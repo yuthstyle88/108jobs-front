@@ -2,105 +2,74 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Footer from "../components/Footer";
 import Header from "@/components/Header";
-import { AssetIcon } from "@/constants/icons";
+import imgapp from "@/assets/images/img-app.webp";
+import apple from "@/assets/icons/apple.svg";
+import google from "@/assets/icons/google-play.svg";
+import fastwork from "@/assets/images/fastwork-app-qr.webp";
+import fastworksymbol from "@/assets/images/fastwork-symbol.svg";
 
 export default function Home() {
   return (
     <>
-      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-        <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-          <Image
-            className="dark:invert"
-            src="https://nextjs.org/icons/next.svg"
-            alt="Next.js logo"
-            width={180}
-            height={38}
-            priority
-          />
-          <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-            <li className="mb-2">
-              Get started by editing{" "}
-              <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-                src/app/page.tsx
-              </code>
-              .
-            </li>
-            <li>Save and see your changes instantly.</li>
-          </ol>
-
-          <div className="flex gap-4 items-center flex-col sm:flex-row">
-            <a
-              className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-              href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                className="dark:invert"
-                src="https://nextjs.org/icons/vercel.svg"
-                alt="Vercel logomark"
-                width={20}
-                height={20}
-              />
-              Deploy now
-            </a>
-            <a
-              className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-              href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Read our docs
-            </a>
+      <Header />
+      <div className="bg-[#E3EDFD]">
+        <div
+          style={{ backgroundImage: `url(${fastworksymbol.src})` }}
+          className="min-h-[342px] bg-no-repeat bg-[105%_30px] grid w-5/6 place-self-start gap-x-8 pt-[140px] grid-cols-[minmax(1rem,_1fr)_minmax(calc(var(--breakpoint-lg)_-_4rem),_calc(var(--breakpoint-lg)_-_4rem))_minmax(1rem,_1fr)] mx-auto grid-rows-auto"
+        >
+          <div className="grid grid-cols-[7fr_5fr] min-w-0 min-h-0 ">
+            <Image
+              alt="Download Application"
+              loading="lazy"
+              decoding="async"
+              data-nimg="1"
+              className="justify-self-end h-auto max-w-[1140px] max-h-[741px]"
+              src={imgapp}
+            />{" "}
+            <div className="flex items-center pl-[2rem]">
+              <div>
+                <h4 className="text-black text-[1.125rem] font-[500] leading-[20.7px] flex items-center font-[Kanit, -apple-system, system-ui, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', sans-serif]">
+                  ดาวน์โหลดแอปฯ Fastwork
+                </h4>
+                <p className="mt-[0.5rem] text-[1rem] text-black font-[Kanit, -apple-system, system-ui, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', sans-serif] leading-[1.65] m-0 p-0 block mb-[1em] mt-[1em] mx-0">
+                  ให้ประสบการณ์การจ้างงานฟรีแลนซ์ของคุณเป็นเรื่องง่าย
+                  ค้นหาฟรีแลนซ์ บรีฟงาน ชําระเงิน รอรับผลงาน จบครบในแอปเดียว
+                </p>
+                <div className="mt-[1.5rem] flex">
+                  <div className="grid grid-cols-1 min-w-0 min-h-0 gap-4">
+                    <a href="https://apps.apple.com/us/app/fastwork-hire-freelancers/id1154830520?ls=1">
+                      <Image
+                        src={apple}
+                        alt="Apple Store"
+                        width={135}
+                        height={40}
+                        className="max-w-full h-auto"
+                      />
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=com.fastwork.app&hl=en">
+                      <Image
+                        src={google}
+                        alt="Google Play"
+                        width={135}
+                        height={40}
+                        className="max-w-full h-auto"
+                      />
+                    </a>
+                  </div>
+                  <div className="ml-[1rem]">
+                    <Image
+                      src={fastwork}
+                      alt="QR Code"
+                      width={96}
+                      height={96}
+                      className="max-w-full h-auto"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </main>
-        <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="https://nextjs.org/icons/file.svg"
-              alt="File icon"
-              width={16}
-              height={16}
-            />
-            Learn
-          </a>
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="https://nextjs.org/icons/window.svg"
-              alt="Window icon"
-              width={16}
-              height={16}
-            />
-            Examples
-          </a>
-          <a
-            className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-            href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              aria-hidden
-              src="https://nextjs.org/icons/globe.svg"
-              alt="Globe icon"
-              width={16}
-              height={16}
-            />
-            Go to nextjs.org →
-          </a>
-        </footer>
+        </div>
       </div>
       <Footer />
     </>
