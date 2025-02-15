@@ -1,14 +1,17 @@
+import { Metadata } from "next";
 import Image from "next/image";
-import Footer from "../components/Footer";
+import Header from '@/components/Header'
+import { AssetIcon } from "@/constants/icons";
 
 export default function Home() {
   return (
-    <>
-      <main className="min-h-screen flex flex-col justify-center items-center">
-        <h1 className="text-4xl font-bold">Welcome to Fastwork</h1>
-        <p className="mt-4 text-lg">Your go-to platform for freelancers.</p>
-      </main>
-      <Footer />
-    </>
+    <div className="">
+      <Header/>
+    </div>
   );
 }
+
+export const metadata: Metadata = {
+  title: "Fastlance.vn - Tổng hợp freelancer chất lượng hàng đầu cho doanh nghiệp ",
+  description: "Nền tảng freelancer chất lượng cao cho doanh nghiệp tại Việt Nam.",
+};
