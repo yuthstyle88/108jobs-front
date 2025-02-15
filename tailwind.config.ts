@@ -12,6 +12,11 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         primary: "var(--primary)",
+        secondary: "var(--secondary)",
+        text_primary: "var(--text-primary)",
+      },
+      boxShadow: {
+        panel: "0 0 1.5rem 0 rgba(25,72,142,.15)",
       },
     },
   },

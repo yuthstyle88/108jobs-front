@@ -1,110 +1,198 @@
+"use client";
 import { Metadata } from "next";
 import Image from "next/image";
 import Footer from "../components/Footer";
-import Header from '@/components/Header'
-import { AssetIcon } from "@/constants/icons";
+import Header from "@/components/Header";
+import { AssetIcon, CategoriesIcon } from "@/constants/icons";
+import { TypeAnimation } from "react-type-animation";
+import TypingText from "@/components/TypingText";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight, faChevronLeft, faChevronRight, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
+import { CategoriesImage } from "@/constants/images";
+
+const categories = [
+  {
+    icon: CategoriesIcon.industry,
+    title: "ประเภทงานยอดนิยม",
+  },
+  {
+    icon: CategoriesIcon.graphic,
+    title: "ออกแบบกราฟิก",
+  },
+  {
+    icon: CategoriesIcon.architect,
+    title: "สถาปัตย์และวิศวกรรม",
+  },
+  {
+    icon: CategoriesIcon.programming,
+    title: "เว็บไซต์และเทคโนโลยี",
+  },
+  {
+    icon: CategoriesIcon.marketing,
+    title: "การตลาดและโฆษณา",
+  },
+  {
+    icon: CategoriesIcon.writing,
+    title: "เขียนและแปลภาษา",
+  },
+  {
+    icon: CategoriesIcon.video,
+    title: "ภาพและเสียง",
+  },
+  {
+    icon: CategoriesIcon.consultant,
+    title: "ธุรกิจและที่ปรึกษา",
+  },
+  {
+    icon: CategoriesIcon.lifestyle,
+    title: "ไลฟ์สไตล์",
+  },
+];
+
+const category_images = [
+  {
+    image: CategoriesImage.seo_image,
+    title: "ทำ SEO",
+  },
+  {
+    image: CategoriesImage.seo_image,
+    title: "ทำ SEO",
+  },
+  {
+    image: CategoriesImage.seo_image,
+    title: "ทำ SEO",
+  },
+  {
+    image: CategoriesImage.seo_image,
+    title: "ทำ SEO",
+  },
+  {
+    image: CategoriesImage.seo_image,
+    title: "ทำ SEO",
+  },
+  {
+    image: CategoriesImage.seo_image,
+    title: "ทำ SEO",
+  },
+  {
+    image: CategoriesImage.seo_image,
+    title: "ทำ SEO",
+  },
+  {
+    image: CategoriesImage.seo_image,
+    title: "ทำ SEO",
+  },
+];
 
 export default function Home() {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+    <div className="min-h-[200vh] bg-white">
+      <Header />
+      <main>
+        <section className="h-auto header-gradient pt-[4.5rem]">
+          <div className="pt-[3rem] pb-[8rem] flex justify-center flex-col gap-4 text-center">
+            <h1 className="text-[24px] font-medium text-white">
+              เรามีฟรีแลนซ์มืออาชีพด้าน...
+            </h1>
+            <TypingText />
+            <p className="text-[18px] font-medium">
+              ที่พร้อมเปลี่ยนไอเดียของคุณให้เป็นความจริง
+            </p>
+            <div className="mt-[1.5rem] flex justify-center">
+              <div className="flex text-black h-[40px] relative w-[624px]">
+                <input
+                  type="text"
+                  placeholder="ค้นหาฟรีแลนซ์..."
+                  className="focus:outline-none rounded-[20px] border-2-white px-5 text-sm font-mono w-full"
+                />
+                <FontAwesomeIcon
+                  icon={faSearch}
+                  className="w-[14px] h-[14px] text-primary absolute right-3 top-1/2 -translate-y-1/2"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+        <section>
+          <div className="grid-container-desktop w-full ">
+            <div className="min-h-[144px] mt-[-4rem] px-8 rounded-lg bg-white shadow-panel col-start-2 col-end-3">
+              <div className="flex items-center justify-between">
+                {categories.map((category, index) => (
+                  <div
+                    key={index}
+                    className={`group relative flex justify-center w-[9rem] h-[9rem] pt-4 px-2 rounded-lg cursor-pointer after:absolute after:bottom-2 after:block after:w-[80%] after:h-1 after:rounded-full after:bg-primary after:origin-center after:transition-all after:ease-[var(--timing-faster)] ${
+                      activeIndex === index
+                        ? "after:scale-100"
+                        : "after:scale-0"
+                    }`}
+                    onClick={() => setActiveIndex(index)}
+                  >
+                    <div className="flex flex-col items-center gap-y-[0.75rem] text-center">
+                      <div
+                        className={`${
+                          activeIndex === index
+                            ? "before:opacity-100 before:translate-y-[5px]"
+                            : ""
+                        } relative transform before:absolute before:opacity-0 before:bottom-[calc(56px*0.2*-1+8px)] before:left-0 before:right-0 before:mx-auto before:w-[calc(56px*0.8)] before:h-[calc(56px*0.2)] before:bg-secondary before:rounded-[50%] before:transition-all before:ease-in-out before:[backface-visibility:hidden] group-hover:before:opacity-100 group-hover:before:translate-y-[5px]`}
+                      >
+                        <Image
+                          src={category.icon}
+                          alt="Consultant"
+                          width={56}
+                          className={`group-hover:translate-y-[-4px] duration-150 group-hover:grayscale-0 ${
+                            activeIndex === index
+                              ? "grayscale-0 translate-y-[-4px]"
+                              : "grayscale-[1]"
+                          }`}
+                        />
+                      </div>
+                      <p className="text-base font-medium text-text_primary leading-[18.4px]">
+                        {category.title}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 ">
+                <div className="grid min-h-0 min-w-0 grid-cols-[1fr_1fr_1fr_1fr] gap-[0.75rem] ">
+                  {category_images.map((category, index) => (
+                    <a href="#" className="group">
+                      <div
+                        style={{
+                          backgroundImage: `url("/categories-image/web-development-02032022.jpg")`,
+                        }}
+                        className="relative rounded-md overflow-hidden bg-cover bg-center transition-all ease-[120ms] cursor-pointer"
+                      >
+                        <div className="relative flex items-end h-20 px-4 py-3 text-white bg-[rgba(0,0,0,.5)] font-semibold">
+                          <span className="group-hover:translate-y-[-4px] duration-150">ทำ SEO</span>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+                <div className="my-4 flex justify-end">
+                  <a
+                    href="#"
+                    className="text-primary py-[0.75rem] relative no-underline cursor-pointer outline-none ease-in-out duration-150 transition-all"
+                  >
+                    ดูเพิ่มเติม
+                    <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
 
-export const metadata: Metadata = {
-  title: "Fastlance.vn - Tổng hợp freelancer chất lượng hàng đầu cho doanh nghiệp ",
-  description: "Nền tảng freelancer chất lượng cao cho doanh nghiệp tại Việt Nam.",
-};
+// export const metadata: Metadata = {
+//   title:
+//     "Fastlance.vn - Tổng hợp freelancer chất lượng hàng đầu cho doanh nghiệp ",
+//   description:
+//     "Nền tảng freelancer chất lượng cao cho doanh nghiệp tại Việt Nam.",
+// };
