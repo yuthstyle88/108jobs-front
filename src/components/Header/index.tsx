@@ -3,7 +3,18 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRight,
+  faChevronDown,
+  faChevronRight,
+  faSearch,
+  faStar,
+  faStarAndCrescent,
+} from "@fortawesome/free-solid-svg-icons";
+import MegaMenu from "../MegaMenu";
+import { MegaMenuImage } from "@/constants/images";
+
+
 
 const Header = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -13,7 +24,7 @@ const Header = () => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrollY(currentScrollY);
-      setShowSearch(currentScrollY > window.innerHeight / 2); // Nếu scroll quá nửa màn hình thì hiện search
+      setShowSearch(currentScrollY > window.innerHeight / 2);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -34,9 +45,7 @@ const Header = () => {
 
           <div
             className={`flex text-black h-[40px] relative w-full transition-all duration-300 ${
-              showSearch
-                ? "opacity-100 "
-                : "opacity-0 pointer-events-none"
+              showSearch ? "opacity-100 " : "opacity-0 pointer-events-none"
             }`}
           >
             <input
@@ -50,10 +59,13 @@ const Header = () => {
           </div>
         </div>
         <div className="flex items-center gap-4 h-full">
-          <div className="relative">
-            <div className="hover:bg-blue-800 hover:text-white text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2">
+          <div className="group">
+            <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2">
               <p className="">Tuyển dụng</p>
               <FontAwesomeIcon icon={faChevronDown} />
+            </div>
+            <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-megaMenu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-10 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[450px] transition-all duration-300">
+              <MegaMenu />
             </div>
           </div>
           <div className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4">
