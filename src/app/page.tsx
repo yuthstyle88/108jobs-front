@@ -7,9 +7,15 @@ import { AssetIcon, CategoriesIcon } from "@/constants/icons";
 import { TypeAnimation } from "react-type-animation";
 import TypingText from "@/components/TypingText";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight, faChevronLeft, faChevronRight, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowRight,
+  faChevronLeft,
+  faChevronRight,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import { CategoriesImage } from "@/constants/images";
+import { AssetsImage, CategoriesImage } from "@/constants/images";
+import { title } from "process";
 
 const categories = [
   {
@@ -82,6 +88,27 @@ const category_images = [
   {
     image: CategoriesImage.seo_image,
     title: "ทำ SEO",
+  },
+];
+
+const freelancer_intro = [
+  {
+    icon: AssetsImage.group,
+    title: "ฟรีแลนซ์คุณภาพอันดับ 1",
+    description:
+      "ฟรีแลนซ์ผ่านการคัดเลือก และยืนยันตัวตน กับ Fastwork สามารถตรวจสอบได้",
+  },
+  {
+    icon: AssetsImage.shield,
+    title: "รับประกันการจ้างงาน",
+    description:
+      "เงินของคุณจะได้รับความคุ้มครองตั้งแต่ฟรีแลนซ์เริ่มทํางานไปจนถึงได้รับงานที่พอใจ",
+  },
+  {
+    icon: AssetsImage.paper,
+    title: "ครบทุกงานที่ต้องการ มั่นใจ เลือก Fastwork",
+    description:
+      "พบกับกองทัพฟรีแลนซ์คุณภาพ พร้อมตอบโจทย์ทุกธุรกิจ ครอบคลุมทุกสายงาน",
   },
 ];
 
@@ -158,7 +185,7 @@ export default function Home() {
               <div className="mt-4 ">
                 <div className="grid min-h-0 min-w-0 grid-cols-[1fr_1fr_1fr_1fr] gap-[0.75rem] ">
                   {category_images.map((category, index) => (
-                    <a href="#" className="group">
+                    <a key={index} href="#" className="group">
                       <div
                         style={{
                           backgroundImage: `url("/categories-image/web-development-02032022.jpg")`,
@@ -166,7 +193,9 @@ export default function Home() {
                         className="relative rounded-md overflow-hidden bg-cover bg-center transition-all ease-[120ms] cursor-pointer"
                       >
                         <div className="relative flex items-end h-20 px-4 py-3 text-white bg-[rgba(0,0,0,.5)] font-semibold">
-                          <span className="group-hover:translate-y-[-4px] duration-150">ทำ SEO</span>
+                          <span className="group-hover:translate-y-[-4px] duration-150">
+                            ทำ SEO
+                          </span>
                         </div>
                       </div>
                     </a>
@@ -183,6 +212,36 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+        <section className="py-24 grid grid-container-desktop gap-y-12 ">
+          <div className="col-start-2 col-end-3">
+            <h4 className="text-[1.5rem] text-[#38404c] font-medium leading-[1.15]">
+              ทำไมถึงต้องใช้ Fastwork?
+            </h4>
+            <h2 className="home-title-head">
+              เพราะเราเปลี่ยนไอเดียของคุณให้เป็นความจริง ด้วยฟรีแลนซ์มืออาชีพ
+            </h2>
+          </div>
+          <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
+            {freelancer_intro.map((freelancer, index) => (
+              <div key={index} className="">
+                <Image
+                  src={freelancer.icon}
+                  alt="Group of people"
+                  width={62}
+                  className="max-w-full h-auto align-top"
+                />
+                <div className="grid grid-cols-[1fr] mt-4 gap-y-1 text-text_primary font-medium">
+                  <h5 className="text-[1.25rem]  leading-[1.15]">
+                    {freelancer.title}
+                  </h5>
+                  <p className="m-0 text-base font-serif leading-[1.65] ">
+                    {freelancer.description}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       </main>
