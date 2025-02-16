@@ -1,9 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 import id from "@/assets/icons/id.svg";
 import th from "@/assets/icons/th.svg";
 import vn from "@/assets/icons/vn.svg";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFacebook,
+  faInstagram,
+  faTiktok,
+} from "@fortawesome/free-brands-svg-icons";
 
 const Footer = () => {
   return (
@@ -125,9 +130,9 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-2 md:grid-cols-5 gap-6 ">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex space-x-4 text-lg text-white">
-              <FaInstagram />
-              <FaFacebook />
-              <FaTiktok className="mr-4" />
+              <FontAwesomeIcon icon={faInstagram} />
+              <FontAwesomeIcon icon={faFacebook} />
+              <FontAwesomeIcon icon={faTiktok} />
               <span>| Sitemaps |</span>
               <Image src={th} alt="TH" width={24} height={16} />
               <Image src={id} alt="SG" width={24} height={16} />
