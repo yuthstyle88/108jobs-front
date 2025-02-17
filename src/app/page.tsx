@@ -372,7 +372,7 @@ export default function Home() {
               <h2 className="block text-[#08439B] text-[36px] mt-[0.83em] mb-[0.83em] mx-0">
                 Fastwork ที่หนึ่งแห่งฟรีแลนซ์คุณภาพ
               </h2>
-              <p
+              <div
                 className={`text-gray-700 overflow-hidden transition-all duration-300 ${
                   expanded ? "max-h-[500px]" : "max-h-20"
                 }`}
@@ -425,10 +425,10 @@ export default function Home() {
                   การันตีคุณภาพโดย Fastwork แหล่งรวม ฟรีแลนซ์ มืออาชีพ
                   ที่ได้รับความไว้วางใจจากลูกค้ากว่า 700,000 ราย
                 </p>
-              </p>
+              </div>
               {!expanded && (
                 <div
-                  className="text-blue-600 cursor-pointer"
+                  className="text-blue-600 cursor-pointer text-center"
                   onClick={() => setExpanded(true)}
                 >
                   อ่านเพิ่มเติม ▼
