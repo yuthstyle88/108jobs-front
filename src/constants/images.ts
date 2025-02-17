@@ -8,6 +8,18 @@ import chat from "../assets/images/megamenu/chat-to-hire.svg";
 import company from "../assets/images/megamenu/company.svg";
 import job from "../assets/images/megamenu/job-board.svg";
 import job_bg from "../assets/images/megamenu/search-th.webp";
+import pic1 from "../assets/images/customer/th/1.png";
+import pic2 from "../assets/images/customer/th/2.png";
+import pic3 from "../assets/images/customer/th/3.png";
+import pic4 from "../assets/images/customer/th/4.png";
+import pic5 from "../assets/images/customer/th/5.png";
+import pic6 from "../assets/images/customer/th/6.png";
+import pic7 from "../assets/images/customer/th/7.png";
+import pic8 from "../assets/images/customer/th/8.png";
+import pic9 from "../assets/images/customer/th/9.png";
+import pic10 from "../assets/images/customer/th/10.png";
+import pic11 from "../assets/images/customer/th/11.png";
+import pic12 from "../assets/images/customer/th/12.png";
 
 export const CategoriesImage = {
   seo_image,
@@ -19,11 +31,26 @@ export const MegaMenuImage = {
   chat,
   company,
   job,
-  job_bg
+  job_bg,
 };
 
 export const AssetsImage = {
   group,
   paper,
   shield,
+};
+
+export const CustomerImage = {
+  pic1,
+  pic2,
+  pic3,
+  pic4,
+  pic5,
+  pic6,
+  pic7,
+  pic8,
+  pic9,
+  pic10,
+  pic11,
+  pic12,
 };
