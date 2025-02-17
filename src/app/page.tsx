@@ -19,7 +19,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useState } from "react";
-import { AssetsImage, CategoriesImage } from "@/constants/images";
+import {
+  AssetsImage,
+  CategoriesImage,
+  CustomerImage,
+} from "@/constants/images";
 import { title } from "process";
 
 const categories = [
@@ -119,6 +123,8 @@ const freelancer_intro = [
 
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [expanded, setExpanded] = useState(false);
+
   return (
     <div className="min-h-[200vh] bg-white">
       <Header />
@@ -219,212 +225,375 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section className="py-24 grid grid-container-desktop gap-y-12 ">
-          <div className="col-start-2 col-end-3">
-            <h4 className="text-[1.5rem] text-[#38404c] font-medium leading-[1.15]">
-              ทำไมถึงต้องใช้ Fastwork?
-            </h4>
-            <h2 className="home-title-head">
-              เพราะเราเปลี่ยนไอเดียของคุณให้เป็นความจริง ด้วยฟรีแลนซ์มืออาชีพ
-            </h2>
-          </div>
-          <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
-            {freelancer_intro.map((freelancer, index) => (
-              <div key={index} className="">
+        <section
+          className="hidden md:block"
+          style={{ backgroundColor: "hsl(216, 15%, 97%)" }}
+        >
+          <div className="py-24 grid grid-container-desktop gap-y-[1.5rem]">
+            <div className="col-start-2 col-end-3 w-full text-center">
+              <h5 className="text-[1.25rem] text-[#2B323BF2] font-medium font-secondary leading-[1.15] mb-[1.5rem]">
+                มีงานสำเร็จกว่า 150,000 ชิ้น โดยบริษัทชั้นนำต่างๆ
+                เชื่อใจและเลือกใช้บริการของ Fastwork
+              </h5>
+              <div className="grid grid-cols-6 grid-rows-2 gap-x-8 gap-y-4">
                 <Image
-                  src={freelancer.icon}
-                  alt="Group of people"
-                  width={62}
-                  className="max-w-full h-auto align-top"
+                  src={CustomerImage.pic1}
+                  alt="trusted by company"
+                  style={{ filter: "grayscale(100%)" }}
+                  width={384}
+                  height={230}
+                  layout="intrinsic"
                 />
-                <div className="grid grid-cols-[1fr] mt-4 gap-y-1 text-text_primary font-medium">
-                  <h5 className="text-[1.25rem]  leading-[1.15]">
-                    {freelancer.title}
-                  </h5>
-                  <p className="m-0 text-base font-serif leading-[1.65] ">
-                    {freelancer.description}
+                <Image
+                  src={CustomerImage.pic2}
+                  alt="trusted by company"
+                  style={{ filter: "grayscale(100%)" }}
+                  width={384}
+                  height={230}
+                  layout="intrinsic"
+                />
+                <Image
+                  src={CustomerImage.pic3}
+                  alt="trusted by company"
+                  style={{ filter: "grayscale(100%)" }}
+                  width={384}
+                  height={230}
+                  layout="intrinsic"
+                />
+                <Image
+                  src={CustomerImage.pic4}
+                  alt="trusted by company"
+                  style={{ filter: "grayscale(100%)" }}
+                  width={384}
+                  height={230}
+                  layout="intrinsic"
+                />
+                <Image
+                  src={CustomerImage.pic5}
+                  alt="trusted by company"
+                  style={{ filter: "grayscale(100%)" }}
+                  width={384}
+                  height={230}
+                  layout="intrinsic"
+                />
+                <Image
+                  src={CustomerImage.pic6}
+                  alt="trusted by company"
+                  style={{ filter: "grayscale(100%)" }}
+                  width={384}
+                  height={230}
+                  layout="intrinsic"
+                />
+                <Image
+                  src={CustomerImage.pic7}
+                  alt="trusted by company"
+                  style={{ filter: "grayscale(100%)" }}
+                  width={384}
+                  height={230}
+                  layout="intrinsic"
+                />
+                <Image
+                  src={CustomerImage.pic8}
+                  alt="trusted by company"
+                  style={{ filter: "grayscale(100%)" }}
+                  width={384}
+                  height={230}
+                  layout="intrinsic"
+                />
+                <Image
+                  src={CustomerImage.pic9}
+                  alt="trusted by company"
+                  style={{ filter: "grayscale(100%)" }}
+                  width={384}
+                  height={230}
+                  layout="intrinsic"
+                />
+                <Image
+                  src={CustomerImage.pic10}
+                  alt="trusted by company"
+                  style={{ filter: "grayscale(100%)" }}
+                  width={384}
+                  height={230}
+                  layout="intrinsic"
+                />
+                <Image
+                  src={CustomerImage.pic11}
+                  alt="trusted by company"
+                  style={{ filter: "grayscale(100%)" }}
+                  width={384}
+                  height={230}
+                  layout="intrinsic"
+                />
+                <Image
+                  src={CustomerImage.pic12}
+                  alt="trusted by company"
+                  style={{ filter: "grayscale(100%)" }}
+                  width={384}
+                  height={230}
+                  layout="intrinsic"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="hidden md:block">
+          <div className="bg-white py-24 grid grid-container-desktop gap-y-12">
+            <div className="col-start-2 col-end-3 w-full text-left">
+              <h2 className="block text-[#08439B] text-[36px] mt-[0.83em] mb-[0.83em] mx-0">
+                Fastwork ที่หนึ่งแห่งฟรีแลนซ์คุณภาพ
+              </h2>
+              <p
+                className={`text-gray-700 overflow-hidden transition-all duration-300 ${
+                  expanded ? "max-h-[500px]" : "max-h-20"
+                }`}
+              >
+                <p>
+                  Fastwork.co คือเว็บไซต์ที่รวบรวม ฟรีแลนซ์
+                  มืออาชีพจากหลากหลายสายงานไว้ในที่เดียวกัน ไม่ว่าจะเป็น
+                  งานออกแบบโลโก้ ทำแบนเนอร์โฆษณา เขียนบทความ แปลภาษา
+                  การตลาดออนไลน์ พัฒนาเว็บไซต์ และงานอื่นๆ อีกกว่า 90 หมวดหมู่
+                  เพื่อตอบโจทย์ความต้องการที่หลากหลายของทั้งผู้ประกอบการและผู้ใช้งานทั่วไป
+                  ทีมงานของเราพัฒนา Fastwork.co ขึ้นโดยเน้นความเรียบง่าย
+                  และความสะดวกรวดเร็วในการใช้งาน
+                  ด้วยแนวคิดที่จะสร้างสรรค์แพลทฟอร์มที่จะช่วยประหยัดเวลาให้กับทั้ง
+                  ฟรีแลนซ์ และลูกค้า
+                  อีกทั้งยังมุ่งมั่นที่จะสนับสนุนการสร้างธุรกิจใหม่
+                  และต่อยอดธุรกิจให้กับผู้ประกอบการทั้งรายใหญ่รายย่อย
+                  และยังช่วยเหลือ ฟรีแลนซ์ ให้หางานได้ง่าย
+                  สร้างรายได้ให้มากขึ้นและมั่นคง
+                  ตลอดจนยกระดับมาตรฐานฟรีแลนซ์ไทยให้มีคุณภาพที่ดีขึ้นอีกด้วย
+                </p>
+                <br />
+                <p>
+                  ด้วยเหตุนี้ Fastwork.co
+                  จึงทำหน้าที่เสมือนเป็นพื้นที่สื่อกลางออนไลน์ระหว่าง ฟรีแลนซ์
+                  และผู้ที่มีความต้องการจ้างงานให้มาเจอกันได้ทุกที่ทุกเวลา
+                  โดยที่ ฟรีแลนซ์ จะใช้เว็บไซต์ Fastwork.co
+                  เป็นพื้นที่ในการลงประกาศรับจ้างงาน
+                  ในขณะที่ลูกค้าก็สามารถเข้ามาค้นหางานของ ฟรีแลนซ์
+                  ที่ต้องการได้ในที่เดียวกัน
+                  อีกทั้งยังมีอิสระในการเลือกจ้างงานเป็นครั้งๆได้
+                  สามารถเปรียบเทียบราคาและคุณภาพผลงานของ ฟรีแลนซ์
+                  ที่มีอยู่หลากหลาย เพื่อให้ตรงกับความต้องการมากที่สุดอีกด้วย
+                  นอกจากนี้ ด้วยระบบการชำระเงินที่ปลอดภัยของ Fastwork.co
+                  ยังช่วยรับประกันการส่งมอบงานที่ครบถ้วนถูกต้องให้กับฝั่งลูกค้า
+                  ด้วยการเป็นตัวกลางในการถือเงินระหว่างที่ ฟรีแลนซ์ กำลังทำงาน
+                  และในทางกลับกันก็ช่วยรับประกันการส่งมอบเงินค่าจ้างให้กับ
+                  ฟรีแลนซ์ เมื่อทำงานสำเร็จและส่งมอบให้ลูกค้าด้วยเช่นกัน
+                </p>
+                <br />{" "}
+                <p>
+                  ปัจจุบัน Fastwork.co มี ฟรีแลนซ์
+                  ที่ผ่านการคัดกรองคุณภาพแล้วกว่า 50,000 คน
+                  ให้บริการในหมวดหมู่งานที่ครอบคลุมความต้องการกว่า 90 หมวดหมู่
+                  ด้วยจำนวนงานที่หลากหลายมากกว่า 15,000 งาน
+                  ซึ่งคัดแยกตามทักษะความสามารถของ ฟรีแลนซ์
+                  เพื่อตอบโจทย์ความต้องการของลูกค้าอย่างครบวงจร
+                  ไม่ว่าจะเป็นเจ้าของกิจการ ธุรกิจ SME แม่ค้าออนไลน์
+                  หรือแม้แต่บุคคลทั่วไป
+                  ที่กำลังมองหางานระดับมืออาชีพในราคาที่จับต้องได้
+                  การันตีคุณภาพโดย Fastwork แหล่งรวม ฟรีแลนซ์ มืออาชีพ
+                  ที่ได้รับความไว้วางใจจากลูกค้ากว่า 700,000 ราย
+                </p>
+              </p>
+              {!expanded && (
+                <div
+                  className="text-blue-600 cursor-pointer"
+                  onClick={() => setExpanded(true)}
+                >
+                  อ่านเพิ่มเติม ▼
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+        <section className="hidden md:block">
+          <div className="bg-white py-24 grid grid-container-desktop gap-y-12">
+            <div className="col-start-2 col-end-3 w-full">
+              <h2 className="block text-[#08439B] text-[36px] mt-[0.83em] mb-[0.83em] mx-0 text-center">
+                หมวดหมู่งานต่างๆ ของ Fastwork
+              </h2>
+              <div className="grid w-full gap-x-8 gap-y-6 grid-cols-4 grid-rows-2">
+                <div className="block">
+                  <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
+                    กราฟิกและการออกแบบ
+                  </strong>
+                  <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
+                    <a href="/social-media-banner">ออกแบบแบนเนอร์</a>,&nbsp;
+                    <a href="/publication/namecard">ออกแบบนามบัตร</a>,&nbsp;
+                    <a href="/publication/poster">ออกแบบโปสเตอร์</a>,&nbsp;
+                    <a href="/infographics">ทำ Infographic</a>,&nbsp;
+                    <a href="/portfolio-resume">รับทำเรซูเม่</a>,&nbsp;
+                    <a href="/tattoo-design">ออกแบบลายสัก</a>,&nbsp;
+                    <a href="/packaging">ออกแบบแพคเกจจิ้ง</a>,&nbsp;
+                    <a href="/corporate-identity">ออกแบบ CI</a>,&nbsp;
+                    <a href="/design-graphic">ดูเพิ่มเติม</a>
+                  </p>
+                </div>
+                <div className="block">
+                  <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
+                    สถาปัตย์และวิศวกรรม
+                  </strong>
+                  <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
+                    <a href="/architect-and-interior/renovation">รีโนเวทบ้าน</a>
+                    ,&nbsp;
+                    <a href="/architect-and-interior/home-design">ออกแบบบ้าน</a>
+                    ,&nbsp;
+                    <a href="/engineering-structural-design/boq">
+                      ถอดแบบประมาณราคา
+                    </a>
+                    ,&nbsp;
+                    <a href="/engineering-structural-design">
+                      เขียนแบบก่อสร้าง
+                    </a>
+                    ,&nbsp;<a href="/home-inspection">ตรวจรับบ้าน</a>,&nbsp;
+                    <a href="/landscape">จัดสวนหน้าบ้าน งบน้อย</a>,&nbsp;
+                    <a href="/engineering-structural-design/residence">
+                      เขียนแบบบ้านชั้นเดียว
+                    </a>
+                    ,&nbsp;
+                    <a href="/architect-and-interior/furniture">
+                      ออกแบบเตียงนอน
+                    </a>
+                    ,&nbsp;
+                    <a href="/engineering-structural-design/machine">
+                      ถอดแบบเครื่องกล
+                    </a>
+                    ,&nbsp;<a href="/architect-and-engineer">ดูเพิ่มเติม</a>
+                  </p>
+                </div>
+                <div className="block">
+                  <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
+                    เว็บไซต์และเขียนโปรแกรม
+                  </strong>
+                  <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
+                    <a href="/ux-ui-design-web-app">ออกแบบเว็บไซต์</a>,&nbsp;
+                    <a href="/web-development/ecommerce">สร้างเว็บขายของ</a>
+                    ,&nbsp;
+                    <a href="/web-development/instant-builder">
+                      เว็บไซต์สำเร็จรูป
+                    </a>
+                    ,&nbsp;<a href="/desktop-application">รับเขียนโปรแกรม</a>
+                    ,&nbsp;<a href="/chatbot">Chatbot Facebook</a>,&nbsp;
+                    <a href="/chatbot">สร้างบอทไลน์</a>,&nbsp;
+                    <a href="/web-scraping">Website Scraping</a>,&nbsp;
+                    <a href="/it-solution-and-support/software">รับลงโปรแกรม</a>
+                    ,&nbsp;<a href="/web-programming">ดูเพิ่มเติม</a>
+                  </p>
+                </div>
+                <div className="block">
+                  <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
+                    การตลาดและโฆษณา
+                  </strong>
+                  <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
+                    <a href="/seo">รับทำ SEO</a>,&nbsp;
+                    <a href="/google-ads">โฆษณา Google</a>,&nbsp;
+                    <a href="/social-media-ads/facebook-ads">โฆษณา Facebook</a>
+                    ,&nbsp;
+                    <a href="/social-media-ads/tiktok-ads">โฆษณา TikTok</a>
+                    ,&nbsp;<a href="/blogger-netidol">บล็อกเกอร์รีวิว</a>,&nbsp;
+                    <a href="/promote-page/product">โปรโมทสินค้า</a>,&nbsp;
+                    <a href="/focus-group">รับจ้างทดลองสินค้า</a>,&nbsp;
+                    <a href="/promote-real-estate">รับฝากขายบ้าน</a>,&nbsp;
+                    <a href="/google-map">ปักหมุด google map</a>,&nbsp;
+                    <a href="/marketing-advertising">ดูเพิ่มเติม</a>
+                  </p>
+                </div>
+                <div className="block">
+                  <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
+                    เขียนและแปลภาษา
+                  </strong>
+                  <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
+                    <a href="/translation">แปลภาษา</a>,&nbsp;
+                    <a href="/translator">ล่ามแปลภาษา</a>,&nbsp;
+                    <a href="/transcription">ถอดไฟล์เสียง</a>,&nbsp;
+                    <a href="/content-writing">เขียนคอนเทนต์</a>,&nbsp;
+                    <a href="/content-writing/seo">เขียนบทความ SEO</a>,&nbsp;
+                    <a href="/content-writing/foreign-language">
+                      เขียนบทความภาษาอังกฤษ
+                    </a>
+                    ,&nbsp;
+                    <a href="/content-writing/thesis-report">รับเขียนรายงาน</a>
+                    ,&nbsp;<a href="/proofreading">พิสูจน์อักษร</a>,&nbsp;
+                    <a href="/story-writing/poets-and-poems">รับแต่งกลอน</a>
+                    ,&nbsp;<a href="/writing-translation">ดูเพิ่มเติม</a>
+                  </p>
+                </div>
+                <div className="block">
+                  <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
+                    ภาพและเสียง
+                  </strong>
+                  <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
+                    <a href="/photography">ตากล้อง</a>,&nbsp;
+                    <a href="/photography/wedding">ถ่ายพรีเวดดิ้ง</a>,&nbsp;
+                    <a href="/podcast">สร้าง Podcast</a>,&nbsp;
+                    <a href="/sound-engineering/edit-mixing-mastering">
+                      ตัดต่อเพลง
+                    </a>
+                    ,&nbsp;<a href="/videography">ตัดต่อวีดีโอ</a>,&nbsp;
+                    <a href="/subtitle">ทำซับไตเติ้ล</a>,&nbsp;
+                    <a href="/motion-graphics">Motion Graphic</a>,&nbsp;
+                    <a href="/videography/live-streaming">รับไลฟ์สด</a>,&nbsp;
+                    <a href="/animations">ทำอนิเมชั่น</a>,&nbsp;
+                    <a href="/voice-over">พากย์เสียง</a>,&nbsp;
+                    <a href="/photography-video">ดูเพิ่มเติม</a>
+                  </p>
+                </div>
+                <div className="block">
+                  <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
+                    ธุรกิจและที่ปรึกษา
+                  </strong>
+                  <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
+                    <a href="/accounting-and-finance/accounting-service">
+                      รับทำบัญชี
+                    </a>
+                    ,&nbsp;<a href="/counseling">รับปรึกษาปัญหาชีวิต</a>,&nbsp;
+                    <a href="/financial-planning">ที่ปรึกษาทางการเงิน</a>,&nbsp;
+                    <a href="/legal">ที่ปรึกษากฎหมาย</a>,&nbsp;
+                    <a href="/psychologist">ปรึกษาสุขภาพจิต</a>,&nbsp;
+                    <a href="/order-from-china">สั่งสินค้าจากจีน</a>,&nbsp;
+                    <a href="/secretary">เลขาส่วนตัว</a>,&nbsp;
+                    <a href="/commercial-registration">จดทะเบียนบริษัท</a>
+                    ,&nbsp;
+                    <a href="/business">ปรึกษาธุรกิจ</a>,&nbsp;
+                    <a href="/consultant">ดูเพิ่มเติม</a>
+                  </p>
+                </div>
+                <div className="block">
+                  <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
+                    ไลฟ์สไตล์
+                  </strong>
+                  <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
+                    <a href="/car-inspection">ตรวจรถมือสอง</a>,&nbsp;
+                    <a href="/feng-shui">ซินแสดูฮวงจุ้ยบ้าน</a>,&nbsp;
+                    <a href="/gaming">รับจ้างเล่นเกม</a>,&nbsp;
+                    <a href="/horoscope">ดูดวง</a>,&nbsp;
+                    <a href="/makeup">ช่างแต่งหน้า</a>,&nbsp;
+                    <a href="/personnal-trainer">จ้างเทรนเนอร์</a>,&nbsp;
+                    <a href="/nutrition">ปรึกษานักโภชนาการ</a>,&nbsp;
+                    <a href="/singer-band">หานักร้อง</a>,&nbsp;
+                    <a href="/trip-planner">รับวางแผนเที่ยว</a>,&nbsp;
+                    <a href="/prop-stylist">สไตล์ลิส</a>,&nbsp;
+                    <a href="/lifestyle">ดูเพิ่มเติม</a>
                   </p>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </section>
       </main>
-      <div className="bg-white">
-        <div className="w-4/6 mx-auto mt-[6rem] pb-[4rem] grid gap-y-6 grid-cols-[minmax(1rem,1fr)_minmax(calc(var(--breakpoint-lg)-4rem),calc(var(--breakpoint-lg)-4rem))_minmax(1rem,1fr)] grid-rows-auto">
-          <h2 className="block text-[#08439B] text-[36px] mt-[0.83em] mb-[0.83em] mx-0">
-            หมวดหมู่งานต่างๆ ของ Fastwork
-          </h2>
-          <div className="grid w-full gap-x-8 gap-y-6 grid-cols-4 grid-rows-2">
-            <div className="block">
-              <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                กราฟิกและการออกแบบ
-              </strong>
-              <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                <a href="/social-media-banner">ออกแบบแบนเนอร์</a>,&nbsp;
-                <a href="/publication/namecard">ออกแบบนามบัตร</a>,&nbsp;
-                <a href="/publication/poster">ออกแบบโปสเตอร์</a>,&nbsp;
-                <a href="/infographics">ทำ Infographic</a>,&nbsp;
-                <a href="/portfolio-resume">รับทำเรซูเม่</a>,&nbsp;
-                <a href="/tattoo-design">ออกแบบลายสัก</a>,&nbsp;
-                <a href="/packaging">ออกแบบแพคเกจจิ้ง</a>,&nbsp;
-                <a href="/corporate-identity">ออกแบบ CI</a>,&nbsp;
-                <a href="/design-graphic">ดูเพิ่มเติม</a>
-              </p>
-            </div>
-            <div className="block">
-              <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                สถาปัตย์และวิศวกรรม
-              </strong>
-              <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                <a href="/architect-and-interior/renovation">รีโนเวทบ้าน</a>
-                ,&nbsp;
-                <a href="/architect-and-interior/home-design">ออกแบบบ้าน</a>
-                ,&nbsp;
-                <a href="/engineering-structural-design/boq">
-                  ถอดแบบประมาณราคา
-                </a>
-                ,&nbsp;
-                <a href="/engineering-structural-design">เขียนแบบก่อสร้าง</a>
-                ,&nbsp;<a href="/home-inspection">ตรวจรับบ้าน</a>,&nbsp;
-                <a href="/landscape">จัดสวนหน้าบ้าน งบน้อย</a>,&nbsp;
-                <a href="/engineering-structural-design/residence">
-                  เขียนแบบบ้านชั้นเดียว
-                </a>
-                ,&nbsp;
-                <a href="/architect-and-interior/furniture">ออกแบบเตียงนอน</a>
-                ,&nbsp;
-                <a href="/engineering-structural-design/machine">
-                  ถอดแบบเครื่องกล
-                </a>
-                ,&nbsp;<a href="/architect-and-engineer">ดูเพิ่มเติม</a>
-              </p>
-            </div>
-            <div className="block">
-              <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                เว็บไซต์และเขียนโปรแกรม
-              </strong>
-              <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                <a href="/ux-ui-design-web-app">ออกแบบเว็บไซต์</a>,&nbsp;
-                <a href="/web-development/ecommerce">สร้างเว็บขายของ</a>
-                ,&nbsp;
-                <a href="/web-development/instant-builder">เว็บไซต์สำเร็จรูป</a>
-                ,&nbsp;<a href="/desktop-application">รับเขียนโปรแกรม</a>
-                ,&nbsp;<a href="/chatbot">Chatbot Facebook</a>,&nbsp;
-                <a href="/chatbot">สร้างบอทไลน์</a>,&nbsp;
-                <a href="/web-scraping">Website Scraping</a>,&nbsp;
-                <a href="/it-solution-and-support/software">รับลงโปรแกรม</a>
-                ,&nbsp;<a href="/web-programming">ดูเพิ่มเติม</a>
-              </p>
-            </div>
-            <div className="block">
-              <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                การตลาดและโฆษณา
-              </strong>
-              <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                <a href="/seo">รับทำ SEO</a>,&nbsp;
-                <a href="/google-ads">โฆษณา Google</a>,&nbsp;
-                <a href="/social-media-ads/facebook-ads">โฆษณา Facebook</a>
-                ,&nbsp;<a href="/social-media-ads/tiktok-ads">โฆษณา TikTok</a>
-                ,&nbsp;<a href="/blogger-netidol">บล็อกเกอร์รีวิว</a>,&nbsp;
-                <a href="/promote-page/product">โปรโมทสินค้า</a>,&nbsp;
-                <a href="/focus-group">รับจ้างทดลองสินค้า</a>,&nbsp;
-                <a href="/promote-real-estate">รับฝากขายบ้าน</a>,&nbsp;
-                <a href="/google-map">ปักหมุด google map</a>,&nbsp;
-                <a href="/marketing-advertising">ดูเพิ่มเติม</a>
-              </p>
-            </div>
-            <div className="block">
-              <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                เขียนและแปลภาษา
-              </strong>
-              <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                <a href="/translation">แปลภาษา</a>,&nbsp;
-                <a href="/translator">ล่ามแปลภาษา</a>,&nbsp;
-                <a href="/transcription">ถอดไฟล์เสียง</a>,&nbsp;
-                <a href="/content-writing">เขียนคอนเทนต์</a>,&nbsp;
-                <a href="/content-writing/seo">เขียนบทความ SEO</a>,&nbsp;
-                <a href="/content-writing/foreign-language">
-                  เขียนบทความภาษาอังกฤษ
-                </a>
-                ,&nbsp;
-                <a href="/content-writing/thesis-report">รับเขียนรายงาน</a>
-                ,&nbsp;<a href="/proofreading">พิสูจน์อักษร</a>,&nbsp;
-                <a href="/story-writing/poets-and-poems">รับแต่งกลอน</a>
-                ,&nbsp;<a href="/writing-translation">ดูเพิ่มเติม</a>
-              </p>
-            </div>
-            <div className="block">
-              <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                ภาพและเสียง
-              </strong>
-              <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                <a href="/photography">ตากล้อง</a>,&nbsp;
-                <a href="/photography/wedding">ถ่ายพรีเวดดิ้ง</a>,&nbsp;
-                <a href="/podcast">สร้าง Podcast</a>,&nbsp;
-                <a href="/sound-engineering/edit-mixing-mastering">
-                  ตัดต่อเพลง
-                </a>
-                ,&nbsp;<a href="/videography">ตัดต่อวีดีโอ</a>,&nbsp;
-                <a href="/subtitle">ทำซับไตเติ้ล</a>,&nbsp;
-                <a href="/motion-graphics">Motion Graphic</a>,&nbsp;
-                <a href="/videography/live-streaming">รับไลฟ์สด</a>,&nbsp;
-                <a href="/animations">ทำอนิเมชั่น</a>,&nbsp;
-                <a href="/voice-over">พากย์เสียง</a>,&nbsp;
-                <a href="/photography-video">ดูเพิ่มเติม</a>
-              </p>
-            </div>
-            <div className="block">
-              <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                ธุรกิจและที่ปรึกษา
-              </strong>
-              <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                <a href="/accounting-and-finance/accounting-service">
-                  รับทำบัญชี
-                </a>
-                ,&nbsp;<a href="/counseling">รับปรึกษาปัญหาชีวิต</a>,&nbsp;
-                <a href="/financial-planning">ที่ปรึกษาทางการเงิน</a>,&nbsp;
-                <a href="/legal">ที่ปรึกษากฎหมาย</a>,&nbsp;
-                <a href="/psychologist">ปรึกษาสุขภาพจิต</a>,&nbsp;
-                <a href="/order-from-china">สั่งสินค้าจากจีน</a>,&nbsp;
-                <a href="/secretary">เลขาส่วนตัว</a>,&nbsp;
-                <a href="/commercial-registration">จดทะเบียนบริษัท</a>,&nbsp;
-                <a href="/business">ปรึกษาธุรกิจ</a>,&nbsp;
-                <a href="/consultant">ดูเพิ่มเติม</a>
-              </p>
-            </div>
-            <div className="block">
-              <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                ไลฟ์สไตล์
-              </strong>
-              <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                <a href="/car-inspection">ตรวจรถมือสอง</a>,&nbsp;
-                <a href="/feng-shui">ซินแสดูฮวงจุ้ยบ้าน</a>,&nbsp;
-                <a href="/gaming">รับจ้างเล่นเกม</a>,&nbsp;
-                <a href="/horoscope">ดูดวง</a>,&nbsp;
-                <a href="/makeup">ช่างแต่งหน้า</a>,&nbsp;
-                <a href="/personnal-trainer">จ้างเทรนเนอร์</a>,&nbsp;
-                <a href="/nutrition">ปรึกษานักโภชนาการ</a>,&nbsp;
-                <a href="/singer-band">หานักร้อง</a>,&nbsp;
-                <a href="/trip-planner">รับวางแผนเที่ยว</a>,&nbsp;
-                <a href="/prop-stylist">สไตล์ลิส</a>,&nbsp;
-                <a href="/lifestyle">ดูเพิ่มเติม</a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="bg-[#E3EDFD]">
-        <div className=" bg-no-repeat bg-[105%_30px] grid w-5/6 place-self-start gap-x-8 grid-cols-[minmax(1rem,_1fr)_minmax(calc(var(--breakpoint-lg)_-_4rem),_calc(var(--breakpoint-lg)_-_4rem))_minmax(1rem,_1fr)] mx-auto grid-rows-auto">
+      <div className="bg-[#E3EDFD]  hidden lg:block">
+        <div className=" bg-no-repeat w-4/6 bg-[105%_30px] grid place-self-start gap-x-8 grid-cols-[minmax(1rem,_1fr)_minmax(calc(var(--breakpoint-lg)_-_4rem),_calc(var(--breakpoint-lg)_-_4rem))_minmax(1rem,_1fr)] mx-auto grid-rows-auto">
           <div className="grid grid-cols-[7fr_5fr] min-w-0 min-h-0 ">
             <Image
               alt="Download Application"
               loading="lazy"
               decoding="async"
               data-nimg="1"
-              className="justify-self-end h-auto max-w-[100%]"
+              className="justify-self-end h-auto max-w-[80%]"
               src={imgapp}
             />
+
             <div className="flex items-center pl-[2rem]">
               <div>
                 <h4 className="text-black text-[1.125rem] font-[500] leading-[20.7px] flex items-center font-[Kanit, -apple-system, system-ui, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', sans-serif]">
