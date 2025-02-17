@@ -1,14 +1,15 @@
 import logo from "../assets/icons/logo.svg";
-import consultant from "../assets/categories-icon/consultant.svg";
-import ecommerce from "../assets/categories-icon/ecommerce.svg";
-import graphic from "../assets/categories-icon/graphic.svg";
-import industry from "../assets/categories-icon/industry-icon.svg";
-import marketing from "../assets/categories-icon/marketing.svg";
-import programming from "../assets/categories-icon/programming.svg";
-import video from "../assets/categories-icon/video.svg";
-import writing from "../assets/categories-icon/writing.svg";
-import architect from "../assets/categories-icon/architect-engineer.svg";
-import lifestyle from "../assets/categories-icon/lifestyle.svg";
+import consultant from "../assets/icons/categories-icon/consultant.svg";
+import ecommerce from "../assets/icons/categories-icon/ecommerce.svg";
+import graphic from "../assets/icons/categories-icon/graphic.svg";
+import industry from "../assets/icons/categories-icon/industry-icon.svg";
+import marketing from "../assets/icons/categories-icon/marketing.svg";
+import programming from "../assets/icons/categories-icon/programming.svg";
+import video from "../assets/icons/categories-icon/video.svg";
+import writing from "../assets/icons/categories-icon/writing.svg";
+import architect from "../assets/icons/categories-icon/architect-engineer.svg";
+import lifestyle from "../assets/icons/categories-icon/lifestyle.svg";
+import guaranteed from "../assets/icons/categories-icon/guaranteed.svg";
 
 export const CategoriesIcon = {
     consultant,
@@ -20,7 +21,8 @@ export const CategoriesIcon = {
     programming,
     writing,
     industry,
-    lifestyle
+    lifestyle,
+    guaranteed
     
 };
 export const AssetIcon = {

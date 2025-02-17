@@ -1,24 +1,33 @@
+"use client";
 import { AssetIcon } from "@/constants/icons";
+import {
+  faChevronDown,
+  faSearch
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowRight,
-  faChevronDown,
-  faChevronRight,
-  faSearch,
-  faStar,
-  faStarAndCrescent,
-} from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
 import MegaMenu from "../MegaMenu";
-import { MegaMenuImage } from "@/constants/images";
 
+const TYPES: Record<string, { bg: string }> = {
+  transparent: {
+    bg: "#transparent",
+  },
+  primary: {
+    bg: "bg-primary",
+  },
+};
 
+interface BgProps {
+  type: keyof typeof TYPES;
+}
 
-const Header = () => {
+const Header = ({ type }: BgProps) => {
   const [scrollY, setScrollY] = useState(0);
   const [showSearch, setShowSearch] = useState(false);
+
+  const { bg } = TYPES[type];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,7 +43,7 @@ const Header = () => {
   return (
     <header
       className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-        scrollY > 0 ? "bg-primary" : "bg-transparent"
+        scrollY > 0 ? "bg-primary" :  bg 
       }`}
     >
       <nav className="mx-[1.5rem] flex h-[70px] items-center justify-between">

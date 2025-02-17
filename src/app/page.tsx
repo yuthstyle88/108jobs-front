@@ -127,7 +127,7 @@ export default function Home() {
 
   return (
     <div className="min-h-[200vh] bg-white">
-      <Header />
+      <Header type="transparent"/>
       <main>
         <section className="h-auto header-gradient pt-[4.5rem]">
           <div className="pt-[3rem] pb-[8rem] flex justify-center flex-col gap-4 text-center">
