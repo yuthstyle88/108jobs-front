@@ -428,7 +428,7 @@ export default function Home() {
               </div>
               {!expanded && (
                 <div
-                  className="text-blue-600 cursor-pointer text-center"
+                  className="text-blue-600 cursor-pointer text-center mt-4"
                   onClick={() => setExpanded(true)}
                 >
                   อ่านเพิ่มเติม ▼
