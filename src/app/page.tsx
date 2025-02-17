@@ -225,6 +225,36 @@ export default function Home() {
             </div>
           </div>
         </section>
+        <section className="py-24 grid grid-container-desktop gap-y-12 ">
+          <div className="col-start-2 col-end-3">
+            <h4 className="text-[1.5rem] text-[#38404c] font-medium leading-[1.15]">
+              ทำไมถึงต้องใช้ Fastwork?
+            </h4>
+            <h2 className="home-title-head">
+              เพราะเราเปลี่ยนไอเดียของคุณให้เป็นความจริง ด้วยฟรีแลนซ์มืออาชีพ
+            </h2>
+          </div>
+          <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
+            {freelancer_intro.map((freelancer, index) => (
+              <div key={index} className="">
+                <Image
+                  src={freelancer.icon}
+                  alt="Group of people"
+                  width={62}
+                  className="max-w-full h-auto align-top"
+                />
+                <div className="grid grid-cols-[1fr] mt-4 gap-y-1 text-text_primary font-medium">
+                  <h5 className="text-[1.25rem]  leading-[1.15]">
+                    {freelancer.title}
+                  </h5>
+                  <p className="m-0 text-base font-serif leading-[1.65] ">
+                    {freelancer.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
         <section
           className="hidden md:block"
           style={{ backgroundColor: "hsl(216, 15%, 97%)" }}
