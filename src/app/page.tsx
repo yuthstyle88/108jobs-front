@@ -7,7 +7,7 @@ import imgapp from "@/assets/images/img-app.webp";
 import apple from "@/assets/icons/apple.svg";
 import google from "@/assets/icons/google-play.svg";
 import fastwork from "@/assets/images/fastwork-app-qr.webp";
-import { AssetIcon, CategoriesIcon } from "@/constants/icons";
+import { AssetIcon, CategoriesIcon, GroupIcon } from "@/constants/icons";
 import { TypeAnimation } from "react-type-animation";
 import TypingText from "@/components/TypingText";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,13 +18,21 @@ import {
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "./styles.css";
+
+import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
+
 import { useState } from "react";
 import {
   AssetsImage,
   CategoriesImage,
   CustomerImage,
 } from "@/constants/images";
-import { title } from "process";
 
 const categories = [
   {
@@ -127,7 +135,7 @@ export default function Home() {
 
   return (
     <div className="min-h-[200vh] bg-white">
-      <Header type="transparent"/>
+      <Header type="transparent" />
       <main>
         <section className="h-auto header-gradient pt-[4.5rem]">
           <div className="pt-[3rem] pb-[8rem] flex justify-center flex-col gap-4 text-center">
@@ -225,6 +233,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+
         <section className="py-24 grid grid-container-desktop gap-y-12 ">
           <div className="col-start-2 col-end-3">
             <h4 className="text-[1.5rem] text-[#38404c] font-medium leading-[1.15]">
@@ -255,6 +264,166 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        <section className="hidden md:block">
+          <div className="py-24 grid grid-container-desktop gap-y-12 ">
+            <div className="col-start-2 col-end-3">
+              <h2 className="home-title-head">
+                เริ่มจ้างงานฟรีแลนซ์ง่ายๆ กับ Fastwork
+              </h2>
+            </div>
+            <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
+              <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium">
+                <div className="flex flex-col">
+                  <div className="flex justify-start items-center gap-x-5 ">
+                    <Image src={GroupIcon.group11651} alt="group1" />
+                    <div className="grid grid-rows-2 gap-y-4">
+                      <h1 className="text-[1.25rem]  leading-[1.15]">
+                        1. ค้นหาฟรีแลนซ์ที่ถูกใจ
+                      </h1>
+                      <p className="m-0 text-base font-serif leading-[1.65] ">
+                        {" "}
+                        พิจารณาจากผลงาน ความสามารถ และรีวิว
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <div className="flex justify-start items-center gap-x-5">
+                    <Image src={GroupIcon.group11653} alt="group3" />
+                    <div className="grid grid-rows-2 gap-y-2">
+                      <h1 className="text-[1.25rem]  leading-[1.15]">
+                        3. ชำระเงินผ่าน Fastwork
+                      </h1>
+                      <p className="m-0 text-base font-serif leading-[1.65] ">
+                        Fastwork Guarantee ได้งานแน่นอน
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium">
+                <div className="flex justify-start items-center gap-x-5">
+                  <Image src={GroupIcon.group11652} alt="group2" />
+                  <div className="grid grid-rows-2 gap-y-2">
+                    <h1 className="text-[1.25rem]  leading-[1.15]">
+                      2. พูดคุยรายละเอียด
+                    </h1>
+                    <p className="m-0 text-base font-serif leading-[1.65] ">
+                      อธิบายงานเพื่อให้ฟรีแลนซ์สร้างใบเสนอราคา
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col">
+                  <div className="flex justify-start items-center gap-x-5">
+                    <Image src={GroupIcon.group11654} alt="group4" />
+                    <div className="grid grid-rows-2 gap-y-2">
+                      <h1 className="text-[1.25rem]  leading-[1.15]">
+                        4. อนุมัติงานและรีวิว
+                      </h1>
+                      <p className="m-0 text-base font-serif leading-[1.65] ">
+                        ตรวจสอบงานที่ได้รับ อนุมัติ และรีวิวงาน
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <Image src={fastwork} alt="fastwork" className="items-end" />
+                Video here
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-24 grid grid-container-desktop gap-y-12 ">
+          <div className="col-span-1"></div>
+          <div className="grid grid-cols-3 gap-x-5">
+            <div className="col-span-2">
+              <Swiper
+                cssMode={true}
+                navigation={true}
+                pagination={true}
+                mousewheel={true}
+                keyboard={true}
+                modules={[Navigation, Pagination, Mousewheel, Keyboard]}
+                className="mySwiper"
+              >
+                <SwiperSlide>
+                  <Image src={imgapp} alt="Picture 1" />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <Image src={imgapp} alt="Picture 2" />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <Image src={imgapp} alt="Picture 3" />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <Image src={imgapp} alt="Picture 4" />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <Image src={imgapp} alt="Picture 5" />
+                </SwiperSlide>
+              </Swiper>
+            </div>
+            <div className="col-span-1">
+              <div className="grid grid-cols-1 gap-y-6">
+                <Image src={imgapp} alt="Picture 1" />
+                <Image src={imgapp} alt="Picture 2" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-24 grid grid-container-desktop gap-y-12 gap-x-4">
+          <div className="col-start-2 col-end-3">
+            <h2 className="home-title-head">สิ่งที่น่าสนใจ </h2>
+            <Swiper
+              slidesPerView={3}
+              cssMode={true}
+              navigation={true}
+              mousewheel={true}
+              keyboard={true}
+              modules={[Navigation]}
+              className="mySwiper px-5"
+            >
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 1" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 2" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 3" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 4" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 5" />
+              </SwiperSlide>
+            </Swiper>
+          </div>
+          <div></div>
+        </section>
+        <section
+          className="bg-gradient-to-t py-24 grid grid-container-desktop gap-y-12 gap-x-4"
+          style={{
+            background: "linear-gradient(to top, hsl(216 85% 94%), #fff)",
+          }}
+        >
+          <div className="col-start-2 col-end-3">
+            <h2 className="home-title-head text-center">
+              เรามีฟรีแลนซ์คุณภาพ และผู้เชี่ยวชาญที่หลากหลายในระบบคอยให้บริการ
+            </h2>
+          </div>
+          <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
+            <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium"></div>
+            <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium"></div>
+            <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium"></div>
+          </div>
+        </section>
+
         <section
           className="hidden md:block"
           style={{ backgroundColor: "hsl(216, 15%, 97%)" }}
