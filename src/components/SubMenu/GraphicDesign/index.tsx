@@ -1,3 +1,5 @@
+import CategoryList from "@/components/CategoryList";
+
 type CategoryItem = {
   title: string;
   new?: boolean;
@@ -60,41 +62,13 @@ const printing: CategoryItem[] = [
   { title: "ผลิตโปสเตอร์" },
 ];
 
-// Reusable CategoryList Component
-type CategoryListProps = {
-  title: string;
-  items: CategoryItem[];
-};
-
-const CategoryList: React.FC<CategoryListProps> = ({ title, items }) => {
-  return (
-    <div className="min-w-[12rem] max-w-[12rem]">
-      <div className="px-2 font-semibold m-0 p-0">{title}</div>
-      <ul className="mt-2 text-[0.875rem] p-0 m-0 list-none ">
-        {items.map((item, index) => (
-          <li key={index} className="hover:bg-[#e3edfd] text-text_secondary hover:text-third">
-            <a className="block px-2 py-[6px] rounded-[4px] ">
-              <span>{item.title}</span>
-              {item.new && (
-                <div className="inline-block bg-third text-white text-[0.6875rem] rounded-[4px] font-bold px-1 py-[1px] ml-1">
-                  New
-                </div>
-              )}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
 const GraphicDesign: React.FC = () => {
   return (
     <div className="relative flex items-center justify-center hover:bg-[#F6F9FE] group after:block after:w-0 after:h-[0.25rem] after:rounded-full after:bg-primary after:absolute after:bottom-0 after:left-1/2 after:transform after:-translate-x-1/2 after:transition-all after:duration-100 after:ease-in-out hover:after:w-[80%] hover:after:opacity-100">
       <a className="px-2 text-[#485261]">ออกแบบกราฟิก</a>
-      <div className="grid grid-cols-[1fr_1fr_1fr] absolute left-0 w-[650px] right-0 opacity-0 scale-y-0 origin-top top-[3.5rem] shadow-subMenu px-[1rem] py-[1rem] text-[rgba(43,50,59,.95)] z-10 bg-white border-t-[1px] border-t-secondary border-b-2 border-b-third group-hover:opacity-100 group-hover:scale-y-100 transition-all duration-300">
+      <div className="grid grid-cols-[1fr_1fr_1fr] gap-y-4 absolute left-0 w-[650px] right-0 opacity-0 scale-y-0 origin-top top-[3.5rem] shadow-subMenu px-[1rem] py-[1rem] text-[rgba(43,50,59,.95)] z-10 bg-white border-t-[1px] border-t-secondary border-b-2 border-b-third group-hover:opacity-100 group-hover:scale-y-100 transition-all duration-300">
         <div>
-          <CategoryList title="หมวดหมู่" items={graphic} />
+          <CategoryList title="Graphic Design" items={graphic} />
           <div className="mt-2 px-2 font-semibold m-0 p-0">Other</div>
           <ul className="mt-2 text-[0.875rem] p-0 m-0 list-none">
             <li>
@@ -104,8 +78,8 @@ const GraphicDesign: React.FC = () => {
             </li>
           </ul>
         </div>
-        <CategoryList title="หมวดหมู่" items={art} />
-        <CategoryList title="หมวดหมู่" items={printing} />
+        <CategoryList title="Art & Drawing" items={art} />
+        <CategoryList title="Printing" items={printing} />
       </div>
     </div>
   );
