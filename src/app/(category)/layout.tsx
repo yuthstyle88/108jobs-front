@@ -12,7 +12,7 @@ export default function CategoryLayout({ children }: CategoryLayoutProps) {
     <>
       <Header type="primary" />
 
-      <section className="pt-[4.5rem]">
+      <section className="pt-[4.5rem] bg-white">
         <SubMenu />
         {children}
       </section>
