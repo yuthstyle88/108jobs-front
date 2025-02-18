@@ -42,7 +42,7 @@ const SpecificCategory = (props: Props) => {
                 เรียงตาม
               </div>
             </div>
-            <div className="inline-grid grid-flow-col justify-start gap-x-2">
+            {/* <div className="inline-grid grid-flow-col justify-start gap-x-2">
               <div className="filter-button">
                 <FontAwesomeIcon icon={faFilter} className="text-third pr-2" />
                 ตัวกรอง
@@ -51,7 +51,7 @@ const SpecificCategory = (props: Props) => {
                 <FontAwesomeIcon icon={faUpDown} className="text-third pr-2" />
                 เรียงตาม
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
