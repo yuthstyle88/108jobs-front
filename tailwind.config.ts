@@ -16,6 +16,7 @@ const config: Config = {
         third: "var(--third)",
         text_primary: "var(--text-primary)",
         text_secondary: "var(--text-secondary)",
+        border_primary: "var(--border-primary)",
       },
       boxShadow: {
         panel: "0 0 1.5rem 0 rgba(25,72,142,.15)",

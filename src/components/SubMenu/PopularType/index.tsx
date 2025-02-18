@@ -1,8 +1,3 @@
-import React, { JSX } from "react";
-
-type Props = {
-  children: React.ReactNode;
-};
 
 const popular_job = [
   {
