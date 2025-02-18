@@ -10,6 +10,17 @@ import writing from "../assets/icons/categories-icon/writing.svg";
 import architect from "../assets/icons/categories-icon/architect-engineer.svg";
 import lifestyle from "../assets/icons/categories-icon/lifestyle.svg";
 import guaranteed from "../assets/icons/categories-icon/guaranteed.svg";
+import group11651 from "../assets/icons/group-11651.svg";
+import group11652 from "../assets/icons/group-11652.svg";
+import group11653 from "../assets/icons/group-11653.svg";
+import group11654 from "../assets/icons/group-11654.svg";
+
+export const GroupIcon = { 
+    group11651,
+    group11652,
+    group11653,
+    group11654
+};
 
 export const CategoriesIcon = {
     consultant,
