@@ -1,22 +1,18 @@
 "use client";
-import { Metadata } from "next";
-import Image from "next/image";
-import Footer from "../components/Footer";
-import Header from "@/components/Header";
-import imgapp from "@/assets/images/img-app.webp";
 import apple from "@/assets/icons/apple.svg";
 import google from "@/assets/icons/google-play.svg";
 import fastwork from "@/assets/images/fastwork-app-qr.webp";
-import { AssetIcon, CategoriesIcon, GroupIcon } from "@/constants/icons";
-import { TypeAnimation } from "react-type-animation";
+import imgapp from "@/assets/images/img-app.webp";
+import Header from "@/components/Header";
 import TypingText from "@/components/TypingText";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CategoriesIcon, GroupIcon } from "@/constants/icons";
 import {
   faArrowRight,
-  faChevronLeft,
-  faChevronRight,
-  faSearch,
+  faSearch
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Image from "next/image";
+import Footer from "../components/Footer";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -25,14 +21,15 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./styles.css";
 
-import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
+import { Keyboard, Mousewheel, Navigation, Pagination } from "swiper/modules";
 
-import { useState } from "react";
 import {
   AssetsImage,
   CategoriesImage,
   CustomerImage,
 } from "@/constants/images";
+import Link from "next/link";
+import { useState } from "react";
 
 const categories = [
   {
@@ -204,7 +201,7 @@ export default function Home() {
               <div className="mt-4 ">
                 <div className="grid min-h-0 min-w-0 grid-cols-[1fr_1fr_1fr_1fr] gap-[0.75rem] ">
                   {category_images.map((category, index) => (
-                    <a key={index} href="#" className="group">
+                    <Link key={index} href="#" className="group">
                       <div
                         style={{
                           backgroundImage: `url("/categories-image/web-development-02032022.jpg")`,
@@ -217,17 +214,17 @@ export default function Home() {
                           </span>
                         </div>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
                 <div className="my-4 flex justify-end">
-                  <a
+                  <Link
                     href="#"
                     className="text-primary py-[0.75rem] relative no-underline cursor-pointer outline-none ease-in-out duration-150 transition-all"
                   >
                     ดูเพิ่มเติม
                     <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -618,15 +615,15 @@ export default function Home() {
                     กราฟิกและการออกแบบ
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <a href="/social-media-banner">ออกแบบแบนเนอร์</a>,&nbsp;
-                    <a href="/publication/namecard">ออกแบบนามบัตร</a>,&nbsp;
-                    <a href="/publication/poster">ออกแบบโปสเตอร์</a>,&nbsp;
-                    <a href="/infographics">ทำ Infographic</a>,&nbsp;
-                    <a href="/portfolio-resume">รับทำเรซูเม่</a>,&nbsp;
-                    <a href="/tattoo-design">ออกแบบลายสัก</a>,&nbsp;
-                    <a href="/packaging">ออกแบบแพคเกจจิ้ง</a>,&nbsp;
-                    <a href="/corporate-identity">ออกแบบ CI</a>,&nbsp;
-                    <a href="/design-graphic">ดูเพิ่มเติม</a>
+                    <Link href="/social-media-banner">ออกแบบแบนเนอร์</Link>,&nbsp;
+                    <Link href="/publication/namecard">ออกแบบนามบัตร</Link>,&nbsp;
+                    <Link href="/publication/poster">ออกแบบโปสเตอร์</Link>,&nbsp;
+                    <Link href="/infographics">ทำ Infographic</Link>,&nbsp;
+                    <Link href="/portfolio-resume">รับทำเรซูเม่</Link>,&nbsp;
+                    <Link href="/tattoo-design">ออกแบบลายสัก</Link>,&nbsp;
+                    <Link href="/packaging">ออกแบบแพคเกจจิ้ง</Link>,&nbsp;
+                    <Link href="/corporate-identity">ออกแบบ CI</Link>,&nbsp;
+                    <Link href="/design-graphic">ดูเพิ่มเติม</Link>
                   </p>
                 </div>
                 <div className="block">
@@ -634,31 +631,31 @@ export default function Home() {
                     สถาปัตย์และวิศวกรรม
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <a href="/architect-and-interior/renovation">รีโนเวทบ้าน</a>
+                    <Link href="/architect-and-interior/renovation">รีโนเวทบ้าน</Link>
                     ,&nbsp;
-                    <a href="/architect-and-interior/home-design">ออกแบบบ้าน</a>
+                    <Link href="/architect-and-interior/home-design">ออกแบบบ้าน</Link>
                     ,&nbsp;
-                    <a href="/engineering-structural-design/boq">
+                    <Link href="/engineering-structural-design/boq">
                       ถอดแบบประมาณราคา
-                    </a>
+                    </Link>
                     ,&nbsp;
-                    <a href="/engineering-structural-design">
+                    <Link href="/engineering-structural-design">
                       เขียนแบบก่อสร้าง
-                    </a>
-                    ,&nbsp;<a href="/home-inspection">ตรวจรับบ้าน</a>,&nbsp;
-                    <a href="/landscape">จัดสวนหน้าบ้าน งบน้อย</a>,&nbsp;
-                    <a href="/engineering-structural-design/residence">
+                    </Link>
+                    ,&nbsp;<Link href="/home-inspection">ตรวจรับบ้าน</Link>,&nbsp;
+                    <Link href="/landscape">จัดสวนหน้าบ้าน งบน้อย</Link>,&nbsp;
+                    <Link href="/engineering-structural-design/residence">
                       เขียนแบบบ้านชั้นเดียว
-                    </a>
+                    </Link>
                     ,&nbsp;
-                    <a href="/architect-and-interior/furniture">
+                    <Link href="/architect-and-interior/furniture">
                       ออกแบบเตียงนอน
-                    </a>
+                    </Link>
                     ,&nbsp;
-                    <a href="/engineering-structural-design/machine">
+                    <Link href="/engineering-structural-design/machine">
                       ถอดแบบเครื่องกล
-                    </a>
-                    ,&nbsp;<a href="/architect-and-engineer">ดูเพิ่มเติม</a>
+                    </Link>
+                    ,&nbsp;<Link href="/architect-and-engineer">ดูเพิ่มเติม</Link>
                   </p>
                 </div>
                 <div className="block">
@@ -666,18 +663,18 @@ export default function Home() {
                     เว็บไซต์และเขียนโปรแกรม
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <a href="/ux-ui-design-web-app">ออกแบบเว็บไซต์</a>,&nbsp;
-                    <a href="/web-development/ecommerce">สร้างเว็บขายของ</a>
+                    <Link href="/ux-ui-design-web-app">ออกแบบเว็บไซต์</Link>,&nbsp;
+                    <Link href="/web-development/ecommerce">สร้างเว็บขายของ</Link>
                     ,&nbsp;
-                    <a href="/web-development/instant-builder">
+                    <Link href="/web-development/instant-builder">
                       เว็บไซต์สำเร็จรูป
-                    </a>
-                    ,&nbsp;<a href="/desktop-application">รับเขียนโปรแกรม</a>
-                    ,&nbsp;<a href="/chatbot">Chatbot Facebook</a>,&nbsp;
-                    <a href="/chatbot">สร้างบอทไลน์</a>,&nbsp;
-                    <a href="/web-scraping">Website Scraping</a>,&nbsp;
-                    <a href="/it-solution-and-support/software">รับลงโปรแกรม</a>
-                    ,&nbsp;<a href="/web-programming">ดูเพิ่มเติม</a>
+                    </Link>
+                    ,&nbsp;<Link href="/desktop-application">รับเขียนโปรแกรม</Link>
+                    ,&nbsp;<Link href="/chatbot">Chatbot Facebook</Link>,&nbsp;
+                    <Link href="/chatbot">สร้างบอทไลน์</Link>,&nbsp;
+                    <Link href="/web-scraping">Website Scraping</Link>,&nbsp;
+                    <Link href="/it-solution-and-support/software">รับลงโปรแกรม</Link>
+                    ,&nbsp;<Link href="/web-programming">ดูเพิ่มเติม</Link>
                   </p>
                 </div>
                 <div className="block">
@@ -685,17 +682,17 @@ export default function Home() {
                     การตลาดและโฆษณา
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <a href="/seo">รับทำ SEO</a>,&nbsp;
-                    <a href="/google-ads">โฆษณา Google</a>,&nbsp;
-                    <a href="/social-media-ads/facebook-ads">โฆษณา Facebook</a>
+                    <Link href="/seo">รับทำ SEO</Link>,&nbsp;
+                    <Link href="/google-ads">โฆษณา Google</Link>,&nbsp;
+                    <Link href="/social-media-ads/facebook-ads">โฆษณา Facebook</Link>
                     ,&nbsp;
-                    <a href="/social-media-ads/tiktok-ads">โฆษณา TikTok</a>
-                    ,&nbsp;<a href="/blogger-netidol">บล็อกเกอร์รีวิว</a>,&nbsp;
-                    <a href="/promote-page/product">โปรโมทสินค้า</a>,&nbsp;
-                    <a href="/focus-group">รับจ้างทดลองสินค้า</a>,&nbsp;
-                    <a href="/promote-real-estate">รับฝากขายบ้าน</a>,&nbsp;
-                    <a href="/google-map">ปักหมุด google map</a>,&nbsp;
-                    <a href="/marketing-advertising">ดูเพิ่มเติม</a>
+                    <Link href="/social-media-ads/tiktok-ads">โฆษณา TikTok</Link>
+                    ,&nbsp;<Link href="/blogger-netidol">บล็อกเกอร์รีวิว</Link>,&nbsp;
+                    <Link href="/promote-page/product">โปรโมทสินค้า</Link>,&nbsp;
+                    <Link href="/focus-group">รับจ้างทดลองสินค้า</Link>,&nbsp;
+                    <Link href="/promote-real-estate">รับฝากขายบ้าน</Link>,&nbsp;
+                    <Link href="/google-map">ปักหมุด google map</Link>,&nbsp;
+                    <Link href="/marketing-advertising">ดูเพิ่มเติม</Link>
                   </p>
                 </div>
                 <div className="block">
@@ -703,19 +700,19 @@ export default function Home() {
                     เขียนและแปลภาษา
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <a href="/translation">แปลภาษา</a>,&nbsp;
-                    <a href="/translator">ล่ามแปลภาษา</a>,&nbsp;
-                    <a href="/transcription">ถอดไฟล์เสียง</a>,&nbsp;
-                    <a href="/content-writing">เขียนคอนเทนต์</a>,&nbsp;
-                    <a href="/content-writing/seo">เขียนบทความ SEO</a>,&nbsp;
-                    <a href="/content-writing/foreign-language">
+                    <Link href="/translation">แปลภาษา</Link>,&nbsp;
+                    <Link href="/translator">ล่ามแปลภาษา</Link>,&nbsp;
+                    <Link href="/transcription">ถอดไฟล์เสียง</Link>,&nbsp;
+                    <Link href="/content-writing">เขียนคอนเทนต์</Link>,&nbsp;
+                    <Link href="/content-writing/seo">เขียนบทความ SEO</Link>,&nbsp;
+                    <Link href="/content-writing/foreign-language">
                       เขียนบทความภาษาอังกฤษ
-                    </a>
+                    </Link>
                     ,&nbsp;
-                    <a href="/content-writing/thesis-report">รับเขียนรายงาน</a>
-                    ,&nbsp;<a href="/proofreading">พิสูจน์อักษร</a>,&nbsp;
-                    <a href="/story-writing/poets-and-poems">รับแต่งกลอน</a>
-                    ,&nbsp;<a href="/writing-translation">ดูเพิ่มเติม</a>
+                    <Link href="/content-writing/thesis-report">รับเขียนรายงาน</Link>
+                    ,&nbsp;<Link href="/proofreading">พิสูจน์อักษร</Link>,&nbsp;
+                    <Link href="/story-writing/poets-and-poems">รับแต่งกลอน</Link>
+                    ,&nbsp;<Link href="/writing-translation">ดูเพิ่มเติม</Link>
                   </p>
                 </div>
                 <div className="block">
@@ -723,19 +720,19 @@ export default function Home() {
                     ภาพและเสียง
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <a href="/photography">ตากล้อง</a>,&nbsp;
-                    <a href="/photography/wedding">ถ่ายพรีเวดดิ้ง</a>,&nbsp;
-                    <a href="/podcast">สร้าง Podcast</a>,&nbsp;
-                    <a href="/sound-engineering/edit-mixing-mastering">
+                    <Link href="/photography">ตากล้อง</Link>,&nbsp;
+                    <Link href="/photography/wedding">ถ่ายพรีเวดดิ้ง</Link>,&nbsp;
+                    <Link href="/podcast">สร้าง Podcast</Link>,&nbsp;
+                    <Link href="/sound-engineering/edit-mixing-mastering">
                       ตัดต่อเพลง
-                    </a>
-                    ,&nbsp;<a href="/videography">ตัดต่อวีดีโอ</a>,&nbsp;
-                    <a href="/subtitle">ทำซับไตเติ้ล</a>,&nbsp;
-                    <a href="/motion-graphics">Motion Graphic</a>,&nbsp;
-                    <a href="/videography/live-streaming">รับไลฟ์สด</a>,&nbsp;
-                    <a href="/animations">ทำอนิเมชั่น</a>,&nbsp;
-                    <a href="/voice-over">พากย์เสียง</a>,&nbsp;
-                    <a href="/photography-video">ดูเพิ่มเติม</a>
+                    </Link>
+                    ,&nbsp;<Link href="/videography">ตัดต่อวีดีโอ</Link>,&nbsp;
+                    <Link href="/subtitle">ทำซับไตเติ้ล</Link>,&nbsp;
+                    <Link href="/motion-graphics">Motion Graphic</Link>,&nbsp;
+                    <Link href="/videography/live-streaming">รับไลฟ์สด</Link>,&nbsp;
+                    <Link href="/animations">ทำอนิเมชั่น</Link>,&nbsp;
+                    <Link href="/voice-over">พากย์เสียง</Link>,&nbsp;
+                    <Link href="/photography-video">ดูเพิ่มเติม</Link>
                   </p>
                 </div>
                 <div className="block">
@@ -743,19 +740,19 @@ export default function Home() {
                     ธุรกิจและที่ปรึกษา
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <a href="/accounting-and-finance/accounting-service">
+                    <Link href="/accounting-and-finance/accounting-service">
                       รับทำบัญชี
-                    </a>
-                    ,&nbsp;<a href="/counseling">รับปรึกษาปัญหาชีวิต</a>,&nbsp;
-                    <a href="/financial-planning">ที่ปรึกษาทางการเงิน</a>,&nbsp;
-                    <a href="/legal">ที่ปรึกษากฎหมาย</a>,&nbsp;
-                    <a href="/psychologist">ปรึกษาสุขภาพจิต</a>,&nbsp;
-                    <a href="/order-from-china">สั่งสินค้าจากจีน</a>,&nbsp;
-                    <a href="/secretary">เลขาส่วนตัว</a>,&nbsp;
-                    <a href="/commercial-registration">จดทะเบียนบริษัท</a>
+                    </Link>
+                    ,&nbsp;<Link href="/counseling">รับปรึกษาปัญหาชีวิต</Link>,&nbsp;
+                    <Link href="/financial-planning">ที่ปรึกษาทางการเงิน</Link>,&nbsp;
+                    <Link href="/legal">ที่ปรึกษากฎหมาย</Link>,&nbsp;
+                    <Link href="/psychologist">ปรึกษาสุขภาพจิต</Link>,&nbsp;
+                    <Link href="/order-from-china">สั่งสินค้าจากจีน</Link>,&nbsp;
+                    <Link href="/secretary">เลขาส่วนตัว</Link>,&nbsp;
+                    <Link href="/commercial-registration">จดทะเบียนบริษัท</Link>
                     ,&nbsp;
-                    <a href="/business">ปรึกษาธุรกิจ</a>,&nbsp;
-                    <a href="/consultant">ดูเพิ่มเติม</a>
+                    <Link href="/business">ปรึกษาธุรกิจ</Link>,&nbsp;
+                    <Link href="/consultant">ดูเพิ่มเติม</Link>
                   </p>
                 </div>
                 <div className="block">
@@ -763,17 +760,17 @@ export default function Home() {
                     ไลฟ์สไตล์
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <a href="/car-inspection">ตรวจรถมือสอง</a>,&nbsp;
-                    <a href="/feng-shui">ซินแสดูฮวงจุ้ยบ้าน</a>,&nbsp;
-                    <a href="/gaming">รับจ้างเล่นเกม</a>,&nbsp;
-                    <a href="/horoscope">ดูดวง</a>,&nbsp;
-                    <a href="/makeup">ช่างแต่งหน้า</a>,&nbsp;
-                    <a href="/personnal-trainer">จ้างเทรนเนอร์</a>,&nbsp;
-                    <a href="/nutrition">ปรึกษานักโภชนาการ</a>,&nbsp;
-                    <a href="/singer-band">หานักร้อง</a>,&nbsp;
-                    <a href="/trip-planner">รับวางแผนเที่ยว</a>,&nbsp;
-                    <a href="/prop-stylist">สไตล์ลิส</a>,&nbsp;
-                    <a href="/lifestyle">ดูเพิ่มเติม</a>
+                    <Link href="/car-inspection">ตรวจรถมือสอง</Link>,&nbsp;
+                    <Link href="/feng-shui">ซินแสดูฮวงจุ้ยบ้าน</Link>,&nbsp;
+                    <Link href="/gaming">รับจ้างเล่นเกม</Link>,&nbsp;
+                    <Link href="/horoscope">ดูดวง</Link>,&nbsp;
+                    <Link href="/makeup">ช่างแต่งหน้า</Link>,&nbsp;
+                    <Link href="/personnal-trainer">จ้างเทรนเนอร์</Link>,&nbsp;
+                    <Link href="/nutrition">ปรึกษานักโภชนาการ</Link>,&nbsp;
+                    <Link href="/singer-band">หานักร้อง</Link>,&nbsp;
+                    <Link href="/trip-planner">รับวางแผนเที่ยว</Link>,&nbsp;
+                    <Link href="/prop-stylist">สไตล์ลิส</Link>,&nbsp;
+                    <Link href="/lifestyle">ดูเพิ่มเติม</Link>
                   </p>
                 </div>
               </div>
@@ -804,7 +801,7 @@ export default function Home() {
                 </p>
                 <div className="mt-[1.5rem] flex">
                   <div className="grid grid-cols-1 min-w-0 min-h-0 gap-4">
-                    <a href="https://apps.apple.com/us/app/fastwork-hire-freelancers/id1154830520?ls=1">
+                    <Link href="https://apps.apple.com/us/app/fastwork-hire-freelancers/id1154830520?ls=1">
                       <Image
                         src={apple}
                         alt="Apple Store"
@@ -812,8 +809,8 @@ export default function Home() {
                         height={40}
                         className="max-w-full h-auto"
                       />
-                    </a>
-                    <a href="https://play.google.com/store/apps/details?id=com.fastwork.app&hl=en">
+                    </Link>
+                    <Link href="https://play.google.com/store/apps/details?id=com.fastwork.app&hl=en">
                       <Image
                         src={google}
                         alt="Google Play"
@@ -821,7 +818,7 @@ export default function Home() {
                         height={40}
                         className="max-w-full h-auto"
                       />
-                    </a>
+                    </Link>
                   </div>
                   <div className="ml-[1rem]">
                     <Image

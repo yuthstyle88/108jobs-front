@@ -7,8 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { title } from "process";
-import React from "react";
+import Link from "next/link";
 
 const mega_freelancer = [
   {
@@ -84,7 +83,7 @@ const MegaMenu = () => {
             </div>
             {mega_freelancer.map((freelancer, index) => (
               <div key={index} className="group hover:bg-[#F6F9FE] ">
-                <a className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4">
+                <Link href="#" className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4">
                   <Image src={freelancer.icon} alt="search" className="w-9" />
                   <div className="gap-x-1 flex flex-col flex-1 ">
                     <span className="text-[0.875rem] font-medium text-text_primary group-hover:text-third">
@@ -100,7 +99,7 @@ const MegaMenu = () => {
                       className="w-2 h-2 inline-flex items-center justify-center cursor-pointer"
                     />
                   </div>
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -116,7 +115,7 @@ const MegaMenu = () => {
             </div>
             {mega_business.map((freelancer, index) => (
               <div key={index} className="text-third hover:bg-[#F6F9FE]">
-                <a className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4">
+                <Link href="#" className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4">
                   <Image src={freelancer.icon} alt="search" className="w-9" />
                   <div className="gap-x-1 flex flex-col flex-1">
                     <span className="text-[0.875rem] font-medium">
@@ -132,7 +131,7 @@ const MegaMenu = () => {
                       className="w-2 h-2 inline-flex items-center justify-center cursor-pointer"
                     />
                   </div>
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -154,7 +153,7 @@ const MegaMenu = () => {
             </span>
             <div className="mt-2 flex flex-col gap-1 mr-4">
               {job.map((job, index) => (
-                <a
+                <Link href="#"
                   key={index}
                   className="text-[0.875rem] text-text_secondary px-2 py-[6px] flex-1 flex items-center justify-between rounded-sm transition-all duration-150 ease-in-out"
                 >
@@ -163,7 +162,7 @@ const MegaMenu = () => {
                     icon={faArrowRight}
                     className="text-[rgba(43,50,59,.4)]"
                   />
-                </a>
+                </Link>
               ))}
             </div>
           </div>

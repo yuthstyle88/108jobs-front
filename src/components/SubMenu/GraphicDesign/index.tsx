@@ -1,4 +1,5 @@
 import CategoryList from "@/components/CategoryList";
+import Link from "next/link";
 
 type CategoryItem = {
   title: string;
@@ -65,16 +66,16 @@ const printing: CategoryItem[] = [
 const GraphicDesign: React.FC = () => {
   return (
     <div className="relative flex items-center justify-center hover:bg-[#F6F9FE] group after:block after:w-0 after:h-[0.25rem] after:rounded-full after:bg-primary after:absolute after:bottom-0 after:left-1/2 after:transform after:-translate-x-1/2 after:transition-all after:duration-100 after:ease-in-out hover:after:w-[80%] hover:after:opacity-100">
-      <a className="px-2 text-[#485261]">ออกแบบกราฟิก</a>
+      <Link href="#" className="px-2 text-[#485261]">ออกแบบกราฟิก</Link>
       <div className="grid grid-cols-[1fr_1fr_1fr] gap-y-4 absolute left-0 w-[650px] right-0 opacity-0 scale-y-0 origin-top top-[3.5rem] shadow-subMenu px-[1rem] py-[1rem] text-[rgba(43,50,59,.95)] z-10 bg-white border-t-[1px] border-t-secondary border-b-2 border-b-third group-hover:opacity-100 group-hover:scale-y-100 transition-all duration-300">
         <div>
           <CategoryList title="Graphic Design" items={graphic} />
           <div className="mt-2 px-2 font-semibold m-0 p-0">Other</div>
           <ul className="mt-2 text-[0.875rem] p-0 m-0 list-none">
             <li>
-              <a className="block px-2 py-[6px] rounded-[4px] text-text_secondary">
+              <Link href="#" className="block px-2 py-[6px] rounded-[4px] text-text_secondary">
                 อื่นๆ
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
