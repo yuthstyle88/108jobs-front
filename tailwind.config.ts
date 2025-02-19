@@ -23,7 +23,11 @@ const config: Config = {
         megaMenu:'0 1px 1px hsl(333deg 0% 50% / 15%), 0 2px 2px hsl(333deg 0% 50% / 15%), 0 4px 4px hsl(333deg 0% 50% / 15%), 0 8px 8px hsl(333deg 0% 50% / 15%), 0 16px 16px hsl(333deg 0% 50% / 15%), 0 32px 32px hsl(333deg 0% 50% / 15%), 0 64px 64px hsl(333deg 0% 50% / 15%)',
         categoryMenu: '0 4px 12px 0 rgba(43, 43, 43, .1)',
         subMenu: '0 0 1.5rem 0 rgba(25, 72, 142, .15)',
+        toggle: '0 0 7px rgba(0, 0, 0, .5)',
       },
+      borderWidth:{
+        1: '1px'
+      }
     },
   },
   plugins: [],

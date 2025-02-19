@@ -1,4 +1,4 @@
-import CategoryList from "@/components/CategoryList";
+import CategoryList from "@/components/CategoryDetail/components/CategoryList";
 import Link from "next/link";
 
 type CategoryItem = {
