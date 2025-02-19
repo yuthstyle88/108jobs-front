@@ -9,7 +9,7 @@ const CategoryCard = () => {
   return (
     <Link href="#" className="flex cursor-pointer ">
       <div className="flex w-full items-stretch ">
-        <div className="border-1 border-border_primary w-full flex flex-col overflow-hidden rounded-md bg-white cursor-pointer transition-all ease-in-out duration-150">
+        <div className="hover:shadow-jobCard border-1 border-border_primary w-full flex flex-col overflow-hidden rounded-md bg-white cursor-pointer transition-all ease-in-out duration-150">
           <div className="relative aspect-[3/2] ">
             <Image
               src={CategoriesImage.seo_job}
