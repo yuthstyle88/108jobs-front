@@ -143,7 +143,7 @@ const MegaMenu = () => {
           <span className="text-third font-medium">
             เลือกดูฟรีแลนซ์ที่ต้องการ และแชทได้ทันที
           </span>
-          <p className="mt-3 text-[0.875rem] text-text_secondary font-serif">
+          <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
             ค้นหาฟรีแลนซ์ตามหมวดหมู่ ดูผลงาน รีวิว
             และแชทเพื่อจ้างฟรีแลนซ์ด้วยตัวเอง
           </p>

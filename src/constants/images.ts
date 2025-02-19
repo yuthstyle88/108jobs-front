@@ -20,9 +20,28 @@ import pic9 from "../assets/images/customer/th/9.png";
 import pic10 from "../assets/images/customer/th/10.png";
 import pic11 from "../assets/images/customer/th/11.png";
 import pic12 from "../assets/images/customer/th/12.png";
+import specialist from "../assets/images/categories-image/specialist_v3_th.png";
+import milestone from "../assets/images/categories-image/milestone_v2_th.png";
+import fast_reply from "../assets/images/categories-image/fast_reply.png";
+import seo_job from "../assets/images/categories-image/seo_job.jpg";
+import badge_rehire from "../assets/images/categories-image/badge_rehire_th.png";
+import google from "../assets/images/categories-image/google-ads.webp";
+import marketing from "../assets/images/categories-image/marketing.webp";
+import promote from "../assets/images/categories-image/promote-page.webp";
+import wordpress from "../assets/images/categories-image/wordpress.webp";
+
 
 export const CategoriesImage = {
   seo_image,
+  specialist,
+  milestone,
+  fast_reply,
+  seo_job,
+  badge_rehire,
+  google,
+  marketing,
+  promote,
+  wordpress,
 };
 
 export const MegaMenuImage = {

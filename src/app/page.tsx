@@ -253,7 +253,7 @@ export default function Home() {
                   <h5 className="text-[1.25rem]  leading-[1.15]">
                     {freelancer.title}
                   </h5>
-                  <p className="m-0 text-base font-serif leading-[1.65] ">
+                  <p className="m-0 text-base font-sans leading-[1.65] ">
                     {freelancer.description}
                   </p>
                 </div>
@@ -278,7 +278,7 @@ export default function Home() {
                       <h1 className="text-[1.25rem]  leading-[1.15]">
                         1. ค้นหาฟรีแลนซ์ที่ถูกใจ
                       </h1>
-                      <p className="m-0 text-base font-serif leading-[1.65] ">
+                      <p className="m-0 text-base font-sans leading-[1.65] ">
                         {" "}
                         พิจารณาจากผลงาน ความสามารถ และรีวิว
                       </p>
@@ -292,7 +292,7 @@ export default function Home() {
                       <h1 className="text-[1.25rem]  leading-[1.15]">
                         3. ชำระเงินผ่าน Fastwork
                       </h1>
-                      <p className="m-0 text-base font-serif leading-[1.65] ">
+                      <p className="m-0 text-base font-sans leading-[1.65] ">
                         Fastwork Guarantee ได้งานแน่นอน
                       </p>
                     </div>
@@ -306,7 +306,7 @@ export default function Home() {
                     <h1 className="text-[1.25rem]  leading-[1.15]">
                       2. พูดคุยรายละเอียด
                     </h1>
-                    <p className="m-0 text-base font-serif leading-[1.65] ">
+                    <p className="m-0 text-base font-sans leading-[1.65] ">
                       อธิบายงานเพื่อให้ฟรีแลนซ์สร้างใบเสนอราคา
                     </p>
                   </div>
@@ -318,7 +318,7 @@ export default function Home() {
                       <h1 className="text-[1.25rem]  leading-[1.15]">
                         4. อนุมัติงานและรีวิว
                       </h1>
-                      <p className="m-0 text-base font-serif leading-[1.65] ">
+                      <p className="m-0 text-base font-sans leading-[1.65] ">
                         ตรวจสอบงานที่ได้รับ อนุมัติ และรีวิวงาน
                       </p>
                     </div>
