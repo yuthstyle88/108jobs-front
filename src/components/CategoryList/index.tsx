@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type CategoryItem = {
   title: string;
   new?: boolean;
@@ -18,14 +20,14 @@ const CategoryList: React.FC<CategoryListProps> = ({ title, items }) => {
             key={index}
             className="hover:bg-[#e3edfd] text-text_secondary hover:text-third"
           >
-            <a className="block px-2 py-[6px] rounded-[4px] font-serif">
+            <Link href="#" className="block px-2 py-[6px] rounded-[4px] font-serif">
               <span>{item.title}</span>
               {item.new && (
                 <div className="inline-block bg-third text-white text-[0.6875rem] rounded-[4px] font-bold px-1 py-[1px] ml-1">
                   New
                 </div>
               )}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>
