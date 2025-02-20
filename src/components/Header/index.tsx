@@ -80,12 +80,12 @@ const Header = ({ type }: BgProps) => {
           <div className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4">
             Đăng ký làm freelancer
           </div>
-          <a
+          <Link
             href="/login"
             className="text-white text-sm hover:bg-blue-800 hover:text-white"
           >
             Đăng nhập
-          </a>
+          </Link>
         </div>
       </nav>
     </header>

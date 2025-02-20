@@ -413,11 +413,11 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-3 gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
             <div className="flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md">
-              <img
+              {/* <img
                 src="your-freelancer-icon-url"
                 alt="Freelancer"
                 className="mb-4 w-16 h-16"
-              />
+              /> */}
               <h3 className="font-semibold text-xl mb-2 text-black">
                 Freelancer
               </h3>
@@ -428,11 +428,11 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md">
-              <img
+              {/* <img
                 src="your-specialist-icon-url"
                 alt="Specialist"
                 className="mb-4 w-16 h-16"
-              />
+              /> */}
               <h3 className="font-semibold text-xl mb-2 text-black">
                 ผู้เชี่ยวชาญ
               </h3>
@@ -446,11 +446,11 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md">
-              <img
+              {/* <img
                 src="your-professional-icon-url"
                 alt="Professional"
                 className="mb-4 w-16 h-16"
-              />
+              /> */}
               <h3 className="font-semibold text-xl mb-2 text-black">
                 Professional
               </h3>
