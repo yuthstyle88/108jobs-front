@@ -43,7 +43,7 @@ const Header = ({ type }: BgProps) => {
   return (
     <header
       className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-        scrollY > 0 ? "bg-primary" :  bg 
+        scrollY > 0 ? "bg-primary" : bg
       }`}
     >
       <nav className="mx-[1.5rem] flex h-[70px] items-center justify-between">
@@ -80,9 +80,12 @@ const Header = ({ type }: BgProps) => {
           <div className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4">
             Đăng ký làm freelancer
           </div>
-          <div className="text-white text-sm hover:bg-blue-800 hover:text-white">
+          <a
+            href="/login"
+            className="text-white text-sm hover:bg-blue-800 hover:text-white"
+          >
             Đăng nhập
-          </div>
+          </a>
         </div>
       </nav>
     </header>

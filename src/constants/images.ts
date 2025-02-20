@@ -29,7 +29,8 @@ import google from "../assets/images/categories-image/google-ads.webp";
 import marketing from "../assets/images/categories-image/marketing.webp";
 import promote from "../assets/images/categories-image/promote-page.webp";
 import wordpress from "../assets/images/categories-image/wordpress.webp";
-import job_detail1 from "../assets/images/job-detail/403f4da4-9c70-422b-b2a3-8982ff7b7322.jpg";
+import logodefault from "../assets/images/categories-image/logo-default.svg";
+import conceptbanner from "../assets/images/categories-image/concept-banner-th.svg";import job_detail1 from "../assets/images/job-detail/403f4da4-9c70-422b-b2a3-8982ff7b7322.jpg";
 import job_detail2 from "../assets/images/job-detail/1639d78d-168b-4342-a77b-e0e133003723.jpg";
 import job_detail3 from "../assets/images/job-detail/8c9a5e42-2244-44b8-af0d-152b320bddec.jpg";
 import job_detail4 from "../assets/images/job-detail/f58cd5e0-8587-4e40-b43c-0a544a6fb51b.jpg";
@@ -54,6 +55,8 @@ export const CategoriesImage = {
   marketing,
   promote,
   wordpress,
+  logodefault,
+  conceptbanner,
   
 };
 

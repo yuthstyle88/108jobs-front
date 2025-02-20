@@ -6,10 +6,7 @@ import imgapp from "@/assets/images/img-app.webp";
 import Header from "@/components/Header";
 import TypingText from "@/components/TypingText";
 import { CategoriesIcon, GroupIcon } from "@/constants/icons";
-import {
-  faArrowRight,
-  faSearch
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Footer from "../components/Footer";
@@ -414,10 +411,58 @@ export default function Home() {
               เรามีฟรีแลนซ์คุณภาพ และผู้เชี่ยวชาญที่หลากหลายในระบบคอยให้บริการ
             </h2>
           </div>
-          <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
-            <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium"></div>
-            <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium"></div>
-            <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium"></div>
+          <div className="grid grid-cols-3 gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
+            <div className="flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md">
+              <img
+                src="your-freelancer-icon-url"
+                alt="Freelancer"
+                className="mb-4 w-16 h-16"
+              />
+              <h3 className="font-semibold text-xl mb-2 text-black">
+                Freelancer
+              </h3>
+              <ul className="text-sm text-left">
+                <li>ผ่านการยืนยันตัวตนในระบบ</li>
+                <li>ผ่านการตรวจสอบผลงาน ตามมาตรฐานที่ตั้งไว้ของ Fastwork</li>
+              </ul>
+            </div>
+
+            <div className="flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md">
+              <img
+                src="your-specialist-icon-url"
+                alt="Specialist"
+                className="mb-4 w-16 h-16"
+              />
+              <h3 className="font-semibold text-xl mb-2 text-black">
+                ผู้เชี่ยวชาญ
+              </h3>
+              <ul className="text-sm text-left">
+                <li>ผ่านการยืนยันตัวตนในระบบ</li>
+                <li>
+                  ผ่านการคัดเลือก ตลอดความรู้ความสามารถ และทักษะในการทำงานโดย
+                  Fastwork
+                </li>
+              </ul>
+            </div>
+
+            <div className="flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md">
+              <img
+                src="your-professional-icon-url"
+                alt="Professional"
+                className="mb-4 w-16 h-16"
+              />
+              <h3 className="font-semibold text-xl mb-2 text-black">
+                Professional
+              </h3>
+              <ul className="text-sm text-left">
+                <li>ผ่านการยืนยันตัวตนในระบบ</li>
+                <li>
+                  ผ่านการคัดเลือก ตลอดความรู้ความสามารถ และทักษะในการทำงานโดย
+                  Fastwork
+                </li>
+                <li>มีประกอบวิชาชีพที่ผ่านการรับรองจากหลายสถาบัน</li>
+              </ul>
+            </div>
           </div>
         </section>
 
@@ -615,9 +660,12 @@ export default function Home() {
                     กราฟิกและการออกแบบ
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <Link href="/social-media-banner">ออกแบบแบนเนอร์</Link>,&nbsp;
-                    <Link href="/publication/namecard">ออกแบบนามบัตร</Link>,&nbsp;
-                    <Link href="/publication/poster">ออกแบบโปสเตอร์</Link>,&nbsp;
+                    <Link href="/social-media-banner">ออกแบบแบนเนอร์</Link>
+                    ,&nbsp;
+                    <Link href="/publication/namecard">ออกแบบนามบัตร</Link>
+                    ,&nbsp;
+                    <Link href="/publication/poster">ออกแบบโปสเตอร์</Link>
+                    ,&nbsp;
                     <Link href="/infographics">ทำ Infographic</Link>,&nbsp;
                     <Link href="/portfolio-resume">รับทำเรซูเม่</Link>,&nbsp;
                     <Link href="/tattoo-design">ออกแบบลายสัก</Link>,&nbsp;
@@ -631,9 +679,13 @@ export default function Home() {
                     สถาปัตย์และวิศวกรรม
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <Link href="/architect-and-interior/renovation">รีโนเวทบ้าน</Link>
+                    <Link href="/architect-and-interior/renovation">
+                      รีโนเวทบ้าน
+                    </Link>
                     ,&nbsp;
-                    <Link href="/architect-and-interior/home-design">ออกแบบบ้าน</Link>
+                    <Link href="/architect-and-interior/home-design">
+                      ออกแบบบ้าน
+                    </Link>
                     ,&nbsp;
                     <Link href="/engineering-structural-design/boq">
                       ถอดแบบประมาณราคา
@@ -642,7 +694,8 @@ export default function Home() {
                     <Link href="/engineering-structural-design">
                       เขียนแบบก่อสร้าง
                     </Link>
-                    ,&nbsp;<Link href="/home-inspection">ตรวจรับบ้าน</Link>,&nbsp;
+                    ,&nbsp;<Link href="/home-inspection">ตรวจรับบ้าน</Link>
+                    ,&nbsp;
                     <Link href="/landscape">จัดสวนหน้าบ้าน งบน้อย</Link>,&nbsp;
                     <Link href="/engineering-structural-design/residence">
                       เขียนแบบบ้านชั้นเดียว
@@ -655,7 +708,8 @@ export default function Home() {
                     <Link href="/engineering-structural-design/machine">
                       ถอดแบบเครื่องกล
                     </Link>
-                    ,&nbsp;<Link href="/architect-and-engineer">ดูเพิ่มเติม</Link>
+                    ,&nbsp;
+                    <Link href="/architect-and-engineer">ดูเพิ่มเติม</Link>
                   </p>
                 </div>
                 <div className="block">
@@ -663,17 +717,23 @@ export default function Home() {
                     เว็บไซต์และเขียนโปรแกรม
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <Link href="/ux-ui-design-web-app">ออกแบบเว็บไซต์</Link>,&nbsp;
-                    <Link href="/web-development/ecommerce">สร้างเว็บขายของ</Link>
+                    <Link href="/ux-ui-design-web-app">ออกแบบเว็บไซต์</Link>
+                    ,&nbsp;
+                    <Link href="/web-development/ecommerce">
+                      สร้างเว็บขายของ
+                    </Link>
                     ,&nbsp;
                     <Link href="/web-development/instant-builder">
                       เว็บไซต์สำเร็จรูป
                     </Link>
-                    ,&nbsp;<Link href="/desktop-application">รับเขียนโปรแกรม</Link>
+                    ,&nbsp;
+                    <Link href="/desktop-application">รับเขียนโปรแกรม</Link>
                     ,&nbsp;<Link href="/chatbot">Chatbot Facebook</Link>,&nbsp;
                     <Link href="/chatbot">สร้างบอทไลน์</Link>,&nbsp;
                     <Link href="/web-scraping">Website Scraping</Link>,&nbsp;
-                    <Link href="/it-solution-and-support/software">รับลงโปรแกรม</Link>
+                    <Link href="/it-solution-and-support/software">
+                      รับลงโปรแกรม
+                    </Link>
                     ,&nbsp;<Link href="/web-programming">ดูเพิ่มเติม</Link>
                   </p>
                 </div>
@@ -684,13 +744,20 @@ export default function Home() {
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
                     <Link href="/seo">รับทำ SEO</Link>,&nbsp;
                     <Link href="/google-ads">โฆษณา Google</Link>,&nbsp;
-                    <Link href="/social-media-ads/facebook-ads">โฆษณา Facebook</Link>
+                    <Link href="/social-media-ads/facebook-ads">
+                      โฆษณา Facebook
+                    </Link>
                     ,&nbsp;
-                    <Link href="/social-media-ads/tiktok-ads">โฆษณา TikTok</Link>
-                    ,&nbsp;<Link href="/blogger-netidol">บล็อกเกอร์รีวิว</Link>,&nbsp;
-                    <Link href="/promote-page/product">โปรโมทสินค้า</Link>,&nbsp;
+                    <Link href="/social-media-ads/tiktok-ads">
+                      โฆษณา TikTok
+                    </Link>
+                    ,&nbsp;<Link href="/blogger-netidol">บล็อกเกอร์รีวิว</Link>
+                    ,&nbsp;
+                    <Link href="/promote-page/product">โปรโมทสินค้า</Link>
+                    ,&nbsp;
                     <Link href="/focus-group">รับจ้างทดลองสินค้า</Link>,&nbsp;
-                    <Link href="/promote-real-estate">รับฝากขายบ้าน</Link>,&nbsp;
+                    <Link href="/promote-real-estate">รับฝากขายบ้าน</Link>
+                    ,&nbsp;
                     <Link href="/google-map">ปักหมุด google map</Link>,&nbsp;
                     <Link href="/marketing-advertising">ดูเพิ่มเติม</Link>
                   </p>
@@ -704,14 +771,19 @@ export default function Home() {
                     <Link href="/translator">ล่ามแปลภาษา</Link>,&nbsp;
                     <Link href="/transcription">ถอดไฟล์เสียง</Link>,&nbsp;
                     <Link href="/content-writing">เขียนคอนเทนต์</Link>,&nbsp;
-                    <Link href="/content-writing/seo">เขียนบทความ SEO</Link>,&nbsp;
+                    <Link href="/content-writing/seo">เขียนบทความ SEO</Link>
+                    ,&nbsp;
                     <Link href="/content-writing/foreign-language">
                       เขียนบทความภาษาอังกฤษ
                     </Link>
                     ,&nbsp;
-                    <Link href="/content-writing/thesis-report">รับเขียนรายงาน</Link>
+                    <Link href="/content-writing/thesis-report">
+                      รับเขียนรายงาน
+                    </Link>
                     ,&nbsp;<Link href="/proofreading">พิสูจน์อักษร</Link>,&nbsp;
-                    <Link href="/story-writing/poets-and-poems">รับแต่งกลอน</Link>
+                    <Link href="/story-writing/poets-and-poems">
+                      รับแต่งกลอน
+                    </Link>
                     ,&nbsp;<Link href="/writing-translation">ดูเพิ่มเติม</Link>
                   </p>
                 </div>
@@ -721,7 +793,8 @@ export default function Home() {
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
                     <Link href="/photography">ตากล้อง</Link>,&nbsp;
-                    <Link href="/photography/wedding">ถ่ายพรีเวดดิ้ง</Link>,&nbsp;
+                    <Link href="/photography/wedding">ถ่ายพรีเวดดิ้ง</Link>
+                    ,&nbsp;
                     <Link href="/podcast">สร้าง Podcast</Link>,&nbsp;
                     <Link href="/sound-engineering/edit-mixing-mastering">
                       ตัดต่อเพลง
@@ -729,7 +802,8 @@ export default function Home() {
                     ,&nbsp;<Link href="/videography">ตัดต่อวีดีโอ</Link>,&nbsp;
                     <Link href="/subtitle">ทำซับไตเติ้ล</Link>,&nbsp;
                     <Link href="/motion-graphics">Motion Graphic</Link>,&nbsp;
-                    <Link href="/videography/live-streaming">รับไลฟ์สด</Link>,&nbsp;
+                    <Link href="/videography/live-streaming">รับไลฟ์สด</Link>
+                    ,&nbsp;
                     <Link href="/animations">ทำอนิเมชั่น</Link>,&nbsp;
                     <Link href="/voice-over">พากย์เสียง</Link>,&nbsp;
                     <Link href="/photography-video">ดูเพิ่มเติม</Link>
@@ -743,11 +817,14 @@ export default function Home() {
                     <Link href="/accounting-and-finance/accounting-service">
                       รับทำบัญชี
                     </Link>
-                    ,&nbsp;<Link href="/counseling">รับปรึกษาปัญหาชีวิต</Link>,&nbsp;
-                    <Link href="/financial-planning">ที่ปรึกษาทางการเงิน</Link>,&nbsp;
+                    ,&nbsp;<Link href="/counseling">รับปรึกษาปัญหาชีวิต</Link>
+                    ,&nbsp;
+                    <Link href="/financial-planning">ที่ปรึกษาทางการเงิน</Link>
+                    ,&nbsp;
                     <Link href="/legal">ที่ปรึกษากฎหมาย</Link>,&nbsp;
                     <Link href="/psychologist">ปรึกษาสุขภาพจิต</Link>,&nbsp;
-                    <Link href="/order-from-china">สั่งสินค้าจากจีน</Link>,&nbsp;
+                    <Link href="/order-from-china">สั่งสินค้าจากจีน</Link>
+                    ,&nbsp;
                     <Link href="/secretary">เลขาส่วนตัว</Link>,&nbsp;
                     <Link href="/commercial-registration">จดทะเบียนบริษัท</Link>
                     ,&nbsp;
