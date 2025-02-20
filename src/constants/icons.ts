@@ -14,7 +14,18 @@ import group11651 from "../assets/icons/group-11651.svg";
 import group11652 from "../assets/icons/group-11652.svg";
 import group11653 from "../assets/icons/group-11653.svg";
 import group11654 from "../assets/icons/group-11654.svg";
+import guarantee from "../assets/icons/job-detail/guarantee-animate.391e31be.svg";
+import company from "../assets/icons/job-detail/company-hiring-aside-th.svg";
+import icon_rehire from "../assets/icons/job-detail/icon-rehire.svg";
+import company_hiring from "../assets/icons/job-detail/company-hiring-full-th.svg";
 
+export const JobDetailIcon = { 
+    guarantee,
+    company,
+    icon_rehire,
+    company_hiring,
+    
+};
 export const GroupIcon = { 
     group11651,
     group11652,

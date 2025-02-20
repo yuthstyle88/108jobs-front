@@ -29,8 +29,7 @@ import google from "../assets/images/categories-image/google-ads.webp";
 import marketing from "../assets/images/categories-image/marketing.webp";
 import promote from "../assets/images/categories-image/promote-page.webp";
 import wordpress from "../assets/images/categories-image/wordpress.webp";
-import logodefault from "../assets/images/categories-image/logo-default.svg";
-import conceptbanner from "../assets/images/categories-image/concept-banner-th.svg";
+
 
 export const CategoriesImage = {
   seo_image,
@@ -43,8 +42,6 @@ export const CategoriesImage = {
   marketing,
   promote,
   wordpress,
-  logodefault,
-  conceptbanner,
 };
 
 export const MegaMenuImage = {
