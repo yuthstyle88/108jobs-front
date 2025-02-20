@@ -201,7 +201,7 @@ export default function Home() {
               <div className="mt-4 ">
                 <div className="grid min-h-0 min-w-0 grid-cols-[1fr_1fr_1fr_1fr] gap-[0.75rem] ">
                   {category_images.map((category, index) => (
-                    <Link key={index} href="#" className="group">
+                    <Link key={index} href="/seo" className="group">
                       <div
                         style={{
                           backgroundImage: `url("/categories-image/web-development-02032022.jpg")`,
