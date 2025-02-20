@@ -1,13 +1,10 @@
 "use client";
-import apple from "@/assets/icons/apple.svg";
-import google from "@/assets/icons/google-play.svg";
-import fastwork from "@/assets/images/fastwork-app-qr.webp";
-import Imageapp from "@/assets/images/Image-app.webp";
-import { CategoriesImage } from "@/constants/images";
 import { CategoriesIcon } from "@/constants/icons";
-import Image from "next/image";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CategoriesImage } from "@/constants/images";
 import { faFacebookF, faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Login() {
   return (
@@ -120,12 +117,12 @@ export default function Login() {
                       ดำเนินการต่อ
                     </button>
                     <div className="flex justify-between text-sm text-blue-600 mt-4">
-                      <a href="/create-account" className="hover:underline">
+                      <Link href="/create-account" className="hover:underline">
                         สร้างบัญชี
-                      </a>
-                      <a href="/forgot-password" className="hover:underline">
+                      </Link>
+                      <Link href="/forgot-password" className="hover:underline">
                         ลืมรหัสผ่าน?
-                      </a>
+                      </Link>
                     </div>
                   </div>
 
