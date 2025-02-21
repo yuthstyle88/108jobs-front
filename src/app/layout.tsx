@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Kanit } from "next/font/google";
 import "./globals.css";
 import FontAwesomeConfig from "./fontawesome";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const kanit = Kanit({
   subsets: ["latin", "vietnamese", "thai"],
@@ -31,7 +32,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${kanit.className} antialiased`}
       >
-        {children}
+         <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );
