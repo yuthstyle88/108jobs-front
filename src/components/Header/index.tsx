@@ -1,9 +1,6 @@
 "use client";
 import { AssetIcon } from "@/constants/icons";
-import {
-  faChevronDown,
-  faSearch
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
@@ -48,7 +45,7 @@ const Header = ({ type }: BgProps) => {
     >
       <nav className="mx-[1.5rem] flex h-[70px] items-center justify-between">
         <div className="grid grid-flow-col items-center gap-x-4">
-          <Link href="#">
+          <Link href="/">
             <Image src={AssetIcon.logo} alt="logo" className="w-full h-full" />
           </Link>
 
@@ -70,21 +67,24 @@ const Header = ({ type }: BgProps) => {
         <div className="flex items-center gap-4 h-full">
           <div className="group">
             <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2">
-              <p className="">Tuyển dụng</p>
+              <p className="">การจ้างงาน</p>
               <FontAwesomeIcon icon={faChevronDown} />
             </div>
             <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-megaMenu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-10 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[450px] transition-all duration-300">
               <MegaMenu />
             </div>
           </div>
-          <div className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4">
-            Đăng ký làm freelancer
-          </div>
+          <Link
+            href="/start-selling"
+            className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
+          >
+            สมัครเป็นฟรีแลนซ์
+          </Link>
           <Link
             href="/login"
             className="text-white text-sm hover:bg-blue-800 hover:text-white"
           >
-            Đăng nhập
+            เข้าสู่ระบบ
           </Link>
         </div>
       </nav>
