@@ -1,17 +1,14 @@
-import Link from "next/link";
-import Image from "next/image";
-import id from "@/assets/icons/id.svg";
-import th from "@/assets/icons/th.svg";
-import vn from "@/assets/icons/vn.svg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+"use client";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useJobsTranslation } from "@/hooks/useTranslation";
 import {
   faFacebook,
   faInstagram,
   faTiktok,
 } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 import LanguageSwitcher from "../LanguageSwitcher";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useJobsTranslation } from "@/hooks/useTranslation";
 
 const Footer = () => {
   const { lang } = useLanguage();

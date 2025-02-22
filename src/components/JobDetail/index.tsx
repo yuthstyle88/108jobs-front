@@ -10,6 +10,29 @@ import Overview from "./Overview";
 import Package from "./Package";
 import Freelance from "./Freelance";
 import Review from "./Review";
+import { CategoriesImage } from "@/constants/images";
+import CategoryRelated from "../CategoryDetail/components/CategoryRelated";
+import CategoryCard from "../CategoryDetail/components/CategoryCard";
+
+const category_related = [
+  {
+    image: CategoriesImage.wordpress,
+    title: "ทำเว็บไซต์ Wordpress เว็บสำเร็จรูป",
+  },
+  {
+    image: CategoriesImage.google,
+    title: "ทำโฆษณา Google Ads",
+  },
+  {
+    image: CategoriesImage.promote,
+    title: "โปรโมทเพจ Facebook / IG / Youtube",
+  },
+  {
+    image: CategoriesImage.marketing,
+    title: "เป็นที่ปรึกษาการตลาด",
+  },
+];
+
 
 const JobDetail = () => {
   return (
@@ -34,6 +57,34 @@ const JobDetail = () => {
           </div>
           <AsideJob />
         </div>
+      </section>
+      <section className="bg-[#F6F7F8]">
+        <section className="grid grid-cols-[1fr_1216px_1fr]">
+          <div className="col-start-2 col-end-auto pb-6">
+            <div>
+              <h2 className="text-[1.5rem] text-text_primary font-medium pb-6">
+              งานอื่น ๆ ที่คนส่วนใหญ่สนใจ
+              </h2>
+              <div className="grid grid-cols-[repeat(4,minmax(1px,1fr))] grid-rows-[1fr] gap-[1.25rem] my-3 ">
+              {Array.from({ length: 4 }, (_, index) => (
+              <CategoryCard key={index} />
+            ))}
+              </div>
+            </div>
+          </div>
+          <div className="col-start-2 col-end-auto pb-6">
+            <div>
+              <h2 className="text-[1.5rem] text-text_primary font-medium pb-6">
+              งานอื่น ๆ ที่คนส่วนใหญ่สนใจ
+              </h2>
+              <div className="grid grid-cols-[repeat(4,minmax(1px,1fr))] grid-rows-[1fr] gap-[1.25rem] my-3 ">
+                {category_related.map((category, index) => (
+                  <CategoryRelated items={category} key={index} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
       </section>
     </>
   );
