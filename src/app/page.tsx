@@ -125,7 +125,7 @@ const freelancer_intro = [
 ];
 
 export default function Home() {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(0);
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -217,7 +217,7 @@ export default function Home() {
                 </div>
                 <div className="my-4 flex justify-end">
                   <Link
-                    href="#"
+                    href="/popular-subcat"
                     className="text-primary py-[0.75rem] relative no-underline cursor-pointer outline-none ease-in-out duration-150 transition-all"
                   >
                     ดูเพิ่มเติม
