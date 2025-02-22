@@ -94,9 +94,8 @@ const ProfileSelling = () => {
               className="mySwiper pt-4"
             >
               {testimonials.map((testimonial, index) => (
-                <SwiperSlide>
+                <SwiperSlide key={index}>
                   <div
-                    key={index}
                     className="min-w-[300px] bg-white rounded-lg p-6 shadow-lg "
                   >
                     <div className="flex items-start space-x-4 mb-4">

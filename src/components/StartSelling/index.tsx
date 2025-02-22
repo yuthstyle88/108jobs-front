@@ -60,9 +60,11 @@ const StartSelling = () => {
           <p className="text-xl md:text-2xl mb-8">
             อิสระของการทำงาน ที่คุณเลือกเองได้
           </p>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
-            สมัครเป็นฟรีแลนซ์
-          </button>
+          <Link href="/login">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
+              สมัครเป็นฟรีแลนซ์
+            </button>
+          </Link>
         </div>
       </div>
       <Benefit />

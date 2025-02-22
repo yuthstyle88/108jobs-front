@@ -2,6 +2,7 @@ import React from "react";
 import StartSelling from "../..";
 import { StartSellingImage } from "@/constants/images";
 import Image from "next/image";
+import Link from "next/link";
 
 type FreelancerType = {
   title: {
@@ -126,9 +127,11 @@ const FreelancerTypes = () => {
           <h2 className="text-3xl font-bold text-center text-primary mb-4">
             สมัครเป็นฟรีแลนซ์บน Fastwork เลย
           </h2>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
-            สมัครเป็นฟรีแลนซ์
-          </button>
+          <Link href="/login">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
+              สมัครเป็นฟรีแลนซ์
+            </button>
+          </Link>
         </div>
       </div>
     </div>
