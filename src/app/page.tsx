@@ -24,6 +24,7 @@ import {
   AssetsImage,
   CategoriesImage,
   CustomerImage,
+  CompareImage,
 } from "@/constants/images";
 import Link from "next/link";
 import { useState } from "react";
@@ -411,58 +412,561 @@ export default function Home() {
               เรามีฟรีแลนซ์คุณภาพ และผู้เชี่ยวชาญที่หลากหลายในระบบคอยให้บริการ
             </h2>
           </div>
-          <div className="grid grid-cols-3 gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
-            <div className="flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md">
+          <div className="grid grid-cols-3 gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3 ">
+            <div className="flex flex-col justify-between items-center text-center bg-white p-6 rounded-lg shadow-md gap-6">
+              <div className="y-2 px-4 rounded-full shadow-md self-end mx-4"></div>
               {/* <img
                 src="your-freelancer-icon-url"
                 alt="Freelancer"
                 className="mb-4 w-16 h-16"
               /> */}
-              <h3 className="font-semibold text-xl mb-2 text-black">
-                Freelancer
-              </h3>
-              <ul className="text-sm text-left">
-                <li>ผ่านการยืนยันตัวตนในระบบ</li>
-                <li>ผ่านการตรวจสอบผลงาน ตามมาตรฐานที่ตั้งไว้ของ Fastwork</li>
-              </ul>
+              <Image src={CompareImage.compare1} alt="Freelancer" />
+              <div className="text-black">
+                <h3 className="font-semibold text-xl mb-2">Freelancer</h3>
+                <ul className="text-sm text-left">
+                  <li className="flex items-center">
+                    ผ่านการยืนยันตัวตนในระบบ{" "}
+                  </li>
+                  <li className="flex items-center">
+                    ผ่านการตรวจสอบผลงาน ตามมาตรฐานขั้นต้นของ Fastwork{" "}
+                  </li>
+                </ul>
+              </div>
+              <a
+                href="#"
+                className="mt-4 text-blue-500 hover:text-blue-700 font-semibold text-sm cursor-pointer"
+              >
+                ดูงานทั้งหมด
+              </a>
             </div>
 
-            <div className="flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md">
+            <div className="justify-between flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md gap-6">
+              <button className=" pointer-events-none bg-blue-200 text-blue-500 font-semibold py-2 px-4 rounded-full shadow-md hover:bg-blue-400 self-end mx-4">
+                ผู้เชี่ยวชาญ
+              </button>
+              <Image src={CompareImage.compare2} alt="Specialist" />
+
               {/* <img
                 src="your-specialist-icon-url"
                 alt="Specialist"
                 className="mb-4 w-16 h-16"
               /> */}
-              <h3 className="font-semibold text-xl mb-2 text-black">
-                ผู้เชี่ยวชาญ
-              </h3>
-              <ul className="text-sm text-left">
-                <li>ผ่านการยืนยันตัวตนในระบบ</li>
-                <li>
-                  ผ่านการคัดเลือก ตลอดความรู้ความสามารถ และทักษะในการทำงานโดย
-                  Fastwork
-                </li>
-              </ul>
+              <div className="text-black">
+                <h3 className="font-semibold text-xl mb-2  mx-4">
+                  ผู้เชี่ยวชาญ
+                </h3>
+                <ul className="text-sm text-left">
+                  <li className="flex items-center">
+                    ผ่านการยืนยันตัวตนในระบบ{" "}
+                  </li>
+                  <li className="flex items-center">
+                    ผ่านการคัดเลือก ทดสอบความรู้ตามสายงาน และทักษะในการทำงานโดย
+                    Fastwork
+                  </li>{" "}
+                  <li className="flex items-center">
+                    {" "}
+                    ผ่านการอบรมพิเศษด้านทักษะและการให้บริการจาก Fastwork
+                  </li>{" "}
+                  <li className="flex items-center">
+                    {" "}
+                    มีใบประกอบวิชาชีพที่จำเป็นตามสายงาน Fastwork
+                  </li>
+                </ul>
+              </div>
+              <a
+                href="#"
+                className="mt-4 text-blue-500 hover:text-blue-700 font-semibold text-sm cursor-pointer"
+              >
+                ดูงานทั้งหมด
+              </a>
             </div>
 
-            <div className="flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md">
-              {/* <img
-                src="your-professional-icon-url"
-                alt="Professional"
-                className="mb-4 w-16 h-16"
-              /> */}
-              <h3 className="font-semibold text-xl mb-2 text-black">
-                Professional
-              </h3>
-              <ul className="text-sm text-left">
-                <li>ผ่านการยืนยันตัวตนในระบบ</li>
-                <li>
-                  ผ่านการคัดเลือก ตลอดความรู้ความสามารถ และทักษะในการทำงานโดย
-                  Fastwork
-                </li>
-                <li>มีประกอบวิชาชีพที่ผ่านการรับรองจากหลายสถาบัน</li>
-              </ul>
+            <div className="justify-between flex flex-col items-center text-center gap-6 bg-white p-6 rounded-lg shadow-md">
+              <button className=" pointer-events-none bg-blue-500 text-blue-2  00 font-semibold py-2 px-4 rounded-full shadow-md hover:bg-blue-400 self-end mx-4">
+                ผู้เชี่ยวชาญ
+              </button>
+              <Image src={CompareImage.compare3} alt="Professional" />
+              <div className="text-black">
+                <h3 className="font-semibold text-xl mb-2">Professional</h3>
+                <ul className="text-sm text-left">
+                  <li className="flex items-center">
+                    ผ่านการยืนยันตัวตนในระบบ
+                  </li>
+                  <li className="flex items-center">
+                    ผ่านการคัดเลือก ทดสอบความรู้ตามสายงาน และทักษะในการทำงานโดย
+                    Fastwork
+                  </li>
+                  <li className="flex items-center">
+                    ผ่านการอบรมพิเศษด้านทักษะและการให้บริการจาก Fastwork
+                  </li>
+                  <li className="flex items-center">
+                    มีใบประกอบวิชาชีพที่จำเป็นตามสายงาน
+                  </li>
+                  <li className="flex items-center">
+                    คัดกรองความเชี่ยวชาญขั้นสูงด้วยเกณฑ์พิเศษ
+                  </li>{" "}
+                  <li className="flex items-center">
+                    มีความสามารถทำงานที่ซับซ้อนสูง และมีขนาดใหญ่
+                  </li>
+                </ul>
+              </div>
+              <a
+                href="#"
+                className="mt-4 text-blue-500 hover:text-blue-700 font-semibold text-sm cursor-pointer"
+              >
+                ดูงานทั้งหมด
+              </a>
             </div>
+          </div>
+          <div className="col-start-2 col-end-3"></div>
+        </section>
+
+        <section className="bg-white py-24 grid grid-container-desktop gap-y-12">
+          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
+            ฟรีแลนซ์ยอดนิยมในหมวด รับจัดดอกไม้
+          </div>
+          <div className="col-start-2 col-end-3">
+            <Swiper
+              slidesPerView={5}
+              cssMode={true}
+              navigation={true}
+              mousewheel={true}
+              keyboard={true}
+              modules={[Navigation]}
+              className="mySwiper px-5"
+            >
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 1" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 2" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 3" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 4" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 5" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 6" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 7" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 8" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 9" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 10" />
+              </SwiperSlide>
+            </Swiper>
+          </div>
+        </section>
+
+        <section className="bg-white py-24 grid grid-container-desktop gap-y-12">
+          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
+            ฟรีแลนซ์ยอดนิยมในหมวด ดูดวง โหราศาสตร์ ความเชื่อ{" "}
+          </div>
+          <div className="col-start-2 col-end-3">
+            <Swiper
+              slidesPerView={5}
+              cssMode={true}
+              navigation={true}
+              mousewheel={true}
+              keyboard={true}
+              modules={[Navigation]}
+              className="mySwiper px-5"
+            >
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 1" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 2" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 3" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 4" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 5" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 6" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 7" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 8" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 9" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 10" />
+              </SwiperSlide>
+            </Swiper>
+          </div>
+        </section>
+
+        <section className="bg-white py-24 grid grid-container-desktop gap-y-12">
+          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
+            ฟรีแลนซ์ยอดนิยมในหมวด ออกแบบ Logo
+          </div>
+          <div className="col-start-2 col-end-3">
+            <Swiper
+              slidesPerView={5}
+              cssMode={true}
+              navigation={true}
+              mousewheel={true}
+              keyboard={true}
+              modules={[Navigation]}
+              className="mySwiper px-5"
+            >
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 1" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 2" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 3" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 4" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 5" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 6" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 7" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 8" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 9" />
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={imgapp} alt="Picture 10" />
+              </SwiperSlide>
+            </Swiper>
+          </div>
+        </section>
+
+        <section className="bg-white py-24 grid grid-container-desktop gap-y-12">
+          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
+            ผลงานแนะนำจากฟรีแลนซ์ Fastwork
+          </div>
+          <div className="col-start-2 col-end-3">
+            <Swiper
+              slidesPerView={3}
+              cssMode={true}
+              navigation={true}
+              mousewheel={true}
+              keyboard={true}
+              modules={[Navigation]}
+              className="mySwiper px-5"
+            >
+              <SwiperSlide>
+                <div className="bg-white p-4 rounded-lg shadow-lg">
+                  <Image
+                    src="/path-to-hotel-image.jpg"
+                    alt="Hotel Image"
+                    width={400}
+                    height={200}
+                    className="rounded-lg"
+                  />
+                  <h3 className="text-lg font-semibold mt-2">Plaza Hotel</h3>
+                  <p className="text-gray-500 text-sm">Bangkok, Thailand</p>
+                  <p className="text-red-500 font-semibold mt-2">
+                    $200 / night
+                  </p>
+                </div>{" "}
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="bg-white p-4 rounded-lg shadow-lg">
+                  <Image
+                    src="/path-to-hotel-image.jpg"
+                    alt="Hotel Image"
+                    width={400}
+                    height={200}
+                    className="rounded-lg"
+                  />
+                  <h3 className="text-lg font-semibold mt-2">Plaza Hotel</h3>
+                  <p className="text-gray-500 text-sm">Bangkok, Thailand</p>
+                  <p className="text-red-500 font-semibold mt-2">
+                    $200 / night
+                  </p>
+                </div>{" "}
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="bg-white p-4 rounded-lg shadow-lg">
+                  <Image
+                    src="/path-to-hotel-image.jpg"
+                    alt="Hotel Image"
+                    width={400}
+                    height={200}
+                    className="rounded-lg"
+                  />
+                  <h3 className="text-lg font-semibold mt-2">Plaza Hotel</h3>
+                  <p className="text-gray-500 text-sm">Bangkok, Thailand</p>
+                  <p className="text-red-500 font-semibold mt-2">
+                    $200 / night
+                  </p>
+                </div>{" "}
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="bg-white p-4 rounded-lg shadow-lg">
+                  <Image
+                    src="/path-to-hotel-image.jpg"
+                    alt="Hotel Image"
+                    width={400}
+                    height={200}
+                    className="rounded-lg"
+                  />
+                  <h3 className="text-lg font-semibold mt-2">Plaza Hotel</h3>
+                  <p className="text-gray-500 text-sm">Bangkok, Thailand</p>
+                  <p className="text-red-500 font-semibold mt-2">
+                    $200 / night
+                  </p>
+                </div>{" "}
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="bg-white p-4 rounded-lg shadow-lg">
+                  <Image
+                    src="/path-to-hotel-image.jpg"
+                    alt="Hotel Image"
+                    width={400}
+                    height={200}
+                    className="rounded-lg"
+                  />
+                  <h3 className="text-lg font-semibold mt-2">Plaza Hotel</h3>
+                  <p className="text-gray-500 text-sm">Bangkok, Thailand</p>
+                  <p className="text-red-500 font-semibold mt-2">
+                    $200 / night
+                  </p>
+                </div>{" "}
+              </SwiperSlide>
+            </Swiper>
+          </div>
+        </section>
+
+        <section className="bg-white py-24 grid grid-container-desktop gap-y-12">
+          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
+            ความคิดเห็นจากผู้ใช้บริการ
+          </div>
+          <div className="col-start-2 col-end-3">
+            <Swiper
+              slidesPerView={3}
+              cssMode={true}
+              navigation={true}
+              mousewheel={true}
+              keyboard={true}
+              modules={[Navigation]}
+              className="mySwiper px-5"
+            >
+              <SwiperSlide>
+                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
+                  <div className="mb-4">
+                    <blockquote className="text-lg text-gray-700 font-semibold italic">
+                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                    </blockquote>
+                  </div>
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center">
+                      {/* Add your logo image here */}
+                      <Image
+                        src="/path-to-your-logo.png"
+                        alt="Company Logo"
+                        width={40}
+                        height={40}
+                      />
+                      <span className="ml-2 text-gray-600 font-medium text-sm">
+                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
+                      </span>
+                    </div>
+                    <div className="text-gray-500 text-xs">
+                      โรงงานอุตสาหกรรมพลาสติก
+                    </div>
+                  </div>
+                </div>{" "}
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
+                  <div className="mb-4">
+                    <blockquote className="text-lg text-gray-700 font-semibold italic">
+                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                    </blockquote>
+                  </div>
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center">
+                      {/* Add your logo image here */}
+                      <Image
+                        src="/path-to-your-logo.png"
+                        alt="Company Logo"
+                        width={40}
+                        height={40}
+                      />
+                      <span className="ml-2 text-gray-600 font-medium text-sm">
+                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
+                      </span>
+                    </div>
+                    <div className="text-gray-500 text-xs">
+                      โรงงานอุตสาหกรรมพลาสติก
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
+                  <div className="mb-4">
+                    <blockquote className="text-lg text-gray-700 font-semibold italic">
+                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                    </blockquote>
+                  </div>
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center">
+                      {/* Add your logo image here */}
+                      <Image
+                        src="/path-to-your-logo.png"
+                        alt="Company Logo"
+                        width={40}
+                        height={40}
+                      />
+                      <span className="ml-2 text-gray-600 font-medium text-sm">
+                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
+                      </span>
+                    </div>
+                    <div className="text-gray-500 text-xs">
+                      โรงงานอุตสาหกรรมพลาสติก
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
+                  <div className="mb-4">
+                    <blockquote className="text-lg text-gray-700 font-semibold italic">
+                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                    </blockquote>
+                  </div>
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center">
+                      {/* Add your logo image here */}
+                      <Image
+                        src="/path-to-your-logo.png"
+                        alt="Company Logo"
+                        width={40}
+                        height={40}
+                      />
+                      <span className="ml-2 text-gray-600 font-medium text-sm">
+                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
+                      </span>
+                    </div>
+                    <div className="text-gray-500 text-xs">
+                      โรงงานอุตสาหกรรมพลาสติก
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
+                  <div className="mb-4">
+                    <blockquote className="text-lg text-gray-700 font-semibold italic">
+                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                    </blockquote>
+                  </div>
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center">
+                      {/* Add your logo image here */}
+                      <Image
+                        src="/path-to-your-logo.png"
+                        alt="Company Logo"
+                        width={40}
+                        height={40}
+                      />
+                      <span className="ml-2 text-gray-600 font-medium text-sm">
+                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
+                      </span>
+                    </div>
+                    <div className="text-gray-500 text-xs">
+                      โรงงานอุตสาหกรรมพลาสติก
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
+                  <div className="mb-4">
+                    <blockquote className="text-lg text-gray-700 font-semibold italic">
+                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                    </blockquote>
+                  </div>
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center">
+                      {/* Add your logo image here */}
+                      <Image
+                        src="/path-to-your-logo.png"
+                        alt="Company Logo"
+                        width={40}
+                        height={40}
+                      />
+                      <span className="ml-2 text-gray-600 font-medium text-sm">
+                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
+                      </span>
+                    </div>
+                    <div className="text-gray-500 text-xs">
+                      โรงงานอุตสาหกรรมพลาสติก
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
+                  <div className="mb-4">
+                    <blockquote className="text-lg text-gray-700 font-semibold italic">
+                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                    </blockquote>
+                  </div>
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center">
+                      {/* Add your logo image here */}
+                      <Image
+                        src="/path-to-your-logo.png"
+                        alt="Company Logo"
+                        width={40}
+                        height={40}
+                      />
+                      <span className="ml-2 text-gray-600 font-medium text-sm">
+                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
+                      </span>
+                    </div>
+                    <div className="text-gray-500 text-xs">
+                      โรงงานอุตสาหกรรมพลาสติก
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+            </Swiper>
           </div>
         </section>
 
@@ -577,6 +1081,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+
         <section className="hidden md:block">
           <div className="bg-white py-24 grid grid-container-desktop gap-y-12">
             <div className="col-start-2 col-end-3 w-full text-left">
