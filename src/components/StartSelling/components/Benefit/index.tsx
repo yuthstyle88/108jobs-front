@@ -1,0 +1,158 @@
+import React, { JSX } from 'react'
+
+type Benefit = {
+  icon: JSX.Element;
+  title: string;
+  description: string;
+};
+
+const benefits: Benefit[] = [
+  {
+    icon: (
+      <svg
+        className="w-8 h-8 text-blue-600"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+    ),
+    title: "เพิ่มโอกาสในการถูกจ้าง",
+    description:
+      "เราช่วยให้งานของคุณถูกค้นหาง่ายขึ้น ไม่ว่าจะผ่าน Google, Facebook หรือช่องทางอื่น ๆ เพื่อเพิ่มโอกาสในการถูกจ้าง",
+  },
+  {
+    icon: (
+      <svg
+        className="w-8 h-8 text-blue-600"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+        />
+      </svg>
+    ),
+    title: "ไม่ต้องกลัวไม่ได้ค่าจ้าง",
+    description:
+      "เราจะเป็นตัวกลางดูแลเงินให้คุณเมื่องานสำเร็จ หมดกังวลเรื่องผู้ว่าจ้างไม่ชำระเงิน",
+  },
+  {
+    icon: (
+      <svg
+        className="w-8 h-8 text-blue-600"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        />
+      </svg>
+    ),
+    title: "ไม่ต้องยุ่งวายทำเอกสาร",
+    description:
+      "เพียงกรอกรายละเอียดงาน ระบุระยะเวลา ใส่แสนอราคา และใบวางบิลให้อัตโนมัติ",
+  },
+  {
+    icon: (
+      <svg
+        className="w-8 h-8 text-blue-600"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"
+        />
+      </svg>
+    ),
+    title: "มีทีมงานช่วยเหลือ",
+    description:
+      "เราพร้อมให้ความช่วยเหลือทันทีเมื่อเกิดปัญหา และจะไหนดูพัฒนาระบบ เพื่อมอบประสบการณ์ที่ดีที่สุดสำหรับคุณ",
+  },
+  {
+    icon: (
+      <svg
+        className="w-8 h-8 text-blue-600"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M13 10V3L4 14h7v7l9-11h-7z"
+        />
+      </svg>
+    ),
+    title: "เติบโตในสายงานด้วย Specialist",
+    description:
+      "เข้าร่วมโปรแกรมทดสอบ และคัดเลือกกับ Fastwork เพิ่มความน่าเชื่อถือ และโอกาสในการมองเห็นบนระบบ",
+  },
+  {
+    icon: (
+      <svg
+        className="w-8 h-8 text-blue-600"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"
+        />
+      </svg>
+    ),
+    title: "สิทธิพิเศษ และกิจกรรมต่าง ๆ",
+    description:
+      "ยิ่งขายงานได้มาก ยิ่งเข้าถึงสิทธิพิเศษและกิจกรรมต่างๆ จาก Fastwork ได้มากมาย",
+  },
+];
+
+const Benefit = () => {
+  return (
+    <div className="grid-container-desktop w-full py-16 px-4 sm:px-6 lg:px-8">
+        <div className="col-start-2 col-end-3">
+          <h2 className="text-3xl font-bold text-center text-primary mb-12">
+            เป็นฟรีแลนซ์ Fastwork ดียังไง?
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {benefits.map((benefit, index) => (
+              <div key={index} className="flex flex-col items-start">
+                <div className="rounded-lg p-2 bg-blue-50">{benefit.icon}</div>
+                <h3 className="mt-4 text-[18px] font-semibold text-text_primary">
+                  {benefit.title}
+                </h3>
+                <p className="mt-2 font-sans text-text_primary">
+                  {benefit.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+  )
+}
+
+export default Benefit
