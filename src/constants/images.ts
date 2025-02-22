@@ -46,9 +46,6 @@ import step3 from "../assets/images/start-selling/step3.svg";
 import step4 from "../assets/images/start-selling/step4.svg";
 import step5 from "../assets/images/start-selling/step5.svg";
 import step6 from "../assets/images/start-selling/step6.svg";
-import compare1 from "../assets/images/start-selling/compare1.svg";
-import compare2 from "../assets/images/start-selling/compare2.svg";
-import compare3 from "../assets/images/start-selling/compare3.svg";
 import profile_selling from "../assets/images/start-selling/Kittanya.png";
 
 export const StartSellingImage = {
