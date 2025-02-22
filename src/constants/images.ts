@@ -35,6 +35,7 @@ import job_detail2 from "../assets/images/job-detail/1639d78d-168b-4342-a77b-e0e
 import job_detail3 from "../assets/images/job-detail/8c9a5e42-2244-44b8-af0d-152b320bddec.jpg";
 import job_detail4 from "../assets/images/job-detail/f58cd5e0-8587-4e40-b43c-0a544a6fb51b.jpg";
 import job_detail5 from "../assets/images/job-detail/abc4aeed-d9cb-4e9f-be78-b544574b521e.jpg";
+import freelancer_avt from "../assets/images/job-detail/165733fb-908b-405d-a656-edca5749a4fd.jpg";
 
 
 export const JobDetailImage = {
@@ -43,6 +44,7 @@ export const JobDetailImage = {
   job_detail3,
   job_detail4,
   job_detail5,
+  freelancer_avt
 };
 export const CategoriesImage = {
   seo_image,
