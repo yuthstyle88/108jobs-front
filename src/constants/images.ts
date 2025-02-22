@@ -30,12 +30,29 @@ import marketing from "../assets/images/categories-image/marketing.webp";
 import promote from "../assets/images/categories-image/promote-page.webp";
 import wordpress from "../assets/images/categories-image/wordpress.webp";
 import logodefault from "../assets/images/categories-image/logo-default.svg";
-import conceptbanner from "../assets/images/categories-image/concept-banner-th.svg";import job_detail1 from "../assets/images/job-detail/403f4da4-9c70-422b-b2a3-8982ff7b7322.jpg";
+import conceptbanner from "../assets/images/categories-image/concept-banner-th.svg";
+import job_detail1 from "../assets/images/job-detail/403f4da4-9c70-422b-b2a3-8982ff7b7322.jpg";
 import job_detail2 from "../assets/images/job-detail/1639d78d-168b-4342-a77b-e0e133003723.jpg";
 import job_detail3 from "../assets/images/job-detail/8c9a5e42-2244-44b8-af0d-152b320bddec.jpg";
 import job_detail4 from "../assets/images/job-detail/f58cd5e0-8587-4e40-b43c-0a544a6fb51b.jpg";
 import job_detail5 from "../assets/images/job-detail/abc4aeed-d9cb-4e9f-be78-b544574b521e.jpg";
+import compare1 from "../assets/images/compare/compare1.svg";
+import compare2 from "../assets/images/compare/compare2.svg";
+import compare3 from "../assets/images/compare/compare3.svg";
+import banner2 from "../assets/images/compare/banner-02.png";
+import comparebadge1 from "../assets/images/compare/compare-badge1.png";
+import comparebadge2 from "../assets/images/compare/compare-badge2.png";
+import logobusiness from "../assets/images/compare/logo-business.png";
 
+export const CompareImage = {
+  compare1,
+  compare2,
+  compare3,
+  banner2,
+  comparebadge1,
+  comparebadge2,
+  logobusiness,
+};  
 
 export const JobDetailImage = {
   job_detail1,
@@ -57,7 +74,6 @@ export const CategoriesImage = {
   wordpress,
   logodefault,
   conceptbanner,
-  
 };
 
 export const MegaMenuImage = {
