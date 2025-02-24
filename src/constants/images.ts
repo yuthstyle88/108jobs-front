@@ -67,6 +67,13 @@ import comparebadge1 from "../assets/images/compare/compare-badge1.png";
 import comparebadge2 from "../assets/images/compare/compare-badge2.png";
 import logobusiness from "../assets/images/compare/logo-business.png";
 
+import avatar from "../assets/images/profile/avatar.jpg";
+import coin_bg from "../assets/images/profile/coin-desktop-banner.webp";
+
+export const ProfileImage = {
+  avatar,
+  coin_bg
+};  
 export const CompareImage = {
   compare1,
   compare2,

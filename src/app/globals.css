@@ -23,6 +23,12 @@
 .header-gradient {
   background-image: linear-gradient(180deg, hsl(216 90% 32%) 4.5rem, hsl(216 77% 50%) 100%)
 }
+.coin-gradient {
+  background: linear-gradient(326.33deg, #27c8f8 2.42%, #1850c2 106.48%), #c4c4c4;
+}
+.coin-popup-gradient {
+  background: linear-gradient(105.31deg, #1855b8 21.49%, #387ae5 93.5%);
+}
 
 .grid-container-desktop{
   display: grid;
