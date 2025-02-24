@@ -23,6 +23,13 @@ import hiring from "../assets/icons/job-detail/hiring.svg";
 import response from "../assets/icons/job-detail/response.svg";
 import sold from "../assets/icons/job-detail/sold.svg";
 
+import coins from "../assets/icons/profile/point-icon.svg";
+
+export const ProfileIcon = { 
+    coins,
+    
+    
+};
 export const JobDetailIcon = { 
     guarantee,
     company,
