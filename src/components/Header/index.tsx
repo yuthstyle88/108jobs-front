@@ -219,7 +219,7 @@ const Header = ({ type }: BgProps) => {
                     <span className="text-gray-700">Discount Coupons</span>
                   </Link>
                   <Link
-                    href="#"
+                    href="/favorites"
                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                   >
                     <FontAwesomeIcon
@@ -249,7 +249,7 @@ const Header = ({ type }: BgProps) => {
                     </span>
                   </div>
                   <Link
-                    href="#"
+                    href="/start-selling"
                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                   >
                     <FontAwesomeIcon
@@ -261,7 +261,7 @@ const Header = ({ type }: BgProps) => {
                     </span>
                   </Link>
                   <Link
-                    href="#"
+                    href="/consent-management"
                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                   >
                     <FontAwesomeIcon
