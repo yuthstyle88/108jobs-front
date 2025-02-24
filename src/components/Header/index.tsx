@@ -1,11 +1,28 @@
 "use client";
-import { AssetIcon } from "@/constants/icons";
-import { faChevronDown, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { AssetIcon, ProfileIcon } from "@/constants/icons";
+import {
+  faBarsProgress,
+  faBell,
+  faBullhorn,
+  faChevronDown,
+  faCodePullRequest,
+  faCoins,
+  faComment,
+  faGear,
+  faGift,
+  faHeart,
+  faMessage,
+  faSearch,
+  faSignOut,
+  faTicket,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import MegaMenu from "../MegaMenu";
+import { ProfileImage } from "@/constants/images";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -23,6 +40,8 @@ interface BgProps {
 const Header = ({ type }: BgProps) => {
   const [scrollY, setScrollY] = useState(0);
   const [showSearch, setShowSearch] = useState(false);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const { bg } = TYPES[type];
 
@@ -86,6 +105,192 @@ const Header = ({ type }: BgProps) => {
           >
             เข้าสู่ระบบ
           </Link>
+          <Link
+            href="/login"
+            className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
+          >
+            <FontAwesomeIcon
+              icon={faComment}
+              className="w-[24px] h-[24px] text-white"
+              size="4x"
+            />
+          </Link>
+          <Link
+            href="/login"
+            className="text-white text-sm hover:bg-blue-800 hover:text-white pr-3"
+          >
+            <FontAwesomeIcon
+              icon={faBell}
+              className="w-[21px] h-[24px] text-white"
+              size="4x"
+            />
+          </Link>
+          <Link
+            href="/login"
+            className="text-white text-sm hover:bg-blue-800 hover:text-white"
+          >
+            <div className="flex items-center gap-2 bg-white rounded-full h-[2rem]">
+              <p className="text-third text-[12px] pl-2">0.00</p>
+              <Image
+                src={ProfileIcon.coins}
+                alt="avatar"
+                className="w-full h-full"
+              />
+            </div>
+          </Link>
+          <div className="relative px-4">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="flex items-center justify-center gap-2 w-12 h-12 rounded-full "
+            >
+              <Image
+                src={ProfileImage.avatar}
+                alt="avatar"
+                className="rounded-full"
+              />
+              <FontAwesomeIcon
+                icon={faChevronDown}
+                className="w-[14px] h-[14px] text-white"
+              />
+            </button>
+
+            {isOpen && (
+              <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-jobCard z-50 select-none">
+                <div className="p-4 border-b border-gray-100 bg-[#D0E1FB] rounded-tl-lg rounded-tr-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+                      <Image
+                        src={ProfileImage.avatar}
+                        alt="avatar"
+                        className="rounded-full"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">uykpfzno</p>
+                      <Link
+                        href="/user"
+                        className="text-sm text-blue-600 hover:underline"
+                      >
+                        View profile
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="py-2">
+                  <Link
+                    href="/coin"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                  >
+                    <FontAwesomeIcon
+                      icon={faCoins}
+                      className="text-[24px] text-primary "
+                    />
+                    <span className="text-gray-700">Coins 0.00</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                  >
+                    <FontAwesomeIcon
+                      icon={faGear}
+                      className="text-[24px] text-primary "
+                    />
+                    <span className="text-gray-700">Set up an account</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                  >
+                    <FontAwesomeIcon
+                      icon={faMessage}
+                      className="text-[24px] text-primary "
+                    />
+                    <span className="text-gray-700">Messages and orders</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                  >
+                    <FontAwesomeIcon
+                      icon={faTicket}
+                      className="text-[24px] text-primary "
+                    />
+                    <span className="text-gray-700">Discount Coupons</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                  >
+                    <FontAwesomeIcon
+                      icon={faHeart}
+                      className="text-[24px] text-primary "
+                    />
+                    <span className="text-gray-700">Jobs you like</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                  >
+                    <FontAwesomeIcon
+                      icon={faBullhorn}
+                      className="text-[24px] text-primary "
+                    />
+                    <span className="text-gray-700">Job board</span>
+                  </Link>
+                  <div className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50">
+                    <FontAwesomeIcon
+                      icon={faGift}
+                      className="text-[24px] text-primary "
+                    />
+                    <span className="text-gray-700">Rewards</span>
+                    <span className="ml-2 px-2 py-1 text-xs text-white bg-blue-500 rounded">
+                      New
+                    </span>
+                  </div>
+                  <Link
+                    href="#"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                  >
+                    <FontAwesomeIcon
+                      icon={faCodePullRequest}
+                      className="text-[24px] text-primary "
+                    />
+                    <span className="text-gray-700">
+                      Apply to be a freelancer
+                    </span>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                  >
+                    <FontAwesomeIcon
+                      icon={faBarsProgress}
+                      className="text-[24px] text-primary "
+                    />
+                    <span className="text-gray-700">Manage data usage</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
+                  >
+                    <FontAwesomeIcon
+                      icon={faSignOut}
+                      className="text-[24px] text-primary "
+                    />
+                    <span className="text-gray-700">Log out</span>
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {isOpen && (
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setIsOpen(false)}
+              />
+            )}
+          </div>
         </div>
       </nav>
     </header>
