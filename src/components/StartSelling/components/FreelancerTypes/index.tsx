@@ -1,5 +1,3 @@
-import React from "react";
-import StartSelling from "../..";
 import { StartSellingImage } from "@/constants/images";
 import Image from "next/image";
 import Link from "next/link";

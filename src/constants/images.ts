@@ -69,10 +69,12 @@ import logobusiness from "../assets/images/compare/logo-business.png";
 
 import avatar from "../assets/images/profile/avatar.jpg";
 import coin_bg from "../assets/images/profile/coin-desktop-banner.webp";
+import job_board from "../assets/images/profile/banner.webp";
 
 export const ProfileImage = {
   avatar,
-  coin_bg
+  coin_bg,
+  job_board
 };  
 export const CompareImage = {
   compare1,
