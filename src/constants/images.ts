@@ -47,7 +47,20 @@ import step4 from "../assets/images/start-selling/step4.svg";
 import step5 from "../assets/images/start-selling/step5.svg";
 import step6 from "../assets/images/start-selling/step6.svg";
 import profile_selling from "../assets/images/start-selling/Kittanya.png";
+import left from "../assets/images/left.svg";
+import right from "../assets/images/right.svg";
+import center from "../assets/images/center.svg";
+import point from "../assets/images/point.svg";
 
+export const BannerImage = {
+  left,
+  right,
+  center,
+}
+
+export const RewardImage = {
+point
+}
 export const StartSellingImage = {
   step1,
   step2,
