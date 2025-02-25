@@ -228,7 +228,7 @@ const Header = ({ type }: BgProps) => {
                     <span className="text-gray-700">งานที่ถูกใจ</span>
                   </Link>
                   <Link
-                    href="#"
+                    href="/job-board"
                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                   >
                     <FontAwesomeIcon
