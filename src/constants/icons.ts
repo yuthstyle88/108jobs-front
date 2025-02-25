@@ -24,9 +24,11 @@ import response from "../assets/icons/job-detail/response.svg";
 import sold from "../assets/icons/job-detail/sold.svg";
 
 import coins from "../assets/icons/profile/point-icon.svg";
+import hiring_info from "../assets/icons/profile/hiring-info-desktop.svg";
 
 export const ProfileIcon = { 
     coins,
+    hiring_info
     
     
 };

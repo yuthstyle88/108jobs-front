@@ -189,7 +189,7 @@ const Header = ({ type }: BgProps) => {
                     <span className="text-gray-700">Coins 0.00</span>
                   </Link>
                   <Link
-                    href="#"
+                    href="/account-setting"
                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                   >
                     <FontAwesomeIcon
