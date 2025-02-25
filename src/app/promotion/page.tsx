@@ -69,7 +69,7 @@ const Promotion = () => {
                 </button>
               ))}
             </div>
-            <div className="mt-[5rem] flex justify-center items-center">
+            <div className=" flex justify-center items-center py-[8rem]">
               <div className="grid-cols-1 items-center justify-center text-center">
                 <FontAwesomeIcon icon={faFontAwesome} className="text-black" />
 
