@@ -38,11 +38,11 @@ const steps: Step[] = [
       <>
         ต้องศึกษา{" "}
         <a href="#" className="text-blue-600 hover:underline">
-          "เทคนิคนำร่องสำหรับฟรีแลนซ์"
+        &ldquo;เทคนิคนำร่องสำหรับฟรีแลนซ์&rdquo;
         </a>{" "}
         หรือใช้{" "}
         <a href="#" className="text-blue-600 hover:underline">
-          "Seller Center"
+          &ldquo;Seller Center&rdquo;
         </a>{" "}
         เพื่อศึกษาวิธีเพิ่มโอกาสในการถูกจ้าง
       </>
@@ -67,12 +67,12 @@ const steps: Step[] = [
     number: 6,
     title: "รับเงินและสิทธิพิเศษ",
     description: (
-      <>
-        Fastwork จะทําการโอนเงินเข้าบัญชีธนาคารของคุณตาม "{" "}
+      <> 
+        Fastwork จะทําการโอนเงินเข้าบัญชีธนาคารของคุณตาม &ldquo;{" "}
         <a href="#" className="text-blue-600 hover:underline">
           เงื่อนไขการรับเงิน
         </a>{" "}
-        " ยิ่งขายงานได้{" "}
+        &rdquo; ยิ่งขายงานได้{" "}
       </>
     ),
     image: StartSellingImage.step6,

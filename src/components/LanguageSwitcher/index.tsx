@@ -1,10 +1,8 @@
-import Image from "next/image";
-import React from "react";
-import { mutate } from "swr";
 import id from "@/assets/icons/id.svg";
 import th from "@/assets/icons/th.svg";
 import vn from "@/assets/icons/vn.svg";
 import { useLanguage } from "@/contexts/LanguageContext";
+import Image from "next/image";
 
 const LanguageSwitcher = () => {
   const { setLang } = useLanguage();

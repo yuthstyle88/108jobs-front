@@ -1,5 +1,6 @@
 "use client";
 import { AssetIcon, ProfileIcon } from "@/constants/icons";
+import { ProfileImage } from "@/constants/images";
 import {
   faBarsProgress,
   faBell,
@@ -14,15 +15,13 @@ import {
   faMessage,
   faSearch,
   faSignOut,
-  faTicket,
-  faUser,
+  faTicket
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import MegaMenu from "../MegaMenu";
-import { ProfileImage } from "@/constants/images";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -171,7 +170,7 @@ const Header = ({ type }: BgProps) => {
                         href="/user"
                         className="text-sm text-blue-600 hover:underline"
                       >
-                        View profile
+                        ดูโปรไฟล์
                       </Link>
                     </div>
                   </div>
@@ -196,7 +195,7 @@ const Header = ({ type }: BgProps) => {
                       icon={faGear}
                       className="text-[24px] text-primary "
                     />
-                    <span className="text-gray-700">Set up an account</span>
+                    <span className="text-gray-700">ตั้งค่าบัญชี</span>
                   </Link>
                   <Link
                     href="#"
@@ -206,7 +205,7 @@ const Header = ({ type }: BgProps) => {
                       icon={faMessage}
                       className="text-[24px] text-primary "
                     />
-                    <span className="text-gray-700">Messages and orders</span>
+                    <span className="text-gray-700">ข้อความและออเดอร์</span>
                   </Link>
                   <Link
                     href="#"
@@ -216,7 +215,7 @@ const Header = ({ type }: BgProps) => {
                       icon={faTicket}
                       className="text-[24px] text-primary "
                     />
-                    <span className="text-gray-700">Discount Coupons</span>
+                    <span className="text-gray-700">คูปองส่วนลด</span>
                   </Link>
                   <Link
                     href="/favorites"
@@ -226,7 +225,7 @@ const Header = ({ type }: BgProps) => {
                       icon={faHeart}
                       className="text-[24px] text-primary "
                     />
-                    <span className="text-gray-700">Jobs you like</span>
+                    <span className="text-gray-700">งานที่ถูกใจ</span>
                   </Link>
                   <Link
                     href="#"
@@ -236,7 +235,7 @@ const Header = ({ type }: BgProps) => {
                       icon={faBullhorn}
                       className="text-[24px] text-primary "
                     />
-                    <span className="text-gray-700">Job board</span>
+                    <span className="text-gray-700">บอร์ดประกาศงาน</span>
                   </Link>
                   <div className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50">
                     <FontAwesomeIcon
@@ -256,9 +255,7 @@ const Header = ({ type }: BgProps) => {
                       icon={faCodePullRequest}
                       className="text-[24px] text-primary "
                     />
-                    <span className="text-gray-700">
-                      Apply to be a freelancer
-                    </span>
+                    <span className="text-gray-700">สมัครเป็นฟรีแลนซ์</span>
                   </Link>
                   <Link
                     href="/consent-management"
@@ -268,7 +265,7 @@ const Header = ({ type }: BgProps) => {
                       icon={faBarsProgress}
                       className="text-[24px] text-primary "
                     />
-                    <span className="text-gray-700">Manage data usage</span>
+                    <span className="text-gray-700">จัดการการใช้ข้อมูล</span>
                   </Link>
                   <Link
                     href="#"
@@ -278,7 +275,7 @@ const Header = ({ type }: BgProps) => {
                       icon={faSignOut}
                       className="text-[24px] text-primary "
                     />
-                    <span className="text-gray-700">Log out</span>
+                    <span className="text-gray-700">ออกจากระบบ</span>
                   </Link>
                 </div>
               </div>
