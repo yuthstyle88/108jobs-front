@@ -2,11 +2,8 @@ import { ProfileImage } from "@/constants/images";
 import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import React from "react";
 
-type Props = {};
-
-const UserProfile = (props: Props) => {
+const UserProfile = () => {
   return (
     <main>
       <div className="relative bg-primary h-[200px]"></div>
@@ -25,9 +22,10 @@ const UserProfile = (props: Props) => {
                 uykpfzno
               </p>
               <div className="flex items-center justify-center pt-2">
-                {[1, 2, 3, 4, 5].map((item, index) => (
+                {[1, 2, 3, 4, 5].map((_, index) => (
                   <FontAwesomeIcon
                     icon={faStar}
+                    key={index}
                     className="text-[14px] text-[#D6DAE1] "
                   />
                 ))}

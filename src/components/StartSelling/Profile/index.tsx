@@ -1,13 +1,10 @@
 "use client";
 import { StartSellingImage } from "@/constants/images";
-import React from "react";
-import { Swiper, SwiperClass, SwiperSlide, useSwiper } from "swiper/react";
-import { JobDetailImage } from "@/constants/images";
 import Image from "next/image";
-import { useState } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 type Testimonial = {
   name: string;
