@@ -1,10 +1,10 @@
 import { AssetsImage, CategoriesImage } from "@/constants/images";
 import Image from "next/image";
+import Link from "next/link";
 import Benefit from "./components/Benefit";
 import FreelancerTypes from "./components/FreelancerTypes";
 import Step from "./components/Step";
 import ProfileSelling from "./Profile";
-import Link from "next/link";
 const category_images = [
   {
     image: CategoriesImage.seo_image,
@@ -60,7 +60,7 @@ const StartSelling = () => {
           <p className="text-xl md:text-2xl mb-8">
             อิสระของการทำงาน ที่คุณเลือกเองได้
           </p>
-          <Link href="/login">
+          <Link href="/apply-freelance">
             <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
               สมัครเป็นฟรีแลนซ์
             </button>

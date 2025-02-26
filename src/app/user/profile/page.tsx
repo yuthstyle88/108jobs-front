@@ -1,10 +1,10 @@
 "use client";
 import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
 import { ProfileImage } from "@/constants/images";
-import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
   return (
