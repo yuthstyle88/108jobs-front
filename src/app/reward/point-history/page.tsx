@@ -4,12 +4,24 @@ import Image from "next/image";
 import { useState } from "react";
 import { FaChevronUp } from "react-icons/fa";
 import { motion } from "framer-motion";
-import PointCard from "@/components/PointIcon/PointCard";
+// import CouponCard from "@/components/CouponCard/CouponCard";
 
-const RewardPage = () => {
+interface PointHistory {
+  id: number;
+  date: string;
+  details: string;
+  points: number;
+}
+
+const PointHistoryPage = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [activeButton, setActiveButton] = useState(0);
   const [openIndexes, setOpenIndexes] = useState(new Set<number>());
+  const [activeTab1, setActiveTab1] = useState<"received" | "exchange">(
+    "received"
+  );
+  const [histories, setHistories] = useState<PointHistory[]>([]);
+  const hasData = false;
 
   const toggleFAQ = (index: number) => {
     setOpenIndexes((prev) => {
@@ -145,79 +157,56 @@ const RewardPage = () => {
       </section>
       <section className="bg-[hsl(216,85%,94%)] py-24 grid grid-container-desktop gap-y-12 pt-[4rem]">
         <div className="col-start-2 col-end-3">
-          <div className="flex">
-            <div className="h-[40px] w-[5px] bg-blue-600 mr-2 " />
-            <div className="text-[31px] font-semibold text-black">
-              ภารกิจรับ Point ฟรี
-            </div>
-          </div>
-          <div className="flex justify-left space-x-4 py-8">
-            <button
-              className={`py-2 px-6 rounded-full ${
-                activeButton === 0
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-blue-600 border border-blue-600"
-              }`}
-              onClick={() => setActiveButton(0)}
-            >
-              ทั้งหมด
-            </button>
-            <button
-              className={`py-2 px-6 rounded-full ${
-                activeButton === 1
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-blue-600 border border-blue-600"
-              }`}
-              onClick={() => setActiveButton(1)}
-            >
-              ทั่วไป
-            </button>
-            <button
-              className={`py-2 px-6 rounded-full ${
-                activeButton === 2
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-blue-600 border border-blue-600"
-              }`}
-              onClick={() => setActiveButton(2)}
-            >
-              สำหรับการจ้างงาน
-            </button>
-          </div>
-          <div className="text-[24px] font-[500] leading-[27.6px] text-[rgb(29,108,226)] pt-8">
+          <div className="text-[24px] font-[500] leading-[27.6px] text-[rgb(29,108,226)] pb-[2rem]">
             ทั่วไป
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 pt-[2rem]">
-            <PointCard
-              title="[พิเศษ] รับ Point ฟรี ประจำวัน"
-              subtitle="เหลือเวลาอีก 8 ชั่วโมง"
-              points={1.0}
-              onCheckPoints={() => {}}
-            />
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-6 ">
+            <div className="grid grid-cols-2 divide-x divide-gray-200">
+              <button
+                className={`py-4 text-center font-medium ${
+                  activeTab1 === "received" ? "text-blue-600" : "text-gray-500"
+                }`}
+                onClick={() => setActiveTab1("received")}
+              >
+                ได้รับ points
+              </button>
+              <button
+                className={`py-4 text-center font-medium ${
+                  activeTab1 === "exchange" ? "text-blue-600" : "text-gray-500"
+                }`}
+                onClick={() => setActiveTab1("exchange")}
+              >
+                แลก point / หมดอายุ
+              </button>
+            </div>
           </div>
-          <div className="text-[24px] font-[500] leading-[27.6px] text-[rgb(29,108,226)] pt-8">
-            สำหรับการจ้างงาน{" "}
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            <PointCard
-              title="ชำระเงินบน fastwork ครั้งแรก"
-              points={50.0}
-              onCheckPoints={() => {}}
-            />
-            <PointCard
-              title="จ้างงานสำเร็จครั้งแรก"
-              points={100.0}
-              onCheckPoints={() => {}}
-            />
-            <PointCard
-              title="จ้างงานฟรีแลนซ์รายเดิม ซ้ำมากกว่า 1 ครั้งสำเร็จ"
-              points={100.0}
-              onCheckPoints={() => {}}
-            />
-            <PointCard
-              title="โพสต์บนบอร์ดประกาศงานสำเร็จครั้งแรก"
-              points={10.0}
-              onCheckPoints={() => {}}
-            />
+
+          {/* Table Header */}
+          <div className="bg-white rounded-lg shadow-sm">
+            <div className="grid grid-cols-3 py-4 px-6 bg-gray-50 border-b border-gray-200 text-sm font-medium text-gray-600">
+              <div>วันที่ได้รับ point</div>
+              <div>รายละเอียด</div>
+              <div className="text-right">จำนวน points</div>
+            </div>
+
+            {/* Table Content */}
+            {hasData ? (
+              histories.map((history) => (
+                <div
+                  key={history.id}
+                  className="grid grid-cols-3 py-4 px-6 border-b border-gray-100 text-sm"
+                >
+                  <div>{history.date}</div>
+                  <div>{history.details}</div>
+                  <div className="text-right font-medium">
+                    {history.points > 0 ? "+" : ""}
+                    {history.points}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="py-12 text-center text-gray-500">ไม่พบข้อมูล</div>
+            )}
           </div>
         </div>
       </section>
@@ -293,4 +282,4 @@ const RewardPage = () => {
   );
 };
 
-export default RewardPage;
+export default PointHistoryPage;
