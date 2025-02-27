@@ -4,9 +4,26 @@ import Image from "next/image";
 import { useState } from "react";
 import { FaChevronUp } from "react-icons/fa";
 import { motion } from "framer-motion";
-import PointCard from "@/components/PointIcon/PointCard";
+import CouponCard from "@/components/CouponCard/CouponCard";
 
-const RewardPage = () => {
+interface CouponData {
+  id: number;
+  value: number;
+  isHotDeal?: boolean;
+  points: number;
+}
+
+const coupons: CouponData[] = [
+  { id: 1, value: 50, points: 50 },
+  { id: 2, value: 100, points: 90 },
+  { id: 3, value: 300, points: 300 },
+  { id: 4, value: 500, points: 500 },
+  { id: 5, value: 1000, points: 1000 },
+  { id: 6, value: 3000, points: 3000 },
+  { id: 7, value: 5000, points: 5000 },
+];
+
+const EarnPage = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [activeButton, setActiveButton] = useState(0);
   const [openIndexes, setOpenIndexes] = useState(new Set<number>());
@@ -148,7 +165,7 @@ const RewardPage = () => {
           <div className="flex">
             <div className="h-[40px] w-[5px] bg-blue-600 mr-2 " />
             <div className="text-[31px] font-semibold text-black">
-              ภารกิจรับ Point ฟรี
+              รายการของรางวัล{" "}
             </div>
           </div>
           <div className="flex justify-left space-x-4 py-8">
@@ -160,7 +177,7 @@ const RewardPage = () => {
               }`}
               onClick={() => setActiveButton(0)}
             >
-              ทั้งหมด
+              รางวัลทั้งหมด{" "}
             </button>
             <button
               className={`py-2 px-6 rounded-full ${
@@ -170,55 +187,31 @@ const RewardPage = () => {
               }`}
               onClick={() => setActiveButton(1)}
             >
-              ทั่วไป
-            </button>
-            <button
-              className={`py-2 px-6 rounded-full ${
-                activeButton === 2
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-blue-600 border border-blue-600"
-              }`}
-              onClick={() => setActiveButton(2)}
-            >
-              สำหรับการจ้างงาน
+              สำหรับการจ้างงาน{" "}
             </button>
           </div>
           <div className="text-[24px] font-[500] leading-[27.6px] text-[rgb(29,108,226)] pt-8">
             ทั่วไป
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 pt-[2rem]">
-            <PointCard
-              title="[พิเศษ] รับ Point ฟรี ประจำวัน"
-              subtitle="เหลือเวลาอีก 8 ชั่วโมง"
-              points={1.0}
-              onCheckPoints={() => {}}
-            />
-          </div>
-          <div className="text-[24px] font-[500] leading-[27.6px] text-[rgb(29,108,226)] pt-8">
-            สำหรับการจ้างงาน{" "}
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            <PointCard
-              title="ชำระเงินบน fastwork ครั้งแรก"
-              points={50.0}
-              onCheckPoints={() => {}}
-            />
-            <PointCard
-              title="จ้างงานสำเร็จครั้งแรก"
-              points={100.0}
-              onCheckPoints={() => {}}
-            />
-            <PointCard
-              title="จ้างงานฟรีแลนซ์รายเดิม ซ้ำมากกว่า 1 ครั้งสำเร็จ"
-              points={100.0}
-              onCheckPoints={() => {}}
-            />
-            <PointCard
-              title="โพสต์บนบอร์ดประกาศงานสำเร็จครั้งแรก"
-              points={10.0}
-              onCheckPoints={() => {}}
-            />
-          </div>
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {coupons.map((coupon, index) => (
+                <CouponCard
+                  key={coupon.id}
+                  id={coupon.id}
+                  value={coupon.value}
+                  points={coupon.points}
+                  isHotDeal={coupon.isHotDeal}
+                  delay={index * 0.1}
+                />
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
       <section
@@ -293,4 +286,4 @@ const RewardPage = () => {
   );
 };
 
-export default RewardPage;
+export default EarnPage;
