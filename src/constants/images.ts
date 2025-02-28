@@ -71,8 +71,9 @@ export const StartSellingImage = {
   compare1,
   compare2,
   compare3,
-  profile_selling
-};import compare1 from "../assets/images/compare/compare1.svg";
+  profile_selling,
+};
+import compare1 from "../assets/images/compare/compare1.svg";
 import compare2 from "../assets/images/compare/compare2.svg";
 import compare3 from "../assets/images/compare/compare3.svg";
 import banner2 from "../assets/images/compare/banner-02.png";
@@ -82,11 +83,30 @@ import logobusiness from "../assets/images/compare/logo-business.png";
 
 import avatar from "../assets/images/profile/avatar.jpg";
 import coin_bg from "../assets/images/profile/coin-desktop-banner.webp";
+import job_board from "../assets/images/profile/banner.webp";
 
+import leakage1 from "../assets/images/apply-freelancer/leakage-1.jpg";
+import leakage2 from "../assets/images/apply-freelancer/leakage-2.jpg";
+import leakage3 from "../assets/images/apply-freelancer/leakage-3.jpg";
+import leakage4 from "../assets/images/apply-freelancer/leakage-4.jpg";
+import background_left from "../assets/images/apply-freelancer/background-left.753caf83.svg";
+import background_right from "../assets/images/apply-freelancer/background-right.f8a09c85.svg";
+import landing from "../assets/images/apply-freelancer/landing.webp";
+
+export const FreelancerImage = {
+  leakage1,
+  leakage2,
+  leakage3,
+  leakage4,
+  background_left,
+  background_right,
+  landing
+};
 export const ProfileImage = {
   avatar,
-  coin_bg
-};  
+  coin_bg,
+  job_board,
+};
 export const CompareImage = {
   compare1,
   compare2,
@@ -95,7 +115,7 @@ export const CompareImage = {
   comparebadge1,
   comparebadge2,
   logobusiness,
-};  
+};
 
 export const JobDetailImage = {
   job_detail1,

@@ -2,7 +2,7 @@
 import { CategoriesImage } from "@/constants/images";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useState } from "react";
 
 type CategoryItem = {
   id: number;
@@ -74,9 +74,6 @@ const subSEO = [
 
 const Categories = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<CategoryItem | null>(
-    null
-  );
 
   return (
     <main className="grid-container-desktop w-full min-h-screen">
@@ -133,7 +130,6 @@ const Categories = () => {
                 key={category.id}
                 href="#"
                 className="group relative overflow-hidden rounded-lg"
-                onMouseEnter={() => setActiveCategory(category)}
               >
                 <div className="relative h-48 w-full overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-60" />

@@ -1,4 +1,6 @@
 import logo from "../assets/icons/logo.svg";
+import logo_blue from "../assets/icons/logo-type-default.f6d70617.svg";
+import logo_seller from "../assets/icons/logo-vn.svg";
 import consultant from "../assets/icons/categories-icon/consultant.svg";
 import ecommerce from "../assets/icons/categories-icon/ecommerce.svg";
 import graphic from "../assets/icons/categories-icon/graphic.svg";
@@ -24,9 +26,11 @@ import response from "../assets/icons/job-detail/response.svg";
 import sold from "../assets/icons/job-detail/sold.svg";
 
 import coins from "../assets/icons/profile/point-icon.svg";
+import hiring_info from "../assets/icons/profile/hiring-info-desktop.svg";
 
 export const ProfileIcon = { 
     coins,
+    hiring_info
     
     
 };
@@ -64,5 +68,7 @@ export const CategoriesIcon = {
 };
 export const AssetIcon = {
     logo,
-    
+    logo_blue,
+    logo_seller,
+
 };

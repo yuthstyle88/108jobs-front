@@ -2,10 +2,9 @@
 import { CategoriesIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { faFacebookF, faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 
 export default function Login() {
@@ -20,7 +19,7 @@ export default function Login() {
     promotionalAccepted: false,
   });
 
-  const handleCheckboxChange = (e: any) => {
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     setCheckboxes((prev) => ({
       ...prev,

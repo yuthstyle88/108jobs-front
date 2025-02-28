@@ -23,8 +23,8 @@ import { Keyboard, Mousewheel, Navigation, Pagination } from "swiper/modules";
 import {
   AssetsImage,
   CategoriesImage,
-  CustomerImage,
   CompareImage,
+  CustomerImage,
 } from "@/constants/images";
 import Link from "next/link";
 import { useState } from "react";
@@ -781,8 +781,8 @@ export default function Home() {
                 <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
                   <div className="mb-4">
                     <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
                     </blockquote>
                   </div>
                   <div className="flex items-center justify-between mt-4">
@@ -807,9 +807,9 @@ export default function Home() {
               <SwiperSlide>
                 <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
                   <div className="mb-4">
-                    <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                     <blockquote className="text-lg text-gray-700 font-semibold italic">
+                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
                     </blockquote>
                   </div>
                   <div className="flex items-center justify-between mt-4">
@@ -835,8 +835,8 @@ export default function Home() {
                 <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
                   <div className="mb-4">
                     <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
                     </blockquote>
                   </div>
                   <div className="flex items-center justify-between mt-4">
@@ -862,8 +862,8 @@ export default function Home() {
                 <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
                   <div className="mb-4">
                     <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                    &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                    เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
                     </blockquote>
                   </div>
                   <div className="flex items-center justify-between mt-4">
@@ -889,8 +889,8 @@ export default function Home() {
                 <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
                   <div className="mb-4">
                     <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                    &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                    เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
                     </blockquote>
                   </div>
                   <div className="flex items-center justify-between mt-4">
@@ -916,8 +916,8 @@ export default function Home() {
                 <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
                   <div className="mb-4">
                     <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                    &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                    เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
                     </blockquote>
                   </div>
                   <div className="flex items-center justify-between mt-4">
@@ -943,8 +943,8 @@ export default function Home() {
                 <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
                   <div className="mb-4">
                     <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      "Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"
+                    &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                    เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
                     </blockquote>
                   </div>
                   <div className="flex items-center justify-between mt-4">
