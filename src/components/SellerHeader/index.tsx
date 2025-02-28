@@ -5,7 +5,7 @@ const SellerHeader = () => {
   return (
     <header className="bg-white border-b border-gray-200">
       <div className="flex items-center justify-between px-8 py-4">
-        <h1 className="text-xl">Xin chào, bth335yq</h1>
+        <h1 className="text-xl text-text_primary">Xin chào, bth335yq</h1>
         <div className="flex items-center space-x-4">
           <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center">
             <span>Fastlance Rewards</span>

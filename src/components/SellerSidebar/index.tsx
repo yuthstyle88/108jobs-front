@@ -33,7 +33,7 @@ const SellerSidebar = () => {
       <nav className="flex-1">
         <div className="">
           <a
-            href="#"
+            href="/seller"
             className="flex items-center gap-3 px-3 py-4 text-base text-third bg-white border-l-4 border-primary bg-secondary"
           >
             <FontAwesomeIcon
@@ -43,7 +43,7 @@ const SellerSidebar = () => {
             <p>Tổng quan</p>
           </a>
           <a
-            href="#"
+            href="/seller/project-management"
             className="group flex items-center gap-3 px-3 py-4 text-base text-text_secondary bg-white border-l-4 hover:border-primary hover:bg-secondary"
           >
             <FontAwesomeIcon
@@ -53,7 +53,7 @@ const SellerSidebar = () => {
             <p>Quản lý dự án</p>
           </a>
           <a
-            href="#"
+            href="/seller/account-statistics"
             className="group flex items-center gap-3 px-3 py-4 text-base text-text_secondary bg-white border-l-4 hover:border-primary hover:bg-secondary"
           >
             <FontAwesomeIcon
@@ -63,7 +63,7 @@ const SellerSidebar = () => {
             <p>Thống kê tài khoản</p>
           </a>
           <a
-            href="#"
+            href="/seller/my-service"
             className="group flex items-center gap-3 px-3 py-4 text-base text-text_secondary bg-white border-l-4 hover:border-primary hover:bg-secondary"
           >
             <FontAwesomeIcon
@@ -73,7 +73,7 @@ const SellerSidebar = () => {
             <p>Dịch vụ của tôi</p>
           </a>
           <a
-            href="#"
+            href="/seller/withdrawal"
             className="group flex items-center gap-3 px-3 py-4 text-base text-text_secondary bg-white border-l-4 hover:border-primary hover:bg-secondary"
           >
             <FontAwesomeIcon
