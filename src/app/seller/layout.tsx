@@ -15,7 +15,7 @@ export default function StartSellingLayout({
       <div className="flex-1">
         <SellerHeader />
         <div className="p-8">
-          <div className="bg-white rounded-lg p-6">{children}</div>
+          <div className="rounded-lg p-6">{children}</div>
         </div>
       </div>
     </div>
