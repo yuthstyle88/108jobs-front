@@ -52,15 +52,20 @@ import right from "../assets/images/right.svg";
 import center from "../assets/images/center.svg";
 import point from "../assets/images/point.svg";
 
+import calculation from "../assets/images/seller/cal@2x.png";
+
+export const SellerImage = {
+  calculation,
+};
 export const BannerImage = {
   left,
   right,
   center,
-}
+};
 
 export const RewardImage = {
-point
-}
+  point,
+};
 export const StartSellingImage = {
   step1,
   step2,
@@ -100,7 +105,7 @@ export const FreelancerImage = {
   leakage4,
   background_left,
   background_right,
-  landing
+  landing,
 };
 export const ProfileImage = {
   avatar,

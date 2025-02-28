@@ -29,6 +29,9 @@
 .coin-popup-gradient {
   background: linear-gradient(105.31deg, #1855b8 21.49%, #387ae5 93.5%);
 }
+.my-service-gradient {
+  background: linear-gradient(108.98deg, #d6d9dd -101.64%, #fbfbfc 93.48%);
+}
 
 .grid-container-desktop{
   display: grid;
