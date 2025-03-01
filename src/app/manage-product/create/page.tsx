@@ -1,8 +1,8 @@
-
 "use client";
-import { useState } from "react";
-import { ArrowLeft, Info, Plus, Upload, X, Youtube } from "lucide-react";
+import { Info, Plus, Upload, X, Youtube } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const CreateService = () => {
   const router = useRouter();
@@ -82,28 +82,35 @@ const CreateService = () => {
         if (!serviceDetails.description) return "Vui lòng nhập mô tả dịch vụ";
         return "";
       case 2:
-        const incompletePackage = packages.find(pkg => 
-          !pkg.name || !pkg.deliverables || !pkg.price || !pkg.deliveryDays
+        const incompletePackage = packages.find(
+          (pkg) =>
+            !pkg.name || !pkg.deliverables || !pkg.price || !pkg.deliveryDays
         );
         if (incompletePackage) {
           if (!incompletePackage.name) return "Vui lòng nhập tên gói";
-          if (!incompletePackage.deliverables) return "Vui lòng nhập deliverables";
+          if (!incompletePackage.deliverables)
+            return "Vui lòng nhập deliverables";
           if (!incompletePackage.price) return "Vui lòng nhập giá";
-          if (!incompletePackage.deliveryDays) return "Vui lòng nhập thời gian giao hàng";
+          if (!incompletePackage.deliveryDays)
+            return "Vui lòng nhập thời gian giao hàng";
         }
         return "";
       case 3:
         if (!coverImage) return "Vui lòng tải lên ảnh bìa";
-        if (serviceImages.length < 2) return "Vui lòng tải lên ít nhất 2 ảnh dịch vụ";
+        if (serviceImages.length < 2)
+          return "Vui lòng tải lên ít nhất 2 ảnh dịch vụ";
         return "";
       case 4:
-        const incompleteStep = workSteps.find(step => !step.description);
+        const incompleteStep = workSteps.find((step) => !step.description);
         if (incompleteStep) return "Vui lòng mô tả tất cả các bước";
         return "";
       case 5:
-        if (!confirmations.isOwner) return "Vui lòng xác nhận bạn là người cung cấp dịch vụ";
-        if (!confirmations.canComplete) return "Vui lòng xác nhận bạn có khả năng hoàn thành dịch vụ";
-        if (!confirmations.agreeTerms) return "Vui lòng đồng ý với điều khoản dịch vụ";
+        if (!confirmations.isOwner)
+          return "Vui lòng xác nhận bạn là người cung cấp dịch vụ";
+        if (!confirmations.canComplete)
+          return "Vui lòng xác nhận bạn có khả năng hoàn thành dịch vụ";
+        if (!confirmations.agreeTerms)
+          return "Vui lòng đồng ý với điều khoản dịch vụ";
         return "";
       default:
         return "";
@@ -199,7 +206,7 @@ const CreateService = () => {
       );
       const updatedImages = [...serviceImages, ...newImages];
       setServiceImages(updatedImages);
-      
+
       // Clear validation error if we now have enough images
       if (updatedImages.length >= 2) {
         setValidationError(null);
@@ -211,7 +218,7 @@ const CreateService = () => {
     const updatedImages = [...serviceImages];
     updatedImages.splice(index, 1);
     setServiceImages(updatedImages);
-    
+
     // Re-validate if we drop below the required number of images
     if (updatedImages.length < 2 && currentStep === 3) {
       setValidationError("Vui lòng tải lên ít nhất 2 ảnh dịch vụ");
@@ -240,7 +247,11 @@ const CreateService = () => {
       )
     );
     // Clear validation if all steps now have descriptions
-    if (workSteps.every(step => step.id === id ? description !== "" : step.description !== "")) {
+    if (
+      workSteps.every((step) =>
+        step.id === id ? description !== "" : step.description !== ""
+      )
+    ) {
       setValidationError(null);
     }
   };
@@ -276,14 +287,17 @@ const CreateService = () => {
       ...serviceDetails,
       [name]: value,
     });
-    
+
     // Clear validation errors if field is now filled
     if (value && validationError) {
       if (
-        (name === "category" && validationError === "Vui lòng chọn danh mục dịch vụ") ||
+        (name === "category" &&
+          validationError === "Vui lòng chọn danh mục dịch vụ") ||
         (name === "type" && validationError === "Vui lòng chọn loại dịch vụ") ||
-        (name === "name" && validationError === "Vui lòng nhập tiêu đề dịch vụ") ||
-        (name === "description" && validationError === "Vui lòng nhập mô tả dịch vụ")
+        (name === "name" &&
+          validationError === "Vui lòng nhập tiêu đề dịch vụ") ||
+        (name === "description" &&
+          validationError === "Vui lòng nhập mô tả dịch vụ")
       ) {
         setValidationError(null);
       }
@@ -294,17 +308,19 @@ const CreateService = () => {
     setPackages(
       packages.map((pkg) => (pkg.id === id ? { ...pkg, [field]: value } : pkg))
     );
-    
+
     // Clear validation error if this was the field with the error
     if (value && validationError) {
       const errorMessages = {
-        "name": "Vui lòng nhập tên gói",
-        "deliverables": "Vui lòng nhập deliverables",
-        "price": "Vui lòng nhập giá",
-        "deliveryDays": "Vui lòng nhập thời gian giao hàng"
+        name: "Vui lòng nhập tên gói",
+        deliverables: "Vui lòng nhập deliverables",
+        price: "Vui lòng nhập giá",
+        deliveryDays: "Vui lòng nhập thời gian giao hàng",
       };
-      
-      if (validationError === errorMessages[field as keyof typeof errorMessages]) {
+
+      if (
+        validationError === errorMessages[field as keyof typeof errorMessages]
+      ) {
         setValidationError(null);
       }
     }
@@ -315,24 +331,26 @@ const CreateService = () => {
       ...confirmations,
       [key]: checked,
     });
-    
+
     // Clear validation error if this confirmation is now checked
     if (checked && validationError) {
       const errorMessages = {
-        "isOwner": "Vui lòng xác nhận bạn là người cung cấp dịch vụ",
-        "canComplete": "Vui lòng xác nhận bạn có khả năng hoàn thành dịch vụ",
-        "agreeTerms": "Vui lòng đồng ý với điều khoản dịch vụ"
+        isOwner: "Vui lòng xác nhận bạn là người cung cấp dịch vụ",
+        canComplete: "Vui lòng xác nhận bạn có khả năng hoàn thành dịch vụ",
+        agreeTerms: "Vui lòng đồng ý với điều khoản dịch vụ",
       };
-      
-      if (validationError === errorMessages[key as keyof typeof errorMessages]) {
+
+      if (
+        validationError === errorMessages[key as keyof typeof errorMessages]
+      ) {
         setValidationError(null);
       }
     }
   };
 
-  const isAllConfirmed = Object.values(confirmations).every(
-    (value) => value === true
-  );
+  // const isAllConfirmed = Object.values(confirmations).every(
+  //   (value) => value === true
+  // );
 
   // Render Step Content
   const renderStepContent = () => {
@@ -340,7 +358,9 @@ const CreateService = () => {
       case 1:
         return (
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-medium mb-6 text-text_primary">Thông tin dịch vụ</h2>
+            <h2 className="text-xl font-medium mb-6 text-text_primary">
+              Thông tin dịch vụ
+            </h2>
 
             <div className="space-y-6 max-w-4xl">
               <div className="grid grid-cols-2 gap-6">
@@ -445,10 +465,12 @@ const CreateService = () => {
       case 2:
         return (
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-medium mb-6 text-text_primary">Các gói dịch vụ và giá</h2>
+            <h2 className="text-xl font-medium mb-6 text-text_primary">
+              Các gói dịch vụ và giá
+            </h2>
 
             <div className="space-y-8 max-w-4xl">
-              {packages.map((pkg, index) => (
+              {packages.map((pkg) => (
                 <div
                   key={pkg.id}
                   className="border border-gray-200 rounded-lg p-6 relative"
@@ -574,12 +596,16 @@ const CreateService = () => {
       case 3:
         return (
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-medium mb-6 text-text_primary">Ảnh và video dịch vụ</h2>
+            <h2 className="text-xl font-medium mb-6 text-text_primary">
+              Ảnh và video dịch vụ
+            </h2>
 
             <div className="space-y-8 max-w-4xl">
               {/* Cover Image Upload */}
               <div>
-                <h3 className="text-md font-medium mb-2 text-text_primary">Ảnh bìa</h3>
+                <h3 className="text-md font-medium mb-2 text-text_primary">
+                  Ảnh bìa
+                </h3>
                 <p className="text-sm text-gray-600 mb-4">
                   Ảnh bìa sẽ được hiển thị nổi bật trong kết quả tìm kiếm (bắt
                   buộc)
@@ -609,10 +635,12 @@ const CreateService = () => {
                   </div>
                 ) : (
                   <div className="relative">
-                    <img
+                    <Image
                       src={coverImage}
                       alt="Cover"
                       className="w-full h-64 object-cover rounded-lg"
+                      width={500}
+                      height={500}
                     />
                     <button
                       className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-md"
@@ -626,7 +654,9 @@ const CreateService = () => {
 
               {/* Service Images Upload */}
               <div>
-                <h3 className="text-md font-medium mb-2 text-text_primary">Ảnh dịch vụ</h3>
+                <h3 className="text-md font-medium mb-2 text-text_primary">
+                  Ảnh dịch vụ
+                </h3>
                 <p className="text-sm text-gray-600 mb-4">
                   Tải lên ít nhất 2 ảnh liên quan đến dịch vụ của bạn (tối đa 30
                   ảnh)
@@ -635,10 +665,12 @@ const CreateService = () => {
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   {serviceImages.map((image, index) => (
                     <div key={index} className="relative">
-                      <img
+                      <Image
                         src={image}
                         alt={`Service ${index}`}
                         className="w-full h-32 object-cover rounded-lg"
+                        width={500}
+                        height={500}
                       />
                       <button
                         className="absolute top-2 right-2 bg-white p-1 rounded-full shadow-md"
@@ -682,7 +714,9 @@ const CreateService = () => {
 
               {/* YouTube Video */}
               <div>
-                <h3 className="text-md font-medium mb-2 text-text_primary">Video từ YouTube</h3>
+                <h3 className="text-md font-medium mb-2 text-text_primary">
+                  Video từ YouTube
+                </h3>
                 <p className="text-sm text-gray-600 mb-4">
                   Thêm một video demo từ YouTube (không bắt buộc)
                 </p>
@@ -803,7 +837,9 @@ const CreateService = () => {
       case 5:
         return (
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-medium mb-6 text-text_primary">Xác nhận dịch vụ</h2>
+            <h2 className="text-xl font-medium mb-6 text-text_primary">
+              Xác nhận dịch vụ
+            </h2>
 
             <div className="space-y-8 max-w-4xl">
               <div className="p-4 bg-amber-50 border border-amber-100 rounded-lg mb-6">

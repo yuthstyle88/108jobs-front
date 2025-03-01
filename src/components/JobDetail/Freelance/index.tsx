@@ -1,6 +1,7 @@
 import { JobDetailIcon } from "@/constants/icons";
 import { JobDetailImage } from "@/constants/images";
 import Image from "next/image";
+import Link from "next/link";
 
 const freelancer = [
   {
@@ -31,7 +32,7 @@ const Freelance = () => {
       <h2 className="text-[1.25rem] text-third font-medium">ฟรีแลนซ์</h2>
       <div className="mx-auto bg-white rounded-xl border-border_primary border-1 shadow-sm p-6">
         <div className="flex items-start justify-between mb-4">
-          <div className="flex items-start space-x-4">
+          <Link href="/user/profile" className="flex items-start space-x-4">
             <Image
               src={JobDetailImage.freelancer_avt}
               alt="Profile"
@@ -54,7 +55,7 @@ const Freelance = () => {
                 อสังหา โรงงาน โรงแรม Shipping แฟชั่น คลินิก
               </p>
             </div>
-          </div>
+          </Link>
         </div>
 
         <div className="flex items-center justify-between mt-6 pt-6 border-t">

@@ -182,6 +182,7 @@ const PointHistoryPage = () => {
               histories.map((history) => (
                 <div
                   key={history.id}
+                  onClick={()=>setHistories([])}
                   className="grid grid-cols-3 py-4 px-6 border-b border-gray-100 text-sm"
                 >
                   <div>{history.date}</div>

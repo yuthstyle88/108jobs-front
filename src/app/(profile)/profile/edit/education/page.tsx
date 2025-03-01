@@ -52,7 +52,7 @@ const EditEducation = () => {
           Trình độ học vấn
         </h1>
 
-        {educationItems.map((item, index) => (
+        {educationItems.map((item) => (
           <div key={item.id} className="bg-white rounded-lg p-6 mb-6 shadow-sm">
             <div className="grid grid-cols-2 gap-6">
               <div>

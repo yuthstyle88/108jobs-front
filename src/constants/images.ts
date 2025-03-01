@@ -53,9 +53,11 @@ import center from "../assets/images/center.svg";
 import point from "../assets/images/point.svg";
 
 import calculation from "../assets/images/seller/cal@2x.png";
+import response from "../assets/images/seller/response-empty-vn@2x.png";
 
 export const SellerImage = {
   calculation,
+  response
 };
 export const BannerImage = {
   left,

@@ -54,7 +54,7 @@ const EditCertifications = () => {
           Chứng chỉ và giải thưởng
         </h1>
 
-        {certificationItems.map((item, index) => (
+        {certificationItems.map((item) => (
           <div key={item.id} className="bg-white rounded-lg p-6 mb-6 shadow-sm">
             <div>
               <label className="block text-gray-700 mb-2">
