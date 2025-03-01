@@ -1,9 +1,10 @@
 "use client";
 import { BannerImage, RewardImage } from "@/constants/images";
+import { motion } from "framer-motion";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FaChevronUp } from "react-icons/fa";
-import { motion } from "framer-motion";
 // import CouponCard from "@/components/CouponCard/CouponCard";
 
 interface PointHistory {
@@ -14,8 +15,7 @@ interface PointHistory {
 }
 
 const PointHistoryPage = () => {
-  const [activeTab, setActiveTab] = useState(0);
-  const [activeButton, setActiveButton] = useState(0);
+  const route = useRouter();
   const [openIndexes, setOpenIndexes] = useState(new Set<number>());
   const [activeTab1, setActiveTab1] = useState<"received" | "exchange">(
     "received"
@@ -123,32 +123,20 @@ const PointHistoryPage = () => {
           {" "}
           <div className="flex space-x-8">
             <div
-              className={`text-[20px] font-normal cursor-pointer ${
-                activeTab === 0
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-400"
-              }`}
-              onClick={() => setActiveTab(0)}
+              className="text-[20px] font-normal cursor-pointer text-gray-400"
+              onClick={() => route.push("/reward/earn")}
             >
               สะสม Point
             </div>
             <div
-              className={`text-[20px] font-normal cursor-pointer ${
-                activeTab === 1
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-400"
-              }`}
-              onClick={() => setActiveTab(1)}
+              className="text-[20px] font-normal cursor-pointer text-gray-400"
+              onClick={() => route.push("/reward/reward")}
             >
               แลกของรางวัล
             </div>
             <div
-              className={`text-[20px] font-normal cursor-pointer ${
-                activeTab === 2
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-400"
-              }`}
-              onClick={() => setActiveTab(2)}
+              className="text-[20px] font-normal cursor-pointer text-blue-600 border-b-2 border-blue-600"
+              onClick={() => route.push("/reward/point-history")}
             >
               ประวัติการใช้งาน
             </div>
