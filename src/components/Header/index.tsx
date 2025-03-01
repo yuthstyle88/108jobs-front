@@ -15,7 +15,7 @@ import {
   faMessage,
   faSearch,
   faSignOut,
-  faTicket
+  faTicket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -92,6 +92,12 @@ const Header = ({ type }: BgProps) => {
               <MegaMenu />
             </div>
           </div>
+          <Link
+            href="/seller"
+            className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
+          >
+            ศูนย์ผู้ขาย
+          </Link>
           <Link
             href="/start-selling"
             className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
@@ -208,7 +214,7 @@ const Header = ({ type }: BgProps) => {
                     <span className="text-gray-700">ข้อความและออเดอร์</span>
                   </Link>
                   <Link
-                    href="#"
+                    href="/promotion"
                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                   >
                     <FontAwesomeIcon
@@ -237,7 +243,10 @@ const Header = ({ type }: BgProps) => {
                     />
                     <span className="text-gray-700">บอร์ดประกาศงาน</span>
                   </Link>
-                  <div className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50">
+                  <Link
+                    href="/reward/earn"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                  >
                     <FontAwesomeIcon
                       icon={faGift}
                       className="text-[24px] text-primary "
@@ -246,7 +255,7 @@ const Header = ({ type }: BgProps) => {
                     <span className="ml-2 px-2 py-1 text-xs text-white bg-blue-500 rounded">
                       New
                     </span>
-                  </div>
+                  </Link>
                   <Link
                     href="/start-selling"
                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"

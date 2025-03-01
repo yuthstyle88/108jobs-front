@@ -10,7 +10,6 @@ interface RewardLayoutProps {
 export default function RewardLayout({ children }: RewardLayoutProps) {
   return (
     <>
-
       <section className="pt-[4.5rem] bg-white">
         {children}
       </section>
