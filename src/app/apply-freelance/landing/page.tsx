@@ -3,15 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-interface LandingApplyFreelancerProps {
-  formData: {
-    termsAccepted: boolean;
-  };
-  updateFormData: (data: { termsAccepted: boolean }) => void;
-  prevStep: () => void;
-}
-
-const LandingApplyFreelancer: React.FC<LandingApplyFreelancerProps> = () => {
+const LandingApplyFreelancer = () => {
   return (
     <div className="min-h-screen flex justify-center items-center bg-white overflow-hidden relative">
       <Image

@@ -1,12 +1,5 @@
 "use client";
-import {
-  ArrowLeft,
-  Bell,
-  ChevronRight,
-  FileText,
-  Info,
-  MessageSquare,
-} from "lucide-react";
+import { FileText, Info } from "lucide-react";
 import Link from "next/link";
 
 const AccountStats = () => {
@@ -25,11 +18,11 @@ const AccountStats = () => {
           {/* User Profile Card */}
           <div className="bg-white rounded-lg p-6 flex flex-col items-center">
             <div className="w-20 h-20 rounded-full overflow-hidden mb-4">
-              <img
+              {/* <img
                 src="/lovable-uploads/7bc51eb8-645d-4a7f-98db-eded96e727b7.png"
                 alt="User Profile"
                 className="w-full h-full object-cover"
-              />
+              /> */}
             </div>
             <h3 className="text-lg font-medium mb-1">wgcnegyk</h3>
           </div>
@@ -75,22 +68,14 @@ const AccountStats = () => {
         </div>
 
         {/* Response Time Card */}
-        <div className="bg-white rounded-lg p-6 mb-8">
+        <div className="bg-white rounded-lg p-6 mb-8 relative">
           <div className="flex items-center mb-4">
-            <h3 className="text-base font-medium flex-grow">
+            <h3 className="text-text_primary text-base font-medium flex-grow">
               Thời gian phản hồi trung bình
             </h3>
             <Info className="w-4 h-4 text-black" />
           </div>
           <div className="text-sm text-black">Chưa có dữ liệu</div>
-
-          <div className="mt-6 rounded-lg overflow-hidden border border-gray-200">
-            <img
-              src="/lovable-uploads/7bc51eb8-645d-4a7f-98db-eded96e727b7.png"
-              alt="Response Time Banner"
-              className="w-full h-auto"
-            />
-          </div>
         </div>
 
         {/* Service Stats */}
@@ -105,9 +90,11 @@ const AccountStats = () => {
           <div className="mt-6 bg-white rounded-lg p-6 flex flex-col items-center justify-center text-center">
             <FileText className="w-12 h-12 text-gray-300 mb-4" />
             <div className="text-black">Chưa có dữ liệu</div>
-            <button className="mt-4 bg-blue-100 text-blue-700 text-sm font-medium py-2 px-4 rounded">
-              Bắt Đầu Bán
-            </button>
+            <Link href="/manage-product/create">
+              <button className="mt-4 bg-blue-100 text-blue-700 text-sm font-medium py-2 px-4 rounded">
+                Bắt Đầu Bán
+              </button>
+            </Link>
           </div>
         </div>
       </div>

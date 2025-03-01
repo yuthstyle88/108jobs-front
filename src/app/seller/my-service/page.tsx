@@ -14,9 +14,11 @@ const MyServices = () => {
           <p className="text-gray-600 text-sm">
             Phí dịch vụ được tính 15% trên giá trị mà freelancer nhận được
           </p>
+          <Link href="/content/commission" >
           <button className="mt-4 bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded">
             Nhập đề tính toán
           </button>
+          </Link>
         </div>
         <div>
           <Image

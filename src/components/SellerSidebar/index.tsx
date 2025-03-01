@@ -1,3 +1,5 @@
+"use client";
+
 import { AssetIcon } from "@/constants/icons";
 import {
   faArrowRightToBracket,
@@ -10,104 +12,120 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 const SellerSidebar = () => {
+  const [isClose, setIsClose] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (path: string) => pathname === path;
+
   return (
-    <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-      <div className="h-[73px] border-b border-gray-200">
-        <a href="/" className="flex items-center justify-row pl-4 pr-8">
-          <div className="relative overflow-hidden py-4 pr-4 flex items-center">
-            <Image
-              src={AssetIcon.logo_seller}
-              alt="avatar"
-              className="w-full h-full"
-            />
+    <div
+      className={`bg-white border-r border-gray-200 flex flex-col transition-all duration-150 ${
+        isClose ? "w-16" : "w-64"
+      }`}
+    >
+      <div className="h-[73px] border-b border-gray-200 flex items-center px-4">
+        <div
+          className={`flex items-center gap-3 min-w-0 overflow-hidden ${
+            isClose ? "hidden" : "block"
+          }`}
+        >
+          <div className="relative overflow-hidden flex items-center p-4">
+            <Link href="/">
+              <Image
+                src={AssetIcon.logo_seller}
+                alt="avatar"
+                className="w-full h-full"
+              />
+            </Link>
           </div>
+        </div>
+        <button onClick={() => setIsClose(!isClose)} className="ml-1">
           <FontAwesomeIcon
             icon={faArrowRightToBracket}
-            className="text-[20px] text-third rotate-180"
+            className={`text-[18px] text-text_primary transition-transform ${
+              isClose ? "" : "rotate-180"
+            }`}
           />
-        </a>
+        </button>
       </div>
 
       <nav className="flex-1">
-        <div className="">
-          <a
-            href="/seller"
-            className="flex items-center gap-3 px-3 py-4 text-base text-third bg-white border-l-4 border-primary bg-secondary"
+        {[
+          { href: "/seller", icon: faFileContract, label: "Tổng quan" },
+          {
+            href: "/seller/project-management",
+            icon: faListCheck,
+            label: "Quản lý dự án",
+          },
+          {
+            href: "/seller/account-statistics",
+            icon: faIdCard,
+            label: "Thống kê tài khoản",
+          },
+          {
+            href: "/seller/my-service",
+            icon: faCalendar,
+            label: "Dịch vụ của tôi",
+          },
+          {
+            href: "/seller/withdrawal",
+            icon: faMoneyBill1Wave,
+            label: "Rút tiền freelancer",
+          },
+          {
+            href: "/reward/earn",
+            icon: faGift,
+            label: "Phần thưởng Fastlance",
+          },
+        ].map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`group flex items-center gap-3 px-3 py-4 text-base ${
+              isActive(item.href)
+                ? "text-third border-primary bg-secondary"
+                : "text-text_secondary bg-white hover:border-primary hover:bg-secondary hover:text-third"
+            } border-l-4 `}
           >
             <FontAwesomeIcon
-              icon={faFileContract}
-              className="text-[16px] text-third "
+              icon={item.icon}
+              className={`text-[16px] ${
+                isActive(item.href)
+                  ? "text-third"
+                  : "text-text_secondary group-hover:text-third"
+              }`}
             />
-            <p>Tổng quan</p>
-          </a>
-          <a
-            href="/seller/project-management"
-            className="group flex items-center gap-3 px-3 py-4 text-base text-text_secondary bg-white border-l-4 hover:border-primary hover:bg-secondary"
-          >
-            <FontAwesomeIcon
-              icon={faListCheck}
-              className="text-[16px] text-text_secondary group-hover:text-third"
-            />
-            <p>Quản lý dự án</p>
-          </a>
-          <a
-            href="/seller/account-statistics"
-            className="group flex items-center gap-3 px-3 py-4 text-base text-text_secondary bg-white border-l-4 hover:border-primary hover:bg-secondary"
-          >
-            <FontAwesomeIcon
-              icon={faIdCard}
-              className="text-[16px] text-text_secondary group-hover:text-third"
-            />
-            <p>Thống kê tài khoản</p>
-          </a>
-          <a
-            href="/seller/my-service"
-            className="group flex items-center gap-3 px-3 py-4 text-base text-text_secondary bg-white border-l-4 hover:border-primary hover:bg-secondary"
-          >
-            <FontAwesomeIcon
-              icon={faCalendar}
-              className="text-[16px] text-text_secondary group-hover:text-third"
-            />
-            <p>Dịch vụ của tôi</p>
-          </a>
-          <a
-            href="/seller/withdrawal"
-            className="group flex items-center gap-3 px-3 py-4 text-base text-text_secondary bg-white border-l-4 hover:border-primary hover:bg-secondary"
-          >
-            <FontAwesomeIcon
-              icon={faMoneyBill1Wave}
-              className="text-[16px] text-text_secondary group-hover:text-third"
-            />
-            <p>Rút tiền freelancer</p>
-          </a>
-          <a
-            href="#"
-            className="group flex items-center gap-3 px-3 py-4 text-base text-text_secondary bg-white border-l-4 hover:border-primary hover:bg-secondary"
-          >
-            <FontAwesomeIcon
-              icon={faGift}
-              className="text-[16px] text-text_secondary group-hover:text-third"
-            />
-            <p>Phần thưởng Fastlance</p>
-          </a>
-        </div>
+            <span
+              className={`whitespace-nowrap overflow-hidden transition-all duration-300 ${
+                isClose ? "hidden" : "block"
+              }`}
+            >
+              {item.label}
+            </span>
+          </Link>
+        ))}
       </nav>
 
       <div className="p-4 border-t border-gray-200">
-        <a
-          href="#"
-          className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
-        >
-          Gửi phản hồi
-        </a>
-        <a
-          href="#"
-          className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
-        >
-          Trung tâm hỗ trợ
-        </a>
+        <div className={`${isClose ? "hidden" : "block"}`}>
+          <Link
+            href="#"
+            className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
+          >
+            Gửi phản hồi
+          </Link>
+          <Link
+            href="#"
+            className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
+          >
+            Trung tâm hỗ trợ
+          </Link>
+        </div>
       </div>
     </div>
   );

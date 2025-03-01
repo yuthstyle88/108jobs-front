@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Clock, Ticket } from "lucide-react";
 import { motion } from "framer-motion";
+import { Clock } from "lucide-react";
+import { useState } from "react";
 interface CouponCardProps {
   id: number;
   value: number;
@@ -9,7 +9,6 @@ interface CouponCardProps {
   delay?: number;
 }
 const CouponCard = ({
-  id,
   value,
   points,
   isHotDeal = false,
