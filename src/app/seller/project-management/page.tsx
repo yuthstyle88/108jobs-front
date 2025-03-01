@@ -1,5 +1,5 @@
 "use client";
-import { ArrowLeft, Bell, Info, MessageSquare } from "lucide-react";
+import { Info } from "lucide-react";
 import { useState } from "react";
 
 const ProjectManagement = () => {

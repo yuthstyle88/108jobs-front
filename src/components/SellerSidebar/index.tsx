@@ -89,8 +89,8 @@ const SellerSidebar = () => {
             className={`group flex items-center gap-3 px-3 py-4 text-base ${
               isActive(item.href)
                 ? "text-third border-primary bg-secondary"
-                : "text-text_secondary bg-white hover:border-primary hover:bg-secondary"
-            } border-l-4 transition-all duration-300`}
+                : "text-text_secondary bg-white hover:border-primary hover:bg-secondary hover:text-third"
+            } border-l-4 `}
           >
             <FontAwesomeIcon
               icon={item.icon}

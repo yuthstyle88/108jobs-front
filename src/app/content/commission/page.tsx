@@ -3,7 +3,6 @@ import {
   ChevronDown,
   X
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const MEMBER_TIERS = [
@@ -64,7 +63,6 @@ const MEMBER_TIERS = [
 ];
 
 const MyServices = () => {
-  const router = useRouter();
   const [showCalculator, setShowCalculator] = useState(false);
   const [showFaqItem, setShowFaqItem] = useState(true);
 
@@ -73,9 +71,9 @@ const MyServices = () => {
   const [projectPrice, setProjectPrice] = useState<string>("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const handleAddNewService = () => {
-    router.push("/create-service");
-  };
+  // const handleAddNewService = () => {
+  //   router.push("/create-service");
+  // };
 
   const handleCalculatorToggle = () => {
     setShowCalculator(!showCalculator);
@@ -99,13 +97,13 @@ const MyServices = () => {
     setDropdownOpen(false);
   };
 
-  const getActiveMemberTier = (income: number) => {
-    return (
-      MEMBER_TIERS.find(
-        (tier) => income >= tier.minIncome && income <= tier.maxIncome
-      ) || MEMBER_TIERS[0]
-    );
-  };
+  // const getActiveMemberTier = (income: number) => {
+  //   return (
+  //     MEMBER_TIERS.find(
+  //       (tier) => income >= tier.minIncome && income <= tier.maxIncome
+  //     ) || MEMBER_TIERS[0]
+  //   );
+  // };
 
   return (
     <div className="relative p-20">
@@ -129,11 +127,6 @@ const MyServices = () => {
                 Phí dịch vụ Fastlance theo cấp độ
               </p>
             </div>
-            <img
-              src="/lovable-uploads/6bf9a178-4de6-4334-b0a9-71a26b6b90f2.png"
-              alt="Calculator Background"
-              className="absolute right-0 top-0 h-full opacity-10"
-            />
           </div>
 
           {/* FAQ Section */}
@@ -445,7 +438,7 @@ const MyServices = () => {
             </div>
 
             <p>
-              Nếu có dự án mà Freelancer "tạo báo giá" vào ngày 10 tháng 6 năm
+              Nếu có dự án mà Freelancer &quot;tạo báo giá&quot; vào ngày 10 tháng 6 năm
               2024, phí dịch vụ cho dự án đó sẽ là 10%.
             </p>
             <p className="text-sm text-gray-500 mt-2 italic">
@@ -528,7 +521,7 @@ const MyServices = () => {
             </div>
 
             <p>
-              Nếu có dự án mà Freelancer "tạo báo giá" vào ngày 20 tháng 6 năm
+              Nếu có dự án mà Freelancer &quot;tạo báo giá&quot; vào ngày 20 tháng 6 năm
               2024, phí dịch vụ cho dự án đó sẽ là 9%.
             </p>
             <p className="text-sm text-gray-500 mt-2 italic">
@@ -610,7 +603,7 @@ const MyServices = () => {
             </div>
 
             <p>
-              Nếu có dự án mà Freelancer "tạo báo giá" vào ngày 1 tháng 7 năm
+              Nếu có dự án mà Freelancer &quot;tạo báo giá&quot; vào ngày 1 tháng 7 năm
               2024, phí dịch vụ cho dự án đó sẽ là 10%.
             </p>
             <p className="text-sm text-gray-500 mt-2 italic">

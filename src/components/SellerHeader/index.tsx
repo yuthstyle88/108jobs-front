@@ -63,7 +63,7 @@ const SellerHeader = () => {
                         <User className="w-4 h-4 mr-3 text-gray-500" />
                         <span>Hồ sơ freelancer</span>
                       </a>
-                      <a href="/profile/edit/education" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <a href="/seller-account-setting/freelance-profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         <Settings className="w-4 h-4 mr-3 text-gray-500" />
                         <span>Cài đặt tài khoản</span>
                       </a>

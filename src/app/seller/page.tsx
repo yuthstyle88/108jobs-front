@@ -151,7 +151,7 @@ const SellerHome = () => {
                 </p>
               </div>
             </div>
-            <Link href="/account-setting/freelance-profile">
+            <Link href="/profile">
             <button className="text-blue-600 hover:underline">
               Thêm thông tin
             </button>

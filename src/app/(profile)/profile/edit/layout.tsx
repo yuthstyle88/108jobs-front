@@ -1,7 +1,5 @@
 "use client";
 
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

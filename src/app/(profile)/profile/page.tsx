@@ -3,7 +3,7 @@ import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 
-import { Pencil, ExternalLink } from "lucide-react";
+import { Pencil } from "lucide-react";
 import Link from "next/link";
 const UserProfile = () => {
   return (

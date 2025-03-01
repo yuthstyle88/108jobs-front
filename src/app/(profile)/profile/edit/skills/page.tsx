@@ -51,7 +51,7 @@ const EditSkills = () => {
     <div className="max-w-3xl mx-auto">
       <h1 className="text-2xl font-semibold text-blue-600 mb-8">Kỹ năng</h1>
       
-      {skillItems.map((item, index) => (
+      {skillItems.map((item) => (
         <div key={item.id} className="bg-white rounded-lg p-6 mb-6 shadow-sm">
           <div className="grid grid-cols-2 gap-6">
             <div>

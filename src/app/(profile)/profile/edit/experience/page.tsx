@@ -55,13 +55,18 @@ const EditExperience = () => {
     }
   };
   
-  const handleChange = (id: string, field: keyof ExperienceItem, value: any) => {
+  const handleChange = <K extends keyof ExperienceItem>(
+    id: string,
+    field: K,
+    value: ExperienceItem[K] 
+  ) => {
     setExperienceItems(
-      experienceItems.map(item => 
+      experienceItems.map(item =>
         item.id === id ? { ...item, [field]: value } : item
       )
     );
   };
+  
   
   const handleSave = () => {
     // Logic to save data would go here
@@ -75,7 +80,7 @@ const EditExperience = () => {
     <div className="max-w-3xl mx-auto">
       <h1 className="text-2xl font-semibold text-blue-600 mb-8">Kinh nghiệm làm việc</h1>
       
-      {experienceItems.map((item, index) => (
+      {experienceItems.map((item) => (
         <div key={item.id} className="bg-white rounded-lg p-6 mb-6 shadow-sm">
           <div className="grid grid-cols-2 gap-6 mb-6">
             <div>
