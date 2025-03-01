@@ -32,6 +32,9 @@
 .my-service-gradient {
   background: linear-gradient(108.98deg, #d6d9dd -101.64%, #fbfbfc 93.48%);
 }
+.edit-profile-gradient {
+  background: linear-gradient(282deg,#27c8f8,#1850c2);
+}
 
 .grid-container-desktop{
   display: grid;
