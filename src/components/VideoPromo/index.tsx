@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -10,7 +11,7 @@ const VideoPromo = () => {
           <div className="relative w-full md:w-auto max-w-lg">
             {/* Background image (grayscale) */}
             <div className="absolute -left-10 top-0 w-full h-full -z-10">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600"
                 alt="Background"
                 className="w-full h-full object-cover grayscale opacity-40"
@@ -20,7 +21,7 @@ const VideoPromo = () => {
             {/* Main video */}
             <div className="relative bg-black rounded-md overflow-hidden shadow-xl">
               <div className="aspect-video relative">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600"
                   alt="Person speaking with microphone"
                   className="w-full h-full object-cover"

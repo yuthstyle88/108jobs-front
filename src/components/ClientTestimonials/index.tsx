@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image"; // Import Image from next/image
+
 type TestimonialType = {
   id: number;
   logoSrc: string;
@@ -9,6 +11,7 @@ type TestimonialType = {
   author: string;
   position: string;
 };
+
 const testimonials: TestimonialType[] = [
   {
     id: 1,
@@ -41,21 +44,26 @@ const testimonials: TestimonialType[] = [
     position: "Senior Product Designer",
   },
 ];
+
 const ClientTestimonials = () => {
   const [activeIndex, setActiveIndex] = useState(1);
+
   const nextSlide = () => {
     setActiveIndex((prevIndex) =>
       prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
     );
   };
+
   const prevSlide = () => {
     setActiveIndex((prevIndex) =>
       prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
     );
   };
+
   const goToSlide = (index: number) => {
     setActiveIndex(index);
   };
+
   return (
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4 max-w-6xl">
@@ -75,9 +83,11 @@ const ClientTestimonials = () => {
               >
                 <div className="mb-8 flex justify-center">
                   <div className="w-32 h-32 rounded-full bg-white flex items-center justify-center p-4 shadow-sm">
-                    <img
+                    <Image
                       src={testimonial.logoSrc}
                       alt={testimonial.logoAlt}
+                      width={128} // Set width
+                      height={128} // Set height
                       className="max-h-16 max-w-full"
                     />
                   </div>
@@ -137,4 +147,5 @@ const ClientTestimonials = () => {
     </section>
   );
 };
+
 export default ClientTestimonials;

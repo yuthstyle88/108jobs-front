@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
+import Image from "next/image";
 interface ServiceItemProps {
   title: string;
   image: string;
@@ -17,7 +18,7 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="relative h-60 overflow-hidden">
-        <img
+        <Image
           src={image}
           alt={title}
           className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"

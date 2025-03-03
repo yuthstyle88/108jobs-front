@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from "react";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef } from "react";
 
 const portfolioItems = [
   {
@@ -64,48 +64,47 @@ const portfolioItems = [
 const OurWorks = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const items = entry.target.querySelectorAll(".portfolio-item");
-            items.forEach((item, index) => {
-              // Add the class immediately, not just when intersecting
-              item.classList.add("animate-fade-in");
-            });
+useEffect(() => {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const items = entry.target.querySelectorAll(".portfolio-item");
+          items.forEach((item) => {
+            item.classList.add("animate-fade-in");
+          });
 
-            // Also make sure the heading and other elements are visible
-            const animatedElements =
-              entry.target.querySelectorAll(".animate-on-scroll");
-            animatedElements.forEach((el) => {
-              el.classList.add("animate-fade-in");
-              el.classList.remove("opacity-0");
-            });
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-
-      // Make sure that section title is visible from the start
-      const titleElements =
-        sectionRef.current.querySelectorAll(".animate-on-scroll");
-      titleElements.forEach((el) => {
-        el.classList.add("animate-fade-in");
-        el.classList.remove("opacity-0");
+          const animatedElements =
+            entry.target.querySelectorAll(".animate-on-scroll");
+          animatedElements.forEach((el) => {
+            el.classList.add("animate-fade-in");
+            el.classList.remove("opacity-0");
+          });
+        }
       });
-    }
+    },
+    { threshold: 0.1 }
+  );
 
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
+  const currentSection = sectionRef.current; // Store the reference here
+
+  if (currentSection) {
+    observer.observe(currentSection);
+
+    const titleElements = currentSection.querySelectorAll(".animate-on-scroll");
+    titleElements.forEach((el) => {
+      el.classList.add("animate-fade-in");
+      el.classList.remove("opacity-0");
+    });
+  }
+
+  return () => {
+    if (currentSection) {
+      observer.unobserve(currentSection);
+    }
+  };
+}, []);
+
 
   return (
     <section
@@ -135,16 +134,18 @@ const OurWorks = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {portfolioItems.map((item, index) => (
+          {portfolioItems.map((item) => (
             <div
               key={item.id}
               className="portfolio-item relative overflow-hidden rounded-xl shadow-sm hover:shadow-xl bg-white animate-fade-in"
             >
               <Link href="/works" className="block h-full">
                 <div className="aspect-[4/3] overflow-hidden bg-gray-100">
-                  <img
+                  <Image
                     src={item.image}
                     alt={item.title}
+                    width={600} // Set width according to the image aspect ratio
+                    height={400} // Set height accordingly
                     className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                   />
                 </div>

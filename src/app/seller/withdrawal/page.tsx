@@ -1,13 +1,27 @@
 "use client";
 import { useState } from "react";
 import { Info, MessageSquare } from "lucide-react";
+
+// Define the interface for a single transaction
+interface Transaction {
+  transactionId: string;
+  balanceDate: string;
+  transferDate: string;
+  account: string;
+  bank: string;
+  amount: string;
+  status: string;
+  note: string;
+}
+
 const Withdrawal = () => {
   const [selectedMonth, setSelectedMonth] = useState("March");
   const [selectedYear, setSelectedYear] = useState("2025");
 
   // Mock data
   const balance = "0.00";
-  const transactions: any[] = [];
+  const transactions: Transaction[] = []; 
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-screen-xl">
       <div className="flex items-center justify-between mb-8">

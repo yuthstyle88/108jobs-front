@@ -1,11 +1,11 @@
-import React, { useState, forwardRef } from "react";
 import { cn } from "@/lib/utils";
-import { Check, ChevronDown } from "lucide-react";
-import * as LabelPrimitive from "@radix-ui/react-label";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+import * as LabelPrimitive from "@radix-ui/react-label";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { cva, type VariantProps } from "class-variance-authority";
 import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Check, ChevronDown } from "lucide-react";
+import React, { forwardRef, useState } from "react";
 
 // Button Component
 const buttonVariants = cva(
@@ -77,23 +77,22 @@ const Input = forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
 Input.displayName = "Input";
 
 // Textarea Component
-interface TextareaProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
 
-const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, ...props }, ref) => {
-    return (
-      <textarea
-        className={cn(
-          "flex min-h-[80px] w-full rounded-md border border-black bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          className
-        )}
-        ref={ref}
-        {...props}
-      />
-    );
-  }
-);
+const Textarea = forwardRef<
+  HTMLTextAreaElement,
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>
+>(({ className, ...props }, ref) => {
+  return (
+    <textarea
+      className={cn(
+        "flex min-h-[80px] w-full rounded-md border border-black bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        className
+      )}
+      ref={ref}
+      {...props}
+    />
+  );
+});
 Textarea.displayName = "Textarea";
 
 // Label Component
@@ -265,7 +264,9 @@ const ContactForm = () => {
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold mb-8 text-black">เรื่องที่อยากให้เราช่วย</h2>
+          <h2 className="text-2xl font-bold mb-8 text-black">
+            เรื่องที่อยากให้เราช่วย
+          </h2>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
