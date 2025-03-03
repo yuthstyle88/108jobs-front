@@ -10,6 +10,7 @@ import OurWorks from "@/components/OurWorks";
 import ContactForm from "@/components/ContractForm";
 
 import Link from "next/link";
+import Image from "next/image"; // Import the Image component from Next.js
 
 const Index = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -59,10 +60,12 @@ const Index = () => {
 
             <div className="hero-image relative w-full md:w-1/2 animate-fade-in">
               <div className="relative z-20">
-                <img
+                <Image
                   src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600"
                   alt="Fastwork for Business"
                   className="w-full object-cover rounded-lg shadow-lg animate-float"
+                  width={600}
+                  height={400}
                 />
 
                 <div
