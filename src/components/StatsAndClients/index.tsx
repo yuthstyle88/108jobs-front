@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 const StatsSection = () => {
   return (
     <div className="py-16 bg-white">
@@ -52,7 +53,7 @@ interface ClientLogoProps {
 const ClientLogo: React.FC<ClientLogoProps> = ({ src, alt }) => {
   return (
     <div className="flex items-center justify-center px-6 py-4">
-      <img src={src} alt={alt} className="max-h-10 md:max-h-12" />
+      <Image src={src} alt={alt} className="max-h-10 md:max-h-12" />
     </div>
   );
 };

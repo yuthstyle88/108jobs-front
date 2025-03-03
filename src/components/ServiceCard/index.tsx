@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 interface ServiceCardProps {
   title: string;
   image: string;
@@ -21,7 +22,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="relative h-40 overflow-hidden">
-        <img
+        <Image
           src={image}
           alt={title}
           className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"

@@ -54,7 +54,6 @@ const TabsContent = forwardRef<
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
 const PriceListPage = () => {
-  const [activeTab, setActiveTab] = useState("online");
   const [isMounted, setIsMounted] = useState(false);
 
   // Set state to true after the component has mounted
@@ -104,21 +103,18 @@ const PriceListPage = () => {
               <TabsTrigger
                 value="online"
                 className="data-[state=active]:bg-fastwork-blue data-[state=active]:text-white"
-                onClick={() => setActiveTab("online")}
               >
                 Online
               </TabsTrigger>
               <TabsTrigger
                 value="offline"
                 className="data-[state=active]:bg-fastwork-blue data-[state=active]:text-white"
-                onClick={() => setActiveTab("offline")}
               >
                 Offline
               </TabsTrigger>
               <TabsTrigger
                 value="branding"
                 className="data-[state=active]:bg-fastwork-blue data-[state=active]:text-white"
-                onClick={() => setActiveTab("branding")}
               >
                 Branding
               </TabsTrigger>
