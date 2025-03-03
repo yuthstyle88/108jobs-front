@@ -8,6 +8,10 @@ import chat from "../assets/images/megamenu/chat-to-hire.svg";
 import company from "../assets/images/megamenu/company.svg";
 import job from "../assets/images/megamenu/job-board.svg";
 import job_bg from "../assets/images/megamenu/search-th.webp";
+import b2b from "../assets/images/megamenu/b2b.webp";
+import chat_to_hire from "../assets/images/megamenu/chat-to-hire-th.webp";
+import buyer_job from "../assets/images/megamenu/buyer-job-board-th.webp";
+import company_th from "../assets/images/megamenu/company-th.webp";
 import pic1 from "../assets/images/customer/th/1.png";
 import pic2 from "../assets/images/customer/th/2.png";
 import pic3 from "../assets/images/customer/th/3.png";
@@ -155,6 +159,10 @@ export const MegaMenuImage = {
   company,
   job,
   job_bg,
+  b2b,
+  chat_to_hire,
+  buyer_job,
+  company_th,
 };
 
 export const AssetsImage = {
