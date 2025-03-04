@@ -59,6 +59,14 @@ import point from "../assets/images/point.svg";
 import calculation from "../assets/images/seller/cal@2x.png";
 import response from "../assets/images/seller/response-empty-vn@2x.png";
 
+
+import chat_message from "../assets/images/message/chat.svg";
+import chat_avt from "../assets/images/message/avatar.jpg";
+
+export const MessageImage = {
+  chat_message,
+  chat_avt
+};
 export const SellerImage = {
   calculation,
   response

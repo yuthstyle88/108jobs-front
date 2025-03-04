@@ -1,8 +1,7 @@
-import { useState, useRef, useEffect } from "react";
-import { ArrowUpDown } from "lucide-react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUpDown } from "@fortawesome/free-solid-svg-icons";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { faUpDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 
 interface SortSectionProps {
   className?: string;

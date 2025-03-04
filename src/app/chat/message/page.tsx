@@ -1,94 +1,59 @@
-import React from "react";
-import Link from "next/link";
+"use client";
+import { JobDetailIcon } from "@/constants/icons";
+import { CategoriesImage, MessageImage } from "@/constants/images";
 import {
-  Bell,
-  MessageCircle,
   ChevronDown,
-  Search,
-  Phone,
   ChevronUp,
-  Send,
+  Copy,
   Paperclip,
-  Smile,
+  Phone,
+  Search,
+  Send,
+  Smile
 } from "lucide-react";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 const ChatMessage = () => {
+  const [isEmploymentOpen, setIsEmploymentOpen] = useState(true);
+  const [isDocumentsOpen, setIsDocumentsOpen] = useState(false);
+  const [messageText, setMessageText] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const toggleEmployment = () => {
+    setIsEmploymentOpen(!isEmploymentOpen);
+  };
+
+  const toggleDocuments = () => {
+    setIsDocumentsOpen(!isDocumentsOpen);
+  };
+
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto";
+      const scrollHeight = textarea.scrollHeight;
+      textarea.style.height = `${scrollHeight}px`;
+    }
+  }, [messageText]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      console.log("Sending message:", messageText);
+      setMessageText("");
+    }
+  };
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="bg-fastwork-blue text-white py-3 px-4 flex justify-between items-center">
-        <div className="flex items-center">
-          <Link href="/" className="flex items-center mr-4">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="mr-2"
-            >
-              <path
-                d="M21.2 8.4c.5.38.8.97.8 1.6 0 1.1-.9 2-2 2H10a2 2 0 1 1 0-4h10c1.1 0 2 .9 2 2"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M14 8v5.5a2.5 2.5 0 0 1-5 0V8"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M9 8v5.5a2.5 2.5 0 0 1-5 0V4"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span className="font-semibold text-lg">fastwork</span>
-          </Link>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          <Link href="/messages" className="text-white hover:text-gray-200">
-            <MessageCircle size={20} />
-          </Link>
-          <Link
-            href="/notifications"
-            className="text-white hover:text-gray-200"
-          >
-            <Bell size={20} />
-          </Link>
-          <div className="flex items-center bg-white bg-opacity-10 rounded-full px-3 py-1">
-            <span className="text-sm mr-1">0.00</span>
-            <span className="bg-white text-fastwork-blue text-xs px-1 rounded">
-              ฿
-            </span>
-          </div>
-          <div className="flex items-center">
-            <img
-              src="/lovable-uploads/cbef2fc0-6fab-4481-9b0f-7b6f6ea8f307.png"
-              alt="Profile"
-              className="w-8 h-8 rounded-full object-cover"
-            />
-            <ChevronDown size={16} className="ml-1" />
-          </div>
-        </div>
-      </header>
-
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <div className="w-64 border-r bg-white">
-          <div className="p-4">
+    <div className="h-screen flex flex-col pt-16">
+      <div className="flex flex-1 overflow-hidden">
+        <div className="w-64 flex flex-col border-r bg-white h-full">
+          <div className="p-4 border-b">
             <div className="relative">
               <input
                 type="text"
                 placeholder="ค้นหาจากอะไร"
-                className="w-full pl-8 pr-3 py-2 border rounded-md focus:outline-none focus:border-fastwork-blue"
+                className="text-text_primary w-full pl-8 pr-3 py-2 border rounded-md focus:outline-none focus:border-fastwork-blue"
               />
               <Search
                 size={18}
@@ -109,11 +74,11 @@ const ChatMessage = () => {
             </label>
           </div>
 
-          <div className="border-t mt-4">
+          <div className="overflow-y-auto flex-1">
             <div className="p-4 flex items-start bg-blue-50 border-l-4 border-fastwork-blue">
               <div className="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-                <img
-                  src="/lovable-uploads/cbef2fc0-6fab-4481-9b0f-7b6f6ea8f307.png"
+                <Image
+                  src={MessageImage.chat_avt}
                   alt="User"
                   className="w-full h-full object-cover"
                 />
@@ -133,18 +98,25 @@ const ChatMessage = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col h-full">
           {/* Chat Header */}
           <div className="border-b p-4 flex justify-between items-center bg-white">
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
+              <Image
+                src={MessageImage.chat_avt}
+                alt="User"
+                className="w-10 h-10 object-cover rounded-full"
+              />
               <div className="mr-4">
-                <span className="text-sm font-medium">Vanint</span>
+                <span className="text-sm font-medium text-text_primary">
+                  Vanint
+                </span>
                 <span className="text-xs text-gray-500 ml-2">#RSQCU4KL</span>
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <button className="bg-gray-100 p-2 rounded hover:bg-gray-200">
-                <Phone size={18} className="text-gray-600" />
+                <Phone size={18} className="text-third" />
               </button>
               <a href="#" className="text-blue-500 hover:underline text-sm">
                 คู่มือการใช้งาน
@@ -176,9 +148,9 @@ const ChatMessage = () => {
                       <p className="text-gray-700">ราคา : 6,900 บาท</p>
                     </div>
                   </div>
-                  <img
-                    src="/lovable-uploads/cbef2fc0-6fab-4481-9b0f-7b6f6ea8f307.png"
-                    alt="Service"
+                  <Image
+                    src={CategoriesImage.seo_job}
+                    alt="seo_job"
                     className="w-16 h-12 object-cover rounded"
                   />
                 </div>
@@ -226,7 +198,7 @@ const ChatMessage = () => {
                   <div className="text-sm text-gray-700">
                     <p>
                       คุณเลือก
-                      'หยิบรายการที่เลือกส่งไปยังแชทตามการเบราว์ซ์ของฟรีแลนซ์มา'
+                      &apos;หยิบรายการที่เลือกส่งไปยังแชทตามการเบราว์ซ์ของฟรีแลนซ์มา&apos;
                       จากโอเพนแชทของลูกค้ามาที่แชทนี้แล้ว
                       ลูพามาดูว่าฟรีแลนซ์กำลังขายอะไรอยู่
                     </p>
@@ -284,21 +256,32 @@ const ChatMessage = () => {
 
           {/* Message Input */}
           <div className="border-t px-4 py-3 bg-white">
-            <div className="flex items-center">
+          <div className="flex items-center">
               <button className="text-gray-400 hover:text-gray-600 mr-3">
                 <Paperclip size={20} />
               </button>
               <div className="flex-1 border rounded-lg overflow-hidden flex">
-                <textarea
-                  placeholder="พิมพ์ข้อความที่นี่"
-                  className="flex-1 px-3 py-2 resize-none focus:outline-none min-h-[40px]"
+                <textarea 
+                  ref={textareaRef}
+                  placeholder="พิมพ์ข้อความที่นี่" 
+                  className="text-text_primary flex-1 px-3 py-2 resize-none focus:outline-none min-h-[40px] max-h-[150px]"
+                  value={messageText}
+                  onChange={(e) => setMessageText(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   rows={1}
+                  style={{ height: 'auto', overflowY: 'hidden' }}
                 ></textarea>
                 <button className="bg-white px-3 text-gray-400 hover:text-gray-600">
                   <Smile size={20} />
                 </button>
               </div>
-              <button className="ml-3 text-blue-500 hover:text-blue-600">
+              <button 
+                className="ml-3 text-blue-500 hover:text-blue-600"
+                onClick={() => {
+                  console.log('Sending message:', messageText);
+                  setMessageText('');
+                }}
+              >
                 <Send size={20} />
               </button>
             </div>
@@ -306,55 +289,134 @@ const ChatMessage = () => {
         </div>
 
         {/* Right Sidebar - Service Details */}
-        <div className="w-64 border-l bg-white overflow-y-auto">
-          <div className="p-4 border-b">
-            <div className="bg-blue-50 rounded-lg p-3 text-center">
-              <span className="text-blue-600 text-sm">
-                มอบหมายงาน / จ่ายเพิ่ม
-              </span>
-            </div>
+        <div className="w-80 flex flex-col border-l bg-white h-full">
+          {/* Title */}
+          <div className="px-4 py-6 border-b">
+            <h3 className="text-gray-800 font-medium">details</h3>
           </div>
 
+          {/* Security Message */}
+          <div className="p-4 bg-[#DBE8FC] flex items-center">
+            <Image
+              src={JobDetailIcon.guarantee}
+              alt="seo_job"
+              className="w-5 mr-4"
+            />
+            <p className="text-sm text-gray-700">
+              ปลอดภัยว่า เชื่อจ่ายเงินผ่าน fastwork
+            </p>
+          </div>
+
+          {/* Service Description */}
           <div className="p-4 border-b">
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-blue-500"
-                >
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                  <circle cx="12" cy="7" r="4"></circle>
-                </svg>
+            <div className="flex">
+              <div className="w-12 h-12 rounded bg-gray-200 overflow-hidden mr-3 flex-shrink-0">
+                <Image
+                  src={CategoriesImage.seo_job}
+                  alt="seo_job"
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div className="mt-3 text-center">
-                <h4 className="font-medium text-gray-800">
-                  มอบหมายงาน / จ่ายเพิ่ม fastwork
-                </h4>
+              <div>
+                <p className="text-sm text-text_primary font-sans line-clamp-2">
+                  Increase traffic and high quality backlinks, push the website
+                  to be ...
+                </p>
               </div>
             </div>
           </div>
 
-          <div className="p-4 border-b">
-            <h4 className="font-medium text-gray-700 mb-2">ข้อมูลทั่วไป</h4>
-            <div className="text-sm text-gray-600">
-              <p className="mb-1">ชื่อแพ็คเกจ:</p>
-              <p className="font-medium mb-2">RSQCU4KL</p>
-            </div>
-          </div>
-
-          <div className="p-4 border-b">
-            <h4 className="font-medium text-gray-700 mb-2">รายละเอียดงาน</h4>
-            <button className="flex items-center justify-between w-full py-2 text-sm text-gray-600">
-              <span>เอกสารแนบ</span>
-              <ChevronDown size={16} />
+          {/* Employment Information */}
+          <div className="border-b">
+            <button
+              className="flex items-center justify-between w-full p-4 text-sm hover:bg-gray-50 transition-colors"
+              onClick={toggleEmployment}
+            >
+              <div className="flex items-center text-blue-600">
+                <span className="inline-block mr-2">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                  </svg>
+                </span>
+                <span>Employment information</span>
+              </div>
+              {isEmploymentOpen ? (
+                <ChevronUp size={16} color="blue" />
+              ) : (
+                <ChevronDown size={16} color="blue" />
+              )}
             </button>
+
+            {isEmploymentOpen && (
+              <div className="px-4 pb-4 animate-fade-in">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-600">Order number</span>
+                  <div className="flex items-center">
+                    <span className="text-green-600 font-medium">LPC8527T</span>
+                    <button className="ml-1 text-gray-400 hover:text-gray-600">
+                      <Copy size={14} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Employment Documents */}
+          <div className="border-b">
+            <button
+              className="flex items-center justify-between w-full p-4 text-sm hover:bg-gray-50 transition-colors"
+              onClick={toggleDocuments}
+            >
+              <div className="flex items-center text-blue-600">
+                <span className="inline-block mr-2">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </span>
+                <span>Employment documents</span>
+              </div>
+              {isDocumentsOpen ? (
+                <ChevronUp size={16} color="blue" />
+              ) : (
+                <ChevronDown size={16} color="blue" />
+              )}
+            </button>
+
+            {isDocumentsOpen && (
+              <div className="px-4 pb-4 animate-fade-in">
+                <p className="text-sm text-gray-500 text-center">
+                  No documents yet
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
