@@ -66,7 +66,6 @@ const MyServices = () => {
   const [showCalculator, setShowCalculator] = useState(false);
   const [showFaqItem, setShowFaqItem] = useState(true);
 
-  // Calculator state
   const [memberTier, setMemberTier] = useState(MEMBER_TIERS[0]);
   const [projectPrice, setProjectPrice] = useState<string>("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
