@@ -1,20 +1,19 @@
 "use client";
 import { MegaMenuImage } from "@/constants/images";
 import {
-  faArrowRight,
   faBuilding,
   faChevronRight,
-  faStarAndCrescent,
+  faStarAndCrescent
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { JSX, useState } from "react";
-import Find from "./Find";
-import Post from "./Post";
-import Chat from "./Chat";
-import Hiring from "./Hiring";
 import Business from "./Business";
+import Chat from "./Chat";
+import Find from "./Find";
+import Hiring from "./Hiring";
+import Post from "./Post";
 
 interface MegaMenuItem {
   key: string;

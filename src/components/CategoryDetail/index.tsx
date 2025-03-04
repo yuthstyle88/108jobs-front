@@ -10,7 +10,7 @@ import { CategoriesIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import FilterSection from "../FilterSection";
 import SortSection from "../SortSection";
 

@@ -1,15 +1,11 @@
 "use client";
-import { Filter } from "lucide-react";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import FilterSidebar from "./FilterSidebar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
 
-interface FilterSectionProps {
-  className?: string;
-}
 
-const FilterSection = ({ className = "" }: FilterSectionProps) => {
+const FilterSection = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   return (
