@@ -8,11 +8,11 @@ import SubCategory from "@/components/CategoryDetail/components/SubCategory";
 import { Pagination } from "@/components/Pagination";
 import { CategoriesIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
-import { faFilter, faUpDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import FilterSection from "../FilterSection";
+import SortSection from "../SortSection";
 
 const category_related = [
   {
@@ -36,6 +36,20 @@ const category_related = [
 const CategoryDetail = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const TOTAL_PAGES = 6;
+
+  const [isSticky, setIsSticky] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsSticky(window.scrollY > 320);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <>
       <section className="grid grid-cols-[1fr_1216px_1fr] h-12 bg-[#E3EDFD] ">
@@ -60,17 +74,17 @@ const CategoryDetail = () => {
       </section>
       <section className="grid grid-cols-[1fr_1216px_1fr] pb-4">
         <SubCategory />
-        <div className="col-start-2 col-end-auto ">
-          <div className="flex justify-between items-center pt-3 pb-3">
+      </section>
+      <section
+        className={`grid grid-cols-[1fr_1216px_1fr] sticky top-[70px] overflow-hidden bg-white z-10 transition-shadow duration-300 ${
+          isSticky ? "shadow-filterSection" : ""
+        }`}
+      >
+        <div className="col-start-2 col-end-auto">
+          <div className=" flex justify-between items-center pt-3 pb-3">
             <div className="inline-grid grid-flow-col justify-start gap-x-2">
-              <div className="filter-button">
-                <FontAwesomeIcon icon={faFilter} className="text-third pr-2" />
-                ตัวกรอง
-              </div>
-              <div className="filter-button">
-                <FontAwesomeIcon icon={faUpDown} className="text-third pr-2" />
-                เรียงตาม
-              </div>
+              <FilterSection />
+              <SortSection />
             </div>
             <CategoryFilter />
           </div>
