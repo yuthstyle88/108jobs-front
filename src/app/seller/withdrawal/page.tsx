@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Info, MessageSquare } from "lucide-react";
+import Link from "next/link";
 
 // Define the interface for a single transaction
 interface Transaction {
@@ -54,18 +55,18 @@ const Withdrawal = () => {
               <span className="text-gray-700 mr-2">•</span>
               <div>
                 <span className="text-gray-700">Thông tin CMND/CCCD: </span>
-                <a href="#" className="text-blue-600 hover:underline">
+                <Link href="#" className="text-blue-600 hover:underline">
                   Kiểm tra thông tin của bạn
-                </a>
+                </Link>
               </div>
             </li>
             <li className="flex items-start">
               <span className="text-gray-700 mr-2">•</span>
               <div>
                 <span className="text-gray-700">Thông tin khai báo thuế: </span>
-                <a href="#" className="text-blue-600 hover:underline">
+                <Link href="#" className="text-blue-600 hover:underline">
                   Thêm dữ liệu →
-                </a>
+                </Link>
               </div>
             </li>
             <li className="flex items-start">
@@ -74,9 +75,9 @@ const Withdrawal = () => {
                 <span className="text-gray-700">
                   Thông tin tài khoản ngân hàng:{" "}
                 </span>
-                <a href="#" className="text-blue-600 hover:underline">
+                <Link href="#" className="text-blue-600 hover:underline">
                   Thêm dữ liệu →
-                </a>
+                </Link>
               </div>
             </li>
           </ul>

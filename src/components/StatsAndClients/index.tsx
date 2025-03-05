@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import th from "@/assets/icons/th.svg";
 import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import Image from "next/image";
+import React, { useState } from "react";
+
 const StatsSection = () => {
   return (
     <div className="py-16 bg-white">
@@ -50,10 +52,16 @@ interface ClientLogoProps {
   src: string;
   alt: string;
 }
-const ClientLogo: React.FC<ClientLogoProps> = ({ src, alt }) => {
+const ClientLogo: React.FC<ClientLogoProps> = ({ alt }) => {
   return (
     <div className="flex items-center justify-center px-6 py-4">
-      <Image src={src} alt={alt} className="max-h-10 md:max-h-12" />
+      <Image
+        src={th}
+        alt={alt}
+        width={500}
+        height={500}
+        className="max-h-10 md:max-h-12"
+      />
     </div>
   );
 };

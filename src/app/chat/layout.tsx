@@ -1,23 +1,26 @@
 import Header from "@/components/Header";
 import { ReactNode } from "react";
-
+import { defaultMetadata } from "@/config/metadata";
 interface CreateLayoutProps {
   children: ReactNode;
 }
 
-export default function ProfileLayout({
-  children,
-}: CreateLayoutProps) {
+export default function ProfileLayout({ children }: CreateLayoutProps) {
   return (
     <>
       <Header type="primary" />
-      <section className="bg-white min-h-screen">
-        {children}
-      </section>
+      <section className="bg-white min-h-screen">{children}</section>
     </>
   );
 }
 
 export const metadata = {
-  title: "iBrowe Shield - Blocking Ads, Trackers & more",
+  ...defaultMetadata,
+  title: "Fastwork chat",
+  description: "Fastwork chat",
+  openGraph: {
+    ...defaultMetadata.openGraph,
+    title: "Fastwork chat",
+    description: "Fastwork chat",
+  },
 };

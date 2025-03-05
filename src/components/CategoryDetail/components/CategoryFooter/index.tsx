@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 const CategoryFooter = () => {
@@ -13,29 +14,29 @@ const CategoryFooter = () => {
           <p>
             <strong>
               บริการรับทำ SEO สายขาว{" "}
-              <a href="https://fastwork.co/seo/backlink">
+              <Link href="https://fastwork.co/seo/backlink">
                 รับทำ Backlink&nbsp;
-              </a>
+              </Link>
             </strong>
-            <a href="https://fastwork.co/seo/wordpress">
+            <Link href="https://fastwork.co/seo/wordpress">
               <strong>รับทำ SEO Wordpress</strong>
-            </a>
+            </Link>
             <strong>&nbsp;</strong>
-            <a href="https://fastwork.co/seo/youtube">
+            <Link href="https://fastwork.co/seo/youtube">
               <strong>รับทำ SEO Youtube</strong>
-            </a>
+            </Link>
             <strong>&nbsp;</strong>
-            <a href="https://fastwork.co/seo/youtube">
+            <Link href="https://fastwork.co/seo/youtube">
               <strong>รับทำ SEO Facebook</strong>
-            </a>
+            </Link>
             <strong>&nbsp;</strong>
-            <a href="https://fastwork.co/seo/audit">
+            <Link href="https://fastwork.co/seo/audit">
               <strong>SEO Audit</strong>
-            </a>
+            </Link>
             <strong>&nbsp;</strong>
-            <a href="https://fastwork.co/seo/full-service">
+            <Link href="https://fastwork.co/seo/full-service">
               <strong>ทำ SEO รายเดือน</strong>
-            </a>
+            </Link>
             <strong>&nbsp;</strong>คุณภาพ ช่วยให้เว็บไซต์ของคุณแสดงเป็นอันดับต้น
             ๆ บน Google
             ทำให้เว็บไซต์ของคุณมีโอกาสที่คนเข้าชมสูงขึ้นและเป็นที่รู้จักมากขึ้น

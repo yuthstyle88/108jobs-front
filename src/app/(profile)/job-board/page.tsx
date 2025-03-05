@@ -1,6 +1,7 @@
 "use client";
 import { ProfileImage } from "@/constants/images";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useState } from "react";
 
 interface JobListing {
@@ -300,9 +301,9 @@ const JobBoard = () => {
             </div>
 
             <div className="flex items-center gap-4 w-full md:w-auto">
-              <a href="#" className="text-blue-600 text-sm hover:underline">
+              <Link href="#" className="text-blue-600 text-sm hover:underline">
                 อยากรับงานบนบอร์ดประกาศงาน ?
-              </a>
+              </Link>
               <button className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors">
                 ประกาศหาฟรีแลนซ์ (0/3)
               </button>
@@ -390,12 +391,12 @@ const JobBoard = () => {
                           )}
                         </div>
                         <div>
-                          <a
+                          <Link
                             href="#"
                             className=" hover:text-blue-600 font-medium text-[14px] text-text_primary font-sans"
                           >
                             {job.title}
-                          </a>
+                          </Link>
                           {job.isHighlighted && (
                             <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
                               EN
@@ -427,7 +428,7 @@ const JobBoard = () => {
 
           <div className="flex items-center justify-center mt-8">
             <nav className="flex items-center">
-              <a
+              <Link
                 href="#"
                 className="px-2 py-2 rounded border border-gray-300 text-gray-500 hover:bg-gray-50"
               >
@@ -448,8 +449,8 @@ const JobBoard = () => {
                     clipRule="evenodd"
                   />
                 </svg>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="mx-1 px-2 py-2 rounded border border-gray-300 text-gray-500 hover:bg-gray-50"
               >
@@ -465,12 +466,12 @@ const JobBoard = () => {
                     clipRule="evenodd"
                   />
                 </svg>
-              </a>
+              </Link>
               <span className="mx-3 text-gray-700">
                 <span className="font-medium text-blue-600">1</span> จาก{" "}
                 <span>35</span>
               </span>
-              <a
+              <Link
                 href="#"
                 className="mx-1 px-2 py-2 rounded border border-gray-300 text-gray-500 hover:bg-gray-50"
               >
@@ -486,8 +487,8 @@ const JobBoard = () => {
                     clipRule="evenodd"
                   />
                 </svg>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="px-2 py-2 rounded border border-gray-300 text-gray-500 hover:bg-gray-50"
               >
@@ -508,7 +509,7 @@ const JobBoard = () => {
                     clipRule="evenodd"
                   />
                 </svg>
-              </a>
+              </Link>
             </nav>
           </div>
         </div>
@@ -522,7 +523,7 @@ const JobBoard = () => {
         </div>
 
         <div className="text-center mt-8">
-          <a
+          <Link
             href="#"
             className="text-blue-600 hover:underline inline-flex items-center"
           >
@@ -538,7 +539,7 @@ const JobBoard = () => {
                 clipRule="evenodd"
               />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

@@ -8,9 +8,8 @@ import StatsAndClients from "@/components/StatsAndClients";
 import ClientTestimonials from "@/components/ClientTestimonials";
 import OurWorks from "@/components/OurWorks";
 import ContactForm from "@/components/ContractForm";
-
 import Link from "next/link";
-import Image from "next/image"; // Import the Image component from Next.js
+import Image from "next/image"; 
 
 const Index = () => {
   const heroRef = useRef<HTMLDivElement>(null);
