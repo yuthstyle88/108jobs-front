@@ -1,8 +1,7 @@
-import type { Metadata } from "next";
-import { Kanit } from "next/font/google";
-import "./globals.css";
-import FontAwesomeConfig from "./fontawesome";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { Kanit } from "next/font/google";
+import FontAwesomeConfig from "./fontawesome";
+import "./globals.css";
 
 const kanit = Kanit({
   subsets: ["latin", "vietnamese", "thai"],
@@ -10,12 +9,40 @@ const kanit = Kanit({
   style: ["normal", "italic"],
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "Fastlance.vn",
-    template: "%s | fastlance.vn",
+export const metadata = {
+  metadataBase: new URL("https://fastwork.co"),
+  title: "Fastwork.co แหล่งรวมฟรีแลนซ์คุณภาพอันดับ 1 ที่ธุรกิจทั่วไทยเลือกใช้",
+  description:
+    "คัดเฉพาะฟรีแลนซ์ผู้เชี่ยวชาญกว่า 5 หมื่นคน รับประกันได้งานตรงทุกความต้องการโดยทีมงานมืออาชีพ ที่ได้รับความไว้ใจจากลูกค้ากว่า 3 แสนราย ให้เราช่วยพัฒนาธุรกิจคุณ!",
+  applicationName: "Fastwork.co",
+  openGraph: {
+    title:
+      "Fastwork.co แหล่งรวมฟรีแลนซ์คุณภาพอันดับ 1 ที่ธุรกิจทั่วไทยเลือกใช้",
+    description:
+      "คัดเฉพาะฟรีแลนซ์ผู้เชี่ยวชาญกว่า 5 หมื่นคน รับประกันได้งานตรงทุกความต้องการโดยทีมงานมืออาชีพ ที่ได้รับความไว้ใจจากลูกค้ากว่า 3 แสนราย ให้เราช่วยพัฒนาธุรกิจคุณ!",
+    url: "https://fastwork.co",
+    siteName: "Fastwork.co",
+    images: [
+      {
+        url: "https://fastwork.co/static-v4/images/home/og-image-home-th.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Fastwork.co แหล่งรวมฟรีแลนซ์คุณภาพอันดับ 1 ที่ธุรกิจทั่วไทยเลือกใช้",
+      },
+    ],
+    type: "website",
+    locale: "th_TH",
   },
-  description: "Tổng hợp freelancer chất lượng hàng đầu cho doanh nghiệp",
+  alternates: {
+    canonical: "https://fastwork.co",
+    languages: {
+      th: "https://fastwork.co",
+      en: "https://fastwork.co",
+      vi: "https://fastwork.co",
+    },
+  },
+
+  referrer: "strict-origin-when-cross-origin",
 };
 
 export default function RootLayout({
@@ -24,7 +51,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="th">
       <head>
         <FontAwesomeConfig />
       </head>
@@ -32,7 +59,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${kanit.className} antialiased`}
       >
-         <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

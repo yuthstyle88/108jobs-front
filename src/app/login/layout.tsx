@@ -1,37 +1,27 @@
-import type { Metadata } from "next";
-import { Kanit } from "next/font/google";
-import FontAwesomeConfig from "../fontawesome";
+import { defaultMetadata } from "@/config/metadata";
+import { ReactNode } from "react";
+interface LoginProps {
+  children: ReactNode;
+}
 
-const kanit = Kanit({
-  subsets: ["latin", "vietnamese", "thai"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-});
-
-export const metadata: Metadata = {
-  title: {
-    default: "Fastlance.vn",
-    template: "%s | fastlance.vn",
-  },
-  description: "Tổng hợp freelancer chất lượng hàng đầu cho doanh nghiệp",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function Login({ children }: LoginProps) {
   return (
-    <html lang="en">
-      <head>
-        <FontAwesomeConfig />
-      </head>
-      <body
-        suppressHydrationWarning
-        className={`${kanit.className} antialiased`}
-      >
+    <>
         {children}
-      </body>
-    </html>
+    </>
   );
 }
+
+export const metadata = {
+    ...defaultMetadata,
+    title: "เข้าสู่ระบบ fastwork.co",
+    description:
+      "เข้าสู่ระบบ fastwork.co",
+    openGraph: {
+      ...defaultMetadata.openGraph,
+      title: "เข้าสู่ระบบ fastwork.co",
+      description:
+        "เข้าสู่ระบบ fastwork.co",
+    },
+  };
+  

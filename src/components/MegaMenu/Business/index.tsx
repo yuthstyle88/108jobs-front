@@ -1,5 +1,6 @@
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 
 const Business = () => {
   return (
@@ -10,12 +11,12 @@ const Business = () => {
       <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
         บริการจัดหาฟรีแลนซ์เพื่อธุรกิจ (fastwork for business)
       </p>
-      <div className="mt-6">
+      <Link href="/business" className="mt-6">
         <span className="text-[0.875rem] font-medium text-third">
           ไปยัง fastwork for business
           <FontAwesomeIcon icon={faArrowRight} className="pl-2 text-third" />
         </span>
-      </div>
+      </Link>
     </div>
   );
 };

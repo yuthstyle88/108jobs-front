@@ -45,7 +45,7 @@ const Find = () => {
         <div className="mt-2 flex flex-col mr-4">
           {job.map((job, index) => (
             <Link
-              href="#"
+              href="/seo"
               key={index}
               className="text-[0.875rem] text-text_secondary px-2 py-[4px] flex-1 flex items-center justify-between rounded-sm transition-all duration-150 ease-in-out"
             >

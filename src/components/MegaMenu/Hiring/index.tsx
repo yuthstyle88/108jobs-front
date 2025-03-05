@@ -1,5 +1,6 @@
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 
 const Hiring = () => {
   return (
@@ -11,12 +12,12 @@ const Hiring = () => {
         เพียง 3 ขั้นตอน หลังเข้าสู่ระบบ <br /> 1. ระบุข้อมูลบริษัท <br /> 2.
         รออนุมัติภายใน 2 ชั่วโมง <br /> 3. แจ้งฟรีแลนซ์ออกเอกสารได้ทันที
       </p>
-      <div className="mt-6">
+      <Link href="/account-setting" className="mt-6">
         <span className="text-[0.875rem] font-medium text-third">
           ระบุข้อมูลบริษัท
           <FontAwesomeIcon icon={faArrowRight} className="pl-2 text-third" />
         </span>
-      </div>
+      </Link>
     </div>
   );
 };

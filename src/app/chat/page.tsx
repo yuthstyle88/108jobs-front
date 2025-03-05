@@ -48,7 +48,7 @@ const Chat = () => {
                 </div>
                 <div className="ml-3">
                   <div className="flex items-center">
-                    <h4 className="font-medium text-sm">Vanint</h4>
+                    <h4 className="font-medium text-sm text-text_primary">Vanint</h4>
                     <span className="ml-2 text-xs text-gray-500">
                       #RSQCU4KL
                     </span>

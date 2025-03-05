@@ -1,6 +1,7 @@
 import SellerHeader from "@/components/SellerHeader";
 import SellerSidebar from "@/components/SellerSidebar";
 import { ReactNode } from "react";
+import { defaultMetadata } from "@/config/metadata";
 
 interface StartSellingLayoutProps {
   children: ReactNode;
@@ -23,5 +24,14 @@ export default function StartSellingLayout({
 }
 
 export const metadata = {
-  title: "iBrowe Shield - Blocking Ads, Trackers & more",
+  ...defaultMetadata,
+  title: "Seller Center | Fastlance.vn",
+  description:
+    "ติดตามความคืบหน้าและจัดการงานอย่างมืออาชีพบน Fastlance Seller Center",
+  openGraph: {
+    ...defaultMetadata.openGraph,
+    title: "Seller Center | Fastlance.vn",
+    description:
+      "ติดตามความคืบหน้าและจัดการงานอย่างมืออาชีพบน Fastlance Seller Center",
+  },
 };

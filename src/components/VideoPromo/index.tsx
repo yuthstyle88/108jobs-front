@@ -14,6 +14,8 @@ const VideoPromo = () => {
               <Image
                 src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600"
                 alt="Background"
+                width={500}
+                height={500}
                 className="w-full h-full object-cover grayscale opacity-40"
               />
             </div>
@@ -25,6 +27,8 @@ const VideoPromo = () => {
                   src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600"
                   alt="Person speaking with microphone"
                   className="w-full h-full object-cover"
+                  width={500}
+                  height={500}
                 />
 
                 {/* Video Controls Overlay */}

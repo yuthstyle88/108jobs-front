@@ -1,5 +1,6 @@
 import { StartSellingImage } from '@/constants/images';
 import Image from 'next/image'
+import Link from 'next/link';
 import React from 'react'
 
 type Step = {
@@ -17,9 +18,9 @@ const steps: Step[] = [
       <>
         ลงทะเบียนพร้อมเตรียมบัตรประชาชนและสมุดบัญชีสำหรับยืนยันตัวตนให้พร้อม
         จากนั้นคุณสามารถลงประกาศขายงานได้เลย ดูวิธีใช้{" "}
-        <a href="#" className="text-blue-600 hover:underline">
+        <Link href="#" className="text-blue-600 hover:underline">
           ตัวอย่างการสมัครเป็นฟรีแลนซ์
-        </a>
+        </Link>
       </>
     ),
     image: StartSellingImage.step1,
@@ -37,13 +38,13 @@ const steps: Step[] = [
     description: (
       <>
         ต้องศึกษา{" "}
-        <a href="#" className="text-blue-600 hover:underline">
+        <Link href="#" className="text-blue-600 hover:underline">
         &ldquo;เทคนิคนำร่องสำหรับฟรีแลนซ์&rdquo;
-        </a>{" "}
+        </Link>{" "}
         หรือใช้{" "}
-        <a href="#" className="text-blue-600 hover:underline">
+        <Link href="#" className="text-blue-600 hover:underline">
           &ldquo;Seller Center&rdquo;
-        </a>{" "}
+        </Link>{" "}
         เพื่อศึกษาวิธีเพิ่มโอกาสในการถูกจ้าง
       </>
     ),
@@ -69,9 +70,9 @@ const steps: Step[] = [
     description: (
       <> 
         Fastwork จะทําการโอนเงินเข้าบัญชีธนาคารของคุณตาม &ldquo;{" "}
-        <a href="#" className="text-blue-600 hover:underline">
+        <Link href="#" className="text-blue-600 hover:underline">
           เงื่อนไขการรับเงิน
-        </a>{" "}
+        </Link>{" "}
         &rdquo; ยิ่งขายงานได้{" "}
       </>
     ),
