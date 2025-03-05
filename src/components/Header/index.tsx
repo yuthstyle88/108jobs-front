@@ -3,7 +3,6 @@ import { AssetIcon, ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import {
   faBarsProgress,
-  faBell,
   faBullhorn,
   faChevronDown,
   faCodePullRequest,
@@ -15,13 +14,14 @@ import {
   faMessage,
   faSearch,
   faSignOut,
-  faTicket,
+  faTicket
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import MegaMenu from "../MegaMenu";
+import NotificationDropdown from "../NotificationDropdown";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -85,7 +85,7 @@ const Header = ({ type }: BgProps) => {
         <div className="flex items-center gap-4 h-full">
           <div className="group">
             <div className="relative">
-              <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2">
+              <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
                 <p className="">การจ้างงาน</p>
                 <FontAwesomeIcon icon={faChevronDown} />
               </div>
@@ -114,7 +114,7 @@ const Header = ({ type }: BgProps) => {
             เข้าสู่ระบบ
           </Link>
           <Link
-            href="/login"
+            href="/chat"
             className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
           >
             <FontAwesomeIcon
@@ -123,16 +123,14 @@ const Header = ({ type }: BgProps) => {
               size="4x"
             />
           </Link>
-          <Link
-            href="/login"
-            className="text-white text-sm hover:bg-blue-800 hover:text-white pr-3"
-          >
+          {/* <div className="text-white text-sm hover:bg-blue-800 hover:text-white pr-3 cursor-pointer">
             <FontAwesomeIcon
               icon={faBell}
               className="w-[21px] h-[24px] text-white"
               size="4x"
             />
-          </Link>
+          </div> */}
+          <NotificationDropdown/>
           <Link
             href="/login"
             className="text-white text-sm hover:bg-blue-800 hover:text-white"
@@ -207,7 +205,7 @@ const Header = ({ type }: BgProps) => {
                     <span className="text-gray-700">ตั้งค่าบัญชี</span>
                   </Link>
                   <Link
-                    href="#"
+                    href="/chat"
                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                   >
                     <FontAwesomeIcon

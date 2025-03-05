@@ -2,6 +2,7 @@
 import {
     Upload
 } from "lucide-react";
+import Link from "next/link";
 
 const CommitmentLetter = () => {
 
@@ -59,9 +60,9 @@ const CommitmentLetter = () => {
               </h3>
               <p className="text-sm text-gray-500 mb-2">
                 Bạn có thể tải xuống tài liệu tại đây{" "}
-                <a href="#" className="text-blue-600 font-medium">
+                <Link href="#" className="text-blue-600 font-medium">
                   Bản cam kết
-                </a>
+                </Link>
               </p>
             </div>
           </li>

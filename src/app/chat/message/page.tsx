@@ -12,6 +12,7 @@ import {
   Smile
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const ChatMessage = () => {
@@ -85,7 +86,7 @@ const ChatMessage = () => {
               </div>
               <div className="ml-3">
                 <div className="flex items-center">
-                  <h4 className="font-medium text-sm">Vanint</h4>
+                  <h4 className="font-medium text-sm text-text_primary">Vanint</h4>
                   <span className="ml-2 text-xs text-gray-500">#RSQCU4KL</span>
                   <span className="ml-2 text-xs text-gray-400">เมื่อวาน</span>
                 </div>
@@ -118,12 +119,12 @@ const ChatMessage = () => {
               <button className="bg-gray-100 p-2 rounded hover:bg-gray-200">
                 <Phone size={18} className="text-third" />
               </button>
-              <a href="#" className="text-blue-500 hover:underline text-sm">
+              <Link href="#" className="text-blue-500 hover:underline text-sm">
                 คู่มือการใช้งาน
-              </a>
-              <a href="#" className="text-blue-500 hover:underline text-sm">
+              </Link>
+              <Link href="#" className="text-blue-500 hover:underline text-sm">
                 รายละเอียด
-              </a>
+              </Link>
             </div>
           </div>
 

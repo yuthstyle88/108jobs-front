@@ -5,6 +5,7 @@ import {
   faRefresh,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 
 const TopUpHistory = () => {
   return (
@@ -80,9 +81,9 @@ const TopUpHistory = () => {
                 </div>
               </td>
               <td className="py-4 px-4">
-                <a href="#" className="text-blue-600 hover:underline text-sm">
+                <Link href="#" className="text-blue-600 hover:underline text-sm">
                   Proceed to payment
-                </a>
+                </Link>
               </td>
             </tr>
           </tbody>

@@ -4,6 +4,7 @@ import ContactForm from "@/components/ContractForm";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { cn } from "@/lib/utils";
 import BussinessHeader from "@/components/BussinessHeader";
+import Link from "next/link";
 
 // Tabs components defined inline
 const Tabs = TabsPrimitive.Root;
@@ -56,12 +57,10 @@ TabsContent.displayName = TabsPrimitive.Content.displayName;
 const PriceListPage = () => {
   const [isMounted, setIsMounted] = useState(false);
 
-  // Set state to true after the component has mounted
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Render nothing on the server, to avoid hydration errors
   if (!isMounted) return null;
 
   return (
@@ -76,20 +75,20 @@ const PriceListPage = () => {
           </h1>
           <div className="flex justify-center gap-2 mt-8">
             <div className="bg-white rounded-lg shadow-md w-60 md:w-72 p-1">
-              <a
+              <Link
                 href="#"
                 className="block w-full py-2 px-4 rounded-lg bg-fastwork-blue text-white"
               >
                 Graphic Design Price List
-              </a>
+              </Link>
             </div>
             <div className="bg-white rounded-lg shadow-md w-60 md:w-72 p-1">
-              <a
+              <Link
                 href="/bussiness/package-details"
                 className="block w-full py-2 px-4 rounded-lg bg-white text-gray-700"
               >
                 Social Content Credit Package
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -277,7 +276,7 @@ const PriceListPage = () => {
               <p className="text-sm">Copyright © 2024 Fastwork for Business.</p>
             </div>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white">
+              <Link href="#" className="text-gray-400 hover:text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -291,8 +290,8 @@ const PriceListPage = () => {
                 >
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                 </svg>
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white">
+              </Link>
+              <Link href="#" className="text-gray-400 hover:text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -308,7 +307,7 @@ const PriceListPage = () => {
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                 </svg>
-              </a>
+              </Link>
             </div>
           </div>
         </div>

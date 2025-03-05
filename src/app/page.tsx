@@ -432,12 +432,12 @@ export default function Home() {
                   </li>
                 </ul>
               </div>
-              <a
+              <Link
                 href="#"
                 className="mt-4 text-blue-500 hover:text-blue-700 font-semibold text-sm cursor-pointer"
               >
                 ดูงานทั้งหมด
-              </a>
+              </Link>
             </div>
 
             <div className="justify-between flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md gap-6">
@@ -473,12 +473,12 @@ export default function Home() {
                   </li>
                 </ul>
               </div>
-              <a
+              <Link
                 href="#"
                 className="mt-4 text-blue-500 hover:text-blue-700 font-semibold text-sm cursor-pointer"
               >
                 ดูงานทั้งหมด
-              </a>
+              </Link>
             </div>
 
             <div className="justify-between flex flex-col items-center text-center gap-6 bg-white p-6 rounded-lg shadow-md">
@@ -510,12 +510,12 @@ export default function Home() {
                   </li>
                 </ul>
               </div>
-              <a
+              <Link
                 href="#"
                 className="mt-4 text-blue-500 hover:text-blue-700 font-semibold text-sm cursor-pointer"
               >
                 ดูงานทั้งหมด
-              </a>
+              </Link>
             </div>
           </div>
           <div className="col-start-2 col-end-3"></div>

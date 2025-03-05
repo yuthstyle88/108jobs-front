@@ -25,6 +25,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         <Image
           src={image}
           alt={title}
+          width={500}
+          height={500}
           className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
         />
       </div>

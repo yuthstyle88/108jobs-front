@@ -3,6 +3,7 @@ import {
   ChevronDown,
   X
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 const MEMBER_TIERS = [
@@ -215,9 +216,9 @@ const MyServices = () => {
             </p>
 
             <div className="mt-4 mb-6">
-              <a href="#" className="text-blue-600 hover:underline text-sm">
+              <Link href="#" className="text-blue-600 hover:underline text-sm">
                 Kiểm tra cấp bậc thành viên của bạn
-              </a>
+              </Link>
             </div>
 
             <p className="text-gray-700 mb-6">
@@ -674,9 +675,9 @@ const MyServices = () => {
                   )}
                 </div>
                 <div className="mt-2">
-                  <a href="#" className="text-blue-600 hover:underline text-xs">
+                  <Link href="#" className="text-blue-600 hover:underline text-xs">
                     Kiểm tra cấp bậc thành viên của bạn
-                  </a>
+                  </Link>
                 </div>
               </div>
 

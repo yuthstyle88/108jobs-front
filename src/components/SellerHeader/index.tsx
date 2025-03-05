@@ -3,6 +3,7 @@ import { useClickOutside } from "@/hooks/useClickOutside";
 import { faBell, faComment } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LogOut, Settings, User } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 
 const SellerHeader = () => {
@@ -48,28 +49,28 @@ const SellerHeader = () => {
             {isProfileMenuOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
                 <div className="py-2">
-                  <a
+                  <Link
                     href="/profile"
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <User className="w-4 h-4 mr-3 text-gray-500" />
                     <span>Hồ sơ freelancer</span>
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     href="/seller-account-setting/freelance-profile"
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <Settings className="w-4 h-4 mr-3 text-gray-500" />
                     <span>Cài đặt tài khoản</span>
-                  </a>
+                  </Link>
                   <div className="border-t border-gray-100 my-1"></div>
-                  <a
+                  <Link
                     href="#"
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <LogOut className="w-4 h-4 mr-3 text-gray-500" />
                     <span>Đăng xuất</span>
-                  </a>
+                  </Link>
                 </div>
               </div>
             )}

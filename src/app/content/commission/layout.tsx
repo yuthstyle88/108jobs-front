@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import { ReactNode } from "react";
+import { defaultMetadata } from "@/config/metadata";
 
 interface CreateLayoutProps {
   children: ReactNode;
@@ -19,5 +20,14 @@ export default function ProfileLayout({
 }
 
 export const metadata = {
-  title: "iBrowe Shield - Blocking Ads, Trackers & more",
+  ...defaultMetadata,
+  title: "Commission | Fastwork",
+  description:
+    "Fastwork Commission",
+  openGraph: {
+    ...defaultMetadata.openGraph,
+    title: "Commission | Fastwork",
+    description:
+      "Fastwork Commission",
+  },
 };

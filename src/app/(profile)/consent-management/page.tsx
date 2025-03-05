@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 
 type Tab = "fastwork" | "all" | "thirdParty";
@@ -28,9 +29,9 @@ const ConsentManagement = () => {
               <p className="text-text_primary mb-4 font-sans">
                 ยินยอมการรับข่าวสารและโปรโมชันที่พิเศษต่าง ๆ ผ่านทุกช่องทางจาก
                 Fastwork{" "}
-                <a href="#" className="text-blue-600 underline">
+                <Link href="#" className="text-blue-600 underline">
                   นโยบายคุ้มครองความเป็นส่วนตัว
-                </a>
+                </Link>
               </p>
               <div className="flex items-center gap-4">
                 <label className="flex items-center gap-2">
@@ -66,9 +67,9 @@ const ConsentManagement = () => {
                 มีการเก็บและใช้งานคุกกี้เพื่อช่วยปรับปรุงพัฒนาประสบการณ์การใช้งานให้ดียิ่งขึ้นเมื่อคุณเข้าเยี่ยมชมเว็บไซต์ของเรา
                 คุณสามารถเลือกให้ความยินยอมคุกกี้แต่ละประเภทได้
                 (ยกเว้นคุกกี้ที่จำเป็น){" "}
-                <a href="#" className="text-blue-600 hover:underline">
+                <Link href="#" className="text-blue-600 hover:underline">
                   นโยบายคุกกี้
-                </a>
+                </Link>
               </p>
 
               <div className="space-y-6">
@@ -194,19 +195,19 @@ const ConsentManagement = () => {
           </h1>
           <div className="mb-[2rem] text-text_primary font-sans">
             อ่าน{" "}
-            <a
+            <Link
               href="https://static.fastwork.co/contents/terms"
               className="text-third underline"
             >
               เงื่อนไขข้อตกลงการใช้บริการ
-            </a>{" "}
+            </Link>{" "}
             และ{" "}
-            <a
+            <Link
               href="https://static.fastwork.co/contents/privacy"
               className="text-third underline"
             >
               นโยบายคุ้มครองความเป็นส่วนตัว
-            </a>
+            </Link>
           </div>
           <div className="bg-white rounded-lg shadow">
             <div className="border-b">
