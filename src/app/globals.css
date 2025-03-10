@@ -2,19 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-.home-title-head{
+.home-title-head {
   @apply text-[2.25rem] text-primary font-medium leading-[1.15]
 }
-.submenu-container{
+
+.submenu-container {
   @apply relative flex items-center justify-center hover:bg-[#F6F9FE] after:block after:w-0 after:h-[0.25rem] after:rounded-full after:bg-primary after:absolute after:bottom-0 after:left-1/2 after:transform after:-translate-x-1/2 after:transition-all after:duration-100 after:ease-in-out hover:after:w-[80%] hover:after:opacity-100
 }
 
-.max-h-sub-menu{
+.max-h-sub-menu {
   @apply max-h-[calc(100dvh_-_4.5rem_-_3.5rem_-_24px)]
 }
 
-.filter-button{
+.filter-button {
   @apply px-4 py-[7px] hover:bg-[#F6F7F8] cursor-pointer border-[1px] border-border_primary rounded-[4px] text-[14px] font-medium text-third
+}
+
+.verification-input {
+  @apply w-12 h-12 text-center text-xl font-semibold rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-verification-blue focus:border-transparent transition-all duration-200;
+}
+
+.verification-input.active {
+  @apply border-verification-blue bg-white shadow-sm;
+}
+
+.verification-button {
+  @apply bg-verification-blue text-white font-medium py-3 px-4 rounded-md w-full hover:bg-opacity-90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-verification-blue focus:ring-opacity-50 disabled:opacity-70 disabled:cursor-not-allowed;
 }
 
 
@@ -23,24 +36,48 @@
 .header-gradient {
   background-image: linear-gradient(180deg, hsl(216 90% 32%) 4.5rem, hsl(216 77% 50%) 100%)
 }
+
 .coin-gradient {
   background: linear-gradient(326.33deg, #27c8f8 2.42%, #1850c2 106.48%), #c4c4c4;
 }
+
 .coin-popup-gradient {
   background: linear-gradient(105.31deg, #1855b8 21.49%, #387ae5 93.5%);
 }
+
 .my-service-gradient {
   background: linear-gradient(108.98deg, #d6d9dd -101.64%, #fbfbfc 93.48%);
 }
+
 .edit-profile-gradient {
-  background: linear-gradient(282deg,#27c8f8,#1850c2);
+  background: linear-gradient(282deg, #27c8f8, #1850c2);
 }
 
-.grid-container-desktop{
+.grid-container-desktop {
   display: grid;
-  grid-template-columns: minmax(1rem,1fr) minmax(calc(1280px - 4rem),calc(1280px - 4rem)) minmax(1rem,1fr);
+  grid-template-columns: minmax(1rem, 1fr) minmax(calc(1280px - 4rem), calc(1280px - 4rem)) minmax(1rem, 1fr);
   grid-template-rows: auto;
 }
+
+.tb-fw-spinner {
+  stroke: hsl(216 77% 50%);
+  animation: tb-fw-spinner-dash 1.2s linear infinite;
+  stroke-width: 2px;
+  stroke-dashoffset: 0;
+  stroke-dasharray: 79.2295761108, 40;
+}
+
+@keyframes tb-fw-spinner-dash {
+  0% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: -119.2295761108px;
+  }
+}
+
+
 
 
 :root {
@@ -48,7 +85,7 @@
   --foreground: #171717;
   --primary: #08439B;
   --secondary: #e3edfd;
-  --third:#1d6ce2;
+  --third: #1d6ce2;
   --text-primary: #2b323bf2;
   --text-secondary: #2b323b99;
   --border-primary: #d6dae1
@@ -71,15 +108,17 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
   .grid-area-side {
     grid-area: side;
   }
+
   .scrollbar-hide {
-    -ms-overflow-style: none;  
-    scrollbar-width: none; 
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
-    display: none; 
+    display: none;
   }
 }

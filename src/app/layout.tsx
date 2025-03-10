@@ -1,7 +1,9 @@
+import { auth } from "@/auth";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Kanit } from "next/font/google";
 import FontAwesomeConfig from "./fontawesome";
 import "./globals.css";
+import { Providers } from "./providers";
 
 const kanit = Kanit({
   subsets: ["latin", "vietnamese", "thai"],
@@ -45,11 +47,12 @@ export const metadata = {
   referrer: "strict-origin-when-cross-origin",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html lang="th">
       <head>
@@ -59,7 +62,9 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${kanit.className} antialiased`}
       >
-        <LanguageProvider>{children}</LanguageProvider>
+        <Providers session={session}>
+          <LanguageProvider>{children}</LanguageProvider>
+        </Providers>
       </body>
     </html>
   );

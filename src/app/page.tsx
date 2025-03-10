@@ -28,6 +28,10 @@ import {
 } from "@/constants/images";
 import Link from "next/link";
 import { useState } from "react";
+import { useJobsTranslation } from "@/hooks/useTranslation";
+import { useLanguage } from "@/hooks/translation/useGlobalTranslate";
+import { useLanguageStore } from "@/store/useLanguageStore";
+import Loading from "@/components/Loading";
 
 const categories = [
   {
@@ -128,9 +132,15 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
   const [expanded, setExpanded] = useState(false);
 
+ const {  isLoading, error } = useLanguage("th", "global");
+  const { languageData } = useLanguageStore();
+
+  if (isLoading) return <Loading/>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
     <div className="min-h-[200vh] bg-white">
-      <Header type="transparent" />
+      <Header type="transparent" languageData={languageData}/>
       <main>
         <section className="h-auto header-gradient pt-[4.5rem]">
           <div className="pt-[3rem] pb-[8rem] flex justify-center flex-col gap-4 text-center">
@@ -807,7 +817,34 @@ export default function Home() {
               <SwiperSlide>
                 <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
                   <div className="mb-4">
-                     <blockquote className="text-lg text-gray-700 font-semibold italic">
+                    <blockquote className="text-lg text-gray-700 font-semibold italic">
+                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
+                    </blockquote>
+                  </div>
+                  <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center">
+                      {/* Add your logo image here */}
+                      <Image
+                        src="/path-to-your-logo.png"
+                        alt="Company Logo"
+                        width={40}
+                        height={40}
+                      />
+                      <span className="ml-2 text-gray-600 font-medium text-sm">
+                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
+                      </span>
+                    </div>
+                    <div className="text-gray-500 text-xs">
+                      โรงงานอุตสาหกรรมพลาสติก
+                    </div>
+                  </div>
+                </div>
+              </SwiperSlide>
+              <SwiperSlide>
+                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
+                  <div className="mb-4">
+                    <blockquote className="text-lg text-gray-700 font-semibold italic">
                       &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
                       เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
                     </blockquote>
@@ -862,8 +899,8 @@ export default function Home() {
                 <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
                   <div className="mb-4">
                     <blockquote className="text-lg text-gray-700 font-semibold italic">
-                    &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                    เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
+                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
                     </blockquote>
                   </div>
                   <div className="flex items-center justify-between mt-4">
@@ -889,8 +926,8 @@ export default function Home() {
                 <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
                   <div className="mb-4">
                     <blockquote className="text-lg text-gray-700 font-semibold italic">
-                    &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                    เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
+                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
                     </blockquote>
                   </div>
                   <div className="flex items-center justify-between mt-4">
@@ -916,35 +953,8 @@ export default function Home() {
                 <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
                   <div className="mb-4">
                     <blockquote className="text-lg text-gray-700 font-semibold italic">
-                    &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                    เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
-                    </blockquote>
-                  </div>
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center">
-                      {/* Add your logo image here */}
-                      <Image
-                        src="/path-to-your-logo.png"
-                        alt="Company Logo"
-                        width={40}
-                        height={40}
-                      />
-                      <span className="ml-2 text-gray-600 font-medium text-sm">
-                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
-                      </span>
-                    </div>
-                    <div className="text-gray-500 text-xs">
-                      โรงงานอุตสาหกรรมพลาสติก
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
-                  <div className="mb-4">
-                    <blockquote className="text-lg text-gray-700 font-semibold italic">
-                    &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                    เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
+                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
                     </blockquote>
                   </div>
                   <div className="flex items-center justify-between mt-4">
@@ -987,7 +997,6 @@ export default function Home() {
                   style={{ filter: "grayscale(100%)" }}
                   width={384}
                   height={230}
-                  layout="intrinsic"
                 />
                 <Image
                   src={CustomerImage.pic2}
@@ -995,7 +1004,6 @@ export default function Home() {
                   style={{ filter: "grayscale(100%)" }}
                   width={384}
                   height={230}
-                  layout="intrinsic"
                 />
                 <Image
                   src={CustomerImage.pic3}
@@ -1003,7 +1011,6 @@ export default function Home() {
                   style={{ filter: "grayscale(100%)" }}
                   width={384}
                   height={230}
-                  layout="intrinsic"
                 />
                 <Image
                   src={CustomerImage.pic4}
@@ -1011,7 +1018,6 @@ export default function Home() {
                   style={{ filter: "grayscale(100%)" }}
                   width={384}
                   height={230}
-                  layout="intrinsic"
                 />
                 <Image
                   src={CustomerImage.pic5}
@@ -1019,7 +1025,6 @@ export default function Home() {
                   style={{ filter: "grayscale(100%)" }}
                   width={384}
                   height={230}
-                  layout="intrinsic"
                 />
                 <Image
                   src={CustomerImage.pic6}
@@ -1027,7 +1032,6 @@ export default function Home() {
                   style={{ filter: "grayscale(100%)" }}
                   width={384}
                   height={230}
-                  layout="intrinsic"
                 />
                 <Image
                   src={CustomerImage.pic7}
@@ -1035,7 +1039,6 @@ export default function Home() {
                   style={{ filter: "grayscale(100%)" }}
                   width={384}
                   height={230}
-                  layout="intrinsic"
                 />
                 <Image
                   src={CustomerImage.pic8}
@@ -1043,7 +1046,6 @@ export default function Home() {
                   style={{ filter: "grayscale(100%)" }}
                   width={384}
                   height={230}
-                  layout="intrinsic"
                 />
                 <Image
                   src={CustomerImage.pic9}
@@ -1051,7 +1053,6 @@ export default function Home() {
                   style={{ filter: "grayscale(100%)" }}
                   width={384}
                   height={230}
-                  layout="intrinsic"
                 />
                 <Image
                   src={CustomerImage.pic10}
@@ -1059,7 +1060,6 @@ export default function Home() {
                   style={{ filter: "grayscale(100%)" }}
                   width={384}
                   height={230}
-                  layout="intrinsic"
                 />
                 <Image
                   src={CustomerImage.pic11}
@@ -1067,7 +1067,6 @@ export default function Home() {
                   style={{ filter: "grayscale(100%)" }}
                   width={384}
                   height={230}
-                  layout="intrinsic"
                 />
                 <Image
                   src={CustomerImage.pic12}
@@ -1075,7 +1074,6 @@ export default function Home() {
                   style={{ filter: "grayscale(100%)" }}
                   width={384}
                   height={230}
-                  layout="intrinsic"
                 />
               </div>
             </div>
@@ -1421,10 +1419,3 @@ export default function Home() {
     </div>
   );
 }
-
-// export const metadata: Metadata = {
-//   title:
-//     "Fastlance.vn - Tổng hợp freelancer chất lượng hàng đầu cho doanh nghiệp ",
-//   description:
-//     "Nền tảng freelancer chất lượng cao cho doanh nghiệp tại Việt Nam.",
-// };
