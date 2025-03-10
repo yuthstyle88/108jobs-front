@@ -23,6 +23,10 @@ const config: Config = {
           "light-blue": "#0F9DFF",
           "bright-blue": "#10A3FF",
         },
+        verification: {
+          blue: "#0078FF",
+          background: "#f0f4fd",
+        },
       },
       boxShadow: {
         panel: "0 0 1.5rem 0 rgba(25,72,142,.15)",
@@ -31,8 +35,10 @@ const config: Config = {
         categoryMenu: "0 4px 12px 0 rgba(43, 43, 43, .1)",
         subMenu: "0 0 1.5rem 0 rgba(25, 72, 142, .15)",
         toggle: "0 0 7px rgba(0, 0, 0, .5)",
-        jobCard: "0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),0 4px 4px hsl(333deg 0% 50% /7.5%),0 8px 8px hsl(333deg 0% 50% /7.5%),0 16px 16px hsl(333deg 0% 50% /7.5%)",
+        jobCard:
+          "0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),0 4px 4px hsl(333deg 0% 50% /7.5%),0 8px 8px hsl(333deg 0% 50% /7.5%),0 16px 16px hsl(333deg 0% 50% /7.5%)",
         filterSection: "0 4px 12px 0 rgba(43, 43, 43, .1)",
+        inputShadow: "box-shadow: 0 0 0 .175em hsl(5 85% 94%)",
       },
       borderWidth: {
         1: "1px",

@@ -3,6 +3,8 @@ const nextConfig = {
   images: {
     domains: ["upload.wikimedia.org", "images.unsplash.com"],
   },
+  reactStrictMode: true,
+  output: "standalone",
 };
 
 export default nextConfig;

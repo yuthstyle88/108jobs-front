@@ -14,7 +14,7 @@ import {
   faMessage,
   faSearch,
   faSignOut,
-  faTicket
+  faTicket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -22,6 +22,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import MegaMenu from "../MegaMenu";
 import NotificationDropdown from "../NotificationDropdown";
+import { GlobalLanguage } from "@/types/language";
+import { useLanguageStore } from "@/store/useLanguageStore";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -36,11 +38,19 @@ interface BgProps {
   type: keyof typeof TYPES;
 }
 
-const Header = ({ type }: BgProps) => {
+interface HeaderProps extends BgProps {
+  languageData: GlobalLanguage | null;
+}
+
+const Header = ({ type,languageData }: HeaderProps) => {
+
   const [scrollY, setScrollY] = useState(0);
   const [showSearch, setShowSearch] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
+
+  console.log("languageData", languageData);
+  
 
   const { bg } = TYPES[type];
 
@@ -57,7 +67,7 @@ const Header = ({ type }: BgProps) => {
 
   return (
     <header
-      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
+      className={`fixed top-0 z-[999] w-full transition-all duration-300 ${
         scrollY > 0 ? "bg-primary" : bg
       }`}
     >
@@ -86,12 +96,12 @@ const Header = ({ type }: BgProps) => {
           <div className="group">
             <div className="relative">
               <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
-                <p className="">การจ้างงาน</p>
+                <p className="">{languageData?.label_employment_button}</p>
                 <FontAwesomeIcon icon={faChevronDown} />
               </div>
-              <div className="absolute left-0 right-0 w-[110px] bg-transparent h-12 z-0"></div>
+              <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
             </div>
-            <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-megaMenu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-10 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
+            <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-megaMenu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
               <MegaMenu />
             </div>
           </div>
@@ -105,13 +115,13 @@ const Header = ({ type }: BgProps) => {
             href="/start-selling"
             className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
           >
-            สมัครเป็นฟรีแลนซ์
+            {languageData?.label_apply_to_be_freelancer_button}
           </Link>
           <Link
             href="/login"
             className="text-white text-sm hover:bg-blue-800 hover:text-white"
           >
-            เข้าสู่ระบบ
+            {languageData?.label_login_button}
           </Link>
           <Link
             href="/chat"
@@ -123,14 +133,7 @@ const Header = ({ type }: BgProps) => {
               size="4x"
             />
           </Link>
-          {/* <div className="text-white text-sm hover:bg-blue-800 hover:text-white pr-3 cursor-pointer">
-            <FontAwesomeIcon
-              icon={faBell}
-              className="w-[21px] h-[24px] text-white"
-              size="4x"
-            />
-          </div> */}
-          <NotificationDropdown/>
+          <NotificationDropdown />
           <Link
             href="/login"
             className="text-white text-sm hover:bg-blue-800 hover:text-white"

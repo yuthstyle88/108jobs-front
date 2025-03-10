@@ -1,5 +1,6 @@
 "use client";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { useLanguageStore } from "@/store/useLanguageStore";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
@@ -11,6 +12,9 @@ interface NotificationDropdownProps {
 const NotificationDropdown = ({
   className = "",
 }: NotificationDropdownProps) => {
+
+    const { languageData } = useLanguageStore();
+
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
