@@ -20,18 +20,17 @@ import "./styles.css";
 
 import { Keyboard, Mousewheel, Navigation, Pagination } from "swiper/modules";
 
+import Loading from "@/components/Loading";
 import {
   AssetsImage,
   CategoriesImage,
   CompareImage,
   CustomerImage,
 } from "@/constants/images";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { useLanguageStore } from "@/store/useLanguageStore";
 import Link from "next/link";
 import { useState } from "react";
-import { useJobsTranslation } from "@/hooks/useTranslation";
-import { useLanguage } from "@/hooks/translation/useGlobalTranslate";
-import { useLanguageStore } from "@/store/useLanguageStore";
-import Loading from "@/components/Loading";
 
 const categories = [
   {
@@ -107,55 +106,60 @@ const category_images = [
   },
 ];
 
-const freelancer_intro = [
-  {
-    icon: AssetsImage.group,
-    title: "ฟรีแลนซ์คุณภาพอันดับ 1",
-    description:
-      "ฟรีแลนซ์ผ่านการคัดเลือก และยืนยันตัวตน กับ Fastwork สามารถตรวจสอบได้",
-  },
-  {
-    icon: AssetsImage.shield,
-    title: "รับประกันการจ้างงาน",
-    description:
-      "เงินของคุณจะได้รับความคุ้มครองตั้งแต่ฟรีแลนซ์เริ่มทํางานไปจนถึงได้รับงานที่พอใจ",
-  },
-  {
-    icon: AssetsImage.paper,
-    title: "ครบทุกงานที่ต้องการ มั่นใจ เลือก Fastwork",
-    description:
-      "พบกับกองทัพฟรีแลนซ์คุณภาพ พร้อมตอบโจทย์ทุกธุรกิจ ครอบคลุมทุกสายงาน",
-  },
-];
-
 export default function Home() {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
   const [expanded, setExpanded] = useState(false);
 
- const {  isLoading, error } = useLanguage("th", "global");
-  const { languageData } = useLanguageStore();
+  const { isLoading, error } = useGlobalTranslate("global");
+  const { isLoading: homeLoading, error: homeError } =
+    useGlobalTranslate("home");
+  const { globalLanguageData, homeLanguageData } = useLanguageStore();
 
-  if (isLoading) return <Loading/>;
-  if (error) return <div>Error: {error}</div>;
+  console.log("globalLanguageData", globalLanguageData);
+
+  const freelancer_intro = [
+    {
+      icon: AssetsImage.group,
+      title: homeLanguageData?.tittle_first_slogan,
+      description:
+        "ฟรีแลนซ์ผ่านการคัดเลือก และยืนยันตัวตน กับ Fastwork สามารถตรวจสอบได้",
+    },
+    {
+      icon: AssetsImage.shield,
+      title: homeLanguageData?.tittle_second_slogan,
+      description:
+        "เงินของคุณจะได้รับความคุ้มครองตั้งแต่ฟรีแลนซ์เริ่มทํางานไปจนถึงได้รับงานที่พอใจ",
+    },
+    {
+      icon: AssetsImage.paper,
+      title: homeLanguageData?.tittle_third_slogan,
+      description:
+        "พบกับกองทัพฟรีแลนซ์คุณภาพ พร้อมตอบโจทย์ทุกธุรกิจ ครอบคลุมทุกสายงาน",
+    },
+  ];
+
+  if (isLoading || homeLoading) return <Loading />;
+  if (error || homeError) return <div>Error loading language data</div>;
 
   return (
     <div className="min-h-[200vh] bg-white">
-      <Header type="transparent" languageData={languageData}/>
+      {/* <Header type="transparent" languageData={globalLanguageData} /> */}
+      <Header type="transparent"/>
       <main>
         <section className="h-auto header-gradient pt-[4.5rem]">
           <div className="pt-[3rem] pb-[8rem] flex justify-center flex-col gap-4 text-center">
             <h1 className="text-[24px] font-medium text-white">
-              เรามีฟรีแลนซ์มืออาชีพด้าน...
+              {homeLanguageData?.title_banner_home_page_1}
             </h1>
             <TypingText />
             <p className="text-[18px] font-medium">
-              ที่พร้อมเปลี่ยนไอเดียของคุณให้เป็นความจริง
+              {homeLanguageData?.title_banner_home_page_2}
             </p>
             <div className="mt-[1.5rem] flex justify-center">
               <div className="flex text-black h-[40px] relative w-[624px]">
                 <input
                   type="text"
-                  placeholder="ค้นหาฟรีแลนซ์..."
+                  placeholder={`${globalLanguageData?.hint_text_header_search}...`}
                   className="focus:outline-none rounded-[20px] border-2-white px-5 text-sm font-mono w-full"
                 />
                 <FontAwesomeIcon
@@ -230,7 +234,7 @@ export default function Home() {
                     href="/popular-subcat"
                     className="text-primary py-[0.75rem] relative no-underline cursor-pointer outline-none ease-in-out duration-150 transition-all"
                   >
-                    ดูเพิ่มเติม
+                    {homeLanguageData?.label_see_more_tittle}
                     <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
                   </Link>
                 </div>
@@ -242,10 +246,10 @@ export default function Home() {
         <section className="py-24 grid grid-container-desktop gap-y-12 ">
           <div className="col-start-2 col-end-3">
             <h4 className="text-[1.5rem] text-[#38404c] font-medium leading-[1.15]">
-              ทำไมถึงต้องใช้ Fastwork?
+              {homeLanguageData?.tittle_primary_why_section}
             </h4>
             <h2 className="home-title-head">
-              เพราะเราเปลี่ยนไอเดียของคุณให้เป็นความจริง ด้วยฟรีแลนซ์มืออาชีพ
+              {homeLanguageData?.tittle_secondary_why_section}
             </h2>
           </div>
           <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
@@ -274,7 +278,7 @@ export default function Home() {
           <div className="py-24 grid grid-container-desktop gap-y-12 ">
             <div className="col-start-2 col-end-3">
               <h2 className="home-title-head">
-                เริ่มจ้างงานฟรีแลนซ์ง่ายๆ กับ Fastwork
+                {homeLanguageData?.title_start_hiring_section}
               </h2>
             </div>
             <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
@@ -284,11 +288,11 @@ export default function Home() {
                     <Image src={GroupIcon.group11651} alt="group1" />
                     <div className="grid grid-rows-2 gap-y-4">
                       <h1 className="text-[1.25rem]  leading-[1.15]">
-                        1. ค้นหาฟรีแลนซ์ที่ถูกใจ
+                        {homeLanguageData?.label_start_hiring_section_1}
                       </h1>
                       <p className="m-0 text-base font-sans leading-[1.65] ">
                         {" "}
-                        พิจารณาจากผลงาน ความสามารถ และรีวิว
+                        {homeLanguageData?.content_start_hiring_section_1}
                       </p>
                     </div>
                   </div>
@@ -298,10 +302,10 @@ export default function Home() {
                     <Image src={GroupIcon.group11653} alt="group3" />
                     <div className="grid grid-rows-2 gap-y-2">
                       <h1 className="text-[1.25rem]  leading-[1.15]">
-                        3. ชำระเงินผ่าน Fastwork
+                        {homeLanguageData?.label_start_hiring_section_3}
                       </h1>
                       <p className="m-0 text-base font-sans leading-[1.65] ">
-                        Fastwork Guarantee ได้งานแน่นอน
+                        {homeLanguageData?.content_start_hiring_section_3}
                       </p>
                     </div>
                   </div>
@@ -312,10 +316,10 @@ export default function Home() {
                   <Image src={GroupIcon.group11652} alt="group2" />
                   <div className="grid grid-rows-2 gap-y-2">
                     <h1 className="text-[1.25rem]  leading-[1.15]">
-                      2. พูดคุยรายละเอียด
+                      {homeLanguageData?.label_start_hiring_section_2}
                     </h1>
                     <p className="m-0 text-base font-sans leading-[1.65] ">
-                      อธิบายงานเพื่อให้ฟรีแลนซ์สร้างใบเสนอราคา
+                      {homeLanguageData?.content_start_hiring_section_2}
                     </p>
                   </div>
                 </div>
@@ -324,10 +328,10 @@ export default function Home() {
                     <Image src={GroupIcon.group11654} alt="group4" />
                     <div className="grid grid-rows-2 gap-y-2">
                       <h1 className="text-[1.25rem]  leading-[1.15]">
-                        4. อนุมัติงานและรีวิว
+                        {homeLanguageData?.label_start_hiring_section_4}
                       </h1>
                       <p className="m-0 text-base font-sans leading-[1.65] ">
-                        ตรวจสอบงานที่ได้รับ อนุมัติ และรีวิวงาน
+                        {homeLanguageData?.content_start_hiring_section_4}
                       </p>
                     </div>
                   </div>
@@ -335,7 +339,6 @@ export default function Home() {
               </div>
               <div>
                 <Image src={fastwork} alt="fastwork" className="items-end" />
-                Video here
               </div>
             </div>
           </div>
@@ -382,7 +385,9 @@ export default function Home() {
 
         <section className="py-24 grid grid-container-desktop gap-y-12 gap-x-4">
           <div className="col-start-2 col-end-3">
-            <h2 className="home-title-head">สิ่งที่น่าสนใจ </h2>
+            <h2 className="home-title-head">
+              {homeLanguageData?.label_recommend_section}
+            </h2>
             <Swiper
               slidesPerView={3}
               cssMode={true}
@@ -419,7 +424,7 @@ export default function Home() {
         >
           <div className="col-start-2 col-end-3">
             <h2 className="home-title-head text-center">
-              เรามีฟรีแลนซ์คุณภาพ และผู้เชี่ยวชาญที่หลากหลายในระบบคอยให้บริการ
+              {homeLanguageData?.tittle_quality_offer_section}
             </h2>
           </div>
           <div className="grid grid-cols-3 gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3 ">
@@ -435,10 +440,10 @@ export default function Home() {
                 <h3 className="font-semibold text-xl mb-2">Freelancer</h3>
                 <ul className="text-sm text-left">
                   <li className="flex items-center">
-                    ผ่านการยืนยันตัวตนในระบบ{" "}
+                    {homeLanguageData?.content_quality_offer_freelancer_card_1}{" "}
                   </li>
                   <li className="flex items-center">
-                    ผ่านการตรวจสอบผลงาน ตามมาตรฐานขั้นต้นของ Fastwork{" "}
+                    {homeLanguageData?.content_quality_offer_freelancer_card_2}{" "}
                   </li>
                 </ul>
               </div>
@@ -446,13 +451,13 @@ export default function Home() {
                 href="#"
                 className="mt-4 text-blue-500 hover:text-blue-700 font-semibold text-sm cursor-pointer"
               >
-                ดูงานทั้งหมด
+                {homeLanguageData?.label_see_more_tittle}
               </Link>
             </div>
 
             <div className="justify-between flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md gap-6">
               <button className=" pointer-events-none bg-blue-200 text-blue-500 font-semibold py-2 px-4 rounded-full shadow-md hover:bg-blue-400 self-end mx-4">
-                ผู้เชี่ยวชาญ
+                {homeLanguageData?.tittle_quality_offer_specialist_card}
               </button>
               <Image src={CompareImage.compare2} alt="Specialist" />
 
@@ -463,23 +468,22 @@ export default function Home() {
               /> */}
               <div className="text-black">
                 <h3 className="font-semibold text-xl mb-2  mx-4">
-                  ผู้เชี่ยวชาญ
+                  {homeLanguageData?.tittle_quality_offer_specialist_card}
                 </h3>
                 <ul className="text-sm text-left">
                   <li className="flex items-center">
-                    ผ่านการยืนยันตัวตนในระบบ{" "}
+                    {homeLanguageData?.content_quality_offer_specialist_card_1}{" "}
                   </li>
                   <li className="flex items-center">
-                    ผ่านการคัดเลือก ทดสอบความรู้ตามสายงาน และทักษะในการทำงานโดย
-                    Fastwork
+                    {homeLanguageData?.content_quality_offer_specialist_card_2}
                   </li>{" "}
                   <li className="flex items-center">
                     {" "}
-                    ผ่านการอบรมพิเศษด้านทักษะและการให้บริการจาก Fastwork
+                    {homeLanguageData?.content_quality_offer_specialist_card_3}
                   </li>{" "}
                   <li className="flex items-center">
                     {" "}
-                    มีใบประกอบวิชาชีพที่จำเป็นตามสายงาน Fastwork
+                    {homeLanguageData?.content_quality_offer_specialist_card_4}
                   </li>
                 </ul>
               </div>
@@ -487,36 +491,49 @@ export default function Home() {
                 href="#"
                 className="mt-4 text-blue-500 hover:text-blue-700 font-semibold text-sm cursor-pointer"
               >
-                ดูงานทั้งหมด
+                {homeLanguageData?.label_see_more_tittle}
               </Link>
             </div>
 
             <div className="justify-between flex flex-col items-center text-center gap-6 bg-white p-6 rounded-lg shadow-md">
               <button className=" pointer-events-none bg-blue-500 text-blue-2  00 font-semibold py-2 px-4 rounded-full shadow-md hover:bg-blue-400 self-end mx-4">
-                ผู้เชี่ยวชาญ
+                {homeLanguageData?.tittle_quality_offer_professional_card}
               </button>
               <Image src={CompareImage.compare3} alt="Professional" />
               <div className="text-black">
-                <h3 className="font-semibold text-xl mb-2">Professional</h3>
+                <h3 className="font-semibold text-xl mb-2">
+                  {homeLanguageData?.tittle_quality_offer_professional_card}
+                </h3>
                 <ul className="text-sm text-left">
                   <li className="flex items-center">
-                    ผ่านการยืนยันตัวตนในระบบ
+                    {
+                      homeLanguageData?.content_quality_offer_professional_card_1
+                    }
                   </li>
                   <li className="flex items-center">
-                    ผ่านการคัดเลือก ทดสอบความรู้ตามสายงาน และทักษะในการทำงานโดย
-                    Fastwork
+                    {
+                      homeLanguageData?.content_quality_offer_professional_card_2
+                    }
                   </li>
                   <li className="flex items-center">
-                    ผ่านการอบรมพิเศษด้านทักษะและการให้บริการจาก Fastwork
+                    {
+                      homeLanguageData?.content_quality_offer_professional_card_3
+                    }
                   </li>
                   <li className="flex items-center">
-                    มีใบประกอบวิชาชีพที่จำเป็นตามสายงาน
+                    {
+                      homeLanguageData?.content_quality_offer_professional_card_4
+                    }
                   </li>
                   <li className="flex items-center">
-                    คัดกรองความเชี่ยวชาญขั้นสูงด้วยเกณฑ์พิเศษ
+                    {
+                      homeLanguageData?.content_quality_offer_professional_card_5
+                    }
                   </li>{" "}
                   <li className="flex items-center">
-                    มีความสามารถทำงานที่ซับซ้อนสูง และมีขนาดใหญ่
+                    {
+                      homeLanguageData?.content_quality_offer_professional_card_6
+                    }
                   </li>
                 </ul>
               </div>
@@ -524,7 +541,7 @@ export default function Home() {
                 href="#"
                 className="mt-4 text-blue-500 hover:text-blue-700 font-semibold text-sm cursor-pointer"
               >
-                ดูงานทั้งหมด
+                {homeLanguageData?.label_see_more_tittle}
               </Link>
             </div>
           </div>
@@ -677,7 +694,7 @@ export default function Home() {
 
         <section className="bg-white py-24 grid grid-container-desktop gap-y-12">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
-            ผลงานแนะนำจากฟรีแลนซ์ Fastwork
+            {homeLanguageData?.title_featured_works}
           </div>
           <div className="col-start-2 col-end-3">
             <Swiper
@@ -775,7 +792,7 @@ export default function Home() {
 
         <section className="bg-white py-24 grid grid-container-desktop gap-y-12">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
-            ความคิดเห็นจากผู้ใช้บริการ
+            {homeLanguageData?.label_reviews_customer}
           </div>
           <div className="col-start-2 col-end-3">
             <Swiper
@@ -987,8 +1004,7 @@ export default function Home() {
           <div className="py-24 grid grid-container-desktop gap-y-[1.5rem]">
             <div className="col-start-2 col-end-3 w-full text-center">
               <h5 className="text-[1.25rem] text-[#2B323BF2] font-medium font-secondary leading-[1.15] mb-[1.5rem]">
-                มีงานสำเร็จกว่า 150,000 ชิ้น โดยบริษัทชั้นนำต่างๆ
-                เชื่อใจและเลือกใช้บริการของ Fastwork
+                {homeLanguageData?.title_trusted_companies}
               </h5>
               <div className="grid grid-cols-6 grid-rows-2 gap-x-8 gap-y-4">
                 <Image
@@ -1084,7 +1100,7 @@ export default function Home() {
           <div className="bg-white py-24 grid grid-container-desktop gap-y-12">
             <div className="col-start-2 col-end-3 w-full text-left">
               <h2 className="block text-[#08439B] text-[36px] mt-[0.83em] mb-[0.83em] mx-0">
-                Fastwork ที่หนึ่งแห่งฟรีแลนซ์คุณภาพ
+                {homeLanguageData?.title_platform}
               </h2>
               <div
                 className={`text-gray-700 overflow-hidden transition-all duration-300 ${
@@ -1145,7 +1161,7 @@ export default function Home() {
                   className="text-blue-600 cursor-pointer text-center mt-4"
                   onClick={() => setExpanded(true)}
                 >
-                  อ่านเพิ่มเติม ▼
+                  {homeLanguageData?.button_job_categories_view_more} ▼
                 </div>
               )}
             </div>
@@ -1155,7 +1171,7 @@ export default function Home() {
           <div className="bg-white py-24 grid grid-container-desktop gap-y-12">
             <div className="col-start-2 col-end-3 w-full">
               <h2 className="block text-[#08439B] text-[36px] mt-[0.83em] mb-[0.83em] mx-0 text-center">
-                หมวดหมู่งานต่างๆ ของ Fastwork
+                {homeLanguageData?.title_job_categories}
               </h2>
               <div className="grid w-full gap-x-8 gap-y-6 grid-cols-4 grid-rows-2">
                 <div className="block">
@@ -1373,11 +1389,10 @@ export default function Home() {
             <div className="flex items-center pl-[2rem]">
               <div>
                 <h4 className="text-black text-[1.125rem] font-[500] leading-[20.7px] flex items-center font-[Kanit, -apple-system, system-ui, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', sans-serif]">
-                  ดาวน์โหลดแอปฯ Fastwork
+                  {homeLanguageData?.button_download_app}
                 </h4>
                 <p className="mt-[0.5rem] text-[1rem] text-black font-[Kanit, -apple-system, system-ui, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', sans-serif] leading-[1.65] m-0 p-0 block mb-[1em] mt-[1em] mx-0">
-                  ให้ประสบการณ์การจ้างงานฟรีแลนซ์ของคุณเป็นเรื่องง่าย
-                  ค้นหาฟรีแลนซ์ บรีฟงาน ชําระเงิน รอรับผลงาน จบครบในแอปเดียว
+                  {homeLanguageData?.subtitle_download_app}
                 </p>
                 <div className="mt-[1.5rem] flex">
                   <div className="grid grid-cols-1 min-w-0 min-h-0 gap-4">

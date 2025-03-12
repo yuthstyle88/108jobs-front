@@ -250,7 +250,7 @@ const ContactForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData, attachments);
+    // console.log("Form submitted:", formData, attachments);
   };
 
   const availableTimes = [

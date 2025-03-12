@@ -1,9 +1,6 @@
 export const API_ENDPOINTS = {
-    posts: {
-      list: '/posts',
-      detail: (id: string | number) => `/posts/${id}`,
-    },
-    users: {
-      profile: '/users/me',
-    },
-  };
+  language: {
+    get: (lang: string, file: "global" | "login" | "home") =>
+      `/lang/${lang}/${file}_${lang}.json`,
+  },
+};

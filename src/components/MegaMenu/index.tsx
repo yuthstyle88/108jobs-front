@@ -1,9 +1,10 @@
 "use client";
 import { MegaMenuImage } from "@/constants/images";
+import { useLanguageStore } from "@/store/useLanguageStore";
 import {
   faBuilding,
   faChevronRight,
-  faStarAndCrescent
+  faStarAndCrescent,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image, { StaticImageData } from "next/image";
@@ -18,73 +19,76 @@ import Post from "./Post";
 interface MegaMenuItem {
   key: string;
   icon: StaticImageData;
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
 }
 
-const mega_freelancer: MegaMenuItem[] = [
-  {
-    key: "find",
-    icon: MegaMenuImage.search,
-    title: "ค้นหา และจ้างด้วยตัวเอง",
-    description: "เลือกดูฟรีแลนซ์ที่ต้องการ และแชทได้ทันที",
-  },
-  {
-    key: "post",
-    icon: MegaMenuImage.job,
-    title: "โพสต์หาผ่านบอร์ดประกาศงาน",
-    description: "โพสต์ และรอฟรีแลนซ์มาเสนองานได้เลย",
-  },
-  {
-    key: "chat",
-    icon: MegaMenuImage.chat,
-    title: "ผู้ช่วยค้นหาฟรีแลนซ์ แค่แอดไลน์",
-    description: "บริการ Chat to hire หรือผู้ช่วยค้นหาฟรีแลนซ์",
-  },
-];
-
-const mega_business: MegaMenuItem[] = [
-  {
-    key: "hire",
-    icon: MegaMenuImage.company,
-    title: "ค้นหา และจ้างด้วยตัวเอง",
-    description: "เลือกดูฟรีแลนซ์ที่ต้องการ และแชทได้ทันที",
-  },
-  {
-    key: "business",
-    icon: MegaMenuImage.business,
-    title: "โพสต์หาผ่านบอร์ดประกาศงาน",
-    description: "โพสต์ และรอฟรีแลนซ์มาเสนองานได้เลย",
-  },
-];
-
-const DESCRIPTION: Record<
-  string,
-  { component: JSX.Element; image: StaticImageData }
-> = {
-  find: {
-    component: <Find />,
-    image: MegaMenuImage.job_bg,
-  },
-  post: {
-    component: <Post />,
-    image: MegaMenuImage.buyer_job,
-  },
-  chat: {
-    component: <Chat />,
-    image: MegaMenuImage.chat_to_hire,
-  },
-  hire: {
-    component: <Hiring />,
-    image: MegaMenuImage.company_th,
-  },
-  business: {
-    component: <Business />,
-    image: MegaMenuImage.b2b,
-  },
-};
-
 const MegaMenu = () => {
+
+  const { globalLanguageData } = useLanguageStore();
+
+  const DESCRIPTION: Record<
+    string,
+    { component: JSX.Element; image: StaticImageData }
+  > = {
+    find: {
+      component: <Find />,
+      image: MegaMenuImage.job_bg,
+    },
+    post: {
+      component: <Post  />,
+      image: MegaMenuImage.buyer_job,
+    },
+    chat: {
+      component: <Chat  />,
+      image: MegaMenuImage.chat_to_hire,
+    },
+    hire: {
+      component: <Hiring  />,
+      image: MegaMenuImage.company_th,
+    },
+    business: {
+      component: <Business  />,
+      image: MegaMenuImage.b2b,
+    },
+  };
+
+  const mega_freelancer: MegaMenuItem[] = [
+    {
+      key: "find",
+      icon: MegaMenuImage.search,
+      title: globalLanguageData?.label_menu_option_1_1,
+      description: globalLanguageData?.hint_label_menu_option_find_hire
+    },
+    {
+      key: "post",
+      icon: MegaMenuImage.job,
+      title: globalLanguageData?.label_menu_option_1_2,
+      description: globalLanguageData?.hint_label_menu_option_search_job_board,
+    },
+    {
+      key: "chat",
+      icon: MegaMenuImage.chat,
+      title: globalLanguageData?.label_menu_option_1_3,
+      description: globalLanguageData?.hint_freelance_search_assistant,
+    },
+  ];
+
+  const mega_business: MegaMenuItem[] = [
+    {
+      key: "hire",
+      icon: MegaMenuImage.company,
+      title: globalLanguageData?.label_menu_option_2_1,
+      description: globalLanguageData?.hint_hire_on_behalf,
+    },
+    {
+      key: "business",
+      icon: MegaMenuImage.business,
+      title: globalLanguageData?.label_menu_option_2_2,
+      description: globalLanguageData?.hint_freelance_services_business,
+    },
+  ];
+
   const [hoveredItem, setHoveredItem] = useState<
     keyof typeof DESCRIPTION | null
   >("find");

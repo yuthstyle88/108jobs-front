@@ -1,5 +1,6 @@
 "use client";
 import { CustomInput } from "@/components/ui/InputField";
+import { useLanguageStore } from "@/store/useLanguageStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -41,6 +42,9 @@ export const RegisterForm = ({
     resolver: zodResolver(registerSchema),
     mode: "onChange",
   });
+
+    const { loginLanguageData } = useLanguageStore();
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -208,7 +212,7 @@ export const RegisterForm = ({
           className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-gray-400"
           disabled={!isValid || isSubmitting}
         >
-          {isSubmitting ? "กำลังดำเนินการ..." : "สร้างบัญชี"}
+          {isSubmitting ? "กำลังดำเนินการ..." : loginLanguageData?.link_create_account}
         </button>
       </div>
     </form>
