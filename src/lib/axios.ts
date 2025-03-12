@@ -1,38 +1,28 @@
-import axios from 'axios';
+// lib/axios.ts
+import axios from 'axios'
+import { getSession } from 'next-auth/react'
 
-const axiosClient = axios.create({
+// Axios không cần token
+export const axiosPublic = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
-});
+})
 
-const axiosClientLanguage = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_MOCK_URL,
+// Axios có token
+export const axiosPrivate = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true,
-});
+})
 
-axiosClient.interceptors.request.use(
-  (config) => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-axiosClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    console.error('API Error:', error);
-    return Promise.reject(error?.response?.data || error);
+// Thêm interceptor cho axiosPrivate
+axiosPrivate.interceptors.request.use(async (config) => {
+  const session = await getSession()
+  if (session?.accessToken) {
+    config.headers.Authorization = `Bearer ${session.accessToken}`
   }
-);
-
-export { axiosClient, axiosClientLanguage };
+  return config
+})

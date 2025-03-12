@@ -279,7 +279,7 @@ const ChatMessage = () => {
               <button 
                 className="ml-3 text-blue-500 hover:text-blue-600"
                 onClick={() => {
-                  console.log('Sending message:', messageText);
+                  // console.log('Sending message:', messageText);
                   setMessageText('');
                 }}
               >

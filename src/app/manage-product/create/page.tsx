@@ -265,14 +265,14 @@ const CreateService = () => {
       return;
     }
 
-    console.log({
-      serviceDetails,
-      packages,
-      coverImage,
-      serviceImages,
-      youtubeUrl,
-      workSteps,
-    });
+    // console.log({
+    //   serviceDetails,
+    //   packages,
+    //   coverImage,
+    //   serviceImages,
+    //   youtubeUrl,
+    //   workSteps,
+    // });
 
     router.push("/my-services");
   };

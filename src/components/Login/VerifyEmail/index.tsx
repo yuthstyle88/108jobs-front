@@ -1,8 +1,8 @@
 import { ERROR_CONSTANTS } from "@/constants/error";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import ResendButton from "../ResendEmailButton";
 interface VerificationEmailProps {
-  verifyEmail?: string;
+  verifyEmail: string;
   resendDelay?: number;
   onBack?: () => void;
   onVerifySuccess?: () => void;
@@ -12,7 +12,6 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
   verifyEmail,
   resendDelay = 60,
 }) => {
-  const router = useRouter();
   const [code, setCode] = useState<string[]>(Array(6).fill(""));
   const [timeLeft, setTimeLeft] = useState<number>(resendDelay);
   const [isResendDisabled, setIsResendDisabled] = useState<boolean>(true);
@@ -101,7 +100,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
           },
           body: JSON.stringify({ token: data.jwt }),
         });
-  
+
         if (loginResponse.ok) {
           window.location.href = "/dashboard";
         } else {
@@ -124,6 +123,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
       setTimeLeft(resendDelay);
       setIsResendDisabled(true);
     } catch (error) {
+      console.error("Verification error:", error);
       setApiError(ERROR_CONSTANTS.SERVER_ERROR);
     }
   };
@@ -170,7 +170,9 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
       <button
         onClick={handleVerify}
         className={`w-full py-3 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 ${
-          isSubmitting || code.join("").length !== 6 ? "opacity-50 cursor-not-allowed" : ""
+          isSubmitting || code.join("").length !== 6
+            ? "opacity-50 cursor-not-allowed"
+            : ""
         }`}
         disabled={code.join("").length !== 6 || isSubmitting}
       >
@@ -192,6 +194,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
       >
         ส่งอีกครั้ง {isResendDisabled ? `(${timeLeft})` : ""}
       </button>
+      <ResendButton email={verifyEmail} />
     </div>
   );
 };
