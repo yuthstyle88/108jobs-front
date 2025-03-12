@@ -7,7 +7,7 @@ export const AuthFormContainer = ({
   onBack,
 }: {
   children: React.ReactNode;
-  title: string;
+  title?: string;
   onBack?: () => void;
 }) => (
   <div className="bg-white rounded-3xl shadow-xl w-[28rem] max-w-2xl mx-auto p-10 gap-y-6">

@@ -1,24 +1,28 @@
 "use client";
 
+import { useLanguageStore } from "@/store/useLanguageStore";
 import { TypeAnimation } from "react-type-animation";
 
 const TypingText = () => {
+  const { globalLanguageData } = useLanguageStore();
+
   return (
     <TypeAnimation
+      key={JSON.stringify(globalLanguageData)}
       sequence={[
-        "ออกแบบกราฟิก",
+        globalLanguageData?.label_nav_bar_item_2 || "",
         1200,
-        "สถาปัตย์และวิศวกรรม",
+        globalLanguageData?.label_nav_bar_item_3 || "",
         1200,
-        "เว็บไซต์และเทคโนโลยี",
+        globalLanguageData?.label_nav_bar_item_4 || "",
         1200,
-        "การตลาดและโฆษณา",
+        globalLanguageData?.label_nav_bar_item_5 || "",
         1200,
-        "เขียนและแปลภาษา",
+        globalLanguageData?.label_nav_bar_item_6 || "",
         1200,
-        "ภาพและเสียง",
+        globalLanguageData?.label_nav_bar_item_7 || "",
         1200,
-        "ธุรกิจและที่ปรึกษา",
+        globalLanguageData?.label_nav_bar_item_8 || "",
         1200,
       ]}
       omitDeletionAnimation

@@ -1,6 +1,7 @@
 "use client";
 import { CustomInput } from "@/components/ui/InputField";
 import { SocialLoginButton } from "@/components/ui/SocialLoginButton";
+import { useLanguageStore } from "@/store/useLanguageStore";
 import { faFacebookF, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
@@ -36,6 +37,8 @@ export const LoginForm = ({
 
   const route = useRouter();
 
+  const { loginLanguageData } = useLanguageStore();
+
   const handleLogin = async (data: z.infer<typeof loginSchema>) => {
     try {
       const result = await signIn("credentials", {
@@ -66,7 +69,6 @@ export const LoginForm = ({
         message: "เกิดข้อผิดพลาดของระบบ กรุณาลองใหม่อีกครั้ง",
       });
       console.log(error);
-      
     }
   };
 
@@ -103,7 +105,7 @@ export const LoginForm = ({
           disabled={isSubmitting}
           className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300"
         >
-          {isSubmitting ? "การเข้าสู่ระบบ..." : "ดำเนินการต่อ"}
+          {isSubmitting ? "การเข้าสู่ระบบ..." : loginLanguageData?.button_proceed}
         </button>
 
         <div className="flex justify-between text-sm text-blue-600 mt-4">
@@ -112,33 +114,35 @@ export const LoginForm = ({
             onClick={switchToRegister}
             className="hover:underline"
           >
-            สร้างบัญชี
+            {loginLanguageData?.link_create_account}
           </button>
           <button
             type="button"
             onClick={switchToForgotPassword}
             className="hover:underline"
           >
-            ลืมรหัสผ่าน?
+            {loginLanguageData?.link_forgot_password}
           </button>
         </div>
       </div>
 
       <div className="flex items-center justify-center space-x-4 text-center mt-6">
         <hr className="flex-grow border-t border-gray-300" />
-        <span className="text-gray-600 px-2">Hoặc</span>
+        <span className="text-gray-600 px-2">
+          {loginLanguageData?.label_or}
+        </span>
         <hr className="flex-grow border-t border-gray-300" />
       </div>
 
       <div className="flex flex-col gap-4 mt-6">
         <SocialLoginButton
           icon={faFacebookF}
-          provider="Facebook"
+          provider={loginLanguageData?.button_login_facebook}
           onClick={() => signIn("facebook")}
         />
         <SocialLoginButton
           icon={faGoogle}
-          provider="Google"
+          provider={loginLanguageData?.button_login_google}
           onClick={() => signIn("google")}
         />
       </div>

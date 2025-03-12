@@ -42,8 +42,6 @@ const EditCertifications = () => {
 
   const handleSave = () => {
     // Logic to save data would go here
-    console.log("Saving certifications data:", certificationItems);
-    // Then redirect back to profile
     window.location.href = "/profile";
   };
 

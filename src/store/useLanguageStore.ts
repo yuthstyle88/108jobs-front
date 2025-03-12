@@ -1,12 +1,20 @@
 import { create } from "zustand";
-import { GlobalLanguage } from "@/types/language";
+import { GlobalLanguage, HomeLanguage, LoginLanguage } from "@/types/language";
 
 interface LanguageState {
-  languageData: GlobalLanguage | null;
-  setLanguageData: (data: GlobalLanguage) => void;
+  globalLanguageData: GlobalLanguage | null;
+  loginLanguageData: LoginLanguage | null;
+  homeLanguageData: HomeLanguage | null;
+  setGlobalLanguageData: (data: GlobalLanguage) => void;
+  setLoginLanguageData: (data: LoginLanguage) => void;
+  setHomeLanguageData: (data: HomeLanguage) => void;
 }
 
 export const useLanguageStore = create<LanguageState>((set) => ({
-    languageData: {} as GlobalLanguage,
-  setLanguageData: (data) => set({ languageData: data }),
+  globalLanguageData: null,
+  loginLanguageData: null,
+  homeLanguageData: null,
+  setGlobalLanguageData: (data) => set({ globalLanguageData: data }),
+  setLoginLanguageData: (data) => set({ loginLanguageData: data }),
+  setHomeLanguageData: (data) => set({ homeLanguageData: data }),
 }));

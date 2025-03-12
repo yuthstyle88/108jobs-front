@@ -28,47 +28,56 @@ import sold from "../assets/icons/job-detail/sold.svg";
 import coins from "../assets/icons/profile/point-icon.svg";
 import hiring_info from "../assets/icons/profile/hiring-info-desktop.svg";
 
-export const ProfileIcon = { 
-    coins,
-    hiring_info
-    
-    
+import advantage_1 from "../assets/icons/authenticate/advantage-1.svg";
+import advantage_2 from "../assets/icons/authenticate/advantage-2.svg";
+import advantage_3 from "../assets/icons/authenticate/advantage-3.svg";
+import advantage_4 from "../assets/icons/authenticate/advantage-4.svg";
+import advantage_5 from "../assets/icons/authenticate/advantage-5.svg";
+
+export const AuthenticateIcon = {
+  advantage_1,
+  advantage_2,
+  advantage_3,
+  advantage_4,
+  advantage_5,
 };
-export const JobDetailIcon = { 
-    guarantee,
-    company,
-    icon_rehire,
-    company_hiring,
-    sold,
-    hiring,
-    response,
-    completed
-    
+
+export const ProfileIcon = {
+  coins,
+  hiring_info,
 };
-export const GroupIcon = { 
-    group11651,
-    group11652,
-    group11653,
-    group11654
+export const JobDetailIcon = {
+  guarantee,
+  company,
+  icon_rehire,
+  company_hiring,
+  sold,
+  hiring,
+  response,
+  completed,
+};
+export const GroupIcon = {
+  group11651,
+  group11652,
+  group11653,
+  group11654,
 };
 
 export const CategoriesIcon = {
-    consultant,
-    ecommerce,
-    graphic,
-    architect,
-    marketing,
-    video,
-    programming,
-    writing,
-    industry,
-    lifestyle,
-    guaranteed
-    
+  consultant,
+  ecommerce,
+  graphic,
+  architect,
+  marketing,
+  video,
+  programming,
+  writing,
+  industry,
+  lifestyle,
+  guaranteed,
 };
 export const AssetIcon = {
-    logo,
-    logo_blue,
-    logo_seller,
-
+  logo,
+  logo_blue,
+  logo_seller,
 };

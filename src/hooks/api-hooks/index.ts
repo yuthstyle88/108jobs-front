@@ -1,76 +1,68 @@
+import { axiosPrivate, axiosPublic } from "./../../lib/axios";
+import type { AxiosError } from "axios";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
-import { axiosClient } from "../../lib/axios";
 
-type ApiResponse<T> = T;
-
-const fetcher = async <T>(url: string): Promise<ApiResponse<T>> => {
-  const response = await axiosClient.get<ApiResponse<T>>(url);
-  return response.data;
-};
-
-export const useFetch = <T>(url: string) => {
-  const { data, isLoading, error, mutate } = useSWR<ApiResponse<T>>(url, fetcher<T>);
-
-  return {
-    data,
-    error,
-    isLoading,
-    mutate,
-  };
-};
-
-type PostData = Record<string, unknown>;
-
-const postFetcher = async <T>(url: string, { arg }: { arg: PostData }): Promise<ApiResponse<T>> => {
-  const response = await axiosClient.post<ApiResponse<T>>(url, arg);
-  return response.data;
-};
-
-export const usePost = <T>(url: string) => {
-  const { trigger, isMutating, error } = useSWRMutation<ApiResponse<T>, Error, string, { arg: PostData }>(
+// Public GET
+export const usePublicFetch = <T>(url: string | null) => {
+  return useSWR<T, AxiosError>(
     url,
-    postFetcher
+    async (url: string) => (await axiosPublic.get<T>(url)).data
   );
-
-  return {
-    postData: (data: PostData) => trigger({ arg: data }),
-    isMutating,
-    error,
-  };
 };
 
-type PutData = Record<string, unknown>;
-
-const putFetcher = async <T>(url: string, { arg }: { arg: PutData }): Promise<ApiResponse<T>> => {
-  const response = await axiosClient.put<ApiResponse<T>>(url, arg);
-  return response.data;
-};
-
-export const usePut = <T>(url: string) => {
-  const { trigger, isMutating, error } = useSWRMutation<ApiResponse<T>, Error, string, { arg: PutData }>(
+// Public POST
+export const usePublicPost = <T, D = unknown>(url: string) => {
+  return useSWRMutation<T, AxiosError, string, D>(
     url,
-    putFetcher
+    async (url, { arg }) => (await axiosPublic.post<T>(url, arg)).data
   );
-
-  return {
-    updateData: (data: PutData) => trigger({ arg: data }),
-    isMutating,
-    error,
-  };
 };
 
-const deleteFetcher = async <T>(url: string): Promise<ApiResponse<T>> => {
-  const response = await axiosClient.delete<ApiResponse<T>>(url);
-  return response.data;
+// Public PUT
+export const usePublicPut = <T, D = unknown>(url: string) => {
+  return useSWRMutation<T, AxiosError, string, D>(
+    url,
+    async (url, { arg }) => (await axiosPublic.put<T>(url, arg)).data
+  );
 };
 
-export const useDelete = <T>(url: string) => {
-  const { trigger, isMutating, error } = useSWRMutation<ApiResponse<T>, Error>(url, deleteFetcher);
+// Public DELETE
+export const usePublicDelete = <T>(url: string) => {
+  return useSWRMutation<T, AxiosError, string>(url, async (url: string) => {
+    const response = await axiosPublic.delete<T>(url);
+    return response.data;
+  });
+};
 
-  return {
-    deleteData: () => trigger(),
-    isMutating,
-    error,
-  };
+// Private GET
+export const usePrivateFetch = <T>(url: string | null) => {
+  return useSWR<T, AxiosError>(
+    url,
+    async (url: string) => (await axiosPrivate.get<T>(url)).data
+  );
+};
+
+// Private POST
+export const usePrivatePost = <T, D = unknown>(url: string) => {
+  return useSWRMutation<T, AxiosError, string, D>(
+    url,
+    async (url, { arg }) => (await axiosPrivate.post<T>(url, arg)).data
+  );
+};
+
+// Private PUT
+export const usePrivatePut = <T, D = unknown>(url: string) => {
+  return useSWRMutation<T, AxiosError, string, D>(
+    url,
+    async (url, { arg }) => (await axiosPrivate.put<T>(url, arg)).data
+  );
+};
+
+// Private DELETE
+export const usePrivateDelete = <T>(url: string) => {
+  return useSWRMutation<T, AxiosError, string>(url, async (url: string) => {
+    const response = await axiosPrivate.delete<T>(url);
+    return response.data;
+  });
 };
