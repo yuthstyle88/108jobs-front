@@ -4,19 +4,22 @@ import { useLanguageStore } from "@/store/useLanguageStore";
 import { RegisterDataProps } from "@/types/registerData";
 import { useEffect, useRef, useState } from "react";
 
-interface VerificationEmailProps {
-  dataRegister?: RegisterDataProps;
+interface VerificationForgotPasswordProps {
+  forgotEmail?: RegisterDataProps;
   resendDelay?: number;
   onBack?: () => void;
   onVerifySuccess?: () => void;
+  // switchToChangePassword: () => void;
+  // setTokenPassword: (data: RegisterDataProps) => void;
 }
 
-const VerificationEmail: React.FC<VerificationEmailProps> = ({
-  dataRegister,
+const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
+  forgotEmail,
   resendDelay = 60,
+  // switchToChangePassword,
+  // setTokenPassword,
 }) => {
-
-    const { loginLanguageData } = useLanguageStore();
+  const { loginLanguageData } = useLanguageStore();
 
   const [code, setCode] = useState<string[]>(Array(6).fill(""));
   const [timeLeft, setTimeLeft] = useState<number>(resendDelay);
@@ -74,19 +77,13 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
 
     try {
       setIsSubmitting(true);
-      const response = await fetch("/api/auth/verify-email", {
+      const response = await fetch("/api/auth/verify-forgot-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          register: {
-            email: dataRegister?.email,
-            username: dataRegister?.username,
-            password: dataRegister?.password,
-            password_verify: dataRegister?.confirmPassword,
-            phone: dataRegister?.phone,
-          },
+          email: forgotEmail?.email,
           code: enteredCode,
         }),
       });
@@ -105,21 +102,22 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
         return;
       }
 
-      if (data.jwt) {
-        const loginResponse = await fetch("/api/auth/token-login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ token: data.jwt }),
-        });
 
-        if (loginResponse.ok) {
-          window.location.href = "/dashboard";
-        } else {
-          setApiError("Đăng nhập tự động thất bại");
-        }
-      }
+      // if (data.jwt) {
+      //   const loginResponse = await fetch("/api/auth/token-login", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({ token: data.jwt }),
+      //   });
+
+      //   if (loginResponse.ok) {
+      //     window.location.href = "/dashboard";
+      //   } else {
+      //     setApiError("Đăng nhập tự động thất bại");
+      //   }
+      // }
     } catch (error) {
       console.error("Verification error:", error);
       setApiError(ERROR_CONSTANTS.SERVER_ERROR);
@@ -140,8 +138,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: dataRegister?.email,
-          username: dataRegister?.username,
+          email: forgotEmail?.email,
         }),
       });
 
@@ -158,7 +155,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
     } catch (error) {
       console.error("Verification error:", error);
       setApiError(ERROR_CONSTANTS.SERVER_ERROR);
-    }finally {
+    } finally {
       setIsSendAgain(false);
     }
   };
@@ -166,12 +163,13 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
   return (
     <div className="text-center max-w-md mx-auto">
       <div className="my-[3rem]">
-      <p className="text-text_primary text-base font-sans">
-        {loginLanguageData?.message_verification_sent} <br/> {dataRegister?.email}
-      </p>
-      <p className="text-text_primary text-base font-sans">
-        {loginLanguageData?.message_enter_code}
-      </p>
+        <p className="text-text_primary text-base font-sans">
+          {loginLanguageData?.verification_forgot_message} <br />{" "}
+          {forgotEmail?.email}
+        </p>
+        <p className="text-text_primary text-base font-sans">
+          {loginLanguageData?.enter_code_prompt}
+        </p>
       </div>
       <div className="flex justify-center gap-2 mb-4">
         {[0, 1, 2, 3, 4, 5].map((index) => (
@@ -211,7 +209,11 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
         }`}
         disabled={code.join("").length !== 6 || isSubmitting}
       >
-        {isSubmitting ? <LoadingCircle/> : loginLanguageData?.button_verify_email}
+        {isSubmitting ? (
+          <LoadingCircle />
+        ) : (
+          loginLanguageData?.change_password_button
+        )}
       </button>
 
       {apiError && (
@@ -222,15 +224,18 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
 
       <button
         onClick={handleResend}
-        disabled={isResendDisabled || isSendAgain}
+        disabled={isResendDisabled}
         className={`text-gray-500 text-sm mt-4 hover:text-blue-600 transition-colors ${
           isResendDisabled ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        {isSendAgain ? `${loginLanguageData?.button_resend_code}...` : loginLanguageData?.button_resend_code} {isResendDisabled ? `again (${timeLeft})` : ""}
+        {isSendAgain
+          ? `${loginLanguageData?.button_resend_code}...`
+          : loginLanguageData?.button_resend_code}{" "}
+        {isResendDisabled ? `(${timeLeft})` : ""}
       </button>
     </div>
   );
 };
 
-export default VerificationEmail;
+export default VerificationForgotPassword;

@@ -1,8 +1,9 @@
 "use client";
+import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
 import { SocialLoginButton } from "@/components/ui/SocialLoginButton";
+import { AuthenticateIcon } from "@/constants/icons";
 import { useLanguageStore } from "@/store/useLanguageStore";
-import { faFacebookF, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -81,20 +82,20 @@ export const LoginForm = ({
       )}
 
       <CustomInput
-        label="Email"
+        label={loginLanguageData?.label_email}
         name="email"
         register={register("email")}
         error={errors.email?.message}
-        placeholder="กรอกอีเมลของคุณ"
+        placeholder={loginLanguageData?.placeholder_email}
       />
 
       <CustomInput
-        label="รหัสผ่าน"
+        label={loginLanguageData?.label_password}
         name="password"
         type="password"
         register={register("password")}
         error={errors.password?.message}
-        placeholder="กรอกรหัสผ่าน"
+        placeholder={loginLanguageData?.placeholder_password}
         showPassword={showPassword}
         toggleShowPassword={() => setShowPassword(!showPassword)}
       />
@@ -105,7 +106,7 @@ export const LoginForm = ({
           disabled={isSubmitting}
           className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300"
         >
-          {isSubmitting ? "การเข้าสู่ระบบ..." : loginLanguageData?.button_proceed}
+          {isSubmitting ? <LoadingCircle /> : loginLanguageData?.button_proceed}
         </button>
 
         <div className="flex justify-between text-sm text-blue-600 mt-4">
@@ -136,14 +137,14 @@ export const LoginForm = ({
 
       <div className="flex flex-col gap-4 mt-6">
         <SocialLoginButton
-          icon={faFacebookF}
+          icon={AuthenticateIcon.fb}
           provider={loginLanguageData?.button_login_facebook}
           onClick={() => signIn("facebook")}
         />
         <SocialLoginButton
-          icon={faGoogle}
+          icon={AuthenticateIcon.gg}
           provider={loginLanguageData?.button_login_google}
-          onClick={() => signIn("google")}
+          onClick={() => window.location.href = "/api/auth/google"}
         />
       </div>
     </form>

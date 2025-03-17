@@ -10,12 +10,12 @@ export const AuthFormContainer = ({
   title?: string;
   onBack?: () => void;
 }) => (
-  <div className="bg-white rounded-3xl shadow-xl w-[28rem] max-w-2xl mx-auto p-10 gap-y-6">
-    <div className="flex items-center gap-4 mb-6">
+  <div className="bg-white rounded-3xl shadow-xl p-16 gap-y-6 w-full relative min-h-[500px] h-fit">
+    <div className="flex items-center gap-4">
       {onBack && (
         <button
           onClick={onBack}
-          className="text-gray-600 hover:text-gray-800 transition-colors p-2 -ml-2"
+          className="text-gray-600 hover:text-gray-800 transition-colors p-2 -ml-2 absolute top-4 left-6"
         >
           <ArrowLeftIcon className="h-6 w-6" />
         </button>

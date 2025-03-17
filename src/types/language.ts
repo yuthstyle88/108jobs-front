@@ -106,6 +106,12 @@ export interface LoginLanguage {
   message_enter_code: string;
   button_verify_email: string;
   button_resend_code: string;
+  verification_message: string;
+  send_code_button: string;
+  verification_forgot_message: string;
+  enter_code_prompt: string;
+  change_password_title: string;
+  change_password_button: string;
 }
 
 export interface HomeLanguage {

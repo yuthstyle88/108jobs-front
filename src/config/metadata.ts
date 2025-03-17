@@ -25,11 +25,11 @@ export const defaultMetadata:Metadata  = {
       locale: "th_TH",
     },
     alternates: {
-      canonical: "https://fastwork.co",
+      canonical: "https://test-fastwork.vercel.app",
       languages: {
-        th: "https://fastwork.co",
-        en: "https://fastwork.co",
-        vi: "https://fastwork.co",
+        th: "https://test-fastwork.vercel.app/th",
+        en: "https://test-fastwork.vercel.app/en",
+        vi: "https://test-fastwork.vercel.app/vi",
       },
     },
   
