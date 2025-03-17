@@ -6,14 +6,14 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     const res = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE_URL + "/users/verify-email",
+      process.env.NEXT_PUBLIC_API_BASE_URL + "/users/verify/reset-password",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          register: body.register,
+          email: body.email,
           code: body.code,
         }),
       }

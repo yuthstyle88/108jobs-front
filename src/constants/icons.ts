@@ -33,6 +33,8 @@ import advantage_2 from "../assets/icons/authenticate/advantage-2.svg";
 import advantage_3 from "../assets/icons/authenticate/advantage-3.svg";
 import advantage_4 from "../assets/icons/authenticate/advantage-4.svg";
 import advantage_5 from "../assets/icons/authenticate/advantage-5.svg";
+import fb from "../assets/icons/authenticate/fb.svg";
+import gg from "../assets/icons/authenticate/gg.svg";
 
 export const AuthenticateIcon = {
   advantage_1,
@@ -40,6 +42,8 @@ export const AuthenticateIcon = {
   advantage_3,
   advantage_4,
   advantage_5,
+  fb,
+  gg,
 };
 
 export const ProfileIcon = {
