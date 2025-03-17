@@ -1,6 +1,7 @@
 export const ERROR_REGISTER = {
   email_already_exists: "email_already_exists",
   database_error: "database_error",
+  rate_limit_error: "rate_limit_error",
 };
 export const ERROR_VERIFY_EMAIL = {
   verification_code_expired: "verification_code_expired",
@@ -15,4 +16,6 @@ export const ERROR_CONSTANTS = {
   INVALID_CODE: "รหัสไม่ถูกต้อง หรือ รหัสหมดอายุ",
   SERVER_ERROR: "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์",
   RESEND_FAILED: "การส่งอีเมลซ้ำล้มเหลว",
+  LIMIT_SEND_EMAIL: "กรุณารอสักครู่แล้วลองอีกครั้ง",
+  EMAIL_NOT_EXIST: "ข้อมูลไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง"
 };

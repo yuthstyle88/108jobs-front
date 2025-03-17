@@ -3,7 +3,7 @@
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { useEffect, useState } from "react";
 
-const ResendButton = ({ email }: { email: string }) => {
+const ResendButton = ({ email }: { email?: string }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(60);

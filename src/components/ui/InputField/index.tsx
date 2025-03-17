@@ -6,7 +6,7 @@ import { UseFormRegisterReturn } from "react-hook-form";
 
 type InputProps = {
   type?: string;
-  label: string;
+  label?: string;
   name: string;
   register?: UseFormRegisterReturn;
   error?: string;
@@ -53,7 +53,7 @@ export const CustomInput = ({
       )}
     </div>
     {error && (
-      <p className="text-red-500 text-sm mt-1">{error}</p>
+      <p className="text-red-500 font-sans text-[13px] mt-1">{error}</p>
     )}
   </div>
 );

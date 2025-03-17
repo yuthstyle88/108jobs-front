@@ -10,19 +10,26 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
   undefined
 );
 
+// Danh sách ngôn ngữ hợp lệ
+const VALID_LANGUAGES = ["th", "vi", "en"];
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState("th");
 
   useEffect(() => {
     const savedLang = localStorage.getItem("lang");
-    if (savedLang) {
+    if (savedLang && VALID_LANGUAGES.includes(savedLang)) {
       setLang(savedLang);
+    } else {
+      localStorage.setItem("lang", "th"); 
     }
   }, []);
 
   const changeLang = (newLang: string) => {
-    setLang(newLang);
-    localStorage.setItem("lang", newLang);
+    if (VALID_LANGUAGES.includes(newLang)) {
+      setLang(newLang);
+      localStorage.setItem("lang", newLang);
+    }
   };
 
   return (

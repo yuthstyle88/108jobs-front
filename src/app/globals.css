@@ -104,6 +104,16 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+input[type="password"] {
+  appearance: none; 
+  -webkit-text-security: disc; 
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

@@ -1,8 +1,11 @@
 "use client";
+import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
+import { ERROR_CONSTANTS } from "@/constants/error";
 import { useLanguageStore } from "@/store/useLanguageStore";
+import { RegisterDataProps } from "@/types/registerData";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 const registerSchema = z
@@ -11,10 +14,15 @@ const registerSchema = z
     username: z.string().min(3, "ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร"),
     password: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
     confirmPassword: z.string(),
-    phone: z.string().min(10, "เบอร์โทรศัพท์ต้องมีอย่างน้อย 10 หลัก"),
+    phone: z
+      .string()
+      .optional()
+      .refine((value) => !value || value.length >= 10, {
+        message: "เบอร์โทรศัพท์ต้องมีอย่างน้อย 10 หลัก",
+      }),
     termsAccepted: z.literal(true),
     privacyAccepted: z.literal(true),
-    promotionalAccepted: z.literal(true),
+    promotionalAccepted: z.boolean().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "รหัสผ่านไม่ตรงกัน",
@@ -23,35 +31,49 @@ const registerSchema = z
 
 type RegisterFormProps = {
   switchToVerifyEmail: () => void;
-  setVerifyEmail: (email: string) => void;
-  onBack: () => void;
+  setDataRegister: (data: RegisterDataProps) => void;
 };
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
 export const RegisterForm = ({
   switchToVerifyEmail,
-  setVerifyEmail,
+  setDataRegister,
 }: RegisterFormProps) => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
     setError,
+    setValue,
+    watch,
   } = useForm({
     resolver: zodResolver(registerSchema),
     mode: "onChange",
   });
 
-    const { loginLanguageData } = useLanguageStore();
+  const { loginLanguageData } = useLanguageStore();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const storedData = sessionStorage.getItem("registerData");
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      if (parsedData.email) setValue("email", parsedData.email);
+      if (parsedData.phone) setValue("phone", parsedData.phone);
+      if (parsedData.termsAccepted) setValue("termsAccepted", true);
+      if (parsedData.privacyAccepted) setValue("privacyAccepted", true);
+    }
+  }, [setValue]);
+
   const onSubmit = async (data: RegisterFormData) => {
     try {
       setApiError(null);
+
+      sessionStorage.setItem("registerData", JSON.stringify(data));
 
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -61,8 +83,6 @@ export const RegisterForm = ({
         body: JSON.stringify({
           email: data.email,
           username: data.username,
-          password: data.password,
-          password_verify: data.confirmPassword,
         }),
       });
 
@@ -87,14 +107,14 @@ export const RegisterForm = ({
           !result.fieldErrors?.email &&
           !result.fieldErrors?.username
         ) {
-          setApiError(result.error);
+          setApiError(ERROR_CONSTANTS.LIMIT_SEND_EMAIL);
         }
 
         return;
       }
 
       switchToVerifyEmail();
-      setVerifyEmail(data.email);
+      setDataRegister(data);
     } catch (error) {
       console.error("Registration error:", error);
       setApiError(
@@ -106,96 +126,96 @@ export const RegisterForm = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <CustomInput
-        label="ชื่อผู้ใช้"
+        label={loginLanguageData?.label_username}
         name="username"
         register={register("username")}
         error={errors.username?.message}
-        placeholder="กรอกชื่อผู้ใช้"
+        placeholder={loginLanguageData?.placeholder_username}
         type="text"
       />
       <CustomInput
-        label="อีเมลที่ติดต่อได้"
+        label={loginLanguageData?.label_email}
         name="email"
         register={register("email")}
         error={errors.email?.message}
-        placeholder="กรอกอีเมล"
+        placeholder={loginLanguageData?.placeholder_email}
         type="email"
       />
 
       <CustomInput
-        label="รหัสผ่าน"
+        label={loginLanguageData?.label_password}
         name="password"
         type="password"
         register={register("password")}
         error={errors.password?.message}
-        placeholder="กรอกรหัสผ่าน"
+        placeholder={loginLanguageData?.placeholder_password}
         showPassword={showPassword}
         toggleShowPassword={() => setShowPassword(!showPassword)}
       />
 
       <CustomInput
-        label="ยืนยันรหัสผ่าน"
+        label={loginLanguageData?.label_confirm_password}
         name="confirmPassword"
         type="password"
         register={register("confirmPassword")}
         error={errors.confirmPassword?.message}
-        placeholder="ยืนยันรหัสผ่าน"
+        placeholder={loginLanguageData?.placeholder_confirm_password}
         showPassword={showConfirmPassword}
         toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
       />
 
       <CustomInput
-        label="เบอร์โทรศัพท์ที่ติดต่อได้"
+        label={loginLanguageData?.label_phone}
         name="phone"
         register={register("phone")}
         error={errors.phone?.message}
-        placeholder="กรอกเบอร์โทร"
+        placeholder={loginLanguageData?.placeholder_phone}
         type="tel"
       />
 
       <div className="space-y-4">
-        <div className="flex items-start gap-3">
+        <div className="flex items-center gap-3">
           <input
             type="checkbox"
             id="termsAccepted"
             {...register("termsAccepted")}
-            className="mt-1"
+            className="w-[1.3em] h-[1.3em] flex-shrink-0 border-[0.0625em] border-neutral-500 rounded-xl bg-transparent cursor-pointer checked:border-primary checked:bg-primary "
           />
-          <label htmlFor="termsAccepted" className="text-sm text-gray-700">
+          <label htmlFor="termsAccepted" className="text-sm text-text_secondary font-sans">
             ฉันได้อ่านและยอมรับ{" "}
-            <a href="#" className="text-blue-600 hover:underline">
+            <a href="#" className="text-text_secondary underline">
               เงื่อนไขข้อตกลงการใช้บริการ
             </a>
           </label>
         </div>
 
-        <div className="flex items-start gap-3">
+        <div className="flex items-center gap-3">
           <input
             type="checkbox"
             id="privacyAccepted"
             {...register("privacyAccepted")}
-            className="mt-1"
+            className="w-[1.3em] h-[1.3em] flex-shrink-0 border-[0.0625em] border-neutral-500 rounded-xl bg-transparent cursor-pointer checked:border-primary checked:bg-primary "
           />
-          <label htmlFor="privacyAccepted" className="text-sm text-gray-700">
+          <label htmlFor="privacyAccepted" className="text-sm text-text_secondary font-sans">
             ฉันได้อ่านและยอมรับ{" "}
-            <a href="#" className="text-blue-600 hover:underline">
+            <a href="#" className="text-text_secondary underline">
               นโยบายคุ้มครองความเป็นส่วนตัว
             </a>
           </label>
         </div>
 
-        <div className="flex items-start gap-3">
+        <div className="flex items-center gap-3">
           <input
             type="checkbox"
             id="promotionalAccepted"
             {...register("promotionalAccepted")}
-            className="mt-1"
+            className="w-[1.3em] h-[1.3em] flex-shrink-0 border-[0.0625em] border-neutral-500 rounded-xl bg-transparent cursor-pointer checked:border-primary checked:bg-primary "
           />
           <label
             htmlFor="promotionalAccepted"
-            className="text-sm text-gray-700"
+            className="text-sm text-text_secondary font-sans"
           >
-            ฉันสนใจรับข้อมูลข่าวสาร ส่วนลดและโปรโมชันผ่านทางอีเมล
+            {loginLanguageData?.checkbox_email_promotion}
           </label>
         </div>
       </div>
@@ -209,10 +229,18 @@ export const RegisterForm = ({
       <div className="text-center">
         <button
           type="submit"
-          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-gray-400"
-          disabled={!isValid || isSubmitting}
+          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
+          disabled={
+            !!errors.confirmPassword ||
+            !watch("termsAccepted") ||
+            !watch("privacyAccepted")
+          }
         >
-          {isSubmitting ? "กำลังดำเนินการ..." : loginLanguageData?.link_create_account}
+          {isSubmitting ? (
+            <LoadingCircle />
+          ) : (
+            loginLanguageData?.link_create_account
+          )}
         </button>
       </div>
     </form>

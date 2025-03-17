@@ -5,7 +5,7 @@ import { useLanguageStore } from "@/store/useLanguageStore";
 import { GlobalLanguage, HomeLanguage, LoginLanguage } from "@/types/language";
 import { useEffect } from "react";
 
-export const useGlobalTranslate = (file: "global" | "login" | "home") => {
+export const useGlobalTranslate = (file: "global" | "authen" | "home") => {
   const { setGlobalLanguageData, setLoginLanguageData, setHomeLanguageData } =
     useLanguageStore();
   const { lang } = useLanguage();
@@ -19,7 +19,7 @@ export const useGlobalTranslate = (file: "global" | "login" | "home") => {
     if (data) {
       if (file === "global") {
         setGlobalLanguageData(data as GlobalLanguage);
-      } else if (file === "login") {
+      } else if (file === "authen") {
         setLoginLanguageData(data as LoginLanguage);
       } else if (file === "home") {
         setHomeLanguageData(data as HomeLanguage);

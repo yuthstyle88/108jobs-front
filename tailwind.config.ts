@@ -63,6 +63,7 @@ const config: Config = {
         "fade-in": "fade-in 0.6s ease-out",
         float: "float 6s ease-in-out infinite",
         "scale-up": "scale-up 0.5s ease-out",
+        "spin-fast": "spin 600ms linear infinite",
       },
     },
   },
