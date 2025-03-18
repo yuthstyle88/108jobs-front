@@ -7,4 +7,5 @@ export type RegisterDataProps = {
   privacyAccepted?: boolean;
   phone?: string | undefined;
   promotionalAccepted?: boolean | undefined;
+  token?: string;
 };

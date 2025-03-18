@@ -23,7 +23,7 @@ type VerifyForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export const ForgotPasswordForm = ({
   switchToVerifyForgotPassword,
   setForgotEmail,
-}:VerifyForgotPasswordProps) => {
+}: VerifyForgotPasswordProps) => {
   const {
     register,
     handleSubmit,
@@ -35,40 +35,40 @@ export const ForgotPasswordForm = ({
 
   const { loginLanguageData } = useLanguageStore();
 
-   const [apiError, setApiError] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const onSubmit = async (data: VerifyForgotPasswordFormData) => {
-      try {
-        setApiError(null);
-  
-        const response = await fetch("/api/auth/forgot-password", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: data.email,
-          }),
-        });
-  
-        const result = await response.json();
-  
-        if (!response.ok) {
-          if (result.error) {
-            setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
-          }
-  
-          return;
+    try {
+      setApiError(null);
+
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: data.email,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (result.error) {
+          setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
         }
-        setForgotEmail(data);
-        switchToVerifyForgotPassword();
-      } catch (error) {
-        console.error("Registration error:", error);
-        setApiError(
-          error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลงทะเบียน"
-        );
+
+        return;
       }
-    };
+      setForgotEmail(data);
+      switchToVerifyForgotPassword();
+    } catch (error) {
+      console.error("Registration error:", error);
+      setApiError(
+        error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลงทะเบียน"
+      );
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -83,6 +83,12 @@ export const ForgotPasswordForm = ({
         error={errors.email?.message}
         placeholder={loginLanguageData?.placeholder_email_phone}
       />
+
+      {apiError && (
+        <div className="p-3 bg-red-100 text-red-700 rounded text-sm mt-4">
+          {apiError}
+        </div>
+      )}
 
       <div className="text-center">
         <button

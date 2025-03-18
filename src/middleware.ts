@@ -1,25 +1,49 @@
-// import { auth } from "@/auth";
+import { getToken } from "next-auth/jwt";
+import { NextResponse, type NextRequest } from "next/server";
 
-// export default auth((req) => {
-//   if (!req.auth) {
-//     const url = req.url.replace(req.nextUrl.pathname, "/login");
-//     return Response.redirect(url);
-//   }
-// });
+type UserRole = "employer" | "freelancer";
 
-// export const config = {
-//   matcher: ["/((?!api|_next/static|_next/image|favicon.ico|login).*)"],
-// };
+const secret = process.env.AUTH_SECRET;
 
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
- 
-// This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-  return NextResponse.redirect(new URL('/home', request.url))
+const roleBasedRoutes: Record<UserRole, string[]> = {
+  employer: ["/account-setting", "/employer/jobs", "/employer/applicants"],
+  freelancer: ["/seller", "/freelancer/jobs", "/freelancer/proposals"],
+};
+
+const protectedRoutes = Object.values(roleBasedRoutes).flat();
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (!protectedRoutes.some((route) => pathname.startsWith(route))) {
+    return NextResponse.next();
+  }
+
+  const token = await getToken({ req: request, secret });
+  if (!token) {
+    const callbackUrl = encodeURIComponent(request.nextUrl.pathname);
+    return NextResponse.redirect(
+      new URL(`/login?redirect=${callbackUrl}`, request.url)
+    );
+  }
+
+  const userRole = token.role as UserRole;
+  const allowedRoutes = roleBasedRoutes[userRole];
+
+  if (pathname.startsWith("/seller") && userRole !== "freelancer") {
+    return NextResponse.redirect(new URL("/start-selling", request.url));
+  }
+
+  if (
+    !allowedRoutes ||
+    !allowedRoutes.some((route) => pathname.startsWith(route))
+  ) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  return NextResponse.next();
 }
- 
-// See "Matching Paths" below to learn more
+
 export const config = {
-  matcher: '/about/:path*',
-}
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};

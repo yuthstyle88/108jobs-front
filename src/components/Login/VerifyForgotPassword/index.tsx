@@ -9,15 +9,15 @@ interface VerificationForgotPasswordProps {
   resendDelay?: number;
   onBack?: () => void;
   onVerifySuccess?: () => void;
-  // switchToChangePassword: () => void;
-  // setTokenPassword: (data: RegisterDataProps) => void;
+  switchToChangePassword: () => void;
+  setTokenPassword: (data: RegisterDataProps) => void;
 }
 
 const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
   forgotEmail,
   resendDelay = 60,
-  // switchToChangePassword,
-  // setTokenPassword,
+  switchToChangePassword,
+  setTokenPassword,
 }) => {
   const { loginLanguageData } = useLanguageStore();
 
@@ -101,23 +101,8 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
         resetCode();
         return;
       }
-
-
-      // if (data.jwt) {
-      //   const loginResponse = await fetch("/api/auth/token-login", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({ token: data.jwt }),
-      //   });
-
-      //   if (loginResponse.ok) {
-      //     window.location.href = "/dashboard";
-      //   } else {
-      //     setApiError("Đăng nhập tự động thất bại");
-      //   }
-      // }
+      switchToChangePassword();
+      setTokenPassword(data.jwt);
     } catch (error) {
       console.error("Verification error:", error);
       setApiError(ERROR_CONSTANTS.SERVER_ERROR);

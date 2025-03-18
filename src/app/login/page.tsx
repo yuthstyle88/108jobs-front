@@ -2,6 +2,7 @@
 "use client";
 import Loading from "@/components/Loading";
 import { AuthFormContainer } from "@/components/Login/AuthFormContainer";
+import { ChangePassword } from "@/components/Login/ChangePassword";
 import { ForgotPasswordForm } from "@/components/Login/ForgotPasswordForm";
 import { LoginForm } from "@/components/Login/LoginForm";
 import { RegisterForm } from "@/components/Login/RegisterForm";
@@ -21,7 +22,8 @@ type ViewState =
   | "register"
   | "forgot-password"
   | "verify-email"
-  | "verify-forgot-password";
+  | "verify-forgot-password"
+  | "change-password";
 
 export default function LoginPage() {
   const { isLoading, error } = useGlobalTranslate("authen");
@@ -31,6 +33,7 @@ export default function LoginPage() {
 
   const [dataRegister, setDataRegister] = useState<RegisterDataProps>();
   const [forgotEmail, setForgotEmail] = useState<RegisterDataProps>();
+  const [tokenPassword, setTokenPassword] = useState<RegisterDataProps>();
 
   const route = useRouter();
 
@@ -183,6 +186,20 @@ export default function LoginPage() {
                   route.push("/");
                 }}
                 forgotEmail={forgotEmail}
+                setTokenPassword={setTokenPassword}
+                switchToChangePassword={() => setCurrentView("change-password")}
+              />
+            </AuthFormContainer>
+          )}
+          {currentView === "change-password" && (
+            <AuthFormContainer
+              title="Change Password"
+              onBack={() => setCurrentView("verify-forgot-password")}
+            >
+              <ChangePassword
+                tokenPassword={tokenPassword}
+                switchToRegister={() => setCurrentView("register")}
+                switchToForgotPassword={() => setCurrentView("forgot-password")}
               />
             </AuthFormContainer>
           )}

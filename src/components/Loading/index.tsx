@@ -1,9 +1,8 @@
 import React from "react";
 
-
 const Loading = () => {
   return (
-    <div className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-secondary">
+    <div className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-secondary z-[9999]">
       <svg
         width="75px"
         height="69px"

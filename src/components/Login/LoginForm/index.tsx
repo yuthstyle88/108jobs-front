@@ -6,7 +6,7 @@ import { AuthenticateIcon } from "@/constants/icons";
 import { useLanguageStore } from "@/store/useLanguageStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -40,12 +40,16 @@ export const LoginForm = ({
 
   const { loginLanguageData } = useLanguageStore();
 
+  const searchParams = useSearchParams();
+    const redirectUrl = searchParams.get('redirect') || '/dashboard';
+
   const handleLogin = async (data: z.infer<typeof loginSchema>) => {
     try {
       const result = await signIn("credentials", {
         redirect: false,
         email: data.email,
         password: data.password,
+        callbackUrl: redirectUrl,
       });
 
       if (result?.error) {
@@ -62,7 +66,7 @@ export const LoginForm = ({
           message: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
         });
       } else {
-        route.push("/dashboard");
+        route.push(result?.url || "/dashboard");
       }
     } catch (error) {
       setError("root", {

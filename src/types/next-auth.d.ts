@@ -1,4 +1,6 @@
 import { DefaultSession, DefaultUser } from "next-auth";
+import { JWT } from "next-auth/jwt";
+
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
@@ -11,6 +13,10 @@ declare module "next-auth" {
   interface User extends DefaultUser {
     token: string;
     role?: string;
+  }
+
+  interface EventCallbacks {
+    signOut: (message: { token: JWT | null }) => Promise<void> | void;
   }
 }
 
