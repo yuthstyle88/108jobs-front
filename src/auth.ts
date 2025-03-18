@@ -11,6 +11,7 @@ interface JWTPayload {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  
   providers: [
     Credentials({
       name: "Credentials",
@@ -44,7 +45,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             });
 
             const res = await fetch(
-              "https://fastwork.ibrowe.com/api/v3/users/login",
+              process.env.NEXT_PUBLIC_API_BASE_URL + "/users/login",
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -79,7 +80,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.accessToken = user.token;
         token.role = user.role;
-        token.email = user.email;
+        token.email = user.email!;
       }
       return token;
     },
@@ -93,8 +94,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
   },
+  events: {
+    async signOut(message) {
+      if ("token" in message) {
+        try {
+          fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/logout`,
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${message.token?.accessToken}`,
+              },
+            }
+          )
+        } catch (error) {
+          console.error('Backend logout failed:', error);
+        }
+      }
+    }
+  },
   pages: {
     signIn: "/login",
+    error: "/error",
   },
   secret: process.env.AUTH_SECRET,
   trustHost: true,

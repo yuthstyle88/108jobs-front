@@ -64,9 +64,17 @@ import chat_message from "../assets/images/message/chat.svg";
 import chat_avt from "../assets/images/message/avatar.jpg";
 
 import banner_02 from "../assets/images/landing/banner-02.png";
+import construction from "../assets/images/landing/construction.svg";
+import bg_error from "../assets/images/landing/bg_error.svg";
+import error from "../assets/images/landing/error.svg";
+import error_mobile from "../assets/images/landing/bg-mobile.svg";
 
 export const LandingImage = {
-  banner_02
+  banner_02,
+  construction,
+  bg_error,
+  error,
+  error_mobile
 };
 
 export const MessageImage = {
