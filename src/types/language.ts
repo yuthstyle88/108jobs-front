@@ -112,6 +112,7 @@ export interface LoginLanguage {
   enter_code_prompt: string;
   change_password_title: string;
   change_password_button: string;
+  confirm_button: string;
 }
 
 export interface HomeLanguage {

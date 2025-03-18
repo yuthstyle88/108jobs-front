@@ -53,6 +53,10 @@
   background: linear-gradient(282deg, #27c8f8, #1850c2);
 }
 
+.not-found-gradient {
+  background: linear-gradient(to top, hsl(216 85% 94%), white);
+}
+
 .grid-container-desktop {
   display: grid;
   grid-template-columns: minmax(1rem, 1fr) minmax(calc(1280px - 4rem), calc(1280px - 4rem)) minmax(1rem, 1fr);

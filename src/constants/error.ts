@@ -8,6 +8,10 @@ export const ERROR_VERIFY_EMAIL = {
   invalid_verification_code: "invalid_verification_code",
 };
 
+export const ERROR_VERIFY_PASSWORD = {
+  invalid_password: "invalid_password",
+};
+
 export const ERROR_CONSTANTS = {
   EMAIL_EXIST: "อีเมลนี้ถูกใช้งานแล้ว กรุณาใช้อีเมลอื่น",
   EMAIL_VERIFIED: "อีเมล์ได้รับการยืนยันแล้ว",
@@ -17,5 +21,7 @@ export const ERROR_CONSTANTS = {
   SERVER_ERROR: "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์",
   RESEND_FAILED: "การส่งอีเมลซ้ำล้มเหลว",
   LIMIT_SEND_EMAIL: "กรุณารอสักครู่แล้วลองอีกครั้ง",
-  EMAIL_NOT_EXIST: "ข้อมูลไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง"
+  EMAIL_NOT_EXIST: "ข้อมูลไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง",
+  INVALID_PASSWORD: "รหัสผ่านไม่ถูกต้อง",
+  CHANGE_PASSWORD_FAILED: "มีข้อผิดพลาดในการเปลี่ยนรหัสผ่านของคุณ"
 };
