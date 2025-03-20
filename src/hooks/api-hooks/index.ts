@@ -7,7 +7,12 @@ import useSWRMutation from "swr/mutation";
 export const usePublicFetch = <T>(url: string | null) => {
   return useSWR<T, AxiosError>(
     url,
-    async (url: string) => (await axiosPublic.get<T>(url)).data
+    async (url: string) => (await axiosPublic.get<T>(url)).data,
+    {
+      revalidateOnFocus: false, // Không refetch khi focus vào trang
+      dedupingInterval: 60000, // 1 phút mới cho phép refetch lại
+      errorRetryCount: 3, // Giới hạn số lần thử lại khi lỗi
+    }
   );
 };
 

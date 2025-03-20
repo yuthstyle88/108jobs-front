@@ -19,7 +19,7 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
   switchToChangePassword,
   setTokenPassword,
 }) => {
-  const { loginLanguageData } = useLanguageStore();
+  const { languageData:loginLanguageData } = useLanguageStore();
 
   const [code, setCode] = useState<string[]>(Array(6).fill(""));
   const [timeLeft, setTimeLeft] = useState<number>(resendDelay);
@@ -149,11 +149,11 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
     <div className="text-center max-w-md mx-auto">
       <div className="my-[3rem]">
         <p className="text-text_primary text-base font-sans">
-          {loginLanguageData?.verification_forgot_message} <br />{" "}
+          {loginLanguageData?.authen?.verification_forgot_message} <br />{" "}
           {forgotEmail?.email}
         </p>
         <p className="text-text_primary text-base font-sans">
-          {loginLanguageData?.enter_code_prompt}
+          {loginLanguageData?.authen?.enter_code_prompt}
         </p>
       </div>
       <div className="flex justify-center gap-2 mb-4">
@@ -197,7 +197,7 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
         {isSubmitting ? (
           <LoadingCircle />
         ) : (
-          loginLanguageData?.change_password_button
+          loginLanguageData?.authen?.change_password_button
         )}
       </button>
 
@@ -215,8 +215,8 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
         }`}
       >
         {isSendAgain
-          ? `${loginLanguageData?.button_resend_code}...`
-          : loginLanguageData?.button_resend_code}{" "}
+          ? `${loginLanguageData?.authen?.button_resend_code}...`
+          : loginLanguageData?.authen?.button_resend_code}{" "}
         {isResendDisabled ? `(${timeLeft})` : ""}
       </button>
     </div>

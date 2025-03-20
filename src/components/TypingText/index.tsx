@@ -4,25 +4,25 @@ import { useLanguageStore } from "@/store/useLanguageStore";
 import { TypeAnimation } from "react-type-animation";
 
 const TypingText = () => {
-  const { globalLanguageData } = useLanguageStore();
+  const { languageData:globalLanguageData } = useLanguageStore();
 
   return (
     <TypeAnimation
       key={JSON.stringify(globalLanguageData)}
       sequence={[
-        globalLanguageData?.label_nav_bar_item_2 || "",
+        globalLanguageData?.global?.label_nav_bar_item_2 || "",
         1200,
-        globalLanguageData?.label_nav_bar_item_3 || "",
+        globalLanguageData?.global?.label_nav_bar_item_3 || "",
         1200,
-        globalLanguageData?.label_nav_bar_item_4 || "",
+        globalLanguageData?.global?.label_nav_bar_item_4 || "",
         1200,
-        globalLanguageData?.label_nav_bar_item_5 || "",
+        globalLanguageData?.global?.label_nav_bar_item_5 || "",
         1200,
-        globalLanguageData?.label_nav_bar_item_6 || "",
+        globalLanguageData?.global?.label_nav_bar_item_6 || "",
         1200,
-        globalLanguageData?.label_nav_bar_item_7 || "",
+        globalLanguageData?.global?.label_nav_bar_item_7 || "",
         1200,
-        globalLanguageData?.label_nav_bar_item_8 || "",
+        globalLanguageData?.global?.label_nav_bar_item_8 || "",
         1200,
       ]}
       omitDeletionAnimation

@@ -27,8 +27,8 @@ import {
   CompareImage,
   CustomerImage,
 } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { useLanguageStore } from "@/store/useLanguageStore";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -110,12 +110,17 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
   const [expanded, setExpanded] = useState(false);
 
-  const { isLoading, error } = useGlobalTranslate("global");
-  const { isLoading: homeLoading, error: homeError } =
-    useGlobalTranslate("home");
-  const { globalLanguageData, homeLanguageData } = useLanguageStore();
+  const {
+    data: globalLanguageData,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.GLOBAL);
 
-  console.log("globalLanguageData", globalLanguageData);
+  const {
+    data: homeLanguageData,
+    isLoading: homeLoading,
+    error: homeError,
+  } = useGlobalTranslate(LanguageFile.HOME);
 
   const freelancer_intro = [
     {
@@ -144,7 +149,7 @@ export default function Home() {
   return (
     <div className="min-h-[200vh] bg-white">
       {/* <Header type="transparent" languageData={globalLanguageData} /> */}
-      <Header type="transparent"/>
+      <Header type="transparent" />
       <main>
         <section className="h-auto header-gradient pt-[4.5rem]">
           <div className="pt-[3rem] pb-[8rem] flex justify-center flex-col gap-4 text-center">

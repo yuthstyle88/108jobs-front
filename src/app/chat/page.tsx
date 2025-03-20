@@ -1,15 +1,26 @@
 "use client";
 import { MessageImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { ChevronDown, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 const Chat = () => {
+  const {
+      data: languageData,
+      isLoading,
+      error,
+    } = useGlobalTranslate(LanguageFile.CHAT);
+  
+    if (isLoading) return <p>Loading...</p>;
+    if (error) return <p>Error loading data.</p>;
+
   return (
     <div className="min-h-screen flex flex-col">
       <div className="flex flex-1">
         {/* Sidebar */}
-        <div className="w-64 border-r bg-white">
+        <div className="w-[340px] border-r bg-white">
           <div className="p-4">
             <div className="relative">
               <input
@@ -23,17 +34,20 @@ const Chat = () => {
               />
             </div>
 
-            <div className="flex items-center mt-4">
+            <div className="flex items-center mt-6">
               <button className="flex items-center justify-between w-full py-2 px-3 text-sm text-gray-700 bg-gray-100 rounded-md">
-                <span>สาขางาน</span>
+                <span>{languageData?.label_filter_jobs}</span>
                 <ChevronDown size={16} />
               </button>
             </div>
 
-            <label className="flex items-center mt-3 text-sm text-gray-600">
-              <input type="checkbox" className="mr-2 rounded" />
-              แสดงเฉพาะช่องว่างที่ไม่ได้จ้าง
-            </label>
+            <div className="flex items-center mt-3 gap-3 text-sm text-gray-600">
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" value="" className="sr-only peer" />
+                <div className="w-[2.75rem] h-[26px] bg-gray-200  hover:bg-gray-300 peer-focus:outline-0 peer-focus:ring-transparent rounded-full peer transition-all ease-in-out duration-500 peer-checked:after:translate-x-1/2 peer-checked:after:border-white after:content-[''] after:absolute after:top-[-3px] after:left-[-2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-8 after:w-8 after:scale-[0.64] after:shadow-toggle after:transition-all peer-checked:bg-third hover:peer-checked:bg-third"></div>
+              </label>
+              {languageData?.checkbox_unhired_only}
+            </div>
           </div>
 
           <div className="border-t mt-4">
@@ -48,7 +62,9 @@ const Chat = () => {
                 </div>
                 <div className="ml-3">
                   <div className="flex items-center">
-                    <h4 className="font-medium text-sm text-text_primary">Vanint</h4>
+                    <h4 className="font-medium text-sm text-text_primary">
+                      Vanint
+                    </h4>
                     <span className="ml-2 text-xs text-gray-500">
                       #RSQCU4KL
                     </span>
@@ -72,9 +88,8 @@ const Chat = () => {
               className="mx-auto w-40 h-40 object-contain"
             />
             <h3 className="mt-4 text-blue-800 font-medium">
-              กรุณาเลือกออเดอร์ทางซ้ายมือ
+              {languageData?.label_no_conversation}
             </h3>
-            <p className="text-blue-800">เพื่อเริ่มสนทนา</p>
           </div>
         </div>
       </div>

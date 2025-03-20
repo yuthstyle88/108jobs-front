@@ -1,37 +1,29 @@
-"use client";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePublicFetch } from "../api-hooks";
 import { useLanguageStore } from "@/store/useLanguageStore";
-import { GlobalLanguage, HomeLanguage, LoginLanguage } from "@/types/language";
 import { useEffect } from "react";
+import { LanguageDataType } from "@/types/language";
+import { LanguageFile } from "@/constants/language";
 
-export const useGlobalTranslate = (file: "global" | "authen" | "home") => {
-  const { setGlobalLanguageData, setLoginLanguageData, setHomeLanguageData } =
-    useLanguageStore();
+export const useGlobalTranslate = (file: LanguageFile) => {
+  const { languageData, setLanguageData } = useLanguageStore();
   const { lang } = useLanguage();
   const path = `/lang/${lang}/${file}_${lang}.json`;
 
-  const { data, error, isLoading } = usePublicFetch<
-    GlobalLanguage | LoginLanguage | HomeLanguage
-  >(path);
+  const cachedData = languageData?.[file];
+
+  const { data, error, isLoading } = usePublicFetch<LanguageDataType>(
+    cachedData ? null : path
+  );
 
   useEffect(() => {
     if (data) {
-      if (file === "global") {
-        setGlobalLanguageData(data as GlobalLanguage);
-      } else if (file === "authen") {
-        setLoginLanguageData(data as LoginLanguage);
-      } else if (file === "home") {
-        setHomeLanguageData(data as HomeLanguage);
-      }
+      setLanguageData((prevData) => ({
+        ...prevData,
+        [file]: data,
+      }));
     }
-  }, [
-    data,
-    file,
-    setGlobalLanguageData,
-    setLoginLanguageData,
-    setHomeLanguageData,
-  ]);
+  }, [data, file, setLanguageData]);
 
-  return { data, error, isLoading };
+  return { data: cachedData || data, error, isLoading };
 };

@@ -1,3 +1,4 @@
+import { ProfileCoinLanguage } from "@/types/language";
 import {
   faChevronLeft,
   faChevronRight,
@@ -7,12 +8,15 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 
-const TopUpHistory = () => {
+interface Props {
+  data: Partial<ProfileCoinLanguage> | null | undefined;
+}
+const TopUpHistory = ({data}:Props) => {
   return (
     <div className="max-w-7xl mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-text_primary">
-          Top-up history
+          {data?.section_top_up_history}
         </h2>
         <div className="flex items-center gap-4">
           <button className="p-2 hover:bg-gray-100 rounded-full">
@@ -34,8 +38,7 @@ const TopUpHistory = () => {
       <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6 flex items-start gap-3">
         <FontAwesomeIcon icon={faInfo} className="text-5 text-primary " />
         <p className="text-blue-700">
-          In some cases, it may take up to 5 minutes for the balance to be
-          updated. Please wait a moment.
+          {data?.note_balance_update}
         </p>
       </div>
 
@@ -44,25 +47,25 @@ const TopUpHistory = () => {
           <thead className="bg-[#F6F7F8]">
             <tr className="text-center">
               <th className="py-4 px-4 text-left font-medium text-text_primary">
-                Payment code
+              {data?.table_payment_code}
               </th>
               <th className="py-4 px-4 text-left font-medium text-text_primary">
-                Date of transaction
+              {data?.table_date_transaction}
               </th>
               <th className="py-4 px-4 text-left font-medium text-text_primary">
-                Top-up amount (baht)
+              {data?.table_top_up_amount}
               </th>
               <th className="py-4 px-4 text-left font-medium text-text_primary">
-                Special bonus (coins)
+              {data?.table_special_bonus}
               </th>
               <th className="py-4 px-4 text-left font-medium text-text_primary">
-                Total coins received
+              {data?.table_total_coins}
               </th>
               <th className="py-4 px-4 text-left font-medium text-text_primary">
-                Payment method
+              {data?.table_payment_method}
               </th>
               <th className="py-4 px-4 text-center font-medium text-text_primary">
-                Status
+              {data?.table_status}
               </th>
               <th className="py-4 px-4 text-left font-medium text-text_primary"></th>
             </tr>
@@ -76,13 +79,13 @@ const TopUpHistory = () => {
               <td className="py-4 px-4 font-medium">233,232.00</td>
               <td className="py-4 px-4">Promptpay</td>
               <td className="py-4 px-4">
-                <div className="bg-[#F9EDC8] text-yellow-800 text-center py-2 rounded-full text-sm flex justify-center items-center">
-                  <span className="leading-[1]">Waiting for payment</span>
+                <div className="bg-[#F9EDC8] text-yellow-800 text-center py-2 px-2 rounded-full text-sm flex justify-center items-center">
+                  <span className="leading-[1]">{data?.status_waiting}</span>
                 </div>
               </td>
               <td className="py-4 px-4">
                 <Link href="#" className="text-blue-600 hover:underline text-sm">
-                  Proceed to payment
+                {data?.status_waiting}
                 </Link>
               </td>
             </tr>

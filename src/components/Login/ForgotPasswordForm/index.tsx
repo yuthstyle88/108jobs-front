@@ -33,7 +33,7 @@ export const ForgotPasswordForm = ({
     mode: "onChange",
   });
 
-  const { loginLanguageData } = useLanguageStore();
+  const { languageData:loginLanguageData } = useLanguageStore();
 
   const [apiError, setApiError] = useState<string | null>(null);
 
@@ -73,15 +73,15 @@ export const ForgotPasswordForm = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <div className="text-sm text-gray-600 mb-6">
-        {loginLanguageData?.verification_message}
+        {loginLanguageData?.authen?.verification_message}
       </div>
 
       <CustomInput
-        label={loginLanguageData?.label_contact_email_phone}
+        label={loginLanguageData?.authen?.label_contact_email_phone}
         name="email"
         register={register("email")}
         error={errors.email?.message}
-        placeholder={loginLanguageData?.placeholder_email_phone}
+        placeholder={loginLanguageData?.authen?.placeholder_email_phone}
       />
 
       {apiError && (
@@ -99,7 +99,7 @@ export const ForgotPasswordForm = ({
           {isSubmitting ? (
             <LoadingCircle />
           ) : (
-            loginLanguageData?.send_code_button
+            loginLanguageData?.authen?.send_code_button
           )}
         </button>
       </div>

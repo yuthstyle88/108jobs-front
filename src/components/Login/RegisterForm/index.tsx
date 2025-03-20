@@ -52,7 +52,7 @@ export const RegisterForm = ({
     mode: "onChange",
   });
 
-  const { loginLanguageData } = useLanguageStore();
+  const { languageData:loginLanguageData } = useLanguageStore();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -126,50 +126,50 @@ export const RegisterForm = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <CustomInput
-        label={loginLanguageData?.label_username}
+        label={loginLanguageData?.authen?.label_username}
         name="username"
         register={register("username")}
         error={errors.username?.message}
-        placeholder={loginLanguageData?.placeholder_username}
+        placeholder={loginLanguageData?.authen?.placeholder_username}
         type="text"
       />
       <CustomInput
-        label={loginLanguageData?.label_email}
+        label={loginLanguageData?.authen?.label_email}
         name="email"
         register={register("email")}
         error={errors.email?.message}
-        placeholder={loginLanguageData?.placeholder_email}
+        placeholder={loginLanguageData?.authen?.placeholder_email}
         type="email"
       />
 
       <CustomInput
-        label={loginLanguageData?.label_password}
+        label={loginLanguageData?.authen?.label_password}
         name="password"
         type="password"
         register={register("password")}
         error={errors.password?.message}
-        placeholder={loginLanguageData?.placeholder_password}
+        placeholder={loginLanguageData?.authen?.placeholder_password}
         showPassword={showPassword}
         toggleShowPassword={() => setShowPassword(!showPassword)}
       />
 
       <CustomInput
-        label={loginLanguageData?.label_confirm_password}
+        label={loginLanguageData?.authen?.label_confirm_password}
         name="confirmPassword"
         type="password"
         register={register("confirmPassword")}
         error={errors.confirmPassword?.message}
-        placeholder={loginLanguageData?.placeholder_confirm_password}
+        placeholder={loginLanguageData?.authen?.placeholder_confirm_password}
         showPassword={showConfirmPassword}
         toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
       />
 
       <CustomInput
-        label={loginLanguageData?.label_phone}
+        label={loginLanguageData?.authen?.label_phone}
         name="phone"
         register={register("phone")}
         error={errors.phone?.message}
-        placeholder={loginLanguageData?.placeholder_phone}
+        placeholder={loginLanguageData?.authen?.placeholder_phone}
         type="tel"
       />
 
@@ -182,9 +182,9 @@ export const RegisterForm = ({
             className="w-[1.3em] h-[1.3em] flex-shrink-0 border-[0.0625em] border-neutral-500 rounded-xl bg-transparent cursor-pointer checked:border-primary checked:bg-primary "
           />
           <label htmlFor="termsAccepted" className="text-sm text-text_secondary font-sans">
-            ฉันได้อ่านและยอมรับ{" "}
+            {loginLanguageData?.authen?.checkbox_terms_conditions}{" "}
             <a href="#" className="text-text_secondary underline">
-              เงื่อนไขข้อตกลงการใช้บริการ
+            {loginLanguageData?.authen?.checkbox_terms_conditions_redirect}
             </a>
           </label>
         </div>
@@ -197,9 +197,9 @@ export const RegisterForm = ({
             className="w-[1.3em] h-[1.3em] flex-shrink-0 border-[0.0625em] border-neutral-500 rounded-xl bg-transparent cursor-pointer checked:border-primary checked:bg-primary "
           />
           <label htmlFor="privacyAccepted" className="text-sm text-text_secondary font-sans">
-            ฉันได้อ่านและยอมรับ{" "}
+          {loginLanguageData?.authen?.checkbox_terms_conditions}{" "}
             <a href="#" className="text-text_secondary underline">
-              นโยบายคุ้มครองความเป็นส่วนตัว
+            {loginLanguageData?.authen?.checkbox_privacy_policy_redirect}
             </a>
           </label>
         </div>
@@ -215,7 +215,7 @@ export const RegisterForm = ({
             htmlFor="promotionalAccepted"
             className="text-sm text-text_secondary font-sans"
           >
-            {loginLanguageData?.checkbox_email_promotion}
+            {loginLanguageData?.authen?.checkbox_email_promotion}
           </label>
         </div>
       </div>
@@ -239,7 +239,7 @@ export const RegisterForm = ({
           {isSubmitting ? (
             <LoadingCircle />
           ) : (
-            loginLanguageData?.link_create_account
+            loginLanguageData?.authen?.link_create_account
           )}
         </button>
       </div>

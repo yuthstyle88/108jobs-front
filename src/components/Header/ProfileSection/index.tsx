@@ -18,7 +18,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 type ProfileSectionProps = {
-  data: GlobalLanguage | null;
+  data: Partial<GlobalLanguage> | null | undefined;
 };
 
 const ProfileSection = ({ data }: ProfileSectionProps) => {
@@ -68,7 +68,7 @@ const ProfileSection = ({ data }: ProfileSectionProps) => {
           <span className="text-gray-700">Coins 0.00</span>
         </Link>
         <Link
-          href="/account-setting"
+          href="/account-setting/basic-info"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
