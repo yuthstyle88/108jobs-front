@@ -1,3 +1,14 @@
+export type LanguageDataType = Partial<
+  GlobalLanguage &
+  LoginLanguage &
+  HomeLanguage &
+  ProfileCoinLanguage &
+  ProfileBasicInfoLanguage &
+  ProfileContactInfoLanguage &
+  ProfileIndividualLanguage &
+  ProfileCompanyInfoLanguage &
+  ProfileProfileChatLanguage
+>;
 export interface GlobalLanguage {
   label_employment_button: string;
   label_seller_center: string;
@@ -113,6 +124,8 @@ export interface LoginLanguage {
   change_password_title: string;
   change_password_button: string;
   confirm_button: string;
+  checkbox_terms_conditions_redirect: string;
+  checkbox_privacy_policy_redirect: string;
 }
 
 export interface HomeLanguage {
@@ -162,3 +175,87 @@ export interface HomeLanguage {
   button_download_app: string;
   subtitle_download_app: string;
 }
+
+export interface ProfileCoinLanguage {
+  title_fastwork_coin: string;
+  subtitle_fastwork_coin: string;
+  label_your_coin: string;
+  label_specify_amount: string;
+  note_min_max: string;
+  placeholder_specify_amount: string;
+  button_top_up: string;
+  label_choose_amount: string;
+  button_top_up_5000: string;
+  button_top_up_10000: string;
+  section_top_up_history: string;
+  note_balance_update: string;
+  table_payment_code: string;
+  table_date_transaction: string;
+  table_top_up_amount: string;
+  table_special_bonus: string;
+  table_total_coins: string;
+  table_payment_method: string;
+  table_status: string;
+  status_waiting: string;
+  button_proceed_payment: string;
+  note_coin_terms: string[];
+}
+
+export type ProfileBasicInfoLanguage = {
+  section_account_info: string;
+  subtitle_account_info: string;
+  label_username: string;
+  placeholder_username: string;
+  label_display_name: string;
+  placeholder_display_name: string;
+  label_birthdate: string;
+  section_password: string;
+  password_description: string;
+  button_set_password: string;
+};
+
+export type ProfileContactInfoLanguage = {
+  section_contact_info: string;
+  subtitle_contact_info: string;
+  label_contact_email: string;
+  label_contact_phone: string;
+  note_contact_phone: string;
+  placeholder_contact_phone: string;
+  section_address_info: string;
+  subtitle_address_info: string;
+  label_current_location: string;
+  option_thailand: string;
+  option_foreign_country: string;
+  placeholder_select_country: string;
+};
+
+export type ProfileIndividualLanguage = {
+  section_individual_hiring: string;
+  subtitle_individual_hiring: string;
+  label_first_name: string;
+  placeholder_first_name: string;
+  label_last_name: string;
+  placeholder_last_name: string;
+};
+
+export type ProfileCompanyInfoLanguage = {
+  section_company_hiring: string;
+  subtitle_company_hiring: string;
+  label_tax_id: string;
+  placeholder_tax_id: string;
+  button_search_company: string;
+  process_title_register_company: string;
+  process_description_register: string;
+  process_title_approval: string;
+  process_description_approval: string;
+  process_title_notify_freelancer: string;
+  process_description_notify: string;
+  note_requirements: string[];
+};
+
+export type ProfileProfileChatLanguage = {
+  section_chat: string;
+  label_filter_jobs: string;
+  checkbox_unhired_only: string;
+  label_no_conversation: string;
+};

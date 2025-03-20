@@ -1,10 +1,10 @@
 "use client";
 import { AssetIcon, ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
 import { ROLE } from "@/constants/role";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { useToggle } from "@/hooks/useToggle";
-import { useLanguageStore } from "@/store/useLanguageStore";
 import {
   faChevronDown,
   faComment,
@@ -36,12 +36,14 @@ interface BgProps {
 const Header = ({ type }: BgProps) => {
   const { data: session } = useSession();
 
-  console.log(session?.user?.role);
-
   const { scrollY, showSearch } = useScrollHandler();
   const { isOpen, toggle, close } = useToggle();
-  const { isLoading, error } = useGlobalTranslate("global");
-  const { globalLanguageData } = useLanguageStore();
+
+    const {
+      data: globalLanguageData,
+      isLoading,
+      error,
+    } = useGlobalTranslate(LanguageFile.GLOBAL);
 
   const { bg } = TYPES[type];
 

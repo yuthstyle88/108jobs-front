@@ -39,7 +39,7 @@ export const ChangePassword = ({
     mode: "onChange",
   });
 
-  const { loginLanguageData } = useLanguageStore();
+  const { languageData:loginLanguageData } = useLanguageStore();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -106,23 +106,23 @@ export const ChangePassword = ({
       )}
 
       <CustomInput
-        label={loginLanguageData?.label_password}
+        label={loginLanguageData?.authen?.label_password}
         name="password"
         type="password"
         register={register("password")}
         error={errors.password?.message}
-        placeholder={loginLanguageData?.placeholder_password}
+        placeholder={loginLanguageData?.authen?.placeholder_password}
         showPassword={showPassword}
         toggleShowPassword={() => setShowPassword(!showPassword)}
       />
 
       <CustomInput
-        label={loginLanguageData?.label_confirm_password}
+        label={loginLanguageData?.authen?.label_confirm_password}
         name="confirmPassword"
         type="password"
         register={register("confirmPassword")}
         error={errors.confirmPassword?.message}
-        placeholder={loginLanguageData?.placeholder_confirm_password}
+        placeholder={loginLanguageData?.authen?.placeholder_confirm_password}
         showPassword={showConfirmPassword}
         toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
       />
@@ -139,7 +139,7 @@ export const ChangePassword = ({
           disabled={isSubmitting}
           className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300"
         >
-          {isSubmitting ? <LoadingCircle /> : loginLanguageData?.confirm_button}
+          {isSubmitting ? <LoadingCircle /> : loginLanguageData?.authen?.confirm_button}
         </button>
       </div>
     </form>

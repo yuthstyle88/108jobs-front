@@ -1,4 +1,3 @@
-// app/login/page.tsx
 "use client";
 import Loading from "@/components/Loading";
 import { AuthFormContainer } from "@/components/Login/AuthFormContainer";
@@ -10,8 +9,8 @@ import VerificationEmail from "@/components/Login/VerifyEmail";
 import VerificationForgotPassword from "@/components/Login/VerifyForgotPassword";
 import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { useLanguageStore } from "@/store/useLanguageStore";
 import { RegisterDataProps } from "@/types/registerData";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -26,8 +25,11 @@ type ViewState =
   | "change-password";
 
 export default function LoginPage() {
-  const { isLoading, error } = useGlobalTranslate("authen");
-  const { loginLanguageData } = useLanguageStore();
+  const {
+    data: loginLanguageData,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.AUTHEN);
 
   const [currentView, setCurrentView] = useState<ViewState>("login");
 
