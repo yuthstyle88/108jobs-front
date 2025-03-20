@@ -25,7 +25,7 @@ interface MegaMenuItem {
 
 const MegaMenu = () => {
 
-  const { globalLanguageData } = useLanguageStore();
+  const { languageData:globalLanguageData } = useLanguageStore();
 
   const DESCRIPTION: Record<
     string,
@@ -57,20 +57,20 @@ const MegaMenu = () => {
     {
       key: "find",
       icon: MegaMenuImage.search,
-      title: globalLanguageData?.label_menu_option_1_1,
-      description: globalLanguageData?.hint_label_menu_option_find_hire
+      title: globalLanguageData?.global?.label_menu_option_1_1,
+      description: globalLanguageData?.global?.hint_label_menu_option_find_hire
     },
     {
       key: "post",
       icon: MegaMenuImage.job,
-      title: globalLanguageData?.label_menu_option_1_2,
-      description: globalLanguageData?.hint_label_menu_option_search_job_board,
+      title: globalLanguageData?.global?.label_menu_option_1_2,
+      description: globalLanguageData?.global?.hint_label_menu_option_search_job_board,
     },
     {
       key: "chat",
       icon: MegaMenuImage.chat,
-      title: globalLanguageData?.label_menu_option_1_3,
-      description: globalLanguageData?.hint_freelance_search_assistant,
+      title: globalLanguageData?.global?.label_menu_option_1_3,
+      description: globalLanguageData?.global?.hint_freelance_search_assistant,
     },
   ];
 
@@ -78,14 +78,14 @@ const MegaMenu = () => {
     {
       key: "hire",
       icon: MegaMenuImage.company,
-      title: globalLanguageData?.label_menu_option_2_1,
-      description: globalLanguageData?.hint_hire_on_behalf,
+      title: globalLanguageData?.global?.label_menu_option_2_1,
+      description: globalLanguageData?.global?.hint_hire_on_behalf,
     },
     {
       key: "business",
       icon: MegaMenuImage.business,
-      title: globalLanguageData?.label_menu_option_2_2,
-      description: globalLanguageData?.hint_freelance_services_business,
+      title: globalLanguageData?.global?.label_menu_option_2_2,
+      description: globalLanguageData?.global?.hint_freelance_services_business,
     },
   ];
 

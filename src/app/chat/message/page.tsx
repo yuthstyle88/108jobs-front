@@ -48,7 +48,7 @@ const ChatMessage = () => {
   return (
     <div className="h-screen flex flex-col pt-16">
       <div className="flex flex-1 overflow-hidden">
-        <div className="w-64 flex flex-col border-r bg-white h-full">
+        <div className="w-[340px] flex flex-col border-r bg-white h-full">
           <div className="p-4 border-b">
             <div className="relative">
               <input

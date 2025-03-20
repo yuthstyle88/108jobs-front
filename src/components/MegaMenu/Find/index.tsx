@@ -31,11 +31,11 @@ const job = [
 ];
 
 const Find = () => {
-  const { globalLanguageData } = useLanguageStore();
+  const { languageData:globalLanguageData } = useLanguageStore();
   return (
     <div className="flex flex-col w-[420px] mt-8">
       <span className="text-third font-medium">
-        {globalLanguageData?.hint_label_menu_option_find_hire}
+        {globalLanguageData?.global?.hint_label_menu_option_find_hire}
       </span>
       <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
         ค้นหาฟรีแลนซ์ตามหมวดหมู่ ดูผลงาน รีวิว และแชทเพื่อจ้างฟรีแลนซ์ด้วยตัวเอง

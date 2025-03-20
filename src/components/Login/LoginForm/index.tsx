@@ -38,7 +38,7 @@ export const LoginForm = ({
 
   const route = useRouter();
 
-  const { loginLanguageData } = useLanguageStore();
+  const { languageData:loginLanguageData } = useLanguageStore();
 
   const searchParams = useSearchParams();
     const redirectUrl = searchParams.get('redirect') || '/dashboard';
@@ -86,20 +86,20 @@ export const LoginForm = ({
       )}
 
       <CustomInput
-        label={loginLanguageData?.label_email}
+        label={loginLanguageData?.authen?.label_email}
         name="email"
         register={register("email")}
         error={errors.email?.message}
-        placeholder={loginLanguageData?.placeholder_email}
+        placeholder={loginLanguageData?.authen?.placeholder_email}
       />
 
       <CustomInput
-        label={loginLanguageData?.label_password}
+        label={loginLanguageData?.authen?.label_password}
         name="password"
         type="password"
         register={register("password")}
         error={errors.password?.message}
-        placeholder={loginLanguageData?.placeholder_password}
+        placeholder={loginLanguageData?.authen?.placeholder_password}
         showPassword={showPassword}
         toggleShowPassword={() => setShowPassword(!showPassword)}
       />
@@ -110,7 +110,7 @@ export const LoginForm = ({
           disabled={isSubmitting}
           className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300"
         >
-          {isSubmitting ? <LoadingCircle /> : loginLanguageData?.button_proceed}
+          {isSubmitting ? <LoadingCircle /> : loginLanguageData?.authen?.button_proceed}
         </button>
 
         <div className="flex justify-between text-sm text-blue-600 mt-4">
@@ -119,14 +119,14 @@ export const LoginForm = ({
             onClick={switchToRegister}
             className="hover:underline"
           >
-            {loginLanguageData?.link_create_account}
+            {loginLanguageData?.authen?.link_create_account}
           </button>
           <button
             type="button"
             onClick={switchToForgotPassword}
             className="hover:underline"
           >
-            {loginLanguageData?.link_forgot_password}
+            {loginLanguageData?.authen?.link_forgot_password}
           </button>
         </div>
       </div>
@@ -134,7 +134,7 @@ export const LoginForm = ({
       <div className="flex items-center justify-center space-x-4 text-center mt-6">
         <hr className="flex-grow border-t border-gray-300" />
         <span className="text-gray-600 px-2">
-          {loginLanguageData?.label_or}
+          {loginLanguageData?.authen?.label_or}
         </span>
         <hr className="flex-grow border-t border-gray-300" />
       </div>
@@ -142,12 +142,12 @@ export const LoginForm = ({
       <div className="flex flex-col gap-4 mt-6">
         <SocialLoginButton
           icon={AuthenticateIcon.fb}
-          provider={loginLanguageData?.button_login_facebook}
+          provider={loginLanguageData?.authen?.button_login_facebook}
           onClick={() => signIn("facebook")}
         />
         <SocialLoginButton
           icon={AuthenticateIcon.gg}
-          provider={loginLanguageData?.button_login_google}
+          provider={loginLanguageData?.authen?.button_login_google}
           onClick={() => window.location.href = "/api/auth/google"}
         />
       </div>

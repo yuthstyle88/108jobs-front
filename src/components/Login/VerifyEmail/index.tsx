@@ -16,7 +16,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
   resendDelay = 60,
 }) => {
 
-    const { loginLanguageData } = useLanguageStore();
+    const { languageData:loginLanguageData } = useLanguageStore();
 
   const [code, setCode] = useState<string[]>(Array(6).fill(""));
   const [timeLeft, setTimeLeft] = useState<number>(resendDelay);
@@ -167,10 +167,10 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
     <div className="text-center max-w-md mx-auto">
       <div className="my-[3rem]">
       <p className="text-text_primary text-base font-sans">
-        {loginLanguageData?.message_verification_sent} <br/> {dataRegister?.email}
+        {loginLanguageData?.authen?.message_verification_sent} <br/> {dataRegister?.email}
       </p>
       <p className="text-text_primary text-base font-sans">
-        {loginLanguageData?.message_enter_code}
+        {loginLanguageData?.authen?.message_enter_code}
       </p>
       </div>
       <div className="flex justify-center gap-2 mb-4">
@@ -211,7 +211,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
         }`}
         disabled={code.join("").length !== 6 || isSubmitting}
       >
-        {isSubmitting ? <LoadingCircle/> : loginLanguageData?.button_verify_email}
+        {isSubmitting ? <LoadingCircle/> : loginLanguageData?.authen?.button_verify_email}
       </button>
 
       {apiError && (
@@ -227,7 +227,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
           isResendDisabled ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        {isSendAgain ? `${loginLanguageData?.button_resend_code}...` : loginLanguageData?.button_resend_code} {isResendDisabled ? `again (${timeLeft})` : ""}
+        {isSendAgain ? `${loginLanguageData?.authen?.button_resend_code}...` : loginLanguageData?.authen?.button_resend_code} {isResendDisabled ? `again (${timeLeft})` : ""}
       </button>
     </div>
   );

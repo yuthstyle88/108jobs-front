@@ -13,7 +13,7 @@ import {
 import { useLanguageStore } from "@/store/useLanguageStore";
 
 const Footer = () => {
-  const { globalLanguageData } = useLanguageStore();
+  const { languageData:globalLanguageData } = useLanguageStore();
 
   return (
     <footer className="bg-blue-900 text-white">
@@ -22,32 +22,32 @@ const Footer = () => {
         {/* Categories */}
         <div>
           <h3 className="font-bold mb-3">
-            {globalLanguageData?.tittle_footer_1}
+            {globalLanguageData?.global?.tittle_footer_1}
           </h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="#">{globalLanguageData?.label_nav_bar_item_2}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_2}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.label_nav_bar_item_3}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_3}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.label_nav_bar_item_4}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_4}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.label_nav_bar_item_5}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_5}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.label_nav_bar_item_6}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_6}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.label_nav_bar_item_7}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_7}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.label_nav_bar_item_8}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_8}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.label_nav_bar_item_9}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_9}</Link>
             </li>
           </ul>
         </div>
@@ -55,34 +55,34 @@ const Footer = () => {
         {/* How to Use */}
         <div>
           <h3 className="font-bold mb-3">
-            {globalLanguageData?.tittle_footer_2}
+            {globalLanguageData?.global?.tittle_footer_2}
           </h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="#">{globalLanguageData?.menu_become_freelancer}</Link>
+              <Link href="#">{globalLanguageData?.global?.menu_become_freelancer}</Link>
             </li>
             <li>
               <Link href="#">
-                {globalLanguageData?.label_start_selling_work}
+                {globalLanguageData?.global?.label_start_selling_work}
               </Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.label_payment_wages}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_payment_wages}</Link>
             </li>
             <li>
               <Link href="#">
-                {globalLanguageData?.label_employment_guarantee}
+                {globalLanguageData?.global?.label_employment_guarantee}
               </Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.label_knowledge_blog}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_knowledge_blog}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.label_faq}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_faq}</Link>
             </li>
             <li>
               <Link href="#">
-                {globalLanguageData?.label_manage_data_usage}
+                {globalLanguageData?.global?.label_manage_data_usage}
               </Link>
             </li>
           </ul>
@@ -91,7 +91,7 @@ const Footer = () => {
         {/* Products */}
         <div>
           <h3 className="font-bold mb-3">
-            {globalLanguageData?.tittle_footer_3}
+            {globalLanguageData?.global?.tittle_footer_3}
           </h3>
           <ul className="space-y-2 text-sm">
             <li>
@@ -106,22 +106,22 @@ const Footer = () => {
         {/* About Fastwork */}
         <div>
           <h3 className="font-bold mb-3">
-            {globalLanguageData?.tittle_footer_4}
+            {globalLanguageData?.global?.tittle_footer_4}
           </h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="#">{globalLanguageData?.label_feedback_us}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_feedback_us}</Link>
             </li>
             <li>
               <Link href="#">
-                {globalLanguageData?.label_work_with_fastwork}
+                {globalLanguageData?.global?.label_work_with_fastwork}
               </Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.label_terms_of_service}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_terms_of_service}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.label_privacy_policy}</Link>
+              <Link href="#">{globalLanguageData?.global?.label_privacy_policy}</Link>
             </li>
           </ul>
         </div>
@@ -129,7 +129,7 @@ const Footer = () => {
         {/* Contact */}
         <div>
           <h3 className="font-bold mb-3">
-            {globalLanguageData?.tittle_footer_5}
+            {globalLanguageData?.global?.tittle_footer_5}
           </h3>
           <ul className="space-y-2 text-sm">
             <li>
@@ -141,8 +141,8 @@ const Footer = () => {
             </li>
           </ul>
           <p className="mt-3 text-xs">
-            {globalLanguageData?.label_working_hours_weekdays} <br />
-            {globalLanguageData?.label_working_hours_weekends}
+            {globalLanguageData?.global?.label_working_hours_weekdays} <br />
+            {globalLanguageData?.global?.label_working_hours_weekends}
           </p>
         </div>
       </div>
