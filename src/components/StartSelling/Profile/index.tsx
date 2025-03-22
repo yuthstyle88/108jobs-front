@@ -1,5 +1,6 @@
 "use client";
 import { StartSellingImage } from "@/constants/images";
+import { ProfileApplyLanguage } from "@/types/language";
 import Image from "next/image";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -71,13 +72,16 @@ const testimonials: Testimonial[] = [
       "ไม่ต้องกังวลว่าไม่พร้อมที่จะออก ใบเสนอราคา หากใส่ทุกทริค จะ จะมั่น จะดี จะสุขุม มากขึ้นทุกๆ จริงๆ ค่ะ ที่สำคัญมีการระบุเงินใน ระบบเป็นของให้ที่ Happy มากค่ะ",
   },
 ];
+type Props = {
+  data: Partial<ProfileApplyLanguage> | null | undefined;
+};
 
-const ProfileSelling = () => {
+const ProfileSelling = ({ data }: Props) => {
   return (
     <div className="mt-12">
       <div className="header-gradient h-[300px] px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-center text-white pt-12">
-          ทำไมฟรีแลนซ์ถึงเลือก Fastwork
+         {data?.why_choose_title}
         </h2>
       </div>
         <div className=" mt-[-4rem] mx-6">

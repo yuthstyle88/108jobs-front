@@ -1,4 +1,7 @@
 "use client";
+import Loading from "@/components/Loading";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -10,12 +13,21 @@ const ConsentManagement = () => {
     analytics: true,
   });
 
+  const {
+    data: concentLanguageData,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.CONSENT);
+  
   const handleToggle = (key: keyof typeof preferences) => {
     setPreferences((prev) => ({
       ...prev,
       [key]: !prev[key],
     }));
   };
+  
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -24,7 +36,7 @@ const ConsentManagement = () => {
           <div className="p-6">
             <div className="mb-6">
               <h3 className="text-lg text-text_primary font-medium mb-2">
-                รับข่าวสาร ส่วนลดและโปรโมชันจาก Fastwork
+                {concentLanguageData?.newsletter_promotions}
               </h3>
               <p className="text-text_primary mb-4 font-sans">
                 ยินยอมการรับข่าวสารและโปรโมชันที่พิเศษต่าง ๆ ผ่านทุกช่องทางจาก
@@ -42,7 +54,9 @@ const ConsentManagement = () => {
                     checked={preferences.marketing}
                     onChange={() => handleToggle("marketing")}
                   />
-                  <span className="text-text_primary">ยินยอม</span>
+                  <span className="text-text_primary">
+                    {concentLanguageData?.newsletter_accept}
+                  </span>
                 </label>
                 <label className="flex items-center gap-2">
                   <input
@@ -52,7 +66,9 @@ const ConsentManagement = () => {
                     checked={!preferences.marketing}
                     onChange={() => handleToggle("marketing")}
                   />
-                  <span className="text-text_primary">ไม่ยินยอม</span>
+                  <span className="text-text_primary">
+                    {concentLanguageData?.newsletter_decline}
+                  </span>
                 </label>
               </div>
             </div>
@@ -77,14 +93,10 @@ const ConsentManagement = () => {
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h4 className="font-medium text-text_primary mb-1">
-                        คุกกี้ที่จำเป็นอย่างยิ่งในการใช้งาน
+                        {concentLanguageData?.functional_cookies}
                       </h4>
                       <p className="text-gray-600 text-sm font-sans">
-                        Fastwork จำเป็นต้องใช้คุกกี้ประเภทนี้
-                        เพื่อให้คุณสามารถเข้าถึงข้อมูล
-                        และใช้งานหน้าฟังก์ชันบนเว็บไซต์ได้อย่างมีประสิทธิภาพ
-                        โดยคุกกี้นี้
-                        ไม่ได้มีการจัดเก็บข้อมูลที่สามารถระบุตัวตนของผู้ใช้แต่อย่างใด
+                        {concentLanguageData?.functional_cookies_description}
                       </p>
                     </div>
                     <div className="ml-6">
@@ -99,12 +111,10 @@ const ConsentManagement = () => {
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <h4 className="font-medium text-text_primary mb-1">
-                        คุกกี้สำหรับการตลาดและโฆษณา
+                        {concentLanguageData?.marketing_cookies}
                       </h4>
                       <p className="text-gray-600 text-sm font-sans">
-                        ยินยอมให้ Fastwork เก็บรวบรวมข้อมูลสำหรับการทำโฆษณา
-                        เพื่อให้เราช่วยนำเสนอเนื้อหา
-                        บริการที่เหมาะสมกับคุณที่สุด
+                      {concentLanguageData?.marketing_cookies_description}
                       </p>
                     </div>
                     <div className="flex items-center gap-4 ml-6">
@@ -116,7 +126,7 @@ const ConsentManagement = () => {
                           checked={preferences.marketing}
                           onChange={() => handleToggle("marketing")}
                         />
-                        <span className="text-text_primary">ยินยอม</span>
+                        <span className="text-text_primary">{concentLanguageData?.newsletter_accept}</span>
                       </label>
                       <label className="flex items-center gap-2">
                         <input
@@ -126,7 +136,7 @@ const ConsentManagement = () => {
                           checked={!preferences.marketing}
                           onChange={() => handleToggle("marketing")}
                         />
-                        <span className="text-text_primary">ไม่ยินยอม</span>
+                        <span className="text-text_primary">{concentLanguageData?.newsletter_decline}</span>
                       </label>
                     </div>
                   </div>
@@ -136,12 +146,10 @@ const ConsentManagement = () => {
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <h4 className="font-medium mb-1 text-text_primary">
-                        คุกกี้สำหรับเก็บข้อมูลวิเคราะห์การใช้งาน
+                        {concentLanguageData?.analytics_cookies}
                       </h4>
                       <p className="text-gray-600 text-sm font-sans">
-                        ยินยอมให้ Fastwork
-                        เก็บรวบรวมข้อมูลการใช้งานเพื่อนำมาวิเคราะห์
-                        เพื่อปรับปรุงและพัฒนาประสบการณ์การใช้งานให้ดียิ่งขึ้น
+                      {concentLanguageData?.analytics_cookies_description}
                       </p>
                     </div>
                     <div className="flex items-center gap-4 ml-6">
@@ -153,7 +161,7 @@ const ConsentManagement = () => {
                           checked={preferences.analytics}
                           onChange={() => handleToggle("analytics")}
                         />
-                        <span className="text-text_primary">ยินยอม</span>
+                        <span className="text-text_primary">{concentLanguageData?.newsletter_accept}</span>
                       </label>
                       <label className="flex items-center gap-2">
                         <input
@@ -163,7 +171,7 @@ const ConsentManagement = () => {
                           checked={!preferences.analytics}
                           onChange={() => handleToggle("analytics")}
                         />
-                        <span className="text-text_primary">ไม่ยินยอม</span>
+                        <span className="text-text_primary">{concentLanguageData?.newsletter_decline}</span>
                       </label>
                     </div>
                   </div>
@@ -191,10 +199,11 @@ const ConsentManagement = () => {
       <div className="grid-container-desktop w-full my-12 min-h-[400px]">
         <div className="col-start-2 col-end-3 max-w-[800px]">
           <h1 className="text-[2.25rem] text-text_primary font-medium">
-            จัดการการใช้ข้อมูล
+            {concentLanguageData?.data_management}
           </h1>
           <div className="mb-[2rem] text-text_primary font-sans">
-            อ่าน{" "}
+            {concentLanguageData?.terms_conditions}
+            {/* อ่าน{" "}
             <Link
               href="https://static.fastwork.co/contents/terms"
               className="text-third underline"
@@ -207,7 +216,7 @@ const ConsentManagement = () => {
               className="text-third underline"
             >
               นโยบายคุ้มครองความเป็นส่วนตัว
-            </Link>
+            </Link> */}
           </div>
           <div className="bg-white rounded-lg shadow">
             <div className="border-b">
@@ -220,7 +229,7 @@ const ConsentManagement = () => {
                   }`}
                   onClick={() => setActiveTab("fastwork")}
                 >
-                  การใช้ข้อมูลสำหรับ Fastwork
+                  {concentLanguageData?.data_usage_fastwork}
                 </button>
                 <button
                   className={`px-6 py-4 font-medium text-sm ${
@@ -230,7 +239,7 @@ const ConsentManagement = () => {
                   }`}
                   onClick={() => setActiveTab("all")}
                 >
-                  จัดการคุกกี้
+                  {concentLanguageData?.cookies_management}
                 </button>
                 <button
                   className={`px-6 py-4 font-medium text-sm ${
@@ -240,7 +249,7 @@ const ConsentManagement = () => {
                   }`}
                   onClick={() => setActiveTab("thirdParty")}
                 >
-                  การแชร์ข้อมูลให้บุคคลที่สาม
+                  {concentLanguageData?.third_party_data_sharing}
                 </button>
               </div>
             </div>
@@ -249,7 +258,7 @@ const ConsentManagement = () => {
 
             <div className="p-6 border-t bg-gray-50">
               <button className="w-full bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors">
-                บันทึกข้อมูล
+                {concentLanguageData?.save_data}
               </button>
             </div>
           </div>

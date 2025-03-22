@@ -3,14 +3,26 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { faFontAwesome } from "@fortawesome/free-regular-svg-icons";
 import { faClipboard } from "@fortawesome/free-solid-svg-icons";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { LanguageFile } from "@/constants/language";
+import Loading from "@/components/Loading";
 
 const Promotion = () => {
   const [selectedTab, setSelectedTab] = useState(0);
 
+  const {
+    data: couponLanguageData,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.COUPON);
+
   const tabs = [
-    { name: "สำหรับการสร้างงาน", content: "ยังไม่มีสิทธิพิเศษในขณะนี้" },
-    { name: "สำหรับฟรีแลนซ์", content: "ยังไม่มีสิทธิพิเศษในขณะนี้" },
+    { name: couponLanguageData?.tab_for_hiring, content: couponLanguageData?.message_no_offers },
+    { name: couponLanguageData?.tab_for_freelancers, content: couponLanguageData?.message_no_offers },
   ];
+
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
   return (
     <>
       {/* <CategoryDetail /> */}
@@ -21,9 +33,11 @@ const Promotion = () => {
         >
           <div className="px-[1.5rem] relative">
             <div className="text-center text-white">
-              <h1 className="text-[28px]">สิทธิพิเศษและโปรโมชัน</h1>
+              <h1 className="text-[28px]">
+                {couponLanguageData?.section_discounts_promotions}
+              </h1>
               <p className="text-[16px]">
-                จากทาง fastwork และพาร์ทเนอร์ที่เข้าร่วม
+                {couponLanguageData?.subtitle_discounts_promotions}
               </p>
             </div>
           </div>
@@ -31,9 +45,11 @@ const Promotion = () => {
         <section className="py-24 grid grid-container-desktop gap-y-12 pt-[4rem]">
           {" "}
           <div className="col-start-2 col-end-3">
-            <h2 className="text-[1.75rem] text-black">คูปองส่วนลดของคุณ </h2>
+            <h2 className="text-[1.75rem] text-black">
+              {couponLanguageData?.label_your_coupons}{" "}
+            </h2>
             <p className="text-[20px] text-gray-500">
-              คุณสามารถเลือกใช้คูปองต่าง ๆ ได้ เมื่อทำการจ้างงานและชำระเงิน
+              {couponLanguageData?.description_your_coupons}
             </p>
           </div>
           <div className=" flex col-start-2 col-end-3 py-[8rem] justify-center items-center">
@@ -41,16 +57,21 @@ const Promotion = () => {
               <div className="flex justify-center items-center">
                 <FontAwesomeIcon icon={faClipboard} className="text-black" />
               </div>
-              <div className="text-gray-700 mt-2">คุณยังไม่มีคูปองส่วนลด</div>
+              <div className="text-gray-700 mt-2">
+                {" "}
+                {couponLanguageData?.message_no_coupons}
+              </div>
             </div>
           </div>
           <div className="col-start-2 col-end-3 border-t border-gray-300 mt-8"></div>
         </section>
         <section className="py-24 grid grid-container-desktop gap-y-12 pt-[4rem]">
           <div className="col-start-2 col-end-3">
-            <h2 className="text-[1.75rem] text-black">สิทธิพิเศษที่น่าสนใจ </h2>
+            <h2 className="text-[1.75rem] text-black">
+              {couponLanguageData?.section_special_offers}{" "}
+            </h2>
             <p className="text-[20px] text-gray-500">
-              สิทธิพิเศษและส่วนลดจากพาร์ทเนอร์ พร้อมให้คุณเก็บคูปองส่วนลดแล้ว
+              {couponLanguageData?.description_special_offers}
             </p>
           </div>
           <div className="col-start-2 col-end-3">

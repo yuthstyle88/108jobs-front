@@ -1,3 +1,4 @@
+import { ProfileRewardLanguage } from "@/types/language";
 import { motion } from "framer-motion";
 import { Clock } from "lucide-react";
 import { useState } from "react";
@@ -7,12 +8,14 @@ interface CouponCardProps {
   points: number;
   isHotDeal?: boolean;
   delay?: number;
+  data: Partial<ProfileRewardLanguage> | undefined | null;
 }
 const CouponCard = ({
   value,
   points,
   isHotDeal = false,
   delay = 0,
+  data,
 }: CouponCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -37,7 +40,7 @@ const CouponCard = ({
         transition={{ duration: 0.2 }}
       >
         <div className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-sm shadow">
-          Discount
+          {data?.label_discount}
         </div>
       </motion.div>
       {/* Coupon Card */}
@@ -106,7 +109,7 @@ const CouponCard = ({
             }}
             transition={{ duration: 0.2 }}
           >
-            {points} points
+            {points} {data?.label_points}
           </motion.button>
         </div>
       </div>
