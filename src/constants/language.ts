@@ -8,4 +8,9 @@ export enum LanguageFile {
     INDIVIDUAL = "profile_individual",
     COMPANY = "profile_company",
     CHAT = "profile_chat",
+    APPLY_FREELANCER = "profile_apply",
+    COUPON = "profile_coupon",
+    CONSENT = "profile_data",
+    JOB_BOARD = "profile_job",
+    REWARD = "profile_point",
   }

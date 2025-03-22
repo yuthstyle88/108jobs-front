@@ -1,77 +1,79 @@
 import { StartSellingImage } from "@/constants/images";
+import { ProfileApplyLanguage } from "@/types/language";
 import Image from "next/image";
 import Link from "next/link";
 
 type FreelancerType = {
-  title: {
-    main: string;
-    sub: string;
+  title?: {
+    main?: string;
+    sub?: string;
   };
   image: string;
   badgeText?: string;
   badgeClass?: string;
-  description: string;
+  description?: string;
   benefits: string[];
 };
 
-const freelancerTypes: FreelancerType[] = [
-  {
-    title: {
-      main: "Fastwork Freelancer",
-      sub: "ฟรีแลนซ์",
-    },
-    image: StartSellingImage.compare1,
-    description:
-      "สมัครได้เลยวันนี้ แสดงรายละเอียดของคุณ เป็นฟรีแลนซ์ ได้ภายใน 48 ชั่วโมง",
-    benefits: [
-      "ลงงานได้ตามความถนัด",
-      "ช่วงราคาสามารถกำหนดเองได้ตามความเหมาะสมของงาน",
-      "Fastwork support",
-      "ระบบใบนัดหมาย, สร้างใบเสนอราคาและแบบฟอร์ม",
-      "ใบเสร็จพิเศษ Freelancer",
-    ],
-  },
-  {
-    title: {
-      main: "Fastwork Specialist",
-      sub: "ผู้เชี่ยวชาญ",
-    },
-    image: StartSellingImage.compare2,
-    badgeClass: "bg-blue-100 text-blue-600",
-    description:
-      "ผู้เชี่ยวชาญที่ผ่านการทดสอบความสามารถตาม สาขาอาชีพและบริการภายในของ Fastwork",
-    benefits: [
-      "ใช้สิทธิขอคำปรึกษาโดยตรงกับทีมแอดฯ",
-      "โอกาสพิเศษรับงานจาก Partner ของเรา",
-      "Badge ที่เเสดงว่าเป็น ผู้เชี่ยวชาญ ซึ่งบริการจาก Fastwork ช่วยให้คุณจ้างงานที่คุณได้อย่างมั่น",
-      "ใบนัดที่เเสดงสำหรับ ผู้เชี่ยวชาญ",
-      "Event ที่เเสดงสำหรับ ผู้เชี่ยวชาญ ระดับ Top",
-      "ผู้ช่วยเหลือพิเศษ (Personal Assistant) สำหรับ ผู้เชี่ยวชาญ",
-    ],
-  },
-  {
-    title: {
-      main: "Fastwork Professional",
-      sub: "ผู้เชี่ยวชาญระดับ Professional",
-    },
-    image: StartSellingImage.compare3,
-    badgeClass: "bg-blue-600 text-white",
-    description:
-      "ผู้เชี่ยวชาญมากหน้าที่ได้รับการคัดเลือกจาก Fastwork จากผลงานและประสบการณ์ในสาขาอาชีพของรายงาน",
-    benefits: [
-      "ใช้สิทธิขอคำปรึกษาโดยตรงผู้เชี่ยวชาญ",
-      "Badge ที่เเสดงสำหรับ Professional ผู้เชี่ยวชาญ Fastwork ช่วยให้คุณจ้างงานที่คุณได้อย่างมั่น",
-      "โอกาสในการได้รับงานมากยิ่งขึ้น จากลูกค้าองค์กรชั้นนำของ Fastwork",
-      "ใบนัดที่เเสดงสำหรับ Professional",
-    ],
-  },
-];
+type Props = {
+  data: Partial<ProfileApplyLanguage> | null | undefined;
+};
 
-const FreelancerTypes = () => {
+const FreelancerTypes = ({ data }: Props) => {
+  const freelancerTypes: FreelancerType[] = [
+    {
+      title: {
+        main: data?.freelancer_standard,
+        sub: "ฟรีแลนซ์",
+      },
+      image: StartSellingImage.compare1,
+      description: data?.freelancer_standard_description,
+      benefits: [
+        "ลงงานได้ตามความถนัด",
+        "ช่วงราคาสามารถกำหนดเองได้ตามความเหมาะสมของงาน",
+        "Fastwork support",
+        "ระบบใบนัดหมาย, สร้างใบเสนอราคาและแบบฟอร์ม",
+        "ใบเสร็จพิเศษ Freelancer",
+      ],
+    },
+    {
+      title: {
+        main: data?.freelancer_specialist,
+        sub: "ผู้เชี่ยวชาญ",
+      },
+      image: StartSellingImage.compare2,
+      badgeClass: "bg-blue-100 text-blue-600",
+      description: data?.freelancer_specialist_description,
+      benefits: [
+        "ใช้สิทธิขอคำปรึกษาโดยตรงกับทีมแอดฯ",
+        "โอกาสพิเศษรับงานจาก Partner ของเรา",
+        "Badge ที่เเสดงว่าเป็น ผู้เชี่ยวชาญ ซึ่งบริการจาก Fastwork ช่วยให้คุณจ้างงานที่คุณได้อย่างมั่น",
+        "ใบนัดที่เเสดงสำหรับ ผู้เชี่ยวชาญ",
+        "Event ที่เเสดงสำหรับ ผู้เชี่ยวชาญ ระดับ Top",
+        "ผู้ช่วยเหลือพิเศษ (Personal Assistant) สำหรับ ผู้เชี่ยวชาญ",
+      ],
+    },
+    {
+      title: {
+        main: data?.freelancer_professional,
+        sub: "ผู้เชี่ยวชาญระดับ Professional",
+      },
+      image: StartSellingImage.compare3,
+      badgeClass: "bg-blue-600 text-white",
+      description:
+      data?.freelancer_professional_description,
+      benefits: [
+        "ใช้สิทธิขอคำปรึกษาโดยตรงผู้เชี่ยวชาญ",
+        "Badge ที่เเสดงสำหรับ Professional ผู้เชี่ยวชาญ Fastwork ช่วยให้คุณจ้างงานที่คุณได้อย่างมั่น",
+        "โอกาสในการได้รับงานมากยิ่งขึ้น จากลูกค้าองค์กรชั้นนำของ Fastwork",
+        "ใบนัดที่เเสดงสำหรับ Professional",
+      ],
+    },
+  ];
   return (
     <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
       <h2 className="text-3xl font-bold text-center text-primary mb-12">
-        Fastwork มี Freelance แบบไหนบ้าง?
+        {data?.freelancer_types_title}
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -82,15 +84,15 @@ const FreelancerTypes = () => {
           >
             <div className="text-center mb-6">
               <h3 className="text-xl font-bold text-primary">
-                {type.title.main}
+                {type?.title?.main}
               </h3>
-              <p className="text-gray-500">{type.title.sub}</p>
+              <p className="text-gray-500">{type?.title?.sub}</p>
             </div>
 
             <div className="aspect-video pb-6 flex items-center justify-center">
               <Image
                 src={type.image}
-                alt={type.title.main}
+                alt={type?.title?.main || "no image"} 
                 className="w-[193px] h-full object-cover"
               />
             </div>

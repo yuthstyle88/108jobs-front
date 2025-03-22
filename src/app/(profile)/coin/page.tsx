@@ -13,11 +13,11 @@ import { useState } from "react";
 const FastworkCoin = () => {
   const [amount, setAmount] = useState("");
 
-    const {
-      data: coinLanguageData,
-      isLoading,
-      error,
-    } = useGlobalTranslate(LanguageFile.COINS);
+  const {
+    data: coinLanguageData,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.COINS);
 
   if (isLoading) return <Loading />;
   if (error) return <div>Error loading language data</div>;
@@ -132,10 +132,7 @@ const FastworkCoin = () => {
                     return (
                       <li key={index}>
                         {parts[0]}
-                        <Link
-                          href=""
-                          className="text-third underline"
-                        >
+                        <Link href="" className="text-third underline">
                           <span>{keyword}</span>
                         </Link>
                         {parts[1]}

@@ -1,5 +1,8 @@
 "use client";
+import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -20,6 +23,15 @@ const JobBoard = () => {
   const [activeTab, setActiveTab] = useState<"myPosts" | "closedPosts">(
     "myPosts"
   );
+
+   const {
+      data: jobBoardLanguageData,
+      isLoading,
+      error,
+    } = useGlobalTranslate(LanguageFile.JOB_BOARD);
+  
+    if (isLoading) return <Loading />;
+    if (error) return <div>Error loading language data</div>;
 
   const jobListings: JobListing[] = [
     {
@@ -213,10 +225,10 @@ const JobBoard = () => {
       <div className="max-w-[1280px] mx-auto py-8 px-4 md:px-6 lg:px-8 rounded-lg shadow-sm">
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-blue-600 mb-1">
-            บอร์ดประกาศงาน
+            {jobBoardLanguageData?.section_job_board}
           </h2>
           <p className="text-gray-600">
-            ผู้ว่าจ้างโพสต์งานเพื่อหาคนที่ใช่ ฟรีแลนซ์เลือกงานที่สนใจ
+          {jobBoardLanguageData?.subtitle_job_board}
           </p>
         </div>
 
@@ -231,7 +243,7 @@ const JobBoard = () => {
                 }`}
                 onClick={() => setActiveTab("myPosts")}
               >
-                บอร์ดประกาศงาน
+                {jobBoardLanguageData?.tab_all_jobs}
               </button>
               <button
                 className={`py-2 text-sm font-medium border-b-2 ${
@@ -241,7 +253,7 @@ const JobBoard = () => {
                 }`}
                 onClick={() => setActiveTab("closedPosts")}
               >
-                งานที่คุณลงประกาศ
+                {jobBoardLanguageData?.tab_saved_jobs}
               </button>
             </div>
           </div>
@@ -251,7 +263,7 @@ const JobBoard = () => {
               <div className="w-full sm:w-48">
                 <div className="relative">
                   <select className="appearance-none bg-white border border-gray-300 rounded-lg w-full py-2.5 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
-                    <option value="">ค้นหาหมวดหมู่งาน</option>
+                    <option value="">{jobBoardLanguageData?.dropdown_search_category}</option>
                     <option value="design">ออกแบบกราฟิก</option>
                     <option value="writing">เขียนบทความ</option>
                     <option value="development">พัฒนาเว็บไซต์</option>
@@ -277,7 +289,7 @@ const JobBoard = () => {
               <div className="w-full sm:w-48">
                 <div className="relative">
                   <select className="appearance-none bg-white border border-gray-300 rounded-lg w-full py-2.5 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500">
-                    <option value="">ลักษณะการจ้าง</option>
+                    <option value="">{jobBoardLanguageData?.dropdown_search_type}</option>
                     <option value="freelance">ฟรีแลนซ์</option>
                     <option value="fulltime">งานประจำ</option>
                   </select>
@@ -305,7 +317,7 @@ const JobBoard = () => {
                 อยากรับงานบนบอร์ดประกาศงาน ?
               </Link>
               <button className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                ประกาศหาฟรีแลนซ์ (0/3)
+                {jobBoardLanguageData?.button_post_job} (0/3)
               </button>
             </div>
           </div>
@@ -318,37 +330,37 @@ const JobBoard = () => {
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    ชื่องาน
+                    {jobBoardLanguageData?.table_header_title}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    หมวดหมู่
+                    {jobBoardLanguageData?.table_header_category}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    ลักษณะการจ้าง
+                    {jobBoardLanguageData?.table_header_job_type}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    งบประมาณ (บาท)
+                    {jobBoardLanguageData?.table_header_budget}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    ลงประกาศเมื่อ
+                    {jobBoardLanguageData?.table_header_post_date}
                   </th>
                   <th
                     scope="col"
                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                   >
-                    สิ้นสุดงานภายใน
+                    {jobBoardLanguageData?.table_header_deadline}
                   </th>
                 </tr>
               </thead>

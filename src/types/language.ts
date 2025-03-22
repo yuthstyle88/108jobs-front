@@ -1,13 +1,18 @@
 export type LanguageDataType = Partial<
   GlobalLanguage &
-  LoginLanguage &
-  HomeLanguage &
-  ProfileCoinLanguage &
-  ProfileBasicInfoLanguage &
-  ProfileContactInfoLanguage &
-  ProfileIndividualLanguage &
-  ProfileCompanyInfoLanguage &
-  ProfileProfileChatLanguage
+    LoginLanguage &
+    HomeLanguage &
+    ProfileCoinLanguage &
+    ProfileBasicInfoLanguage &
+    ProfileContactInfoLanguage &
+    ProfileIndividualLanguage &
+    ProfileCompanyInfoLanguage &
+    ProfileProfileChatLanguage &
+    ProfileApplyLanguage &
+    ProfileCouponLanguage &
+    ProfileConsentLanguage &
+    ProfileJobBoardLanguage &
+    ProfileRewardLanguage
 >;
 export interface GlobalLanguage {
   label_employment_button: string;
@@ -258,4 +263,157 @@ export type ProfileProfileChatLanguage = {
   label_filter_jobs: string;
   checkbox_unhired_only: string;
   label_no_conversation: string;
+};
+
+export type ProfileApplyLanguage = {
+  subtitle: string;
+  apply_button: string;
+  advantages_title: string;
+  increase_hiring: string;
+  increase_hiring_description: string;
+  payment_security: string;
+  payment_security_description: string;
+  paperwork: string;
+  paperwork_description: string;
+  support_team: string;
+  support_team_description: string;
+  career_growth: string;
+  career_growth_description: string;
+  privileges: string;
+  privileges_description: string;
+  steps_title: string;
+  step1: string;
+  step1_description: string;
+  step2: string;
+  step2_description: string;
+  step3: string;
+  step3_description: string;
+  step4: string;
+  step4_description: string;
+  step5: string;
+  step5_description: string;
+  step6: string;
+  step6_description: string;
+  freelancer_types_title: string;
+  freelancer_standard: string;
+  freelancer_standard_description: string;
+  freelancer_specialist: string;
+  freelancer_specialist_description: string;
+  freelancer_professional: string;
+  freelancer_professional_description: string;
+  why_choose_title: string;
+  popular_categories_title: string;
+};
+
+export type ProfileCouponLanguage = {
+  section_discounts_promotions: string;
+  subtitle_discounts_promotions: string;
+  label_your_coupons: string;
+  description_your_coupons: string;
+  message_no_coupons: string;
+  section_special_offers: string;
+  description_special_offers: string;
+  tab_for_hiring: string;
+  tab_for_freelancers: string;
+  message_no_offers: string;
+};
+
+export type ProfileConsentLanguage = {
+  data_management: string;
+  terms_conditions: string;
+  data_usage_fastwork: string;
+  cookies_management: string;
+  third_party_data_sharing: string;
+  newsletter_promotions: string;
+  newsletter_accept: string;
+  newsletter_decline: string;
+  save_data: string;
+  no_freelancer_favorites: string;
+  functional_cookies: string;
+  functional_cookies_description: string;
+  marketing_cookies: string;
+  marketing_cookies_description: string;
+  analytics_cookies: string;
+  analytics_cookies_description: string;
+  toggle_marketing_cookies: string;
+  toggle_analytics_cookies: string;
+  mandatory_cookies: string;
+};
+
+export type ProfileJobBoardLanguage = {
+  section_job_board: string;
+  subtitle_job_board: string;
+  tab_all_jobs: string;
+  tab_saved_jobs: string;
+  dropdown_search_category: string;
+  dropdown_search_type: string;
+  button_post_job: string;
+  label_selected_jobs: string;
+  table_header_title: string;
+  table_header_category: string;
+  table_header_job_type: string;
+  table_header_budget: string;
+  table_header_post_date: string;
+  table_header_deadline: string;
+  label_pagination: string;
+  section_assistant: string;
+  description_assistant: string;
+  assistant_feature1: string;
+  assistant_feature2: string;
+  assistant_feature3: string;
+  button_learn_more: string;
+};
+
+export type ProfileRewardLanguage = {
+  section_rewards_points: string;
+  label_total_points: string;
+  tab_collect_points: string;
+  tab_redeem_rewards: string;
+  tab_usage_history: string;
+  section_free_points_mission: string;
+  filter_all: string;
+  filter_general: string;
+  filter_employment: string;
+  label_general_mission: string;
+  label_employment_mission: string;
+  task_daily_points: string;
+  task_first_payment: string;
+  task_successful_hire: string;
+  task_repeat_hire: string;
+  task_first_job_post: string;
+  button_check_get_points: string;
+  label_view_other_rewards: string;
+  section_awards: string;
+  button_all_awards: string;
+  button_for_employment: string;
+  section_general: string;
+  label_discount: string;
+  award_50_baht_coupon: string;
+  award_100_baht_coupon: string;
+  award_300_baht_coupon: string;
+  award_500_baht_coupon: string;
+  award_1000_baht_coupon: string;
+  award_3000_baht_coupon: string;
+  award_5000_baht_coupon: string;
+  label_points: string;
+  label_cached: string;
+  tab_earned_points: string;
+  tab_redeemed_expired: string;
+  column_date_received: string;
+  column_details: string;
+  column_points_amount: string;
+  label_no_data: string;
+  section_terms_conditions: string;
+  terms_1: string;
+  terms_2: string;
+  terms_3: string;
+  section_faq: string;
+  faq_join_rewards: string;
+  faq_join_rewards_answer: string;
+  faq_more_points: string;
+  faq_more_points_answer: string;
+  faq_benefits: string;
+  faq_benefits_answer: string;
+  faq_expiration: string;
+  faq_expiration_answer: string;
 };
