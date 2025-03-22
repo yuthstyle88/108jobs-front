@@ -4,14 +4,9 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const { search } = new URL(request.url);
 
-  // Tạo URL đầy đủ với toàn bộ query string
   const fullPath = `/auth/google/callback${search}`;
 
-  console.log(`https://fastwork.ibrowe.com${fullPath}`);
-  
-
   try {
-    // Gửi toàn bộ query string tới backend
     const response = await fetch(`https://fastwork.ibrowe.com${fullPath}`);
 
     const data = await response.json();
@@ -23,7 +18,6 @@ export async function GET(request: Request) {
       );
     }
 
-    // Dùng token để tạo session qua NextAuth.js
     const result = await signIn("credentials", {
       token: data.jwt,
       redirect: false,

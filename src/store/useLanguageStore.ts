@@ -1,17 +1,21 @@
-import { create } from "zustand";
+import { LanguageFile } from "@/constants/language";
 import {
   GlobalLanguage,
   HomeLanguage,
   LoginLanguage,
+  ProfileApplyLanguage,
   ProfileBasicInfoLanguage,
   ProfileCoinLanguage,
   ProfileCompanyInfoLanguage,
+  ProfileConsentLanguage,
   ProfileContactInfoLanguage,
+  ProfileCouponLanguage,
   ProfileIndividualLanguage,
+  ProfileJobBoardLanguage,
   ProfileProfileChatLanguage,
+  ProfileRewardLanguage
 } from "@/types/language";
-import { LanguageFile } from "@/constants/language";
-
+import { create } from "zustand";
 
 type LanguageData = {
   [key in LanguageFile]?: Partial<
@@ -23,7 +27,12 @@ type LanguageData = {
       ProfileCompanyInfoLanguage &
       ProfileIndividualLanguage &
       ProfileContactInfoLanguage &
-      ProfileProfileChatLanguage
+      ProfileProfileChatLanguage &
+      ProfileApplyLanguage &
+      ProfileCouponLanguage &
+      ProfileConsentLanguage &
+      ProfileJobBoardLanguage &
+      ProfileRewardLanguage
   >;
 };
 

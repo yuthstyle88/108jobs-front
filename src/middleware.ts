@@ -20,6 +20,10 @@ export async function middleware(request: NextRequest) {
   }
 
   const token = await getToken({ req: request, secret });
+  if (!secret) {
+    console.error('NEXTAUTH_SECRET is missing!');
+    throw new Error('Authentication secret is not configured');
+  }
   if (!token) {
     const callbackUrl = encodeURIComponent(request.nextUrl.pathname);
     return NextResponse.redirect(

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { defaultMetadata } from "@/config/metadata";
+import FaqReward from "@/components/FaqReward";
 
 interface RewardLayoutProps {
   children: ReactNode;
@@ -9,6 +10,7 @@ export default function RewardLayout({ children }: RewardLayoutProps) {
   return (
     <>
       <section className="pt-[4.5rem] bg-white">{children}</section>
+      <FaqReward/>
     </>
   );
 }

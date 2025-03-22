@@ -39,8 +39,6 @@ export default function LoginPage() {
 
   const route = useRouter();
 
-  console.log("loginLanguageData", loginLanguageData);
-
   if (isLoading) return <Loading />;
   if (error) return <div>Error</div>;
 

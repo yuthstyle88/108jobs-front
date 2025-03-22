@@ -2,10 +2,12 @@ import { ArrowRight } from "lucide-react";
 import PointIcon from "./PointIcon";
 
 interface PointCardProps {
-  title: string;
-  points: number;
+  title?: string;
+  points?: number;
   subtitle?: string;
+  buttonLabel?: string;
   onCheckPoints: () => void;
+  viewLabel?: string;
 }
 
 const PointCard = ({
@@ -13,10 +15,11 @@ const PointCard = ({
   points,
   subtitle,
   onCheckPoints,
+  buttonLabel,
+  viewLabel,
 }: PointCardProps) => {
-  // Format points as +X.XX
-  const formattedPoints = points.toFixed(2).replace(/\.00$/, "");
-  const displayPoints = points > 0 ? `+${formattedPoints}` : formattedPoints;
+  const formattedPoints = points?.toFixed(2).replace(/\.00$/, "");
+  const displayPoints = points && points > 0 ? `+${formattedPoints}` : formattedPoints;
 
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden flex h-40">
@@ -33,14 +36,14 @@ const PointCard = ({
           onClick={onCheckPoints}
           className="bg-blue-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors w-full sm:w-auto text-center"
         >
-          ตรวจสอบ และรับ Points
+          {buttonLabel}
         </button>
       </div>
       <div className="w-32 bg-gray-50 flex flex-col items-center justify-center p-3">
         <PointIcon />
         <p className="text-blue-600 font-bold text-2xl mt-2">{displayPoints}</p>
         <div className="flex items-center text-sm text-gray-500 mt-2 hover:text-blue-600 cursor-pointer transition-colors">
-          <span>ดูรีวอร์ดอื่น</span>
+          <span>{viewLabel}</span>
           <ArrowRight className="w-4 h-4 ml-1" />
         </div>
       </div>
