@@ -56,6 +56,42 @@ const config: Config = {
           "0%": { transform: "scale(0.95)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" },
         },
+        'modal-fade-in': {
+					'0%': { 
+						opacity: '0',
+						transform: 'translateY(30px)'
+					},
+					'100%': { 
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'modal-fade-out': {
+					'0%': { 
+						opacity: '1',
+						transform: 'translateY(0)'
+					},
+					'100%': { 
+						opacity: '0',
+						transform: 'translateY(30px)'
+					}
+				},
+				'backdrop-fade-in': {
+					'0%': { 
+						opacity: '0'
+					},
+					'100%': { 
+						opacity: '1'
+					}
+				},
+				'backdrop-fade-out': {
+					'0%': { 
+						opacity: '1'
+					},
+					'100%': { 
+						opacity: '0'
+					}
+				}
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -64,6 +100,10 @@ const config: Config = {
         float: "float 6s ease-in-out infinite",
         "scale-up": "scale-up 0.5s ease-out",
         "spin-fast": "spin 600ms linear infinite",
+        'modal-show': 'modal-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+				'modal-hide': 'modal-fade-out 0.2s ease-out forwards',
+        'backdrop-show': 'backdrop-fade-in 0.2s ease-out forwards',
+				'backdrop-hide': 'backdrop-fade-out 0.2s ease-out forwards'
       },
     },
   },

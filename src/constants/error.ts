@@ -10,6 +10,7 @@ export const ERROR_VERIFY_EMAIL = {
 
 export const ERROR_VERIFY_PASSWORD = {
   invalid_password: "invalid_password",
+  invalid_credentials: "invalid_credentials",
 };
 
 export const ERROR_CONSTANTS = {
@@ -23,5 +24,6 @@ export const ERROR_CONSTANTS = {
   LIMIT_SEND_EMAIL: "กรุณารอสักครู่แล้วลองอีกครั้ง",
   EMAIL_NOT_EXIST: "ข้อมูลไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง",
   INVALID_PASSWORD: "รหัสผ่านไม่ถูกต้อง",
+  INVALID_OLD_PASSWORD: "รหัสผ่านเดิมไม่ถูกต้อง",
   CHANGE_PASSWORD_FAILED: "มีข้อผิดพลาดในการเปลี่ยนรหัสผ่านของคุณ"
 };

@@ -12,7 +12,7 @@ type FreelancerType = {
   badgeText?: string;
   badgeClass?: string;
   description?: string;
-  benefits: string[];
+  benefits?: string[];
 };
 
 type Props = {
@@ -24,49 +24,49 @@ const FreelancerTypes = ({ data }: Props) => {
     {
       title: {
         main: data?.freelancer_standard,
-        sub: "ฟรีแลนซ์",
+        sub: data?.freelancer_label,
       },
       image: StartSellingImage.compare1,
       description: data?.freelancer_standard_description,
       benefits: [
-        "ลงงานได้ตามความถนัด",
-        "ช่วงราคาสามารถกำหนดเองได้ตามความเหมาะสมของงาน",
-        "Fastwork support",
-        "ระบบใบนัดหมาย, สร้างใบเสนอราคาและแบบฟอร์ม",
-        "ใบเสร็จพิเศษ Freelancer",
+        data?.freelancer_2 ?? "",
+        data?.freelancer_3 ?? "",
+        data?.freelancer_4 ?? "",
+        data?.freelancer_5 ?? "",
+        data?.freelancer_6 ?? "",
       ],
     },
     {
       title: {
         main: data?.freelancer_specialist,
-        sub: "ผู้เชี่ยวชาญ",
+        sub: data?.specialist_label,
       },
       image: StartSellingImage.compare2,
       badgeClass: "bg-blue-100 text-blue-600",
       description: data?.freelancer_specialist_description,
       benefits: [
-        "ใช้สิทธิขอคำปรึกษาโดยตรงกับทีมแอดฯ",
-        "โอกาสพิเศษรับงานจาก Partner ของเรา",
-        "Badge ที่เเสดงว่าเป็น ผู้เชี่ยวชาญ ซึ่งบริการจาก Fastwork ช่วยให้คุณจ้างงานที่คุณได้อย่างมั่น",
-        "ใบนัดที่เเสดงสำหรับ ผู้เชี่ยวชาญ",
-        "Event ที่เเสดงสำหรับ ผู้เชี่ยวชาญ ระดับ Top",
-        "ผู้ช่วยเหลือพิเศษ (Personal Assistant) สำหรับ ผู้เชี่ยวชาญ",
+        data?.specialist_2 ?? "",
+        data?.specialist_3 ?? "",
+        data?.specialist_4 ?? "",
+        data?.specialist_5 ?? "",
+        data?.specialist_6 ?? "",
+        data?.specialist_7 ?? "",
       ],
     },
     {
       title: {
         main: data?.freelancer_professional,
-        sub: "ผู้เชี่ยวชาญระดับ Professional",
+        sub: data?.professional_label,
       },
       image: StartSellingImage.compare3,
       badgeClass: "bg-blue-600 text-white",
       description:
       data?.freelancer_professional_description,
       benefits: [
-        "ใช้สิทธิขอคำปรึกษาโดยตรงผู้เชี่ยวชาญ",
-        "Badge ที่เเสดงสำหรับ Professional ผู้เชี่ยวชาญ Fastwork ช่วยให้คุณจ้างงานที่คุณได้อย่างมั่น",
-        "โอกาสในการได้รับงานมากยิ่งขึ้น จากลูกค้าองค์กรชั้นนำของ Fastwork",
-        "ใบนัดที่เเสดงสำหรับ Professional",
+        data?.professional_2 ?? "",
+        data?.professional_3 ?? "",
+        data?.professional_4 ?? "",
+        data?.professional_5 ?? "",
       ],
     },
   ];
@@ -100,7 +100,7 @@ const FreelancerTypes = ({ data }: Props) => {
             <p className="text-gray-600 mb-6">{type.description}</p>
 
             <ul className="space-y-3">
-              {type.benefits.map((benefit, benefitIndex) => (
+              {type.benefits?.map((benefit, benefitIndex) => (
                 <li key={benefitIndex} className="flex items-start">
                   <svg
                     className="w-5 h-5 text-third mt-0.5 flex-shrink-0"
@@ -125,11 +125,11 @@ const FreelancerTypes = ({ data }: Props) => {
       <div className="grid-container-desktop w-full pt-[64px]">
         <div className="col-start-2 col-end-3 flex flex-col justify-center items-center">
           <h2 className="text-3xl font-bold text-center text-primary mb-4">
-            สมัครเป็นฟรีแลนซ์บน Fastwork เลย
+            {data?.cta_title}
           </h2>
           <Link href="/apply-freelance">
             <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
-              สมัครเป็นฟรีแลนซ์
+            {data?.cta_button}
             </button>
           </Link>
         </div>

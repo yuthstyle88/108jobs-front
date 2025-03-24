@@ -1,16 +1,23 @@
 import Header from "@/components/Header";
 import { ReactNode } from "react";
 import { defaultMetadata } from "@/config/metadata";
+import ChatWrapper from "@/container/ChatWrapper";
+import { ChatLanguageProvider } from "@/contexts/ChatLanguage";
 interface CreateLayoutProps {
   children: ReactNode;
 }
 
 export default function ProfileLayout({ children }: CreateLayoutProps) {
   return (
-    <>
+    <ChatLanguageProvider>
       <Header type="primary" />
-      <section className="bg-white min-h-screen">{children}</section>
-    </>
+      <div className="h-screen flex flex-col pt-16">
+        <div className="flex flex-1 overflow-hidden">
+          <ChatWrapper />
+          {children}
+        </div>
+      </div>
+    </ChatLanguageProvider>
   );
 }
 
