@@ -1,8 +1,10 @@
 import { LanguageFile } from "@/constants/language";
 import {
+  ErrorPageLanguage,
   GlobalLanguage,
   HomeLanguage,
   LoginLanguage,
+  NotFoundPageLanguage,
   ProfileApplyLanguage,
   ProfileBasicInfoLanguage,
   ProfileCoinLanguage,
@@ -12,7 +14,8 @@ import {
   ProfileCouponLanguage,
   ProfileIndividualLanguage,
   ProfileJobBoardLanguage,
-  ProfileProfileChatLanguage,
+  ProfileNavbarAccountLanguage,
+  ProfileChatLanguage,
   ProfileRewardLanguage
 } from "@/types/language";
 import { create } from "zustand";
@@ -27,12 +30,15 @@ type LanguageData = {
       ProfileCompanyInfoLanguage &
       ProfileIndividualLanguage &
       ProfileContactInfoLanguage &
-      ProfileProfileChatLanguage &
+      ProfileChatLanguage &
       ProfileApplyLanguage &
       ProfileCouponLanguage &
       ProfileConsentLanguage &
       ProfileJobBoardLanguage &
-      ProfileRewardLanguage
+      ProfileRewardLanguage &
+      ProfileNavbarAccountLanguage & 
+      ErrorPageLanguage &
+      NotFoundPageLanguage
   >;
 };
 

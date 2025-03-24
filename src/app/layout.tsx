@@ -4,6 +4,7 @@ import { Kanit } from "next/font/google";
 import FontAwesomeConfig from "./fontawesome";
 import "./globals.css";
 import { Providers } from "./providers";
+import { Toaster } from "sonner";
 
 const kanit = Kanit({
   subsets: ["latin", "vietnamese", "thai"],
@@ -63,6 +64,7 @@ export default async function RootLayout({
         className={`${kanit.className} antialiased`}
       >
         <Providers session={session}>
+          <Toaster richColors closeButton position="top-right" />
           <LanguageProvider>{children}</LanguageProvider>
         </Providers>
       </body>

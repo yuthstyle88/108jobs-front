@@ -13,8 +13,8 @@ export default function ProfileLayout({
     <>
       <Header type="primary" />
 
-      <section className="pt-[4.5rem] bg-white min-h-screen">
-        <div className="grid-container-desktop w-full min-h-screen py-8 bg-[#F6F7F8]">
+      <section className="min-h-screen pt-[4.5rem] bg-[#F6F7F8]">
+        <div className="grid-container-desktop w-full  py-8">
           <div className="col-start-2 col-end-3">
             <div className="grid-cols-[286px_1fr] grid gap-6 items-start">
               <AccountSettingWrapper />

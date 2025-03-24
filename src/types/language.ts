@@ -7,12 +7,15 @@ export type LanguageDataType = Partial<
     ProfileContactInfoLanguage &
     ProfileIndividualLanguage &
     ProfileCompanyInfoLanguage &
-    ProfileProfileChatLanguage &
+    ProfileChatLanguage &
     ProfileApplyLanguage &
     ProfileCouponLanguage &
     ProfileConsentLanguage &
     ProfileJobBoardLanguage &
-    ProfileRewardLanguage
+    ProfileRewardLanguage &
+    ProfileNavbarAccountLanguage &
+    NotFoundPageLanguage &
+    ErrorPageLanguage
 >;
 export interface GlobalLanguage {
   label_employment_button: string;
@@ -258,11 +261,21 @@ export type ProfileCompanyInfoLanguage = {
   note_requirements: string[];
 };
 
-export type ProfileProfileChatLanguage = {
+export type ProfileChatLanguage = {
   section_chat: string;
   label_filter_jobs: string;
   checkbox_unhired_only: string;
   label_no_conversation: string;
+  search_placeholder: string;
+  job_branch: string;
+  time_ago: string;
+  guide: string;
+  details: string;
+  selected_here: string;
+  days: string;
+  secure_payment_note: string;
+  unselect_warning: string;
+  type_message_here: string;
 };
 
 export type ProfileApplyLanguage = {
@@ -303,6 +316,55 @@ export type ProfileApplyLanguage = {
   freelancer_professional_description: string;
   why_choose_title: string;
   popular_categories_title: string;
+  freelance_types_title: string;
+  freelancer_title: string;
+  freelancer_label: string;
+  freelancer_1: string;
+  freelancer_2: string;
+  freelancer_3: string;
+  freelancer_4: string;
+  freelancer_5: string;
+  freelancer_6: string;
+  specialist_title: string;
+  specialist_label: string;
+  specialist_1: string;
+  specialist_2: string;
+  specialist_3: string;
+  specialist_4: string;
+  specialist_5: string;
+  specialist_6: string;
+  specialist_7: string;
+  professional_title: string;
+  professional_label: string;
+  professional_1: string;
+  professional_2: string;
+  professional_3: string;
+  professional_4: string;
+  professional_5: string;
+  sell_steps_title: string;
+  sell_step_1_title: string;
+  sell_step_1_desc_prefix: string;
+  sell_step_1_link_text: string;
+  sell_step_2_title: string;
+  sell_step_2_desc: string;
+  sell_step_3_title: string;
+  sell_step_3_desc_prefix: string;
+  sell_step_3_link_1: string;
+  sell_step_3_desc_middle: string;
+  sell_step_3_link_2: string;
+  sell_step_3_desc_suffix: string;
+  sell_step_4_title: string;
+  sell_step_4_desc: string;
+  sell_step_5_title: string;
+  sell_step_5_desc: string;
+  sell_step_6_title: string;
+  sell_step_6_desc_prefix: string;
+  sell_step_6_link_text: string;
+  sell_step_6_desc_suffix: string;
+  cta_title: string;
+  cta_button: string;
+  why_title: string;
+  popular_categories: string;
 };
 
 export type ProfileCouponLanguage = {
@@ -416,4 +478,23 @@ export type ProfileRewardLanguage = {
   faq_benefits_answer: string;
   faq_expiration: string;
   faq_expiration_answer: string;
+};
+
+export type ProfileNavbarAccountLanguage = {
+  section_account: string;
+  account_info: string;
+  contact_info: string;
+  section_hiring: string;
+  personal_hiring_info: string;
+  company_hiring_info: string;
+};
+
+export type NotFoundPageLanguage = {
+  error_title: string;
+  error_description: string;
+  back_button: string;
+  recommended_section_title: string;
+};
+export type ErrorPageLanguage = {
+  title: string;
 };

@@ -1,6 +1,9 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import { LandingImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import Image from "next/image";
 import { useEffect } from "react";
 
@@ -9,10 +12,18 @@ interface ErrorProps {
 }
 
 export default function Error({ error }: ErrorProps) {
+  const {
+    data: errorLanguageData,
+    isLoading,
+    error: isError,
+  } = useGlobalTranslate(LanguageFile.ERROR);
 
   useEffect(() => {
     console.error("Error caught:", error);
   }, [error]);
+
+  if (isLoading) return <Loading />;
+  if (isError) return <div>Error loading language data</div>;
 
   return (
     <div className="min-h-screen w-full h-full flex items-center justify-center bg-secondary">
@@ -28,13 +39,15 @@ export default function Error({ error }: ErrorProps) {
         fill
         className="object-cover"
       />
-      <div className="flex flex-col items-center gap-16 mx-2"> 
-      <Image
-        src={LandingImage.error}
-        alt="error"
-        className="w-[80%] h-[280px] sm:w-full"
-      />
-      <p className="text-center text-[20px] md:text-[32px] text-text_primary font-sans">ขออภัย มีข้อผิดพลาดบางอย่างเกิดขึ้น</p>
+      <div className="flex flex-col items-center gap-16 mx-2">
+        <Image
+          src={LandingImage.error}
+          alt="error"
+          className="w-[80%] h-[280px] sm:w-full"
+        />
+        <p className="text-center text-[20px] md:text-[32px] text-text_primary font-sans">
+          {errorLanguageData?.title}
+        </p>
       </div>
     </div>
   );

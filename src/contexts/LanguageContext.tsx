@@ -10,7 +10,6 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
   undefined
 );
 
-// Danh sách ngôn ngữ hợp lệ
 const VALID_LANGUAGES = ["th", "vi", "en"];
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
