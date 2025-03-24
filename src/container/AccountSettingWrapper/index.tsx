@@ -1,5 +1,6 @@
 "use client";
-import { useLanguageStore } from "@/store/useLanguageStore";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -8,12 +9,19 @@ export default function AccountSettingWrapper() {
 
   const isActive = (path: string) => pathname === path;
 
-  const {languageData:basicInfoLanguageData, languageData:contactInfoLanguageData,languageData:companyInfoLanguageData,languageData:individualLanguageData} = useLanguageStore();
+   const {
+     data: navbarAccountData,
+     isLoading,
+     error,
+   } = useGlobalTranslate(LanguageFile.ACCOUNT_NAVBAR);
+
+   if (isLoading) return <p>Loading...</p>;
+   if (error) return <p>Error loading data.</p>;
 
   return (
     <div>
       <p className="font-medium text-[16px] text-text_primary pb-[16px]">
-        บัญชีของคุณ
+      {navbarAccountData?.section_account}
       </p>
       <div className="flex flex-col">
         <Link
@@ -36,7 +44,7 @@ export default function AccountSettingWrapper() {
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
           </svg>
-          <span>{basicInfoLanguageData?.profile_info?.section_account_info}</span>
+          <span>{navbarAccountData?.account_info}</span>
         </Link>
 
         <Link
@@ -59,11 +67,11 @@ export default function AccountSettingWrapper() {
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
             <polyline points="22,6 12,13 2,6" />
           </svg>
-          <span>{contactInfoLanguageData?.profile_contact?.section_contact_info}</span>
+          <span>{navbarAccountData?.contact_info}</span>
         </Link>
 
         <p className="font-medium text-[16px] text-text_primary py-4">
-          ข้อมูลการจ้างงาน
+        {navbarAccountData?.section_hiring}
         </p>
 
         <Link
@@ -86,7 +94,7 @@ export default function AccountSettingWrapper() {
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
             <circle cx="12" cy="10" r="3" />
           </svg>
-          <span>{individualLanguageData?.profile_individual?.section_individual_hiring}</span>
+          <span>{navbarAccountData?.personal_hiring_info}</span>
         </Link>
 
          <Link
@@ -110,7 +118,7 @@ export default function AccountSettingWrapper() {
             <path d="M3 9h18" />
             <path d="M9 21V9" />
           </svg>
-          <span>{companyInfoLanguageData?.profile_company?.section_company_hiring}</span>
+          <span>{navbarAccountData?.company_hiring_info}</span>
         </Link>
       </div>
     </div>

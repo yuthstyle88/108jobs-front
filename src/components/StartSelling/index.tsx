@@ -51,6 +51,7 @@ const StartSelling = () => {
       error,
     } = useGlobalTranslate(LanguageFile.APPLY_FREELANCER);
 
+
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error loading data.</p>;
 

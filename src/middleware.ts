@@ -6,7 +6,7 @@ type UserRole = "employer" | "freelancer";
 const secret = process.env.AUTH_SECRET;
 
 const roleBasedRoutes: Record<UserRole, string[]> = {
-  employer: ["/account-setting", "/employer/jobs", "/employer/applicants"],
+  employer: [ "/employer/jobs", "/employer/applicants"],
   freelancer: ["/seller", "/freelancer/jobs", "/freelancer/proposals"],
 };
 

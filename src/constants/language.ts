@@ -13,4 +13,7 @@ export enum LanguageFile {
     CONSENT = "profile_data",
     JOB_BOARD = "profile_job",
     REWARD = "profile_point",
+    ACCOUNT_NAVBAR = "profile_navbar",
+    ERROR = "error",
+    NOT_FOUND = "not_found",
   }
