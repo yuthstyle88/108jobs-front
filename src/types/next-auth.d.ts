@@ -6,13 +6,13 @@ declare module "next-auth" {
     accessToken?: string;
     user: {
       email?: string;
-      role?: string;
+      roles?: string[];
     } & DefaultSession["user"];
   }
 
   interface User extends DefaultUser {
     token: string;
-    role?: string;
+    roles?: string[];
   }
 
   interface EventCallbacks {
@@ -24,6 +24,6 @@ declare module "next-auth/jwt" {
   interface JWT {
     accessToken?: string;
     email?: string;
-    role?: string;
+    roles?: string[];
   }
 }

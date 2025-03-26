@@ -3,11 +3,29 @@ import ImageUploadModal from "@/components/AvatarUploadModal";
 import PasswordChangeModal from "@/components/ChangePasswordModal";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { usePrivatePost } from "@/hooks/api-hooks";
+import {
+  usePrivateFetch,
+  usePrivateImagePost,
+  usePrivatePut,
+} from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { convertBase64ToBlobUrl } from "@/utils/convertBase64ToBlobUrl";
+import { useDateOptions } from "@/hooks/useDateOptions";
+import { ProfileData } from "@/types/userData";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+
+interface FormValues {
+  display_name: string;
+  username: string;
+  birth_day: string;
+  birth_month: string;
+  birth_year: string;
+}
+
+interface ImageUploadResponse {
+  image_url: string;
+}
 
 export default function BasicInformation() {
   const {
@@ -16,14 +34,100 @@ export default function BasicInformation() {
     error,
   } = useGlobalTranslate(LanguageFile.BASIC_INFO);
 
+  const { trigger: uploadImage, isMutating: isUploadMuting } =
+    usePrivateImagePost<ImageUploadResponse>("/image");
+  const { trigger: updateProfile, isMutating: isUpdateMuting } =
+    usePrivatePut<ImageUploadResponse>("/profile/info");
+
+  const {
+    data: profileData,
+    isLoading: isLoadingProfile,
+    error: isErrorProfile,
+    mutate,
+  } = usePrivateFetch<ProfileData>("/profile");
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<FormValues>();
+
+  console.log("register", profileData);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { days, months, years } = useDateOptions();
+
+  // Initialize form from API data
+  useEffect(() => {
+    if (profileData?.user) {
+      const birthDate = profileData.user.birth_date;
+      if (birthDate) {
+        const [year, month, day] = birthDate.split("-");
+        reset({
+          display_name: profileData.user.display_name,
+          username: profileData.user.username,
+          birth_day: day || "day",
+          birth_month: month || "month",
+          birth_year: year || "year",
+        });
+      } else {
+        reset({
+          display_name: profileData.user.display_name,
+          username: profileData.user.username,
+          birth_day: "day",
+          birth_month: "month",
+          birth_year: "year",
+        });
+      }
+      setSelectedImage(profileData.user.avatar_url);
+    }
+  }, [profileData, reset]);
+
+  // console.log("profile",profileData.user.avatar_url);
+
+  const onSubmit = async (formData: FormValues) => {
+    try {
+      let avatarUrl = profileData?.user.avatar_url;
+
+      if (selectedImage) {
+        const formData = new FormData();
+        const blob = await fetch(selectedImage).then((res) => res.blob());
+
+        formData.append("images[]", blob, "profile.jpg");
+        const result = await uploadImage(formData);
+        if (!result?.image_url) throw new Error("Image upload failed");
+        avatarUrl = result.image_url;
+      }
+
+      const updateData = {
+        display_name: formData.display_name,
+        username: formData.username,
+        birth_date:
+          formData.birth_day === "Day" ||
+          formData.birth_month === "Month" ||
+          formData.birth_year === "Year"
+            ? null
+            : `${formData.birth_year}-${formData.birth_month}-${formData.birth_day}`,
+        avatar_url: avatarUrl || null,
+      };
+
+      const response = await updateProfile(updateData);
+      console.log("updated profile", response);
+
+      if (!response) throw new Error("Profile update failed");
+
+      await mutate();
+    } catch (error) {
+      console.error("Update error:", error);
+    }
+  };
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
-  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const closeImageModal = () => {
     setIsImageModalOpen(false);
@@ -32,8 +136,12 @@ export default function BasicInformation() {
     }
   };
 
-  const handleImageUpload = (imageUrl: string) => {
-    setProfileImage(imageUrl);
+  const handleImageUpload = async (imageUrl: string) => {
+    const blob = await fetch(imageUrl).then((res) => res.blob());
+    const formData = new FormData();
+    formData.append("image", blob, "profile.jpg");
+
+    setSelectedImage(URL.createObjectURL(blob));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,34 +167,15 @@ export default function BasicInformation() {
     fileInputRef.current?.click();
   };
 
-  const { trigger, isMutating } = usePrivatePost("/image");
-
-  const handleUpdateProfile = async () => {
-    try {
-      const res = await trigger({ profileImage });
-      console.log("res", res);
-    } catch (error) {
-      console.error("Lỗi khi cập nhật hồ sơ:", error);
-    }
-  };
-
-  useEffect(() => {
-    const isChangingImage = localStorage.getItem("changingImage");
-    if (isChangingImage) {
-      localStorage.removeItem("changingImage");
-      setTimeout(() => {
-        handleSelectFile();
-      }, 300);
-    }
-  }, []);
-
-  if (isLoading) return <p>Loading...</p>;
-  if (isMutating) return <p>Loading...</p>;
-  if (error) return <p>Error loading data.</p>;
+  if (isLoading || isLoadingProfile) return <p>Loading...</p>;
+  if (error || isErrorProfile) return <p>Error loading data.</p>;
 
   return (
-    <div>
-      <div className="border-1 border-border_primary rounded-lg bg-white py-6">
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="border-1 border-border_primary rounded-lg bg-white py-6"
+      >
         <div className="border-b-1 px-6">
           <h2 className="text-[16px] font-medium mb-2 text-text_primary">
             {languageData?.section_account_info}
@@ -110,11 +199,7 @@ export default function BasicInformation() {
                 onChange={handleFileChange}
               />
               <Image
-                src={
-                  profileImage
-                    ? convertBase64ToBlobUrl(profileImage)
-                    : ProfileImage.avatar
-                }
+                src={selectedImage ? selectedImage : ProfileImage.avatar}
                 alt="avatar"
                 className="w-full h-full rounded-full"
                 width={500}
@@ -148,10 +233,8 @@ export default function BasicInformation() {
             <div className="flex items-center">
               <span className="text-gray-500 mr-2">fastwork.co/user/</span>
               <input
-                type="text"
+                {...register("username")}
                 className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-text_secondary font-sans"
-                defaultValue="uykpfzno"
-                readOnly
               />
             </div>
           </div>
@@ -164,10 +247,18 @@ export default function BasicInformation() {
               ตรงนี้คือชื่อที่ผู้บันทึกการเพื่อสร้างความน่าเชื่อถือ
             </p>
             <input
-              type="text"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-text_secondary"
-              defaultValue="uykpfzno"
+              {...register("display_name", {
+                required: languageData?.account_info,
+                validate: (value) =>
+                  value.trim().length > 0 || "Invalid display name",
+              })}
+              className="text-text_primary w-full px-4 py-2 border border-border_primary rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
+            {errors.display_name && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.display_name.message}
+              </p>
+            )}
           </div>
 
           <div className="col-span-2">
@@ -175,27 +266,67 @@ export default function BasicInformation() {
               {languageData?.label_birthdate}
             </label>
             <div className="grid grid-cols-3 gap-4">
-              <select className="border border-gray-300 rounded-lg px-3 py-2 text-text_secondary">
-                <option>14</option>
+              <select
+                {...register("birth_day", {
+                  required: languageData?.account_info,
+                })}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-text_secondary"
+              >
+                <option disabled value="">Day</option>
+                {days.map((day) => (
+                  <option key={day} value={day}>
+                    {day}
+                  </option>
+                ))}
               </select>
-              <select className="border border-gray-300 rounded-lg px-3 py-2 text-text_secondary">
-                <option>ตุลาคม</option>
+              <select
+                {...register("birth_month", {
+                  required: languageData?.account_info,
+                })}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-text_secondary"
+              >
+                <option disabled value="">Month</option>
+                {months.map((month) => (
+                  <option key={month} value={month}>
+                    {month}
+                  </option>
+                ))}
               </select>
-              <select className="border border-gray-300 rounded-lg px-3 py-2 text-text_secondary">
-                <option>2009</option>
+              <select
+                {...register("birth_year", {
+                  required: languageData?.account_info,
+                })}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-text_secondary"
+              >
+                <option disabled value="">Year</option>
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
               </select>
             </div>
+            {(errors.birth_day || errors.birth_month || errors.birth_year) && (
+              <p className="text-red-500 text-sm mt-1">
+                {languageData?.account_info}
+              </p>
+            )}
           </div>
           <div className="self-end w-fit">
             <button
-              onClick={handleUpdateProfile}
+              type="submit"
+              disabled={isSubmitting}
               className="w-full bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              บันทึก
+              {isSubmitting || isUpdateMuting || isUploadMuting ? (
+                <span>บันทึก...</span>
+              ) : (
+                "บันทึก"
+              )}
             </button>
           </div>
         </div>
-      </div>
+      </form>
       <div className="border-1 border-border_primary rounded-lg bg-white mt-5 p-6 flex flex-row justify-between">
         <div className="text-[16px] text-text_primary font-medium">
           {languageData?.section_password}
@@ -218,6 +349,6 @@ export default function BasicInformation() {
         onClose={closeImageModal}
         onImageUpload={handleImageUpload}
       />
-    </div>
+    </>
   );
 }

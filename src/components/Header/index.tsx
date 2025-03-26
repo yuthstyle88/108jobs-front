@@ -92,7 +92,7 @@ const Header = ({ type }: BgProps) => {
               <MegaMenu />
             </div>
           </div>
-          {session?.user.role === ROLE.FREELANCER && (
+          {session?.user.roles?.includes(ROLE.FREELANCER) && (
             <Link
               href="/seller"
               className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
@@ -106,7 +106,7 @@ const Header = ({ type }: BgProps) => {
           >
             {globalLanguageData?.label_apply_to_be_freelancer_button}
           </Link>
-          {session?.user.role === ROLE.EMPLOYER && (
+          {session?.user.roles?.includes(ROLE.EMPLOYER) && (
             <>
               <Link
                 href="/chat"
