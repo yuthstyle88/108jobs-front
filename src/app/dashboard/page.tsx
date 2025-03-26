@@ -19,7 +19,7 @@ export default async function Dashboard() {
 
         <pre className="bg-gray-50 p-4 rounded-md">
           {JSON.stringify(session.user.email, null, 2)}
-          {JSON.stringify(session.user.role, null, 2)}
+          {JSON.stringify(session.user.roles, null, 2)}
         </pre>
       </div>
     </div>

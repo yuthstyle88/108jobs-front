@@ -1,4 +1,4 @@
-import { axiosPrivate, axiosPublic } from "./../../lib/axios";
+import { axiosFileUpload, axiosPrivate, axiosPublic } from "./../../lib/axios";
 import type { AxiosError } from "axios";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
@@ -9,9 +9,9 @@ export const usePublicFetch = <T>(url: string | null) => {
     url,
     async (url: string) => (await axiosPublic.get<T>(url)).data,
     {
-      revalidateOnFocus: false, // Không refetch khi focus vào trang
-      dedupingInterval: 60000, // 1 phút mới cho phép refetch lại
-      errorRetryCount: 3, // Giới hạn số lần thử lại khi lỗi
+      revalidateOnFocus: false,
+      dedupingInterval: 60000,
+      errorRetryCount: 3, 
     }
   );
 };
@@ -53,6 +53,17 @@ export const usePrivatePost = <T, D = unknown>(url: string) => {
   return useSWRMutation<T, AxiosError, string, D>(
     url,
     async (url, { arg }) => (await axiosPrivate.post<T>(url, arg)).data
+  );
+};
+export const usePrivateImagePost = <T, D = unknown>(url: string) => {
+  return useSWRMutation<T, AxiosError, string, D>(
+    url,
+    async (url, { arg }) =>
+      (await axiosFileUpload.post<T>(url, arg, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })).data
   );
 };
 

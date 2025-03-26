@@ -1,10 +1,11 @@
 import { auth } from "@/auth";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { SessionUserProvider } from "@/contexts/SessionContext";
 import { Kanit } from "next/font/google";
+import { Toaster } from "sonner";
 import FontAwesomeConfig from "./fontawesome";
 import "./globals.css";
 import { Providers } from "./providers";
-import { Toaster } from "sonner";
 
 const kanit = Kanit({
   subsets: ["latin", "vietnamese", "thai"],
@@ -65,7 +66,9 @@ export default async function RootLayout({
       >
         <Providers session={session}>
           <Toaster richColors closeButton position="top-right" />
-          <LanguageProvider>{children}</LanguageProvider>
+          <SessionUserProvider initialSession={session}>
+            <LanguageProvider>{children}</LanguageProvider>
+          </SessionUserProvider>
         </Providers>
       </body>
     </html>
