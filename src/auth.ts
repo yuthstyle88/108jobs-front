@@ -5,7 +5,7 @@ import { signInSchema } from "./lib/zod";
 
 interface JWTPayload {
   sub: string;
-  role: string;
+  roles: string[];
   iat: number;
   exp: number;
 }
@@ -33,7 +33,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             return {
               id: decoded.sub,
               email: decoded.sub,
-              role: decoded.role,
+              roles: decoded.roles,
               token: token,
             };
           }
@@ -60,7 +60,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               return {
                 id: decoded.sub,
                 email: decoded.sub,
-                role: decoded.role,
+                roles: decoded.roles,
                 token: data.jwt,
               };
             }
@@ -79,7 +79,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.accessToken = user.token;
-        token.role = user.role;
+        token.roles = user.roles;
         token.email = user.email!;
       }
       return token;
@@ -89,7 +89,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user = {
         ...session.user,
         email: token.email!,
-        role: typeof token.role === "string" ? token.role : "",
+        roles: Array.isArray(token.roles) ? token.roles : [],
       };
       return session;
     },

@@ -2,6 +2,16 @@
 const nextConfig = {
   images: {
     domains: ["upload.wikimedia.org", "images.unsplash.com"],
+    domains: ['azpet.com.vn'],
+    domains: ['fastwork.ibrowe.com'], 
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'fastwork.ibrowe.com',
+        port: '', 
+        pathname: '/api/v4/image/**', 
+      },
+    ],
   },
   reactStrictMode: true,
   output: "standalone",
