@@ -229,7 +229,7 @@ export const RegisterForm = ({
       <div className="text-center">
         <button
           type="submit"
-          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
+          className="submit-button py-3"
           disabled={
             !!errors.confirmPassword ||
             !watch("termsAccepted") ||

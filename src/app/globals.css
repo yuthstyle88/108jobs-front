@@ -30,6 +30,10 @@
   @apply bg-verification-blue text-white font-medium py-3 px-4 rounded-md w-full hover:bg-opacity-90 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-verification-blue focus:ring-opacity-50 disabled:opacity-70 disabled:cursor-not-allowed;
 }
 
+.submit-button {
+  @apply w-full bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed
+}
+
 
 
 
@@ -55,6 +59,9 @@
 
 .not-found-gradient {
   background: linear-gradient(to top, hsl(216 85% 94%), white);
+}
+.step2-gradient {
+  background: linear-gradient(180deg, #e0f1ff, rgba(246, 247, 248, .24));
 }
 
 .grid-container-desktop {
