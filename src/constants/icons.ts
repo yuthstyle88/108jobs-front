@@ -36,6 +36,30 @@ import advantage_5 from "../assets/icons/authenticate/advantage-5.svg";
 import fb from "../assets/icons/authenticate/fb.svg";
 import gg from "../assets/icons/authenticate/gg.svg";
 
+import ck from "../assets/icons/apply-freelancer/ck.webp";
+import facebook from "../assets/icons/apply-freelancer/facebook.svg";
+import google from "../assets/icons/apply-freelancer/google.svg";
+import ig from "../assets/icons/apply-freelancer/ig.svg";
+import linkedin from "../assets/icons/apply-freelancer/linkedin.svg";
+import referral from "../assets/icons/apply-freelancer/referral.webp";
+import tiktok from "../assets/icons/apply-freelancer/tiktok.svg";
+import x from "../assets/icons/apply-freelancer/x.svg";
+import youtube from "../assets/icons/apply-freelancer/youtube.svg";
+import know from "../assets/icons/apply-freelancer/know.svg";
+
+export const ApplyFreelancerIcon = {
+  ck,
+  facebook,
+  google,
+  ig,
+  linkedin,
+  referral,
+  tiktok,
+  x,
+  youtube,
+  know,
+};
+
 export const AuthenticateIcon = {
   advantage_1,
   advantage_2,

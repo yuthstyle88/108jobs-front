@@ -5,22 +5,14 @@ import { LandingImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import Image from "next/image";
-import { useEffect } from "react";
 
-interface ErrorProps {
-  error: Error & { digest?: string };
-}
 
-export default function Error({ error }: ErrorProps) {
+export default function Error() {
   const {
     data: errorLanguageData,
     isLoading,
     error: isError,
   } = useGlobalTranslate(LanguageFile.ERROR);
-
-  useEffect(() => {
-    console.error("Error caught:", error);
-  }, [error]);
 
   if (isLoading) return <Loading />;
   if (isError) return <div>Error loading language data</div>;

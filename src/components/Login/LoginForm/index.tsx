@@ -108,7 +108,7 @@ export const LoginForm = ({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300"
+          className="submit-button py-2"
         >
           {isSubmitting ? <LoadingCircle /> : loginLanguageData?.authen?.button_proceed}
         </button>
