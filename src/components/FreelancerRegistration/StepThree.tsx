@@ -17,7 +17,6 @@ const StepThree: React.FC<StepThreeProps> = ({
   formData,
   updateFormData,
   nextStep,
-  prevStep,
 }) => {
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateFormData({ ...formData, username: e.target.value });

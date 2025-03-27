@@ -5,7 +5,6 @@ import { LandingImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import Image from "next/image";
-import { useEffect } from "react";
 
 
 export default function Error() {
