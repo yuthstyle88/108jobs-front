@@ -137,7 +137,7 @@ export const ChangePassword = ({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300"
+          className="submit-button py-3"
         >
           {isSubmitting ? <LoadingCircle /> : loginLanguageData?.authen?.confirm_button}
         </button>

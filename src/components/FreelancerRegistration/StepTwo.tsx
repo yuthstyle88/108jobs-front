@@ -50,7 +50,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
   };
 
   return (
-    <div className="p-6">
+    <div className="p-6 flex flex-col h-full justify-center ">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-text_primary">
           เลือกรูปที่บ่งบอกความเป็นคุณ

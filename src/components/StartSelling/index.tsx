@@ -8,6 +8,8 @@ import Step from "./components/Step";
 import ProfileSelling from "./Profile";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import Loading from "../Loading";
+import Error from "@/app/error";
 const category_images = [
   {
     image: CategoriesImage.seo_image,
@@ -44,16 +46,14 @@ const category_images = [
 ];
 
 const StartSelling = () => {
+  const {
+    data: applyFreelancerData,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.APPLY_FREELANCER);
 
-    const {
-      data: applyFreelancerData,
-      isLoading,
-      error,
-    } = useGlobalTranslate(LanguageFile.APPLY_FREELANCER);
-
-
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error loading data.</p>;
+  if (isLoading) return <Loading />;
+  if (error) return <Error />;
 
   return (
     <main>
@@ -81,10 +81,10 @@ const StartSelling = () => {
           </Link>
         </div>
       </div>
-      <Benefit data={applyFreelancerData}/>
-      <Step data={applyFreelancerData}/>
-      <FreelancerTypes data={applyFreelancerData}/>
-      <ProfileSelling data={applyFreelancerData}/>
+      <Benefit data={applyFreelancerData} />
+      <Step data={applyFreelancerData} />
+      <FreelancerTypes data={applyFreelancerData} />
+      <ProfileSelling data={applyFreelancerData} />
       <div className="grid-container-desktop w-full py-16 px-4 sm:px-6 lg:px-8">
         <div className="col-start-2 col-end-3">
           <h2 className="text-3xl font-bold text-center text-primary mb-12">

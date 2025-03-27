@@ -1,4 +1,3 @@
-import { ApplyFreelancerIcon } from "@/constants/icons";
 import Image from "next/image";
 import React from "react";
 
@@ -29,83 +28,47 @@ const StepFour: React.FC<StepFourProps> = ({
   };
 
   return (
-    <div className="pl-6 h-full">
-      <div className="flex flex-col md:flex-row h-full">
-        <div className="flex flex-col justify-center mx-10 md:w-1/2 md:pr-4 mb-6 md:mb-0">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-text_primary">
-              อธิบายตัวตนของคุณให้ลูกค้ารู้จักมากขึ้น
-            </h2>
-            <p className="text-text_secondary mt-2">
-              เล่าประวัติทางด้านอาชีพ เช่น ประสบการณ์การทำงาน ประวัติการศึกษา
-              ใบรับรองที่เกี่ยวโยงฯ
+    <div className="p-6">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-text_primary">
+          อธิบายตัวตนของคุณให้ลูกค้ารู้จักมากขึ้น
+        </h2>
+        <p className="text-text_secondary mt-2">
+          เล่าประวัติทางด้านอาชีพ เช่น ประสบการณ์การทำงาน ประวัติการศึกษา
+          ใบรับรองที่เกี่ยวโยงฯ
+        </p>
+      </div>
+
+      <div className="flex flex-col md:flex-row">
+        <div className="w-full md:w-1/2 md:pr-4 mb-6 md:mb-0">
+          <div className="mb-4">
+            <label className="block text-sm text-text_primary font-semibold mb-2">
+              เกี่ยวกับฟรีแลนซ์
+            </label>
+            <textarea
+              value={formData.bio}
+              onChange={handleBioChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third h-64 resize-none text-text_primary"
+              placeholder="เล่าเกี่ยวกับประสบการณ์ ทักษะ และความสามารถของคุณ..."
+            ></textarea>
+            <p className="text-xs text-text_secondary mt-2">
+              ให้ข้อมูลประสบการณ์ทำงาน ทักษะที่โดดเด่น
+              และสิ่งที่คุณสามารถทำได้ดี
             </p>
-          </div>
-          <div className="w-full md:pr-4 mb-6 md:mb-0">
-            <div className="mb-4">
-              <label className="block text-sm text-text_primary font-semibold mb-2">
-                เกี่ยวกับฟรีแลนซ์
-              </label>
-              <textarea
-                value={formData.bio}
-                onChange={handleBioChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third h-64 resize-none text-text_primary"
-                placeholder="เล่าเกี่ยวกับประสบการณ์ ทักษะ และความสามารถของคุณ..."
-              ></textarea>
-              <p className="text-xs text-text_secondary mt-2">
-                ให้ข้อมูลประสบการณ์ทำงาน ทักษะที่โดดเด่น
-                และสิ่งที่คุณสามารถทำได้ดี
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-row gap-4 mt-8">
-            <button
-              onClick={prevStep}
-              className="px-3 py-2 whitespace-nowrap border border-gray-300 rounded-lg text-text_primary"
-            >
-              ย้อนกลับ
-            </button>
-            <button
-              onClick={nextStep}
-              disabled={!isFormValid()}
-              className={`submit-button py-3 flex justify-center items-center ${
-                !isFormValid()
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-third text-white"
-              }`}
-            >
-              บันทึก และไปต่อ
-              <svg
-                className="w-5 h-5 ml-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
-            </button>
           </div>
         </div>
 
-        <div className="w-full md:w-1/2 md:pl-4 step2-gradient relative z-0 overflow-hidden">
-          <div className="border border-gray-200 rounded-lg overflow-hidden absolute top-[100px] left-[200px] -z-0 w-full h-full bg-white">
+        <div className="w-full md:w-1/2 md:pl-4">
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
             <div className="bg-gray-100 p-2 flex items-center space-x-2">
               <div className="bg-red-500 w-3 h-3 rounded-full"></div>
               <div className="bg-yellow-500 w-3 h-3 rounded-full"></div>
               <div className="bg-green-500 w-3 h-3 rounded-full"></div>
-              <div className="flex-1 pl-4 text-xs text-gray-500">
+              <div className="flex-1 text-center text-xs text-gray-500">
                 <span>Fastwork.co/user/{formData.username || "username"}</span>
               </div>
             </div>
-          </div>
-          <div className="absolute left-[50px] top-[180px] max-w-[475px] w-full">
-            <div className="p-6 bg-white border border-gray-200 rounded-lg">
+            <div className="p-6 bg-white">
               <div className="flex">
                 <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden mr-4">
                   {formData.profileImage ? (
@@ -120,15 +83,16 @@ const StepFour: React.FC<StepFourProps> = ({
                     <div className="w-full h-full bg-gray-300"></div>
                   )}
                 </div>
-                <div className="flex-1 min-w-0 overflow-hidden">
-                  <h3 className="font-medium text-lg text-text_primary truncate">
-                    {formData.displayName || "Display name"}
+                <div>
+                  <h3 className="font-medium text-lg text-text_primary">
+                    {formData.username || "username"}
                   </h3>
-                  <p className="text-gray-500 text-sm break-words whitespace-pre-line line-clamp-3">
-                    {formData.bio || "Bio"}
+                  <p className="text-gray-500 text-sm">
+                    {formData.displayName || "Display Name"}
                   </p>
                 </div>
               </div>
+
               <div className="mt-6 flex justify-between">
                 <div className="flex space-x-6">
                   <div className="flex items-center">
@@ -201,25 +165,33 @@ const StepFour: React.FC<StepFourProps> = ({
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="mt-4 bg-secondary px-4 py-2 rounded-lg border border-third ">
-              <div className="flex gap-3">
-                <Image
-                  src={ApplyFreelancerIcon.know}
-                  alt="know"
-                  width={23}
-                  height={18}
-                />
-                <div>
-                  <p className="text-sm text-gray-700">
-                    ลูกค้ากว่า 80% อ่านประวัติของคุณ ก่อนตัดสินใจจ้างงาน
-                  </p>
+
+              <div className="mt-4 bg-blue-50 p-4 rounded-lg border border-blue-100">
+                <div className="flex">
+                  <svg
+                    className="w-5 h-5 text-blue-500 mr-2 flex-shrink-0 mt-1"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <div>
+                    <p className="text-sm text-gray-700">
+                      {formData.bio || "ยังไม่มีข้อมูล"}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
       <div className="flex justify-between mt-8">
         <button
           onClick={prevStep}
