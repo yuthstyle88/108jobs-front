@@ -13,10 +13,15 @@ interface FormValues {
   birth_year: string;
 }
 
+interface ImageUploadResponse {
+  image_url: string;
+}
+
+
 export const useProfileForm = (
   profileData: ProfileData | undefined,
   selectedImage: string | null,
-  uploadImage: (formData: FormData) => Promise<any>,
+  uploadImage: (formData: FormData) => Promise<ImageUploadResponse | null>,
   mutate: () => void,
   setSelectedImage: (imageUrl: string) => void,
 ) => {
@@ -55,7 +60,7 @@ export const useProfileForm = (
         }
         setSelectedImage(profileData.user.avatar_url);
       }
-    }, [profileData, reset]);
+    }, [profileData, reset,setSelectedImage]);
 
   const onSubmit = async (formData: FormValues) => {
     try {
