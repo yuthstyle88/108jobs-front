@@ -1,4 +1,3 @@
-// hooks/useProfileData.ts
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { ProfileData } from "@/types/userData";
 

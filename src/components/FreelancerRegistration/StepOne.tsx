@@ -43,7 +43,7 @@ const StepOne: React.FC<StepOneProps> = ({
     formData.sourceTypes.includes(sourceId);
 
   return (
-    <div className="p-6 flex flex-col h-full justify-center items-center">
+    <div className="p-2 md:p-6 flex flex-col h-full justify-center items-center">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-text_primary">
           ก่อนเริ่ม, บอกหน่อยคุณรู้จักเราจากที่ไหน? 😊
@@ -51,15 +51,15 @@ const StepOne: React.FC<StepOneProps> = ({
         <p className="text-text_secondary mt-2">สามารถเลือกได้หลายข้อ</p>
       </div>
 
-      <div className="grid grid-cols-[repeat(3,minmax(0px,1fr))] md:grid-cols-[repeat(3,minmax(0px,1fr))] gap-4 mb-8">
+      <div className="grid grid-cols-[repeat(2,minmax(0px,1fr))] md:grid-cols-[repeat(3,minmax(0px,1fr))] gap-4 mb-8">
         {sources.map((source) => (
           <div
             key={source.id}
             onClick={() => toggleSource(source.id)}
-            className={`flex flex-col items-center justify-center px-10 py-6 gap-4 rounded-lg cursor-pointer transition-colors duration-200 ${
+            className={`flex flex-col items-center justify-center px-4 sm:px-10 py-6 gap-4 rounded-lg cursor-pointer transition-colors duration-200 ${
               isSelected(source.id)
-                ? "bg-third text-white"
-                : "bg-gray-100 text-text_primary hover:bg-gray-200"
+                ? "bg-secondary border-1 border-third text-black"
+                : "bg-gray-100 border-1 text-text_primary hover:bg-gray-200"
             }`}
           >
             <Image src={source.icon} alt={source.id} width={24} height={24} />
@@ -67,17 +67,12 @@ const StepOne: React.FC<StepOneProps> = ({
           </div>
         ))}
         <div className="flex flex-row gap-4 col-start-1 col-end-[-1] w-full pt-8">
-          <button className="text-gray-400 px-6 py-2 rounded-lg" disabled>
+          <button onClick={nextStep} className="text-gray-400 px-6 py-2 rounded-md text-third border-gray-200 border-1 hover:bg-gray-200 duration-300">
             ข้าม
           </button>
           <button
             onClick={nextStep}
-            disabled={formData.sourceTypes.length === 0}
-            className={`px-6 py-2 rounded-lg flex items-center w-full justify-center ${
-              formData.sourceTypes.length === 0
-                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                : "bg-third text-white"
-            }`}
+            className="flex items-center justify-center submit-button-skip py-2 px-4"
           >
             บันทึก และไปต่อ
             <svg

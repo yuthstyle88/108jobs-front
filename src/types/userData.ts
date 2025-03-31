@@ -47,6 +47,17 @@ export type User = {
     created_at: string;
     updated_at: string;
   };
+  export type Address = {
+    id: string;
+  country: string;
+  province: string | null;
+  district_or_subdistrict: string | null;
+  subdistrict_or_district: string | null;
+  address_details: string | null;
+  zip_code: string | null;
+  created_at: string; 
+  updated_at: string;
+  };
   
   // Main type for profile data response
   export type ProfileData = {
@@ -55,5 +66,6 @@ export type User = {
     role: Role;
     profile: Profile;
     contact: Contact;
+    address: Address;
   };
   

@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
 
+const kanit = ['Kanit', 'sans-serif'];
+
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,12 +10,16 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        kanit,
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
         primary: "var(--primary)",
         secondary: "var(--secondary)",
         third: "var(--third)",
+        fourth: "var(--fourth)",
         text_primary: "var(--text-primary)",
         text_secondary: "var(--text-secondary)",
         border_primary: "var(--border-primary)",
@@ -39,6 +45,7 @@ const config: Config = {
           "0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),0 4px 4px hsl(333deg 0% 50% /7.5%),0 8px 8px hsl(333deg 0% 50% /7.5%),0 16px 16px hsl(333deg 0% 50% /7.5%)",
         filterSection: "0 4px 12px 0 rgba(43, 43, 43, .1)",
         inputShadow: "box-shadow: 0 0 0 .175em hsl(5 85% 94%)",
+        recipeShadow:"0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),0 4px 4px hsl(333deg 0% 50% /7.5%),0 8px 8px hsl(333deg 0% 50% /7.5%),0 16px 16px hsl(333deg 0% 50% /7.5%)"
       },
       borderWidth: {
         1: "1px",
@@ -56,42 +63,42 @@ const config: Config = {
           "0%": { transform: "scale(0.95)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" },
         },
-        'modal-fade-in': {
-					'0%': { 
-						opacity: '0',
-						transform: 'translateY(30px)'
-					},
-					'100%': { 
-						opacity: '1',
-						transform: 'translateY(0)'
-					}
-				},
-				'modal-fade-out': {
-					'0%': { 
-						opacity: '1',
-						transform: 'translateY(0)'
-					},
-					'100%': { 
-						opacity: '0',
-						transform: 'translateY(30px)'
-					}
-				},
-				'backdrop-fade-in': {
-					'0%': { 
-						opacity: '0'
-					},
-					'100%': { 
-						opacity: '1'
-					}
-				},
-				'backdrop-fade-out': {
-					'0%': { 
-						opacity: '1'
-					},
-					'100%': { 
-						opacity: '0'
-					}
-				}
+        "modal-fade-in": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(30px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
+        "modal-fade-out": {
+          "0%": {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+          "100%": {
+            opacity: "0",
+            transform: "translateY(30px)",
+          },
+        },
+        "backdrop-fade-in": {
+          "0%": {
+            opacity: "0",
+          },
+          "100%": {
+            opacity: "1",
+          },
+        },
+        "backdrop-fade-out": {
+          "0%": {
+            opacity: "1",
+          },
+          "100%": {
+            opacity: "0",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -100,10 +107,11 @@ const config: Config = {
         float: "float 6s ease-in-out infinite",
         "scale-up": "scale-up 0.5s ease-out",
         "spin-fast": "spin 600ms linear infinite",
-        'modal-show': 'modal-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-				'modal-hide': 'modal-fade-out 0.2s ease-out forwards',
-        'backdrop-show': 'backdrop-fade-in 0.2s ease-out forwards',
-				'backdrop-hide': 'backdrop-fade-out 0.2s ease-out forwards'
+        "modal-show":
+          "modal-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "modal-hide": "modal-fade-out 0.2s ease-out forwards",
+        "backdrop-show": "backdrop-fade-in 0.2s ease-out forwards",
+        "backdrop-hide": "backdrop-fade-out 0.2s ease-out forwards",
       },
     },
   },
