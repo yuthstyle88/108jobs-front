@@ -31,7 +31,11 @@
 }
 
 .submit-button {
-  @apply w-full bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed
+  @apply cursor-pointer w-full bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed
+}
+
+.submit-button-skip {
+  @apply cursor-pointer w-full bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 
 }
 
 
@@ -62,6 +66,12 @@
 }
 .step2-gradient {
   background: linear-gradient(180deg, #e0f1ff, rgba(246, 247, 248, .24));
+}
+.skeleton-gray {
+  background: linear-gradient(270deg, hsla(0, 0%, 86%, .05), #e8eaee);
+}
+.skeleton-blue {
+  background: linear-gradient(90deg, #1d6ce2 -1.4%, rgba(29, 108, 226, 0) 104.93%);
 }
 
 .grid-container-desktop {
@@ -97,6 +107,7 @@
   --primary: #08439B;
   --secondary: #e3edfd;
   --third: #1d6ce2;
+  --fourth: #f6f7f8;
   --text-primary: #2b323bf2;
   --text-secondary: #2b323b99;
   --border-primary: #d6dae1

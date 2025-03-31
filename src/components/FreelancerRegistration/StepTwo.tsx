@@ -3,18 +3,16 @@ import React, { useRef, useState } from "react";
 
 interface StepTwoProps {
   formData: {
-    profileImage: string | null;
+    avatar_url: string | null;
   };
-  updateFormData: (data: { profileImage: string | null }) => void;
+  updateFormData: (data: { avatar_url: string | null }) => void;
   nextStep: () => void;
-  prevStep: () => void;
 }
 
 const StepTwo: React.FC<StepTwoProps> = ({
   formData,
   updateFormData,
   nextStep,
-  prevStep,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +34,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
     setError(null);
     const reader = new FileReader();
     reader.onload = () => {
-      updateFormData({ profileImage: reader.result as string });
+      updateFormData({ avatar_url: reader.result as string });
     };
     reader.readAsDataURL(file);
   };
@@ -46,7 +44,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
   };
 
   const removeImage = () => {
-    updateFormData({ profileImage: null });
+    updateFormData({ avatar_url: null });
   };
 
   return (
@@ -71,11 +69,11 @@ const StepTwo: React.FC<StepTwoProps> = ({
               accept="image/*"
             />
 
-            {formData.profileImage ? (
+            {formData.avatar_url ? (
               <div className="relative">
                 <div className="w-48 h-48 bg-gray-200 rounded-full overflow-hidden">
                   <Image
-                    src={formData.profileImage}
+                    src={formData.avatar_url}
                     alt="Profile Preview"
                     className="w-full h-full object-cover"
                     width={500}
@@ -137,7 +135,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
 
             {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
 
-            {formData.profileImage && (
+            {formData.avatar_url && (
               <button
                 onClick={removeImage}
                 className="mt-4 text-red-500 hover:text-red-700 text-sm"
@@ -155,9 +153,9 @@ const StepTwo: React.FC<StepTwoProps> = ({
             </h3>
             <div className="bg-gray-50 rounded-lg p-4 flex items-center">
               <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden mr-4">
-                {formData.profileImage ? (
+                {formData.avatar_url ? (
                   <Image
-                    src={formData.profileImage}
+                    src={formData.avatar_url}
                     alt="Profile"
                     className="w-full h-full object-cover"
                     width={500}
@@ -176,18 +174,12 @@ const StepTwo: React.FC<StepTwoProps> = ({
         </div>
       </div>
 
-      <div className="flex justify-between mt-8">
-        <button
-          onClick={prevStep}
-          className="px-6 py-2 border border-gray-300 rounded-lg text-text_primary"
-        >
-          ย้อนกลับ
-        </button>
+      <div className="flex justify-center mt-16">
         <button
           onClick={nextStep}
-          disabled={!formData.profileImage}
+          disabled={!formData.avatar_url}
           className={`px-6 py-2 rounded-lg flex items-center ${
-            !formData.profileImage
+            !formData.avatar_url
               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
               : "bg-third text-white"
           }`}
