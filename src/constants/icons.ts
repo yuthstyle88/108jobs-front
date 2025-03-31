@@ -47,6 +47,9 @@ import x from "../assets/icons/apply-freelancer/x.svg";
 import youtube from "../assets/icons/apply-freelancer/youtube.svg";
 import know from "../assets/icons/apply-freelancer/know.svg";
 
+import favicon from "../app/favicon.ico";
+import logo_icon from "../assets/icons/logo-icon.svg";
+
 export const ApplyFreelancerIcon = {
   ck,
   facebook,
@@ -108,4 +111,6 @@ export const AssetIcon = {
   logo,
   logo_blue,
   logo_seller,
+  favicon,
+  logo_icon
 };

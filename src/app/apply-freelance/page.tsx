@@ -8,20 +8,31 @@ import StepSeven from "@/components/FreelancerRegistration/StepSeven";
 import StepSix from "@/components/FreelancerRegistration/StepSix";
 import StepThree from "@/components/FreelancerRegistration/StepThree";
 import StepTwo from "@/components/FreelancerRegistration/StepTwo";
+import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useFetchUser } from "./hooks/useFetchUserProfile";
+import { useUserStore } from "@/store/useUserProfileStore";
 
 const FreelancerRegistration = () => {
+  const { user:userData } = useUserStore();
+  const { isLoading, isError } = useFetchUser();
+
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     sourceTypes: [] as string[],
-    profileImage: null as string | null,
+    avatar_url: null as string | null,
     username: "",
-    displayName: "",
+    display_name: "",
     bio: "",
-    workType: "Part-time",
+    freelancer_type: "Parttime",
+    apply_fee: false,
+    birth_date: "",
+    email: "",
+    country: "เวียดนาม",
+    province_or_city: "",
+
     nationalIdFront: null as string | null,
     nationalIdBack: null as string | null,
     title: "",
@@ -32,13 +43,6 @@ const FreelancerRegistration = () => {
     district: "",
     province: "",
     postalCode: "",
-    birthDay: "",
-    birthMonth: "",
-    birthYear: "",
-    email: "",
-    nationality: "เวียดนาม",
-    currentCity: "",
-    termsAccepted: false,
   });
 
   const updateFormData = (data: Partial<typeof formData>) => {
@@ -52,6 +56,29 @@ const FreelancerRegistration = () => {
   const prevStep = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
+
+  useEffect(() => {
+    if (userData) {
+      setFormData(prev => ({
+        ...prev,
+        avatar_url: userData.user.avatar_url || null,
+        username: userData.user.username || prev.username,
+        display_name: userData.user.display_name || prev.display_name,
+        birth_date: userData.user.birth_date 
+          ? new Date(userData.user.birth_date).toISOString().split('T')[0] 
+          : prev.birth_date,
+        email: userData.contact?.email || prev.email,
+        country: userData.address?.country || prev.country,
+        province_or_city: userData.address?.province || prev.province_or_city,
+      }));
+    }
+  }, [userData]);
+
+  if (isLoading) return <Loading/>;
+  if (isError) return <p>Error loading profile</p>;
+
+  console.log("userData", formData);
+  
 
   const renderStep = () => {
     switch (currentStep) {
@@ -69,7 +96,6 @@ const FreelancerRegistration = () => {
             formData={formData}
             updateFormData={updateFormData}
             nextStep={nextStep}
-            prevStep={prevStep}
           />
         );
       case 3:
@@ -78,7 +104,6 @@ const FreelancerRegistration = () => {
             formData={formData}
             updateFormData={updateFormData}
             nextStep={nextStep}
-            prevStep={prevStep}
           />
         );
       case 4:
@@ -87,7 +112,6 @@ const FreelancerRegistration = () => {
             formData={formData}
             updateFormData={updateFormData}
             nextStep={nextStep}
-            prevStep={prevStep}
           />
         );
       case 5:
@@ -96,7 +120,6 @@ const FreelancerRegistration = () => {
             formData={formData}
             updateFormData={updateFormData}
             nextStep={nextStep}
-            prevStep={prevStep}
           />
         );
       case 6:
@@ -105,7 +128,6 @@ const FreelancerRegistration = () => {
             formData={formData}
             updateFormData={updateFormData}
             nextStep={nextStep}
-            prevStep={prevStep}
           />
         );
       case 7:
@@ -114,7 +136,6 @@ const FreelancerRegistration = () => {
             formData={formData}
             updateFormData={updateFormData}
             nextStep={nextStep}
-            prevStep={prevStep}
           />
         );
       case 8:
@@ -123,15 +144,12 @@ const FreelancerRegistration = () => {
             formData={formData}
             updateFormData={updateFormData}
             nextStep={nextStep}
-            prevStep={prevStep}
           />
         );
       case 9:
         return (
           <StepNine
             formData={formData}
-            updateFormData={updateFormData}
-            prevStep={prevStep}
           />
         );
       default:
@@ -146,11 +164,11 @@ const FreelancerRegistration = () => {
   };
 
   return (
-    <div className="h-[100dvh] bg-white items-center">
-      <div className="w-[80vw] h-full max-h-[calc(100%-6rem)] m-0 mx-auto pt-8 px-4">
+    <div className="md:h-[100dvh] min-h-screen bg-white items-center">
+      <div className="sm:w-[80vw] w-full h-full  m-0 sm:mx-auto py-8 px-4">
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center">
-            <Link href="/" className="text-third">
+            <button  onClick={prevStep}  className="text-third">
               <svg
                 className="w-6 h-6"
                 fill="none"
@@ -165,7 +183,7 @@ const FreelancerRegistration = () => {
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 />
               </svg>
-            </Link>
+            </button>
           </div>
           <div className="flex items-center">
             <Image src={AssetIcon.logo_blue} alt="Group" className="w-full" />

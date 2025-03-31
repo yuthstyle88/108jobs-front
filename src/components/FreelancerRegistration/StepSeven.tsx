@@ -1,114 +1,115 @@
-
-import React from 'react';
+import { AssetIcon } from "@/constants/icons";
+import Image from "next/image";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
 
 interface StepSevenProps {
   formData: {
-    birthDay: string;
-    birthMonth: string;
-    birthYear: string;
+    birth_date: string;
   };
-  updateFormData: (data: Partial<StepSevenProps['formData']>) => void;
+  updateFormData: (data: Partial<StepSevenProps["formData"]>) => void;
   nextStep: () => void;
-  prevStep: () => void;
 }
 
-const StepSeven: React.FC<StepSevenProps> = ({ formData, updateFormData, nextStep, prevStep }) => {
+interface FormValues {
+  birthDay: string;
+  birthMonth: string;
+  birthYear: string;
+}
+
+const StepSeven: React.FC<StepSevenProps> = ({ formData, updateFormData, nextStep }) => {
+  const { control, handleSubmit, watch } = useForm<FormValues>({
+    defaultValues: {
+      birthDay: formData.birth_date?.split("-")[2] || "",
+      birthMonth: formData.birth_date?.split("-")[1] || "",
+      birthYear: formData.birth_date?.split("-")[0] || "",
+    },
+  });
+
+  const onSubmit = (data: FormValues) => {
+    const { birthDay, birthMonth, birthYear } = data;
+    const formattedDate = `${birthYear}-${birthMonth.padStart(2, "0")}-${birthDay.padStart(2, "0")}`;
+
+    updateFormData({ birth_date: formattedDate });
+    nextStep();
+  };
+
+  const birthDay = watch("birthDay");
+  const birthMonth = watch("birthMonth");
+  const birthYear = watch("birthYear");
+
+  const isFormValid = birthDay && birthMonth && birthYear;
+
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
   const months = [
-    'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
-    'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+    "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", 
+    "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
   ];
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 80 }, (_, i) => (currentYear - i).toString());
 
-  const handleDayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateFormData({ birthDay: e.target.value });
-  };
-
-  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateFormData({ birthMonth: e.target.value });
-  };
-
-  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateFormData({ birthYear: e.target.value });
-  };
-
-  const isFormValid = () => {
-    return formData.birthDay !== '' && formData.birthMonth !== '' && formData.birthYear !== '';
-  };
-
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-text_primary">คุณเกิดวันอะไร?</h2>
-        <p className="text-text_secondary mt-2">อายุไม่มีผลต่อการจ้างงานแต่มีผลต่อกฎหมายแรงงาน</p>
-      </div>
+    <form className="h-full py-8 md:p-0" onSubmit={handleSubmit(onSubmit)}>
+      <div className="grid grid-cols-1 md:grid-cols-2 h-full">
+        <div className="flex flex-col justify-center px-12">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-text_primary">คุณเกิดวันอะไร?</h2>
+            <p className="text-text_secondary mt-2">อายุไม่มีผลต่อการจ้างงานแต่มีผลต่อกฎหมายแรงงาน</p>
+          </div>
 
-      <div className="mb-8">
-        <div className="text-sm font-medium text-text_primary mb-2">วันเกิด</div>
-        <div className="grid grid-cols-3 gap-4">
-          <div>
-            <select
-              value={formData.birthDay}
-              onChange={handleDayChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-            >
-              <option value="">วัน</option>
-              {days.map((day) => (
-                <option key={day} value={day}>{day}</option>
-              ))}
-            </select>
+          <div className="mb-8">
+            <div className="text-sm font-medium text-text_primary mb-2">วันเกิด</div>
+            <div className="grid grid-cols-3 gap-4">
+              <Controller name="birthDay" control={control} render={({ field }) => (
+                <select {...field} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary">
+                  <option value="">วัน</option>
+                  {days.map((day) => (
+                    <option key={day} value={day}>{day}</option>
+                  ))}
+                </select>
+              )} />
+
+              <Controller name="birthMonth" control={control} render={({ field }) => (
+                <select {...field} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary">
+                  <option value="">เดือน</option>
+                  {months.map((month, index) => (
+                    <option key={month} value={(index + 1).toString().padStart(2, "0")}>{month}</option>
+                  ))}
+                </select>
+              )} />
+
+              <Controller name="birthYear" control={control} render={({ field }) => (
+                <select {...field} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary">
+                  <option value="">ปี</option>
+                  {years.map((year) => (
+                    <option key={year} value={year}>{year}</option>
+                  ))}
+                </select>
+              )} />
+            </div>
           </div>
-          <div>
-            <select
-              value={formData.birthMonth}
-              onChange={handleMonthChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+
+          <div className="flex justify-between mt-8">
+            <button
+              type="submit"
+              disabled={!isFormValid}
+              className={`w-full px-6 py-2 rounded-lg flex items-center justify-center ${
+                !isFormValid ? "bg-gray-200 text-gray-400 cursor-not-allowed" : "bg-third text-white"
+              }`}
             >
-              <option value="">เดือน</option>
-              {months.map((month) => (
-                <option key={month} value={month}>{month}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <select
-              value={formData.birthYear}
-              onChange={handleYearChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-            >
-              <option value="">ปี</option>
-              {years.map((year) => (
-                <option key={year} value={year}>{year}</option>
-              ))}
-            </select>
+              บันทึกและดำเนินการต่อ
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
           </div>
         </div>
-      </div>
 
-      <div className="flex justify-between mt-8">
-        <button 
-          onClick={prevStep}
-          className="px-6 py-2 border border-gray-300 rounded-lg text-text_primary"
-        >
-          ย้อนกลับ
-        </button>
-        <button 
-          onClick={nextStep}
-          disabled={!isFormValid()}
-          className={`px-6 py-2 rounded-lg flex items-center ${
-            !isFormValid() 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-third text-white'
-          }`}
-        >
-          บันทึกและดำเนินการต่อ
-          <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </button>
+        <div className="w-full h-full step2-gradient relative z-0 overflow-hidden hidden md:block">
+          <Image src={AssetIcon.logo_icon} alt="icon" className="w-full h-full" width={500} height={500} />
+        </div>
       </div>
-    </div>
+    </form>
   );
 };
 

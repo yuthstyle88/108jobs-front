@@ -1,132 +1,213 @@
-
-import React, { useState } from 'react';
+import { AssetIcon } from "@/constants/icons";
+import { useUserStore } from "@/store/useUserProfileStore";
+import Image from "next/image";
+import React, { useState } from "react";
+import ChangeEmailModal from "./components/ChangeEmailModal";
 
 interface StepEightProps {
   formData: {
     email: string;
-    nationality: string;
-    currentCity: string;
+    country: string;
+    province_or_city: string;
   };
-  updateFormData: (data: Partial<StepEightProps['formData']>) => void;
+  updateFormData: (data: Partial<StepEightProps["formData"]>) => void;
   nextStep: () => void;
-  prevStep: () => void;
 }
 
-const StepEight: React.FC<StepEightProps> = ({ formData, updateFormData, nextStep, prevStep }) => {
-  const [isVietnam, setIsVietnam] = useState(true);
-  const [isOtherNation, setIsOtherNation] = useState(false);
+const StepEight: React.FC<StepEightProps> = ({
+  formData,
+  updateFormData,
+  nextStep,
+}) => {
+  const { user } = useUserStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmChange, setIsConfirmChange] = useState(false);
+
+  const COUNTRY_OPTIONS = ["Thailand", "Foreign"];
+
+  const thaiProvinces = [
+    { id: 1, name_en: "Bangkok", name_th: "กรุงเทพมหานคร" },
+    { id: 2, name_en: "Chiang Mai", name_th: "เชียงใหม่" },
+    { id: 3, name_en: "Phuket", name_th: "ภูเก็ต" },
+  ];
+
+  const countries = [
+    { id: 1, name_en: "Vietnam", name_th: "เวียดนาม" },
+    { id: 2, name_en: "Singapore", name_th: "สิงคโปร์" },
+    { id: 3, name_en: "Malaysia", name_th: "มาเลเซีย" },
+  ];
+
+  const COUNTRY_LABELS: Record<string, string> = {
+    Thailand: "ประเทศไทย",
+    Foreign: "ต่างชาติ",
+  };
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  const handleConfirmChange = () => {
+    setIsConfirmChange(true);
+    closeModal();
+  };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateFormData({ email: e.target.value });
   };
 
-  const handleNationalityChange = (nationality: 'เวียดนาม' | 'ต่างชาติ') => {
-    if (nationality === 'เวียดนาม') {
-      setIsVietnam(true);
-      setIsOtherNation(false);
-    } else {
-      setIsVietnam(false);
-      setIsOtherNation(true);
-    }
-    updateFormData({ nationality });
+  const handleCountryChange = (country: string) => {
+    updateFormData({ country, province_or_city: "" });
   };
 
   const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateFormData({ currentCity: e.target.value });
+    updateFormData({ province_or_city: e.target.value });
   };
 
-  const isFormValid = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(formData.email);
-  };
+  const isFormValid = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-text_primary">ยืนยันข้อมูลการติดต่อของคุณ</h2>
-        <p className="text-text_secondary mt-2">เพื่อให้ทางเราส่งข้อมูลการติดต่อกลับคุณได้</p>
-      </div>
+    <div className="py-8 md:p-0 h-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 h-full">
+        <div className="flex flex-col justify-center px-12">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-text_primary">
+              ยืนยันข้อมูลการติดต่อของคุณ
+            </h2>
+            <p className="text-text_secondary mt-2">
+              เพื่อให้ทางเราส่งข้อมูลการติดต่อกลับคุณได้
+            </p>
+          </div>
 
-      <div className="mb-6">
-        <label className="block text-sm text-text_primary font-semibold mb-2">
-          อีเมลติดต่อ
-        </label>
-        <input
-          type="email"
-          value={formData.email}
-          onChange={handleEmailChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-          placeholder="your.email@example.com"
-        />
-        <div className="flex mt-2">
-          <button 
-            className="px-4 py-1 rounded-md text-sm bg-third text-white"
-          >
-            ยืนยัน
-          </button>
+          {/* Email Section */}
+          <div className="mb-6 flex flex-row gap-2 items-end w-full">
+            <div className="flex-1">
+              <label className="block text-sm text-text_primary font-semibold mb-2">
+                อีเมลติดต่อ
+              </label>
+              <input
+                type="email"
+                value={isConfirmChange ? formData.email : user?.contact.email}
+                onChange={isConfirmChange ? handleEmailChange : undefined}
+                disabled={!isConfirmChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary disabled:cursor-not-allowed"
+                placeholder="your.email@example.com"
+              />
+            </div>
+            <button
+              onClick={openModal}
+              className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
+            >
+              ยืนยัน
+            </button>
+          </div>
+
+          {/* Country Selection */}
+          <div className="mb-6">
+            <label className="block text-sm text-text_primary font-semibold mb-2">
+              ที่อยู่ปัจจุบัน
+            </label>
+            <div className="flex space-x-4 mb-4">
+              {COUNTRY_OPTIONS.map((country) => (
+                <div
+                  key={country}
+                  onClick={() => handleCountryChange(country)}
+                  className={`flex items-center px-4 py-2 rounded-lg cursor-pointer border text-text_primary ${
+                    formData.country === country
+                      ? "border-third"
+                      : "border-gray-300"
+                  }`}
+                >
+                  <div
+                    className={`w-4 h-4 rounded-full border mr-2 flex items-center justify-center ${
+                      formData.country === country
+                        ? "border-third"
+                        : "border-gray-400"
+                    }`}
+                  >
+                    {formData.country === country && (
+                      <div className="w-2 h-2 rounded-full bg-third"></div>
+                    )}
+                  </div>
+                  <span>{COUNTRY_LABELS[country]}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* City/Country Selection */}
+            <select
+              value={formData.province_or_city}
+              onChange={handleCityChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+            >
+              <option value="" disabled>
+                {formData.country === "Thailand"
+                  ? "เลือกจังหวัด"
+                  : "เลือกประเทศ"}
+              </option>
+
+              {formData.country === "Thailand"
+                ? 
+                  thaiProvinces.map((province) => (
+                    <option key={province.id} value={province.name_en}>
+                      {province.name_th}
+                    </option>
+                  ))
+                : 
+                  countries.map((country) => (
+                    <option key={country.id} value={country.name_en}>
+                      {country.name_th}
+                    </option>
+                  ))}
+            </select>
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-between mt-8">
+            <button
+              onClick={nextStep}
+              disabled={!isFormValid()}
+              className={`w-full px-6 py-2 rounded-lg flex items-center justify-center ${
+                !isFormValid()
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-third text-white"
+              }`}
+            >
+              บันทึกและส่งข้อมูล
+              <svg
+                className="w-5 h-5 ml-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* Image Section */}
+        <div className="w-full h-full step2-gradient relative z-0 overflow-hidden hidden md:block">
+          <Image
+            src={AssetIcon.logo_icon}
+            alt="icon"
+            className="w-full h-full"
+            width={500}
+            height={500}
+          />
         </div>
       </div>
 
-      <div className="mb-6">
-        <label className="block text-sm text-text_primary font-semibold mb-2">
-          ที่อยู่ปัจจุบัน
-        </label>
-        <div className="flex space-x-4 mb-4">
-          <div 
-            onClick={() => handleNationalityChange('เวียดนาม')} 
-            className={`flex items-center px-4 py-2 rounded-lg cursor-pointer border text-text_primary ${isVietnam ? 'border-third' : 'border-gray-300'}`}
-          >
-            <div className={`w-4 h-4 rounded-full border mr-2 flex items-center justify-center ${isVietnam ? 'border-third' : 'border-gray-400'}`}>
-              {isVietnam && <div className="w-2 h-2 rounded-full bg-third"></div>}
-            </div>
-            <span>เวียดนาม</span>
-          </div>
-          <div 
-            onClick={() => handleNationalityChange('ต่างชาติ')} 
-            className={`flex items-center px-4 py-2 rounded-lg cursor-pointer border text-text_primary ${isOtherNation ? 'border-third' : 'border-gray-300'}`}
-          >
-            <div className={`w-4 h-4 rounded-full border mr-2 flex items-center justify-center ${isOtherNation ? 'border-third' : 'border-gray-400'}`}>
-              {isOtherNation && <div className="w-2 h-2 rounded-full bg-third"></div>}
-            </div>
-            <span>ต่างชาติ</span>
-          </div>
-        </div>
-        <select
-          value={formData.currentCity}
-          onChange={handleCityChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-        >
-          <option value="">เมือง/จังหวัด</option>
-          <option value="เมืองโฮจิมินห์">เมืองโฮจิมินห์</option>
-          <option value="ฮานอย">ฮานอย</option>
-          <option value="ดานัง">ดานัง</option>
-          <option value="เว้">เว้</option>
-          <option value="นาตรัง">นาตรัง</option>
-        </select>
-      </div>
-
-      <div className="flex justify-between mt-8">
-        <button 
-          onClick={prevStep}
-          className="px-6 py-2 border border-gray-300 rounded-lg text-text_primary"
-        >
-          ย้อนกลับ
-        </button>
-        <button 
-          onClick={nextStep}
-          disabled={!isFormValid()}
-          className={`px-6 py-2 rounded-lg flex items-center ${
-            !isFormValid() 
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
-              : 'bg-third text-white'
-          }`}
-        >
-          บันทึกและส่งข้อมูล
-          <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </button>
-      </div>
+      {/* Change Email Modal */}
+      <ChangeEmailModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        handleConfirmChange={handleConfirmChange}
+      />
     </div>
   );
 };
