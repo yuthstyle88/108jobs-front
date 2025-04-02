@@ -5,7 +5,7 @@ import { useUserStore } from "@/store/useUserProfileStore";
 
 export const useFetchUser = () => {
   const { setUser } = useUserStore();
-  const { data, isLoading, error:isError } = usePrivateFetch<ProfileData>("/profile");
+  const { data, isLoading, error:isError,mutate } = usePrivateFetch<ProfileData>("/profile");
 
   useEffect(() => {
     if (data) {
@@ -13,5 +13,5 @@ export const useFetchUser = () => {
     }
   }, [data, setUser]);
 
-  return { isLoading, isError };
+  return { isLoading, isError,mutate };
 };

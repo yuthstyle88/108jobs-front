@@ -16,7 +16,7 @@ import { useFetchUser } from "./hooks/useFetchUserProfile";
 import { useUserStore } from "@/store/useUserProfileStore";
 
 const FreelancerRegistration = () => {
-  const { user:userData } = useUserStore();
+  const { user: userData } = useUserStore();
   const { isLoading, isError } = useFetchUser();
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -30,19 +30,25 @@ const FreelancerRegistration = () => {
     apply_fee: false,
     birth_date: "",
     email: "",
-    country: "เวียดนาม",
-    province_or_city: "",
+    country: "Thailand",
 
-    nationalIdFront: null as string | null,
-    nationalIdBack: null as string | null,
+    card_number: "",
+    card_address_details: "",
+    card_zip_code: "",
+    card_subdistrict_or_district: "",
+    card_district_or_subdistrict: "",
+    card_province: "",
+
+    front_card: null as string | null,
+    back_card: null as string | null,
     title: "",
-    firstName: "",
-    lastName: "",
-    idNumber: "",
-    address: "",
-    district: "",
+    name: "",
+    surname: "",
+    address_details: "",
     province: "",
-    postalCode: "",
+    subdistrict_or_district: "",
+    district_or_subdistrict: "",
+    zip_code: "",
   });
 
   const updateFormData = (data: Partial<typeof formData>) => {
@@ -59,26 +65,25 @@ const FreelancerRegistration = () => {
 
   useEffect(() => {
     if (userData) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         avatar_url: userData.user.avatar_url || null,
         username: userData.user.username || prev.username,
         display_name: userData.user.display_name || prev.display_name,
-        birth_date: userData.user.birth_date 
-          ? new Date(userData.user.birth_date).toISOString().split('T')[0] 
+        birth_date: userData.user.birth_date
+          ? new Date(userData.user.birth_date).toISOString().split("T")[0]
           : prev.birth_date,
         email: userData.contact?.email || prev.email,
         country: userData.address?.country || prev.country,
-        province_or_city: userData.address?.province || prev.province_or_city,
+        province: userData.address?.province || prev.province,
       }));
     }
   }, [userData]);
 
-  if (isLoading) return <Loading/>;
+  if (isLoading) return <Loading />;
   if (isError) return <p>Error loading profile</p>;
 
   console.log("userData", formData);
-  
 
   const renderStep = () => {
     switch (currentStep) {
@@ -147,11 +152,7 @@ const FreelancerRegistration = () => {
           />
         );
       case 9:
-        return (
-          <StepNine
-            formData={formData}
-          />
-        );
+        return <StepNine formData={formData} />;
       default:
         return (
           <StepOne
@@ -168,7 +169,7 @@ const FreelancerRegistration = () => {
       <div className="sm:w-[80vw] w-full h-full  m-0 sm:mx-auto py-8 px-4">
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center">
-            <button  onClick={prevStep}  className="text-third">
+            <button onClick={prevStep} className="text-third">
               <svg
                 className="w-6 h-6"
                 fill="none"
