@@ -1,8 +1,5 @@
-import React from "react";
 
-type Props = {};
-
-const LoadingMultiCircle = (props: Props) => {
+const LoadingMultiCircle = () => {
   return (
     <div className="text-[rgb(153, 153, 153)] px-2 py-3 box-border">
       <div className="relative inline-block w-[5rem] h-[0.8125rem] text-[#e8eaee]">

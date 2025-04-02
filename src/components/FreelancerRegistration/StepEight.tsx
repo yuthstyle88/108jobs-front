@@ -1,16 +1,16 @@
+import { useFetchUser } from "@/app/apply-freelance/hooks/useFetchUserProfile";
+import { ERROR_CONSTANTS } from "@/constants/error";
 import { AssetIcon } from "@/constants/icons";
+import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useUserStore } from "@/store/useUserProfileStore";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import LoadingCircle from "../LoadingCircle";
 import ChangeEmailModal from "./components/ChangeEmailModal";
 import ConfirmChangeModal from "./components/ConfirmChangeModal";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { ERROR_CONSTANTS } from "@/constants/error";
-import LoadingCircle from "../LoadingCircle";
-import { useFetchUser } from "@/app/apply-freelance/hooks/useFetchUserProfile";
-import { usePrivateFetch } from "@/hooks/api-hooks";
 import ZipcodeSearch from "./components/SearchZipcode";
 
 const forgotPasswordSchema = z.object({
@@ -50,7 +50,7 @@ const StepEight: React.FC<StepEightProps> = ({
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm({
     resolver: zodResolver(forgotPasswordSchema),
     mode: "onChange",
@@ -61,8 +61,6 @@ const StepEight: React.FC<StepEightProps> = ({
 
   const {
     data: countriesData,
-    error,
-    isLoading,
   } = usePrivateFetch<CountriesResponse>("/profile/countries");
 
   const { mutate } = useFetchUser();
@@ -72,18 +70,6 @@ const StepEight: React.FC<StepEightProps> = ({
   const [isChangeModal, setIsChangeModal] = useState(false);
 
   const COUNTRY_OPTIONS = ["Thailand", "Foreign"];
-
-  const thaiProvinces = [
-    { id: 1, name_en: "Bangkok", name_th: "กรุงเทพมหานคร" },
-    { id: 2, name_en: "Chiang Mai", name_th: "เชียงใหม่" },
-    { id: 3, name_en: "Phuket", name_th: "ภูเก็ต" },
-  ];
-
-  const countries = [
-    { id: 1, name_en: "Vietnam", name_th: "เวียดนาม" },
-    { id: 2, name_en: "Singapore", name_th: "สิงคโปร์" },
-    { id: 3, name_en: "Malaysia", name_th: "มาเลเซีย" },
-  ];
 
   const COUNTRY_LABELS: Record<string, string> = {
     Thailand: "ประเทศไทย",

@@ -1,15 +1,12 @@
 "use client";
+import LoadingCircle from "@/components/LoadingCircle";
 import Modal from "@/components/ui/Modal";
+import { ERROR_CONSTANTS } from "@/constants/error";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail, Mailbox } from "lucide-react";
+import { Mailbox } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import LoadingCircle from "@/components/LoadingCircle";
-import { ERROR_CONSTANTS } from "@/constants/error";
-import { useLanguageStore } from "@/store/useLanguageStore";
-import { RegisterDataProps } from "@/types/registerData";
-import { useEffect, useRef, useState } from "react";
-import { useFetchUser } from "@/app/apply-freelance/hooks/useFetchUserProfile";
 
 const changePasswordSchema = z
   .object({
