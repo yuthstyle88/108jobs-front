@@ -1,17 +1,20 @@
 import { AssetIcon } from "@/constants/icons";
 import Image from "next/image";
 import React from "react";
+import ZipcodeSearch from "./components/SearchZipcode";
+import CardZipcodeSearch from "./components/CardSearchZipcode";
 
 interface StepSixProps {
   formData: {
     title: string;
-    firstName: string;
-    lastName: string;
-    idNumber: string;
-    address: string;
-    district: string;
-    province: string;
-    postalCode: string;
+    name: string;
+    surname: string;
+    card_number: string,
+    card_address_details: string,
+    card_zip_code: string,
+    card_subdistrict_or_district: string,
+    card_district_or_subdistrict: string,
+    card_province: string,
   };
   updateFormData: (data: Partial<StepSixProps["formData"]>) => void;
   nextStep: () => void;
@@ -22,6 +25,8 @@ const StepSix: React.FC<StepSixProps> = ({
   updateFormData,
   nextStep,
 }) => {
+  const [idNumberError, setIdNumberError] = React.useState("");
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -29,16 +34,40 @@ const StepSix: React.FC<StepSixProps> = ({
     updateFormData({ [name]: value });
   };
 
+  const handleIdNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (!/^\d*$/.test(value)) {
+      setIdNumberError("กรุณากรอกเฉพาะตัวเลข");
+      return;
+    }
+
+    if (value.length > 13) {
+      return;
+    }
+
+    updateFormData({ card_number: value });
+
+    if (value.length === 13) {
+      setIdNumberError("");
+    } else {
+      setIdNumberError("ต้องมีเลข 13 หลัก");
+    }
+  };
+
   const isFormValid = () => {
+    const idPattern = /^\d{13}$/;
     return (
       formData.title !== "" &&
-      formData.firstName !== "" &&
-      formData.lastName !== "" &&
-      formData.idNumber !== "" &&
-      formData.address !== "" &&
-      formData.district !== "" &&
-      formData.province !== "" &&
-      formData.postalCode !== ""
+      formData.name !== "" &&
+      formData.surname !== "" &&
+      idPattern.test(formData.card_number) &&
+      formData.card_address_details !== "" &&
+      formData.card_district_or_subdistrict !== "" &&
+      formData.card_subdistrict_or_district !== "" &&
+      formData.card_province !== "" &&
+      formData.card_zip_code !== "" &&
+      idNumberError === ""
     );
   };
 
@@ -81,8 +110,8 @@ const StepSix: React.FC<StepSixProps> = ({
                 </label>
                 <input
                   type="text"
-                  name="firstName"
-                  value={formData.firstName}
+                  name="name"
+                  value={formData.name}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   placeholder="ระบุชื่อจริง"
@@ -95,8 +124,8 @@ const StepSix: React.FC<StepSixProps> = ({
                 </label>
                 <input
                   type="text"
-                  name="lastName"
-                  value={formData.lastName}
+                  name="surname"
+                  value={formData.surname}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   placeholder="ระบุนามสกุลจริง"
@@ -111,12 +140,19 @@ const StepSix: React.FC<StepSixProps> = ({
               <input
                 type="text"
                 name="idNumber"
-                value={formData.idNumber}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                value={formData.card_number}
+                onChange={handleIdNumberChange}
+                className={`w-full px-3 py-2 border ${
+                  idNumberError
+                    ? "border-red-500 focus:ring-red-100 "
+                    : "border-gray-300 focus:ring-third"
+                } rounded-md focus:outline-none focus:ring-2 text-text_primary`}
                 placeholder="ระบุเลขบัตรประชาชน 13 หลัก"
                 maxLength={13}
               />
+              {idNumberError && (
+                <p className="text-red-500 text-xs mt-1">{idNumberError}</p>
+              )}
             </div>
             <h1 className="text-base text-text_primary font-semibold font-kanit leading-[18.4px] tracking-wide">
               ที่อยู่ตามบัตรประชาชน
@@ -127,8 +163,8 @@ const StepSix: React.FC<StepSixProps> = ({
               </label>
               <input
                 type="text"
-                name="address"
-                value={formData.address}
+                name="card_address_details"
+                value={formData.card_address_details}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                 placeholder="ระบุที่อยู่, หมู่, ถนน, ซอย"
@@ -136,32 +172,29 @@ const StepSix: React.FC<StepSixProps> = ({
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-4">
+              <CardZipcodeSearch
+                formData={formData}
+                onSelect={(selected) => {
+                  updateFormData({
+                    card_province: selected.card_province,
+                    card_district_or_subdistrict: selected.card_district_or_subdistrict,
+                    card_subdistrict_or_district: selected.card_subdistrict_or_district,
+                    card_zip_code: selected.card_zip_code,
+                  });
+                }}
+              />
+
               <div>
                 <label className="block text-sm text-text_primary font-semibold mb-2">
                   ตำบล/แขวง
                 </label>
                 <input
                   type="text"
-                  name="district"
-                  value={formData.district}
+                  name="subdistrict_or_district"
+                  value={formData.card_subdistrict_or_district}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   placeholder="ระบุตำบล/แขวง"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-text_primary font-semibold mb-2">
-                  รหัสไปรษณีย์
-                </label>
-                <input
-                  type="text"
-                  name="postalCode"
-                  value={formData.postalCode}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                  placeholder="ระบุรหัสไปรษณีย์"
-                  maxLength={5}
                 />
               </div>
             </div>
@@ -173,8 +206,8 @@ const StepSix: React.FC<StepSixProps> = ({
                 </label>
                 <input
                   type="text"
-                  name="district"
-                  value={formData.district}
+                  name="district_or_subdistrictt"
+                  value={formData.card_district_or_subdistrict}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   placeholder="ระบุอำเภอ/เขต"
@@ -188,7 +221,7 @@ const StepSix: React.FC<StepSixProps> = ({
                 <input
                   type="text"
                   name="province"
-                  value={formData.province}
+                  value={formData.card_province}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   placeholder="ระบุจังหวัด"
@@ -245,15 +278,16 @@ const StepSix: React.FC<StepSixProps> = ({
                     ผู้ขาย:
                   </p>
                   <p className="text-[12px] leading-[13.8px] text-text_primary">
-                    {formData.title} {formData.firstName} {formData.lastName}
+                    {formData.title} {formData.name} {formData.surname}
                   </p>
                   <p className="text-[12px] leading-[13.8px] text-text_primary capitalize">
-                    ที่อยู่: {formData.address} {formData.district}{" "}
-                    {formData.district} {formData.province}{" "}
-                    {formData.postalCode}
+                    ที่อยู่: {formData.card_address_details}{" "}
+                    {formData.card_subdistrict_or_district}{" "}
+                    {formData.card_district_or_subdistrict} {formData.card_province}{" "}
+                    {formData.card_zip_code}
                   </p>
                   <p className="text-[12px] leading-[13.8px] text-text_primary">
-                    เลขประจำตัวผู้เสียภาษี: {formData.idNumber}
+                    เลขประจำตัวผู้เสียภาษี: {formData.card_number}
                   </p>
                 </div>
                 <div className="flex-[2_1] flex flex-col gap-2">
