@@ -3,12 +3,12 @@ import React, { useRef, useState } from "react";
 
 interface StepFiveProps {
   formData: {
-    nationalIdFront: string | null;
-    nationalIdBack: string | null;
+    front_card: string | null;
+    back_card: string | null;
   };
   updateFormData: (data: {
-    nationalIdFront?: string | null;
-    nationalIdBack?: string | null;
+    front_card?: string | null;
+    back_card?: string | null;
   }) => void;
   nextStep: () => void;
 }
@@ -41,9 +41,9 @@ const StepFive: React.FC<StepFiveProps> = ({
       const reader = new FileReader();
       reader.onload = () => {
         if (type === "front") {
-          updateFormData({ nationalIdFront: reader.result as string });
+          updateFormData({ front_card: reader.result as string });
         } else {
-          updateFormData({ nationalIdBack: reader.result as string });
+          updateFormData({ back_card: reader.result as string });
         }
       };
       reader.readAsDataURL(file);
@@ -59,14 +59,15 @@ const StepFive: React.FC<StepFiveProps> = ({
 
   const removeImage = (type: "front" | "back") => {
     if (type === "front") {
-      updateFormData({ nationalIdFront: null });
+      updateFormData({ front_card: null });
     } else {
-      updateFormData({ nationalIdBack: null });
+      updateFormData({ back_card: null });
     }
   };
 
   const isFormValid = () => {
-    return formData.nationalIdFront !== null;
+    return formData.front_card !== null &&
+      formData.back_card !== null;
   };
 
   return (
@@ -99,10 +100,10 @@ const StepFive: React.FC<StepFiveProps> = ({
                 accept="image/*"
               />
 
-              {formData.nationalIdFront ? (
+              {formData.front_card ? (
                 <div className="relative mb-4">
                   <Image
-                    src={formData.nationalIdFront}
+                    src={formData.front_card}
                     alt="National ID Front"
                     className="w-full h-60 py-4 px-2 md:px-0 object-contain border border-gray-200 rounded-lg bg-gray-50"
                     width={500}
@@ -175,10 +176,10 @@ const StepFive: React.FC<StepFiveProps> = ({
                 accept="image/*"
               />
 
-              {formData.nationalIdBack ? (
+              {formData.back_card ? (
                 <div className="relative mb-4">
                   <Image
-                    src={formData.nationalIdBack}
+                    src={formData.back_card}
                     alt="National ID Back"
                     className="w-full h-60 py-4 px-2 md:px-0 object-contain border border-gray-200 rounded-lg bg-gray-50"
                     width={500}

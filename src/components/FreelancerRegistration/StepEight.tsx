@@ -3,15 +3,43 @@ import { useUserStore } from "@/store/useUserProfileStore";
 import Image from "next/image";
 import React, { useState } from "react";
 import ChangeEmailModal from "./components/ChangeEmailModal";
+import ConfirmChangeModal from "./components/ConfirmChangeModal";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { ERROR_CONSTANTS } from "@/constants/error";
+import LoadingCircle from "../LoadingCircle";
+import { useFetchUser } from "@/app/apply-freelance/hooks/useFetchUserProfile";
+import { usePrivateFetch } from "@/hooks/api-hooks";
+import ZipcodeSearch from "./components/SearchZipcode";
+
+const forgotPasswordSchema = z.object({
+  email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์"),
+});
+
+type VerifyForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 interface StepEightProps {
   formData: {
     email: string;
     country: string;
-    province_or_city: string;
+    address_details: string;
+    province: string;
+    subdistrict_or_district: string;
+    district_or_subdistrict: string;
+    zip_code: string;
   };
   updateFormData: (data: Partial<StepEightProps["formData"]>) => void;
   nextStep: () => void;
+}
+
+interface Country {
+  id: string;
+  name: string;
+}
+
+interface CountriesResponse {
+  countries: Country[];
 }
 
 const StepEight: React.FC<StepEightProps> = ({
@@ -19,9 +47,29 @@ const StepEight: React.FC<StepEightProps> = ({
   updateFormData,
   nextStep,
 }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(forgotPasswordSchema),
+    mode: "onChange",
+    defaultValues: {
+      email: formData.email,
+    },
+  });
+
+  const {
+    data: countriesData,
+    error,
+    isLoading,
+  } = usePrivateFetch<CountriesResponse>("/profile/countries");
+
+  const { mutate } = useFetchUser();
   const { user } = useUserStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmChange, setIsConfirmChange] = useState(false);
+  const [isChangeModal, setIsChangeModal] = useState(false);
 
   const COUNTRY_OPTIONS = ["Thailand", "Foreign"];
 
@@ -44,25 +92,71 @@ const StepEight: React.FC<StepEightProps> = ({
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+  const closeChangeModal = () => setIsChangeModal(false);
 
   const handleConfirmChange = () => {
     setIsConfirmChange(true);
     closeModal();
   };
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateFormData({ email: e.target.value });
+  const handleChangeEmail = async () => {
+    await mutate();
+    setIsConfirmChange(false);
+    closeChangeModal();
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    updateFormData({ [name]: value });
   };
 
   const handleCountryChange = (country: string) => {
-    updateFormData({ country, province_or_city: "" });
+    updateFormData({ country, province: "" });
   };
 
   const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateFormData({ province_or_city: e.target.value });
+    updateFormData({ province: e.target.value });
   };
 
   const isFormValid = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+
+  const [apiError, setApiError] = useState<string | null>(null);
+
+  const onSubmit = async (data: VerifyForgotPasswordFormData) => {
+    try {
+      setApiError(null);
+
+      const response = await fetch("/api/auth/resend-change-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: data.email,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (result.error) {
+          setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
+        }
+
+        return;
+      }
+      setIsChangeModal(true);
+    } catch (error) {
+      console.error("Registration error:", error);
+      setApiError(
+        error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลงทะเบียน"
+      );
+    }
+  };
+
+  console.log("countriesData", countriesData);
 
   return (
     <div className="py-8 md:p-0 h-full">
@@ -78,27 +172,64 @@ const StepEight: React.FC<StepEightProps> = ({
           </div>
 
           {/* Email Section */}
-          <div className="mb-6 flex flex-row gap-2 items-end w-full">
-            <div className="flex-1">
-              <label className="block text-sm text-text_primary font-semibold mb-2">
-                อีเมลติดต่อ
-              </label>
-              <input
-                type="email"
-                value={isConfirmChange ? formData.email : user?.contact.email}
-                onChange={isConfirmChange ? handleEmailChange : undefined}
-                disabled={!isConfirmChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary disabled:cursor-not-allowed"
-                placeholder="your.email@example.com"
-              />
+
+          {isConfirmChange ? (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="mb-6">
+                <div className="flex flex-row gap-2 items-end w-full">
+                  <div className="flex-1">
+                    <label className="block text-sm text-text_primary font-semibold mb-2">
+                      อีเมลติดต่อ
+                    </label>
+                    <input
+                      type="email"
+                      {...register("email")}
+                      className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary
+                        ${apiError && "border-[#ea6357] text-[#ea6357]"}`}
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+                  <div className="justify-end">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="px-3 py-[8px] submit-button"
+                    >
+                      {isSubmitting ? <LoadingCircle /> : "ยืนยัน"}
+                    </button>
+                  </div>
+                </div>
+                {apiError && (
+                  <div className="text-[#ea6357] rounded text-[12px] font-sans">
+                    {apiError}
+                  </div>
+                )}
+              </div>
+            </form>
+          ) : (
+            <div className="mb-6 flex flex-row gap-2 items-end w-full">
+              <div className="flex-1">
+                <label className="block text-sm text-text_primary font-semibold mb-2">
+                  อีเมลติดต่อ
+                </label>
+                <input
+                  type="email"
+                  value={user?.contact.email}
+                  disabled
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary disabled:cursor-not-allowed"
+                  placeholder="your.email@example.com"
+                />
+              </div>
+              <div className="justify-end">
+                <button
+                  onClick={openModal}
+                  className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
+                >
+                  ยืนยัน
+                </button>
+              </div>
             </div>
-            <button
-              onClick={openModal}
-              className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
-            >
-              ยืนยัน
-            </button>
-          </div>
+          )}
 
           {/* Country Selection */}
           <div className="mb-6">
@@ -133,31 +264,98 @@ const StepEight: React.FC<StepEightProps> = ({
             </div>
 
             {/* City/Country Selection */}
-            <select
-              value={formData.province_or_city}
-              onChange={handleCityChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-            >
-              <option value="" disabled>
-                {formData.country === "Thailand"
-                  ? "เลือกจังหวัด"
-                  : "เลือกประเทศ"}
-              </option>
+            {formData.country === "Foreign" && (
+              <select
+                value={formData.province}
+                onChange={handleCityChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+              >
+                <option value="" disabled>
+                  เลือกประเทศ
+                </option>
+                {countriesData?.countries?.map((country: Country) => (
+                  <option key={country.id} value={country.name}>
+                    {country.name}
+                  </option>
+                ))}
+              </select>
+            )}
+            {formData.country === "Thailand" && (
+              <>
+                <div className="mb-4">
+                  <label className="block text-sm text-text_primary font-semibold mb-2">
+                    รายละเอียดที่อยู่
+                  </label>
+                  <input
+                    type="text"
+                    name="address_details"
+                    value={formData.address_details}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                    placeholder="ระบุที่อยู่, หมู่, ถนน, ซอย"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <ZipcodeSearch
+                    formData={formData}
+                    onSelect={(selected) => {
+                      updateFormData({
+                        province: selected.province,
+                        district_or_subdistrict:
+                          selected.district_or_subdistrict,
+                        subdistrict_or_district:
+                          selected.subdistrict_or_district,
+                        zip_code: selected.zip_code,
+                      });
+                    }}
+                  />
 
-              {formData.country === "Thailand"
-                ? 
-                  thaiProvinces.map((province) => (
-                    <option key={province.id} value={province.name_en}>
-                      {province.name_th}
-                    </option>
-                  ))
-                : 
-                  countries.map((country) => (
-                    <option key={country.id} value={country.name_en}>
-                      {country.name_th}
-                    </option>
-                  ))}
-            </select>
+                  <div>
+                    <label className="block text-sm text-text_primary font-semibold mb-2">
+                      ตำบล/แขวง
+                    </label>
+                    <input
+                      type="text"
+                      name="subdistrict_or_district"
+                      value={formData.subdistrict_or_district || ""}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                      placeholder="ระบุตำบล/แขวง"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm text-text_primary font-semibold mb-2">
+                      อำเภอ/เขต
+                    </label>
+                    <input
+                      type="text"
+                      name="district_or_subdistrict"
+                      value={formData.district_or_subdistrict || ""}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                      placeholder="ระบุอำเภอ/เขต"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm text-text_primary font-semibold mb-2">
+                      จังหวัด
+                    </label>
+                    <input
+                      type="text"
+                      name="province"
+                      value={formData.province || ""}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                      placeholder="ระบุจังหวัด"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Submit Button */}
@@ -203,10 +401,16 @@ const StepEight: React.FC<StepEightProps> = ({
       </div>
 
       {/* Change Email Modal */}
-      <ChangeEmailModal
+      <ConfirmChangeModal
         isOpen={isModalOpen}
         onClose={closeModal}
         handleConfirmChange={handleConfirmChange}
+      />
+      <ChangeEmailModal
+        formEmail={formData.email}
+        isOpen={isChangeModal}
+        onClose={closeChangeModal}
+        handleConfirmChange={handleChangeEmail}
       />
     </div>
   );

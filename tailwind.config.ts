@@ -99,6 +99,18 @@ const config: Config = {
             opacity: "0",
           },
         },
+        'loader1': {
+          '0%': { transform: 'scale(0)' },
+          '100%': { transform: 'scale(1)' },
+        },
+        'loader2': {
+          '0%': { transform: 'translate(0)' },
+          '100%': { transform: 'translate(1.5rem)' },
+        },
+        'loader3': {
+          '0%': { transform: 'scale(1)' },
+          '100%': { transform: 'scale(0)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -112,6 +124,9 @@ const config: Config = {
         "modal-hide": "modal-fade-out 0.2s ease-out forwards",
         "backdrop-show": "backdrop-fade-in 0.2s ease-out forwards",
         "backdrop-hide": "backdrop-fade-out 0.2s ease-out forwards",
+        'loader1': 'loader1 0.6s infinite',
+        'loader2': 'loader2 0.6s infinite',
+        'loader3': 'loader3 0.6s infinite',
       },
     },
   },

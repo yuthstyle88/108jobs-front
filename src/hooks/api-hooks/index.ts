@@ -1,6 +1,6 @@
 import { axiosFileUpload, axiosPrivate, axiosPublic } from "./../../lib/axios";
 import type { AxiosError } from "axios";
-import useSWR from "swr";
+import useSWR, { SWRConfiguration } from "swr";
 import useSWRMutation from "swr/mutation";
 
 // Public GET
@@ -47,6 +47,17 @@ export const usePrivateFetch = <T>(url: string | null) => {
     async (url: string) => (await axiosPrivate.get<T>(url)).data
   );
 };
+
+// Private GET with params
+export const usePrivateFetchParams = <T>(url: string | null, options?: SWRConfiguration) => {
+  const fetcher = async (url: string) => {
+    const response = await axiosPrivate.get<T>(url);
+    return response.data;
+  };
+
+  return useSWR<T, AxiosError>(url, url ? fetcher : null, options);
+};
+
 
 // Private POST
 export const usePrivatePost = <T, D = unknown>(url: string) => {

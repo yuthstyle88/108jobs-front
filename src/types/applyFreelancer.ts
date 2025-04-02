@@ -8,7 +8,6 @@ export type ApplyFreelancerFormData = {
     birth_date: string;
     email: string;
     country: string;
-    province_or_city: string;
     apply_fee: boolean;
   };
   
