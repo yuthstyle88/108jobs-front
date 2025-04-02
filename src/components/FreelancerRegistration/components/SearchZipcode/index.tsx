@@ -62,7 +62,7 @@ export default function ZipcodeSearch({
       setZipcodeValue(formData.zip_code);
       setValue("zipcode", formData.zip_code);
     }
-  }, [formData.zip_code]);
+  }, [formData.zip_code, setValue]);
 
   const updateSearchUrl = useCallback(
     debounce((postal: string) => {
@@ -162,7 +162,7 @@ export default function ZipcodeSearch({
                     className="p-3 hover:bg-blue-50 cursor-pointer transition-colors"
                   >
                     <span className="text-[12px] font-sans text-black">
-                      สร้างรหัสไปรษณีย์: "{zipcode}"
+                      สร้างรหัสไปรษณีย์: &quot;{zipcode}&quot;
                     </span>
                   </div>
                 )}

@@ -1,7 +1,6 @@
 import { AssetIcon } from "@/constants/icons";
 import Image from "next/image";
 import React from "react";
-import ZipcodeSearch from "./components/SearchZipcode";
 import CardZipcodeSearch from "./components/CardSearchZipcode";
 
 interface StepSixProps {

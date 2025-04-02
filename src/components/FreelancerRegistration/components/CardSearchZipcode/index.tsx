@@ -23,6 +23,7 @@ interface CardZipcodeSearchProps {
     card_province: string;
   }) => void;
 }
+
 export default function CardZipcodeSearch({
   formData,
   onSelect,
@@ -62,7 +63,7 @@ export default function CardZipcodeSearch({
       setZipcodeValue(formData.card_zip_code);
       setValue("zipcode", formData.card_zip_code);
     }
-  }, [formData.card_zip_code]);
+  }, [formData.card_zip_code, setValue]); // ✅ Add setValue to dependencies
 
   const updateSearchUrl = useCallback(
     debounce((postal: string) => {
@@ -73,7 +74,7 @@ export default function CardZipcodeSearch({
       }
       setShowDropdown(true);
     }, 500),
-    []
+    [] // ✅ OK if setSearchUrl and setShowDropdown are stable (React guarantees that for useState setters)
   );
 
   const handleSelect = (geo: Geography) => {
@@ -162,8 +163,8 @@ export default function CardZipcodeSearch({
                     className="p-3 hover:bg-blue-50 cursor-pointer transition-colors"
                   >
                     <span className="text-[12px] font-sans text-black">
-                      สร้างรหัสไปรษณีย์: "{zipcode}"
-                    </span>
+                      สร้างรหัสไปรษณีย์: &quot;{zipcode}&quot;
+                    </span> {/* ✅ escaped quotes properly */}
                   </div>
                 )}
               </>
