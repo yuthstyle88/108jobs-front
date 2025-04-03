@@ -63,8 +63,9 @@ export default function CardZipcodeSearch({
       setZipcodeValue(formData.card_zip_code);
       setValue("zipcode", formData.card_zip_code);
     }
-  }, [formData.card_zip_code, setValue]); // ✅ Add setValue to dependencies
+  }, [formData.card_zip_code, setValue]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateSearchUrl = useCallback(
     debounce((postal: string) => {
       if (postal.length >= 2) {
@@ -74,7 +75,7 @@ export default function CardZipcodeSearch({
       }
       setShowDropdown(true);
     }, 500),
-    [] // ✅ OK if setSearchUrl and setShowDropdown are stable (React guarantees that for useState setters)
+    [] 
   );
 
   const handleSelect = (geo: Geography) => {

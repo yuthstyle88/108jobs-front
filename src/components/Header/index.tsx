@@ -8,7 +8,7 @@ import { useToggle } from "@/hooks/useToggle";
 import {
   faChevronDown,
   faComment,
-  faSearch
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
@@ -39,11 +39,11 @@ const Header = ({ type }: BgProps) => {
   const { scrollY, showSearch } = useScrollHandler();
   const { isOpen, toggle, close } = useToggle();
 
-    const {
-      data: globalLanguageData,
-      isLoading,
-      error,
-    } = useGlobalTranslate(LanguageFile.GLOBAL);
+  const {
+    data: globalLanguageData,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.GLOBAL);
 
   const { bg } = TYPES[type];
 
@@ -100,12 +100,16 @@ const Header = ({ type }: BgProps) => {
               {globalLanguageData?.label_seller_center}
             </Link>
           )}
-          <Link
-            href="/start-selling"
-            className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
-          >
-            {globalLanguageData?.label_apply_to_be_freelancer_button}
-          </Link>
+          {session?.user.roles?.includes(ROLE.EMPLOYER) &&
+            !session?.user.roles?.includes(ROLE.FREELANCER) && (
+              <Link
+                href="/start-selling"
+                className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
+              >
+                {globalLanguageData?.label_apply_to_be_freelancer_button}
+              </Link>
+            )}
+
           {session?.user.roles?.includes(ROLE.EMPLOYER) && (
             <>
               <Link

@@ -64,6 +64,7 @@ export default function ZipcodeSearch({
     }
   }, [formData.zip_code, setValue]);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateSearchUrl = useCallback(
     debounce((postal: string) => {
       if (postal.length >= 2) {
