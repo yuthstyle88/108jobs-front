@@ -1,5 +1,7 @@
+"use client";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React from "react";
+import { useSingleImageUpload } from "./hooks/useSingleImageUpload";
 
 interface StepFiveProps {
   formData: {
@@ -18,60 +20,36 @@ const StepFive: React.FC<StepFiveProps> = ({
   updateFormData,
   nextStep,
 }) => {
-  const frontIdInputRef = useRef<HTMLInputElement>(null);
-  const backIdInputRef = useRef<HTMLInputElement>(null);
-  const [error, setError] = useState<string | null>(null);
+  // FRONT IMAGE UPLOAD HOOK
+  const {
+    imageUrl: frontImage,
+    fileInputRef: frontInputRef,
+    handleFileChange: handleFrontChange,
+    handleSelectFile: selectFrontFile,
+    resetImage: resetFront,
+    isUploading: isFrontUploading,
+    error: frontError,
+  } = useSingleImageUpload(formData.front_card, (url) =>
+    updateFormData({ front_card: url })
+  );
 
-  const handleImageUpload =
-    (type: "front" | "back") => (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
+  // BACK IMAGE UPLOAD HOOK
+  const {
+    imageUrl: backImage,
+    fileInputRef: backInputRef,
+    handleFileChange: handleBackChange,
+    handleSelectFile: selectBackFile,
+    resetImage: resetBack,
+    isUploading: isBackUploading,
+    error: backError,
+  } = useSingleImageUpload(formData.back_card, (url) =>
+    updateFormData({ back_card: url })
+  );
 
-      if (!file.type.startsWith("image/")) {
-        setError("Please upload an image file");
-        return;
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        setError("Image size should be less than 5MB");
-        return;
-      }
-
-      setError(null);
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (type === "front") {
-          updateFormData({ front_card: reader.result as string });
-        } else {
-          updateFormData({ back_card: reader.result as string });
-        }
-      };
-      reader.readAsDataURL(file);
-    };
-
-  const triggerFileInput = (type: "front" | "back") => {
-    if (type === "front") {
-      frontIdInputRef.current?.click();
-    } else {
-      backIdInputRef.current?.click();
-    }
-  };
-
-  const removeImage = (type: "front" | "back") => {
-    if (type === "front") {
-      updateFormData({ front_card: null });
-    } else {
-      updateFormData({ back_card: null });
-    }
-  };
-
-  const isFormValid = () => {
-    return formData.front_card !== null &&
-      formData.back_card !== null;
-  };
+  const isFormValid = frontImage && backImage;
 
   return (
-    <div className="flex flex-col w-full h-full ">
+    <div className="flex flex-col w-full h-full">
       <div className="py-6 md:py-12 flex flex-1 flex-col mx-auto gap-4 w-full max-w-screen-lg h-full">
         <div className="flex flex-col gap-2 justify-between h-full w-full px-4">
           <div className="text-center mb-8">
@@ -84,33 +62,39 @@ const StepFive: React.FC<StepFiveProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* FRONT CARD */}
             <div className="border border-gray-200 rounded-lg p-4 shadow-categoryMenu">
               <h3 className="font-medium text-lg text-text_primary">
                 รูปบัตรประชาชน
               </h3>
-              <p className="text-[12px] font-sans text-text_secondary mb-6">
+              <p className="text-[12px] text-text_secondary mb-6">
                 ถ่ายรูปให้เห็นด้านหน้าของบัตร
               </p>
 
               <input
                 type="file"
                 className="hidden"
-                ref={frontIdInputRef}
-                onChange={handleImageUpload("front")}
+                ref={frontInputRef}
+                onChange={handleFrontChange}
                 accept="image/*"
               />
 
-              {formData.front_card ? (
+              {frontImage ? (
                 <div className="relative mb-4">
                   <Image
-                    src={formData.front_card}
+                    src={frontImage}
                     alt="National ID Front"
-                    className="w-full h-60 py-4 px-2 md:px-0 object-contain border border-gray-200 rounded-lg bg-gray-50"
+                    className="w-full h-60 object-contain border border-gray-200 rounded-lg bg-gray-50"
                     width={500}
                     height={500}
                   />
+                  {isFrontUploading && (
+                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
+                      <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  )}
                   <button
-                    onClick={() => removeImage("front")}
+                    onClick={resetFront}
                     className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
                   >
                     <svg
@@ -118,7 +102,6 @@ const StepFive: React.FC<StepFiveProps> = ({
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
                         strokeLinecap="round"
@@ -131,7 +114,7 @@ const StepFive: React.FC<StepFiveProps> = ({
                 </div>
               ) : (
                 <div
-                  onClick={() => triggerFileInput("front")}
+                  onClick={selectFrontFile}
                   className="border-2 border-dashed border-gray-300 rounded-lg p-14 mb-4 text-center cursor-pointer hover:bg-gray-50 transition-colors"
                 >
                   <svg
@@ -139,7 +122,6 @@ const StepFive: React.FC<StepFiveProps> = ({
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
                       strokeLinecap="round"
@@ -153,40 +135,51 @@ const StepFive: React.FC<StepFiveProps> = ({
               )}
 
               <button
-                onClick={() => triggerFileInput("front")}
+                onClick={selectFrontFile}
                 className="w-full py-2 bg-third text-white rounded-lg hover:bg-blue-700 transition-colors"
+                disabled={isFrontUploading}
               >
-                เปลี่ยนรูป
+                {isFrontUploading ? "กำลังอัปโหลด..." : "เปลี่ยนรูป"}
               </button>
+
+              {frontError && (
+                <p className="text-sm text-red-500 mt-2">{frontError}</p>
+              )}
             </div>
 
+            {/* BACK CARD */}
             <div className="border border-gray-200 rounded-lg p-4 shadow-categoryMenu">
               <h3 className="font-medium text-lg text-text_primary">
                 รูปบัตรประชาชน
               </h3>
-              <p className="text-[12px] font-sans text-text_secondary mb-6">
+              <p className="text-[12px] text-text_secondary mb-6">
                 ถ่ายให้เห็นด้านหลังบัตร
               </p>
 
               <input
                 type="file"
                 className="hidden"
-                ref={backIdInputRef}
-                onChange={handleImageUpload("back")}
+                ref={backInputRef}
+                onChange={handleBackChange}
                 accept="image/*"
               />
 
-              {formData.back_card ? (
+              {backImage ? (
                 <div className="relative mb-4">
                   <Image
-                    src={formData.back_card}
+                    src={backImage}
                     alt="National ID Back"
-                    className="w-full h-60 py-4 px-2 md:px-0 object-contain border border-gray-200 rounded-lg bg-gray-50"
+                    className="w-full h-60 object-contain border border-gray-200 rounded-lg bg-gray-50"
                     width={500}
                     height={500}
                   />
+                  {isBackUploading && (
+                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
+                      <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  )}
                   <button
-                    onClick={() => removeImage("back")}
+                    onClick={resetBack}
                     className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
                   >
                     <svg
@@ -194,7 +187,6 @@ const StepFive: React.FC<StepFiveProps> = ({
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
                         strokeLinecap="round"
@@ -207,7 +199,7 @@ const StepFive: React.FC<StepFiveProps> = ({
                 </div>
               ) : (
                 <div
-                  onClick={() => triggerFileInput("back")}
+                  onClick={selectBackFile}
                   className="border-2 border-dashed border-gray-300 rounded-lg p-14 mb-4 text-center cursor-pointer hover:bg-gray-50 transition-colors"
                 >
                   <svg
@@ -215,7 +207,6 @@ const StepFive: React.FC<StepFiveProps> = ({
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
                       strokeLinecap="round"
@@ -229,26 +220,25 @@ const StepFive: React.FC<StepFiveProps> = ({
               )}
 
               <button
-                onClick={() => triggerFileInput("back")}
+                onClick={selectBackFile}
                 className="w-full py-2 bg-third text-white rounded-lg hover:bg-blue-700 transition-colors"
+                disabled={isBackUploading}
               >
-                เปลี่ยนรูป
+                {isBackUploading ? "กำลังอัปโหลด..." : "เปลี่ยนรูป"}
               </button>
+
+              {backError && (
+                <p className="text-sm text-red-500 mt-2">{backError}</p>
+              )}
             </div>
           </div>
-
-          {error && (
-            <div className="mt-4 p-3 bg-red-50 text-red-500 rounded-lg">
-              {error}
-            </div>
-          )}
 
           <div className="w-full mt-8">
             <button
               onClick={nextStep}
-              disabled={!isFormValid()}
+              disabled={!isFormValid || isFrontUploading || isBackUploading}
               className={`w-full px-6 py-2 rounded-lg flex justify-center items-center ${
-                !isFormValid()
+                !isFormValid || isFrontUploading || isBackUploading
                   ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                   : "bg-third text-white"
               }`}
@@ -259,7 +249,6 @@ const StepFive: React.FC<StepFiveProps> = ({
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
               >
                 <path
                   strokeLinecap="round"

@@ -59,36 +59,20 @@ const StepEight: React.FC<StepEightProps> = ({
     },
   });
 
-  const {
-    data: countriesData,
-  } = usePrivateFetch<CountriesResponse>("/profile/countries");
-
+  const { data: countriesData } =
+    usePrivateFetch<CountriesResponse>("/profile/countries");
   const { mutate } = useFetchUser();
   const { user } = useUserStore();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmChange, setIsConfirmChange] = useState(false);
   const [isChangeModal, setIsChangeModal] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const COUNTRY_OPTIONS = ["Thailand", "Foreign"];
-
   const COUNTRY_LABELS: Record<string, string> = {
     Thailand: "ประเทศไทย",
     Foreign: "ต่างชาติ",
-  };
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-  const closeChangeModal = () => setIsChangeModal(false);
-
-  const handleConfirmChange = () => {
-    setIsConfirmChange(true);
-    closeModal();
-  };
-
-  const handleChangeEmail = async () => {
-    await mutate();
-    setIsConfirmChange(false);
-    closeChangeModal();
   };
 
   const handleChange = (
@@ -108,41 +92,29 @@ const StepEight: React.FC<StepEightProps> = ({
 
   const isFormValid = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
 
-  const [apiError, setApiError] = useState<string | null>(null);
-
   const onSubmit = async (data: VerifyForgotPasswordFormData) => {
     try {
       setApiError(null);
-
       const response = await fetch("/api/auth/resend-change-email", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: data.email,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: data.email }),
       });
 
       const result = await response.json();
 
       if (!response.ok) {
-        if (result.error) {
-          setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
-        }
-
+        if (result.error) setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
         return;
       }
+
       setIsChangeModal(true);
     } catch (error) {
-      console.error("Registration error:", error);
       setApiError(
         error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลงทะเบียน"
       );
     }
   };
-
-  console.log("countriesData", countriesData);
 
   return (
     <div className="py-8 md:p-0 h-full">
@@ -158,11 +130,10 @@ const StepEight: React.FC<StepEightProps> = ({
           </div>
 
           {/* Email Section */}
-
           {isConfirmChange ? (
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-6">
-                <div className="flex flex-row gap-2 items-end w-full">
+                <div className="flex gap-2 items-end w-full">
                   <div className="flex-1">
                     <label className="block text-sm text-text_primary font-semibold mb-2">
                       อีเมลติดต่อ
@@ -170,8 +141,11 @@ const StepEight: React.FC<StepEightProps> = ({
                     <input
                       type="email"
                       {...register("email")}
-                      className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary
-                        ${apiError && "border-[#ea6357] text-[#ea6357]"}`}
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                        apiError
+                          ? "border-[#ea6357] text-[#ea6357]"
+                          : "border-gray-300"
+                      }`}
                       placeholder="your.email@example.com"
                     />
                   </div>
@@ -186,21 +160,21 @@ const StepEight: React.FC<StepEightProps> = ({
                   </div>
                 </div>
                 {apiError && (
-                  <div className="text-[#ea6357] rounded text-[12px] font-sans">
+                  <div className="text-[#ea6357] text-[12px] font-sans">
                     {apiError}
                   </div>
                 )}
               </div>
             </form>
           ) : (
-            <div className="mb-6 flex flex-row gap-2 items-end w-full">
+            <div className="mb-6 flex gap-2 items-end w-full">
               <div className="flex-1">
                 <label className="block text-sm text-text_primary font-semibold mb-2">
                   อีเมลติดต่อ
                 </label>
                 <input
                   type="email"
-                  value={user?.contact.email}
+                  value={user?.contact.email ?? ""}
                   disabled
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary disabled:cursor-not-allowed"
                   placeholder="your.email@example.com"
@@ -208,7 +182,7 @@ const StepEight: React.FC<StepEightProps> = ({
               </div>
               <div className="justify-end">
                 <button
-                  onClick={openModal}
+                  onClick={() => setIsModalOpen(true)}
                   className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
                 >
                   ยืนยัน
@@ -223,49 +197,46 @@ const StepEight: React.FC<StepEightProps> = ({
               ที่อยู่ปัจจุบัน
             </label>
             <div className="flex space-x-4 mb-4">
-              {COUNTRY_OPTIONS.map((country) => (
-                <div
-                  key={country}
-                  onClick={() => handleCountryChange(country)}
+              {COUNTRY_OPTIONS.map((countryOption) => (
+                <label
+                  key={countryOption}
                   className={`flex items-center px-4 py-2 rounded-lg cursor-pointer border text-text_primary ${
-                    formData.country === country
+                    formData.country === countryOption
                       ? "border-third"
                       : "border-gray-300"
                   }`}
                 >
-                  <div
-                    className={`w-4 h-4 rounded-full border mr-2 flex items-center justify-center ${
-                      formData.country === country
-                        ? "border-third"
-                        : "border-gray-400"
-                    }`}
-                  >
-                    {formData.country === country && (
-                      <div className="w-2 h-2 rounded-full bg-third"></div>
-                    )}
-                  </div>
-                  <span>{COUNTRY_LABELS[country]}</span>
-                </div>
+                  <input
+                    type="radio"
+                    name="country"
+                    value={countryOption}
+                    checked={formData.country === countryOption}
+                    onChange={() => handleCountryChange(countryOption)}
+                    className="mr-2 text-third"
+                  />
+                  {COUNTRY_LABELS[countryOption]}
+                </label>
               ))}
             </div>
 
-            {/* City/Country Selection */}
-            {formData.country === "Foreign" && (
+            {/* Province / Country dropdown */}
+            {formData.country === "Foreign" && countriesData && (
               <select
-                value={formData.province}
+                value={formData.province ?? ""}
                 onChange={handleCityChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
               >
                 <option value="" disabled>
                   เลือกประเทศ
                 </option>
-                {countriesData?.countries?.map((country: Country) => (
+                {countriesData.countries.map((country: Country) => (
                   <option key={country.id} value={country.name}>
                     {country.name}
                   </option>
                 ))}
               </select>
             )}
+
             {formData.country === "Thailand" && (
               <>
                 <div className="mb-4">
@@ -275,12 +246,13 @@ const StepEight: React.FC<StepEightProps> = ({
                   <input
                     type="text"
                     name="address_details"
-                    value={formData.address_details}
+                    value={formData.address_details ?? ""}
                     onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                     placeholder="ระบุที่อยู่, หมู่, ถนน, ซอย"
                   />
                 </div>
+
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <ZipcodeSearch
                     formData={formData}
@@ -295,7 +267,6 @@ const StepEight: React.FC<StepEightProps> = ({
                       });
                     }}
                   />
-
                   <div>
                     <label className="block text-sm text-text_primary font-semibold mb-2">
                       ตำบล/แขวง
@@ -303,7 +274,7 @@ const StepEight: React.FC<StepEightProps> = ({
                     <input
                       type="text"
                       name="subdistrict_or_district"
-                      value={formData.subdistrict_or_district || ""}
+                      value={formData.subdistrict_or_district ?? ""}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                       placeholder="ระบุตำบล/แขวง"
@@ -319,7 +290,7 @@ const StepEight: React.FC<StepEightProps> = ({
                     <input
                       type="text"
                       name="district_or_subdistrict"
-                      value={formData.district_or_subdistrict || ""}
+                      value={formData.district_or_subdistrict ?? ""}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                       placeholder="ระบุอำเภอ/เขต"
@@ -333,7 +304,7 @@ const StepEight: React.FC<StepEightProps> = ({
                     <input
                       type="text"
                       name="province"
-                      value={formData.province || ""}
+                      value={formData.province ?? ""}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                       placeholder="ระบุจังหวัด"
@@ -344,7 +315,6 @@ const StepEight: React.FC<StepEightProps> = ({
             )}
           </div>
 
-          {/* Submit Button */}
           <div className="flex justify-between mt-8">
             <button
               onClick={nextStep}
@@ -361,7 +331,6 @@ const StepEight: React.FC<StepEightProps> = ({
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
               >
                 <path
                   strokeLinecap="round"
@@ -374,7 +343,7 @@ const StepEight: React.FC<StepEightProps> = ({
           </div>
         </div>
 
-        {/* Image Section */}
+        {/* Side Image */}
         <div className="w-full h-full step2-gradient relative z-0 overflow-hidden hidden md:block">
           <Image
             src={AssetIcon.logo_icon}
@@ -386,17 +355,24 @@ const StepEight: React.FC<StepEightProps> = ({
         </div>
       </div>
 
-      {/* Change Email Modal */}
+      {/* Modals */}
       <ConfirmChangeModal
         isOpen={isModalOpen}
-        onClose={closeModal}
-        handleConfirmChange={handleConfirmChange}
+        onClose={() => setIsModalOpen(false)}
+        handleConfirmChange={() => {
+          setIsConfirmChange(true);
+          setIsModalOpen(false);
+        }}
       />
       <ChangeEmailModal
         formEmail={formData.email}
         isOpen={isChangeModal}
-        onClose={closeChangeModal}
-        handleConfirmChange={handleChangeEmail}
+        onClose={() => setIsChangeModal(false)}
+        handleConfirmChange={async () => {
+          await mutate();
+          setIsConfirmChange(false);
+          setIsChangeModal(false);
+        }}
       />
     </div>
   );

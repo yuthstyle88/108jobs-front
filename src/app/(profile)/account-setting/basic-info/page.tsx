@@ -13,13 +13,13 @@ import { useState } from "react";
 import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
 import { useImageUpload } from "../hooks/useImageUpload";
 import { useProfileForm } from "../hooks/useProfileForm";
-
+import { ImageUploadResponse } from "@/types/image";
 
 export default function BasicInformation() {
   const { data: languageData } = useGlobalTranslate(LanguageFile.BASIC_INFO);
   const { days, months, years } = useDateOptions();
   const { trigger: uploadImage, isMutating: isUploadMuting } =
-    usePrivateImagePost<{ image_url: string }>("/image");
+  usePrivateImagePost<ImageUploadResponse, FormData>("/image");
 
   const { profileData, isLoadingProfile, isErrorProfile, mutate } =
     useBasicInfoForm();
@@ -56,6 +56,7 @@ export default function BasicInformation() {
 
   if (isLoadingProfile) return <Loading />;
   if (isErrorProfile) return <Error />;
+
   return (
     <>
       <form
@@ -153,12 +154,11 @@ export default function BasicInformation() {
             </label>
             <div className="grid grid-cols-3 gap-4">
               <select
-                {...register("birth_day", {
-                  required: languageData?.account_info,
-                })}
+                {...register("birth_day")}
+                defaultValue="Day"
                 className="border border-gray-300 rounded-lg px-3 py-2 text-text_secondary"
               >
-                <option disabled value="">
+                <option disabled value="Day">
                   Day
                 </option>
                 {days.map((day) => (
@@ -168,12 +168,11 @@ export default function BasicInformation() {
                 ))}
               </select>
               <select
-                {...register("birth_month", {
-                  required: languageData?.account_info,
-                })}
+                {...register("birth_month")}
+                defaultValue="Month"
                 className="border border-gray-300 rounded-lg px-3 py-2 text-text_secondary"
               >
-                <option disabled value="">
+                <option disabled value="Month">
                   Month
                 </option>
                 {months.map((month) => (
@@ -183,12 +182,11 @@ export default function BasicInformation() {
                 ))}
               </select>
               <select
-                {...register("birth_year", {
-                  required: languageData?.account_info,
-                })}
+                {...register("birth_year")}
+                defaultValue="Year"
                 className="border border-gray-300 rounded-lg px-3 py-2 text-text_secondary"
               >
-                <option disabled value="">
+                <option disabled value="Year">
                   Year
                 </option>
                 {years.map((year) => (
@@ -198,12 +196,8 @@ export default function BasicInformation() {
                 ))}
               </select>
             </div>
-            {(errors.birth_day || errors.birth_month || errors.birth_year) && (
-              <p className="text-red-500 text-sm mt-1">
-                {languageData?.account_info}
-              </p>
-            )}
           </div>
+
           <div className="self-end w-fit">
             <button
               type="submit"
@@ -219,6 +213,7 @@ export default function BasicInformation() {
           </div>
         </div>
       </form>
+
       <div className="border-1 border-border_primary rounded-lg bg-white mt-5 p-6 flex flex-row justify-between">
         <div className="text-[16px] text-text_primary font-medium">
           {languageData?.section_password}
@@ -235,6 +230,7 @@ export default function BasicInformation() {
           </button>
         </div>
       </div>
+
       <PasswordChangeModal isOpen={isModalOpen} onClose={closeModal} />
       <ImageUploadModal
         isOpen={isImageModalOpen}
