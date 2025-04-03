@@ -1,5 +1,6 @@
 import React from "react";
 import PreviewProfile from "./components/PreviewProfile";
+import { FreelancerFormData } from "@/types/applyFreelancer";
 
 interface StepThreeProps {
   formData: {
@@ -9,11 +10,7 @@ interface StepThreeProps {
     display_name: string;
     avatar_url: string | null;
   };
-  updateFormData: (data: {
-    username: string;
-    display_name: string;
-    freelancer_type: string;
-  }) => void;
+  updateFormData: (data: Partial<FreelancerFormData>) => void;
   nextStep: () => void;
 }
 
@@ -23,19 +20,20 @@ const StepThree: React.FC<StepThreeProps> = ({
   nextStep,
 }) => {
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateFormData({ ...formData, username: e.target.value });
+    updateFormData({ username: e.target.value });
   };
 
   const handleDisplayNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateFormData({ ...formData, display_name: e.target.value });
+    updateFormData({ display_name: e.target.value });
   };
 
   const handleFreelanceTypeChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    updateFormData({ ...formData, freelancer_type: e.target.value });
+    updateFormData({
+      freelancer_type: e.target.value as "Parttime" | "Fulltime",
+    });
   };
-
   const isFormValid = () => {
     return (
       formData.username.trim() !== "" && formData.display_name.trim() !== ""

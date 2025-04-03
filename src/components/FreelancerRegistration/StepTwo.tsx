@@ -1,5 +1,7 @@
+"use client";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React from "react";
+import { useSingleImageUpload } from "./hooks/useSingleImageUpload";
 
 interface StepTwoProps {
   formData: {
@@ -14,41 +16,20 @@ const StepTwo: React.FC<StepTwoProps> = ({
   updateFormData,
   nextStep,
 }) => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith("image/")) {
-      setError("Please upload an image file");
-      return;
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
-      setError("Image size should be less than 5MB");
-      return;
-    }
-
-    setError(null);
-    const reader = new FileReader();
-    reader.onload = () => {
-      updateFormData({ avatar_url: reader.result as string });
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
-
-  const removeImage = () => {
-    updateFormData({ avatar_url: null });
-  };
+  const {
+    imageUrl,
+    isUploading,
+    error,
+    fileInputRef,
+    handleFileChange,
+    handleSelectFile,
+    resetImage,
+  } = useSingleImageUpload(formData.avatar_url, (uploadedUrl) => {
+    updateFormData({ avatar_url: uploadedUrl });
+  });
 
   return (
-    <div className="p-6 flex flex-col h-full justify-center ">
+    <div className="p-6 flex flex-col h-full justify-center">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-text_primary">
           เลือกรูปที่บ่งบอกความเป็นคุณ
@@ -59,29 +40,35 @@ const StepTwo: React.FC<StepTwoProps> = ({
       </div>
 
       <div className="flex flex-col md:flex-row">
+        {/* LEFT: Image upload */}
         <div className="w-full md:w-1/2 mb-6 md:mb-0">
           <div className="flex items-center justify-center flex-col">
             <input
               type="file"
               className="hidden"
               ref={fileInputRef}
-              onChange={handleImageUpload}
               accept="image/*"
+              onChange={handleFileChange}
             />
 
-            {formData.avatar_url ? (
+            {imageUrl ? (
               <div className="relative">
                 <div className="w-48 h-48 bg-gray-200 rounded-full overflow-hidden">
                   <Image
-                    src={formData.avatar_url}
+                    src={imageUrl}
                     alt="Profile Preview"
                     className="w-full h-full object-cover"
                     width={500}
                     height={500}
                   />
                 </div>
+                {isUploading && (
+                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-full ">
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  </div>
+                )}
                 <button
-                  onClick={triggerFileInput}
+                  onClick={handleSelectFile}
                   className="absolute bottom-2 right-2 bg-third text-white p-2 rounded-full shadow-md"
                 >
                   <svg
@@ -108,7 +95,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
               </div>
             ) : (
               <div
-                onClick={triggerFileInput}
+                onClick={handleSelectFile}
                 className="w-48 h-48 bg-gray-100 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors"
               >
                 <div className="text-center">
@@ -135,9 +122,12 @@ const StepTwo: React.FC<StepTwoProps> = ({
 
             {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
 
-            {formData.avatar_url && (
+            {imageUrl && (
               <button
-                onClick={removeImage}
+                onClick={() => {
+                  resetImage();
+                  updateFormData({ avatar_url: null });
+                }}
                 className="mt-4 text-red-500 hover:text-red-700 text-sm"
               >
                 Remove image
@@ -146,6 +136,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
           </div>
         </div>
 
+        {/* RIGHT: Preview card */}
         <div className="w-full md:w-1/2">
           <div className="p-4 border border-gray-200 rounded-lg">
             <h3 className="font-medium text-lg text-text_primary mb-4">
@@ -153,33 +144,34 @@ const StepTwo: React.FC<StepTwoProps> = ({
             </h3>
             <div className="bg-gray-50 rounded-lg p-4 flex items-center">
               <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden mr-4">
-                {formData.avatar_url ? (
+                {imageUrl ? (
                   <Image
-                    src={formData.avatar_url}
+                    src={imageUrl}
                     alt="Profile"
                     className="w-full h-full object-cover"
                     width={500}
                     height={500}
                   />
                 ) : (
-                  <div className="w-full h-full bg-gray-300"></div>
+                  <div className="w-full h-full bg-gray-300" />
                 )}
               </div>
               <div>
-                <div className="h-4 w-32 bg-gray-300 rounded mb-2"></div>
-                <div className="h-3 w-24 bg-gray-300 rounded"></div>
+                <div className="h-4 w-32 bg-gray-300 rounded mb-2" />
+                <div className="h-3 w-24 bg-gray-300 rounded" />
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* NEXT BUTTON */}
       <div className="flex justify-center mt-16">
         <button
           onClick={nextStep}
-          disabled={!formData.avatar_url}
+          disabled={!imageUrl || isUploading}
           className={`px-6 py-2 rounded-lg flex items-center ${
-            !formData.avatar_url
+            !imageUrl || isUploading
               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
               : "bg-third text-white"
           }`}

@@ -1,43 +1,109 @@
+import { useFormStorage } from "@/app/apply-freelance/hooks/useFormStorage";
 import { FreelancerImage } from "@/constants/images";
+import { usePrivatePost } from "@/hooks/api-hooks";
+import { FreelancerFormData } from "@/types/applyFreelancer";
 import Image from "next/image";
 import React, { useState } from "react";
+import Loading from "../Loading";
 import SwipeToConfirm from "./components/SlideToConfirm";
-import { ApplyFreelancerFormData } from "@/types/applyFreelancer";
 
 interface StepNineProps {
-  formData: ApplyFreelancerFormData;
+  formData: FreelancerFormData;
+  currentStep: number;
 }
 
-const StepNine: React.FC<StepNineProps> = ({ formData }) => {
+interface ApplyFreelancerResponse {
+  jwt: string;
+}
 
+const StepNine: React.FC<StepNineProps> = ({ formData, currentStep }) => {
   console.log("formData", formData);
-  
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const { clearFormStorage } = useFormStorage<FreelancerFormData>({
+    currentStep,
+    setCurrentStep: () => {},
+    setFormData: () => {},
+  });
+
   const [isSuccess, setIsSuccess] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
-  const simulateApiCall = () => {
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 3000);
-    });
-  };
+  const { trigger: applyFreelancer, isMutating: isUpdateMuting } =
+    usePrivatePost("/profile/apply/freelancer");
 
   const handleConfirm = async () => {
-    setIsLoading(true);
-
+    setApiError(null);
     try {
-      await simulateApiCall();
-      setIsSuccess(true);
-      setIsLoading(false);
+      const payload = {
+        user_info: {
+          avatar_url: formData.avatar_url,
+          username: formData.username,
+          display_name: formData.display_name,
+          freelancer_type: formData.freelancer_type,
+        },
+        bio: formData.bio,
+        card_info: {
+          front_card: formData.front_card,
+          back_card: formData.back_card,
+          title: formData.title,
+          name: formData.name,
+          surname: formData.surname,
+          card_number: formData.card_number,
+          card_address_details: formData.card_address_details,
+          card_zip_code: formData.card_zip_code,
+          card_subdistrict_or_district: formData.card_subdistrict_or_district,
+          card_district_or_subdistrict: formData.card_district_or_subdistrict,
+          card_province: formData.card_province,
+        },
+        birth_date: formData.birth_date,
+        contact_address_info:
+          formData.country === "Thailand"
+            ? {
+                email: formData.email,
+                country: formData.country,
+                address_details: formData.address_details,
+                zip_code: formData.zip_code,
+                subdistrict_or_district: formData.subdistrict_or_district,
+                district_or_subdistrict: formData.district_or_subdistrict,
+                province: formData.province,
+              }
+            : {
+                email: formData.email,
+                country: formData.country,
+                province: formData.province,
+              },
+      };
 
-        setTimeout(() => {
-          setIsSuccess(false);
-        }, 1500);
+      const res = (await applyFreelancer(payload)) as ApplyFreelancerResponse;
+
+      if (!res) {
+        setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+        return;
+      }
+      if (res?.jwt) {
+        setIsLogin(true);
+        const loginResponse = await fetch("/api/auth/token-login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: res.jwt }),
+        });
+
+        if (!loginResponse.ok) {
+          setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+          return;
+        }
+
+        clearFormStorage();
+        setIsSuccess(true);
+        setIsLogin(false);
+        window.location.href = "/apply-freelance/landing";
+      } else {
+        setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      }
     } catch (error) {
       console.log("Error:", error);
-      setIsLoading(false);
+      setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
     }
   };
 
@@ -106,15 +172,19 @@ const StepNine: React.FC<StepNineProps> = ({ formData }) => {
             </p>
           </div>
         </div>
-
-        <div className="w-full flex justify-center mb-8 relative ">
+        <div className="w-full flex flex-col items-center justify-center mb-8 relative ">
           <div className="w-[400px] ">
             <SwipeToConfirm
               onConfirm={handleConfirm}
-              isLoading={isLoading}
+              isLoading={isUpdateMuting || isLogin}
               isSuccess={isSuccess}
             />
           </div>
+          {apiError && (
+            <div className="text-center text-sm text-red-600 mt-2">
+              {apiError}
+            </div>
+          )}
         </div>
       </div>
     </div>

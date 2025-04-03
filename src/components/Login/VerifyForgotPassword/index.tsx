@@ -114,10 +114,10 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
 
   const handleResend = async () => {
     if (isResendDisabled) return;
-
     try {
       setIsSendAgain(true);
-      const response = await fetch("/api/auth/register", {
+      setApiError(null);
+      const response = await fetch("/api/auth/forgot-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

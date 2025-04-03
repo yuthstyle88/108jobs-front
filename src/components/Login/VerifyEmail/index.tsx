@@ -120,6 +120,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
           setApiError("Đăng nhập tự động thất bại");
         }
       }
+      sessionStorage.removeItem("registerData");
     } catch (error) {
       console.error("Verification error:", error);
       setApiError(ERROR_CONSTANTS.SERVER_ERROR);
