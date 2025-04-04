@@ -15,8 +15,8 @@ export const useFormStorage = <T>({
 }: UseFormStorageProps<T>) => {
   const formKey = `${storageKey}FormData`;
   const stepKey = `${storageKey}CurrentStep`;
-  
-// eslint-disable-next-line react-hooks/exhaustive-deps
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const savedFormData = localStorage.getItem(formKey);
     const savedStep = localStorage.getItem(stepKey);

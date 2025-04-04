@@ -4,7 +4,6 @@ import { usePrivatePost } from "@/hooks/api-hooks";
 import { FreelancerFormData } from "@/types/applyFreelancer";
 import Image from "next/image";
 import React, { useState } from "react";
-import Loading from "../Loading";
 import SwipeToConfirm from "./components/SlideToConfirm";
 
 interface StepNineProps {
