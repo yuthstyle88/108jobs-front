@@ -33,14 +33,14 @@ const FreelancerRegistration = () => {
     birth_date: "",
     email: "",
     country: "Thailand",
-  
+
     card_number: "",
     card_address_details: "",
     card_zip_code: "",
     card_subdistrict_or_district: "",
     card_district_or_subdistrict: "",
     card_province: "",
-  
+
     front_card: null,
     back_card: null,
     title: "",
@@ -81,7 +81,7 @@ const FreelancerRegistration = () => {
     });
   };
 
- // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (userData) {
       setFormData((prev) => {
@@ -115,16 +115,26 @@ const FreelancerRegistration = () => {
   const renderStep = () => {
     const stepProps = { formData, updateFormData, nextStep };
     switch (currentStep) {
-      case 1: return <StepOne {...stepProps} />;
-      case 2: return <StepTwo {...stepProps} />;
-      case 3: return <StepThree {...stepProps} />;
-      case 4: return <StepFour {...stepProps} />;
-      case 5: return <StepFive {...stepProps} />;
-      case 6: return <StepSix {...stepProps} />;
-      case 7: return <StepSeven {...stepProps} />;
-      case 8: return <StepEight {...stepProps} />;
-      case 9: return <StepNine formData={formData} currentStep={currentStep} />;
-      default: return <StepOne {...stepProps} />;
+      case 1:
+        return <StepOne {...stepProps} />;
+      case 2:
+        return <StepTwo {...stepProps} />;
+      case 3:
+        return <StepThree {...stepProps} />;
+      case 4:
+        return <StepFour {...stepProps} />;
+      case 5:
+        return <StepFive {...stepProps} />;
+      case 6:
+        return <StepSix {...stepProps} />;
+      case 7:
+        return <StepSeven {...stepProps} />;
+      case 8:
+        return <StepEight {...stepProps} />;
+      case 9:
+        return <StepNine formData={formData} currentStep={currentStep} />;
+      default:
+        return <StepOne {...stepProps} />;
     }
   };
 
@@ -133,16 +143,36 @@ const FreelancerRegistration = () => {
       <div className="sm:w-[80vw] w-full h-full m-0 sm:mx-auto py-8 px-4">
         <div className="flex justify-between items-center mb-8">
           <button onClick={prevStep} className="text-third">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
           </button>
           <div className="flex items-center">
             <Image src={AssetIcon.logo_blue} alt="Logo" className="w-full" />
           </div>
           <button className="text-gray-400">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
