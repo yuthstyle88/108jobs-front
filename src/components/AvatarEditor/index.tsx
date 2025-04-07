@@ -436,7 +436,7 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
 
       <div className="flex justify-between pt-2">
         <div className="flex space-x-2">
-          <Button type="button" variant="outline" onClick={handleReset}>
+          <Button type="button" variant="default" onClick={handleReset}>
             <RotateCw className="h-4 w-4 mr-2" />
             รีเซ็ต
           </Button>

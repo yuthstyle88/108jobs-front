@@ -1,43 +1,62 @@
 "use client";
+import { API_ROUTES } from "@/api/endpoints";
+import Error from "@/app/error";
+import ImageUploadModal from "@/components/AvatarUploadModal";
+import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
-import { Pencil } from "lucide-react";
-import Image, { StaticImageData } from "next/image";
-import { useRef, useState } from "react";
+import { usePrivateImagePost } from "@/hooks/api-hooks";
+import { ImageUploadResponse } from "@/types/image";
+import Image from "next/image";
+import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
+import { useImageUpload } from "../hooks/useImageUpload";
+import { useProfileForm } from "../hooks/useProfileForm";
 
 const AccountSettings = () => {
-  const [username, setUsername] = useState("bth335yq");
-  const [displayName, setDisplayName] = useState("bth335yq");
-  const [userType, setUserType] = useState("part-time");
-  const [aboutText, setAboutText] = useState("dawdawdawdawdawdawdawd");
+  const { trigger: uploadImage, isMutating: isUploadMuting } =
+    usePrivateImagePost<ImageUploadResponse, FormData>(API_ROUTES.image.upload);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [profileImage, setProfileImage] = useState<StaticImageData | string>(
-    ProfileImage.avatar
+  const { profileData, isLoadingProfile, isErrorProfile, mutate } =
+    useBasicInfoForm();
+
+  const {
+    selectedImage,
+    setSelectedImage,
+    isImageModalOpen,
+    fileInputRef,
+    handleFileChange,
+    handleSelectFile,
+    handleImageUpload,
+    closeImageModal,
+  } = useImageUpload(profileData?.user?.avatar_url);
+
+  const {
+    register,
+    handleSubmit,
+    errors,
+    isSubmitting,
+    isUpdateMuting,
+    onSubmit,
+    watch,
+  } = useProfileForm(
+    profileData,
+    selectedImage,
+    uploadImage,
+    mutate,
+    setSelectedImage
   );
 
-  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setProfileImage(result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  console.log(isUploadMuting,errors,isSubmitting,isUpdateMuting);
+  
 
-  const handleImageEditClick = () => {
-    fileInputRef.current?.click();
-  };
 
-  const handleSave = () => {
-    console.log("Saving account settings");
-    // Logic to save data would go here
-  };
+  if (isLoadingProfile) return <Loading />;
+  if (isErrorProfile) return <Error />;
 
   return (
-    <div className="bg-white rounded-md shadow-sm overflow-hidden">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white rounded-md shadow-sm overflow-hidden"
+    >
       <div className="border-b border-gray-200 p-5">
         <h2 className="text-lg font-medium text-gray-800">
           Thông tin tài khoản freelancer
@@ -63,9 +82,7 @@ const AccountSettings = () => {
                   Fastlance.vn/user/
                 </span>
                 <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  {...register("username")}
                   className="text-text_primary flex-1 px-3 py-2 border border-gray-300 rounded-r-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -79,9 +96,7 @@ const AccountSettings = () => {
                 Nên sử dụng tên thật để tăng độ uy tín
               </p>
               <input
-                type="text"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
+                {...register("display_name")}
                 className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -95,59 +110,73 @@ const AccountSettings = () => {
                 lòng chọn Bán thời gian
               </p>
               <div className="flex space-x-4">
-                <label className="flex items-center">
+                <label
+                  className={`flex items-center border rounded-md px-4 py-2 cursor-pointer ${
+                    watch("freelancer_type") === "Parttime" && "border-third"
+                  }`}
+                >
                   <input
                     type="radio"
-                    className="form-radio h-4 w-4 text-blue-600"
-                    name="userType"
-                    value="part-time"
-                    checked={userType === "part-time"}
-                    onChange={() => setUserType("part-time")}
+                    className="mr-2 text-third"
+                    value="Parttime"
+                    {...register("freelancer_type")}
                   />
-                  <span className="ml-2 text-sm text-gray-700">
-                    Bán thời gian
-                  </span>
+                  <span className="text-text_primary">Part-time</span>
                 </label>
-                <label className="flex items-center">
+                <label
+                  className={`flex items-center border rounded-md px-4 py-2 cursor-pointer ${
+                    watch("freelancer_type") === "Fulltime" && "border-third"
+                  }`}
+                >
                   <input
                     type="radio"
-                    className="form-radio h-4 w-4 text-blue-600"
-                    name="userType"
-                    value="full-time"
-                    checked={userType === "full-time"}
-                    onChange={() => setUserType("full-time")}
+                    {...register("freelancer_type")}
+                    value="Fulltime"
+                    className="mr-2 text-third"
                   />
-                  <span className="ml-2 text-sm text-gray-700">
-                    Toàn thời gian
-                  </span>
+                  <span className="text-text_primary">Full-time</span>
                 </label>
               </div>
             </div>
           </div>
 
           <div className="md:w-1/3 flex flex-col items-center">
-            <div className="relative w-32 h-32 overflow-hidden">
-              <Image
-                src={profileImage}
-                alt="ProfileImage"
-                width={200}
-                height={200}
-                className="w-full h-full object-cover relative rounded-full"
-              />
-              <button
-                onClick={handleImageEditClick}
-                className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-md hover:bg-gray-100"
-                aria-label="Edit Profile Picture"
+            <div className="relative">
+              <div
+                onClick={handleSelectFile}
+                className="w-32 h-32 bg-blue-100 rounded-full flex items-center justify-center cursor-pointer"
               >
-                <Pencil className="h-4 w-4 text-gray-600" />
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+                <Image
+                  src={selectedImage ? selectedImage : ProfileImage.avatar}
+                  alt="avatar"
+                  className="w-full h-full rounded-full"
+                  width={500}
+                  height={500}
+                />
+              </div>
+              <button
+                onClick={handleSelectFile}
+                className="absolute bottom-0 right-0 bg-blue-600 rounded-full p-2"
+              >
+                <svg
+                  className="w-4 h-4 text-white"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                </svg>
               </button>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleProfileImageChange}
-                accept="image/*"
-                className="hidden"
-              />
             </div>
           </div>
         </div>
@@ -157,23 +186,25 @@ const AccountSettings = () => {
             Về freelancer
           </label>
           <textarea
-            value={aboutText}
-            onChange={(e) => setAboutText(e.target.value)}
+            {...register("bio")}
+            placeholder="Mô tả ngắn gọn điểm mạnh của bạn để giúp khách hàng quyết định"
             rows={5}
             className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           ></textarea>
         </div>
 
         <div className="flex justify-end">
-          <button
-            onClick={handleSave}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
+          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
             Lưu
           </button>
         </div>
       </div>
-    </div>
+      <ImageUploadModal
+        isOpen={isImageModalOpen}
+        onClose={closeImageModal}
+        onImageUpload={handleImageUpload}
+      />
+    </form>
   );
 };
 

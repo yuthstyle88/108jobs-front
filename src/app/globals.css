@@ -73,6 +73,9 @@
 .skeleton-blue {
   background: linear-gradient(90deg, #1d6ce2 -1.4%, rgba(29, 108, 226, 0) 104.93%);
 }
+.profile-member-gradient {
+  background: linear-gradient(105.12deg,#4580da 0.07%,rgb(69 128 218/0%) 53.66%),linear-gradient(0deg,#97bdf7,#97bdf7)
+}
 
 .grid-container-desktop {
   display: grid;

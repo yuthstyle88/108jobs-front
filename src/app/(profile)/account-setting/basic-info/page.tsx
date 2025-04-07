@@ -14,12 +14,13 @@ import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
 import { useImageUpload } from "../hooks/useImageUpload";
 import { useProfileForm } from "../hooks/useProfileForm";
 import { ImageUploadResponse } from "@/types/image";
+import { API_ROUTES } from "@/api/endpoints";
 
 export default function BasicInformation() {
   const { data: languageData } = useGlobalTranslate(LanguageFile.BASIC_INFO);
   const { days, months, years } = useDateOptions();
   const { trigger: uploadImage, isMutating: isUploadMuting } =
-  usePrivateImagePost<ImageUploadResponse, FormData>("/image");
+    usePrivateImagePost<ImageUploadResponse, FormData>(API_ROUTES.image.upload);
 
   const { profileData, isLoadingProfile, isErrorProfile, mutate } =
     useBasicInfoForm();
