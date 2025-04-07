@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { ERROR_CONSTANTS } from "@/constants/error";
+import { API_ROUTES } from "@/api/endpoints";
 
 export async function POST(request: Request) {
   try {
@@ -13,7 +14,7 @@ export async function POST(request: Request) {
     }
 
     const res = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE_URL + "/users/resend-verify-email",
+      process.env.NEXT_PUBLIC_API_BASE_URL + API_ROUTES.auth.resend_verify_email,
       {
         method: "POST",
         headers: {

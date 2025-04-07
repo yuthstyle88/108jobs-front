@@ -1,8 +1,12 @@
 "use client";
+import { API_ROUTES } from "@/api/endpoints";
 import { CategoriesImage } from "@/constants/images";
+import { usePublicFetch } from "@/hooks/api-hooks";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import Loading from "../Loading";
+import { ServiceCatalogData } from "@/types/catalog";
 
 type PopularSubCatItem = {
   id: number;
@@ -74,6 +78,18 @@ const subSEO = [
 
 const PopularSubCat = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const {
+    data: catalogData,
+    isLoading,
+    error,
+  } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.get_all_catalog);
+
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
+
+  console.log("catalogData",catalogData);
+  
 
   return (
     <section className="col-start-2 col-end-3 grid grid-cols-[280px_1fr] pt-8 pb-9 gap-6 text-[0.875rem]">

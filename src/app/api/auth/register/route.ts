@@ -1,3 +1,4 @@
+import { API_ROUTES } from "@/api/endpoints";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { NextResponse } from "next/server";
 
@@ -6,7 +7,7 @@ export async function POST(request: Request) {
 
   try {
     const res = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE_URL + "/email/send/verify",
+      process.env.NEXT_PUBLIC_API_BASE_URL + API_ROUTES.auth.register,
       {
         method: "POST",
         headers: {
