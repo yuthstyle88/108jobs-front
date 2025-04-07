@@ -8,6 +8,8 @@ import chat from "../assets/images/megamenu/chat-to-hire.svg";
 import company from "../assets/images/megamenu/company.svg";
 import job from "../assets/images/megamenu/job-board.svg";
 import job_bg from "../assets/images/megamenu/search-th.webp";
+import ads from "../assets/images/megamenu/ads.svg";
+import ads_bg from "../assets/images/megamenu/seller-ads-vn.webp";
 import b2b from "../assets/images/megamenu/b2b.webp";
 import chat_to_hire from "../assets/images/megamenu/chat-to-hire-th.webp";
 import buyer_job from "../assets/images/megamenu/buyer-job-board-th.webp";
@@ -118,6 +120,7 @@ import logobusiness from "../assets/images/compare/logo-business.png";
 import avatar from "../assets/images/profile/avatar.jpg";
 import coin_bg from "../assets/images/profile/coin-desktop-banner.webp";
 import job_board from "../assets/images/profile/banner.webp";
+import decal from "../assets/images/profile/decal.svg";
 
 import leakage1 from "../assets/images/apply-freelancer/leakage-1.jpg";
 import leakage2 from "../assets/images/apply-freelancer/leakage-2.jpg";
@@ -140,6 +143,7 @@ export const ProfileImage = {
   avatar,
   coin_bg,
   job_board,
+  decal,
 };
 export const CompareImage = {
   compare1,
@@ -186,6 +190,8 @@ export const MegaMenuImage = {
   chat_to_hire,
   buyer_job,
   company_th,
+  ads,
+  ads_bg
 };
 
 export const AssetsImage = {

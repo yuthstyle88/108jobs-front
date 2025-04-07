@@ -7,7 +7,7 @@ const secret = process.env.AUTH_SECRET;
 
 const roleBasedRoutes: Record<UserRole, string[]> = {
   employer: [ "/employer/jobs", "/employer/applicants"],
-  freelancer: ["/seller", "/freelancer/jobs", "/freelancer/proposals"],
+  freelancer: ["/freelancer/jobs", "/freelancer/proposals"],
 };
 
 const protectedRoutes = Object.values(roleBasedRoutes).flat();

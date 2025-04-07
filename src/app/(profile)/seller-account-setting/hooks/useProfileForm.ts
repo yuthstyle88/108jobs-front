@@ -12,6 +12,8 @@ interface FormValues {
   birth_day: string;
   birth_month: string;
   birth_year: string;
+  freelancer_type: string;
+  bio: string;
 }
 
 export const useProfileForm = (
@@ -26,6 +28,7 @@ export const useProfileForm = (
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    watch,
   } = useForm<FormValues>();
 
   const { trigger: updateProfile, isMutating: isUpdateMuting } =
@@ -44,6 +47,8 @@ export const useProfileForm = (
           birth_day: day || "Day",
           birth_month: month || "Month",
           birth_year: year || "Year",
+          freelancer_type: profileData.profile.freelancer_type,
+          bio: profileData.profile.bio || "",
         });
       } else {
         reset({
@@ -101,5 +106,6 @@ export const useProfileForm = (
     isSubmitting,
     isUpdateMuting,
     onSubmit,
+    watch,
   };
 };

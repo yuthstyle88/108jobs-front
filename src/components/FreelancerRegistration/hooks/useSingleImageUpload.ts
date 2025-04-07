@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { usePrivateImagePost } from "@/hooks/api-hooks";
 import { ImageUploadResponse } from "@/types/image";
+import { API_ROUTES } from "@/api/endpoints";
 
 /**
  * A reusable image uploader hook for single image upload with validation and callbacks.
@@ -17,7 +18,7 @@ export const useSingleImageUpload = (
   const { trigger: uploadImage } = usePrivateImagePost<
     ImageUploadResponse,
     FormData
-  >("/image");
+  >(API_ROUTES.image.upload);
 
   const handleSelectFile = () => fileInputRef.current?.click();
 

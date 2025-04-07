@@ -5,6 +5,7 @@ import { FreelancerFormData } from "@/types/applyFreelancer";
 import Image from "next/image";
 import React, { useState } from "react";
 import SwipeToConfirm from "./components/SlideToConfirm";
+import { API_ROUTES } from "@/api/endpoints";
 
 interface StepNineProps {
   formData: FreelancerFormData;
@@ -16,8 +17,6 @@ interface ApplyFreelancerResponse {
 }
 
 const StepNine: React.FC<StepNineProps> = ({ formData, currentStep }) => {
-  console.log("formData", formData);
-
   const [isLogin, setIsLogin] = useState(false);
   const { clearFormStorage } = useFormStorage<FreelancerFormData>({
     currentStep,
@@ -29,7 +28,7 @@ const StepNine: React.FC<StepNineProps> = ({ formData, currentStep }) => {
   const [apiError, setApiError] = useState<string | null>(null);
 
   const { trigger: applyFreelancer, isMutating: isUpdateMuting } =
-    usePrivatePost("/profile/apply/freelancer");
+    usePrivatePost(API_ROUTES.profile.apply_freelancer);
 
   const handleConfirm = async () => {
     setApiError(null);

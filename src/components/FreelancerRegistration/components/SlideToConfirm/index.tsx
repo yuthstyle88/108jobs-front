@@ -148,7 +148,6 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
   }, []);
 
   const handleConfirmAction = useCallback(() => {
-    console.log("Swipe completed, executing confirmation");
     setCompleted(true);
     transitionActiveRef.current = true;
     
@@ -221,7 +220,6 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
     
     // Only confirm if threshold was met
     if (thresholdMetRef.current) {
-      console.log("Threshold met after release, triggering confirmation");
       handleConfirmAction();
     } else {
       // If below threshold, reset position with animation

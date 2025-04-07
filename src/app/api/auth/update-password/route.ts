@@ -1,3 +1,4 @@
+import { API_ROUTES } from "@/api/endpoints";
 import { auth } from "@/auth";
 import { ERROR_CONSTANTS, ERROR_VERIFY_PASSWORD } from "@/constants/error";
 import { NextResponse } from "next/server";
@@ -9,7 +10,7 @@ export async function POST(request: Request) {
     const session = await auth()
 
     const res = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE_URL + "/profile/change/password",
+      process.env.NEXT_PUBLIC_API_BASE_URL + API_ROUTES.auth.update_password,
       {
         method: "POST",
         headers: {
