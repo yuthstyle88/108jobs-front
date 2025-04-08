@@ -8,9 +8,9 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import ChangeEmailModal from "../ChangeEmailModal";
+import ConfirmChangeEmailModal from "../ConfirmChangeEmailModal";
 import LoadingCircle from "../LoadingCircle";
-import ChangeEmailModal from "./components/ChangeEmailModal";
-import ConfirmChangeModal from "./components/ConfirmChangeModal";
 import ZipcodeSearch from "./components/SearchZipcode";
 
 const forgotPasswordSchema = z.object({
@@ -141,7 +141,7 @@ const StepEight: React.FC<StepEightProps> = ({
                     <input
                       type="email"
                       {...register("email")}
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                      className={`text-text_primary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                         apiError
                           ? "border-[#ea6357] text-[#ea6357]"
                           : "border-gray-300"
@@ -356,7 +356,7 @@ const StepEight: React.FC<StepEightProps> = ({
       </div>
 
       {/* Modals */}
-      <ConfirmChangeModal
+      <ConfirmChangeEmailModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         handleConfirmChange={() => {

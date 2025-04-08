@@ -62,7 +62,7 @@ export default async function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className={`${kanit.className} antialiased`}
+        className={`${kanit.className} antialiased bg-white`}
       >
         <Providers session={session}>
           <Toaster richColors closeButton position="top-right" />
