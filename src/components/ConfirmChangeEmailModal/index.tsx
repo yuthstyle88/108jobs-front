@@ -17,14 +17,14 @@ const changePasswordSchema = z
     path: ["confirmPassword"],
   });
 
-interface ConfirmChangeModalProps {
+interface ConfirmChangeEmailModalProps {
   isOpen: boolean;
   onClose: () => void;
   handleConfirmChange: () => void;
 }
 
 
-const ConfirmChangeModal: React.FC<ConfirmChangeModalProps> = ({
+const ConfirmChangeEmailModal: React.FC<ConfirmChangeEmailModalProps> = ({
   isOpen,
   onClose,
   handleConfirmChange
@@ -82,4 +82,4 @@ const ConfirmChangeModal: React.FC<ConfirmChangeModalProps> = ({
   );
 };
 
-export default ConfirmChangeModal;
+export default ConfirmChangeEmailModal;

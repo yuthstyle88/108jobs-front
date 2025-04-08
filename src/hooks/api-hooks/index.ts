@@ -11,7 +11,7 @@ export const usePublicFetch = <T>(url: string | null) => {
     {
       revalidateOnFocus: false,
       dedupingInterval: 60000,
-      errorRetryCount: 3, 
+      errorRetryCount: 3,
     }
   );
 };
@@ -44,12 +44,20 @@ export const usePublicDelete = <T>(url: string) => {
 export const usePrivateFetch = <T>(url: string | null) => {
   return useSWR<T, AxiosError>(
     url,
-    async (url: string) => (await axiosPrivate.get<T>(url)).data
+    async (url: string) => (await axiosPrivate.get<T>(url)).data,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 60000,
+      keepPreviousData: true,
+    }
   );
 };
 
 // Private GET with params
-export const usePrivateFetchParams = <T>(url: string | null, options?: SWRConfiguration) => {
+export const usePrivateFetchParams = <T>(
+  url: string | null,
+  options?: SWRConfiguration
+) => {
   const fetcher = async (url: string) => {
     const response = await axiosPrivate.get<T>(url);
     return response.data;
@@ -57,7 +65,6 @@ export const usePrivateFetchParams = <T>(url: string | null, options?: SWRConfig
 
   return useSWR<T, AxiosError>(url, url ? fetcher : null, options);
 };
-
 
 // Private POST
 export const usePrivatePost = <T, D = unknown>(url: string) => {
@@ -70,11 +77,13 @@ export const usePrivateImagePost = <T, D = unknown>(url: string) => {
   return useSWRMutation<T, AxiosError, string, D>(
     url,
     async (url, { arg }) =>
-      (await axiosFileUpload.post<T>(url, arg, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })).data
+      (
+        await axiosFileUpload.post<T>(url, arg, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+      ).data
   );
 };
 
