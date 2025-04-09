@@ -6,6 +6,7 @@ export const API_ROUTES = {
     apply_freelancer: "/profile/apply/freelancer",
     get_profile: "/profile",
     update_Profile: "/profile/info",
+    update_address_profile: "/profile/address"
   },
   catalog: {
     get_all_catalog: "/service/catalogs-all",
@@ -21,5 +22,10 @@ export const API_ROUTES = {
     verify_change_email: "/profile/contact/verify/email",
     update_password: "/profile/change/password",
     verify_forgot_password: "/users/verify/reset-password",
+  },
+};
+export const API_ROUTES_SELLER = {
+  profile: {
+    update_Profile: "/freelancer/info",
   },
 };

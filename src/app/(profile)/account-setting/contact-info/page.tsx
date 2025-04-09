@@ -5,16 +5,17 @@ import Loading from "@/components/Loading";
 import LoadingCircle from "@/components/LoadingCircle";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
-import { usePrivateFetch } from "@/hooks/api-hooks";
+import { usePrivateFetch, usePrivatePut } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
-import {
-  useForm
-} from "react-hook-form";
+import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ZipcodeSearch from "../components/SearchZipcode";
 import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
+import { addressSchema } from "@/utils/validation/addressSchema";
+import { API_ROUTES } from "@/api/endpoints";
+import useNotification from "@/hooks/useNotification";
 
 const emailSchema = z.object({
   email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์").optional(),
@@ -63,8 +64,11 @@ function normalizeAddress(address: RawAddress | undefined): AddressFormData {
 export default function ContactPage() {
   const { profileData, mutate } = useBasicInfoForm();
   const [isReady, setIsReady] = useState(false);
+  const [defaultForeignCountry, setDefaultForeignCountry] =
+    useState<string>("");
 
   const form = useForm<AddressFormData>({
+    resolver: zodResolver(addressSchema),
     defaultValues: {
       country: "Thailand",
     },
@@ -77,7 +81,7 @@ export default function ContactPage() {
     control,
     watch,
     reset,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting },
   } = form;
 
   const {
@@ -96,26 +100,51 @@ export default function ContactPage() {
 
   const { data: countriesData } =
     usePrivateFetch<CountriesResponse>("/profile/countries");
+
   const {
     data: contactInfoLanguageData,
     isLoading,
     error,
   } = useGlobalTranslate(LanguageFile.CONTACT);
 
+  const { trigger: updateAddressProfile, isMutating: isUpdateMuting } =
+    usePrivatePut<AddressFormData>(API_ROUTES.profile.update_address_profile);
+
+  const { success_message } = useNotification();
+  const LOCATION_OPTIONS = ["Thailand", "Foreign"] as const;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmChange, setIsConfirmChange] = useState(false);
   const [isChangeModal, setIsChangeModal] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  type LocationType = (typeof LOCATION_OPTIONS)[number];
+  const [locationType, setLocationType] = useState<LocationType>("Thailand");
 
   const country = watch("country");
-  const province = watch("province");
+
+  const countryOptions = useMemo(() => {
+    return (
+      countriesData?.countries.map((c) => ({
+        label: c.name,
+        value: c.name,
+      })) ?? []
+    );
+  }, [countriesData]);
 
   useEffect(() => {
     if (profileData?.address && !isReady) {
-      reset(normalizeAddress(profileData.address));
+      const normalized = normalizeAddress(profileData.address);
+
+      if (normalized.country !== "Thailand") {
+        setLocationType("Foreign");
+        setDefaultForeignCountry(normalized.country); // store default for foreign
+      } else {
+        setLocationType("Thailand");
+      }
+
+      reset(normalized);
       setIsReady(true);
     }
-  }, [profileData?.address,isReady, reset]);
+  }, [profileData?.address, isReady, reset]);
 
   useEffect(() => {
     if (isConfirmChange) {
@@ -148,6 +177,26 @@ export default function ContactPage() {
 
   const onSubmitAddress = async (data: AddressFormData) => {
     console.log("Address data:", data);
+    try {
+      let payload: Partial<AddressFormData>;
+
+      if (data.country === "Thailand") {
+        payload = data;
+      } else {
+        payload = { country: data.country };
+      }
+
+      await updateAddressProfile(payload);
+      await mutate();
+      success_message("profile", "update", null);
+      if (data.country !== "Thailand") {
+        setDefaultForeignCountry(data.country);
+      } else {
+        setDefaultForeignCountry("");
+      }
+    } catch (error) {
+      console.error("Update error:", error);
+    }
   };
 
   if (isLoading || !isReady) return <Loading />;
@@ -266,17 +315,24 @@ export default function ContactPage() {
             {contactInfoLanguageData?.label_current_location}
           </h3>
           <div className="grid grid-cols-2 gap-4 mb-4">
-            {["Thailand", "Foreign"].map((option) => (
+            {LOCATION_OPTIONS.map((option) => (
               <label
                 key={option}
                 className={`flex items-center py-3 px-4 border rounded-lg cursor-pointer ${
-                  country === option ? "border-third" : "border-gray-300"
+                  locationType === option ? "border-third" : "border-gray-300"
                 }`}
               >
                 <input
                   type="radio"
-                  value={option}
-                  {...register("country")}
+                  checked={locationType === option}
+                  onChange={() => {
+                    setLocationType(option);
+                    if (option === "Thailand") {
+                      setValue("country", "Thailand");
+                    } else {
+                      setValue("country", defaultForeignCountry || "");
+                    }
+                  }}
                   className="text-blue-600 mr-3"
                 />
                 {option === "Thailand" ? "ประเทศไทย" : "ต่างชาติ"}
@@ -284,19 +340,29 @@ export default function ContactPage() {
             ))}
           </div>
 
-          {country === "Foreign" ? (
-            <select
-              {...register("province")}
-              value={province}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-            >
-              <option value="">เลือกประเทศ</option>
-              {countriesData?.countries.map((c) => (
-                <option key={c.id} value={c.name}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
+          {locationType === "Foreign" ? (
+            <>
+              <label className="block text-sm mb-1">เลือกประเทศ</label>
+              <select
+                {...register("country")}
+                value={country}
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary ${
+                  errors.country ? "border-red-500" : "border-gray-300"
+                }`}
+              >
+                <option value="">-- เลือกประเทศ --</option>
+                {countryOptions.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+              {errors.country && (
+                <p className="text-red-500 text-[12px] mt-1">
+                  {errors.country.message}
+                </p>
+              )}
+            </>
           ) : (
             <>
               <div className="mb-4">
@@ -308,16 +374,30 @@ export default function ContactPage() {
                   className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   placeholder="ระบุที่อยู่, หมู่, ถนน, ซอย"
                 />
+                {errors.address_details && (
+                  <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
+                    {errors.address_details.message}
+                  </p>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4 mb-4">
-                <ZipcodeSearch control={control} setValue={setValue} />
+                <ZipcodeSearch
+                  error={errors.zip_code}
+                  control={control}
+                  setValue={setValue}
+                />
                 <div>
                   <label className="block font-semibold mb-1">ตำบล/แขวง</label>
                   <input
                     {...register("subdistrict_or_district")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   />
+                  {errors.subdistrict_or_district && (
+                    <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
+                      {errors.subdistrict_or_district.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -328,6 +408,11 @@ export default function ContactPage() {
                     {...register("district_or_subdistrict")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   />
+                  {errors.district_or_subdistrict && (
+                    <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
+                      {errors.district_or_subdistrict.message}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block font-semibold mb-1">จังหวัด</label>
@@ -335,6 +420,11 @@ export default function ContactPage() {
                     {...register("province")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   />
+                  {errors.province && (
+                    <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
+                      {errors.province.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </>
@@ -346,7 +436,11 @@ export default function ContactPage() {
               disabled={isSubmitting}
               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
-              {isSubmitting ? "กำลังบันทึก..." : "บันทึก"}
+              {isSubmitting || isUpdateMuting ? (
+                <span>กำลังบันทึก...</span>
+              ) : (
+                "บันทึก"
+              )}
             </button>
           </div>
         </div>
