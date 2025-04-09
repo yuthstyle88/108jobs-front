@@ -1,20 +1,31 @@
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { usePrivatePut } from "@/hooks/api-hooks";
 import { ProfileData } from "@/types/userData";
 import { useEffect } from "react";
 import useNotification from "@/hooks/useNotification";
 import { ImageUploadResponse } from "@/types/image";
-import { API_ROUTES } from "@/api/endpoints";
+import { API_ROUTES_SELLER } from "@/api/endpoints";
 
-interface FormValues {
-  display_name: string;
-  username: string;
-  birth_day: string;
-  birth_month: string;
-  birth_year: string;
-  freelancer_type: string;
-  bio: string;
-}
+const profileSchema = z.object({
+  display_name: z
+    .string()
+    .min(2, "Tên hiển thị phải có ít nhất 2 ký tự")
+    .max(50, "Tên hiển thị không được quá 50 ký tự"),
+  username: z
+    .string()
+    .min(3, "Username phải có ít nhất 3 ký tự")
+    .max(30, "Username không được quá 30 ký tự")
+    .regex(/^[a-zA-Z0-9_]+$/, "Username chỉ chứa chữ, số và _"),
+  birth_day: z.string(),
+  birth_month: z.string(),
+  birth_year: z.string(),
+  freelancer_type: z.string(),
+  bio: z.string().optional(),
+});
+
+type FormValues = z.infer<typeof profileSchema>;
 
 export const useProfileForm = (
   profileData: ProfileData | undefined,
@@ -29,10 +40,12 @@ export const useProfileForm = (
     formState: { errors, isSubmitting },
     reset,
     watch,
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    resolver: zodResolver(profileSchema),
+  });
 
   const { trigger: updateProfile, isMutating: isUpdateMuting } =
-    usePrivatePut<ProfileData>(API_ROUTES.profile.update_Profile);
+    usePrivatePut<ProfileData>(API_ROUTES_SELLER.profile.update_Profile);
 
   const { success_message } = useNotification();
 
@@ -57,6 +70,8 @@ export const useProfileForm = (
           birth_day: "Day",
           birth_month: "Month",
           birth_year: "Year",
+          freelancer_type: profileData.profile.freelancer_type,
+          bio: profileData.profile.bio || "",
         });
       }
       setSelectedImage(profileData.user.avatar_url);
@@ -83,17 +98,21 @@ export const useProfileForm = (
         formData.birth_year === "Year";
 
       const updateData = {
-        display_name: formData.display_name,
-        username: formData.username,
-        birth_date: isIncompleteBirthDate
-          ? null
-          : `${formData.birth_year}-${formData.birth_month}-${formData.birth_day}`,
-        avatar_url: avatarUrl || null,
+        update_user: {
+          display_name: formData.display_name,
+          username: formData.username,
+          avatar_url: avatarUrl || null,
+          birth_date: isIncompleteBirthDate
+            ? null
+            : `${formData.birth_year}-${formData.birth_month}-${formData.birth_day}`,
+        },
+        freelancer_type: formData.freelancer_type,
+        bio: formData.bio,
       };
 
       await updateProfile(updateData);
-      success_message("profile", "update", null);
       await mutate();
+      success_message("profile", "update", null);
     } catch (error) {
       console.error("Update error:", error);
     }

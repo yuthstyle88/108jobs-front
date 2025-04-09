@@ -45,9 +45,7 @@ const AccountSettings = () => {
     setSelectedImage
   );
 
-  console.log(isUploadMuting,errors,isSubmitting,isUpdateMuting);
-  
-
+  console.log(isUploadMuting, errors, isSubmitting, isUpdateMuting);
 
   if (isLoadingProfile) return <Loading />;
   if (isErrorProfile) return <Error />;
@@ -86,6 +84,11 @@ const AccountSettings = () => {
                   className="text-text_primary flex-1 px-3 py-2 border border-gray-300 rounded-r-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
+              {errors.username && (
+                <p className="text-red-500 text-[12px] font-sans mt-1">
+                  {errors.username.message}
+                </p>
+              )}
             </div>
 
             <div className="mb-6">
@@ -99,6 +102,11 @@ const AccountSettings = () => {
                 {...register("display_name")}
                 className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
+              {errors.display_name && (
+                <p className="text-red-500 text-[12px] font-sans mt-1">
+                  {errors.display_name.message}
+                </p>
+              )}
             </div>
 
             <div className="mb-6">
@@ -194,8 +202,16 @@ const AccountSettings = () => {
         </div>
 
         <div className="flex justify-end">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-            Lưu
+          <button
+            type="submit"
+            disabled={isSubmitting || isUpdateMuting || isUploadMuting}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSubmitting || isUpdateMuting || isUploadMuting ? (
+              <span>บันทึก...</span>
+            ) : (
+              "บันทึก"
+            )}
           </button>
         </div>
       </div>
