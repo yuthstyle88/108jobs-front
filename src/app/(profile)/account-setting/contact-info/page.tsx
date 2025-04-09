@@ -1,23 +1,209 @@
 "use client";
+import ChangeEmailModal from "@/components/ChangeEmailModal";
+import ConfirmChangeEmailModal from "@/components/ConfirmChangeEmailModal";
 import Loading from "@/components/Loading";
+import LoadingCircle from "@/components/LoadingCircle";
+import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
+import { usePrivateFetch, usePrivatePut } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import ZipcodeSearch from "../components/SearchZipcode";
+import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
+import { addressSchema } from "@/utils/validation/addressSchema";
+import { API_ROUTES } from "@/api/endpoints";
+import useNotification from "@/hooks/useNotification";
+
+const emailSchema = z.object({
+  email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์").optional(),
+});
+
+type VerifyEmailFormData = z.infer<typeof emailSchema>;
+
+interface Country {
+  id: string;
+  name: string;
+}
+
+interface CountriesResponse {
+  countries: Country[];
+}
+
+export interface AddressFormData {
+  country: string;
+  province?: string;
+  district_or_subdistrict?: string;
+  subdistrict_or_district?: string;
+  zip_code?: string;
+  address_details?: string;
+}
+
+interface RawAddress {
+  country?: string | null;
+  province?: string | null;
+  district_or_subdistrict?: string | null;
+  subdistrict_or_district?: string | null;
+  zip_code?: string | null;
+  address_details?: string | null;
+}
+
+function normalizeAddress(address: RawAddress | undefined): AddressFormData {
+  return {
+    country: address?.country ?? "Thailand",
+    province: address?.province ?? "",
+    district_or_subdistrict: address?.district_or_subdistrict ?? "",
+    subdistrict_or_district: address?.subdistrict_or_district ?? "",
+    zip_code: address?.zip_code ?? "",
+    address_details: address?.address_details ?? "",
+  };
+}
 
 export default function ContactPage() {
-  const [selectedCountry, setSelectedCountry] = useState("foreign");
+  const { profileData, mutate } = useBasicInfoForm();
+  const [isReady, setIsReady] = useState(false);
+  const [defaultForeignCountry, setDefaultForeignCountry] =
+    useState<string>("");
+
+  const form = useForm<AddressFormData>({
+    resolver: zodResolver(addressSchema),
+    defaultValues: {
+      country: "Thailand",
+    },
+  });
 
   const {
-      data: contactInfoLanguageData,
-      isLoading,
-      error,
-    } = useGlobalTranslate(LanguageFile.CONTACT);
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    watch,
+    reset,
+    formState: { errors, isSubmitting },
+  } = form;
 
-  if (isLoading) return <Loading />;
+  const {
+    register: emailRegister,
+    handleSubmit: handleEmailSubmit,
+    reset: resetEmail,
+    formState: { isSubmitting: isSubmittingEmail },
+    getValues: getEmailValues,
+  } = useForm({
+    resolver: zodResolver(emailSchema),
+    mode: "onChange",
+    defaultValues: {
+      email: profileData?.contact.email,
+    },
+  });
+
+  const { data: countriesData } =
+    usePrivateFetch<CountriesResponse>("/profile/countries");
+
+  const {
+    data: contactInfoLanguageData,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.CONTACT);
+
+  const { trigger: updateAddressProfile, isMutating: isUpdateMuting } =
+    usePrivatePut<AddressFormData>(API_ROUTES.profile.update_address_profile);
+
+  const { success_message } = useNotification();
+  const LOCATION_OPTIONS = ["Thailand", "Foreign"] as const;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmChange, setIsConfirmChange] = useState(false);
+  const [isChangeModal, setIsChangeModal] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+  type LocationType = (typeof LOCATION_OPTIONS)[number];
+  const [locationType, setLocationType] = useState<LocationType>("Thailand");
+
+  const country = watch("country");
+
+  const countryOptions = useMemo(() => {
+    return (
+      countriesData?.countries.map((c) => ({
+        label: c.name,
+        value: c.name,
+      })) ?? []
+    );
+  }, [countriesData]);
+
+  useEffect(() => {
+    if (profileData?.address && !isReady) {
+      const normalized = normalizeAddress(profileData.address);
+
+      if (normalized.country !== "Thailand") {
+        setLocationType("Foreign");
+        setDefaultForeignCountry(normalized.country); // store default for foreign
+      } else {
+        setLocationType("Thailand");
+      }
+
+      reset(normalized);
+      setIsReady(true);
+    }
+  }, [profileData?.address, isReady, reset]);
+
+  useEffect(() => {
+    if (isConfirmChange) {
+      resetEmail({ email: profileData?.contact.email ?? "" });
+    }
+  }, [isConfirmChange, profileData, resetEmail]);
+
+  const onSubmitEmail = async (data: VerifyEmailFormData) => {
+    try {
+      setApiError(null);
+      const response = await fetch("/api/auth/resend-change-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: data.email }),
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        if (result.error) setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
+        return;
+      }
+
+      setIsChangeModal(true);
+    } catch (error) {
+      setApiError(
+        error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลงทะเบียน"
+      );
+    }
+  };
+
+  const onSubmitAddress = async (data: AddressFormData) => {
+    console.log("Address data:", data);
+    try {
+      let payload: Partial<AddressFormData>;
+
+      if (data.country === "Thailand") {
+        payload = data;
+      } else {
+        payload = { country: data.country };
+      }
+
+      await updateAddressProfile(payload);
+      await mutate();
+      success_message("profile", "update", null);
+      if (data.country !== "Thailand") {
+        setDefaultForeignCountry(data.country);
+      } else {
+        setDefaultForeignCountry("");
+      }
+    } catch (error) {
+      console.error("Update error:", error);
+    }
+  };
+
+  if (isLoading || !isReady) return <Loading />;
   if (error) return <div>Error loading language data</div>;
 
   return (
-    <div className="">
+    <div>
       <div className="bg-white rounded-lg shadow-sm border-1 border-border_primary mb-6">
         <div className="border-b p-6">
           <h2 className="text-[16px] font-medium mb-2 text-text_primary">
@@ -29,19 +215,66 @@ export default function ContactPage() {
         </div>
 
         <div className="p-6">
-          <div className="mb-6">
-            <h3 className="text-[14px] font-sans text-text_primary font-semibold mb-1">
-              {contactInfoLanguageData?.label_contact_email}
-            </h3>
-            <div className="flex items-center gap-4">
-              <div className="flex-1 py-2 px-3 bg-gray-50 border border-gray-200 rounded text-gray-700">
-                vutruonggiang452002@gmail.com
+          {isConfirmChange ? (
+            <form onSubmit={handleEmailSubmit(onSubmitEmail)}>
+              <div className="mb-6">
+                <div className="flex gap-2 items-end w-full">
+                  <div className="flex-1">
+                    <label className="block text-sm text-text_primary font-semibold mb-2">
+                      อีเมลติดต่อ
+                    </label>
+                    <input
+                      type="email"
+                      {...emailRegister("email")}
+                      className={`text-text_primary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                        apiError
+                          ? "border-[#ea6357] text-[#ea6357]"
+                          : "border-gray-300"
+                      }`}
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+                  <div className="justify-end">
+                    <button
+                      type="submit"
+                      disabled={isSubmittingEmail}
+                      className="px-3 py-[8px] submit-button"
+                    >
+                      {isSubmittingEmail ? <LoadingCircle /> : "ยืนยัน"}
+                    </button>
+                  </div>
+                </div>
+                {apiError && (
+                  <div className="text-[#ea6357] text-[12px] font-sans">
+                    {apiError}
+                  </div>
+                )}
               </div>
-              <button className="text-blue-600 hover:underline font-medium">
-                เปลี่ยน
-              </button>
+            </form>
+          ) : (
+            <div className="mb-6 flex gap-2 items-end w-full">
+              <div className="flex-1">
+                <label className="block text-sm text-text_primary font-semibold mb-2">
+                  อีเมลติดต่อ
+                </label>
+                <input
+                  type="email"
+                  value={profileData?.contact.email ?? ""}
+                  disabled
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary disabled:cursor-not-allowed"
+                  placeholder="your.email@example.com"
+                />
+              </div>
+              <div className="justify-end">
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
+                >
+                  ยืนยัน
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           <div>
             <h3 className="text-sm text-text_primary font-semibold text-gray-600 mb-1 font-sans">
@@ -65,153 +298,173 @@ export default function ContactPage() {
         </div>
       </div>
 
-      <div className="">
-        <div className="bg-white rounded-lg text-sm text-text_primary font-semibold font-sans mb-6">
-          <div className="p-6 border-b">
-            <h2 className="text-[16px] font-medium mb-2 text-text_primary">
-              {contactInfoLanguageData?.section_address_info}
-            </h2>
-            <p className="text-gray-600 text-[14px] font-sans">
-              {contactInfoLanguageData?.subtitle_address_info}
-            </p>
+      <form
+        onSubmit={handleSubmit(onSubmitAddress)}
+        className="bg-white rounded-lg text-sm text-text_primary font-semibold font-sans mb-6"
+      >
+        <div className="p-6 border-b">
+          <h2 className="text-[16px] font-medium mb-2 text-text_primary">
+            {contactInfoLanguageData?.section_address_info}
+          </h2>
+          <p className="text-gray-600 text-[14px] font-sans font-normal">
+            {contactInfoLanguageData?.subtitle_address_info}
+          </p>
+        </div>
+        <div className="p-6 flex flex-col border-b">
+          <h3 className="text-base font-medium mb-3">
+            {contactInfoLanguageData?.label_current_location}
+          </h3>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {LOCATION_OPTIONS.map((option) => (
+              <label
+                key={option}
+                className={`flex items-center py-3 px-4 border rounded-lg cursor-pointer ${
+                  locationType === option ? "border-third" : "border-gray-300"
+                }`}
+              >
+                <input
+                  type="radio"
+                  checked={locationType === option}
+                  onChange={() => {
+                    setLocationType(option);
+                    if (option === "Thailand") {
+                      setValue("country", "Thailand");
+                    } else {
+                      setValue("country", defaultForeignCountry || "");
+                    }
+                  }}
+                  className="text-blue-600 mr-3"
+                />
+                {option === "Thailand" ? "ประเทศไทย" : "ต่างชาติ"}
+              </label>
+            ))}
           </div>
 
-          <div className="p-6 flex flex-col border-b">
-            <div>
-              <h3 className="text-base font-medium mb-3">
-                {contactInfoLanguageData?.label_current_location}
-              </h3>
+          {locationType === "Foreign" ? (
+            <>
+              <label className="block text-sm mb-1">เลือกประเทศ</label>
+              <select
+                {...register("country")}
+                value={country}
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary ${
+                  errors.country ? "border-red-500" : "border-gray-300"
+                }`}
+              >
+                <option value="">-- เลือกประเทศ --</option>
+                {countryOptions.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+              {errors.country && (
+                <p className="text-red-500 text-[12px] mt-1">
+                  {errors.country.message}
+                </p>
+              )}
+            </>
+          ) : (
+            <>
+              <div className="mb-4">
+                <label className="block text-sm text-text_primary font-semibold mb-2">
+                  รายละเอียดที่อยู่
+                </label>
+                <input
+                  {...register("address_details")}
+                  className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                  placeholder="ระบุที่อยู่, หมู่, ถนน, ซอย"
+                />
+                {errors.address_details && (
+                  <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
+                    {errors.address_details.message}
+                  </p>
+                )}
+              </div>
+
               <div className="grid grid-cols-2 gap-4 mb-4">
-                <label
-                  className={`flex items-center py-3 px-4 border border-gray-200 rounded-lg cursor-pointer ${
-                    selectedCountry === "thailand"
-                      ? "bg-blue-50 border-third"
-                      : ""
-                  }`}
-                >
+                <ZipcodeSearch
+                  error={errors.zip_code}
+                  control={control}
+                  setValue={setValue}
+                />
+                <div>
+                  <label className="block font-semibold mb-1">ตำบล/แขวง</label>
                   <input
-                    type="radio"
-                    name="country"
-                    value="thailand"
-                    checked={selectedCountry === "thailand"}
-                    onChange={(e) => setSelectedCountry(e.target.value)}
-                    className="text-blue-600 mr-3"
+                    {...register("subdistrict_or_district")}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   />
-                  <span>{contactInfoLanguageData?.option_thailand}</span>
-                </label>
-                <label
-                  className={`flex items-center py-3 px-4 border border-gray-200 rounded-lg cursor-pointer ${
-                    selectedCountry === "foreign"
-                      ? "bg-blue-50 border-third"
-                      : ""
-                  }`}
-                >
+                  {errors.subdistrict_or_district && (
+                    <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
+                      {errors.subdistrict_or_district.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-semibold mb-1">อำเภอ/เขต</label>
                   <input
-                    type="radio"
-                    name="country"
-                    value="foreign"
-                    checked={selectedCountry === "foreign"}
-                    onChange={(e) => setSelectedCountry(e.target.value)}
-                    className="text-blue-600 mr-3"
+                    {...register("district_or_subdistrict")}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   />
-                  <span>{contactInfoLanguageData?.option_foreign_country}</span>
-                </label>
-              </div>
-            </div>
-            {selectedCountry === "thailand" && (
-              <>
-                <div className="pb-6">
-                  <h3 className="text-sm text-text_primary font-semibold text-gray-600 mb-1 font-sans">
-                    รายละเอียดที่อยู่
-                  </h3>
-                  <div className="flex gap-4">
-                    <input
-                      type="text"
-                      className="flex-1 border border-gray-300 rounded-lg px-3 py-2"
-                      placeholder="ระบุเลขที่, หมู่, ถนน, ซอย"
-                    />
-                  </div>
+                  {errors.district_or_subdistrict && (
+                    <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
+                      {errors.district_or_subdistrict.message}
+                    </p>
+                  )}
                 </div>
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <h3 className="text-sm text-text_primary font-semibold text-gray-600 mb-1 font-sans">
-                      รหัสไปรษณีย์
-                    </h3>
-                    <div className="flex gap-4">
-                      <input
-                        type="text"
-                        placeholder="รหัสไปรษณีย์"
-                        className="flex-1 border border-gray-300 rounded-lg px-3 py-2"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-sm text-text_primary font-semibold text-gray-600 mb-1 font-sans">
-                      ตำบล/แขวง
-                    </h3>
-                    <div className="flex gap-4">
-                      <input
-                        type="text"
-                        placeholder="ตำบล/แขวง"
-                        className="flex-1 border border-gray-300 rounded-lg px-3 py-2"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-sm text-text_primary font-semibold text-gray-600 mb-1 font-sans">
-                      อำเภอ/เขต
-                    </h3>
-                    <div className="flex gap-4">
-                      <input
-                        type="text"
-                        placeholder="อำเภอ/เขต"
-                        className="flex-1 border border-gray-300 rounded-lg px-3 py-2"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-sm text-text_primary font-semibold text-gray-600 mb-1 font-sans">
-                      จังหวัด
-                    </h3>
-                    <div className="flex gap-4">
-                      <input
-                        type="text"
-                        placeholder="จังหวัด"
-                        className="flex-1 border border-gray-300 rounded-lg px-3 py-2"
-                      />
-                    </div>
-                  </div>
+                <div>
+                  <label className="block font-semibold mb-1">จังหวัด</label>
+                  <input
+                    {...register("province")}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                  />
+                  {errors.province && (
+                    <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
+                      {errors.province.message}
+                    </p>
+                  )}
                 </div>
-              </>
-            )}
-
-            {selectedCountry === "foreign" && (
-              <div className="relative">
-                <select className="w-full border border-gray-300 rounded-lg px-3 py-2.5 appearance-none bg-white pr-10">
-                  <option>Vietnam</option>
-                </select>
-                <svg
-                  className="w-5 h-5 text-gray-500 absolute right-3 top-3"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
               </div>
-            )}
+            </>
+          )}
 
-            <div className="self-end w-fit pt-8">
-              <button className="w-full bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors">
-                บันทึก
-              </button>
-            </div>
+          <div className="pt-6">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              {isSubmitting || isUpdateMuting ? (
+                <span>กำลังบันทึก...</span>
+              ) : (
+                "บันทึก"
+              )}
+            </button>
           </div>
         </div>
-      </div>
+      </form>
+
+      <ConfirmChangeEmailModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        handleConfirmChange={() => {
+          setIsConfirmChange(true);
+          setIsModalOpen(false);
+        }}
+      />
+
+      <ChangeEmailModal
+        formEmail={getEmailValues("email")}
+        isOpen={isChangeModal}
+        onClose={() => setIsChangeModal(false)}
+        handleConfirmChange={async () => {
+          await mutate();
+          setIsConfirmChange(false);
+          setIsChangeModal(false);
+        }}
+      />
     </div>
   );
 }

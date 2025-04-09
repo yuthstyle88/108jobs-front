@@ -95,6 +95,7 @@ export default function BasicInformation() {
               />
             </div>
             <button
+              type="button"
               onClick={handleSelectFile}
               className="absolute bottom-0 right-0 bg-blue-600 rounded-full p-2"
             >
@@ -157,7 +158,7 @@ export default function BasicInformation() {
               <select
                 {...register("birth_day")}
                 defaultValue="Day"
-                className="border border-gray-300 rounded-lg px-3 py-2 text-text_secondary"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
               >
                 <option disabled value="Day">
                   Day
@@ -171,7 +172,7 @@ export default function BasicInformation() {
               <select
                 {...register("birth_month")}
                 defaultValue="Month"
-                className="border border-gray-300 rounded-lg px-3 py-2 text-text_secondary"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
               >
                 <option disabled value="Month">
                   Month
@@ -185,7 +186,7 @@ export default function BasicInformation() {
               <select
                 {...register("birth_year")}
                 defaultValue="Year"
-                className="border border-gray-300 rounded-lg px-3 py-2 text-text_secondary"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
               >
                 <option disabled value="Year">
                   Year

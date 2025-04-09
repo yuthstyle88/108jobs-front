@@ -1,5 +1,4 @@
-import Architecture from "./Architecture";
-import Business from "./Business";
+import Advise from "./Advise";
 import GraphicDesign from "./GraphicDesign";
 import ImageAndSound from "./Image";
 import Lifestyle from "./Lifestyle";
@@ -16,12 +15,11 @@ const SubMenu = () => {
         <div className="grid grid-flow-col gap-x-3 cursor-pointer">
           <PopularType />
           <GraphicDesign />
-          <Architecture />
           <Website />
           <Marketing/>
           <Write/>
           <ImageAndSound/>
-          <Business/>
+          <Advise/>
           <Lifestyle/>
         </div>
       </nav>

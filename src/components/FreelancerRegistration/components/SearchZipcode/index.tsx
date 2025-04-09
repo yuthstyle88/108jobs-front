@@ -160,7 +160,7 @@ export default function ZipcodeSearch({
                       e.preventDefault();
                       handleCreate();
                     }}
-                    className="p-3 hover:bg-blue-50 cursor-pointer transition-colors"
+                    className="p-3 hover:bg-blue-50 cursor-pointer transition-colors text-center"
                   >
                     <span className="text-[12px] font-sans text-black">
                       สร้างรหัสไปรษณีย์: &quot;{zipcode}&quot;

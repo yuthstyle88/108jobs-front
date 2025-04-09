@@ -111,6 +111,10 @@ const config: Config = {
           '0%': { transform: 'scale(1)' },
           '100%': { transform: 'scale(0)' },
         },
+        'fade-down': {
+          '0%': { opacity: '0', transform: 'translateY(-10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -127,6 +131,7 @@ const config: Config = {
         'loader1': 'loader1 0.6s infinite',
         'loader2': 'loader2 0.6s infinite',
         'loader3': 'loader3 0.6s infinite',
+        'fade-down': 'fade-down 0.1s ease-out',
       },
     },
   },
