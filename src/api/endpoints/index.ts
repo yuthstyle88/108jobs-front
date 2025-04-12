@@ -27,5 +27,6 @@ export const API_ROUTES = {
 export const API_ROUTES_SELLER = {
   profile: {
     update_Profile: "/freelancer/info",
+    update_personal_info: "/profile/card",
   },
 };

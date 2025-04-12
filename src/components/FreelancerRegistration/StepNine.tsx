@@ -1,192 +1,130 @@
-import { useFormStorage } from "@/app/apply-freelance/hooks/useFormStorage";
-import { FreelancerImage } from "@/constants/images";
-import { usePrivatePost } from "@/hooks/api-hooks";
-import { FreelancerFormData } from "@/types/applyFreelancer";
-import Image from "next/image";
+import { ArrowRight, CheckCircle2, SkipForward } from "lucide-react";
 import React, { useState } from "react";
-import SwipeToConfirm from "./components/SlideToConfirm";
-import { API_ROUTES } from "@/api/endpoints";
+import { Button } from "../ui/Button";
+import BankCard from "./components/BankCard";
+import Image from "next/image";
+import { AssetIcon } from "@/constants/icons";
 
-interface StepNineProps {
-  formData: FreelancerFormData;
-  currentStep: number;
+interface StepNightProps {
+  nextStep: () => void;
 }
 
-interface ApplyFreelancerResponse {
-  jwt: string;
-}
+const StepNight: React.FC<StepNightProps> = ({
+  nextStep,
+}) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [verificationComplete, setVerificationComplete] = useState(false);
 
-const StepNine: React.FC<StepNineProps> = ({ formData, currentStep }) => {
-  const [isLogin, setIsLogin] = useState(false);
-  const { clearFormStorage } = useFormStorage<FreelancerFormData>({
-    currentStep,
-    setCurrentStep: () => {},
-    setFormData: () => {},
-  });
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [apiError, setApiError] = useState<string | null>(null);
-
-  const { trigger: applyFreelancer, isMutating: isUpdateMuting } =
-    usePrivatePost(API_ROUTES.profile.apply_freelancer);
-
-  const handleConfirm = async () => {
-    setApiError(null);
-    try {
-      const payload = {
-        user_info: {
-          avatar_url: formData.avatar_url,
-          username: formData.username,
-          display_name: formData.display_name,
-          freelancer_type: formData.freelancer_type,
-        },
-        bio: formData.bio,
-        card_info: {
-          front_card: formData.front_card,
-          back_card: formData.back_card,
-          title: formData.title,
-          name: formData.name,
-          surname: formData.surname,
-          card_number: formData.card_number,
-          card_address_details: formData.card_address_details,
-          card_zip_code: formData.card_zip_code,
-          card_subdistrict_or_district: formData.card_subdistrict_or_district,
-          card_district_or_subdistrict: formData.card_district_or_subdistrict,
-          card_province: formData.card_province,
-        },
-        birth_date: formData.birth_date,
-        contact_address_info:
-          formData.country === "Thailand"
-            ? {
-                email: formData.email,
-                country: formData.country,
-                address_details: formData.address_details,
-                zip_code: formData.zip_code,
-                subdistrict_or_district: formData.subdistrict_or_district,
-                district_or_subdistrict: formData.district_or_subdistrict,
-                province: formData.province,
-              }
-            : {
-                email: formData.email,
-                country: formData.country,
-                province: formData.province,
-              },
-      };
-
-      const res = (await applyFreelancer(payload)) as ApplyFreelancerResponse;
-
-      if (!res) {
-        setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
-        return;
-      }
-      if (res?.jwt) {
-        setIsLogin(true);
-        const loginResponse = await fetch("/api/auth/token-login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token: res.jwt }),
-        });
-
-        if (!loginResponse.ok) {
-          setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
-          return;
-        }
-
-        clearFormStorage();
-        setIsSuccess(true);
-        setIsLogin(false);
-        window.location.href = "/apply-freelance/landing";
-      } else {
-        setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
-      }
-    } catch (error) {
-      console.log("Error:", error);
-      setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
-    }
+    // Simulate verification process
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setVerificationComplete(true);
+    }, 2000);
   };
 
-  return (
-    <div className="p-6 h-full">
-      <div className="flex flex-col justify-between h-full">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-text_primary">
-            การใช้ Fastlance อย่างถูกต้องช่วยลดความเสี่ยงในการถูกแบน
-          </h2>
-          <p className="text-text_secondary mt-2">
-            การปฎิบัติตามกฎจะช่วยให้คุณหลีกเลี่ยงการถูกแบนและทำรายได้อย่างมั่นใจ
+  const handleSkip = () => {
+    setVerificationComplete(true);
+  };
+
+  if (verificationComplete) {
+    return (
+      <div className="w-full max-w-md mx-auto rounded-lg border bg-card text-text_primary shadow-sm">
+        <div className="flex flex-col space-y-1.5 p-6 text-center">
+          <h3 className="text-2xl font-semibold leading-none tracking-tight">
+            Verification Successful
+          </h3>
+          <p className="text-sm text-text_primary">
+            Your freelancer account is now active
           </p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="">
-            <Image
-              src={FreelancerImage.leakage1}
-              alt="leakage1"
-              className="w-full"
-              width={400}
-              height={400}
-            />
-            <p className="text-center text-base font-medium text-red-500 mt-2">
-              การนำใบข้อมูลการติดต่อ
-            </p>
+        <div className="p-6 pt-0 flex flex-col items-center">
+          <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mb-4">
+            <CheckCircle2 className="h-10 w-10 text-green-600" />
           </div>
+          <p className="text-center mb-4">
+            Thank you for completing the verification process. You can now
+            access all freelancer features.
+          </p>
+          <Button className="w-full mt-4">Go to Dashboard</Button>
+        </div>
+      </div>
+    );
+  }
 
-          <div className="">
-            <Image
-              src={FreelancerImage.leakage2}
-              alt="leakage1"
-              className="w-full"
-              width={400}
-              height={400}
-            />
-            <p className="text-center text-base font-medium text-red-500 mt-2">
-              ห้าม การเรียกร้อง/รับการชำระเงินนอกระบบ
-            </p>
-          </div>
+  return (
+    <div className="py-8 md:p-0 h-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 h-full">
+        <div className="flex flex-col justify-center px-12">
+          <div className="bg-[#ffffff] text-[#1A1F2C] shadow-sm">
+            <div className="flex flex-col space-y-1.5 p-6">
+              <h3 className="text-2xl font-semibold leading-none tracking-tight">
+                Final Verification Step
+              </h3>
+              <p className="text-sm text-[#8E9196]">
+                Please transfer any amount to verify your freelancer account
+              </p>
+            </div>
+            <div className="p-6 pt-0 space-y-6">
+              <div className="space-y-2">
+                <BankCard
+                  accountName="Bangkok Freelancer"
+                  accountNumber="1234567890123"
+                />
+                <p className="text-xs text-[#8E9196] mt-2">
+                  Transfer any amount to this account to complete verification.
+                </p>
+              </div>
 
-          <div className="">
-            <Image
-              src={FreelancerImage.leakage3}
-              alt="leakage1"
-              className="w-full"
-              width={400}
-              height={400}
-            />
-            <p className="text-center text-base font-medium text-red-500 mt-2">
-              การห้าม ยอมรับงานที่ผิดกฎหมาย
-            </p>
-          </div>
-
-          <div className="">
-            <Image
-              src={FreelancerImage.leakage4}
-              alt="leakage1"
-              className="w-full"
-              width={400}
-              height={400}
-            />
-            <p className="text-center text-base font-medium text-green-500 mt-2">
-              ดำเนินการใช้เครื่องมือที่ถูกต้อง
-            </p>
+              <div className="flex flex-row gap-4 mt-8">
+              <button
+                onClick={nextStep}
+                className="px-3 py-2 whitespace-nowrap border border-gray-300 rounded-lg text-text_primary"
+              >
+                ย้อนกลับ
+              </button>
+              <button
+                onClick={nextStep}
+                className="submit-button-skip py-3 flex justify-center items-center"
+              >
+                บันทึก และไปต่อ
+                <svg
+                  className="w-5 h-5 ml-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </button>
+            </div>
+            </div>
+            <div className="flex items-center p-6 pt-0 justify-center text-xs text-[#8E9196]">
+              <p>Bạn có thể thanh toán sau để confirm trở thành freelancer</p>
+            </div>
           </div>
         </div>
-        <div className="w-full flex flex-col items-center justify-center mb-8 relative ">
-          <div className="w-[400px] ">
-            <SwipeToConfirm
-              onConfirm={handleConfirm}
-              isLoading={isUpdateMuting || isLogin}
-              isSuccess={isSuccess}
-            />
-          </div>
-          {apiError && (
-            <div className="text-center text-sm text-red-600 mt-2">
-              {apiError}
-            </div>
-          )}
+        <div className="w-full h-full step2-gradient relative z-0 overflow-hidden hidden md:block">
+          <Image
+            src={AssetIcon.logo_icon}
+            alt="icon"
+            className="w-full h-full"
+            width={500}
+            height={500}
+          />
         </div>
       </div>
     </div>
   );
 };
 
-export default StepNine;
+export default StepNight;

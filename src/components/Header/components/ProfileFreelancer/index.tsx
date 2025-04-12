@@ -37,7 +37,7 @@ const ProfileFreelancer = ({ data }: ProfileFreelancerProps) => {
 
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-jobCard z-50 select-none">
-      <Link href="/user">
+      <Link href="/profile">
         <div className="p-4 bg-secondary hover:bg-[#D0E1FB] duration-150 rounded-tl-lg rounded-tr-lg relative">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">

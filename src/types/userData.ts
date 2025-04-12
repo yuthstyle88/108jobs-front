@@ -58,6 +58,22 @@ export type User = {
   created_at: string; 
   updated_at: string;
   };
+
+  export type Card = {
+    id: string;
+    front_card: string;
+    back_card: string;
+    title: string;
+    name: string;
+    surname: string;
+    address_details: string;
+    zip_code: string;
+    subdistrict_or_district: string;
+    district_or_subdistrict: string;
+    province: string;
+    card_number: string;
+  };
+  
   
   // Main type for profile data response
   export type ProfileData = {
@@ -67,5 +83,6 @@ export type User = {
     profile: Profile;
     contact: Contact;
     address: Address;
+    card: Card;
   };
   
