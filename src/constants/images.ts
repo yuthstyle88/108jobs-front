@@ -121,6 +121,8 @@ import avatar from "../assets/images/profile/avatar.jpg";
 import coin_bg from "../assets/images/profile/coin-desktop-banner.webp";
 import job_board from "../assets/images/profile/banner.webp";
 import decal from "../assets/images/profile/decal.svg";
+import back_card from "../assets/images/profile/back-vn.jpg";
+import front_card from "../assets/images/profile/front-vn.jpg";
 
 import leakage1 from "../assets/images/apply-freelancer/leakage-1.jpg";
 import leakage2 from "../assets/images/apply-freelancer/leakage-2.jpg";
@@ -144,6 +146,8 @@ export const ProfileImage = {
   coin_bg,
   job_board,
   decal,
+  back_card,
+  front_card,
 };
 export const CompareImage = {
   compare1,

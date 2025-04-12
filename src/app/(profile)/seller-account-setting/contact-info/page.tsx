@@ -184,6 +184,14 @@ const ContactInfo = () => {
       success_message("profile", "update", null);
       if (data.country !== "Thailand") {
         setDefaultForeignCountry(data.country);
+        reset({
+          country: data.country,
+          address_details: "",
+          district_or_subdistrict: "",
+          subdistrict_or_district: "",
+          zip_code: "",
+          province: "",
+        });
       } else {
         setDefaultForeignCountry("");
       }
