@@ -16,6 +16,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useFetchUser } from "./hooks/useFetchUserProfile";
 import { useFormStorage } from "./hooks/useFormStorage";
+import StepTen from "@/components/FreelancerRegistration/StepTen";
 
 const FreelancerRegistration = () => {
   const { user: userData } = useUserStore();
@@ -67,7 +68,7 @@ const FreelancerRegistration = () => {
 
   const nextStep = () => {
     setCurrentStep((prev) => {
-      const newStep = Math.min(prev + 1, 9);
+      const newStep = Math.min(prev + 1, 10);
       localStorage.setItem("freelancerCurrentStep", newStep.toString());
       return newStep;
     });
@@ -103,12 +104,6 @@ const FreelancerRegistration = () => {
     }
   }, [userData]);
 
-  // useEffect(() => {
-  //   if (currentStep === 9) {
-  //     clearFormStorage();
-  //   }
-  // }, [currentStep]);
-
   if (isLoading) return <Loading />;
   if (isError) return <p>Error loading profile</p>;
 
@@ -132,7 +127,9 @@ const FreelancerRegistration = () => {
       case 8:
         return <StepEight {...stepProps} />;
       case 9:
-        return <StepNine formData={formData} currentStep={currentStep} />;
+        return <StepNine nextStep={nextStep}/>;
+      case 10:
+        return <StepTen formData={formData} currentStep={currentStep} />;
       default:
         return <StepOne {...stepProps} />;
     }
