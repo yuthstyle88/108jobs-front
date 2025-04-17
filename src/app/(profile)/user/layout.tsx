@@ -2,7 +2,6 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { ReactNode } from "react";
 import { defaultMetadata } from "@/config/metadata";
-
 interface StartSellingLayoutProps {
   children: ReactNode;
 }

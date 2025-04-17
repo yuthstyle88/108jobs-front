@@ -1,5 +1,8 @@
+import { API_ROUTES } from "@/api/endpoints";
 import { ProfileImage } from "@/constants/images";
+import { usePrivateFetch } from "@/hooks/api-hooks";
 import { GlobalLanguage } from "@/types/language";
+import { Profile, ProfileData } from "@/types/userData";
 import { faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
 import {
   faBarsProgress,
@@ -15,7 +18,7 @@ import {
   faTicket
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,6 +27,7 @@ type ProfileFreelancerProps = {
 };
 
 const ProfileFreelancer = ({ data }: ProfileFreelancerProps) => {
+  const { data: user } = usePrivateFetch<ProfileData>(API_ROUTES.profile.get_profile);
   const handleLogout = async () => {
     try {
       await signOut({
@@ -37,7 +41,7 @@ const ProfileFreelancer = ({ data }: ProfileFreelancerProps) => {
 
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-jobCard z-50 select-none">
-      <Link href="/profile">
+      <Link href={`/user/${user?.user.username}`}>
         <div className="p-4 bg-secondary hover:bg-[#D0E1FB] duration-150 rounded-tl-lg rounded-tr-lg relative">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">

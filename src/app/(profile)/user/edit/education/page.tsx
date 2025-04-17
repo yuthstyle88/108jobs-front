@@ -1,0 +1,181 @@
+"use client";
+import { API_ROUTES_SELLER } from "@/api/endpoints";
+import LoadingCircle from "@/components/LoadingCircle";
+import LoadingMultiCircle from "@/components/LoadingMultiCircle";
+import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
+import useNotification from "@/hooks/useNotification";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Plus, Trash2 } from "lucide-react";
+import { useEffect } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
+
+const educationSchema = z.object({
+  educationItems: z.array(
+    z.object({
+      id: z.string().optional(),
+      school: z.string().min(1, "Vui lòng nhập tên trường"),
+      major: z.string().min(1, "Vui lòng nhập chuyên ngành"),
+    })
+  ),
+});
+
+type EducationFormData = z.infer<typeof educationSchema>;
+
+type EducationFromServer = {
+  id: string;
+  school_name: string;
+  major: string;
+};
+
+const EditEducation = () => {
+  const {
+    control,
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<EducationFormData>({
+    resolver: zodResolver(educationSchema),
+    defaultValues: {
+      educationItems: [],
+    },
+  });
+
+  const { success_message } = useNotification();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "educationItems",
+  });
+
+  const {
+    data: educationData,
+    isLoading,
+    mutate,
+  } = usePrivateFetch<{ educations: EducationFromServer[] }>(
+    API_ROUTES_SELLER.profile.education
+  );
+
+  const { trigger: sendEducation, isMutating: isUpdateMuting } = usePrivatePost(
+    API_ROUTES_SELLER.profile.education
+  );
+
+  useEffect(() => {
+    if (educationData?.educations) {
+      const mapped = educationData.educations.map((edu) => ({
+        id: edu.id,
+        school: edu.school_name,
+        major: edu.major,
+      }));
+      reset({ educationItems: mapped });
+    }
+  }, [educationData, reset]);
+
+  const onSubmit = async (data: EducationFormData) => {
+    const body = {
+      educations: data.educationItems.map((item) => ({
+        ...(item.id ? { id: item.id } : {}),
+        school_name: item.school,
+        major: item.major,
+      })),
+    };
+
+    try {
+      await sendEducation(body);
+      success_message("profile", "update_education", null);
+      mutate();
+    } catch (error) {
+      console.error("Lỗi khi lưu thông tin học vấn:", error);
+    }
+  };
+
+  return (
+    <div className="flex-1">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-2xl font-semibold text-blue-600 mb-8">
+          Trình độ học vấn
+        </h1>
+        {isLoading || fields.length === 0 ? (
+          <div className="bg-white w-full h-40 flex justify-center items-center">
+            <LoadingMultiCircle />
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {fields.map((item, index) => (
+              <div
+                key={item.id || index}
+                className="bg-white rounded-lg p-6 mb-6 shadow-sm"
+              >
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-gray-700 mb-2">
+                      Tên trường
+                    </label>
+                    <input
+                      type="text"
+                      className="text-text_primary w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Nhập tên trường"
+                      {...register(`educationItems.${index}.school`)}
+                    />
+                    {errors.educationItems?.[index]?.school && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.educationItems[index]?.school?.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2">
+                      Khoa/Chuyên ngành
+                    </label>
+                    <input
+                      type="text"
+                      className="text-text_primary w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Chỉ định khoa/chuyên ngành"
+                      {...register(`educationItems.${index}.major`)}
+                    />
+                    {errors.educationItems?.[index]?.major && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.educationItems[index]?.major?.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-4 w-full flex justify-end items-center">
+                  <button
+                    type="button"
+                    onClick={() => remove(index)}
+                    className="border-1 border-border_secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
+                  >
+                    <Trash2 className="w-4" />
+                    <span className="ml-2 font-medium">Xóa thông tin</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={() => append({ id: undefined, school: "", major: "" })}
+              className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
+            >
+              <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
+            </button>
+
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                disabled={isUpdateMuting}
+                className="w-[128px] py-2 submit-button-custom"
+              >
+                {isUpdateMuting ? <LoadingCircle /> : "Lưu thông tin"}
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default EditEducation;

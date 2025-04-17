@@ -38,6 +38,10 @@
   @apply cursor-pointer w-full bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 
 }
 
+.submit-button-custom {
+  @apply cursor-pointer bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed
+}
+
 
 
 
@@ -113,7 +117,8 @@
   --fourth: #f6f7f8;
   --text-primary: #2b323bf2;
   --text-secondary: #2b323b99;
-  --border-primary: #d6dae1
+  --border-primary: #d6dae1;
+  --border-secondary: #e8eaee;
 }
 
 @media (prefers-color-scheme: dark) {

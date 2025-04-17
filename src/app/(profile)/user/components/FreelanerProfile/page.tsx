@@ -1,11 +1,11 @@
-"use client";
+'use client';
 import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
 import { ProfileImage } from "@/constants/images";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useState } from "react";
-const UserProfile = () => {
+const FreelancerProfile = () => {
   const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
   return (
     <main>
@@ -216,4 +216,4 @@ const UserProfile = () => {
   );
 };
 
-export default UserProfile;
+export default FreelancerProfile;

@@ -4,6 +4,8 @@ const type = {
   profile: {
     success: {
       update: "บันทึกสำเร็จ",
+      update_education: "บันทึกการศึกษาเรียบร้อย",
+      update_work_experience: "บันทึกประสบการณ์การทำงานเรียบร้อย",
     },
     fail: {
       set_default: "Failed set default address",
