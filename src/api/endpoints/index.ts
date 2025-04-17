@@ -28,5 +28,10 @@ export const API_ROUTES_SELLER = {
   profile: {
     update_Profile: "/freelancer/info",
     update_personal_info: "/profile/card",
+    skills: "/freelancer/skills",
+    work_experience: "/freelancer/work-experience",
+    education: "/freelancer/education",
+    certificate: "/freelancer/certificates-awards",
+    skill_level: "/skill-levels",
   },
 };

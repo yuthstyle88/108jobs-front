@@ -23,6 +23,7 @@ const config: Config = {
         text_primary: "var(--text-primary)",
         text_secondary: "var(--text-secondary)",
         border_primary: "var(--border-primary)",
+        border_secondary: "var(--border-secondary)",
         fastwork: {
           blue: "#0078FF",
           "deep-blue": "#0062CC",

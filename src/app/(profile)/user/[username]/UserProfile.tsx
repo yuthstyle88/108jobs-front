@@ -1,3 +1,4 @@
+"use client";
 import { ProfileImage } from "@/constants/images";
 import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -5,7 +6,20 @@ import Image from "next/image";
 
 import { Pencil } from "lucide-react";
 import Link from "next/link";
-const UserProfile = () => {
+import { usePrivateFetchParams } from "@/hooks/api-hooks";
+import { API_ROUTES_SELLER } from "@/api/endpoints";
+import Loading from "@/components/Loading";
+type Props = {
+    username: string;
+};
+const UserProfile = ({ username }: Props) => {
+  
+  const {data,isLoading} = usePrivateFetchParams(`/users/${username}`)
+
+  console.log("data", data);
+
+  if(isLoading) return <Loading/>
+  
   return (
     <main>
       <div className="relative bg-primary h-[200px]"></div>
@@ -38,18 +52,30 @@ const UserProfile = () => {
                 </p>
                 <p className="text-[14px] text-third">February 15, 2025</p>
               </div>
-              <div>
+              <div className="mt-6 px-6">
+                <div className="text-text_secondary px-4 py-3 border border-border_secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
+                  <p className="text-text_secondary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words">
+                    <i>http://localhost:3000/profilehttp</i>
+                  </p>
+                </div>
+              </div>
+
+              <Link
+                href="/seller-account-setting/freelance-profile"
+                target="_blank"
+                className="absolute top-4 right-4"
+              >
                 <FontAwesomeIcon
                   icon={faEdit}
-                  className="text-[18px] text-text_secondary absolute top-5 right-3"
+                  className="text-[18px] text-text_secondary"
                 />
-              </div>
+              </Link>
             </div>
             <div className="w-[320px] mt-4 relative border-[0.0625rem] border-border_primary bg-white rounded-[0.25rem]">
               <div className="max-w-4xl mx-auto">
-                <div className="space-y-6">
+                <div className="space-y-6 px-6">
                   {/* Education Section */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <div className="bg-white rounded-lg py-6">
                     <div className="flex justify-between items-center mb-4">
                       <h2 className="text-blue-600 font-medium">
                         Trình độ học vấn
@@ -58,16 +84,19 @@ const UserProfile = () => {
                         href="/profile/edit/education"
                         className="text-gray-500"
                       >
-                        <Pencil className="w-5 h-5" />
+                        <FontAwesomeIcon
+                          icon={faEdit}
+                          className="text-[20px] text-gray-500"
+                        />
                       </Link>
                     </div>
                     <div className="text-gray-500 text-sm">
                       Chưa cung cấp thông tin
                     </div>
                   </div>
-
+                  <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
                   {/* Work Experience Section */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <div className="bg-white rounded-lg py-6">
                     <div className="flex justify-between items-center mb-4">
                       <h2 className="text-blue-600 font-medium">
                         Kinh nghiệm làm việc
@@ -76,48 +105,60 @@ const UserProfile = () => {
                         href="/profile/edit/experience"
                         className="text-gray-500"
                       >
-                        <Pencil className="w-5 h-5" />
+                        <FontAwesomeIcon
+                          icon={faEdit}
+                          className="text-[20px] text-gray-500"
+                        />
                       </Link>
                     </div>
                     <div className="text-gray-500 text-sm">
                       Chưa cung cấp thông tin
                     </div>
                   </div>
+                  <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
 
                   {/* Skills Section */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <div className="bg-white rounded-lg py-6">
                     <div className="flex justify-between items-center mb-4">
                       <h2 className="text-blue-600 font-medium">Kỹ năng</h2>
                       <Link
                         href="/profile/edit/skills"
                         className="text-gray-500"
                       >
-                        <Pencil className="w-5 h-5" />
+                        <FontAwesomeIcon
+                          icon={faEdit}
+                          className="text-[20px] text-gray-500"
+                        />
                       </Link>
                     </div>
                     <div className="text-gray-500 text-sm">
                       Chưa cung cấp thông tin
                     </div>
                   </div>
+                  <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
 
                   {/* Languages Section */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <div className="bg-white rounded-lg py-6">
                     <div className="flex justify-between items-center mb-4">
                       <h2 className="text-blue-600 font-medium">Ngôn ngữ</h2>
                       <Link
                         href="/profile/edit/languages"
                         className="text-gray-500"
                       >
-                        <Pencil className="w-5 h-5" />
+                        <FontAwesomeIcon
+                          icon={faEdit}
+                          className="text-[20px] text-gray-500"
+                        />
                       </Link>
                     </div>
                     <div className="text-gray-500 text-sm">
                       Chưa cung cấp thông tin
                     </div>
                   </div>
+                  <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
 
                   {/* Certifications Section */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <div className="bg-white rounded-lg py-6">
                     <div className="flex justify-between items-center mb-4">
                       <h2 className="text-blue-600 font-medium">
                         Chứng chỉ và giải thưởng
@@ -126,7 +167,10 @@ const UserProfile = () => {
                         href="/profile/edit/certifications"
                         className="text-gray-500"
                       >
-                        <Pencil className="w-5 h-5" />
+                        <FontAwesomeIcon
+                          icon={faEdit}
+                          className="text-[20px] text-gray-500"
+                        />
                       </Link>
                     </div>
                     <div className="text-gray-500 text-sm">
