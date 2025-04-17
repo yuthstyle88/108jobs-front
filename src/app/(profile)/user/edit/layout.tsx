@@ -1,5 +1,4 @@
 "use client";
-
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,20 +8,22 @@ interface StartSellingLayoutProps {
   children: ReactNode;
 }
 
-export default function StartSellingLayout({ children }: StartSellingLayoutProps) {
+export default function StartSellingLayout({
+  children,
+}: StartSellingLayoutProps) {
   const pathname = usePathname();
 
   const menuItems = [
-    { href: "/profile/edit/education", label: "Trình độ học vấn" },
-    { href: "/profile/edit/experience", label: "Kinh nghiệm làm việc" },
-    { href: "/profile/edit/skills", label: "Kỹ năng" },
-    { href: "/profile/edit/languages", label: "Ngôn ngữ" },
-    { href: "/profile/edit/certifications", label: "Chứng chỉ và giải thưởng" },
+    { href: "/user/edit/education", label: "Trình độ học vấn" },
+    { href: "/user/edit/experience", label: "Kinh nghiệm làm việc" },
+    { href: "/user/edit/skills", label: "Kỹ năng" },
+    { href: "/user/edit/languages", label: "Ngôn ngữ" },
+    { href: "/user/edit/certifications", label: "Chứng chỉ và giải thưởng" },
   ];
 
   return (
     <>
-      <section className="bg-[#FBFBFC]">
+      <section className="bg-[#FBFBFC] mb-12">
         <div className="h-[200px] relative flex justify-center items-center w-full edit-profile-gradient">
           <p className="text-[1.75rem] font-semibold text-white">
             Chỉnh sửa thông tin freelancer
@@ -53,9 +54,12 @@ export default function StartSellingLayout({ children }: StartSellingLayoutProps
               </nav>
 
               <div className="px-4 py-2 mt-4 border-1 border-border_primary rounded-lg">
-                <Link href="/profile" className="text-blue-600 flex items-center">
+                <Link
+                  href="/profile"
+                  className="text-blue-600 flex justify-center items-center gap-2"
+                >
+                  <p className="font-medium">Xem hồ sơ của bạn</p>
                   <ExternalLink className="w-4 h-4 mr-2" />
-                  Xem hồ sơ của bạn
                 </Link>
               </div>
             </div>
