@@ -6,6 +6,9 @@ const type = {
       update: "บันทึกสำเร็จ",
       update_education: "บันทึกการศึกษาเรียบร้อย",
       update_work_experience: "บันทึกประสบการณ์การทำงานเรียบร้อย",
+      update_certification: "บันทึกการรับรองเรียบร้อย",
+      update_skill: "บันทึกทักษะเรียบร้อย",
+      update_language: "บันทึกภาษาต่างประเทศเรียบร้อย",
     },
     fail: {
       set_default: "Failed set default address",
