@@ -1,126 +1,242 @@
 "use client";
-import { Plus, X } from "lucide-react";
-import { useState } from "react";
+import { Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
+import { API_ROUTES_SELLER } from "@/api/endpoints";
+import LoadingMultiCircle from "@/components/LoadingMultiCircle";
+import LoadingCircle from "@/components/LoadingCircle";
+import useNotification from "@/hooks/useNotification";
 
-type LanguageItem = {
+// Zod Schema
+const languageSchema = z.object({
+  languageItems: z.array(
+    z.object({
+      id: z.string().optional(),
+      language: z.string().min(1, "Vui lòng nhập ngôn ngữ"),
+      level: z.string().min(1, "Vui lòng chọn cấp độ"),
+    })
+  ),
+});
+
+type LanguageFormData = z.infer<typeof languageSchema>;
+
+type LanguageFromServer = {
   id: string;
-  language: string;
-  level: string;
+  lang: string;
+  level_id: string;
+  level_name: string;
 };
 
-const languageLevels = ["Cơ bản", "Trung bình", "Khá", "Tốt", "Chuyên môn cao"];
+type LevelItem = {
+  id: string;
+  title: string;
+};
+
+const levelMap: Record<string, string> = {
+  Medium: "Trình độ trung bình",
+  High: "Chuyên môn cao",
+};
 
 const EditLanguages = () => {
-  const [languageItems, setLanguageItems] = useState<LanguageItem[]>([
-    { id: "1", language: "", level: "Chuyên môn cao" },
-  ]);
+  const {
+    control,
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<LanguageFormData>({
+    resolver: zodResolver(languageSchema),
+    defaultValues: {
+      languageItems: [],
+    },
+  });
 
-  const addLanguageItem = () => {
-    const newItem = {
-      id: Date.now().toString(),
-      language: "",
-      level: "Chuyên môn cao",
+  const { success_message } = useNotification();
+  const { fields, append, remove, replace } = useFieldArray({
+    control,
+    name: "languageItems",
+  });
+
+  const [isFormReady, setIsFormReady] = useState(false);
+
+  const { data: levelData, isLoading: isLevelLoading } = usePrivateFetch<{
+    levels: LevelItem[];
+  }>(API_ROUTES_SELLER.profile.skill_level);
+
+  const {
+    data: languageData,
+    isLoading: isLangLoading,
+  } = usePrivateFetch<{ language_profiles: LanguageFromServer[] }>(
+    API_ROUTES_SELLER.profile.languages
+  );
+
+  const { trigger: sendLanguages, isMutating } = usePrivatePost(
+    API_ROUTES_SELLER.profile.languages
+  );
+
+  useEffect(() => {
+    if (!isLangLoading && !isLevelLoading) {
+      const mapped =
+        languageData?.language_profiles.map((item) => ({
+          id: item.id,
+          language: item.lang,
+          level: item.level_name,
+        })) || [];
+
+      reset({ languageItems: mapped });
+      replace(mapped);
+      setIsFormReady(true);
+    }
+  }, [languageData, levelData, isLangLoading, isLevelLoading, reset, replace]);
+
+  const onSubmit = async (data: LanguageFormData) => {
+    if (!levelData) return;
+
+    const body = {
+      language_profiles: data.languageItems.map((item) => {
+        const levelObj = levelData.levels.find(
+          (lvl) => lvl.title === item.level
+        );
+        return {
+          ...(item.id ? { id: item.id } : {}),
+          lang: item.language,
+          level_id: levelObj?.id || "",
+        };
+      }),
     };
-    setLanguageItems([...languageItems, newItem]);
-  };
 
-  const removeLanguageItem = (id: string) => {
-    if (languageItems.length > 1) {
-      setLanguageItems(languageItems.filter((item) => item.id !== id));
+    try {
+      await sendLanguages(body);
+      success_message("profile", "update_language", null);
+    } catch (error) {
+      console.error("Lỗi khi lưu ngôn ngữ:", error);
     }
   };
 
-  const handleChange = (
-    id: string,
-    field: keyof LanguageItem,
-    value: string
-  ) => {
-    setLanguageItems(
-      languageItems.map((item) =>
-        item.id === id ? { ...item, [field]: value } : item
-      )
-    );
-  };
+  const levelOptions = levelData?.levels || [];
 
-  const handleSave = () => {
-    // Logic to save data would go here
-    console.log("Saving languages data:", languageItems);
-    // Then redirect back to profile
-    window.location.href = "/profile";
-  };
+  const isFetching = isLangLoading || isLevelLoading || !isFormReady;
 
   return (
     <div className="flex-1">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-semibold text-blue-600 mb-8">Ngôn ngữ</h1>
 
-        {languageItems.map((item) => (
-          <div key={item.id} className="bg-white rounded-lg p-6 mb-6 shadow-sm">
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <label className="block text-gray-700 mb-2">Ngôn ngữ</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Ví dụ: Tiếng Thái, Tiếng Anh"
-                  value={item.language}
-                  onChange={(e) =>
-                    handleChange(item.id, "language", e.target.value)
-                  }
-                />
-                <p className="text-red-500 text-xs mt-1">
-                  Vui lòng nhập thông tin
-                </p>
-              </div>
-              <div>
-                <label className="block text-gray-700 mb-2">Cấp độ</label>
-                <select
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat bg-right"
-                  style={{
-                    backgroundImage:
-                      'url(\'data:image/svg+xml;charset=US-ASCII,<svg width="12" height="7" xmlns="http://www.w3.org/2000/svg"><path d="M1 1l5 5 5-5" stroke="%23999" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>\')',
-                    backgroundPosition: "right 1rem center",
-                  }}
-                  value={item.level}
-                  onChange={(e) =>
-                    handleChange(item.id, "level", e.target.value)
-                  }
-                >
-                  {languageLevels.map((level) => (
-                    <option key={level} value={level}>
-                      {level}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {languageItems.length > 1 && (
-              <button
-                onClick={() => removeLanguageItem(item.id)}
-                className="mt-4 flex items-center text-red-500 text-sm"
-              >
-                <X className="w-4 h-4 mr-1" /> Xóa thông tin
-              </button>
-            )}
+        {isFetching ? (
+          <div className="bg-white w-full h-40 flex justify-center items-center">
+            <LoadingMultiCircle />
           </div>
-        ))}
+        ) : fields.length === 0 ? (
+          <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
+            <p className="text-gray-500 mb-4">Chưa có dữ liệu ngôn ngữ.</p>
+            <button
+              type="button"
+              onClick={() =>
+                append({
+                  id: undefined,
+                  language: "",
+                  level: levelOptions[0]?.title || "",
+                })
+              }
+              className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
+            >
+              <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
+            </button>
 
-        <button
-          onClick={addLanguageItem}
-          className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
-        >
-          <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
-        </button>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                onClick={handleSubmit(onSubmit)}
+                disabled={isMutating}
+                className="w-[128px] py-2 submit-button-custom"
+              >
+                {isMutating ? <LoadingCircle /> : "Lưu thông tin"}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {fields.map((item, index) => (
+              <div
+                key={item.id || index}
+                className="bg-white rounded-lg p-6 mb-6 shadow-sm"
+              >
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-gray-700 mb-2">Ngôn ngữ</label>
+                    <input
+                      type="text"
+                      className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Ví dụ: Tiếng Thái, Tiếng Anh"
+                      {...register(`languageItems.${index}.language`)}
+                    />
+                    {errors.languageItems?.[index]?.language && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.languageItems[index]?.language?.message}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-gray-700 mb-2">Cấp độ</label>
+                    <select
+                      className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      {...register(`languageItems.${index}.level`)}
+                    >
+                      {levelOptions.map((lvl) => (
+                        <option key={lvl.id} value={lvl.title}>
+                          {levelMap[lvl.title] || lvl.title}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.languageItems?.[index]?.level && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.languageItems[index]?.level?.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
 
-        <div className="flex justify-end">
-          <button
-            onClick={handleSave}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Lưu thông tin
-          </button>
-        </div>
+                <div className="mt-4 w-full flex justify-end items-center">
+                  <button
+                    type="button"
+                    onClick={() => remove(index)}
+                    className="border-1 border-border_secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
+                  >
+                    <Trash2 className="w-4" />
+                    <span className="ml-2 font-medium">Xóa thông tin</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={() =>
+                append({
+                  id: undefined,
+                  language: "",
+                  level: levelOptions[0]?.title || "",
+                })
+              }
+              className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
+            >
+              <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
+            </button>
+
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                disabled={isMutating}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                {isMutating ? <LoadingCircle /> : "Lưu thông tin"}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );

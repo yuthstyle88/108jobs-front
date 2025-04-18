@@ -6,7 +6,7 @@ import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
 import useNotification from "@/hooks/useNotification";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -43,7 +43,7 @@ const EditEducation = () => {
   });
 
   const { success_message } = useNotification();
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "educationItems",
   });
@@ -51,14 +51,15 @@ const EditEducation = () => {
   const {
     data: educationData,
     isLoading,
-    mutate,
   } = usePrivateFetch<{ educations: EducationFromServer[] }>(
     API_ROUTES_SELLER.profile.education
   );
 
-  const { trigger: sendEducation, isMutating: isUpdateMuting } = usePrivatePost(
+  const { trigger: sendEducation, isMutating: isUpdateMuting, } = usePrivatePost(
     API_ROUTES_SELLER.profile.education
   );
+
+  const [hasInitializedForm, setHasInitializedForm] = useState(false);
 
   useEffect(() => {
     if (educationData?.educations) {
@@ -67,9 +68,12 @@ const EditEducation = () => {
         school: edu.school_name,
         major: edu.major,
       }));
+
       reset({ educationItems: mapped });
+      replace(mapped);
+      setHasInitializedForm(true);
     }
-  }, [educationData, reset]);
+  }, [educationData, reset, replace]);
 
   const onSubmit = async (data: EducationFormData) => {
     const body = {
@@ -83,11 +87,12 @@ const EditEducation = () => {
     try {
       await sendEducation(body);
       success_message("profile", "update_education", null);
-      mutate();
     } catch (error) {
       console.error("Lỗi khi lưu thông tin học vấn:", error);
     }
   };
+
+  const isFetchingInitialData = isLoading || !hasInitializedForm;
 
   return (
     <div className="flex-1">
@@ -95,9 +100,31 @@ const EditEducation = () => {
         <h1 className="text-2xl font-semibold text-blue-600 mb-8">
           Trình độ học vấn
         </h1>
-        {isLoading || fields.length === 0 ? (
+
+        {isFetchingInitialData ? (
           <div className="bg-white w-full h-40 flex justify-center items-center">
             <LoadingMultiCircle />
+          </div>
+        ) : fields.length === 0 ? (
+          <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
+            <p className="text-gray-500 mb-4">Chưa có thông tin học vấn.</p>
+            <button
+              type="button"
+              onClick={() => append({ id: undefined, school: "", major: "" })}
+              className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
+            >
+              <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
+            </button>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                onClick={handleSubmit(onSubmit)}
+                disabled={isUpdateMuting}
+                className="w-[128px] py-2 submit-button-custom"
+              >
+                {isUpdateMuting ? <LoadingCircle /> : "Lưu thông tin"}
+              </button>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>

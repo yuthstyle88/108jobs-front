@@ -1,9 +1,7 @@
-import { ArrowRight, CheckCircle2, SkipForward } from "lucide-react";
-import React, { useState } from "react";
-import { Button } from "../ui/Button";
-import BankCard from "./components/BankCard";
-import Image from "next/image";
 import { AssetIcon } from "@/constants/icons";
+import Image from "next/image";
+import React from "react";
+import BankCard from "./components/BankCard";
 
 interface StepNightProps {
   nextStep: () => void;
@@ -12,48 +10,6 @@ interface StepNightProps {
 const StepNight: React.FC<StepNightProps> = ({
   nextStep,
 }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [verificationComplete, setVerificationComplete] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Simulate verification process
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setVerificationComplete(true);
-    }, 2000);
-  };
-
-  const handleSkip = () => {
-    setVerificationComplete(true);
-  };
-
-  if (verificationComplete) {
-    return (
-      <div className="w-full max-w-md mx-auto rounded-lg border bg-card text-text_primary shadow-sm">
-        <div className="flex flex-col space-y-1.5 p-6 text-center">
-          <h3 className="text-2xl font-semibold leading-none tracking-tight">
-            Verification Successful
-          </h3>
-          <p className="text-sm text-text_primary">
-            Your freelancer account is now active
-          </p>
-        </div>
-        <div className="p-6 pt-0 flex flex-col items-center">
-          <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mb-4">
-            <CheckCircle2 className="h-10 w-10 text-green-600" />
-          </div>
-          <p className="text-center mb-4">
-            Thank you for completing the verification process. You can now
-            access all freelancer features.
-          </p>
-          <Button className="w-full mt-4">Go to Dashboard</Button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="py-8 md:p-0 h-full">
