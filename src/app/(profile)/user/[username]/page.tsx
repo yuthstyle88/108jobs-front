@@ -1,5 +1,7 @@
 import CurrentProfile from "../components/CurrentProfile/page";
 
-export default function Page({ params }: { params: { username: string } }) {
-  return <CurrentProfile username={params.username} />;
+export default async function Page({ params }: { params: Promise<{ username: string }> }) {
+  const resolvedParams = await params;
+
+  return <CurrentProfile username={resolvedParams.username} />;
 }

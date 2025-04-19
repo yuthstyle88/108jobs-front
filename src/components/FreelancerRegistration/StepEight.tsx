@@ -22,6 +22,7 @@ type VerifyForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 interface StepEightProps {
   formData: {
     email: string;
+    countryType: "Thailand" | "Foreign";
     country: string;
     address_details: string;
     province: string;
@@ -69,8 +70,7 @@ const StepEight: React.FC<StepEightProps> = ({
   const [isChangeModal, setIsChangeModal] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const COUNTRY_OPTIONS = ["Thailand", "Foreign"];
-  const COUNTRY_LABELS: Record<string, string> = {
+  const COUNTRY_LABELS: Record<"Thailand" | "Foreign", string> = {
     Thailand: "ประเทศไทย",
     Foreign: "ต่างชาติ",
   };
@@ -82,15 +82,33 @@ const StepEight: React.FC<StepEightProps> = ({
     updateFormData({ [name]: value });
   };
 
-  const handleCountryChange = (country: string) => {
-    updateFormData({ country, province: "" });
+  const handleCountryTypeChange = (type: "Thailand" | "Foreign") => {
+    if (type === "Thailand") {
+      updateFormData({
+        countryType: "Thailand",
+        country: "Thailand", // ✅ Luôn set rõ ràng
+        province: "",
+        district_or_subdistrict: "",
+        subdistrict_or_district: "",
+        zip_code: "",
+        address_details: "",
+      });
+    } else {
+      updateFormData({
+        countryType: "Foreign",
+        country: "", // ✅ Reset lại để chọn quốc gia từ dropdown
+        province: "",
+        district_or_subdistrict: "",
+        subdistrict_or_district: "",
+        zip_code: "",
+        address_details: "",
+      });
+    }
   };
 
-  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateFormData({ province: e.target.value });
-  };
-
-  const isFormValid = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+  const isFormValid = () =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) &&
+    (formData.countryType === "Thailand" || formData.country);
 
   const onSubmit = async (data: VerifyForgotPasswordFormData) => {
     try {
@@ -129,7 +147,7 @@ const StepEight: React.FC<StepEightProps> = ({
             </p>
           </div>
 
-          {/* Email Section */}
+          {/* Email confirm */}
           {isConfirmChange ? (
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-6">
@@ -191,39 +209,41 @@ const StepEight: React.FC<StepEightProps> = ({
             </div>
           )}
 
-          {/* Country Selection */}
+          {/* Country type selector */}
           <div className="mb-6">
             <label className="block text-sm text-text_primary font-semibold mb-2">
               ที่อยู่ปัจจุบัน
             </label>
             <div className="flex space-x-4 mb-4">
-              {COUNTRY_OPTIONS.map((countryOption) => (
+              {(["Thailand", "Foreign"] as const).map((type) => (
                 <label
-                  key={countryOption}
+                  key={type}
                   className={`flex items-center px-4 py-2 rounded-lg cursor-pointer border text-text_primary ${
-                    formData.country === countryOption
+                    formData.countryType === type
                       ? "border-third"
                       : "border-gray-300"
                   }`}
                 >
                   <input
                     type="radio"
-                    name="country"
-                    value={countryOption}
-                    checked={formData.country === countryOption}
-                    onChange={() => handleCountryChange(countryOption)}
+                    name="countryType"
+                    value={type}
+                    checked={formData.countryType === type}
+                    onChange={() => handleCountryTypeChange(type)}
                     className="mr-2 text-third"
                   />
-                  {COUNTRY_LABELS[countryOption]}
+                  {COUNTRY_LABELS[type]}
                 </label>
               ))}
             </div>
 
-            {/* Province / Country dropdown */}
-            {formData.country === "Foreign" && countriesData && (
+            {/* Foreign country dropdown */}
+            {formData.countryType === "Foreign" && countriesData && (
               <select
-                value={formData.province ?? ""}
-                onChange={handleCityChange}
+                value={formData.country}
+                onChange={(e) =>
+                  updateFormData({ country: e.target.value })
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
               >
                 <option value="" disabled>
@@ -237,7 +257,8 @@ const StepEight: React.FC<StepEightProps> = ({
               </select>
             )}
 
-            {formData.country === "Thailand" && (
+            {/* Thailand address inputs */}
+            {formData.countryType === "Thailand" && (
               <>
                 <div className="mb-4">
                   <label className="block text-sm text-text_primary font-semibold mb-2">
@@ -246,7 +267,7 @@ const StepEight: React.FC<StepEightProps> = ({
                   <input
                     type="text"
                     name="address_details"
-                    value={formData.address_details ?? ""}
+                    value={formData.address_details}
                     onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                     placeholder="ระบุที่อยู่, หมู่, ถนน, ซอย"
@@ -274,7 +295,7 @@ const StepEight: React.FC<StepEightProps> = ({
                     <input
                       type="text"
                       name="subdistrict_or_district"
-                      value={formData.subdistrict_or_district ?? ""}
+                      value={formData.subdistrict_or_district}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                       placeholder="ระบุตำบล/แขวง"
@@ -290,13 +311,12 @@ const StepEight: React.FC<StepEightProps> = ({
                     <input
                       type="text"
                       name="district_or_subdistrict"
-                      value={formData.district_or_subdistrict ?? ""}
+                      value={formData.district_or_subdistrict}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                       placeholder="ระบุอำเภอ/เขต"
                     />
                   </div>
-
                   <div>
                     <label className="block text-sm text-text_primary font-semibold mb-2">
                       จังหวัด
@@ -304,7 +324,7 @@ const StepEight: React.FC<StepEightProps> = ({
                     <input
                       type="text"
                       name="province"
-                      value={formData.province ?? ""}
+                      value={formData.province}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                       placeholder="ระบุจังหวัด"
@@ -343,7 +363,6 @@ const StepEight: React.FC<StepEightProps> = ({
           </div>
         </div>
 
-        {/* Side Image */}
         <div className="w-full h-full step2-gradient relative z-0 overflow-hidden hidden md:block">
           <Image
             src={AssetIcon.logo_icon}
@@ -355,7 +374,6 @@ const StepEight: React.FC<StepEightProps> = ({
         </div>
       </div>
 
-      {/* Modals */}
       <ConfirmChangeEmailModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

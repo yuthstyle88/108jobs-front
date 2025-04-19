@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useCallback } from "react";
 
 type UseFormStorageProps<T> = {
   setFormData: React.Dispatch<React.SetStateAction<T>>;
@@ -13,10 +13,9 @@ export const useFormStorage = <T>({
   setCurrentStep,
   storageKey = "freelancer",
 }: UseFormStorageProps<T>) => {
-  const formKey = `${storageKey}FormData`;
-  const stepKey = `${storageKey}CurrentStep`;
+  const formKey = useMemo(() => `${storageKey}FormData`, [storageKey]);
+  const stepKey = useMemo(() => `${storageKey}CurrentStep`, [storageKey]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const savedFormData = localStorage.getItem(formKey);
     const savedStep = localStorage.getItem(stepKey);
@@ -36,17 +35,20 @@ export const useFormStorage = <T>({
         setCurrentStep(parsedStep);
       }
     }
-  }, []);
+  }, [formKey, stepKey, setFormData, setCurrentStep]);
 
-  const saveFormToStorage = (updatedForm: T) => {
-    localStorage.setItem(formKey, JSON.stringify(updatedForm));
-    localStorage.setItem(stepKey, currentStep.toString());
-  };
+  const saveFormToStorage = useCallback(
+    (updatedForm: T) => {
+      localStorage.setItem(formKey, JSON.stringify(updatedForm));
+      localStorage.setItem(stepKey, currentStep.toString());
+    },
+    [formKey, stepKey, currentStep]
+  );
 
-  const clearFormStorage = () => {
+  const clearFormStorage = useCallback(() => {
     localStorage.removeItem(formKey);
     localStorage.removeItem(stepKey);
-  };
+  }, [formKey, stepKey]);
 
   return {
     saveFormToStorage,
