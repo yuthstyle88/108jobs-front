@@ -189,7 +189,7 @@ const StepSix: React.FC<StepSixProps> = ({
                 </label>
                 <input
                   type="text"
-                  name="subdistrict_or_district"
+                  name="card_subdistrict_or_district"
                   value={formData.card_subdistrict_or_district}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
@@ -205,7 +205,7 @@ const StepSix: React.FC<StepSixProps> = ({
                 </label>
                 <input
                   type="text"
-                  name="district_or_subdistrictt"
+                  name="card_district_or_subdistrict"
                   value={formData.card_district_or_subdistrict}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
@@ -219,7 +219,7 @@ const StepSix: React.FC<StepSixProps> = ({
                 </label>
                 <input
                   type="text"
-                  name="province"
+                  name="card_province"
                   value={formData.card_province}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"

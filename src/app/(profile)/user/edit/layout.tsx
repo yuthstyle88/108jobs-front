@@ -1,5 +1,9 @@
 "use client";
+import { API_ROUTES } from "@/api/endpoints";
+import { usePrivateFetch } from "@/hooks/api-hooks";
+import { ProfileData } from "@/types/userData";
 import { ExternalLink } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
@@ -12,6 +16,9 @@ export default function StartSellingLayout({
   children,
 }: StartSellingLayoutProps) {
   const pathname = usePathname();
+  const { data: user } = usePrivateFetch<ProfileData>(
+    API_ROUTES.profile.get_profile
+  );
 
   const menuItems = [
     { href: "/user/edit/education", label: "Trình độ học vấn" },
@@ -55,7 +62,8 @@ export default function StartSellingLayout({
 
               <div className="px-4 py-2 mt-4 border-1 border-border_primary rounded-lg">
                 <Link
-                  href="/profile"
+                target="_blank"
+                  href={`/user/${user?.user.username}`}
                   className="text-blue-600 flex justify-center items-center gap-2"
                 >
                   <p className="font-medium">Xem hồ sơ của bạn</p>

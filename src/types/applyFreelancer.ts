@@ -8,6 +8,7 @@ export type FreelancerFormData = {
   apply_fee: boolean;
   birth_date: string;
   email: string;
+  countryType: "Thailand" | "Foreign";
   country: string;
 
   card_number: string;

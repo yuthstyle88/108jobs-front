@@ -1,15 +1,15 @@
 "use client";
-import { Plus, X } from "lucide-react";
-import { useEffect } from "react";
+import { Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
 import { API_ROUTES_SELLER } from "@/api/endpoints";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
+import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
 
-// Zod schema
 const experienceSchema = z.object({
   experienceItems: z.array(
     z.object({
@@ -53,10 +53,10 @@ const months = [
   "December",
 ];
 
-const currentYear = new Date().getFullYear();
 const currentDate = new Date();
+const currentYear = currentDate.getFullYear();
 const defaultMonth = months[currentDate.getMonth()];
-const defaultYear = currentDate.getFullYear().toString();
+const defaultYear = currentYear.toString();
 const years = Array.from({ length: 40 }, (_, i) =>
   (currentYear - i).toString()
 );
@@ -66,30 +66,30 @@ const EditExperience = () => {
     control,
     register,
     handleSubmit,
-    setValue,
     reset,
+    setValue,
     watch,
     formState: { errors },
   } = useForm<ExperienceFormData>({
     resolver: zodResolver(experienceSchema),
-    defaultValues: {
-      experienceItems: [],
-    },
+    defaultValues: { experienceItems: [] },
   });
 
   const { success_message } = useNotification();
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "experienceItems",
   });
 
-  const { data, isLoading, mutate } = usePrivateFetch<{
+  const { data, isLoading } = usePrivateFetch<{
     work_experiences: ExperienceFromServer[];
   }>(API_ROUTES_SELLER.profile.work_experience);
 
   const { trigger: sendExperience, isMutating } = usePrivatePost(
     API_ROUTES_SELLER.profile.work_experience
   );
+
+  const [isFormReady, setIsFormReady] = useState(false);
 
   useEffect(() => {
     if (data?.work_experiences) {
@@ -99,29 +99,31 @@ const EditExperience = () => {
         position: item.position,
         startMonth: item.start_month,
         startYear: item.start_year.toString(),
-        endMonth: item.end_month ?? defaultMonth, // 👈 fix tại đây
-        endYear: item.end_year?.toString() ?? defaultYear, // 👈 fix tại đây
+        endMonth: item.end_month ?? defaultMonth,
+        endYear: item.end_year?.toString() ?? defaultYear,
         isCurrent: item.is_current,
       }));
-      
+
       reset({ experienceItems: mapped });
+      replace(mapped);
+      setIsFormReady(true);
     }
-  }, [data, reset]);
+  }, [data, reset, replace]);
 
   const watchExperience = watch("experienceItems");
 
-useEffect(() => {
-  watchExperience.forEach((item, index) => {
-    if (!item.isCurrent) {
-      if (!item.endMonth) {
-        setValue(`experienceItems.${index}.endMonth`, defaultMonth);
+  useEffect(() => {
+    watchExperience.forEach((item, index) => {
+      if (!item.isCurrent) {
+        if (!item.endMonth) {
+          setValue(`experienceItems.${index}.endMonth`, defaultMonth);
+        }
+        if (!item.endYear) {
+          setValue(`experienceItems.${index}.endYear`, defaultYear);
+        }
       }
-      if (!item.endYear) {
-        setValue(`experienceItems.${index}.endYear`, defaultYear);
-      }
-    }
-  });
-}, [watchExperience, setValue]);
+    });
+  }, [watchExperience, setValue]);
 
   const onSubmit = async (formData: ExperienceFormData) => {
     const body = {
@@ -139,11 +141,13 @@ useEffect(() => {
 
     try {
       await sendExperience(body);
-      success_message("profile", "update_education", null);
+      success_message("profile", "update_work_experience", null);
     } catch (error) {
       console.error("Lỗi khi lưu kinh nghiệm:", error);
     }
   };
+
+  const isFetching = isLoading || !isFormReady 
 
   return (
     <div className="flex-1">
@@ -152,9 +156,44 @@ useEffect(() => {
           Kinh nghiệm làm việc
         </h1>
 
-        {isLoading || fields.length === 0 ? (
+        {isFetching ? (
           <div className="bg-white w-full h-40 flex justify-center items-center">
             <LoadingMultiCircle />
+          </div>
+        ) : fields.length === 0 ? (
+          <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
+            <p className="text-gray-500 mb-4">
+              Chưa có thông tin kinh nghiệm làm việc.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                append({
+                  id: undefined,
+                  company: "",
+                  position: "",
+                  startMonth: defaultMonth,
+                  startYear: defaultYear,
+                  endMonth: defaultMonth,
+                  endYear: defaultYear,
+                  isCurrent: false,
+                });
+                setIsFormReady(true);
+              }}
+              className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
+            >
+              <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
+            </button>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                onClick={handleSubmit(onSubmit)}
+                disabled={isMutating}
+                className="w-[128px] py-2 submit-button-custom"
+              >
+                {isMutating ? <LoadingCircle /> : "Lưu thông tin"}
+              </button>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -204,12 +243,7 @@ useEffect(() => {
                         Tháng bắt đầu
                       </label>
                       <select
-                        className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat bg-right"
-                        style={{
-                          backgroundImage:
-                            'url(\'data:image/svg+xml;charset=US-ASCII,<svg width="12" height="7" xmlns="http://www.w3.org/2000/svg"><path d="M1 1l5 5 5-5" stroke="%23999" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>\')',
-                          backgroundPosition: "right 1rem center",
-                        }}
+                        className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md"
                         {...register(`experienceItems.${index}.startMonth`)}
                       >
                         {months.map((month) => (
@@ -224,12 +258,7 @@ useEffect(() => {
                         Năm bắt đầu
                       </label>
                       <select
-                        className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat bg-right"
-                        style={{
-                          backgroundImage:
-                            'url(\'data:image/svg+xml;charset=US-ASCII,<svg width="12" height="7" xmlns="http://www.w3.org/2000/svg"><path d="M1 1l5 5 5-5" stroke="%23999" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>\')',
-                          backgroundPosition: "right 1rem center",
-                        }}
+                        className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md"
                         {...register(`experienceItems.${index}.startYear`)}
                       >
                         {years.map((year) => (
@@ -245,7 +274,7 @@ useEffect(() => {
                     <label className="flex items-center">
                       <input
                         type="checkbox"
-                        className="text-text_primary form-checkbox h-5 w-5 text-blue-600 rounded"
+                        className="form-checkbox h-5 w-5 text-blue-600 rounded"
                         {...register(`experienceItems.${index}.isCurrent`)}
                       />
                       <span className="ml-2 text-gray-700">
@@ -261,12 +290,7 @@ useEffect(() => {
                           Tháng kết thúc
                         </label>
                         <select
-                          className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat bg-right"
-                          style={{
-                            backgroundImage:
-                              'url(\'data:image/svg+xml;charset=US-ASCII,<svg width="12" height="7" xmlns="http://www.w3.org/2000/svg"><path d="M1 1l5 5 5-5" stroke="%23999" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>\')',
-                            backgroundPosition: "right 1rem center",
-                          }}
+                          className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md"
                           {...register(`experienceItems.${index}.endMonth`)}
                         >
                           {months.map((month) => (
@@ -281,12 +305,7 @@ useEffect(() => {
                           Năm kết thúc
                         </label>
                         <select
-                          className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white bg-no-repeat bg-right"
-                          style={{
-                            backgroundImage:
-                              'url(\'data:image/svg+xml;charset=US-ASCII,<svg width="12" height="7" xmlns="http://www.w3.org/2000/svg"><path d="M1 1l5 5 5-5" stroke="%23999" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>\')',
-                            backgroundPosition: "right 1rem center",
-                          }}
+                          className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md"
                           {...register(`experienceItems.${index}.endYear`)}
                         >
                           {years.map((year) => (
@@ -299,15 +318,16 @@ useEffect(() => {
                     </div>
                   )}
 
-                  {fields.length > 1 && (
+                  <div className="mt-4 w-full flex justify-end items-center">
                     <button
                       type="button"
                       onClick={() => remove(index)}
-                      className="mt-4 flex items-center text-red-500 text-sm"
+                      className="border-1 border-border_secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                     >
-                      <X className="w-4 h-4 mr-1" /> Xóa thông tin
+                      <Trash2 className="w-4" />
+                      <span className="ml-2 font-medium">Xóa thông tin</span>
                     </button>
-                  )}
+                  </div>
                 </div>
               );
             })}

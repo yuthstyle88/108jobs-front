@@ -21,6 +21,7 @@ import StepTen from "@/components/FreelancerRegistration/StepTen";
 const FreelancerRegistration = () => {
   const { user: userData } = useUserStore();
   const { isLoading, isError } = useFetchUser();
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FreelancerFormData>({
@@ -33,6 +34,7 @@ const FreelancerRegistration = () => {
     apply_fee: false,
     birth_date: "",
     email: "",
+    countryType: "Thailand",
     country: "Thailand",
 
     card_number: "",
@@ -84,7 +86,11 @@ const FreelancerRegistration = () => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if (userData) {
+    if (userData && !isInitialized) {
+      const userCountry = userData.address?.country ?? "Thailand";
+      const countryType: "Thailand" | "Foreign" =
+        userCountry === "Thailand" ? "Thailand" : "Foreign";
+  
       setFormData((prev) => {
         const updated = {
           ...prev,
@@ -95,14 +101,16 @@ const FreelancerRegistration = () => {
             ? new Date(userData.user.birth_date).toISOString().split("T")[0]
             : prev.birth_date,
           email: userData.contact?.email || prev.email,
-          country: userData.address?.country || prev.country,
-          province: userData.address?.province || prev.province,
+          countryType,
+          country: userCountry,
         };
         saveFormToStorage(updated);
         return updated;
       });
+  
+      setIsInitialized(true); 
     }
-  }, [userData]);
+  }, [userData, isInitialized, saveFormToStorage]);
 
   if (isLoading) return <Loading />;
   if (isError) return <p>Error loading profile</p>;
@@ -127,7 +135,7 @@ const FreelancerRegistration = () => {
       case 8:
         return <StepEight {...stepProps} />;
       case 9:
-        return <StepNine nextStep={nextStep}/>;
+        return <StepNine nextStep={nextStep} />;
       case 10:
         return <StepTen formData={formData} currentStep={currentStep} />;
       default:

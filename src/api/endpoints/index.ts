@@ -32,6 +32,7 @@ export const API_ROUTES_SELLER = {
     work_experience: "/freelancer/work-experience",
     education: "/freelancer/education",
     certificate: "/freelancer/certificates-awards",
+    languages: "/freelancer/languages",
     skill_level: "/skill-levels",
   },
 };
