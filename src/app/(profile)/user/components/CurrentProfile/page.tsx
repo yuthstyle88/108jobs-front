@@ -272,7 +272,7 @@ const CurrentProfile = ({ username }: Props) => {
                         />
                       </Link>
                     </div>
-                    {userProfile && userProfile?.language.length > 0 ? (
+                    {userProfile && userProfile?.cert_and_award.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {userProfile?.cert_and_award.map(
                           (cert: Certificate) => {
