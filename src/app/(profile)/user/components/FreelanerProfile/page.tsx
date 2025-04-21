@@ -1,12 +1,43 @@
-'use client';
+"use client";
 import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
+import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { usePrivateFetchParams } from "@/hooks/api-hooks";
+import {
+  Certificate,
+  Education,
+  LanguageSkill,
+  ProfileShow,
+  Skill,
+  WorkExperience,
+} from "@/types/freelancerPofile";
+import { formatDateToLong } from "@/utils/formatDateToLong";
+import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useState } from "react";
-const FreelancerProfile = () => {
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+type Props = {
+  username: string;
+};
+const FreelancerProfile = ({ username }: Props) => {
+  const { data: userProfile, isLoading } = usePrivateFetchParams<ProfileShow>(
+    `/users/${username}`
+  );
+
   const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
+  const [showFullBio, setShowFullBio] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const bioRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (bioRef.current) {
+      const el = bioRef.current;
+      setIsClamped(el.scrollHeight > el.clientHeight);
+    }
+  }, [userProfile?.bio]);
+
+  if (isLoading) return <Loading />;
   return (
     <main>
       <div className="relative bg-primary h-[200px]"></div>
@@ -22,39 +53,43 @@ const FreelancerProfile = () => {
                 />
               </div>
               <p className="text-[28px] font-medium text-text_primary text-center pt-2">
-                uykpfzno
+                {userProfile?.username}
               </p>
               <div className="flex items-center justify-center pt-2">
                 {[1, 2, 3, 4, 5].map((_, index) => (
                   <FontAwesomeIcon
                     icon={faStar}
                     key={index}
-                    className="text-[14px] text-[#e9b10c] "
+                    className="text-[14px] text-gray-300 "
                   />
                 ))}
               </div>
-              <div className="flex items-center justify-center w-full">
-                <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-[#1EB899] text-white w-fit">
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  <span className="text-sm font-medium">
-                    Verified Freelance
-                  </span>
+              {userProfile?.is_verified && (
+                <div className="flex items-center justify-center w-full">
+                  <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-[#1EB899] text-white w-fit">
+                    <svg
+                      className="w-4 h-4 mr-1"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="text-sm font-medium">
+                      Verified Freelance
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )}
               <div className="w-full mt-4 space-y-3 px-4">
                 <div className="flex justify-between items-center">
                   <div className="text-text_secondary">เป็นสมาชิกเมื่อ</div>
-                  <div className="text-third font-medium">08 มกราคม 2021</div>
+                  <div className="text-third font-medium">
+                    {formatDateToLong(userProfile?.member_since)}
+                  </div>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="text-text_secondary">จำนวนงานแล้ว</div>
@@ -70,41 +105,196 @@ const FreelancerProfile = () => {
                 </div>
               </div>
 
-              <div className="mt-6 p-4 rounded-lg text-sm bg-[#FBFBFC] text-text_secondary px-4 font-sans mx-4 border-1 border-border_primary">
-                <p>
-                  ประสบการณ์กว่า 10 ปี ทางด้าน Digital Marketing
-                  เกี่ยวกับการรับจ้างทำ SEO สำหรับบุคคลและบริษัทฯชั้นนำในไทย
-                  HTML CSS SASS ใส่ค่า Keyword ดัด หน้าแรกงานแล้วกว่า 100000 KW
-                  จาก...
-                </p>
-                <button className="mt-2 hover:underline font-medium text-text_primary">
-                  ดูทั้งหมด
-                </button>
+              <div className="mt-6 px-6">
+                <div className="text-text_secondary px-4 py-3 border border-border_secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
+                  <p
+                    ref={bioRef}
+                    className={`text-text_secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
+                      showFullBio ? "" : "line-clamp-5"
+                    }`}
+                  >
+                    <i>{userProfile?.bio}</i>
+                  </p>
+                  {userProfile?.bio && isClamped && !showFullBio && (
+                    <button
+                      onClick={() => setShowFullBio(true)}
+                      className="mt-2 text-text_primary font-sans text-sm font-medium underline"
+                    >
+                      Xem thêm
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="w-[320px] mt-4 py-4 relative border-[0.0625rem] border-border_primary bg-white rounded-[0.25rem]">
-              <div className="px-4">
-                <h3 className="text-lg font-medium mb-3 text-third">
-                  ทักษะความสามารถ
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <div className="text-text_primary">SEO</div>
-                    <div className="px-3 py-1 rounded-lg text-sm bg-secondary_custom text-third">
-                      ระดับเชี่ยวชาญ
+            <div className="w-[320px] mt-4 relative border-[0.0625rem] border-border_primary bg-white rounded-[0.25rem]">
+              <div className="max-w-4xl mx-auto">
+                <div className="p-6">
+                  {/* Education Section */}
+                  <div className="bg-white rounded-lg pb-6">
+                    <div className="mb-2">
+                      <h2 className="text-blue-600 font-medium">
+                        Trình độ học vấn
+                      </h2>
                     </div>
+                    {userProfile && userProfile?.education.length > 0 ? (
+                      <div className="flex flex-col gap-4">
+                        {userProfile?.education.map((education: Education) => {
+                          return (
+                            <div
+                              key={education.id}
+                              className="text-[14px] leading-[1.65] p-0 font-sans font-medium"
+                            >
+                              <p className="text-text_primary break-words line-clamp-2">
+                                {education?.school_name}
+                              </p>
+                              <p className="text-text_secondary break-words line-clamp-2">
+                                {education?.major}
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="text-gray-500 text-sm">
+                        Chưa cung cấp thông tin
+                      </div>
+                    )}
                   </div>
-                  <div className="flex justify-between items-center">
-                    <div className="text-text_primary">Wordpress</div>
-                    <div className="px-3 py-1 rounded-lg text-sm bg-secondary_custom text-third">
-                      ระดับเชี่ยวชาญ
+                  <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
+                  {/* Work Experience Section */}
+                  <div className="bg-white rounded-lg py-6">
+                    <div className="mb-2">
+                      <h2 className="text-blue-600 font-medium">
+                        Kinh nghiệm làm việc
+                      </h2>
                     </div>
+                    {userProfile && userProfile?.work_experience.length > 0 ? (
+                      <div className="flex flex-col gap-4">
+                        {userProfile?.work_experience.map(
+                          (experience: WorkExperience) => {
+                            return (
+                              <div
+                                key={experience.id}
+                                className="px-4 py-3 border border-border_secondary rounded-[4px] max-w-full bg-[#FBFBFC] font-sans"
+                              >
+                                <p className="text-text_primary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words font-medium">
+                                  {experience?.company_name}
+                                </p>
+                                <p className="text-text_secondary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words pt-2">
+                                  {experience?.position}
+                                </p>
+                                <p className="text-text_secondary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words">
+                                  {experience?.start_month}{" "}
+                                  {experience?.start_year} -{" "}
+                                  {experience?.start_month}{" "}
+                                  {experience?.start_year}
+                                </p>
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-gray-500 text-sm">
+                        Chưa cung cấp thông tin
+                      </div>
+                    )}
                   </div>
-                  <div className="flex justify-between items-center">
-                    <div className="text-text_primary">HTML</div>
-                    <div className="px-3 py-1 rounded-lg text-sm bg-secondary_custom text-third">
-                      ระดับเชี่ยวชาญ
+                  <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
+
+                  {/* Skills Section */}
+                  <div className="bg-white rounded-lg py-6">
+                    <div className="mb-2">
+                      <h2 className="text-blue-600 font-medium">Kỹ năng</h2>
                     </div>
+                    {userProfile && userProfile?.skill.length > 0 ? (
+                      <div className="flex flex-col gap-4">
+                        {userProfile?.skill.map((skill: Skill) => {
+                          return (
+                            <div
+                              key={skill.id}
+                              className="flex flex-row justify-between gap-[0.75rem] items-center text-[14px] leading-[1.65] p-0 font-sans font-medium"
+                            >
+                              <p className="text-text_primary break-words line-clamp-2 font-sans leading-[16.1px] p-0 font-medium">
+                                {skill?.skill_name}
+                              </p>
+                              <p className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
+                                Intermediate level
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="text-gray-500 text-sm">
+                        Chưa cung cấp thông tin
+                      </div>
+                    )}
+                  </div>
+                  <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
+
+                  {/* Languages Section */}
+                  <div className="bg-white rounded-lg py-6">
+                    <div className="mb-2">
+                      <h2 className="text-blue-600 font-medium">Ngôn ngữ</h2>
+                    </div>
+                    {userProfile && userProfile?.language.length > 0 ? (
+                      <div className="flex flex-col gap-4">
+                        {userProfile?.language.map(
+                          (language: LanguageSkill) => {
+                            return (
+                              <div
+                                key={language.id}
+                                className="flex flex-row justify-between gap-[0.75rem] items-center text-[14px] leading-[1.65] p-0 font-sans font-medium"
+                              >
+                                <p className="text-text_primary break-words line-clamp-2 font-sans leading-[16.1px] p-0 font-medium">
+                                  {language?.lang}
+                                </p>
+                                <p className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
+                                  Expert level
+                                </p>
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-gray-500 text-sm">
+                        Chưa cung cấp thông tin
+                      </div>
+                    )}
+                  </div>
+                  <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
+
+                  {/* Certifications Section */}
+                  <div className="bg-white rounded-lg py-6">
+                    <div className="mb-2">
+                      <h2 className="text-blue-600 font-medium">
+                        Chứng chỉ và giải thưởng
+                      </h2>
+                    </div>
+                    {userProfile && userProfile?.cert_and_award.length > 0 ? (
+                      <div className="flex flex-col gap-4">
+                        {userProfile?.cert_and_award.map(
+                          (cert: Certificate) => {
+                            return (
+                              <div
+                                key={cert.id}
+                                className="text-[14px] leading-[1.65] p-0 font-sans font-medium"
+                              >
+                                <p className="text-text_primary break-words line-clamp-2 font-sans leading-[16.1px] p-0 font-medium">
+                                  {cert?.name}
+                                </p>
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-gray-500 text-sm">
+                        Chưa cung cấp thông tin
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -113,13 +303,13 @@ const FreelancerProfile = () => {
 
           <section className="w-full">
             <h2 className="pt-8 pb-4 text-[28px] font-medium text-text_primary w-full">
-            งานของ taratra
+              งานของ taratra
             </h2>
             <section className="grid grid-cols-[repeat(3,minmax(1px,1fr))] gap-5">
-            {Array.from({ length: 2 }, (_, index) => (
-              <CategoryCard key={index} />
-            ))}
-          </section>
+              {Array.from({ length: 2 }, (_, index) => (
+                <CategoryCard key={index} />
+              ))}
+            </section>
             <div className="mt-8">
               <div className="border-b border-border_primary mb-6">
                 <div className="flex -mb-px">

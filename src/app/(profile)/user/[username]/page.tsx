@@ -1,7 +1,11 @@
-import CurrentProfile from "../components/CurrentProfile/page";
+import CheckRoleProfile from "./CheckRoleProfile";
 
-export default async function Page({ params }: { params: Promise<{ username: string }> }) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}) {
   const resolvedParams = await params;
 
-  return <CurrentProfile username={resolvedParams.username} />;
+  return <CheckRoleProfile username={resolvedParams.username} />;
 }

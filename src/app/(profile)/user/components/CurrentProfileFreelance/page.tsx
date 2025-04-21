@@ -13,17 +13,29 @@ import {
 import { formatDateToLong } from "@/utils/formatDateToLong";
 import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { SquarePen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
+
 type Props = {
   username: string;
 };
-const CurrentProfile = ({ username }: Props) => {
+
+const CurrentProfileFreelance = ({ username }: Props) => {
   const { data: userProfile, isLoading } = usePrivateFetchParams<ProfileShow>(
     `/users/${username}`
   );
+  const [showFullBio, setShowFullBio] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const bioRef = useRef<HTMLParagraphElement>(null);
 
-  console.log("data", userProfile);
+  useEffect(() => {
+    if (bioRef.current) {
+      const el = bioRef.current;
+      setIsClamped(el.scrollHeight > el.clientHeight);
+    }
+  }, [userProfile?.bio]);
 
   if (isLoading) return <Loading />;
 
@@ -49,7 +61,7 @@ const CurrentProfile = ({ username }: Props) => {
                   <FontAwesomeIcon
                     icon={faStar}
                     key={index}
-                    className="text-[14px] text-[#D6DAE1] "
+                    className="text-[14px] text-yellow-500"
                   />
                 ))}
               </div>
@@ -63,9 +75,22 @@ const CurrentProfile = ({ username }: Props) => {
               </div>
               <div className="mt-6 px-6">
                 <div className="text-text_secondary px-4 py-3 border border-border_secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
-                  <p className="text-text_secondary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words">
+                  <p
+                    ref={bioRef}
+                    className={`text-text_secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
+                      showFullBio ? "" : "line-clamp-5"
+                    }`}
+                  >
                     <i>{userProfile?.bio}</i>
                   </p>
+                  {userProfile?.bio && isClamped && !showFullBio && (
+                    <button
+                      onClick={() => setShowFullBio(true)}
+                      className="mt-2 text-text_primary font-sans text-sm font-medium underline"
+                    >
+                      Xem thêm
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -93,10 +118,7 @@ const CurrentProfile = ({ username }: Props) => {
                         href="/user/edit/education"
                         className="text-gray-500"
                       >
-                        <FontAwesomeIcon
-                          icon={faEdit}
-                          className="text-[20px] text-gray-500"
-                        />
+                        <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
                     {userProfile && userProfile?.education.length > 0 ? (
@@ -134,10 +156,7 @@ const CurrentProfile = ({ username }: Props) => {
                         href="/user/edit/experience"
                         className="text-gray-500"
                       >
-                        <FontAwesomeIcon
-                          icon={faEdit}
-                          className="text-[20px] text-gray-500"
-                        />
+                        <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
                     {userProfile && userProfile?.work_experience.length > 0 ? (
@@ -178,14 +197,8 @@ const CurrentProfile = ({ username }: Props) => {
                   <div className="bg-white rounded-lg py-6">
                     <div className="flex justify-between items-center mb-4">
                       <h2 className="text-blue-600 font-medium">Kỹ năng</h2>
-                      <Link
-                        href="/user/edit/skills"
-                        className="text-gray-500"
-                      >
-                        <FontAwesomeIcon
-                          icon={faEdit}
-                          className="text-[20px] text-gray-500"
-                        />
+                      <Link href="/user/edit/skills" className="text-gray-500">
+                        <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
                     {userProfile && userProfile?.skill.length > 0 ? (
@@ -200,7 +213,7 @@ const CurrentProfile = ({ username }: Props) => {
                                 {skill?.skill_name}
                               </p>
                               <p className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
-                                Trình độ trung bình
+                                Intermediate level
                               </p>
                             </div>
                           );
@@ -222,10 +235,7 @@ const CurrentProfile = ({ username }: Props) => {
                         href="/user/edit/languages"
                         className="text-gray-500"
                       >
-                        <FontAwesomeIcon
-                          icon={faEdit}
-                          className="text-[20px] text-gray-500"
-                        />
+                        <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
                     {userProfile && userProfile?.language.length > 0 ? (
@@ -241,7 +251,7 @@ const CurrentProfile = ({ username }: Props) => {
                                   {language?.lang}
                                 </p>
                                 <p className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
-                                  Chuyên môn cao
+                                  Expert level
                                 </p>
                               </div>
                             );
@@ -266,10 +276,7 @@ const CurrentProfile = ({ username }: Props) => {
                         href="/user/edit/certifications"
                         className="text-gray-500"
                       >
-                        <FontAwesomeIcon
-                          icon={faEdit}
-                          className="text-[20px] text-gray-500"
-                        />
+                        <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
                     {userProfile && userProfile?.cert_and_award.length > 0 ? (
@@ -315,4 +322,4 @@ const CurrentProfile = ({ username }: Props) => {
   );
 };
 
-export default CurrentProfile;
+export default CurrentProfileFreelance;
