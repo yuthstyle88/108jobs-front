@@ -13,15 +13,18 @@ import FreelanceMegaMenu from "../FreelanceMegaMenu";
 import FreelanceImproveMenu from "../FreelancerImproveMenu";
 import ProfileFreelancer from "../ProfileFreelancer";
 import { Session } from "next-auth";
+import { ProfileData } from "@/types/userData";
 
 interface FreelancerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
   session?: Session;
+  user?: ProfileData;
 }
 
 const FreelancerSession = ({
   globalLanguageData,
   session,
+  user,
 }: FreelancerProps) => {
   const { isOpen, toggle, close } = useToggle();
   return (
@@ -98,7 +101,7 @@ const FreelancerSession = ({
           />
         </button>
 
-        {isOpen && <ProfileFreelancer data={globalLanguageData} />}
+        {isOpen && <ProfileFreelancer user={user} data={globalLanguageData} />}
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()} />
         )}

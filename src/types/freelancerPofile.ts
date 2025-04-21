@@ -12,6 +12,8 @@ export type Month =
   | "November"
   | "December";
 
+  export type RoleType = "employer" | "freelancer";
+
 export interface Skill {
   id: string;
   profile_id: string;
@@ -56,4 +58,5 @@ export interface ProfileShow {
   skill: Skill[];
   language: LanguageSkill[];
   cert_and_award: Certificate[];
+  roles: RoleType[];
 }

@@ -11,13 +11,15 @@ import Link from "next/link";
 import MegaMenu from "../MegaMenu";
 import ProfileSection from "../ProfileSection";
 import { Session } from "next-auth";
+import { ProfileData } from "@/types/userData";
 
 interface EmployerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
   session?: Session;
+  user?: ProfileData;
 }
 
-const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
+const EmployerSection = ({ globalLanguageData, user }: EmployerProps) => {
   const { isOpen, toggle, close } = useToggle();
   return (
     <section className="flex items-center gap-4 h-full">
@@ -79,7 +81,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           />
         </button>
 
-        {isOpen && <ProfileSection data={globalLanguageData} />}
+        {isOpen && <ProfileSection user={user} data={globalLanguageData} />}
 
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()} />

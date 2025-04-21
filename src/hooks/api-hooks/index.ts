@@ -63,8 +63,18 @@ export const usePrivateFetchParams = <T>(
     return response.data;
   };
 
-  return useSWR<T, AxiosError>(url, url ? fetcher : null, options);
+  return useSWR<T, AxiosError>(
+    url,
+    url ? fetcher : null,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 60000,
+      keepPreviousData: true,
+      ...options,
+    }
+  );
 };
+
 
 // Private POST
 export const usePrivatePost = <T, D = unknown>(url: string) => {
