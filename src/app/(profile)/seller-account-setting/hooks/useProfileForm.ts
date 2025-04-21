@@ -16,8 +16,8 @@ const profileSchema = z.object({
   username: z
     .string()
     .min(3, "Username phải có ít nhất 3 ký tự")
-    .max(30, "Username không được quá 30 ký tự")
-    .regex(/^[a-zA-Z0-9_]+$/, "Username chỉ chứa chữ, số và _"),
+    .max(30, "Username không được quá 30 ký tự"),
+    // .regex(/^[a-zA-Z0-9_]+$/, "Username chỉ chứa chữ, số và _"),
   birth_day: z.string(),
   birth_month: z.string(),
   birth_year: z.string(),

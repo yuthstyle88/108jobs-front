@@ -7,12 +7,13 @@ import { formatDateToLong } from "@/utils/formatDateToLong";
 import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 
 type Props = {
   username: string;
 };
-const UserProfile = ({ username }: Props) => {
+const CurrentProfileEmployer = ({ username }: Props) => {
   const { data: userProfile, isLoading } = usePrivateFetchParams<ProfileShow>(
     `/users/${username}`
   );
@@ -83,6 +84,16 @@ const UserProfile = ({ username }: Props) => {
                   )}
                 </div>
               </div>
+              <Link
+                href="/account-setting/basic-info"
+                target="_blank"
+                className="absolute top-4 right-4"
+              >
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  className="text-[18px] text-text_secondary"
+                />
+              </Link>
             </div>
           </aside>
           <section className="w-full">
@@ -101,4 +112,4 @@ const UserProfile = ({ username }: Props) => {
   );
 };
 
-export default UserProfile;
+export default CurrentProfileEmployer;

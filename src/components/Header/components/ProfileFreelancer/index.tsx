@@ -15,7 +15,7 @@ import {
   faMessage,
   faMoneyBillTrendUp,
   faSignOut,
-  faTicket
+  faTicket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { signOut } from "next-auth/react";
@@ -24,10 +24,10 @@ import Link from "next/link";
 
 type ProfileFreelancerProps = {
   data: Partial<GlobalLanguage> | null | undefined;
+  user?: ProfileData;
 };
 
-const ProfileFreelancer = ({ data }: ProfileFreelancerProps) => {
-  const { data: user } = usePrivateFetch<ProfileData>(API_ROUTES.profile.get_profile);
+const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
   const handleLogout = async () => {
     try {
       await signOut({
@@ -52,7 +52,7 @@ const ProfileFreelancer = ({ data }: ProfileFreelancerProps) => {
               />
             </div>
             <div>
-              <p className="font-medium text-gray-900">uykpfzno</p>
+              <p className="font-medium text-gray-900">{user?.user.username}</p>
               <p className="text-sm font-sans text-text_secondary underline">
                 {data?.label_view_profile}
               </p>

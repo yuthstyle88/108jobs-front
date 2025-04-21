@@ -16,12 +16,16 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
+import { API_ROUTES } from "@/api/endpoints";
+import { ProfileData } from "@/types/userData";
+import { usePrivateFetch } from "@/hooks/api-hooks";
 
 type ProfileSectionProps = {
   data: Partial<GlobalLanguage> | null | undefined;
+    user?: ProfileData;
 };
 
-const ProfileSection = ({ data }: ProfileSectionProps) => {
+const ProfileSection = ({ data, user }: ProfileSectionProps) => {
   const handleLogout = async () => {
     try {
       await signOut({
@@ -35,7 +39,7 @@ const ProfileSection = ({ data }: ProfileSectionProps) => {
 
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-jobCard z-50 select-none">
-      <Link href="/user">
+      <Link href={`/user/${user?.user.username}`}>
         <div className="p-4 bg-secondary hover:bg-[#D0E1FB] duration-150 rounded-tl-lg rounded-tr-lg relative">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
@@ -46,7 +50,7 @@ const ProfileSection = ({ data }: ProfileSectionProps) => {
               />
             </div>
             <div>
-              <p className="font-medium text-gray-900">uykpfzno</p>
+              <p className="font-medium text-gray-900">{user?.user.username}</p>
               <p className="text-sm font-sans text-text_secondary underline">
                 {data?.label_view_profile}
               </p>

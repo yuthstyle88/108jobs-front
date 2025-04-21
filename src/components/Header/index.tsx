@@ -13,6 +13,9 @@ import FreelancerSession from "./components/FreelancerSection";
 import { useScrollHandler } from "./hooks/useScrollHandler";
 import EmployerSection from "./components/EmployerSection";
 import MegaMenu from "./components/MegaMenu";
+import { usePrivateFetch } from "@/hooks/api-hooks";
+import { ProfileData } from "@/types/userData";
+import { API_ROUTES } from "@/api/endpoints";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -37,6 +40,8 @@ const Header = ({ type }: BgProps) => {
     isLoading,
     error,
   } = useGlobalTranslate(LanguageFile.GLOBAL);
+
+  const { data: user } = usePrivateFetch<ProfileData>(API_ROUTES.profile.get_profile);
 
   const { bg } = TYPES[type];
 
@@ -99,6 +104,7 @@ const Header = ({ type }: BgProps) => {
           {session?.user.roles?.includes(ROLE.EMPLOYER) &&
             session?.user.roles?.includes(ROLE.FREELANCER) && (
               <FreelancerSession
+                user={user}
                 globalLanguageData={globalLanguageData}
                 session={session}
               />
@@ -106,6 +112,7 @@ const Header = ({ type }: BgProps) => {
           {session?.user.roles?.includes(ROLE.EMPLOYER) &&
             !session?.user.roles?.includes(ROLE.FREELANCER) && (
               <EmployerSection
+              user={user}
                 globalLanguageData={globalLanguageData}
                 session={session}
               />
