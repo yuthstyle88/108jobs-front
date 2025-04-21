@@ -14,18 +14,21 @@ import FreelanceImproveMenu from "../FreelancerImproveMenu";
 import ProfileFreelancer from "../ProfileFreelancer";
 import { Session } from "next-auth";
 import { ProfileData } from "@/types/userData";
+import { usePrivateFetch } from "@/hooks/api-hooks";
+import { API_ROUTES } from "@/api/endpoints";
 
 interface FreelancerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
   session?: Session;
-  user?: ProfileData;
 }
 
 const FreelancerSession = ({
   globalLanguageData,
   session,
-  user,
 }: FreelancerProps) => {
+  const { data: user } = usePrivateFetch<ProfileData>(
+    API_ROUTES.profile.get_profile
+  );
   const { isOpen, toggle, close } = useToggle();
   return (
     <section className="flex items-center gap-4 h-full">

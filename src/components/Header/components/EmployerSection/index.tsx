@@ -12,15 +12,19 @@ import MegaMenu from "../MegaMenu";
 import ProfileSection from "../ProfileSection";
 import { Session } from "next-auth";
 import { ProfileData } from "@/types/userData";
+import { usePrivateFetch } from "@/hooks/api-hooks";
+import { API_ROUTES } from "@/api/endpoints";
 
 interface EmployerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
   session?: Session;
-  user?: ProfileData;
 }
 
-const EmployerSection = ({ globalLanguageData, user }: EmployerProps) => {
+const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
   const { isOpen, toggle, close } = useToggle();
+  const { data: user } = usePrivateFetch<ProfileData>(
+    API_ROUTES.profile.get_profile
+  );
   return (
     <section className="flex items-center gap-4 h-full">
       <div className="group">

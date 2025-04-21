@@ -38,10 +38,10 @@ export const LoginForm = ({
 
   const route = useRouter();
 
-  const { languageData:loginLanguageData } = useLanguageStore();
+  const { languageData: loginLanguageData } = useLanguageStore();
 
   const searchParams = useSearchParams();
-    const redirectUrl = searchParams.get('redirect') || '/dashboard';
+  const redirectUrl = searchParams.get("redirect") || "/";
 
   const handleLogin = async (data: z.infer<typeof loginSchema>) => {
     try {
@@ -66,7 +66,7 @@ export const LoginForm = ({
           message: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
         });
       } else {
-        route.push(result?.url || "/dashboard");
+        route.push(result?.url || "/");
       }
     } catch (error) {
       setError("root", {
@@ -110,7 +110,11 @@ export const LoginForm = ({
           disabled={isSubmitting}
           className="submit-button py-2"
         >
-          {isSubmitting ? <LoadingCircle /> : loginLanguageData?.authen?.button_proceed}
+          {isSubmitting ? (
+            <LoadingCircle />
+          ) : (
+            loginLanguageData?.authen?.button_proceed
+          )}
         </button>
 
         <div className="flex justify-between text-sm text-blue-600 mt-4">
@@ -148,7 +152,7 @@ export const LoginForm = ({
         <SocialLoginButton
           icon={AuthenticateIcon.gg}
           provider={loginLanguageData?.authen?.button_login_google}
-          onClick={() => window.location.href = "/api/auth/google"}
+          onClick={() => (window.location.href = "/api/auth/google")}
         />
       </div>
     </form>
