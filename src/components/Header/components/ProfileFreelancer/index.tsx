@@ -1,6 +1,4 @@
-import { API_ROUTES } from "@/api/endpoints";
 import { ProfileImage } from "@/constants/images";
-import { usePrivateFetch } from "@/hooks/api-hooks";
 import { GlobalLanguage } from "@/types/language";
 import { ProfileData } from "@/types/userData";
 import { faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";

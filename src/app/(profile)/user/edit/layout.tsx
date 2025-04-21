@@ -3,7 +3,6 @@ import { API_ROUTES } from "@/api/endpoints";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { ProfileData } from "@/types/userData";
 import { ExternalLink } from "lucide-react";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";

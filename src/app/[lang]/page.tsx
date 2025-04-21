@@ -18,7 +18,7 @@ export default function LanguageRedirect() {
   useEffect(() => {
     const lang = params?.lang as string;
     const validLangs = ["vi", "en", "th"];
-    const validRoutes = ["/login", "/register", "/dashboard", "/profile"];
+    const validRoutes = ["/login", "/register", "/profile"];
 
     if (validLangs.includes(lang)) {
       if (pathname === `/${lang}`) {

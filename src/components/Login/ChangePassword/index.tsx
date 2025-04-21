@@ -80,7 +80,7 @@ export const ChangePassword = ({
         });
 
         if (loginResponse.ok) {
-          window.location.href = "/dashboard";
+          window.location.href = "/";
         } else {
           setApiError("Đăng nhập tự động thất bại");
         }
