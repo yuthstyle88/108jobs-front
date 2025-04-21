@@ -12,10 +12,9 @@ import {
   WorkExperience,
 } from "@/types/freelancerPofile";
 import { formatDateToLong } from "@/utils/formatDateToLong";
-import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 type Props = {
   username: string;

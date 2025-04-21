@@ -1,6 +1,6 @@
-import { signOut } from "next-auth/react";
 import { ProfileImage } from "@/constants/images";
 import { GlobalLanguage } from "@/types/language";
+import { ProfileData } from "@/types/userData";
 import {
   faBarsProgress,
   faBullhorn,
@@ -14,11 +14,9 @@ import {
   faTicket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { API_ROUTES } from "@/api/endpoints";
-import { ProfileData } from "@/types/userData";
-import { usePrivateFetch } from "@/hooks/api-hooks";
 
 type ProfileSectionProps = {
   data: Partial<GlobalLanguage> | null | undefined;

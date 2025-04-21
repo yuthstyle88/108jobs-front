@@ -4,10 +4,10 @@ import { ProfileImage } from "@/constants/images";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
 import { ProfileShow } from "@/types/freelancerPofile";
 import { formatDateToLong } from "@/utils/formatDateToLong";
-import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Props = {
   username: string;
