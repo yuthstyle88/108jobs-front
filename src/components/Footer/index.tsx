@@ -1,19 +1,20 @@
 "use client";
-import Link from "next/link";
-import Image from "next/image";
-import id from "@/assets/icons/id.svg";
+import en from "@/assets/icons/en.svg";
 import th from "@/assets/icons/th.svg";
 import vn from "@/assets/icons/vn.svg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { LanguageFile } from "@/constants/language";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import {
   faFacebook,
   faInstagram,
   faTiktok,
 } from "@fortawesome/free-brands-svg-icons";
-import { useLanguageStore } from "@/store/useLanguageStore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Image from "next/image";
+import Link from "next/link";
 
 const Footer = () => {
-  const { languageData:globalLanguageData } = useLanguageStore();
+  const global = useTranslateFile(LanguageFile.GLOBAL);
 
   return (
     <footer className="bg-blue-900 text-white">
@@ -22,32 +23,32 @@ const Footer = () => {
         {/* Categories */}
         <div>
           <h3 className="font-bold mb-3">
-            {globalLanguageData?.global?.tittle_footer_1}
+            {global?.tittle_footer_1}
           </h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_2}</Link>
+              <Link href="#">{global?.label_nav_bar_item_2}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_3}</Link>
+              <Link href="#">{global?.label_nav_bar_item_3}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_4}</Link>
+              <Link href="#">{global?.label_nav_bar_item_4}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_5}</Link>
+              <Link href="#">{global?.label_nav_bar_item_5}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_6}</Link>
+              <Link href="#">{global?.label_nav_bar_item_6}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_7}</Link>
+              <Link href="#">{global?.label_nav_bar_item_7}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_8}</Link>
+              <Link href="#">{global?.label_nav_bar_item_8}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_nav_bar_item_9}</Link>
+              <Link href="#">{global?.label_nav_bar_item_9}</Link>
             </li>
           </ul>
         </div>
@@ -55,34 +56,34 @@ const Footer = () => {
         {/* How to Use */}
         <div>
           <h3 className="font-bold mb-3">
-            {globalLanguageData?.global?.tittle_footer_2}
+            {global?.tittle_footer_2}
           </h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="#">{globalLanguageData?.global?.menu_become_freelancer}</Link>
+              <Link href="#">{global?.menu_become_freelancer}</Link>
             </li>
             <li>
               <Link href="#">
-                {globalLanguageData?.global?.label_start_selling_work}
+                {global?.label_start_selling_work}
               </Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_payment_wages}</Link>
+              <Link href="#">{global?.label_payment_wages}</Link>
             </li>
             <li>
               <Link href="#">
-                {globalLanguageData?.global?.label_employment_guarantee}
+                {global?.label_employment_guarantee}
               </Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_knowledge_blog}</Link>
+              <Link href="#">{global?.label_knowledge_blog}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_faq}</Link>
+              <Link href="#">{global?.label_faq}</Link>
             </li>
             <li>
               <Link href="#">
-                {globalLanguageData?.global?.label_manage_data_usage}
+                {global?.label_manage_data_usage}
               </Link>
             </li>
           </ul>
@@ -91,7 +92,7 @@ const Footer = () => {
         {/* Products */}
         <div>
           <h3 className="font-bold mb-3">
-            {globalLanguageData?.global?.tittle_footer_3}
+            {global?.tittle_footer_3}
           </h3>
           <ul className="space-y-2 text-sm">
             <li>
@@ -106,22 +107,22 @@ const Footer = () => {
         {/* About Fastwork */}
         <div>
           <h3 className="font-bold mb-3">
-            {globalLanguageData?.global?.tittle_footer_4}
+            {global?.tittle_footer_4}
           </h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_feedback_us}</Link>
+              <Link href="#">{global?.label_feedback_us}</Link>
             </li>
             <li>
               <Link href="#">
-                {globalLanguageData?.global?.label_work_with_fastwork}
+                {global?.label_work_with_fastwork}
               </Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_terms_of_service}</Link>
+              <Link href="#">{global?.label_terms_of_service}</Link>
             </li>
             <li>
-              <Link href="#">{globalLanguageData?.global?.label_privacy_policy}</Link>
+              <Link href="#">{global?.label_privacy_policy}</Link>
             </li>
           </ul>
         </div>
@@ -129,7 +130,7 @@ const Footer = () => {
         {/* Contact */}
         <div>
           <h3 className="font-bold mb-3">
-            {globalLanguageData?.global?.tittle_footer_5}
+            {global?.tittle_footer_5}
           </h3>
           <ul className="space-y-2 text-sm">
             <li>
@@ -141,8 +142,8 @@ const Footer = () => {
             </li>
           </ul>
           <p className="mt-3 text-xs">
-            {globalLanguageData?.global?.label_working_hours_weekdays} <br />
-            {globalLanguageData?.global?.label_working_hours_weekends}
+            {global?.label_working_hours_weekdays} <br />
+            {global?.label_working_hours_weekends}
           </p>
         </div>
       </div>
@@ -157,7 +158,7 @@ const Footer = () => {
               <FontAwesomeIcon icon={faTiktok} />
               <span>| Sitemaps |</span>
               <Image src={th} alt="TH" width={24} height={16} />
-              <Image src={id} alt="SG" width={24} height={16} />
+              <Image src={en} alt="SG" width={24} height={16} />
               <Image src={vn} alt="VN" width={24} height={16} />
             </div>
 

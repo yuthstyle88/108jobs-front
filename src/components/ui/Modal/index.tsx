@@ -88,7 +88,7 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <div 
       className={cn(
-        "fixed inset-0 z-[9999] flex items-center justify-center px-4 bg-black/50",
+        "fixed inset-0 z-[9999] flex items-center justify-center px-4 bg-black/40",
         isLeaving ? "animate-backdrop-hide" : "animate-backdrop-show"
       )}
       onClick={handleOutsideClick}

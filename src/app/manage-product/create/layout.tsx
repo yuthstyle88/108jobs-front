@@ -12,7 +12,7 @@ export default function ProfileLayout({
   return (
     <>
       <Header type="primary" />
-      <section className="pt-[4.5rem] bg-white min-h-screen">
+      <section className="bg-white min-h-screen">
         {children}
       </section>
     </>

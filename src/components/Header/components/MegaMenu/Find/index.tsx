@@ -1,4 +1,5 @@
-import { useLanguageStore } from "@/store/useLanguageStore";
+import { LanguageFile } from "@/constants/language";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -31,11 +32,11 @@ const job = [
 ];
 
 const Find = () => {
-  const { languageData:globalLanguageData } = useLanguageStore();
+  const global = useTranslateFile(LanguageFile.GLOBAL);
   return (
     <div className="flex flex-col w-[420px] mt-8">
       <span className="text-third font-medium">
-        {globalLanguageData?.global?.hint_label_menu_option_find_hire}
+        {global?.hint_label_menu_option_find_hire}
       </span>
       <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
         ค้นหาฟรีแลนซ์ตามหมวดหมู่ ดูผลงาน รีวิว และแชทเพื่อจ้างฟรีแลนซ์ด้วยตัวเอง

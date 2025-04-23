@@ -13,6 +13,7 @@ import EmployerSection from "./components/EmployerSection";
 import FreelancerSession from "./components/FreelancerSection";
 import MegaMenu from "./components/MegaMenu";
 import { useScrollHandler } from "./hooks/useScrollHandler";
+import LanguageDropdown from "../LanguageDropDown";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -118,6 +119,7 @@ const Header = ({ type }: BgProps) => {
               {globalLanguageData?.label_login_button}
             </Link>
           )}
+          {!session && <LanguageDropdown />}
         </section>
       </nav>
     </header>

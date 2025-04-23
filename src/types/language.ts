@@ -16,7 +16,7 @@ export type LanguageDataType = Partial<
     ProfileNavbarAccountLanguage &
     NotFoundPageLanguage &
     ErrorPageLanguage
->;
+>
 export interface GlobalLanguage {
   label_employment_button: string;
   label_seller_center: string;

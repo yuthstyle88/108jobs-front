@@ -1,9 +1,9 @@
 import LoadingCircle from "@/components/LoadingCircle";
 import { ERROR_CONSTANTS } from "@/constants/error";
-import { useLanguageStore } from "@/store/useLanguageStore";
+import { LanguageFile } from "@/constants/language";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { RegisterDataProps } from "@/types/registerData";
 import { useEffect, useRef, useState } from "react";
-
 interface VerificationForgotPasswordProps {
   forgotEmail?: RegisterDataProps;
   resendDelay?: number;
@@ -19,7 +19,7 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
   switchToChangePassword,
   setTokenPassword,
 }) => {
-  const { languageData:loginLanguageData } = useLanguageStore();
+    const authen = useTranslateFile(LanguageFile.AUTHEN);
 
   const [code, setCode] = useState<string[]>(Array(6).fill(""));
   const [timeLeft, setTimeLeft] = useState<number>(resendDelay);
@@ -149,11 +149,11 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
     <div className="text-center max-w-md mx-auto">
       <div className="my-[3rem]">
         <p className="text-text_primary text-base font-sans">
-          {loginLanguageData?.authen?.verification_forgot_message} <br />{" "}
+          {authen?.verification_forgot_message} <br />{" "}
           {forgotEmail?.email}
         </p>
         <p className="text-text_primary text-base font-sans">
-          {loginLanguageData?.authen?.enter_code_prompt}
+          {authen?.enter_code_prompt}
         </p>
       </div>
       <div className="flex justify-center gap-2 mb-4">
@@ -197,7 +197,7 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
         {isSubmitting ? (
           <LoadingCircle />
         ) : (
-          loginLanguageData?.authen?.change_password_button
+          authen?.change_password_button
         )}
       </button>
 
@@ -215,8 +215,8 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
         }`}
       >
         {isSendAgain
-          ? `${loginLanguageData?.authen?.button_resend_code}...`
-          : loginLanguageData?.authen?.button_resend_code}{" "}
+          ? `${authen?.button_resend_code}...`
+          : authen?.button_resend_code}{" "}
         {isResendDisabled ? `(${timeLeft})` : ""}
       </button>
     </div>

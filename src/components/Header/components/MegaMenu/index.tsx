@@ -1,6 +1,7 @@
 "use client";
 import { MegaMenuImage } from "@/constants/images";
-import { useLanguageStore } from "@/store/useLanguageStore";
+import { LanguageFile } from "@/constants/language";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import {
   faBuilding,
   faChevronRight,
@@ -25,7 +26,7 @@ interface MegaMenuItem {
 
 const MegaMenu = () => {
 
-  const { languageData:globalLanguageData } = useLanguageStore();
+  const global = useTranslateFile(LanguageFile.GLOBAL);
 
   const DESCRIPTION: Record<
     string,
@@ -57,20 +58,20 @@ const MegaMenu = () => {
     {
       key: "find",
       icon: MegaMenuImage.search,
-      title: globalLanguageData?.global?.label_menu_option_1_1,
-      description: globalLanguageData?.global?.hint_label_menu_option_find_hire
+      title: global?.label_menu_option_1_1,
+      description: global?.hint_label_menu_option_find_hire
     },
     {
       key: "post",
       icon: MegaMenuImage.job,
-      title: globalLanguageData?.global?.label_menu_option_1_2,
-      description: globalLanguageData?.global?.hint_label_menu_option_search_job_board,
+      title: global?.label_menu_option_1_2,
+      description: global?.hint_label_menu_option_search_job_board,
     },
     {
       key: "chat",
       icon: MegaMenuImage.chat,
-      title: globalLanguageData?.global?.label_menu_option_1_3,
-      description: globalLanguageData?.global?.hint_freelance_search_assistant,
+      title: global?.label_menu_option_1_3,
+      description: global?.hint_freelance_search_assistant,
     },
   ];
 
@@ -78,14 +79,14 @@ const MegaMenu = () => {
     {
       key: "hire",
       icon: MegaMenuImage.company,
-      title: globalLanguageData?.global?.label_menu_option_2_1,
-      description: globalLanguageData?.global?.hint_hire_on_behalf,
+      title: global?.label_menu_option_2_1,
+      description: global?.hint_hire_on_behalf,
     },
     {
       key: "business",
       icon: MegaMenuImage.business,
-      title: globalLanguageData?.global?.label_menu_option_2_2,
-      description: globalLanguageData?.global?.hint_freelance_services_business,
+      title: global?.label_menu_option_2_2,
+      description: global?.hint_freelance_services_business,
     },
   ];
 
