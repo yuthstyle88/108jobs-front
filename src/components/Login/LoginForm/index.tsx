@@ -3,7 +3,8 @@ import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
 import { SocialLoginButton } from "@/components/ui/SocialLoginButton";
 import { AuthenticateIcon } from "@/constants/icons";
-import { useLanguageStore } from "@/store/useLanguageStore";
+import { LanguageFile } from "@/constants/language";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -38,7 +39,7 @@ export const LoginForm = ({
 
   const route = useRouter();
 
-  const { languageData: loginLanguageData } = useLanguageStore();
+    const authen = useTranslateFile(LanguageFile.AUTHEN);
 
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/";
@@ -86,20 +87,20 @@ export const LoginForm = ({
       )}
 
       <CustomInput
-        label={loginLanguageData?.authen?.label_email}
+        label={authen?.label_email}
         name="email"
         register={register("email")}
         error={errors.email?.message}
-        placeholder={loginLanguageData?.authen?.placeholder_email}
+        placeholder={authen?.placeholder_email}
       />
 
       <CustomInput
-        label={loginLanguageData?.authen?.label_password}
+        label={authen?.label_password}
         name="password"
         type="password"
         register={register("password")}
         error={errors.password?.message}
-        placeholder={loginLanguageData?.authen?.placeholder_password}
+        placeholder={authen?.placeholder_password}
         showPassword={showPassword}
         toggleShowPassword={() => setShowPassword(!showPassword)}
       />
@@ -113,7 +114,7 @@ export const LoginForm = ({
           {isSubmitting ? (
             <LoadingCircle />
           ) : (
-            loginLanguageData?.authen?.button_proceed
+            authen?.button_proceed
           )}
         </button>
 
@@ -123,14 +124,14 @@ export const LoginForm = ({
             onClick={switchToRegister}
             className="hover:underline"
           >
-            {loginLanguageData?.authen?.link_create_account}
+            {authen?.link_create_account}
           </button>
           <button
             type="button"
             onClick={switchToForgotPassword}
             className="hover:underline"
           >
-            {loginLanguageData?.authen?.link_forgot_password}
+            {authen?.link_forgot_password}
           </button>
         </div>
       </div>
@@ -138,7 +139,7 @@ export const LoginForm = ({
       <div className="flex items-center justify-center space-x-4 text-center mt-6">
         <hr className="flex-grow border-t border-gray-300" />
         <span className="text-gray-600 px-2">
-          {loginLanguageData?.authen?.label_or}
+          {authen?.label_or}
         </span>
         <hr className="flex-grow border-t border-gray-300" />
       </div>
@@ -146,12 +147,12 @@ export const LoginForm = ({
       <div className="flex flex-col gap-4 mt-6">
         <SocialLoginButton
           icon={AuthenticateIcon.fb}
-          provider={loginLanguageData?.authen?.button_login_facebook}
+          provider={authen?.button_login_facebook}
           onClick={() => signIn("facebook")}
         />
         <SocialLoginButton
           icon={AuthenticateIcon.gg}
-          provider={loginLanguageData?.authen?.button_login_google}
+          provider={authen?.button_login_google}
           onClick={() => (window.location.href = "/api/auth/google")}
         />
       </div>

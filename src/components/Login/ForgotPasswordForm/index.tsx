@@ -2,7 +2,8 @@
 import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
 import { ERROR_CONSTANTS } from "@/constants/error";
-import { useLanguageStore } from "@/store/useLanguageStore";
+import { LanguageFile } from "@/constants/language";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { RegisterDataProps } from "@/types/registerData";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -33,7 +34,7 @@ export const ForgotPasswordForm = ({
     mode: "onChange",
   });
 
-  const { languageData:loginLanguageData } = useLanguageStore();
+    const authen = useTranslateFile(LanguageFile.AUTHEN);
 
   const [apiError, setApiError] = useState<string | null>(null);
 
@@ -73,15 +74,15 @@ export const ForgotPasswordForm = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <div className="text-sm text-gray-600 mb-6">
-        {loginLanguageData?.authen?.verification_message}
+        {authen?.verification_message}
       </div>
 
       <CustomInput
-        label={loginLanguageData?.authen?.label_contact_email_phone}
+        label={authen?.label_contact_email_phone}
         name="email"
         register={register("email")}
         error={errors.email?.message}
-        placeholder={loginLanguageData?.authen?.placeholder_email_phone}
+        placeholder={authen?.placeholder_email_phone}
       />
 
       {apiError && (
@@ -99,7 +100,7 @@ export const ForgotPasswordForm = ({
           {isSubmitting ? (
             <LoadingCircle />
           ) : (
-            loginLanguageData?.authen?.send_code_button
+            authen?.send_code_button
           )}
         </button>
       </div>

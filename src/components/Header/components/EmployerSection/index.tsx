@@ -14,6 +14,7 @@ import { Session } from "next-auth";
 import { ProfileData } from "@/types/userData";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { API_ROUTES } from "@/api/endpoints";
+import LanguageDropdown from "@/components/LanguageDropDown";
 
 interface EmployerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
@@ -69,6 +70,9 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           />
         </div>
       </Link>
+      <div className="px-1">
+      <LanguageDropdown />
+      </div>
       <div className="relative px-4">
         <button
           onClick={() => toggle()}

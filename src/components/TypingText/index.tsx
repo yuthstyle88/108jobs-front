@@ -1,28 +1,29 @@
 "use client";
 
-import { useLanguageStore } from "@/store/useLanguageStore";
+import { LanguageFile } from "@/constants/language";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { TypeAnimation } from "react-type-animation";
 
 const TypingText = () => {
-  const { languageData:globalLanguageData } = useLanguageStore();
+    const global = useTranslateFile(LanguageFile.GLOBAL);
 
   return (
     <TypeAnimation
-      key={JSON.stringify(globalLanguageData)}
+      key={JSON.stringify(global)}
       sequence={[
-        globalLanguageData?.global?.label_nav_bar_item_2 || "",
+        global?.label_nav_bar_item_2 || "",
         1200,
-        globalLanguageData?.global?.label_nav_bar_item_3 || "",
+        global?.label_nav_bar_item_3 || "",
         1200,
-        globalLanguageData?.global?.label_nav_bar_item_4 || "",
+        global?.label_nav_bar_item_4 || "",
         1200,
-        globalLanguageData?.global?.label_nav_bar_item_5 || "",
+        global?.label_nav_bar_item_5 || "",
         1200,
-        globalLanguageData?.global?.label_nav_bar_item_6 || "",
+        global?.label_nav_bar_item_6 || "",
         1200,
-        globalLanguageData?.global?.label_nav_bar_item_7 || "",
+        global?.label_nav_bar_item_7 || "",
         1200,
-        globalLanguageData?.global?.label_nav_bar_item_8 || "",
+        global?.label_nav_bar_item_8 || "",
         1200,
       ]}
       omitDeletionAnimation

@@ -35,4 +35,11 @@ export const API_ROUTES_SELLER = {
     languages: "/freelancer/languages",
     skill_level: "/skill-levels",
   },
+  job:{
+    get_job: "/freelancer/jobs",
+    post_job_step_1: "/freelancer/jobs/step/1",
+    post_job_step_2: "/freelancer/jobs/step/2",
+    post_job_step_3: "/freelancer/jobs/step/3",
+    post_job_step_4: "/freelancer/jobs/step/4",
+  }
 };

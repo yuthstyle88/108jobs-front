@@ -1,6 +1,7 @@
 "use client";
 import { MegaMenuImage } from "@/constants/images";
-import { useLanguageStore } from "@/store/useLanguageStore";
+import { LanguageFile } from "@/constants/language";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import {
   faChevronRight,
   faStarAndCrescent
@@ -23,7 +24,7 @@ interface FreelanceMegaMenuItem {
 }
 
 const FreelanceMegaMenu = () => {
-  const { languageData: globalLanguageData } = useLanguageStore();
+  const global = useTranslateFile(LanguageFile.GLOBAL);
 
   const DESCRIPTION: Record<
     string,
@@ -55,15 +56,15 @@ const FreelanceMegaMenu = () => {
     {
       key: "find",
       icon: MegaMenuImage.search,
-      title: globalLanguageData?.global?.label_menu_option_1_1,
-      description: globalLanguageData?.global?.hint_label_menu_option_find_hire,
+      title: global?.label_menu_option_1_1,
+      description: global?.hint_label_menu_option_find_hire,
     },
     {
       key: "post",
       icon: MegaMenuImage.job,
-      title: globalLanguageData?.global?.label_menu_option_1_2,
+      title: global?.label_menu_option_1_2,
       description:
-        globalLanguageData?.global?.hint_label_menu_option_search_job_board,
+        global?.hint_label_menu_option_search_job_board,
     },
   ];
 
