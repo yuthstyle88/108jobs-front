@@ -1,6 +1,7 @@
 "use client";
+import { LanguageFile } from "@/constants/language";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { useClickOutside } from "@/hooks/useClickOutside";
-import { useLanguageStore } from "@/store/useLanguageStore";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
@@ -16,7 +17,7 @@ const NotificationDropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
-  const { languageData:globalLanguageData } = useLanguageStore();
+  const global = useTranslateFile(LanguageFile.GLOBAL);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -43,12 +44,12 @@ const NotificationDropdown = ({
         }`}
       >
         <div className="py-3 px-4 border-b border-gray-200">
-          <h3 className="text-gray-800 font-medium">{globalLanguageData?.global?.label_notification}</h3>
+          <h3 className="text-gray-800 font-medium">{global?.label_notification}</h3>
         </div>
         <div className="py-2">
           {/* You can map through notifications here */}
           <div className="py-8 flex flex-col items-center justify-center text-gray-500">
-            <p className="text-sm">{globalLanguageData?.global?.label_empty_notification}</p>
+            <p className="text-sm">{global?.label_empty_notification}</p>
           </div>
         </div>
       </div>

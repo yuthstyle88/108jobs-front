@@ -2,7 +2,8 @@
 import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
 import { ERROR_CONSTANTS } from "@/constants/error";
-import { useLanguageStore } from "@/store/useLanguageStore";
+import { LanguageFile } from "@/constants/language";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { RegisterDataProps } from "@/types/registerData";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -39,7 +40,8 @@ export const ChangePassword = ({
     mode: "onChange",
   });
 
-  const { languageData:loginLanguageData } = useLanguageStore();
+  const authen = useTranslateFile(LanguageFile.AUTHEN);
+  
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -106,23 +108,23 @@ export const ChangePassword = ({
       )}
 
       <CustomInput
-        label={loginLanguageData?.authen?.label_password}
+        label={authen?.label_password}
         name="password"
         type="password"
         register={register("password")}
         error={errors.password?.message}
-        placeholder={loginLanguageData?.authen?.placeholder_password}
+        placeholder={authen?.placeholder_password}
         showPassword={showPassword}
         toggleShowPassword={() => setShowPassword(!showPassword)}
       />
 
       <CustomInput
-        label={loginLanguageData?.authen?.label_confirm_password}
+        label={authen?.label_confirm_password}
         name="confirmPassword"
         type="password"
         register={register("confirmPassword")}
         error={errors.confirmPassword?.message}
-        placeholder={loginLanguageData?.authen?.placeholder_confirm_password}
+        placeholder={authen?.placeholder_confirm_password}
         showPassword={showConfirmPassword}
         toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
       />
@@ -139,7 +141,7 @@ export const ChangePassword = ({
           disabled={isSubmitting}
           className="submit-button py-3"
         >
-          {isSubmitting ? <LoadingCircle /> : loginLanguageData?.authen?.confirm_button}
+          {isSubmitting ? <LoadingCircle /> : authen?.confirm_button}
         </button>
       </div>
     </form>
