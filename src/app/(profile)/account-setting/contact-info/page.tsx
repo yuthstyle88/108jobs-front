@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import ZipcodeSearch from "../components/SearchZipcode";
+import ZipcodeSearch from "../_components/SearchZipcode";
 import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
 import { addressSchema } from "@/utils/validation/addressSchema";
 import { API_ROUTES } from "@/api/endpoints";

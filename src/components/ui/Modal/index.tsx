@@ -1,6 +1,6 @@
-
 "use client";
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -37,36 +37,41 @@ const Modal: React.FC<ModalProps> = ({
       setIsVisible(false);
       setIsLeaving(false);
       onClose();
-    }, 200); // Match animation duration
+    }, 200);
 
     return () => clearTimeout(timer);
   }, [isVisible, onClose]);
 
-  // Handle modal visibility with animation
   useEffect(() => {
+    const preventScroll = (e: Event) => {
+      e.preventDefault();
+    };
+
     if (isOpen) {
       setIsVisible(true);
-      document.body.style.overflow = "hidden";
+
+      document.body.style.overflow = "";
+
+      document.addEventListener("wheel", preventScroll, { passive: false });
+      document.addEventListener("touchmove", preventScroll, { passive: false });
+      document.addEventListener("scroll", preventScroll, { passive: false });
     } else {
       handleClose();
     }
 
     return () => {
-      document.body.style.overflow = "";
+      document.removeEventListener("wheel", preventScroll);
+      document.removeEventListener("touchmove", preventScroll);
+      document.removeEventListener("scroll", preventScroll);
     };
   }, [isOpen, handleClose]);
 
-  // Handle close with animation
-
-
-  // Handle click outside
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (closeOnOutsideClick && modalRef.current && !modalRef.current.contains(e.target as Node)) {
       handleClose();
     }
   };
 
-  // Handle ESC key
   useEffect(() => {
     const handleEscKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isVisible) {
@@ -85,8 +90,8 @@ const Modal: React.FC<ModalProps> = ({
 
   if (!isVisible) return null;
 
-  return (
-    <div 
+  return createPortal(
+    <div
       className={cn(
         "fixed inset-0 z-[9999] flex items-center justify-center px-4 bg-black/40",
         isLeaving ? "animate-backdrop-hide" : "animate-backdrop-show"
@@ -105,8 +110,12 @@ const Modal: React.FC<ModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {(title || showCloseButton) && (
-          <div className={`flex items-center justify-between p-4 ${title && "border-b"}`}>
-            {title && <h2 className="text-lg font-medium flex justify-center items-center w-full text-text_primary">{title}</h2>}
+          <div className={`flex items-center justify-between p-4 ${title ? "border-b" : ""}`}>
+            {title && (
+              <h2 className="text-lg font-medium flex justify-center items-center w-full text-text_primary">
+                {title}
+              </h2>
+            )}
             {showCloseButton && (
               <button
                 onClick={handleClose}
@@ -118,9 +127,12 @@ const Modal: React.FC<ModalProps> = ({
             )}
           </div>
         )}
-        <div className={cn("p-4", contentClassName)}>{children}</div>
+        <div className={cn("p-4", contentClassName)}>
+          {children}
+        </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

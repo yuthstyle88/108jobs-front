@@ -41,5 +41,6 @@ export const API_ROUTES_SELLER = {
     post_job_step_2: "/freelancer/jobs/step/2",
     post_job_step_3: "/freelancer/jobs/step/3",
     post_job_step_4: "/freelancer/jobs/step/4",
+    post_job_step_5: "/freelancer/jobs/step/5",
   }
 };
