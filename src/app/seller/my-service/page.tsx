@@ -1,20 +1,49 @@
 "use client";
-import { usePrivateFetch } from "@/hooks/api-hooks";
 import { API_ROUTES_SELLER } from "@/api/endpoints";
-import { JobListResponse } from "@/types/job";
+import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import { SellerImage } from "@/constants/images";
+import { usePrivateDelete, usePrivateFetch } from "@/hooks/api-hooks";
+import { JobListResponse } from "@/types/job";
 import { Eye, Info, Pencil, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import JobCreatedStatus from "./_components/JobCreatedStatus";
+import { useState } from "react";
+import ConfirmDeleteModal from "./_components/ConfirmDeleteModal";
 
 const MyServices = () => {
-  const { data: jobsData, isLoading } = usePrivateFetch<JobListResponse>(
-    API_ROUTES_SELLER.job.get_job
+  const {
+    data: jobsData,
+    isLoading,
+    mutate,
+  } = usePrivateFetch<JobListResponse>(API_ROUTES_SELLER.job.get_job);
+
+  const [selectedJob, setSelectedJob] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
+  const { isMutating, trigger: deleteJob } = usePrivateDelete(
+    API_ROUTES_SELLER.job.get_job + "/" + selectedJob?.id
   );
+
+  const handleOpenModal = (jobId: string, jobName: string) => {
+    setSelectedJob({ id: jobId, name: jobName });
+  };
+  const handleCloseModal = () => {
+    setSelectedJob(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedJob) {
+      await deleteJob();
+      setSelectedJob(null);
+      mutate();
+    }
+  };
 
   return (
     <div className="">
-      {/* Tính phí dịch vụ */}
       <div className="my-service-gradient rounded-lg shadow-sm p-6 mb-8 flex justify-between items-center hover:shadow-jobCard duration-300">
         <div className="flex-1">
           <h2 className="text-lg font-medium mb-2 text-text_primary">
@@ -38,12 +67,11 @@ const MyServices = () => {
         </div>
       </div>
 
-      {/* Header dịch vụ */}
       <div className="mb-6 flex justify-between items-center">
         <h2 className="text-xl font-medium text-text_primary">
           Dịch vụ của tôi ({jobsData?.jobs.length || 0}/5)
         </h2>
-        <Link href="/manage-product/create">
+        <Link target="_blank" href="/manage-product/create">
           <button className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
             <Plus className="w-4 h-4" />
             Thêm dịch vụ mới
@@ -51,7 +79,6 @@ const MyServices = () => {
         </Link>
       </div>
 
-      {/* Info note */}
       <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6 flex items-start">
         <Info className="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
         <div className="text-sm">
@@ -66,22 +93,31 @@ const MyServices = () => {
         </div>
       </div>
 
-      {/* Table dịch vụ */}
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
         <div className="grid grid-cols-5 border-b border-gray-200 bg-gray-50">
           <div className="p-4 font-medium text-sm text-gray-700">Dịch vụ</div>
-          <div className="p-4 font-medium text-sm text-gray-700">Phí dịch vụ (%)</div>
-          <div className="p-4 font-medium text-sm text-gray-700">Trạng thái dịch vụ</div>
-          <div className="p-4 font-medium text-sm text-gray-700">Hiển thị dịch vụ</div>
+          <div className="p-4 font-medium text-sm text-gray-700">
+            Phí dịch vụ (%)
+          </div>
+          <div className="p-4 font-medium text-sm text-gray-700">
+            Trạng thái dịch vụ
+          </div>
+          <div className="p-4 font-medium text-sm text-gray-700">
+            Hiển thị dịch vụ
+          </div>
           <div className="p-4 font-medium text-sm text-gray-700">Quản lý</div>
         </div>
 
-        {/* Loading */}
         {isLoading ? (
-          <div className="p-6 text-center text-gray-500">Đang tải danh sách dịch vụ...</div>
+          <div className="w-full flex justify-center items-center h-32">
+            <LoadingMultiCircle />
+          </div>
         ) : jobsData?.jobs?.length ? (
           jobsData.jobs.map((job) => (
-            <div key={job.id} className="grid grid-cols-5 border-b border-gray-200">
+            <div
+              key={job.id}
+              className="grid grid-cols-5 border-b border-gray-200"
+            >
               <div className="p-4 flex items-center">
                 <div className="w-12 h-12 bg-gray-100 rounded overflow-hidden mr-3 flex-shrink-0">
                   <Image
@@ -96,27 +132,44 @@ const MyServices = () => {
               </div>
               <div className="p-4 flex items-center text-text_primary">15%</div>
               <div className="p-4 flex items-center">
-                <span className="px-3 py-1 bg-yellow-50 text-yellow-700 rounded-full text-xs">
-                  {job.status === 0 ? "Chờ phê duyệt" : "Đã duyệt"}
-                </span>
+                <JobCreatedStatus status={job.status} />
               </div>
               <div className="p-4 flex items-center">
-                <Eye className={`w-5 h-5 ${job.show ? "text-gray-700" : "text-gray-400"}`} />
+                <Eye
+                  className={`w-5 h-5 ${
+                    job.show ? "text-gray-700" : "text-gray-400"
+                  }`}
+                />
               </div>
               <div className="p-4 flex items-center space-x-2">
-                <button className="p-1 text-gray-500 hover:text-gray-700">
-                  <Pencil className="w-4 h-4" />
-                </button>
-                <button className="p-1 text-gray-500 hover:text-gray-700">
+                <Link target="_blank" href={`/manage-product/${job.id}`}>
+                  <button className="p-1 text-gray-500 hover:text-gray-700">
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                </Link>
+                <button
+                  onClick={() => handleOpenModal(job.id, job.title)}
+                  className="p-1 text-gray-500 hover:text-gray-700"
+                >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             </div>
           ))
         ) : (
-          <div className="p-6 text-center text-gray-500">Chưa có dịch vụ nào</div>
+          <div className="p-6 text-center text-gray-500">
+            Chưa có dịch vụ nào
+          </div>
         )}
       </div>
+
+      <ConfirmDeleteModal
+        isDeleteLoading={isMutating}
+        isOpen={!!selectedJob}
+        jobName={selectedJob?.name || ""}
+        onClose={handleCloseModal}
+        handleConfirmChange={handleConfirmDelete}
+      />
     </div>
   );
 };
