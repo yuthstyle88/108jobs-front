@@ -1,13 +1,13 @@
-// Step1ServiceInfo.tsx
 import { API_ROUTES, API_ROUTES_SELLER } from "@/api/endpoints";
+import Loading from "@/components/Loading";
 import LoadingBlur from "@/components/LoadingBlur";
 import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
 import { ServiceCatalogData } from "@/types/catalog";
 import { JobType } from "@/types/job";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Info } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useEffect, useMemo } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const schema = z.object({
@@ -19,65 +19,75 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-type Props = {
-  setJob: (job: JobType) => void;
-  nextStep: () => void;
-};
+interface Props {
+  onCreated?: (job: JobType) => void;
+  job?: JobType;
+  setJob?: (job: JobType) => void;
+  nextStep?: () => void;
+}
 
-const Step1ServiceInfo = ({ setJob, nextStep }: Props) => {
-  const { data: jobsData } = usePrivateFetch<ServiceCatalogData>(
+const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
+  const { data: jobsData, isLoading } = usePrivateFetch<ServiceCatalogData>(
     API_ROUTES.catalog.get_all_catalog
   );
   const { trigger: sendLanguages, isMutating } = usePrivatePost(
     API_ROUTES_SELLER.job.post_job_step_1
   );
 
-  const [selectedCatalogId, setSelectedCatalogId] = useState<string>("");
-  const [subCategories, setSubCategories] = useState<
-    { id: string; name: string }[]
-  >([]);
-
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
     setValue,
+    watch,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
-  const selectedCategory = useWatch({
-    control,
-    name: "category",
-  });
+  const selectedCategory = watch("category");
+
+  const subCategories = useMemo(() => {
+    const selected = jobsData?.service_catalogs.find(
+      (c) => c.id === selectedCategory
+    );
+    return selected ? selected.sections.flatMap((s) => s.categories) : [];
+  }, [jobsData, selectedCategory]);
 
   useEffect(() => {
-    setSelectedCatalogId(selectedCategory);
-  }, [selectedCategory]);
-  useEffect(() => {
-    if (!selectedCatalogId || !jobsData?.service_catalogs) return;
-    const selected = jobsData.service_catalogs.find(
-      (c) => c.id === selectedCatalogId
-    );
+    if (!job || !jobsData?.service_catalogs?.length) return;
+
+    const catalogId = job.service_catalog?.id || "";
+    const typeId = job.service_type?.id || "";
+
+    setValue("category", catalogId);
+    setValue("name", job.title);
+    setValue("description", job.description);
+
+    const selected = jobsData.service_catalogs.find((c) => c.id === catalogId);
     if (selected) {
-      const allCategories = selected.sections.flatMap((s) => s.categories);
-      setSubCategories(allCategories);
+      const subs = selected.sections.flatMap((s) => s.categories);
+      const match = subs.find((c) => c.id === typeId);
+      if (match) setTimeout(() => setValue("type", typeId), 0);
     }
-  }, [selectedCatalogId, jobsData]);
+  }, [job, jobsData, setValue]);
 
   const onSubmit = async (data: FormData) => {
     try {
-      const response = await sendLanguages({
+      const res = await sendLanguages({
+        ...(job?.id && { job_id: job.id }),
         service_type_id: data.type,
         job_title: data.name,
         job_description: data.description,
       });
-      setJob(response as JobType);
-
-      nextStep();
-    } catch (error) {
-      console.error("Submit error", error);
+      const newJob = res as JobType;
+      setJob?.(newJob);
+      if (nextStep) {
+        nextStep();
+      } else if (onCreated) {
+        onCreated(newJob);
+      }
+    } catch (err) {
+      console.error("Submit error", err);
     }
   };
 
@@ -86,7 +96,8 @@ const Step1ServiceInfo = ({ setJob, nextStep }: Props) => {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white rounded-lg shadow-sm p-6"
     >
-      {isMutating && <LoadingBlur text={"Đang lưu dữ liệu"} />}
+      {isMutating && <LoadingBlur text="Đang lưu dữ liệu" />}
+      {isLoading && <Loading />}
       <h2 className="text-[32px] font-medium mb-6 text-text_primary">
         Thông tin dịch vụ
       </h2>
@@ -126,7 +137,7 @@ const Step1ServiceInfo = ({ setJob, nextStep }: Props) => {
             <select
               className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
               {...register("type")}
-              disabled={!selectedCatalogId}
+              disabled={!selectedCategory || subCategories.length === 0}
             >
               <option value="">Chọn loại dịch vụ</option>
               {subCategories.map((sub) => (
@@ -161,12 +172,12 @@ const Step1ServiceInfo = ({ setJob, nextStep }: Props) => {
               <p className="font-medium mb-1">Hướng dẫn đặt tiêu đề dịch vụ:</p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>
-                  • Sử dụng tiêu đề rõ ràng và chính xác để người thuê dễ dàng
-                  tìm thấy dịch vụ của bạn. Ví dụ: &quot;Thiết kế Logo Nhà
-                  Hàng/Công ty phong cách Tối giản và Hiện đại.&quot;
+                  Sử dụng tiêu đề rõ ràng và chính xác để người thuê dễ dàng tìm
+                  thấy dịch vụ của bạn. Ví dụ: &quot;Thiết kế Logo Nhà Hàng/Công
+                  ty phong cách Tối giản và Hiện đại.&quot;
                 </li>
                 <li>
-                  • Đảm bảo sử dụng tiêu đề khác nhau cho các dịch vụ tương tự
+                  Đảm bảo sử dụng tiêu đề khác nhau cho các dịch vụ tương tự
                   trong cùng một danh mục. Tiêu đề trùng lặp sẽ không được phê
                   duyệt.
                 </li>

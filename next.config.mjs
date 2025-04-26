@@ -12,6 +12,14 @@ const nextConfig = {
         pathname: '/api/v4/image/**', 
       },
     ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'example.com',
+        port: '', 
+        pathname: '/**', 
+      },
+    ],
   },
   reactStrictMode: true,
   output: "standalone",

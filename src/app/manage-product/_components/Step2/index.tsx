@@ -6,6 +6,7 @@ import { usePrivatePost } from "@/hooks/api-hooks";
 import { API_ROUTES_SELLER } from "@/api/endpoints";
 import { JobType } from "@/types/job";
 import LoadingBlur from "@/components/LoadingBlur";
+import { useEffect } from "react";
 
 const packageSchema = z.object({
   package_name: z.string().nonempty("Tên gói là bắt buộc"),
@@ -24,14 +25,16 @@ type Props = {
   job: JobType;
   nextStep: () => void;
   prevStep: () => void;
+  mutate: () => void;
 };
 
-const Step2Packages = ({ job, nextStep, prevStep }: Props) => {
+const Step2Packages = ({ job, nextStep, prevStep,mutate }: Props) => {
   const {
     register,
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormData>({
     defaultValues: {
       packages: [
@@ -61,11 +64,25 @@ const Step2Packages = ({ job, nextStep, prevStep }: Props) => {
         job_id: job.id,
         packages: data.packages,
       });
+      await mutate();
       nextStep();
     } catch (err) {
       console.error("SUBMIT ERROR:", err);
     }
   };
+
+  useEffect(() => {
+    if (job?.packages?.length) {
+      reset({
+        packages: job.packages.map((pkg) => ({
+          package_name: pkg.package_name,
+          description: pkg.description,
+          price: pkg.price,
+          execution_time: pkg.execution_time,
+        })),
+      });
+    }
+  }, [job, reset]);
 
   return (
     <form

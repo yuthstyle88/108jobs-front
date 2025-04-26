@@ -17,6 +17,7 @@ const SuccessCreateJobModal: React.FC<SuccessCreateJobModalProps> = ({
 
   const handleCloseModal = () => {
     onClose();
+    window.location.href = "/seller/my-service";
   };
 
   return (

@@ -5,11 +5,11 @@ type Props = {
 };
 const LoadingBlur = ({ text }: Props) => {
   return (
-    <div className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-white/60 z-[9999]">
-      <div className="flex flex-col items-center gap-3">
+    <div className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-white/70 z-[9999]">
+      <div className="flex flex-col items-center gap-1">
         <svg
-          width="85px"
-          height="69px"
+          width="90px"
+          height="74px"
           viewBox="-1 -1 77 71"
           version="1.1"
           xmlns="http://www.w3.org/2000/svg"
@@ -29,7 +29,7 @@ const LoadingBlur = ({ text }: Props) => {
             ></path>
           </g>
         </svg>
-        <p className="text-[18px] font-medium text-third">{text}</p>
+        <p className="text-[19px] font-normal font-sans text-third">{text}</p>
       </div>
     </div>
   );

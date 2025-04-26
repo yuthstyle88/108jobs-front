@@ -82,6 +82,7 @@ const useMultiImageUpload = (options?: UseMultiImageUploadOptions) => {
     removeImage,
     reset,
     triggerSelect,
+    setImages,
   };
 };
 

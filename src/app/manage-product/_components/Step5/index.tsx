@@ -1,6 +1,8 @@
-// Step5Confirm.tsx
 "use client";
+
 import LoadingBlur from "@/components/LoadingBlur";
+import { usePrivatePost } from "@/hooks/api-hooks";
+import { API_ROUTES_SELLER } from "@/api/endpoints";
 import { JobType } from "@/types/job";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Info } from "lucide-react";
@@ -47,22 +49,17 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const { trigger: submitJob } = usePrivatePost(API_ROUTES_SELLER.job.post_job_step_5);
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async () => {
     setIsLoading(true);
     try {
-      console.log("Submitting final step with:", {
-        job_id: job.id,
-        ...data,
-      });
-
-      // Giả lập API call
-      await new Promise((res) => setTimeout(res, 1000));
-      setIsLoading(false);
-      // Thành công
+      await submitJob({ job_id: job.id });
       handleSubmitSteps();
     } catch (error) {
       console.error("Lỗi khi gửi bước 5", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,7 +72,9 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
       <h2 className="text-xl font-medium text-text_primary">
         Xác nhận dịch vụ
       </h2>
-      <p className="mb-6 text-[16px] text-text_secondary font-sans">Nếu không xác nhận đồng ý với các điều khoản, bạn sẽ không thể đăng bán dịch vụ trên Fastlance</p>
+      <p className="mb-6 text-[16px] text-text_secondary font-sans">
+        Nếu không xác nhận đồng ý với các điều khoản, bạn sẽ không thể đăng bán dịch vụ trên Fastlance
+      </p>
 
       <div className="space-y-8 max-w-4xl">
         <div className="p-4 bg-secondary border border-third rounded-lg mb-6 flex">
@@ -99,15 +98,9 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
               {...register("isOwner")}
             />
             <label htmlFor="isOwner" className="text-[16px] text-black font-sans font-semibold">
-            Tôi là chủ sở hữu thực sự của dịch vụ
+              Tôi là chủ sở hữu thực sự của dịch vụ
             </label>
           </div>
-          {errors.isOwner && (
-            <p className="text-sm text-red-500 ml-7">
-              {errors.isOwner.message}
-            </p>
-          )}
-
           <div className="flex items-center">
             <input
               type="checkbox"
@@ -116,15 +109,9 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
               {...register("canComplete")}
             />
             <label htmlFor="canComplete" className="text-[16px] text-black font-sans font-semibold">
-            Tôi có thể hoàn thành tất cả công việc như đã mô tả
+              Tôi có thể hoàn thành tất cả công việc như đã mô tả
             </label>
           </div>
-          {errors.canComplete && (
-            <p className="text-sm text-red-500 ml-7">
-              {errors.canComplete.message}
-            </p>
-          )}
-
           <div className="flex items-center">
             <input
               type="checkbox"
@@ -133,17 +120,14 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
               {...register("agreeTerms")}
             />
             <label htmlFor="agreeTerms" className="text-[16px] text-black font-sans font-semibold">
-            Tôi đã đọc và đồng ý với các gợi ý <a className="underline text-third">Điều khoản sử dụng dịch vụ của Fastlance</a>
+              Tôi đã đọc và đồng ý với các gợi ý <a className="underline text-third">Điều khoản sử dụng dịch vụ của Fastlance</a>
             </label>
           </div>
-          {errors.agreeTerms && (
-            <p className="text-sm text-red-500 ml-7">
-              {errors.agreeTerms.message}
-            </p>
+          {(errors.agreeTerms || errors.isOwner || errors.canComplete) && (
+            <p className="text-sm text-red-500">Vui lòng chấp nhận điều khoản và điều kiện để tiếp tục</p>
           )}
         </div>
-
-        <div className="flex justify-between">
+        <div className="flex justify-between pt-4">
           <button
             type="button"
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50"

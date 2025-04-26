@@ -1,9 +1,12 @@
+"use client";
+
 import { API_ROUTES_SELLER } from "@/api/endpoints";
 import LoadingBlur from "@/components/LoadingBlur";
 import { usePrivatePost } from "@/hooks/api-hooks";
 import { JobType } from "@/types/job";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
+import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -13,9 +16,7 @@ const workStepSchema = z.object({
 });
 
 const schema = z.object({
-  worksteps: z
-    .array(workStepSchema)
-    .min(2, "Cần ít nhất 2 bước"),
+  worksteps: z.array(workStepSchema).min(2, "Cần ít nhất 2 bước"),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -24,13 +25,15 @@ type Props = {
   job: JobType;
   nextStep: () => void;
   prevStep: () => void;
+  mutate: () => void;
 };
 
-const Step4WorkSteps = ({ job, nextStep, prevStep }: Props) => {
+const Step4WorkSteps = ({ job, nextStep, prevStep,mutate }: Props) => {
   const {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -63,17 +66,29 @@ const Step4WorkSteps = ({ job, nextStep, prevStep }: Props) => {
       };
 
       await sendWorksteps(payload);
+      mutate();
       nextStep();
     } catch (err) {
       console.error("Submit step 4 error:", err);
     }
   };
 
+  useEffect(() => {
+    if (job?.worksteps?.length) {
+      reset({
+        worksteps: job.worksteps.map((step) => ({
+          id: step.id,
+          description: step.description,
+        })),
+      });
+    }
+  }, [job, reset]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-lg shadow-sm p-6">
-      {isMutating && <LoadingBlur text={"Đang lưu dữ liệu"}/>}
+      {isMutating && <LoadingBlur text={"Đang lưu dữ liệu"} />}
       <h2 className="text-[32px] font-medium text-text_primary">
-      Xác định các bước làm việc của bạn
+        Xác định các bước làm việc của bạn
       </h2>
 
       <div className="space-y-8 max-w-4xl mb-6">
@@ -98,7 +113,9 @@ const Step4WorkSteps = ({ job, nextStep, prevStep }: Props) => {
             )}
 
             <div className="mt-4">
-              <label className="block text-base font-medium text-gray-700 mb-1">Mô tả</label>
+              <label className="block text-base font-medium text-gray-700 mb-1">
+                Mô tả
+              </label>
               <textarea
                 className="text-text_primary w-full p-3 border border-gray-300 rounded-lg min-h-24"
                 placeholder="Mô tả chi tiết bước thực hiện..."
