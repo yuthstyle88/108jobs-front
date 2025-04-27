@@ -46,7 +46,10 @@ const config: Config = {
           "0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),0 4px 4px hsl(333deg 0% 50% /7.5%),0 8px 8px hsl(333deg 0% 50% /7.5%),0 16px 16px hsl(333deg 0% 50% /7.5%)",
         filterSection: "0 4px 12px 0 rgba(43, 43, 43, .1)",
         inputShadow: "box-shadow: 0 0 0 .175em hsl(5 85% 94%)",
-        recipeShadow:"0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),0 4px 4px hsl(333deg 0% 50% /7.5%),0 8px 8px hsl(333deg 0% 50% /7.5%),0 16px 16px hsl(333deg 0% 50% /7.5%)"
+        recipeShadow:"0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),0 4px 4px hsl(333deg 0% 50% /7.5%),0 8px 8px hsl(333deg 0% 50% /7.5%),0 16px 16px hsl(333deg 0% 50% /7.5%)",
+        memberShipShadow:"0 10px 40px -4px rgba(19, 55, 109, 0.08), 0 8px 22px -6px rgba(19, 55, 109, 0.1);",
+        topWorkShadow:"0 0 1.5rem 0 rgba(24, 85, 184, .25);",
+        reviewShadow:"0 0 1.5rem 0 rgba(24, 85, 184, .1);"
       },
       borderWidth: {
         1: "1px",
