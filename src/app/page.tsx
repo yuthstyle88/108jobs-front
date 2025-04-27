@@ -5,8 +5,14 @@ import fastwork from "@/assets/images/fastwork-app-qr.webp";
 import imgapp from "@/assets/images/img-app.webp";
 import Header from "@/components/Header";
 import TypingText from "@/components/TypingText";
-import { CategoriesIcon, GroupIcon } from "@/constants/icons";
-import { faArrowRight, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { GroupIcon } from "@/constants/icons";
+import {
+  faArrowRight,
+  faCheck,
+  faPlay,
+  faQuoteLeft,
+  faSearch,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Footer from "../components/Footer";
@@ -20,94 +26,26 @@ import "./styles.css";
 
 import { Keyboard, Mousewheel, Navigation, Pagination } from "swiper/modules";
 
+import { API_ROUTES } from "@/api/endpoints";
+import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
 import Loading from "@/components/Loading";
 import {
   AssetsImage,
-  CategoriesImage,
   CompareImage,
   CustomerImage,
+  LandingImage,
+  ProfileImage
 } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
+import { usePublicFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { ServiceCatalogData } from "@/types/catalog";
+import { catalogIcons } from "@/types/catalogIcon";
 import Link from "next/link";
 import { useState } from "react";
 
-const categories = [
-  {
-    icon: CategoriesIcon.industry,
-    title: "ประเภทงานยอดนิยม",
-  },
-  {
-    icon: CategoriesIcon.graphic,
-    title: "ออกแบบกราฟิก",
-  },
-  {
-    icon: CategoriesIcon.architect,
-    title: "สถาปัตย์และวิศวกรรม",
-  },
-  {
-    icon: CategoriesIcon.programming,
-    title: "เว็บไซต์และเทคโนโลยี",
-  },
-  {
-    icon: CategoriesIcon.marketing,
-    title: "การตลาดและโฆษณา",
-  },
-  {
-    icon: CategoriesIcon.writing,
-    title: "เขียนและแปลภาษา",
-  },
-  {
-    icon: CategoriesIcon.video,
-    title: "ภาพและเสียง",
-  },
-  {
-    icon: CategoriesIcon.consultant,
-    title: "ธุรกิจและที่ปรึกษา",
-  },
-  {
-    icon: CategoriesIcon.lifestyle,
-    title: "ไลฟ์สไตล์",
-  },
-];
-
-const category_images = [
-  {
-    image: CategoriesImage.seo_image,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seo_image,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seo_image,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seo_image,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seo_image,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seo_image,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seo_image,
-    title: "ทำ SEO",
-  },
-  {
-    image: CategoriesImage.seo_image,
-    title: "ทำ SEO",
-  },
-];
-
 export default function Home() {
-  const [activeIndex, setActiveIndex] = useState<number | null>(0);
+  const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
   const [expanded, setExpanded] = useState(false);
 
   const {
@@ -121,6 +59,9 @@ export default function Home() {
     isLoading: homeLoading,
     error: homeError,
   } = useGlobalTranslate(LanguageFile.HOME);
+
+  const { data: catalogData, isLoading: isCatalogLoading } =
+    usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.get_all_catalog);
 
   const freelancer_intro = [
     {
@@ -143,9 +84,11 @@ export default function Home() {
     },
   ];
 
-  if (isLoading || homeLoading) return <Loading />;
-  if (error || homeError) return <div>Error loading language data</div>;
+  const serviceCatalogs = catalogData?.service_catalogs || [];
+  const activeCatalog = serviceCatalogs[activeCatalogIndex];
 
+  if (isLoading || homeLoading || isCatalogLoading) return <Loading />;
+  if (error || homeError) return <div>Error loading language data</div>;
   return (
     <div className="min-h-[200vh] bg-white">
       {/* <Header type="transparent" languageData={globalLanguageData} /> */}
@@ -178,61 +121,85 @@ export default function Home() {
         <section>
           <div className="grid-container-desktop w-full ">
             <div className="min-h-[144px] mt-[-4rem] px-8 rounded-lg bg-white shadow-panel col-start-2 col-end-3">
-              <div className="flex items-center justify-between">
-                {categories.map((category, index) => (
-                  <div
-                    key={index}
-                    className={`group relative flex justify-center w-[9rem] h-[9rem] pt-4 px-2 rounded-lg cursor-pointer after:absolute after:bottom-2 after:block after:w-[80%] after:h-1 after:rounded-full after:bg-primary after:origin-center after:transition-all after:ease-[var(--timing-faster)] ${
-                      activeIndex === index
-                        ? "after:scale-100"
-                        : "after:scale-0"
-                    }`}
-                    onClick={() => setActiveIndex(index)}
-                  >
-                    <div className="flex flex-col items-center gap-y-[0.75rem] text-center">
-                      <div
-                        className={`${
-                          activeIndex === index
-                            ? "before:opacity-100 before:translate-y-[5px]"
-                            : ""
-                        } relative transform before:absolute before:opacity-0 before:bottom-[calc(56px*0.2*-1+8px)] before:left-0 before:right-0 before:mx-auto before:w-[calc(56px*0.8)] before:h-[calc(56px*0.2)] before:bg-secondary before:rounded-[50%] before:transition-all before:ease-in-out before:[backface-visibility:hidden] group-hover:before:opacity-100 group-hover:before:translate-y-[5px]`}
-                      >
-                        <Image
-                          src={category.icon}
-                          alt="Consultant"
-                          width={56}
-                          className={`group-hover:translate-y-[-4px] duration-150 group-hover:grayscale-0 ${
-                            activeIndex === index
-                              ? "grayscale-0 translate-y-[-4px]"
-                              : "grayscale-[1]"
-                          }`}
-                        />
+              <div className="flex items-center justify-between overflow-x-auto">
+                {serviceCatalogs.map((catalog, index) => {
+                  const matchedIcon = catalogIcons.find(
+                    (c) => c.id === catalog.id
+                  )?.icon;
+                  const catalogIcon =
+                    matchedIcon ||
+                    "/categories-image/web-development-02032022.jpg";
+
+                  return (
+                    <div
+                      key={catalog.id}
+                      className={`group relative flex justify-center w-[9rem] h-[9rem] pt-4 px-2 rounded-lg cursor-pointer after:absolute after:bottom-2 after:block after:w-[80%] after:h-1 after:rounded-full after:bg-primary after:origin-center after:transition-all after:ease-[var(--timing-faster)] ${
+                        activeCatalogIndex === index
+                          ? "after:scale-100"
+                          : "after:scale-0"
+                      }`}
+                      onClick={() => setActiveCatalogIndex(index)}
+                    >
+                      <div className="flex flex-col items-center gap-y-[0.75rem] text-center">
+                        <div
+                          className={`${
+                            activeCatalogIndex === index
+                              ? "before:opacity-100 before:translate-y-[5px]"
+                              : ""
+                          } relative transform before:absolute before:opacity-0 before:bottom-[calc(56px*0.2*-1+8px)] before:left-0 before:right-0 before:mx-auto before:w-[calc(56px*0.8)] before:h-[calc(56px*0.2)] before:bg-secondary before:rounded-[50%] before:transition-all before:ease-in-out before:[backface-visibility:hidden] group-hover:before:opacity-100 group-hover:before:translate-y-[5px]`}
+                        >
+                          <Image
+                            src={catalogIcon}
+                            alt={catalog.name}
+                            width={56}
+                            height={56}
+                            className={`group-hover:translate-y-[-4px] duration-150 group-hover:grayscale-0 ${
+                              activeCatalogIndex === index
+                                ? "grayscale-0 translate-y-[-4px]"
+                                : "grayscale-[1]"
+                            }`}
+                          />
+                        </div>
+                        <p className="text-base font-medium text-text_primary leading-[18.4px]">
+                          {catalog.name}
+                        </p>
                       </div>
-                      <p className="text-base font-medium text-text_primary leading-[18.4px]">
-                        {category.title}
-                      </p>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               <div className="mt-4 ">
                 <div className="grid min-h-0 min-w-0 grid-cols-[1fr_1fr_1fr_1fr] gap-[0.75rem] ">
-                  {category_images.map((category, index) => (
-                    <Link key={index} href="/seo" className="group">
-                      <div
-                        style={{
-                          backgroundImage: `url("/categories-image/web-development-02032022.jpg")`,
-                        }}
-                        className="relative rounded-md overflow-hidden bg-cover bg-center transition-all ease-[120ms] cursor-pointer"
-                      >
-                        <div className="relative flex items-end h-20 px-4 py-3 text-white bg-[rgba(0,0,0,.5)] font-semibold">
-                          <span className="group-hover:translate-y-[-4px] duration-150">
-                            ทำ SEO
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
+                  {activeCatalog?.sections
+                    ?.flatMap((section) => section.categories)
+                    .slice(0, 8)
+                    .map((category) => {
+                      const backgroundImage = category.image
+                        ? `url(${category.image})`
+                        : `url("/categories-image/web-development-02032022.jpg")`;
+
+                      return (
+                        <Link
+                          key={category.id}
+                          // href={`/category/${category.id}`}
+                          href={`/seo`}
+                          className="group"
+                        >
+                          <div
+                            style={{
+                              backgroundImage,
+                            }}
+                            className="relative rounded-md overflow-hidden bg-cover bg-center transition-all ease-[120ms] cursor-pointer"
+                          >
+                            <div className="relative flex items-end h-20 px-4 py-3 text-white bg-[rgba(0,0,0,.5)] font-semibold">
+                              <span className="group-hover:translate-y-[-4px] duration-150">
+                                {category.name}
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      );
+                    })}
                 </div>
                 <div className="my-4 flex justify-end">
                   <Link
@@ -259,11 +226,12 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
             {freelancer_intro.map((freelancer, index) => (
-              <div key={index} className="">
+              <div key={index}>
                 <Image
                   src={freelancer.icon}
                   alt="Group of people"
                   width={62}
+                  height={62}
                   className="max-w-full h-auto align-top"
                 />
                 <div className="grid grid-cols-[1fr] mt-4 gap-y-1 text-text_primary font-medium">
@@ -279,77 +247,116 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="hidden md:block">
-          <div className="py-24 grid grid-container-desktop gap-y-12 ">
+        <section className="hidden md:block pb-6">
+          <div className="grid grid-container-desktop gap-y-12 ">
             <div className="col-start-2 col-end-3">
               <h2 className="home-title-head">
                 {homeLanguageData?.title_start_hiring_section}
               </h2>
             </div>
             <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
+              {/* Cột 1 */}
               <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium">
-                <div className="flex flex-col">
-                  <div className="flex justify-start items-center gap-x-5 ">
-                    <Image src={GroupIcon.group11651} alt="group1" />
-                    <div className="grid grid-rows-2 gap-y-4">
-                      <h1 className="text-[1.25rem]  leading-[1.15]">
-                        {homeLanguageData?.label_start_hiring_section_1}
-                      </h1>
-                      <p className="m-0 text-base font-sans leading-[1.65] ">
-                        {" "}
-                        {homeLanguageData?.content_start_hiring_section_1}
-                      </p>
-                    </div>
+                <div className="flex gap-x-5">
+                  <div className="flex-shrink-0">
+                    <Image
+                      src={GroupIcon.group11651}
+                      width={30}
+                      height={30}
+                      alt="group1"
+                    />
+                  </div>
+                  <div>
+                    <h1 className="text-[1.25rem] leading-[1.15]">
+                      {homeLanguageData?.label_start_hiring_section_1}
+                    </h1>
+                    <p className="m-0 text-base font-sans leading-[1.65]">
+                      {homeLanguageData?.content_start_hiring_section_1}
+                    </p>
                   </div>
                 </div>
-                <div className="flex flex-col">
-                  <div className="flex justify-start items-center gap-x-5">
-                    <Image src={GroupIcon.group11653} alt="group3" />
-                    <div className="grid grid-rows-2 gap-y-2">
-                      <h1 className="text-[1.25rem]  leading-[1.15]">
-                        {homeLanguageData?.label_start_hiring_section_3}
-                      </h1>
-                      <p className="m-0 text-base font-sans leading-[1.65] ">
-                        {homeLanguageData?.content_start_hiring_section_3}
-                      </p>
-                    </div>
+                <div className="flex gap-x-5">
+                  <div className="flex-shrink-0">
+                    <Image
+                      src={GroupIcon.group11653}
+                      width={30}
+                      height={30}
+                      alt="group3"
+                    />
+                  </div>
+                  <div>
+                    <h1 className="text-[1.25rem] leading-[1.15]">
+                      {homeLanguageData?.label_start_hiring_section_3}
+                    </h1>
+                    <p className="m-0 text-base font-sans leading-[1.65]">
+                      {homeLanguageData?.content_start_hiring_section_3}
+                    </p>
                   </div>
                 </div>
               </div>
+
+              {/* Cột 2 */}
               <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium">
-                <div className="flex justify-start items-center gap-x-5">
-                  <Image src={GroupIcon.group11652} alt="group2" />
-                  <div className="grid grid-rows-2 gap-y-2">
-                    <h1 className="text-[1.25rem]  leading-[1.15]">
+                <div className="flex gap-x-5">
+                  <div className="flex-shrink-0">
+                    <Image
+                      src={GroupIcon.group11652}
+                      width={30}
+                      height={30}
+                      alt="group2"
+                    />
+                  </div>
+                  <div>
+                    <h1 className="text-[1.25rem] leading-[1.15]">
                       {homeLanguageData?.label_start_hiring_section_2}
                     </h1>
-                    <p className="m-0 text-base font-sans leading-[1.65] ">
+                    <p className="m-0 text-base font-sans leading-[1.65]">
                       {homeLanguageData?.content_start_hiring_section_2}
                     </p>
                   </div>
                 </div>
-                <div className="flex flex-col">
-                  <div className="flex justify-start items-center gap-x-5">
-                    <Image src={GroupIcon.group11654} alt="group4" />
-                    <div className="grid grid-rows-2 gap-y-2">
-                      <h1 className="text-[1.25rem]  leading-[1.15]">
-                        {homeLanguageData?.label_start_hiring_section_4}
-                      </h1>
-                      <p className="m-0 text-base font-sans leading-[1.65] ">
-                        {homeLanguageData?.content_start_hiring_section_4}
-                      </p>
-                    </div>
+                <div className="flex gap-x-5">
+                  <div className="flex-shrink-0">
+                    <Image
+                      src={GroupIcon.group11654}
+                      width={30}
+                      height={30}
+                      alt="group4"
+                    />
+                  </div>
+                  <div>
+                    <h1 className="text-[1.25rem] leading-[1.15]">
+                      {homeLanguageData?.label_start_hiring_section_4}
+                    </h1>
+                    <p className="m-0 text-base font-sans leading-[1.65]">
+                      {homeLanguageData?.content_start_hiring_section_4}
+                    </p>
                   </div>
                 </div>
               </div>
-              <div>
-                <Image src={fastwork} alt="fastwork" className="items-end" />
+
+              {/* Cột 3 */}
+              <div className="rounded-lg relative cursor-pointer h-[219px]">
+                <Image
+                  src={LandingImage.video_bg}
+                  alt="video background"
+                  className="rounded-lg object-cover w-full h-full"
+                  width={500}
+                  height={500}
+                />
+                <div className="bg-black/25 absolute top-0 left-0 w-full h-full rounded-lg">
+                  <div className="w-[75px] h-[75px] rounded-full bg-black absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex justify-center items-center">
+                    <FontAwesomeIcon
+                      icon={faPlay}
+                      className="w-[38px] h-[38px] text-white pl-1"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
-
-        <section className="py-24 grid grid-container-desktop gap-y-12 ">
+        <section className="py-[4rem] grid grid-container-desktop gap-y-12">
           <div className="col-span-1"></div>
           <div className="grid grid-cols-3 gap-x-5">
             <div className="col-span-2">
@@ -363,34 +370,71 @@ export default function Home() {
                 className="mySwiper"
               >
                 <SwiperSlide>
-                  <Image src={imgapp} alt="Picture 1" />
+                  <Image
+                    src={LandingImage.slider2}
+                    alt="Picture 1"
+                    className="rounded-lg"
+                  />
                 </SwiperSlide>
                 <SwiperSlide>
-                  <Image src={imgapp} alt="Picture 2" />
+                  <Image
+                    src={LandingImage.slider1}
+                    alt="Picture 2"
+                    className="rounded-lg"
+                  />
                 </SwiperSlide>
                 <SwiperSlide>
-                  <Image src={imgapp} alt="Picture 3" />
+                  <Image
+                    src={LandingImage.slider3}
+                    alt="Picture 3"
+                    className="rounded-lg"
+                  />
                 </SwiperSlide>
                 <SwiperSlide>
-                  <Image src={imgapp} alt="Picture 4" />
+                  <Image
+                    src={LandingImage.slider4}
+                    alt="Picture 4"
+                    className="rounded-lg"
+                  />
                 </SwiperSlide>
                 <SwiperSlide>
-                  <Image src={imgapp} alt="Picture 5" />
+                  <Image
+                    src={LandingImage.slider5}
+                    alt="Picture 5"
+                    className="rounded-lg"
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <Image
+                    src={LandingImage.slider6}
+                    alt="Picture 6"
+                    className="rounded-lg"
+                  />
+                </SwiperSlide>
+                <SwiperSlide>
+                  <Image
+                    src={LandingImage.slider7}
+                    alt="Picture 7"
+                    className="rounded-lg"
+                  />
                 </SwiperSlide>
               </Swiper>
             </div>
             <div className="col-span-1">
               <div className="grid grid-cols-1 gap-y-6">
-                <Image src={imgapp} alt="Picture 1" />
-                <Image src={imgapp} alt="Picture 2" />
+                <Image
+                  src={LandingImage.award_bg}
+                  alt="Picture 1"
+                  className="rounded-lg"
+                />
               </div>
             </div>
           </div>
         </section>
 
-        <section className="py-24 grid grid-container-desktop gap-y-12 gap-x-4">
+        <section className="grid grid-container-desktop gap-y-12 gap-x-4">
           <div className="col-start-2 col-end-3">
-            <h2 className="home-title-head">
+            <h2 className="home-title-head pb-4">
               {homeLanguageData?.label_recommend_section}
             </h2>
             <Swiper
@@ -400,29 +444,33 @@ export default function Home() {
               mousewheel={true}
               keyboard={true}
               modules={[Navigation]}
-              className="mySwiper px-5"
+              className="mySwiper px-5 "
             >
               <SwiperSlide>
-                <Image src={imgapp} alt="Picture 1" />
+                <Image src={LandingImage.interest_1} alt="Picture 1" className="rounded-lg"/>
               </SwiperSlide>
               <SwiperSlide>
-                <Image src={imgapp} alt="Picture 2" />
+                <Image src={LandingImage.interest_2} alt="Picture 2" className="rounded-lg"/>
               </SwiperSlide>
               <SwiperSlide>
-                <Image src={imgapp} alt="Picture 3" />
+                <Image src={LandingImage.interest_3} alt="Picture 3" className="rounded-lg"/>
               </SwiperSlide>
               <SwiperSlide>
-                <Image src={imgapp} alt="Picture 4" />
+                <Image src={LandingImage.interest_4} alt="Picture 4" className="rounded-lg"/>
               </SwiperSlide>
               <SwiperSlide>
-                <Image src={imgapp} alt="Picture 5" />
+                <Image src={LandingImage.interest_5} alt="Picture 5" className="rounded-lg"/>
+              </SwiperSlide>
+              <SwiperSlide>
+                <Image src={LandingImage.interest_6} alt="Picture 6" className="rounded-lg"/>
               </SwiperSlide>
             </Swiper>
           </div>
           <div></div>
         </section>
+
         <section
-          className="bg-gradient-to-t py-24 grid grid-container-desktop gap-y-12 gap-x-4"
+          className="bg-gradient-to-t py-12 grid grid-container-desktop gap-y-12 gap-x-4"
           style={{
             background: "linear-gradient(to top, hsl(216 85% 94%), #fff)",
           }}
@@ -432,132 +480,229 @@ export default function Home() {
               {homeLanguageData?.tittle_quality_offer_section}
             </h2>
           </div>
-          <div className="grid grid-cols-3 gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3 ">
-            <div className="flex flex-col justify-between items-center text-center bg-white p-6 rounded-lg shadow-md gap-6">
-              <div className="y-2 px-4 rounded-full shadow-md self-end mx-4"></div>
-              {/* <img
-                src="your-freelancer-icon-url"
-                alt="Freelancer"
-                className="mb-4 w-16 h-16"
-              /> */}
-              <Image src={CompareImage.compare1} alt="Freelancer" />
-              <div className="text-black">
-                <h3 className="font-semibold text-xl mb-2">Freelancer</h3>
-                <ul className="text-sm text-left">
-                  <li className="flex items-center">
-                    {homeLanguageData?.content_quality_offer_freelancer_card_1}{" "}
-                  </li>
-                  <li className="flex items-center">
-                    {homeLanguageData?.content_quality_offer_freelancer_card_2}{" "}
-                  </li>
-                </ul>
+          <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3 ">
+            <div className="flex flex-col shadow-memberShipShadow rounded-lg bg-white">
+              <div className="p-6 flex-1 text-center bg-white rounded-lg gap-6">
+                <div className="h-[32px]"></div>
+                <div className="flex justify-center mt-8 items-center">
+                  <Image src={CompareImage.compare1} alt="Freelancer" />
+                </div>
+                <div className="text-text_primary mt-6">
+                  <h3 className="font-semibold text-[1.25rem] mb-2">
+                    Freelancer
+                  </h3>
+                  <ul className="text-sm text-left text-text_secondary grid grid-cols-[1fr] gap-1">
+                    <li className="flex flex-row gap-3 items-center">
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        className="w-[12px] h-[14px] text-third"
+                      />
+                      <p className="text-[0.875rem] leading-[1.65]">
+                        {
+                          homeLanguageData?.content_quality_offer_freelancer_card_1
+                        }{" "}
+                      </p>
+                    </li>
+                    <li className="flex flex-row gap-3 items-center">
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        className="w-[12px] h-[14px] text-third"
+                      />
+                      <p className="text-[0.875rem] leading-[1.65]">
+                        {
+                          homeLanguageData?.content_quality_offer_freelancer_card_2
+                        }{" "}
+                      </p>
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <Link
-                href="#"
-                className="mt-4 text-blue-500 hover:text-blue-700 font-semibold text-sm cursor-pointer"
-              >
-                {homeLanguageData?.label_see_more_tittle}
-              </Link>
+              <div>
+                <hr className="w-full h-[1px] m-0 bg-border_secondary" />
+                <div className="h-[60px] px-6 flex justify-end items-center ">
+                  <div className="opacity-70 text-[0.875rem] cursor-pointer text-text_secondary">
+                    {homeLanguageData?.label_see_more_tittle}
+                    <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col shadow-memberShipShadow rounded-lg bg-white">
+              <div className="p-6 flex-1 text-center bg-white rounded-lg gap-6">
+                <div className="w-full flex justify-end">
+                  <button className="w-fit pointer-events-none bg-blue-200 text-blue-500 font-semibold py-1 px-4 rounded-full shadow-md hover:bg-blue-400 ">
+                    {homeLanguageData?.tittle_quality_offer_specialist_card}
+                  </button>
+                </div>
+                <div className="flex justify-center mt-8 items-center">
+                  <Image src={CompareImage.compare2} alt="Specialist" />
+                </div>
+                <div className="text-text_primary mt-6">
+                  <h3 className="font-semibold text-[1.25rem] mb-2">
+                    {homeLanguageData?.tittle_quality_offer_specialist_card}
+                  </h3>
+                  <ul className="text-sm text-left text-text_secondary grid grid-cols-[1fr] gap-1">
+                    <li className="flex flex-row gap-3 items-center">
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        className="w-[12px] h-[14px] text-third"
+                      />
+                      <p className="text-[0.875rem] leading-[1.65]">
+                        {
+                          homeLanguageData?.content_quality_offer_specialist_card_1
+                        }
+                      </p>
+                    </li>
+                    <li className="flex flex-row gap-3 items-center">
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        className="w-[12px] h-[14px] text-third"
+                      />
+                      <p className="text-[0.875rem] leading-[1.65]">
+                        {
+                          homeLanguageData?.content_quality_offer_specialist_card_2
+                        }
+                      </p>
+                    </li>
+                    <li className="flex flex-row gap-3 items-center">
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        className="w-[12px] h-[14px] text-third"
+                      />
+                      <p className="text-[0.875rem] leading-[1.65]">
+                        {
+                          homeLanguageData?.content_quality_offer_specialist_card_3
+                        }
+                      </p>
+                    </li>
+                    <li className="flex flex-row gap-3 items-center">
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        className="w-[12px] h-[14px] text-third"
+                      />
+                      <p className="text-[0.875rem] leading-[1.65]">
+                        {
+                          homeLanguageData?.content_quality_offer_specialist_card_4
+                        }
+                      </p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div>
+                <hr className="w-full h-[1px] m-0 bg-border_secondary" />
+                <div className="h-[60px] px-6 flex justify-end items-center ">
+                  <div className="opacity-70 text-[0.875rem] cursor-pointer text-text_secondary">
+                    {homeLanguageData?.label_see_more_tittle}
+                    <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="justify-between flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md gap-6">
-              <button className=" pointer-events-none bg-blue-200 text-blue-500 font-semibold py-2 px-4 rounded-full shadow-md hover:bg-blue-400 self-end mx-4">
-                {homeLanguageData?.tittle_quality_offer_specialist_card}
-              </button>
-              <Image src={CompareImage.compare2} alt="Specialist" />
-
-              {/* <img
-                src="your-specialist-icon-url"
-                alt="Specialist"
-                className="mb-4 w-16 h-16"
-              /> */}
-              <div className="text-black">
-                <h3 className="font-semibold text-xl mb-2  mx-4">
-                  {homeLanguageData?.tittle_quality_offer_specialist_card}
-                </h3>
-                <ul className="text-sm text-left">
-                  <li className="flex items-center">
-                    {homeLanguageData?.content_quality_offer_specialist_card_1}{" "}
-                  </li>
-                  <li className="flex items-center">
-                    {homeLanguageData?.content_quality_offer_specialist_card_2}
-                  </li>{" "}
-                  <li className="flex items-center">
-                    {" "}
-                    {homeLanguageData?.content_quality_offer_specialist_card_3}
-                  </li>{" "}
-                  <li className="flex items-center">
-                    {" "}
-                    {homeLanguageData?.content_quality_offer_specialist_card_4}
-                  </li>
-                </ul>
+            <div className="flex flex-col shadow-memberShipShadow rounded-lg bg-white">
+              <div className="p-6 flex-1 text-center bg-white rounded-lg gap-6">
+                <div className="w-full flex justify-end">
+                  <button className="w-fit pointer-events-none bg-blue-500 text-white font-semibold py-1 px-4 rounded-full shadow-md hover:bg-blue-400">
+                    {homeLanguageData?.tittle_quality_offer_professional_card}
+                  </button>
+                </div>
+                <div className="flex justify-center mt-8 items-center">
+                  <Image src={CompareImage.compare3} alt="Professional" />
+                </div>
+                <div className="text-text_primary mt-6">
+                  <h3 className="font-semibold text-[1.25rem] mb-2">
+                    {homeLanguageData?.tittle_quality_offer_professional_card}
+                  </h3>
+                  <ul className="text-sm text-left text-text_secondary grid grid-cols-[1fr] gap-1">
+                    <li className="flex flex-row gap-3 items-center">
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        className="w-[12px] h-[14px] text-third"
+                      />
+                      <p className="text-[0.875rem] leading-[1.65]">
+                        {
+                          homeLanguageData?.content_quality_offer_professional_card_1
+                        }
+                      </p>
+                    </li>
+                    <li className="flex flex-row gap-3 items-center">
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        className="w-[12px] h-[14px] text-third"
+                      />
+                      <p className="text-[0.875rem] leading-[1.65]">
+                        {
+                          homeLanguageData?.content_quality_offer_professional_card_2
+                        }
+                      </p>
+                    </li>
+                    <li className="flex flex-row gap-3 items-center">
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        className="w-[12px] h-[14px] text-third"
+                      />
+                      <p className="text-[0.875rem] leading-[1.65]">
+                        {
+                          homeLanguageData?.content_quality_offer_professional_card_3
+                        }
+                      </p>
+                    </li>
+                    <li className="flex flex-row gap-3 items-center">
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        className="w-[12px] h-[14px] text-third"
+                      />
+                      <p className="text-[0.875rem] leading-[1.65]">
+                        {
+                          homeLanguageData?.content_quality_offer_professional_card_4
+                        }
+                      </p>
+                    </li>
+                    <li className="flex flex-row gap-3 items-center">
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        className="w-[12px] h-[14px] text-third"
+                      />
+                      <p className="text-[0.875rem] leading-[1.65]">
+                        {
+                          homeLanguageData?.content_quality_offer_professional_card_5
+                        }
+                      </p>
+                    </li>
+                    <li className="flex flex-row gap-3 items-center">
+                      <FontAwesomeIcon
+                        icon={faCheck}
+                        className="w-[12px] h-[14px] text-third"
+                      />
+                      <p className="text-[0.875rem] leading-[1.65]">
+                        {
+                          homeLanguageData?.content_quality_offer_professional_card_6
+                        }
+                      </p>
+                    </li>
+                  </ul>
+                </div>
               </div>
-              <Link
-                href="#"
-                className="mt-4 text-blue-500 hover:text-blue-700 font-semibold text-sm cursor-pointer"
-              >
-                {homeLanguageData?.label_see_more_tittle}
-              </Link>
-            </div>
-
-            <div className="justify-between flex flex-col items-center text-center gap-6 bg-white p-6 rounded-lg shadow-md">
-              <button className=" pointer-events-none bg-blue-500 text-blue-2  00 font-semibold py-2 px-4 rounded-full shadow-md hover:bg-blue-400 self-end mx-4">
-                {homeLanguageData?.tittle_quality_offer_professional_card}
-              </button>
-              <Image src={CompareImage.compare3} alt="Professional" />
-              <div className="text-black">
-                <h3 className="font-semibold text-xl mb-2">
-                  {homeLanguageData?.tittle_quality_offer_professional_card}
-                </h3>
-                <ul className="text-sm text-left">
-                  <li className="flex items-center">
-                    {
-                      homeLanguageData?.content_quality_offer_professional_card_1
-                    }
-                  </li>
-                  <li className="flex items-center">
-                    {
-                      homeLanguageData?.content_quality_offer_professional_card_2
-                    }
-                  </li>
-                  <li className="flex items-center">
-                    {
-                      homeLanguageData?.content_quality_offer_professional_card_3
-                    }
-                  </li>
-                  <li className="flex items-center">
-                    {
-                      homeLanguageData?.content_quality_offer_professional_card_4
-                    }
-                  </li>
-                  <li className="flex items-center">
-                    {
-                      homeLanguageData?.content_quality_offer_professional_card_5
-                    }
-                  </li>{" "}
-                  <li className="flex items-center">
-                    {
-                      homeLanguageData?.content_quality_offer_professional_card_6
-                    }
-                  </li>
-                </ul>
+              <div>
+                <hr className="w-full h-[1px] m-0 bg-border_secondary" />
+                <div className="h-[60px] px-6 flex justify-end items-center ">
+                  <div className="opacity-70 text-[0.875rem] cursor-pointer text-text_secondary">
+                    {homeLanguageData?.label_see_more_tittle}
+                    <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
+                  </div>
+                </div>
               </div>
-              <Link
-                href="#"
-                className="mt-4 text-blue-500 hover:text-blue-700 font-semibold text-sm cursor-pointer"
-              >
-                {homeLanguageData?.label_see_more_tittle}
-              </Link>
             </div>
           </div>
           <div className="col-start-2 col-end-3"></div>
         </section>
 
-        <section className="bg-white py-24 grid grid-container-desktop gap-y-12">
+        <section className="bg-white pt-12 grid grid-container-desktop gap-y-6">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
             ฟรีแลนซ์ยอดนิยมในหมวด รับจัดดอกไม้
           </div>
-          <div className="col-start-2 col-end-3">
+          <div className="col-start-2 col-end-3 mx-[10px] pb-7">
             <Swiper
               slidesPerView={5}
               cssMode={true}
@@ -565,47 +710,36 @@ export default function Home() {
               mousewheel={true}
               keyboard={true}
               modules={[Navigation]}
-              className="mySwiper px-5"
+              className="mySwiper"
+              breakpoints={{
+                640: {
+                  slidesPerView: 2,
+                  spaceBetween: 20,
+                },
+                768: {
+                  slidesPerView: 4,
+                  spaceBetween: 20,
+                },
+                1024: {
+                  slidesPerView: 5,
+                  spaceBetween: 20,
+                },
+              }}
             >
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 1" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 2" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 3" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 4" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 5" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 6" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 7" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 8" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 9" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 10" />
-              </SwiperSlide>
+              {Array.from({ length: 16 }, (_, index) => (
+                <SwiperSlide key={index}>
+                  <CategoryCard />
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         </section>
 
-        <section className="bg-white py-24 grid grid-container-desktop gap-y-12">
+        <section className="bg-white pt-12 grid grid-container-desktop gap-y-6">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
             ฟรีแลนซ์ยอดนิยมในหมวด ดูดวง โหราศาสตร์ ความเชื่อ{" "}
           </div>
-          <div className="col-start-2 col-end-3">
+          <div className="col-start-2 col-end-3 mx-[10px] pb-7">
             <Swiper
               slidesPerView={5}
               cssMode={true}
@@ -613,47 +747,36 @@ export default function Home() {
               mousewheel={true}
               keyboard={true}
               modules={[Navigation]}
-              className="mySwiper px-5"
+              className="mySwiper"
+              breakpoints={{
+                640: {
+                  slidesPerView: 2,
+                  spaceBetween: 20,
+                },
+                768: {
+                  slidesPerView: 4,
+                  spaceBetween: 20,
+                },
+                1024: {
+                  slidesPerView: 5,
+                  spaceBetween: 20,
+                },
+              }}
             >
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 1" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 2" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 3" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 4" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 5" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 6" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 7" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 8" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 9" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 10" />
-              </SwiperSlide>
+              {Array.from({ length: 16 }, (_, index) => (
+                <SwiperSlide key={index}>
+                  <CategoryCard />
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         </section>
 
-        <section className="bg-white py-24 grid grid-container-desktop gap-y-12">
+        <section className="bg-white pt-12 grid grid-container-desktop gap-y-6">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
-            ฟรีแลนซ์ยอดนิยมในหมวด ออกแบบ Logo
+            ฟรีแลนซ์ยอดนิยมในหมวด Photography
           </div>
-          <div className="col-start-2 col-end-3">
+          <div className="col-start-2 col-end-3 mx-[10px] pb-7">
             <Swiper
               slidesPerView={5}
               cssMode={true}
@@ -661,141 +784,101 @@ export default function Home() {
               mousewheel={true}
               keyboard={true}
               modules={[Navigation]}
-              className="mySwiper px-5"
+              className="mySwiper"
+              breakpoints={{
+                640: {
+                  slidesPerView: 2,
+                  spaceBetween: 20,
+                },
+                768: {
+                  slidesPerView: 4,
+                  spaceBetween: 20,
+                },
+                1024: {
+                  slidesPerView: 5,
+                  spaceBetween: 20,
+                },
+              }}
             >
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 1" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 2" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 3" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 4" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 5" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 6" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 7" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 8" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 9" />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={imgapp} alt="Picture 10" />
-              </SwiperSlide>
+              {Array.from({ length: 16 }, (_, index) => (
+                <SwiperSlide key={index}>
+                  <CategoryCard/>
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         </section>
 
-        <section className="bg-white py-24 grid grid-container-desktop gap-y-12">
+        <section className="bg-white pt-12 grid grid-container-desktop gap-y-12">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
             {homeLanguageData?.title_featured_works}
           </div>
-          <div className="col-start-2 col-end-3">
+          <div className="col-start-2 col-end-3 pb-16">
             <Swiper
               slidesPerView={3}
               cssMode={true}
               navigation={true}
               mousewheel={true}
               keyboard={true}
+              // spaceBetween={50}
               modules={[Navigation]}
-              className="mySwiper px-5"
+              className="mySwiper"
             >
-              <SwiperSlide>
-                <div className="bg-white p-4 rounded-lg shadow-lg">
-                  <Image
-                    src="/path-to-hotel-image.jpg"
-                    alt="Hotel Image"
-                    width={400}
-                    height={200}
-                    className="rounded-lg"
-                  />
-                  <h3 className="text-lg font-semibold mt-2">Plaza Hotel</h3>
-                  <p className="text-gray-500 text-sm">Bangkok, Thailand</p>
-                  <p className="text-red-500 font-semibold mt-2">
-                    $200 / night
-                  </p>
-                </div>{" "}
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="bg-white p-4 rounded-lg shadow-lg">
-                  <Image
-                    src="/path-to-hotel-image.jpg"
-                    alt="Hotel Image"
-                    width={400}
-                    height={200}
-                    className="rounded-lg"
-                  />
-                  <h3 className="text-lg font-semibold mt-2">Plaza Hotel</h3>
-                  <p className="text-gray-500 text-sm">Bangkok, Thailand</p>
-                  <p className="text-red-500 font-semibold mt-2">
-                    $200 / night
-                  </p>
-                </div>{" "}
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="bg-white p-4 rounded-lg shadow-lg">
-                  <Image
-                    src="/path-to-hotel-image.jpg"
-                    alt="Hotel Image"
-                    width={400}
-                    height={200}
-                    className="rounded-lg"
-                  />
-                  <h3 className="text-lg font-semibold mt-2">Plaza Hotel</h3>
-                  <p className="text-gray-500 text-sm">Bangkok, Thailand</p>
-                  <p className="text-red-500 font-semibold mt-2">
-                    $200 / night
-                  </p>
-                </div>{" "}
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="bg-white p-4 rounded-lg shadow-lg">
-                  <Image
-                    src="/path-to-hotel-image.jpg"
-                    alt="Hotel Image"
-                    width={400}
-                    height={200}
-                    className="rounded-lg"
-                  />
-                  <h3 className="text-lg font-semibold mt-2">Plaza Hotel</h3>
-                  <p className="text-gray-500 text-sm">Bangkok, Thailand</p>
-                  <p className="text-red-500 font-semibold mt-2">
-                    $200 / night
-                  </p>
-                </div>{" "}
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="bg-white p-4 rounded-lg shadow-lg">
-                  <Image
-                    src="/path-to-hotel-image.jpg"
-                    alt="Hotel Image"
-                    width={400}
-                    height={200}
-                    className="rounded-lg"
-                  />
-                  <h3 className="text-lg font-semibold mt-2">Plaza Hotel</h3>
-                  <p className="text-gray-500 text-sm">Bangkok, Thailand</p>
-                  <p className="text-red-500 font-semibold mt-2">
-                    $200 / night
-                  </p>
-                </div>{" "}
-              </SwiperSlide>
+              {Array.from({ length: 6 }, (_, index) => (
+                <SwiperSlide key={index}>
+                  <div className="bg-white p-6 pb-8">
+                    <Link
+                      href="/"
+                      className="block rounded-lg mx-auto w-[350px] shadow-topWorkShadow"
+                    >
+                      <div className="h-[256px] relative">
+                        <Image
+                          src={LandingImage.top_works}
+                          alt="Hotel Image"
+                          width={400}
+                          height={200}
+                          className="absolute h-full w-full inset-0 object-cover rounded-tr-lg rounded-tl-lg"
+                        />
+                      </div>
+                      <div className="rounded-br-lg rounded-bl-lg bg-white">
+                        <div className="grid-cols-[2fr_10fr] grid min-w-0 min-h-0 p-4">
+                          <div>
+                            <Image
+                              src={ProfileImage.avatar}
+                              alt="profile Image"
+                              width={400}
+                              height={200}
+                              className="max-w-full h-auto w-9 block rounded-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-text_primary p-0">
+                              Line sticker
+                            </p>
+                            <p className="text-[14px] text-text_secondary p-0">
+                              by designdee
+                            </p>
+                          </div>
+                          {/* <h3 className="text-lg font-semibold mt-2">
+                            Plaza Hotel
+                          </h3>
+                          <p className="text-gray-500 text-sm">
+                            Bangkok, Thailand
+                          </p>
+                          <p className="text-red-500 font-semibold mt-2">
+                            $200 / night
+                          </p> */}
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         </section>
 
-        <section className="bg-white py-24 grid grid-container-desktop gap-y-12">
+        <section className="bg-white pb-16 grid grid-container-desktop gap-y-12">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
             {homeLanguageData?.label_reviews_customer}
           </div>
@@ -809,195 +892,44 @@ export default function Home() {
               modules={[Navigation]}
               className="mySwiper px-5"
             >
-              <SwiperSlide>
-                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
-                  <div className="mb-4">
-                    <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
-                    </blockquote>
-                  </div>
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center">
-                      {/* Add your logo image here */}
-                      <Image
-                        src="/path-to-your-logo.png"
-                        alt="Company Logo"
-                        width={40}
-                        height={40}
-                      />
-                      <span className="ml-2 text-gray-600 font-medium text-sm">
-                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
-                      </span>
+              {Array.from({ length: 6 }, (_, index) => (
+                <SwiperSlide key={index}>
+                  <div className="w-[350px] m-6 bg-white">
+                    <div className="shadow-reviewShadow rounded-lg p-6">
+                      <div className="mb-6 flex flex-row gap-8">
+                        <FontAwesomeIcon
+                          icon={faQuoteLeft}
+                          className="text-[#E3EDFD] w-[28px] h-[32px]"
+                        />
+                        <blockquote className="text-base leading-[1.65] text-[#728197] font-sans italic">
+                          &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ
+                          ง่ายขึ้นมากครับ เราสามารถ
+                          เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
+                        </blockquote>
+                      </div>
+                      <div className="flex items-center justify-between mt-4">
+                        <div className="flex items-center gap-4">
+                          <Image
+                            src={ProfileImage.avatar}
+                            alt="Company Logo"
+                            width={47}
+                            height={47}
+                            className="rounded-full object-cover"
+                          />
+                          <div className="flex flex-col">
+                            <span className="text-third font-medium text-sm">
+                              บริษัท อีสานพลาสแพ็ค 1999 จำกัด
+                            </span>
+                            <div className="text-gray-500 text-xs">
+                              โรงงานอุตสาหกรรมพลาสติก
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-gray-500 text-xs">
-                      โรงงานอุตสาหกรรมพลาสติก
-                    </div>
-                  </div>
-                </div>{" "}
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
-                  <div className="mb-4">
-                    <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
-                    </blockquote>
-                  </div>
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center">
-                      {/* Add your logo image here */}
-                      <Image
-                        src="/path-to-your-logo.png"
-                        alt="Company Logo"
-                        width={40}
-                        height={40}
-                      />
-                      <span className="ml-2 text-gray-600 font-medium text-sm">
-                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
-                      </span>
-                    </div>
-                    <div className="text-gray-500 text-xs">
-                      โรงงานอุตสาหกรรมพลาสติก
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
-                  <div className="mb-4">
-                    <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
-                    </blockquote>
-                  </div>
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center">
-                      {/* Add your logo image here */}
-                      <Image
-                        src="/path-to-your-logo.png"
-                        alt="Company Logo"
-                        width={40}
-                        height={40}
-                      />
-                      <span className="ml-2 text-gray-600 font-medium text-sm">
-                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
-                      </span>
-                    </div>
-                    <div className="text-gray-500 text-xs">
-                      โรงงานอุตสาหกรรมพลาสติก
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
-                  <div className="mb-4">
-                    <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
-                    </blockquote>
-                  </div>
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center">
-                      {/* Add your logo image here */}
-                      <Image
-                        src="/path-to-your-logo.png"
-                        alt="Company Logo"
-                        width={40}
-                        height={40}
-                      />
-                      <span className="ml-2 text-gray-600 font-medium text-sm">
-                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
-                      </span>
-                    </div>
-                    <div className="text-gray-500 text-xs">
-                      โรงงานอุตสาหกรรมพลาสติก
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
-                  <div className="mb-4">
-                    <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
-                    </blockquote>
-                  </div>
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center">
-                      {/* Add your logo image here */}
-                      <Image
-                        src="/path-to-your-logo.png"
-                        alt="Company Logo"
-                        width={40}
-                        height={40}
-                      />
-                      <span className="ml-2 text-gray-600 font-medium text-sm">
-                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
-                      </span>
-                    </div>
-                    <div className="text-gray-500 text-xs">
-                      โรงงานอุตสาหกรรมพลาสติก
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
-                  <div className="mb-4">
-                    <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
-                    </blockquote>
-                  </div>
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center">
-                      {/* Add your logo image here */}
-                      <Image
-                        src="/path-to-your-logo.png"
-                        alt="Company Logo"
-                        width={40}
-                        height={40}
-                      />
-                      <span className="ml-2 text-gray-600 font-medium text-sm">
-                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
-                      </span>
-                    </div>
-                    <div className="text-gray-500 text-xs">
-                      โรงงานอุตสาหกรรมพลาสติก
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="max-w-xs p-4 bg-white shadow-lg rounded-lg">
-                  <div className="mb-4">
-                    <blockquote className="text-lg text-gray-700 font-semibold italic">
-                      &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
-                      เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
-                    </blockquote>
-                  </div>
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center">
-                      {/* Add your logo image here */}
-                      <Image
-                        src="/path-to-your-logo.png"
-                        alt="Company Logo"
-                        width={40}
-                        height={40}
-                      />
-                      <span className="ml-2 text-gray-600 font-medium text-sm">
-                        บริษัท อีสานพลาสแพ็ค 1999 จำกัด
-                      </span>
-                    </div>
-                    <div className="text-gray-500 text-xs">
-                      โรงงานอุตสาหกรรมพลาสติก
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
+                  </div>{" "}
+                </SwiperSlide>
+              ))}
             </Swiper>
           </div>
         </section>
@@ -1006,7 +938,7 @@ export default function Home() {
           className="hidden md:block"
           style={{ backgroundColor: "hsl(216, 15%, 97%)" }}
         >
-          <div className="py-24 grid grid-container-desktop gap-y-[1.5rem]">
+          <div className="py-8 grid grid-container-desktop gap-y-[1.5rem]">
             <div className="col-start-2 col-end-3 w-full text-center">
               <h5 className="text-[1.25rem] text-[#2B323BF2] font-medium font-secondary leading-[1.15] mb-[1.5rem]">
                 {homeLanguageData?.title_trusted_companies}
@@ -1102,9 +1034,9 @@ export default function Home() {
         </section>
 
         <section className="hidden md:block">
-          <div className="bg-white py-24 grid grid-container-desktop gap-y-12">
+          <div className="bg-white pt-24 pb-16 grid grid-container-desktop gap-y-12">
             <div className="col-start-2 col-end-3 w-full text-left">
-              <h2 className="block text-[#08439B] text-[36px] mt-[0.83em] mb-[0.83em] mx-0">
+              <h2 className="block text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px] mt-[0.83em] mb-[0.83em] mx-0">
                 {homeLanguageData?.title_platform}
               </h2>
               <div
@@ -1172,10 +1104,17 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <div className="grid grid-container-desktop">
+          <div className="col-start-2 col-end-3 w-full">
+            <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
+          </div>
+        </div>
+
         <section className="hidden md:block">
-          <div className="bg-white py-24 grid grid-container-desktop gap-y-12">
+          <div className="bg-white pt-24 pb-16 grid grid-container-desktop gap-y-12">
             <div className="col-start-2 col-end-3 w-full">
-              <h2 className="block text-[#08439B] text-[36px] mt-[0.83em] mb-[0.83em] mx-0 text-center">
+              <h2 className="block text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px] mb-[0.83em] mx-0">
                 {homeLanguageData?.title_job_categories}
               </h2>
               <div className="grid w-full gap-x-8 gap-y-6 grid-cols-4 grid-rows-2">
