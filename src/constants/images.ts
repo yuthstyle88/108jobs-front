@@ -70,13 +70,46 @@ import construction from "../assets/images/landing/construction.svg";
 import bg_error from "../assets/images/landing/bg_error.svg";
 import error from "../assets/images/landing/error.svg";
 import error_mobile from "../assets/images/landing/bg-mobile.svg";
+import video_bg from "../assets/images/landing/video_cover-1.jpg";
+import slider1 from "../assets/images/landing/Job_board_second_commu_Home_1638x856_35af976c47.webp";
+import slider2 from "../assets/images/landing/AW_Earthquake_campaign_adapt_5_Home_Banner_1638x856_e42ae92775.webp";
+import slider3 from "../assets/images/landing/Banner_Home_banner_desktop_1638x856_33f96e0d49.webp";
+import slider4 from "../assets/images/landing/LINE_alert_re_design_Home_1600x838_7b2d62b09d.webp";
+import slider5 from "../assets/images/landing/Milestone_Buyer_banner_home_1600x838_3576020f01.webp";
+import slider6 from "../assets/images/landing/Muconomy_Popup_Banner_Full_1638x856_e20733252f.webp";
+import slider7 from "../assets/images/landing/Point_back_revise_Date_Home_Banner_1638x856px_c177c4cf09.webp";
+import award_bg from "../assets/images/landing/Buyer_rewards_home_1638x856_36c29e8dea.webp";
+
+import interest_1 from "../assets/images/landing/Point_back_revise_Date_Recommend_banner784x196px_c349d22e8b.webp";
+import interest_2 from "../assets/images/landing/Job_board_second_commu_Recommend_784x196_6a89f6e2a5.webp";
+import interest_3 from "../assets/images/landing/company_boost_visibility_discount_784x196_037b9903df.webp";
+import interest_4 from "../assets/images/landing/Chat_to_hire_redesign_Recommend_banner_784x196_7bec321ed0.webp";
+import interest_5 from "../assets/images/landing/Instant_call_re_design_Aug2023_discount_784x196_21b32759dc.webp";
+import interest_6 from "../assets/images/landing/Milestone_Buyer_banner_discount_784x196_3a80602fe0.webp";
+import top_works from "../assets/images/landing/Line_sticker_designdee_505bdaa359.webp";
 
 export const LandingImage = {
   banner_02,
   construction,
   bg_error,
   error,
-  error_mobile
+  error_mobile,
+  video_bg,
+  slider1,
+  slider2,
+  slider3,
+  slider4,
+  slider5,
+  slider6,
+  slider7,
+  award_bg,
+  interest_1,
+  interest_2,
+  interest_3,
+  interest_4,
+  interest_5,
+  interest_6,
+  top_works
 };
 
 export const MessageImage = {

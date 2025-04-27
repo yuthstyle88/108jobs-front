@@ -103,6 +103,7 @@ const Step3Media = ({
       console.error("Submit step 3 error:", err);
     }
   };
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (job?.images?.length) {
@@ -112,6 +113,8 @@ const Step3Media = ({
       if (galleryImgs.length > 0)
         multi.setImages(galleryImgs.map((img) => img.image_url));
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [job]);
 
   useEffect(() => {
