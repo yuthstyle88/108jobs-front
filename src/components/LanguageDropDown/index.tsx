@@ -37,7 +37,7 @@ const LanguageDropdown = ({ className = "" }: LanguageDropdownProps) => {
     <div ref={dropdownRef} className={`relative ${className}`}>
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="text-white text-sm hover:bg-blue-800 hover:text-white cursor-pointer flex items-center gap-2"
+        className="text-white text-sm hover:bg-blue-800 hover:text-white cursor-pointer flex items-center gap-2 w-[30px] h-[30px]"
       >
         {currentLangData && (
           <Image

@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import { ReactNode } from "react";
 import { defaultMetadata } from "@/config/metadata";
-import ChatWrapper from "@/container/ChatWrapper";
+import ChatWrapper from "@/containers/ChatWrapper";
 import { ChatLanguageProvider } from "@/contexts/ChatLanguage";
 interface CreateLayoutProps {
   children: ReactNode;

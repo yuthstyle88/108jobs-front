@@ -42,9 +42,9 @@ const PopularSubCat = () => {
   if (error) return <div>Error loading data</div>;
 
   return (
-    <section className="col-start-2 col-end-3 grid grid-cols-[280px_1fr] pt-8 pb-9 gap-6 text-[0.875rem]">
+    <section className="col-start-2 col-end-3 grid grid-cols-2 sm:grid-cols-[280px_1fr] pt-12 sm:pt-8 pb-9 gap-6 text-[0.875rem]">
       <div className="relative pt-4" ref={dropdownRef}>
-        <div className="sticky top-[100px]">
+        <div className="sticky top-[110px] sm:top-[100px]">
           <button
             onClick={() => setIsOpen((prev) => !prev)}
             className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 focus:outline-none"
@@ -102,11 +102,11 @@ const PopularSubCat = () => {
       </div>
 
       <div className="flex-1">
-        <h2 className="text-[32px] font-semibold text-text_primary pb-4">
+        <h2 className="text-[24px] md:text-[32px] font-semibold text-text_primary pb-4">
           {selectedCategory?.name}
         </h2>
         {selectedCategory && (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {selectedCategory.sections
               .flatMap((section) => section.categories)
               .map((cat) => (
