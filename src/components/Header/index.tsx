@@ -30,7 +30,6 @@ interface BgProps {
 
 const Header = ({ type }: BgProps) => {
   const { data: session } = useSession();
-
   const { scrollY, showSearch } = useScrollHandler();
 
   const {
@@ -50,14 +49,14 @@ const Header = ({ type }: BgProps) => {
         scrollY > 0 ? "bg-primary" : bg
       }`}
     >
-      <nav className="mx-[1.5rem] flex h-[70px] items-center justify-between">
-        <section className="grid grid-flow-col items-center gap-x-4">
-          <Link href="/">
+      <nav className="mx-[1.5rem] flex flex-wrap items-center justify-center h-auto min-h-[70px] py-4 xl:py-1 xl:justify-between">
+        <section className="flex items-center gap-x-4 w-full md:w-auto">
+          <Link href="/" className="shrink-0">
             <Image src={AssetIcon.logo} alt="logo" className="w-full h-full" />
           </Link>
 
           <div
-            className={`flex text-black h-[40px] w-[250px] relative transition-all duration-300 ${
+            className={`flex text-black h-[40px] w-full md:w-[250px] relative transition-all duration-300 ${
               showSearch ? "opacity-100 " : "opacity-0 pointer-events-none"
             }`}
           >
@@ -72,18 +71,15 @@ const Header = ({ type }: BgProps) => {
             />
           </div>
         </section>
-        <section className="flex items-center gap-4 h-full">
+
+        <section className="flex items-center gap-4 w-full md:w-auto mt-4 md:mt-0 justify-end">
           {!session && (
-            <div className="group">
-              <div className="relative">
-                <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
-                  <p className="">
-                    {globalLanguageData?.label_employment_button}
-                  </p>
-                  <FontAwesomeIcon icon={faChevronDown} />
-                </div>
-                <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
+            <div className="group relative">
+              <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex items-center gap-2 cursor-pointer">
+                <p>{globalLanguageData?.label_employment_button}</p>
+                <FontAwesomeIcon icon={faChevronDown} />
               </div>
+              <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
               <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-megaMenu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
                 <MegaMenu />
               </div>
@@ -127,6 +123,7 @@ const Header = ({ type }: BgProps) => {
 };
 
 export default Header;
+
 
 // "use client";
 // import { AssetIcon, ProfileIcon } from "@/constants/icons";

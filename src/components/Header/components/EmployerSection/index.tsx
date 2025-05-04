@@ -58,7 +58,8 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
       </Link>
       <NotificationDropdown />
       <Link
-        href="/login"
+        target="_blank"
+        href="/reward/earn"
         className="text-white text-sm hover:bg-blue-800 hover:text-white"
       >
         <div className="flex items-center gap-2 bg-white rounded-full h-[2rem]">
@@ -71,7 +72,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
         </div>
       </Link>
       <div className="px-1">
-      <LanguageDropdown />
+        <LanguageDropdown />
       </div>
       <div className="relative px-4">
         <button

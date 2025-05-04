@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .home-title-head {
-  @apply text-[2.25rem] text-primary font-medium leading-[1.15]
+  @apply text-primary font-medium leading-[1.15]
 }
 
 .submenu-container {
@@ -88,11 +88,25 @@
 .profile-member-gradient {
   background: linear-gradient(105.12deg,#4580da 0.07%,rgb(69 128 218/0%) 53.66%),linear-gradient(0deg,#97bdf7,#97bdf7)
 }
+.profile-gradient {
+  background: linear-gradient(90deg, #ffe8ae, #fffdf9);
+}
 
 .grid-container-desktop {
   display: grid;
   grid-template-columns: minmax(1rem, 1fr) minmax(calc(1280px - 4rem), calc(1280px - 4rem)) minmax(1rem, 1fr);
   grid-template-rows: auto;
+}
+.grid-container-desktop-banner {
+  display: grid;
+  grid-template-columns: minmax(1rem, 1fr) minmax(calc(1280px - 4rem), calc(1280px - 4rem)) minmax(1rem, 1fr);
+  grid-template-rows: auto;
+}
+
+@media (max-width: 1280px) {
+  .grid-container-desktop-banner {
+    grid-template-columns: 8px 1fr 8px;
+  }
 }
 
 .tb-fw-spinner {
@@ -113,9 +127,10 @@
   }
 }
 
-
-
-
+/* * {
+  outline: 1px solid red;
+} */
+ 
 :root {
   --background: #ffffff;
   --foreground: #171717;

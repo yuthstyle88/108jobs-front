@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import { defaultMetadata } from "@/config/metadata";
-import AccountSettingWrapper from "@/container/AccountSettingWrapper";
+import AccountSettingWrapper from "@/containers/AccountSettingWrapper";
 import { ReactNode } from "react";
 interface ConsentManagementLayoutProps {
   children: ReactNode;

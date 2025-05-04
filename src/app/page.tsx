@@ -17,14 +17,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Footer from "../components/Footer";
 
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./styles.css";
 
-import { Keyboard, Mousewheel, Navigation, Pagination } from "swiper/modules";
+import { Navigation } from "swiper/modules";
 
 import { API_ROUTES } from "@/api/endpoints";
 import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
@@ -34,15 +34,47 @@ import {
   CompareImage,
   CustomerImage,
   LandingImage,
-  ProfileImage
+  ProfileImage,
 } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
+import SpAdsSlider from "@/containers/SpAdsSlider";
+import SpCatalog from "@/containers/SpCatalog";
+import SpHeader from "@/containers/SpHeader";
 import { usePublicFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { ServiceCatalogData } from "@/types/catalog";
 import { catalogIcons } from "@/types/catalogIcon";
 import Link from "next/link";
 import { useState } from "react";
+
+const interestImages = [
+  LandingImage.interest_1,
+  LandingImage.interest_2,
+  LandingImage.interest_3,
+  LandingImage.interest_4,
+  LandingImage.interest_5,
+  LandingImage.interest_6,
+];
+
+const CustomNavigation = () => {
+  const swiper = useSwiper();
+  return (
+    <div>
+      <button
+        className="absolute top-1/2 -translate-y-1/2 left-0 bg-transparent pl-2 border-[none] text-[24px] rounded-tr-[10px] rounded-br-[10px] cursor-pointer z-50"
+        onClick={() => swiper.slidePrev()}
+      >
+        ❮
+      </button>
+      <button
+        className="absolute top-1/2 -translate-y-1/2 right-0 bg-transparent pr-2 border-[none] text-[24px] rounded-tl-[10px] rounded-bl-[10px] cursor-pointer z-50"
+        onClick={() => swiper.slideNext()}
+      >
+        ❯
+      </button>
+    </div>
+  );
+};
 
 export default function Home() {
   const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
@@ -90,11 +122,16 @@ export default function Home() {
   if (isLoading || homeLoading || isCatalogLoading) return <Loading />;
   if (error || homeError) return <div>Error loading language data</div>;
   return (
-    <div className="min-h-[200vh] bg-white">
+    <div className="min-h-[100vh] bg-white">
       {/* <Header type="transparent" languageData={globalLanguageData} /> */}
-      <Header type="transparent" />
-      <main>
-        <section className="h-auto header-gradient pt-[4.5rem]">
+      <div className="hidden sm:block">
+        <Header type="transparent" />
+      </div>
+      <div className="block sm:hidden">
+        <SpHeader />
+      </div>
+      <main className="">
+        <section className="hidden sm:block h-auto header-gradient pt-[6.5rem] md:pt-[4.5rem]">
           <div className="pt-[3rem] pb-[8rem] flex justify-center flex-col gap-4 text-center">
             <h1 className="text-[24px] font-medium text-white">
               {homeLanguageData?.title_banner_home_page_1}
@@ -118,10 +155,10 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section>
-          <div className="grid-container-desktop w-full ">
+        <section className="hidden sm:block">
+          <div className="grid-container-desktop-banner w-full ">
             <div className="min-h-[144px] mt-[-4rem] px-8 rounded-lg bg-white shadow-panel col-start-2 col-end-3">
-              <div className="flex items-center justify-between overflow-x-auto">
+              <div className="flex items-center justify-between flex-wrap overflow-x-auto">
                 {serviceCatalogs.map((catalog, index) => {
                   const matchedIcon = catalogIcons.find(
                     (c) => c.id === catalog.id
@@ -215,27 +252,34 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-24 grid grid-container-desktop gap-y-12 ">
+        <section className="block sm:hidden pt-[4.5rem]">
+          <SpAdsSlider />
+        </section>
+        <section className="block sm:hidden p-[0.75rem] border-b-[0.25rem] border-border_primary ">
+          <SpCatalog />
+        </section>
+
+        <section className="py-6 sm:py-24 grid grid-container-desktop-banner gap-y-4 sm:gap-y-12 ">
           <div className="col-start-2 col-end-3">
-            <h4 className="text-[1.5rem] text-[#38404c] font-medium leading-[1.15]">
+            <h4 className="text-[16px] sm:text-[1.5rem] text-[#38404c] font-medium leading-[1.15]">
               {homeLanguageData?.tittle_primary_why_section}
             </h4>
-            <h2 className="home-title-head">
+            <h2 className="home-title-head text-[18px] sm:text-[2.25rem]">
               {homeLanguageData?.tittle_secondary_why_section}
             </h2>
           </div>
-          <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-[1.5rem] gap-y-[1rem] lg:gap-y-0 min-h-0 min-w-0 col-start-2 col-end-3">
             {freelancer_intro.map((freelancer, index) => (
-              <div key={index}>
+              <div key={index} className="flex flex-col items-center sm:block">
                 <Image
                   src={freelancer.icon}
                   alt="Group of people"
                   width={62}
                   height={62}
-                  className="max-w-full h-auto align-top"
+                  className="max-w-full h-auto align-top self-center"
                 />
                 <div className="grid grid-cols-[1fr] mt-4 gap-y-1 text-text_primary font-medium">
-                  <h5 className="text-[1.25rem]  leading-[1.15]">
+                  <h5 className="text-base sm:text-[1.25rem] leading-[1.15]">
                     {freelancer.title}
                   </h5>
                   <p className="m-0 text-base font-sans leading-[1.65] ">
@@ -247,14 +291,14 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="hidden md:block pb-6">
-          <div className="grid grid-container-desktop gap-y-12 ">
+        <section className="pb-6">
+          <div className="grid grid-container-desktop-banner gap-y-4 sm:gap-y-12">
             <div className="col-start-2 col-end-3">
-              <h2 className="home-title-head">
+              <h2 className="home-title-head text-[18px] sm:text-[2.25rem]">
                 {homeLanguageData?.title_start_hiring_section}
               </h2>
             </div>
-            <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
               {/* Cột 1 */}
               <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium">
                 <div className="flex gap-x-5">
@@ -336,7 +380,7 @@ export default function Home() {
               </div>
 
               {/* Cột 3 */}
-              <div className="rounded-lg relative cursor-pointer h-[219px]">
+              <div className="rounded-lg relative cursor-pointer h-[219px] mt-8 md:mt-0">
                 <Image
                   src={LandingImage.video_bg}
                   alt="video background"
@@ -356,131 +400,61 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section className="py-[4rem] grid grid-container-desktop gap-y-12">
-          <div className="col-span-1"></div>
-          <div className="grid grid-cols-3 gap-x-5">
-            <div className="col-span-2">
-              <Swiper
-                cssMode={true}
-                navigation={true}
-                pagination={true}
-                mousewheel={true}
-                keyboard={true}
-                modules={[Navigation, Pagination, Mousewheel, Keyboard]}
-                className="mySwiper"
-              >
-                <SwiperSlide>
-                  <Image
-                    src={LandingImage.slider2}
-                    alt="Picture 1"
-                    className="rounded-lg"
-                  />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image
-                    src={LandingImage.slider1}
-                    alt="Picture 2"
-                    className="rounded-lg"
-                  />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image
-                    src={LandingImage.slider3}
-                    alt="Picture 3"
-                    className="rounded-lg"
-                  />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image
-                    src={LandingImage.slider4}
-                    alt="Picture 4"
-                    className="rounded-lg"
-                  />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image
-                    src={LandingImage.slider5}
-                    alt="Picture 5"
-                    className="rounded-lg"
-                  />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image
-                    src={LandingImage.slider6}
-                    alt="Picture 6"
-                    className="rounded-lg"
-                  />
-                </SwiperSlide>
-                <SwiperSlide>
-                  <Image
-                    src={LandingImage.slider7}
-                    alt="Picture 7"
-                    className="rounded-lg"
-                  />
-                </SwiperSlide>
-              </Swiper>
-            </div>
-            <div className="col-span-1">
-              <div className="grid grid-cols-1 gap-y-6">
-                <Image
-                  src={LandingImage.award_bg}
-                  alt="Picture 1"
-                  className="rounded-lg"
-                />
-              </div>
-            </div>
-          </div>
+
+        <section className="hidden sm:block">
+          <SpAdsSlider />
         </section>
 
-        <section className="grid grid-container-desktop gap-y-12 gap-x-4">
+        <section className="grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3">
-            <h2 className="home-title-head pb-4">
+            <h2 className="home-title-head text-[18px] sm:text-[2.25rem] pb-4">
               {homeLanguageData?.label_recommend_section}
             </h2>
-            <Swiper
-              slidesPerView={3}
-              cssMode={true}
-              navigation={true}
-              mousewheel={true}
-              keyboard={true}
-              modules={[Navigation]}
-              className="mySwiper px-5 "
-            >
-              <SwiperSlide>
-                <Image src={LandingImage.interest_1} alt="Picture 1" className="rounded-lg"/>
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={LandingImage.interest_2} alt="Picture 2" className="rounded-lg"/>
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={LandingImage.interest_3} alt="Picture 3" className="rounded-lg"/>
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={LandingImage.interest_4} alt="Picture 4" className="rounded-lg"/>
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={LandingImage.interest_5} alt="Picture 5" className="rounded-lg"/>
-              </SwiperSlide>
-              <SwiperSlide>
-                <Image src={LandingImage.interest_6} alt="Picture 6" className="rounded-lg"/>
-              </SwiperSlide>
-            </Swiper>
           </div>
-          <div></div>
         </section>
 
+        <div className="max-w-[1280px] mx-auto px-4 xl:px-8">
+          <Swiper
+            navigation={{
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            }}
+            mousewheel
+            keyboard
+            modules={[Navigation]}
+            breakpoints={{
+              0: { slidesPerView: 1 },
+              640: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+            }}
+            spaceBetween={20}
+            className="mySwiper"
+          >
+            <CustomNavigation />
+            {interestImages.map((img, i) => (
+              <SwiperSlide key={i}>
+                <Image
+                  src={img}
+                  alt={`Picture ${i + 1}`}
+                  className="rounded-lg w-full h-auto"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
         <section
-          className="bg-gradient-to-t py-12 grid grid-container-desktop gap-y-12 gap-x-4"
+          className="bg-gradient-to-t py-12 grid grid-container-desktop-banner gap-y-4 sm:gap-y-12 gap-x-4"
           style={{
             background: "linear-gradient(to top, hsl(216 85% 94%), #fff)",
           }}
         >
           <div className="col-start-2 col-end-3">
-            <h2 className="home-title-head text-center">
+            <h2 className="home-title-head text-[18px] sm:text-[2.25rem] text-center">
               {homeLanguageData?.tittle_quality_offer_section}
             </h2>
           </div>
-          <div className="grid grid-cols-[1fr_1fr_1fr] gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3 ">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-[1.5rem] gap-y-[1.5rem] lg:gap-y-0 min-h-0 min-w-0 col-start-2 col-end-3">
             <div className="flex flex-col shadow-memberShipShadow rounded-lg bg-white">
               <div className="p-6 flex-1 text-center bg-white rounded-lg gap-6">
                 <div className="h-[32px]"></div>
@@ -698,241 +672,236 @@ export default function Home() {
           <div className="col-start-2 col-end-3"></div>
         </section>
 
-        <section className="bg-white pt-12 grid grid-container-desktop gap-y-6">
-          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
+        <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
+          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
             ฟรีแลนซ์ยอดนิยมในหมวด รับจัดดอกไม้
           </div>
-          <div className="col-start-2 col-end-3 mx-[10px] pb-7">
-            <Swiper
-              slidesPerView={5}
-              cssMode={true}
-              navigation={true}
-              mousewheel={true}
-              keyboard={true}
-              modules={[Navigation]}
-              className="mySwiper"
-              breakpoints={{
-                640: {
-                  slidesPerView: 2,
-                  spaceBetween: 20,
-                },
-                768: {
-                  slidesPerView: 4,
-                  spaceBetween: 20,
-                },
-                1024: {
-                  slidesPerView: 5,
-                  spaceBetween: 20,
-                },
-              }}
-            >
-              {Array.from({ length: 16 }, (_, index) => (
-                <SwiperSlide key={index}>
-                  <CategoryCard />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+        </section>
+
+        <div className="max-w-[1280px] mx-auto px-[26px] xl:px-[42px] pt-6 pb-7">
+          <Swiper
+            navigation={{
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            }}
+            slidesPerView={5}
+            cssMode={true}
+            mousewheel
+            keyboard
+            modules={[Navigation]}
+            className="mySwiper"
+            breakpoints={{
+              0: { slidesPerView: 1 },
+              640: { slidesPerView: 2, spaceBetween: 20 },
+              768: { slidesPerView: 4, spaceBetween: 10 },
+              1024: { slidesPerView: 5, spaceBetween: 20 },
+            }}
+          >
+            <CustomNavigation />
+            {Array.from({ length: 16 }, (_, index) => (
+              <SwiperSlide key={index}>
+                <CategoryCard />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+        <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
+          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
+            ฟรีแลนซ์ยอดนิยมในหมวด ดูดวง โหราศาสตร์ ความเชื่อ
           </div>
         </section>
 
-        <section className="bg-white pt-12 grid grid-container-desktop gap-y-6">
-          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
-            ฟรีแลนซ์ยอดนิยมในหมวด ดูดวง โหราศาสตร์ ความเชื่อ{" "}
-          </div>
-          <div className="col-start-2 col-end-3 mx-[10px] pb-7">
-            <Swiper
-              slidesPerView={5}
-              cssMode={true}
-              navigation={true}
-              mousewheel={true}
-              keyboard={true}
-              modules={[Navigation]}
-              className="mySwiper"
-              breakpoints={{
-                640: {
-                  slidesPerView: 2,
-                  spaceBetween: 20,
-                },
-                768: {
-                  slidesPerView: 4,
-                  spaceBetween: 20,
-                },
-                1024: {
-                  slidesPerView: 5,
-                  spaceBetween: 20,
-                },
-              }}
-            >
-              {Array.from({ length: 16 }, (_, index) => (
-                <SwiperSlide key={index}>
-                  <CategoryCard />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </section>
+        <div className="max-w-[1280px] mx-auto px-[26px] xl:px-[42px] pt-6 pb-7">
+          <Swiper
+            navigation={{
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            }}
+            slidesPerView={5}
+            cssMode={true}
+            mousewheel
+            keyboard
+            modules={[Navigation]}
+            className="mySwiper"
+            breakpoints={{
+              0: { slidesPerView: 1 },
+              640: { slidesPerView: 2, spaceBetween: 20 },
+              768: { slidesPerView: 4, spaceBetween: 10 },
+              1024: { slidesPerView: 5, spaceBetween: 20 },
+            }}
+          >
+            <CustomNavigation />
+            {Array.from({ length: 16 }, (_, index) => (
+              <SwiperSlide key={index}>
+                <CategoryCard />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
 
-        <section className="bg-white pt-12 grid grid-container-desktop gap-y-6">
-          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
+        <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
+          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
             ฟรีแลนซ์ยอดนิยมในหมวด Photography
           </div>
-          <div className="col-start-2 col-end-3 mx-[10px] pb-7">
-            <Swiper
-              slidesPerView={5}
-              cssMode={true}
-              navigation={true}
-              mousewheel={true}
-              keyboard={true}
-              modules={[Navigation]}
-              className="mySwiper"
-              breakpoints={{
-                640: {
-                  slidesPerView: 2,
-                  spaceBetween: 20,
-                },
-                768: {
-                  slidesPerView: 4,
-                  spaceBetween: 20,
-                },
-                1024: {
-                  slidesPerView: 5,
-                  spaceBetween: 20,
-                },
-              }}
-            >
-              {Array.from({ length: 16 }, (_, index) => (
-                <SwiperSlide key={index}>
-                  <CategoryCard/>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
         </section>
 
-        <section className="bg-white pt-12 grid grid-container-desktop gap-y-12">
-          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
+        <div className="max-w-[1280px] mx-auto px-[26px] xl:px-[42px] pt-6 pb-7">
+          <Swiper
+            navigation={{
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            }}
+            slidesPerView={5}
+            cssMode={true}
+            mousewheel
+            keyboard
+            modules={[Navigation]}
+            className="mySwiper"
+            breakpoints={{
+              0: { slidesPerView: 1 },
+              640: { slidesPerView: 2, spaceBetween: 20 },
+              768: { slidesPerView: 4, spaceBetween: 10 },
+              1024: { slidesPerView: 5, spaceBetween: 20 },
+            }}
+          >
+            <CustomNavigation />
+            {Array.from({ length: 16 }, (_, index) => (
+              <SwiperSlide key={index}>
+                <CategoryCard />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+        <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
+          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
             {homeLanguageData?.title_featured_works}
           </div>
-          <div className="col-start-2 col-end-3 pb-16">
-            <Swiper
-              slidesPerView={3}
-              cssMode={true}
-              navigation={true}
-              mousewheel={true}
-              keyboard={true}
-              // spaceBetween={50}
-              modules={[Navigation]}
-              className="mySwiper"
-            >
-              {Array.from({ length: 6 }, (_, index) => (
-                <SwiperSlide key={index}>
-                  <div className="bg-white p-6 pb-8">
-                    <Link
-                      href="/"
-                      className="block rounded-lg mx-auto w-[350px] shadow-topWorkShadow"
-                    >
-                      <div className="h-[256px] relative">
-                        <Image
-                          src={LandingImage.top_works}
-                          alt="Hotel Image"
-                          width={400}
-                          height={200}
-                          className="absolute h-full w-full inset-0 object-cover rounded-tr-lg rounded-tl-lg"
-                        />
-                      </div>
-                      <div className="rounded-br-lg rounded-bl-lg bg-white">
-                        <div className="grid-cols-[2fr_10fr] grid min-w-0 min-h-0 p-4">
-                          <div>
-                            <Image
-                              src={ProfileImage.avatar}
-                              alt="profile Image"
-                              width={400}
-                              height={200}
-                              className="max-w-full h-auto w-9 block rounded-full object-cover"
-                            />
-                          </div>
-                          <div>
-                            <p className="font-semibold text-text_primary p-0">
-                              Line sticker
-                            </p>
-                            <p className="text-[14px] text-text_secondary p-0">
-                              by designdee
-                            </p>
-                          </div>
-                          {/* <h3 className="text-lg font-semibold mt-2">
-                            Plaza Hotel
-                          </h3>
-                          <p className="text-gray-500 text-sm">
-                            Bangkok, Thailand
-                          </p>
-                          <p className="text-red-500 font-semibold mt-2">
-                            $200 / night
-                          </p> */}
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
         </section>
-
-        <section className="bg-white pb-16 grid grid-container-desktop gap-y-12">
-          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px]">
-            {homeLanguageData?.label_reviews_customer}
-          </div>
-          <div className="col-start-2 col-end-3">
-            <Swiper
-              slidesPerView={3}
-              cssMode={true}
-              navigation={true}
-              mousewheel={true}
-              keyboard={true}
-              modules={[Navigation]}
-              className="mySwiper px-5"
-            >
-              {Array.from({ length: 6 }, (_, index) => (
-                <SwiperSlide key={index}>
-                  <div className="w-[350px] m-6 bg-white">
-                    <div className="shadow-reviewShadow rounded-lg p-6">
-                      <div className="mb-6 flex flex-row gap-8">
-                        <FontAwesomeIcon
-                          icon={faQuoteLeft}
-                          className="text-[#E3EDFD] w-[28px] h-[32px]"
-                        />
-                        <blockquote className="text-base leading-[1.65] text-[#728197] font-sans italic">
-                          &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ
-                          ง่ายขึ้นมากครับ เราสามารถ
-                          เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
-                        </blockquote>
-                      </div>
-                      <div className="flex items-center justify-between mt-4">
-                        <div className="flex items-center gap-4">
+        <div className="max-w-[1280px] mx-auto px-4 xl:px-8 pb-16 pt-8">
+          <Swiper
+            navigation={{
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            }}
+            slidesPerView={3}
+            mousewheel
+            keyboard
+            modules={[Navigation]}
+            breakpoints={{
+              0: { slidesPerView: 1, spaceBetween: 20 },
+              640: { slidesPerView: 2, spaceBetween: 20 },
+              1024: { slidesPerView: 3, spaceBetween: 30 },
+            }}
+            className="mySwiper"
+          >
+            <CustomNavigation />
+            {Array.from({ length: 6 }, (_, index) => (
+              <SwiperSlide key={index}>
+                <div className="bg-white p-4 sm:p-6 pb-8">
+                  <Link
+                    href="/"
+                    className="block rounded-lg mx-auto w-[350px] shadow-topWorkShadow"
+                  >
+                    <div className="h-[256px] relative">
+                      <Image
+                        src={LandingImage.top_works}
+                        alt="Hotel Image"
+                        width={400}
+                        height={200}
+                        className="absolute h-full w-full inset-0 object-cover rounded-tr-lg rounded-tl-lg"
+                      />
+                    </div>
+                    <div className="rounded-br-lg rounded-bl-lg bg-white">
+                      <div className="grid-cols-[2fr_10fr] grid min-w-0 min-h-0 p-4">
+                        <div>
                           <Image
                             src={ProfileImage.avatar}
-                            alt="Company Logo"
-                            width={47}
-                            height={47}
-                            className="rounded-full object-cover"
+                            alt="profile Image"
+                            width={400}
+                            height={200}
+                            className="max-w-full h-auto w-9 block rounded-full object-cover"
                           />
-                          <div className="flex flex-col">
-                            <span className="text-third font-medium text-sm">
-                              บริษัท อีสานพลาสแพ็ค 1999 จำกัด
-                            </span>
-                            <div className="text-gray-500 text-xs">
-                              โรงงานอุตสาหกรรมพลาสติก
-                            </div>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-text_primary p-0">
+                            Line sticker
+                          </p>
+                          <p className="text-[14px] text-text_secondary p-0">
+                            by designdee
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+        <section className="bg-white grid grid-container-desktop-banner">
+          <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
+            {homeLanguageData?.label_reviews_customer}
+          </div>
+        </section>
+        <div className="max-w-[1280px] mx-auto px-4 xl:px-8 pb-16 pt-4">
+          <Swiper
+            navigation={{
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            }}
+            mousewheel
+            keyboard
+            modules={[Navigation]}
+            breakpoints={{
+              0: { slidesPerView: 1, spaceBetween: 20 },
+              640: { slidesPerView: 2, spaceBetween: 20 },
+              1024: { slidesPerView: 3, spaceBetween: 30 },
+            }}
+            className="mySwiper"
+          >
+            <CustomNavigation />
+            {Array.from({ length: 6 }, (_, index) => (
+              <SwiperSlide key={index}>
+                <div className="w-full max-w-[350px] m-auto bg-white px-4 py-6">
+                  <div className="shadow-reviewShadow rounded-lg p-4 sm:p-6">
+                    <div className="mb-6 flex flex-row gap-4 sm:gap-8">
+                      <FontAwesomeIcon
+                        icon={faQuoteLeft}
+                        className="text-[#E3EDFD] w-[24px] h-[28px] sm:w-[28px] sm:h-[32px]"
+                      />
+                      <blockquote className="text-base leading-[1.65] text-[#728197] font-sans italic">
+                        &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                        เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
+                      </blockquote>
+                    </div>
+                    <div className="flex items-center justify-between mt-4">
+                      <div className="flex items-center gap-4">
+                        <Image
+                          src={ProfileImage.avatar}
+                          alt="Company Logo"
+                          width={47}
+                          height={47}
+                          className="rounded-full object-cover"
+                        />
+                        <div className="flex flex-col">
+                          <span className="text-third font-medium text-sm">
+                            บริษัท อีสานพลาสแพ็ค 1999 จำกัด
+                          </span>
+                          <div className="text-gray-500 text-xs">
+                            โรงงานอุตสาหกรรมพลาสติก
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>{" "}
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </section>
+                  </div>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
 
         <section
           className="hidden md:block"
@@ -1105,9 +1074,9 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="grid grid-container-desktop">
+        <div className="grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 w-full">
-            <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
+            <hr className="w-full h-[1px] m-0 bg-border_secondary" />
           </div>
         </div>
 

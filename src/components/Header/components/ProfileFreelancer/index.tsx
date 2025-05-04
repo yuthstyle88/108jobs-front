@@ -44,9 +44,11 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
               <Image
-                src={ProfileImage.avatar}
+                src={user?.user.avatar_url || ProfileImage.avatar}
                 alt="avatar"
                 className="rounded-full"
+                width={500}
+            height={500}
               />
             </div>
             <div>
