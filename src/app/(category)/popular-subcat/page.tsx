@@ -3,7 +3,7 @@ import { defaultMetadata } from "@/config/metadata";
 
 const Categories = () => {
   return (
-    <main className="grid-container-desktop w-full min-h-screen">
+    <main className="grid-container-desktop-banner w-full min-h-screen">
       <PopularSubCat />
     </main>
   );

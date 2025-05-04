@@ -21,13 +21,7 @@ export type User = {
     created_at: string;
     updated_at: string;
   };
-  
-  export type Role = {
-    id: string;
-    title: string;
-    created_at: string;
-    updated_at: string;
-  };
+  export type Role = "employer" | "freelancer";
   
   export type Profile = {
     id: string;
@@ -79,7 +73,7 @@ export type User = {
   export type ProfileData = {
     user: User;
     coin: Coin;
-    role: Role;
+    roles: Role[];
     profile: Profile;
     contact: Contact;
     address: Address;

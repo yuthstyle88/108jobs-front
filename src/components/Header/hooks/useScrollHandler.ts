@@ -6,14 +6,26 @@ export const useScrollHandler = () => {
   const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const updateState = () => {
       const currentScrollY = window.scrollY;
+      const isSmallScreen = window.innerWidth <= 1280; // lg breakpoint
       setScrollY(currentScrollY);
-      setShowSearch(currentScrollY > window.innerHeight / 2);
+
+      if (isSmallScreen) {
+        setShowSearch(true);
+      } else {
+        setShowSearch(currentScrollY > window.innerHeight / 2);
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", updateState);
+    window.addEventListener("resize", updateState);
+    updateState(); // run once on mount
+
+    return () => {
+      window.removeEventListener("scroll", updateState);
+      window.removeEventListener("resize", updateState);
+    };
   }, []);
 
   return { scrollY, showSearch };

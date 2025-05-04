@@ -31,9 +31,10 @@ const FreelancerSession = ({
     API_ROUTES.profile.get_profile
   );
   const { isOpen, toggle, close } = useToggle();
+
   return (
     <section className="flex items-center gap-4 h-full">
-      <div className="group">
+      <div className="group hidden lg:block">
         <div className="relative">
           <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
             <p className="">เพิ่มโอกาสการได้รับการจ้างงาน</p>
@@ -53,7 +54,7 @@ const FreelancerSession = ({
           {globalLanguageData?.label_seller_center}
         </Link>
       )}
-      <div className="group">
+      <div className="group hidden md:block">
         <div className="relative">
           <div className="border-r-[1px] border-[#4f8ce8] pr-8 text-[14px] text-white px-3 py-2 font-medium flex flex-row items-center gap-2 cursor-pointer">
             <p className="">การรับสมัคร</p>
@@ -77,7 +78,8 @@ const FreelancerSession = ({
       </Link>
       <NotificationDropdown />
       <Link
-        href="/login"
+        target="_blank"
+        href="/reward/earn"
         className="text-white text-sm hover:bg-blue-800 hover:text-white"
       >
         <div className="flex items-center gap-2 bg-white rounded-full h-[2rem]">
@@ -90,7 +92,7 @@ const FreelancerSession = ({
         </div>
       </Link>
       <div className="px-1">
-      <LanguageDropdown />
+        <LanguageDropdown />
       </div>
       <div className="relative px-4">
         <button
@@ -98,9 +100,11 @@ const FreelancerSession = ({
           className="flex items-center justify-center gap-2 w-12 h-12 rounded-full "
         >
           <Image
-            src={ProfileImage.avatar}
+            src={user?.user.avatar_url || ProfileImage.avatar}
             alt="avatar"
             className="rounded-full"
+            width={500}
+            height={500}
           />
           <FontAwesomeIcon
             icon={faChevronDown}
