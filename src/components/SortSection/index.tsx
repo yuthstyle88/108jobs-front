@@ -57,7 +57,7 @@ const SortSection = ({ className = "" }: SortSectionProps) => {
   };
 
   return (
-    <div ref={dropdownRef} className={`relative ${className}`}>
+    <div className={`relative ${className}`}>
       <div
         onClick={toggleDropdown}
         className="filter-button cursor-pointer"
@@ -70,6 +70,7 @@ const SortSection = ({ className = "" }: SortSectionProps) => {
       {isOpen &&
         ReactDOM.createPortal(
           <div
+            ref={dropdownRef}
             className="absolute mt-2 w-44 bg-white rounded-md shadow-lg z-20 border border-gray-200 transition-opacity duration-200"
             style={{
               top: dropdownPosition.top,
@@ -85,7 +86,10 @@ const SortSection = ({ className = "" }: SortSectionProps) => {
                       ? "bg-blue-50 text-blue-600"
                       : "text-gray-700 hover:bg-gray-100"
                   }`}
-                  onClick={() => handleOptionSelect(option.value)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleOptionSelect(option.value);
+                  }}
                 >
                   {option.label}
                 </button>

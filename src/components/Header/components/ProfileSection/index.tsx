@@ -20,12 +20,14 @@ import Link from "next/link";
 
 type ProfileSectionProps = {
   data: Partial<GlobalLanguage> | null | undefined;
-    user?: ProfileData;
+  user?: ProfileData;
 };
 
 const ProfileSection = ({ data, user }: ProfileSectionProps) => {
   const handleLogout = async () => {
     try {
+      localStorage.removeItem("freelancerFormData");
+      localStorage.removeItem("freelancerCurrentStep");
       await signOut({
         callbackUrl: "/",
         redirect: true,

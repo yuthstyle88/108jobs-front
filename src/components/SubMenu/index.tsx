@@ -10,7 +10,7 @@ import Write from "./Write";
 
 const SubMenu = () => {
   return (
-    <div className="shadow-categoryMenu relative">
+    <div className="shadow-categoryMenu relative lg:pt-12 xl:pt-0">
       <nav className="flex justify-center px-2 h-[3.5rem] text-text_primary bg-white">
         <div className="grid grid-flow-col gap-x-3 cursor-pointer">
           <PopularType />

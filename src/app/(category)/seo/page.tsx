@@ -2,9 +2,9 @@ import CategoryDetail from "@/components/CategoryDetail";
 import { defaultMetadata } from "@/config/metadata";
 const SpecificCategory = () => {
   return (
-    <>
+    <main className="pt-10 sm:pt-0">
       <CategoryDetail />
-    </>
+    </main>
   );
 };
 

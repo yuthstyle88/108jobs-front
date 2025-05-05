@@ -18,7 +18,7 @@ export default function CategoryLayout({ children }: CategoryLayoutProps) {
       </div>
 
       <section className="pt-[4.5rem] bg-white">
-        <div className="hidden sm:block">
+        <div className="hidden lg:block">
           <SubMenu />
         </div>
         {children}
