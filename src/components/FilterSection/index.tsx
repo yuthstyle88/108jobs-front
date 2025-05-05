@@ -10,13 +10,6 @@ const FilterSection = () => {
 
   return (
     <>
-      {/* <button
-        className={`flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 ${className}`}
-        onClick={() => setIsFilterOpen(true)}
-      >
-        <Filter className="h-5 w-5" />
-        <span>Filter</span>
-      </button> */}
       <div onClick={() => setIsFilterOpen(true)} className="filter-button">
         <FontAwesomeIcon icon={faFilter} className="text-third pr-2" />
         ตัวกรอง

@@ -8,12 +8,12 @@ interface StepSixProps {
     title: string;
     name: string;
     surname: string;
-    card_number: string,
-    card_address_details: string,
-    card_zip_code: string,
-    card_subdistrict_or_district: string,
-    card_district_or_subdistrict: string,
-    card_province: string,
+    card_number: string;
+    card_address_details: string;
+    card_zip_code: string;
+    card_subdistrict_or_district: string;
+    card_district_or_subdistrict: string;
+    card_province: string;
   };
   updateFormData: (data: Partial<StepSixProps["formData"]>) => void;
   nextStep: () => void;
@@ -57,16 +57,15 @@ const StepSix: React.FC<StepSixProps> = ({
   const isFormValid = () => {
     const idPattern = /^\d{13}$/;
     return (
-      formData.title !== "" &&
-      formData.name !== "" &&
-      formData.surname !== "" &&
+      formData.title.trim() !== "" &&
+      formData.name.trim() !== "" &&
+      formData.surname.trim() !== "" &&
       idPattern.test(formData.card_number) &&
-      formData.card_address_details !== "" &&
-      formData.card_district_or_subdistrict !== "" &&
-      formData.card_subdistrict_or_district !== "" &&
-      formData.card_province !== "" &&
-      formData.card_zip_code !== "" &&
-      idNumberError === ""
+      formData.card_address_details.trim() !== "" &&
+      formData.card_district_or_subdistrict.trim() !== "" &&
+      formData.card_subdistrict_or_district.trim() !== "" &&
+      formData.card_province.trim() !== "" &&
+      formData.card_zip_code.trim() !== ""
     );
   };
 
@@ -176,8 +175,10 @@ const StepSix: React.FC<StepSixProps> = ({
                 onSelect={(selected) => {
                   updateFormData({
                     card_province: selected.card_province,
-                    card_district_or_subdistrict: selected.card_district_or_subdistrict,
-                    card_subdistrict_or_district: selected.card_subdistrict_or_district,
+                    card_district_or_subdistrict:
+                      selected.card_district_or_subdistrict,
+                    card_subdistrict_or_district:
+                      selected.card_subdistrict_or_district,
                     card_zip_code: selected.card_zip_code,
                   });
                 }}
@@ -282,8 +283,8 @@ const StepSix: React.FC<StepSixProps> = ({
                   <p className="text-[12px] leading-[13.8px] text-text_primary capitalize">
                     ที่อยู่: {formData.card_address_details}{" "}
                     {formData.card_subdistrict_or_district}{" "}
-                    {formData.card_district_or_subdistrict} {formData.card_province}{" "}
-                    {formData.card_zip_code}
+                    {formData.card_district_or_subdistrict}{" "}
+                    {formData.card_province} {formData.card_zip_code}
                   </p>
                   <p className="text-[12px] leading-[13.8px] text-text_primary">
                     เลขประจำตัวผู้เสียภาษี: {formData.card_number}

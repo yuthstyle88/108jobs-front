@@ -28,6 +28,8 @@ type ProfileFreelancerProps = {
 const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
   const handleLogout = async () => {
     try {
+      localStorage.removeItem("freelancerFormData");
+      localStorage.removeItem("freelancerCurrentStep");
       await signOut({
         callbackUrl: "/",
         redirect: true,

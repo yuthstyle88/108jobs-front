@@ -52,7 +52,7 @@ const CategoryDetail = () => {
 
   return (
     <>
-      <section className="grid grid-cols-[1fr_1216px_1fr] h-12 bg-[#E3EDFD] ">
+      <section className="grid-container-job h-12 bg-[#E3EDFD] ">
         <Link
           href="#"
           className="col-start-2 col-end-auto flex justify-center items-center gap-3"
@@ -64,19 +64,19 @@ const CategoryDetail = () => {
           </p>
         </Link>
       </section>
-      <section className="grid grid-cols-[1fr_1216px_1fr]">
+      <section className="grid-container-job">
         <BreadCrumb />
         <div className="col-start-2 col-end-auto ">
-          <h1 className="mb-6 mt-4 text-[32px] text-text_primary font-semibold">
+          <h1 className="mb-2 sm:mb-6 mt-4 text-[20px] md:text-[32px] text-text_primary font-semibold">
             ทำ SEO
           </h1>
         </div>
       </section>
-      <section className="grid grid-cols-[1fr_1216px_1fr] pb-4">
+      <section className="grid-container-job overflow-x-auto pb-4">
         <SubCategory />
       </section>
       <section
-        className={`grid grid-cols-[1fr_1216px_1fr] sticky top-[70px] overflow-hidden bg-white z-10 transition-shadow duration-300 ${
+        className={`grid-container-job sticky top-[110px] sm:top-[70px] overflow-hidden bg-white z-10 transition-shadow duration-300 ${
           isSticky ? "shadow-filterSection" : ""
         }`}
       >
@@ -91,12 +91,12 @@ const CategoryDetail = () => {
         </div>
       </section>
       <section className="pb-10 mt-4">
-        <div className="grid grid-cols-[1fr_1216px_1fr]">
+        <div className="grid-container-job">
           <div className="flex justify-between col-start-2 col-end-auto mb-3 text-[0.875rem] text-text_primary font-sans">
             <div>พบงาน 14 รายการ</div>
             <div>หน้า 1 จาก 1</div>
           </div>
-          <section className="col-start-2 col-end-auto grid grid-cols-[repeat(4,minmax(1px,1fr))] gap-5">
+          <section className="col-start-2 col-end-auto grid grid-cols-1 md:grid-cols-[repeat(4,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
             {Array.from({ length: 16 }, (_, index) => (
               <CategoryCard key={index} />
             ))}
@@ -113,7 +113,7 @@ const CategoryDetail = () => {
               <h2 className="mb-6 text-text_primary font-medium text-[1.5rem] leading-[1.15] p-0 m-0">
                 หมวดหมู่ที่เกี่ยวข้องกับ ทำ SEO
               </h2>
-              <div className="grid grid-cols-[repeat(4,minmax(1px,1fr))] grid-rows-[1fr] gap-[1.25rem] my-3 ">
+              <div className="grid grid-cols-2 md:grid-cols-[repeat(4,minmax(1px,1fr))] grid-rows-[1fr] gap-[1.25rem] my-3 ">
                 {category_related.map((category, index) => (
                   <CategoryRelated items={category} key={index} />
                 ))}
@@ -122,7 +122,7 @@ const CategoryDetail = () => {
           </section>
         </div>
       </section>
-      <section className="grid grid-cols-[1fr_1216px_1fr] pt-3 pb-12 bg-[#f6f7f8]">
+      <section className="grid-container-job pt-3 pb-12 bg-[#f6f7f8]">
         <CategoryFooter />
       </section>
     </>
