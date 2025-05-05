@@ -4,7 +4,7 @@ import React from "react";
 
 const BreadCrumb = () => {
   return (
-    <section className="col-start-2 col-end-auto h-5 mt-10">
+    <section className="col-start-2 col-end-auto h-5 mt-2 sm:mt-10">
       <div className="flex justify-between items-center">
         <ul className="flex-wrap inline-flex m-0 h-0 list-none">
           <li className="mr-[0.875rem]">

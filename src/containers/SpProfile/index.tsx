@@ -27,16 +27,17 @@ const SpProfile = () => {
   );
 
   const handleLogout = async () => {
-      try {
-        await signOut({
-          callbackUrl: "/",
-          redirect: true,
-        });
-      } catch (error) {
-        console.error("Logout failed:", error);
-      }
-    };
-  
+    try {
+      localStorage.removeItem("freelancerFormData");
+      localStorage.removeItem("freelancerCurrentStep");
+      await signOut({
+        callbackUrl: "/",
+        redirect: true,
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   if (isLoading) return <Loading />;
 
@@ -70,7 +71,10 @@ const SpProfile = () => {
               {user?.user.username}
             </strong>
           </Link>
-          <Link href={`/user/${user?.user.username}`}>
+          <Link
+            href={`/user/${user?.user.username}`}
+            className="inline-block max-w-full whitespace-nowrap"
+          >
             <strong className="text-sm font-sans text-text_primary">
               {user?.contact.email}
             </strong>

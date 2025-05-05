@@ -75,7 +75,7 @@ export default function CardZipcodeSearch({
       }
       setShowDropdown(true);
     }, 500),
-    [] 
+    []
   );
 
   const handleSelect = (geo: Geography) => {
@@ -101,7 +101,7 @@ export default function CardZipcodeSearch({
   return (
     <div className="relative" ref={dropdownRef}>
       <label className="block text-sm text-text_primary font-semibold mb-2">
-        ตำบล/แขวง
+        รหัสไปรษณีย์
       </label>
       <input
         value={zipcodeValue}
@@ -165,7 +165,7 @@ export default function CardZipcodeSearch({
                   >
                     <span className="text-[12px] font-sans text-black">
                       สร้างรหัสไปรษณีย์: &quot;{zipcode}&quot;
-                    </span> 
+                    </span>
                   </div>
                 )}
               </>

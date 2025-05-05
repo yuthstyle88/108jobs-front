@@ -46,7 +46,7 @@ const SubCategory = () => {
                 index === category
                   ? "text-third border-third bg-[#E3EDFD]"
                   : "hover:bg-[#F6F7F8] text-text_secondary border-border_primary"
-              } text-base font-medium leading-[1.5] px-4 py-[7px] whitespace-nowrap text-text_secondary border-[1px] border-border_primary rounded-[4px] cursor-pointer select-none flex justify-center items-center `}
+              } text-[14px] sm:text-base font-medium leading-[1.5] px-2 py-[5px] sm:px-4 sm:py-[7px] whitespace-nowrap text-text_secondary border-[1px] border-border_primary rounded-[4px] cursor-pointer select-none flex justify-center items-center `}
             >
               <span>{item.title}</span>
             </div>

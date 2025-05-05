@@ -64,7 +64,7 @@ export default function ZipcodeSearch({
     }
   }, [formData.zip_code, setValue]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateSearchUrl = useCallback(
     debounce((postal: string) => {
       if (postal.length >= 2) {
@@ -100,7 +100,7 @@ export default function ZipcodeSearch({
   return (
     <div className="relative" ref={dropdownRef}>
       <label className="block text-sm text-text_primary font-semibold mb-2">
-        ตำบล/แขวง
+        รหัสไปรษณีย์
       </label>
       <input
         value={zipcodeValue}

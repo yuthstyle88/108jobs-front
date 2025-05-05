@@ -4,7 +4,7 @@ import React from "react";
 
 const CategoryFilter = () => {
   return (
-    <div className="grid grid-flow-col gap-4 justify-start pl-3 ">
+    <div className="hidden sm:grid grid-flow-col gap-4 justify-start pl-3 ">
       <div>
         <span className="inline-flex items-center">
           <div className="mr-2">
