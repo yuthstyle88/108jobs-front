@@ -26,7 +26,7 @@ const EarnPage = () => {
     <>
       <section className="relative">
         <div className="bg-white absolute top-0 right-0 bottom-0 left-0 flex w-full h-[200px]">
-          <div className="flex-shrink-0 h-full">
+          <div className="flex-shrink-0 h-full hidden sm:block">
             <Image
               src={BannerImage.left}
               className="h-full w-auto object-cover"
@@ -41,10 +41,32 @@ const EarnPage = () => {
               alt="center"
             />
           </div>
-          <div className="flex-shrink-0 h-full ml-auto">
+          <div className="flex-shrink-0 h-full ml-auto hidden sm:block">
             <Image
               src={BannerImage.right}
               className="h-full w-auto object-cover"
+              alt="right"
+            />
+          </div>
+        </div>
+        <div className="absolute top-0 left-0 h-[200px] block sm:hidden">
+          <div className="flex-shrink-0 h-full">
+            <Image
+              src={BannerImage.left}
+              className="object-cover"
+              height={50}
+              width={50}
+              alt="left"
+            />
+          </div>
+        </div>
+        <div className="absolute top-0 right-0 h-[200px] block sm:hidden">
+          <div className="flex-shrink-0 h-full">
+            <Image
+              src={BannerImage.right}
+              className="object-cover"
+              height={50}
+              width={50}
               alt="right"
             />
           </div>
@@ -74,31 +96,22 @@ const EarnPage = () => {
         </div>
       </section>
       <section className="pt-[200px]">
-        <div
-          className="flex justify-center items-center h-[135px] px-4 pt-0 pr-4 pb-0 pl-4 bg-[hsl(216,85%,94%)]"
-          style={{
-            borderRadius: "50% 50% 0 0 / 100% 100% 0 0",
-            borderTopLeftRadius: "50% 100%",
-            borderTopRightRadius: "50% 100%",
-            borderBottomRightRadius: "0px",
-          }}
-        >
-          {" "}
-          <div className="flex space-x-8">
+        <div className="flex justify-center items-center h-[135px] px-8 sm:px-4 pt-4 sm:pt-0 pb-0 bg-[hsl(216,85%,94%)] rounded-reward-sp sm:rounded-reward-pc">
+          <div className="flex space-x-8 pl-8 text-base sm:text-[20px] font-normal">
             <div
-              className="text-[20px] font-normal cursor-pointer text-blue-600 border-b-2 border-blue-600"
+              className="text-center cursor-pointer text-third border-b-2 border-third"
               onClick={() => route.push("/reward/earn")}
             >
               {pointLanguageData?.tab_collect_points}
             </div>
             <div
-              className="text-[20px] font-normal cursor-pointer text-gray-400"
+              className="text-center cursor-pointer text-gray-400"
               onClick={() => route.push("/reward/reward")}
             >
               {pointLanguageData?.tab_redeem_rewards}
             </div>
             <div
-              className="text-[20px] font-normal cursor-pointer text-gray-400"
+              className="text-center cursor-pointer text-gray-400"
               onClick={() => route.push("/reward/point-history")}
             >
               {pointLanguageData?.tab_usage_history}
@@ -106,7 +119,7 @@ const EarnPage = () => {
           </div>
         </div>
       </section>
-      <section className="bg-[hsl(216,85%,94%)] py-24 grid grid-container-desktop gap-y-12 pt-[4rem]">
+      <section className="bg-[hsl(216,85%,94%)] py-24 grid grid-container-desktop-banner gap-y-12 pt-0 sm:pt-[4rem]">
         <div className="col-start-2 col-end-3">
           <div className="flex">
             <div className="h-[40px] w-[5px] bg-blue-600 mr-2 " />
@@ -116,7 +129,7 @@ const EarnPage = () => {
           </div>
           <div className="flex justify-left space-x-4 py-8">
             <button
-              className={`py-2 px-6 rounded-full ${
+              className={`py-1 px-3 sm:py-2 sm:px-6 rounded-full ${
                 activeButton === 0
                   ? "bg-blue-600 text-white"
                   : "bg-white text-blue-600 border border-blue-600"
@@ -126,7 +139,7 @@ const EarnPage = () => {
               {pointLanguageData?.filter_all}
             </button>
             <button
-              className={`py-2 px-6 rounded-full ${
+              className={`py-1 px-3 sm:py-2 sm:px-6 rounded-full ${
                 activeButton === 1
                   ? "bg-blue-600 text-white"
                   : "bg-white text-blue-600 border border-blue-600"
@@ -136,7 +149,7 @@ const EarnPage = () => {
               {pointLanguageData?.filter_general}
             </button>
             <button
-              className={`py-2 px-6 rounded-full ${
+              className={`py-1 px-3 sm:py-2 sm:px-6 rounded-full ${
                 activeButton === 2
                   ? "bg-blue-600 text-white"
                   : "bg-white text-blue-600 border border-blue-600"

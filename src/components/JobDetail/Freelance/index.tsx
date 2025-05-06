@@ -60,7 +60,7 @@ const Freelance = () => {
 
         <div className="flex items-center justify-between mt-6 pt-6 border-t">
           {freelancer.map((item, index) => (
-            <div key={index} className="flex items-center space-x-2">
+            <div key={index} className="flex flex-col md:flex-row items-center space-x-2">
               <Image
                 src={item.icon}
                 alt="icon"

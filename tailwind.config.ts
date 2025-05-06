@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
+import type { PluginAPI } from "tailwindcss/types/config";
 
-const kanit = ['Kanit', 'sans-serif'];
+const kanit = ["Kanit", "sans-serif"];
 
 const config: Config = {
   content: [
@@ -46,10 +47,12 @@ const config: Config = {
           "0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),0 4px 4px hsl(333deg 0% 50% /7.5%),0 8px 8px hsl(333deg 0% 50% /7.5%),0 16px 16px hsl(333deg 0% 50% /7.5%)",
         filterSection: "0 4px 12px 0 rgba(43, 43, 43, .1)",
         inputShadow: "box-shadow: 0 0 0 .175em hsl(5 85% 94%)",
-        recipeShadow:"0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),0 4px 4px hsl(333deg 0% 50% /7.5%),0 8px 8px hsl(333deg 0% 50% /7.5%),0 16px 16px hsl(333deg 0% 50% /7.5%)",
-        memberShipShadow:"0 10px 40px -4px rgba(19, 55, 109, 0.08), 0 8px 22px -6px rgba(19, 55, 109, 0.1);",
-        topWorkShadow:"0 0 1.5rem 0 rgba(24, 85, 184, .25);",
-        reviewShadow:"0 0 1.5rem 0 rgba(24, 85, 184, .1);"
+        recipeShadow:
+          "0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),0 4px 4px hsl(333deg 0% 50% /7.5%),0 8px 8px hsl(333deg 0% 50% /7.5%),0 16px 16px hsl(333deg 0% 50% /7.5%)",
+        memberShipShadow:
+          "0 10px 40px -4px rgba(19, 55, 109, 0.08), 0 8px 22px -6px rgba(19, 55, 109, 0.1);",
+        topWorkShadow: "0 0 1.5rem 0 rgba(24, 85, 184, .25);",
+        reviewShadow: "0 0 1.5rem 0 rgba(24, 85, 184, .1);",
       },
       borderWidth: {
         1: "1px",
@@ -103,21 +106,21 @@ const config: Config = {
             opacity: "0",
           },
         },
-        'loader1': {
-          '0%': { transform: 'scale(0)' },
-          '100%': { transform: 'scale(1)' },
+        loader1: {
+          "0%": { transform: "scale(0)" },
+          "100%": { transform: "scale(1)" },
         },
-        'loader2': {
-          '0%': { transform: 'translate(0)' },
-          '100%': { transform: 'translate(1.5rem)' },
+        loader2: {
+          "0%": { transform: "translate(0)" },
+          "100%": { transform: "translate(1.5rem)" },
         },
-        'loader3': {
-          '0%': { transform: 'scale(1)' },
-          '100%': { transform: 'scale(0)' },
+        loader3: {
+          "0%": { transform: "scale(1)" },
+          "100%": { transform: "scale(0)" },
         },
-        'fade-down': {
-          '0%': { opacity: '0', transform: 'translateY(-10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+        "fade-down": {
+          "0%": { opacity: "0", transform: "translateY(-10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
       },
       animation: {
@@ -132,13 +135,24 @@ const config: Config = {
         "modal-hide": "modal-fade-out 0.2s ease-out forwards",
         "backdrop-show": "backdrop-fade-in 0.2s ease-out forwards",
         "backdrop-hide": "backdrop-fade-out 0.2s ease-out forwards",
-        'loader1': 'loader1 0.6s infinite',
-        'loader2': 'loader2 0.6s infinite',
-        'loader3': 'loader3 0.6s infinite',
-        'fade-down': 'fade-down 0.1s ease-out',
+        loader1: "loader1 0.6s infinite",
+        loader2: "loader2 0.6s infinite",
+        loader3: "loader3 0.6s infinite",
+        "fade-down": "fade-down 0.1s ease-out",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }: PluginAPI) {
+      addUtilities({
+        ".rounded-reward-sp": {
+          borderRadius: "100% 100% 0px 0px / 100% 100% 0% 0%",
+        },
+        ".rounded-reward-pc": {
+          borderRadius: "50% 50% 0 0 / 100% 100% 0 0",
+        },
+      });
+    },
+  ],
 };
 export default config;

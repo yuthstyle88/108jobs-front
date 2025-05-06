@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { defaultMetadata } from "@/config/metadata";
 import FaqReward from "@/components/FaqReward";
+import RewardHeader from "@/components/RewardHeader";
 
 interface RewardLayoutProps {
   children: ReactNode;
@@ -9,8 +10,14 @@ interface RewardLayoutProps {
 export default function RewardLayout({ children }: RewardLayoutProps) {
   return (
     <>
-      <section className="pt-[4.5rem] bg-white">{children}</section>
-      <FaqReward/>
+      <div className="hidden sm:block">
+        <RewardHeader/>
+      </div>
+      <div className="block sm:hidden">
+        <RewardHeader/>
+      </div>
+      <section className="bg-white">{children}</section>
+      <FaqReward />
     </>
   );
 }

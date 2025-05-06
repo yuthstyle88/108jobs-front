@@ -49,6 +49,7 @@ import know from "../assets/icons/apply-freelancer/know.svg";
 
 import favicon from "../app/favicon.ico";
 import logo_icon from "../assets/icons/logo-icon.svg";
+import logo_reward from "../assets/icons/reward-default.svg";
 
 export const ApplyFreelancerIcon = {
   ck,
@@ -112,5 +113,6 @@ export const AssetIcon = {
   logo_blue,
   logo_seller,
   favicon,
-  logo_icon
+  logo_icon,
+  logo_reward,
 };
