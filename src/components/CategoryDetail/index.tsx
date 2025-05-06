@@ -64,7 +64,7 @@ const CategoryDetail = () => {
           </p>
         </Link>
       </section>
-      <section className="grid-container-job">
+      <section className="grid-container-job pt-2 sm:pt-0">
         <BreadCrumb />
         <div className="col-start-2 col-end-auto ">
           <h1 className="mb-2 sm:mb-6 mt-4 text-[20px] md:text-[32px] text-text_primary font-semibold">
