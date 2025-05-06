@@ -18,7 +18,7 @@ const CategoryCard = () => {
             />
           </div>
           <div className="flex flex-col p-2 bg-white border-b md:border-none">
-            <h3 className="overflow-hidden max-h-9 leading-[1.25em] text-text_primary text-clip break-words font-normal text-sm font-sans">
+            <h3 className="overflow-hidden leading-[1.25em] text-text_primary text-clip break-words font-normal text-sm font-sans line-clamp-2">
               เพิ่ม Traffic และ Backlink คุณภาพสูง ดัน Web ติดอันดับ SEO เร่ง
               index KW ให้ติดรัวๆ
             </h3>

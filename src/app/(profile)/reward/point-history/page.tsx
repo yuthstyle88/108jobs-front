@@ -35,7 +35,7 @@ const PointHistoryPage = () => {
     <>
       <section className="relative">
         <div className="bg-white absolute top-0 right-0 bottom-0 left-0 flex w-full h-[200px]">
-          <div className="flex-shrink-0 h-full">
+          <div className="flex-shrink-0 h-full hidden sm:block">
             <Image
               src={BannerImage.left}
               className="h-full w-auto object-cover"
@@ -50,7 +50,7 @@ const PointHistoryPage = () => {
               alt="center"
             />
           </div>
-          <div className="flex-shrink-0 h-full ml-auto">
+          <div className="flex-shrink-0 h-full ml-auto hidden sm:block">
             <Image
               src={BannerImage.right}
               className="h-full w-auto object-cover"
@@ -58,10 +58,32 @@ const PointHistoryPage = () => {
             />
           </div>
         </div>
+        <div className="absolute top-0 left-0 h-[200px] block sm:hidden">
+          <div className="flex-shrink-0 h-full">
+            <Image
+              src={BannerImage.left}
+              className="object-cover"
+              height={50}
+              width={50}
+              alt="left"
+            />
+          </div>
+        </div>
+        <div className="absolute top-0 right-0 h-[200px] block sm:hidden">
+          <div className="flex-shrink-0 h-full">
+            <Image
+              src={BannerImage.right}
+              className="object-cover"
+              height={50}
+              width={50}
+              alt="right"
+            />
+          </div>
+        </div>
         <div className="absolute top-0 left-0 right-0 flex justify-center items-center h-[200px] text-black">
           <div className="flex flex-col justify-center items-center text-center">
             <div className="text-[20px] font-[500] leading-[23px]">
-            {historyLanguageData?.section_rewards_points}
+              {historyLanguageData?.section_rewards_points}
             </div>
             <div className="flex items-center">
               <Image
@@ -83,44 +105,35 @@ const PointHistoryPage = () => {
         </div>
       </section>
       <section className="pt-[200px]">
-        <div
-          className="flex justify-center items-center h-[135px] px-4 pt-0 pr-4 pb-0 pl-4 bg-[hsl(216,85%,94%)]"
-          style={{
-            borderRadius: "50% 50% 0 0 / 100% 100% 0 0",
-            borderTopLeftRadius: "50% 100%",
-            borderTopRightRadius: "50% 100%",
-            borderBottomRightRadius: "0px",
-          }}
-        >
-          {" "}
-          <div className="flex space-x-8">
+        <div className="flex justify-center items-center h-[135px] px-8 sm:px-4 pt-4 sm:pt-0 pb-0 bg-[hsl(216,85%,94%)] rounded-reward-sp sm:rounded-reward-pc">
+          <div className="flex space-x-8 pl-8 text-base sm:text-[20px] font-normal">
             <div
-              className="text-[20px] font-normal cursor-pointer text-gray-400"
+              className="text-center cursor-pointer text-gray-400"
               onClick={() => route.push("/reward/earn")}
             >
-             {historyLanguageData?.tab_collect_points}
+              {historyLanguageData?.tab_collect_points}
             </div>
             <div
-              className="text-[20px] font-normal cursor-pointer text-gray-400"
+              className="text-center cursor-pointer text-gray-400"
               onClick={() => route.push("/reward/reward")}
             >
               {historyLanguageData?.tab_redeem_rewards}
             </div>
             <div
-              className="text-[20px] font-normal cursor-pointer text-blue-600 border-b-2 border-blue-600"
+              className="text-center cursor-pointer text-third border-b-2 border-third"
               onClick={() => route.push("/reward/point-history")}
             >
-             {historyLanguageData?.tab_usage_history}
+              {historyLanguageData?.tab_usage_history}
             </div>
           </div>
         </div>
       </section>
-      <section className="bg-[hsl(216,85%,94%)] py-24 grid grid-container-desktop gap-y-12 pt-[4rem]">
+      <section className="bg-[hsl(216,85%,94%)] py-24 grid grid-container-desktop-banner gap-y-12 pt-0 sm:pt-[4rem]">
         <div className="col-start-2 col-end-3">
           <div className="flex pb-4">
             <div className="h-[40px] w-[5px] bg-blue-600 mr-2 " />
             <div className="text-[31px] font-semibold text-black">
-            {historyLanguageData?.tab_earned_points}
+              {historyLanguageData?.tab_earned_points}
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-6 ">
@@ -139,7 +152,7 @@ const PointHistoryPage = () => {
                 }`}
                 onClick={() => setActiveTab1("exchange")}
               >
-                   {historyLanguageData?.tab_redeemed_expired}
+                {historyLanguageData?.tab_redeemed_expired}
               </button>
             </div>
           </div>
@@ -149,7 +162,9 @@ const PointHistoryPage = () => {
             <div className="grid grid-cols-3 py-4 px-6 bg-gray-50 border-b border-gray-200 text-sm font-medium text-gray-600">
               <div>{historyLanguageData?.column_date_received}</div>
               <div>{historyLanguageData?.column_details}</div>
-              <div className="text-right">{historyLanguageData?.column_points_amount}</div>
+              <div className="text-right">
+                {historyLanguageData?.column_points_amount}
+              </div>
             </div>
 
             {/* Table Content */}
@@ -169,7 +184,9 @@ const PointHistoryPage = () => {
                 </div>
               ))
             ) : (
-              <div className="py-12 text-center text-gray-500">{historyLanguageData?.label_no_data}</div>
+              <div className="py-12 text-center text-gray-500">
+                {historyLanguageData?.label_no_data}
+              </div>
             )}
           </div>
         </div>

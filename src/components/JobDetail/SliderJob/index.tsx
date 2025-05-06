@@ -117,6 +117,20 @@ const SliderJob = () => {
           onSwiper={setThumbsSwiper}
           spaceBetween={10}
           slidesPerView={5}
+          breakpoints={{
+            320: {
+              slidesPerView: 3,
+            },
+            640: {
+              slidesPerView: 3,
+            },
+            768: {
+              slidesPerView: 4,
+            },
+            1024: {
+              slidesPerView: 5,
+            },
+          }}
           freeMode={true}
           watchSlidesProgress={true}
           modules={[FreeMode, Navigation, Thumbs]}

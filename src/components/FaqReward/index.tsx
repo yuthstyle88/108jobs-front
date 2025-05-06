@@ -49,7 +49,7 @@ const FaqReward = () => {
   return (
     <div className="bg-white">
       <section
-        className="w-3/5 bg-white mx-auto py-10 md:py-20 grid md:grid-cols-1 gap-5 items-center unicode-bidi-[isolate] max-w-full md:max-w-[980px] border-t border-gray-100"
+        className="sm:w-3/5 bg-white mx-8 sm:mx-auto py-10 md:py-20 grid md:grid-cols-1 gap-5 items-center justify-center unicode-bidi-[isolate] max-w-full md:max-w-[980px] border-t border-gray-100"
         style={{ fontFamily: "Montserrat, sans-serif" }}
       >
         <div className="w-full mx-auto max-w-[980px] border-0 border-solid border-[#dadce8] box-border tab-[4] text-[100%]">
@@ -94,7 +94,7 @@ const FaqReward = () => {
           <div className="border-b border-gray-200 last:border-b-0 py-4" />
         </div>
       </section>
-      <section className="bg-[#F6F7F8]  py-24 grid grid-container-desktop gap-y-12 pt-[4rem]">
+      <section className="bg-[#F6F7F8]  py-24 grid grid-container-desktop-banner gap-y-12 pt-[4rem]">
         <div className="col-start-2 col-end-3 text-black">
           <h2 className="text-[20px] font-bold">
             {footerLanguageData?.section_terms_conditions}
