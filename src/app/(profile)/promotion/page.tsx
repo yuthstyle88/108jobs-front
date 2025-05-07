@@ -1,11 +1,13 @@
 "use client";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
-import { faFontAwesome } from "@fortawesome/free-regular-svg-icons";
-import { faClipboard } from "@fortawesome/free-solid-svg-icons";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { LanguageFile } from "@/constants/language";
 import Loading from "@/components/Loading";
+import { AssetIcon } from "@/constants/icons";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { faGift } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Tags } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 
 const Promotion = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -17,8 +19,14 @@ const Promotion = () => {
   } = useGlobalTranslate(LanguageFile.COUPON);
 
   const tabs = [
-    { name: couponLanguageData?.tab_for_hiring, content: couponLanguageData?.message_no_offers },
-    { name: couponLanguageData?.tab_for_freelancers, content: couponLanguageData?.message_no_offers },
+    {
+      name: couponLanguageData?.tab_for_hiring,
+      content: couponLanguageData?.message_no_offers,
+    },
+    {
+      name: couponLanguageData?.tab_for_freelancers,
+      content: couponLanguageData?.message_no_offers,
+    },
   ];
 
   if (isLoading) return <Loading />;
@@ -28,7 +36,7 @@ const Promotion = () => {
       {/* <CategoryDetail /> */}
       <main>
         <section
-          className="flex items-center justify-center w-full h-[200px]"
+          className="flex items-center justify-center w-full h-[200px] relative overflow-hidden"
           style={{ background: "linear-gradient(282deg, #27c8f8, #1850c2)" }}
         >
           <div className="px-[1.5rem] relative">
@@ -41,23 +49,30 @@ const Promotion = () => {
               </p>
             </div>
           </div>
+          <div className="absolute right-[-100px] bottom-[150px] h-[150px] ml-auto opacity-30 pointer-events-none">
+            <Image
+              src={AssetIcon.logo_icon}
+              alt="Logo"
+              width={350}
+              height={350}
+            />
+          </div>
         </section>
-        <section className="py-24 grid grid-container-desktop gap-y-12 pt-[4rem]">
-          {" "}
+        <section className="py-6 sm:py-24 grid grid-container-desktop-banner gap-y-4 sm:gap-y-12 pt-4 sm:pt-[4rem]">
           <div className="col-start-2 col-end-3">
-            <h2 className="text-[1.75rem] text-black">
+            <h2 className="text-[20px] sm:text-[1.75rem] text-black">
               {couponLanguageData?.label_your_coupons}{" "}
             </h2>
-            <p className="text-[20px] text-gray-500">
+            <p className="text-[12px] sm:text-[20px] text-gray-500">
               {couponLanguageData?.description_your_coupons}
             </p>
           </div>
           <div className=" flex col-start-2 col-end-3 py-[8rem] justify-center items-center">
             <div className="grid-cols-1 items-center justify-center text-center">
               <div className="flex justify-center items-center">
-                <FontAwesomeIcon icon={faClipboard} className="text-black" />
+                <Tags className="text-text_secondary w-9 h-9"/>
               </div>
-              <div className="text-gray-700 mt-2">
+              <div className="text-text_secondary mt-2">
                 {" "}
                 {couponLanguageData?.message_no_coupons}
               </div>
@@ -65,7 +80,7 @@ const Promotion = () => {
           </div>
           <div className="col-start-2 col-end-3 border-t border-gray-300 mt-8"></div>
         </section>
-        <section className="py-24 grid grid-container-desktop gap-y-12 pt-[4rem]">
+        <section className="py-24 grid grid-container-desktop-banner gap-y-12 pt-[4rem]">
           <div className="col-start-2 col-end-3">
             <h2 className="text-[1.75rem] text-black">
               {couponLanguageData?.section_special_offers}{" "}
@@ -92,9 +107,9 @@ const Promotion = () => {
             </div>
             <div className=" flex justify-center items-center py-[8rem]">
               <div className="grid-cols-1 items-center justify-center text-center">
-                <FontAwesomeIcon icon={faFontAwesome} className="text-black" />
+                <FontAwesomeIcon icon={faGift} className="text-text_secondary text-[28px]"  />
 
-                <p className="text-gray-700 mt-2">
+                <p className="text-text_secondary mt-2">
                   {tabs[selectedTab].content}
                 </p>
               </div>

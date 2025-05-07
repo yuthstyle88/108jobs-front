@@ -1,5 +1,6 @@
 "use client";
 import Loading from "@/components/Loading";
+import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
 import {
@@ -40,12 +41,22 @@ const CurrentProfileFreelance = ({ username }: Props) => {
   if (isLoading) return <Loading />;
 
   return (
-    <main>
-      <div className="relative bg-primary h-[200px]"></div>
-      <div className="grid grid-cols-[1fr_1216px_1fr] w-full pb-16">
-        <div className="col-start-2 col-end-3 gap-x-[4rem] flex items-start ">
+    <main className="min-h-screen bg-[#FBFBFC]">
+      <div className="relative bg-primary h-[200px]">
+        <div className="relative block sm:hidden">
+          <Image
+            src={AssetIcon.logo_icon}
+            alt="logo_icon"
+            className="absolute top-[-110px] left-1/2 -translate-x-1/2 object-cover opacity-30"
+            width={200}
+            height={200}
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-[1fr_1216px_1fr] w-full pb-16">
+        <div className="col-start-2 col-end-3 gap-x-[4rem] flex flex-col sm:flex-row sm:items-start">
           <aside>
-            <div className="w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-border_primary bg-white rounded-[0.25rem]">
+            <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-border_primary bg-white rounded-[0.25rem]">
               <div className="flex items-center justify-center">
                 <Image
                   src={ProfileImage.avatar}
@@ -105,7 +116,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                 />
               </Link>
             </div>
-            <div className="w-[320px] mt-4 relative border-[0.0625rem] border-border_primary bg-white rounded-[0.25rem]">
+            <div className="w-full sm:w-[320px] mt-4 relative border-[0.0625rem] border-border_primary bg-white rounded-[0.25rem]">
               <div className="max-w-4xl mx-auto">
                 <div className="p-6">
                   {/* Education Section */}
@@ -306,12 +317,12 @@ const CurrentProfileFreelance = ({ username }: Props) => {
               </div>
             </div>
           </aside>
-          <section className="w-full">
+          <section className="w-full px-4">
             <h2 className="py-[3rem] text-[28px] font-medium text-text_primary w-full">
               The work of {userProfile?.username}
             </h2>
             <div className="grid grid-cols-[1fr_1fr_1fr] border-b-[2px] border-b-border_primary">
-              <div className="relative border-b-2 border-border_primary hover:text-third duration-150 flex justify-center items-center cursor-pointer px-1 py-3 font-bold text-third  after:absolute after:bottom-[-3px] after:h-[2px] after:w-full after:bg-third">
+              <div className="whitespace-nowrap relative border-b-2 border-border_primary hover:text-third duration-150 flex justify-center items-center cursor-pointer px-1 py-3 font-bold text-third  after:absolute after:bottom-[-3px] after:h-[2px] after:w-full after:bg-third">
                 Reviews from freelancers
               </div>
             </div>
