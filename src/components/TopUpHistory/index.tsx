@@ -11,9 +11,9 @@ import Link from "next/link";
 interface Props {
   data: Partial<ProfileCoinLanguage> | null | undefined;
 }
-const TopUpHistory = ({data}:Props) => {
+const TopUpHistory = ({ data }: Props) => {
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-text_primary">
           {data?.section_top_up_history}
@@ -37,35 +37,33 @@ const TopUpHistory = ({data}:Props) => {
 
       <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6 flex items-start gap-3">
         <FontAwesomeIcon icon={faInfo} className="text-5 text-primary " />
-        <p className="text-blue-700">
-          {data?.note_balance_update}
-        </p>
+        <p className="text-blue-700">{data?.note_balance_update}</p>
       </div>
 
       <div className="overflow-x-auto rounded-lg border border-gray-200">
-        <table className="w-full divide-y divide-gray-200">
+        <table className="min-w-[800px] divide-y divide-gray-200">
           <thead className="bg-[#F6F7F8]">
             <tr className="text-center">
               <th className="py-4 px-4 text-left font-medium text-text_primary">
-              {data?.table_payment_code}
+                {data?.table_payment_code}
               </th>
               <th className="py-4 px-4 text-left font-medium text-text_primary">
-              {data?.table_date_transaction}
+                {data?.table_date_transaction}
               </th>
               <th className="py-4 px-4 text-left font-medium text-text_primary">
-              {data?.table_top_up_amount}
+                {data?.table_top_up_amount}
               </th>
               <th className="py-4 px-4 text-left font-medium text-text_primary">
-              {data?.table_special_bonus}
+                {data?.table_special_bonus}
               </th>
               <th className="py-4 px-4 text-left font-medium text-text_primary">
-              {data?.table_total_coins}
+                {data?.table_total_coins}
               </th>
               <th className="py-4 px-4 text-left font-medium text-text_primary">
-              {data?.table_payment_method}
+                {data?.table_payment_method}
               </th>
               <th className="py-4 px-4 text-center font-medium text-text_primary">
-              {data?.table_status}
+                {data?.table_status}
               </th>
               <th className="py-4 px-4 text-left font-medium text-text_primary"></th>
             </tr>
@@ -79,13 +77,16 @@ const TopUpHistory = ({data}:Props) => {
               <td className="py-4 px-4 font-medium">233,232.00</td>
               <td className="py-4 px-4">Promptpay</td>
               <td className="py-4 px-4">
-                <div className="bg-[#F9EDC8] text-yellow-800 text-center py-2 px-2 rounded-full text-sm flex justify-center items-center">
+                <div className="bg-[#F9EDC8] text-yellow-800 text-center py-2 px-6 rounded-full text-sm flex justify-center items-center">
                   <span className="leading-[1]">{data?.status_waiting}</span>
                 </div>
               </td>
               <td className="py-4 px-4">
-                <Link href="#" className="text-blue-600 hover:underline text-sm">
-                {data?.status_waiting}
+                <Link
+                  href="#"
+                  className="text-blue-600 hover:underline text-sm"
+                >
+                  {data?.status_waiting}
                 </Link>
               </td>
             </tr>

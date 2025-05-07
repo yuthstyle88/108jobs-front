@@ -300,7 +300,7 @@ export default function ContactPage() {
 
       <form
         onSubmit={handleSubmit(onSubmitAddress)}
-        className="bg-white rounded-lg text-sm text-text_primary font-semibold font-sans mb-6"
+        className="bg-white rounded-lg text-sm text-text_primary font-semibold font-sans mb-6 shadow-sm border-1 border-border_primary"
       >
         <div className="p-6 border-b">
           <h2 className="text-[16px] font-medium mb-2 text-text_primary">

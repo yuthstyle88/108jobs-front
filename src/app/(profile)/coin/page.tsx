@@ -24,23 +24,23 @@ const FastworkCoin = () => {
 
   return (
     <div className="w-full">
-      <div className="coin-gradient h-[200px] px-4 flex flex-col justify-center items-center relative overflow-hidden">
+      <div className="coin-gradient h-[300px] sm:h-[200px] px-4 flex flex-col justify-center items-center relative overflow-hidden">
         <h1 className="text-3xl font-bold text-white mb-2">
           {coinLanguageData?.title_fastwork_coin}
         </h1>
-        <p className="text-white text-lg">
+        <p className="text-white text-lg text-center">
           {coinLanguageData?.subtitle_fastwork_coin}
         </p>
         <Image
           src={ProfileImage.coin_bg}
           alt="avatar"
-          className="h-full absolute top-0 right-0 object-cover"
+          className="h-full absolute top-0 right-[-130px] sm:right-0"
         />
       </div>
 
-      <div className="grid-container-desktop w-full py-16 px-4 sm:px-6 lg:px-8">
+      <div className="grid-container-desktop-banner w-full py-8 sm:py-16 px-4 sm:px-6 lg:px-8">
         <div className="col-start-2 col-end-3 flex justify-center w-full">
-          <div className="w-[528px]">
+          <div className="max-w-[528px]">
             <div className="coin-popup-gradient rounded-lg p-6 text-center shadow-lg w-full">
               <p className="text-blue-100 mb-2">
                 {coinLanguageData?.label_your_coin}
@@ -147,7 +147,7 @@ const FastworkCoin = () => {
           </div>
         </div>
       </div>
-      <div className="grid-container-desktop w-full py-16 px-4 sm:px-6 lg:px-8 bg-[#F6F7F8]">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white rounded-lg">
         <div className="col-start-2 col-end-3 bg-white">
           <TopUpHistory data={coinLanguageData} />
         </div>
