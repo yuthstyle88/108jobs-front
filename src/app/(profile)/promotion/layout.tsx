@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import SubMenu from "@/components/SubMenu";
 import { ReactNode } from "react";
 import { defaultMetadata } from "@/config/metadata";
+import SpHeader from "@/containers/SpHeader";
 
 interface PromotionLayoutProps {
   children: ReactNode;
@@ -11,10 +12,16 @@ interface PromotionLayoutProps {
 export default function PromotionLayout({ children }: PromotionLayoutProps) {
   return (
     <>
-      <Header type="primary" />
-
-      <section className="pt-[4.5rem] bg-white">
-        <SubMenu />
+      <div className="hidden sm:block">
+        <Header type="primary" />
+      </div>
+      <div className="block sm:hidden">
+        <SpHeader showSearch={false}/>
+      </div>
+      <section className="pt-[3rem] sm:pt-[4.5rem] bg-white">
+        <div className="hidden sm:block">
+          <SubMenu />
+        </div>
         {children}
       </section>
       <Footer />

@@ -42,21 +42,23 @@ export default function BusinessPage() {
           </p>
         </div>
         <div className="p-6">
-          <label className="block text-sm text-text_primary font-semibold text-gray-600 mb-2">
-            {companyInfoLanguageData?.label_tax_id}
-          </label>
-          <div className="flex gap-4">
-            <input
-              type="text"
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2"
-              placeholder={companyInfoLanguageData?.placeholder_tax_id}
-              defaultValue=""
-            />
-            <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-              {companyInfoLanguageData?.button_search_company}
-            </button>
-          </div>
-        </div>
+  <label className="block text-sm text-text_primary font-semibold text-gray-600 mb-2">
+    {companyInfoLanguageData?.label_tax_id}
+  </label>
+  
+  <div className="flex flex-col sm:flex-row gap-4">
+    <input
+      type="text"
+      className="sm:flex-1 border border-gray-300 rounded-lg px-3 py-2"
+      placeholder={companyInfoLanguageData?.placeholder_tax_id}
+      defaultValue=""
+    />
+    <button className="sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 whitespace-nowrap">
+      {companyInfoLanguageData?.button_search_company}
+    </button>
+  </div>
+</div>
+
       </div>
     </div>
   );

@@ -216,14 +216,14 @@ export default function BasicInformation() {
         </div>
       </form>
 
-      <div className="border-1 border-border_primary rounded-lg bg-white mt-5 p-6 flex flex-row justify-between">
+      <div className="border-1 border-border_primary rounded-lg bg-white mt-5 p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
         <div className="text-[16px] text-text_primary font-medium">
           {languageData?.section_password}
           <p className="text-[14px] text-text_secondary font-normal">
             {languageData?.password_description}
           </p>
         </div>
-        <div className="self-end w-fit">
+        <div className="self-end w-full sm:w-fit">
           <button
             onClick={openModal}
             className="w-full bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors"
