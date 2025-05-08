@@ -1,33 +1,39 @@
 "use client";
+import { API_ROUTES } from "@/api/endpoints";
+import { ProfileImage } from "@/constants/images";
+import { usePrivateFetch } from "@/hooks/api-hooks";
+import { ProfileData } from "@/types/userData";
 import { FileText, Info } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 const AccountStats = () => {
-  // Days of the week for the activity chart
+  const { data: user } = usePrivateFetch<ProfileData>(
+    API_ROUTES.profile.get_profile
+  );
   const daysOfWeek = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
   return (
     <div className="flex-1">
-      {/* Main Content */}
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-6 text-black">
           Thống kê tài khoản
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 text-black">
-          {/* User Profile Card */}
-          <div className="bg-white rounded-lg p-6 flex flex-col items-center">
-            <div className="w-20 h-20 rounded-full overflow-hidden mb-4">
-              {/* <img
-                src="/lovable-uploads/7bc51eb8-645d-4a7f-98db-eded96e727b7.png"
-                alt="User Profile"
-                className="w-full h-full object-cover"
-              /> */}
-            </div>
-            <h3 className="text-lg font-medium mb-1">wgcnegyk</h3>
+          <div className="bg-white rounded-lg p-6 flex flex-col justify-center items-center">
+            <figure className="w-20 h-20 rounded-full overflow-hidden relative">
+              <Image
+                src={user?.user.avatar_url || ProfileImage.avatar}
+                alt="avatar"
+                width={80}
+                height={80}
+                className="object-cover"
+              />
+            </figure>
+            <h3 className="text-lg font-medium mb-1">{user?.user.username}</h3>
           </div>
 
-          {/* Online Activity Card */}
           <div className="bg-white rounded-lg p-6">
             <div className="flex items-center mb-4">
               <h3 className="text-base font-medium flex-grow text-black">
@@ -36,7 +42,6 @@ const AccountStats = () => {
               <Info className="w-4 h-4 text-gray-400" />
             </div>
 
-            {/* Activity Chart */}
             <div className="flex items-center justify-between mb-2">
               {daysOfWeek.map((day, index) => (
                 <div key={index} className="flex flex-col items-center">
@@ -57,17 +62,17 @@ const AccountStats = () => {
             </div>
 
             <div className="mt-6 flex justify-center">
-              <button
+              <Link
                 className="bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-md"
-                onClick={() => (window.location.href = "/job-board")}
+                href="/job-board"
+                target="_blank"
               >
                 Tìm công việc
-              </button>
+              </Link>
             </div>
           </div>
         </div>
 
-        {/* Response Time Card */}
         <div className="bg-white rounded-lg p-6 mb-8 relative">
           <div className="flex items-center mb-4">
             <h3 className="text-text_primary text-base font-medium flex-grow">
@@ -78,7 +83,6 @@ const AccountStats = () => {
           <div className="text-sm text-black">Chưa có dữ liệu</div>
         </div>
 
-        {/* Service Stats */}
         <div className="mb-8">
           <h2 className="text-xl font-medium mb-4 text-black">
             Thống Kê Dịch Vụ
