@@ -1,4 +1,7 @@
 "use client";
+import { API_ROUTES } from "@/api/endpoints";
+import { usePrivateFetch } from "@/hooks/api-hooks";
+import { ProfileData } from "@/types/userData";
 import {
   faArrowRight,
   faEye,
@@ -32,23 +35,30 @@ const SellerHome = () => {
     { name: "Th01 25", value: 0 },
     { name: "Th02 25", value: 0 },
   ];
+
+  const { data: user } = usePrivateFetch<ProfileData>(
+    API_ROUTES.profile.get_profile
+  );
+
   return (
-    <div>
-      <div className="bg-white rounded-lg p-6 mb-6">
-        <div className="flex justify-between items-start">
-          <div>
+    <main className="min-h-screen">
+      <section className="bg-white rounded-lg p-6 mb-6">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-0 justify-between items-start">
+          <div className="flex flex-row md:flex-col gap-6 md:gap-0">
             <div className="bg-blue-600 text-white px-4 py-2 rounded-lg inline-block mb-2">
               <h3 className="font-medium">Member</h3>
               <p className="text-sm">Phí dịch vụ 0%</p>
             </div>
-            <div className="flex items-baseline gap-1 mt-2">
-              <span className="text-blue-600 font-medium">đ0,00</span>
-              <span className="text-gray-400">/ 800.000,00</span>
-            </div>
-            <div className="flex items-center mt-2">
-              <span className="text-sm text-gray-500">
-                Thu nhập tích lũy trong 3 tháng
-              </span>
+            <div>
+              <div className="flex items-baseline gap-1 mt-2">
+                <span className="text-blue-600 font-medium">đ0,00</span>
+                <span className="text-gray-400">/ 800.000,00</span>
+              </div>
+              <div className="flex items-center mt-2">
+                <span className="text-sm text-gray-500">
+                  Thu nhập tích lũy trong 3 tháng
+                </span>
+              </div>
             </div>
           </div>
           <div className="flex gap-4">
@@ -60,10 +70,10 @@ const SellerHome = () => {
             </button>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="rounded-lg p-6 bg-white">
-        <div className="flex items-center gap-2 mb-4 ">
+      <section className="rounded-lg p-6 bg-white">
+        <div className="flex flex-col md:flex-row gap-2 items-center md:gap-2 mb-4 ">
           <div className="p-2 bg-blue-600 rounded text-white">
             <svg
               className="w-5 h-5"
@@ -88,7 +98,7 @@ const SellerHome = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 border border-green-100 rounded-lg bg-green-50">
+          <div className="flex flex-col gap-2 md:flex-row md:gap-0 items-center justify-between p-4 border border-green-100 rounded-lg bg-green-50">
             <div className="flex items-center gap-3">
               <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
                 <svg
@@ -114,7 +124,7 @@ const SellerHome = () => {
             <span className="text-green-500">Hoàn tất</span>
           </div>
 
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+          <div className="flex flex-col gap-2 md:flex-row md:gap-0 items-center justify-between p-4 border border-gray-200 rounded-lg">
             <div className="flex items-center gap-3">
               <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
                 <span className="text-gray-500 text-sm">2</span>
@@ -129,14 +139,21 @@ const SellerHome = () => {
                 </p>
               </div>
             </div>
-            <Link href="/seller/my-service">
+            <Link
+              href="/seller/my-service"
+              className="flex flex-row items-center gap-2"
+            >
               <button className="text-blue-600 hover:underline">
                 Đăng dịch vụ
               </button>
+              <FontAwesomeIcon
+                icon={faArrowRight}
+                className="text-[14px] text-third"
+              />
             </Link>
           </div>
-          
-          <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+
+          <div className="flex flex-col gap-2 md:flex-row md:gap-0 items-center justify-between p-4 border border-gray-200 rounded-lg">
             <div className="flex items-center gap-3">
               <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
                 <span className="text-gray-500 text-sm">3</span>
@@ -151,15 +168,23 @@ const SellerHome = () => {
                 </p>
               </div>
             </div>
-            <Link href="/profile">
-            <button className="text-blue-600 hover:underline">
-              Thêm thông tin
-            </button>
+            <Link
+              target="_blank"
+              href={`/user/${user?.user.username}`}
+              className="flex flex-row items-center gap-2"
+            >
+              <button className="text-blue-600 hover:underline">
+                Thêm thông tin
+              </button>
+              <FontAwesomeIcon
+                icon={faArrowRight}
+                className="text-[14px] text-third"
+              />
             </Link>
           </div>
         </div>
-      </div>
-      <div className="bg-white rounded-lg my-6 p-6">
+      </section>
+      <section className="bg-white rounded-lg my-6 p-6">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-3 mt-6">
             <div className="p-2 bg-blue-100 rounded">
@@ -237,15 +262,15 @@ const SellerHome = () => {
             <p className="text-sm">Chưa có dự án</p>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Detailed Statistics Section */}
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">
+      <h2 className="text-xl font-semibold mb-4 text-gray-800 px-4">
         Dữ liệu chi tiết
       </h2>
 
       {/* Overview Chart */}
-      <div className="bg-white rounded-lg p-6 mb-6">
+      <section className="bg-white rounded-lg py-6 px-2 md:px-6 md:py-6 mb-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-blue-100 rounded">
             <FontAwesomeIcon
@@ -315,10 +340,10 @@ const SellerHome = () => {
             </RechartsLineChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </section>
 
       {/* Access Rate Section */}
-      <div className="bg-white rounded-lg p-6 mb-6">
+      <section className="bg-white rounded-lg p-6 mb-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-blue-100 rounded">
             <FontAwesomeIcon icon={faEye} className="w-5 h-5 text-blue-500" />
@@ -350,8 +375,8 @@ const SellerHome = () => {
           </svg>
           <p className="text-sm">Chưa có dữ liệu</p>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 
