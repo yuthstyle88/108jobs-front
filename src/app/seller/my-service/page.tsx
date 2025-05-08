@@ -4,7 +4,7 @@ import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import { SellerImage } from "@/constants/images";
 import { usePrivateDelete, usePrivateFetch } from "@/hooks/api-hooks";
 import { JobListResponse } from "@/types/job";
-import { Eye, Info, Pencil, Plus, Trash2 } from "lucide-react";
+import { Eye, Info, MessageSquare, Pencil, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import JobCreatedStatus from "./_components/JobCreatedStatus";
@@ -43,7 +43,7 @@ const MyServices = () => {
   };
 
   return (
-    <div className="">
+    <div className="p-4 md:p-0">
       <div className="my-service-gradient rounded-lg shadow-sm p-6 mb-8 flex justify-between items-center hover:shadow-jobCard duration-300">
         <div className="flex-1">
           <h2 className="text-lg font-medium mb-2 text-text_primary">
@@ -93,74 +93,146 @@ const MyServices = () => {
         </div>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <div className="grid grid-cols-5 border-b border-gray-200 bg-gray-50">
-          <div className="p-4 font-medium text-sm text-gray-700">Dịch vụ</div>
-          <div className="p-4 font-medium text-sm text-gray-700">
-            Phí dịch vụ (%)
-          </div>
-          <div className="p-4 font-medium text-sm text-gray-700">
-            Trạng thái dịch vụ
-          </div>
-          <div className="p-4 font-medium text-sm text-gray-700">
-            Hiển thị dịch vụ
-          </div>
-          <div className="p-4 font-medium text-sm text-gray-700">Quản lý</div>
-        </div>
+      <div className="hidden md:block bg-white border border-gray-200 rounded-lg overflow-hidden">
+        <table className="min-w-full table-auto text-left text-sm">
+          <thead className="bg-gray-50 text-gray-700 font-medium">
+            <tr>
+              <th className="p-4">Dịch vụ</th>
+              <th className="p-4">Phí dịch vụ (%)</th>
+              <th className="p-4">Trạng thái dịch vụ</th>
+              <th className="p-4">Hiển thị dịch vụ</th>
+              <th className="p-4">Quản lý</th>
+            </tr>
+          </thead>
+          <tbody>
+            {isLoading ? (
+              <tr>
+                <td colSpan={5} className="p-6 text-center">
+                  <LoadingMultiCircle />
+                </td>
+              </tr>
+            ) : jobsData?.jobs?.length ? (
+              jobsData.jobs.map((job) => (
+                <tr key={job.id} className="border-t border-gray-200">
+                  <td className="p-4 flex items-center">
+                    <div className="w-12 h-12 bg-gray-100 rounded overflow-hidden mr-3 flex-shrink-0">
+                      <Image
+                        src={job.user.avatar_url || SellerImage.calculation}
+                        alt={job.title}
+                        className="w-full h-full object-cover"
+                        width={48}
+                        height={48}
+                      />
+                    </div>
+                    <div className="font-medium text-text_primary">
+                      {job.title}
+                    </div>
+                  </td>
+                  <td className="p-4 text-text_primary">15%</td>
+                  <td className="p-4">
+                    <JobCreatedStatus status={job.status} />
+                  </td>
+                  <td className="p-4">
+                    <Eye
+                      className={`w-5 h-5 ${
+                        job.show ? "text-gray-700" : "text-gray-400"
+                      }`}
+                    />
+                  </td>
+                  <td className="p-4 space-x-2">
+                    <Link target="_blank" href={`/manage-product/${job.id}`}>
+                      <button className="p-1 text-gray-500 hover:text-gray-700">
+                        <Pencil className="w-4 h-4" />
+                      </button>
+                    </Link>
+                    <button
+                      onClick={() => handleOpenModal(job.id, job.title)}
+                      className="p-1 text-gray-500 hover:text-gray-700"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="p-6 text-center text-gray-500">
+                  Chưa có dịch vụ nào
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
-        {isLoading ? (
-          <div className="w-full flex justify-center items-center h-32">
-            <LoadingMultiCircle />
-          </div>
-        ) : jobsData?.jobs?.length ? (
-          jobsData.jobs.map((job) => (
-            <div
-              key={job.id}
-              className="grid grid-cols-5 border-b border-gray-200"
-            >
-              <div className="p-4 flex items-center">
-                <div className="w-12 h-12 bg-gray-100 rounded overflow-hidden mr-3 flex-shrink-0">
-                  <Image
-                    src={job.user.avatar_url || SellerImage.calculation}
-                    alt={job.title}
-                    className="w-full h-full object-cover"
-                    width={48}
-                    height={48}
-                  />
-                </div>
-                <div className="font-medium text-text_primary">{job.title}</div>
-              </div>
-              <div className="p-4 flex items-center text-text_primary">15%</div>
-              <div className="p-4 flex items-center">
-                <JobCreatedStatus status={job.status} />
-              </div>
-              <div className="p-4 flex items-center">
-                <Eye
-                  className={`w-5 h-5 ${
-                    job.show ? "text-gray-700" : "text-gray-400"
-                  }`}
-                />
-              </div>
-              <div className="p-4 flex items-center space-x-2">
-                <Link target="_blank" href={`/manage-product/${job.id}`}>
-                  <button className="p-1 text-gray-500 hover:text-gray-700">
-                    <Pencil className="w-4 h-4" />
-                  </button>
-                </Link>
-                <button
-                  onClick={() => handleOpenModal(job.id, job.title)}
-                  className="p-1 text-gray-500 hover:text-gray-700"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
+      <div className="block md:hidden overflow-hidden">
+        <div className="space-y-4">
+          {isLoading ? (
+            <div className="w-full flex justify-center items-center py-6">
+              <LoadingMultiCircle />
             </div>
-          ))
-        ) : (
-          <div className="p-6 text-center text-gray-500">
-            Chưa có dịch vụ nào
-          </div>
-        )}
+          ) : jobsData?.jobs?.length ? (
+            jobsData.jobs.map((job) => (
+              <div
+                key={job.id}
+                className="relative border border-gray-200 rounded-lg px-4 pt-4 bg-white shadow-sm"
+              >
+                <div className="absolute top-2 right-2">
+                  <JobCreatedStatus status={job.status} />
+                </div>
+
+                <div className="flex flex-col gap-3 mb-2">
+                  <div className="w-10 h-10 rounded-md overflow-hidden mr-3 flex-shrink-0 bg-gray-100">
+                    <Image
+                      src={job.user.avatar_url || SellerImage.calculation}
+                      alt={job.title}
+                      width={40}
+                      height={40}
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="font-sans text-sm font-semibold text-text_primary line-clamp-2">
+                    {job.title}
+                  </div>
+                </div>
+
+                <div className="inline-block bg-blue-100 text-blue-600 text-xs font-medium px-2 py-1 rounded">
+                  Service fees 15%
+                </div>
+
+                <div className="pb-4 border-b-1 border-border_secondary w-full font-sans">
+                  <div className="text-sm text-text_secondary flex flex-row justify-between items-center pt-4">
+                    <p>Set up an auto reply message</p>
+                    <MessageSquare className="w-4 h-4 text-text_secondary" />
+                  </div>
+
+                  <Link
+                    target="_blank"
+                    href={`/manage-product/${job.id}`}
+                    className="text-sm text-text_secondary flex flex-row justify-between items-center pt-4"
+                  >
+                    <p>Edit</p>
+                    <Pencil className="w-4 h-4 text-gray-400" />
+                  </Link>
+                </div>
+
+                <div className="flex items-center justify-end py-3">
+                  <button
+                    onClick={() => handleOpenModal(job.id, job.title)}
+                    className="font-sans text-red-500 text-sm font-medium flex items-center gap-1 hover:underline"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="w-full flex justify-center items-center py-6">
+              Chưa có dịch vụ nào
+            </div>
+          )}
+        </div>
       </div>
 
       <ConfirmDeleteModal

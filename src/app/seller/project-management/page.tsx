@@ -8,7 +8,7 @@ const ProjectManagement = () => {
   return (
     <div className="flex-1">
       {/* Main Content */}
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         {/* Tab Navigation */}
         <div className="border-b border-gray-200 mb-6">
           <div className="flex">
