@@ -1,8 +1,6 @@
 "use client";
-import {
-  ChevronDown,
-  X
-} from "lucide-react";
+import { scrollToElementById } from "@/utils/scrollSmooth";
+import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -64,20 +62,15 @@ const MEMBER_TIERS = [
 ];
 
 const MyServices = () => {
-  const [showCalculator, setShowCalculator] = useState(false);
   const [showFaqItem, setShowFaqItem] = useState(true);
 
   const [memberTier, setMemberTier] = useState(MEMBER_TIERS[0]);
   const [projectPrice, setProjectPrice] = useState<string>("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // const handleAddNewService = () => {
-  //   router.push("/create-service");
-  // };
-
-  const handleCalculatorToggle = () => {
-    setShowCalculator(!showCalculator);
-    window.scrollTo(0, 0);
+  const handleClick = (e: React.MouseEvent<HTMLElement>, id: number) => {
+    e.preventDefault();
+    scrollToElementById(`section${id}`);
   };
 
   const formatNumber = (number: number) => {
@@ -97,24 +90,124 @@ const MyServices = () => {
     setDropdownOpen(false);
   };
 
-  // const getActiveMemberTier = (income: number) => {
-  //   return (
-  //     MEMBER_TIERS.find(
-  //       (tier) => income >= tier.minIncome && income <= tier.maxIncome
-  //     ) || MEMBER_TIERS[0]
-  //   );
-  // };
-
   return (
-    <div className="relative p-20">
-      <button
-        onClick={handleCalculatorToggle}
-        className="absolute top-0 right-0 text-gray-400 hover:text-gray-600"
-      >
-        <X className="w-6 h-6" />
-      </button>
-
+    <div className="relative p-4 md:p-10 xl:p-20">
       <div className="flex flex-col lg:flex-row gap-8">
+        <div className="block sm:hidden w-full lg:w-1/3 relative">
+          <div className="sticky top-20 bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-blue-600 text-white p-4 text-center">
+              <h3 className="font-medium">
+                Tính toán phí dịch vụ và giá dự án
+              </h3>
+            </div>
+            <div className="p-4 space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Cấp bậc thành viên
+                </label>
+                <div className="relative">
+                  <button
+                    className="w-full text-left flex items-center justify-between p-3 border border-gray-300 rounded-lg bg-white"
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                  >
+                    <span className="text-gray-700">
+                      {memberTier.name} (Phí dịch vụ {memberTier.feePercent}%)
+                    </span>
+                    <ChevronDown
+                      className={`w-5 h-5 text-gray-500 transition-transform ${
+                        dropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {dropdownOpen && (
+                    <div className="text-text_primary absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                      {MEMBER_TIERS.map((tier) => (
+                        <div
+                          key={tier.id}
+                          className={`p-3 hover:bg-blue-50 cursor-pointer flex items-center ${
+                            tier.id === memberTier.id ? "bg-blue-50" : ""
+                          }`}
+                          onClick={() => handleTierSelect(tier)}
+                        >
+                          <span>
+                            {tier.name} (Phí dịch vụ {tier.feePercent}%)
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="mt-2">
+                  <Link
+                    href="#"
+                    className="text-blue-600 hover:underline text-xs"
+                  >
+                    Kiểm tra cấp bậc thành viên của bạn
+                  </Link>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Giá dự án
+                </label>
+                <div className="flex">
+                  <input
+                    type="text"
+                    className="text-text_primary flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="123213123213"
+                    value={projectPrice}
+                    onChange={(e) => {
+                      // Allow only numbers and format with commas
+                      const value = e.target.value.replace(/\D/g, "");
+                      setProjectPrice(value);
+                    }}
+                  />
+                  <div className="bg-gray-100 p-3 border border-l-0 border-gray-300 rounded-r-lg text-gray-700">
+                    VND
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-200 pt-4">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-gray-700">Phí dịch vụ</span>
+                  <span className="text-blue-600 font-medium">
+                    {projectPrice
+                      ? formatNumber(
+                          calculateFee(
+                            parseInt(projectPrice) || 0,
+                            memberTier.feePercent
+                          )
+                        )
+                      : "0"}{" "}
+                    VND
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center border-t border-gray-200 pt-4">
+                  <div>
+                    <div className="text-gray-700">
+                      Số tiền nhận được từ nền tảng
+                    </div>
+                  </div>
+                  <div className="text-blue-600 font-bold">
+                    {projectPrice
+                      ? formatNumber(
+                          calculateNetAmount(
+                            parseInt(projectPrice) || 0,
+                            memberTier.feePercent
+                          )
+                        )
+                      : "0"}{" "}
+                    VND
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         {/* Left Content */}
         <div className="w-full lg:w-2/3">
           {/* Header Banner */}
@@ -131,11 +224,11 @@ const MyServices = () => {
 
           {/* FAQ Section */}
           <div className="mb-8">
-            <div
-              className="border border-gray-200 rounded-lg bg-white overflow-hidden mb-6"
-              onClick={() => setShowFaqItem(!showFaqItem)}
-            >
-              <div className="flex justify-between items-center p-4 cursor-pointer">
+            <div className="border border-gray-200 rounded-lg bg-white overflow-hidden mb-6">
+              <div
+                onClick={() => setShowFaqItem(!showFaqItem)}
+                className="flex justify-between items-center p-4 cursor-pointer"
+              >
                 <div className="flex items-center">
                   <svg
                     className="w-5 h-5 mr-2 text-blue-500"
@@ -150,7 +243,9 @@ const MyServices = () => {
                       d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <span className="font-medium text-text_primary">Tất cả nội dung</span>
+                  <span className="font-medium text-text_primary">
+                    Tất cả nội dung
+                  </span>
                 </div>
                 <ChevronDown
                   className={`w-5 h-5 text-gray-500 transition-transform ${
@@ -161,40 +256,73 @@ const MyServices = () => {
 
               {showFaqItem && (
                 <div className="p-4 pt-0 border-t border-gray-200">
-                  <ul className="space-y-4 text-sm text-gray-700">
+                  <ul className="space-y-4 pt-2 text-sm text-gray-700">
                     <li className="flex items-start">
                       <span className="text-blue-500 mr-2">•</span>
-                      <span>Phí dịch vụ dựa trên thu nhập tích lũy là gì?</span>
+                      <Link
+                        href="/content/commission#section1"
+                        onClick={(e) => handleClick(e, 1)}
+                      >
+                        <span className="cursor-pointer hover:underline">
+                          Phí dịch vụ dựa trên thu nhập tích lũy là gì?
+                        </span>
+                      </Link>
                     </li>
                     <li className="flex items-start">
                       <span className="text-blue-500 mr-2">•</span>
-                      <span>Phí dịch vụ được tính như thế nào?</span>
+                      <Link
+                        href="/content/commission#section2"
+                        onClick={(e) => handleClick(e, 2)}
+                      >
+                        <span>Phí dịch vụ được tính như thế nào?</span>
+                      </Link>
+
                       <ul className="mt-2 pl-5 space-y-2">
                         <li className="flex items-start">
                           <span className="text-blue-500 mr-2">•</span>
-                          <span>
-                            Ví dụ 1: Không có dự án được phê duyệt trong tháng
-                            hiện tại
-                          </span>
+                          <Link
+                            href="/content/commission#section3"
+                            onClick={(e) => handleClick(e, 3)}
+                          >
+                            <span>
+                              Ví dụ 1: Không có dự án được phê duyệt trong tháng
+                              hiện tại
+                            </span>
+                          </Link>
                         </li>
                         <li className="flex items-start">
                           <span className="text-blue-500 mr-2">•</span>
-                          <span>
-                            Ví dụ 2: Có dự án được phê duyệt trong tháng này cho
-                            đến ngày hiện tại
-                          </span>
+                          <Link
+                            href="/content/commission#section4"
+                            onClick={(e) => handleClick(e, 4)}
+                          >
+                            <span>
+                              Ví dụ 2: Có dự án được phê duyệt trong tháng này
+                              cho đến ngày hiện tại
+                            </span>
+                          </Link>
                         </li>
                         <li className="flex items-start">
                           <span className="text-blue-500 mr-2">•</span>
-                          <span>Ví dụ 3: Đầu tháng mới</span>
+                          <Link
+                            href="/content/commission#section5"
+                            onClick={(e) => handleClick(e, 5)}
+                          >
+                            <span>Ví dụ 3: Đầu tháng mới</span>
+                          </Link>
                         </li>
                       </ul>
                     </li>
                     <li className="flex items-start">
                       <span className="text-blue-500 mr-2">•</span>
-                      <span>
-                        Phí dịch vụ Fastlance được sử dụng cho mục đích gì?
-                      </span>
+                      <Link
+                        href="/content/commission#section6"
+                        onClick={(e) => handleClick(e, 6)}
+                      >
+                        <span>
+                          Phí dịch vụ Fastlance được sử dụng cho mục đích gì?
+                        </span>
+                      </Link>
                     </li>
                   </ul>
                 </div>
@@ -203,7 +331,7 @@ const MyServices = () => {
           </div>
 
           {/* Membership Tiers Table */}
-          <div className="mb-8">
+          <div id="section1" className="mb-8">
             <h2 className="text-xl font-medium mb-6 text-text_primary">
               Phí dịch vụ dựa trên thu nhập tích lũy là gì?
             </h2>
@@ -283,7 +411,10 @@ const MyServices = () => {
 
           {/* How Fees Are Calculated */}
           <div className="mb-8">
-            <h2 className="text-xl font-medium mb-6 text-text_primary">
+            <h2
+              id="section2"
+              className="text-xl font-medium mb-6 text-text_primary"
+            >
               Phí dịch vụ được tính như thế nào?
             </h2>
             <ul className="list-disc pl-5 space-y-2 text-gray-700 mb-6">
@@ -366,7 +497,10 @@ const MyServices = () => {
           </div>
 
           {/* Example 1 */}
-          <div className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary">
+          <div
+            id="section3"
+            className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary"
+          >
             <div className="bg-blue-100 rounded-lg px-4 py-2 inline-block mb-4">
               <h3 className="text-blue-800 font-medium">Ví dụ 1</h3>
               <span className="text-blue-700">
@@ -438,8 +572,8 @@ const MyServices = () => {
             </div>
 
             <p>
-              Nếu có dự án mà Freelancer &quot;tạo báo giá&quot; vào ngày 10 tháng 6 năm
-              2024, phí dịch vụ cho dự án đó sẽ là 10%.
+              Nếu có dự án mà Freelancer &quot;tạo báo giá&quot; vào ngày 10
+              tháng 6 năm 2024, phí dịch vụ cho dự án đó sẽ là 10%.
             </p>
             <p className="text-sm text-gray-500 mt-2 italic">
               Lưu ý: Nếu có chỉnh sửa báo giá, % phí dịch vụ sẽ được tính toán
@@ -448,7 +582,10 @@ const MyServices = () => {
           </div>
 
           {/* Example 2 */}
-          <div className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary">
+          <div
+            id="section4"
+            className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary"
+          >
             <div className="bg-blue-100 rounded-lg px-4 py-2 inline-block mb-4">
               <h3 className="text-blue-800 font-medium">Ví dụ 2</h3>
               <span className="text-blue-700">
@@ -521,8 +658,8 @@ const MyServices = () => {
             </div>
 
             <p>
-              Nếu có dự án mà Freelancer &quot;tạo báo giá&quot; vào ngày 20 tháng 6 năm
-              2024, phí dịch vụ cho dự án đó sẽ là 9%.
+              Nếu có dự án mà Freelancer &quot;tạo báo giá&quot; vào ngày 20
+              tháng 6 năm 2024, phí dịch vụ cho dự án đó sẽ là 9%.
             </p>
             <p className="text-sm text-gray-500 mt-2 italic">
               Lưu ý: Nếu có chỉnh sửa báo giá, % phí dịch vụ sẽ được tính toán
@@ -531,7 +668,10 @@ const MyServices = () => {
           </div>
 
           {/* Example 3 */}
-          <div className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary">
+          <div
+            id="section5"
+            className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary"
+          >
             <div className="bg-blue-100 rounded-lg px-4 py-2 inline-block mb-4">
               <h3 className="text-blue-800 font-medium">Ví dụ 3</h3>
               <span className="text-blue-700">Đầu tháng mới</span>
@@ -603,8 +743,8 @@ const MyServices = () => {
             </div>
 
             <p>
-              Nếu có dự án mà Freelancer &quot;tạo báo giá&quot; vào ngày 1 tháng 7 năm
-              2024, phí dịch vụ cho dự án đó sẽ là 10%.
+              Nếu có dự án mà Freelancer &quot;tạo báo giá&quot; vào ngày 1
+              tháng 7 năm 2024, phí dịch vụ cho dự án đó sẽ là 10%.
             </p>
             <p className="text-sm text-gray-500 mt-2 italic">
               Lưu ý: Nếu có chỉnh sửa báo giá, % phí dịch vụ sẽ được tính toán
@@ -613,7 +753,7 @@ const MyServices = () => {
           </div>
 
           {/* Service Fee Purpose */}
-          <div className="mb-8">
+          <div id="section6" className="mb-8">
             <h2 className="text-xl font-medium mb-6 text-text_primary">
               Phí dịch vụ Fastlance được sử dụng cho mục đích gì?
             </h2>
@@ -629,7 +769,7 @@ const MyServices = () => {
         </div>
 
         {/* Right Calculator Panel - Sticky */}
-        <div className="w-full lg:w-1/3 relative">
+        <div className="hidden sm:block w-full lg:w-1/3 relative">
           <div className="sticky top-20 bg-white rounded-lg shadow-md overflow-hidden">
             <div className="bg-blue-600 text-white p-4 text-center">
               <h3 className="font-medium">
@@ -675,7 +815,10 @@ const MyServices = () => {
                   )}
                 </div>
                 <div className="mt-2">
-                  <Link href="#" className="text-blue-600 hover:underline text-xs">
+                  <Link
+                    href="#"
+                    className="text-blue-600 hover:underline text-xs"
+                  >
                     Kiểm tra cấp bậc thành viên của bạn
                   </Link>
                 </div>

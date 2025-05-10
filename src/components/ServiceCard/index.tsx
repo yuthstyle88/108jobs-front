@@ -1,9 +1,9 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 interface ServiceCardProps {
   title: string;
-  image: string;
+  image: StaticImageData;
   className?: string;
   delay?: number;
 }

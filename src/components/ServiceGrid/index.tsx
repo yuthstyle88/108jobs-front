@@ -1,10 +1,14 @@
+"use client";
 import React from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
+import { BusinessImage } from "@/constants/images";
+import { usePathname } from "next/navigation";
+import { scrollToElementById } from "@/utils/scrollSmooth";
 interface ServiceItemProps {
   title: string;
-  image: string;
+  image: StaticImageData;
   delay?: number;
 }
 const ServiceItem: React.FC<ServiceItemProps> = ({
@@ -36,6 +40,15 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
   );
 };
 const ServiceGrid: React.FC = () => {
+  const pathname = usePathname();
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/business") {
+      e.preventDefault();
+      scrollToElementById("contact");
+    }
+  };
+
   return (
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4 md:px-6">
@@ -51,39 +64,40 @@ const ServiceGrid: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           <ServiceItem
             title="Design & Graphic"
-            image="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600"
+            image={BusinessImage.business2}
             delay={100}
           />
           <ServiceItem
             title="Online Marketing"
-            image="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&q=80&w=600"
+            image={BusinessImage.business3}
             delay={200}
           />
           <ServiceItem
             title="Photoshoot & Video Production"
-            image="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=600"
+            image={BusinessImage.business4}
             delay={300}
           />
           <ServiceItem
             title="Operation & Consultant"
-            image="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=600"
+            image={BusinessImage.business5}
             delay={400}
           />
           <ServiceItem
             title="Writing & Translation"
-            image="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=600"
+            image={BusinessImage.business6}
             delay={500}
           />
           <ServiceItem
             title="Web & Programming"
-            image="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=600"
+            image={BusinessImage.business1}
             delay={600}
           />
         </div>
 
         <div className="flex justify-center">
           <Link
-            href="/services"
+            href="/business#contact"
+            onClick={handleClick}
             className="border border-gray-300 text-gray-700 py-3 px-12 rounded-md font-medium transition-all duration-300 hover:bg-gray-100"
           >
             บริการเรา

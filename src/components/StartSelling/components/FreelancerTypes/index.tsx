@@ -122,7 +122,7 @@ const FreelancerTypes = ({ data }: Props) => {
           </div>
         ))}
       </div>
-      <div className="grid-container-desktop w-full pt-[64px]">
+      <div className="grid-container-desktop-banner w-full pt-[64px]">
         <div className="col-start-2 col-end-3 flex flex-col justify-center items-center">
           <h2 className="text-3xl font-bold text-center text-primary mb-4">
             {data?.cta_title}

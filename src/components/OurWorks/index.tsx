@@ -1,3 +1,4 @@
+import { BusinessImage } from "@/constants/images";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,56 +7,49 @@ import { useEffect, useRef } from "react";
 const portfolioItems = [
   {
     id: 1,
-    image:
-      "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&q=80&w=600",
+    image: BusinessImage.business1,
     title: "Digital Marketing Campaign",
     category: "Google Ads",
   },
   {
     id: 2,
-    image:
-      "https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?auto=format&fit=crop&q=80&w=600",
+    image: BusinessImage.business3,
     title: "Web Design Project",
     category: "UX/UI Design",
   },
   {
     id: 3,
-    image:
-      "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&q=80&w=600",
+    image: BusinessImage.business2,
     title: "Mobile App Development",
     category: "App Development",
   },
   {
     id: 4,
-    image:
-      "https://images.unsplash.com/photo-1458668383970-8ddd3927deed?auto=format&fit=crop&q=80&w=600",
+    image: BusinessImage.business4,
     title: "Product Packaging Design",
     category: "Graphic Design",
   },
   {
     id: 5,
-    image:
-      "https://images.unsplash.com/photo-1482881497185-d4a9ddbe4151?auto=format&fit=crop&q=80&w=600",
+    image: BusinessImage.business5,
     title: "Brand Identity Development",
     category: "Branding",
   },
   {
     id: 6,
-    image: "/lovable-uploads/67ad5db5-2d4c-46ea-821f-a3e9d9789481.png",
+    image: BusinessImage.business6,
     title: "Corporate Website Redesign",
     category: "Web Development",
   },
   {
     id: 7,
-    image:
-      "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&q=80&w=600",
+    image: BusinessImage.business4,
     title: "E-commerce Platform",
     category: "Web Development",
   },
   {
     id: 8,
-    image:
-      "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=600",
+    image: BusinessImage.business2,
     title: "Social Media Campaign",
     category: "Digital Marketing",
   },
@@ -64,47 +58,47 @@ const portfolioItems = [
 const OurWorks = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
 
-useEffect(() => {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const items = entry.target.querySelectorAll(".portfolio-item");
-          items.forEach((item) => {
-            item.classList.add("animate-fade-in");
-          });
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const items = entry.target.querySelectorAll(".portfolio-item");
+            items.forEach((item) => {
+              item.classList.add("animate-fade-in");
+            });
 
-          const animatedElements =
-            entry.target.querySelectorAll(".animate-on-scroll");
-          animatedElements.forEach((el) => {
-            el.classList.add("animate-fade-in");
-            el.classList.remove("opacity-0");
-          });
-        }
-      });
-    },
-    { threshold: 0.1 }
-  );
+            const animatedElements =
+              entry.target.querySelectorAll(".animate-on-scroll");
+            animatedElements.forEach((el) => {
+              el.classList.add("animate-fade-in");
+              el.classList.remove("opacity-0");
+            });
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
 
-  const currentSection = sectionRef.current; // Store the reference here
+    const currentSection = sectionRef.current; // Store the reference here
 
-  if (currentSection) {
-    observer.observe(currentSection);
-
-    const titleElements = currentSection.querySelectorAll(".animate-on-scroll");
-    titleElements.forEach((el) => {
-      el.classList.add("animate-fade-in");
-      el.classList.remove("opacity-0");
-    });
-  }
-
-  return () => {
     if (currentSection) {
-      observer.unobserve(currentSection);
-    }
-  };
-}, []);
+      observer.observe(currentSection);
 
+      const titleElements =
+        currentSection.querySelectorAll(".animate-on-scroll");
+      titleElements.forEach((el) => {
+        el.classList.add("animate-fade-in");
+        el.classList.remove("opacity-0");
+      });
+    }
+
+    return () => {
+      if (currentSection) {
+        observer.unobserve(currentSection);
+      }
+    };
+  }, []);
 
   return (
     <section

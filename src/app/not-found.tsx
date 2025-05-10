@@ -58,7 +58,13 @@ export default function NotFound() {
       <header className="px-[1rem] flex h-[70px] items-center justify-start bg-primary">
         <div className=" px-4">
           <Link href="/">
-            <Image src={AssetIcon.logo} alt="logo" className="w-full h-full" />
+            <Image
+              src={AssetIcon.logo}
+              alt="logo"
+              className="w-full h-full"
+              width={500}
+              height={500}
+            />
           </Link>
         </div>
       </header>
@@ -88,6 +94,9 @@ export default function NotFound() {
                   src={LandingImage.construction}
                   alt="construction"
                   className="w-full h-full"
+                  width={500}
+                  height={500}
+                  priority
                 />
               </div>
             </div>

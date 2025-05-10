@@ -90,7 +90,7 @@ const ConsentManagement = () => {
 
               <div className="space-y-6">
                 <div className="border rounded-lg p-6">
-                  <div className="flex justify-between items-start mb-4">
+                  <div className="flex flex-col gap-4 md:gap-0 md:flex-row justify-between items-start mb-4">
                     <div>
                       <h4 className="font-medium text-text_primary mb-1">
                         {concentLanguageData?.functional_cookies}
@@ -99,7 +99,7 @@ const ConsentManagement = () => {
                         {concentLanguageData?.functional_cookies_description}
                       </p>
                     </div>
-                    <div className="ml-6">
+                    <div className="ml-0 md:ml-6">
                       <button className="bg-gray-100 text-primary font-medium px-4 py-2 rounded-lg cursor-not-allowed">
                         เปิดใช้งานตลอด
                       </button>
@@ -108,7 +108,7 @@ const ConsentManagement = () => {
                 </div>
 
                 <div className="border rounded-lg p-6">
-                  <div className="flex justify-between items-start">
+                  <div className="flex flex-col gap-4 md:gap-0 md:flex-row justify-between items-start">
                     <div className="flex-1">
                       <h4 className="font-medium text-text_primary mb-1">
                         {concentLanguageData?.marketing_cookies}
@@ -117,7 +117,7 @@ const ConsentManagement = () => {
                       {concentLanguageData?.marketing_cookies_description}
                       </p>
                     </div>
-                    <div className="flex items-center gap-4 ml-6">
+                    <div className="flex items-center gap-4 ml-0 md:ml-6">
                       <label className="flex items-center gap-2">
                         <input
                           type="radio"
@@ -143,7 +143,7 @@ const ConsentManagement = () => {
                 </div>
 
                 <div className="border rounded-lg p-6">
-                  <div className="flex justify-between items-start">
+                  <div className="flex flex-col gap-4 md:gap-0 md:flex-row justify-between items-start">
                     <div className="flex-1">
                       <h4 className="font-medium mb-1 text-text_primary">
                         {concentLanguageData?.analytics_cookies}
@@ -152,7 +152,7 @@ const ConsentManagement = () => {
                       {concentLanguageData?.analytics_cookies_description}
                       </p>
                     </div>
-                    <div className="flex items-center gap-4 ml-6">
+                    <div className="flex items-center gap-4 ml-0 md:ml-6">
                       <label className="flex items-center gap-2">
                         <input
                           type="radio"
@@ -196,7 +196,7 @@ const ConsentManagement = () => {
   };
   return (
     <div className="w-full">
-      <div className="grid-container-desktop w-full my-12 min-h-[400px]">
+      <div className="grid-container-desktop-banner w-full my-4 md:my-12 min-h-[400px]">
         <div className="col-start-2 col-end-3 max-w-[800px]">
           <h1 className="text-[2.25rem] text-text_primary font-medium">
             {concentLanguageData?.data_management}

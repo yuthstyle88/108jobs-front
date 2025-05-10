@@ -15,6 +15,7 @@ const CategoryCard = () => {
               alt="seo"
               className="object-cover w-full h-full bg-[#e8eaee]"
               fill
+              sizes="(max-width: 768px) 100vw, 33vw" 
             />
           </div>
           <div className="flex flex-col p-2 bg-white border-b md:border-none">
