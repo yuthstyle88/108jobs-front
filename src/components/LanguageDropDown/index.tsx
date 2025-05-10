@@ -37,7 +37,7 @@ const LanguageDropdown = ({ className = "" }: LanguageDropdownProps) => {
     <div ref={dropdownRef} className={`relative ${className}`}>
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="text-white text-sm hover:text-white cursor-pointer flex items-center gap-2 w-[30px] h-[30px]"
+        className="text-white text-sm hover:text-white cursor-pointer flex items-center gap-2"
       >
         {currentLangData && (
           <Image
@@ -45,6 +45,7 @@ const LanguageDropdown = ({ className = "" }: LanguageDropdownProps) => {
             alt={currentLangData.label}
             width={30}
             height={30}
+            style={{ height: "auto" }}
           />
         )}
       </div>
@@ -69,7 +70,7 @@ const LanguageDropdown = ({ className = "" }: LanguageDropdownProps) => {
                   isSelected ? "ring-2 ring-blue-800" : ""
                 }`}
               >
-                <Image src={lang.flag} alt={lang.label} width={26} height={26} />
+                <Image src={lang.flag} alt={lang.label} width={26} height={26} style={{ height: "auto" }}/>
               </div>
               <span className="text-text_primary text-sm">{lang.label}</span>
             </div>

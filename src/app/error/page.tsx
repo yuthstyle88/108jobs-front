@@ -4,7 +4,8 @@ import Image from "next/image";
 export default function Error() {
 
   return (
-    <div className="min-h-screen w-full h-full flex items-center justify-center bg-secondary">
+    <div className="relative min-h-screen w-full h-full flex items-center justify-center bg-secondary">
+
       <Image
         src={LandingImage.bg_error}
         alt="error"

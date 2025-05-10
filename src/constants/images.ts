@@ -61,7 +61,6 @@ import point from "../assets/images/point.svg";
 import calculation from "../assets/images/seller/cal@2x.png";
 import response from "../assets/images/seller/response-empty-vn@2x.png";
 
-
 import chat_message from "../assets/images/message/chat.svg";
 import chat_avt from "../assets/images/message/avatar.jpg";
 
@@ -88,6 +87,30 @@ import interest_5 from "../assets/images/landing/Instant_call_re_design_Aug2023_
 import interest_6 from "../assets/images/landing/Milestone_Buyer_banner_discount_784x196_3a80602fe0.webp";
 import top_works from "../assets/images/landing/Line_sticker_designdee_505bdaa359.webp";
 
+import business1 from "../assets/images/fastwork-business/business1.jpg";
+import business2 from "../assets/images/fastwork-business/business2.jpg";
+import business3 from "../assets/images/fastwork-business/business3.jpg";
+import business4 from "../assets/images/fastwork-business/business4.jpg";
+import business5 from "../assets/images/fastwork-business/business5.jpg";
+import business6 from "../assets/images/fastwork-business/business6.jpg";
+import logo_business from "../assets/images/fastwork-business/logo_business.png";
+import logo_customer1 from "../assets/images/fastwork-business/Alipay.png";
+import logo_customer2 from "../assets/images/fastwork-business/Logo_tangerine-1-120x120.png";
+import logo_customer3 from "../assets/images/fastwork-business/unnamed-120x120.png";
+
+export const BusinessImage = {
+  business1,
+  business2,
+  business3,
+  business4,
+  business5,
+  business6,
+  logo_business,
+  logo_customer1,
+  logo_customer2,
+  logo_customer3,
+};
+
 export const LandingImage = {
   banner_02,
   construction,
@@ -109,17 +132,17 @@ export const LandingImage = {
   interest_4,
   interest_5,
   interest_6,
-  top_works
+  top_works,
 };
 
 export const MessageImage = {
   chat_message,
-  chat_avt
+  chat_avt,
 };
 
 export const SellerImage = {
   calculation,
-  response
+  response,
 };
 export const BannerImage = {
   left,
@@ -228,7 +251,7 @@ export const MegaMenuImage = {
   buyer_job,
   company_th,
   ads,
-  ads_bg
+  ads_bg,
 };
 
 export const AssetsImage = {

@@ -1,7 +1,7 @@
-import th from "@/assets/icons/th.svg";
+import { BusinessImage } from "@/constants/images";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import React, { useState } from "react";
 
 const StatsSection = () => {
@@ -49,18 +49,18 @@ const StatsSection = () => {
   );
 };
 interface ClientLogoProps {
-  src: string;
+  src: StaticImageData;
   alt: string;
 }
-const ClientLogo: React.FC<ClientLogoProps> = ({ alt }) => {
+const ClientLogo: React.FC<ClientLogoProps> = ({ src, alt }) => {
   return (
     <div className="flex items-center justify-center px-6 py-4">
       <Image
-        src={th}
+        src={src}
         alt={alt}
         width={500}
         height={500}
-        className="max-h-10 md:max-h-12"
+        className="w-full h-full"
       />
     </div>
   );
@@ -80,79 +80,79 @@ const ClientsCarousel = () => {
   const clientsData = [
     [
       {
-        src: "https://1000logos.net/wp-content/uploads/2021/05/Google-logo.png",
-        alt: "Google",
-      },
-      {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/1920px-Netflix_2015_logo.svg.png",
+        src: BusinessImage.logo_customer1,
         alt: "Netflix",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png",
+        src: BusinessImage.logo_customer3,
+        alt: "Netflix",
+      },
+      {
+        src: BusinessImage.logo_customer2,
         alt: "Amazon",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Slack_Technologies_Logo.svg/1280px-Slack_Technologies_Logo.svg.png",
+        src: BusinessImage.logo_customer1,
         alt: "Slack",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1667px-Apple_logo_black.svg.png",
+        src: BusinessImage.logo_customer3,
         alt: "Apple",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1667px-Apple_logo_black.svg.png",
+        src: BusinessImage.logo_customer2,
         alt: "Apple",
       },
     ],
     [
       {
-        src: "https://1000logos.net/wp-content/uploads/2021/05/Google-logo.png",
+        src: BusinessImage.logo_customer3,
         alt: "Google",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/1920px-Netflix_2015_logo.svg.png",
+        src: BusinessImage.logo_customer1,
         alt: "Netflix",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png",
+        src: BusinessImage.logo_customer2,
         alt: "Amazon",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Slack_Technologies_Logo.svg/1280px-Slack_Technologies_Logo.svg.png",
+        src: BusinessImage.logo_customer3,
         alt: "Slack",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1667px-Apple_logo_black.svg.png",
+        src: BusinessImage.logo_customer1,
         alt: "Apple",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1667px-Apple_logo_black.svg.png",
+        src: BusinessImage.logo_customer2,
         alt: "Apple",
       },
     ],
     [
       {
-        src: "https://1000logos.net/wp-content/uploads/2021/05/Google-logo.png",
+        src: BusinessImage.logo_customer3,
         alt: "Google",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Netflix_2015_logo.svg/1920px-Netflix_2015_logo.svg.png",
+        src: BusinessImage.logo_customer1,
         alt: "Netflix",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png",
+        src: BusinessImage.logo_customer2,
         alt: "Amazon",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Slack_Technologies_Logo.svg/1280px-Slack_Technologies_Logo.svg.png",
+        src: BusinessImage.logo_customer1,
         alt: "Slack",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1667px-Apple_logo_black.svg.png",
+        src: BusinessImage.logo_customer3,
         alt: "Apple",
       },
       {
-        src: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/1667px-Apple_logo_black.svg.png",
+        src: BusinessImage.logo_customer1,
         alt: "Apple",
       },
     ],

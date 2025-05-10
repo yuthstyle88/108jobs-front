@@ -161,11 +161,8 @@ export default function Home() {
               <div className="flex items-center justify-between flex-wrap overflow-x-auto">
                 {serviceCatalogs.map((catalog, index) => {
                   const matchedIcon = catalogIcons.find(
-                    (c) => c.id === catalog.id
+                    (c) => c.name === catalog.name
                   )?.icon;
-                  const catalogIcon =
-                    matchedIcon ||
-                    "/categories-image/web-development-02032022.jpg";
 
                   return (
                     <div
@@ -186,7 +183,7 @@ export default function Home() {
                           } relative transform before:absolute before:opacity-0 before:bottom-[calc(56px*0.2*-1+8px)] before:left-0 before:right-0 before:mx-auto before:w-[calc(56px*0.8)] before:h-[calc(56px*0.2)] before:bg-secondary before:rounded-[50%] before:transition-all before:ease-in-out before:[backface-visibility:hidden] group-hover:before:opacity-100 group-hover:before:translate-y-[5px]`}
                         >
                           <Image
-                            src={catalogIcon}
+                            src={matchedIcon}
                             alt={catalog.name}
                             width={56}
                             height={56}
@@ -401,9 +398,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="hidden sm:block">
-          <SpAdsSlider />
-        </section>
+        <section className="hidden sm:block"><SpAdsSlider /></section>
 
         <section className="grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3">

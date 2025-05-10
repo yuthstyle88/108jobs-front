@@ -22,9 +22,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-5 gap-6">
         {/* Categories */}
         <div>
-          <h3 className="font-bold mb-3">
-            {global?.tittle_footer_1}
-          </h3>
+          <h3 className="font-bold mb-3">{global?.tittle_footer_1}</h3>
           <ul className="space-y-2 text-sm">
             <li>
               <Link href="#">{global?.label_nav_bar_item_2}</Link>
@@ -55,25 +53,19 @@ const Footer = () => {
 
         {/* How to Use */}
         <div>
-          <h3 className="font-bold mb-3">
-            {global?.tittle_footer_2}
-          </h3>
+          <h3 className="font-bold mb-3">{global?.tittle_footer_2}</h3>
           <ul className="space-y-2 text-sm">
             <li>
               <Link href="#">{global?.menu_become_freelancer}</Link>
             </li>
             <li>
-              <Link href="#">
-                {global?.label_start_selling_work}
-              </Link>
+              <Link href="#">{global?.label_start_selling_work}</Link>
             </li>
             <li>
               <Link href="#">{global?.label_payment_wages}</Link>
             </li>
             <li>
-              <Link href="#">
-                {global?.label_employment_guarantee}
-              </Link>
+              <Link href="#">{global?.label_employment_guarantee}</Link>
             </li>
             <li>
               <Link href="#">{global?.label_knowledge_blog}</Link>
@@ -82,18 +74,14 @@ const Footer = () => {
               <Link href="#">{global?.label_faq}</Link>
             </li>
             <li>
-              <Link href="#">
-                {global?.label_manage_data_usage}
-              </Link>
+              <Link href="#">{global?.label_manage_data_usage}</Link>
             </li>
           </ul>
         </div>
 
         {/* Products */}
         <div>
-          <h3 className="font-bold mb-3">
-            {global?.tittle_footer_3}
-          </h3>
+          <h3 className="font-bold mb-3">{global?.tittle_footer_3}</h3>
           <ul className="space-y-2 text-sm">
             <li>
               <Link href="#">Fastwork</Link>
@@ -106,17 +94,13 @@ const Footer = () => {
 
         {/* About Fastwork */}
         <div>
-          <h3 className="font-bold mb-3">
-            {global?.tittle_footer_4}
-          </h3>
+          <h3 className="font-bold mb-3">{global?.tittle_footer_4}</h3>
           <ul className="space-y-2 text-sm">
             <li>
               <Link href="#">{global?.label_feedback_us}</Link>
             </li>
             <li>
-              <Link href="#">
-                {global?.label_work_with_fastwork}
-              </Link>
+              <Link href="#">{global?.label_work_with_fastwork}</Link>
             </li>
             <li>
               <Link href="#">{global?.label_terms_of_service}</Link>
@@ -129,9 +113,7 @@ const Footer = () => {
 
         {/* Contact */}
         <div>
-          <h3 className="font-bold mb-3">
-            {global?.tittle_footer_5}
-          </h3>
+          <h3 className="font-bold mb-3">{global?.tittle_footer_5}</h3>
           <ul className="space-y-2 text-sm">
             <li>
               Email:{" "}
@@ -157,9 +139,24 @@ const Footer = () => {
               <FontAwesomeIcon icon={faFacebook} />
               <FontAwesomeIcon icon={faTiktok} />
               <span>| Sitemaps |</span>
-              <Image src={th} alt="TH" width={24} height={16} />
-              <Image src={en} alt="SG" width={24} height={16} />
-              <Image src={vn} alt="VN" width={24} height={16} />
+              <Image
+                src={th}
+                alt="TH"
+                height={23}
+                style={{ height: "23px", width: "auto" }}
+              />
+              <Image
+                src={en}
+                alt="EN"
+                height={23}
+                style={{ height: "23px", width: "auto" }}
+              />
+              <Image
+                src={vn}
+                alt="VN"
+                height={23}
+                style={{ height: "23px", width: "auto" }}
+              />
             </div>
 
             {/* Copyright */}

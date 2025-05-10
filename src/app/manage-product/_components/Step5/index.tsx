@@ -26,6 +26,31 @@ const schema = z.object({
   }),
 });
 
+const checkboxes: {
+  id: "isOwner" | "canComplete" | "agreeTerms";
+  label: React.ReactNode;
+}[] = [
+  {
+    id: "isOwner",
+    label: "Tôi là chủ sở hữu thực sự của dịch vụ",
+  },
+  {
+    id: "canComplete",
+    label: "Tôi có thể hoàn thành tất cả công việc như đã mô tả",
+  },
+  {
+    id: "agreeTerms",
+    label: (
+      <>
+        Tôi đã đọc và đồng ý với các gợi ý{" "}
+        <a className="underline text-third" href="#">
+          Điều khoản sử dụng dịch vụ của Fastlance
+        </a>
+      </>
+    ),
+  },
+];
+
 type FormData = z.infer<typeof schema>;
 
 type Props = {
@@ -49,7 +74,9 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const { trigger: submitJob } = usePrivatePost(API_ROUTES_SELLER.job.post_job_step_5);
+  const { trigger: submitJob } = usePrivatePost(
+    API_ROUTES_SELLER.job.post_job_step_5
+  );
 
   const onSubmit = async () => {
     setIsLoading(true);
@@ -73,7 +100,8 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
         Xác nhận dịch vụ
       </h2>
       <p className="mb-6 text-[16px] text-text_secondary font-sans">
-        Nếu không xác nhận đồng ý với các điều khoản, bạn sẽ không thể đăng bán dịch vụ trên Fastlance
+        Nếu không xác nhận đồng ý với các điều khoản, bạn sẽ không thể đăng bán
+        dịch vụ trên Fastlance
       </p>
 
       <div className="space-y-8 max-w-4xl">
@@ -90,43 +118,30 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
         </div>
 
         <div className="space-y-4">
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="isOwner"
-              className="mt-1 mr-2 checkbox-button checkbox-indicato"
-              {...register("isOwner")}
-            />
-            <label htmlFor="isOwner" className="text-[16px] text-black font-sans font-semibold">
-              Tôi là chủ sở hữu thực sự của dịch vụ
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="canComplete"
-              className="mt-1 mr-2 checkbox-button checkbox-indicato"
-              {...register("canComplete")}
-            />
-            <label htmlFor="canComplete" className="text-[16px] text-black font-sans font-semibold">
-              Tôi có thể hoàn thành tất cả công việc như đã mô tả
-            </label>
-          </div>
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="agreeTerms"
-              className="mt-1 mr-2 checkbox-button checkbox-indicato"
-              {...register("agreeTerms")}
-            />
-            <label htmlFor="agreeTerms" className="text-[16px] text-black font-sans font-semibold">
-              Tôi đã đọc và đồng ý với các gợi ý <a className="underline text-third">Điều khoản sử dụng dịch vụ của Fastlance</a>
-            </label>
-          </div>
-          {(errors.agreeTerms || errors.isOwner || errors.canComplete) && (
-            <p className="text-sm text-red-500">Vui lòng chấp nhận điều khoản và điều kiện để tiếp tục</p>
-          )}
-        </div>
+    {checkboxes.map(({ id, label }) => (
+      <div key={id} className="flex items-start gap-2">
+        <input
+          type="checkbox"
+          id={id}
+          className="checkbox-button checkbox-indicato mt-1"
+          {...register(id)}
+        />
+        <label
+          htmlFor={id}
+          className="text-[16px] text-black font-sans font-semibold"
+        >
+          {label}
+        </label>
+      </div>
+    ))}
+
+    {(errors.agreeTerms || errors.isOwner || errors.canComplete) && (
+      <p className="text-sm text-red-500">
+        Vui lòng chấp nhận điều khoản và điều kiện để tiếp tục
+      </p>
+    )}
+  </div>
+
         <div className="flex justify-between pt-4">
           <button
             type="button"

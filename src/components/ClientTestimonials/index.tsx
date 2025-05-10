@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Image from "next/image"; // Import Image from next/image
+import Image, { StaticImageData } from "next/image"; // Import Image from next/image
+import { BusinessImage } from "@/constants/images";
 
 type TestimonialType = {
   id: number;
-  logoSrc: string;
+  logoSrc: StaticImageData;
   logoAlt: string;
   testimonial: string;
   author: string;
@@ -15,8 +16,7 @@ type TestimonialType = {
 const testimonials: TestimonialType[] = [
   {
     id: 1,
-    logoSrc:
-      "https://images.unsplash.com/photo-1675364310491-627e7d0a26e0?q=80&w=200",
+    logoSrc: BusinessImage.logo_customer1,
     logoAlt: "tangerine",
     testimonial:
       "การทำงานกับ fastwork เป็นไปได้อย่างเสมอต้นเสมอปลาย ตั้งแต่เริ่มต้น จนถึงขั้นตอนการส่งงาน คือยอดเยี่ยมความสามารถหลังจากมีการส่งรูปโน๊ะ ไม่รำเนิน ต้องคอยตามงาน หรือถูกจักกับงาน ทำให้มีความ คล่องตัวมากขึ้นในการทำงาน และมีการส่งงานที่ตรง ตามที่กำหนดเวลา ไม่เคยสาย รวมถึงการช่วยแก้ ปัญหาต่างได้เร็วมาก ๆ",
@@ -25,8 +25,7 @@ const testimonials: TestimonialType[] = [
   },
   {
     id: 2,
-    logoSrc:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png",
+    logoSrc: BusinessImage.logo_customer2,
     logoAlt: "Google",
     testimonial:
       "Fastwork has been an absolute pleasure to work with. My team has been using Fastwork for several years to create beautiful graphics to explain our products. Over this time, Fastwork has been a driving force in our graphic production, and has always delivered the utmost quality in a reasonable time frame.",
@@ -35,8 +34,7 @@ const testimonials: TestimonialType[] = [
   },
   {
     id: 3,
-    logoSrc:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Alipay_logo.png/480px-Alipay_logo.png",
+    logoSrc: BusinessImage.logo_customer3,
     logoAlt: "Alipay",
     testimonial:
       "Fastwork help us understand and ship localized products in an international manner.",
@@ -86,9 +84,9 @@ const ClientTestimonials = () => {
                     <Image
                       src={testimonial.logoSrc}
                       alt={testimonial.logoAlt}
-                      width={128} // Set width
-                      height={128} // Set height
-                      className="max-h-16 max-w-full"
+                      width={128}
+                      height={128}
+                      className="w-full h-full max-w-full"
                     />
                   </div>
                 </div>

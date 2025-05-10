@@ -1,23 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["upload.wikimedia.org", "images.unsplash.com"],
-    domains: ['azpet.com.vn'],
-    domains: ['fastwork.ibrowe.com'], 
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'fastwork.ibrowe.com',
-        port: '', 
-        pathname: '/api/v4/image/**', 
-      },
+    domains: [
+      "upload.wikimedia.org",
+      "images.unsplash.com",
+      "azpet.com.vn",
+      "fastwork.ibrowe.com",
     ],
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'example.com',
-        port: '', 
-        pathname: '/**', 
+        protocol: "https",
+        hostname: "fastwork.ibrowe.com",
+        port: "",
+        pathname: "/api/v4/image/**",
+      },
+      {
+        protocol: "https",
+        hostname: "example.com",
+        port: "",
+        pathname: "/**",
       },
     ],
   },
@@ -26,6 +27,7 @@ const nextConfig = {
 };
 
 export default nextConfig;
+
 
 // const nextConfig = {
 //   output: "export", 
