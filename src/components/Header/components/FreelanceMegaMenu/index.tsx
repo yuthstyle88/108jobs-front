@@ -99,7 +99,7 @@ const FreelanceMegaMenu = () => {
                   href="#"
                   className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4"
                 >
-                  <Image src={freelancer.icon} alt="search" className="w-9" />
+                  <Image src={freelancer.icon} alt="search" className="w-9" width={500} height={500}/>
                   <div className="gap-x-1 flex flex-col flex-1 ">
                     <span
                       className={`text-[0.875rem] font-medium text-text_primary ${

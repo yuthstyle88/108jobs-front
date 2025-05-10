@@ -10,6 +10,7 @@ import OurWorks from "@/components/OurWorks";
 import ContactForm from "@/components/ContractForm";
 import Link from "next/link";
 import Image from "next/image"; 
+import { BusinessImage } from "@/constants/images";
 
 const Index = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -60,7 +61,7 @@ const Index = () => {
             <div className="hero-image relative w-full md:w-1/2 animate-fade-in">
               <div className="relative z-20">
                 <Image
-                  src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=600"
+                  src={BusinessImage.business1}
                   alt="Fastwork for Business"
                   className="w-full object-cover rounded-lg shadow-lg animate-float"
                   width={600}
@@ -73,8 +74,8 @@ const Index = () => {
                 >
                   <ServiceCard
                     title="Online Marketing"
-                    image="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&q=80&w=300"
-                    className="w-48 h-36"
+                    image={BusinessImage.business2}
+                    className="w-24 h-20 md:w-48 md:h-36"
                     delay={300}
                   />
                 </div>
@@ -85,8 +86,8 @@ const Index = () => {
                 >
                   <ServiceCard
                     title="Design & Graphic"
-                    image="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=300"
-                    className="w-48 h-36"
+                    image={BusinessImage.business3}
+                    className="w-24 h-20 md:w-48 md:h-36"
                     delay={400}
                   />
                 </div>
@@ -97,8 +98,8 @@ const Index = () => {
                 >
                   <ServiceCard
                     title="Photoshoot & Video Production"
-                    image="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=300"
-                    className="w-48 h-36"
+                    image={BusinessImage.business4}
+                    className="w-24 h-20 md:w-48 md:h-36"
                     delay={500}
                   />
                 </div>
@@ -109,8 +110,8 @@ const Index = () => {
                 >
                   <ServiceCard
                     title="Motion Graphic"
-                    image="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=300"
-                    className="w-48 h-36"
+                    image={BusinessImage.business5}
+                    className="w-24 h-20 md:w-48 md:h-36"
                     delay={600}
                   />
                 </div>

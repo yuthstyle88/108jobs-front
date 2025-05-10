@@ -129,7 +129,7 @@ const Benefit = ({ data }: Props) => {
     },
   ];
   return (
-    <div className="grid-container-desktop w-full py-16 px-4 sm:px-6 lg:px-8">
+    <div className="grid-container-desktop-banner w-full py-16 px-4 sm:px-6 lg:px-8">
       <div className="col-start-2 col-end-3">
         <h2 className="text-3xl font-bold text-center text-primary mb-12">
           {data?.advantages_title}

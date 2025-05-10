@@ -127,7 +127,7 @@ const Checkbox = forwardRef<
     {...props}
   >
     <CheckboxPrimitive.Indicator
-      className={cn("flex items-center justify-center text-current")}
+      className={cn("flex items-center justify-center text-text_primary")}
     >
       <Check className="h-4 w-4" />
     </CheckboxPrimitive.Indicator>
@@ -146,7 +146,7 @@ const SelectTrigger = forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border border-black bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      "flex h-10 w-full text-text_primary items-center justify-between rounded-md border border-black bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-text_primary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
       className
     )}
     {...props}
@@ -167,7 +167,7 @@ const SelectContent = forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-white text-text_primary shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className
@@ -196,7 +196,7 @@ const SelectItem = forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-text_primary data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
     {...props}
@@ -261,7 +261,7 @@ const ContactForm = () => {
   ];
 
   return (
-    <section className="py-16 bg-white">
+    <section id="contact" className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl font-bold mb-8 text-black">
@@ -279,7 +279,7 @@ const ContactForm = () => {
                 value={formData.details}
                 onChange={handleChange}
                 placeholder="รายละเอียด..."
-                className="min-h-[150px] border border-black bg-white"
+                className="text-text_primary min-h-[150px] border border-black bg-white"
               />
             </div>
 
@@ -319,7 +319,7 @@ const ContactForm = () => {
                 value={formData.budget}
                 onChange={handleChange}
                 placeholder="ระบุงบประมาณ(บาท)"
-                className="border border-black bg-white"
+                className="text-text_primary border border-black bg-white"
               />
             </div>
 
@@ -334,7 +334,7 @@ const ContactForm = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="ระบุอีเมล"
-                className="border border-black bg-white"
+                className="text-text_primary border border-black bg-white"
               />
             </div>
 
@@ -349,7 +349,7 @@ const ContactForm = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="ระบุเบอร์โทรศัพท์มือถือ"
-                  className="border border-black bg-white"
+                  className="text-text_primary border border-black bg-white"
                 />
               </div>
               <div>
@@ -362,7 +362,7 @@ const ContactForm = () => {
                   value={formData.lineId}
                   onChange={handleChange}
                   placeholder="ระบุไลน์ไอดี / หรือ ไม่ระบุ"
-                  className="border border-black bg-white"
+                  className="text-text_primary border border-black bg-white"
                 />
               </div>
             </div>
@@ -397,19 +397,6 @@ const ContactForm = () => {
               <Label htmlFor="terms" className="text-sm">
                 ยินยอมรับ ข้อกำหนดและเงื่อนไขการใช้งานและ นโยบายความเป็นส่วนตัว
               </Label>
-            </div>
-
-            <div className="relative">
-              <Input
-                name="captcha"
-                value={formData.captcha}
-                onChange={handleChange}
-                placeholder="Input this code"
-                className="mb-2"
-              />
-              <div className="absolute right-2 top-2 bg-gray-200 px-2 py-1 rounded text-sm">
-                RYD
-              </div>
             </div>
 
             <Button

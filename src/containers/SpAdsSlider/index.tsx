@@ -18,6 +18,16 @@ import {
 
 import { LandingImage } from "@/constants/images";
 
+const slides = [
+  LandingImage.slider2,
+  LandingImage.slider1,
+  LandingImage.slider3,
+  LandingImage.slider4,
+  LandingImage.slider5,
+  LandingImage.slider6,
+  LandingImage.slider7,
+];
+
 const CustomNavigation = () => {
   const swiper = useSwiper();
   return (
@@ -45,6 +55,7 @@ const SpAdsSlider = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 lg:gap-y-0 lg:grid-cols-3 gap-x-5 w-full">
         <div className="col-span-1 lg:col-span-2">
           <Swiper
+            slidesPerView={1}
             navigation={{
               nextEl: ".swiper-button-next",
               prevEl: ".swiper-button-prev",
@@ -54,7 +65,6 @@ const SpAdsSlider = () => {
             keyboard={true}
             modules={[Navigation, Pagination, Mousewheel, Keyboard, Autoplay]}
             className="mySwiper"
-            loop={true}
             autoplay={{
               delay: 3000,
               disableOnInteraction: true,
@@ -62,55 +72,18 @@ const SpAdsSlider = () => {
             }}
           >
             <CustomNavigation />
-            <SwiperSlide>
-              <Image
-                src={LandingImage.slider2}
-                alt="Picture 1"
-                className="rounded-lg"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Image
-                src={LandingImage.slider1}
-                alt="Picture 2"
-                className="rounded-lg"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Image
-                src={LandingImage.slider3}
-                alt="Picture 3"
-                className="rounded-lg"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Image
-                src={LandingImage.slider4}
-                alt="Picture 4"
-                className="rounded-lg"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Image
-                src={LandingImage.slider5}
-                alt="Picture 5"
-                className="rounded-lg"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Image
-                src={LandingImage.slider6}
-                alt="Picture 6"
-                className="rounded-lg"
-              />
-            </SwiperSlide>
-            <SwiperSlide>
-              <Image
-                src={LandingImage.slider7}
-                alt="Picture 7"
-                className="rounded-lg"
-              />
-            </SwiperSlide>
+            {slides.map((img, i) => (
+              <SwiperSlide key={i}>
+                <Image
+                  src={img}
+                  alt={`Picture ${i + 1}`}
+                  className="rounded-lg"
+                  width={800}
+                  height={400}
+                  style={{ width: "100%", height: "auto" }}
+                />
+              </SwiperSlide>
+            ))}
           </Swiper>
         </div>
         <div className="col-span-1 hidden sm:block">
@@ -119,6 +92,8 @@ const SpAdsSlider = () => {
               src={LandingImage.award_bg}
               alt="Picture 1"
               className="rounded-lg"
+              width={400}
+              height={200}
             />
           </div>
         </div>
