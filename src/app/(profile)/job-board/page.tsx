@@ -31,7 +31,6 @@ const JobBoard = () => {
   if (isLanguageLoading) return <Loading />;
   if (languageError) return <div>Error loading language data</div>;
 
-  // Format date from API to display format
   const formatDate = (dateString: string) => {
     if (!dateString || dateString === "-") return "-";
     const date = new Date(dateString);
@@ -148,14 +147,17 @@ const JobBoard = () => {
             </div>
 
             <div className="flex items-center gap-4 w-full md:w-auto">
-              <Link href="#" className="text-blue-600 text-sm hover:underline">
+              <Link href="/start-selling" className="text-blue-600 text-sm hover:underline">
                 อยากรับงานบนบอร์ดประกาศงาน ?
               </Link>
-              <button className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-                {jobBoardLanguageData?.button_post_job} (0/3)
-              </button>
+              <Link 
+                href="/job-board/create-job" 
+                className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              >
+                {jobBoardLanguageData?.button_post_job || "Post a Job"} (0/3)
+              </Link>
             </div>
-          </div>
+          </div>  
 
           <div className="overflow-x-auto border-1 border-border_primary rounded-lg">
             {isJobsLoading ? (
