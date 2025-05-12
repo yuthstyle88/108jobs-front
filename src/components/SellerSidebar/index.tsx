@@ -1,6 +1,8 @@
 "use client";
 
 import { AssetIcon } from "@/constants/icons";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import {
   faArrowRightToBracket,
   faCalendar,
@@ -15,12 +17,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import Loading from "../Loading";
 
 const SellerSidebar = () => {
+  const {
+    data: globalLanguageData,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.GLOBAL);
   const [isClose, setIsClose] = useState(false);
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path;
+
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
 
   return (
     <div
@@ -56,31 +67,35 @@ const SellerSidebar = () => {
 
       <nav className="flex-1">
         {[
-          { href: "/seller", icon: faFileContract, label: "Tổng quan" },
+          {
+            href: "/seller",
+            icon: faFileContract,
+            label: globalLanguageData?.sidebar_overview,
+          },
           {
             href: "/seller/project-management",
             icon: faListCheck,
-            label: "Quản lý dự án",
+            label: globalLanguageData?.sidebar_project_management,
           },
           {
             href: "/seller/account-statistics",
             icon: faIdCard,
-            label: "Thống kê tài khoản",
+            label: globalLanguageData?.sidebar_account_statistics,
           },
           {
             href: "/seller/my-service",
             icon: faCalendar,
-            label: "Dịch vụ của tôi",
+            label: globalLanguageData?.sidebar_my_services,
           },
           {
             href: "/seller/withdrawal",
             icon: faMoneyBill1Wave,
-            label: "Rút tiền freelancer",
+            label: globalLanguageData?.sidebar_withdraw_freelancer,
           },
           {
             href: "/reward/earn",
             icon: faGift,
-            label: "Phần thưởng Fastlance",
+            label: globalLanguageData?.sidebar_fastwork_rewards,
           },
         ].map((item) => (
           <Link
@@ -117,13 +132,13 @@ const SellerSidebar = () => {
             href="#"
             className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
           >
-            Gửi phản hồi
+            {globalLanguageData?.sidebar_feedback}
           </Link>
           <Link
             href="#"
             className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
           >
-            Trung tâm hỗ trợ
+            {globalLanguageData?.sidebar_support_center}
           </Link>
         </div>
       </div>

@@ -2,6 +2,7 @@
 import { API_ROUTES } from "@/api/endpoints";
 import { ProfileImage } from "@/constants/images";
 import { usePrivateFetch } from "@/hooks/api-hooks";
+import { useLogout } from "@/hooks/useLogout";
 import { ProfileData } from "@/types/userData";
 import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -16,7 +17,6 @@ import {
   faUserPen,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -93,18 +93,7 @@ const SellerMenu = ({ isOpen, onClose }: SellerMenuProps) => {
     },
   ];
 
-  const handleLogout = async () => {
-    try {
-      localStorage.removeItem("freelancerFormData");
-      localStorage.removeItem("freelancerCurrentStep");
-      await signOut({
-        callbackUrl: "/",
-        redirect: true,
-      });
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+  const { logout } = useLogout();
 
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
@@ -232,7 +221,7 @@ const SellerMenu = ({ isOpen, onClose }: SellerMenuProps) => {
           })}
           <hr className="h-[1px] bg-border_secondary w-full inline-block" />
           <li className="flex flex-row items-center gap-2 bg-white text-text_secondary">
-            <button onClick={handleLogout} className="px-5 py-4 flex-1">
+            <button onClick={logout} className="px-5 py-4 flex-1">
               <div className="flex flex-row items-center gap-4">
                 <FontAwesomeIcon
                   icon={faRightFromBracket}

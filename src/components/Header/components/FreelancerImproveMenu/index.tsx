@@ -1,8 +1,10 @@
 "use client";
 import { MegaMenuImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import {
   faChevronRight,
-  faStarAndCrescent
+  faStarAndCrescent,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image, { StaticImageData } from "next/image";
@@ -19,7 +21,7 @@ interface FreelanceImproveMenuItem {
 }
 
 const FreelanceImproveMenu = () => {
-  // const { languageData: globalLanguageData } = useLanguageStore();
+  const global = useTranslateFile(LanguageFile.GLOBAL);
 
   const DESCRIPTION: Record<
     string,
@@ -39,15 +41,14 @@ const FreelanceImproveMenu = () => {
     {
       key: "post",
       icon: MegaMenuImage.job,
-      title: "Nhận việc từ Bảng thông báo việc làm",
-      description:
-        "Xem bài đăng tuyển dụng của người thuê & đề xuất dịch vụ của bạn",
+      title: global?.job_board_freelancer_title,
+      description: global?.job_board_desc,
     },
     {
       key: "ads",
       icon: MegaMenuImage.ads,
-      title: "Quảng bá dịch vụ của bạn qua quảng cáo (Coming soon...)",
-      description: "Tăng cơ hội được thuê",
+      title: global?.ads_coming_title,
+      description: global?.hire_opportunity_title,
     },
   ];
 
@@ -66,7 +67,7 @@ const FreelanceImproveMenu = () => {
                 className="w-3 h-3 inline-flex items-center justify-center cursor-pointer"
               />
               <span className="text-[0.875rem] font-semibold text-[rgba(43,50,59,.6)]">
-              Tăng cơ hội được thuê
+                {global?.hire_opportunity_title}
               </span>
             </div>
             {mega_freelancer.map((freelancer, index) => (
