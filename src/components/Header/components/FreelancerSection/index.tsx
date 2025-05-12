@@ -37,7 +37,7 @@ const FreelancerSession = ({
       <div className="group hidden lg:block">
         <div className="relative">
           <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
-            <p className="">เพิ่มโอกาสการได้รับการจ้างงาน</p>
+            <p className="">{globalLanguageData?.increase_hiring_opportunity}</p>
             <FontAwesomeIcon icon={faChevronDown} />
           </div>
           <div className="absolute left-0 right-0 w-[230px] bg-transparent h-4"></div>
@@ -57,7 +57,7 @@ const FreelancerSession = ({
       <div className="group hidden md:block">
         <div className="relative">
           <div className="border-r-[1px] border-[#4f8ce8] pr-8 text-[14px] text-white px-3 py-2 font-medium flex flex-row items-center gap-2 cursor-pointer">
-            <p className="">การรับสมัคร</p>
+            <p className="">{globalLanguageData?.recruitment}</p>
             <FontAwesomeIcon icon={faChevronDown} />
           </div>
           <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>

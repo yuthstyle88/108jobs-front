@@ -4,16 +4,13 @@ import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import {
   faChevronRight,
-  faStarAndCrescent
+  faStarAndCrescent,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { JSX, useState } from "react";
-import Business from "./Business";
-import Chat from "./Chat";
 import Find from "./Find";
-import Hiring from "./Hiring";
 import Post from "./Post";
 
 interface FreelanceMegaMenuItem {
@@ -38,18 +35,6 @@ const FreelanceMegaMenu = () => {
       component: <Post />,
       image: MegaMenuImage.buyer_job,
     },
-    chat: {
-      component: <Chat />,
-      image: MegaMenuImage.chat_to_hire,
-    },
-    hire: {
-      component: <Hiring />,
-      image: MegaMenuImage.company_th,
-    },
-    business: {
-      component: <Business />,
-      image: MegaMenuImage.b2b,
-    },
   };
 
   const mega_freelancer: FreelanceMegaMenuItem[] = [
@@ -63,8 +48,7 @@ const FreelanceMegaMenu = () => {
       key: "post",
       icon: MegaMenuImage.job,
       title: global?.label_menu_option_1_2,
-      description:
-        global?.hint_label_menu_option_search_job_board,
+      description: global?.hint_label_menu_option_search_job_board,
     },
   ];
 
@@ -83,7 +67,7 @@ const FreelanceMegaMenu = () => {
                 className="w-3 h-3 inline-flex items-center justify-center cursor-pointer"
               />
               <span className="text-[0.875rem] font-semibold text-[rgba(43,50,59,.6)]">
-                การจ้างงาน
+                {global?.tittle_header_menu_section_1}
               </span>
             </div>
             {mega_freelancer.map((freelancer, index) => (
@@ -99,7 +83,13 @@ const FreelanceMegaMenu = () => {
                   href="#"
                   className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4"
                 >
-                  <Image src={freelancer.icon} alt="search" className="w-9" width={500} height={500}/>
+                  <Image
+                    src={freelancer.icon}
+                    alt="search"
+                    className="w-9"
+                    width={500}
+                    height={500}
+                  />
                   <div className="gap-x-1 flex flex-col flex-1 ">
                     <span
                       className={`text-[0.875rem] font-medium text-text_primary ${

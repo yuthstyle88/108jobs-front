@@ -19,6 +19,7 @@ export enum LanguageFile {
   ACCOUNT_NAVBAR = "profile_navbar",
   ERROR = "error",
   NOT_FOUND = "not_found",
+  SELLER_OVERVIEW = "seller",
 }
 
 export const LANGUAGES = {

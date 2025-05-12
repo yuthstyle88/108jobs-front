@@ -24,6 +24,9 @@ const CreateJobPage = () => {
     error: languageError,
   } = useGlobalTranslate(LanguageFile.JOB_BOARD);
 
+  console.log("jobBoardLanguageData", jobBoardLanguageData);
+  
+
   const {
     data: catalogData,
     isLoading: isCatalogLoading,
@@ -168,7 +171,7 @@ const CreateJobPage = () => {
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start">
             <FontAwesomeIcon icon={faInfoCircle} className="text-blue-600 mt-1 mr-3" />
             <p className="text-blue-800">
-              For <span className="font-medium">"Job Posting"</span> only. Self-promotion, contact information, or uses violating system terms are not allowed. Posts violating these terms will be removed immediately
+              For <span className="font-medium">&quot;Job Posting&quot;</span> only. Self-promotion, contact information, or uses violating system terms are not allowed. Posts violating these terms will be removed immediately
             </p>
           </div>
           
@@ -270,7 +273,7 @@ const CreateJobPage = () => {
                 Job Description
               </label>
               <p className="text-gray-500 text-sm mb-2">
-                When someone is interested, you'll receive notifications through system contacts
+                When someone is interested, you&apos;ll receive notifications through system contacts
               </p>
               <textarea
                 id="description"

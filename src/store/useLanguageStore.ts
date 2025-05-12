@@ -17,6 +17,7 @@ import {
   ProfileNavbarAccountLanguage,
   NotFoundPageLanguage,
   ErrorPageLanguage,
+  SellerOverview,
 } from "@/types/language";
 import { create } from "zustand";
 
@@ -38,7 +39,8 @@ export type LanguageDataType = Partial<
   ProfileRewardLanguage &
   ProfileNavbarAccountLanguage &
   NotFoundPageLanguage &
-  ErrorPageLanguage
+  ErrorPageLanguage &
+  SellerOverview
 >;
 
 // Mỗi file lưu ngôn ngữ hiện tại + data

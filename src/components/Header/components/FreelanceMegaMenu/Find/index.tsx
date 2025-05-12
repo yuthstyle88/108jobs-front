@@ -39,11 +39,11 @@ const Find = () => {
         {global?.hint_label_menu_option_find_hire}
       </span>
       <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
-        ค้นหาฟรีแลนซ์ตามหมวดหมู่ ดูผลงาน รีวิว และแชทเพื่อจ้างฟรีแลนซ์ด้วยตัวเอง
+        {global?.freelancer_selection_description}
       </p>
       <div className="mt-6">
         <span className="text-[0.875rem] font-medium text-text_primary">
-          ประเภทงานยอดนิยม
+          {global?.label_nav_bar_item_1}
         </span>
         <div className="mt-2 flex flex-col mr-4">
           {job.map((job, index) => (

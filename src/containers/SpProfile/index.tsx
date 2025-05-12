@@ -5,6 +5,7 @@ import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { ROLE } from "@/constants/role";
 import { usePrivateFetch } from "@/hooks/api-hooks";
+import { useLogout } from "@/hooks/useLogout";
 import { ProfileData } from "@/types/userData";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -19,25 +20,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
 
 const SpProfile = () => {
   const { data: user, isLoading } = usePrivateFetch<ProfileData>(
     API_ROUTES.profile.get_profile
   );
 
-  const handleLogout = async () => {
-    try {
-      localStorage.removeItem("freelancerFormData");
-      localStorage.removeItem("freelancerCurrentStep");
-      await signOut({
-        callbackUrl: "/",
-        redirect: true,
-      });
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+  const { logout } = useLogout();
 
   if (isLoading) return <Loading />;
 
@@ -302,7 +291,7 @@ const SpProfile = () => {
           <ul className="p-0 m-0 list-none">
             <li>
               <button
-                onClick={handleLogout}
+                onClick={logout}
                 className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
               >
                 <span>Logout</span>
