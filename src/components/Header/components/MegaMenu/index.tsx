@@ -25,7 +25,6 @@ interface MegaMenuItem {
 }
 
 const MegaMenu = () => {
-
   const global = useTranslateFile(LanguageFile.GLOBAL);
 
   const DESCRIPTION: Record<
@@ -37,19 +36,19 @@ const MegaMenu = () => {
       image: MegaMenuImage.job_bg,
     },
     post: {
-      component: <Post  />,
+      component: <Post />,
       image: MegaMenuImage.buyer_job,
     },
     chat: {
-      component: <Chat  />,
+      component: <Chat />,
       image: MegaMenuImage.chat_to_hire,
     },
     hire: {
-      component: <Hiring  />,
+      component: <Hiring />,
       image: MegaMenuImage.company_th,
     },
     business: {
-      component: <Business  />,
+      component: <Business />,
       image: MegaMenuImage.b2b,
     },
   };
@@ -59,7 +58,7 @@ const MegaMenu = () => {
       key: "find",
       icon: MegaMenuImage.search,
       title: global?.label_menu_option_1_1,
-      description: global?.hint_label_menu_option_find_hire
+      description: global?.hint_label_menu_option_find_hire,
     },
     {
       key: "post",
@@ -105,7 +104,7 @@ const MegaMenu = () => {
                 className="w-3 h-3 inline-flex items-center justify-center cursor-pointer"
               />
               <span className="text-[0.875rem] font-semibold text-[rgba(43,50,59,.6)]">
-                การจ้างงาน
+                {global?.tittle_header_menu_section_1}
               </span>
             </div>
             {mega_freelancer.map((freelancer, index) => (
@@ -151,7 +150,7 @@ const MegaMenu = () => {
                 className="w-3 h-3  inline-flex items-center justify-center cursor-pointer"
               />
               <span className="text-[0.875rem] font-semibold text-[rgba(43,50,59,.6)]">
-                สำหรับลูกค้าบริษัท
+                {global?.tittle_header_menu_section_2}
               </span>
             </div>
             {mega_business.map((freelancer, index) => (

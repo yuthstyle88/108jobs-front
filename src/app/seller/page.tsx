@@ -1,7 +1,10 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
+import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch } from "@/hooks/api-hooks";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { ProfileData } from "@/types/userData";
+import { interpolateDouble } from "@/utils/interpolate";
 import {
   faArrowRight,
   faEye,
@@ -40,14 +43,20 @@ const SellerHome = () => {
     API_ROUTES.profile.get_profile
   );
 
+  const { data: sellerOverviewLanguage } = useGlobalTranslate(
+    LanguageFile.SELLER_OVERVIEW
+  );
+
   return (
     <main className="min-h-screen">
       <section className="bg-white rounded-lg p-6 mb-6">
         <div className="flex flex-col md:flex-row gap-4 md:gap-0 justify-between items-start">
           <div className="flex flex-row md:flex-col gap-6 md:gap-0">
             <div className="bg-blue-600 text-white px-4 py-2 rounded-lg inline-block mb-2">
-              <h3 className="font-medium">Member</h3>
-              <p className="text-sm">Phí dịch vụ 0%</p>
+              <h3 className="font-medium">
+                {sellerOverviewLanguage?.member_label}
+              </h3>
+              <p className="text-sm">{sellerOverviewLanguage?.service_fee}</p>
             </div>
             <div>
               <div className="flex items-baseline gap-1 mt-2">
@@ -56,17 +65,23 @@ const SellerHome = () => {
               </div>
               <div className="flex items-center mt-2">
                 <span className="text-sm text-gray-500">
-                  Thu nhập tích lũy trong 3 tháng
+                  {interpolateDouble(
+                    sellerOverviewLanguage?.accumulated_income || "",
+                    { n: 3 }
+                  )}
                 </span>
               </div>
             </div>
           </div>
           <div className="flex gap-4">
             <button className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm">
-              Tích lũy thêm đ1.800.000,00
+              {interpolateDouble(
+                sellerOverviewLanguage?.accumulate_more || "",
+                { n: "đ1.800.000,00" }
+              )}
             </button>
             <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">
-              Để nâng hạng thành viên
+              {sellerOverviewLanguage?.upgrade_membership}
             </button>
           </div>
         </div>
@@ -90,10 +105,10 @@ const SellerHome = () => {
             </svg>
           </div>
           <h2 className="text-lg text-text_primary font-medium">
-            Bắt đầu làm freelancer
+            {sellerOverviewLanguage?.freelancer_setup_title}
           </h2>
           <span className="text-sm text-gray-500">
-            3 bước để tạo thu nhập trên fastlance
+            {sellerOverviewLanguage?.freelancer_setup_steps}
           </span>
         </div>
 
@@ -117,11 +132,13 @@ const SellerHome = () => {
               </div>
               <div>
                 <p className="font-medium text-text_primary">
-                  Đăng ký làm freelancer: Freelance đã được xác minh
+                  {sellerOverviewLanguage?.step_1_title}
                 </p>
               </div>
             </div>
-            <span className="text-green-500">Hoàn tất</span>
+            <span className="text-green-500">
+              {sellerOverviewLanguage?.step_1_status}
+            </span>
           </div>
 
           <div className="flex flex-col gap-2 md:flex-row md:gap-0 items-center justify-between p-4 border border-gray-200 rounded-lg">
@@ -131,11 +148,10 @@ const SellerHome = () => {
               </div>
               <div>
                 <p className="font-medium text-text_primary">
-                  Đăng dịch vụ của bạn
+                  {sellerOverviewLanguage?.step_2_title}
                 </p>
                 <p className="text-sm text-gray-500">
-                  Tạo các dịch vụ hấp dẫn để thu hút người thuê và tạo ra thu
-                  nhập trên fastlance
+                  {sellerOverviewLanguage?.step_2_desc}
                 </p>
               </div>
             </div>
@@ -144,7 +160,7 @@ const SellerHome = () => {
               className="flex flex-row items-center gap-2"
             >
               <button className="text-blue-600 hover:underline">
-                Đăng dịch vụ
+                {sellerOverviewLanguage?.step_2_action}
               </button>
               <FontAwesomeIcon
                 icon={faArrowRight}
@@ -160,11 +176,10 @@ const SellerHome = () => {
               </div>
               <div>
                 <p className="font-medium text-text_primary">
-                  Giới thiệu bản thân
+                  {sellerOverviewLanguage?.step_3_title}
                 </p>
                 <p className="text-sm text-gray-500">
-                  Thêm kinh nghiệm làm việc, trình độ học vấn và các kỹ năng của
-                  bạn
+                  {sellerOverviewLanguage?.step_3_desc}
                 </p>
               </div>
             </div>
@@ -174,7 +189,7 @@ const SellerHome = () => {
               className="flex flex-row items-center gap-2"
             >
               <button className="text-blue-600 hover:underline">
-                Thêm thông tin
+                {sellerOverviewLanguage?.step_3_action}
               </button>
               <FontAwesomeIcon
                 icon={faArrowRight}
@@ -204,16 +219,18 @@ const SellerHome = () => {
             </div>
             <div>
               <h2 className="font-medium text-text_primary">
-                Dự án đang thực hiện
+                {sellerOverviewLanguage?.ongoing_projects_title}
               </h2>
-              <p className="text-sm text-gray-500">0 dự án</p>
+              <p className="text-sm text-gray-500">
+                0 {sellerOverviewLanguage?.ongoing_projects_count}
+              </p>
             </div>
           </div>
           <Link
             href="/seller/project-management"
             className="text-blue-600 hover:underline flex items-center text-sm"
           >
-            Xem thêm{" "}
+            {sellerOverviewLanguage?.see_more}
             <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4 ml-1" />
           </Link>
         </div>
@@ -222,22 +239,24 @@ const SellerHome = () => {
           <div className="grid grid-cols-4 gap-4 bg-gray-50 p-4 border-b border-gray-200">
             <div className="flex items-center">
               <span className="font-medium text-sm text-gray-700">
-                Tên dự án
+                {sellerOverviewLanguage?.project_column_name}
               </span>
               <FontAwesomeIcon
                 icon={faInfoCircle}
                 className="w-4 h-4 ml-1 text-gray-400"
               />
             </div>
-            <div className="font-medium text-sm text-gray-700">Mã dự án</div>
+            <div className="font-medium text-sm text-gray-700">
+              {sellerOverviewLanguage?.project_column_code}
+            </div>
             <div className="flex items-center">
               <span className="font-medium text-sm text-gray-700">
-                Số tiền (VND)
+                {sellerOverviewLanguage?.project_column_amount}
               </span>
             </div>
             <div className="flex items-center">
               <span className="font-medium text-sm text-gray-700">
-                Hạn chót
+                {sellerOverviewLanguage?.project_column_deadline}
               </span>
               <FontAwesomeIcon
                 icon={faInfoCircle}
@@ -259,14 +278,14 @@ const SellerHome = () => {
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            <p className="text-sm">Chưa có dự án</p>
+            <p className="text-sm">{sellerOverviewLanguage?.no_projects}</p>
           </div>
         </div>
       </section>
 
       {/* Detailed Statistics Section */}
       <h2 className="text-xl font-semibold mb-4 text-gray-800 px-4">
-        Dữ liệu chi tiết
+        {sellerOverviewLanguage?.details_title}
       </h2>
 
       {/* Overview Chart */}
@@ -280,10 +299,10 @@ const SellerHome = () => {
           </div>
           <div>
             <h3 className="font-medium text-text_primary">
-              Tổng quan về việc thuê
+              {sellerOverviewLanguage?.hiring_overview_title}
             </h3>
             <p className="text-sm text-gray-500">
-              Lưu ý: Dữ liệu sẽ được cập nhật trong vòng 24 giờ
+              {sellerOverviewLanguage?.hiring_note}
             </p>
           </div>
         </div>
@@ -291,12 +310,14 @@ const SellerHome = () => {
         <div className="flex items-center mb-2 gap-6">
           <div className="flex items-center gap-2">
             <span className="w-4 h-4 bg-blue-300 rounded-full"></span>
-            <span className="text-sm text-gray-600">Thu nhập (đồng)</span>
+            <span className="text-sm text-gray-600">
+              {sellerOverviewLanguage?.legend_income}
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <span className="w-4 h-4 bg-gray-800 rounded-full"></span>
             <span className="text-sm text-gray-600">
-              Dự án đã hoàn thành (Dự án)
+              {sellerOverviewLanguage?.legend_completed_projects}
             </span>
           </div>
         </div>
@@ -350,11 +371,10 @@ const SellerHome = () => {
           </div>
           <div>
             <h3 className="font-medium text-text_primary">
-              Tỷ lệ truy cập và thuê{" "}
-              <span className="text-blue-500">tháng 2</span>
+              {sellerOverviewLanguage?.access_hire_rate_title}
             </h3>
             <p className="text-sm text-gray-500">
-              Lưu ý: Dữ liệu sẽ được cập nhật trong vòng 24 giờ
+              {sellerOverviewLanguage?.access_hire_note}
             </p>
           </div>
         </div>
@@ -373,7 +393,7 @@ const SellerHome = () => {
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <p className="text-sm">Chưa có dữ liệu</p>
+          <p className="text-sm">{sellerOverviewLanguage?.no_data}</p>
         </div>
       </section>
     </main>

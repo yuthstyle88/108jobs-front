@@ -1,4 +1,5 @@
 import { ProfileImage } from "@/constants/images";
+import { useLogout } from "@/hooks/useLogout";
 import { GlobalLanguage } from "@/types/language";
 import { ProfileData } from "@/types/userData";
 import { faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
@@ -16,28 +17,15 @@ import {
   faTicket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-
 type ProfileFreelancerProps = {
   data: Partial<GlobalLanguage> | null | undefined;
   user?: ProfileData;
 };
 
 const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
-  const handleLogout = async () => {
-    try {
-      localStorage.removeItem("freelancerFormData");
-      localStorage.removeItem("freelancerCurrentStep");
-      await signOut({
-        callbackUrl: "/",
-        redirect: true,
-      });
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
+  const { logout } = useLogout();
 
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-jobCard z-50 select-none">
@@ -193,7 +181,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
           <span className="text-gray-700">{data?.menu_data_management}</span>
         </Link>
         <button
-          onClick={handleLogout}
+          onClick={logout}
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 "
         >
           <FontAwesomeIcon

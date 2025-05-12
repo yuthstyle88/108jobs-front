@@ -15,8 +15,9 @@ export type LanguageDataType = Partial<
     ProfileRewardLanguage &
     ProfileNavbarAccountLanguage &
     NotFoundPageLanguage &
-    ErrorPageLanguage
->
+    ErrorPageLanguage &
+    SellerOverview
+>;
 export interface GlobalLanguage {
   label_employment_button: string;
   label_seller_center: string;
@@ -47,6 +48,21 @@ export interface GlobalLanguage {
   label_nav_bar_item_8: string;
   label_nav_bar_item_9: string;
   label_nav_bar_item_10: string;
+  freelancer_selection_title: string;
+  freelancer_selection_description: string;
+  business_service_title: string;
+  business_service_description: string;
+  company_registration_title: string;
+  company_registration_step_1: string;
+  company_registration_step_2: string;
+  company_registration_step_3: string;
+  company_registration_button: string;
+  chat_to_hire_title: string;
+  chat_to_hire_description: string;
+  chat_to_hire_button: string;
+  job_board_title: string;
+  job_board_description: string;
+  job_board_button: string;
   tittle_footer_1: string;
   tittle_footer_2: string;
   label_apply_freelancer: string;
@@ -82,6 +98,33 @@ export interface GlobalLanguage {
   menu_become_freelancer: string;
   menu_data_management: string;
   menu_logout: string;
+  button_change: string;
+  button_verify: string;
+  button_save: string;
+  sidebar_overview: string;
+  sidebar_project_management: string;
+  sidebar_account_statistics: string;
+  sidebar_my_services: string;
+  sidebar_withdraw_freelancer: string;
+  sidebar_fastwork_rewards: string;
+  sidebar_feedback: string;
+  sidebar_support_center: string;
+  greeting_user: string;
+  fastwork_rewards_button: string;
+  fastwork_rewards_subtext: string;
+  go_to_fastwork_business: string;
+  login_steps_intro: string;
+  increase_hiring_opportunity: string;
+  recruitment: string;
+  hire_opportunity_title: string;
+  job_board_freelancer_title: string;
+  job_board_desc: string;
+  job_board_side_title: string;
+  job_board_side_desc: string;
+  job_board_link_text: string;
+  ads_coming_title: string;
+  ads_section_description: string;
+  ads_feedback_link: string;
 }
 
 export interface LoginLanguage {
@@ -495,6 +538,41 @@ export type NotFoundPageLanguage = {
   back_button: string;
   recommended_section_title: string;
 };
+
 export type ErrorPageLanguage = {
   title: string;
+};
+
+export type SellerOverview = {
+  member_label: string;
+  service_fee: string;
+  accumulated_income: string;
+  accumulate_more: string;
+  upgrade_membership: string;
+  freelancer_setup_title: string;
+  freelancer_setup_steps: string;
+  step_1_title: string;
+  step_1_status: string;
+  step_2_title: string;
+  step_2_desc: string;
+  step_2_action: string;
+  step_3_title: string;
+  step_3_desc: string;
+  step_3_action: string;
+  ongoing_projects_title: string;
+  ongoing_projects_count: string;
+  project_column_name: string;
+  project_column_code: string;
+  project_column_amount: string;
+  project_column_deadline: string;
+  no_projects: string;
+  see_more: string;
+  details_title: string;
+  hiring_overview_title: string;
+  hiring_note: string;
+  legend_income: string;
+  legend_completed_projects: string;
+  access_hire_rate_title: string;
+  access_hire_note: string;
+  no_data: string;
 };
