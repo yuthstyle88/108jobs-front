@@ -1,10 +1,21 @@
 "use client";
+import Loading from "@/components/Loading";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { interpolateDouble } from "@/utils/interpolate";
 import { Info } from "lucide-react";
 import { useState } from "react";
 
 const ProjectManagement = () => {
-  const [activeTab, setActiveTab] = useState("inProgress"); // "inProgress" or "pending"
+  const [activeTab, setActiveTab] = useState("inProgress");
 
+  const { data: sellerPrjManagementLanguage,isLoading,error } = useGlobalTranslate(
+    LanguageFile.SELLER_PROJECT_MANAGEMENT
+  );
+
+  
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
   return (
     <div className="flex-1">
       {/* Main Content */}
@@ -20,7 +31,10 @@ const ProjectManagement = () => {
               }`}
               onClick={() => setActiveTab("inProgress")}
             >
-              Đang thực hiện (0)
+              {interpolateDouble(
+                sellerPrjManagementLanguage?.project_in_progress_tab || "",
+                { n: 3 }
+              )}
             </button>
             <button
               className={`px-6 py-3 font-medium ${
@@ -30,7 +44,10 @@ const ProjectManagement = () => {
               }`}
               onClick={() => setActiveTab("pending")}
             >
-              Chờ phê duyệt (0)
+              {interpolateDouble(
+                sellerPrjManagementLanguage?.project_pending_tab || "",
+                { n: 3 }
+              )}
             </button>
           </div>
         </div>
@@ -56,27 +73,43 @@ const ProjectManagement = () => {
               </div>
               <div>
                 <div className="font-medium text-black">
-                  Dự án đang thực hiện
+                  {sellerPrjManagementLanguage?.project_in_progress_title}
                 </div>
-                <div className="text-sm text-black">0 dự án</div>
+                <div className="text-sm text-black">
+                  {interpolateDouble(
+                    sellerPrjManagementLanguage?.project_in_progress_count ||
+                      "",
+                    { n: 3 }
+                  )}
+                </div>
               </div>
             </div>
 
             <div className="border border-gray-200 rounded-lg bg-white">
               <div className="grid grid-cols-5 p-4 border-b border-gray-200 bg-gray-50 text-black">
                 <div className="flex items-center">
-                  <span className="font-medium text-sm">Tên dự án</span>
+                  <span className="font-medium text-sm">
+                    {sellerPrjManagementLanguage?.project_column_title}
+                  </span>
                   <Info className="w-4 h-4 ml-1 text-gray-400" />
                 </div>
-                <div className="font-medium text-sm">Mã dự án</div>
-                <div className="font-medium text-sm flex items-center">
-                  <span>Số tiền (VND)</span>
+                <div className="font-medium text-sm">
+                  {sellerPrjManagementLanguage?.project_column_code}
                 </div>
                 <div className="font-medium text-sm flex items-center">
-                  <span>Hạn chót</span>
+                  <span>
+                    {sellerPrjManagementLanguage?.project_column_amount}
+                  </span>
+                </div>
+                <div className="font-medium text-sm flex items-center">
+                  <span>
+                    {sellerPrjManagementLanguage?.project_column_deadline}
+                  </span>
                   <Info className="w-4 h-4 ml-1 text-gray-400" />
                 </div>
-                <div className="font-medium text-sm">Bắt đầu trò chuyện</div>
+                <div className="font-medium text-sm">
+                  {sellerPrjManagementLanguage?.project_column_chat}
+                </div>
               </div>
               <div className="p-12 flex flex-col items-center justify-center">
                 <svg
@@ -92,7 +125,9 @@ const ProjectManagement = () => {
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                   />
                 </svg>
-                <div className="text-gray-500 text-center">Chưa có dự án</div>
+                <div className="text-gray-500 text-center">
+                  {sellerPrjManagementLanguage?.project_empty_text}
+                </div>
               </div>
             </div>
           </div>
@@ -119,24 +154,39 @@ const ProjectManagement = () => {
               </div>
               <div>
                 <div className="font-medium text-black">
-                  Dự án đang chờ phê duyệt
+                  {interpolateDouble(
+                    sellerPrjManagementLanguage?.project_pending_title || "",
+                    { n: 3 }
+                  )}
                 </div>
-                <div className="text-sm text-black">0 dự án</div>
+                <div className="text-sm text-black">
+                  {interpolateDouble(
+                    sellerPrjManagementLanguage?.project_in_progress_count ||
+                      "",
+                    { n: 3 }
+                  )}
+                </div>
               </div>
             </div>
 
             <div className="border border-gray-200 rounded-lg bg-white">
               <div className="grid grid-cols-5 p-4 border-b border-gray-200 bg-gray-50 text-black">
                 <div className="flex items-center">
-                  <span className="font-medium text-sm">Tên dự án</span>
+                  <span className="font-medium text-sm">
+                    {sellerPrjManagementLanguage?.project_column_title}
+                  </span>
                   <Info className="w-4 h-4 ml-1 text-gray-400" />
                 </div>
-                <div className="font-medium text-sm">Mã dự án</div>
-                <div className="font-medium text-sm flex items-center">
-                  <span>Số tiền (VND)</span>
+                <div className="font-medium text-sm">
+                  {sellerPrjManagementLanguage?.project_column_code}
                 </div>
                 <div className="font-medium text-sm flex items-center">
-                  <span>Bắt đầu trò chuyện</span>
+                  <span>
+                    {sellerPrjManagementLanguage?.project_column_amount}
+                  </span>
+                </div>
+                <div className="font-medium text-sm">
+                  {sellerPrjManagementLanguage?.project_column_chat}
                 </div>
               </div>
               <div className="p-12 flex flex-col items-center justify-center">
@@ -153,7 +203,9 @@ const ProjectManagement = () => {
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                   />
                 </svg>
-                <div className="text-gray-500 text-center">Chưa có dự án</div>
+                <div className="text-gray-500 text-center">
+                  {sellerPrjManagementLanguage?.project_empty_text}
+                </div>
               </div>
             </div>
           </div>

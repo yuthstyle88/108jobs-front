@@ -1,19 +1,21 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
-import { z } from "zod";
-import { useBasicInfoForm } from "../../account-setting/hooks/useBasicInfoForm";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { usePrivateFetch, usePrivatePut } from "@/hooks/api-hooks";
 import { API_ROUTES } from "@/api/endpoints";
-import useNotification from "@/hooks/useNotification";
-import { ERROR_CONSTANTS } from "@/constants/error";
-import { addressSchema } from "@/utils/validation/addressSchema";
+import ChangeEmailModal from "@/components/ChangeEmailModal";
+import ConfirmChangeEmailModal from "@/components/ConfirmChangeEmailModal";
 import Loading from "@/components/Loading";
 import LoadingCircle from "@/components/LoadingCircle";
+import { ERROR_CONSTANTS } from "@/constants/error";
+import { LanguageFile } from "@/constants/language";
+import { usePrivateFetch, usePrivatePut } from "@/hooks/api-hooks";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import useNotification from "@/hooks/useNotification";
+import { addressSchema } from "@/utils/validation/addressSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useBasicInfoForm } from "../../account-setting/hooks/useBasicInfoForm";
 import ZipcodeSearch from "../components/SearchZipcode";
-import ConfirmChangeEmailModal from "@/components/ConfirmChangeEmailModal";
-import ChangeEmailModal from "@/components/ChangeEmailModal";
 
 const emailSchema = z.object({
   email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์").optional(),
@@ -62,6 +64,15 @@ function normalizeAddress(address: RawAddress | undefined): AddressFormData {
 const ContactInfo = () => {
   const { profileData, isLoadingProfile, isErrorProfile, mutate } =
     useBasicInfoForm();
+
+  const { data: sellerContactLanguage } = useGlobalTranslate(
+    LanguageFile.SELLER_CONTACT_INFO
+  );
+
+   const { data: global } = useGlobalTranslate(
+    LanguageFile.GLOBAL
+  );
+
   const [isReady, setIsReady] = useState(false);
   const [defaultForeignCountry, setDefaultForeignCountry] =
     useState<string>("");
@@ -207,10 +218,10 @@ const ContactInfo = () => {
     <div className="bg-white rounded-md shadow-sm overflow-hidden">
       <div className="border-b border-gray-200 p-5">
         <h2 className="text-lg font-medium text-gray-800">
-          Thông tin liên lạc
+          {sellerContactLanguage?.contact_info_title}
         </h2>
         <p className="text-sm text-gray-500">
-          Để chúng tôi và khách hàng có thể liên hệ bạn
+          {sellerContactLanguage?.contact_info_description}
         </p>
       </div>
 
@@ -221,7 +232,7 @@ const ContactInfo = () => {
               <div className="flex gap-2 items-end w-full">
                 <div className="flex-1">
                   <label className="block text-sm text-text_primary font-semibold mb-2">
-                    อีเมลติดต่อ
+                    {sellerContactLanguage?.email_contact}
                   </label>
                   <input
                     type="email"
@@ -255,7 +266,7 @@ const ContactInfo = () => {
           <div className="mb-6 flex gap-2 items-end w-full">
             <div className="flex-1">
               <label className="block text-sm text-text_primary font-semibold mb-2">
-                อีเมลติดต่อ
+                {sellerContactLanguage?.email_contact}
               </label>
               <input
                 type="email"
@@ -270,7 +281,7 @@ const ContactInfo = () => {
                 onClick={() => setIsModalOpen(true)}
                 className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
               >
-                ยืนยัน
+                {global?.confirm_button}
               </button>
             </div>
           </div>
@@ -282,14 +293,16 @@ const ContactInfo = () => {
         >
           <div className="pb-4 pt-4 border-b">
             <h2 className="text-[16px] font-medium mb-2 text-text_primary">
-              Thông tin địa chỉ
+              {sellerContactLanguage?.address_info_title}
             </h2>
             <p className="text-gray-600 text-[14px] font-sans font-normal">
-              Để chúng tôi có thể gửi hàng và tài liệu cho bạn
+              {sellerContactLanguage?.address_info_description}
             </p>
           </div>
           <div className="pt-6 flex flex-col">
-            <h3 className="text-base font-medium mb-3">Địa chỉ hiện tại</h3>
+            <h3 className="text-base font-medium mb-3">
+              {sellerContactLanguage?.current_address}
+            </h3>
             <div className="grid grid-cols-2 gap-4 mb-4">
               {LOCATION_OPTIONS.map((option) => (
                 <label
@@ -311,14 +324,18 @@ const ContactInfo = () => {
                     }}
                     className="text-blue-600 mr-3"
                   />
-                  {option === "Thailand" ? "ประเทศไทย" : "ต่างชาติ"}
+                  {option === "Thailand"
+                    ? sellerContactLanguage?.thailand
+                    : sellerContactLanguage?.international}
                 </label>
               ))}
             </div>
 
             {locationType === "Foreign" ? (
               <>
-                <label className="block text-sm mb-1">เลือกประเทศ</label>
+                <label className="block text-sm mb-1">
+                  {sellerContactLanguage?.select_country}
+                </label>
                 <select
                   {...register("country")}
                   value={country}
@@ -417,9 +434,9 @@ const ContactInfo = () => {
                 className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
               >
                 {isSubmitting || isUpdateMuting ? (
-                  <span>กำลังบันทึก...</span>
+                  <span>{global?.button_save}...</span>
                 ) : (
-                  "บันทึก"
+                  global?.button_save
                 )}
               </button>
             </div>

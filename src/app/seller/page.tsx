@@ -1,5 +1,6 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
+import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
@@ -43,9 +44,14 @@ const SellerHome = () => {
     API_ROUTES.profile.get_profile
   );
 
-  const { data: sellerOverviewLanguage } = useGlobalTranslate(
-    LanguageFile.SELLER_OVERVIEW
-  );
+  const {
+    data: sellerOverviewLanguage,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.SELLER_OVERVIEW);
+
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
 
   return (
     <main className="min-h-screen">

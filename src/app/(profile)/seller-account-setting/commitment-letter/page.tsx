@@ -1,24 +1,38 @@
 "use client";
-import {
-    Upload
-} from "lucide-react";
+import Error from "@/app/error";
+import Loading from "@/components/Loading";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { Upload } from "lucide-react";
 import Link from "next/link";
 
 const CommitmentLetter = () => {
+  const {
+    data: sellerCommitmentLanguage,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.SELLER_COMMITMENT_LETTER);
+
+ const { data: global } = useGlobalTranslate(
+     LanguageFile.GLOBAL
+   );
 
   const handleSave = () => {
     console.log("Saving account settings");
     // Logic to save data would go here
   };
 
+  if (isLoading) return <Loading />;
+  if (error) return <Error />;
+
   return (
     <div className="bg-white rounded-md shadow-sm overflow-hidden">
       <div className="border-b border-gray-200 p-5">
         <h2 className="text-lg font-medium text-gray-800">
-          Thông tin khai báo thuế
+          {sellerCommitmentLanguage?.tax_info_title}
         </h2>
         <p className="text-sm text-gray-500">
-          Để nhận thanh toán thông qua hệ thống Fastlance
+          {sellerCommitmentLanguage?.tax_info_description}
         </p>
       </div>
 
@@ -36,15 +50,14 @@ const CommitmentLetter = () => {
             </div>
             <div className="ml-4">
               <h3 className="text-base font-medium text-gray-800">
-                Nhập mã số thuế
+                {sellerCommitmentLanguage?.step_1_title}
               </h3>
               <p className="text-sm text-gray-500 mb-2">
-                Sau khi được xác minh, thông tin này không thể thay đổi (vui
-                lòng liên hệ đội ngũ hỗ trợ)
+                {sellerCommitmentLanguage?.step_1_note}
               </p>
               <input
                 type="text"
-                placeholder="Vui lòng nhập thông tin"
+                placeholder={sellerCommitmentLanguage?.step_1_placeholder}
                 className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -56,12 +69,12 @@ const CommitmentLetter = () => {
             </div>
             <div className="ml-4">
               <h3 className="text-base font-medium text-gray-800">
-                Tải xuống bản cam kết
+                {sellerCommitmentLanguage?.step_2_title}
               </h3>
               <p className="text-sm text-gray-500 mb-2">
-                Bạn có thể tải xuống tài liệu tại đây{" "}
+                {sellerCommitmentLanguage?.step_2_note} {""}
                 <Link href="#" className="text-blue-600 font-medium">
-                  Bản cam kết
+                  {sellerCommitmentLanguage?.step_2_link}
                 </Link>
               </p>
             </div>
@@ -73,11 +86,10 @@ const CommitmentLetter = () => {
             </div>
             <div className="ml-4">
               <h3 className="text-base font-medium text-gray-800">
-                Đọc ký và ký tài liệu
+                {sellerCommitmentLanguage?.step_3_title}
               </h3>
               <p className="text-sm text-gray-500 mb-2">
-                Chữ ký số không được chấp nhận; tài liệu phải được ký bằng chữ
-                ký viết tay
+                {sellerCommitmentLanguage?.step_3_note}
               </p>
             </div>
           </li>
@@ -88,15 +100,14 @@ const CommitmentLetter = () => {
             </div>
             <div className="ml-4">
               <h3 className="text-base font-medium text-gray-800">
-                Chụp hình tài liệu và tải lên thông qua Fastlance
+                {sellerCommitmentLanguage?.step_4_title}
               </h3>
               <p className="text-sm text-gray-500 mb-2">
-                Bạn có thể tải lên các tệp có định dạng .pdf, .png hoặc .jpg với
-                dung lượng tối đa 10MB
+                {sellerCommitmentLanguage?.step_4_note}
               </p>
               <button className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                 <Upload className="w-5 h-5 mr-2" />
-                Tải lên tài liệu
+                {sellerCommitmentLanguage?.upload_button}
               </button>
             </div>
           </li>
@@ -107,7 +118,7 @@ const CommitmentLetter = () => {
             onClick={handleSave}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            Lưu
+            {global?.button_save}
           </button>
         </div>
       </div>
