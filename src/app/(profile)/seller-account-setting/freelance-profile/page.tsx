@@ -4,7 +4,9 @@ import Error from "@/app/error";
 import ImageUploadModal from "@/components/AvatarUploadModal";
 import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
 import { usePrivateImagePost } from "@/hooks/api-hooks";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { ImageUploadResponse } from "@/types/image";
 import Image from "next/image";
 import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
@@ -17,6 +19,10 @@ const AccountSettings = () => {
 
   const { profileData, isLoadingProfile, isErrorProfile, mutate } =
     useBasicInfoForm();
+
+  const { data: sellerProfileLanguage } = useGlobalTranslate(
+    LanguageFile.SELLER_FREELANCER_PROFILE
+  );
 
   const {
     selectedImage,
@@ -57,10 +63,10 @@ const AccountSettings = () => {
     >
       <div className="border-b border-gray-200 p-5">
         <h2 className="text-lg font-medium text-gray-800">
-          Thông tin tài khoản freelancer
+          {sellerProfileLanguage?.freelancer_account_info_title}
         </h2>
         <p className="text-sm text-gray-500">
-          Thiết lập thông tin cơ bản của bạn
+          {sellerProfileLanguage?.freelancer_account_info_subtitle}
         </p>
       </div>
 
@@ -69,15 +75,14 @@ const AccountSettings = () => {
           <div className="md:w-2/3">
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Username
+                {sellerProfileLanguage?.username_label}
               </label>
               <p className="text-xs text-gray-500 mb-2">
-                Username sẽ hiển thị trong URL, chỉnh sửa username có thể ảnh
-                hưởng đến kết quả tìm kiếm trên Google
+                {sellerProfileLanguage?.username_note}
               </p>
               <div className="flex">
                 <span className="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                  Fastlance.vn/user/
+                  Fastwork.co/user/
                 </span>
                 <input
                   {...register("username")}
@@ -93,10 +98,10 @@ const AccountSettings = () => {
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Tên hiển thị trên hệ thống
+                {sellerProfileLanguage?.display_name_label}
               </label>
               <p className="text-xs text-gray-500 mb-2 ">
-                Nên sử dụng tên thật để tăng độ uy tín
+                {sellerProfileLanguage?.display_name_note}
               </p>
               <input
                 {...register("display_name")}
@@ -111,11 +116,10 @@ const AccountSettings = () => {
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Loại freelancer
+                {sellerProfileLanguage?.freelancer_type_label}
               </label>
               <p className="text-xs text-gray-500 mb-2">
-                Chỉ sử dụng để cài thiện hệ thống, nếu bạn còn là sinh viên, vui
-                lòng chọn Bán thời gian
+                {sellerProfileLanguage?.freelancer_type_note}
               </p>
               <div className="flex space-x-4">
                 <label
@@ -129,7 +133,9 @@ const AccountSettings = () => {
                     value="Parttime"
                     {...register("freelancer_type")}
                   />
-                  <span className="text-text_primary">Part-time</span>
+                  <span className="text-text_primary">
+                    {sellerProfileLanguage?.part_time}
+                  </span>
                 </label>
                 <label
                   className={`flex items-center border rounded-md px-4 py-2 cursor-pointer ${
@@ -142,7 +148,9 @@ const AccountSettings = () => {
                     value="Fulltime"
                     className="mr-2 text-third"
                   />
-                  <span className="text-text_primary">Full-time</span>
+                  <span className="text-text_primary">
+                    {sellerProfileLanguage?.full_time}
+                  </span>
                 </label>
               </div>
             </div>
@@ -191,7 +199,7 @@ const AccountSettings = () => {
 
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Về freelancer
+            {sellerProfileLanguage?.about_freelancer_label}
           </label>
           <textarea
             {...register("bio")}
@@ -208,9 +216,9 @@ const AccountSettings = () => {
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting || isUpdateMuting || isUploadMuting ? (
-              <span>บันทึก...</span>
+              <span>{sellerProfileLanguage?.save_button}...</span>
             ) : (
-              "บันทึก"
+              sellerProfileLanguage?.save_button
             )}
           </button>
         </div>

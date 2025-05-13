@@ -2,6 +2,7 @@ import { ProfileImage } from "@/constants/images";
 import { useLogout } from "@/hooks/useLogout";
 import { GlobalLanguage } from "@/types/language";
 import { ProfileData } from "@/types/userData";
+import { interpolateElement } from "@/utils/interpolateElement";
 import { faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
 import {
   faBarsProgress,
@@ -38,7 +39,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
                 alt="avatar"
                 className="rounded-full"
                 width={500}
-            height={500}
+                height={500}
               />
             </div>
             <div>
@@ -60,8 +61,13 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
       <Link href="/seller" target="_blank">
         <div className="relative">
           <div className="text-[13px] font-light text-white relative hover:bg-black/20 transition-all duration-150 ease-in-out z-10 px-6 py-3">
-            Freelance cấp độ
-            <span className="font-semibold text-[0.875rem] ml-1">Member</span>
+            {interpolateElement(data?.label_freelancer_level || "", {
+              level: (
+                <span className="font-semibold text-[0.875rem] ml-1">
+                  Member
+                </span>
+              ),
+            })}
             <FontAwesomeIcon
               icon={faChevronRight}
               className="text-[14px] ml-1"
@@ -121,7 +127,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faMoneyBill1}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">Seller Center</span>
+          <span className="text-gray-700">{data?.menu_seller_center}</span>
         </Link>
         <Link
           href="/job-board"
@@ -143,7 +149,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faGift}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">Rewards</span>
+          <span className="text-gray-700">{data?.menu_rewards}</span>
           <span className="ml-[-6px] px-3 py-1 text-xs text-white bg-third rounded">
             New
           </span>
@@ -157,7 +163,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faBriefcase}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">My job</span>
+          <span className="text-gray-700">{data?.menu_my_job}</span>
         </Link>
         <Link
           href="/seller/withdrawal"
@@ -168,7 +174,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faMoneyBillTrendUp}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">Accumulate</span>
+          <span className="text-gray-700">{data?.menu_accumulate}</span>
         </Link>
         <Link
           href="/consent-management"

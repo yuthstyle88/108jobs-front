@@ -4,6 +4,7 @@ import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { useLogout } from "@/hooks/useLogout";
 import { ProfileData } from "@/types/userData";
 import { interpolate } from "@/utils/interpolate";
 import { faBell, faComment } from "@fortawesome/free-solid-svg-icons";
@@ -11,8 +12,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LogOut, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import LanguageDropdown from "../LanguageDropDown";
 import Loading from "../Loading";
-import { useLogout } from "@/hooks/useLogout";
 
 const SellerHeader = () => {
   const { data: globalLanguageData } = useGlobalTranslate(LanguageFile.GLOBAL);
@@ -63,10 +64,13 @@ const SellerHeader = () => {
               className="text-[20px] text-third "
             />
           </button>
+          <div className="p-2">
+            <LanguageDropdown />
+          </div>
           <div className="relative" ref={profileMenuRef}>
             <button
               onClick={toggleProfileMenu}
-              className="w-8 h-8 bg-black rounded-full overflow-hidden"
+              className="w-8 h-8 bg-black rounded-full overflow-hidden  flex justify-center items-center"
             >
               {/* Avatar image can be added here */}
             </button>
@@ -80,7 +84,7 @@ const SellerHeader = () => {
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <User className="w-4 h-4 mr-3 text-gray-500" />
-                    <span>Hồ sơ freelancer</span>
+                    <span>{globalLanguageData?.freelancer_profile}</span>
                   </Link>
                   <Link
                     href="/seller-account-setting/freelance-profile"

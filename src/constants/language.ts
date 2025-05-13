@@ -20,6 +20,18 @@ export enum LanguageFile {
   ERROR = "error",
   NOT_FOUND = "not_found",
   SELLER_OVERVIEW = "seller",
+  SELLER_PROJECT_MANAGEMENT = "seller-project-management",
+  SELLER_ACCOUNT_STATISTICS = "seller-account-statistics",
+  SELLER_MY_SERVICE = "seller-my-service",
+  SELLER_WITHDRAWAL = "seller-withdrawal",
+  SELLER_CREATE_JOBS = "manage-product-create",
+  SELLER_FREELANCER_PROFILE = "seller-profile",
+  SELLER_PERSONAL_INFO = "seller-personal-info",
+  SELLER_CONTACT_INFO = "seller-contact-info",
+  SELLER_BANK_ACCOUNT = "seller-bank-account",
+  SELLER_COMMITMENT_LETTER = "seller-commitment-letter",
+  SELLER_DOCUMENT_INFO = "seller-document-info",
+  BREAD_CRUMB = "breadcrumb",
 }
 
 export const LANGUAGES = {

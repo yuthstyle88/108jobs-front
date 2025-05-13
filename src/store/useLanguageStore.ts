@@ -18,29 +18,53 @@ import {
   NotFoundPageLanguage,
   ErrorPageLanguage,
   SellerOverview,
+  SellerProjectManagement,
+  SellerAccountStatistics,
+  SellerMyService,
+  SellerWithdrawal,
+  SellerCreateJobs,
+  SellerFreelanceProfile,
+  SellerPersonalInfo,
+  SellerContactInfo,
+  SellerBankAccount,
+  SellerCommitmentLetter,
+  SellerDocumentInfo,
+  BreadCrumb,
 } from "@/types/language";
 import { create } from "zustand";
 
 // Raw JSON từ mỗi file
 export type LanguageDataType = Partial<
   GlobalLanguage &
-  LoginLanguage &
-  HomeLanguage &
-  ProfileCoinLanguage &
-  ProfileBasicInfoLanguage &
-  ProfileCompanyInfoLanguage &
-  ProfileIndividualLanguage &
-  ProfileContactInfoLanguage &
-  ProfileChatLanguage &
-  ProfileApplyLanguage &
-  ProfileCouponLanguage &
-  ProfileConsentLanguage &
-  ProfileJobBoardLanguage &
-  ProfileRewardLanguage &
-  ProfileNavbarAccountLanguage &
-  NotFoundPageLanguage &
-  ErrorPageLanguage &
-  SellerOverview
+    LoginLanguage &
+    HomeLanguage &
+    ProfileCoinLanguage &
+    ProfileBasicInfoLanguage &
+    ProfileCompanyInfoLanguage &
+    ProfileIndividualLanguage &
+    ProfileContactInfoLanguage &
+    ProfileChatLanguage &
+    ProfileApplyLanguage &
+    ProfileCouponLanguage &
+    ProfileConsentLanguage &
+    ProfileJobBoardLanguage &
+    ProfileRewardLanguage &
+    ProfileNavbarAccountLanguage &
+    NotFoundPageLanguage &
+    ErrorPageLanguage &
+    SellerOverview &
+    SellerProjectManagement &
+    SellerAccountStatistics &
+    SellerMyService &
+    SellerWithdrawal &
+    SellerCreateJobs &
+    SellerFreelanceProfile &
+    SellerPersonalInfo &
+    SellerContactInfo &
+    SellerBankAccount &
+    SellerCommitmentLetter &
+    SellerDocumentInfo &
+    BreadCrumb
 >;
 
 // Mỗi file lưu ngôn ngữ hiện tại + data
