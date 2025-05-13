@@ -14,6 +14,8 @@ import { useImagePreviewOnly } from "../hooks/useImagePreviewOnly";
 import { usePersonalInfoForm } from "../hooks/usePersonalInfoForm";
 import { InputError } from "@/components/ui/InputError";
 import ErrorModal from "@/components/ui/ErrorModal";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const PersonalInfo = () => {
   const { trigger: uploadImage, isMutating: isUploadMuting } =
@@ -21,6 +23,15 @@ const PersonalInfo = () => {
 
   const { profileData, isLoadingProfile, isErrorProfile, mutate } =
     useBasicInfoForm();
+
+  const { data: sellerPersonalInfoLanguage } = useGlobalTranslate(
+      LanguageFile.SELLER_PERSONAL_INFO
+    );
+
+    const { data: global } = useGlobalTranslate(
+        LanguageFile.GLOBAL
+      );
+
   const { days, months, years } = useDateOptions();
   const frontInputRef = useRef<HTMLInputElement>(null);
   const backInputRef = useRef<HTMLInputElement>(null);
@@ -67,9 +78,9 @@ const PersonalInfo = () => {
     >
       <div className="border-b border-gray-200 p-5">
         <h2 className="text-lg font-medium text-gray-800">
-          Thông tin CMND/CCCD
+          {sellerPersonalInfoLanguage?.id_info_title}
         </h2>
-        <p className="text-sm text-gray-500">Dùng để xác nhận danh tính</p>
+        <p className="text-sm text-gray-500">{sellerPersonalInfoLanguage?.id_info_description}</p>
       </div>
 
       <div className="p-6">
@@ -80,9 +91,9 @@ const PersonalInfo = () => {
           {/* ID front */}
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
             <h4 className="text-sm font-medium mb-1 text-text_primary">
-              Ảnh CMND/CCCD
+              {sellerPersonalInfoLanguage?.front_id_image}
             </h4>
-            <p className="text-xs text-gray-500 mb-3">Ảnh cần rõ nét</p>
+            <p className="text-xs text-gray-500 mb-3">{sellerPersonalInfoLanguage?.image_hint}</p>
             <div className="relative border border-gray-200 rounded-lg overflow-hidden mb-3">
               {frontPreview ? (
                 <>
@@ -125,16 +136,16 @@ const PersonalInfo = () => {
               onClick={() => frontInputRef.current?.click()}
               className="w-full py-2 text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              {frontPreview ? "Thay đổi ảnh" : "Tải lên ảnh"}
+              {frontPreview ?  sellerPersonalInfoLanguage?.change_image : sellerPersonalInfoLanguage?.change_image}
             </button>
           </div>
 
           {/* ID back */}
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
             <h4 className="text-sm font-medium mb-1 text-text_primary">
-              Ảnh CMND/CCCD mặt sau
+              {sellerPersonalInfoLanguage?.back_id_image}
             </h4>
-            <p className="text-xs text-gray-500 mb-3">Ảnh cần rõ nét</p>
+            <p className="text-xs text-gray-500 mb-3">{sellerPersonalInfoLanguage?.image_hint}</p>
             <div className="relative border border-gray-200 rounded-lg overflow-hidden mb-3">
               {backPreview ? (
                 <>
@@ -177,7 +188,7 @@ const PersonalInfo = () => {
               onClick={() => backInputRef.current?.click()}
               className="w-full py-2 text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              {backPreview ? "Thay đổi ảnh" : "Tải lên ảnh"}
+              {backPreview ? sellerPersonalInfoLanguage?.change_image : sellerPersonalInfoLanguage?.change_image}
             </button>
           </div>
         </div>
@@ -187,7 +198,7 @@ const PersonalInfo = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tên đệm và tên
+              {sellerPersonalInfoLanguage?.first_name}
             </label>
             <input
               {...register("name")}
@@ -197,7 +208,7 @@ const PersonalInfo = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Họ
+              {sellerPersonalInfoLanguage?.last_name}
             </label>
             <input
               {...register("surname")}
@@ -209,7 +220,7 @@ const PersonalInfo = () => {
 
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Số CMND/CCCD
+            {sellerPersonalInfoLanguage?.id_number}
           </label>
           <input
             {...register("card_number")}
@@ -220,7 +231,7 @@ const PersonalInfo = () => {
 
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Ngày sinh
+            {sellerPersonalInfoLanguage?.date_of_birth}
           </label>
           <div className="grid grid-cols-3 gap-4">
             <select
@@ -228,7 +239,7 @@ const PersonalInfo = () => {
               className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
             >
               <option disabled value="Day">
-                Day
+                วัน
               </option>
               {days.map((day) => (
                 <option key={day} value={day}>
@@ -241,7 +252,7 @@ const PersonalInfo = () => {
               className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
             >
               <option disabled value="Month">
-                Month
+                เดือน
               </option>
               {months.map((month) => (
                 <option key={month} value={month}>
@@ -254,7 +265,7 @@ const PersonalInfo = () => {
               className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
             >
               <option disabled value="Year">
-                Year
+                ปี
               </option>
               {years.map((year) => (
                 <option key={year} value={year}>
@@ -274,15 +285,15 @@ const PersonalInfo = () => {
 
         <div className="mb-6">
           <h3 className="text-sm font-medium text-gray-700 mb-2">
-            Địa chỉ theo CMND/CCCD
+            {sellerPersonalInfoLanguage?.address_info_title}
           </h3>
           <p className="text-sm text-gray-500 mb-2">
-            Vui lòng nhập thông tin trùng với CMND/CCCD của bạn
+            {sellerPersonalInfoLanguage?.address_info_note}
           </p>
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Chi tiết địa chỉ
+              {sellerPersonalInfoLanguage?.address_detail}
             </label>
             <input
               {...register("card_address_details")}
@@ -294,7 +305,7 @@ const PersonalInfo = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Mã bưu điện
+               {sellerPersonalInfoLanguage?.postal_code}
               </label>
               <input
                 {...register("card_zip_code")}
@@ -304,7 +315,7 @@ const PersonalInfo = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Xã/Phường
+                {sellerPersonalInfoLanguage?.sub_district}
               </label>
               <input
                 {...register("card_subdistrict_or_district")}
@@ -319,7 +330,7 @@ const PersonalInfo = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Quận/Huyện
+                {sellerPersonalInfoLanguage?.district}
               </label>
               <input
                 {...register("card_district_or_subdistrict")}
@@ -331,7 +342,7 @@ const PersonalInfo = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Tỉnh/Thành phố
+                {sellerPersonalInfoLanguage?.province}
               </label>
               <input
                 {...register("card_province")}
@@ -348,9 +359,9 @@ const PersonalInfo = () => {
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             {isSubmitting || isUpdateMuting || isUploadMuting ? (
-              <span>บันทึก...</span>
+              <span>{global?.button_save}...</span>
             ) : (
-              "บันทึก"
+              global?.button_save
             )}
           </button>
         </div>

@@ -62,7 +62,7 @@ const Header = ({ type }: BgProps) => {
           >
             <input
               type="text"
-              placeholder="Find freelancers..."
+              placeholder={`${globalLanguageData?.hint_text_header_search}...`}
               className="focus:outline-none rounded-[20px] border-2-white px-5 text-sm font-mono w-full"
             />
             <FontAwesomeIcon

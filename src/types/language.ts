@@ -16,7 +16,19 @@ export type LanguageDataType = Partial<
     ProfileNavbarAccountLanguage &
     NotFoundPageLanguage &
     ErrorPageLanguage &
-    SellerOverview
+    SellerOverview &
+    SellerProjectManagement &
+    SellerAccountStatistics &
+    SellerMyService &
+    SellerWithdrawal &
+    SellerCreateJobs &
+    SellerFreelanceProfile &
+    SellerPersonalInfo &
+    SellerContactInfo &
+    SellerBankAccount &
+    SellerCommitmentLetter &
+    SellerDocumentInfo &
+    BreadCrumb
 >;
 export interface GlobalLanguage {
   label_employment_button: string;
@@ -90,17 +102,28 @@ export interface GlobalLanguage {
   label_notification: string;
   label_empty_notification: string;
   label_view_profile: string;
+  label_freelancer_level: string;
   menu_account_settings: string;
   menu_messages_orders: string;
   menu_coupons: string;
   menu_favorite_jobs: string;
+  menu_seller_center: string;
   menu_job_board: string;
+  menu_rewards: string;
+  menu_my_job: string;
   menu_become_freelancer: string;
+  menu_accumulate: string;
   menu_data_management: string;
   menu_logout: string;
   button_change: string;
   button_verify: string;
   button_save: string;
+  button_submit: string;
+  button_edit: string;
+  button_remove: string;
+  button_delete: string;
+  button_cancel: string;
+  button_confirm: string;
   sidebar_overview: string;
   sidebar_project_management: string;
   sidebar_account_statistics: string;
@@ -125,6 +148,18 @@ export interface GlobalLanguage {
   ads_coming_title: string;
   ads_section_description: string;
   ads_feedback_link: string;
+  hiring: string;
+  for_business_customers: string;
+  freelancer_account_section: string;
+  freelancer_account_info: string;
+  contact_info: string;
+  id_info: string;
+  tax_info: string;
+  bank_info: string;
+  client_document_section: string;
+  client_document_info: string;
+  save_success: string;
+  freelancer_profile: string;
 }
 
 export interface LoginLanguage {
@@ -575,4 +610,206 @@ export type SellerOverview = {
   access_hire_rate_title: string;
   access_hire_note: string;
   no_data: string;
+};
+export type SellerProjectManagement = {
+  project_in_progress_tab: string;
+  project_pending_tab: string;
+  project_in_progress_title: string;
+  project_pending_title: string;
+  project_in_progress_count: string;
+  project_column_title: string;
+  project_column_code: string;
+  project_column_amount: string;
+  project_column_deadline: string;
+  project_column_chat: string;
+  project_empty_text: string;
+};
+export type SellerAccountStatistics = {
+  account_statistics_title: string;
+  online_activity_title: string;
+  online_activity_hint: string;
+  find_jobs_button: string;
+  average_response_time: string;
+  no_data_available: string;
+  service_statistics_title: string;
+  service_statistics_note: string;
+  start_selling_button: string;
+};
+export type SellerMyService = {
+  service_fee_title: string;
+  service_fee_description: string;
+  service_fee_button: string;
+  my_services_title: string;
+  approval_note: string;
+  add_new_service: string;
+  column_service: string;
+  column_fee_percent: string;
+  column_status: string;
+  column_visibility: string;
+  column_manage: string;
+  status_pending: string;
+  status_draft: string;
+  status_rejected: string;
+  status_approved: string;
+};
+export type SellerWithdrawal = {
+  my_income: string;
+  accumulated_balance: string;
+  verification_info_title: string;
+  verification_id: string;
+  verification_tax: string;
+  verification_bank: string;
+  payment_steps: string;
+  transaction_history: string;
+  transfer_note: string;
+  column_withdrawal_code: string;
+  column_closing_date: string;
+  column_transfer_date: string;
+  column_account: string;
+  column_bank: string;
+  column_amount: string;
+  column_status: string;
+  column_note: string;
+  no_transactions: string;
+  check_your_info: string;
+  add_data: string;
+};
+export type SellerCreateJobs = {
+  service_info_title: string;
+  service_category_label: string;
+  sub_service_label: string;
+  select_service_category_placeholder: string;
+  select_sub_service_placeholder: string;
+  select_service_category_error: string;
+  select_sub_service_error: string;
+  service_title_label: string;
+  service_title_placeholder: string;
+  service_title_error: string;
+  service_title_guide_header: string;
+  service_title_guide_1: string;
+  service_title_guide_2: string;
+  service_description_label: string;
+  service_description_placeholder: string;
+  service_description_error: string;
+  next_button: string;
+  package_title: string;
+  package_name_label: string;
+  package_name_error: string;
+  package_description_label: string;
+  package_description_error: string;
+  package_price_label: string;
+  package_price_error: string;
+  package_delivery_label: string;
+  add_package: string;
+  back_button: string;
+  upload_cover_title: string;
+  upload_cover_instruction_title: string;
+  upload_cover_instruction_1: string;
+  upload_cover_instruction_2: string;
+  upload_cover_error: string;
+  upload_gallery_error: string;
+  workflow_title: string;
+  workflow_description_label: string;
+  workflow_description_placeholder: string;
+  workflow_description_error: string;
+  add_step: string;
+  confirmation_title: string;
+  confirmation_notice_1: string;
+  confirmation_notice_2: string;
+  confirmation_check_1: string;
+  confirmation_check_2: string;
+  confirmation_check_3: string;
+  confirmation_error: string;
+  submission_success: string;
+};
+
+export type SellerFreelanceProfile = {
+  freelancer_account_info_title: string;
+  freelancer_account_info_subtitle: string;
+  username_label: string;
+  username_note: string;
+  display_name_label: string;
+  display_name_note: string;
+  freelancer_type_label: string;
+  freelancer_type_note: string;
+  part_time: string;
+  full_time: string;
+  about_freelancer_label: string;
+  save_button: string;
+  username_min_length_error: string;
+  display_name_min_length_error: string;
+};
+
+export type SellerPersonalInfo = {
+  id_info_title: string;
+  id_info_description: string;
+  front_id_image: string;
+  back_id_image: string;
+  image_hint: string;
+  change_image: string;
+  first_name: string;
+  last_name: string;
+  id_number: string;
+  date_of_birth: string;
+  address_info_title: string;
+  address_info_note: string;
+  address_detail: string;
+  postal_code: string;
+  sub_district: string;
+  district: string;
+  province: string;
+};
+
+export type SellerContactInfo = {
+  contact_info_title: string;
+  contact_info_description: string;
+  email_contact: string;
+  address_info_title: string;
+  address_info_description: string;
+  current_address: string;
+  thailand: string;
+  international: string;
+  select_country: string;
+};
+
+export type SellerBankAccount = {
+  bank_info_title: string;
+  bank_info_description: string;
+  bank_qr_upload_title: string;
+  bank_qr_upload_note: string;
+  upload_button: string;
+  bank_name_label: string;
+  bank_name_placeholder: string;
+  bank_account_number_label: string;
+  bank_account_number_placeholder: string;
+};
+export type SellerCommitmentLetter = {
+  tax_info_title: string;
+  tax_info_description: string;
+  step_1_title: string;
+  step_1_note: string;
+  step_1_placeholder: string;
+  step_2_title: string;
+  step_2_note: string;
+  step_2_link: string;
+  step_3_title: string;
+  step_3_note: string;
+  step_4_title: string;
+  step_4_note: string;
+  upload_button: string;
+};
+export type SellerDocumentInfo = {
+  title: string;
+  subtitle: string;
+  firstname_label: string;
+  firstname_placeholder: string;
+  lastname_label: string;
+  lastname_placeholder: string;
+};
+export type BreadCrumb = {
+  freelancer_infor_breadcrumb: string;
+  contact_info_breadcrumb: string;
+  id_card_information_breadcrumb: string;
+  commitment_letter_breadcrumb: string;
+  bank_account_information_breadcrumb: string;
 };

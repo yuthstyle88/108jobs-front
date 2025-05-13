@@ -1,15 +1,19 @@
 "use client";
 import { API_ROUTES_SELLER } from "@/api/endpoints";
+import Loading from "@/components/Loading";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import { SellerImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
 import { usePrivateDelete, usePrivateFetch } from "@/hooks/api-hooks";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { JobListResponse } from "@/types/job";
-import { Eye, Info, MessageSquare, Pencil, Plus, Trash2 } from "lucide-react";
+import { interpolateDouble } from "@/utils/interpolate";
+import { Eye, Info, Pencil, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import JobCreatedStatus from "./_components/JobCreatedStatus";
 import { useState } from "react";
 import ConfirmDeleteModal from "./_components/ConfirmDeleteModal";
+import JobCreatedStatus from "./_components/JobCreatedStatus";
 
 const MyServices = () => {
   const {
@@ -17,6 +21,14 @@ const MyServices = () => {
     isLoading,
     mutate,
   } = usePrivateFetch<JobListResponse>(API_ROUTES_SELLER.job.get_job);
+
+  const {
+    data: sellerMyServiceLanguage,
+    isLoading: languageLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.SELLER_MY_SERVICE);
+
+  const lengthOfJobs = jobsData?.jobs.length || 0;
 
   const [selectedJob, setSelectedJob] = useState<{
     id: string;
@@ -42,19 +54,22 @@ const MyServices = () => {
     }
   };
 
+  if (isLoading || languageLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
+
   return (
     <div className="p-4 md:p-0">
       <div className="my-service-gradient rounded-lg shadow-sm p-6 mb-8 flex justify-between items-center hover:shadow-jobCard duration-300">
         <div className="flex-1">
           <h2 className="text-lg font-medium mb-2 text-text_primary">
-            Tính phí dịch vụ
+            {sellerMyServiceLanguage?.service_fee_title}
           </h2>
           <p className="text-gray-600 text-sm">
-            Phí dịch vụ được tính 15% trên giá trị mà freelancer nhận được
+            {sellerMyServiceLanguage?.service_fee_description}
           </p>
           <Link href="/content/commission">
             <button className="mt-4 bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded">
-              Nhập để tính toán
+              {sellerMyServiceLanguage?.service_fee_button}
             </button>
           </Link>
         </div>
@@ -69,12 +84,18 @@ const MyServices = () => {
 
       <div className="mb-6 flex justify-between items-center">
         <h2 className="text-xl font-medium text-text_primary">
-          Dịch vụ của tôi ({jobsData?.jobs.length || 0}/5)
+          {interpolateDouble(sellerMyServiceLanguage?.my_services_title || "", {
+            n: lengthOfJobs || 0,
+            max: 5,
+          })}
         </h2>
         <Link target="_blank" href="/manage-product/create">
-          <button className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+          <button
+            disabled={lengthOfJobs >= 5}
+            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium disabled:bg-blue-300 disabled:cursor-not-allowed"
+          >
             <Plus className="w-4 h-4" />
-            Thêm dịch vụ mới
+            {sellerMyServiceLanguage?.add_new_service}
           </button>
         </Link>
       </div>
@@ -83,12 +104,7 @@ const MyServices = () => {
         <Info className="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
         <div className="text-sm">
           <span className="text-gray-700">
-            Đối với hồ sơ dịch vụ đang ở trạng thái{" "}
-          </span>
-          <span className="text-yellow-600 font-medium">Đang chờ duyệt</span>
-          <span className="text-gray-700">
-            , chúng tôi sẽ xem xét trong vòng 2 ngày làm việc (sau khi tài khoản
-            người dùng được phê duyệt)
+            {sellerMyServiceLanguage?.approval_note}
           </span>
         </div>
       </div>
@@ -97,11 +113,15 @@ const MyServices = () => {
         <table className="min-w-full table-auto text-left text-sm">
           <thead className="bg-gray-50 text-gray-700 font-medium">
             <tr>
-              <th className="p-4">Dịch vụ</th>
-              <th className="p-4">Phí dịch vụ (%)</th>
-              <th className="p-4">Trạng thái dịch vụ</th>
-              <th className="p-4">Hiển thị dịch vụ</th>
-              <th className="p-4">Quản lý</th>
+              <th className="p-4">{sellerMyServiceLanguage?.column_service}</th>
+              <th className="p-4">
+                {sellerMyServiceLanguage?.column_fee_percent}
+              </th>
+              <th className="p-4">{sellerMyServiceLanguage?.column_status}</th>
+              <th className="p-4">
+                {sellerMyServiceLanguage?.column_visibility}
+              </th>
+              <th className="p-4">{sellerMyServiceLanguage?.column_manage}</th>
             </tr>
           </thead>
           <tbody>
@@ -130,7 +150,10 @@ const MyServices = () => {
                   </td>
                   <td className="p-4 text-text_primary">15%</td>
                   <td className="p-4">
-                    <JobCreatedStatus status={job.status} />
+                    <JobCreatedStatus
+                      languageMap={sellerMyServiceLanguage}
+                      status={job.status}
+                    />
                   </td>
                   <td className="p-4">
                     <Eye
@@ -178,7 +201,10 @@ const MyServices = () => {
                 className="relative border border-gray-200 rounded-lg px-4 pt-4 bg-white shadow-sm"
               >
                 <div className="absolute top-2 right-2">
-                  <JobCreatedStatus status={job.status} />
+                  <JobCreatedStatus
+                    status={job.status}
+                    languageMap={sellerMyServiceLanguage}
+                  />
                 </div>
 
                 <div className="flex flex-col gap-3 mb-2">
@@ -197,13 +223,13 @@ const MyServices = () => {
                 </div>
 
                 <div className="inline-block bg-blue-100 text-blue-600 text-xs font-medium px-2 py-1 rounded">
-                  Service fees 15%
+                  {sellerMyServiceLanguage?.column_fee_percent} 15%
                 </div>
 
                 <div className="pb-4 border-b-1 border-border_secondary w-full font-sans">
                   <div className="text-sm text-text_secondary flex flex-row justify-between items-center pt-4">
-                    <p>Set up an auto reply message</p>
-                    <MessageSquare className="w-4 h-4 text-text_secondary" />
+                    <p>{sellerMyServiceLanguage?.column_visibility}</p>
+                    <Eye className="w-4 h-4 text-text_secondary" />
                   </div>
 
                   <Link
@@ -211,7 +237,7 @@ const MyServices = () => {
                     href={`/manage-product/${job.id}`}
                     className="text-sm text-text_secondary flex flex-row justify-between items-center pt-4"
                   >
-                    <p>Edit</p>
+                    <p>Chỉnh sửa</p>
                     <Pencil className="w-4 h-4 text-gray-400" />
                   </Link>
                 </div>
@@ -222,7 +248,7 @@ const MyServices = () => {
                     className="font-sans text-red-500 text-sm font-medium flex items-center gap-1 hover:underline"
                   >
                     <Trash2 className="w-4 h-4" />
-                    Delete
+                    Xóa
                   </button>
                 </div>
               </div>

@@ -1,7 +1,10 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
+import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch } from "@/hooks/api-hooks";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { ProfileData } from "@/types/userData";
 import { FileText, Info } from "lucide-react";
 import Image from "next/image";
@@ -11,13 +14,23 @@ const AccountStats = () => {
   const { data: user } = usePrivateFetch<ProfileData>(
     API_ROUTES.profile.get_profile
   );
+
+  const {
+    data: sellerAccStatsLanguage,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.SELLER_ACCOUNT_STATISTICS);
+
   const daysOfWeek = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
 
   return (
     <div className="flex-1">
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-6 text-black">
-          Thống kê tài khoản
+          {sellerAccStatsLanguage?.account_statistics_title}
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 text-black">
@@ -37,7 +50,7 @@ const AccountStats = () => {
           <div className="bg-white rounded-lg p-6">
             <div className="flex items-center mb-4">
               <h3 className="text-base font-medium flex-grow text-black">
-                Hoạt động trực tuyến
+                {sellerAccStatsLanguage?.online_activity_title}
               </h3>
               <Info className="w-4 h-4 text-gray-400" />
             </div>
@@ -58,7 +71,7 @@ const AccountStats = () => {
             </div>
 
             <div className="text-sm text-black text-center mt-4">
-              Hoạt động trực tuyến liên tục để tăng khả năng hiển thị
+              {sellerAccStatsLanguage?.online_activity_hint}
             </div>
 
             <div className="mt-6 flex justify-center">
@@ -67,7 +80,7 @@ const AccountStats = () => {
                 href="/job-board"
                 target="_blank"
               >
-                Tìm công việc
+                {sellerAccStatsLanguage?.find_jobs_button}
               </Link>
             </div>
           </div>
@@ -76,27 +89,31 @@ const AccountStats = () => {
         <div className="bg-white rounded-lg p-6 mb-8 relative">
           <div className="flex items-center mb-4">
             <h3 className="text-text_primary text-base font-medium flex-grow">
-              Thời gian phản hồi trung bình
+              {sellerAccStatsLanguage?.average_response_time}
             </h3>
             <Info className="w-4 h-4 text-black" />
           </div>
-          <div className="text-sm text-black">Chưa có dữ liệu</div>
+          <div className="text-sm text-black">
+            {sellerAccStatsLanguage?.no_data_available}
+          </div>
         </div>
 
         <div className="mb-8">
           <h2 className="text-xl font-medium mb-4 text-black">
-            Thống Kê Dịch Vụ
+            {sellerAccStatsLanguage?.service_statistics_title}
           </h2>
           <div className="text-sm text-black">
-            Chỉ chú: Dữ liệu sẽ được cập nhật trong vòng 24 giờ
+            {sellerAccStatsLanguage?.service_statistics_note}
           </div>
 
           <div className="mt-6 bg-white rounded-lg p-6 flex flex-col items-center justify-center text-center">
             <FileText className="w-12 h-12 text-gray-300 mb-4" />
-            <div className="text-black">Chưa có dữ liệu</div>
+            <div className="text-black">
+              {sellerAccStatsLanguage?.no_data_available}
+            </div>
             <Link href="/manage-product/create">
               <button className="mt-4 bg-blue-100 text-blue-700 text-sm font-medium py-2 px-4 rounded">
-                Bắt Đầu Bán
+                {sellerAccStatsLanguage?.start_selling_button}
               </button>
             </Link>
           </div>
