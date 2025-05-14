@@ -69,9 +69,11 @@ const ContactInfo = () => {
     LanguageFile.SELLER_CONTACT_INFO
   );
 
-   const { data: global } = useGlobalTranslate(
-    LanguageFile.GLOBAL
-  );
+  const {
+      data: contactInfoLanguageData,
+    } = useGlobalTranslate(LanguageFile.CONTACT);
+
+  const { data: global } = useGlobalTranslate(LanguageFile.GLOBAL);
 
   const [isReady, setIsReady] = useState(false);
   const [defaultForeignCountry, setDefaultForeignCountry] =
@@ -140,7 +142,7 @@ const ContactInfo = () => {
 
       if (normalized.country !== "Thailand") {
         setLocationType("Foreign");
-        setDefaultForeignCountry(normalized.country); // store default for foreign
+        setDefaultForeignCountry(normalized.country); 
       } else {
         setLocationType("Thailand");
       }
@@ -251,7 +253,7 @@ const ContactInfo = () => {
                     disabled={isSubmittingEmail}
                     className="px-3 py-[8px] submit-button"
                   >
-                    {isSubmittingEmail ? <LoadingCircle /> : "ยืนยัน"}
+                    {isSubmittingEmail ? <LoadingCircle /> : global?.button_change}
                   </button>
                 </div>
               </div>
@@ -281,7 +283,7 @@ const ContactInfo = () => {
                 onClick={() => setIsModalOpen(true)}
                 className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
               >
-                {global?.confirm_button}
+                {global?.button_edit}
               </button>
             </div>
           </div>
@@ -360,12 +362,12 @@ const ContactInfo = () => {
               <>
                 <div className="mb-4">
                   <label className="block text-sm text-text_primary font-semibold mb-2">
-                    รายละเอียดที่อยู่
+                    {sellerContactLanguage?.address_detail}
                   </label>
                   <input
                     {...register("address_details")}
                     className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                    placeholder="ระบุที่อยู่, หมู่, ถนน, ซอย"
+                    placeholder={sellerContactLanguage?.address_placeholder}
                   />
                   {errors.address_details && (
                     <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -379,14 +381,16 @@ const ContactInfo = () => {
                     error={errors.zip_code}
                     control={control}
                     setValue={setValue}
+                    language={sellerContactLanguage}
                   />
                   <div>
                     <label className="block font-semibold mb-1">
-                      ตำบล/แขวง
+                      {sellerContactLanguage?.sub_district}
                     </label>
                     <input
+                      placeholder={sellerContactLanguage?.sub_district}
                       {...register("subdistrict_or_district")}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                     />
                     {errors.subdistrict_or_district && (
                       <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -399,11 +403,12 @@ const ContactInfo = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block font-semibold mb-1">
-                      อำเภอ/เขต
+                      {sellerContactLanguage?.district}
                     </label>
                     <input
+                      placeholder={sellerContactLanguage?.district}
                       {...register("district_or_subdistrict")}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                     />
                     {errors.district_or_subdistrict && (
                       <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -412,10 +417,13 @@ const ContactInfo = () => {
                     )}
                   </div>
                   <div>
-                    <label className="block font-semibold mb-1">จังหวัด</label>
+                    <label className="block font-semibold mb-1">
+                      {sellerContactLanguage?.province}
+                    </label>
                     <input
+                      placeholder={sellerContactLanguage?.province}
                       {...register("province")}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                     />
                     {errors.province && (
                       <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -450,6 +458,7 @@ const ContactInfo = () => {
             setIsConfirmChange(true);
             setIsModalOpen(false);
           }}
+          language={contactInfoLanguageData}
         />
 
         <ChangeEmailModal
@@ -461,6 +470,7 @@ const ContactInfo = () => {
             setIsConfirmChange(false);
             setIsChangeModal(false);
           }}
+          language={contactInfoLanguageData}
         />
       </div>
     </div>

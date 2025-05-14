@@ -13,6 +13,8 @@ import Step4WorkSteps from "../_components/Step4";
 import Step5Confirm from "../_components/Step5";
 import SuccessCreateJobModal from "../_components/SuccessCreateJobModal";
 import NotFound from "@/app/not-found";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { LanguageFile } from "@/constants/language";
 
 const getNextStep = (onboarding: Onboarding | undefined): number => {
   if (!onboarding) return 1;
@@ -33,6 +35,11 @@ const ServiceOnboardingPage = () => {
   } = usePrivateFetchParams<JobType>(
     API_ROUTES_SELLER.job.get_job + "/" + jobId
   );
+
+  const { data: createJobLanguage, isLoading: isCreateJobLoading } =
+    useGlobalTranslate(LanguageFile.SELLER_CREATE_JOBS);
+
+  console.log("createJobLanguage", createJobLanguage);
 
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [job, setJob] = useState<JobType>();
@@ -111,7 +118,7 @@ const ServiceOnboardingPage = () => {
   const CurrentComponent =
     stepComponents[currentStep as keyof typeof stepComponents];
 
-  if (isLoading) return <Loading />;
+  if (isLoading || isCreateJobLoading) return <Loading />;
 
   if (!job) {
     return <NotFound />;

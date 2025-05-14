@@ -2,13 +2,27 @@
 import { useRouter } from "next/navigation";
 import Step1ServiceInfo from "../_components/Step1";
 import { JobType } from "@/types/job";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { LanguageFile } from "@/constants/language";
+import Loading from "@/components/Loading";
 
 const CreateService = () => {
   const router = useRouter();
 
+  const {
+    data: createJobLanguage,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.SELLER_CREATE_JOBS);
+
+  console.log("createJobLanguage", createJobLanguage);
+
   const handleCreatedStep1 = (job: JobType) => {
     router.push(`/manage-product/${job.id}`);
   };
+
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
 
   return (
     <div className="min-h-screen pt-[4.5rem] bg-[#F8F9FB]">
@@ -22,10 +36,7 @@ const CreateService = () => {
           ></div>
 
           {[1, 2, 3, 4, 5].map((step) => (
-            <div
-              key={step}
-              className="z-10 flex flex-col items-center"
-            >
+            <div key={step} className="z-10 flex flex-col items-center">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
                   step === 1

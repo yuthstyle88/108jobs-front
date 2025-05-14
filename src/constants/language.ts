@@ -32,6 +32,7 @@ export enum LanguageFile {
   SELLER_COMMITMENT_LETTER = "seller-commitment-letter",
   SELLER_DOCUMENT_INFO = "seller-document-info",
   BREAD_CRUMB = "breadcrumb",
+  GO_TO_PROFILE = "profile",
 }
 
 export const LANGUAGES = {

@@ -1,6 +1,7 @@
 "use client";
 import LoadingCircle from "@/components/LoadingCircle";
 import Modal from "@/components/ui/Modal";
+import { GlobalLanguage, SellerMyService } from "@/types/language";
 import { Trash2 } from "lucide-react";
 
 interface ConfirmDeleteModalProps {
@@ -9,6 +10,8 @@ interface ConfirmDeleteModalProps {
   jobName: string;
   handleConfirmChange: () => void;
   isDeleteLoading: boolean;
+  language: Partial<SellerMyService> | undefined | null;
+  global: Partial<GlobalLanguage> | undefined | null;
 }
 
 const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
@@ -17,6 +20,8 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
   jobName,
   onClose,
   handleConfirmChange,
+  language,
+  global
 }) => {
   return (
     <Modal
@@ -29,14 +34,13 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
         <Trash2 className="w-[65px] h-[65px] text-[#EA6357]" />
         <article className="text-center">
           <h1 className="text-[18px] font-medium text-text_primary">
-            Xác nhận xóa dịch vụ
+            {language?.confirm_delete_service_title}
           </h1>
           <h1 className="text-[16px] font-medium text-text_primary">
             {`"${jobName}"`}
           </h1>
           <p className="text-[14px] font-sans text-text_secondary pt-3">
-            Sau khi xác nhận xóa dịch vụ, bạn sẽ không thể khôi phục lại dữ
-            liệu.
+            {language?.confirm_delete_service_message}
           </p>
         </article>
       </section>
@@ -45,13 +49,13 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
           onClick={onClose}
           className="px-10 py-3 w-full text-text_secondary font-normal rounded-md shadow-lg hover:bg-gray-100 transition duration-300"
         >
-          Hủy
+          {global?.button_cancel}
         </button>
         <button
           onClick={handleConfirmChange}
           className="px-10 py-3 w-full bg-[#EA6357] text-white font-normal rounded-md shadow-lg hover:bg-[#DE5E53] transition duration-300"
         >
-          {isDeleteLoading ? <LoadingCircle/> : "Xác nhận"}
+          {isDeleteLoading ? <LoadingCircle/> : global?.button_confirm}
         </button>
       </div>
     </Modal>

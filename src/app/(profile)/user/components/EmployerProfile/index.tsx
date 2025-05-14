@@ -2,9 +2,12 @@
 import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { ProfileShow } from "@/types/freelancerPofile";
 import { formatDateToLong } from "@/utils/formatDateToLong";
+import { interpolateDouble } from "@/utils/interpolate";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -16,6 +19,10 @@ type Props = {
 const UserProfile = ({ username }: Props) => {
   const { data: userProfile, isLoading } = usePrivateFetchParams<ProfileShow>(
     `/users/${username}`
+  );
+
+  const { data: goToProfileLanguage } = useGlobalTranslate(
+    LanguageFile.GO_TO_PROFILE
   );
 
   const [showFullBio, setShowFullBio] = useState(false);
@@ -49,9 +56,11 @@ const UserProfile = ({ username }: Props) => {
             <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-border_primary bg-white rounded-[0.25rem]">
               <div className="flex items-center justify-center">
                 <Image
-                  src={ProfileImage.avatar}
+                  src={userProfile?.avatar_url || ProfileImage.avatar}
                   alt="avatar"
                   className="rounded-full w-[175px] object-cover"
+                  width={175}
+                  height={500}
                 />
               </div>
               <p className="text-[28px] font-medium text-text_primary text-center pt-2">
@@ -68,7 +77,7 @@ const UserProfile = ({ username }: Props) => {
               </div>
               <div className="flex flex-row justify-between pt-10 gap-4 px-6">
                 <p className="text-[14px] text-text_primary">
-                  Become a member when
+                  {goToProfileLanguage?.member_since}
                 </p>
                 <p className="text-[14px] text-third">
                   {formatDateToLong(userProfile?.member_since)}
@@ -89,7 +98,7 @@ const UserProfile = ({ username }: Props) => {
                       onClick={() => setShowFullBio(true)}
                       className="mt-2 text-blue-600 text-sm font-medium hover:underline"
                     >
-                      Xem thêm
+                      ดูเพิ่มเติม
                     </button>
                   )}
                 </div>
@@ -98,11 +107,13 @@ const UserProfile = ({ username }: Props) => {
           </aside>
           <section className="w-full px-4">
             <h2 className="py-[3rem] text-[28px] font-medium text-text_primary w-full">
-              The work of {userProfile?.username}
+              {interpolateDouble(goToProfileLanguage?.work_title || "", {
+                username: userProfile?.username,
+              })}
             </h2>
             <div className="grid grid-cols-[1fr_1fr_1fr] border-b-[2px] border-b-border_primary">
               <div className="relative whitespace-nowrap border-b-2 border-border_primary hover:text-third duration-150 flex justify-center items-center cursor-pointer px-1 py-3 font-bold text-third  after:absolute after:bottom-[-3px] after:h-[2px] after:w-full after:bg-third">
-                Reviews from freelancers
+                {goToProfileLanguage?.review_tab}
               </div>
             </div>
           </section>

@@ -2,6 +2,7 @@
 import LoadingCircle from "@/components/LoadingCircle";
 import Modal from "@/components/ui/Modal";
 import { ERROR_CONSTANTS } from "@/constants/error";
+import { ProfileContactInfoLanguage } from "@/types/language";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mailbox } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -27,6 +28,7 @@ interface ChangeEmailModalProps {
   onBack?: () => void;
   onVerifySuccess?: () => void;
   formEmail?: string;
+  language: Partial<ProfileContactInfoLanguage> | undefined | null;
 }
 
 const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
@@ -35,6 +37,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
   handleConfirmChange,
   resendDelay = 60,
   formEmail,
+  language,
 }) => {
   const { reset } = useForm({
     resolver: zodResolver(changePasswordSchema),
@@ -62,10 +65,10 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
 
   useEffect(() => {
     if (!isOpen) return;
-  
+
     setTimeLeft(resendDelay);
     setIsResendDisabled(true);
-  
+
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
@@ -76,7 +79,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
         return prevTime - 1;
       });
     }, 1000);
-  
+
     return () => clearInterval(timer);
   }, [isOpen, resendDelay]);
 
@@ -183,11 +186,10 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
         <Mailbox className="w-[60px] h-[60px] text-third" />
         <article>
           <h1 className="text-base font-bold text-text_primary text-center">
-            กรุณายืนยันอีเมล์ของคุณ
+            {language?.email_verification_title}
           </h1>
           <p className="text-[14px] font-sans text-text_secondary text-center">
-            ป้อนรหัส 6
-            หลักที่ส่งไปยังอีเมลของคุณเพื่อยืนยันและยืนยันความเป็นเจ้าของบัญชี{" "}
+            {language?.email_verification_description}
             <br /> {formEmail}
           </p>
         </article>
@@ -230,7 +232,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
             isResendDisabled ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          {isSendAgain ? "ส่งอีกครั้ง..." : "ส่งอีกครั้ง"}
+          {isSendAgain ? `${language?.resend_code}...` : language?.resend_code}
           {isResendDisabled ? `(${timeLeft})` : ""}
         </button>
         <button
@@ -242,7 +244,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
           }`}
           disabled={code.join("").length !== 6 || isSubmitting}
         >
-          {isSubmitting ? <LoadingCircle /> : "ยืนยัน"}
+          {isSubmitting ? <LoadingCircle /> : language?.verify_button}
         </button>
       </div>
       {apiError && (

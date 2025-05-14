@@ -28,7 +28,8 @@ export type LanguageDataType = Partial<
     SellerBankAccount &
     SellerCommitmentLetter &
     SellerDocumentInfo &
-    BreadCrumb
+    BreadCrumb &
+    GoToProfile
 >;
 export interface GlobalLanguage {
   label_employment_button: string;
@@ -298,6 +299,14 @@ export type ProfileBasicInfoLanguage = {
   section_password: string;
   password_description: string;
   button_set_password: string;
+  name_trust_note: string;
+  save: string;
+  password: string;
+  password_placeholder: string;
+  confirm_password_label: string;
+  confirm_password_placeholder: string;
+  submit_button: string;
+  password_min_length_error: string;
 };
 
 export type ProfileContactInfoLanguage = {
@@ -313,6 +322,15 @@ export type ProfileContactInfoLanguage = {
   option_thailand: string;
   option_foreign_country: string;
   placeholder_select_country: string;
+  email_change_title: string;
+  email_change_description: string;
+  cancel_button: string;
+  confirm_button: string;
+  email_verification_title: string;
+  email_verification_description: string;
+  verify_button: string;
+  resend_code: string;
+  invalid_or_expired_code: string;
 };
 
 export type ProfileIndividualLanguage = {
@@ -649,8 +667,11 @@ export type SellerMyService = {
   column_manage: string;
   status_pending: string;
   status_draft: string;
-  status_rejected: string;
   status_approved: string;
+  status_rejected: string;
+  confirm_delete_service_title: string;
+  confirm_delete_service_message: string;
+  no_service: string;
 };
 export type SellerWithdrawal = {
   my_income: string;
@@ -770,6 +791,13 @@ export type SellerContactInfo = {
   thailand: string;
   international: string;
   select_country: string;
+  address_detail: string;
+  address_placeholder: string;
+  zipcode: string;
+  zipcode_placeholder: string;
+  sub_district: string;
+  district: string;
+  province: string;
 };
 
 export type SellerBankAccount = {
@@ -797,6 +825,7 @@ export type SellerCommitmentLetter = {
   step_4_title: string;
   step_4_note: string;
   upload_button: string;
+  income_tax_description: string;
 };
 export type SellerDocumentInfo = {
   title: string;
@@ -812,4 +841,18 @@ export type BreadCrumb = {
   id_card_information_breadcrumb: string;
   commitment_letter_breadcrumb: string;
   bank_account_information_breadcrumb: string;
+  seller_center_breadcrumb: string;
+  account_settings_breadcrumb: string;
+};
+export type GoToProfile = {
+  member_since: string;
+  review_tab: string;
+  work_title: string;
+  education_title: string;
+  experience_title: string;
+  skill_title: string;
+  language_title: string;
+  certification_title: string;
+  level_intermediate: string;
+  level_expert: string;
 };

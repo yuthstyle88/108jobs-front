@@ -6,20 +6,38 @@ import { usePrivatePost } from "@/hooks/api-hooks";
 import { API_ROUTES_SELLER } from "@/api/endpoints";
 import { JobType } from "@/types/job";
 import LoadingBlur from "@/components/LoadingBlur";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { LanguageFile } from "@/constants/language";
+import LoadingCircle from "@/components/LoadingCircle";
 
-const packageSchema = z.object({
-  package_name: z.string().nonempty("Tên gói là bắt buộc"),
-  description: z.string().nonempty("Vui lòng nhập mô tả"),
-  price: z.string().nonempty("Giá là bắt buộc"),
-  execution_time: z.coerce.number().min(1, "Tối thiểu 1 phút"),
-});
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getSchema = (lang: any) =>
+  z.object({
+    packages: z
+      .array(
+        z.object({
+          package_name: z
+            .string()
+            .nonempty(lang?.package_name_error || "Tên gói là bắt buộc"),
+          description: z
+            .string()
+            .nonempty(
+              lang?.package_description_error || "Vui lòng nhập mô tả"
+            ),
+          price: z
+            .string()
+            .nonempty(lang?.package_price_error || "Giá là bắt buộc"),
+          execution_time: z.coerce
+            .number()
+            .min(1, lang?.package_delivery_label || "Tối thiểu 1 phút"),
+        })
+      )
+      .min(1)
+      .max(3),
+  });
 
-const schema = z.object({
-  packages: z.array(packageSchema).min(1).max(3),
-});
-
-type FormData = z.infer<typeof schema>;
+type FormData = z.infer<ReturnType<typeof getSchema>>;
 
 type Props = {
   job: JobType;
@@ -28,7 +46,14 @@ type Props = {
   mutate: () => void;
 };
 
-const Step2Packages = ({ job, nextStep, prevStep,mutate }: Props) => {
+const Step2Packages = ({ job, nextStep, prevStep, mutate }: Props) => {
+  const createJobLanguage = useTranslateFile(LanguageFile.SELLER_CREATE_JOBS);
+
+  const schema = useMemo(
+    () => getSchema(createJobLanguage),
+    [createJobLanguage]
+  );
+
   const {
     register,
     control,
@@ -91,7 +116,7 @@ const Step2Packages = ({ job, nextStep, prevStep,mutate }: Props) => {
     >
       {isMutating && <LoadingBlur text={"Đang lưu dữ liệu"} />}
       <h2 className="text-[32px] font-medium mb-2 text-text_primary">
-        Các gói dịch vụ và giá
+        {createJobLanguage?.package_title}
       </h2>
       <div className="mb-6">
         <p className="text-[20px] text-text_primary">Tạo gói dịch vụ của bạn</p>
@@ -125,7 +150,7 @@ const Step2Packages = ({ job, nextStep, prevStep,mutate }: Props) => {
             <div className="mt-4 space-y-6">
               <div>
                 <label className="block text-base font-medium text-gray-700 mb-1">
-                  Tên gói
+                  {createJobLanguage?.package_name_label}
                 </label>
                 <input
                   className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
@@ -140,7 +165,7 @@ const Step2Packages = ({ job, nextStep, prevStep,mutate }: Props) => {
 
               <div>
                 <label className="block text-base font-medium text-gray-700 mb-1">
-                  Mô tả
+                  {createJobLanguage?.package_description_label}
                 </label>
                 <textarea
                   className="text-text_primary w-full p-3 border border-gray-300 rounded-lg min-h-24"
@@ -156,7 +181,7 @@ const Step2Packages = ({ job, nextStep, prevStep,mutate }: Props) => {
               <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-base font-medium text-gray-700 mb-1">
-                    Giá (VND)
+                    {createJobLanguage?.package_price_label}
                   </label>
                   <input
                     type="text"
@@ -172,7 +197,7 @@ const Step2Packages = ({ job, nextStep, prevStep,mutate }: Props) => {
 
                 <div>
                   <label className="block text-base font-medium text-gray-700 mb-1">
-                    Thời gian thực hiện (phút)
+                    {createJobLanguage?.package_delivery_label}
                   </label>
                   <input
                     type="number"
@@ -204,7 +229,7 @@ const Step2Packages = ({ job, nextStep, prevStep,mutate }: Props) => {
             className="flex items-center gap-2 text-blue-600 font-medium"
           >
             <Plus className="w-4 h-4" />
-            Thêm gói
+            {createJobLanguage?.add_package}
           </button>
         )}
 
@@ -214,14 +239,14 @@ const Step2Packages = ({ job, nextStep, prevStep,mutate }: Props) => {
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50"
             onClick={prevStep}
           >
-            Quay lại
+            {createJobLanguage?.back_button}
           </button>
           <button
             type="submit"
             className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
             disabled={isMutating}
           >
-            {isMutating ? "Đang gửi..." : "Tiếp tục"}
+            {isMutating ? <LoadingCircle /> : createJobLanguage?.next_button}
           </button>
         </div>
       </div>

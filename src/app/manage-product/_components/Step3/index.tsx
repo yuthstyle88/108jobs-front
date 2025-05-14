@@ -2,7 +2,10 @@
 
 import { API_ROUTES, API_ROUTES_SELLER } from "@/api/endpoints";
 import LoadingBlur from "@/components/LoadingBlur";
+import LoadingCircle from "@/components/LoadingCircle";
+import { LanguageFile } from "@/constants/language";
 import { usePrivateImagePost, usePrivatePost } from "@/hooks/api-hooks";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import useImageUpload from "@/hooks/useImageUpload";
 import useMultiImageUpload from "@/hooks/useMultiImageUpload";
 import { ImageUploadResponse } from "@/types/image";
@@ -23,6 +26,8 @@ const Step3Media = ({
   prevStep: () => void;
   mutate: () => void;
 }) => {
+  const createJobLanguage = useTranslateFile(LanguageFile.SELLER_CREATE_JOBS);
+
   const cover = useImageUpload();
   const multi = useMultiImageUpload();
   const [coverError, setCoverError] = useState<string | null>(null);
@@ -45,13 +50,13 @@ const Step3Media = ({
   const validateImages = () => {
     let valid = true;
     if (!cover.imagePreview) {
-      setCoverError("Vui lòng tải ảnh bìa");
+      setCoverError(`${createJobLanguage?.upload_cover_error}`);
       valid = false;
     } else {
       setCoverError(null);
     }
     if (multi.images.length < 2) {
-      setGalleryError("Cần ít nhất 2 ảnh dịch vụ");
+      setGalleryError(`${createJobLanguage?.upload_gallery_error}`);
       valid = false;
     } else {
       setGalleryError(null);
@@ -97,7 +102,7 @@ const Step3Media = ({
         job_id: job.id,
         images: imagesPayload,
       });
-      mutate();
+      await mutate();
       nextStep();
     } catch (err) {
       console.error("Submit step 3 error:", err);
@@ -135,7 +140,7 @@ const Step3Media = ({
       ) : null}
 
       <h2 className="text-[32px] font-medium mb-6 text-text_primary">
-        Tải lên hình ảnh dịch vụ
+        {createJobLanguage?.upload_cover_title}
       </h2>
 
       <div className="space-y-8 max-w-4xl">
@@ -146,12 +151,9 @@ const Step3Media = ({
           <div className="p-4 bg-amber-50 border border-amber-100 rounded-lg mb-6 flex">
             <Info className="w-5 h-5 text-amber-500 mr-2 flex-shrink-0" />
             <p className="text-sm text-gray-700 font-normal font-sans leading-6">
-              Hướng dẫn chọn ảnh bìa:
-              <br />• Chọn ảnh bìa thể hiện rõ lĩnh vực và chuyên môn của bạn.
-              Ảnh bìa giúp thu hút người thuê lựa chọn dịch vụ của bạn.
-              <br />• Đảm bảo sử dụng ảnh bìa khác nhau cho các dịch vụ tương tự
-              trong cùng một danh mục. Việc sử dụng ảnh bìa giống nhau sẽ khiến
-              dịch vụ của bạn bị từ chối.
+              {createJobLanguage?.upload_cover_instruction_1}
+              <br />• {createJobLanguage?.upload_cover_instruction_1}
+              <br />• {createJobLanguage?.upload_cover_instruction_2}
             </p>
           </div>
           {!cover.imagePreview ? (
@@ -170,7 +172,7 @@ const Step3Media = ({
               <div className="flex flex-col items-center justify-center">
                 <Upload className="w-10 h-10 text-gray-400 mb-2" />
                 <p className="text-sm text-gray-600">
-                  Kéo thả hoặc nhấn để tải lên
+                  Drag or drop your file here
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
                   JPG, PNG hoặc GIF (max. 5MB)
@@ -263,14 +265,18 @@ const Step3Media = ({
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50"
             onClick={prevStep}
           >
-            Quay lại
+            {createJobLanguage?.back_button}
           </button>
           <button
             type="submit"
             className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
             disabled={isMutating || isUploadImage}
           >
-            {isMutating || isUploadImage ? "Đang gửi..." : "Tiếp tục"}
+            {isMutating || isUploadImage ? (
+              <LoadingCircle />
+            ) : (
+              createJobLanguage?.next_button
+            )}
           </button>
         </div>
       </div>
