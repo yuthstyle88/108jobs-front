@@ -13,9 +13,7 @@ const CommitmentLetter = () => {
     error,
   } = useGlobalTranslate(LanguageFile.SELLER_COMMITMENT_LETTER);
 
- const { data: global } = useGlobalTranslate(
-     LanguageFile.GLOBAL
-   );
+  const { data: global } = useGlobalTranslate(LanguageFile.GLOBAL);
 
   const handleSave = () => {
     console.log("Saving account settings");
@@ -38,9 +36,7 @@ const CommitmentLetter = () => {
 
       <div className="p-6">
         <p className="text-sm text-gray-700 mb-6">
-          Để nhận thanh toán thông qua hệ thống Fastlance, freelancer phải xác
-          nhận và đồng ý tự cung cấp thông tin thu nhập của mình để cơ quan thuế
-          xem xét tuân thủ các yêu cầu pháp lý.
+          {sellerCommitmentLanguage?.income_tax_description}
         </p>
 
         <ol className="mb-8 space-y-8">

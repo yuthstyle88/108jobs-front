@@ -188,7 +188,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
         </Link>
         <button
           onClick={logout}
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 "
+          className="w-full flex items-center gap-5 px-4 py-3 hover:bg-gray-50 "
         >
           <FontAwesomeIcon
             icon={faSignOut}

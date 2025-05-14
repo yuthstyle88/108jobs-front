@@ -9,6 +9,7 @@ import {
   useWatch,
 } from "react-hook-form";
 import { AddressFormData } from "../../contact-info/page";
+import { SellerContactInfo } from "@/types/language";
 
 type Geography = {
   province_name_th: string;
@@ -22,12 +23,14 @@ interface ZipcodeSearchProps {
   control: Control<AddressFormData>;
   setValue: UseFormSetValue<AddressFormData>;
   error?: FieldError;
+  language: Partial<SellerContactInfo> | null | undefined;
 }
 
 export default function ZipcodeSearch({
   control,
   setValue,
   error,
+  language,
 }: ZipcodeSearchProps) {
   const [searchUrl, setSearchUrl] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -92,7 +95,7 @@ export default function ZipcodeSearch({
   return (
     <div className="relative" ref={dropdownRef}>
       <label className="block text-sm text-text_primary font-semibold mb-2">
-        รหัสไปรษณีย์
+        {language?.zipcode}
       </label>
       <input
         ref={inputRef}
@@ -106,7 +109,7 @@ export default function ZipcodeSearch({
           if ((zipCode ?? "").length >= 2) debouncedSearch(zipCode ?? "");
           setShowDropdown(true);
         }}
-        placeholder="Enter Zipcode"
+        placeholder={language?.zipcode_placeholder}
         autoComplete="off"
         className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary transition-all"
       />

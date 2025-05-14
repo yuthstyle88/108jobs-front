@@ -107,6 +107,12 @@ export default function ContactPage() {
     error,
   } = useGlobalTranslate(LanguageFile.CONTACT);
 
+  const { data: sellerContactLanguage } = useGlobalTranslate(
+    LanguageFile.SELLER_CONTACT_INFO
+  );
+
+  const { data: global } = useGlobalTranslate(LanguageFile.GLOBAL);
+
   const { trigger: updateAddressProfile, isMutating: isUpdateMuting } =
     usePrivatePut<AddressFormData>(API_ROUTES.profile.update_address_profile);
 
@@ -221,7 +227,7 @@ export default function ContactPage() {
                 <div className="flex gap-2 items-end w-full">
                   <div className="flex-1">
                     <label className="block text-sm text-text_primary font-semibold mb-2">
-                      อีเมลติดต่อ
+                      {contactInfoLanguageData?.label_contact_email}
                     </label>
                     <input
                       type="email"
@@ -240,7 +246,11 @@ export default function ContactPage() {
                       disabled={isSubmittingEmail}
                       className="px-3 py-[8px] submit-button"
                     >
-                      {isSubmittingEmail ? <LoadingCircle /> : "ยืนยัน"}
+                      {isSubmittingEmail ? (
+                        <LoadingCircle />
+                      ) : (
+                        global?.button_change
+                      )}
                     </button>
                   </div>
                 </div>
@@ -255,7 +265,7 @@ export default function ContactPage() {
             <div className="mb-6 flex gap-2 items-end w-full">
               <div className="flex-1">
                 <label className="block text-sm text-text_primary font-semibold mb-2">
-                  อีเมลติดต่อ
+                  {contactInfoLanguageData?.label_contact_email}
                 </label>
                 <input
                   type="email"
@@ -270,7 +280,7 @@ export default function ContactPage() {
                   onClick={() => setIsModalOpen(true)}
                   className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
                 >
-                  ยืนยัน
+                  {global?.button_edit}
                 </button>
               </div>
             </div>
@@ -286,12 +296,12 @@ export default function ContactPage() {
             <div className="flex gap-4">
               <input
                 type="tel"
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-2"
+                className="text-text_primary flex-1 border border-gray-300 rounded-lg px-3 py-2"
                 placeholder="ระบุเบอร์โทร"
-                defaultValue="uykpfzno"
+                defaultValue="0981893238"
               />
               <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                ยืนยัน
+                {global?.button_edit}
               </button>
             </div>
           </div>
@@ -335,14 +345,18 @@ export default function ContactPage() {
                   }}
                   className="text-blue-600 mr-3"
                 />
-                {option === "Thailand" ? "ประเทศไทย" : "ต่างชาติ"}
+                {option === "Thailand"
+                  ? contactInfoLanguageData?.option_thailand
+                  : contactInfoLanguageData?.option_foreign_country}
               </label>
             ))}
           </div>
 
           {locationType === "Foreign" ? (
             <>
-              <label className="block text-sm mb-1">เลือกประเทศ</label>
+              <label className="block text-sm mb-1">
+                {contactInfoLanguageData?.placeholder_select_country}
+              </label>
               <select
                 {...register("country")}
                 value={country}
@@ -367,12 +381,12 @@ export default function ContactPage() {
             <>
               <div className="mb-4">
                 <label className="block text-sm text-text_primary font-semibold mb-2">
-                  รายละเอียดที่อยู่
+                  {sellerContactLanguage?.address_detail}
                 </label>
                 <input
                   {...register("address_details")}
                   className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                  placeholder="ระบุที่อยู่, หมู่, ถนน, ซอย"
+                  placeholder={sellerContactLanguage?.address_placeholder}
                 />
                 {errors.address_details && (
                   <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -386,10 +400,14 @@ export default function ContactPage() {
                   error={errors.zip_code}
                   control={control}
                   setValue={setValue}
+                   language={sellerContactLanguage}
                 />
                 <div>
-                  <label className="block font-semibold mb-1">ตำบล/แขวง</label>
+                  <label className="block font-semibold mb-1">
+                    {sellerContactLanguage?.sub_district}
+                  </label>
                   <input
+                    placeholder={sellerContactLanguage?.sub_district}
                     {...register("subdistrict_or_district")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   />
@@ -403,8 +421,11 @@ export default function ContactPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-semibold mb-1">อำเภอ/เขต</label>
+                  <label className="block font-semibold mb-1">
+                    {sellerContactLanguage?.district}
+                  </label>
                   <input
+                    placeholder={sellerContactLanguage?.district}
                     {...register("district_or_subdistrict")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   />
@@ -415,7 +436,9 @@ export default function ContactPage() {
                   )}
                 </div>
                 <div>
-                  <label className="block font-semibold mb-1">จังหวัด</label>
+                  <label className="block font-semibold mb-1">
+                    {sellerContactLanguage?.province}
+                  </label>
                   <input
                     {...register("province")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
@@ -453,6 +476,7 @@ export default function ContactPage() {
           setIsConfirmChange(true);
           setIsModalOpen(false);
         }}
+        language={contactInfoLanguageData}
       />
 
       <ChangeEmailModal
@@ -464,6 +488,7 @@ export default function ContactPage() {
           setIsConfirmChange(false);
           setIsChangeModal(false);
         }}
+        language={contactInfoLanguageData}
       />
     </div>
   );

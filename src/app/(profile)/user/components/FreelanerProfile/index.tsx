@@ -3,7 +3,9 @@ import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
 import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import {
   Certificate,
   Education,
@@ -13,6 +15,7 @@ import {
   WorkExperience,
 } from "@/types/freelancerPofile";
 import { formatDateToLong } from "@/utils/formatDateToLong";
+import { interpolateDouble } from "@/utils/interpolate";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -23,6 +26,10 @@ type Props = {
 const FreelancerProfile = ({ username }: Props) => {
   const { data: userProfile, isLoading } = usePrivateFetchParams<ProfileShow>(
     `/users/${username}`
+  );
+
+  const { data: goToProfileLanguage } = useGlobalTranslate(
+    LanguageFile.GO_TO_PROFILE
   );
 
   const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
@@ -57,9 +64,11 @@ const FreelancerProfile = ({ username }: Props) => {
             <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-border_primary bg-white rounded-[0.25rem]">
               <div className="flex items-center justify-center">
                 <Image
-                  src={ProfileImage.avatar}
-                  alt="avatar"
+                  src={userProfile?.avatar_url || ProfileImage.avatar}
+                  alt="Avatar"
                   className="rounded-full w-[175px] object-cover"
+                  width={175}
+                  height={500}
                 />
               </div>
               <p className="text-[28px] font-medium text-text_primary text-center pt-2">
@@ -70,7 +79,7 @@ const FreelancerProfile = ({ username }: Props) => {
                   <FontAwesomeIcon
                     icon={faStar}
                     key={index}
-                    className="text-[14px] text-gray-300 "
+                    className="text-[14px] text-[#D6DAE1]"
                   />
                 ))}
               </div>
@@ -96,7 +105,9 @@ const FreelancerProfile = ({ username }: Props) => {
               )}
               <div className="w-full mt-4 space-y-3 px-4">
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">เป็นสมาชิกเมื่อ</div>
+                  <div className="text-text_secondary">
+                    {goToProfileLanguage?.member_since}
+                  </div>
                   <div className="text-third font-medium">
                     {formatDateToLong(userProfile?.member_since)}
                   </div>
@@ -130,7 +141,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       onClick={() => setShowFullBio(true)}
                       className="mt-2 text-text_primary font-sans text-sm font-medium underline"
                     >
-                      Xem thêm
+                      ดูเพิ่มเติม
                     </button>
                   )}
                 </div>
@@ -143,7 +154,7 @@ const FreelancerProfile = ({ username }: Props) => {
                   <div className="bg-white rounded-lg pb-6">
                     <div className="mb-2">
                       <h2 className="text-blue-600 font-medium">
-                        Trình độ học vấn
+                        {goToProfileLanguage?.education_title}
                       </h2>
                     </div>
                     {userProfile && userProfile?.education.length > 0 ? (
@@ -206,7 +217,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        Chưa cung cấp thông tin
+                        {goToProfileLanguage?.experience_title}
                       </div>
                     )}
                   </div>
@@ -215,7 +226,9 @@ const FreelancerProfile = ({ username }: Props) => {
                   {/* Skills Section */}
                   <div className="bg-white rounded-lg py-6">
                     <div className="mb-2">
-                      <h2 className="text-blue-600 font-medium">Kỹ năng</h2>
+                      <h2 className="text-blue-600 font-medium">
+                        {goToProfileLanguage?.skill_title}
+                      </h2>
                     </div>
                     {userProfile && userProfile?.skill.length > 0 ? (
                       <div className="flex flex-col gap-4">
@@ -246,7 +259,9 @@ const FreelancerProfile = ({ username }: Props) => {
                   {/* Languages Section */}
                   <div className="bg-white rounded-lg py-6">
                     <div className="mb-2">
-                      <h2 className="text-blue-600 font-medium">Ngôn ngữ</h2>
+                      <h2 className="text-blue-600 font-medium">
+                        {goToProfileLanguage?.language_title}
+                      </h2>
                     </div>
                     {userProfile && userProfile?.language.length > 0 ? (
                       <div className="flex flex-col gap-4">
@@ -280,7 +295,7 @@ const FreelancerProfile = ({ username }: Props) => {
                   <div className="bg-white rounded-lg py-6">
                     <div className="mb-2">
                       <h2 className="text-blue-600 font-medium">
-                        Chứng chỉ và giải thưởng
+                        {goToProfileLanguage?.certification_title}
                       </h2>
                     </div>
                     {userProfile && userProfile?.cert_and_award.length > 0 ? (
@@ -313,9 +328,11 @@ const FreelancerProfile = ({ username }: Props) => {
 
           <section className="w-full px-4">
             <h2 className="pt-8 pb-4 text-[28px] font-medium text-text_primary w-full">
-              งานของ taratra
+              {interpolateDouble(goToProfileLanguage?.work_title || "", {
+                username: userProfile?.username,
+              })}
             </h2>
-            <section className="grid grid-cols-1 md:grid-cols-[repeat(3,minmax(1px,1fr))] gap-5">
+            <section className="mt-4 grid grid-cols-1 md:grid-cols-[repeat(3,minmax(1px,1fr))] gap-5">
               {Array.from({ length: 2 }, (_, index) => (
                 <CategoryCard key={index} />
               ))}
@@ -331,7 +348,7 @@ const FreelancerProfile = ({ username }: Props) => {
                     }`}
                     onClick={() => setActiveTab("reviews")}
                   >
-                    รีวิวจากผู้ว่าจ้าง (928)
+                    {goToProfileLanguage?.review_tab} (928)
                   </button>
                   <button
                     className={`py-2 text-sm font-medium border-b-2 ${

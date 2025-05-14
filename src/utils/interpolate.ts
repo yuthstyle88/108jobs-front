@@ -1,4 +1,4 @@
-export function interpolate(template: string, values: Record<string, string | number>): string {
+export function interpolate(template: string, values: Record<string, string | number | undefined>): string {
   return template.replace(/\{(\w+)\}/g, (_, key) => values[key]?.toString() || "");
 }
 

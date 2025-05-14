@@ -33,9 +33,11 @@ const ProfileSection = ({ data, user }: ProfileSectionProps) => {
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
               <Image
-                src={ProfileImage.avatar}
+                src={user?.user.avatar_url || ProfileImage.avatar}
                 alt="avatar"
                 className="rounded-full"
+                width={500}
+                height={500}
               />
             </div>
             <div>
@@ -153,7 +155,7 @@ const ProfileSection = ({ data, user }: ProfileSectionProps) => {
         </Link>
         <button
           onClick={logout}
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 "
+          className="w-full flex items-center gap-5 px-4 py-3 hover:bg-gray-50 "
         >
           <FontAwesomeIcon
             icon={faSignOut}

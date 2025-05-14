@@ -1,7 +1,10 @@
 import { API_ROUTES, API_ROUTES_SELLER } from "@/api/endpoints";
 import Loading from "@/components/Loading";
 import LoadingBlur from "@/components/LoadingBlur";
+import LoadingCircle from "@/components/LoadingCircle";
+import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { ServiceCatalogData } from "@/types/catalog";
 import { JobType } from "@/types/job";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,14 +13,16 @@ import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const schema = z.object({
-  category: z.string().nonempty("Vui lòng chọn danh mục dịch vụ"),
-  type: z.string().nonempty("Vui lòng chọn loại dịch vụ"),
-  name: z.string().min(5, "Tiêu đề phải có ít nhất 5 ký tự"),
-  description: z.string().min(10, "Mô tả phải có ít nhất 10 ký tự"),
-});
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getSchema = (createJobLanguage: any) =>
+  z.object({
+    category: z.string().nonempty(createJobLanguage?.select_service_category_error || "Vui lòng chọn danh mục dịch vụ"),
+    type: z.string().nonempty(createJobLanguage?.select_sub_service_error || "Vui lòng chọn loại dịch vụ"),
+    name: z.string().min(5, createJobLanguage?.service_title_error || "Tiêu đề phải có ít nhất 5 ký tự"),
+    description: z.string().min(10, createJobLanguage?.service_description_error || "Mô tả phải có ít nhất 10 ký tự"),
+  });
 
-type FormData = z.infer<typeof schema>;
+type FormData = z.infer<ReturnType<typeof getSchema>>;
 
 interface Props {
   onCreated?: (job: JobType) => void;
@@ -27,11 +32,18 @@ interface Props {
 }
 
 const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
+  const createJobLanguage = useTranslateFile(LanguageFile.SELLER_CREATE_JOBS);
+
   const { data: jobsData, isLoading } = usePrivateFetch<ServiceCatalogData>(
     API_ROUTES.catalog.get_all_catalog
   );
   const { trigger: sendLanguages, isMutating } = usePrivatePost(
     API_ROUTES_SELLER.job.post_job_step_1
+  );
+
+  const schema = useMemo(
+    () => getSchema(createJobLanguage),
+    [createJobLanguage]
   );
 
   const {
@@ -99,14 +111,14 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
       {isMutating && <LoadingBlur text="Đang lưu dữ liệu" />}
       {isLoading && <Loading />}
       <h2 className="text-[32px] font-medium mb-6 text-text_primary">
-        Thông tin dịch vụ
+        {createJobLanguage?.service_info_title}
       </h2>
 
       <div className="space-y-6 max-w-4xl">
         <div className="grid grid-cols-2 gap-6">
           <div>
             <label className="block text-base font-medium text-gray-700 mb-1">
-              Danh mục dịch vụ
+              {createJobLanguage?.service_category_label}
             </label>
             <select
               className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
@@ -116,7 +128,9 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
                 setValue("type", "");
               }}
             >
-              <option value="">Chọn danh mục</option>
+              <option value="">
+                {createJobLanguage?.select_service_category_placeholder}
+              </option>
               {jobsData?.service_catalogs?.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.name}
@@ -132,14 +146,16 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
 
           <div>
             <label className="block text-base font-medium text-gray-700 mb-1">
-              Dịch vụ con
+              {createJobLanguage?.sub_service_label}
             </label>
             <select
               className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
               {...register("type")}
               disabled={!selectedCategory || subCategories.length === 0}
             >
-              <option value="">Chọn loại dịch vụ</option>
+              <option value="">
+                {createJobLanguage?.select_sub_service_placeholder}
+              </option>
               {subCategories.map((sub) => (
                 <option key={sub.id} value={sub.id}>
                   {sub.name}
@@ -154,12 +170,12 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
 
         <div>
           <label className="block text-base font-medium text-gray-700 mb-1">
-            Tiêu đề dịch vụ
+            {createJobLanguage?.service_title_label}
           </label>
           <input
             type="text"
             className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
-            placeholder="Ví dụ: Thiết kế website chuyên nghiệp, tối ưu SEO"
+            placeholder={createJobLanguage?.service_title_placeholder}
             {...register("name")}
           />
           {errors.name && (
@@ -169,17 +185,13 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
           <div className="mt-2 p-3 bg-[#f6f7f8] rounded-lg flex">
             <Info className="w-5 h-5 text-[#728197] mr-2 flex-shrink-0 mt-0.5" />
             <div className="text-[0.875rem] leading-[1.65] text-[#728197]">
-              <p className="font-medium mb-1">Hướng dẫn đặt tiêu đề dịch vụ:</p>
+              <p className="font-medium mb-1">{createJobLanguage?.service_title_guide_header}</p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>
-                  Sử dụng tiêu đề rõ ràng và chính xác để người thuê dễ dàng tìm
-                  thấy dịch vụ của bạn. Ví dụ: &quot;Thiết kế Logo Nhà Hàng/Công
-                  ty phong cách Tối giản và Hiện đại.&quot;
+                 {createJobLanguage?.service_title_guide_1}
                 </li>
                 <li>
-                  Đảm bảo sử dụng tiêu đề khác nhau cho các dịch vụ tương tự
-                  trong cùng một danh mục. Tiêu đề trùng lặp sẽ không được phê
-                  duyệt.
+                  {createJobLanguage?.service_title_guide_2}
                 </li>
               </ul>
             </div>
@@ -188,11 +200,11 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
 
         <div>
           <label className="block text-base font-medium text-gray-700 mb-1">
-            Mô tả dịch vụ
+            {createJobLanguage?.service_description_label}
           </label>
           <textarea
             className="text-text_primary w-full p-3 border border-gray-300 rounded-lg min-h-40"
-            placeholder="Mô tả chi tiết dịch vụ của bạn..."
+            placeholder={createJobLanguage?.service_description_placeholder}
             {...register("description")}
           ></textarea>
           {errors.description && (
@@ -208,7 +220,7 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
             className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
             disabled={isMutating}
           >
-            {isMutating ? "Đang gửi..." : "Lưu và tiếp tục"}
+            {isMutating ? <LoadingCircle/> : createJobLanguage?.next_button}
           </button>
         </div>
       </div>

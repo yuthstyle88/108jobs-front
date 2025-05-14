@@ -28,6 +28,8 @@ const MyServices = () => {
     error,
   } = useGlobalTranslate(LanguageFile.SELLER_MY_SERVICE);
 
+  const { data: global } = useGlobalTranslate(LanguageFile.GLOBAL);
+
   const lengthOfJobs = jobsData?.jobs.length || 0;
 
   const [selectedJob, setSelectedJob] = useState<{
@@ -180,7 +182,7 @@ const MyServices = () => {
             ) : (
               <tr>
                 <td colSpan={5} className="p-6 text-center text-gray-500">
-                  Chưa có dịch vụ nào
+                  {sellerMyServiceLanguage?.no_service}
                 </td>
               </tr>
             )}
@@ -237,7 +239,7 @@ const MyServices = () => {
                     href={`/manage-product/${job.id}`}
                     className="text-sm text-text_secondary flex flex-row justify-between items-center pt-4"
                   >
-                    <p>Chỉnh sửa</p>
+                    <p>{global?.button_edit}</p>
                     <Pencil className="w-4 h-4 text-gray-400" />
                   </Link>
                 </div>
@@ -248,7 +250,7 @@ const MyServices = () => {
                     className="font-sans text-red-500 text-sm font-medium flex items-center gap-1 hover:underline"
                   >
                     <Trash2 className="w-4 h-4" />
-                    Xóa
+                    {global?.button_delete}
                   </button>
                 </div>
               </div>
@@ -267,6 +269,8 @@ const MyServices = () => {
         jobName={selectedJob?.name || ""}
         onClose={handleCloseModal}
         handleConfirmChange={handleConfirmDelete}
+        language={sellerMyServiceLanguage}
+        global={global}
       />
     </div>
   );
