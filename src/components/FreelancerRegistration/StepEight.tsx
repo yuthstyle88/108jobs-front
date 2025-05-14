@@ -12,6 +12,9 @@ import ChangeEmailModal from "../ChangeEmailModal";
 import ConfirmChangeEmailModal from "../ConfirmChangeEmailModal";
 import LoadingCircle from "../LoadingCircle";
 import ZipcodeSearch from "./components/SearchZipcode";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { LanguageFile } from "@/constants/language";
+import Loading from "../Loading";
 
 const forgotPasswordSchema = z.object({
   email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์"),
@@ -48,6 +51,12 @@ const StepEight: React.FC<StepEightProps> = ({
   updateFormData,
   nextStep,
 }) => {
+  const {
+    data: contactInfoLanguageData,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.CONTACT);
+
   const {
     register,
     handleSubmit,
@@ -133,6 +142,9 @@ const StepEight: React.FC<StepEightProps> = ({
       );
     }
   };
+
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
 
   return (
     <div className="py-8 md:p-0 h-full">
@@ -241,9 +253,7 @@ const StepEight: React.FC<StepEightProps> = ({
             {formData.countryType === "Foreign" && countriesData && (
               <select
                 value={formData.country}
-                onChange={(e) =>
-                  updateFormData({ country: e.target.value })
-                }
+                onChange={(e) => updateFormData({ country: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
               >
                 <option value="" disabled>
@@ -381,6 +391,7 @@ const StepEight: React.FC<StepEightProps> = ({
           setIsConfirmChange(true);
           setIsModalOpen(false);
         }}
+        language={contactInfoLanguageData}
       />
       <ChangeEmailModal
         formEmail={formData.email}
@@ -391,6 +402,7 @@ const StepEight: React.FC<StepEightProps> = ({
           setIsConfirmChange(false);
           setIsChangeModal(false);
         }}
+        language={contactInfoLanguageData}
       />
     </div>
   );

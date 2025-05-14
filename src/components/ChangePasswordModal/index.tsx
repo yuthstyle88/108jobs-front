@@ -1,6 +1,7 @@
 "use client";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import useNotification from "@/hooks/useNotification";
+import { ProfileBasicInfoLanguage } from "@/types/language";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -23,6 +24,7 @@ const changePasswordSchema = z
 interface PasswordChangeModalProps {
   isOpen: boolean;
   onClose: () => void;
+  languageData:Partial<ProfileBasicInfoLanguage> | undefined | null;
 }
 
 type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
@@ -30,6 +32,7 @@ type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
   isOpen,
   onClose,
+  languageData
 }) => {
   const {
     register,
@@ -98,13 +101,13 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={handleCloseModal}
-      title="รหัสผ่าน"
+      title={languageData?.password}
       className="max-w-md w-full"
       closeOnOutsideClick={false}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <CustomInput
-          label="รหัสผ่าน"
+          label="รหัสผ่านเก่า"
           name="old_password"
           type="password"
           register={register("old_password")}
@@ -114,7 +117,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
           toggleShowPassword={() => setShowOldPassword(!showOldPassword)}
         />
         <CustomInput
-          label="รหัสผ่าน"
+          label="รหัสผ่านใหม่"
           name="new_password"
           type="password"
           register={register("new_password")}
@@ -125,7 +128,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
         />
 
         <CustomInput
-          label="ยืนยันรหัสผ่าน"
+          label="กรอกรหัสผ่านใหม่อีกครั้ง"
           name="confirmPassword"
           type="password"
           register={register("confirmPassword")}

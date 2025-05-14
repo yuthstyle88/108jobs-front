@@ -30,6 +30,7 @@ import {
   SellerCommitmentLetter,
   SellerDocumentInfo,
   BreadCrumb,
+  GoToProfile
 } from "@/types/language";
 import { create } from "zustand";
 
@@ -64,7 +65,8 @@ export type LanguageDataType = Partial<
     SellerBankAccount &
     SellerCommitmentLetter &
     SellerDocumentInfo &
-    BreadCrumb
+    BreadCrumb &
+    GoToProfile
 >;
 
 // Mỗi file lưu ngôn ngữ hiện tại + data

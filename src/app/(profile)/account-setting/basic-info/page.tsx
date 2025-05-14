@@ -133,7 +133,7 @@ export default function BasicInformation() {
               {languageData?.label_display_name}
             </label>
             <p className="text-[12px] text-gray-500 mb-2">
-              ตรงนี้คือชื่อที่ผู้บันทึกการเพื่อสร้างความน่าเชื่อถือ
+              {languageData?.name_trust_note}
             </p>
             <input
               {...register("display_name", {
@@ -207,9 +207,9 @@ export default function BasicInformation() {
               className="submit-button px-4 py-2"
             >
               {isSubmitting || isUpdateMuting || isUploadMuting ? (
-                <span>บันทึก...</span>
+                <span>{languageData?.save}...</span>
               ) : (
-                "บันทึก"
+                languageData?.save
               )}
             </button>
           </div>
@@ -233,7 +233,7 @@ export default function BasicInformation() {
         </div>
       </div>
 
-      <PasswordChangeModal isOpen={isModalOpen} onClose={closeModal} />
+      <PasswordChangeModal isOpen={isModalOpen} onClose={closeModal} languageData={languageData}/>
       <ImageUploadModal
         isOpen={isImageModalOpen}
         onClose={closeImageModal}

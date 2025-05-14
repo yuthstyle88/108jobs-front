@@ -51,6 +51,7 @@ export interface WorkExperience {
 export interface ProfileShow {
   username: string;
   bio: string;
+  avatar_url: string;
   is_verified: boolean;
   member_since: string;
   education: Education[];

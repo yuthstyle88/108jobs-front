@@ -2,24 +2,36 @@
 
 import { API_ROUTES_SELLER } from "@/api/endpoints";
 import LoadingBlur from "@/components/LoadingBlur";
+import LoadingCircle from "@/components/LoadingCircle";
+import { LanguageFile } from "@/constants/language";
 import { usePrivatePost } from "@/hooks/api-hooks";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { JobType } from "@/types/job";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
-const workStepSchema = z.object({
-  id: z.string().uuid().nullable().optional(),
-  description: z.string().min(1, "Vui lòng nhập mô tả bước"),
-});
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getSchema = (lang: any) =>
+  z.object({
+    worksteps: z
+      .array(
+        z.object({
+          id: z.string().uuid().nullable().optional(),
+          description: z
+            .string()
+            .min(
+              1,
+              lang?.workflow_description_error || "Vui lòng nhập mô tả bước"
+            ),
+        })
+      )
+      .min(2, lang?.worksteps_min || "Cần ít nhất 2 bước"),
+  });
 
-const schema = z.object({
-  worksteps: z.array(workStepSchema).min(2, "Cần ít nhất 2 bước"),
-});
-
-type FormData = z.infer<typeof schema>;
+type FormData = z.infer<ReturnType<typeof getSchema>>;
 
 type Props = {
   job: JobType;
@@ -28,7 +40,14 @@ type Props = {
   mutate: () => void;
 };
 
-const Step4WorkSteps = ({ job, nextStep, prevStep,mutate }: Props) => {
+const Step4WorkSteps = ({ job, nextStep, prevStep, mutate }: Props) => {
+  const createJobLanguage = useTranslateFile(LanguageFile.SELLER_CREATE_JOBS);
+
+  const schema = useMemo(
+    () => getSchema(createJobLanguage),
+    [createJobLanguage]
+  );
+
   const {
     register,
     control,
@@ -66,7 +85,7 @@ const Step4WorkSteps = ({ job, nextStep, prevStep,mutate }: Props) => {
       };
 
       await sendWorksteps(payload);
-      mutate();
+      await mutate();
       nextStep();
     } catch (err) {
       console.error("Submit step 4 error:", err);
@@ -85,19 +104,26 @@ const Step4WorkSteps = ({ job, nextStep, prevStep,mutate }: Props) => {
   }, [job, reset]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-lg shadow-sm p-6">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white rounded-lg shadow-sm p-6"
+    >
       {isMutating && <LoadingBlur text={"Đang lưu dữ liệu"} />}
       <h2 className="text-[32px] font-medium text-text_primary">
-        Xác định các bước làm việc của bạn
+        {createJobLanguage?.workflow_title}
       </h2>
 
       <div className="space-y-8 max-w-4xl mb-6">
         <p className="text-sm text-gray-600">
-          Mô tả các bước thực hiện để hoàn thành dịch vụ của bạn. Điều này giúp khách hàng hiểu rõ quy trình làm việc.
+          Mô tả các bước thực hiện để hoàn thành dịch vụ của bạn. Điều này giúp
+          khách hàng hiểu rõ quy trình làm việc.
         </p>
 
         {fields.map((field, index) => (
-          <div key={field.id} className="border border-gray-200 rounded-lg p-6 relative">
+          <div
+            key={field.id}
+            className="border border-gray-200 rounded-lg p-6 relative"
+          >
             <div className="absolute -top-3 left-4 bg-blue-600 text-white text-[16px] font-medium px-3 py-1 rounded-full">
               Bước {index + 1}
             </div>
@@ -114,11 +140,13 @@ const Step4WorkSteps = ({ job, nextStep, prevStep,mutate }: Props) => {
 
             <div className="mt-4">
               <label className="block text-base font-medium text-gray-700 mb-1">
-                Mô tả
+                {createJobLanguage?.workflow_description_label}
               </label>
               <textarea
                 className="text-text_primary w-full p-3 border border-gray-300 rounded-lg min-h-24"
-                placeholder="Mô tả chi tiết bước thực hiện..."
+                placeholder={
+                  createJobLanguage?.workflow_description_placeholder
+                }
                 {...register(`worksteps.${index}.description`)}
               ></textarea>
               {errors.worksteps?.[index]?.description && (
@@ -136,7 +164,7 @@ const Step4WorkSteps = ({ job, nextStep, prevStep,mutate }: Props) => {
           className="flex items-center gap-2 text-blue-600 font-medium"
         >
           <Plus className="w-4 h-4" />
-          Thêm bước
+          {createJobLanguage?.add_step}
         </button>
 
         {errors.worksteps && (
@@ -151,14 +179,14 @@ const Step4WorkSteps = ({ job, nextStep, prevStep,mutate }: Props) => {
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50"
             onClick={prevStep}
           >
-            Quay lại
+            {createJobLanguage?.back_button}
           </button>
           <button
             type="submit"
             className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
             disabled={isMutating}
           >
-            {isMutating ? "Đang gửi..." : "Tiếp tục"}
+            {isMutating ? <LoadingCircle /> : createJobLanguage?.next_button}
           </button>
         </div>
       </div>
