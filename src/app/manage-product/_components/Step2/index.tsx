@@ -119,11 +119,9 @@ const Step2Packages = ({ job, nextStep, prevStep, mutate }: Props) => {
         {createJobLanguage?.package_title}
       </h2>
       <div className="mb-6">
-        <p className="text-[20px] text-text_primary">Tạo gói dịch vụ của bạn</p>
+        <p className="text-[20px] text-text_primary">{createJobLanguage?.create_package_title}</p>
         <p className="text-[14px] text-text_secondary mb-6">
-          Gói dịch vụ sẽ giúp quá trình nhận dự án của bạn trở nên thuận tiện
-          hơn, giảm bớt các bước thảo luận chi tiết với người thuê. Bạn cần tạo
-          ít nhất một gói và tối đa ba gói cho một dịch vụ.
+          {createJobLanguage?.create_package_description}
         </p>
       </div>
 
@@ -134,7 +132,7 @@ const Step2Packages = ({ job, nextStep, prevStep, mutate }: Props) => {
             className="border border-gray-200 rounded-lg p-6 relative"
           >
             <div className="absolute -top-3 left-4 bg-blue-600 text-white text-[16px] font-medium px-3 py-1 rounded-full">
-              Gói {index + 1}
+              {createJobLanguage?.package_label} {index + 1}
             </div>
 
             {fields.length > 1 && (

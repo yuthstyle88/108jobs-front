@@ -17,22 +17,17 @@ const getSchema = (lang: any) =>
   z.object({
     isOwner: z.literal(true, {
       errorMap: () => ({
-        message:
-          lang?.confirmation_error ||
-          "Vui lòng xác nhận bạn là người cung cấp dịch vụ",
+        message: lang?.confirmation_error,
       }),
     }),
     canComplete: z.literal(true, {
       errorMap: () => ({
-        message:
-          lang?.confirmation_error ||
-          "Vui lòng xác nhận bạn có khả năng hoàn thành dịch vụ",
+        message: lang?.confirmation_error,
       }),
     }),
     agreeTerms: z.literal(true, {
       errorMap: () => ({
-        message:
-          lang?.confirmation_error || "Vui lòng đồng ý với điều khoản dịch vụ",
+        message: lang?.confirmation_error,
       }),
     }),
   });
@@ -143,7 +138,7 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
 
           {(errors.agreeTerms || errors.isOwner || errors.canComplete) && (
             <p className="text-sm text-red-500">
-              Vui lòng chấp nhận điều khoản và điều kiện để tiếp tục
+              {createJobLanguage?.confirmation_error}
             </p>
           )}
         </div>
