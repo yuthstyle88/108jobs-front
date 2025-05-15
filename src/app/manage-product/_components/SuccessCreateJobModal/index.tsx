@@ -1,7 +1,6 @@
 "use client";
 import Modal from "@/components/ui/Modal";
 import { SellerCreateJobs } from "@/types/language";
-import { last } from "lodash";
 import { CircleCheck } from "lucide-react";
 
 interface SuccessCreateJobModalProps {
