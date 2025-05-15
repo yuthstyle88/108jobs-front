@@ -520,6 +520,7 @@ export type ProfileJobBoardLanguage = {
   assistant_feature2: string;
   assistant_feature3: string;
   button_learn_more: string;
+  want_to_get_job_board: string;
 };
 
 export type ProfileRewardLanguage = {
@@ -723,12 +724,14 @@ export type SellerCreateJobs = {
   package_delivery_label: string;
   add_package: string;
   back_button: string;
-  upload_cover_title: string;
-  upload_cover_instruction_title: string;
-  upload_cover_instruction_1: string;
-  upload_cover_instruction_2: string;
-  upload_cover_error: string;
-  upload_gallery_error: string;
+  upload_service_images_title: string;
+  upload_cover_image_title: string;
+  cover_image_note: string;
+  cover_image_note_2: string;
+  upload_at_least_2_images_title: string;
+  upload_at_least_2_images_note: string;
+  add_image_button: string;
+  save_continue_button: string;
   workflow_title: string;
   workflow_description_label: string;
   workflow_description_placeholder: string;
@@ -742,6 +745,18 @@ export type SellerCreateJobs = {
   confirmation_check_3: string;
   confirmation_error: string;
   submission_success: string;
+  submission_success_message: string;
+  got_it_button: string;
+  step_1: string;
+  step_2: string;
+  step_3: string;
+  step_4: string;
+  step_5: string;
+  define_work_steps_description: string;
+  step_label: string;
+  create_package_title: string;
+  create_package_description: string;
+  package_label: string;
 };
 
 export type SellerFreelanceProfile = {
@@ -846,7 +861,6 @@ export type BreadCrumb = {
 };
 export type GoToProfile = {
   member_since: string;
-  review_tab: string;
   work_title: string;
   education_title: string;
   experience_title: string;
@@ -855,4 +869,11 @@ export type GoToProfile = {
   certification_title: string;
   level_intermediate: string;
   level_expert: string;
+  freelancer_review: string;
+  see_more: string;
+  success_rate: string;
+  average_response_time: string;
+  minutes: string;
+  times: string;
+  job_count: string;
 };

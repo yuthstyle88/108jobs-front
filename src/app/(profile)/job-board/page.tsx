@@ -148,7 +148,7 @@ const JobBoard = () => {
 
             <div className="flex items-center gap-4 w-full md:w-auto">
               <Link href="/start-selling" className="text-blue-600 text-sm hover:underline">
-                อยากรับงานบนบอร์ดประกาศงาน ?
+                {jobBoardLanguageData?.want_to_get_job_board}
               </Link>
               <Link 
                 href="/job-board/create-job" 

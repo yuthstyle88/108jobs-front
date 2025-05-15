@@ -115,8 +115,7 @@ const Step4WorkSteps = ({ job, nextStep, prevStep, mutate }: Props) => {
 
       <div className="space-y-8 max-w-4xl mb-6">
         <p className="text-sm text-gray-600">
-          Mô tả các bước thực hiện để hoàn thành dịch vụ của bạn. Điều này giúp
-          khách hàng hiểu rõ quy trình làm việc.
+          {createJobLanguage?.define_work_steps_description}
         </p>
 
         {fields.map((field, index) => (
@@ -125,7 +124,7 @@ const Step4WorkSteps = ({ job, nextStep, prevStep, mutate }: Props) => {
             className="border border-gray-200 rounded-lg p-6 relative"
           >
             <div className="absolute -top-3 left-4 bg-blue-600 text-white text-[16px] font-medium px-3 py-1 rounded-full">
-              Bước {index + 1}
+              {createJobLanguage?.step_label} {index + 1}
             </div>
 
             {fields.length > 2 && (

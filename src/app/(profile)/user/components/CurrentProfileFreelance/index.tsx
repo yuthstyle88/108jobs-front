@@ -97,15 +97,15 @@ const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">จำนวนงานแล้ว</div>
-                  <div className="text-third font-medium">1.2K ครั้ง</div>
+                  <div className="text-text_secondary">{goToProfileLanguage?.job_count}</div>
+                  <div className="text-third font-medium">1.2K {goToProfileLanguage?.times}</div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">เวลาตอบกลับเฉลี่ย</div>
-                  <div className="text-third font-medium">34 นาที</div>
+                  <div className="text-text_secondary">{goToProfileLanguage?.average_response_time}</div>
+                  <div className="text-third font-medium">34 {goToProfileLanguage?.minutes}</div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">อัตราการทำงานสำเร็จ</div>
+                  <div className="text-text_secondary">{goToProfileLanguage?.success_rate}</div>
                   <div className="text-third font-medium">100%</div>
                 </div>
               </div>
@@ -132,7 +132,7 @@ const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
                       onClick={() => setShowFullBio(true)}
                       className="mt-2 text-text_primary font-sans text-sm font-medium underline"
                     >
-                      ดูเพิ่มเติม
+                       {goToProfileLanguage?.see_more}
                     </button>
                   )}
                 </div>
@@ -376,7 +376,7 @@ const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
                     }`}
                     onClick={() => setActiveTab("reviews")}
                   >
-                    {goToProfileLanguage?.review_tab} (928)
+                    {goToProfileLanguage?.freelancer_review} (928)
                   </button>
                   <button
                     className={`py-2 text-sm font-medium border-b-2 ${
@@ -386,7 +386,7 @@ const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
                     }`}
                     onClick={() => setActiveTab("clients")}
                   >
-                    รีวิวจากฟรีแลนซ์ (1)
+                    {goToProfileLanguage?.freelancer_review} (1)
                   </button>
                 </div>
               </div>
