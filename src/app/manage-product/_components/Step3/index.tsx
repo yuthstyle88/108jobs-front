@@ -10,6 +10,7 @@ import useImageUpload from "@/hooks/useImageUpload";
 import useMultiImageUpload from "@/hooks/useMultiImageUpload";
 import { ImageUploadResponse } from "@/types/image";
 import { JobType } from "@/types/job";
+import { interpolateDouble } from "@/utils/interpolate";
 import { Info, Plus, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -140,20 +141,20 @@ const Step3Media = ({
       ) : null}
 
       <h2 className="text-[32px] font-medium mb-6 text-text_primary">
-        {createJobLanguage?.upload_cover_title}
+        {createJobLanguage?.upload_service_images_title}
       </h2>
 
       <div className="space-y-8 max-w-4xl">
         <div>
           <h3 className="text-[20px] font-medium mb-2 text-text_primary">
-            Tải lên ảnh bìa
+            {createJobLanguage?.upload_cover_image_title}
           </h3>
           <div className="p-4 bg-amber-50 border border-amber-100 rounded-lg mb-6 flex">
             <Info className="w-5 h-5 text-amber-500 mr-2 flex-shrink-0" />
             <p className="text-sm text-gray-700 font-normal font-sans leading-6">
-              {createJobLanguage?.upload_cover_instruction_1}
-              <br />• {createJobLanguage?.upload_cover_instruction_1}
-              <br />• {createJobLanguage?.upload_cover_instruction_2}
+              {createJobLanguage?.upload_cover_image_title}
+              <br />• {createJobLanguage?.cover_image_note}
+              <br />• {createJobLanguage?.cover_image_note_2}
             </p>
           </div>
           {!cover.imagePreview ? (
@@ -207,11 +208,16 @@ const Step3Media = ({
 
         <div>
           <h3 className="text-[20px] font-medium mb-2 text-text_primary">
-            Tải lên ít nhất 2 hình ảnh dịch vụ (2/30)
+            {/* {createJobLanguage?.upload_at_least_2_images_title} */}
+            {interpolateDouble(
+              createJobLanguage?.upload_at_least_2_images_title || "",
+              {
+                n: multi.images.length,
+              }
+            )}
           </h3>
           <p className="text-sm text-text_secondary mb-4">
-            Người thuê muốn biết về kỹ năng của bạn, chọn ít nhất 2 hình ảnh thể
-            hiện kỹ năng và chuyên môn của bạn
+            {createJobLanguage?.upload_at_least_2_images_note}
           </p>
 
           <div className="grid grid-cols-4 gap-4 mb-4">
@@ -249,7 +255,9 @@ const Step3Media = ({
                 />
                 <div className="flex flex-col items-center justify-center">
                   <Plus className="w-6 h-6 text-gray-400 mb-1" />
-                  <p className="text-xs text-gray-500">Thêm ảnh</p>
+                  <p className="text-xs text-gray-500">
+                    {createJobLanguage?.add_image_button}
+                  </p>
                 </div>
               </label>
             )}

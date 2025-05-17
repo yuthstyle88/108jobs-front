@@ -1,47 +1,84 @@
-import { getToken } from "next-auth/jwt";
 import { NextResponse, type NextRequest } from "next/server";
+import { auth } from "./auth";
 
-type UserRole = "employer" | "freelancer";
-
-const secret = process.env.AUTH_SECRET;
-
-const roleBasedRoutes: Record<UserRole, string[]> = {
-  employer: [ "/employer/jobs", "/employer/applicants"],
-  freelancer: ["/freelancer/jobs", "/freelancer/proposals"],
+const roleBasedRoutes: Record<"employer" | "freelancer", string[]> = {
+  employer: [
+    "/account-setting",
+    "/employer/applicants",
+    "/apply-freelance",
+    "/favorites",
+    "/coin",
+    "/reward",
+    "/consent-management",
+    "/job-board/create-job"
+  ],
+  freelancer: [
+    "/seller",
+    "/seller-account-setting",
+    "/manage-product",
+    "/favorites",
+    "/coin",
+    "/reward",
+    "/consent-management",
+    "/job-board/create-job"
+  ],
 };
+
+const publicRoutes = ["/job-board"];
 
 const protectedRoutes = Object.values(roleBasedRoutes).flat();
 
+function getRolesAllowedForPath(
+  pathname: string
+): ("employer" | "freelancer")[] {
+  return (["employer", "freelancer"] as const).filter((role) =>
+    roleBasedRoutes[role].some((route) => pathname.startsWith(route))
+  );
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (publicRoutes.includes(pathname)) {
+    return NextResponse.next();
+  }
+
+  if (pathname === "/login") {
+    const session = await auth();
+    if (!session?.user) return NextResponse.next();
+    return NextResponse.redirect(new URL("/", request.url));
+  }
 
   if (!protectedRoutes.some((route) => pathname.startsWith(route))) {
     return NextResponse.next();
   }
 
-  const token = await getToken({ req: request, secret });
-  if (!secret) {
-    console.error('NEXTAUTH_SECRET is missing!');
-    throw new Error('Authentication secret is not configured');
-  }
-  if (!token) {
-    const callbackUrl = encodeURIComponent(request.nextUrl.pathname);
+  const session = await auth();
+  if (!session?.user) {
+    const callbackUrl = encodeURIComponent(pathname);
     return NextResponse.redirect(
       new URL(`/login?redirect=${callbackUrl}`, request.url)
     );
   }
 
-  const userRole = token.role as UserRole;
-  const allowedRoutes = roleBasedRoutes[userRole];
+  const userRoles = session.user.roles as string[];
 
-  if (pathname.startsWith("/seller") && userRole !== "freelancer") {
+  if (pathname.startsWith("/seller") && !userRoles.includes("freelancer")) {
     return NextResponse.redirect(new URL("/start-selling", request.url));
   }
 
+  const allowedRoles = getRolesAllowedForPath(pathname);
+
   if (
-    !allowedRoutes ||
-    !allowedRoutes.some((route) => pathname.startsWith(route))
+    allowedRoles.length === 1 &&
+    allowedRoles[0] === "employer" &&
+    userRoles.includes("freelancer")
   ) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  const isAuthorized = allowedRoles.some((role) => userRoles.includes(role));
+  if (!isAuthorized) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 

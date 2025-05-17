@@ -33,6 +33,7 @@ export enum LanguageFile {
   SELLER_DOCUMENT_INFO = "seller-document-info",
   BREAD_CRUMB = "breadcrumb",
   GO_TO_PROFILE = "profile",
+  PROFILE_USER_EDIT = "user-edit",
 }
 
 export const LANGUAGES = {

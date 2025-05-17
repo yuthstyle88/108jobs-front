@@ -9,23 +9,8 @@ import { API_ROUTES_SELLER } from "@/api/endpoints";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
-
-const experienceSchema = z.object({
-  experienceItems: z.array(
-    z.object({
-      id: z.string().optional(),
-      company: z.string().min(1, "Vui lòng nhập tên công ty"),
-      position: z.string().min(1, "Vui lòng nhập vị trí công việc"),
-      startMonth: z.string(),
-      startYear: z.string(),
-      endMonth: z.string().nullable(),
-      endYear: z.string().nullable(),
-      isCurrent: z.boolean(),
-    })
-  ),
-});
-
-type ExperienceFormData = z.infer<typeof experienceSchema>;
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { LanguageFile } from "@/constants/language";
 
 type ExperienceFromServer = {
   id: string;
@@ -62,6 +47,26 @@ const years = Array.from({ length: 40 }, (_, i) =>
 );
 
 const EditExperience = () => {
+  const { data: userEditLanguage, isLoading: isExperienceLoading } =
+    useGlobalTranslate(LanguageFile.PROFILE_USER_EDIT);
+
+  const experienceSchema = z.object({
+    experienceItems: z.array(
+      z.object({
+        id: z.string().optional(),
+        company: z.string().min(1, userEditLanguage?.company_name_required),
+        position: z.string().min(1, userEditLanguage?.job_title_required),
+        startMonth: z.string(),
+        startYear: z.string(),
+        endMonth: z.string().nullable(),
+        endYear: z.string().nullable(),
+        isCurrent: z.boolean(),
+      })
+    ),
+  });
+
+  type ExperienceFormData = z.infer<typeof experienceSchema>;
+
   const {
     control,
     register,
@@ -147,13 +152,13 @@ const EditExperience = () => {
     }
   };
 
-  const isFetching = isLoading || !isFormReady 
+  const isFetching = isLoading || !isFormReady || isExperienceLoading;
 
   return (
     <div className="flex-1">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-semibold text-blue-600 mb-8">
-          Kinh nghiệm làm việc
+          {userEditLanguage?.work_experience}
         </h1>
 
         {isFetching ? (
@@ -163,7 +168,7 @@ const EditExperience = () => {
         ) : fields.length === 0 ? (
           <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
             <p className="text-gray-500 mb-4">
-              Chưa có thông tin kinh nghiệm làm việc.
+              {userEditLanguage?.no_work_experience_info}
             </p>
             <button
               type="button"
@@ -182,16 +187,17 @@ const EditExperience = () => {
               }}
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
+              <Plus className="w-5 h-5 mr-2" />{" "}
+              {userEditLanguage?.add_more_button}
             </button>
             <div className="flex justify-end">
               <button
                 type="submit"
                 onClick={handleSubmit(onSubmit)}
                 disabled={isMutating}
-                className="w-[128px] py-2 submit-button-custom"
+                className="min-w-[128px] px-2 py-2 submit-button-custom"
               >
-                {isMutating ? <LoadingCircle /> : "Lưu thông tin"}
+                {isMutating ? <LoadingCircle /> : userEditLanguage?.save_button}
               </button>
             </div>
           </div>
@@ -207,12 +213,12 @@ const EditExperience = () => {
                   <div className="grid grid-cols-2 gap-6 mb-6">
                     <div>
                       <label className="block text-gray-700 mb-2">
-                        Tên công ty
+                        {userEditLanguage?.company_name}
                       </label>
                       <input
                         type="text"
                         className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Chỉ định tên công ty"
+                        placeholder={userEditLanguage?.company_name_placeholder}
                         {...register(`experienceItems.${index}.company`)}
                       />
                       {errors.experienceItems?.[index]?.company && (
@@ -222,11 +228,13 @@ const EditExperience = () => {
                       )}
                     </div>
                     <div>
-                      <label className="block text-gray-700 mb-2">Vị trí</label>
+                      <label className="block text-gray-700 mb-2">
+                        {userEditLanguage?.job_title}
+                      </label>
                       <input
                         type="text"
                         className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Chỉ định vị trí công việc"
+                        placeholder={userEditLanguage?.job_title_placeholder}
                         {...register(`experienceItems.${index}.position`)}
                       />
                       {errors.experienceItems?.[index]?.position && (
@@ -240,7 +248,7 @@ const EditExperience = () => {
                   <div className="grid grid-cols-2 gap-6 mb-4">
                     <div>
                       <label className="block text-gray-700 mb-2">
-                        Tháng bắt đầu
+                        {userEditLanguage?.start_month}
                       </label>
                       <select
                         className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -255,7 +263,7 @@ const EditExperience = () => {
                     </div>
                     <div>
                       <label className="block text-gray-700 mb-2">
-                        Năm bắt đầu
+                        {userEditLanguage?.start_year}
                       </label>
                       <select
                         className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -278,7 +286,7 @@ const EditExperience = () => {
                         {...register(`experienceItems.${index}.isCurrent`)}
                       />
                       <span className="ml-2 text-gray-700">
-                        Nơi làm việc hiện tại
+                        {userEditLanguage?.current_workplace}
                       </span>
                     </label>
                   </div>
@@ -287,7 +295,7 @@ const EditExperience = () => {
                     <div className="grid grid-cols-2 gap-6 mb-4">
                       <div>
                         <label className="block text-gray-700 mb-2">
-                          Tháng kết thúc
+                          {userEditLanguage?.end_month}
                         </label>
                         <select
                           className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -302,7 +310,7 @@ const EditExperience = () => {
                       </div>
                       <div>
                         <label className="block text-gray-700 mb-2">
-                          Năm kết thúc
+                          {userEditLanguage?.end_year}
                         </label>
                         <select
                           className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -325,7 +333,9 @@ const EditExperience = () => {
                       className="border-1 border-border_secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                     >
                       <Trash2 className="w-4" />
-                      <span className="ml-2 font-medium">Xóa thông tin</span>
+                      <span className="ml-2 font-medium">
+                        {userEditLanguage?.delete_info}
+                      </span>
                     </button>
                   </div>
                 </div>
@@ -348,16 +358,16 @@ const EditExperience = () => {
               }
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.add_info}
             </button>
 
             <div className="flex justify-end">
               <button
                 type="submit"
                 disabled={isMutating}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className="min-w-[128px] px-2 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
-                {isMutating ? "Đang lưu..." : "Lưu thông tin"}
+                {isMutating ? <LoadingCircle /> : userEditLanguage?.save_info}
               </button>
             </div>
           </form>

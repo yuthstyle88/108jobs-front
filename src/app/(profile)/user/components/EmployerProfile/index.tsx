@@ -98,7 +98,7 @@ const UserProfile = ({ username }: Props) => {
                       onClick={() => setShowFullBio(true)}
                       className="mt-2 text-blue-600 text-sm font-medium hover:underline"
                     >
-                      ดูเพิ่มเติม
+                       {goToProfileLanguage?.see_more}
                     </button>
                   )}
                 </div>
@@ -113,7 +113,7 @@ const UserProfile = ({ username }: Props) => {
             </h2>
             <div className="grid grid-cols-[1fr_1fr_1fr] border-b-[2px] border-b-border_primary">
               <div className="relative whitespace-nowrap border-b-2 border-border_primary hover:text-third duration-150 flex justify-center items-center cursor-pointer px-1 py-3 font-bold text-third  after:absolute after:bottom-[-3px] after:h-[2px] after:w-full after:bg-third">
-                {goToProfileLanguage?.review_tab}
+                {goToProfileLanguage?.freelancer_review}
               </div>
             </div>
           </section>

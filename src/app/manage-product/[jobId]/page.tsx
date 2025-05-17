@@ -39,8 +39,6 @@ const ServiceOnboardingPage = () => {
   const { data: createJobLanguage, isLoading: isCreateJobLoading } =
     useGlobalTranslate(LanguageFile.SELLER_CREATE_JOBS);
 
-  console.log("createJobLanguage", createJobLanguage);
-
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [job, setJob] = useState<JobType>();
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
@@ -170,11 +168,11 @@ const ServiceOnboardingPage = () => {
         ${isPending && !isActive ? "text-gray-500" : ""}
       `}
                 >
-                  {step === 1 && "Thông tin dịch vụ"}
-                  {step === 2 && "Gói và giá cả"}
-                  {step === 3 && "Tải lên ảnh dịch vụ"}
-                  {step === 4 && "Bước làm việc"}
-                  {step === 5 && "Nộp hồ sơ chờ phê duyệt"}
+                  {step === 1 && createJobLanguage?.step_1}
+                  {step === 2 && createJobLanguage?.step_2}
+                  {step === 3 && createJobLanguage?.step_3}
+                  {step === 4 && createJobLanguage?.step_4}
+                  {step === 5 && createJobLanguage?.step_5}
                 </span>
               </div>
             );
@@ -192,6 +190,7 @@ const ServiceOnboardingPage = () => {
           setIsModalOpen(false);
           window.location.href = "/seller/my-service";
         }}
+        language={createJobLanguage}
       />
     </div>
   );

@@ -29,7 +29,8 @@ export type LanguageDataType = Partial<
     SellerCommitmentLetter &
     SellerDocumentInfo &
     BreadCrumb &
-    GoToProfile
+    GoToProfile &
+    ProfileUserEdit
 >;
 export interface GlobalLanguage {
   label_employment_button: string;
@@ -307,6 +308,8 @@ export type ProfileBasicInfoLanguage = {
   confirm_password_placeholder: string;
   submit_button: string;
   password_min_length_error: string;
+  old_password: string;
+  new_password: string;
 };
 
 export type ProfileContactInfoLanguage = {
@@ -520,6 +523,7 @@ export type ProfileJobBoardLanguage = {
   assistant_feature2: string;
   assistant_feature3: string;
   button_learn_more: string;
+  want_to_get_job_board: string;
 };
 
 export type ProfileRewardLanguage = {
@@ -723,10 +727,14 @@ export type SellerCreateJobs = {
   package_delivery_label: string;
   add_package: string;
   back_button: string;
-  upload_cover_title: string;
-  upload_cover_instruction_title: string;
-  upload_cover_instruction_1: string;
-  upload_cover_instruction_2: string;
+  upload_service_images_title: string;
+  upload_cover_image_title: string;
+  cover_image_note: string;
+  cover_image_note_2: string;
+  upload_at_least_2_images_title: string;
+  upload_at_least_2_images_note: string;
+  add_image_button: string;
+  save_continue_button: string;
   upload_cover_error: string;
   upload_gallery_error: string;
   workflow_title: string;
@@ -741,7 +749,21 @@ export type SellerCreateJobs = {
   confirmation_check_2: string;
   confirmation_check_3: string;
   confirmation_error: string;
+  confirmation_warning: string;
   submission_success: string;
+  submission_success_message: string;
+  got_it_button: string;
+  step_1: string;
+  step_2: string;
+  step_3: string;
+  step_4: string;
+  step_5: string;
+  define_work_steps_description: string;
+  step_label: string;
+  create_package_title: string;
+  create_package_description: string;
+  package_label: string;
+  system_note: string;
 };
 
 export type SellerFreelanceProfile = {
@@ -846,7 +868,6 @@ export type BreadCrumb = {
 };
 export type GoToProfile = {
   member_since: string;
-  review_tab: string;
   work_title: string;
   education_title: string;
   experience_title: string;
@@ -855,4 +876,49 @@ export type GoToProfile = {
   certification_title: string;
   level_intermediate: string;
   level_expert: string;
+  freelancer_review: string;
+  see_more: string;
+  success_rate: string;
+  average_response_time: string;
+  minutes: string;
+  times: string;
+  job_count: string;
+  review_tab: string;
+  not_provided: string;
+};
+
+export type ProfileUserEdit = {
+  school_name: string;
+  school_name_placeholder: string;
+  major: string;
+  major_placeholder: string;
+  add_info: string;
+  delete_info: string;
+  save_info: string;
+  company_name: string;
+  company_name_placeholder: string;
+  company_name_required: string;
+  job_title: string;
+  job_title_placeholder: string;
+  job_title_required: string;
+  start_month: string;
+  start_year: string;
+  current_workplace: string;
+  end_month: string;
+  end_year: string;
+  delete_button: string;
+  add_more_button: string;
+  save_button: string;
+  no_work_experience_info: string;
+  no_education_info: string;
+  education: string;
+  work_experience: string;
+  skills: string;
+  languages: string;
+  certificates_awards: string;
+  view_profile: string;
+  medium_level: string;
+  high_level: string;
+  language_placeholder: string;
+  award_placeholder: string;
 };

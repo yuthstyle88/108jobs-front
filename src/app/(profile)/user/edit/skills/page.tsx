@@ -9,19 +9,8 @@ import { API_ROUTES_SELLER } from "@/api/endpoints";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
-
-// Schema
-const skillSchema = z.object({
-  skillItems: z.array(
-    z.object({
-      id: z.string().optional(),
-      skill: z.string().min(1, "Vui lòng nhập kỹ năng"),
-      level: z.string().min(1, "Vui lòng chọn cấp độ"),
-    })
-  ),
-});
-
-type SkillFormData = z.infer<typeof skillSchema>;
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { LanguageFile } from "@/constants/language";
 
 type SkillLevel = {
   id: string;
@@ -34,12 +23,28 @@ type SkillFromServer = {
   level_name: string;
 };
 
-const levelMap: Record<string, string> = {
-  Medium: "Trình độ trung bình",
-  High: "Chuyên môn cao",
-};
-
 const EditSkills = () => {
+  const { data: userEditLanguage, isLoading: isLoading } = useGlobalTranslate(
+    LanguageFile.PROFILE_USER_EDIT
+  );
+
+  const skillSchema = z.object({
+    skillItems: z.array(
+      z.object({
+        id: z.string().optional(),
+        skill: z.string().min(1, "Vui lòng nhập kỹ năng"),
+        level: z.string().min(1, "Vui lòng chọn cấp độ"),
+      })
+    ),
+  });
+
+  type SkillFormData = z.infer<typeof skillSchema>;
+
+  const levelMap: Record<string, string> = {
+    Medium: userEditLanguage?.medium_level || "",
+    High: userEditLanguage?.high_level || "",
+  };
+
   const {
     control,
     register,
@@ -63,12 +68,9 @@ const EditSkills = () => {
     levels: SkillLevel[];
   }>(API_ROUTES_SELLER.profile.skill_level);
 
-  const {
-    data: skillData,
-    isLoading: isSkillLoading,
-  } = usePrivateFetch<{ skill_profiles: SkillFromServer[] }>(
-    API_ROUTES_SELLER.profile.skills
-  );
+  const { data: skillData, isLoading: isSkillLoading } = usePrivateFetch<{
+    skill_profiles: SkillFromServer[];
+  }>(API_ROUTES_SELLER.profile.skills);
 
   const { trigger: sendSkills, isMutating } = usePrivatePost(
     API_ROUTES_SELLER.profile.skills
@@ -114,12 +116,15 @@ const EditSkills = () => {
 
   const levelOptions = levelData?.levels || [];
 
-  const isFetching = isSkillLoading || isLevelLoading || !isFormReady;
+  const isFetching =
+    isSkillLoading || isLevelLoading || !isFormReady || isLoading;
 
   return (
     <div className="flex-1">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-semibold text-blue-600 mb-8">Kỹ năng</h1>
+        <h1 className="text-2xl font-semibold text-blue-600 mb-8">
+          {userEditLanguage?.skills}
+        </h1>
 
         {isFetching ? (
           <div className="bg-white w-full h-40 flex justify-center items-center">
@@ -139,7 +144,7 @@ const EditSkills = () => {
               }
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.add_info}
             </button>
 
             <div className="flex justify-end">
@@ -147,9 +152,9 @@ const EditSkills = () => {
                 type="submit"
                 onClick={handleSubmit(onSubmit)}
                 disabled={isMutating}
-                className="w-[128px] py-2 submit-button-custom"
+                className="min-w-[128px] px-2 py-2 submit-button-custom"
               >
-                {isMutating ? <LoadingCircle /> : "Lưu thông tin"}
+                {isMutating ? <LoadingCircle /> : userEditLanguage?.save_info}
               </button>
             </div>
           </div>
@@ -162,7 +167,9 @@ const EditSkills = () => {
               >
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-gray-700 mb-2">Kỹ năng</label>
+                    <label className="block text-gray-700 mb-2">
+                      {userEditLanguage?.skills}
+                    </label>
                     <input
                       type="text"
                       className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -202,7 +209,9 @@ const EditSkills = () => {
                     className="border-1 border-border_secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                   >
                     <Trash2 className="w-4" />
-                    <span className="ml-2 font-medium">Xóa thông tin</span>
+                    <span className="ml-2 font-medium">
+                      {userEditLanguage?.delete_button}
+                    </span>
                   </button>
                 </div>
               </div>
@@ -219,16 +228,17 @@ const EditSkills = () => {
               }
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
+              <Plus className="w-5 h-5 mr-2" />{" "}
+              {userEditLanguage?.add_more_button}
             </button>
 
             <div className="flex justify-end">
               <button
                 type="submit"
                 disabled={isMutating}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="min-w-[128px] px-2 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                {isMutating ? <LoadingCircle /> : "Lưu thông tin"}
+                {isMutating ? <LoadingCircle /> : userEditLanguage?.save_info}
               </button>
             </div>
           </form>
