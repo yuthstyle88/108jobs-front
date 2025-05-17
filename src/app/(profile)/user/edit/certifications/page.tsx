@@ -9,17 +9,8 @@ import { API_ROUTES_SELLER } from "@/api/endpoints";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
-
-const certificationSchema = z.object({
-  certificationItems: z.array(
-    z.object({
-      id: z.string().optional(),
-      name: z.string().min(1, "Vui lòng nhập tên chứng chỉ hoặc giải thưởng"),
-    })
-  ),
-});
-
-type CertificationFormData = z.infer<typeof certificationSchema>;
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { LanguageFile } from "@/constants/language";
 
 type CertificationFromServer = {
   id: string;
@@ -28,6 +19,20 @@ type CertificationFromServer = {
 };
 
 const EditCertifications = () => {
+  const { data: userEditLanguage, isLoading: isCertLoading } =
+    useGlobalTranslate(LanguageFile.PROFILE_USER_EDIT);
+
+  const certificationSchema = z.object({
+    certificationItems: z.array(
+      z.object({
+        id: z.string().optional(),
+        name: z.string().min(1, "Vui lòng nhập tên chứng chỉ hoặc giải thưởng"),
+      })
+    ),
+  });
+
+  type CertificationFormData = z.infer<typeof certificationSchema>;
+
   const {
     control,
     register,
@@ -87,13 +92,13 @@ const EditCertifications = () => {
     }
   };
 
-  const isFetching = isLoading || !isFormReady;
+  const isFetching = isLoading || !isFormReady || isCertLoading;
 
   return (
     <div className="flex-1">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-semibold text-blue-600 mb-8">
-          Chứng chỉ và giải thưởng
+          {userEditLanguage?.certificates_awards}
         </h1>
 
         {isFetching ? (
@@ -110,7 +115,7 @@ const EditCertifications = () => {
               onClick={() => append({ id: undefined, name: "" })}
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.add_more_button}
             </button>
 
             <div className="flex justify-end">
@@ -120,7 +125,7 @@ const EditCertifications = () => {
                 disabled={isMutating}
                 className="w-[128px] py-2 submit-button-custom"
               >
-                {isMutating ? <LoadingCircle /> : "Lưu thông tin"}
+                {isMutating ? <LoadingCircle /> : userEditLanguage?.save_button}
               </button>
             </div>
           </div>
@@ -138,7 +143,7 @@ const EditCertifications = () => {
                   <input
                     type="text"
                     className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Nhập tên giải thưởng"
+                    placeholder={userEditLanguage?.award_placeholder}
                     {...register(`certificationItems.${index}.name`)}
                   />
                   {errors.certificationItems?.[index]?.name && (
@@ -155,7 +160,7 @@ const EditCertifications = () => {
                     className="border-1 border-border_secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                   >
                     <Trash2 className="w-4" />
-                    <span className="ml-2 font-medium">Xóa thông tin</span>
+                    <span className="ml-2 font-medium">{userEditLanguage?.delete_info}</span>
                   </button>
                 </div>
               </div>
@@ -166,7 +171,7 @@ const EditCertifications = () => {
               onClick={() => append({ id: undefined, name: "" })}
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.add_info}
             </button>
 
             <div className="flex justify-end">
@@ -175,7 +180,7 @@ const EditCertifications = () => {
                 disabled={isMutating}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                {isMutating ? <LoadingCircle /> : "Lưu thông tin"}
+                {isMutating ? <LoadingCircle /> : userEditLanguage?.save_info}
               </button>
             </div>
           </form>

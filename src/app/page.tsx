@@ -5,7 +5,7 @@ import fastwork from "@/assets/images/fastwork-app-qr.webp";
 import imgapp from "@/assets/images/img-app.webp";
 import Header from "@/components/Header";
 import TypingText from "@/components/TypingText";
-import { GroupIcon } from "@/constants/icons";
+import { CategoriesIcon, GroupIcon } from "@/constants/icons";
 import {
   faArrowRight,
   faCheck,
@@ -158,7 +158,7 @@ export default function Home() {
         <section className="hidden sm:block">
           <div className="grid-container-desktop-banner w-full ">
             <div className="min-h-[144px] mt-[-4rem] px-8 rounded-lg bg-white shadow-panel col-start-2 col-end-3">
-              <div className="flex items-center justify-between flex-wrap overflow-x-auto">
+              <div className="flex items-center justify-start flex-wrap overflow-x-auto">
                 {serviceCatalogs.map((catalog, index) => {
                   const matchedIcon = catalogIcons.find(
                     (c) => c.name === catalog.name
@@ -183,7 +183,7 @@ export default function Home() {
                           } relative transform before:absolute before:opacity-0 before:bottom-[calc(56px*0.2*-1+8px)] before:left-0 before:right-0 before:mx-auto before:w-[calc(56px*0.8)] before:h-[calc(56px*0.2)] before:bg-secondary before:rounded-[50%] before:transition-all before:ease-in-out before:[backface-visibility:hidden] group-hover:before:opacity-100 group-hover:before:translate-y-[5px]`}
                         >
                           <Image
-                            src={matchedIcon}
+                            src={matchedIcon || CategoriesIcon.industry}
                             alt={catalog.name}
                             width={56}
                             height={56}

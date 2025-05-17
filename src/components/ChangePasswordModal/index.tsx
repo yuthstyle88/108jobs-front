@@ -3,37 +3,51 @@ import { ERROR_CONSTANTS } from "@/constants/error";
 import useNotification from "@/hooks/useNotification";
 import { ProfileBasicInfoLanguage } from "@/types/language";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import LoadingCircle from "../LoadingCircle";
 import { CustomInput } from "../ui/InputField";
 import Modal from "../ui/Modal";
 
-const changePasswordSchema = z
-  .object({
-    old_password: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
-    new_password: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.new_password === data.confirmPassword, {
-    message: "รหัสผ่านไม่ตรงกัน",
-    path: ["confirmPassword"],
-  });
-
 interface PasswordChangeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  languageData:Partial<ProfileBasicInfoLanguage> | undefined | null;
+  languageData: Partial<ProfileBasicInfoLanguage> | undefined | null;
 }
-
-type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
 const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
   isOpen,
   onClose,
-  languageData
+  languageData,
 }) => {
+  const schema = useMemo(() => {
+    return z
+      .object({
+        old_password: z
+          .string()
+          .min(
+            6,
+            languageData?.password_min_length_error ||
+              "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
+          ),
+        new_password: z
+          .string()
+          .min(
+            6,
+            languageData?.password_min_length_error ||
+              "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
+          ),
+        confirmPassword: z.string(),
+      })
+      .refine((data) => data.new_password === data.confirmPassword, {
+        message: languageData?.password_min_length_error || "รหัสผ่านไม่ตรงกัน",
+        path: ["confirmPassword"],
+      });
+  }, [languageData]);
+
+  type ChangePasswordFormData = z.infer<typeof schema>;
+
   const {
     register,
     handleSubmit,
@@ -41,7 +55,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
     reset,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: zodResolver(changePasswordSchema),
+    resolver: zodResolver(schema),
     mode: "onChange",
   });
 
@@ -51,10 +65,10 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const handleCloseModal = ()=>{
+  const handleCloseModal = () => {
     reset();
     onClose();
-  }
+  };
 
   const onSubmit = async (data: ChangePasswordFormData) => {
     try {
@@ -107,33 +121,33 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <CustomInput
-          label="รหัสผ่านเก่า"
+          label={languageData?.old_password}
           name="old_password"
           type="password"
           register={register("old_password")}
           error={errors.old_password?.message}
-          placeholder="ระบุรหัสผ่าน"
+          placeholder={languageData?.password_placeholder}
           showPassword={showOldPassword}
           toggleShowPassword={() => setShowOldPassword(!showOldPassword)}
         />
         <CustomInput
-          label="รหัสผ่านใหม่"
+          label={languageData?.new_password}
           name="new_password"
           type="password"
           register={register("new_password")}
           error={errors.new_password?.message}
-          placeholder="ระบุรหัสผ่าน"
+          placeholder={languageData?.password_placeholder}
           showPassword={showNewPassword}
           toggleShowPassword={() => setShowNewPassword(!showNewPassword)}
         />
 
         <CustomInput
-          label="กรอกรหัสผ่านใหม่อีกครั้ง"
+          label={languageData?.confirm_password_label}
           name="confirmPassword"
           type="password"
           register={register("confirmPassword")}
           error={errors.confirmPassword?.message}
-          placeholder="ยืนยันรหัสผ่าน"
+          placeholder={languageData?.password_placeholder}
           showPassword={showConfirmPassword}
           toggleShowPassword={() =>
             setShowConfirmPassword(!showConfirmPassword)
@@ -151,7 +165,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
           disabled={isSubmitting}
           className="submit-button py-2"
         >
-          {isSubmitting ? <LoadingCircle /> : "ยืนยัน"}
+          {isSubmitting ? <LoadingCircle /> : languageData?.submit_button}
         </button>
       </form>
     </Modal>

@@ -1,6 +1,9 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
+import Loading from "@/components/Loading";
+import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch } from "@/hooks/api-hooks";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { ProfileData } from "@/types/userData";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
@@ -15,17 +18,27 @@ export default function StartSellingLayout({
   children,
 }: StartSellingLayoutProps) {
   const pathname = usePathname();
+
+  const {
+    data: userEditLanguage,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.PROFILE_USER_EDIT);
+
   const { data: user } = usePrivateFetch<ProfileData>(
     API_ROUTES.profile.get_profile
   );
 
   const menuItems = [
-    { href: "/user/edit/education", label: "Trình độ học vấn" },
-    { href: "/user/edit/experience", label: "Kinh nghiệm làm việc" },
-    { href: "/user/edit/skills", label: "Kỹ năng" },
-    { href: "/user/edit/languages", label: "Ngôn ngữ" },
-    { href: "/user/edit/certifications", label: "Chứng chỉ và giải thưởng" },
+    { href: "/user/edit/education", label: userEditLanguage?.education },
+    { href: "/user/edit/experience", label: userEditLanguage?.work_experience },
+    { href: "/user/edit/skills", label: userEditLanguage?.skills },
+    { href: "/user/edit/languages", label: userEditLanguage?.languages },
+    { href: "/user/edit/certifications", label: userEditLanguage?.certificates_awards },
   ];
+
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
 
   return (
     <>
@@ -61,11 +74,11 @@ export default function StartSellingLayout({
 
               <div className="px-4 py-2 mt-4 border-1 border-border_primary rounded-lg">
                 <Link
-                target="_blank"
+                  target="_blank"
                   href={`/user/${user?.user.username}`}
                   className="text-blue-600 flex justify-center items-center gap-2"
                 >
-                  <p className="font-medium">Xem hồ sơ của bạn</p>
+                  <p className="font-medium">{userEditLanguage?.view_profile}</p>
                   <ExternalLink className="w-4 h-4 mr-2" />
                 </Link>
               </div>

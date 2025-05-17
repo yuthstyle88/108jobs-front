@@ -51,15 +51,13 @@ const Step3Media = ({
   const validateImages = () => {
     let valid = true;
     if (!cover.imagePreview) {
-      // setCoverError(`${createJobLanguage?.upload_cover_error}`);
-      setCoverError(`Please upload a cover image`);
+      setCoverError(`${createJobLanguage?.upload_cover_error}`);
       valid = false;
     } else {
       setCoverError(null);
     }
     if (multi.images.length < 2) {
-      // setGalleryError(`${createJobLanguage?.upload_gallery_error}`);
-      setGalleryError(`Please upload more than 2 images`);
+      setGalleryError(`${createJobLanguage?.upload_gallery_error}`);
       valid = false;
     } else {
       setGalleryError(null);
