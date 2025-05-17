@@ -29,7 +29,8 @@ export type LanguageDataType = Partial<
     SellerCommitmentLetter &
     SellerDocumentInfo &
     BreadCrumb &
-    GoToProfile
+    GoToProfile &
+    ProfileUserEdit
 >;
 export interface GlobalLanguage {
   label_employment_button: string;
@@ -307,6 +308,8 @@ export type ProfileBasicInfoLanguage = {
   confirm_password_placeholder: string;
   submit_button: string;
   password_min_length_error: string;
+  old_password: string;
+  new_password: string;
 };
 
 export type ProfileContactInfoLanguage = {
@@ -732,6 +735,8 @@ export type SellerCreateJobs = {
   upload_at_least_2_images_note: string;
   add_image_button: string;
   save_continue_button: string;
+  upload_cover_error: string;
+  upload_gallery_error: string;
   workflow_title: string;
   workflow_description_label: string;
   workflow_description_placeholder: string;
@@ -744,6 +749,7 @@ export type SellerCreateJobs = {
   confirmation_check_2: string;
   confirmation_check_3: string;
   confirmation_error: string;
+  confirmation_warning: string;
   submission_success: string;
   submission_success_message: string;
   got_it_button: string;
@@ -757,6 +763,7 @@ export type SellerCreateJobs = {
   create_package_title: string;
   create_package_description: string;
   package_label: string;
+  system_note: string;
 };
 
 export type SellerFreelanceProfile = {
@@ -876,4 +883,42 @@ export type GoToProfile = {
   minutes: string;
   times: string;
   job_count: string;
+  review_tab: string;
+  not_provided: string;
+};
+
+export type ProfileUserEdit = {
+  school_name: string;
+  school_name_placeholder: string;
+  major: string;
+  major_placeholder: string;
+  add_info: string;
+  delete_info: string;
+  save_info: string;
+  company_name: string;
+  company_name_placeholder: string;
+  company_name_required: string;
+  job_title: string;
+  job_title_placeholder: string;
+  job_title_required: string;
+  start_month: string;
+  start_year: string;
+  current_workplace: string;
+  end_month: string;
+  end_year: string;
+  delete_button: string;
+  add_more_button: string;
+  save_button: string;
+  no_work_experience_info: string;
+  no_education_info: string;
+  education: string;
+  work_experience: string;
+  skills: string;
+  languages: string;
+  certificates_awards: string;
+  view_profile: string;
+  medium_level: string;
+  high_level: string;
+  language_placeholder: string;
+  award_placeholder: string;
 };

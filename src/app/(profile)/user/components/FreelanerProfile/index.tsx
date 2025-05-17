@@ -177,7 +177,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        Chưa cung cấp thông tin
+                        {goToProfileLanguage?.not_provided}
                       </div>
                     )}
                   </div>
@@ -250,7 +250,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        Chưa cung cấp thông tin
+                        {goToProfileLanguage?.education_title}
                       </div>
                     )}
                   </div>
@@ -285,7 +285,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        Chưa cung cấp thông tin
+                        {goToProfileLanguage?.education_title}
                       </div>
                     )}
                   </div>
@@ -317,7 +317,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        Chưa cung cấp thông tin
+                        {goToProfileLanguage?.education_title}
                       </div>
                     )}
                   </div>
@@ -348,7 +348,7 @@ const FreelancerProfile = ({ username }: Props) => {
                     }`}
                     onClick={() => setActiveTab("reviews")}
                   >
-                    {goToProfileLanguage?.freelancer_review} (928)
+                    {goToProfileLanguage?.review_tab} (928)
                   </button>
                   <button
                     className={`py-2 text-sm font-medium border-b-2 ${

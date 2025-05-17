@@ -9,19 +9,8 @@ import { API_ROUTES_SELLER } from "@/api/endpoints";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
-
-// Zod Schema
-const languageSchema = z.object({
-  languageItems: z.array(
-    z.object({
-      id: z.string().optional(),
-      language: z.string().min(1, "Vui lòng nhập ngôn ngữ"),
-      level: z.string().min(1, "Vui lòng chọn cấp độ"),
-    })
-  ),
-});
-
-type LanguageFormData = z.infer<typeof languageSchema>;
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { LanguageFile } from "@/constants/language";
 
 type LanguageFromServer = {
   id: string;
@@ -35,12 +24,27 @@ type LevelItem = {
   title: string;
 };
 
-const levelMap: Record<string, string> = {
-  Medium: "Trình độ trung bình",
-  High: "Chuyên môn cao",
-};
-
 const EditLanguages = () => {
+  const { data: userEditLanguage, isLoading: isLanguageLoading } =
+    useGlobalTranslate(LanguageFile.PROFILE_USER_EDIT);
+
+  const languageSchema = z.object({
+    languageItems: z.array(
+      z.object({
+        id: z.string().optional(),
+        language: z.string().min(1, "Vui lòng nhập ngôn ngữ"),
+        level: z.string().min(1, "Vui lòng chọn cấp độ"),
+      })
+    ),
+  });
+
+  type LanguageFormData = z.infer<typeof languageSchema>;
+
+  const levelMap: Record<string, string> = {
+    Medium: userEditLanguage?.medium_level || "",
+    High: userEditLanguage?.high_level || "",
+  };
+
   const {
     control,
     register,
@@ -66,12 +70,9 @@ const EditLanguages = () => {
     levels: LevelItem[];
   }>(API_ROUTES_SELLER.profile.skill_level);
 
-  const {
-    data: languageData,
-    isLoading: isLangLoading,
-  } = usePrivateFetch<{ language_profiles: LanguageFromServer[] }>(
-    API_ROUTES_SELLER.profile.languages
-  );
+  const { data: languageData, isLoading: isLangLoading } = usePrivateFetch<{
+    language_profiles: LanguageFromServer[];
+  }>(API_ROUTES_SELLER.profile.languages);
 
   const { trigger: sendLanguages, isMutating } = usePrivatePost(
     API_ROUTES_SELLER.profile.languages
@@ -118,12 +119,15 @@ const EditLanguages = () => {
 
   const levelOptions = levelData?.levels || [];
 
-  const isFetching = isLangLoading || isLevelLoading || !isFormReady;
+  const isFetching =
+    isLangLoading || isLevelLoading || !isFormReady || isLanguageLoading;
 
   return (
     <div className="flex-1">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-semibold text-blue-600 mb-8">Ngôn ngữ</h1>
+        <h1 className="text-2xl font-semibold text-blue-600 mb-8">
+          {userEditLanguage?.languages}
+        </h1>
 
         {isFetching ? (
           <div className="bg-white w-full h-40 flex justify-center items-center">
@@ -143,7 +147,8 @@ const EditLanguages = () => {
               }
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
+              <Plus className="w-5 h-5 mr-2" />{" "}
+              {userEditLanguage?.add_more_button}
             </button>
 
             <div className="flex justify-end">
@@ -153,7 +158,7 @@ const EditLanguages = () => {
                 disabled={isMutating}
                 className="w-[128px] py-2 submit-button-custom"
               >
-                {isMutating ? <LoadingCircle /> : "Lưu thông tin"}
+                {isMutating ? <LoadingCircle /> : userEditLanguage?.save_button}
               </button>
             </div>
           </div>
@@ -166,11 +171,13 @@ const EditLanguages = () => {
               >
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-gray-700 mb-2">Ngôn ngữ</label>
+                    <label className="block text-gray-700 mb-2">
+                      {userEditLanguage?.languages}
+                    </label>
                     <input
                       type="text"
                       className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Ví dụ: Tiếng Thái, Tiếng Anh"
+                      placeholder={userEditLanguage?.language_placeholder}
                       {...register(`languageItems.${index}.language`)}
                     />
                     {errors.languageItems?.[index]?.language && (
@@ -206,7 +213,9 @@ const EditLanguages = () => {
                     className="border-1 border-border_secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                   >
                     <Trash2 className="w-4" />
-                    <span className="ml-2 font-medium">Xóa thông tin</span>
+                    <span className="ml-2 font-medium">
+                      {userEditLanguage?.delete_info}
+                    </span>
                   </button>
                 </div>
               </div>
@@ -223,7 +232,7 @@ const EditLanguages = () => {
               }
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> Thêm thông tin
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.add_info}
             </button>
 
             <div className="flex justify-end">
@@ -232,7 +241,7 @@ const EditLanguages = () => {
                 disabled={isMutating}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                {isMutating ? <LoadingCircle /> : "Lưu thông tin"}
+                {isMutating ? <LoadingCircle /> : userEditLanguage?.save_info}
               </button>
             </div>
           </form>

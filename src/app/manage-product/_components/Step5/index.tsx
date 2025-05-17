@@ -40,6 +40,7 @@ type Props = {
 
 const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
   const createJobLanguage = useTranslateFile(LanguageFile.SELLER_CREATE_JOBS);
+  const global = useTranslateFile(LanguageFile.GLOBAL);
 
   const checkboxes: {
     id: "isOwner" | "canComplete" | "agreeTerms";
@@ -104,15 +105,14 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
         {createJobLanguage?.confirmation_title}
       </h2>
       <p className="mb-6 text-[16px] text-text_secondary font-sans">
-        Nếu không xác nhận đồng ý với các điều khoản, bạn sẽ không thể đăng bán
-        dịch vụ trên Fastlance
+        {createJobLanguage?.confirmation_warning}
       </p>
 
       <div className="space-y-8 max-w-4xl">
         <div className="p-4 bg-secondary border border-third rounded-lg mb-6 flex">
           <Info className="w-5 h-5 text-primary mr-2 flex-shrink-0" />
           <p className="text-sm text-primary mb-2 font-normal font-sans leading-6">
-            Thông tin bổ sung từ hệ thống
+            {createJobLanguage?.system_note}
             <br />• {createJobLanguage?.confirmation_notice_1}
             <br />• {createJobLanguage?.confirmation_notice_2}
           </p>
@@ -120,7 +120,7 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
 
         <div className="space-y-4">
           {checkboxes.map(({ id, label }) => (
-            <div key={id} className="flex items-start gap-2">
+            <div key={id} className="flex flex-row items-center gap-2">
               <input
                 type="checkbox"
                 id={id}
@@ -155,7 +155,7 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
             type="submit"
             className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
           >
-            Đăng dịch vụ
+            {global?.button_submit}
           </button>
         </div>
       </div>
