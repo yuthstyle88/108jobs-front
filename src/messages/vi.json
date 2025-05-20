@@ -1,0 +1,40 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "features": "Tính năng",
+    "compare": "So sánh",
+    "compare_links": {
+      "chrome": "iBrowe với Chrome",
+      "firefox": "iBrowe với Firefox",
+      "google": "iBrowe với Google",
+      "duckduckgo": "iBrowe Search với DuckDuckGo",
+      "safari": "iBrowe với Safari",
+      "edge": "iBrowe với Edge"
+    },
+    "business": "Cho doanh nghiệp",
+    "support": "Hỗ trợ",
+    "download": "Tải xuống iBrowe",
+    "logo_alt": "Logo iBrowe",
+    "privacy": "Chính sách bảo mật",
+    "linux": "iBrowe cho Linux"
+  },
+  "pages": {
+    "home": {
+      "title": "iBrowe - Trình duyệt Web An toàn và Riêng tư",
+      "description": "Trình duyệt được thiết kế cho sự riêng tư và an toàn của bạn"
+    },
+    "download": {
+      "title": "Tải xuống iBrowe",
+      "description": "Tải xuống iBrowe cho Windows, Mac, Linux và Di động"
+    },
+    "privacy": {
+      "title": "Chính sách bảo mật",
+      "description": "Chính sách bảo mật iBrowe"
+    }
+  },
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "try_again": "Thử lại"
+  }
+}
