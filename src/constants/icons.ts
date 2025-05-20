@@ -50,6 +50,8 @@ import know from "../assets/icons/apply-freelancer/know.svg";
 import favicon from "../app/favicon.ico";
 import logo_icon from "../assets/icons/logo-icon.svg";
 import logo_reward from "../assets/icons/reward-default.svg";
+import thailand_geo from "../assets/icons/thailand_select.dd0930bf.svg";
+import other_geo from "../assets/icons/other_select.70c4da84.svg";
 
 export const ApplyFreelancerIcon = {
   ck,
@@ -115,4 +117,6 @@ export const AssetIcon = {
   favicon,
   logo_icon,
   logo_reward,
+  thailand_geo,
+  other_geo,
 };

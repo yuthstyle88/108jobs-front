@@ -6,6 +6,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import SwipeToConfirm from "./components/SlideToConfirm";
 import { API_ROUTES } from "@/api/endpoints";
+import ConfirmTermsFreelancerModal from "../ConfirmTermsFreelancerModal";
 
 interface StepTenProps {
   formData: FreelancerFormData;
@@ -26,9 +27,25 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep }) => {
 
   const [isSuccess, setIsSuccess] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [isOpenTerm, setIsOpenTerm] = useState(false);
+  const [isLoadingSwipe, setIsLoadingSwipe] = useState(false);
 
   const { trigger: applyFreelancer, isMutating: isUpdateMuting } =
     usePrivatePost(API_ROUTES.profile.apply_freelancer);
+
+  const handleCheckTerms = () => {
+    setIsLoadingSwipe(true);
+    setTimeout(() => {
+      setIsLoadingSwipe(false);
+      setIsSuccess(true);
+      setIsOpenTerm(true);
+    }, 800);
+  };
+
+  const handleCloseTerms = () => {
+    setIsSuccess(false);
+    setIsOpenTerm(false);
+  };
 
   const handleConfirm = async () => {
     setApiError(null);
@@ -95,6 +112,7 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep }) => {
         clearFormStorage();
         setIsSuccess(true);
         setIsLogin(false);
+        setIsOpenTerm(false);
         window.location.href = "/apply-freelance/landing";
       } else {
         setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
@@ -172,9 +190,14 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep }) => {
         </div>
         <div className="w-full flex flex-col items-center justify-center mb-8 relative ">
           <div className="w-[400px] ">
-            <SwipeToConfirm
-              onConfirm={handleConfirm}
+            {/* <SwipeToConfirm
+              onConfirm={handleCheckTerms}
               isLoading={isUpdateMuting || isLogin}
+              isSuccess={isSuccess}
+            /> */}
+            <SwipeToConfirm
+              onConfirm={handleCheckTerms}
+              isLoading={isLoadingSwipe}
               isSuccess={isSuccess}
             />
           </div>
@@ -185,6 +208,12 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep }) => {
           )}
         </div>
       </div>
+      <ConfirmTermsFreelancerModal
+        isOpen={isOpenTerm}
+        onClose={handleCloseTerms}
+        handleConfirmChange={handleConfirm}
+        isLoading={isUpdateMuting || isLogin}
+      />
     </div>
   );
 };

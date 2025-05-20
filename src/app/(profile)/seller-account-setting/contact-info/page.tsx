@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useBasicInfoForm } from "../../account-setting/hooks/useBasicInfoForm";
 import ZipcodeSearch from "../components/SearchZipcode";
+import { CountriesResponse } from "@/types/location";
 
 const emailSchema = z.object({
   email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์").optional(),
@@ -23,14 +24,6 @@ const emailSchema = z.object({
 
 type VerifyEmailFormData = z.infer<typeof emailSchema>;
 
-interface Country {
-  id: string;
-  name: string;
-}
-
-interface CountriesResponse {
-  countries: Country[];
-}
 
 export interface AddressFormData {
   country: string;
@@ -182,7 +175,6 @@ const ContactInfo = () => {
   };
 
   const onSubmitAddress = async (data: AddressFormData) => {
-    console.log("Address data:", data);
     try {
       let payload: Partial<AddressFormData>;
 

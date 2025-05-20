@@ -45,7 +45,7 @@ export default function StartSellingLayout({
       <section className="bg-[#FBFBFC] mb-12">
         <div className="h-[200px] relative flex justify-center items-center w-full edit-profile-gradient">
           <p className="text-[1.75rem] font-semibold text-white">
-            Chỉnh sửa thông tin freelancer
+            {userEditLanguage?.user_edit_heading}
           </p>
         </div>
 
