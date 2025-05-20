@@ -1,10 +1,7 @@
 import { defaultMetadata } from "@/config/metadata";
-import { ReactNode } from "react";
-interface BusinessLayoutProps {
-  children: ReactNode;
-}
+import { LayoutProps } from "@/types/layout";
 
-export default function BusinessLayout({ children }: BusinessLayoutProps) {
+export default function BusinessLayout({ children }: LayoutProps) {
   return (
     <>
         {children}

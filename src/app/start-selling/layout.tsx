@@ -1,17 +1,13 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import SubMenu from "@/components/SubMenu";
-import { ReactNode } from "react";
 import { defaultMetadata } from "@/config/metadata";
 import SpHeader from "@/containers/SpHeader";
-
-interface StartSellingLayoutProps {
-  children: ReactNode;
-}
+import { LayoutProps } from "@/types/layout";
 
 export default function StartSellingLayout({
   children,
-}: StartSellingLayoutProps) {
+}: LayoutProps) {
   return (
     <>
       <div className="hidden sm:block">

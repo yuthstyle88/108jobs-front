@@ -33,11 +33,11 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
       <Link href={`/user/${user?.user.username}`}>
         <div className="p-4 bg-secondary hover:bg-[#D0E1FB] duration-150 rounded-tl-lg rounded-tr-lg relative">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+            <div className="bg-gray-200 flex items-center justify-center">
               <Image
                 src={user?.user.avatar_url || ProfileImage.avatar}
                 alt="avatar"
-                className="rounded-full"
+                className="rounded-full w-12 h-12 object-cover"
                 width={500}
                 height={500}
               />

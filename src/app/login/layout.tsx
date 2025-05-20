@@ -1,10 +1,7 @@
 import { defaultMetadata } from "@/config/metadata";
-import { ReactNode } from "react";
-interface LoginProps {
-  children: ReactNode;
-}
+import { LayoutProps } from "@/types/layout";
 
-export default function Login({ children }: LoginProps) {
+export default function Login({ children }: LayoutProps) {
   return (
     <>
         {children}

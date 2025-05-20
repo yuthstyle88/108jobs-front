@@ -29,6 +29,7 @@ import { Navigation } from "swiper/modules";
 import { API_ROUTES } from "@/api/endpoints";
 import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
 import Loading from "@/components/Loading";
+import LocationSelectionModal from "@/components/LocationSelectionModal";
 import {
   AssetsImage,
   CompareImage,
@@ -44,9 +45,9 @@ import { usePublicFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { ServiceCatalogData } from "@/types/catalog";
 import { catalogIcons } from "@/types/catalogIcon";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
-import LocationSelectionModal from "@/components/LocationSelectionModal";
 
 const interestImages = [
   LandingImage.interest_1,
@@ -78,6 +79,7 @@ const CustomNavigation = () => {
 };
 
 export default function Home() {
+  const { data: session } = useSession();
   const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
   const [expanded, setExpanded] = useState(false);
 
@@ -1305,11 +1307,13 @@ export default function Home() {
         </div>
       </div>
       <Footer />
-      <LocationSelectionModal
-        isOpen={isOpenLocationSelection}
-        onClose={() => setIsOpenLocationSelection(false)}
-        handleConfirmChange={() => setIsOpenLocationSelection(false)}
-      />
+      {session && (
+        <LocationSelectionModal
+          isOpen={isOpenLocationSelection}
+          onClose={() => setIsOpenLocationSelection(false)}
+          handleConfirmChange={() => setIsOpenLocationSelection(false)}
+        />
+      )}
     </div>
   );
 }

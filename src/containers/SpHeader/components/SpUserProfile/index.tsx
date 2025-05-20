@@ -23,7 +23,7 @@ const SpUserAvatar = () => {
       <Image
         src={user?.user.avatar_url || ProfileImage.avatar}
         alt="avatar"
-        className="rounded-full w-8 h-8"
+        className="rounded-full w-8 h-8 object-cover"
         width={500}
         height={500}
       />

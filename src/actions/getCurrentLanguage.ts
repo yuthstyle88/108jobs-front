@@ -6,6 +6,8 @@ export async function getCurrentLanguage() {
     const cookieStore = await cookies()
     try {
         const data = cookieStore.get('current-language')?.value
+        console.log('current-language', data);
+        
         if (!data) return null
 
         const parsedData = JSON.parse(data)

@@ -77,12 +77,12 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
       <div className="relative px-4">
         <button
           onClick={() => toggle()}
-          className="flex items-center justify-center gap-2 w-12 h-12 rounded-full "
+          className="flex items-center justify-center gap-2 "
         >
           <Image
             src={user?.user.avatar_url || ProfileImage.avatar}
             alt="avatar"
-            className="rounded-full"
+            className="w-12 h-12 rounded-full object-cover"
             width={500}
             height={500}
           />
