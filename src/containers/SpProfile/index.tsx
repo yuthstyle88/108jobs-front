@@ -32,7 +32,7 @@ const SpProfile = () => {
 
   return (
     <main className="min-h-screen bg-white relative">
-      <section className="pb-16">
+      <section className="pb-20">
         <svg
           preserveAspectRatio="none"
           width="100%"
@@ -52,7 +52,7 @@ const SpProfile = () => {
               width={80}
               height={80}
               alt="avatar"
-              className="inline-flex justify-center items-center rounded-full object-cover object-center mt-4"
+              className="inline-flex justify-center items-center w-[80px] min-h-[80px]  rounded-full object-cover object-center mt-4"
             />
           </Link>
           <Link href={`/user/${user?.user.username}`}>

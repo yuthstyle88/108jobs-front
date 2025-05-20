@@ -74,7 +74,6 @@ export type LanguageDataType = Partial<
     Commission
 >;
 
-// Mỗi file lưu ngôn ngữ hiện tại + data
 type LanguageStoreData = {
   data: LanguageDataType;
   lang: string;
@@ -109,7 +108,7 @@ type CurrentLanguageStore = {
 export const useCurrentLanguageStore = create<CurrentLanguageStore>()(
     persist(
         (set) => ({
-          currentLang: 'th', // ค่าเริ่มต้น
+          currentLang: 'th',
           setCurrentLang: (lang) => set({ currentLang: lang }),
         }),
         {

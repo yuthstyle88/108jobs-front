@@ -2,15 +2,12 @@ import SellerHeader from "@/components/SellerHeader";
 import SellerSidebar from "@/components/SellerSidebar";
 import { defaultMetadata } from "@/config/metadata";
 import SpSellerHeader from "@/containers/SpHeaderSeller";
-import { ReactNode } from "react";
+import { LayoutProps } from "@/types/layout";
 
-interface StartSellingLayoutProps {
-  children: ReactNode;
-}
 
 export default function StartSellingLayout({
   children,
-}: StartSellingLayoutProps) {
+}: LayoutProps) {
   return (
     <div className="min-h-screen bg-[#F8F9FB] flex">
       <div className="hidden md:block">

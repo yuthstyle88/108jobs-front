@@ -1,13 +1,10 @@
 import Header from "@/components/Header";
-import { ReactNode } from "react";
 import { defaultMetadata } from "@/config/metadata";
 import ChatWrapper from "@/containers/ChatWrapper";
 import { ChatLanguageProvider } from "@/contexts/ChatLanguage";
-interface CreateLayoutProps {
-  children: ReactNode;
-}
+import { LayoutProps } from "@/types/layout";
 
-export default function ProfileLayout({ children }: CreateLayoutProps) {
+export default function ProfileLayout({ children }: LayoutProps) {
   return (
     <ChatLanguageProvider>
       <Header type="primary" />

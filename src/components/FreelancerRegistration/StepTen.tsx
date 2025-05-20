@@ -1,12 +1,13 @@
+import { API_ROUTES } from "@/api/endpoints";
 import { useFormStorage } from "@/app/apply-freelance/hooks/useFormStorage";
 import { FreelancerImage } from "@/constants/images";
 import { usePrivatePost } from "@/hooks/api-hooks";
 import { FreelancerFormData } from "@/types/applyFreelancer";
+import { signIn } from "next-auth/react";
 import Image from "next/image";
 import React, { useState } from "react";
-import SwipeToConfirm from "./components/SlideToConfirm";
-import { API_ROUTES } from "@/api/endpoints";
 import ConfirmTermsFreelancerModal from "../ConfirmTermsFreelancerModal";
+import SwipeToConfirm from "./components/SlideToConfirm";
 
 interface StepTenProps {
   formData: FreelancerFormData;
@@ -24,7 +25,6 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep }) => {
     setCurrentStep: () => {},
     setFormData: () => {},
   });
-
   const [isSuccess, setIsSuccess] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [isOpenTerm, setIsOpenTerm] = useState(false);
@@ -98,22 +98,22 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep }) => {
       }
       if (res?.jwt) {
         setIsLogin(true);
-        const loginResponse = await fetch("/api/auth/token-login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token: res.jwt }),
+        const loginResult = await signIn("credentials", {
+          token: res.jwt,
+          redirect: false,
+          callbackUrl: "/apply-freelance/landing",
         });
 
-        if (!loginResponse.ok) {
+        if (loginResult?.url) {
+          const path = new URL(loginResult.url).pathname;
+          clearFormStorage();
+          setIsSuccess(true);
+          setIsLogin(false);
+          setIsOpenTerm(false);
+          window.location.href = path;
+        } else {
           setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
-          return;
         }
-
-        clearFormStorage();
-        setIsSuccess(true);
-        setIsLogin(false);
-        setIsOpenTerm(false);
-        window.location.href = "/apply-freelance/landing";
       } else {
         setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
       }
