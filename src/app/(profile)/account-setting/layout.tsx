@@ -1,15 +1,22 @@
+import { Metadata } from 'next'
 import Header from "@/components/Header";
-import { defaultMetadata } from "@/config/metadata";
 import AccountSettingWrapper from "@/containers/AccountSettingWrapper";
 import SpHeader from "@/containers/SpHeader";
-import { ReactNode } from "react";
-interface ConsentManagementLayoutProps {
-  children: ReactNode;
+import { LayoutProps } from "@/types/layout";
+import { generateBaseMetadata } from '@/lib/metadata'
+import { getCurrentLanguage } from '@/actions/getCurrentLanguage';
+
+export async function generateMetadata(): Promise<Metadata> {
+    const currentLang = await getCurrentLanguage()
+    return generateBaseMetadata({
+            locale: currentLang || 'th'
+        }
+    )
 }
 
 export default function ProfileLayout({
   children,
-}: ConsentManagementLayoutProps) {
+}: LayoutProps) {
   return (
     <>
       <div className="hidden sm:block">
@@ -33,16 +40,3 @@ export default function ProfileLayout({
   );
 }
 
-export const metadata = {
-  ...defaultMetadata,
-  title: "Fastwork.co แหล่งรวมฟรีแลนซ์คุณภาพอันดับ 1 ที่ธุรกิจทั่วไทยเลือกใช้",
-  description:
-    "คัดเฉพาะฟรีแลนซ์ผู้เชี่ยวชาญกว่า 5 หมื่นคน รับประกันได้งานตรงทุกความต้องการโดยทีมงานมืออาชีพ ที่ได้รับความไว้ใจจากลูกค้ากว่า 3 แสนราย ให้เราช่วยพัฒนาธุรกิจคุณ!",
-  openGraph: {
-    ...defaultMetadata.openGraph,
-    title:
-      "Fastwork.co แหล่งรวมฟรีแลนซ์คุณภาพอันดับ 1 ที่ธุรกิจทั่วไทยเลือกใช้",
-    description:
-      "คัดเฉพาะฟรีแลนซ์ผู้เชี่ยวชาญกว่า 5 หมื่นคน รับประกันได้งานตรงทุกความต้องการโดยทีมงานมืออาชีพ ที่ได้รับความไว้ใจจากลูกค้ากว่า 3 แสนราย ให้เราช่วยพัฒนาธุรกิจคุณ!",
-  },
-};
