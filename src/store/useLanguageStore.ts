@@ -31,7 +31,8 @@ import {
   SellerDocumentInfo,
   BreadCrumb,
   GoToProfile,
-  ProfileUserEdit
+  ProfileUserEdit,
+  Commission
 } from "@/types/language";
 import { create } from "zustand";
 
@@ -68,7 +69,8 @@ export type LanguageDataType = Partial<
     SellerDocumentInfo &
     BreadCrumb &
     GoToProfile &
-    ProfileUserEdit
+    ProfileUserEdit &
+    Commission
 >;
 
 // Mỗi file lưu ngôn ngữ hiện tại + data

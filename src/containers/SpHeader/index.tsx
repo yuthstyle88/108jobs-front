@@ -1,10 +1,6 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
-import { ProfileImage } from "@/constants/images";
 import { LANGUAGES } from "@/constants/language";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { usePrivateFetch } from "@/hooks/api-hooks";
-import { ProfileData } from "@/types/userData";
 import { faBullhorn, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CircleUserRound, Grip, House, Search } from "lucide-react";
@@ -14,6 +10,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import LanguageBottomSheet from "../SpBottomTab";
+import SpUserAvatar from "./components/SpUserProfile";
 
 type SpHeaderProps = {
   showSearch?: boolean;
@@ -22,10 +19,6 @@ type SpHeaderProps = {
 const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
   const { data: session } = useSession();
   const pathname = usePathname();
-
-  const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
-  );
 
   const [showLang, setShowLang] = useState(false);
   const { lang } = useLanguage();
@@ -85,20 +78,7 @@ const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
             />
           </button>
           {session ? (
-            <Link
-              href="/profile"
-              className={`flex-1 flex items-center justify-center p-2 text-white text-[24px] cursor-pointer ${
-                pathname === "/profile" ? "bg-primary" : ""
-              }`}
-            >
-              <Image
-                src={user?.user.avatar_url || ProfileImage.avatar}
-                alt="avatar"
-                className="rounded-full w-8 h-8"
-                width={500}
-                height={500}
-              />
-            </Link>
+            <SpUserAvatar />
           ) : (
             <Link
               href="/login"

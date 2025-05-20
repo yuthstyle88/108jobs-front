@@ -23,6 +23,9 @@ export const API_ROUTES = {
     update_password: "/profile/change/password",
     verify_forgot_password: "/users/verify/reset-password",
   },
+  location:{
+    get_countries: "/profile/countries",
+  }
 };
 export const API_ROUTES_SELLER = {
   profile: {

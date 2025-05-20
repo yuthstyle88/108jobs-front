@@ -13,6 +13,7 @@ interface ModalProps {
   contentClassName?: string;
   showCloseButton?: boolean;
   closeOnOutsideClick?: boolean;
+  isBlur?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -24,6 +25,7 @@ const Modal: React.FC<ModalProps> = ({
   contentClassName,
   showCloseButton = true,
   closeOnOutsideClick = true,
+  isBlur = false,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
@@ -43,28 +45,18 @@ const Modal: React.FC<ModalProps> = ({
   }, [isVisible, onClose]);
 
   useEffect(() => {
-    const preventScroll = (e: Event) => {
-      e.preventDefault();
-    };
+  if (isOpen) {
+    document.body.style.overflow = "hidden"; // ✅ chặn scroll ngoài modal
+    setIsVisible(true);
+  } else {
+    handleClose();
+  }
 
-    if (isOpen) {
-      setIsVisible(true);
+  return () => {
+    document.body.style.overflow = ""; // reset scroll khi đóng modal
+  };
+}, [isOpen, handleClose]);
 
-      document.body.style.overflow = "";
-
-      document.addEventListener("wheel", preventScroll, { passive: false });
-      document.addEventListener("touchmove", preventScroll, { passive: false });
-      document.addEventListener("scroll", preventScroll, { passive: false });
-    } else {
-      handleClose();
-    }
-
-    return () => {
-      document.removeEventListener("wheel", preventScroll);
-      document.removeEventListener("touchmove", preventScroll);
-      document.removeEventListener("scroll", preventScroll);
-    };
-  }, [isOpen, handleClose]);
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (closeOnOutsideClick && modalRef.current && !modalRef.current.contains(e.target as Node)) {
@@ -93,8 +85,9 @@ const Modal: React.FC<ModalProps> = ({
   return createPortal(
     <div
       className={cn(
-        "fixed inset-0 z-[9999] flex items-center justify-center px-4 bg-black/40",
-        isLeaving ? "animate-backdrop-hide" : "animate-backdrop-show"
+        "fixed inset-0 z-[9999] flex items-center justify-center px-4 bg-black/40 ",
+        isLeaving ? "animate-backdrop-hide" : "animate-backdrop-show",
+        isBlur ? " backdrop-blur-md" : ""
       )}
       onClick={handleOutsideClick}
       aria-modal="true"

@@ -46,6 +46,7 @@ import { ServiceCatalogData } from "@/types/catalog";
 import { catalogIcons } from "@/types/catalogIcon";
 import Link from "next/link";
 import { useState } from "react";
+import LocationSelectionModal from "@/components/LocationSelectionModal";
 
 const interestImages = [
   LandingImage.interest_1,
@@ -80,6 +81,8 @@ export default function Home() {
   const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
   const [expanded, setExpanded] = useState(false);
 
+  const [isOpenLocationSelection, setIsOpenLocationSelection] = useState(false);
+
   const {
     data: globalLanguageData,
     isLoading,
@@ -99,20 +102,17 @@ export default function Home() {
     {
       icon: AssetsImage.group,
       title: homeLanguageData?.tittle_first_slogan,
-      description:
-        "ฟรีแลนซ์ผ่านการคัดเลือก และยืนยันตัวตน กับ Fastwork สามารถตรวจสอบได้",
+      description: homeLanguageData?.content_freelancer_verification,
     },
     {
       icon: AssetsImage.shield,
       title: homeLanguageData?.tittle_second_slogan,
-      description:
-        "เงินของคุณจะได้รับความคุ้มครองตั้งแต่ฟรีแลนซ์เริ่มทํางานไปจนถึงได้รับงานที่พอใจ",
+      description: homeLanguageData?.content_payment_protection,
     },
     {
       icon: AssetsImage.paper,
       title: homeLanguageData?.tittle_third_slogan,
-      description:
-        "พบกับกองทัพฟรีแลนซ์คุณภาพ พร้อมตอบโจทย์ทุกธุรกิจ ครอบคลุมทุกสายงาน",
+      description: homeLanguageData?.content_quality_freelancers,
     },
   ];
 
@@ -398,7 +398,9 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="hidden sm:block"><SpAdsSlider /></section>
+        <section className="hidden sm:block">
+          <SpAdsSlider />
+        </section>
 
         <section className="grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3">
@@ -669,7 +671,7 @@ export default function Home() {
 
         <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-            ฟรีแลนซ์ยอดนิยมในหมวด รับจัดดอกไม้
+            {homeLanguageData?.title_popular_freelancers}
           </div>
         </section>
 
@@ -703,7 +705,7 @@ export default function Home() {
 
         <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-            ฟรีแลนซ์ยอดนิยมในหมวด ดูดวง โหราศาสตร์ ความเชื่อ
+            {homeLanguageData?.title_astrology_freelancers}
           </div>
         </section>
 
@@ -737,7 +739,7 @@ export default function Home() {
 
         <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-            ฟรีแลนซ์ยอดนิยมในหมวด Photography
+            {homeLanguageData?.title_logo_design_freelancers}
           </div>
         </section>
 
@@ -1008,54 +1010,10 @@ export default function Home() {
                   expanded ? "max-h-[500px]" : "max-h-20"
                 }`}
               >
-                <p>
-                  Fastwork.co คือเว็บไซต์ที่รวบรวม ฟรีแลนซ์
-                  มืออาชีพจากหลากหลายสายงานไว้ในที่เดียวกัน ไม่ว่าจะเป็น
-                  งานออกแบบโลโก้ ทำแบนเนอร์โฆษณา เขียนบทความ แปลภาษา
-                  การตลาดออนไลน์ พัฒนาเว็บไซต์ และงานอื่นๆ อีกกว่า 90 หมวดหมู่
-                  เพื่อตอบโจทย์ความต้องการที่หลากหลายของทั้งผู้ประกอบการและผู้ใช้งานทั่วไป
-                  ทีมงานของเราพัฒนา Fastwork.co ขึ้นโดยเน้นความเรียบง่าย
-                  และความสะดวกรวดเร็วในการใช้งาน
-                  ด้วยแนวคิดที่จะสร้างสรรค์แพลทฟอร์มที่จะช่วยประหยัดเวลาให้กับทั้ง
-                  ฟรีแลนซ์ และลูกค้า
-                  อีกทั้งยังมุ่งมั่นที่จะสนับสนุนการสร้างธุรกิจใหม่
-                  และต่อยอดธุรกิจให้กับผู้ประกอบการทั้งรายใหญ่รายย่อย
-                  และยังช่วยเหลือ ฟรีแลนซ์ ให้หางานได้ง่าย
-                  สร้างรายได้ให้มากขึ้นและมั่นคง
-                  ตลอดจนยกระดับมาตรฐานฟรีแลนซ์ไทยให้มีคุณภาพที่ดีขึ้นอีกด้วย
-                </p>
+                <p>{homeLanguageData?.content_fastwork_1}</p>
                 <br />
-                <p>
-                  ด้วยเหตุนี้ Fastwork.co
-                  จึงทำหน้าที่เสมือนเป็นพื้นที่สื่อกลางออนไลน์ระหว่าง ฟรีแลนซ์
-                  และผู้ที่มีความต้องการจ้างงานให้มาเจอกันได้ทุกที่ทุกเวลา
-                  โดยที่ ฟรีแลนซ์ จะใช้เว็บไซต์ Fastwork.co
-                  เป็นพื้นที่ในการลงประกาศรับจ้างงาน
-                  ในขณะที่ลูกค้าก็สามารถเข้ามาค้นหางานของ ฟรีแลนซ์
-                  ที่ต้องการได้ในที่เดียวกัน
-                  อีกทั้งยังมีอิสระในการเลือกจ้างงานเป็นครั้งๆได้
-                  สามารถเปรียบเทียบราคาและคุณภาพผลงานของ ฟรีแลนซ์
-                  ที่มีอยู่หลากหลาย เพื่อให้ตรงกับความต้องการมากที่สุดอีกด้วย
-                  นอกจากนี้ ด้วยระบบการชำระเงินที่ปลอดภัยของ Fastwork.co
-                  ยังช่วยรับประกันการส่งมอบงานที่ครบถ้วนถูกต้องให้กับฝั่งลูกค้า
-                  ด้วยการเป็นตัวกลางในการถือเงินระหว่างที่ ฟรีแลนซ์ กำลังทำงาน
-                  และในทางกลับกันก็ช่วยรับประกันการส่งมอบเงินค่าจ้างให้กับ
-                  ฟรีแลนซ์ เมื่อทำงานสำเร็จและส่งมอบให้ลูกค้าด้วยเช่นกัน
-                </p>
-                <br />{" "}
-                <p>
-                  ปัจจุบัน Fastwork.co มี ฟรีแลนซ์
-                  ที่ผ่านการคัดกรองคุณภาพแล้วกว่า 50,000 คน
-                  ให้บริการในหมวดหมู่งานที่ครอบคลุมความต้องการกว่า 90 หมวดหมู่
-                  ด้วยจำนวนงานที่หลากหลายมากกว่า 15,000 งาน
-                  ซึ่งคัดแยกตามทักษะความสามารถของ ฟรีแลนซ์
-                  เพื่อตอบโจทย์ความต้องการของลูกค้าอย่างครบวงจร
-                  ไม่ว่าจะเป็นเจ้าของกิจการ ธุรกิจ SME แม่ค้าออนไลน์
-                  หรือแม้แต่บุคคลทั่วไป
-                  ที่กำลังมองหางานระดับมืออาชีพในราคาที่จับต้องได้
-                  การันตีคุณภาพโดย Fastwork แหล่งรวม ฟรีแลนซ์ มืออาชีพ
-                  ที่ได้รับความไว้วางใจจากลูกค้ากว่า 700,000 ราย
-                </p>
+                <p>{homeLanguageData?.content_fastwork_2}</p>
+                <br /> <p>{homeLanguageData?.content_fastwork_3}</p>
               </div>
               {!expanded && (
                 <div
@@ -1084,10 +1042,10 @@ export default function Home() {
               <div className="grid w-full gap-x-8 gap-y-6 grid-cols-4 grid-rows-2">
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    กราฟิกและการออกแบบ
+                    {homeLanguageData?.graphic_design}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <Link href="/social-media-banner">ออกแบบแบนเนอร์</Link>
+                    {/* <Link href="/social-media-banner">ออกแบบแบนเนอร์</Link>
                     ,&nbsp;
                     <Link href="/publication/namecard">ออกแบบนามบัตร</Link>
                     ,&nbsp;
@@ -1098,15 +1056,16 @@ export default function Home() {
                     <Link href="/tattoo-design">ออกแบบลายสัก</Link>,&nbsp;
                     <Link href="/packaging">ออกแบบแพคเกจจิ้ง</Link>,&nbsp;
                     <Link href="/corporate-identity">ออกแบบ CI</Link>,&nbsp;
-                    <Link href="/design-graphic">ดูเพิ่มเติม</Link>
+                    <Link href="/design-graphic">ดูเพิ่มเติม</Link> */}
+                    {homeLanguageData?.graphic_design_services}
                   </p>
                 </div>
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    สถาปัตย์และวิศวกรรม
+                    {homeLanguageData?.architecture_engineering}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <Link href="/architect-and-interior/renovation">
+                    {/* <Link href="/architect-and-interior/renovation">
                       รีโนเวทบ้าน
                     </Link>
                     ,&nbsp;
@@ -1136,15 +1095,16 @@ export default function Home() {
                       ถอดแบบเครื่องกล
                     </Link>
                     ,&nbsp;
-                    <Link href="/architect-and-engineer">ดูเพิ่มเติม</Link>
+                    <Link href="/architect-and-engineer">ดูเพิ่มเติม</Link> */}
+                    {homeLanguageData?.architecture_engineering_services}
                   </p>
                 </div>
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    เว็บไซต์และเขียนโปรแกรม
+                    {homeLanguageData?.website_programming}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <Link href="/ux-ui-design-web-app">ออกแบบเว็บไซต์</Link>
+                    {/* <Link href="/ux-ui-design-web-app">ออกแบบเว็บไซต์</Link>
                     ,&nbsp;
                     <Link href="/web-development/ecommerce">
                       สร้างเว็บขายของ
@@ -1161,15 +1121,16 @@ export default function Home() {
                     <Link href="/it-solution-and-support/software">
                       รับลงโปรแกรม
                     </Link>
-                    ,&nbsp;<Link href="/web-programming">ดูเพิ่มเติม</Link>
+                    ,&nbsp;<Link href="/web-programming">ดูเพิ่มเติม</Link> */}
+                    {homeLanguageData?.website_programming_services}
                   </p>
                 </div>
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    การตลาดและโฆษณา
+                    {homeLanguageData?.marketing_advertising}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <Link href="/seo">รับทำ SEO</Link>,&nbsp;
+                    {/* <Link href="/seo">รับทำ SEO</Link>,&nbsp;
                     <Link href="/google-ads">โฆษณา Google</Link>,&nbsp;
                     <Link href="/social-media-ads/facebook-ads">
                       โฆษณา Facebook
@@ -1186,15 +1147,16 @@ export default function Home() {
                     <Link href="/promote-real-estate">รับฝากขายบ้าน</Link>
                     ,&nbsp;
                     <Link href="/google-map">ปักหมุด google map</Link>,&nbsp;
-                    <Link href="/marketing-advertising">ดูเพิ่มเติม</Link>
+                    <Link href="/marketing-advertising">ดูเพิ่มเติม</Link> */}
+                    {homeLanguageData?.marketing_advertising_services}
                   </p>
                 </div>
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    เขียนและแปลภาษา
+                    {homeLanguageData?.writing_translation}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <Link href="/translation">แปลภาษา</Link>,&nbsp;
+                    {/* <Link href="/translation">แปลภาษา</Link>,&nbsp;
                     <Link href="/translator">ล่ามแปลภาษา</Link>,&nbsp;
                     <Link href="/transcription">ถอดไฟล์เสียง</Link>,&nbsp;
                     <Link href="/content-writing">เขียนคอนเทนต์</Link>,&nbsp;
@@ -1211,15 +1173,16 @@ export default function Home() {
                     <Link href="/story-writing/poets-and-poems">
                       รับแต่งกลอน
                     </Link>
-                    ,&nbsp;<Link href="/writing-translation">ดูเพิ่มเติม</Link>
+                    ,&nbsp;<Link href="/writing-translation">ดูเพิ่มเติม</Link> */}
+                    {homeLanguageData?.writing_translation_services}
                   </p>
                 </div>
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    ภาพและเสียง
+                    {homeLanguageData?.media_audio}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <Link href="/photography">ตากล้อง</Link>,&nbsp;
+                    {/* <Link href="/photography">ตากล้อง</Link>,&nbsp;
                     <Link href="/photography/wedding">ถ่ายพรีเวดดิ้ง</Link>
                     ,&nbsp;
                     <Link href="/podcast">สร้าง Podcast</Link>,&nbsp;
@@ -1233,15 +1196,16 @@ export default function Home() {
                     ,&nbsp;
                     <Link href="/animations">ทำอนิเมชั่น</Link>,&nbsp;
                     <Link href="/voice-over">พากย์เสียง</Link>,&nbsp;
-                    <Link href="/photography-video">ดูเพิ่มเติม</Link>
+                    <Link href="/photography-video">ดูเพิ่มเติม</Link> */}
+                    {homeLanguageData?.media_audio_services}
                   </p>
                 </div>
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    ธุรกิจและที่ปรึกษา
+                    {homeLanguageData?.business_consulting}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <Link href="/accounting-and-finance/accounting-service">
+                    {/* <Link href="/accounting-and-finance/accounting-service">
                       รับทำบัญชี
                     </Link>
                     ,&nbsp;<Link href="/counseling">รับปรึกษาปัญหาชีวิต</Link>
@@ -1256,15 +1220,16 @@ export default function Home() {
                     <Link href="/commercial-registration">จดทะเบียนบริษัท</Link>
                     ,&nbsp;
                     <Link href="/business">ปรึกษาธุรกิจ</Link>,&nbsp;
-                    <Link href="/consultant">ดูเพิ่มเติม</Link>
+                    <Link href="/consultant">ดูเพิ่มเติม</Link> */}
+                    {homeLanguageData?.business_consulting_services}
                   </p>
                 </div>
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    ไลฟ์สไตล์
+                    {homeLanguageData?.lifestyle}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    <Link href="/car-inspection">ตรวจรถมือสอง</Link>,&nbsp;
+                    {/* <Link href="/car-inspection">ตรวจรถมือสอง</Link>,&nbsp;
                     <Link href="/feng-shui">ซินแสดูฮวงจุ้ยบ้าน</Link>,&nbsp;
                     <Link href="/gaming">รับจ้างเล่นเกม</Link>,&nbsp;
                     <Link href="/horoscope">ดูดวง</Link>,&nbsp;
@@ -1274,7 +1239,8 @@ export default function Home() {
                     <Link href="/singer-band">หานักร้อง</Link>,&nbsp;
                     <Link href="/trip-planner">รับวางแผนเที่ยว</Link>,&nbsp;
                     <Link href="/prop-stylist">สไตล์ลิส</Link>,&nbsp;
-                    <Link href="/lifestyle">ดูเพิ่มเติม</Link>
+                    <Link href="/lifestyle">ดูเพิ่มเติม</Link> */}
+                    {homeLanguageData?.lifestyle_services}
                   </p>
                 </div>
               </div>
@@ -1339,6 +1305,11 @@ export default function Home() {
         </div>
       </div>
       <Footer />
+      <LocationSelectionModal
+        isOpen={isOpenLocationSelection}
+        onClose={() => setIsOpenLocationSelection(false)}
+        handleConfirmChange={() => setIsOpenLocationSelection(false)}
+      />
     </div>
   );
 }

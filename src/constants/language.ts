@@ -34,6 +34,7 @@ export enum LanguageFile {
   BREAD_CRUMB = "breadcrumb",
   GO_TO_PROFILE = "profile",
   PROFILE_USER_EDIT = "user-edit",
+  COMMISSION = "commission",
 }
 
 export const LANGUAGES = {
