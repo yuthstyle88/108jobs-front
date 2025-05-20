@@ -1,3 +1,4 @@
+import { persist } from "zustand/middleware";
 import { LanguageFile } from "@/constants/language";
 import {
   GlobalLanguage,
@@ -100,3 +101,19 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
           : { ...state.languageData, ...data },
     })),
 }));
+
+type CurrentLanguageStore = {
+  currentLang: string;
+  setCurrentLang: (lang: string) => void;
+};
+export const useCurrentLanguageStore = create<CurrentLanguageStore>()(
+    persist(
+        (set) => ({
+          currentLang: 'th', // ค่าเริ่มต้น
+          setCurrentLang: (lang) => set({ currentLang: lang }),
+        }),
+        {
+          name: 'current-language'
+        }
+    )
+);
