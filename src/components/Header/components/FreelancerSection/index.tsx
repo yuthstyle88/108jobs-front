@@ -37,7 +37,9 @@ const FreelancerSession = ({
       <div className="group hidden lg:block">
         <div className="relative">
           <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
-            <p className="">{globalLanguageData?.increase_hiring_opportunity}</p>
+            <p className="">
+              {globalLanguageData?.increase_hiring_opportunity}
+            </p>
             <FontAwesomeIcon icon={faChevronDown} />
           </div>
           <div className="absolute left-0 right-0 w-[230px] bg-transparent h-4"></div>
@@ -102,7 +104,7 @@ const FreelancerSession = ({
           <Image
             src={user?.user.avatar_url || ProfileImage.avatar}
             alt="avatar"
-            className="rounded-full"
+            className="rounded-full w-12 h-12 object-cover"
             width={500}
             height={500}
           />

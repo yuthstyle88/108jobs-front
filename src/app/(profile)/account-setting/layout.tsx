@@ -8,6 +8,8 @@ import { getCurrentLanguage } from '@/actions/getCurrentLanguage';
 
 export async function generateMetadata(): Promise<Metadata> {
     const currentLang = await getCurrentLanguage()
+    console.log('currentLang', currentLang);
+    
     return generateBaseMetadata({
             locale: currentLang || 'th'
         }

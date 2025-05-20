@@ -35,13 +35,13 @@ const AccountStats = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 text-black">
           <div className="bg-white rounded-lg p-6 flex flex-col justify-center items-center">
-            <figure className="w-20 h-20 rounded-full overflow-hidden relative">
+            <figure className="w-20 h-20 rounded-full">
               <Image
                 src={user?.user.avatar_url || ProfileImage.avatar}
                 alt="avatar"
                 width={80}
                 height={80}
-                className="object-cover"
+                className="object-cover w-20 h-20 rounded-full"
               />
             </figure>
             <h3 className="text-lg font-medium mb-1">{user?.user.username}</h3>

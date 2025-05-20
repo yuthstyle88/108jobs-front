@@ -14,6 +14,8 @@ import Link from "next/link";
 import { useState } from "react";
 import LanguageDropdown from "../LanguageDropDown";
 import Loading from "../Loading";
+import Image from "next/image";
+import { ProfileImage } from "@/constants/images";
 
 const SellerHeader = () => {
   const { data: globalLanguageData } = useGlobalTranslate(LanguageFile.GLOBAL);
@@ -70,9 +72,15 @@ const SellerHeader = () => {
           <div className="relative" ref={profileMenuRef}>
             <button
               onClick={toggleProfileMenu}
-              className="w-8 h-8 bg-black rounded-full overflow-hidden  flex justify-center items-center"
+              className="flex justify-center items-center"
             >
-              {/* Avatar image can be added here */}
+              <Image
+                src={user?.user.avatar_url || ProfileImage.avatar}
+                alt="avatar"
+                className="w-8 h-8 rounded-full object-cover"
+                width={500}
+                height={500}
+              />
             </button>
 
             {isProfileMenuOpen && (

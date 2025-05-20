@@ -217,7 +217,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        {goToProfileLanguage?.experience_title}
+                        {goToProfileLanguage?.not_provided}
                       </div>
                     )}
                   </div>
@@ -250,7 +250,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        {goToProfileLanguage?.education_title}
+                        {goToProfileLanguage?.not_provided}
                       </div>
                     )}
                   </div>
@@ -285,7 +285,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        {goToProfileLanguage?.education_title}
+                        {goToProfileLanguage?.not_provided}
                       </div>
                     )}
                   </div>
@@ -317,7 +317,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        {goToProfileLanguage?.education_title}
+                        {goToProfileLanguage?.not_provided}
                       </div>
                     )}
                   </div>

@@ -1,67 +1,76 @@
 "use client";
+import Loading from "@/components/Loading";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { scrollToElementById } from "@/utils/scrollSmooth";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-const MEMBER_TIERS = [
-  {
-    id: "member",
-    name: "Member",
-    feePercent: 12,
-    minIncome: 0,
-    maxIncome: 1799999,
-    color: "bg-blue-400",
-    icon: "🔹",
-  },
-  {
-    id: "bronze",
-    name: "Bronze",
-    feePercent: 10,
-    minIncome: 1800000,
-    maxIncome: 8199999,
-    color: "bg-amber-500",
-    icon: "🥉",
-  },
-  {
-    id: "silver",
-    name: "Silver",
-    feePercent: 9,
-    minIncome: 8200000,
-    maxIncome: 24999999,
-    color: "bg-gray-300",
-    icon: "🥈",
-  },
-  {
-    id: "gold",
-    name: "Gold",
-    feePercent: 8,
-    minIncome: 25000000,
-    maxIncome: 109999999,
-    color: "bg-yellow-400",
-    icon: "🥇",
-  },
-  {
-    id: "platinum",
-    name: "Platinum",
-    feePercent: 7,
-    minIncome: 110000000,
-    maxIncome: 349999999,
-    color: "bg-gray-400",
-    icon: "👑",
-  },
-  {
-    id: "diamond",
-    name: "Diamond",
-    feePercent: 6,
-    minIncome: 350000000,
-    maxIncome: Infinity,
-    color: "bg-blue-300",
-    icon: "💎",
-  },
-];
-
 const MyServices = () => {
+  const {
+    data: commissionLanguage,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.COMMISSION);
+
+  const MEMBER_TIERS = [
+    {
+      id: "member",
+      name: commissionLanguage?.tier_table_rows_0_level,
+      feePercent: 12,
+      minIncome: 0,
+      maxIncome: 1799999,
+      color: "bg-blue-400",
+      icon: "🔹",
+    },
+    {
+      id: "bronze",
+      name: commissionLanguage?.tier_table_rows_1_level,
+      feePercent: 10,
+      minIncome: 1800000,
+      maxIncome: 8199999,
+      color: "bg-amber-500",
+      icon: "🥉",
+    },
+    {
+      id: "silver",
+      name: commissionLanguage?.tier_table_rows_2_level,
+      feePercent: 9,
+      minIncome: 8200000,
+      maxIncome: 24999999,
+      color: "bg-gray-300",
+      icon: "🥈",
+    },
+    {
+      id: "gold",
+      name: commissionLanguage?.tier_table_rows_3_level,
+      feePercent: 8,
+      minIncome: 25000000,
+      maxIncome: 109999999,
+      color: "bg-yellow-400",
+      icon: "🥇",
+    },
+    {
+      id: "platinum",
+      name: commissionLanguage?.tier_table_rows_4_level,
+      feePercent: 7,
+      minIncome: 110000000,
+      maxIncome: 349999999,
+      color: "bg-gray-400",
+      icon: "👑",
+    },
+    {
+      id: "diamond",
+      name: commissionLanguage?.tier_table_rows_5_level,
+      feePercent: 6,
+      minIncome: 350000000,
+      maxIncome: Infinity,
+      color: "bg-blue-300",
+      icon: "💎",
+    },
+  ];
+
   const [showFaqItem, setShowFaqItem] = useState(true);
 
   const [memberTier, setMemberTier] = useState(MEMBER_TIERS[0]);
@@ -90,20 +99,21 @@ const MyServices = () => {
     setDropdownOpen(false);
   };
 
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
+
   return (
     <div className="relative p-4 md:p-10 xl:p-20">
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="block sm:hidden w-full lg:w-1/3 relative">
           <div className="sticky top-20 bg-white rounded-lg shadow-md overflow-hidden">
             <div className="bg-blue-600 text-white p-4 text-center">
-              <h3 className="font-medium">
-                Tính toán phí dịch vụ và giá dự án
-              </h3>
+              <h3 className="font-medium">{commissionLanguage?.header}</h3>
             </div>
             <div className="p-4 space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Cấp bậc thành viên
+                  {commissionLanguage?.translator_type_label}
                 </label>
                 <div className="relative">
                   <button
@@ -111,7 +121,9 @@ const MyServices = () => {
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                   >
                     <span className="text-gray-700">
-                      {memberTier.name} (Phí dịch vụ {memberTier.feePercent}%)
+                      {memberTier.name} (
+                      {commissionLanguage?.translation_fee_label}{" "}
+                      {memberTier.feePercent}%)
                     </span>
                     <ChevronDown
                       className={`w-5 h-5 text-gray-500 transition-transform ${
@@ -131,7 +143,9 @@ const MyServices = () => {
                           onClick={() => handleTierSelect(tier)}
                         >
                           <span>
-                            {tier.name} (Phí dịch vụ {tier.feePercent}%)
+                            {tier.name} (
+                            {commissionLanguage?.translation_fee_label}{" "}
+                            {tier.feePercent}%)
                           </span>
                         </div>
                       ))}
@@ -143,23 +157,22 @@ const MyServices = () => {
                     href="#"
                     className="text-blue-600 hover:underline text-xs"
                   >
-                    Kiểm tra cấp bậc thành viên của bạn
+                    {commissionLanguage?.translator_type_additional_info}
                   </Link>
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Giá dự án
+                  {commissionLanguage?.unit_price_label}
                 </label>
                 <div className="flex">
                   <input
                     type="text"
                     className="text-text_primary flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="123213123213"
+                    placeholder="0"
                     value={projectPrice}
                     onChange={(e) => {
-                      // Allow only numbers and format with commas
                       const value = e.target.value.replace(/\D/g, "");
                       setProjectPrice(value);
                     }}
@@ -172,7 +185,9 @@ const MyServices = () => {
 
               <div className="border-t border-gray-200 pt-4">
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-gray-700">Phí dịch vụ</span>
+                  <span className="text-gray-700">
+                    {commissionLanguage?.translation_fee_label}
+                  </span>
                   <span className="text-blue-600 font-medium">
                     {projectPrice
                       ? formatNumber(
@@ -189,7 +204,7 @@ const MyServices = () => {
                 <div className="flex justify-between items-center border-t border-gray-200 pt-4">
                   <div>
                     <div className="text-gray-700">
-                      Số tiền nhận được từ nền tảng
+                      {commissionLanguage?.additional_fee_label}
                     </div>
                   </div>
                   <div className="text-blue-600 font-bold">
@@ -214,10 +229,10 @@ const MyServices = () => {
           <div className="bg-gradient-to-r from-blue-500 to-blue-700 rounded-lg mb-8 p-8 text-white relative overflow-hidden">
             <div className="relative z-10">
               <h1 className="text-3xl font-bold mb-2">
-                Phí dịch vụ dựa trên thu nhập tích lũy
+                {commissionLanguage?.header}
               </h1>
               <p className="text-lg opacity-90">
-                Phí dịch vụ Fastlance theo cấp độ
+                {commissionLanguage?.subheader}
               </p>
             </div>
           </div>
@@ -244,7 +259,7 @@ const MyServices = () => {
                     />
                   </svg>
                   <span className="font-medium text-text_primary">
-                    Tất cả nội dung
+                    {commissionLanguage?.all_content_title}
                   </span>
                 </div>
                 <ChevronDown
@@ -264,7 +279,9 @@ const MyServices = () => {
                         onClick={(e) => handleClick(e, 1)}
                       >
                         <span className="cursor-pointer hover:underline">
-                          Phí dịch vụ dựa trên thu nhập tích lũy là gì?
+                          {
+                            commissionLanguage?.all_content_what_is_fee_based_on_accumulated_income
+                          }
                         </span>
                       </Link>
                     </li>
@@ -274,7 +291,11 @@ const MyServices = () => {
                         href="/content/commission#section2"
                         onClick={(e) => handleClick(e, 2)}
                       >
-                        <span>Phí dịch vụ được tính như thế nào?</span>
+                        <span>
+                          {
+                            commissionLanguage?.all_content_how_is_fee_calculated
+                          }
+                        </span>
                       </Link>
 
                       <ul className="mt-2 pl-5 space-y-2">
@@ -285,8 +306,7 @@ const MyServices = () => {
                             onClick={(e) => handleClick(e, 3)}
                           >
                             <span>
-                              Ví dụ 1: Không có dự án được phê duyệt trong tháng
-                              hiện tại
+                              {commissionLanguage?.all_content_example_1_title}
                             </span>
                           </Link>
                         </li>
@@ -297,8 +317,7 @@ const MyServices = () => {
                             onClick={(e) => handleClick(e, 4)}
                           >
                             <span>
-                              Ví dụ 2: Có dự án được phê duyệt trong tháng này
-                              cho đến ngày hiện tại
+                              {commissionLanguage?.all_content_example_2_title}
                             </span>
                           </Link>
                         </li>
@@ -308,7 +327,9 @@ const MyServices = () => {
                             href="/content/commission#section5"
                             onClick={(e) => handleClick(e, 5)}
                           >
-                            <span>Ví dụ 3: Đầu tháng mới</span>
+                            <span>
+                              {commissionLanguage?.all_content_example_3_title}
+                            </span>
                           </Link>
                         </li>
                       </ul>
@@ -320,7 +341,7 @@ const MyServices = () => {
                         onClick={(e) => handleClick(e, 6)}
                       >
                         <span>
-                          Phí dịch vụ Fastlance được sử dụng cho mục đích gì?
+                          {commissionLanguage?.all_content_what_is_fee_used_for}
                         </span>
                       </Link>
                     </li>
@@ -333,36 +354,39 @@ const MyServices = () => {
           {/* Membership Tiers Table */}
           <div id="section1" className="mb-8">
             <h2 className="text-xl font-medium mb-6 text-text_primary">
-              Phí dịch vụ dựa trên thu nhập tích lũy là gì?
+              {commissionLanguage?.what_is_accumulated_income_fee_title}
             </h2>
             <p className="text-gray-700 mb-6">
-              Đây là phí dịch vụ được khấu trừ trên tổng tiền mỗi dự án của
-              freelancer và sẽ được tính theo cấp bậc thành viên Fastlance.
-              Trong đó, cấp bậc thành viên được xác định dựa vào thu nhập tích
-              lũy trong 3 tháng gần nhất tính đến ngày freelancer tạo hoặc chỉnh
-              sửa báo giá và chỉ bao gồm các dự án đã hoàn thành.
+              {commissionLanguage?.what_is_accumulated_income_fee_description}
             </p>
 
             <div className="mt-4 mb-6">
-              <Link href="#" className="text-blue-600 hover:underline text-sm">
-                Kiểm tra cấp bậc thành viên của bạn
+              <Link
+                href="/seller"
+                target="_blank"
+                className="text-blue-600 underline text-sm"
+              >
+                {commissionLanguage?.check_your_tier}
               </Link>
             </div>
 
             <p className="text-gray-700 mb-6">
-              Chi tiết cách tính phí dịch vụ như sau:
+              {commissionLanguage?.tier_table_header_name}
             </p>
 
             <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 text-text_primary">
               <div className="grid grid-cols-3 text-sm">
                 <div className="font-medium p-4 bg-gray-100">
-                  Cấp bậc thành viên
+                  {commissionLanguage?.tier_table_headers_member_level}
                 </div>
                 <div className="font-medium p-4 bg-gray-100">
-                  Thu nhập tích lũy trong 3 tháng gần nhất tính đến hiện tại
-                  (VND)
+                  {commissionLanguage?.tier_table_headers_accumulated_income}
                 </div>
-                <div className="font-medium p-4 bg-gray-100">% Phí dịch vụ</div>
+                <div className="font-medium p-4 bg-gray-100">
+                  {
+                    commissionLanguage?.tier_table_headers_service_fee_percentage
+                  }
+                </div>
               </div>
 
               {MEMBER_TIERS.map((tier) => (
@@ -391,7 +415,9 @@ const MyServices = () => {
                       ? `${formatNumber(tier.minIncome)} - ${formatNumber(
                           tier.maxIncome
                         )}`
-                      : `${formatNumber(tier.minIncome)} trở lên`}
+                      : `${formatNumber(tier.minIncome)} ${
+                          commissionLanguage?.tier_table_rows_5_income_range_upper
+                        }`}
                   </div>
                   <div
                     className={`p-4 font-medium ${
@@ -404,8 +430,7 @@ const MyServices = () => {
               ))}
             </div>
             <p className="text-gray-500 text-xs mt-2">
-              *Thu nhập tích lũy trong vòng 3 tháng trở lại sẽ được tính toán
-              dựa trên các dự án đã được phê duyệt.
+              *{commissionLanguage?.tier_table_note}
             </p>
           </div>
 
@@ -415,27 +440,30 @@ const MyServices = () => {
               id="section2"
               className="text-xl font-medium mb-6 text-text_primary"
             >
-              Phí dịch vụ được tính như thế nào?
+              {commissionLanguage?.how_is_fee_calculated_section_title}
             </h2>
             <ul className="list-disc pl-5 space-y-2 text-gray-700 mb-6">
               <li>
-                Hệ thống sẽ tính phí dựa trên tổng thu nhập tích lũy trong 3
-                tháng gần nhất tính đến ngày hiện tại, chỉ bao gồm các dự án đã
-                được phê duyệt.
+                {
+                  commissionLanguage?.how_is_fee_calculated_section_description_1
+                }
               </li>
               <li>
-                Tỷ lệ phần trăm phí dịch vụ cho mỗi báo giá sẽ được tính toán
-                ngay khi Freelancer tạo báo giá.
+                {
+                  commissionLanguage?.how_is_fee_calculated_section_description_2
+                }
               </li>
               <li>
-                Nếu báo giá được chỉnh sửa, tỷ lệ phần trăm phí dịch vụ hệ thống
-                sẽ được điều chỉnh và tính toán dựa trên ngày chỉnh sửa.
+                {
+                  commissionLanguage?.how_is_fee_calculated_section_description_3
+                }
               </li>
             </ul>
 
             <p className="text-gray-700 mb-6">
-              Freelancer có thể tham khảo thêm thông tin chi tiết thông qua các
-              ví dụ sau đây.
+              {
+                commissionLanguage?.how_is_fee_calculated_section_freelancer_reference
+              }
             </p>
 
             {/* Table for Phí dịch vụ được tính như thế nào */}
@@ -444,10 +472,14 @@ const MyServices = () => {
                 <thead>
                   <tr className="bg-gray-50">
                     <th className="p-4 text-left font-medium text-sm text-gray-700">
-                      Bảng tính phí dịch vụ
+                      {
+                        commissionLanguage?.how_is_fee_calculated_section_calculation_steps_title
+                      }
                     </th>
                     <th className="p-4 text-left font-medium text-sm text-gray-700">
-                      Cách tính
+                      {
+                        commissionLanguage?.how_is_fee_calculated_section_calculation_steps_title_method
+                      }
                     </th>
                   </tr>
                 </thead>
@@ -456,39 +488,48 @@ const MyServices = () => {
                     <td className="p-4">
                       <div className="flex items-center">
                         <span className="font-medium mr-2">
-                          1. Thu nhập tích lũy
+                          {
+                            commissionLanguage?.how_is_fee_calculated_section_calculation_steps_step_1_title
+                          }
                         </span>
                       </div>
                     </td>
                     <td className="p-4">
-                      Thu nhập của các dự án đã hoàn thành trong 3 tháng gần
-                      nhất, tính tới ngày tạo báo giá.
+                      {
+                        commissionLanguage?.how_is_fee_calculated_section_calculation_steps_step_1_description
+                      }
                     </td>
                   </tr>
                   <tr className="border-t border-gray-200">
                     <td className="p-4">
                       <div className="flex items-center">
                         <span className="font-medium mr-2">
-                          2. Xác định cấp bậc
+                          {
+                            commissionLanguage?.how_is_fee_calculated_section_calculation_steps_step_2_title
+                          }
                         </span>
                       </div>
                     </td>
                     <td className="p-4">
-                      Dựa vào thu nhập tích lũy để xác định cấp bậc thành viên
-                      tương ứng.
+                      {
+                        commissionLanguage?.how_is_fee_calculated_section_calculation_steps_step_2_description
+                      }
                     </td>
                   </tr>
                   <tr className="border-t border-gray-200">
                     <td className="p-4">
                       <div className="flex items-center">
                         <span className="font-medium mr-2">
-                          3. Áp dụng % phí dịch vụ
+                          {
+                            commissionLanguage?.how_is_fee_calculated_section_calculation_steps_step_3_title
+                          }
                         </span>
                       </div>
                     </td>
                     <td className="p-4">
-                      Áp dụng % phí dịch vụ tương ứng với cấp bậc thành viên cho
-                      dự án.
+                      {
+                        commissionLanguage?.how_is_fee_calculated_section_calculation_steps_step_3_description
+                      }
                     </td>
                   </tr>
                 </tbody>
@@ -502,55 +543,72 @@ const MyServices = () => {
             className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary"
           >
             <div className="bg-blue-100 rounded-lg px-4 py-2 inline-block mb-4">
-              <h3 className="text-blue-800 font-medium">Ví dụ 1</h3>
+              <h3 className="text-blue-800 font-medium">
+                {" "}
+                {commissionLanguage?.example_1_title}
+              </h3>
               <span className="text-blue-700">
-                Không có dự án được phê duyệt trong tháng hiện tại
+                {commissionLanguage?.example_1_subtitle}
               </span>
             </div>
 
             <ul className="space-y-3 mb-4">
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>Hôm nay là ngày 10 tháng 6 năm 2024.</span>
+                <span>{commissionLanguage?.example_1_details_date}</span>
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>
-                  Trong tháng 6, không có dự án mới nào được phê duyệt.
-                </span>
+                <span>{commissionLanguage?.example_1_details_status}</span>
               </li>
             </ul>
 
             <p className="mb-4">
-              Do đó, % phí dịch vụ tính đến ngày 10 tháng 6 năm 2024 sẽ như sau:
+              {commissionLanguage?.example_1_details_calculation_intro}
             </p>
 
             <div className="grid grid-cols-4 gap-3 mb-6">
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
-                <div className="font-medium">tháng 3 năm 2024</div>
+                <div className="font-medium">
+                  {commissionLanguage?.example_1_details_months_0_month}
+                </div>
                 <div className="mt-2">
-                  <div>Thu nhập</div>
+                  <div>
+                    {commissionLanguage?.example_1_details_months_0_label}
+                  </div>
                   <div className="font-bold">5.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
-                <div className="font-medium">tháng 4 năm 2024</div>
+                <div className="font-medium">
+                  {commissionLanguage?.example_1_details_months_1_month}
+                </div>
                 <div className="mt-2">
-                  <div>Thu nhập</div>
+                  <div>
+                    {commissionLanguage?.example_1_details_months_0_label}
+                  </div>
                   <div className="font-bold">2.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
-                <div className="font-medium">tháng 5 năm 2024</div>
+                <div className="font-medium">
+                  {commissionLanguage?.example_1_details_months_2_month}
+                </div>
                 <div className="mt-2">
-                  <div>Thu nhập</div>
+                  <div>
+                    {commissionLanguage?.example_1_details_months_0_label}
+                  </div>
                   <div className="font-bold">1.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-600 text-white rounded-lg p-3 text-center">
-                <div className="font-medium">tháng 6 năm 2024</div>
+                <div className="font-medium">
+                  {commissionLanguage?.example_1_details_months_3_month}
+                </div>
                 <div className="mt-2">
-                  <div>Thu nhập tính đến ngày 10 tháng 6</div>
+                  <div>
+                    {commissionLanguage?.example_1_details_months_3_label}
+                  </div>
                   <div className="font-bold">0 VND</div>
                 </div>
               </div>
@@ -561,23 +619,23 @@ const MyServices = () => {
                 <div className="absolute inset-0 bg-blue-600 w-3/4"></div>
               </div>
               <div className="text-gray-700">
-                Thu nhập tích lũy 8.000.000 + 0 ={" "}
+                {commissionLanguage?.example_1_details_total} 8.000.000 + 0 ={" "}
                 <span className="font-bold">8.000.000 VND</span>
               </div>
 
               <div className="mt-6 bg-amber-500 text-white px-6 py-2 rounded-full flex items-center">
-                <span className="mr-2">Bronze</span>
-                <span className="font-bold">Phí dịch vụ 10%</span>
+                <span className="mr-2">
+                  {commissionLanguage?.tier_table_rows_1_level}
+                </span>
+                <span className="font-bold">
+                  {commissionLanguage?.translation_fee_label} 10%
+                </span>
               </div>
             </div>
 
-            <p>
-              Nếu có dự án mà Freelancer &quot;tạo báo giá&quot; vào ngày 10
-              tháng 6 năm 2024, phí dịch vụ cho dự án đó sẽ là 10%.
-            </p>
+            <p>{commissionLanguage?.example_1_note}</p>
             <p className="text-sm text-gray-500 mt-2 italic">
-              Lưu ý: Nếu có chỉnh sửa báo giá, % phí dịch vụ sẽ được tính toán
-              lại dựa trên ngày chỉnh sửa.
+              {commissionLanguage?.example_1_additional_note}
             </p>
           </div>
 
@@ -587,56 +645,71 @@ const MyServices = () => {
             className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary"
           >
             <div className="bg-blue-100 rounded-lg px-4 py-2 inline-block mb-4">
-              <h3 className="text-blue-800 font-medium">Ví dụ 2</h3>
+              <h3 className="text-blue-800 font-medium">
+                {commissionLanguage?.example_2_title}
+              </h3>
               <span className="text-blue-700">
-                Có dự án được phê duyệt trong tháng này cho đến ngày hiện tại
+                {commissionLanguage?.example_2_subtitle}
               </span>
             </div>
 
             <ul className="space-y-3 mb-4">
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>Hôm nay là ngày 20 tháng 6 năm 2024.</span>
+                <span>{commissionLanguage?.example_2_details_date}</span>
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>
-                  Trong tháng 6, có 1 dự án đã được phê duyệt với thu nhập
-                  7.000.000 VND.
-                </span>
+                <span>{commissionLanguage?.example_2_details_status}</span>
               </li>
             </ul>
 
             <p className="mb-4">
-              Do đó, % phí dịch vụ tính đến ngày 20 tháng 6 năm 2024 sẽ như sau:
+              {commissionLanguage?.example_2_details_calculation_intro}
             </p>
 
             <div className="grid grid-cols-4 gap-3 mb-6">
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
-                <div className="font-medium">tháng 3 năm 2024</div>
+                <div className="font-medium">
+                  {commissionLanguage?.example_2_details_months_0_month}
+                </div>
                 <div className="mt-2">
-                  <div>Thu nhập</div>
+                  <div>
+                    {commissionLanguage?.example_2_details_months_0_label}
+                  </div>
                   <div className="font-bold">5.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
-                <div className="font-medium">tháng 4 năm 2024</div>
+                <div className="font-medium">
+                  {commissionLanguage?.example_2_details_months_1_month}
+                </div>
                 <div className="mt-2">
-                  <div>Thu nhập</div>
+                  <div>
+                    {commissionLanguage?.example_2_details_months_0_label}
+                  </div>
                   <div className="font-bold">2.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
-                <div className="font-medium">tháng 5 năm 2024</div>
+                <div className="font-medium">
+                  {commissionLanguage?.example_2_details_months_2_month}
+                </div>
                 <div className="mt-2">
-                  <div>Thu nhập</div>
+                  <div>
+                    {commissionLanguage?.example_2_details_months_0_label}
+                  </div>
                   <div className="font-bold">1.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-600 text-white rounded-lg p-3 text-center">
-                <div className="font-medium">tháng 6 năm 2024</div>
+                <div className="font-medium">
+                  {commissionLanguage?.example_2_details_months_3_month}
+                </div>
                 <div className="mt-2">
-                  <div>Thu nhập tính đến ngày 20 tháng 6</div>
+                  <div>
+                    {commissionLanguage?.example_2_details_months_3_label}
+                  </div>
                   <div className="font-bold">7.000.000 VND</div>
                 </div>
               </div>
@@ -647,23 +720,23 @@ const MyServices = () => {
                 <div className="absolute inset-0 bg-blue-600 w-5/6"></div>
               </div>
               <div className="text-gray-700">
-                Thu nhập tích lũy 8.000.000 + 7.000.000 ={" "}
-                <span className="font-bold">15.000.000 VND</span>
+                {commissionLanguage?.example_2_details_total} 8.000.000 +
+                7.000.000 = <span className="font-bold">15.000.000 VND</span>
               </div>
 
               <div className="mt-6 bg-gray-300 text-white px-6 py-2 rounded-full flex items-center">
-                <span className="mr-2">Silver</span>
-                <span className="font-bold">Phí dịch vụ 9%</span>
+                <span className="mr-2">
+                  {commissionLanguage?.tier_table_rows_2_level}
+                </span>
+                <span className="font-bold">
+                  {commissionLanguage?.translation_fee_label} 9%
+                </span>
               </div>
             </div>
 
-            <p>
-              Nếu có dự án mà Freelancer &quot;tạo báo giá&quot; vào ngày 20
-              tháng 6 năm 2024, phí dịch vụ cho dự án đó sẽ là 9%.
-            </p>
+            <p>{commissionLanguage?.example_2_note}</p>
             <p className="text-sm text-gray-500 mt-2 italic">
-              Lưu ý: Nếu có chỉnh sửa báo giá, % phí dịch vụ sẽ được tính toán
-              lại dựa trên ngày chỉnh sửa.
+              {commissionLanguage?.example_2_additional_note}
             </p>
           </div>
 
@@ -673,53 +746,69 @@ const MyServices = () => {
             className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary"
           >
             <div className="bg-blue-100 rounded-lg px-4 py-2 inline-block mb-4">
-              <h3 className="text-blue-800 font-medium">Ví dụ 3</h3>
-              <span className="text-blue-700">Đầu tháng mới</span>
+              <h3 className="text-blue-800 font-medium">
+                {commissionLanguage?.example_3_title}
+              </h3>
+              <span className="text-blue-700">
+                {commissionLanguage?.example_3_subtitle}
+              </span>
             </div>
 
             <ul className="space-y-3 mb-4">
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>Hôm nay là ngày 1 tháng 7 năm 2024.</span>
+                <span>{commissionLanguage?.example_3_details_date}</span>
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>
-                  Tháng 4 không còn được tính, thay vào đó là tháng 7.
-                </span>
+                <span>{commissionLanguage?.example_3_details_status}</span>
               </li>
             </ul>
 
             <p className="mb-4">
-              Do đó, % phí dịch vụ tính đến ngày 1 tháng 7 năm 2024 sẽ như sau:
+              {commissionLanguage?.example_3_details_calculation_intro}
             </p>
 
             <div className="grid grid-cols-4 gap-3 mb-6">
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
-                <div className="font-medium">tháng 4 năm 2024</div>
+                <div className="font-medium">
+                  {commissionLanguage?.example_3_details_months_0_month}
+                </div>
                 <div className="mt-2">
-                  <div>Thu nhập</div>
+                  <div>
+                    {commissionLanguage?.example_2_details_months_0_label}
+                  </div>
                   <div className="font-bold text-gray-300 line-through">
                     2.000.000 VND
                   </div>
                 </div>
               </div>
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
-                <div className="font-medium">tháng 5 năm 2024</div>
+                <div className="font-medium">
+                  {commissionLanguage?.example_3_details_months_1_month}
+                </div>
                 <div className="mt-2">
-                  <div>Thu nhập</div>
+                  <div>
+                    {commissionLanguage?.example_2_details_months_0_label}
+                  </div>
                   <div className="font-bold">1.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
-                <div className="font-medium">tháng 6 năm 2024</div>
+                <div className="font-medium">
+                  {commissionLanguage?.example_3_details_months_2_month}
+                </div>
                 <div className="mt-2">
-                  <div>Thu nhập</div>
+                  <div>
+                    {commissionLanguage?.example_2_details_months_0_label}
+                  </div>
                   <div className="font-bold">7.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-600 text-white rounded-lg p-3 text-center">
-                <div className="font-medium">tháng 7 năm 2024</div>
+                <div className="font-medium">
+                  {commissionLanguage?.example_3_details_months_3_month}
+                </div>
                 <div className="mt-2">
                   <div>Thu nhập tính đến ngày 1 tháng 7</div>
                   <div className="font-bold">0 VND</div>
@@ -732,38 +821,33 @@ const MyServices = () => {
                 <div className="absolute inset-0 bg-blue-600 w-1/2"></div>
               </div>
               <div className="text-gray-700">
-                Thu nhập tích lũy 1.000.000 + 7.000.000 + 0 ={" "}
-                <span className="font-bold">8.000.000 VND</span>
+                {commissionLanguage?.example_3_details_total} 1.000.000 +
+                7.000.000 + 0 = <span className="font-bold">8.000.000 VND</span>
               </div>
 
               <div className="mt-6 bg-amber-500 text-white px-6 py-2 rounded-full flex items-center">
-                <span className="mr-2">Bronze</span>
-                <span className="font-bold">Phí dịch vụ 10%</span>
+                <span className="mr-2">
+                  {commissionLanguage?.tier_table_rows_1_level}
+                </span>
+                <span className="font-bold">
+                  {commissionLanguage?.translation_fee_label} 10%
+                </span>
               </div>
             </div>
 
-            <p>
-              Nếu có dự án mà Freelancer &quot;tạo báo giá&quot; vào ngày 1
-              tháng 7 năm 2024, phí dịch vụ cho dự án đó sẽ là 10%.
-            </p>
+            <p>{commissionLanguage?.example_3_note}</p>
             <p className="text-sm text-gray-500 mt-2 italic">
-              Lưu ý: Nếu có chỉnh sửa báo giá, % phí dịch vụ sẽ được tính toán
-              lại dựa trên ngày chỉnh sửa.
+              {commissionLanguage?.example_3_additional_note}
             </p>
           </div>
 
           {/* Service Fee Purpose */}
           <div id="section6" className="mb-8">
             <h2 className="text-xl font-medium mb-6 text-text_primary">
-              Phí dịch vụ Fastlance được sử dụng cho mục đích gì?
+              {commissionLanguage?.fastlane_fee_purpose_quest}
             </h2>
             <p className="text-gray-700">
-              Phí dịch vụ trên hệ thống của chúng tôi sẽ được sử dụng để bảo
-              trì, cải thiện nền tảng nhằm đáp ứng nhu cầu sử dụng của cả hai
-              bên: freelancer và người thuê. Điều này bao gồm việc nâng cao trải
-              nghiệm người dùng trên nền tảng, thúc đẩy doanh thu, quảng bá
-              thương hiệu để thu hút thêm người dùng và tạo ra nhiều cơ hội việc
-              làm hơn.
+              {commissionLanguage?.fastlane_fee_purpose}
             </p>
           </div>
         </div>
@@ -772,14 +856,12 @@ const MyServices = () => {
         <div className="hidden sm:block w-full lg:w-1/3 relative">
           <div className="sticky top-20 bg-white rounded-lg shadow-md overflow-hidden">
             <div className="bg-blue-600 text-white p-4 text-center">
-              <h3 className="font-medium">
-                Tính toán phí dịch vụ và giá dự án
-              </h3>
+              <h3 className="font-medium">{commissionLanguage?.title}</h3>
             </div>
             <div className="p-4 space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Cấp bậc thành viên
+                  {commissionLanguage?.translator_type_label}
                 </label>
                 <div className="relative">
                   <button
@@ -787,7 +869,9 @@ const MyServices = () => {
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                   >
                     <span className="text-gray-700">
-                      {memberTier.name} (Phí dịch vụ {memberTier.feePercent}%)
+                      {memberTier.name} (
+                      {commissionLanguage?.translation_fee_label}{" "}
+                      {memberTier.feePercent}%)
                     </span>
                     <ChevronDown
                       className={`w-5 h-5 text-gray-500 transition-transform ${
@@ -807,7 +891,9 @@ const MyServices = () => {
                           onClick={() => handleTierSelect(tier)}
                         >
                           <span>
-                            {tier.name} (Phí dịch vụ {tier.feePercent}%)
+                            {tier.name} (
+                            {commissionLanguage?.translation_fee_label}{" "}
+                            {tier.feePercent}%)
                           </span>
                         </div>
                       ))}
@@ -819,20 +905,20 @@ const MyServices = () => {
                     href="#"
                     className="text-blue-600 hover:underline text-xs"
                   >
-                    Kiểm tra cấp bậc thành viên của bạn
+                    {commissionLanguage?.translator_type_additional_info}
                   </Link>
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Giá dự án
+                  {commissionLanguage?.unit_price_label}
                 </label>
                 <div className="flex">
                   <input
                     type="text"
                     className="text-text_primary flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="123213123213"
+                    placeholder="0"
                     value={projectPrice}
                     onChange={(e) => {
                       // Allow only numbers and format with commas
@@ -848,7 +934,9 @@ const MyServices = () => {
 
               <div className="border-t border-gray-200 pt-4">
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-gray-700">Phí dịch vụ</span>
+                  <span className="text-gray-700">
+                    {commissionLanguage?.translation_fee_label}
+                  </span>
                   <span className="text-blue-600 font-medium">
                     {projectPrice
                       ? formatNumber(
@@ -865,7 +953,7 @@ const MyServices = () => {
                 <div className="flex justify-between items-center border-t border-gray-200 pt-4">
                   <div>
                     <div className="text-gray-700">
-                      Số tiền nhận được từ nền tảng
+                      {commissionLanguage?.additional_fee_label}
                     </div>
                   </div>
                   <div className="text-blue-600 font-bold">

@@ -26,7 +26,7 @@ const EditCertifications = () => {
     certificationItems: z.array(
       z.object({
         id: z.string().optional(),
-        name: z.string().min(1, "Vui lòng nhập tên chứng chỉ hoặc giải thưởng"),
+        name: z.string().min(1, userEditLanguage?.certificates_placeholder),
       })
     ),
   });
@@ -108,7 +108,7 @@ const EditCertifications = () => {
         ) : fields.length === 0 ? (
           <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
             <p className="text-gray-500 mb-4">
-              Chưa có chứng chỉ hoặc giải thưởng.
+              {userEditLanguage?.no_certificates_info}
             </p>
             <button
               type="button"
@@ -138,7 +138,7 @@ const EditCertifications = () => {
               >
                 <div>
                   <label className="block text-gray-700 mb-2">
-                    Tên giải thưởng
+                    {userEditLanguage?.certificates_name}
                   </label>
                   <input
                     type="text"

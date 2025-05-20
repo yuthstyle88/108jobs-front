@@ -11,7 +11,6 @@ interface JWTPayload {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  
   providers: [
     Credentials({
       name: "Credentials",
@@ -93,25 +92,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       };
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+
+      if (new URL(url).origin === baseUrl) return url;
+
+      return baseUrl;
+    },
   },
   events: {
     async signOut(message) {
       if ("token" in message) {
         try {
-          fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/logout`,
-            {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${message.token?.accessToken}`,
-              },
-            }
-          )
+          fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/logout`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${message.token?.accessToken}`,
+            },
+          });
         } catch (error) {
-          console.error('Backend logout failed:', error);
+          console.error("Backend logout failed:", error);
         }
       }
-    }
+    },
   },
   pages: {
     signIn: "/login",

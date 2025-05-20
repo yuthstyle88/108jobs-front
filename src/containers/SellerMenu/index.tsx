@@ -128,13 +128,13 @@ const SellerMenu = ({ isOpen, onClose }: SellerMenuProps) => {
       >
         <div className="h-full flex flex-col relative bg-white">
           <section className="flex gap-3 items-center flex-col pt-8 px-4 pb-1">
-            <figure className="w-20 h-20 rounded-full overflow-hidden relative">
+            <figure className="rounded-full overflow-hidden relative">
               <Image
                 src={user?.user.avatar_url || ProfileImage.avatar}
                 alt="avatar"
                 width={80}
                 height={80}
-                className="object-cover"
+                className="rounded-full w-20 h-20  object-cover"
               />
             </figure>
             <div className="text-[0.875rem] font-semibold text-text_primary">

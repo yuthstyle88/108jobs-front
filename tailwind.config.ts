@@ -21,6 +21,7 @@ const config: Config = {
         secondary: "var(--secondary)",
         third: "var(--third)",
         fourth: "var(--fourth)",
+        fifth: "var(--fifth)",
         text_primary: "var(--text-primary)",
         text_secondary: "var(--text-secondary)",
         border_primary: "var(--border-primary)",

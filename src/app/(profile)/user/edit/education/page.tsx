@@ -26,8 +26,8 @@ const EditEducation = () => {
     educationItems: z.array(
       z.object({
         id: z.string().optional(),
-        school: z.string().min(1, "Vui lòng nhập tên trường"),
-        major: z.string().min(1, "Vui lòng nhập chuyên ngành"),
+        school: z.string().min(1, userEditLanguage?.school_name_require),
+        major: z.string().min(1, userEditLanguage?.major_require),
       })
     ),
   });

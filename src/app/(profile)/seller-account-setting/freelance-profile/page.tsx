@@ -51,7 +51,6 @@ const AccountSettings = () => {
     setSelectedImage
   );
 
-  console.log(isUploadMuting, errors, isSubmitting, isUpdateMuting);
 
   if (isLoadingProfile) return <Loading />;
   if (isErrorProfile) return <Error />;

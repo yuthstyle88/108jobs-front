@@ -182,7 +182,6 @@ export default function ContactPage() {
   };
 
   const onSubmitAddress = async (data: AddressFormData) => {
-    console.log("Address data:", data);
     try {
       let payload: Partial<AddressFormData>;
 
