@@ -4,16 +4,14 @@ import AccountSettingWrapper from "@/containers/AccountSettingWrapper";
 import SpHeader from "@/containers/SpHeader";
 import { LayoutProps } from "@/types/layout";
 import { generateBaseMetadata } from '@/lib/metadata'
-import { locales} from '@/i18n/routing';
+import { getCurrentLanguage } from '@/actions/getCurrentLanguage';
 
-type Props = {
-    children: React.ReactNode
-    params: { locale: string }
-}
-
-export async function generateMetadata({ params }: Omit<Props, 'children'>): Promise<Metadata> {
-    const { locale } = await params
-    return generateBaseMetadata({ locale })
+export async function generateMetadata(): Promise<Metadata> {
+    const currentLang = await getCurrentLanguage()
+    return generateBaseMetadata({
+            locale: currentLang || 'th'
+        }
+    )
 }
 
 export default function ProfileLayout({
