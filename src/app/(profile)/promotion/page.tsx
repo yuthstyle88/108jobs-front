@@ -6,11 +6,13 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { faGift } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tags } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
 
 const Promotion = () => {
   const [selectedTab, setSelectedTab] = useState(0);
+  const { data: session } = useSession();
 
   const {
     data: couponLanguageData,
@@ -58,28 +60,30 @@ const Promotion = () => {
             />
           </div>
         </section>
-        <section className="py-6 sm:py-24 grid grid-container-desktop-banner gap-y-4 sm:gap-y-12 pt-4 sm:pt-[4rem]">
-          <div className="col-start-2 col-end-3">
-            <h2 className="text-[20px] sm:text-[1.75rem] text-black">
-              {couponLanguageData?.label_your_coupons}{" "}
-            </h2>
-            <p className="text-[12px] sm:text-[20px] text-gray-500">
-              {couponLanguageData?.description_your_coupons}
-            </p>
-          </div>
-          <div className=" flex col-start-2 col-end-3 py-[8rem] justify-center items-center">
-            <div className="grid-cols-1 items-center justify-center text-center">
-              <div className="flex justify-center items-center">
-                <Tags className="text-text_secondary w-9 h-9"/>
-              </div>
-              <div className="text-text_secondary mt-2">
-                {" "}
-                {couponLanguageData?.message_no_coupons}
+        {session && (
+          <section className="py-6 sm:py-24 grid grid-container-desktop-banner gap-y-4 sm:gap-y-12 pt-4 sm:pt-[4rem]">
+            <div className="col-start-2 col-end-3">
+              <h2 className="text-[20px] sm:text-[1.75rem] text-black">
+                {couponLanguageData?.label_your_coupons}{" "}
+              </h2>
+              <p className="text-[12px] sm:text-[20px] text-gray-500">
+                {couponLanguageData?.description_your_coupons}
+              </p>
+            </div>
+            <div className=" flex col-start-2 col-end-3 py-[8rem] justify-center items-center">
+              <div className="grid-cols-1 items-center justify-center text-center">
+                <div className="flex justify-center items-center">
+                  <Tags className="text-text_secondary w-9 h-9" />
+                </div>
+                <div className="text-text_secondary mt-2">
+                  {" "}
+                  {couponLanguageData?.message_no_coupons}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-start-2 col-end-3 border-t border-gray-300 mt-8"></div>
-        </section>
+            <div className="col-start-2 col-end-3 border-t border-gray-300 mt-8"></div>
+          </section>
+        )}
         <section className="py-24 grid grid-container-desktop-banner gap-y-12 pt-[4rem]">
           <div className="col-start-2 col-end-3">
             <h2 className="text-[1.75rem] text-black">
@@ -107,7 +111,10 @@ const Promotion = () => {
             </div>
             <div className=" flex justify-center items-center py-[8rem]">
               <div className="grid-cols-1 items-center justify-center text-center">
-                <FontAwesomeIcon icon={faGift} className="text-text_secondary text-[28px]"  />
+                <FontAwesomeIcon
+                  icon={faGift}
+                  className="text-text_secondary text-[28px]"
+                />
 
                 <p className="text-text_secondary mt-2">
                   {tabs[selectedTab].content}

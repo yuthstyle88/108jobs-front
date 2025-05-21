@@ -1,6 +1,5 @@
 import SellerHeader from "@/components/SellerHeader";
 import SellerSidebar from "@/components/SellerSidebar";
-import { defaultMetadata } from "@/config/metadata";
 import SpSellerHeader from "@/containers/SpHeaderSeller";
 import { LayoutProps } from "@/types/layout";
 
@@ -27,16 +26,3 @@ export default function StartSellingLayout({
     </div>
   );
 }
-
-export const metadata = {
-  ...defaultMetadata,
-  title: "Seller Center | Fastlance.vn",
-  description:
-    "ติดตามความคืบหน้าและจัดการงานอย่างมืออาชีพบน Fastlance Seller Center",
-  openGraph: {
-    ...defaultMetadata.openGraph,
-    title: "Seller Center | Fastlance.vn",
-    description:
-      "ติดตามความคืบหน้าและจัดการงานอย่างมืออาชีพบน Fastlance Seller Center",
-  },
-};

@@ -35,7 +35,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
   const { data: goToProfileLanguage } = useGlobalTranslate(
     LanguageFile.GO_TO_PROFILE
   );
-const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
+  const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
   const [showFullBio, setShowFullBio] = useState(false);
   const [isClamped, setIsClamped] = useState(false);
   const bioRef = useRef<HTMLParagraphElement>(null);
@@ -79,7 +79,7 @@ const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
                 {userProfile?.username}
               </p>
               <div className="flex items-center justify-center pt-2">
-                {[1, 2, 3, 4, 5].map((_, index) => (
+                {[...Array(userProfile?.ratings || 0)].map((_, index) => (
                   <FontAwesomeIcon
                     icon={faStar}
                     key={index}
@@ -97,46 +97,50 @@ const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">{goToProfileLanguage?.job_count}</div>
-                  <div className="text-third font-medium">1.2K {goToProfileLanguage?.times}</div>
+                  <div className="text-text_secondary">
+                    {goToProfileLanguage?.job_count}
+                  </div>
+                  <div className="text-third font-medium">
+                    1.2K {goToProfileLanguage?.times}
+                  </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">{goToProfileLanguage?.average_response_time}</div>
-                  <div className="text-third font-medium">34 {goToProfileLanguage?.minutes}</div>
+                  <div className="text-text_secondary">
+                    {goToProfileLanguage?.average_response_time}
+                  </div>
+                  <div className="text-third font-medium">
+                    34 {goToProfileLanguage?.minutes}
+                  </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">{goToProfileLanguage?.success_rate}</div>
+                  <div className="text-text_secondary">
+                    {goToProfileLanguage?.success_rate}
+                  </div>
                   <div className="text-third font-medium">100%</div>
                 </div>
               </div>
-              {/* <div className="flex flex-row justify-between pt-10 gap-4 px-6">
-                <p className="text-[14px] text-text_primary">
-                  {goToProfileLanguage?.member_since}
-                </p>
-                <p className="text-[14px] text-third">
-                  {formatDateToLong(userProfile?.member_since)}
-                </p>
-              </div> */}
-              <div className="mt-6 px-6">
-                <div className="text-text_secondary px-4 py-3 border border-border_secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
-                  <p
-                    ref={bioRef}
-                    className={`text-text_secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
-                      showFullBio ? "" : "line-clamp-5"
-                    }`}
-                  >
-                    <i>{userProfile?.bio}</i>
-                  </p>
-                  {userProfile?.bio && isClamped && !showFullBio && (
-                    <button
-                      onClick={() => setShowFullBio(true)}
-                      className="mt-2 text-text_primary font-sans text-sm font-medium underline"
+              {userProfile?.bio && (
+                <div className="mt-6 px-6">
+                  <div className="text-text_secondary px-4 py-3 border border-border_secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
+                    <p
+                      ref={bioRef}
+                      className={`text-text_secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
+                        showFullBio ? "" : "line-clamp-5"
+                      }`}
                     >
-                       {goToProfileLanguage?.see_more}
-                    </button>
-                  )}
+                      <i>{userProfile?.bio}</i>
+                    </p>
+                    {userProfile?.bio && isClamped && !showFullBio && (
+                      <button
+                        onClick={() => setShowFullBio(true)}
+                        className="mt-2 text-text_primary font-sans text-sm font-medium underline"
+                      >
+                        {goToProfileLanguage?.see_more}
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
 
               <Link
                 href="/seller-account-setting/freelance-profile"
@@ -259,7 +263,7 @@ const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
                                 {skill?.skill_name}
                               </p>
                               <p className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
-                                Intermediate level
+                                {skill?.level_name}
                               </p>
                             </div>
                           );
@@ -299,7 +303,7 @@ const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
                                   {language?.lang}
                                 </p>
                                 <p className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
-                                  Expert level
+                                  {language?.level_name}
                                 </p>
                               </div>
                             );
@@ -360,8 +364,8 @@ const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
                 username: userProfile?.username,
               })}
             </h2>
-              <section className="mt-4 grid grid-cols-1 md:grid-cols-[repeat(3,minmax(1px,1fr))] gap-5">
-              {Array.from({ length: 2 }, (_, index) => (
+            <section className="mt-4 grid grid-cols-1 md:grid-cols-[repeat(3,minmax(1px,1fr))] gap-5">
+              {userProfile?.services.map((_, index) => (
                 <CategoryCard key={index} />
               ))}
             </section>

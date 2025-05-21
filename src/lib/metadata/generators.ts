@@ -1,67 +1,64 @@
 // lib/metadata/generators.ts
-import { Metadata } from 'next'
-import { metadataTranslations } from './translations'
-import { siteConfig } from './config'
 
-type GenerateMetadataProps = {
-    locale: string
-    path?: string
-}
+import { Metadata } from "next";
+import { getCurrentLanguage } from "@/actions/getCurrentLanguage";
+import {
+  seoTranslations,
+  isSupportedLang,
+  SupportedLang,
+} from "./translations";
 
-export function generateBaseMetadata({ locale, path = '' }: GenerateMetadataProps): Metadata {
-    const t = metadataTranslations[locale as keyof typeof metadataTranslations]
+type PageContent = { title: string; description: string };
+type PageKey = {
+  [K in keyof (typeof seoTranslations)["th"]]: (typeof seoTranslations)["th"][K] extends PageContent
+    ? K
+    : never;
+}[keyof (typeof seoTranslations)["th"]];
 
-    return {
-        metadataBase: new URL(siteConfig.metadataBase),
-        title: {
-            template: `%s | ${t.websiteName}`,
-            default: t.websiteName,
+export async function generateLocalizedMetadata(
+  pageKeyOrContent: PageKey | { title: string; description: string },
+  overrides?: Partial<Metadata>
+): Promise<Metadata> {
+  const lang = await getCurrentLanguage();
+  const locale: SupportedLang = isSupportedLang(lang) ? lang : "th";
+  const t = seoTranslations[locale];
+
+  const page =
+    typeof pageKeyOrContent === "string"
+      ? t[pageKeyOrContent]
+      : pageKeyOrContent;
+
+  return {
+    metadataBase: new URL("https://fastwork.co"),
+    applicationName: "Fastwork.co",
+    title: page.title,
+    description: page.description,
+    openGraph: {
+      title: page.title,
+      description: page.description,
+      url: overrides?.openGraph?.url ?? "https://fastwork.co",
+      siteName: "Fastwork.co",
+      images: [
+        {
+          url: t.ogImage,
+          width: 1200,
+          height: 630,
+          alt: page.title,
         },
-        description: t.defaultDescription,
-        alternates: {
-            canonical: path,
-            languages: {
-                th: `/th${path}`,
-                en: `/en${path}`,
-                vi: `/vi${path}`
-            }
-        },
-        openGraph: {
-            title: t.websiteName,
-            description: t.ogDescription,
-            url: `${siteConfig.metadataBase}${path}`,
-            siteName: t.websiteName,
-            images: [
-                {
-                    url: siteConfig.defaultOgImage,
-                    width: 1200,
-                    height: 630,
-                    alt: t.ogImageAlt,
-                }
-            ],
-            locale: locale,
-            type: 'website',
-        },
-        twitter: {
-            card: 'summary_large_image',
-            title: t.websiteName,
-            description: t.twitterDescription,
-            images: [siteConfig.defaultTwitterImage],
-            creator: siteConfig.twitterHandle,
-        },
-        robots: {
-            index: true,
-            follow: true,
-            googleBot: {
-                index: true,
-                follow: true,
-                'max-video-preview': -1,
-                'max-image-preview': 'large',
-                'max-snippet': -1,
-            },
-        },
-        verification: {
-            google: siteConfig.googleVerificationCode,
-        }
-    }
+      ],
+      type: "website",
+      locale: t.locale,
+      ...overrides?.openGraph,
+    },
+    alternates: {
+      canonical: overrides?.alternates?.canonical ?? "https://fastwork.co",
+      languages: {
+        th: `https://fastwork.co/th`,
+        en: `https://fastwork.co/en`,
+        vi: `https://fastwork.co/vi`,
+      },
+    },
+    referrer: "strict-origin-when-cross-origin",
+    ...overrides,
+  };
 }

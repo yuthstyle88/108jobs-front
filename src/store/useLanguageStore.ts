@@ -1,39 +1,38 @@
-import { persist } from "zustand/middleware";
 import { LanguageFile } from "@/constants/language";
 import {
-  GlobalLanguage,
-  LoginLanguage,
-  HomeLanguage,
-  ProfileCoinLanguage,
-  ProfileBasicInfoLanguage,
-  ProfileCompanyInfoLanguage,
-  ProfileIndividualLanguage,
-  ProfileContactInfoLanguage,
-  ProfileChatLanguage,
-  ProfileApplyLanguage,
-  ProfileCouponLanguage,
-  ProfileConsentLanguage,
-  ProfileJobBoardLanguage,
-  ProfileRewardLanguage,
-  ProfileNavbarAccountLanguage,
-  NotFoundPageLanguage,
+  BreadCrumb,
+  Commission,
   ErrorPageLanguage,
-  SellerOverview,
-  SellerProjectManagement,
+  GlobalLanguage,
+  GoToProfile,
+  HomeLanguage,
+  LoginLanguage,
+  NotFoundPageLanguage,
+  ProfileApplyLanguage,
+  ProfileBasicInfoLanguage,
+  ProfileChatLanguage,
+  ProfileCoinLanguage,
+  ProfileCompanyInfoLanguage,
+  ProfileConsentLanguage,
+  ProfileContactInfoLanguage,
+  ProfileCouponLanguage,
+  ProfileIndividualLanguage,
+  ProfileJobBoardLanguage,
+  ProfileNavbarAccountLanguage,
+  ProfileRewardLanguage,
+  ProfileUserEdit,
   SellerAccountStatistics,
-  SellerMyService,
-  SellerWithdrawal,
-  SellerCreateJobs,
-  SellerFreelanceProfile,
-  SellerPersonalInfo,
-  SellerContactInfo,
   SellerBankAccount,
   SellerCommitmentLetter,
+  SellerContactInfo,
+  SellerCreateJobs,
   SellerDocumentInfo,
-  BreadCrumb,
-  GoToProfile,
-  ProfileUserEdit,
-  Commission
+  SellerFreelanceProfile,
+  SellerMyService,
+  SellerOverview,
+  SellerPersonalInfo,
+  SellerProjectManagement,
+  SellerWithdrawal
 } from "@/types/language";
 import { create } from "zustand";
 
@@ -100,19 +99,3 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
           : { ...state.languageData, ...data },
     })),
 }));
-
-type CurrentLanguageStore = {
-  currentLang: string;
-  setCurrentLang: (lang: string) => void;
-};
-export const useCurrentLanguageStore = create<CurrentLanguageStore>()(
-    persist(
-        (set) => ({
-          currentLang: 'th',
-          setCurrentLang: (lang) => set({ currentLang: lang }),
-        }),
-        {
-          name: 'current-language'
-        }
-    )
-);

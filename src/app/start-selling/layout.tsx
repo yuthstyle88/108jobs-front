@@ -1,9 +1,13 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import SubMenu from "@/components/SubMenu";
-import { defaultMetadata } from "@/config/metadata";
 import SpHeader from "@/containers/SpHeader";
+import { generateLocalizedMetadata } from "@/lib/metadata";
 import { LayoutProps } from "@/types/layout";
+
+export async function generateMetadata() {
+  return generateLocalizedMetadata("startSelling");
+}
 
 export default function StartSellingLayout({
   children,
@@ -28,15 +32,3 @@ export default function StartSellingLayout({
   );
 }
 
-export const metadata = {
-  ...defaultMetadata,
-  title: "สมัครเป็นฟรีแลนซ์ อิสระของการทำงานที่คุณเลือกเองได้ | Fastwork.co",
-  description:
-    "ฟรีแลนซ์ฟาสต์เวิร์ค เพิ่มโอกาสถูกจ้างงานผ่านการค้นหาบน Google เข้าถึงโบนัสและสิทธิพิเศษมากมาย มีทีมงานคอยให้ความช่วยเหลือเพื่อมอบประสบการณ์ที่ดีที่สุดให้คุณ!",
-  openGraph: {
-    ...defaultMetadata.openGraph,
-    title: "สมัครเป็นฟรีแลนซ์ อิสระของการทำงานที่คุณเลือกเองได้ | Fastwork.co",
-    description:
-      "ฟรีแลนซ์ฟาสต์เวิร์ค เพิ่มโอกาสถูกจ้างงานผ่านการค้นหาบน Google เข้าถึงโบนัสและสิทธิพิเศษมากมาย มีทีมงานคอยให้ความช่วยเหลือเพื่อมอบประสบการณ์ที่ดีที่สุดให้คุณ!",
-  },
-};

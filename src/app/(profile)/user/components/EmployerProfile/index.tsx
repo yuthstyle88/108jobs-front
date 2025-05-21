@@ -83,26 +83,28 @@ const UserProfile = ({ username }: Props) => {
                   {formatDateToLong(userProfile?.member_since)}
                 </p>
               </div>
-              <div className="mt-6 px-6">
-                <div className="text-text_secondary px-4 py-3 border border-border_secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
-                  <p
-                    ref={bioRef}
-                    className={`text-text_secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
-                      showFullBio ? "" : "line-clamp-5"
-                    }`}
-                  >
-                    <i>{userProfile?.bio}</i>
-                  </p>
-                  {userProfile?.bio && isClamped && !showFullBio && (
-                    <button
-                      onClick={() => setShowFullBio(true)}
-                      className="mt-2 text-blue-600 text-sm font-medium hover:underline"
+              {userProfile?.bio && (
+                <div className="mt-6 px-6">
+                  <div className="text-text_secondary px-4 py-3 border border-border_secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
+                    <p
+                      ref={bioRef}
+                      className={`text-text_secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
+                        showFullBio ? "" : "line-clamp-5"
+                      }`}
                     >
-                       {goToProfileLanguage?.see_more}
-                    </button>
-                  )}
+                      <i>{userProfile?.bio}</i>
+                    </p>
+                    {userProfile?.bio && isClamped && !showFullBio && (
+                      <button
+                        onClick={() => setShowFullBio(true)}
+                        className="mt-2 text-blue-600 text-sm font-medium hover:underline"
+                      >
+                        {goToProfileLanguage?.see_more}
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </aside>
           <section className="w-full px-4">

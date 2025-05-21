@@ -1,20 +1,7 @@
-import { Metadata } from 'next'
 import Header from "@/components/Header";
 import AccountSettingWrapper from "@/containers/AccountSettingWrapper";
 import SpHeader from "@/containers/SpHeader";
 import { LayoutProps } from "@/types/layout";
-import { generateBaseMetadata } from '@/lib/metadata'
-import { getCurrentLanguage } from '@/actions/getCurrentLanguage';
-
-export async function generateMetadata(): Promise<Metadata> {
-    const currentLang = await getCurrentLanguage()
-    console.log('currentLang', currentLang);
-    
-    return generateBaseMetadata({
-            locale: currentLang || 'th'
-        }
-    )
-}
 
 export default function ProfileLayout({
   children,

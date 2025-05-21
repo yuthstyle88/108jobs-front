@@ -1,18 +1,17 @@
-'use server'
+"use server";
 
-import { cookies } from 'next/headers'
+import { cookies } from "next/headers";
 
-export async function getCurrentLanguage() {
-    const cookieStore = await cookies()
-    try {
-        const data = cookieStore.get('current-language')?.value
-        console.log('current-language', data);
-        
-        if (!data) return null
+export async function getCurrentLanguage(): Promise<"th" | "vi" | "en" | null> {
+  const cookieStore = await cookies();
 
-        const parsedData = JSON.parse(data)
-        return parsedData.state.currentLang || null
-    } catch {
-        return null
-    }
+  const lang = cookieStore.get("current-language")?.value;
+
+  const validLangs = ["th", "vi", "en"];
+
+  if (lang && validLangs.includes(lang)) {
+    return lang as "th" | "vi" | "en";
+  }
+
+  return null;
 }
