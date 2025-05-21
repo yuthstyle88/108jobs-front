@@ -1,5 +1,9 @@
-import { defaultMetadata } from "@/config/metadata";
+import { generateLocalizedMetadata } from "@/lib/metadata";
 import { LayoutProps } from "@/types/layout";
+
+export async function generateMetadata() {
+  return generateLocalizedMetadata("login");
+}
 
 export default function Login({ children }: LayoutProps) {
   return (
@@ -8,17 +12,3 @@ export default function Login({ children }: LayoutProps) {
     </>
   );
 }
-
-export const metadata = {
-    ...defaultMetadata,
-    title: "เข้าสู่ระบบ fastwork.co",
-    description:
-      "เข้าสู่ระบบ fastwork.co",
-    openGraph: {
-      ...defaultMetadata.openGraph,
-      title: "เข้าสู่ระบบ fastwork.co",
-      description:
-        "เข้าสู่ระบบ fastwork.co",
-    },
-  };
-  

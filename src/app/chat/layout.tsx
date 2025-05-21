@@ -1,5 +1,4 @@
 import Header from "@/components/Header";
-import { defaultMetadata } from "@/config/metadata";
 import ChatWrapper from "@/containers/ChatWrapper";
 import { ChatLanguageProvider } from "@/contexts/ChatLanguage";
 import { LayoutProps } from "@/types/layout";
@@ -17,14 +16,3 @@ export default function ProfileLayout({ children }: LayoutProps) {
     </ChatLanguageProvider>
   );
 }
-
-export const metadata = {
-  ...defaultMetadata,
-  title: "Fastwork chat",
-  description: "Fastwork chat",
-  openGraph: {
-    ...defaultMetadata.openGraph,
-    title: "Fastwork chat",
-    description: "Fastwork chat",
-  },
-};

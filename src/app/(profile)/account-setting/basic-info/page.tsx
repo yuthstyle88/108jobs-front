@@ -123,7 +123,7 @@ export default function BasicInformation() {
               <span className="text-gray-500 mr-2">fastwork.co/user/</span>
               <input
                 {...register("username")}
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-text_secondary font-sans"
+                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-text_primary font-sans outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function BasicInformation() {
                 validate: (value) =>
                   value.trim().length > 0 || "Invalid display name",
               })}
-              className="text-text_primary w-full px-4 py-2 border border-border_primary rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="text-text_primary w-full px-4 py-2 border border-border_primary rounded-lg outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
             />
             {errors.display_name && (
               <p className="text-red-500 text-sm mt-1">
