@@ -1,3 +1,5 @@
+import { Service } from "./service";
+
 export type Month =
   | "January"
   | "February"
@@ -12,7 +14,7 @@ export type Month =
   | "November"
   | "December";
 
-  export type RoleType = "employer" | "freelancer";
+export type RoleType = "employer" | "freelancer";
 
 export interface Skill {
   id: string;
@@ -21,6 +23,7 @@ export interface Skill {
   skill_name: string;
   created_at: string;
   updated_at: string;
+  level_name: string;
 }
 export interface Education {
   id: string;
@@ -31,6 +34,7 @@ export interface LanguageSkill {
   id: string;
   lang: string;
   level_id: string;
+  level_name: string;
 }
 export interface Certificate {
   id: string;
@@ -60,4 +64,6 @@ export interface ProfileShow {
   language: LanguageSkill[];
   cert_and_award: Certificate[];
   roles: RoleType[];
+  services: Service[];
+  ratings: number;
 }

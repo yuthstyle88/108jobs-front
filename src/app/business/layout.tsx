@@ -1,5 +1,9 @@
-import { defaultMetadata } from "@/config/metadata";
+import { generateLocalizedMetadata } from "@/lib/metadata";
 import { LayoutProps } from "@/types/layout";
+
+export async function generateMetadata() {
+  return generateLocalizedMetadata("business"); 
+}
 
 export default function BusinessLayout({ children }: LayoutProps) {
   return (
@@ -8,17 +12,3 @@ export default function BusinessLayout({ children }: LayoutProps) {
     </>
   );
 }
-
-export const metadata = {
-    ...defaultMetadata,
-    title: "Fastwork for Business – แหล่งรวมฟรีแลนซ์สำหรับกลุ่มธุรกิจ",
-    description:
-      "Fastwork for Business – แหล่งรวมฟรีแลนซ์สำหรับกลุ่มธุรกิจ",
-    openGraph: {
-      ...defaultMetadata.openGraph,
-      title: "Fastwork for Business – แหล่งรวมฟรีแลนซ์สำหรับกลุ่มธุรกิจ",
-      description:
-        "Fastwork for Business – แหล่งรวมฟรีแลนซ์สำหรับกลุ่มธุรกิจ",
-    },
-  };
-  

@@ -1,27 +1,35 @@
 import JobDetail from "@/components/JobDetail";
-import { defaultMetadata } from "@/config/metadata";
+import { generateLocalizedMetadata } from "@/lib/metadata";
+import { getCurrentLanguage } from "@/actions/getCurrentLanguage";
+import { isSupportedLang } from "@/lib/metadata";
 
-const JobDetailPage = () => {
+export async function generateMetadata() {
+  const lang = await getCurrentLanguage();
+  const locale = isSupportedLang(lang) ? lang : "th";
+
+  const job = {
+    title: {
+      th: "เพิ่ม Traffic และ Backlink คุณภาพสูง ดัน Web ติดอันดับ SEO เร่ง index KW ให้ติดรัวๆ",
+      en: "Boost Traffic & Quality Backlinks – Rank Top with SEO Experts",
+      vi: "Tăng Traffic & Backlink chất lượng để đẩy web lên top Google",
+    },
+    description: {
+      th: "หามืออาชีพรับทำ SEO ให้เว็บไซต์ติดหน้าแรกบน Google...",
+      en: "Hire SEO professionals to rank your website top on Google...",
+      vi: "Tìm chuyên gia SEO giúp website bạn lên top Google...",
+    },
+  };
+
+  return generateLocalizedMetadata({
+    title: job.title[locale],
+    description: job.description[locale],
+  });
+}
+
+export default function JobDetailPage() {
   return (
     <main className="pt-12 sm:pt-0">
       <JobDetail />
     </main>
   );
-};
-
-export default JobDetailPage;
-
-export const metadata = {
-  ...defaultMetadata,
-  title:
-    "เพิ่ม Traffic และ Backlink คุณภาพสูง ดัน Web ติดอันดับ SEO เร่ง index KW ให้ติดรัวๆ",
-  description:
-    "หามืออาชีพรับทำ SEO ให้เว็บไซต์ติดหน้าแรกบน Google สร้างโอกาสทางการตลาด เพิ่มยอดขายให้ธุรกิจ การันตีคุณภาพ ที่ Fastwork.co แหล่งรวมผู้เชี่ยวชาญที่พร้อมช่วยคุณ",
-  openGraph: {
-    ...defaultMetadata.openGraph,
-    title:
-      "เพิ่ม Traffic และ Backlink คุณภาพสูง ดัน Web ติดอันดับ SEO เร่ง index KW ให้ติดรัวๆ",
-    description:
-      "หามืออาชีพรับทำ SEO ให้เว็บไซต์ติดหน้าแรกบน Google สร้างโอกาสทางการตลาด เพิ่มยอดขายให้ธุรกิจ การันตีคุณภาพ ที่ Fastwork.co แหล่งรวมผู้เชี่ยวชาญที่พร้อมช่วยคุณ",
-  },
-};
+}

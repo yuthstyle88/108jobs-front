@@ -1,6 +1,5 @@
 import SellerHeader from "@/components/SellerHeader";
 import SideBarSellerAccountSetting from "@/components/SideBarSellerAccountSetting";
-import { defaultMetadata } from "@/config/metadata";
 import SpSellerHeader from "@/containers/SpHeaderSeller";
 import { ReactNode } from "react";
 import BreadCrumbAccountSetting from "./components/BreadScrumbAccountSetting";
@@ -35,16 +34,3 @@ export default function ProfileLayout({ children }: SellerProfileLayoutProps) {
     </div>
   );
 }
-
-export const metadata = {
-  ...defaultMetadata,
-  title: "Seller Center | Fastwork.co",
-  description:
-    "ติดตามความคืบหน้าและจัดการงานอย่างมืออาชีพบน Fastlance Seller Center",
-  openGraph: {
-    ...defaultMetadata.openGraph,
-    title: "Seller Center | Fastwork.co",
-    description:
-      "ติดตามความคืบหน้าและจัดการงานอย่างมืออาชีพบน Fastlance Seller Center",
-  },
-};

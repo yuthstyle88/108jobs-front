@@ -7,7 +7,6 @@ const roleBasedRoutes: Record<"employer" | "freelancer", string[]> = {
     "/employer/applicants",
     "/apply-freelance",
     "/favorites",
-    "/coin",
     "/reward",
     "/consent-management",
     "/job-board/create-job"
@@ -17,14 +16,13 @@ const roleBasedRoutes: Record<"employer" | "freelancer", string[]> = {
     "/seller-account-setting",
     "/manage-product",
     "/favorites",
-    "/coin",
     "/reward",
     "/consent-management",
     "/job-board/create-job"
   ],
 };
 
-const publicRoutes = ["/job-board","/apply-freelance/landing"];
+const publicRoutes = ["/job-board","/apply-freelance/landing","/coin","/promotion"];
 
 const protectedRoutes = Object.values(roleBasedRoutes).flat();
 
