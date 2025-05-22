@@ -1,12 +1,16 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
 import Modal from "@/components/ui/Modal";
 import { AssetIcon } from "@/constants/icons";
-import { usePrivateFetch } from "@/hooks/api-hooks";
-import { CountriesResponse } from "@/types/location";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import ProvinceSearch from "./components/ProvinceSearch";
+import CountrySearch from "./components/CountrySearch";
+
+export interface LocationForm {
+  country: string;
+  province: string;
+}
 
 interface LocationSelectionModalProps {
   isOpen: boolean;
@@ -15,71 +19,57 @@ interface LocationSelectionModalProps {
   isLoading?: boolean;
 }
 
-const THAI_PROVINCES = [
-  "Bangkok",
-  "Chiang Mai",
-  "Phuket",
-  "Khon Kaen",
-  "Chonburi",
-  "Nakhon Ratchasima",
-];
-
 const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
   isOpen,
   onClose,
   handleConfirmChange,
 }) => {
-  const { register, watch, setValue, getValues } = useForm({
-    mode: "onChange",
-    defaultValues: {
-      country: "Thailand",
-    },
-  });
+  const { control,  setValue } = useForm<LocationForm>({
+  mode: "onChange",
+  defaultValues: {
+    country: "Thailand",
+    province: "",
+  },
+});
 
-  const { data: countriesData } = usePrivateFetch<CountriesResponse>(
-    API_ROUTES.location.get_countries
-  );
-
-  const [selectedGeo, setSelectedGeo] = useState<"thailand" | "other" | null>(
+  const [selectedGeo, setSelectedGeo] = useState<"thailand" | "other">(
     "thailand"
   );
-  const [selectedProvince, setSelectedProvince] = useState<string>("");
 
-  const selectedCountry = watch("country");
-
-  const countryOptions = useMemo(() => {
-    return (
-      countriesData?.countries.map((c) => ({
-        label: c.name,
-        value: c.name,
-      })) ?? []
-    );
-  }, [countriesData]);
+  const [provinceConfirmed, setProvinceConfirmed] = useState<{
+    en: string;
+    th: string;
+  } | null>(null);
+  const [countryConfirmed, setCountryConfirmed] = useState<string | null>(null);
 
   const handleThailandClick = () => {
     setSelectedGeo("thailand");
     setValue("country", "Thailand");
-    setSelectedProvince("");
+    setValue("province", "");
+    setCountryConfirmed(null);
   };
 
   const handleOtherClick = () => {
     setSelectedGeo("other");
     setValue("country", "");
-    setSelectedProvince("");
+    setValue("province", "");
+    setProvinceConfirmed(null);
   };
 
   const handleConfirm = () => {
-    const finalLocation =
-      selectedGeo === "thailand" && selectedProvince
-        ? selectedProvince
-        : getValues("country");
+    const location =
+      selectedGeo === "thailand" && provinceConfirmed
+        ? provinceConfirmed.th
+        : countryConfirmed;
 
-    handleConfirmChange(finalLocation);
+    if (location) {
+      handleConfirmChange(location);
+    }
   };
 
   const isButtonEnabled =
-    (selectedGeo === "thailand" && selectedProvince) ||
-    (selectedGeo === "other" && selectedCountry);
+    (selectedGeo === "thailand" && !!provinceConfirmed) ||
+    (selectedGeo === "other" && !!countryConfirmed);
 
   return (
     <Modal
@@ -141,43 +131,24 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
             </div>
           </div>
 
-          {/* Province or Country Selector */}
-          {selectedGeo === "thailand" ? (
-            <div className="w-[400px] max-w-full relative box-border">
-              <select
-                className="text-[14px] w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary border-gray-300"
-                value={selectedProvince}
-                onChange={(e) => setSelectedProvince(e.target.value)}
-              >
-                <option disabled value="">
-                  -- Select your province --
-                </option>
-                {THAI_PROVINCES.map((province) => (
-                  <option key={province} value={province}>
-                    {province}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : selectedGeo === "other" ? (
-            <div className="w-[400px] max-w-full relative box-border">
-              <select
-                {...register("country")}
-                value={selectedCountry}
-                onChange={(e) => setValue("country", e.target.value)}
-                className="text-[14px] w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary border-gray-300"
-              >
-                <option disabled value="">
-                  -- Select your country --
-                </option>
-                {countryOptions.map((c) => (
-                  <option key={c.value} value={c.value}>
-                    {c.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : null}
+          {/* Input selector */}
+          <div className="w-[400px] max-w-full box-border">
+            {selectedGeo === "thailand" ? (
+              <ProvinceSearch
+                control={control}
+                setValue={setValue}
+                fieldName="province"
+                onSelect={(en, th) => setProvinceConfirmed({ en, th })}
+              />
+            ) : (
+              <CountrySearch
+                control={control}
+                setValue={setValue}
+                fieldName="country"
+                onSelect={(name) => setCountryConfirmed(name)}
+              />
+            )}
+          </div>
         </section>
       </main>
 

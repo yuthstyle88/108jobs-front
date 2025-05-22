@@ -35,6 +35,8 @@ export enum LanguageFile {
   GO_TO_PROFILE = "profile",
   PROFILE_USER_EDIT = "user-edit",
   COMMISSION = "commission",
+  APPLY_FREELANCER_SUCCESS = "freelancer_registration",
+  JOB_BOARD_CREATE = "create_job",
 }
 
 export const LANGUAGES = {

@@ -24,7 +24,8 @@ export const API_ROUTES = {
     verify_forgot_password: "/users/verify/reset-password",
   },
   location:{
-    get_countries: "/profile/countries",
+    get_provinces: "/profile/countries",
+    get_countries: "profile/countries/search"
   }
 };
 export const API_ROUTES_SELLER = {

@@ -1,7 +1,10 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
 import Loading from "@/components/Loading";
+import LoadingCircle from "@/components/LoadingCircle";
+import { LanguageFile } from "@/constants/language";
 import { usePublicFetch } from "@/hooks/api-hooks";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { ServiceCatalogData } from "@/types/catalog";
 import {
   faExclamationCircle,
@@ -19,11 +22,11 @@ const CreateJobPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // const {
-  //   data: jobBoardLanguageData,
-  //   isLoading: isLanguageLoading,
-  //   error: languageError,
-  // } = useGlobalTranslate(LanguageFile.JOB_BOARD);
+  const {
+    data: createJobLanguage,
+    isLoading: isLanguageLoading,
+    error: languageError,
+  } = useGlobalTranslate(LanguageFile.JOB_BOARD_CREATE);
 
   const {
     data: catalogData,
@@ -163,17 +166,15 @@ const CreateJobPage = () => {
     }
   };
 
-  if (isCatalogLoading) return <Loading />;
-  if (catalogError) return <div>Error loading data</div>;
-  // if (isLanguageLoading || isCatalogLoading) return <Loading />;
-  // if (languageError || catalogError) return <div>Error loading data</div>;
+  if (isLanguageLoading || isCatalogLoading) return <Loading />;
+  if (languageError || catalogError) return <div>Error loading data</div>;
 
   return (
     <div className="bg-[#F6F9FE] min-h-screen py-8">
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
-            Post New Job
+            {createJobLanguage?.page_title}
           </h1>
 
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start">
@@ -182,10 +183,7 @@ const CreateJobPage = () => {
               className="text-blue-600 mt-1 mr-3"
             />
             <p className="text-blue-800">
-              For <span className="font-medium">&quot;Job Posting&quot;</span>{" "}
-              only. Self-promotion, contact information, or uses violating
-              system terms are not allowed. Posts violating these terms will be
-              removed immediately
+              {createJobLanguage?.job_posting_notice}
             </p>
           </div>
 
@@ -196,7 +194,7 @@ const CreateJobPage = () => {
                 htmlFor="job_title"
                 className="block text-gray-700 font-medium mb-2"
               >
-                Job Title
+                {createJobLanguage?.job_title_label}
               </label>
               <input
                 type="text"
@@ -204,8 +202,8 @@ const CreateJobPage = () => {
                 name="job_title"
                 value={formData.job_title}
                 onChange={handleInputChange}
-                placeholder="I am looking for"
-                className={`w-full p-3 border ${
+                placeholder={createJobLanguage?.job_title_placeholder}
+                className={`w-full text-text_primary placeholder:text-text_secondary placeholder:font-sans p-3 border ${
                   errors.job_title ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 required
@@ -224,7 +222,7 @@ const CreateJobPage = () => {
             {/* Working From Type */}
             <div className="mb-6">
               <label className="block text-gray-700 font-medium mb-2">
-                Employment Type
+                {createJobLanguage?.employment_type_label}
               </label>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="flex items-center p-3 border border-gray-300 rounded-lg">
@@ -240,7 +238,7 @@ const CreateJobPage = () => {
                     className="h-4 w-4 text-blue-600"
                   />
                   <label htmlFor="freelance" className="ml-2 text-gray-700">
-                    Freelance (project-based)
+                    {createJobLanguage?.employment_type_freelance}
                   </label>
                 </div>
 
@@ -257,7 +255,7 @@ const CreateJobPage = () => {
                     className="h-4 w-4 text-blue-600"
                   />
                   <label htmlFor="contract" className="ml-2 text-gray-700">
-                    Contract (monthly/yearly)
+                    {createJobLanguage?.employment_type_contract}
                   </label>
                 </div>
 
@@ -274,7 +272,7 @@ const CreateJobPage = () => {
                     className="h-4 w-4 text-blue-600"
                   />
                   <label htmlFor="parttime" className="ml-2 text-gray-700">
-                    Part-time (hourly/daily)
+                    {createJobLanguage?.employment_type_part_time}
                   </label>
                 </div>
 
@@ -291,7 +289,7 @@ const CreateJobPage = () => {
                     className="h-4 w-4 text-blue-600"
                   />
                   <label htmlFor="fulltime" className="ml-2 text-gray-700">
-                    Full-time
+                    {createJobLanguage?.employment_type_full_time}
                   </label>
                 </div>
               </div>
@@ -303,23 +301,18 @@ const CreateJobPage = () => {
                 htmlFor="description"
                 className="block text-gray-700 font-medium mb-2"
               >
-                Job Description
+                {createJobLanguage?.job_description_label}
               </label>
               <p className="text-gray-500 text-sm mb-2">
-                When someone is interested, you&apos;ll receive notifications
-                through system contacts
+                {createJobLanguage?.job_description_notice}
               </p>
               <textarea
                 id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
-                placeholder="Describe your job requirements, such as:
-1. Job Info: Purpose, target audience, action plan, etc.
-2. Details: Number of deliverables, scope, requirements, etc.
-
-(Contact information such as email, phone, LINE, or other contact details are not allowed)"
-                className={`w-full p-3 border ${
+                placeholder={createJobLanguage?.job_description_details}
+                className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border ${
                   errors.description ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[200px]`}
                 required
@@ -350,7 +343,7 @@ const CreateJobPage = () => {
                   htmlFor="is_english_required"
                   className="ml-2 text-gray-700"
                 >
-                  An English-speaking seller is required.
+                  {createJobLanguage?.english_speaker_label}
                 </label>
               </div>
             </div>
@@ -370,8 +363,10 @@ const CreateJobPage = () => {
                   name="example_url"
                   value={formData.example_url}
                   onChange={handleInputChange}
-                  placeholder="e.g., https://example.com"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder={
+                    createJobLanguage?.service_category_placeholder_url
+                  }
+                  className="text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -381,21 +376,23 @@ const CreateJobPage = () => {
                   htmlFor="service_catalog_id"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  Service Catalog
+                  {createJobLanguage?.service_category_label}
                 </label>
                 <select
                   id="service_catalog_id"
                   name="service_catalog_id"
                   value={formData.service_catalog_id}
                   onChange={handleInputChange}
-                  className={`w-full p-3 border ${
+                  className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border ${
                     errors.service_catalog_id
                       ? "border-red-500"
                       : "border-gray-300"
                   } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                   required
                 >
-                  <option value="">Select a service category</option>
+                  <option disabled value="">
+                    {createJobLanguage?.service_category_placeholder_select}
+                  </option>
                   {catalogData?.service_catalogs?.map((catalog) => (
                     <option key={catalog.id} value={catalog.id}>
                       {catalog.name}
@@ -421,7 +418,7 @@ const CreateJobPage = () => {
                   htmlFor="budget"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  Budget
+                  {createJobLanguage?.budget_label}
                 </label>
                 <div className="relative">
                   <input
@@ -429,8 +426,9 @@ const CreateJobPage = () => {
                     id="budget"
                     name="budget"
                     value={formData.budget}
+                    placeholder="0"
                     onChange={handleInputChange}
-                    className={`w-full p-3 border ${
+                    className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border ${
                       errors.budget ? "border-red-500" : "border-gray-300"
                     } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     required
@@ -455,7 +453,7 @@ const CreateJobPage = () => {
                   htmlFor="deadline"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  Deadline (Optional)
+                  {createJobLanguage?.deadline_label}
                 </label>
                 <input
                   type="date"
@@ -463,7 +461,7 @@ const CreateJobPage = () => {
                   name="deadline"
                   value={formData.deadline}
                   onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -471,10 +469,10 @@ const CreateJobPage = () => {
             {/* Intended Use */}
             <div className="mb-6">
               <label className="block text-gray-700 font-medium mb-2">
-                Intended Use
+                {createJobLanguage?.intended_use_label}
               </label>
               <p className="text-gray-500 text-sm mb-2">
-                To help freelancers propose suitable work
+                {createJobLanguage?.intended_use_notice}
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
                 <div
@@ -501,7 +499,7 @@ const CreateJobPage = () => {
                       />
                     </svg>
                   </div>
-                  <span className="text-gray-700">Business Use</span>
+                  <span className="text-gray-700">{createJobLanguage?.intended_use_business}</span>
                 </div>
 
                 <div
@@ -528,7 +526,7 @@ const CreateJobPage = () => {
                       />
                     </svg>
                   </div>
-                  <span className="text-gray-700">Personal Use</span>
+                  <span className="text-gray-700">{createJobLanguage?.intended_use_personal}</span>
                 </div>
 
                 <div
@@ -555,7 +553,7 @@ const CreateJobPage = () => {
                       />
                     </svg>
                   </div>
-                  <span className="text-gray-700">Unknown</span>
+                  <span className="text-gray-700">{createJobLanguage?.intended_use_unknown}</span>
                 </div>
               </div>
             </div>
@@ -577,7 +575,7 @@ const CreateJobPage = () => {
                   }
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                <span className="ms-3 text-gray-700">Anonymous post</span>
+                <span className="ms-3 text-gray-700">{createJobLanguage?.anonymous_post_label}</span>
               </label>
             </div>
 
@@ -587,14 +585,14 @@ const CreateJobPage = () => {
                 href="/job-board"
                 className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50"
               >
-                Back
+                {createJobLanguage?.preview_button}
               </Link>
               <button
                 type="submit"
                 className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Submitting..." : "Submit"}
+                {isSubmitting ? <LoadingCircle/> : createJobLanguage?.submit_button}
               </button>
             </div>
           </form>
