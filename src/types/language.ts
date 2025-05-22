@@ -31,7 +31,9 @@ export type LanguageDataType = Partial<
     BreadCrumb &
     GoToProfile &
     ProfileUserEdit &
-    Commission
+    Commission &
+    ApplyFreelancerSuccessLanguage &
+    JobPostCreate
 >;
 export interface GlobalLanguage {
   label_employment_button: string;
@@ -920,7 +922,7 @@ export type GoToProfile = {
 };
 
 export type ProfileUserEdit = {
- add_info: string;
+  add_info: string;
   add_more_button: string;
   award_placeholder: string;
   certificates_awards: string;
@@ -1073,3 +1075,44 @@ export type Commission = {
   translation_fee_label: string;
   additional_fee_label: string;
 };
+
+export type ApplyFreelancerSuccessLanguage = {
+  register_to_become_a_successful_freelancer: string;
+  you_can_start_posting_your_job_right_away_just_click_start_posting_job: string;
+  start_posting_job: string;
+  return_to_home_page: string;
+};
+
+export type JobPostCreate = {
+  page_title: string;
+  job_posting_notice: string;
+  job_title_label: string;
+  job_title_placeholder: string;
+  employment_type_label: string;
+  employment_type_freelance: string;
+  employment_type_contract: string;
+  employment_type_part_time: string;
+  employment_type_full_time: string;
+  job_description_label: string;
+  job_description_notice: string;
+  job_description_details: string;
+  job_description_placeholder: string;
+  english_speaker_label: string;
+  service_category_label: string;
+  service_category_placeholder_url: string;
+  service_category_placeholder_select: string;
+  budget_label: string;
+  budget_placeholder: string;
+  deadline_label: string;
+  deadline_placeholder: string;
+  intended_use_label: string;
+  intended_use_notice: string;
+  intended_use_business: string;
+  intended_use_personal: string;
+  intended_use_unknown: string;
+  intended_use_placeholder: string;
+  anonymous_post_label: string;
+  preview_button: string;
+  submit_button: string;
+};
+

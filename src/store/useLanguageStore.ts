@@ -32,7 +32,9 @@ import {
   SellerOverview,
   SellerPersonalInfo,
   SellerProjectManagement,
-  SellerWithdrawal
+  SellerWithdrawal,
+  ApplyFreelancerSuccessLanguage,
+  JobPostCreate
 } from "@/types/language";
 import { create } from "zustand";
 
@@ -70,7 +72,9 @@ export type LanguageDataType = Partial<
     BreadCrumb &
     GoToProfile &
     ProfileUserEdit &
-    Commission
+    Commission &
+    ApplyFreelancerSuccessLanguage &
+    JobPostCreate
 >;
 
 type LanguageStoreData = {
