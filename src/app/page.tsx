@@ -1309,7 +1309,7 @@ export default function Home() {
       <Footer />
       {session && (
         <LocationSelectionModal
-          isOpen={!isOpenLocationSelection}
+          isOpen={isOpenLocationSelection}
           onClose={() => setIsOpenLocationSelection(false)}
           handleConfirmChange={() => setIsOpenLocationSelection(false)}
         />
