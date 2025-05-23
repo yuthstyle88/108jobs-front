@@ -2,6 +2,7 @@ import { AssetIcon } from "@/constants/icons";
 import Image from "next/image";
 import React from "react";
 import CardZipcodeSearch from "./components/CardSearchZipcode";
+import { ApplyToBeFreelancerLanguage } from "@/types/language";
 
 interface StepSixProps {
   formData: {
@@ -17,12 +18,14 @@ interface StepSixProps {
   };
   updateFormData: (data: Partial<StepSixProps["formData"]>) => void;
   nextStep: () => void;
+   applyFreelancerLanguage:Partial<ApplyToBeFreelancerLanguage> | undefined | null;
 }
 
 const StepSix: React.FC<StepSixProps> = ({
   formData,
   updateFormData,
   nextStep,
+  applyFreelancerLanguage
 }) => {
   const [idNumberError, setIdNumberError] = React.useState("");
 
@@ -37,7 +40,7 @@ const StepSix: React.FC<StepSixProps> = ({
     const value = e.target.value;
 
     if (!/^\d*$/.test(value)) {
-      setIdNumberError("กรุณากรอกเฉพาะตัวเลข");
+      setIdNumberError(applyFreelancerLanguage?.id_number_only ?? "Invalid ID number");
       return;
     }
 
@@ -50,7 +53,7 @@ const StepSix: React.FC<StepSixProps> = ({
     if (value.length === 13) {
       setIdNumberError("");
     } else {
-      setIdNumberError("ต้องมีเลข 13 หลัก");
+      setIdNumberError(applyFreelancerLanguage?.id_number_length ?? "Invalid ID number");
     }
   };
 
@@ -70,21 +73,21 @@ const StepSix: React.FC<StepSixProps> = ({
   };
 
   return (
-    <div className="p-6 md:p-0 h-full font-sans">
+    <div className="p-6 md:p-0 h-full min-h-screen bg-white rounded-lg shadow-jobCard font-sans">
       <div className="flex flex-col  md:flex-row h-full">
         <section className="flex-1 flex flex-col justify-center p-4 2xl:p-0 gap-4 mx-auto md:w-1/2 ">
           <article className="text-center">
             <h2 className="text-[20px] font-bold text-text_primary">
-              ข้อมูลบัตรประชาชนเพื่อออกเอกสาร📑
+              {applyFreelancerLanguage?.id_info_instruction}📑
             </h2>
             <p className="text-[14px] font-sans text-text_secondary mt-2">
-              อย่าลืมเช็คความถูกต้องก่อนทำการบันทึก
+              {applyFreelancerLanguage?.check_accuracy}
             </p>
           </article>
           <div className="max-w-[440px] flex flex-col justify-center gap-4 mx-auto">
             <div>
               <label className="block text-sm text-text_primary font-semibold mb-2">
-                คำนำหน้าชื่อ
+                {applyFreelancerLanguage?.title_before_name}
               </label>
               <select
                 name="title"
@@ -93,7 +96,7 @@ const StepSix: React.FC<StepSixProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
               >
                 <option disabled value="">
-                  เลือกคำนำหน้า
+                  {applyFreelancerLanguage?.choose_title}
                 </option>
                 <option value="นาย">นาย</option>
                 <option value="นาง">นาง</option>
@@ -104,7 +107,7 @@ const StepSix: React.FC<StepSixProps> = ({
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm text-text_primary font-semibold mb-2">
-                  ชื่อ
+                  {applyFreelancerLanguage?.first_name}
                 </label>
                 <input
                   type="text"
@@ -112,13 +115,13 @@ const StepSix: React.FC<StepSixProps> = ({
                   value={formData.name}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                  placeholder="ระบุชื่อจริง"
+                  placeholder={applyFreelancerLanguage?.enter_first_name}
                 />
               </div>
 
               <div>
                 <label className="block text-sm text-text_primary font-semibold mb-2">
-                  นามสกุล
+                  {applyFreelancerLanguage?.last_name}
                 </label>
                 <input
                   type="text"
@@ -126,14 +129,14 @@ const StepSix: React.FC<StepSixProps> = ({
                   value={formData.surname}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                  placeholder="ระบุนามสกุลจริง"
+                  placeholder={applyFreelancerLanguage?.enter_last_name}
                 />
               </div>
             </div>
 
             <div>
               <label className="block text-sm text-text_primary font-semibold mb-2">
-                เลขบัตรประชาชน
+                {applyFreelancerLanguage?.id_number}
               </label>
               <input
                 type="text"
@@ -145,7 +148,7 @@ const StepSix: React.FC<StepSixProps> = ({
                     ? "border-red-500 focus:ring-red-100 "
                     : "border-gray-300 focus:ring-third"
                 } rounded-md focus:outline-none focus:ring-2 text-text_primary`}
-                placeholder="ระบุเลขบัตรประชาชน 13 หลัก"
+                placeholder={applyFreelancerLanguage?.enter_id_number}
                 maxLength={13}
               />
               {idNumberError && (
@@ -153,11 +156,11 @@ const StepSix: React.FC<StepSixProps> = ({
               )}
             </div>
             <h1 className="text-base text-text_primary font-semibold font-kanit leading-[18.4px] tracking-wide">
-              ที่อยู่ตามบัตรประชาชน
+              {applyFreelancerLanguage?.address_on_id}
             </h1>
             <div>
               <label className="block text-sm text-text_primary font-semibold mb-2">
-                รายละเอียดที่อยู่
+                {applyFreelancerLanguage?.address_details}
               </label>
               <input
                 type="text"
@@ -165,7 +168,7 @@ const StepSix: React.FC<StepSixProps> = ({
                 value={formData.card_address_details}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                placeholder="ระบุที่อยู่, หมู่, ถนน, ซอย"
+                placeholder={applyFreelancerLanguage?.address_details_instruction}
               />
             </div>
 
@@ -182,11 +185,12 @@ const StepSix: React.FC<StepSixProps> = ({
                     card_zip_code: selected.card_zip_code,
                   });
                 }}
+                language={applyFreelancerLanguage}
               />
 
               <div>
                 <label className="block text-sm text-text_primary font-semibold mb-2">
-                  ตำบล/แขวง
+                  {applyFreelancerLanguage?.ward_commune}
                 </label>
                 <input
                   type="text"
@@ -194,7 +198,7 @@ const StepSix: React.FC<StepSixProps> = ({
                   value={formData.card_subdistrict_or_district}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                  placeholder="ระบุตำบล/แขวง"
+                  placeholder={applyFreelancerLanguage?.enter_ward_commune}
                 />
               </div>
             </div>
@@ -202,7 +206,7 @@ const StepSix: React.FC<StepSixProps> = ({
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm text-text_primary font-semibold mb-2">
-                  อำเภอ/เขต
+                  {applyFreelancerLanguage?.district}
                 </label>
                 <input
                   type="text"
@@ -210,13 +214,13 @@ const StepSix: React.FC<StepSixProps> = ({
                   value={formData.card_district_or_subdistrict}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                  placeholder="ระบุอำเภอ/เขต"
+                  placeholder={applyFreelancerLanguage?.enter_district}
                 />
               </div>
 
               <div>
                 <label className="block text-sm text-text_primary font-semibold mb-2">
-                  จังหวัด
+                  {applyFreelancerLanguage?.province}
                 </label>
                 <input
                   type="text"
@@ -224,7 +228,7 @@ const StepSix: React.FC<StepSixProps> = ({
                   value={formData.card_province}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                  placeholder="ระบุจังหวัด"
+                  placeholder={applyFreelancerLanguage?.enter_province}
                 />
               </div>
             </div>
@@ -238,7 +242,7 @@ const StepSix: React.FC<StepSixProps> = ({
                     : "bg-third text-white"
                 }`}
               >
-                บันทึก และไปต่อ
+                {applyFreelancerLanguage?.save_and_continue}
                 <svg
                   className="w-5 h-5 ml-2"
                   fill="none"
@@ -263,7 +267,7 @@ const StepSix: React.FC<StepSixProps> = ({
             <div className="">
               <figure className="border-b-1 border-gray-200 pb-2 mb-4">
                 <h3 className="font-bold text-[24px] text-third flex items-center">
-                  ใบเสร็จรับเงิน
+                  {applyFreelancerLanguage?.invoice}
                 </h3>
                 <Image
                   src={AssetIcon.logo_blue}
@@ -275,24 +279,24 @@ const StepSix: React.FC<StepSixProps> = ({
               <div className="flex flex-row gap-6 mb-4">
                 <div className="flex flex-col gap-2 flex-[3_1]">
                   <p className="text-base text-text_primary font-semibold">
-                    ผู้ขาย:
+                    {applyFreelancerLanguage?.seller}:
                   </p>
                   <p className="text-[12px] leading-[13.8px] text-text_primary">
                     {formData.title} {formData.name} {formData.surname}
                   </p>
                   <p className="text-[12px] leading-[13.8px] text-text_primary capitalize">
-                    ที่อยู่: {formData.card_address_details}{" "}
+                    {applyFreelancerLanguage?.address}: {formData.card_address_details}{" "}
                     {formData.card_subdistrict_or_district}{" "}
                     {formData.card_district_or_subdistrict}{" "}
                     {formData.card_province} {formData.card_zip_code}
                   </p>
                   <p className="text-[12px] leading-[13.8px] text-text_primary">
-                    เลขประจำตัวผู้เสียภาษี: {formData.card_number}
+                    {applyFreelancerLanguage?.postal_code}: {formData.card_number}
                   </p>
                 </div>
                 <div className="flex-[2_1] flex flex-col gap-2">
                   <p className="text-base text-text_primary font-semibold mb-2">
-                    ลูกค้า:
+                    {applyFreelancerLanguage?.customer}:
                   </p>
                   <div className="w-1/2 h-[10px] rounded-md skeleton-gray"></div>
                   <div className="w-full h-[10px] rounded-md skeleton-gray"></div>

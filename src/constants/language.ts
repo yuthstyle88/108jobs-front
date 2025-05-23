@@ -37,6 +37,10 @@ export enum LanguageFile {
   COMMISSION = "commission",
   APPLY_FREELANCER_SUCCESS = "freelancer_registration",
   JOB_BOARD_CREATE = "create_job",
+  APPLY_TO_BE_FREELANCER = "employee_register",
+  NOTIFICATIONS = "notifications",
+  JOB_CARD = "job-card",
+  JOB_CATEGORY = "job-category",
 }
 
 export const LANGUAGES = {

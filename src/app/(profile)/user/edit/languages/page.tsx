@@ -111,7 +111,7 @@ const EditLanguages = () => {
 
     try {
       await sendLanguages(body);
-      success_message("profile", "update_language", null);
+      success_message("profile", "update_language");
     } catch (error) {
       console.error("Lỗi khi lưu ngôn ngữ:", error);
     }

@@ -112,7 +112,7 @@ export const useProfileForm = (
 
       await updateProfile(updateData);
       await mutate();
-      success_message("profile", "update", null);
+      success_message("profile", "update");
     } catch (error) {
       console.error("Update error:", error);
     }

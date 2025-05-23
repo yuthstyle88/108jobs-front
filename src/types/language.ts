@@ -33,7 +33,11 @@ export type LanguageDataType = Partial<
     ProfileUserEdit &
     Commission &
     ApplyFreelancerSuccessLanguage &
-    JobPostCreate
+    JobPostCreate &
+    ApplyToBeFreelancerLanguage &
+    NotificationLanguage &
+    JobCardLanguage &
+    JobCategoryLanguage
 >;
 export interface GlobalLanguage {
   label_employment_button: string;
@@ -1114,5 +1118,153 @@ export type JobPostCreate = {
   anonymous_post_label: string;
   preview_button: string;
   submit_button: string;
+  example_url: string;
 };
 
+export type ApplyToBeFreelancerLanguage = {
+  how_did_you_hear_about_us: string;
+  multiple_options: string;
+  skip: string;
+  save_and_continue: string;
+  choose_profile_picture: string;
+  profile_picture_tip: string;
+  upload_profile_picture: string;
+  delete_image: string;
+  preview_profile: string;
+  create_freelancer_profile: string;
+  setup_basic_info: string;
+  username: string;
+  username_description: string;
+  display_name: string;
+  display_name_tip: string;
+  freelance_type: string;
+  freelance_type_instruction: string;
+  part_time: string;
+  full_time: string;
+  bio: string;
+  bio_statistic: string;
+  bio_instruction: string;
+  bio_details: string;
+  freelancer_introduction: string;
+  experience_skills_instruction: string;
+  experience_skills_details: string;
+  verify_identity: string;
+  upload_id_instruction: string;
+  upload_id_front: string;
+  id_front_instruction: string;
+  upload_id_back: string;
+  id_back_instruction: string;
+  choose_id_front: string;
+  choose_id_back: string;
+  change_image: string;
+  id_info_instruction: string;
+  check_accuracy: string;
+  title_before_name: string;
+  choose_title: string;
+  first_name: string;
+  enter_first_name: string;
+  last_name: string;
+  enter_last_name: string;
+  id_number: string;
+  enter_id_number: string;
+  id_number_only: string;
+  id_number_length: string;
+  address_on_id: string;
+  address_details: string;
+  address_details_instruction: string;
+  postal_code: string;
+  enter_postal_code: string;
+  ward_commune: string;
+  enter_ward_commune: string;
+  district: string;
+  enter_district: string;
+  province: string;
+  enter_province: string;
+  min_characters: string;
+  create_postal_code: string;
+  invoice: string;
+  seller: string;
+  customer: string;
+  address: string;
+  birth_date_question: string;
+  birth_date_note: string;
+  birth_date: string;
+  day: string;
+  month: string;
+  year: string;
+  verify_contact_info: string;
+  contact_info_instruction: string;
+  contact_email: string;
+  change: string;
+  confirm: string;
+  current_address: string;
+  choose_country: string;
+  final_verification_step: string;
+  transfer_verification_instruction: string;
+  account_holder: string;
+  transfer_to_verify: string;
+  pay_later_verification: string;
+  fastwork_usage_tip: string;
+  compliance_tip: string;
+  contact_info_usage: string;
+  no_off_platform_payment: string;
+  no_illegal_jobs: string;
+  use_tools_correctly: string;
+  accept_by_sliding: string;
+  processing: string;
+  i_accept: string;
+};
+
+export type NotificationLanguage = {
+  change_password: string;
+  update: string;
+  update_education: string;
+  update_work_experience: string;
+  update_certification: string;
+  update_skill: string;
+  update_language: string;
+};
+export type JobCardLanguage = {
+  expert: string;
+  popular: string;
+  rating: string;
+  response_time: string;
+  sold: string;
+  starting_price: string;
+};
+
+export type JobCategoryLanguage = {
+   all_job_types: string;
+  categories_related_to_job_type: string;
+  recommended: string;
+  high_review_score: string;
+  sell_a_lot: string;
+  price_low_to_high: string;
+  price_high_to_low: string;
+  filter: string;
+  sort_by: string;
+  category: string;
+  online: string;
+  fast_response: string;
+  new_seller: string;
+  found_jobs: string;
+  page_info: string;
+  make_wordpress_website: string;
+  create_google_ads: string;
+  promote_facebook_ig_youtube: string;
+  become_marketing_consultant: string;
+  price_range: string;
+  language_used_to_communicate_with_employers: string;
+  thai: string;
+  english: string;
+  points_received: string;
+  "4": string;
+  "4_and_up": string;
+  "3_and_up": string;
+  "2_and_up": string;
+  "1_and_up": string;
+  clean_the_filters: string;
+  confirm: string;
+  protected_by_xAI_en: string;
+  highest_price: string;
+};

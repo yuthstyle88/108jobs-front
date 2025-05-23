@@ -2,13 +2,16 @@ import { AssetIcon } from "@/constants/icons";
 import Image from "next/image";
 import React from "react";
 import BankCard from "./components/BankCard";
+import { ApplyToBeFreelancerLanguage } from "@/types/language";
 
 interface StepNightProps {
   nextStep: () => void;
+  applyFreelancerLanguage:Partial<ApplyToBeFreelancerLanguage> | undefined | null;
 }
 
 const StepNight: React.FC<StepNightProps> = ({
   nextStep,
+  applyFreelancerLanguage
 }) => {
 
   return (
@@ -18,10 +21,10 @@ const StepNight: React.FC<StepNightProps> = ({
           <div className="bg-[#ffffff] text-[#1A1F2C] shadow-sm">
             <div className="flex flex-col space-y-1.5 p-6">
               <h3 className="text-2xl font-semibold leading-none tracking-tight">
-                Final Verification Step
+                {applyFreelancerLanguage?.final_verification_step}
               </h3>
               <p className="text-sm text-[#8E9196]">
-                Please transfer any amount to verify your freelancer account
+                {applyFreelancerLanguage?.transfer_verification_instruction}
               </p>
             </div>
             <div className="p-6 pt-0 space-y-6">
@@ -31,7 +34,7 @@ const StepNight: React.FC<StepNightProps> = ({
                   accountNumber="1234567890123"
                 />
                 <p className="text-xs text-[#8E9196] mt-2">
-                  Transfer any amount to this account to complete verification.
+                  {applyFreelancerLanguage?.transfer_to_verify}
                 </p>
               </div>
 
@@ -40,13 +43,13 @@ const StepNight: React.FC<StepNightProps> = ({
                 onClick={nextStep}
                 className="px-3 py-2 whitespace-nowrap border border-gray-300 rounded-lg text-text_primary"
               >
-                ย้อนกลับ
+                {applyFreelancerLanguage?.skip}
               </button>
               <button
                 onClick={nextStep}
                 className="submit-button-skip py-3 flex justify-center items-center"
               >
-                บันทึก และไปต่อ
+                {applyFreelancerLanguage?.save_and_continue}
                 <svg
                   className="w-5 h-5 ml-2"
                   fill="none"
@@ -65,7 +68,7 @@ const StepNight: React.FC<StepNightProps> = ({
             </div>
             </div>
             <div className="flex items-center p-6 pt-0 justify-center text-xs text-[#8E9196]">
-              <p>Bạn có thể thanh toán sau để confirm trở thành freelancer</p>
+              <p>{applyFreelancerLanguage?.pay_later_verification}</p>
             </div>
           </div>
         </div>

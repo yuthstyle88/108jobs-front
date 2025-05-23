@@ -108,7 +108,7 @@ const EditSkills = () => {
 
     try {
       await sendSkills(body);
-      success_message("profile", "update_skill", null);
+      success_message("profile", "update_skill");
     } catch (err) {
       console.error("Lỗi khi lưu kỹ năng:", err);
     }
