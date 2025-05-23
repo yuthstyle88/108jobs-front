@@ -8,17 +8,19 @@ import Image from "next/image";
 import React, { useState } from "react";
 import ConfirmTermsFreelancerModal from "../ConfirmTermsFreelancerModal";
 import SwipeToConfirm from "./components/SlideToConfirm";
+import { ApplyToBeFreelancerLanguage } from "@/types/language";
 
 interface StepTenProps {
   formData: FreelancerFormData;
   currentStep: number;
+  applyFreelancerLanguage:Partial<ApplyToBeFreelancerLanguage> | undefined | null;
 }
 
 interface ApplyFreelancerResponse {
   jwt: string;
 }
 
-const StepTen: React.FC<StepTenProps> = ({ formData, currentStep }) => {
+const StepTen: React.FC<StepTenProps> = ({ formData, currentStep,applyFreelancerLanguage }) => {
   const [isLogin, setIsLogin] = useState(false);
   const { clearFormStorage } = useFormStorage<FreelancerFormData>({
     currentStep,
@@ -128,10 +130,10 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep }) => {
       <div className="flex flex-col justify-between h-full">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-text_primary">
-            การใช้ Fastlance อย่างถูกต้องช่วยลดความเสี่ยงในการถูกแบน
+           {applyFreelancerLanguage?.fastwork_usage_tip}
           </h2>
           <p className="text-text_secondary mt-2">
-            การปฎิบัติตามกฎจะช่วยให้คุณหลีกเลี่ยงการถูกแบนและทำรายได้อย่างมั่นใจ
+            {applyFreelancerLanguage?.compliance_tip}
           </p>
         </div>
 
@@ -145,7 +147,7 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep }) => {
               height={400}
             />
             <p className="text-center text-base font-medium text-red-500 mt-2">
-              การนำใบข้อมูลการติดต่อ
+              {applyFreelancerLanguage?.contact_info_usage}
             </p>
           </div>
 
@@ -158,7 +160,7 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep }) => {
               height={400}
             />
             <p className="text-center text-base font-medium text-red-500 mt-2">
-              ห้าม การเรียกร้อง/รับการชำระเงินนอกระบบ
+              {applyFreelancerLanguage?.no_off_platform_payment}
             </p>
           </div>
 
@@ -171,7 +173,7 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep }) => {
               height={400}
             />
             <p className="text-center text-base font-medium text-red-500 mt-2">
-              การห้าม ยอมรับงานที่ผิดกฎหมาย
+              {applyFreelancerLanguage?.no_illegal_jobs}
             </p>
           </div>
 
@@ -184,21 +186,17 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep }) => {
               height={400}
             />
             <p className="text-center text-base font-medium text-green-500 mt-2">
-              ดำเนินการใช้เครื่องมือที่ถูกต้อง
+              {applyFreelancerLanguage?.use_tools_correctly}
             </p>
           </div>
         </div>
         <div className="w-full flex flex-col items-center justify-center mb-8 relative ">
           <div className="w-[400px] ">
-            {/* <SwipeToConfirm
-              onConfirm={handleCheckTerms}
-              isLoading={isUpdateMuting || isLogin}
-              isSuccess={isSuccess}
-            /> */}
             <SwipeToConfirm
               onConfirm={handleCheckTerms}
               isLoading={isLoadingSwipe}
               isSuccess={isSuccess}
+              language={applyFreelancerLanguage}
             />
           </div>
           {apiError && (

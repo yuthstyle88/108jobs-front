@@ -1,4 +1,5 @@
 import { ApplyFreelancerIcon } from "@/constants/icons";
+import { ApplyToBeFreelancerLanguage } from "@/types/language";
 import Image from "next/image";
 import React from "react";
 
@@ -8,12 +9,14 @@ interface StepOneProps {
   };
   updateFormData: (data: { sourceTypes: string[] }) => void;
   nextStep: () => void;
+  applyFreelancerLanguage:Partial<ApplyToBeFreelancerLanguage> | undefined | null;
 }
 
 const StepOne: React.FC<StepOneProps> = ({
   formData,
   updateFormData,
   nextStep,
+  applyFreelancerLanguage
 }) => {
   const sources = [
     { id: "google", name: "Google", icon: ApplyFreelancerIcon.google },
@@ -46,9 +49,9 @@ const StepOne: React.FC<StepOneProps> = ({
     <div className="p-2 md:p-6 flex flex-col h-full justify-center items-center">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-text_primary">
-          ก่อนเริ่ม, บอกหน่อยคุณรู้จักเราจากที่ไหน? 😊
+          {applyFreelancerLanguage?.how_did_you_hear_about_us} 😊
         </h2>
-        <p className="text-text_secondary mt-2">สามารถเลือกได้หลายข้อ</p>
+        <p className="text-text_secondary mt-2">{applyFreelancerLanguage?.multiple_options}</p>
       </div>
 
       <div className="grid grid-cols-[repeat(2,minmax(0px,1fr))] md:grid-cols-[repeat(3,minmax(0px,1fr))] gap-4 mb-8">
@@ -67,14 +70,14 @@ const StepOne: React.FC<StepOneProps> = ({
           </div>
         ))}
         <div className="flex flex-row gap-4 col-start-1 col-end-[-1] w-full pt-8">
-          <button onClick={nextStep} className="text-gray-400 px-6 py-2 rounded-md text-third border-gray-200 border-1 hover:bg-gray-200 duration-300">
-            ข้าม
+          <button onClick={nextStep} className="whitespace-nowrap text-gray-400 px-6 py-2 rounded-md text-third border-gray-200 border-1 hover:bg-gray-200 duration-300">
+            {applyFreelancerLanguage?.skip}
           </button>
           <button
             onClick={nextStep}
             className="flex items-center justify-center submit-button-skip py-2 px-4"
           >
-            บันทึก และไปต่อ
+            {applyFreelancerLanguage?.save_and_continue}
             <svg
               className="w-5 h-5 ml-2"
               fill="none"

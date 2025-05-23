@@ -1,4 +1,5 @@
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { JobCategoryLanguage } from "@/types/language";
 import { faUpDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useRef, useEffect } from "react";
@@ -6,9 +7,10 @@ import ReactDOM from "react-dom";
 
 interface SortSectionProps {
   className?: string;
+  language: Partial<JobCategoryLanguage> | undefined | null;
 }
 
-const SortSection = ({ className = "" }: SortSectionProps) => {
+const SortSection = ({ className = "",language }: SortSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("recommend");
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
@@ -16,11 +18,11 @@ const SortSection = ({ className = "" }: SortSectionProps) => {
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   const sortOptions = [
-    { value: "recommend", label: "recommend" },
-    { value: "highReview", label: "High review score" },
-    { value: "sellAlot", label: "Sell a lot" },
-    { value: "priceLowToHigh", label: "Price (low to high)" },
-    { value: "priceHighToLow", label: "Price (high to low)" },
+    { value: "recommend", label: language?.recommended },
+    { value: "highReview", label: language?.high_review_score },
+    { value: "sellAlot", label: language?.sell_a_lot },
+    { value: "priceLowToHigh", label: language?.price_low_to_high },
+    { value: "priceHighToLow", label: language?.price_high_to_low },
   ];
 
   const updatePosition = () => {
@@ -64,7 +66,7 @@ const SortSection = ({ className = "" }: SortSectionProps) => {
         ref={toggleRef}
       >
         <FontAwesomeIcon icon={faUpDown} className="text-third pr-2" />
-        เรียงตาม
+        {language?.sort_by}
       </div>
 
       {isOpen &&

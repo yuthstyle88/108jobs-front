@@ -66,4 +66,5 @@ export interface ProfileShow {
   roles: RoleType[];
   services: Service[];
   ratings: number;
+  user_id: string;
 }

@@ -2,6 +2,8 @@
 import Image from "next/image";
 import React from "react";
 import { useSingleImageUpload } from "./hooks/useSingleImageUpload";
+import { ApplyToBeFreelancerLanguage } from "@/types/language";
+import LoadingCircle from "../LoadingCircle";
 
 interface StepFiveProps {
   formData: {
@@ -13,14 +15,18 @@ interface StepFiveProps {
     back_card?: string | null;
   }) => void;
   nextStep: () => void;
+  applyFreelancerLanguage:
+    | Partial<ApplyToBeFreelancerLanguage>
+    | undefined
+    | null;
 }
 
 const StepFive: React.FC<StepFiveProps> = ({
   formData,
   updateFormData,
   nextStep,
+  applyFreelancerLanguage,
 }) => {
-  // FRONT IMAGE UPLOAD HOOK
   const {
     imageUrl: frontImage,
     fileInputRef: frontInputRef,
@@ -33,7 +39,6 @@ const StepFive: React.FC<StepFiveProps> = ({
     updateFormData({ front_card: url })
   );
 
-  // BACK IMAGE UPLOAD HOOK
   const {
     imageUrl: backImage,
     fileInputRef: backInputRef,
@@ -49,15 +54,15 @@ const StepFive: React.FC<StepFiveProps> = ({
   const isFormValid = frontImage && backImage;
 
   return (
-    <div className="flex flex-col w-full h-full">
-      <div className="py-6 md:py-12 flex flex-1 flex-col mx-auto gap-4 w-full max-w-screen-lg h-full">
+    <div className="flex flex-col w-full min-h-60 bg-white rounded-lg shadow-jobCard">
+      <div className="py-0 md:py-6 2xl:py-12 flex flex-1 flex-col mx-auto gap-4 w-full max-w-screen-lg h-full">
         <div className="flex flex-col gap-2 justify-between h-full w-full px-4">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-text_primary">
-              ยืนยันตัวตนว่าคุณคือใคร
+              {applyFreelancerLanguage?.verify_identity}
             </h2>
             <p className="text-text_secondary mt-2">
-              อัพโหลดบัตรประชาชนเพื่อความปลอดภัยในการทำธุรกรรม
+              {applyFreelancerLanguage?.upload_id_instruction}
             </p>
           </div>
 
@@ -65,10 +70,10 @@ const StepFive: React.FC<StepFiveProps> = ({
             {/* FRONT CARD */}
             <div className="border border-gray-200 rounded-lg p-4 shadow-categoryMenu">
               <h3 className="font-medium text-lg text-text_primary">
-                รูปบัตรประชาชน
+                {applyFreelancerLanguage?.upload_id_front}
               </h3>
               <p className="text-[12px] text-text_secondary mb-6">
-                ถ่ายรูปให้เห็นด้านหน้าของบัตร
+                {applyFreelancerLanguage?.id_front_instruction}
               </p>
 
               <input
@@ -130,7 +135,9 @@ const StepFive: React.FC<StepFiveProps> = ({
                       d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
-                  <p className="text-gray-500">Click to upload front side</p>
+                  <p className="text-gray-500">
+                    {applyFreelancerLanguage?.choose_id_front}
+                  </p>
                 </div>
               )}
 
@@ -139,7 +146,11 @@ const StepFive: React.FC<StepFiveProps> = ({
                 className="w-full py-2 bg-third text-white rounded-lg hover:bg-blue-700 transition-colors"
                 disabled={isFrontUploading}
               >
-                {isFrontUploading ? "กำลังอัปโหลด..." : "เปลี่ยนรูป"}
+                {isFrontUploading ? (
+                  <LoadingCircle />
+                ) : (
+                  applyFreelancerLanguage?.change_image
+                )}
               </button>
 
               {frontError && (
@@ -150,10 +161,10 @@ const StepFive: React.FC<StepFiveProps> = ({
             {/* BACK CARD */}
             <div className="border border-gray-200 rounded-lg p-4 shadow-categoryMenu">
               <h3 className="font-medium text-lg text-text_primary">
-                รูปบัตรประชาชน
+                {applyFreelancerLanguage?.upload_id_back}
               </h3>
               <p className="text-[12px] text-text_secondary mb-6">
-                ถ่ายให้เห็นด้านหลังบัตร
+                {applyFreelancerLanguage?.id_back_instruction}
               </p>
 
               <input
@@ -215,7 +226,9 @@ const StepFive: React.FC<StepFiveProps> = ({
                       d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
-                  <p className="text-gray-500">Click to upload back side</p>
+                  <p className="text-gray-500">
+                    {applyFreelancerLanguage?.choose_id_back}
+                  </p>
                 </div>
               )}
 
@@ -224,7 +237,11 @@ const StepFive: React.FC<StepFiveProps> = ({
                 className="w-full py-2 bg-third text-white rounded-lg hover:bg-blue-700 transition-colors"
                 disabled={isBackUploading}
               >
-                {isBackUploading ? "กำลังอัปโหลด..." : "เปลี่ยนรูป"}
+                {isBackUploading ? (
+                  <LoadingCircle />
+                ) : (
+                  applyFreelancerLanguage?.change_image
+                )}
               </button>
 
               {backError && (
@@ -243,7 +260,7 @@ const StepFive: React.FC<StepFiveProps> = ({
                   : "bg-third text-white"
               }`}
             >
-              บันทึก และไปต่อ
+              {applyFreelancerLanguage?.save_and_continue}
               <svg
                 className="w-5 h-5 ml-2"
                 fill="none"

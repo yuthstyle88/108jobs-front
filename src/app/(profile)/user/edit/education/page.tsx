@@ -88,7 +88,7 @@ const EditEducation = () => {
 
     try {
       await sendEducation(body);
-      success_message("profile", "update_education", null);
+      success_message("profile", "update_education");
     } catch (error) {
       console.error("Lỗi khi lưu thông tin học vấn:", error);
     }

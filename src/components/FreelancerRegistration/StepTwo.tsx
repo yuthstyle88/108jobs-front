@@ -2,6 +2,7 @@
 import Image from "next/image";
 import React from "react";
 import { useSingleImageUpload } from "./hooks/useSingleImageUpload";
+import { ApplyToBeFreelancerLanguage } from "@/types/language";
 
 interface StepTwoProps {
   formData: {
@@ -9,12 +10,14 @@ interface StepTwoProps {
   };
   updateFormData: (data: { avatar_url: string | null }) => void;
   nextStep: () => void;
+  applyFreelancerLanguage:Partial<ApplyToBeFreelancerLanguage> | undefined | null;
 }
 
 const StepTwo: React.FC<StepTwoProps> = ({
   formData,
   updateFormData,
   nextStep,
+  applyFreelancerLanguage
 }) => {
   const {
     imageUrl,
@@ -32,10 +35,10 @@ const StepTwo: React.FC<StepTwoProps> = ({
     <div className="p-6 flex flex-col h-full justify-center">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-text_primary">
-          เลือกรูปที่บ่งบอกความเป็นคุณ
+          {applyFreelancerLanguage?.choose_profile_picture}
         </h2>
         <p className="text-text_secondary mt-2">
-          การใช้ภาพหน้าชัดจะช่วยให้ลูกค้าเลือกคุณได้มากกว่าหรือใช้โลโก้ที่สื่อถึงของคุณเท่านั้น
+         {applyFreelancerLanguage?.profile_picture_tip}
         </p>
       </div>
 
@@ -114,7 +117,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
                     />
                   </svg>
                   <span className="text-sm text-gray-500 mt-2 block">
-                    Upload Profile Image
+                    {applyFreelancerLanguage?.upload_profile_picture}
                   </span>
                 </div>
               </div>
@@ -130,7 +133,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
                 }}
                 className="mt-4 text-red-500 hover:text-red-700 text-sm"
               >
-                Remove image
+                {applyFreelancerLanguage?.delete_image}
               </button>
             )}
           </div>
@@ -140,7 +143,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
         <div className="w-full md:w-1/2">
           <div className="p-4 border border-gray-200 rounded-lg">
             <h3 className="font-medium text-lg text-text_primary mb-4">
-              Profile Preview
+              {applyFreelancerLanguage?.preview_profile}
             </h3>
             <div className="bg-gray-50 rounded-lg p-4 flex items-center">
               <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden mr-4">
@@ -176,7 +179,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
               : "bg-third text-white"
           }`}
         >
-          บันทึก และไปต่อ
+          {applyFreelancerLanguage?.save_and_continue}
           <svg
             className="w-5 h-5 ml-2"
             fill="none"

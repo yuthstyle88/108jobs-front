@@ -1,6 +1,7 @@
 import React from "react";
 import PreviewProfile from "./components/PreviewProfile";
 import { FreelancerFormData } from "@/types/applyFreelancer";
+import { ApplyToBeFreelancerLanguage } from "@/types/language";
 
 interface StepThreeProps {
   formData: {
@@ -12,12 +13,14 @@ interface StepThreeProps {
   };
   updateFormData: (data: Partial<FreelancerFormData>) => void;
   nextStep: () => void;
+  applyFreelancerLanguage:Partial<ApplyToBeFreelancerLanguage> | undefined | null;
 }
 
 const StepThree: React.FC<StepThreeProps> = ({
   formData,
   updateFormData,
   nextStep,
+  applyFreelancerLanguage
 }) => {
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateFormData({ username: e.target.value });
@@ -47,18 +50,18 @@ const StepThree: React.FC<StepThreeProps> = ({
           <div className="max-w-[440px]">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-bold text-text_primary">
-                สร้างโปรไฟล์ฟรีแลนซ์ของคุณ
+                {applyFreelancerLanguage?.create_freelancer_profile}
               </h2>
               <p className="text-text_secondary mt-2">
-                กำหนดข้อมูลเบื้องต้นที่ช่วงสร้างความน่าเชื่อถือ
+                {applyFreelancerLanguage?.setup_basic_info}
               </p>
             </div>
             <div className="mb-4 w-full">
               <label className="block text-sm text-text_primary font-semibold mb-2">
-                Username
+                {applyFreelancerLanguage?.username}
               </label>
               <p className="text-xs text-text_secondary mb-2">
-                ชื่อนี้จะวางหน้าเว็บไซต์ของคุณและหน้าโปรไฟล์
+                {applyFreelancerLanguage?.username_description}
               </p>
               <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
@@ -69,33 +72,33 @@ const StepThree: React.FC<StepThreeProps> = ({
                   value={formData.username}
                   onChange={handleUsernameChange}
                   className="w-full pl-36 text-text_primary pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third"
-                  placeholder="username"
+                  placeholder={applyFreelancerLanguage?.username}
                 />
               </div>
             </div>
 
             <div className="mb-4">
               <label className="block text-sm text-text_primary font-semibold mb-2">
-                ชื่อที่ใช้แสดงในระบบ
+                {applyFreelancerLanguage?.display_name}
               </label>
               <p className="text-xs text-text_secondary mb-2">
-                ควรตั้งชื่อที่เป็นภาษาไทยเพื่อสร้างความน่าเชื่อถือ
+                {applyFreelancerLanguage?.display_name_tip}
               </p>
               <input
                 type="text"
                 value={formData.display_name}
                 onChange={handleDisplayNameChange}
                 className="w-full px-3 py-2 text-text_primary border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third"
-                placeholder="ชื่อที่แสดงในระบบ"
+                placeholder={applyFreelancerLanguage?.display_name}
               />
             </div>
 
             <div className="mb-4">
               <label className="block text-sm text-text_primary font-semibold mb-2">
-                ประเภทฟรีแลนซ์ (เปลี่ยนได้ทีหลัง)
+                {applyFreelancerLanguage?.freelance_type}
               </label>
               <p className="text-xs text-text_secondary mb-2">
-                ให้เลือกประเภทฟรีแลนซ์ที่ตรงกับคุณ อาจ Part-time ได้เลย
+                {applyFreelancerLanguage?.freelance_type_instruction}
               </p>
               <div className="flex gap-4">
                 <label
@@ -111,7 +114,7 @@ const StepThree: React.FC<StepThreeProps> = ({
                     onChange={handleFreelanceTypeChange}
                     className="mr-2 text-third"
                   />
-                  <span className="text-text_primary">Part-time</span>
+                  <span className="text-text_primary">{applyFreelancerLanguage?.part_time}</span>
                 </label>
                 <label
                   className={`flex items-center border rounded-md px-4 py-2 cursor-pointer ${
@@ -126,7 +129,7 @@ const StepThree: React.FC<StepThreeProps> = ({
                     onChange={handleFreelanceTypeChange}
                     className="mr-2 text-third"
                   />
-                  <span className="text-text_primary">Full-time</span>
+                  <span className="text-text_primary">{applyFreelancerLanguage?.full_time}</span>
                 </label>
               </div>
               <div className="w-full mt-8">
@@ -139,7 +142,7 @@ const StepThree: React.FC<StepThreeProps> = ({
                       : "bg-third text-white"
                   }`}
                 >
-                  บันทึก และไปต่อ
+                  {applyFreelancerLanguage?.save_and_continue}
                   <svg
                     className="w-5 h-5 ml-2"
                     fill="none"
@@ -159,7 +162,7 @@ const StepThree: React.FC<StepThreeProps> = ({
             </div>
           </div>
         </div>
-        <PreviewProfile formData={formData} />
+        <PreviewProfile language={applyFreelancerLanguage} formData={formData} />
       </div>
     </div>
   );

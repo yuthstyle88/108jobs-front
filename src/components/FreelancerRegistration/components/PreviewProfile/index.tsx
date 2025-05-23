@@ -1,4 +1,5 @@
 import { ApplyFreelancerIcon, AssetIcon } from "@/constants/icons";
+import { ApplyToBeFreelancerLanguage } from "@/types/language";
 import {
     ArrowLeft,
     ArrowRight,
@@ -18,13 +19,15 @@ import {
     bio: string;
     display_name: string;
     avatar_url: string | null;
+    
   };
   
   type PreviewProfileProps = {
     formData: FormData;
+    language:Partial<ApplyToBeFreelancerLanguage> | undefined | null;
   };
   
-  const PreviewProfile: React.FC<PreviewProfileProps> = ({ formData }) => {
+  const PreviewProfile: React.FC<PreviewProfileProps> = ({ formData,language }) => {
   return (
     <div className="w-full md:w-1/2 md:pl-4 step2-gradient relative z-0 overflow-hidden">
       <div className=" rounded-lg overflow-hidden absolute top-[100px] left-[150px] -z-0 w-full h-full bg-white">
@@ -79,10 +82,10 @@ import {
             </div>
             <div className="flex-1 min-w-0 overflow-hidden">
               <h3 className="font-medium text-lg text-text_primary truncate">
-                {formData.display_name || "Display name"}
+                {formData.display_name || language?.display_name}
               </h3>
               <p className="text-gray-500 text-sm break-words whitespace-pre-line line-clamp-3">
-                {formData.bio || "Bio"}
+                {formData.bio || language?.bio}
               </p>
             </div>
           </div>
@@ -129,7 +132,7 @@ import {
             />
             <div>
               <p className="text-sm text-gray-700">
-                ลูกค้ากว่า 80% อ่านประวัติของคุณ ก่อนตัดสินใจจ้างงาน
+                {language?.bio_statistic}
               </p>
             </div>
           </div>

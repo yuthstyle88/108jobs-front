@@ -355,7 +355,7 @@ const CreateJobPage = () => {
                   htmlFor="example_url"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  Example URL (Optional)
+                  {createJobLanguage?.example_url}
                 </label>
                 <input
                   type="url"
