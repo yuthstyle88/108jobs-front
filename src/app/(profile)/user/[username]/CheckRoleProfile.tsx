@@ -30,7 +30,7 @@ export default function CheckRoleProfile({ username }: Props) {
   if (error) return <NotFound />;
   const roles = userProfile?.roles || [];
 
-  const isCurrentUser = username === user?.user.username;
+  const isCurrentUser = userProfile?.user_id === user?.user.id;
   const isCurrentEmployer =
     isCurrentUser &&
     roles.includes("employer") &&

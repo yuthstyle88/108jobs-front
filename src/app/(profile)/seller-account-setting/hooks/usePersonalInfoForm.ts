@@ -131,7 +131,7 @@ export const usePersonalInfoForm = (
 
       await updateCardInfo(payload);
       await mutate();
-      success_message("profile", "update", null);
+      success_message("profile", "update");
     } catch (error) {
       console.error("Lỗi cập nhật thẻ:", error);
       setError("root", {

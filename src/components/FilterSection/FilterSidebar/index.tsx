@@ -1,5 +1,6 @@
 "use client";
 import { CategoriesImage } from "@/constants/images";
+import { JobCategoryLanguage } from "@/types/language";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useEffect } from "react";
@@ -7,9 +8,10 @@ import { useEffect } from "react";
 interface FilterSidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  language: Partial<JobCategoryLanguage> | undefined | null;
 }
 
-const FilterSidebar = ({ isOpen, onClose }: FilterSidebarProps) => {
+const FilterSidebar = ({ isOpen, onClose,language }: FilterSidebarProps) => {
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -59,7 +61,7 @@ const FilterSidebar = ({ isOpen, onClose }: FilterSidebarProps) => {
           </div>
 
           <div className="flex-1 overflow-y-auto p-6">
-            <div className="grid grid-flow-row gap-6 py-8 w-full">
+            <div className="grid sm:hidden grid-flow-row gap-6 py-8 w-full">
               <div>
                 <span className="flex flex-row justify-between items-center">
                   <div className="mr-2">
@@ -108,137 +110,7 @@ const FilterSidebar = ({ isOpen, onClose }: FilterSidebarProps) => {
             </div>
             <div className="mb-8">
               <h3 className="text-lg font-medium mb-4 text-text_primary">
-                Type
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center">
-                  <input
-                    id="offpage-analysis"
-                    type="checkbox"
-                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label
-                    htmlFor="offpage-analysis"
-                    className="ml-3 text-gray-700"
-                  >
-                    Offpage Analysis
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="onpage-analysis"
-                    type="checkbox"
-                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label
-                    htmlFor="onpage-analysis"
-                    className="ml-3 text-gray-700"
-                  >
-                    Onpage Analysis
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="competitor-analysis"
-                    type="checkbox"
-                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label
-                    htmlFor="competitor-analysis"
-                    className="ml-3 text-gray-700"
-                  >
-                    Competitor Analysis
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="keyword-analysis"
-                    type="checkbox"
-                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label
-                    htmlFor="keyword-analysis"
-                    className="ml-3 text-gray-700"
-                  >
-                    Keyword Analysis
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="build-backlinks"
-                    type="checkbox"
-                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label
-                    htmlFor="build-backlinks"
-                    className="ml-3 text-gray-700"
-                  >
-                    Build Backlinks
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="customize-tags"
-                    type="checkbox"
-                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label
-                    htmlFor="customize-tags"
-                    className="ml-3 text-gray-700"
-                  >
-                    Customize H1 H2 H3 Tags
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <h3 className="text-lg font-medium mb-4 text-text_primary">
-                Included in the package
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center">
-                  <input
-                    id="write-content"
-                    type="checkbox"
-                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label htmlFor="write-content" className="ml-3 text-gray-700">
-                    Write content
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="promote-web-pages"
-                    type="checkbox"
-                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label
-                    htmlFor="promote-web-pages"
-                    className="ml-3 text-gray-700"
-                  >
-                    Promote web pages
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="buy-advertising"
-                    type="checkbox"
-                    className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label
-                    htmlFor="buy-advertising"
-                    className="ml-3 text-gray-700"
-                  >
-                    Buy online advertising
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <h3 className="text-lg font-medium mb-4 text-text_primary">
-                Price range
+                {language?.price_range}
               </h3>
               <div className="flex items-center space-x-2">
                 <input
@@ -249,59 +121,30 @@ const FilterSidebar = ({ isOpen, onClose }: FilterSidebarProps) => {
                 <span>-</span>
                 <input
                   type="number"
-                  placeholder="Highest price"
+                  placeholder={language?.highest_price}
                   className="text-text_primary w-full p-3 border border-gray-300 rounded-md focus:outline-blue-500"
                 />
               </div>
             </div>
-
             <div className="mb-8">
               <h3 className="text-lg font-medium mb-4 text-text_primary">
-                Language used to communicate with employers
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center">
-                  <input
-                    id="thai"
-                    type="checkbox"
-                    className="text-text_primary h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label htmlFor="thai" className="ml-3 text-gray-700">
-                    Thai
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    id="english"
-                    type="checkbox"
-                    className="text-text_primary h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <label htmlFor="english" className="ml-3 text-gray-700">
-                    English
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-8">
-              <h3 className="text-lg font-medium mb-4 text-text_primary">
-                Points received
+                {language?.points_received}
               </h3>
               <div className="grid grid-cols-2 gap-2 text-text_primary">
                 <button className="w-full p-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-blue-500">
                   5
                 </button>
                 <button className="w-full p-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-blue-500">
-                  4 and up
+                  {language?.["4_and_up"]}
                 </button>
                 <button className="w-full p-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-blue-500">
-                  4 and up
+                  {language?.["3_and_up"]}
                 </button>
                 <button className="w-full p-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-blue-500">
-                  4 and up
+                  {language?.["2_and_up"]}
                 </button>
                 <button className="w-full p-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-blue-500">
-                  4 and up
+                  {language?.["1_and_up"]}
                 </button>
               </div>
             </div>
@@ -315,7 +158,7 @@ const FilterSidebar = ({ isOpen, onClose }: FilterSidebarProps) => {
                 console.log("Clearing filters");
               }}
             >
-              Clean the filter
+              {language?.clean_the_filters}
             </button>
             <button
               className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700"
@@ -324,7 +167,7 @@ const FilterSidebar = ({ isOpen, onClose }: FilterSidebarProps) => {
                 onClose();
               }}
             >
-              Confirm
+              {language?.confirm}
             </button>
           </div>
         </div>

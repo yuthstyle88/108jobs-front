@@ -17,11 +17,19 @@ import { useEffect, useState } from "react";
 import { useFetchUser } from "./hooks/useFetchUserProfile";
 import { useFormStorage } from "./hooks/useFormStorage";
 import StepTen from "@/components/FreelancerRegistration/StepTen";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const FreelancerRegistration = () => {
   const { user: userData } = useUserStore();
   const { isLoading, isError } = useFetchUser();
   const [isInitialized, setIsInitialized] = useState(false);
+
+  const {
+      data: applyFreelancerLanguage,
+      isLoading:isLanguageLoading,
+      error,
+    } = useGlobalTranslate(LanguageFile.APPLY_TO_BE_FREELANCER);
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FreelancerFormData>({
@@ -112,11 +120,11 @@ const FreelancerRegistration = () => {
     }
   }, [userData, isInitialized, saveFormToStorage]);
 
-  if (isLoading) return <Loading />;
-  if (isError) return <p>Error loading profile</p>;
+  if (isLoading || isLanguageLoading) return <Loading />;
+  if (isError || error) return <p>Error loading profile</p>;
 
   const renderStep = () => {
-    const stepProps = { formData, updateFormData, nextStep };
+    const stepProps = { formData, updateFormData, nextStep,applyFreelancerLanguage };
     switch (currentStep) {
       case 1:
         return <StepOne {...stepProps} />;
@@ -135,9 +143,9 @@ const FreelancerRegistration = () => {
       case 8:
         return <StepEight {...stepProps} />;
       case 9:
-        return <StepNine nextStep={nextStep} />;
+        return <StepNine applyFreelancerLanguage={applyFreelancerLanguage} nextStep={nextStep} />;
       case 10:
-        return <StepTen formData={formData} currentStep={currentStep} />;
+        return <StepTen applyFreelancerLanguage={applyFreelancerLanguage} formData={formData} currentStep={currentStep} />;
       default:
         return <StepOne {...stepProps} />;
     }

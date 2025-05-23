@@ -86,7 +86,7 @@ const EditCertifications = () => {
 
     try {
       await sendCertificates(body);
-      success_message("profile", "update_certification", null);
+      success_message("profile", "update_certification");
     } catch (error) {
       console.error("Lỗi khi lưu chứng chỉ:", error);
     }

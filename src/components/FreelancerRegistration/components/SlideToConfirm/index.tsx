@@ -1,6 +1,6 @@
-
 import LoadingCircle from "@/components/LoadingCircle";
 import { cn } from "@/lib/utils";
+import { ApplyToBeFreelancerLanguage } from "@/types/language";
 import { ArrowRight, Check } from "lucide-react";
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 
@@ -13,59 +13,76 @@ interface SwipeToConfirmProps {
   isLoading?: boolean;
   isSuccess?: boolean;
   successText?: string;
+  language: Partial<ApplyToBeFreelancerLanguage> | undefined | null;
 }
 
 // Memoized thumb component to prevent unnecessary re-renders
-const ThumbComponent = memo(({ 
-  isDragging, 
-  position, 
-  onMouseDown, 
-  onTouchStart 
-}: { 
-  isDragging: boolean;
-  position: number;
-  onMouseDown: (e: React.MouseEvent) => void;
-  onTouchStart: (e: React.TouchEvent) => void;
-}) => (
-  <div
-    className={cn(
-      "absolute left-[2px] top-[2px] flex h-[calc(100%-4px)] w-12 cursor-grab items-center justify-center rounded bg-white shadow-md will-change-transform p-1", 
-      {
-        "cursor-grabbing": isDragging,
-        "scale-90": isDragging,
-      }
-    )}
-    style={{
-      transform: `translateX(${position}px)`,
-      transition: !isDragging 
-        ? `transform ${position === 0 ? '0.3s ease-out' : '0.2s ease'}`
-        : 'none', // Remove transition during dragging for smoother experience
-    }}
-    onMouseDown={onMouseDown}
-    onTouchStart={onTouchStart}
-  >
-    <ArrowRight 
-      className={cn("h-5 w-5 text-blue-600 will-change-transform", {
-        "translate-x-1": isDragging,
-      })} 
+const ThumbComponent = memo(
+  ({
+    isDragging,
+    position,
+    onMouseDown,
+    onTouchStart,
+  }: {
+    isDragging: boolean;
+    position: number;
+    onMouseDown: (e: React.MouseEvent) => void;
+    onTouchStart: (e: React.TouchEvent) => void;
+  }) => (
+    <div
+      className={cn(
+        "absolute left-[2px] top-[2px] flex h-[calc(100%-4px)] w-12 cursor-grab items-center justify-center rounded bg-white shadow-md will-change-transform p-1",
+        {
+          "cursor-grabbing": isDragging,
+          "scale-90": isDragging,
+        }
+      )}
       style={{
-        transition: isDragging ? "transform 0.05s ease" : "transform 0.2s ease", 
+        transform: `translateX(${position}px)`,
+        transition: !isDragging
+          ? `transform ${position === 0 ? "0.3s ease-out" : "0.2s ease"}`
+          : "none", // Remove transition during dragging for smoother experience
       }}
-    />
-  </div>
-));
+      onMouseDown={onMouseDown}
+      onTouchStart={onTouchStart}
+    >
+      <ArrowRight
+        className={cn("h-5 w-5 text-blue-600 will-change-transform", {
+          "translate-x-1": isDragging,
+        })}
+        style={{
+          transition: isDragging
+            ? "transform 0.05s ease"
+            : "transform 0.2s ease",
+        }}
+      />
+    </div>
+  )
+);
 
 ThumbComponent.displayName = "ThumbComponent";
 
 // Memoized loading state component
-const LoadingComponent = memo(({ text = "Đang xử lý..." }: { text?: string }) => (
-  <div className="flex h-12 items-center justify-center">
-    <div className="flex items-center justify-center space-x-2">
-      <span>{text}</span>
-      <LoadingCircle/>
-    </div>
-  </div>
-));
+const LoadingComponent = memo(
+  ({
+    text,
+    language,
+  }: {
+    text?: string;
+    language: Partial<ApplyToBeFreelancerLanguage> | undefined | null;
+  }) => {
+    const displayText = text ?? language?.processing ?? "Processing...";
+
+    return (
+      <div className="flex h-12 items-center justify-center">
+        <div className="flex items-center justify-center space-x-2">
+          <span>{displayText}</span>
+          <LoadingCircle />
+        </div>
+      </div>
+    );
+  }
+);
 
 LoadingComponent.displayName = "LoadingComponent";
 
@@ -85,19 +102,20 @@ SuccessComponent.displayName = "SuccessComponent";
 
 const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
   onConfirm,
-  confirmText = "Kéo để chấp nhận",
+  language,
+  confirmText = language?.accept_by_sliding || "Accept by sliding",
   swipeThreshold = 0.8, // 80% threshold
   className,
   disabled = false,
   isLoading = false,
   isSuccess = false,
-  successText = "Tôi chấp nhận",
+  successText = language?.i_accept || "I accept",
 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState(0);
   const [completed, setCompleted] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
-  
+
   const trackRef = useRef<HTMLDivElement>(null);
   const startXRef = useRef(0);
   const wasAboveThresholdRef = useRef(false);
@@ -116,19 +134,19 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
         const trackWidth = trackRef.current.offsetWidth;
         const thumbWidth = 48; // Width of thumb (w-12)
         maxTravelRef.current = trackWidth - thumbWidth - 4; // Subtract padding (2px on each side)
-        
+
         // Mark as initialized after first calculation
         if (!isInitialized) {
           setIsInitialized(true);
         }
       }
     };
-    
+
     updateMaxTravel();
-    
+
     // Recalculate on resize
-    window.addEventListener('resize', updateMaxTravel);
-    return () => window.removeEventListener('resize', updateMaxTravel);
+    window.addEventListener("resize", updateMaxTravel);
+    return () => window.removeEventListener("resize", updateMaxTravel);
   }, [isInitialized]);
 
   const resetSwiper = useCallback(() => {
@@ -139,7 +157,7 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
       setCompleted(false);
       wasAboveThresholdRef.current = false;
       thresholdMetRef.current = false;
-      
+
       // Add a small delay to allow animation to complete before enabling drag again
       setTimeout(() => {
         transitionActiveRef.current = false;
@@ -150,7 +168,7 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
   const handleConfirmAction = useCallback(() => {
     setCompleted(true);
     transitionActiveRef.current = true;
-    
+
     // Call the onConfirm callback provided by the parent
     if (onConfirm) {
       onConfirm();
@@ -162,62 +180,98 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
     return Math.min(Math.max(currentPosition / maxTravelRef.current, 0), 1);
   }, []);
 
-  const handleDragStart = useCallback((clientX: number) => {
-    if (disabled || completed || isLoading || !isInitialized || transitionActiveRef.current) return;
-    
-    // Cancel any pending animation frame
-    if (animationFrameRef.current !== null) {
-      cancelAnimationFrame(animationFrameRef.current);
-      animationFrameRef.current = null;
-    }
-    
-    // Immediately set position to avoid jumps
-    dragStateRef.current = true;
-    setIsDragging(true);
-    thresholdMetRef.current = false;
-    
-    // Store start position accounting for current thumb position
-    startXRef.current = clientX - positionRef.current;
-  }, [disabled, completed, isLoading, isInitialized]);
+  const handleDragStart = useCallback(
+    (clientX: number) => {
+      if (
+        disabled ||
+        completed ||
+        isLoading ||
+        !isInitialized ||
+        transitionActiveRef.current
+      )
+        return;
 
-  const handleDragMove = useCallback((clientX: number) => {
-    if (!dragStateRef.current || disabled || completed || isLoading || !isInitialized || transitionActiveRef.current) return;
-    
-    // Calculate new position
-    let newPosition = clientX - startXRef.current;
-    
-    // Constrain position to valid range (0 to maxTravel)
-    newPosition = Math.max(0, Math.min(newPosition, maxTravelRef.current));
-    
-    // Store in ref without causing re-render
-    positionRef.current = newPosition;
-    
-    // Use requestAnimationFrame to optimize updates and prevent stuttering
-    if (animationFrameRef.current === null) {
-      animationFrameRef.current = requestAnimationFrame(() => {
-        setPosition(positionRef.current);
-        
-        // Track if we've met the threshold
-        const percentage = calculatePercentage(positionRef.current);
-        thresholdMetRef.current = percentage >= swipeThreshold;
-        
+      // Cancel any pending animation frame
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
         animationFrameRef.current = null;
-      });
-    }
-  }, [disabled, completed, isLoading, calculatePercentage, swipeThreshold, isInitialized]);
+      }
+
+      // Immediately set position to avoid jumps
+      dragStateRef.current = true;
+      setIsDragging(true);
+      thresholdMetRef.current = false;
+
+      // Store start position accounting for current thumb position
+      startXRef.current = clientX - positionRef.current;
+    },
+    [disabled, completed, isLoading, isInitialized]
+  );
+
+  const handleDragMove = useCallback(
+    (clientX: number) => {
+      if (
+        !dragStateRef.current ||
+        disabled ||
+        completed ||
+        isLoading ||
+        !isInitialized ||
+        transitionActiveRef.current
+      )
+        return;
+
+      // Calculate new position
+      let newPosition = clientX - startXRef.current;
+
+      // Constrain position to valid range (0 to maxTravel)
+      newPosition = Math.max(0, Math.min(newPosition, maxTravelRef.current));
+
+      // Store in ref without causing re-render
+      positionRef.current = newPosition;
+
+      // Use requestAnimationFrame to optimize updates and prevent stuttering
+      if (animationFrameRef.current === null) {
+        animationFrameRef.current = requestAnimationFrame(() => {
+          setPosition(positionRef.current);
+
+          // Track if we've met the threshold
+          const percentage = calculatePercentage(positionRef.current);
+          thresholdMetRef.current = percentage >= swipeThreshold;
+
+          animationFrameRef.current = null;
+        });
+      }
+    },
+    [
+      disabled,
+      completed,
+      isLoading,
+      calculatePercentage,
+      swipeThreshold,
+      isInitialized,
+    ]
+  );
 
   const handleDragEnd = useCallback(() => {
-    if (!dragStateRef.current || disabled || completed || isLoading || !isInitialized || transitionActiveRef.current) return;
-    
+    if (
+      !dragStateRef.current ||
+      disabled ||
+      completed ||
+      isLoading ||
+      !isInitialized ||
+      transitionActiveRef.current
+    )
+      return;
+
     // Cancel any pending animation frame
     if (animationFrameRef.current !== null) {
       cancelAnimationFrame(animationFrameRef.current);
       animationFrameRef.current = null;
     }
-    
+
     setIsDragging(false);
     dragStateRef.current = false;
-    
+
     // Only confirm if threshold was met
     if (thresholdMetRef.current) {
       handleConfirmAction();
@@ -226,7 +280,7 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
       transitionActiveRef.current = true;
       setPosition(0);
       positionRef.current = 0;
-      
+
       // Add a small delay to allow animation to complete before enabling drag again
       setTimeout(() => {
         transitionActiveRef.current = false;
@@ -234,14 +288,20 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
     }
   }, [disabled, completed, isLoading, handleConfirmAction, isInitialized]);
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    handleDragStart(e.clientX);
-  }, [handleDragStart]);
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      handleDragStart(e.clientX);
+    },
+    [handleDragStart]
+  );
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    handleDragStart(e.touches[0].clientX);
-  }, [handleDragStart]);
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      handleDragStart(e.touches[0].clientX);
+    },
+    [handleDragStart]
+  );
 
   // Add global event listeners
   useEffect(() => {
@@ -271,9 +331,13 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
     };
 
     // Add listeners with passive option for better touch performance, except for touchmove
-    window.addEventListener("mousemove", handleGlobalMouseMove, { passive: true });
+    window.addEventListener("mousemove", handleGlobalMouseMove, {
+      passive: true,
+    });
     window.addEventListener("mouseup", handleGlobalMouseUp);
-    window.addEventListener("touchmove", handleGlobalTouchMove, { passive: false });
+    window.addEventListener("touchmove", handleGlobalTouchMove, {
+      passive: false,
+    });
     window.addEventListener("touchend", handleGlobalTouchEnd);
 
     return () => {
@@ -281,7 +345,7 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
       window.removeEventListener("mouseup", handleGlobalMouseUp);
       window.removeEventListener("touchmove", handleGlobalTouchMove);
       window.removeEventListener("touchend", handleGlobalTouchEnd);
-      
+
       // Clean up any pending animation frame
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -299,9 +363,9 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
   // Memoize the render content to prevent unnecessary re-renders
   const renderContent = useCallback(() => {
     if (isLoading) {
-      return <LoadingComponent />;
+      return <LoadingComponent language={language} />;
     }
-    
+
     if (isSuccess) {
       return <SuccessComponent text={successText} />;
     }
@@ -317,7 +381,7 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
             {confirmText}
           </div>
         </div>
-        <ThumbComponent 
+        <ThumbComponent
           isDragging={isDragging}
           position={position}
           onMouseDown={handleMouseDown}
@@ -325,7 +389,16 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
         />
       </>
     );
-  }, [isLoading, isSuccess, successText, position, isDragging, confirmText, handleMouseDown, handleTouchStart]);
+  }, [
+    isLoading,
+    isSuccess,
+    successText,
+    position,
+    isDragging,
+    confirmText,
+    handleMouseDown,
+    handleTouchStart,
+  ]);
 
   return (
     <div

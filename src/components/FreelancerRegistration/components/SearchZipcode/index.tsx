@@ -1,5 +1,6 @@
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
+import { SellerContactInfo } from "@/types/language";
 import debounce from "lodash.debounce";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -22,10 +23,12 @@ interface ZipcodeSearchProps {
     subdistrict_or_district: string;
     zip_code: string;
   }) => void;
+  language: Partial<SellerContactInfo> | null | undefined;
 }
 export default function ZipcodeSearch({
   formData,
   onSelect,
+  language,
 }: ZipcodeSearchProps) {
   const { setValue, watch } = useForm();
   const [searchUrl, setSearchUrl] = useState<string | null>(null);
@@ -100,7 +103,7 @@ export default function ZipcodeSearch({
   return (
     <div className="relative" ref={dropdownRef}>
       <label className="block text-sm text-text_primary font-semibold mb-2">
-        รหัสไปรษณีย์
+        {language?.zipcode}
       </label>
       <input
         value={zipcodeValue}
@@ -111,7 +114,7 @@ export default function ZipcodeSearch({
           updateSearchUrl(value);
         }}
         ref={inputRef}
-        placeholder="Enter Zipcode"
+        placeholder={language?.zipcode_placeholder}
         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary transition-all"
         autoComplete="off"
         onFocus={() => {

@@ -1,5 +1,6 @@
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
+import { ApplyToBeFreelancerLanguage } from "@/types/language";
 import debounce from "lodash.debounce";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -22,11 +23,13 @@ interface CardZipcodeSearchProps {
     card_district_or_subdistrict: string;
     card_province: string;
   }) => void;
+  language:Partial<ApplyToBeFreelancerLanguage> | undefined | null;
 }
 
 export default function CardZipcodeSearch({
   formData,
   onSelect,
+  language
 }: CardZipcodeSearchProps) {
   const { setValue, watch } = useForm();
   const [searchUrl, setSearchUrl] = useState<string | null>(null);
@@ -101,7 +104,7 @@ export default function CardZipcodeSearch({
   return (
     <div className="relative" ref={dropdownRef}>
       <label className="block text-sm text-text_primary font-semibold mb-2">
-        รหัสไปรษณีย์
+        {language?.postal_code}
       </label>
       <input
         value={zipcodeValue}
@@ -112,7 +115,7 @@ export default function CardZipcodeSearch({
           updateSearchUrl(value);
         }}
         ref={inputRef}
-        placeholder="Enter Zipcode"
+        placeholder={language?.enter_postal_code}
         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary transition-all"
         autoComplete="off"
         onFocus={() => {
@@ -138,7 +141,7 @@ export default function CardZipcodeSearch({
               <>
                 {zipcodeValue.length < 2 ? (
                   <div className="flex justify-center items-center px-3 py-3 text-[12px] font-sans text-black">
-                    -- ระบุอย่างน้อย 2 ตัวอักษร --
+                    -- {language?.min_characters} --
                   </div>
                 ) : (searchResults?.geographies?.length ?? 0) > 0 ? (
                   searchResults!.geographies.map((geo, index) => (
@@ -164,7 +167,7 @@ export default function CardZipcodeSearch({
                     className="p-3 hover:bg-blue-50 cursor-pointer transition-colors text-center"
                   >
                     <span className="text-[12px] font-sans text-black">
-                      สร้างรหัสไปรษณีย์: &quot;{zipcode}&quot;
+                      {language?.create_postal_code}: &quot;{zipcode}&quot;
                     </span>
                   </div>
                 )}

@@ -15,6 +15,7 @@ import ZipcodeSearch from "./components/SearchZipcode";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { LanguageFile } from "@/constants/language";
 import Loading from "../Loading";
+import { ApplyToBeFreelancerLanguage } from "@/types/language";
 
 const forgotPasswordSchema = z.object({
   email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์"),
@@ -35,6 +36,10 @@ interface StepEightProps {
   };
   updateFormData: (data: Partial<StepEightProps["formData"]>) => void;
   nextStep: () => void;
+  applyFreelancerLanguage:
+    | Partial<ApplyToBeFreelancerLanguage>
+    | undefined
+    | null;
 }
 
 interface Country {
@@ -50,12 +55,17 @@ const StepEight: React.FC<StepEightProps> = ({
   formData,
   updateFormData,
   nextStep,
+  applyFreelancerLanguage,
 }) => {
   const {
     data: contactInfoLanguageData,
     isLoading,
     error,
   } = useGlobalTranslate(LanguageFile.CONTACT);
+
+  const { data: sellerContactLanguage } = useGlobalTranslate(
+    LanguageFile.SELLER_CONTACT_INFO
+  );
 
   const {
     register,
@@ -80,8 +90,8 @@ const StepEight: React.FC<StepEightProps> = ({
   const [apiError, setApiError] = useState<string | null>(null);
 
   const COUNTRY_LABELS: Record<"Thailand" | "Foreign", string> = {
-    Thailand: "ประเทศไทย",
-    Foreign: "ต่างชาติ",
+    Thailand: contactInfoLanguageData?.option_thailand ?? "Thailand",
+    Foreign: contactInfoLanguageData?.option_foreign_country ?? "Foreign",
   };
 
   const handleChange = (
@@ -147,15 +157,15 @@ const StepEight: React.FC<StepEightProps> = ({
   if (error) return <div>Error loading language data</div>;
 
   return (
-    <div className="py-8 md:p-0 h-full">
+    <div className="py-8 md:p-0 h-full min-h-screen bg-white rounded-lg shadow-jobCard">
       <div className="grid grid-cols-1 md:grid-cols-2 h-full">
         <div className="flex flex-col justify-center px-12">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-text_primary">
-              ยืนยันข้อมูลการติดต่อของคุณ
+              {applyFreelancerLanguage?.verify_contact_info}
             </h2>
             <p className="text-text_secondary mt-2">
-              เพื่อให้ทางเราส่งข้อมูลการติดต่อกลับคุณได้
+              {applyFreelancerLanguage?.contact_info_instruction}
             </p>
           </div>
 
@@ -166,7 +176,7 @@ const StepEight: React.FC<StepEightProps> = ({
                 <div className="flex gap-2 items-end w-full">
                   <div className="flex-1">
                     <label className="block text-sm text-text_primary font-semibold mb-2">
-                      อีเมลติดต่อ
+                      {applyFreelancerLanguage?.contact_email}
                     </label>
                     <input
                       type="email"
@@ -185,7 +195,7 @@ const StepEight: React.FC<StepEightProps> = ({
                       disabled={isSubmitting}
                       className="px-3 py-[8px] submit-button"
                     >
-                      {isSubmitting ? <LoadingCircle /> : "ยืนยัน"}
+                      {isSubmitting ? <LoadingCircle /> : applyFreelancerLanguage?.change}
                     </button>
                   </div>
                 </div>
@@ -200,7 +210,7 @@ const StepEight: React.FC<StepEightProps> = ({
             <div className="mb-6 flex gap-2 items-end w-full">
               <div className="flex-1">
                 <label className="block text-sm text-text_primary font-semibold mb-2">
-                  อีเมลติดต่อ
+                  {applyFreelancerLanguage?.contact_email}
                 </label>
                 <input
                   type="email"
@@ -215,7 +225,7 @@ const StepEight: React.FC<StepEightProps> = ({
                   onClick={() => setIsModalOpen(true)}
                   className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
                 >
-                  ยืนยัน
+                  {applyFreelancerLanguage?.confirm}
                 </button>
               </div>
             </div>
@@ -224,7 +234,7 @@ const StepEight: React.FC<StepEightProps> = ({
           {/* Country type selector */}
           <div className="mb-6">
             <label className="block text-sm text-text_primary font-semibold mb-2">
-              ที่อยู่ปัจจุบัน
+              {applyFreelancerLanguage?.current_address}
             </label>
             <div className="flex space-x-4 mb-4">
               {(["Thailand", "Foreign"] as const).map((type) => (
@@ -257,7 +267,7 @@ const StepEight: React.FC<StepEightProps> = ({
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
               >
                 <option value="" disabled>
-                  เลือกประเทศ
+                  {contactInfoLanguageData?.placeholder_select_country}
                 </option>
                 {countriesData.countries.map((country: Country) => (
                   <option key={country.id} value={country.name}>
@@ -272,7 +282,7 @@ const StepEight: React.FC<StepEightProps> = ({
               <>
                 <div className="mb-4">
                   <label className="block text-sm text-text_primary font-semibold mb-2">
-                    รายละเอียดที่อยู่
+                     {sellerContactLanguage?.address_detail}
                   </label>
                   <input
                     type="text"
@@ -280,7 +290,7 @@ const StepEight: React.FC<StepEightProps> = ({
                     value={formData.address_details}
                     onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                    placeholder="ระบุที่อยู่, หมู่, ถนน, ซอย"
+                    placeholder={sellerContactLanguage?.address_placeholder}
                   />
                 </div>
 
@@ -297,10 +307,11 @@ const StepEight: React.FC<StepEightProps> = ({
                         zip_code: selected.zip_code,
                       });
                     }}
+                    language={sellerContactLanguage}
                   />
                   <div>
                     <label className="block text-sm text-text_primary font-semibold mb-2">
-                      ตำบล/แขวง
+                      {sellerContactLanguage?.sub_district}
                     </label>
                     <input
                       type="text"
@@ -308,7 +319,7 @@ const StepEight: React.FC<StepEightProps> = ({
                       value={formData.subdistrict_or_district}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                      placeholder="ระบุตำบล/แขวง"
+                      placeholder={sellerContactLanguage?.sub_district}
                     />
                   </div>
                 </div>
@@ -316,7 +327,7 @@ const StepEight: React.FC<StepEightProps> = ({
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm text-text_primary font-semibold mb-2">
-                      อำเภอ/เขต
+                      {sellerContactLanguage?.district}
                     </label>
                     <input
                       type="text"
@@ -324,12 +335,12 @@ const StepEight: React.FC<StepEightProps> = ({
                       value={formData.district_or_subdistrict}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                      placeholder="ระบุอำเภอ/เขต"
+                     placeholder={sellerContactLanguage?.district}
                     />
                   </div>
                   <div>
                     <label className="block text-sm text-text_primary font-semibold mb-2">
-                      จังหวัด
+                      {sellerContactLanguage?.province}
                     </label>
                     <input
                       type="text"
@@ -337,7 +348,7 @@ const StepEight: React.FC<StepEightProps> = ({
                       value={formData.province}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                      placeholder="ระบุจังหวัด"
+                      placeholder={sellerContactLanguage?.province}
                     />
                   </div>
                 </div>
@@ -355,7 +366,7 @@ const StepEight: React.FC<StepEightProps> = ({
                   : "bg-third text-white"
               }`}
             >
-              บันทึกและส่งข้อมูล
+              {applyFreelancerLanguage?.save_and_continue}
               <svg
                 className="w-5 h-5 ml-2"
                 fill="none"

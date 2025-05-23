@@ -186,7 +186,7 @@ const ContactInfo = () => {
 
       await updateAddressProfile(payload);
       await mutate();
-      success_message("profile", "update", null);
+      success_message("profile", "update");
       if (data.country !== "Thailand") {
         setDefaultForeignCountry(data.country);
         reset({

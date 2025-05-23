@@ -13,6 +13,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import FilterSection from "../FilterSection";
 import SortSection from "../SortSection";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { LanguageFile } from "@/constants/language";
+import Loading from "../Loading";
+import { interpolateDouble } from "@/utils/interpolate";
 
 const category_related = [
   {
@@ -34,6 +38,12 @@ const category_related = [
 ];
 
 const CategoryDetail = () => {
+  const {
+    data: jobCategoryLanguage,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.JOB_CATEGORY);
+
   const [currentPage, setCurrentPage] = useState(1);
   const TOTAL_PAGES = 6;
 
@@ -49,6 +59,9 @@ const CategoryDetail = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
 
   return (
     <>
@@ -83,8 +96,8 @@ const CategoryDetail = () => {
         <div className="col-start-2 col-end-auto">
           <div className=" flex justify-between items-center pt-3 pb-3">
             <div className="inline-grid grid-flow-col justify-start gap-x-2">
-              <FilterSection />
-              <SortSection />
+              <FilterSection language={jobCategoryLanguage} />
+              <SortSection language={jobCategoryLanguage} />
             </div>
             <CategoryFilter />
           </div>
@@ -93,8 +106,17 @@ const CategoryDetail = () => {
       <section className="pb-10 mt-4">
         <div className="grid-container-job">
           <div className="flex justify-between col-start-2 col-end-auto mb-3 text-[0.875rem] text-text_primary font-sans">
-            <div>พบงาน 14 รายการ</div>
-            <div>หน้า 1 จาก 1</div>
+            <div>
+              {interpolateDouble(jobCategoryLanguage?.found_jobs || "", {
+                job_number: 4,
+              })}
+            </div>
+            <div>
+              {interpolateDouble(jobCategoryLanguage?.page_info || "", {
+                current_page: 1,
+                total_pages: 4,
+              })}
+            </div>
           </div>
           <section className="col-start-2 col-end-auto grid grid-cols-1 md:grid-cols-[repeat(4,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
             {Array.from({ length: 16 }, (_, index) => (
@@ -111,7 +133,12 @@ const CategoryDetail = () => {
           <section className="col-start-2 col-end-auto mt-12 ">
             <div>
               <h2 className="mb-6 text-text_primary font-medium text-[1.5rem] leading-[1.15] p-0 m-0">
-                หมวดหมู่ที่เกี่ยวข้องกับ ทำ SEO
+                {interpolateDouble(
+                  jobCategoryLanguage?.categories_related_to_job_type || "",
+                  {
+                    job_type: "SEO",
+                  }
+                )}
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-[repeat(4,minmax(1px,1fr))] grid-rows-[1fr] gap-[1.25rem] my-3 ">
                 {category_related.map((category, index) => (

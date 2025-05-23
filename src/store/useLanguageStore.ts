@@ -34,7 +34,11 @@ import {
   SellerProjectManagement,
   SellerWithdrawal,
   ApplyFreelancerSuccessLanguage,
-  JobPostCreate
+  JobPostCreate,
+  ApplyToBeFreelancerLanguage,
+  NotificationLanguage,
+  JobCardLanguage,
+  JobCategoryLanguage
 } from "@/types/language";
 import { create } from "zustand";
 
@@ -74,7 +78,11 @@ export type LanguageDataType = Partial<
     ProfileUserEdit &
     Commission &
     ApplyFreelancerSuccessLanguage &
-    JobPostCreate
+    JobPostCreate &
+    ApplyToBeFreelancerLanguage &
+    NotificationLanguage &
+    JobCardLanguage &
+    JobCategoryLanguage
 >;
 
 type LanguageStoreData = {

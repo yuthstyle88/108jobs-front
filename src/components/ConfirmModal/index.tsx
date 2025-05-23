@@ -84,7 +84,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
       }
       reset();
       onClose();
-      success_message(null, null, "Change password successfully");
+      success_message("profile", "change_password");
     } catch (error) {
       setApiError(
         error instanceof Error

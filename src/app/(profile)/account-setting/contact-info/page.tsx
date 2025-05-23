@@ -193,7 +193,7 @@ export default function ContactPage() {
 
       await updateAddressProfile(payload);
       await mutate();
-      success_message("profile", "update", null);
+      success_message("profile", "update");
       if (data.country !== "Thailand") {
         setDefaultForeignCountry(data.country);
       } else {
@@ -363,7 +363,9 @@ export default function ContactPage() {
                   errors.country ? "border-red-500" : "border-gray-300"
                 }`}
               >
-                <option value="">-- เลือกประเทศ --</option>
+                <option value="">
+                  -- {contactInfoLanguageData?.placeholder_select_country} --
+                </option>
                 {countryOptions.map((c) => (
                   <option key={c.value} value={c.value}>
                     {c.label}
@@ -399,7 +401,7 @@ export default function ContactPage() {
                   error={errors.zip_code}
                   control={control}
                   setValue={setValue}
-                   language={sellerContactLanguage}
+                  language={sellerContactLanguage}
                 />
                 <div>
                   <label className="block font-semibold mb-1">
@@ -439,6 +441,7 @@ export default function ContactPage() {
                     {sellerContactLanguage?.province}
                   </label>
                   <input
+                    placeholder={sellerContactLanguage?.province}
                     {...register("province")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   />
@@ -459,9 +462,9 @@ export default function ContactPage() {
               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
               {isSubmitting || isUpdateMuting ? (
-                <span>กำลังบันทึก...</span>
+                <LoadingCircle />
               ) : (
-                "บันทึก"
+                global?.button_save
               )}
             </button>
           </div>

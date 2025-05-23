@@ -146,7 +146,7 @@ const EditExperience = () => {
 
     try {
       await sendExperience(body);
-      success_message("profile", "update_work_experience", null);
+      success_message("profile", "update_work_experience");
     } catch (error) {
       console.error("Lỗi khi lưu kinh nghiệm:", error);
     }
