@@ -1,35 +1,43 @@
 import { JobDetailIcon } from "@/constants/icons";
 import { JobDetailImage } from "@/constants/images";
+import { JobDetailLanguage } from "@/types/language";
 import Image from "next/image";
 import Link from "next/link";
 
-const freelancer = [
+type Props = {
+  language: Partial<JobDetailLanguage> | undefined | null;
+};
+
+
+
+
+const Freelance = ({ language }: Props) => {
+
+  const freelancer = [
   {
-    title: "งานสำเร็จ",
+    title: language?.work_completed,
     icon: JobDetailIcon.completed,
     percentage: "100%",
   },
   {
-    title: "ขายได้",
+    title: language?.can_be_sold,
     icon: JobDetailIcon.sold,
-    percentage: "1.2K ครั้ง",
+    percentage: `1.2K ${language?.times}`,
   },
   {
-    title: "จ้างซ้ำ",
+    title: language?.re_hiring,
     icon: JobDetailIcon.response,
-    percentage: "596 ครั้ง",
+    percentage: `596 ${language?.times}`,
   },
   {
-    title: "ตอบกลับ",
+    title: language?.respond,
     icon: JobDetailIcon.hiring,
-    percentage: "2 ชั่วโมง",
+    percentage: `2 ${language?.minutes}`,
   },
 ];
-
-const Freelance = () => {
   return (
     <div className="grid grid-cols-[1fr] gap-y-6">
-      <h2 className="text-[1.25rem] text-third font-medium">ฟรีแลนซ์</h2>
+      <h2 className="text-[1.25rem] text-third font-medium">{language?.freelancer}</h2>
       <div className="mx-auto bg-white rounded-xl border-border_primary border-1 shadow-sm p-6">
         <div className="flex items-start justify-between mb-4">
           <Link href="/user/profile" className="flex items-start space-x-4">
@@ -44,7 +52,7 @@ const Freelance = () => {
                   taratra
                 </h2>
                 <button className="px-3 py-1 text-blue-600 border border-blue-600 rounded-lg text-sm hover:bg-blue-50">
-                  ดูโปรไฟล์
+                  {language?.view_profile}
                 </button>
               </div>
               <p className="text-gray-600 text-sm mt-1 leading-relaxed font-sans text-text_secondary">

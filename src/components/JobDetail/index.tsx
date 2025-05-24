@@ -13,6 +13,9 @@ import Review from "./Review";
 import { CategoriesImage } from "@/constants/images";
 import CategoryRelated from "../CategoryDetail/components/CategoryRelated";
 import CategoryCard from "../CategoryDetail/components/CategoryCard";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import Loading from "../Loading";
 
 const category_related = [
   {
@@ -34,6 +37,14 @@ const category_related = [
 ];
 
 const JobDetail = () => {
+  const {
+    data: jobDetailLanguage,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.JOB_DETAIL);
+
+  if (isLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
   return (
     <>
       <section className="grid-container-job">
@@ -44,30 +55,35 @@ const JobDetail = () => {
           <div className="max-w-[850px] h-full relative">
             <SliderJob />
             <div className="block pt-4 xl:pt-0 xl:hidden">
-              <AsideJob />
+              <AsideJob language={jobDetailLanguage} />
             </div>
             <div className="pt-4 md:pt-12 relative h-full">
               <TabNavigation
-                tabLabel={["ภาพรวม", "แพ็กเกจ", "ฟรีแลนซ์", "รีวิว"]}
+                tabLabel={[
+                  jobDetailLanguage?.overview_tab || "Overview",
+                  jobDetailLanguage?.package_tab || "Packages",
+                  jobDetailLanguage?.freelancer || "Reviews",
+                  jobDetailLanguage?.review || "Reviews",
+                ]}
               >
-                <Overview key="overview" />
-                <Package key="package" />
-                <Freelance key="freelance" />
-                <Review key="review" />
+                <Overview language={jobDetailLanguage} key="overview" />
+                <Package language={jobDetailLanguage} key="package" />
+                <Freelance language={jobDetailLanguage} key="freelance" />
+                <Review language={jobDetailLanguage} key="review" />
               </TabNavigation>
             </div>
           </div>
           <div className="hidden xl:block">
-            <AsideJob />
+            <AsideJob language={jobDetailLanguage} />
           </div>
         </div>
       </section>
       <section className="bg-[#F6F7F8]">
         <section className="grid-container-job">
           <div className="col-start-2 col-end-auto pb-6">
-            <div>
+            <div className="mt-6">
               <h2 className="text-[1.5rem] text-text_primary font-medium pb-6">
-                งานอื่น ๆ ที่คนส่วนใหญ่สนใจ
+                {jobDetailLanguage?.similar_jobs}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-[repeat(4,minmax(1px,1fr))] grid-rows-[1fr] gap-[1.25rem] my-3 ">
                 {Array.from({ length: 4 }, (_, index) => (
@@ -79,7 +95,7 @@ const JobDetail = () => {
           <div className="col-start-2 col-end-auto pb-2 md:pb-6">
             <div>
               <h2 className="text-[1.5rem] text-text_primary font-medium pb-6">
-                งานอื่น ๆ ที่คนส่วนใหญ่สนใจ
+                {jobDetailLanguage?.other_jobs_section}
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-[repeat(4,minmax(1px,1fr))] gap-[1.25rem] my-3">
                 {category_related.map((category, index) => (

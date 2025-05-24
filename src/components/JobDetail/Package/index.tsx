@@ -1,13 +1,17 @@
 import { JobDetailIcon } from "@/constants/icons";
+import { JobDetailLanguage } from "@/types/language";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 
-const Package = () => {
+type Props = {
+  language: Partial<JobDetailLanguage> | undefined | null;
+};
+const Package = ({ language }: Props) => {
   return (
-    <div className="grid grid-cols-[1fr] gap-y-6">
+    <div id="package" className="grid grid-cols-[1fr] gap-y-6">
       <h2 className="text-[1.25rem] text-third font-medium">
-        แพ็กเกจ ราคา เพิ่ม Traffic และ Backlink คุณภาพสูง ดัน Web ติดอันดับ SEO
+        {language?.package_details} เพิ่ม Traffic และ Backlink คุณภาพสูง ดัน Web ติดอันดับ SEO
         เร่ง index KW ให้ติดรัวๆ
       </h2>
       <div className="px-6 pt-6 pb-4 border-[0.0625rem] border-border_primary rounded-[0.25rem]">
@@ -57,26 +61,13 @@ const Package = () => {
           </p>
         </div>
         <hr className="my-4 bg-border_primary block overflow-visible w-full h-[1px] m-0" />
-        <div className="flex justify-between items-center">
-          <div className="gap-[0.5em] items-center justify-between flex text-[0.875rem] ">
-            <input
-              name="company-payment"
-              type="checkbox"
-              className="w-[1.375em] h-[1.375em] flex-shrink-0 border-[0.0625em] border-neutral-500 rounded-md bg-transparent cursor-pointer checked:border-primary checked:bg-primary "
-            />
-            <label
-              htmlFor="company-payment"
-              className="font-semibold text-[0.875rem] text-text_secondary"
-            >
-              สนใจจ้างในนามบริษัท
-            </label>
-          </div>
+        <div className="flex justify-end items-end">
           <button className="relative inline-flex justify-center items-center overflow-hidden min-h-[2.5rem] px-[1.125rem] border-none rounded-[0.25rem] bg-third text-[0.875rem] font-medium w-fit text-white">
-            <span>ทักแชทฟรีแลนซ์</span>
+            <span>{language?.chat_with_freelancers}</span>
           </button>
         </div>
       </div>
-      <div className="pt-4">
+      <div className="mt-4 shadow-md">
         <Image
           src={JobDetailIcon.company_hiring}
           alt="company"
