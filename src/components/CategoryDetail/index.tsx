@@ -72,8 +72,8 @@ const CategoryDetail = () => {
         >
           <Image src={CategoriesIcon.guaranteed} alt="guaranteed" width={22} />
           <p className="text-base font-medium ">
-            <span className="text-third">ปลอดภัย ไม่โดนโกง </span>
-            <span className="text-text_primary">ดูแลตลอดการจ้างงาน</span>
+            <span className="text-third">{jobCategoryLanguage?.safe_no_scam} </span>
+            <span className="text-text_primary">{jobCategoryLanguage?.support_throughout}</span>
           </p>
         </Link>
       </section>
