@@ -37,7 +37,8 @@ export type LanguageDataType = Partial<
     ApplyToBeFreelancerLanguage &
     NotificationLanguage &
     JobCardLanguage &
-    JobCategoryLanguage
+    JobCategoryLanguage &
+    JobDetailLanguage
 >;
 export interface GlobalLanguage {
   label_employment_button: string;
@@ -1265,6 +1266,53 @@ export type JobCategoryLanguage = {
   "1_and_up": string;
   clean_the_filters: string;
   confirm: string;
-  protected_by_xAI_en: string;
   highest_price: string;
+  safe_no_scam: string;
+  support_throughout: string;
+};
+
+export type JobDetailLanguage = {
+  all_job_types: string;
+  marketing_advertising: string;
+  do_seo: string;
+  fastwork_guarantee: string;
+  fastwork_guarantee_description: string;
+  chat_with_freelancers: string;
+  interested_in_hiring: string;
+  no_charges_message: string;
+  record_label: string;
+  overview_tab: string;
+  package_tab: string;
+  seo_tab: string;
+  freelance_review_tab: string;
+  package_description: string;
+  traffic_package_description: string;
+  view_package_information: string;
+  sold_12k_times: string;
+  rating_4_9: string;
+  employers_trust: string;
+  other_jobs_section: string;
+  view_profile: string;
+  work_completed: string;
+  can_be_sold: string;
+  re_hiring: string;
+  respond: string;
+  hours: string;
+  minutes: string;
+  days: string;
+  reviews_from_employers: string;
+  response_speed: string;
+  friendly_and_expert: string;
+  service_provision: string;
+  value_for_money: string;
+  anonymous: string;
+  view_package_info: string;
+  read_additional_protection_terms: string;
+  save: string;
+  share: string;
+  freelancer: string;
+  review: string;
+  package_details: string;
+  times: string;
+  similar_jobs: string;
 };

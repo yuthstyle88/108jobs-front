@@ -1,11 +1,17 @@
 import { JobDetailIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
+import { JobDetailLanguage } from "@/types/language";
+import { interpolateDouble } from "@/utils/interpolate";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 
-const Overview = () => {
+type Props = {
+  language: Partial<JobDetailLanguage> | undefined | null;
+};
+
+const Overview = ({ language }: Props) => {
   return (
     <section>
       <h1 className="text-[1.5rem] text-third font-medium leading-[1.15]">
@@ -14,7 +20,11 @@ const Overview = () => {
       </h1>
       <div className="flex flex-wrap mt-3 gap-3">
         <div className="pr-2 border-r-1 border-r-border_primary flex items-center">
-          <span className="font-sans text-text_primary">ขายได้ 1.2K ครั้ง</span>
+          <span className="font-sans text-text_primary">
+            {interpolateDouble(language?.sold_12k_times || "", {
+              sell_count: "1.2k",
+            })}
+          </span>
         </div>
         <div className="pr-2 border-r-1 border-r-border_primary flex items-center">
           <FontAwesomeIcon icon={faStar} className="text-[#E9B10C]" />
@@ -42,8 +52,7 @@ const Overview = () => {
           className="w-8 h-8"
         />
         <div className="text-[0.875rem] text-text_primary font-sans">
-          <span className="font-medium">ผู้ว่าจ้างไว้ใจ! {""}</span>
-          กลับมาจ้างซ้ำเป็นจำนวนมาก
+          {language?.employers_trust}
         </div>
       </div>
       <hr className="mt-4 bg-border_primary block overflow-visible w-full h-[1px] m-0" />

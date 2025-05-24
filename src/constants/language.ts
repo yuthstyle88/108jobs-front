@@ -41,6 +41,7 @@ export enum LanguageFile {
   NOTIFICATIONS = "notifications",
   JOB_CARD = "job-card",
   JOB_CATEGORY = "job-category",
+  JOB_DETAIL = "job_detail",
 }
 
 export const LANGUAGES = {

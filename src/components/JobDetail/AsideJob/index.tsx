@@ -1,5 +1,7 @@
 "use client";
 import { JobDetailIcon } from "@/constants/icons";
+import { JobDetailLanguage } from "@/types/language";
+import { scrollToElementById } from "@/utils/scrollSmooth";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,8 +15,17 @@ interface PackageInfo {
   description: string;
 }
 
-const AsideJob = () => {
+interface AsideJobProps {
+  language: Partial<JobDetailLanguage> | undefined | null;
+}
+
+const AsideJob = ({ language }: AsideJobProps) => {
   const [selectedPackage, setSelectedPackage] = useState(0);
+
+   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault();
+      scrollToElementById("package");
+    };
 
   const packages: PackageInfo[] = [
     {
@@ -50,13 +61,14 @@ const AsideJob = () => {
             />
           </div>
           <div className="">
-            <strong className="text-third ">Fastwork Guarantee</strong>
+            <strong className="text-third ">
+              {language?.fastwork_guarantee}
+            </strong>
             <p className="mt-1 text-[0.75rem] text-text_secondary font-sans">
-              ดูแลตลอดการจ้างงาน ปลอดภัย ไม่โดนโกง
-              ตัวกลางคุ้มครองเงินจนงานได้รับการอนุมัติ
+              {language?.fastwork_guarantee_description}
             </p>
             <Link href="#" className="text-third text-[0.75rem] font-sans">
-              อ่านเงื่อนไขและสิทธิ์การคุ้มครองเพิ่มเติม
+              {language?.read_additional_protection_terms}
             </Link>
           </div>
         </div>
@@ -87,33 +99,19 @@ const AsideJob = () => {
             {packages[selectedPackage].description}
           </p>
           <Link
-            href=""
+            href="/seo/job-detail#package"
+            onClick={(e) => handleClick(e)}
             className="text-third mt-2 font-semibold text-[0.875rem] cursor-pointer font-sans"
           >
-            ดูข้อมูลแพ็กเกจ
+            {language?.view_package_info}
           </Link>
           <hr className="mt-4 bg-border_primary block overflow-visible w-full h-[1px] m-0" />
-          <div className="mt-4 mb-4">
-            <div className="gap-[0.5em] items-center justify-between flex text-[0.875rem] ">
-              <label
-                htmlFor="company-payment"
-                className="font-medium text-[0.875rem] text-text_secondary"
-              >
-                สนใจจ้างในนามบริษัท
-              </label>
-              <input
-                name="company-payment"
-                type="checkbox"
-                className="w-[1.375em] h-[1.375em] flex-shrink-0 border-[0.0625em] border-neutral-500 rounded-md bg-transparent cursor-pointer checked:border-primary checked:bg-primary "
-              />
-            </div>
-          </div>
           <button className="relative inline-flex justify-center items-center overflow-hidden min-h-[2.5rem] px-[1.125rem] border-none rounded-[0.25rem] bg-third text-[0.875rem] font-medium w-full text-white">
-            <span>ทักแชทฟรีแลนซ์</span>
+            <span>{language?.chat_with_freelancers}</span>
           </button>
           <div className="text-center mt-2">
             <small className="text-[0.75rem] text-text_secondary">
-              คุณจะยังไม่เสียค่าใช้จ่าย
+              {language?.no_charges_message}
             </small>
           </div>
         </section>
@@ -128,11 +126,11 @@ const AsideJob = () => {
       <div className="grid grid-cols-[1fr_1fr] text-center mt-4 font-medium text-text_secondary ">
         <div className="flex flex-row items-center justify-center min-w-[34px] border-r-1 border-border_primary p-2 cursor-pointer">
           <FontAwesomeIcon icon={faHeart} className="text-text_secondary" />
-          <p className="ml-2 cursor-pointer text-center">บันทึก</p>
+          <p className="ml-2 cursor-pointer text-center">{language?.save}</p>
         </div>
         <div className="flex flex-row items-center justify-center min-w-[34px] p-2 cursor-pointer">
           <FontAwesomeIcon icon={faShareAlt} className="text-text_secondary" />
-          <p className="ml-2 cursor-pointer text-center">บันทึก</p>
+          <p className="ml-2 cursor-pointer text-center">{language?.share}</p>
         </div>
       </div>
     </aside>

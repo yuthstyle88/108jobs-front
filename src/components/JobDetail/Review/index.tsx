@@ -1,3 +1,5 @@
+import { JobDetailLanguage } from "@/types/language";
+
 const StarIcon = ({ filled }: { filled: boolean }) => (
   <svg
     className={`w-5 h-5 ${filled ? "text-[#E9B10C]" : "text-gray-300"}`}
@@ -18,11 +20,15 @@ const RatingStars = ({ rating }: { rating: number }) => {
   );
 };
 
-const ReviewCard = () => {
+type Props = {
+  language: Partial<JobDetailLanguage> | undefined | null;
+};
+
+const ReviewCard = ({ language }: Props) => {
   return (
     <div className="grid grid-cols-[1fr] gap-y-6">
       <h2 className="text-[1.25rem] text-third font-medium">
-        รีวิวจากผู้ว่าจ้าง (921)
+        {language?.reviews_from_employers} (921)
       </h2>
       <div className="mx-auto bg-white rounded-xl shadow-sm p-2 md:p-6">
         <div className="flex items-center gap-8 justify-between mb-6">
@@ -35,19 +41,19 @@ const ReviewCard = () => {
           <div className="flex-1 w-full lg:mx-12">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-center gap-2 justify-between">
-                <span className="text-gray-700 text-sm sm:text-base">ความเร็วในการตอบ</span>
+                <span className="text-gray-700 text-sm sm:text-base">{language?.response_speed}</span>
                 <RatingStars rating={5} />
               </div>
               <div className="flex items-center gap-2 justify-between">
-                <span className="text-gray-700 text-sm sm:text-base">มีมิตรและความเชี่ยวชาญ</span>
+                <span className="text-gray-700 text-sm sm:text-base">{language?.friendly_and_expert}</span>
                 <RatingStars rating={5} />
               </div>
               <div className="flex items-center gap-2 justify-between">
-                <span className="text-gray-700 text-sm sm:text-base">การให้บริการ</span>
+                <span className="text-gray-700 text-sm sm:text-base">{language?.service_provision}</span>
                 <RatingStars rating={5} />
               </div>
               <div className="flex items-center gap-2 justify-between">
-                <span className="text-gray-700 text-sm sm:text-base">ความคุ้มค่าของราคา</span>
+                <span className="text-gray-700 text-sm sm:text-base">{language?.value_for_money}</span>
                 <RatingStars rating={5} />
               </div>
             </div>
