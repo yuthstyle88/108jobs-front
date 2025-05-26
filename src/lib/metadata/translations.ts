@@ -18,6 +18,7 @@ type LangSeoData = {
   promotion: SEOPageContent;
   catalog: SEOPageContent;
   login: SEOPageContent;
+  how: SEOPageContent;
 };
 
 export const seoTranslations: Record<SupportedLang, LangSeoData> = {
@@ -72,6 +73,10 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
       description:
         "เข้าสู่ระบบเพื่อเริ่มต้นใช้งานแพลตฟอร์มฟรีแลนซ์อันดับ 1 ของไทย",
     },
+    how: {
+      title: "วิธีการซื้อ/ขายบน Fastwork?",
+      description: "เว็บไซต์ตลาดฟรีแลนซ์อันดับหนึ่ง",
+    },
   },
   en: {
     locale: "en_US",
@@ -121,6 +126,10 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
       title: "Login to fastwork.co",
       description:
         "Sign in to manage your projects, hire freelancers and grow your business on Fastwork.",
+    },
+    how: {
+      title: "How to buy/sell on Fastwork?",
+      description: "Number one, freelance market-place website.",
     },
   },
   vi: {
@@ -172,6 +181,10 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
       title: "Đăng nhập fastwork.co",
       description:
         "Đăng nhập để quản lý dự án và thuê freelancer chất lượng trên nền tảng Fastwork.",
+    },
+    how: {
+      title: "Cách mua/bán trên Fastwork?",
+      description: "Trang web thị trường freelance số một.",
     },
   },
 };

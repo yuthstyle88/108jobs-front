@@ -389,6 +389,7 @@ const SwipeToConfirm: React.FC<SwipeToConfirmProps> = ({
         />
       </>
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isLoading,
     isSuccess,
