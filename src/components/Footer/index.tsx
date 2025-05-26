@@ -3,7 +3,7 @@ import en from "@/assets/icons/en.svg";
 import th from "@/assets/icons/th.svg";
 import vn from "@/assets/icons/vn.svg";
 import { LanguageFile } from "@/constants/language";
-import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import {
   faFacebook,
   faInstagram,
@@ -14,7 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const Footer = () => {
-  const global = useTranslateFile(LanguageFile.GLOBAL);
+  const { data: global } = useGlobalTranslate(LanguageFile.GLOBAL);
 
   return (
     <footer className="bg-blue-900 text-white">
@@ -56,25 +56,35 @@ const Footer = () => {
           <h3 className="font-bold mb-3">{global?.tittle_footer_2}</h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="#">{global?.menu_become_freelancer}</Link>
+              <Link href="/start-selling">
+                {global?.menu_become_freelancer}
+              </Link>
             </li>
             <li>
-              <Link href="#">{global?.label_start_selling_work}</Link>
+              <Link href="/content/how">
+                {global?.label_start_selling_work}
+              </Link>
             </li>
+            {/* <li>
+              <Link href="/">{global?.label_payment_wages}</Link>
+            </li> */}
             <li>
-              <Link href="#">{global?.label_payment_wages}</Link>
+              <Link href="/content/guarantee">
+                {global?.label_employment_guarantee}
+              </Link>
             </li>
-            <li>
-              <Link href="#">{global?.label_employment_guarantee}</Link>
-            </li>
-            <li>
+            {/* <li>
               <Link href="#">{global?.label_knowledge_blog}</Link>
+            </li> */}
+            <li>
+              <Link href="https://fastwork4276.zendesk.com/hc/en-us">
+                {global?.label_faq}
+              </Link>
             </li>
             <li>
-              <Link href="#">{global?.label_faq}</Link>
-            </li>
-            <li>
-              <Link href="#">{global?.label_manage_data_usage}</Link>
+              <Link href="/consent-management">
+                {global?.label_manage_data_usage}
+              </Link>
             </li>
           </ul>
         </div>

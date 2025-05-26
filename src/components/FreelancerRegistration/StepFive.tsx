@@ -54,7 +54,7 @@ const StepFive: React.FC<StepFiveProps> = ({
   const isFormValid = frontImage && backImage;
 
   return (
-    <div className="flex flex-col w-full min-h-60 bg-white rounded-lg shadow-jobCard">
+    <div className="flex flex-col w-full min-h-60 bg-white rounded-lg">
       <div className="py-0 md:py-6 2xl:py-12 flex flex-1 flex-col mx-auto gap-4 w-full max-w-screen-lg h-full">
         <div className="flex flex-col gap-2 justify-between h-full w-full px-4">
           <div className="text-center mb-8">

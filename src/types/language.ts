@@ -38,7 +38,8 @@ export type LanguageDataType = Partial<
     NotificationLanguage &
     JobCardLanguage &
     JobCategoryLanguage &
-    JobDetailLanguage
+    JobDetailLanguage &
+    TermAndConditionLanguage
 >;
 export interface GlobalLanguage {
   label_employment_button: string;
@@ -1315,4 +1316,280 @@ export type JobDetailLanguage = {
   package_details: string;
   times: string;
   similar_jobs: string;
+};
+
+export type TermAndConditionLanguage = {
+  homepage_title: string;
+  homepage_subtitle: string;
+  homepage_app_prompt: string;
+  homepage_freelancer_section_title: string;
+
+  freelancer_category_title: string;
+  freelancer_category_1: string;
+  freelancer_category_2: string;
+  freelancer_category_3: string;
+  freelancer_category_cta: string;
+
+  specialist_category_title: string;
+  specialist_category_1: string;
+  specialist_category_2: string;
+  specialist_category_3: string;
+  specialist_category_4: string;
+  specialist_category_5: string;
+
+  professional_category_title: string;
+  professional_category_1: string;
+  professional_category_2: string;
+  professional_category_3: string;
+  professional_category_4: string;
+  professional_category_5: string;
+  professional_category_6: string;
+  professional_category_7: string;
+
+  how_to_use_title: string;
+  how_to_use_step_1_title: string;
+  how_to_use_step_1_description: string;
+  how_to_use_step_2_title: string;
+  how_to_use_step_2_description: string;
+  how_to_use_step_3_title: string;
+  how_to_use_step_3_description: string;
+  how_to_use_step_4_title: string;
+  how_to_use_step_4_description: string;
+
+  trusted_clients_title: string;
+  trusted_clients_cta: string;
+
+  terms_and_conditions_title: string;
+
+  section_1_title: string;
+  definition_1: string;
+  definition_2: string;
+  definition_3: string;
+  definition_4: string;
+  definition_5: string;
+  definition_6: string;
+  definition_7: string;
+  definition_8: string;
+  definition_9: string;
+  definition_10: string;
+  definition_11: string;
+  definition_12: string;
+  definition_13: string;
+  definition_14: string;
+  definition_15: string;
+  definition_16: string;
+  definition_17: string;
+  definition_18: string;
+  definition_19: string;
+  definition_20: string;
+  definition_21: string;
+  definition_22: string;
+  definition_23: string;
+  definition_24: string;
+  definition_25: string;
+  definition_26: string;
+  definition_27: string;
+  definition_28: string;
+  definition_29: string;
+  definition_30: string;
+  definition_31: string;
+  definition_32: string;
+
+  section_2_title: string;
+  general_terms_1: string;
+  general_terms_2: string;
+  general_terms_3: string;
+  general_terms_4: string;
+  general_terms_5: string;
+  general_terms_6: string;
+  general_terms_7: string;
+  general_terms_8: string;
+  general_terms_9: string;
+
+  section_3_title: string;
+  freelancer_commitment_1: string;
+  freelancer_commitment_2: string;
+  freelancer_commitment_3: string;
+  freelancer_commitment_4: string;
+  freelancer_commitment_5: string;
+  freelancer_commitment_6: string;
+  freelancer_commitment_7: string;
+  freelancer_commitment_8: string;
+  freelancer_commitment_9: string;
+  freelancer_commitment_10: string;
+  freelancer_commitment_11: string;
+  freelancer_commitment_12: string;
+  freelancer_commitment_13: string;
+  freelancer_commitment_14: string;
+  freelancer_commitment_15: string;
+  freelancer_commitment_16: string;
+  freelancer_commitment_17: string;
+
+  section_4_title: string;
+  registration_1: string;
+  registration_2: string;
+  registration_3: string;
+  registration_4: string;
+  registration_5: string;
+  registration_6: string;
+  registration_7: string;
+  registration_8: string;
+  registration_9: string;
+  registration_10: string;
+
+  section_5_title: string;
+  project_1: string;
+  project_2: string;
+  project_3: string;
+  project_4: string;
+  project_5: string;
+  project_6: string;
+  project_7: string;
+  project_8: string;
+  project_9: string;
+  project_10: string;
+  project_11: string;
+  project_12: string;
+  project_13: string;
+  project_14: string;
+  project_15: string;
+  project_16: string;
+
+  section_6_title: string;
+  communication_1: string;
+  communication_2: string;
+  communication_3: string;
+  communication_4: string;
+  communication_5: string;
+  communication_6: string;
+
+  section_7_title: string;
+  fees_1: string;
+  fees_2: string;
+  fees_3: string;
+  fees_4: string;
+  fees_5: string;
+  fees_6: string;
+  fees_7: string;
+  fees_8: string;
+  fees_9: string;
+  fees_10: string;
+  fees_11: string;
+
+  section_8_title: string;
+  coins_1: string;
+  coins_2: string;
+  coins_3: string;
+  coins_4: string;
+  coins_5: string;
+  coins_6: string;
+
+  section_9_title: string;
+  product_service_1: string;
+  product_service_2: string;
+  product_service_3: string;
+  product_service_4: string;
+  product_service_5: string;
+
+  section_10_title: string;
+  review_1: string;
+  review_2: string;
+  review_3: string;
+  review_4: string;
+  review_5: string;
+  review_6: string;
+  review_7: string;
+
+  section_11_title: string;
+  project_status_1: string;
+  project_status_2: string;
+  project_status_3: string;
+  project_status_4: string;
+  project_status_5: string;
+  project_status_6: string;
+
+  section_12_title: string;
+  cancellation_restrictions_1: string;
+  cancellation_restrictions_2: string;
+  cancellation_restrictions_3: string;
+  cancellation_restrictions_4: string;
+
+  section_13_title: string;
+  account_suspension_1: string;
+  account_suspension_2: string;
+  account_suspension_3: string;
+  account_suspension_4: string;
+  account_suspension_5: string;
+  account_suspension_6: string;
+  account_suspension_7: string;
+  account_suspension_8: string;
+  account_suspension_9: string;
+  account_suspension_10: string;
+  account_suspension_11: string;
+  account_suspension_12: string;
+  account_suspension_13: string;
+  account_suspension_14: string;
+  account_suspension_15: string;
+
+  section_14_title: string;
+  dispute_resolution_1: string;
+  dispute_resolution_2: string;
+  dispute_resolution_3: string;
+  dispute_resolution_4: string;
+  dispute_resolution_5: string;
+  dispute_resolution_6: string;
+  dispute_resolution_7: string;
+  dispute_resolution_8: string;
+
+  section_15_title: string;
+  indemnification_1: string;
+  indemnification_2: string;
+  indemnification_3: string;
+  indemnification_4: string;
+  indemnification_5: string;
+  indemnification_6: string;
+  indemnification_7: string;
+  indemnification_8: string;
+  indemnification_9: string;
+
+  section_16_title: string;
+  company_liability_1: string;
+  company_liability_2: string;
+  company_liability_3: string;
+  company_liability_4: string;
+  company_liability_5: string;
+  company_liability_6: string;
+  company_liability_7: string;
+  company_liability_8: string;
+
+  section_17_title: string;
+  intellectual_property_1: string;
+  intellectual_property_2: string;
+  intellectual_property_3: string;
+
+  section_18_title: string;
+  privacy_policy_1: string;
+  privacy_policy_2: string;
+  privacy_policy_3: string;
+  privacy_policy_4: string;
+
+  section_19_title: string;
+  contact_1: string;
+  contact_2: string;
+  contact_3: string;
+  contact_4: string;
+  contact_5: string;
+
+  note_1: string;
+  note_2: string;
+  note_3: string;
+  note_4: string;
+  note_5: string;
+  note_6: string;
+  note_7: string;
+  note_8: string;
+  note_9: string;
+  note_10: string;
+  note_11: string;
+  note_12: string;
 };
