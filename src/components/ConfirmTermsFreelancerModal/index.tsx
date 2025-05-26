@@ -5,6 +5,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import TermsAndCondition from "./components/TermsAndCondition";
 import LoadingCircle from "../LoadingCircle";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { LanguageFile } from "@/constants/language";
+import Loading from "../Loading";
 
 interface ConfirmTermsFreelancerModalProps {
   isOpen: boolean;
@@ -21,14 +24,20 @@ const registerSchema = z.object({
 
 const ConfirmTermsFreelancerModal: React.FC<
   ConfirmTermsFreelancerModalProps
-> = ({ isOpen, onClose, handleConfirmChange,isLoading }) => {
+> = ({ isOpen, onClose, handleConfirmChange, isLoading }) => {
   const {
-    watch,
-    register,
-  } = useForm({
+    data: termLanguage,
+    isLoading: isTermLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.TERMS_AND_CONDITIONS);
+
+  const { watch, register } = useForm({
     resolver: zodResolver(registerSchema),
     mode: "onChange",
   });
+
+  if (isTermLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
 
   return (
     <Modal
@@ -43,7 +52,7 @@ const ConfirmTermsFreelancerModal: React.FC<
           ข้อกำหนดและเงื่อนไขของ Fastwork
         </p>
         <div className="border-1 border-border_primary p-3 rounded-lg text-[12px] list-decimal max-h-[280px] overflow-auto">
-          <TermsAndCondition />
+          <TermsAndCondition language={termLanguage}/>
         </div>
         <div className="space-y-2 pt-2">
           <div className="flex items-center gap-3">

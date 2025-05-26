@@ -54,6 +54,7 @@ const config: Config = {
           "0 10px 40px -4px rgba(19, 55, 109, 0.08), 0 8px 22px -6px rgba(19, 55, 109, 0.1);",
         topWorkShadow: "0 0 1.5rem 0 rgba(24, 85, 184, .25);",
         reviewShadow: "0 0 1.5rem 0 rgba(24, 85, 184, .1);",
+        howShadow: "0 8px 24px -4px #13376d0a,0 7px 12px -6px #13376d0f",
       },
       borderWidth: {
         1: "1px",

@@ -53,6 +53,21 @@ import logo_reward from "../assets/icons/reward-default.svg";
 import thailand_geo from "../assets/icons/thailand_select.dd0930bf.svg";
 import other_geo from "../assets/icons/other_select.70c4da84.svg";
 
+import buyer from "../assets/icons/content/buyer.svg";
+import seller from "../assets/icons/content/freelance.svg";
+import step1 from "../assets/icons/content/step1-1-en.svg";
+import step2 from "../assets/icons/content/step1-2-en.svg";
+import step3 from "../assets/icons/content/step1-3-en.svg";
+import step4 from "../assets/icons/content/step1-4-en.svg";
+
+export const ContentIcon = {
+  buyer,
+  seller,
+  step1,
+  step2,
+  step3,
+  step4,
+};
 export const ApplyFreelancerIcon = {
   ck,
   facebook,

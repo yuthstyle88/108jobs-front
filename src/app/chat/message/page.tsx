@@ -9,11 +9,13 @@ import {
   Paperclip,
   Phone,
   Send,
-  Smile
+  Smile,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+// import { useSocket } from "../hooks/useSocket";
+// import { useSession } from "next-auth/react";
 
 const ChatMessage = () => {
   const { languageData: chatLanguageData } = useChatLanguage();
@@ -22,6 +24,19 @@ const ChatMessage = () => {
   const [isDocumentsOpen, setIsDocumentsOpen] = useState(false);
   const [messageText, setMessageText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // const { data: session } = useSession();
+
+  // const token = session?.accessToken || "";
+  // const partnerId = "ba26ecd5-8ed9-4bea-8571-d6c624e9e3e0";
+
+  // const { sendMessage } = useSocket({
+  //   token,
+  //   partnerId,
+  //   onMessage: (event) => {
+  //     const data = JSON.parse(event.data);
+  //     console.log("Received:", data);
+  //   },
+  // });
 
   const toggleEmployment = () => {
     setIsEmploymentOpen(!isEmploymentOpen);
@@ -43,8 +58,14 @@ const ChatMessage = () => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      console.log("Sending message:", messageText);
-      setMessageText("");
+      // if (messageText.trim()) {
+      //   sendMessage({
+      //     event: "send_message",
+      //     content: messageText,
+      //     // bổ sung sender_id, timestamp, ...
+      //   });
+      //   setMessageText("");
+      // }
     }
   };
   return (
@@ -358,7 +379,7 @@ const ChatMessage = () => {
           {isDocumentsOpen && (
             <div className="px-4 pb-4 animate-fade-in">
               <p className="text-sm text-gray-500 text-center">
-              ยังไม่มีเอกสาร
+                ยังไม่มีเอกสาร
               </p>
             </div>
           )}
