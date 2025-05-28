@@ -3,66 +3,64 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React from "react";
+
 interface PaginationProps {
-  totalPages: number;
-  currentPage: number;
+  totalPages: number;       // từ API: total_pages
+  currentPage: number;      // từ API: page
   onPageChange: (page: number) => void;
 }
+
 export const Pagination = ({
   totalPages,
   currentPage,
   onPageChange,
 }: PaginationProps) => {
-  const [expandedNumbers, setExpandedNumbers] = useState(false);
   const renderPageNumbers = () => {
-    const pages = [];
-    const DOTS = "...";
+    const pages: (number | string)[] = [];
 
-    pages.push(1);
-    if (expandedNumbers) {
-      for (let i = 2; i <= totalPages; i++) {
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
+      pages.push(1);
+
       if (currentPage > 3) {
-        pages.push(DOTS);
+        pages.push("...");
       }
+
       for (
         let i = Math.max(2, currentPage - 1);
         i <= Math.min(currentPage + 1, totalPages - 1);
         i++
       ) {
-        if (pages[pages.length - 1] !== i) {
-          pages.push(i);
-        }
+        pages.push(i);
       }
+
       if (currentPage < totalPages - 2) {
-        pages.push(DOTS);
+        pages.push("...");
       }
-      if (pages[pages.length - 1] !== totalPages) {
-        pages.push(totalPages);
-      }
+
+      pages.push(totalPages);
     }
-    return pages.map((page, index) => {
-      if (page === DOTS) {
+
+    return pages.map((page, idx) => {
+      if (page === "...") {
         return (
-          <button
-            key={`dots-${index}`}
-            className="flex h-8 w-8 items-center justify-center text-gray-600 hover:text-primary duration-300"
-            onClick={() => setExpandedNumbers(true)}
+          <span
+            key={`dots-${idx}`}
+            className="flex h-8 w-8 items-center justify-center text-gray-500"
           >
-            {DOTS}
-          </button>
+            ...
+          </span>
         );
       }
+
       return (
         <button
           key={page}
-          onClick={() => {
-            onPageChange(Number(page));
-            setExpandedNumbers(false);
-          }}
+          onClick={() => onPageChange(Number(page))}
           className={`flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors ${
             currentPage === page
               ? "bg-third text-white"
@@ -74,8 +72,9 @@ export const Pagination = ({
       );
     });
   };
+
   return (
-    <div className="flex items-center justify-center gap-4">
+    <div className="flex items-center justify-center gap-4 mt-4">
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
@@ -85,12 +84,11 @@ export const Pagination = ({
             : "text-gray-600 hover:bg-gray-100"
         }`}
       >
-        <FontAwesomeIcon
-          icon={faChevronLeft}
-          className="text-[#8793a6] w-4 h-4 border-1 border-border_primary px-2 py-[7px] rounded-full"
-        />
+        <FontAwesomeIcon icon={faChevronLeft} className="w-4 h-4" />
       </button>
+
       {renderPageNumbers()}
+
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
@@ -100,10 +98,7 @@ export const Pagination = ({
             : "text-gray-600 hover:bg-gray-100"
         }`}
       >
-        <FontAwesomeIcon
-          icon={faChevronRight}
-          className="text-[#8793a6] w-4 h-4 border-1 border-border_primary px-2 py-[7px] rounded-full"
-        />
+        <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
       </button>
     </div>
   );

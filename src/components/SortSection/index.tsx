@@ -1,28 +1,37 @@
+"use client";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { JobCategoryLanguage } from "@/types/language";
 import { faUpDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { X } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 interface SortSectionProps {
   className?: string;
   language: Partial<JobCategoryLanguage> | undefined | null;
+  onSortChange?: (value: string) => void;
+  currentSort?: string;
 }
 
-const SortSection = ({ className = "",language }: SortSectionProps) => {
+const SortSection = ({
+  className = "",
+  language,
+  onSortChange,
+  currentSort = "",
+}: SortSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("recommend");
+  const [selectedOption, setSelectedOption] = useState(currentSort);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+
   const toggleRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   const sortOptions = [
-    { value: "recommend", label: language?.recommended },
-    { value: "highReview", label: language?.high_review_score },
-    { value: "sellAlot", label: language?.sell_a_lot },
-    { value: "priceLowToHigh", label: language?.price_low_to_high },
-    { value: "priceHighToLow", label: language?.price_high_to_low },
+    { value: "rating", label: language?.high_review_score },
+    { value: "price_asc", label: language?.price_low_to_high },
+    { value: "price_desc", label: language?.price_high_to_low },
+    { value: "purchase_count", label: language?.sell_a_lot },
   ];
 
   const updatePosition = () => {
@@ -36,17 +45,13 @@ const SortSection = ({ className = "",language }: SortSectionProps) => {
   };
 
   const toggleDropdown = () => {
-    if (!isOpen) {
-      updatePosition();
-    }
+    if (!isOpen) updatePosition();
     setIsOpen(!isOpen);
   };
 
   useEffect(() => {
     if (isOpen) {
-      const handleScroll = () => {
-        updatePosition();
-      };
+      const handleScroll = () => updatePosition();
       window.addEventListener("scroll", handleScroll, true);
       return () => window.removeEventListener("scroll", handleScroll, true);
     }
@@ -55,18 +60,32 @@ const SortSection = ({ className = "",language }: SortSectionProps) => {
   const handleOptionSelect = (value: string) => {
     setSelectedOption(value);
     setIsOpen(false);
-    console.log(`Sort by: ${value}`);
+    onSortChange?.(value); // Notify parent
   };
 
   return (
     <div className={`relative ${className}`}>
       <div
         onClick={toggleDropdown}
-        className="filter-button cursor-pointer"
+        className={`filter-button cursor-pointer flex items-center gap-2 border rounded-md px-3 py-2 ${
+          selectedOption ? "bg-[#E3EDFD] border-blue-500 text-blue-600" : ""
+        }`}
         ref={toggleRef}
       >
-        <FontAwesomeIcon icon={faUpDown} className="text-third pr-2" />
-        {language?.sort_by}
+        <FontAwesomeIcon icon={faUpDown} className="text-third" />
+        {selectedOption
+          ? sortOptions.find((opt) => opt.value === selectedOption)?.label
+          : language?.sort_by}
+        {selectedOption && (
+          <X
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedOption("");
+              onSortChange?.("");
+            }}
+            className="w-4 h-4 text-third cursor-pointer"
+          />
+        )}
       </div>
 
       {isOpen &&

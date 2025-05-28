@@ -218,7 +218,7 @@ export default function Home() {
                         <Link
                           key={category.id}
                           // href={`/category/${category.id}`}
-                          href={`/seo`}
+                          href={`/job/afdd8f40-a60d-4609-9718-58110e80f4bb`}
                           className="group"
                         >
                           <div
