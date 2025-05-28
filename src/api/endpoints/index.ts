@@ -26,6 +26,9 @@ export const API_ROUTES = {
   location:{
     get_provinces: "/profile/countries",
     get_countries: "profile/countries/search"
+  },
+  job:{
+    get_job_by_slug: "/jobs/search"
   }
 };
 export const API_ROUTES_SELLER = {

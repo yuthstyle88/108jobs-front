@@ -1592,4 +1592,9 @@ export type TermAndConditionLanguage = {
   note_10: string;
   note_11: string;
   note_12: string;
+  terms_title: string;
+    terms_acceptance: string;
+    privacy_acceptance: string;
+    marketing_opt_in: string;
+    freelancer_signup:string;
 };

@@ -15,7 +15,7 @@
 }
 
 .filter-button {
-  @apply px-4 py-[7px] hover:bg-[#F6F7F8] cursor-pointer border-[1px] border-border_primary rounded-[4px] text-[14px] font-medium text-third
+  @apply px-4 py-[7px]  cursor-pointer border-[1px] rounded-[4px] text-[14px] font-medium text-third
 }
 
 .verification-input {
@@ -35,7 +35,7 @@
 }
 
 .submit-button-skip {
-  @apply cursor-pointer w-full bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 
+  @apply cursor-pointer w-full bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300
 }
 
 .submit-button-custom {
@@ -76,18 +76,23 @@
 .not-found-gradient {
   background: linear-gradient(to top, hsl(216 85% 94%), white);
 }
+
 .step2-gradient {
   background: linear-gradient(180deg, #e0f1ff, rgba(246, 247, 248, .24));
 }
+
 .skeleton-gray {
   background: linear-gradient(270deg, hsla(0, 0%, 86%, .05), #e8eaee);
 }
+
 .skeleton-blue {
   background: linear-gradient(90deg, #1d6ce2 -1.4%, rgba(29, 108, 226, 0) 104.93%);
 }
+
 .profile-member-gradient {
-  background: linear-gradient(105.12deg,#4580da 0.07%,rgb(69 128 218/0%) 53.66%),linear-gradient(0deg,#97bdf7,#97bdf7)
+  background: linear-gradient(105.12deg, #4580da 0.07%, rgb(69 128 218/0%) 53.66%), linear-gradient(0deg, #97bdf7, #97bdf7)
 }
+
 .profile-gradient {
   background: linear-gradient(90deg, #ffe8ae, #fffdf9);
 }
@@ -97,6 +102,7 @@
   grid-template-columns: minmax(1rem, 1fr) minmax(calc(1280px - 4rem), calc(1280px - 4rem)) minmax(1rem, 1fr);
   grid-template-rows: auto;
 }
+
 .grid-container-desktop-banner {
   display: grid;
   grid-template-columns: minmax(1rem, 1fr) minmax(calc(1280px - 4rem), calc(1280px - 4rem)) minmax(1rem, 1fr);
@@ -112,10 +118,17 @@
 .grid-container-job {
   display: grid;
   grid-template-columns:
-    minmax(1rem, 1fr)
-    minmax(calc(1280px - 4rem), calc(1280px - 4rem))
-    minmax(1rem, 1fr);
+    minmax(1rem, 1fr) minmax(1536px, 1536px) minmax(1rem, 1fr);
   grid-template-rows: auto;
+}
+
+@media (max-width: 1536px) {
+  .grid-container-job {
+    display: grid;
+    grid-template-columns:
+      minmax(1rem, 1fr) minmax(calc(1280px - 4rem), calc(1280px - 4rem)) minmax(1rem, 1fr);
+    grid-template-rows: auto;
+  }
 }
 
 @media (max-width: 1280px) {
@@ -175,8 +188,8 @@ body {
 }
 
 input[type="password"] {
-  appearance: none; 
-  -webkit-text-security: disc; 
+  appearance: none;
+  -webkit-text-security: disc;
 }
 
 input[type="password"]::-ms-reveal,

@@ -26,10 +26,16 @@ export async function generateMetadata() {
   });
 }
 
-export default function SpecificCategory() {
-  return (
+export default async function SpecificCategory({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const resolvedParams = await params;
+
+   return (
     <main className="pt-10 sm:pt-0">
-      <CategoryDetail />
+      <CategoryDetail slug={resolvedParams.slug} />
     </main>
   );
 }

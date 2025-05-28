@@ -38,6 +38,7 @@ import wordpress from "../assets/images/categories-image/wordpress.webp";
 import logodefault from "../assets/images/categories-image/logo-default.svg";
 import web_development from "../assets/images/categories-image/web-development-02032022.jpg";
 import conceptbanner from "../assets/images/categories-image/concept-banner-th.svg";
+import not_found_search from "../assets/images/categories-image/empty-list.webp";
 
 import job_detail1 from "../assets/images/job-detail/403f4da4-9c70-422b-b2a3-8982ff7b7322.jpg";
 import job_detail2 from "../assets/images/job-detail/1639d78d-168b-4342-a77b-e0e133003723.jpg";
@@ -237,6 +238,7 @@ export const CategoriesImage = {
   logodefault,
   conceptbanner,
   web_development,
+  not_found_search
 };
 
 export const MegaMenuImage = {
