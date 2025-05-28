@@ -1,40 +1,75 @@
 "use client";
-import { CategoriesImage } from "@/constants/images";
 import { JobCategoryLanguage } from "@/types/language";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { X } from "lucide-react";
-import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface FilterSidebarProps {
   isOpen: boolean;
   onClose: () => void;
   language: Partial<JobCategoryLanguage> | undefined | null;
+  onApply: (filters: {
+    min_price?: number;
+    max_price?: number;
+    rating?: string;
+  }) => void;
+  currentFilters: {
+    min_price?: number;
+    max_price?: number;
+    rating: string;
+  };
 }
 
-const FilterSidebar = ({ isOpen, onClose,language }: FilterSidebarProps) => {
-  useEffect(() => {
-    const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", handleEscapeKey);
-    return () => {
-      document.removeEventListener("keydown", handleEscapeKey);
-    };
-  }, [isOpen, onClose]);
+const FilterSidebar = ({
+  isOpen,
+  onClose,
+  language,
+  onApply,
+  currentFilters,
+}: FilterSidebarProps) => {
+  const [min, setMin] = useState<number | undefined>(currentFilters.min_price);
+  const [max, setMax] = useState<number | undefined>(currentFilters.max_price);
+  const [rating, setRating] = useState(currentFilters.rating || "");
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
+      setMin(currentFilters.min_price);
+      setMax(currentFilters.max_price);
+      setRating(currentFilters.rating);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleEscapeKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) onClose();
+    };
+    document.addEventListener("keydown", handleEscapeKey);
+    return () => document.removeEventListener("keydown", handleEscapeKey);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
     };
   }, [isOpen]);
+
+  const handleApply = () => {
+    onApply({
+      min_price: min,
+      max_price: max,
+      rating,
+    });
+    onClose();
+  };
+
+  const handleClear = () => {
+    setMin(undefined);
+    setMax(undefined);
+    setRating("");
+  };
 
   return (
     <div className={`fixed inset-0 z-50 ${isOpen ? "visible" : "invisible"}`}>
@@ -44,7 +79,6 @@ const FilterSidebar = ({ isOpen, onClose,language }: FilterSidebarProps) => {
         }`}
         onClick={onClose}
       />
-
       <div
         className={`fixed inset-y-0 left-0 w-full sm:w-[560px] bg-white shadow-xl transform transition-all duration-150 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -61,53 +95,7 @@ const FilterSidebar = ({ isOpen, onClose,language }: FilterSidebarProps) => {
           </div>
 
           <div className="flex-1 overflow-y-auto p-6">
-            <div className="grid sm:hidden grid-flow-row gap-6 py-8 w-full">
-              <div>
-                <span className="flex flex-row justify-between items-center">
-                  <div className="mr-2">
-                    <Image
-                      src={CategoriesImage.specialist}
-                      alt="specialist"
-                      className="align-top h-[26px] w-full"
-                    />
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" value="" className="sr-only peer" />
-                    <div className="w-[2.75rem] h-[26px] bg-gray-200  hover:bg-gray-300 peer-focus:outline-0 peer-focus:ring-transparent rounded-full peer transition-all ease-in-out duration-500 peer-checked:after:translate-x-1/2 peer-checked:after:border-white after:content-[''] after:absolute after:top-[-3px] after:left-[-2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-8 after:w-8 after:scale-[0.64] after:shadow-toggle after:transition-all peer-checked:bg-third hover:peer-checked:bg-third"></div>
-                  </label>
-                </span>
-              </div>
-              <div>
-                <span className="flex flex-row justify-between items-center">
-                  <div className="mr-2">
-                    <Image
-                      src={CategoriesImage.milestone}
-                      alt="milestone"
-                      className="align-top h-[26px] w-full"
-                    />
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" value="" className="sr-only peer" />
-                    <div className="w-[2.75rem] h-[26px] bg-gray-200  hover:bg-gray-300 peer-focus:outline-0 peer-focus:ring-transparent rounded-full peer transition-all ease-in-out duration-500 peer-checked:after:translate-x-1/2 peer-checked:after:border-white after:content-[''] after:absolute after:top-[-3px] after:left-[-2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-8 after:w-8 after:scale-[0.64] after:shadow-toggle after:transition-all peer-checked:bg-third hover:peer-checked:bg-third"></div>
-                  </label>
-                </span>
-              </div>
-              <div>
-                <span className="flex flex-row justify-between items-center">
-                  <div className="mr-2">
-                    <Image
-                      src={CategoriesImage.fast_reply}
-                      alt="fast_reply"
-                      className="align-top h-[26px] w-full"
-                    />
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" value="" className="sr-only peer" />
-                    <div className="w-[2.75rem] h-[26px] bg-gray-200  hover:bg-gray-300 peer-focus:outline-0 peer-focus:ring-transparent rounded-full peer transition-all ease-in-out duration-500 peer-checked:after:translate-x-1/2 peer-checked:after:border-white after:content-[''] after:absolute after:top-[-3px] after:left-[-2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-8 after:w-8 after:scale-[0.64] after:shadow-toggle after:transition-all peer-checked:bg-third hover:peer-checked:bg-third"></div>
-                  </label>
-                </span>
-              </div>
-            </div>
+            {/* Price Filter */}
             <div className="mb-8">
               <h3 className="text-lg font-medium mb-4 text-text_primary">
                 {language?.price_range}
@@ -116,36 +104,53 @@ const FilterSidebar = ({ isOpen, onClose,language }: FilterSidebarProps) => {
                 <input
                   type="number"
                   placeholder="0"
-                  className="text-text_primary text-text_primaryw-full p-3 border border-gray-300 rounded-md focus:outline-blue-500"
+                  value={min ?? ""}
+                  onChange={(e) =>
+                    setMin(e.target.value ? Number(e.target.value) : undefined)
+                  }
+                  className="text-text_primary w-full p-3 border border-gray-300 rounded-md focus:outline-blue-500"
                 />
                 <span>-</span>
                 <input
                   type="number"
                   placeholder={language?.highest_price}
+                  value={max ?? ""}
+                  onChange={(e) =>
+                    setMax(e.target.value ? Number(e.target.value) : undefined)
+                  }
                   className="text-text_primary w-full p-3 border border-gray-300 rounded-md focus:outline-blue-500"
                 />
               </div>
             </div>
+
+            {/* Rating Filter */}
             <div className="mb-8">
               <h3 className="text-lg font-medium mb-4 text-text_primary">
                 {language?.points_received}
               </h3>
               <div className="grid grid-cols-2 gap-2 text-text_primary">
-                <button className="w-full p-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-blue-500">
-                  5
-                </button>
-                <button className="w-full p-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-blue-500">
-                  {language?.["4_and_up"]}
-                </button>
-                <button className="w-full p-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-blue-500">
-                  {language?.["3_and_up"]}
-                </button>
-                <button className="w-full p-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-blue-500">
-                  {language?.["2_and_up"]}
-                </button>
-                <button className="w-full p-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-blue-500">
-                  {language?.["1_and_up"]}
-                </button>
+                {[5, 4, 3, 2, 1].map((n) => {
+                  const value = n === 5 ? "5" : `${n}_plus`;
+                  return (
+                    <button
+                      key={value}
+                      className={`w-full p-2 border border-gray-300 rounded-md ${
+                        rating === value
+                          ? "bg-secondary text-third font-bold border-third"
+                          : "hover:bg-gray-50"
+                      }`}
+                      onClick={() =>
+                        setRating((prev) => (prev === value ? "" : value))
+                      }
+                    >
+                      {n}{" "}
+                      <FontAwesomeIcon
+                        icon={faStar}
+                        className="text-[#e9b10c]"
+                      />
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -154,18 +159,13 @@ const FilterSidebar = ({ isOpen, onClose,language }: FilterSidebarProps) => {
           <div className="p-4 border-t flex justify-between">
             <button
               className="px-4 py-2 text-blue-600 font-medium hover:bg-blue-50 rounded-md"
-              onClick={() => {
-                console.log("Clearing filters");
-              }}
+              onClick={handleClear}
             >
               {language?.clean_the_filters}
             </button>
             <button
               className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700"
-              onClick={() => {
-                console.log("Applying filters");
-                onClose();
-              }}
+              onClick={handleApply}
             >
               {language?.confirm}
             </button>

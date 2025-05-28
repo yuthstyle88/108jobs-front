@@ -43,12 +43,18 @@ const JobDetail = () => {
     error,
   } = useGlobalTranslate(LanguageFile.JOB_DETAIL);
 
+  const breadcrumbItems = [
+    { label: "ประเภทงานทั้งหมด", href: "/categories" },
+    { label: "การตลาดและโฆษณา", href: "/marketing" },
+    { label: "ทำ SEO", href: "/marketing/seo" },
+  ];
+
   if (isLoading) return <Loading />;
   if (error) return <div>Error loading language data</div>;
   return (
     <>
       <section className="grid-container-job">
-        <BreadCrumb />
+        <BreadCrumb items={breadcrumbItems} />
       </section>
       <section className="grid-container-job pb-4 pt-4 sm:pt-10 min-h-[200vh]">
         <div className="col-start-2 col-end-auto grid grid-cols-1 xl:grid-cols-[1fr_20rem] gap-x-10 gap-y-6">
