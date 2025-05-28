@@ -1,36 +1,37 @@
 "use client";
-import {useClickOutside} from "@/hooks/useClickOutside";
-import {faUpDown} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {X} from "lucide-react";
-import {useEffect, useRef, useState} from "react";
+import { useClickOutside } from "@/hooks/useClickOutside";
+import { JobCategoryLanguage } from "@/types/language";
+import { faUpDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import ReactDOM from "react-dom";
-import {useTranslation} from "@/hooks/translation/useTranslation";
 
 interface SortSectionProps {
   className?: string;
+  language: Partial<JobCategoryLanguage> | undefined | null;
   onSortChange?: (value: string) => void;
   currentSort?: string;
 }
 
 const SortSection = ({
   className = "",
+  language,
   onSortChange,
   currentSort = "",
 }: SortSectionProps) => {
-  const {t} = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(currentSort);
-  const [dropdownPosition, setDropdownPosition] = useState({top: 0, left: 0});
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
 
   const toggleRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   const sortOptions = [
-    {value: "rating", label: t("sort.highReviewScore")},
-    {value: "priceAsc", label: t("sort.priceLowToHigh")},
-    {value: "priceDesc", label: t("sort.priceHighToLow")},
-    {value: "purchaseCount", label: t("sort.sellALot")},
+    { value: "rating", label: language?.high_review_score },
+    { value: "price_asc", label: language?.price_low_to_high },
+    { value: "price_desc", label: language?.price_high_to_low },
+    { value: "purchase_count", label: language?.sell_a_lot },
   ];
 
   const updatePosition = () => {
@@ -49,17 +50,12 @@ const SortSection = ({
   };
 
   useEffect(() => {
-      if (isOpen) {
-        const handleScroll = () => updatePosition();
-        window.addEventListener("scroll",
-          handleScroll,
-          true);
-        return () => window.removeEventListener("scroll",
-          handleScroll,
-          true);
-      }
-    },
-    [isOpen]);
+    if (isOpen) {
+      const handleScroll = () => updatePosition();
+      window.addEventListener("scroll", handleScroll, true);
+      return () => window.removeEventListener("scroll", handleScroll, true);
+    }
+  }, [isOpen]);
 
   const handleOptionSelect = (value: string) => {
     setSelectedOption(value);
@@ -72,14 +68,14 @@ const SortSection = ({
       <div
         onClick={toggleDropdown}
         className={`filter-button cursor-pointer flex items-center gap-2 border rounded-md px-3 py-2 ${
-          selectedOption ? "bg-[#E3EDFD] border-blue-500 text-primary" : ""
+          selectedOption ? "bg-[#E3EDFD] border-blue-500 text-blue-600" : ""
         }`}
         ref={toggleRef}
       >
-        <FontAwesomeIcon icon={faUpDown} className="text-third"/>
+        <FontAwesomeIcon icon={faUpDown} className="text-third" />
         {selectedOption
           ? sortOptions.find((opt) => opt.value === selectedOption)?.label
-          : t("sort.sortBy")}
+          : language?.sort_by}
         {selectedOption && (
           <X
             onClick={(e) => {
@@ -108,7 +104,7 @@ const SortSection = ({
                   key={option.value}
                   className={`block w-full text-left px-4 py-2 text-sm ${
                     selectedOption === option.value
-                      ? "bg-blue-50 text-primary"
+                      ? "bg-blue-50 text-blue-600"
                       : "text-gray-700 hover:bg-gray-100"
                   }`}
                   onClick={(e) => {

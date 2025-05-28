@@ -1,58 +1,57 @@
 export type JobList = {
   jobs: Job[];
-  totalItems: number;
-  totalPages: number;
+  total_items: number;
+  total_pages: number;
   page: number;
   limit: number;
-  serviceCategories: ServiceCategory[];
+  service_categories: ServiceCategory[];
   tag: string;
 };
 
 export type Job = {
   id: string;
   user: User;
-  serviceType: ServiceType;
+  service_type: ServiceType;
   slug: string;
   title: string;
-  basePrice: string;
-  priceBeforeDiscount: string;
+  base_price: string;
+  price_before_discount: string;
   show: boolean;
   rating: string;
   status: number;
-  isHot: boolean;
-  isPro: boolean;
+  is_hot: boolean;
+  is_pro: boolean;
   description: string;
-  isInstantHire: boolean;
-  purchaseCount: number;
-  reviewsCount: number;
-  onboarding?: Onboarding;
-  createdAt: string;
-  updatedAt: string;
-  images: image[];
+  is_instant_hire: boolean;
+  purchase_count: number;
+  reviews_count: number;
+  onboarding: Onboarding;
+  created_at: string;
+  updated_at: string;
 };
 
 export type User = {
   username: string;
-  displayName: string;
-  avatarUrl: string;
+  display_name: string;
+  avatar_url: string;
   bio: string;
 };
 
 export type ServiceType = {
   id: string;
   title: string;
-  secondTitle: string;
-  createdAt: string;
-  updatedAt: string;
-  parentId: string;
-  serviceTopic: string;
-  imageUrl: string | null;
-  isPopular: boolean;
+  second_title: string;
+  created_at: string;
+  updated_at: string;
+  parent_id: string;
+  service_topic: string;
+  image_url: string | null;
+  is_popular: boolean;
 };
 
 export type Onboarding = {
   id: string;
-  jobId: string;
+  job_id: string;
   step1: boolean;
   step2: boolean;
   step3: boolean;
@@ -63,31 +62,9 @@ export type Onboarding = {
 export type ServiceCategory = {
   id: string;
   title: string;
-  secondTitle: string | null;
-  parentId: string | null;
-  serviceTopic: string | null;
-  imageUrl: string | null;
-  jobsCount: number;
-};
-
-export type Tag = {
-  id: string;
-  name: string;
-  slug: string;
-  subCategoryId: string;
-};
-
-export type Tags = {
-  tags: Tag[];
-};
-
-export type image = {
-  id: string;
-  jobId: string;
-  imageUrl: string;
-  isCoverPhoto: boolean;
-  sortOrder: number;
-  alt: string;
-  createdAt: string;
-  updatedAt: string;
+  second_title: string | null;
+  parent_id: string | null;
+  service_topic: string | null;
+  image_url: string | null;
+  jobs_count: number;
 };
