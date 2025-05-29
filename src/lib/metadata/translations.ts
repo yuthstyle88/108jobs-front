@@ -19,6 +19,10 @@ type LangSeoData = {
   catalog: SEOPageContent;
   login: SEOPageContent;
   how: SEOPageContent;
+  guarantee: SEOPageContent;
+  term: SEOPageContent;
+  privacy: SEOPageContent;
+  supportCenter: SEOPageContent;
 };
 
 export const seoTranslations: Record<SupportedLang, LangSeoData> = {
@@ -77,6 +81,25 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
       title: "วิธีการซื้อ/ขายบน Fastwork?",
       description: "เว็บไซต์ตลาดฟรีแลนซ์อันดับหนึ่ง",
     },
+    guarantee: {
+      title:
+        "การรับประกันโดย Fastwork | จ้างงานอย่างปลอดภัย พร้อมระบบคุ้มครองการชำระเงิน",
+      description:
+        "Fastwork รับประกันความพึงพอใจของคุณในการใช้บริการฟรีแลนซ์ เราดูแลให้เงินของคุณปลอดภัยตั้งแต่เริ่มต้นจนจบโครงการ",
+    },
+    term: {
+      title: "เงื่อนไขการให้บริการ | Fastwork",
+      description: "เงื่อนไขการให้บริการของ Fastwork",
+    },
+    privacy: {
+      title: "นโยบายความเป็นส่วนตัว | Fastwork",
+      description: "นโยบายความเป็นส่วนตัวของ Fastwork",
+    },
+    supportCenter: {
+      title: "Fastwork - แพลตฟอร์มฟรีแลนซ์อันดับ 1 ในประเทศไทย",
+      description:
+        "แพลตฟอร์มตลาดฟรีแลนซ์อันดับหนึ่งในประเทศไทย จ้างฟรีแลนซ์มืออาชีพสำหรับทุกความต้องการทางธุรกิจของคุณ",
+    },
   },
   en: {
     locale: "en_US",
@@ -130,6 +153,24 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
     how: {
       title: "How to buy/sell on Fastwork?",
       description: "Number one, freelance market-place website.",
+    },
+    guarantee: {
+      title: "Fastwork Guarantee | Safe Hiring with Payment Protection",
+      description:
+        "Fastwork guarantees your satisfaction with our freelance services. We ensure your funds are protected from project start to completion.",
+    },
+    term: {
+      title: "Terms of Services | Fastwork",
+      description: "Fastwork Terms of services",
+    },
+    privacy: {
+      title: "Privacy Policy | Fastwork",
+      description: "Fastwork Privacy Policy",
+    },
+    supportCenter: {
+      title: "Fastwork - #1 Freelance Platform in Thailand",
+      description:
+        "The number one freelance marketplace platform in Thailand. Hire professional freelancers for all your business needs.",
     },
   },
   vi: {
@@ -185,6 +226,24 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
     how: {
       title: "Cách mua/bán trên Fastwork?",
       description: "Trang web thị trường freelance số một.",
+    },
+    guarantee: {
+      title: "Đảm bảo từ Fastwork | Thuê an toàn với bảo vệ thanh toán",
+      description:
+        "Fastwork cam kết sự hài lòng của bạn với các dịch vụ freelance. Chúng tôi đảm bảo số tiền của bạn được bảo vệ từ lúc bắt đầu đến khi hoàn thành dự án.",
+    },
+    term: {
+      title: "Điều khoản dịch vụ | Fastwork",
+      description: "Điều khoản dịch vụ của Fastwork",
+    },
+    privacy: {
+      title: "Chính sách quyền riêng tư | Fastwork",
+      description: "Chính sách quyền riêng tư của Fastwork",
+    },
+    supportCenter: {
+      title: "Fastwork - Nền tảng freelance số 1 tại Thái Lan",
+      description:
+        "Nền tảng marketplace freelance hàng đầu tại Thái Lan. Thuê freelancer chuyên nghiệp cho mọi nhu cầu kinh doanh của bạn.",
     },
   },
 };
