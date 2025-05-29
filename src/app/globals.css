@@ -137,6 +137,25 @@
   }
 }
 
+.grid-container-content {
+  display: grid;
+  grid-template-columns: 1fr 768px 1fr;
+  grid-template-rows: auto;
+  justify-content: center;
+}
+
+
+@media (max-width: 1280px) {
+  .grid-container-content {
+    grid-template-columns: 8px 640px 8px;
+  }
+}
+@media (max-width: 768px) {
+  .grid-container-content {
+    grid-template-columns: 8px 1fr 8px;
+  }
+}
+
 
 .tb-fw-spinner {
   stroke: hsl(216 77% 50%);

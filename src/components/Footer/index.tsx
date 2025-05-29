@@ -25,28 +25,28 @@ const Footer = () => {
           <h3 className="font-bold mb-3">{global?.tittle_footer_1}</h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="#">{global?.label_nav_bar_item_2}</Link>
+              <Link target="_blank" href="#">{global?.label_nav_bar_item_2}</Link>
             </li>
             <li>
-              <Link href="#">{global?.label_nav_bar_item_3}</Link>
+              <Link target="_blank" href="#">{global?.label_nav_bar_item_3}</Link>
             </li>
             <li>
-              <Link href="#">{global?.label_nav_bar_item_4}</Link>
+              <Link target="_blank" href="#">{global?.label_nav_bar_item_4}</Link>
             </li>
             <li>
-              <Link href="#">{global?.label_nav_bar_item_5}</Link>
+              <Link target="_blank" href="#">{global?.label_nav_bar_item_5}</Link>
             </li>
             <li>
-              <Link href="#">{global?.label_nav_bar_item_6}</Link>
+              <Link target="_blank" href="#">{global?.label_nav_bar_item_6}</Link>
             </li>
             <li>
-              <Link href="#">{global?.label_nav_bar_item_7}</Link>
+              <Link target="_blank" href="#">{global?.label_nav_bar_item_7}</Link>
             </li>
             <li>
-              <Link href="#">{global?.label_nav_bar_item_8}</Link>
+              <Link target="_blank" href="#">{global?.label_nav_bar_item_8}</Link>
             </li>
             <li>
-              <Link href="#">{global?.label_nav_bar_item_9}</Link>
+              <Link target="_blank" href="#">{global?.label_nav_bar_item_9}</Link>
             </li>
           </ul>
         </div>
@@ -56,33 +56,33 @@ const Footer = () => {
           <h3 className="font-bold mb-3">{global?.tittle_footer_2}</h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/start-selling">
+              <Link target="_blank" href="/start-selling">
                 {global?.menu_become_freelancer}
               </Link>
             </li>
             <li>
-              <Link href="/content/how">
+              <Link target="_blank" href="/content/how">
                 {global?.label_start_selling_work}
               </Link>
             </li>
             {/* <li>
-              <Link href="/">{global?.label_payment_wages}</Link>
+              <Link target="_blank" href="/">{global?.label_payment_wages}</Link>
             </li> */}
             <li>
-              <Link href="/content/guarantee">
+              <Link target="_blank" href="/content/guarantee">
                 {global?.label_employment_guarantee}
               </Link>
             </li>
             {/* <li>
-              <Link href="#">{global?.label_knowledge_blog}</Link>
+              <Link target="_blank" href="#">{global?.label_knowledge_blog}</Link>
             </li> */}
             <li>
-              <Link href="https://fastwork4276.zendesk.com/hc/en-us">
+              <Link target="_blank" href="/content/support-center">
                 {global?.label_faq}
               </Link>
             </li>
             <li>
-              <Link href="/consent-management">
+              <Link target="_blank" href="/consent-management">
                 {global?.label_manage_data_usage}
               </Link>
             </li>
@@ -94,10 +94,10 @@ const Footer = () => {
           <h3 className="font-bold mb-3">{global?.tittle_footer_3}</h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="#">Fastwork</Link>
+              <Link href="/">Fastwork</Link>
             </li>
             <li>
-              <Link href="#">Fastwork for Business</Link>
+              <Link target="_blank" href="/business">Fastwork for Business</Link>
             </li>
           </ul>
         </div>
@@ -107,16 +107,16 @@ const Footer = () => {
           <h3 className="font-bold mb-3">{global?.tittle_footer_4}</h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="#">{global?.label_feedback_us}</Link>
+              <Link target="_blank" href="https://form.jotform.com/251484529705059">{global?.label_feedback_us}</Link>
             </li>
             <li>
-              <Link href="#">{global?.label_work_with_fastwork}</Link>
+              <Link href="/">{global?.label_work_with_fastwork}</Link>
             </li>
             <li>
-              <Link href="#">{global?.label_terms_of_service}</Link>
+              <Link target="_blank" href="/content/terms">{global?.label_terms_of_service}</Link>
             </li>
             <li>
-              <Link href="#">{global?.label_privacy_policy}</Link>
+              <Link target="_blank" href="/content/privacy">{global?.label_privacy_policy}</Link>
             </li>
           </ul>
         </div>

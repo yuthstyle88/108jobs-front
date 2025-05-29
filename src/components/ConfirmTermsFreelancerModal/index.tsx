@@ -49,7 +49,7 @@ const ConfirmTermsFreelancerModal: React.FC<
     >
       <section className="px-[12px] w-full flex flex-col gap-3 justify-center">
         <p className="text-sm text-text_primary font-semibold">
-          ข้อกำหนดและเงื่อนไขของ Fastwork
+          {termLanguage?.terms_title}
         </p>
         <div className="border-1 border-border_primary p-3 rounded-lg text-[12px] list-decimal max-h-[280px] overflow-auto">
           <TermsAndCondition language={termLanguage}/>
@@ -66,8 +66,7 @@ const ConfirmTermsFreelancerModal: React.FC<
               htmlFor="termsAccepted"
               className="text-[12px] text-text_primary font-sans"
             >
-              Tôi đã đọc và chấp nhận Điều khoản và Điều kiện sử dụng của
-              fastlance
+              {termLanguage?.terms_acceptance}
             </label>
           </div>
 
@@ -82,10 +81,7 @@ const ConfirmTermsFreelancerModal: React.FC<
               htmlFor="privacyAccepted"
               className="text-[12px] text-text_primary font-sans"
             >
-              Tôi đã đọc và chấp nhận
-              <a href="#" className="text-text_secondary underline">
-                Chính sách bảo mật
-              </a>
+              {termLanguage?.privacy_acceptance}
             </label>
           </div>
 
@@ -100,8 +96,7 @@ const ConfirmTermsFreelancerModal: React.FC<
               htmlFor="promotionalAccepted"
               className="text-[12px] text-text_primary font-sans"
             >
-              Tôi quan tâm đến việc nhận thông tin, ưu đãi, và khuyến mãi từ
-              fastlance
+              {termLanguage?.marketing_opt_in}
             </label>
           </div>
         </div>
@@ -112,7 +107,7 @@ const ConfirmTermsFreelancerModal: React.FC<
           disabled={!watch("termsAccepted") || !watch("privacyAccepted")}
           className="px-3 py-2 cursor-pointer w-full bg-blue-600 text-white font-normal rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
         >
-          {isLoading ? <LoadingCircle /> : "Đăng ký làm freelancer"}
+          {isLoading ? <LoadingCircle /> : termLanguage?.freelancer_signup}
         </button>
       </div>
     </Modal>

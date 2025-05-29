@@ -1,9 +1,10 @@
+import Footer from "@/components/Footer";
 import HeaderSimple from "@/components/HeaderSimple";
 import { generateLocalizedMetadata } from "@/lib/metadata";
 import { LayoutProps } from "@/types/layout";
 
 export async function generateMetadata() {
-  return generateLocalizedMetadata("guarantee");
+  return generateLocalizedMetadata("term");
 }
 
 export default function ProfileLayout({ children }: LayoutProps) {
@@ -15,6 +16,7 @@ export default function ProfileLayout({ children }: LayoutProps) {
       <section className="bg-white min-h-screen">
         {children}
       </section>
+      <Footer/>
     </>
   );
 }

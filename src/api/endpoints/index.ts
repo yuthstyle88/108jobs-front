@@ -9,7 +9,7 @@ export const API_ROUTES = {
     update_address_profile: "/profile/address"
   },
   catalog: {
-    get_all_catalog: "/service/catalogs-all",
+    get_all_catalog: "/service/catalogs/all",
   },
   auth: {
     change_password: "/users/password-change",
