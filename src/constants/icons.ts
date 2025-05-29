@@ -59,6 +59,7 @@ import step1 from "../assets/icons/content/step1-1-en.svg";
 import step2 from "../assets/icons/content/step1-2-en.svg";
 import step3 from "../assets/icons/content/step1-3-en.svg";
 import step4 from "../assets/icons/content/step1-4-en.svg";
+import qr from "../assets/icons/content/M_zuq6811u_BW.png";
 
 export const ContentIcon = {
   buyer,
@@ -67,6 +68,7 @@ export const ContentIcon = {
   step2,
   step3,
   step4,
+qr
 };
 export const ApplyFreelancerIcon = {
   ck,
