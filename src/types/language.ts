@@ -1236,7 +1236,7 @@ export type JobCardLanguage = {
 };
 
 export type JobCategoryLanguage = {
-   all_job_types: string;
+  all_job_types: string;
   categories_related_to_job_type: string;
   recommended: string;
   high_review_score: string;
@@ -1593,8 +1593,8 @@ export type TermAndConditionLanguage = {
   note_11: string;
   note_12: string;
   terms_title: string;
-    terms_acceptance: string;
-    privacy_acceptance: string;
-    marketing_opt_in: string;
-    freelancer_signup:string;
+  terms_acceptance: string;
+  privacy_acceptance: string;
+  marketing_opt_in: string;
+  freelancer_signup: string;
 };

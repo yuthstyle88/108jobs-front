@@ -1,13 +1,13 @@
 "use client";
 import Modal from "@/components/ui/Modal";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import TermsAndCondition from "./components/TermsAndCondition";
-import LoadingCircle from "../../Loading/LoadingCircle";
-import {getNamespace} from "@/utils/i18nHelper";
-import {LanguageFile} from "@/constants/language";
-import {useEffect} from "react";
+import LoadingCircle from "../LoadingCircle";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { LanguageFile } from "@/constants/language";
+import Loading from "../Loading";
 
 interface ConfirmTermsFreelancerModalProps {
   isOpen: boolean;
@@ -16,7 +16,7 @@ interface ConfirmTermsFreelancerModalProps {
   isLoading?: boolean;
 }
 
-const signUpSchema = z.object({
+const registerSchema = z.object({
   termsAccepted: z.literal(true),
   privacyAccepted: z.literal(true),
   promotionalAccepted: z.boolean().optional(),
@@ -24,36 +24,35 @@ const signUpSchema = z.object({
 
 const ConfirmTermsFreelancerModal: React.FC<
   ConfirmTermsFreelancerModalProps
-> = ({isOpen, onClose, handleConfirmChange, isLoading}) => {
-  const termLanguage = getNamespace(LanguageFile.TERMS_AND_CONDITIONS);
+> = ({ isOpen, onClose, handleConfirmChange, isLoading }) => {
+  const {
+    data: termLanguage,
+    isLoading: isTermLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.TERMS_AND_CONDITIONS);
 
-  const {watch, register, reset} = useForm({
-    resolver: zodResolver(signUpSchema),
+  const { watch, register } = useForm({
+    resolver: zodResolver(registerSchema),
     mode: "onChange",
   });
 
-  useEffect(() => {
-      if (!isOpen) {
-        reset();
-      }
-    },
-    [isOpen, reset]);
-
+  if (isTermLoading) return <Loading />;
+  if (error) return <div>Error loading language data</div>;
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       className="max-w-[520px] p-0 w-full"
-      title={termLanguage?.confirmFreelancerRegistrationTitle}
+      title="ยืนยันการลงทะเบียนเป็นฟรีแลนซ์"
       closeOnOutsideClick={false}
     >
       <section className="px-[12px] w-full flex flex-col gap-3 justify-center">
-        <p className="text-sm text-text-primary font-semibold">
-          {termLanguage?.termsTitle}
+        <p className="text-sm text-text_primary font-semibold">
+          {termLanguage?.terms_title}
         </p>
-        <div className="border-1 border-border-primary p-3 rounded-lg text-[12px] list-decimal max-h-[280px] overflow-auto">
-          <TermsAndCondition/>
+        <div className="border-1 border-border_primary p-3 rounded-lg text-[12px] list-decimal max-h-[280px] overflow-auto">
+          <TermsAndCondition language={termLanguage}/>
         </div>
         <div className="space-y-2 pt-2">
           <div className="flex items-center gap-3">
@@ -65,9 +64,9 @@ const ConfirmTermsFreelancerModal: React.FC<
             />
             <label
               htmlFor="termsAccepted"
-              className="text-[12px] text-text-primary font-sans"
+              className="text-[12px] text-text_primary font-sans"
             >
-              {termLanguage?.termsAcceptance}
+              {termLanguage?.terms_acceptance}
             </label>
           </div>
 
@@ -80,9 +79,9 @@ const ConfirmTermsFreelancerModal: React.FC<
             />
             <label
               htmlFor="privacyAccepted"
-              className="text-[12px] text-text-primary font-sans"
+              className="text-[12px] text-text_primary font-sans"
             >
-              {termLanguage?.privacyAcceptance}
+              {termLanguage?.privacy_acceptance}
             </label>
           </div>
 
@@ -95,20 +94,20 @@ const ConfirmTermsFreelancerModal: React.FC<
             />
             <label
               htmlFor="promotionalAccepted"
-              className="text-[12px] text-text-primary font-sans"
+              className="text-[12px] text-text_primary font-sans"
             >
-              {termLanguage?.marketingOptIn}
+              {termLanguage?.marketing_opt_in}
             </label>
           </div>
         </div>
       </section>
-      <div className="flex flex-row gap-2 justify-end items-end pt-4 mt-4 w-full border-t-1 border-border-secondary">
+      <div className="flex flex-row gap-2 justify-end items-end pt-4 mt-4 w-full border-t-1 border-border_secondary">
         <button
           onClick={handleConfirmChange}
           disabled={!watch("termsAccepted") || !watch("privacyAccepted")}
-          className="px-3 py-2 cursor-pointer w-full bg-primary text-white font-normal rounded-md shadow-lg hover:bg-[#063a68] transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
+          className="px-3 py-2 cursor-pointer w-full bg-blue-600 text-white font-normal rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
         >
-          {isLoading ? <LoadingCircle/> : termLanguage?.freelancerSignup}
+          {isLoading ? <LoadingCircle /> : termLanguage?.freelancer_signup}
         </button>
       </div>
     </Modal>

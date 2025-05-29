@@ -1,7 +1,6 @@
 import logo from "../assets/icons/logo.svg";
-import logoBlue from "../assets/icons/logo-type-default.f6d70617.svg";
-import logoSeller from "../assets/icons/logo-vn.svg";
-import logoFreelancer from "../assets/icons/logo_freelancer.png";
+import logo_blue from "../assets/icons/logo-type-default.f6d70617.svg";
+import logo_seller from "../assets/icons/logo-vn.svg";
 import consultant from "../assets/icons/categories-icon/consultant.svg";
 import ecommerce from "../assets/icons/categories-icon/ecommerce.svg";
 import graphic from "../assets/icons/categories-icon/graphic.svg";
@@ -19,21 +18,21 @@ import group11653 from "../assets/icons/group-11653.svg";
 import group11654 from "../assets/icons/group-11654.svg";
 import guarantee from "../assets/icons/job-detail/guarantee-animate.391e31be.svg";
 import company from "../assets/icons/job-detail/company-hiring-aside-th.svg";
-import iconRehire from "../assets/icons/job-detail/icon-rehire.svg";
-import companyHiring from "../assets/icons/job-detail/company-hiring-full-th.svg";
+import icon_rehire from "../assets/icons/job-detail/icon-rehire.svg";
+import company_hiring from "../assets/icons/job-detail/company-hiring-full-th.svg";
 import completed from "../assets/icons/job-detail/completed.svg";
 import hiring from "../assets/icons/job-detail/hiring.svg";
 import response from "../assets/icons/job-detail/response.svg";
 import sold from "../assets/icons/job-detail/sold.svg";
 
 import coins from "../assets/icons/profile/point-icon.svg";
-import hiringInfo from "../assets/icons/profile/hiring-info-desktop.svg";
+import hiring_info from "../assets/icons/profile/hiring-info-desktop.svg";
 
-import advantage1 from "../assets/icons/authenticate/advantage-1.svg";
-import advantage2 from "../assets/icons/authenticate/advantage-2.svg";
-import advantage3 from "../assets/icons/authenticate/advantage-3.svg";
-import advantage4 from "../assets/icons/authenticate/advantage-4.svg";
-import advantage5 from "../assets/icons/authenticate/advantage-5.svg";
+import advantage_1 from "../assets/icons/authenticate/advantage-1.svg";
+import advantage_2 from "../assets/icons/authenticate/advantage-2.svg";
+import advantage_3 from "../assets/icons/authenticate/advantage-3.svg";
+import advantage_4 from "../assets/icons/authenticate/advantage-4.svg";
+import advantage_5 from "../assets/icons/authenticate/advantage-5.svg";
 import fb from "../assets/icons/authenticate/fb.svg";
 import gg from "../assets/icons/authenticate/gg.svg";
 
@@ -49,10 +48,10 @@ import youtube from "../assets/icons/apply-freelancer/youtube.svg";
 import know from "../assets/icons/apply-freelancer/know.svg";
 
 import favicon from "../app/favicon.ico";
-import logoIcon from "../assets/icons/logo-icon.svg";
-import logoReward from "../assets/icons/reward-default.svg";
-import thailandGeo from "../assets/icons/thailand_select.dd0930bf.svg";
-import otherGeo from "../assets/icons/other_select.70c4da84.svg";
+import logo_icon from "../assets/icons/logo-icon.svg";
+import logo_reward from "../assets/icons/reward-default.svg";
+import thailand_geo from "../assets/icons/thailand_select.dd0930bf.svg";
+import other_geo from "../assets/icons/other_select.70c4da84.svg";
 
 import buyer from "../assets/icons/content/buyer.svg";
 import seller from "../assets/icons/content/freelance.svg";
@@ -69,7 +68,7 @@ export const ContentIcon = {
   step2,
   step3,
   step4,
-  qr
+qr
 };
 export const ApplyFreelancerIcon = {
   ck,
@@ -85,24 +84,24 @@ export const ApplyFreelancerIcon = {
 };
 
 export const AuthenticateIcon = {
-  advantage1,
-  advantage2,
-  advantage3,
-  advantage4,
-  advantage5,
+  advantage_1,
+  advantage_2,
+  advantage_3,
+  advantage_4,
+  advantage_5,
   fb,
   gg,
 };
 
 export const ProfileIcon = {
   coins,
-  hiringInfo,
+  hiring_info,
 };
 export const JobDetailIcon = {
   guarantee,
   company,
-  iconRehire,
-  companyHiring,
+  icon_rehire,
+  company_hiring,
   sold,
   hiring,
   response,
@@ -130,12 +129,11 @@ export const CategoriesIcon = {
 };
 export const AssetIcon = {
   logo,
-  logoBlue,
-  logoSeller,
+  logo_blue,
+  logo_seller,
   favicon,
-  logoIcon,
-  logoReward,
-  thailandGeo,
-  otherGeo,
-  logoFreelancer,
+  logo_icon,
+  logo_reward,
+  thailand_geo,
+  other_geo,
 };
