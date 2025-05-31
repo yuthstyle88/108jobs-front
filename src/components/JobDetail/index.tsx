@@ -94,7 +94,7 @@ const JobDetail = ({ username, slug }: Props) => {
     return <div>Error loading language data</div>;
   return (
     <>
-      <section className="grid-container-job-detail my-4 px-4 py-2  h-16 md:h-12 md:p-0 md:my-0 bg-[#E3EDFD]">
+      <section className="grid-container-job-detail mb-4 px-4 py-2 h-16 md:h-12 md:p-0 md:my-0 bg-[#E3EDFD]">
         <Link
           href="#"
           className="col-start-2 col-end-auto flex justify-center items-center gap-3"
