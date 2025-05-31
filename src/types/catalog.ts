@@ -7,6 +7,7 @@ type ServiceCatalogData = {
     name: string;
     image: string;
     sections: Section[];
+    slug:string
   };
   
   type Section = {
@@ -18,6 +19,7 @@ type ServiceCatalogData = {
     id: string;
     name: string;
     image: string | null;
+    slug: string;
   };
 
   export type { ServiceCatalogData, ServiceCatalog, Section, Category };

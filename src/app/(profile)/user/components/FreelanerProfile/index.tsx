@@ -344,8 +344,8 @@ const FreelancerProfile = ({ username }: Props) => {
               })}
             </h2>
             <section className="mt-4 grid grid-cols-1 md:grid-cols-[repeat(3,minmax(1px,1fr))] gap-5">
-              {userProfile?.services.map((_, index) => (
-                <CategoryCard key={index} />
+              {userProfile?.services.map((service, index) => (
+                <CategoryCard data={service} username={userProfile.username} key={index} />
               ))}
             </section>
             <div className="mt-8">

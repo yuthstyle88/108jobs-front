@@ -52,7 +52,7 @@ const Header = ({ type }: BgProps) => {
       <nav className="mx-[1.5rem] flex flex-wrap items-center justify-center h-auto min-h-[70px] py-4 xl:py-1 xl:justify-between">
         <section className="flex items-center gap-x-4 w-full md:w-auto">
           <Link href="/" className="shrink-0">
-            <Image src={AssetIcon.logo} alt="logo" className="w-full h-full" />
+            <Image src={AssetIcon.logo} alt="logo" className="w-full h-full" width={500} height={500} priority/>
           </Link>
 
           <div

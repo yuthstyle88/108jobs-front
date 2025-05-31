@@ -1274,8 +1274,6 @@ export type JobCategoryLanguage = {
 
 export type JobDetailLanguage = {
   all_job_types: string;
-  marketing_advertising: string;
-  do_seo: string;
   fastwork_guarantee: string;
   fastwork_guarantee_description: string;
   chat_with_freelancers: string;
@@ -1284,13 +1282,10 @@ export type JobDetailLanguage = {
   record_label: string;
   overview_tab: string;
   package_tab: string;
-  seo_tab: string;
   freelance_review_tab: string;
   package_description: string;
-  traffic_package_description: string;
   view_package_information: string;
-  sold_12k_times: string;
-  rating_4_9: string;
+  sold_times: string;
   employers_trust: string;
   other_jobs_section: string;
   view_profile: string;

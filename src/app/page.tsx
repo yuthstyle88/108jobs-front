@@ -27,7 +27,7 @@ import "./styles.css";
 import { Navigation } from "swiper/modules";
 
 import { API_ROUTES } from "@/api/endpoints";
-import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
+import CategoryCardMock from "@/components/CategoryCardMock";
 import Loading from "@/components/Loading";
 import LocationSelectionModal from "@/components/LocationSelectionModal";
 import {
@@ -217,8 +217,7 @@ export default function Home() {
                       return (
                         <Link
                           key={category.id}
-                          // href={`/category/${category.id}`}
-                          href={`/job/afdd8f40-a60d-4609-9718-58110e80f4bb`}
+                          href={`/job/${category.slug}`}
                           className="group"
                         >
                           <div
@@ -699,7 +698,7 @@ export default function Home() {
             <CustomNavigation />
             {Array.from({ length: 16 }, (_, index) => (
               <SwiperSlide key={index}>
-                <CategoryCard />
+                <CategoryCardMock />
               </SwiperSlide>
             ))}
           </Swiper>
@@ -733,7 +732,7 @@ export default function Home() {
             <CustomNavigation />
             {Array.from({ length: 16 }, (_, index) => (
               <SwiperSlide key={index}>
-                <CategoryCard />
+                <CategoryCardMock />
               </SwiperSlide>
             ))}
           </Swiper>
@@ -767,7 +766,7 @@ export default function Home() {
             <CustomNavigation />
             {Array.from({ length: 16 }, (_, index) => (
               <SwiperSlide key={index}>
-                <CategoryCard />
+                <CategoryCardMock />
               </SwiperSlide>
             ))}
           </Swiper>
