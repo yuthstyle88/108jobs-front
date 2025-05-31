@@ -14,10 +14,9 @@ type Props = {
 };
 
 const JobCard = ({ data }: Props) => {
-  console.log("JobCard data:", data);
   const { data: jobCardLanguage } = useGlobalTranslate(LanguageFile.JOB_CARD);
   return (
-    <Link href="/seo/job-detail" className="flex cursor-pointer w-full">
+    <Link href={`/user/${data.user.username}/${data.slug}`} className="flex cursor-pointer w-full">
       <div className="hover:shadow-jobCard border border-border_primary w-full flex flex-col overflow-hidden rounded-md bg-white transition-all ease-in-out duration-150">
         <section className="grid grid-cols-[minmax(17px,170px)_1fr] grid-rows-[1fr_max-content] md:flex md:flex-col">
           <div className="relative aspect-[3/2] w-full">
@@ -27,6 +26,7 @@ const JobCard = ({ data }: Props) => {
               className="object-cover w-full h-full bg-[#e8eaee]"
               fill
               sizes="(max-width: 768px) 100vw, 33vw"
+              priority
             />
           </div>
           <div className="flex flex-col p-2 bg-white border-b md:border-none">
@@ -72,7 +72,6 @@ const JobCard = ({ data }: Props) => {
               {jobCardLanguage?.starting_price}
             </span>
             <span className="text-[0.75rem] text-third text-right break-words">
-              {/* ฿1,600 */}
               {formatThaiBaht(data.base_price)}
             </span>
           </div>

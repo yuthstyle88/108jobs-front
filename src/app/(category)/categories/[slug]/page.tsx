@@ -1,5 +1,5 @@
 import PopularSubCat from "@/components/PopularSubcat";
-import {generateLocalizedMetadata} from "@/lib/metadata";
+import { generateLocalizedMetadata } from "@/lib/metadata";
 
 export async function generateMetadata() {
   return generateLocalizedMetadata("catalog");
@@ -8,12 +8,13 @@ export async function generateMetadata() {
 export default async function Categories({
   params,
 }: {
-  params: Promise<{name: string}>;
+  params: Promise<{ slug: string }>;
 }) {
   const resolvedParams = await params;
-  return (
-    <main className="grid-container-desktop-banner w-full min-h-screen">
-      <PopularSubCat name={resolvedParams.name}/>
+
+   return (
+   <main className="grid-container-desktop-banner w-full min-h-screen">
+      <PopularSubCat slug={resolvedParams.slug} />
     </main>
   );
 }

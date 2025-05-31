@@ -19,10 +19,13 @@ import Loading from "../Loading";
 import { interpolateDouble } from "@/utils/interpolate";
 import { API_ROUTES } from "@/api/endpoints";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
-import { JobList } from "@/types/jobSearch";
+import { JobList, Tags } from "@/types/jobSearch";
 import JobCard from "../JobCard";
 import NotFoundJob from "./components/NotFoundJob";
 import buildQueryParams from "@/utils/buildJobQueryParams";
+import { ServiceCatalogData } from "@/types/catalog";
+import { Category } from "@/types/category";
+import JobCardSkeleton from "../JobCardSkeleton";
 
 const category_related = [
   {
@@ -40,19 +43,54 @@ const category_related = [
 type Props = {
   slug: string;
 };
+
 const CategoryDetail = ({ slug }: Props) => {
-  console.log("CategoryDetail rendered with slug:", slug);
-  
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
   const selectedTag = searchParams.get("q") || "";
-  const serviceCategoryId = searchParams.get("service_category_id") || "";
   const minPrice = searchParams.get("min_price");
   const maxPrice = searchParams.get("max_price");
   const rating = searchParams.get("rating") || "";
   const sort = searchParams.get("sort_by") || "";
+
+  const {
+    data: jobCategoryLanguage,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.JOB_CATEGORY);
+
+  const {
+    data: categoryData,
+    isLoading: isCategoryLoading,
+    error: errorCategory,
+  } = usePrivateFetchParams<Category[]>(
+    `${API_ROUTES.job.get_category_by_slug}/${slug}`
+  );
+
+  const serviceCategoryId = categoryData?.[0]?.id || "";
+  const categoryTitle = categoryData?.[0]?.title || "";
+
+  const {
+    data: catalogData,
+    isLoading: isCatalogLoading,
+    error: errorCatalog,
+  } = usePrivateFetchParams<ServiceCatalogData>(
+    serviceCategoryId
+      ? `${API_ROUTES.job.get_catalog_by_id}/${serviceCategoryId}`
+      : null
+  );
+
+  const catalogTitle = catalogData?.service_catalogs?.[0]?.name || "";
+  const catalogSlug = catalogData?.service_catalogs?.[0]?.slug || "";
+
+  const { data: tagsData, isLoading: isTagLoading } =
+    usePrivateFetchParams<Tags>(
+      serviceCategoryId
+        ? `${API_ROUTES.job.get_tags_by_id}/${serviceCategoryId}`
+        : null
+    );
 
   const queryParams = buildQueryParams({
     min_price: minPrice ? parseFloat(minPrice) : undefined,
@@ -70,14 +108,8 @@ const CategoryDetail = ({ slug }: Props) => {
     isLoading: isJobListLoading,
     error: errorJobList,
   } = usePrivateFetchParams<JobList>(
-    `${API_ROUTES.job.get_job_by_slug}?${queryParams}`
+    serviceCategoryId ? `${API_ROUTES.job.get_job_by_id}?${queryParams}` : null
   );
-
-  const {
-    data: jobCategoryLanguage,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.JOB_CATEGORY);
 
   const [isSticky, setIsSticky] = useState(false);
   useEffect(() => {
@@ -94,7 +126,13 @@ const CategoryDetail = ({ slug }: Props) => {
 
   const handleTagChange = (tag: string) => {
     const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set("q", tag);
+
+    if (!tag) {
+      newParams.delete("q");
+    } else {
+      newParams.set("q", tag);
+    }
+
     newParams.set("page", "1");
     router.push(`?${newParams.toString()}`);
   };
@@ -129,13 +167,19 @@ const CategoryDetail = ({ slug }: Props) => {
 
   const breadcrumbItems = [
     { label: "ประเภทงานทั้งหมด", href: "/categories" },
-    { label: "การตลาดและโฆษณา", href: "/marketing" },
-    { label: "ทำ SEO", href: "/marketing/seo" },
-    ...(selectedTag ? [{ label: `${selectedTag}` }] : []),
+    ...(catalogTitle
+      ? [{ label: catalogTitle, href: `/categories/${catalogSlug}` }]
+      : []),
+    ...(categoryTitle
+      ? [{ label: categoryTitle, href: `/job/${slug}` }]
+      : []),
+    ...(selectedTag ? [{ label: selectedTag }] : []),
   ];
 
-  if (isLoading || isJobListLoading) return <Loading />;
-  if (error || errorJobList || !jobList) return <div>Error loading data</div>;
+  if (isLoading || !jobCategoryLanguage || !jobList) return <Loading />;
+
+  if (error || errorJobList || errorCategory || errorCatalog)
+    return <div>Error loading data</div>;
 
   return (
     <>
@@ -157,17 +201,25 @@ const CategoryDetail = ({ slug }: Props) => {
       </section>
 
       <section className="grid-container-job pt-2 sm:pt-0">
-        <BreadCrumb items={breadcrumbItems} />
+        {(!isCategoryLoading || !isCatalogLoading) && (
+          <BreadCrumb items={breadcrumbItems} />
+        )}
         <div className="col-start-2 col-end-auto">
           <h1 className="mb-2 sm:mb-6 mt-4 text-[20px] md:text-[32px] text-text_primary font-semibold">
-            ทำ SEO
+            {categoryTitle} Service, Hire Freelancer to {categoryTitle}
           </h1>
         </div>
       </section>
 
-      <section className="grid-container-job overflow-x-auto pb-4">
-        <SubCategory selectedTag={selectedTag} onSelectTag={handleTagChange} />
-      </section>
+      {!isTagLoading && tagsData?.tags && tagsData.tags.length > 0 && (
+        <section className="grid-container-job overflow-x-auto pb-4">
+          <SubCategory
+            tagList={tagsData.tags}
+            selectedTag={selectedTag}
+            onSelectTag={handleTagChange}
+          />
+        </section>
+      )}
 
       <section
         className={`grid-container-job sticky top-[110px] sm:top-[70px] overflow-hidden bg-white z-10 transition-shadow duration-300 ${
@@ -213,18 +265,23 @@ const CategoryDetail = ({ slug }: Props) => {
             </div>
           </div>
           <div className="col-start-2 col-end-auto text-[0.875rem] text-text_primary font-sans">
-            {jobList.jobs.length === 0 ? (
+            {isJobListLoading ? (
+              <section className="col-start-2 col-end-auto grid grid-cols-1 sm:grid-cols-[repeat(2,minmax(1px,1fr))] md:grid-cols-[repeat(3,minmax(1px,1fr))] lg:grid-cols-[repeat(4,minmax(1px,1fr))] 2xl:grid-cols-[repeat(5,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
+                {Array.from({ length: 20 }).map((_, index) => (
+                  <JobCardSkeleton key={index} />
+                ))}
+              </section>
+            ) : jobList.jobs.length === 0 ? (
               <NotFoundJob />
             ) : (
-              <>
-                <section className="col-start-2 col-end-auto grid grid-cols-1 sm:grid-cols-[repeat(2,minmax(1px,1fr))] md:grid-cols-[repeat(3,minmax(1px,1fr))] lg:grid-cols-[repeat(4,minmax(1px,1fr))] 2xl:grid-cols-[repeat(5,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
-                  {jobList.jobs.map((job, index) => (
-                    <JobCard data={job} key={index} />
-                  ))}
-                </section>
-              </>
+              <section className="col-start-2 col-end-auto grid grid-cols-1 sm:grid-cols-[repeat(2,minmax(1px,1fr))] md:grid-cols-[repeat(3,minmax(1px,1fr))] lg:grid-cols-[repeat(4,minmax(1px,1fr))] 2xl:grid-cols-[repeat(5,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
+                {jobList.jobs.map((job, index) => (
+                  <JobCard data={job} key={index} />
+                ))}
+              </section>
             )}
           </div>
+
           <section className="flex justify-center col-start-2 col-end-auto mt-12">
             {jobList.total_pages > 1 && (
               <Pagination

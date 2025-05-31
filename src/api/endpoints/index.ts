@@ -6,7 +6,7 @@ export const API_ROUTES = {
     apply_freelancer: "/profile/apply/freelancer",
     get_profile: "/profile",
     update_Profile: "/profile/info",
-    update_address_profile: "/profile/address"
+    update_address_profile: "/profile/address",
   },
   catalog: {
     get_all_catalog: "/service/catalogs/all",
@@ -23,13 +23,17 @@ export const API_ROUTES = {
     update_password: "/profile/change/password",
     verify_forgot_password: "/users/verify/reset-password",
   },
-  location:{
+  location: {
     get_provinces: "/profile/countries",
-    get_countries: "profile/countries/search"
+    get_countries: "profile/countries/search",
   },
-  job:{
-    get_job_by_slug: "/jobs/search"
-  }
+  job: {
+    get_job_by_id: "/jobs/search",
+    get_category_by_slug: "/service/category",
+    get_catalog_by_id: "/service/catalogs/by-category",
+    get_tags_by_id: "/service/tag/by-category",
+    get_job_detail_by_id: "/job-detail",
+  },
 };
 export const API_ROUTES_SELLER = {
   profile: {
@@ -42,12 +46,12 @@ export const API_ROUTES_SELLER = {
     languages: "/freelancer/languages",
     skill_level: "/skill-levels",
   },
-  job:{
+  job: {
     get_job: "/freelancer/jobs",
     post_job_step_1: "/freelancer/jobs/step/1",
     post_job_step_2: "/freelancer/jobs/step/2",
     post_job_step_3: "/freelancer/jobs/step/3",
     post_job_step_4: "/freelancer/jobs/step/4",
     post_job_step_5: "/freelancer/jobs/step/5",
-  }
+  },
 };

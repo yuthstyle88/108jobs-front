@@ -68,3 +68,15 @@ export type ServiceCategory = {
   image_url: string | null;
   jobs_count: number;
 };
+
+export type Tag = {
+  id: string;
+  name: string;
+  slug: string;
+  sub_category_id: string;
+};
+
+export type Tags = {
+  tags: Tag[];
+};
+
