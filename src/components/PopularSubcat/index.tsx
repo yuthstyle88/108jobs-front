@@ -9,8 +9,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Loading from "../Loading";
+import { notFound } from "next/navigation";
 
-const PopularSubCat = () => {
+type Props = {
+  slug: string;
+};
+
+const PopularSubCat = ({ slug }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] =
     useState<ServiceCatalog | null>(null);
@@ -22,21 +27,29 @@ const PopularSubCat = () => {
     error,
   } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.get_all_catalog);
 
-  const handleSelectSubcategory = (id: string) => {
-    const matched =
-      catalogData?.service_catalogs.find((item) => item.id === id) || null;
-    setSelectedCategory(matched);
-    setIsOpen(false);
-  };
-
   useEffect(() => {
-    if (
-      catalogData?.service_catalogs &&
-      catalogData.service_catalogs.length > 0
-    ) {
-      setSelectedCategory((prev) => prev ?? catalogData.service_catalogs[0]);
+  if (!catalogData?.service_catalogs) return;
+
+  const normalizedSlug = slug.toLowerCase().replace(/\s+/g, "-");
+
+  const matchedCatalog = catalogData.service_catalogs.find(
+    (catalog) =>
+      catalog.slug === slug ||
+      (!catalog.slug &&
+        catalog.name.toLowerCase().replace(/\s+/g, "-") === normalizedSlug)
+  );
+
+  if (matchedCatalog) {
+    if (!matchedCatalog.slug) {
+      notFound();
+      return;
     }
-  }, [catalogData]);
+
+    setSelectedCategory(matchedCatalog);
+  } else {
+    notFound();
+  }
+}, [catalogData, slug]);
 
   if (isLoading) return <Loading />;
   if (error) return <div>Error loading data</div>;
@@ -70,15 +83,23 @@ const PopularSubCat = () => {
           {isOpen && (
             <div className="absolute left-0 mt-2 w-[250px] bg-white rounded-lg shadow-lg z-50 flex animate-fade-down">
               <div className="w-64 py-4">
-                {catalogData?.service_catalogs.map((subcategory) => (
-                  <button
-                    key={subcategory.id}
-                    onClick={() => handleSelectSubcategory(subcategory.id)}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-50 text-gray-700"
-                  >
-                    {subcategory.name}
-                  </button>
-                ))}
+                {catalogData?.service_catalogs.map((subcategory) => {
+                  const fallbackSlug = subcategory.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "-");
+                  const catalogSlug = subcategory.slug ?? fallbackSlug;
+
+                  return (
+                    <Link
+                      key={subcategory.id}
+                      href={`/categories/${catalogSlug}`}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-50 text-gray-700"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {subcategory.name}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -90,7 +111,7 @@ const PopularSubCat = () => {
                 .map((cat) => (
                   <Link
                     key={cat.id}
-                    href="#"
+                    href={`/job/${cat.slug}`}
                     className="text-text_secondary hover:underline"
                   >
                     {cat.name}
@@ -112,7 +133,7 @@ const PopularSubCat = () => {
               .map((cat) => (
                 <Link
                   key={cat.id}
-                  href="#"
+                  href={`/job/${cat.slug}`}
                   className="group relative overflow-hidden rounded-lg"
                 >
                   <div className="relative h-48 w-full overflow-hidden">
@@ -120,7 +141,10 @@ const PopularSubCat = () => {
                     <Image
                       src={cat.image || CategoriesImage.web_development}
                       alt={cat.name}
+                      width={500}
+                      height={500}
                       className="h-full w-full object-cover transform group-hover:scale-110 transition-transform duration-200"
+                      priority
                     />
                     <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
                       <h3 className="text-lg font-semibold">{cat.name}</h3>

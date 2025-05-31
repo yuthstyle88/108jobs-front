@@ -26,6 +26,7 @@ const config: Config = {
         text_secondary: "var(--text-secondary)",
         border_primary: "var(--border-primary)",
         border_secondary: "var(--border-secondary)",
+        skeleton: "var(--skeleton)",
         fastwork: {
           blue: "#0078FF",
           "deep-blue": "#0062CC",
@@ -36,6 +37,7 @@ const config: Config = {
           blue: "#0078FF",
           background: "#f0f4fd",
         },
+        darkOverlay: "rgba(43, 43, 43, 0.25)",
       },
       boxShadow: {
         panel: "0 0 1.5rem 0 rgba(25,72,142,.15)",
@@ -124,6 +126,9 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(-10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        shimmer: {
+          '100%': { transform: 'translateX(100%)' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -141,6 +146,7 @@ const config: Config = {
         loader2: "loader2 0.6s infinite",
         loader3: "loader3 0.6s infinite",
         "fade-down": "fade-down 0.1s ease-out",
+        shimmer: 'shimmer 1.5s infinite',
       },
     },
   },

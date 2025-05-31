@@ -26,10 +26,16 @@ export async function generateMetadata() {
   });
 }
 
-export default function JobDetailPage() {
+export default async function JobDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string; username: string }>;
+}) {
+  const { username, slug } = await params;
+
   return (
     <main className="pt-12 sm:pt-0">
-      <JobDetail />
+      <JobDetail username={username} slug={slug} />
     </main>
   );
 }

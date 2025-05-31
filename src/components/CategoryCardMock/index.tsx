@@ -1,24 +1,18 @@
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { Job } from "@/types/jobSearch";
-import { formatThaiBaht } from "@/utils/formatMoney";
 import { interpolateDouble } from "@/utils/interpolate";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 
-type Props = {
-  data: Job;
-};
-
-const JobCard = ({ data }: Props) => {
+const CategoryCardMock = () => {
   const { data: jobCardLanguage } = useGlobalTranslate(LanguageFile.JOB_CARD);
   return (
-    <Link href={`/user/${data.user.username}/${data.slug}`} className="flex cursor-pointer w-full">
+    <Link href="/seo/job-detail" className="flex cursor-pointer w-full">
       <div className="hover:shadow-jobCard border border-border_primary w-full flex flex-col overflow-hidden rounded-md bg-white transition-all ease-in-out duration-150">
-        <section className="grid grid-cols-[minmax(17px,170px)_1fr] grid-rows-[1fr_max-content] md:flex md:flex-col">
+        <section className="flex flex-row md:flex-col">
           <div className="relative aspect-[3/2] w-full">
             <Image
               src={CategoriesImage.seo_job}
@@ -26,23 +20,21 @@ const JobCard = ({ data }: Props) => {
               className="object-cover w-full h-full bg-[#e8eaee]"
               fill
               sizes="(max-width: 768px) 100vw, 33vw"
-              priority
             />
           </div>
           <div className="flex flex-col p-2 bg-white border-b md:border-none">
             <h3 className="overflow-hidden leading-[1.25em] text-text_primary text-clip break-words font-normal text-sm font-sans line-clamp-2">
-              {data.title}
+              เพิ่ม Traffic และ Backlink คุณภาพสูง ดัน Web ติดอันดับ SEO เร่ง
+              index KW ให้ติดรัวๆ
             </h3>
             <div className="flex flex-row items-center mt-2 text-[12px]">
               <div className="text-text_secondary font-sans">
-                <span>
-                  {jobCardLanguage?.sold} {data.purchase_count}
-                </span>
+                <span>{jobCardLanguage?.sold} 1.2K</span>
               </div>
               <div className="pl-2 ml-2 border-l border-[#2b323b66] flex items-center gap-1">
                 <FontAwesomeIcon icon={faStar} className="text-[#e9b10c]" />
                 <span className="text-[12px] font-sans text-text_secondary">
-                  {data.reviews_count}
+                  4.9 (921)
                 </span>
               </div>
             </div>
@@ -68,11 +60,9 @@ const JobCard = ({ data }: Props) => {
             })}
           </div>
           <div className="flex flex-row gap-2 md:gap-0 md:flex-col items-end min-w-fit ml-auto text-text_secondary overflow-hidden text-ellipsis whitespace-nowrap">
-            <span className="text-[0.75rem]">
-              {jobCardLanguage?.starting_price}
-            </span>
+            <span className="text-[0.75rem]">{jobCardLanguage?.starting_price}</span>
             <span className="text-[0.75rem] text-third text-right break-words">
-              {formatThaiBaht(data.base_price)}
+              ฿1,600
             </span>
           </div>
         </div>
@@ -81,4 +71,4 @@ const JobCard = ({ data }: Props) => {
   );
 };
 
-export default JobCard;
+export default CategoryCardMock;

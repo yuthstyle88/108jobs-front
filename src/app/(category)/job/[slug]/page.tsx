@@ -34,7 +34,7 @@ export default async function SpecificCategory({
   const resolvedParams = await params;
 
    return (
-    <main className="pt-10 sm:pt-0">
+    <main className="min-h-screen pt-10 sm:pt-0">
       <CategoryDetail slug={resolvedParams.slug} />
     </main>
   );
