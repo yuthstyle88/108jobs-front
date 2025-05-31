@@ -1,3 +1,4 @@
+import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
 
 const StarIcon = ({ filled }: { filled: boolean }) => (
@@ -22,94 +23,126 @@ const RatingStars = ({ rating }: { rating: number }) => {
 
 type Props = {
   language: Partial<JobDetailLanguage> | undefined | null;
+  data: JobDetailResponse;
 };
 
-const ReviewCard = ({ language }: Props) => {
+const ReviewCard = ({ language, data }: Props) => {
+  const rating = Number(data.rating) || 0;
   return (
-    <div className="grid grid-cols-[1fr] gap-y-6">
+    <div className="grid grid-cols-[1fr] gap-y-6 pb-10">
       <h2 className="text-[1.25rem] text-third font-medium">
-        {language?.reviews_from_employers} (921)
+        {language?.reviews_from_employers}
+        {rating > 0 && ` (${rating})`}
       </h2>
-      <div className="mx-auto bg-white rounded-xl shadow-sm p-2 md:p-6">
-        <div className="flex items-center gap-8 justify-between mb-6">
-          <div className="flex flex-col gap-2 items-center">
-            <div className="bg-blue-100 rounded-full w-16 h-16 md:w-24 md:h-24 flex items-center justify-center">
-              <span className="text-[24px] md:text-4xl font-bold text-blue-600">4.9</span>
-            </div>
-            <span className="text-gray-500 text-[12px] md:text-sm ml-2">จาก 5</span>
-          </div>
-          <div className="flex-1 w-full lg:mx-12">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex items-center gap-2 justify-between">
-                <span className="text-gray-700 text-sm sm:text-base">{language?.response_speed}</span>
-                <RatingStars rating={5} />
-              </div>
-              <div className="flex items-center gap-2 justify-between">
-                <span className="text-gray-700 text-sm sm:text-base">{language?.friendly_and_expert}</span>
-                <RatingStars rating={5} />
-              </div>
-              <div className="flex items-center gap-2 justify-between">
-                <span className="text-gray-700 text-sm sm:text-base">{language?.service_provision}</span>
-                <RatingStars rating={5} />
-              </div>
-              <div className="flex items-center gap-2 justify-between">
-                <span className="text-gray-700 text-sm sm:text-base">{language?.value_for_money}</span>
-                <RatingStars rating={5} />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          {[
-            {
-              id: 1,
-              name: "***** (ไม่เปิดเผยชื่อ)",
-              date: "18/02/2025",
-              rating: 5.0,
-            },
-            {
-              id: 2,
-              name: "jfkkfdff",
-              date: "18/02/2025",
-              rating: 5.0,
-            },
-          ].map((review) => (
-            <div
-              key={review.id}
-              className="flex items-center justify-between py-4 border-t"
-            >
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                  <svg
-                    className="w-6 h-6 text-gray-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <div className="font-medium text-gray-900">{review.name}</div>
-                  <div className="text-sm text-gray-500">{review.date}</div>
-                </div>
-              </div>
-              <div className="flex items-center space-x-1">
-                <StarIcon filled={true} />
-                <span className="font-medium text-text_primary">
-                  {review.rating}
+      {rating > 0 ? (
+        <div className="mx-auto bg-white rounded-xl shadow-sm p-2 md:p-6">
+          <div className="flex items-center gap-8 justify-between mb-6">
+            <div className="flex flex-col gap-2 items-center">
+              <div className="bg-blue-100 rounded-full w-16 h-16 md:w-24 md:h-24 flex items-center justify-center">
+                <span className="text-[24px] md:text-4xl font-bold text-blue-600">
+                  4.9
                 </span>
               </div>
+              <span className="text-gray-500 text-[12px] md:text-sm ml-2">
+                จาก 5
+              </span>
             </div>
-          ))}
+            <div className="flex-1 w-full lg:mx-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex items-center gap-2 justify-between">
+                  <span className="text-gray-700 text-sm sm:text-base">
+                    {language?.response_speed}
+                  </span>
+                  <RatingStars rating={5} />
+                </div>
+                <div className="flex items-center gap-2 justify-between">
+                  <span className="text-gray-700 text-sm sm:text-base">
+                    {language?.friendly_and_expert}
+                  </span>
+                  <RatingStars rating={5} />
+                </div>
+                <div className="flex items-center gap-2 justify-between">
+                  <span className="text-gray-700 text-sm sm:text-base">
+                    {language?.service_provision}
+                  </span>
+                  <RatingStars rating={5} />
+                </div>
+                <div className="flex items-center gap-2 justify-between">
+                  <span className="text-gray-700 text-sm sm:text-base">
+                    {language?.value_for_money}
+                  </span>
+                  <RatingStars rating={5} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              {
+                id: 1,
+                name: "***** (ไม่เปิดเผยชื่อ)",
+                date: "18/02/2025",
+                rating: 5.0,
+              },
+              {
+                id: 2,
+                name: "jfkkfdff",
+                date: "18/02/2025",
+                rating: 5.0,
+              },
+            ].map((review) => (
+              <div
+                key={review.id}
+                className="flex items-center justify-between py-4 border-t"
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                    <svg
+                      className="w-6 h-6 text-gray-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">
+                      {review.name}
+                    </div>
+                    <div className="text-sm text-gray-500">{review.date}</div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <StarIcon filled={true} />
+                  <span className="font-medium text-text_primary">
+                    {review.rating}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="w-full flex items-center py-12 justify-center gap-2 ">
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-row justify-center">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <StarIcon key={star} filled={false} />
+              ))}
+            </div>
+            <p className="text-[0.875rem] font-sans text-text_secondary text-center">
+              Bắt đầu thuê freelancer này và đánh giá
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

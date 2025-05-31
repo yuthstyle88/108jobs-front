@@ -1,6 +1,8 @@
 "use client";
 import { JobDetailIcon } from "@/constants/icons";
+import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
+import { formatThaiBaht } from "@/utils/formatMoney";
 import { scrollToElementById } from "@/utils/scrollSmooth";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
@@ -9,45 +11,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-interface PackageInfo {
-  price: string;
-  title: string;
-  description: string;
-}
-
 interface AsideJobProps {
   language: Partial<JobDetailLanguage> | undefined | null;
+  data: JobDetailResponse;
 }
 
-const AsideJob = ({ language }: AsideJobProps) => {
+const AsideJob = ({ language, data }: AsideJobProps) => {
   const [selectedPackage, setSelectedPackage] = useState(0);
 
-   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault();
-      scrollToElementById("package");
-    };
-
-  const packages: PackageInfo[] = [
-    {
-      price: "฿1,600",
-      title: "แพ็กเกจ : เพิ่ม Traffic 30 วัน ดันอันดับ เร่ง Index",
-      description:
-        "Traffic Package ทุก Package Traffic ทำงาน 30 วันค่ะ Traffic Package 6,000 Traffic View เหมาะสำหรับเว็บคู่แข่งน้อย 1,600 บาท 1 Link 1 Keyword",
-    },
-    {
-      price: "฿2,600",
-      title: "แพ็กเกจ: Backlink Package ดันอันดับ เร่ง Index",
-      description:
-        "Backlink Package ใช้เวลาทำงานไม่เกิน 5 วันคะ QUALITY BLOG COMMENTS เหมาะสำหรับ...",
-    },
-    {
-      price: "฿3,600",
-      title:
-        "แพ็กเกจ: Traffic + Backlink Offpage SEO mix ขั้นเทพ ออกแบบตามความต้องการ ดันหน้า 1",
-      description:
-        "สูตรที่ 1 ทำ SEO ระดับความยากสี่ ชุดเริ่มต้น Keyword ลูกน้อย เว็บใหม่ เว็บต้องการตั้งตัว...",
-    },
-  ];
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    scrollToElementById("package");
+  };
 
   return (
     <aside className="text-black sticky top-40 self-start">
@@ -75,7 +50,7 @@ const AsideJob = ({ language }: AsideJobProps) => {
       </div>
       <div className="rounded-md overflow-hidden mt-4 shadow-jobCard ">
         <section className="grid-cols-[1fr_1fr_1fr] grid min-w-0 min-h-0">
-          {packages.map((pkg, index) => (
+          {data.packages.map((pkg, index) => (
             <div
               key={index}
               className={`relative ${
@@ -87,19 +62,19 @@ const AsideJob = ({ language }: AsideJobProps) => {
               } ${index === 2 ? "rounded-tr-md" : ""}`}
               onClick={() => setSelectedPackage(index)}
             >
-              <strong>{pkg.price}</strong>
+              <strong>{formatThaiBaht(pkg.price)}</strong>
             </div>
           ))}
         </section>
         <section className="p-6 bg-white">
           <h3 className="font-medium text-third">
-            {packages[selectedPackage].title}
+            {data.packages[selectedPackage].package_name}
           </h3>
           <p className="line-clamp-2 text-ellipsis overflow-hidden break-words mt-2 text-[0.875rem] text-text_secondary font-sans ">
-            {packages[selectedPackage].description}
+            {data.packages[selectedPackage].description}
           </p>
           <Link
-            href="/seo/job-detail#package"
+            href="#package"
             onClick={(e) => handleClick(e)}
             className="text-third mt-2 font-semibold text-[0.875rem] cursor-pointer font-sans"
           >

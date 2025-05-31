@@ -1,5 +1,5 @@
 "use client";
-import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
+import CategoryCardMock from "@/components/CategoryCardMock";
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
@@ -25,7 +25,7 @@ const Favorites = () => {
             {/* <p className="text-[1.5rem] leading-[1.5] font-medium text-text_secondary">ไม่มีฟรีแลนซ์ที่ถูกใจ</p> */}
             <section className="grid grid-cols-1 md:grid-cols-[repeat(3,minmax(1px,1fr))] gap-5">
               {Array.from({ length: 2 }, (_, index) => (
-                <CategoryCard key={index} />
+                <CategoryCardMock key={index} />
               ))}
             </section>
           </div>

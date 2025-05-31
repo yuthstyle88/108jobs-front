@@ -80,6 +80,7 @@ const SpAdsSlider = () => {
                   className="rounded-lg"
                   width={800}
                   height={400}
+                  priority
                   style={{ width: "100%", height: "auto" }}
                 />
               </SwiperSlide>
