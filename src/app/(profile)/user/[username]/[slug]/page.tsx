@@ -34,7 +34,7 @@ export default async function JobDetailPage({
   const { username, slug } = await params;
 
   return (
-    <main className="pt-12 sm:pt-0">
+    <main className="sm:pt-0">
       <JobDetail username={username} slug={slug} />
     </main>
   );
