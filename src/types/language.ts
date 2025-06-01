@@ -1270,6 +1270,9 @@ export type JobCategoryLanguage = {
   highest_price: string;
   safe_no_scam: string;
   support_throughout: string;
+  no_results_message: string;
+  post_job_board: string;
+  all_categories: string;
 };
 
 export type JobDetailLanguage = {
