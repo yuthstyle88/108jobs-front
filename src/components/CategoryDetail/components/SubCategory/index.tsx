@@ -3,14 +3,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { Tag } from "@/types/jobSearch";
+import { JobCategoryLanguage } from "@/types/language";
 
 interface SubCategoryProps {
   selectedTag: string;
   onSelectTag: (tag: string) => void;
   tagList: Tag[];
+  language: Partial<JobCategoryLanguage> | undefined | null;
 }
 
-const SubCategory = ({ selectedTag, onSelectTag, tagList }: SubCategoryProps) => {
+const SubCategory = ({
+  selectedTag,
+  onSelectTag,
+  tagList,
+  language,
+}: SubCategoryProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -71,7 +78,7 @@ const SubCategory = ({ selectedTag, onSelectTag, tagList }: SubCategoryProps) =>
                 : "hover:bg-[#F6F7F8] text-text_secondary border-border_primary"
             } text-[14px] sm:text-base font-medium leading-[1.5] px-2 py-[5px] sm:px-4 sm:py-[7px] border-[1px] rounded-[4px] cursor-pointer select-none flex justify-center items-center`}
           >
-            <span>Tất cả</span>
+            <span>{language?.all_categories}</span>
           </div>
 
           {tagList.map((item, index) => {

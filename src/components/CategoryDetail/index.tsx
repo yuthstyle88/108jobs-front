@@ -166,13 +166,11 @@ const CategoryDetail = ({ slug }: Props) => {
   };
 
   const breadcrumbItems = [
-    { label: "ประเภทงานทั้งหมด", href: "/categories" },
+    { label: jobCategoryLanguage?.all_job_types || "", href: "/categories" },
     ...(catalogTitle
       ? [{ label: catalogTitle, href: `/categories/${catalogSlug}` }]
       : []),
-    ...(categoryTitle
-      ? [{ label: categoryTitle, href: `/job/${slug}` }]
-      : []),
+    ...(categoryTitle ? [{ label: categoryTitle, href: `/job/${slug}` }] : []),
     ...(selectedTag ? [{ label: selectedTag }] : []),
   ];
 
@@ -214,6 +212,7 @@ const CategoryDetail = ({ slug }: Props) => {
       {!isTagLoading && tagsData?.tags && tagsData.tags.length > 0 && (
         <section className="grid-container-job overflow-x-auto pb-4">
           <SubCategory
+            language={jobCategoryLanguage}
             tagList={tagsData.tags}
             selectedTag={selectedTag}
             onSelectTag={handleTagChange}
@@ -272,7 +271,7 @@ const CategoryDetail = ({ slug }: Props) => {
                 ))}
               </section>
             ) : jobList.jobs.length === 0 ? (
-              <NotFoundJob />
+              <NotFoundJob language={jobCategoryLanguage}/>
             ) : (
               <section className="col-start-2 col-end-auto grid grid-cols-1 sm:grid-cols-[repeat(2,minmax(1px,1fr))] md:grid-cols-[repeat(3,minmax(1px,1fr))] lg:grid-cols-[repeat(4,minmax(1px,1fr))] 2xl:grid-cols-[repeat(5,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
                 {jobList.jobs.map((job, index) => (
