@@ -74,7 +74,7 @@ const JobDetail = ({ username, slug }: Props) => {
   const categorySlug = jobDetailData?.service_type.slug || "";
 
   const breadcrumbItems = [
-    { label: "ประเภทงานทั้งหมด", href: "/categories" },
+    { label: jobCategoryLanguage?.all_job_types || "", href: "/categories" },
     ...(catalogTitle
       ? [{ label: catalogTitle, href: `/categories/${catalogSlug}` }]
       : []),
