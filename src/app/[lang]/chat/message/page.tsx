@@ -11,11 +11,11 @@ import {
   Send,
   Smile,
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-// import { useSocket } from "../hooks/useSocket";
-// import { useSession } from "next-auth/react";
+import { useWebSocket } from "../hooks/useSocket";
 
 const ChatMessage = () => {
   const { languageData: chatLanguageData } = useChatLanguage();
@@ -24,19 +24,20 @@ const ChatMessage = () => {
   const [isDocumentsOpen, setIsDocumentsOpen] = useState(false);
   const [messageText, setMessageText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  // const { data: session } = useSession();
 
-  // const token = session?.accessToken || "";
-  // const partnerId = "ba26ecd5-8ed9-4bea-8571-d6c624e9e3e0";
+  const { data: session, status } = useSession();
 
-  // const { sendMessage } = useSocket({
-  //   token,
-  //   partnerId,
-  //   onMessage: (event) => {
-  //     const data = JSON.parse(event.data);
-  //     console.log("Received:", data);
-  //   },
-  // });
+  const token = session?.accessToken || "";
+  const partnerId = "1f6ee25d-d91c-499f-af50-c8e151aa7236";
+
+  const { sendMessage } = useWebSocket({
+    token,
+    partnerId,
+    onMessage: (event) => {
+      const data = JSON.parse(event.data);
+      console.log("📨 Received:", data);
+    },
+  });
 
   const toggleEmployment = () => {
     setIsEmploymentOpen(!isEmploymentOpen);
@@ -58,16 +59,18 @@ const ChatMessage = () => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      // if (messageText.trim()) {
-      //   sendMessage({
-      //     event: "send_message",
-      //     content: messageText,
-      //     // bổ sung sender_id, timestamp, ...
-      //   });
-      //   setMessageText("");
-      // }
+      if (messageText.trim()) {
+        sendMessage({
+          message: messageText,
+        });
+        setMessageText("");
+      }
     }
   };
+
+  if (status !== "authenticated" || !token) {
+    return null;
+  }
   return (
     <>
       {/* Main Content */}

@@ -1,6 +1,4 @@
-// lib/metadata/generators.ts
-
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { getCurrentLanguage } from "@/actions/getCurrentLanguage";
 import {
   seoTranslations,
@@ -16,10 +14,11 @@ type PageKey = {
 }[keyof (typeof seoTranslations)["th"]];
 
 export async function generateLocalizedMetadata(
-  pageKeyOrContent: PageKey | { title: string; description: string },
+  pageKeyOrContent: PageKey | PageContent,
+  options?: { lang?: string },
   overrides?: Partial<Metadata>
 ): Promise<Metadata> {
-  const lang = await getCurrentLanguage();
+  const lang = options?.lang || (await getCurrentLanguage());
   const locale: SupportedLang = isSupportedLang(lang) ? lang : "th";
   const t = seoTranslations[locale];
 
