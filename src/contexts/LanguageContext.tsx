@@ -1,43 +1,43 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
+import { createContext, useContext } from "react";
+
 interface LanguageContextType {
   lang: string;
   setLang: (lang: string) => void;
 }
 
+const VALID_LANGUAGES = ["th", "vi", "en"];
 const LanguageContext = createContext<LanguageContextType | undefined>(
   undefined
 );
 
-const VALID_LANGUAGES = ["th", "vi", "en"];
+export function LanguageProvider({
+  children,
+  initialLang = "th",
+}: {
+  children: React.ReactNode;
+  initialLang?: string;
+}) {
+  const lang = initialLang;
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLang] = useState("th");
-  const router = useRouter();
+  const setLang = (newLang: string) => {
+    if (!VALID_LANGUAGES.includes(newLang)) return;
 
-  useEffect(() => {
-    const savedLang = localStorage.getItem("lang");
-    if (savedLang && VALID_LANGUAGES.includes(savedLang)) {
-      setLang(savedLang);
-      document.cookie = `current-language=${savedLang}; path=/`;
+    localStorage.setItem("lang", newLang);
+    document.cookie = `current-language=${newLang}; path=/`;
+
+    const cleanPath = window.location.pathname.replace(/^\/(vi|en|th)/, "");
+    const isLocalhost = window.location.hostname === "localhost";
+
+    if (isLocalhost) {
+      window.location.pathname = `/${newLang}${cleanPath}`;
     } else {
-      localStorage.setItem("lang", "th"); 
-      document.cookie = `current-language=th; path=/`;
-    }
-  }, []);
-
-  const changeLang = (newLang: string) => {
-    if (VALID_LANGUAGES.includes(newLang)) {
-      setLang(newLang);
-      localStorage.setItem("lang", newLang);
-      document.cookie = `current-language=${newLang}; path=/`;
-      router.replace(window.location.pathname);
+      window.location.href = `https://${newLang}.yourdomain.com/${newLang}${cleanPath}`;
     }
   };
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang: changeLang }}>
+    <LanguageContext.Provider value={{ lang, setLang }}>
       {children}
     </LanguageContext.Provider>
   );
@@ -45,8 +45,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
 export function useLanguage() {
   const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
-  }
+  if (!context)
+    throw new Error("useLanguage must be used within LanguageProvider");
   return context;
 }

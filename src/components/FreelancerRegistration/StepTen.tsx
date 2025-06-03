@@ -1,5 +1,5 @@
 import { API_ROUTES } from "@/api/endpoints";
-import { useFormStorage } from "@/app/apply-freelance/hooks/useFormStorage";
+import { useFormStorage } from "@/app/[lang]/apply-freelance/hooks/useFormStorage"; 
 import { FreelancerImage } from "@/constants/images";
 import { usePrivatePost } from "@/hooks/api-hooks";
 import { FreelancerFormData } from "@/types/applyFreelancer";

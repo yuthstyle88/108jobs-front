@@ -6,19 +6,19 @@ import StepNine from "@/components/FreelancerRegistration/StepNine";
 import StepOne from "@/components/FreelancerRegistration/StepOne";
 import StepSeven from "@/components/FreelancerRegistration/StepSeven";
 import StepSix from "@/components/FreelancerRegistration/StepSix";
+import StepTen from "@/components/FreelancerRegistration/StepTen";
 import StepThree from "@/components/FreelancerRegistration/StepThree";
 import StepTwo from "@/components/FreelancerRegistration/StepTwo";
 import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { useUserStore } from "@/store/useUserProfileStore";
 import { FreelancerFormData } from "@/types/applyFreelancer";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useFetchUser } from "./hooks/useFetchUserProfile";
 import { useFormStorage } from "./hooks/useFormStorage";
-import StepTen from "@/components/FreelancerRegistration/StepTen";
-import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const FreelancerRegistration = () => {
   const { user: userData } = useUserStore();

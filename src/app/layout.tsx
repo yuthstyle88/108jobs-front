@@ -15,14 +15,16 @@ const kanit = Kanit({
 });
 
 export async function generateMetadata() {
-  return generateLocalizedMetadata("home"); 
+  return generateLocalizedMetadata("home", { lang: "th" });
 }
+
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   const session = await auth();
   return (
     <html lang="th" suppressHydrationWarning>
@@ -36,7 +38,7 @@ export default async function RootLayout({
         <Providers session={session}>
           <Toaster richColors closeButton position="top-right" />
           <SessionUserProvider initialSession={session}>
-            <LanguageProvider>{children}</LanguageProvider>
+            <LanguageProvider initialLang="th">{children}</LanguageProvider>
           </SessionUserProvider>
         </Providers>
       </body>

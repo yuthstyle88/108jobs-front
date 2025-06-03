@@ -1,4 +1,4 @@
-import { useFetchUser } from "@/app/apply-freelance/hooks/useFetchUserProfile";
+import { useFetchUser } from "@/app/[lang]/apply-freelance/hooks/useFetchUserProfile"; 
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { AssetIcon } from "@/constants/icons";
 import { usePrivateFetch } from "@/hooks/api-hooks";

@@ -24,12 +24,12 @@ const LanguageDropdown = ({ className = "" }: LanguageDropdownProps) => {
   const { setLang, lang: currentLang } = useLanguage();
 
   const handleSelectLang = (lang: string) => {
-    if (lang !== currentLang) {
-      setLang(lang);
-      localStorage.setItem("lang", lang);
-    }
-    setIsOpen(false);
-  };
+  if (lang !== currentLang) {
+    setLang(lang);
+  }
+  setIsOpen(false);
+};
+
 
   const currentLangData = LANGUAGES[currentLang as keyof typeof LANGUAGES];
 
