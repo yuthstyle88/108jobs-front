@@ -238,7 +238,7 @@ export default function Home() {
                 </div>
                 <div className="my-4 flex justify-end">
                   <Link
-                    href="/popular-subcat"
+                    href="/categories/popular-service"
                     className="text-primary py-[0.75rem] relative no-underline cursor-pointer outline-none ease-in-out duration-150 transition-all"
                   >
                     {homeLanguageData?.label_see_more_tittle}

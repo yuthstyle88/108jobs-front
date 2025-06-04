@@ -1,10 +1,11 @@
 "use client";
+import FavoriteButton from "@/components/FavoriteButton";
+import ShareJobModal from "@/components/ShareJob";
 import { JobDetailIcon } from "@/constants/icons";
 import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
 import { formatThaiBaht } from "@/utils/formatMoney";
 import { scrollToElementById } from "@/utils/scrollSmooth";
-import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -18,6 +19,7 @@ interface AsideJobProps {
 
 const AsideJob = ({ language, data }: AsideJobProps) => {
   const [selectedPackage, setSelectedPackage] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
@@ -99,15 +101,16 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
         </Link>
       </div>
       <div className="grid grid-cols-[1fr_1fr] text-center mt-4 font-medium text-text_secondary ">
-        <div className="flex flex-row items-center justify-center min-w-[34px] border-r-1 border-border_primary p-2 cursor-pointer">
-          <FontAwesomeIcon icon={faHeart} className="text-text_secondary" />
-          <p className="ml-2 cursor-pointer text-center">{language?.save}</p>
-        </div>
-        <div className="flex flex-row items-center justify-center min-w-[34px] p-2 cursor-pointer">
+        <FavoriteButton jobId={data.id} label={language?.save} />
+        <button onClick={()=> setIsModalOpen(true)} className="flex flex-row items-center justify-center min-w-[34px] p-2 cursor-pointer">
           <FontAwesomeIcon icon={faShareAlt} className="text-text_secondary" />
           <p className="ml-2 cursor-pointer text-center">{language?.share}</p>
-        </div>
+        </button>
       </div>
+      <ShareJobModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </aside>
   );
 };
