@@ -106,9 +106,11 @@ export const usePrivatePut = <T, D = unknown>(url: string) => {
 };
 
 // Private DELETE
-export const usePrivateDelete = <T>(url: string) => {
-  return useSWRMutation<T, AxiosError, string>(url, async (url: string) => {
-    const response = await axiosPrivate.delete<T>(url);
-    return response.data;
-  });
+export const usePrivateDelete = <T, D = unknown>(url: string) => {
+  return useSWRMutation<T, AxiosError, string, D>(
+    url,
+    async (url, { arg }) =>
+      (await axiosPrivate.delete<T>(url, { data: arg })).data
+  );
 };
+

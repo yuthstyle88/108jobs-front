@@ -33,6 +33,10 @@ export const API_ROUTES = {
     get_catalog_by_id: "/service/catalogs/by-category",
     get_tags_by_id: "/service/tag/by-category",
     get_job_detail_by_id: "/job-detail",
+    get_favorite_job: "/jobs/favorite",
+    update_favorite_job: "/jobs/favorite",
+    check_is_favorite_job: "/jobs/favorite",
+    delete_favorite_job: "/jobs/favorite",
   },
 };
 export const API_ROUTES_SELLER = {

@@ -1,16 +1,15 @@
-export type JobList = {
+export type FavoriteJob = {
   jobs: Job[];
-  total_items: number;
-  total_pages: number;
+  total_count: number;
+  success: boolean;
   page: number;
-  limit: number;
-  service_categories: ServiceCategory[];
-  tag: string;
+  per_page: number;
 };
 
 export type Job = {
   id: string;
   user: User;
+  service_catalog: ServiceCatalog;
   service_type: ServiceType;
   slug: string;
   title: string;
@@ -25,9 +24,12 @@ export type Job = {
   is_instant_hire: boolean;
   purchase_count: number;
   reviews_count: number;
-  onboarding?: Onboarding;
   created_at: string;
   updated_at: string;
+  tag_ids: string[];
+  completion_rate: number;
+  overall_rating: OverallRating;
+  rehire_orders_count: number;
 };
 
 export type User = {
@@ -35,6 +37,19 @@ export type User = {
   display_name: string;
   avatar_url: string;
   bio: string;
+};
+
+export type ServiceCatalog = {
+  id: string;
+  title: string;
+  second_title: string | null;
+  created_at: string;
+  updated_at: string;
+  parent_id: string | null;
+  service_topic: string | null;
+  image_url: string | null;
+  is_popular: boolean;
+  slug: string;
 };
 
 export type ServiceType = {
@@ -47,36 +62,13 @@ export type ServiceType = {
   service_topic: string;
   image_url: string | null;
   is_popular: boolean;
-};
-
-export type Onboarding = {
-  id: string;
-  job_id: string;
-  step1: boolean;
-  step2: boolean;
-  step3: boolean;
-  step4: boolean;
-  step5: boolean;
-};
-
-export type ServiceCategory = {
-  id: string;
-  title: string;
-  second_title: string | null;
-  parent_id: string | null;
-  service_topic: string | null;
-  image_url: string | null;
-  jobs_count: number;
-};
-
-export type Tag = {
-  id: string;
-  name: string;
   slug: string;
-  sub_category_id: string;
 };
 
-export type Tags = {
-  tags: Tag[];
+export type OverallRating = {
+  overall_rating: number;
+  average_responsiveness_rating: number;
+  average_service_rating: number;
+  average_skill_rating: number;
+  average_worth_rating: number;
 };
-

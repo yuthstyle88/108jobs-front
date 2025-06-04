@@ -1,8 +1,13 @@
 "use client";
-import CategoryCardMock from "@/components/CategoryCardMock";
+import { API_ROUTES } from "@/api/endpoints";
+import Error from "@/app/error";
+import JobCard from "@/components/JobCard";
+import JobCardSkeleton from "@/components/JobCardSkeleton";
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
+import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { FavoriteJob } from "@/types/favorite";
 
 const Favorites = () => {
   const {
@@ -11,8 +16,14 @@ const Favorites = () => {
     error,
   } = useGlobalTranslate(LanguageFile.GLOBAL);
 
-    if (isLoading) return <Loading />;
-    if (error) return <div>Error loading language data</div>;
+  const {
+    data: favoriteData,
+    isLoading: isLoadingFavorite,
+    error: isErrorFavorite,
+  } = usePrivateFetch<FavoriteJob>(API_ROUTES.job.get_favorite_job);
+
+  if (isLoading) return <Loading />;
+  if (error || isErrorFavorite) return <Error/>;
 
   return (
     <div className="w-full min-h-screen">
@@ -22,11 +33,20 @@ const Favorites = () => {
             {global?.menu_favorite_jobs}
           </h1>
           <div className="w-full text-center py-8 px-4 rounded-sm bg-[#F6F7F8] mt-4 sm:mt-8">
-            {/* <p className="text-[1.5rem] leading-[1.5] font-medium text-text_secondary">ไม่มีฟรีแลนซ์ที่ถูกใจ</p> */}
-            <section className="grid grid-cols-1 md:grid-cols-[repeat(3,minmax(1px,1fr))] gap-5">
-              {Array.from({ length: 2 }, (_, index) => (
-                <CategoryCardMock key={index} />
-              ))}
+            <section className="grid grid-cols-1 md:grid-cols-[repeat(4,minmax(1px,1fr))] gap-5">
+              {isLoadingFavorite ? (
+                Array.from({ length: 10 }).map((_, index) => (
+                  <JobCardSkeleton key={index} />
+                ))
+              ) : favoriteData && favoriteData.jobs.length === 0 ? (
+                <p className="text-[1.5rem] leading-[1.5] font-medium text-text_secondary">
+                  ไม่มีฟรีแลนซ์ที่ถูกใจ
+                </p>
+              ) : (
+                favoriteData && favoriteData.jobs.map((job, index) => (
+                  <JobCard data={job} key={index} />
+                ))
+              )}
             </section>
           </div>
         </div>
