@@ -1,5 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { auth } from "./auth";
+import { middleware as langMiddleware } from "./middleware-lang";
+
+const VALID_LANGS = ["vi", "en", "th"];
 
 const roleBasedRoutes: Record<"employer" | "freelancer", string[]> = {
   employer: [
@@ -8,7 +11,7 @@ const roleBasedRoutes: Record<"employer" | "freelancer", string[]> = {
     "/apply-freelance",
     "/favorites",
     "/reward",
-    "/job-board/create-job"
+    "/job-board/create-job",
   ],
   freelancer: [
     "/seller",
@@ -16,11 +19,16 @@ const roleBasedRoutes: Record<"employer" | "freelancer", string[]> = {
     "/manage-product",
     "/favorites",
     "/reward",
-    "/job-board/create-job"
+    "/job-board/create-job",
   ],
 };
 
-const publicRoutes = ["/job-board","/apply-freelance/landing","/coin","/promotion"];
+const publicRoutes = [
+  "/job-board",
+  "/apply-freelance/landing",
+  "/coin",
+  "/promotion",
+];
 
 const protectedRoutes = Object.values(roleBasedRoutes).flat();
 
@@ -33,49 +41,64 @@ function getRolesAllowedForPath(
 }
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, origin } = request.nextUrl;
 
-  if (publicRoutes.includes(pathname)) {
+  const langRedirect = langMiddleware(request);
+  if (langRedirect) return langRedirect;
+
+  const pathSegments = pathname.split("/");
+  const firstSegment = pathSegments[1];
+  const langPrefix = VALID_LANGS.includes(firstSegment)
+    ? `/${firstSegment}`
+    : "";
+  const cleanPathname = pathname.replace(langPrefix, "") || "/";
+
+  if (publicRoutes.includes(cleanPathname)) {
     return NextResponse.next();
   }
 
-  if (pathname === "/login") {
+  if (cleanPathname === "/login") {
     const session = await auth();
     if (!session?.user) return NextResponse.next();
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
   }
 
-  if (!protectedRoutes.some((route) => pathname.startsWith(route))) {
+  if (!protectedRoutes.some((route) => cleanPathname.startsWith(route))) {
     return NextResponse.next();
   }
 
   const session = await auth();
   if (!session?.user) {
-    const callbackUrl = encodeURIComponent(pathname);
+    const callbackUrl = encodeURIComponent(cleanPathname);
     return NextResponse.redirect(
-      new URL(`/login?redirect=${callbackUrl}`, request.url)
+      new URL(`${langPrefix}/login?redirect=${callbackUrl}`, origin)
     );
   }
 
   const userRoles = session.user.roles as string[];
 
-  if (pathname.startsWith("/seller") && !userRoles.includes("freelancer")) {
-    return NextResponse.redirect(new URL("/start-selling", request.url));
+  if (
+    cleanPathname.startsWith("/seller") &&
+    !userRoles.includes("freelancer")
+  ) {
+    return NextResponse.redirect(
+      new URL(`${langPrefix}/start-selling`, origin)
+    );
   }
 
-  const allowedRoles = getRolesAllowedForPath(pathname);
+  const allowedRoles = getRolesAllowedForPath(cleanPathname);
 
   if (
     allowedRoles.length === 1 &&
     allowedRoles[0] === "employer" &&
     userRoles.includes("freelancer")
   ) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
   }
 
   const isAuthorized = allowedRoles.some((role) => userRoles.includes(role));
   if (!isAuthorized) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
   }
 
   return NextResponse.next();

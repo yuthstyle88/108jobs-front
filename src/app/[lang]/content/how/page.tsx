@@ -1,4 +1,5 @@
 "use client";
+import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { AssetIcon, ContentIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
@@ -148,7 +149,7 @@ const HowSellAndBuy = () => {
   const currentSteps = selectedTab === 0 ? EMPLOYERS : SELLERS;
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
   return (
     <>
       <main>

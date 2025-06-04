@@ -1,30 +1,18 @@
 "use client";
+
 import { toast } from "sonner";
 import { useGlobalTranslate } from "./translation/useGlobalTranslate";
 import { LanguageFile } from "@/constants/language";
 
-type NotificationType = {
-  profile: {
-    success: {
-      update?: string;
-      update_education?: string;
-      update_work_experience?: string;
-      update_certification?: string;
-      update_skill?: string;
-      update_language?: string;
-      change_password?: string;
-    };
-    fail: {
-      set_default: string;
-    };
-  };
+type NotificationGroup = {
+  success?: Record<string, string | undefined>;
+  fail?: Record<string, string | undefined>;
 };
 
-function useNotification() {
+type NotificationType = Record<"profile" | "job", NotificationGroup>;
 
-  const {
-      data: notiLanguage,
-    } = useGlobalTranslate(LanguageFile.NOTIFICATIONS);
+function useNotification() {
+  const { data: notiLanguage } = useGlobalTranslate(LanguageFile.NOTIFICATIONS);
 
   const type: NotificationType = {
     profile: {
@@ -36,38 +24,59 @@ function useNotification() {
         update_skill: notiLanguage?.update_skill,
         update_language: notiLanguage?.update_language,
         change_password: notiLanguage?.change_password,
+        update_favorite: "Successfully saved job to favorites",
+        delete_favorite: "Successfully unsaved job from favorites",
       },
       fail: {
         set_default: "Failed set default address",
       },
     },
+    job: {
+      success: {
+        update_favorite: "Successfully saved job to favorites",
+        delete_favorite: "Successfully unsaved job from favorites",
+      },
+      fail: {},
+    },
   };
 
-  type MessageKey = keyof typeof type;
-
   const success_message = (
-    msg: MessageKey,
-    action: keyof (typeof type)[MessageKey]["success"],
+    group: keyof NotificationType | null,
+    action: string | null,
     custom?: string
-  ): void => {
-    const message = custom ?? type[msg]?.success?.[action];
-    if (message) {
-      toast.success(message);
-    } else {
-      console.warn(`Missing success message for ${msg}.${action}`);
+  ) => {
+    if (custom) {
+      toast.success(custom);
+      return;
+    }
+
+    if (group && action) {
+      const message = type[group]?.success?.[action];
+      if (message) {
+        toast.success(message);
+      } else {
+        console.warn(`Missing success message for ${group}.${action}`);
+      }
     }
   };
 
   const error_message = (
-    msg: MessageKey,
-    action: keyof (typeof type)[MessageKey]["fail"],
+    group: keyof NotificationType | null,
+    action: string | null,
     custom?: string
-  ): void => {
-    const message = custom ?? type[msg]?.fail?.[action];
-    if (message) {
-      toast.error(message);
-    } else {
-      console.warn(`Missing error message for ${msg}.${action}`);
+  ) => {
+    if (custom) {
+      toast.error(custom);
+      return;
+    }
+
+    if (group && action) {
+      const message = type[group]?.fail?.[action];
+      if (message) {
+        toast.error(message);
+      } else {
+        console.warn(`Missing error message for ${group}.${action}`);
+      }
     }
   };
 
