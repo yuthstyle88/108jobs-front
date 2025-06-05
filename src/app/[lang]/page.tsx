@@ -1310,6 +1310,7 @@ export default function Home() {
         <LocationSelectionModal
           isOpen={isOpenLocationSelection}
           onClose={() => setIsOpenLocationSelection(false)}
+          onOpen={() => setIsOpenLocationSelection(true)}
           handleConfirmChange={() => setIsOpenLocationSelection(false)}
         />
       )}

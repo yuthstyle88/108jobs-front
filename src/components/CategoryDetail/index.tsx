@@ -25,7 +25,7 @@ import NotFoundJob from "./components/NotFoundJob";
 import buildQueryParams from "@/utils/buildJobQueryParams";
 import { ServiceCatalogData } from "@/types/catalog";
 import { Category } from "@/types/category";
-import JobCardSkeleton from "../JobCardSkeleton";
+import JobCardSkeleton from "../ui/JobCardSkeleton";
 
 const category_related = [
   {

@@ -6,8 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 const ChatWrapper = () => {
-
-    const {languageData:chatLanguageData}= useChatLanguage();
+  const { languageData: chatLanguageData } = useChatLanguage();
 
   return (
     <div className="w-[340px] flex flex-col border-r bg-white h-full">

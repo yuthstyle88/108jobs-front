@@ -38,6 +38,7 @@ export type User = {
   display_name: string;
   avatar_url: string;
   bio: string;
+  user_id: string;
 };
 
 export type ServiceCatalog = {

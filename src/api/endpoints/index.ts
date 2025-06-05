@@ -7,6 +7,8 @@ export const API_ROUTES = {
     get_profile: "/profile",
     update_Profile: "/profile/info",
     update_address_profile: "/profile/address",
+    skip_address: "/profile/address/skip-country",
+    update_new_address: "/profile/address/country",
   },
   catalog: {
     get_all_catalog: "/service/catalogs/all",
