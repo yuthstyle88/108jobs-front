@@ -6,6 +6,7 @@ import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { RegisterDataProps } from "@/types/registerData";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -53,7 +54,7 @@ export const RegisterForm = ({
     mode: "onChange",
   });
 
-    const authen = useTranslateFile(LanguageFile.AUTHEN);
+  const authen = useTranslateFile(LanguageFile.AUTHEN);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -182,11 +183,18 @@ export const RegisterForm = ({
             {...register("termsAccepted")}
             className="w-[1.3em] h-[1.3em] flex-shrink-0 border-[0.0625em] border-neutral-500 rounded-xl bg-transparent cursor-pointer checked:border-primary checked:bg-primary "
           />
-          <label htmlFor="termsAccepted" className="text-sm text-text_secondary font-sans">
+          <label
+            htmlFor="termsAccepted"
+            className="text-sm text-text_secondary font-sans"
+          >
             {authen?.checkbox_terms_conditions}{" "}
-            <a href="#" className="text-text_secondary underline">
-            {authen?.checkbox_terms_conditions_redirect}
-            </a>
+            <Link
+              href="/content/terms"
+              target="_blank"
+              className="text-text_secondary underline"
+            >
+              {authen?.checkbox_terms_conditions_redirect}
+            </Link>
           </label>
         </div>
 
@@ -197,11 +205,18 @@ export const RegisterForm = ({
             {...register("privacyAccepted")}
             className="w-[1.3em] h-[1.3em] flex-shrink-0 border-[0.0625em] border-neutral-500 rounded-xl bg-transparent cursor-pointer checked:border-primary checked:bg-primary "
           />
-          <label htmlFor="privacyAccepted" className="text-sm text-text_secondary font-sans">
-          {authen?.checkbox_terms_conditions}{" "}
-            <a href="#" className="text-text_secondary underline">
-            {authen?.checkbox_privacy_policy_redirect}
-            </a>
+          <label
+            htmlFor="privacyAccepted"
+            className="text-sm text-text_secondary font-sans"
+          >
+            {authen?.checkbox_terms_conditions}{" "}
+            <Link
+              href="/content/privacy"
+              target="_blank"
+              className="text-text_secondary underline"
+            >
+              {authen?.checkbox_privacy_policy_redirect}
+            </Link>
           </label>
         </div>
 
@@ -237,11 +252,7 @@ export const RegisterForm = ({
             !watch("privacyAccepted")
           }
         >
-          {isSubmitting ? (
-            <LoadingCircle />
-          ) : (
-            authen?.link_create_account
-          )}
+          {isSubmitting ? <LoadingCircle /> : authen?.link_create_account}
         </button>
       </div>
     </form>

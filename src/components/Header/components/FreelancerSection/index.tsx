@@ -17,6 +17,7 @@ import { ProfileData } from "@/types/userData";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { API_ROUTES } from "@/api/endpoints";
 import LanguageDropdown from "@/components/LanguageDropDown";
+import AvatarSkeleton from "@/components/ui/AvatarSkeleton";
 
 interface FreelancerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
@@ -27,7 +28,7 @@ const FreelancerSession = ({
   globalLanguageData,
   session,
 }: FreelancerProps) => {
-  const { data: user } = usePrivateFetch<ProfileData>(
+  const { data: user, isLoading } = usePrivateFetch<ProfileData>(
     API_ROUTES.profile.get_profile
   );
   const { isOpen, toggle, close } = useToggle();
@@ -101,13 +102,19 @@ const FreelancerSession = ({
           onClick={() => toggle()}
           className="flex items-center justify-center gap-2 w-12 h-12 rounded-full "
         >
-          <Image
-            src={user?.user.avatar_url || ProfileImage.avatar}
-            alt="avatar"
-            className="rounded-full w-12 h-12 object-cover"
-            width={500}
-            height={500}
-          />
+          {isLoading ? (
+            <AvatarSkeleton />
+          ) : (
+            user && (
+              <Image
+                src={user?.user.avatar_url || ProfileImage.avatar}
+                alt="avatar"
+                className="rounded-full w-12 h-12 object-cover"
+                width={500}
+                height={500}
+              />
+            )
+          )}
           <FontAwesomeIcon
             icon={faChevronDown}
             className="w-[14px] h-[14px] text-white"

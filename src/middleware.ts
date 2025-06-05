@@ -12,6 +12,7 @@ const roleBasedRoutes: Record<"employer" | "freelancer", string[]> = {
     "/favorites",
     "/reward",
     "/job-board/create-job",
+    "/chat",
   ],
   freelancer: [
     "/seller",
@@ -20,6 +21,7 @@ const roleBasedRoutes: Record<"employer" | "freelancer", string[]> = {
     "/favorites",
     "/reward",
     "/job-board/create-job",
+    "/chat"
   ],
 };
 
