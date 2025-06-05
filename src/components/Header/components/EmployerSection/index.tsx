@@ -1,20 +1,21 @@
 "use client";
+import { API_ROUTES } from "@/api/endpoints";
+import LanguageDropdown from "@/components/LanguageDropDown";
 import NotificationDropdown from "@/components/NotificationDropdown";
+import AvatarSkeleton from "@/components/ui/AvatarSkeleton";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
+import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useToggle } from "@/hooks/useToggle";
 import { GlobalLanguage } from "@/types/language";
+import { ProfileData } from "@/types/userData";
 import { faChevronDown, faComment } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
 import MegaMenu from "../MegaMenu";
 import ProfileSection from "../ProfileSection";
-import { Session } from "next-auth";
-import { ProfileData } from "@/types/userData";
-import { usePrivateFetch } from "@/hooks/api-hooks";
-import { API_ROUTES } from "@/api/endpoints";
-import LanguageDropdown from "@/components/LanguageDropDown";
 
 interface EmployerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
@@ -23,9 +24,10 @@ interface EmployerProps {
 
 const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
   const { isOpen, toggle, close } = useToggle();
-  const { data: user } = usePrivateFetch<ProfileData>(
+  const { data: user, isLoading } = usePrivateFetch<ProfileData>(
     API_ROUTES.profile.get_profile
   );
+
   return (
     <section className="flex items-center gap-4 h-full">
       <div className="group">
@@ -79,13 +81,20 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           onClick={() => toggle()}
           className="flex items-center justify-center gap-2 "
         >
-          <Image
-            src={user?.user.avatar_url || ProfileImage.avatar}
-            alt="avatar"
-            className="w-12 h-12 rounded-full object-cover"
-            width={500}
-            height={500}
-          />
+          {isLoading ? (
+            <AvatarSkeleton />
+          ) : (
+            user && (
+              <Image
+                src={user?.user.avatar_url || ProfileImage.avatar}
+                alt="avatar"
+                className="w-12 h-12 rounded-full object-cover"
+                width={500}
+                height={500}
+              />
+            )
+          )}
+
           <FontAwesomeIcon
             icon={faChevronDown}
             className="w-[14px] h-[14px] text-white"

@@ -83,9 +83,11 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
             {language?.view_package_info}
           </Link>
           <hr className="mt-4 bg-border_primary block overflow-visible w-full h-[1px] m-0" />
-          <button className="relative inline-flex justify-center items-center overflow-hidden min-h-[2.5rem] px-[1.125rem] border-none rounded-[0.25rem] bg-third text-[0.875rem] font-medium w-full text-white">
-            <span>{language?.chat_with_freelancers}</span>
-          </button>
+          <Link href={`/chat/message/${data.user.user_id}`} target="_blank" className="w-full">
+            <button className="relative inline-flex justify-center items-center overflow-hidden min-h-[2.5rem] px-[1.125rem] border-none rounded-[0.25rem] bg-third text-[0.875rem] font-medium w-full text-white">
+              <span>{language?.chat_with_freelancers}</span>
+            </button>
+          </Link>
           <div className="text-center mt-2">
             <small className="text-[0.75rem] text-text_secondary">
               {language?.no_charges_message}
@@ -102,7 +104,10 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
       </div>
       <div className="grid grid-cols-[1fr_1fr] text-center mt-4 font-medium text-text_secondary ">
         <FavoriteButton jobId={data.id} label={language?.save} />
-        <button onClick={()=> setIsModalOpen(true)} className="flex flex-row items-center justify-center min-w-[34px] p-2 cursor-pointer">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="flex flex-row items-center justify-center min-w-[34px] p-2 cursor-pointer"
+        >
           <FontAwesomeIcon icon={faShareAlt} className="text-text_secondary" />
           <p className="ml-2 cursor-pointer text-center">{language?.share}</p>
         </button>

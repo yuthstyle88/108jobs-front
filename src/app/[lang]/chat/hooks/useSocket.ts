@@ -1,62 +1,79 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
-interface UseWebSocketProps {
+type UseWebSocketProps = {
   token: string;
   partnerId: string;
   onMessage: (event: MessageEvent) => void;
-}
-interface MessagePayload {
+};
+
+type MessagePayload = {
   message: string;
-}
+};
+
+// Singleton WebSocket and listeners
+let socket: WebSocket | null = null;
+const listeners = new Set<(event: MessageEvent) => void>();
+let reconnectTimeout: NodeJS.Timeout | null = null;
 
 export const useWebSocket = ({ token, partnerId, onMessage }: UseWebSocketProps) => {
-  const socketRef = useRef<WebSocket | null>(null);
+  const currentUrl = `wss://fastwork.ibrowe.com/api/v4/ws/?token=${token}&partner_id=${partnerId}`;
+  const isMounted = useRef(true);
+
+  const connect = useCallback(() => {
+    if (socket && socket.readyState !== WebSocket.CLOSED) {
+      console.log("🛑 Socket already exists. Skipping re-connection.");
+      return;
+    }
+
+    socket = new WebSocket(currentUrl);
+
+    socket.onopen = () => {
+      console.log("✅ WebSocket connected");
+    };
+
+    socket.onmessage = (event) => {
+      listeners.forEach((listener) => listener(event));
+    };
+
+    socket.onclose = (event) => {
+      console.warn("❌ WebSocket disconnected", event);
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
+      reconnectTimeout = setTimeout(() => {
+        if (isMounted.current) connect();
+      }, 3000);
+    };
+
+    socket.onerror = (err) => {
+      console.error("🚨 WebSocket error", err);
+      socket?.close(); // force reconnect
+    };
+  }, [currentUrl]);
 
   useEffect(() => {
-    if (!token || !partnerId) return;
+    isMounted.current = true;
+    connect();
 
-    if (socketRef.current) {
-      // console.warn("⚠️ Existing WebSocket already exists. Closing it.");
-      socketRef.current.close();
-    }
-
-    const wsUrl = `wss://fastwork.ibrowe.com/api/v4/ws/?token=${token}&partner_id=${partnerId}`;
-    const ws = new WebSocket(wsUrl);
-
-    // console.log("🔌 Connecting WebSocket:", wsUrl);
-    socketRef.current = ws;
-
-    ws.onopen = () => {
-      // console.log("✅ WebSocket connected");
-    };
-
-    ws.onmessage = onMessage;
-
-    ws.onclose = (event) => {
-      console.log("❌ WebSocket disconnected", event);
-    };
-
-    ws.onerror = (err) => {
-      console.error("🚨 WebSocket error:", err);
-    };
+    listeners.add(onMessage);
 
     return () => {
-      // console.log("🧹 Cleaning up WebSocket...");
-      ws.close();
+      isMounted.current = false;
+      listeners.delete(onMessage);
+
+      // Chỉ đóng nếu không còn ai nghe nữa
+      if (listeners.size === 0) {
+        socket?.close();
+        socket = null;
+      }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, partnerId]);
+  }, [connect, onMessage]);
 
   const sendMessage = (data: MessagePayload) => {
-    if (socketRef.current?.readyState === WebSocket.OPEN) {
-      socketRef.current.send(JSON.stringify(data));
+    if (socket?.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify(data));
     } else {
-      console.warn("⚠️ Cannot send: WebSocket not connected");
+      console.warn("❗ WebSocket not ready to send");
     }
   };
 
-  return {
-    sendMessage,
-    socket: socketRef.current,
-  };
+  return { sendMessage };
 };

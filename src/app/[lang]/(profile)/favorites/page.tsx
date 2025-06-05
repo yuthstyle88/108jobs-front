@@ -2,7 +2,7 @@
 import { API_ROUTES } from "@/api/endpoints";
 import Error from "@/app/error";
 import JobCard from "@/components/JobCard";
-import JobCardSkeleton from "@/components/JobCardSkeleton";
+import JobCardSkeleton from "@/components/ui/JobCardSkeleton";
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch } from "@/hooks/api-hooks";
