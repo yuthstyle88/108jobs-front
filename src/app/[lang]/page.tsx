@@ -3,6 +3,7 @@ import apple from "@/assets/icons/apple.svg";
 import google from "@/assets/icons/google-play.svg";
 import fastwork from "@/assets/images/fastwork-app-qr.webp";
 import imgapp from "@/assets/images/img-app.webp";
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import TypingText from "@/components/TypingText";
 import { CategoriesIcon, GroupIcon } from "@/constants/icons";
@@ -10,12 +11,10 @@ import {
   faArrowRight,
   faCheck,
   faPlay,
-  faQuoteLeft,
-  faSearch,
+  faQuoteLeft
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import Footer from "@/components/Footer";
 
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 
@@ -30,6 +29,7 @@ import { API_ROUTES } from "@/api/endpoints";
 import CategoryCardMock from "@/components/CategoryCardMock";
 import Loading from "@/components/Loading";
 import LocationSelectionModal from "@/components/LocationSelectionModal";
+import SearchInput from "@/components/SearchInput";
 import {
   AssetsImage,
   CompareImage,
@@ -142,19 +142,7 @@ export default function Home() {
             <p className="text-[18px] font-medium">
               {homeLanguageData?.title_banner_home_page_2}
             </p>
-            <div className="mt-[1.5rem] flex justify-center">
-              <div className="flex text-black h-[40px] relative w-[624px]">
-                <input
-                  type="text"
-                  placeholder={`${globalLanguageData?.hint_text_header_search}...`}
-                  className="focus:outline-none rounded-[20px] border-2-white px-5 text-sm font-mono w-full"
-                />
-                <FontAwesomeIcon
-                  icon={faSearch}
-                  className="w-[14px] h-[14px] text-primary absolute right-3 top-1/2 -translate-y-1/2"
-                />
-              </div>
-            </div>
+            <SearchInput language={globalLanguageData}/>
           </div>
         </section>
         <section className="hidden sm:block">

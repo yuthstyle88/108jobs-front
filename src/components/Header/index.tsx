@@ -3,17 +3,18 @@ import { AssetIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
 import { ROLE } from "@/constants/role";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { faChevronDown, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import LanguageDropdown from "../LanguageDropDown";
 import Loading from "../Loading";
 import EmployerSection from "./components/EmployerSection";
 import FreelancerSession from "./components/FreelancerSection";
 import MegaMenu from "./components/MegaMenu";
+import Search from "./components/Search";
 import { useScrollHandler } from "./hooks/useScrollHandler";
-import LanguageDropdown from "../LanguageDropDown";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -26,11 +27,12 @@ const TYPES: Record<string, { bg: string }> = {
 
 interface BgProps {
   type: keyof typeof TYPES;
+  forceShowSearch?: boolean;
 }
 
-const Header = ({ type }: BgProps) => {
+const Header = ({ type, forceShowSearch = false }: BgProps) => {
   const { data: session } = useSession();
-  const { scrollY, showSearch } = useScrollHandler();
+  const { scrollY, showSearch } = useScrollHandler(forceShowSearch);
 
   const {
     data: globalLanguageData,
@@ -52,24 +54,17 @@ const Header = ({ type }: BgProps) => {
       <nav className="mx-[1.5rem] flex flex-wrap items-center justify-center h-auto min-h-[70px] py-4 xl:py-1 xl:justify-between">
         <section className="flex items-center gap-x-4 w-full md:w-auto">
           <Link href="/" className="shrink-0">
-            <Image src={AssetIcon.logo} alt="logo" className="w-full h-full" width={500} height={500} priority/>
+            <Image
+              src={AssetIcon.logo}
+              alt="logo"
+              className="w-full h-full"
+              width={500}
+              height={500}
+              priority
+            />
           </Link>
 
-          <div
-            className={`flex text-black h-[40px] w-full md:w-[250px] relative transition-all duration-300 ${
-              showSearch ? "opacity-100 " : "opacity-0 pointer-events-none"
-            }`}
-          >
-            <input
-              type="text"
-              placeholder={`${globalLanguageData?.hint_text_header_search}...`}
-              className="focus:outline-none rounded-[20px] border-2-white px-5 text-sm font-mono w-full"
-            />
-            <FontAwesomeIcon
-              icon={faSearch}
-              className="w-[14px] h-[14px] text-primary absolute right-3 top-1/2 -translate-y-1/2"
-            />
-          </div>
+          <Search language={globalLanguageData} showSearch={showSearch} />
         </section>
 
         <section className="flex items-center gap-4 w-full md:w-auto mt-4 md:mt-0 justify-end">

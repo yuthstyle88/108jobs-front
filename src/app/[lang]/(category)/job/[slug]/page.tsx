@@ -2,28 +2,55 @@ import CategoryDetail from "@/components/CategoryDetail";
 import { generateLocalizedMetadata } from "@/lib/metadata";
 import { getCurrentLanguage } from "@/actions/getCurrentLanguage";
 import { isSupportedLang } from "@/lib/metadata";
+import type { Metadata } from "next";
+import { API_ROUTES } from "@/api/endpoints";
+import { auth } from "@/auth";
 
-export async function generateMetadata() {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const lang = await getCurrentLanguage();
+  const { slug } = await params;
   const locale = isSupportedLang(lang) ? lang : "th";
+  const session = await auth();
 
-  const category = {
-    title: {
-      th: "รับทำ SEO ให้ติดหน้าแรกบน Google - จ้างมืออาชีพได้ที่ Fastwork.co",
-      en: "Hire SEO Experts to Rank on Google – Find the Right Freelancer at Fastwork",
-      vi: "Thuê chuyên gia SEO đưa website lên top Google – Tìm freelancer phù hợp tại Fastwork",
-    },
-    description: {
-      th: "หามืออาชีพรับทำ SEO ให้เว็บไซต์ติดหน้าแรกบน Google สร้างโอกาสทางการตลาด เพิ่มยอดขายให้ธุรกิจ การันตีคุณภาพ ที่ Fastwork.co แหล่งรวมผู้เชี่ยวชาญที่พร้อมช่วยคุณ",
-      en: "Hire professionals to get your site on Google’s front page. Boost traffic, sales, and visibility with trusted freelancers at Fastwork.",
-      vi: "Tìm chuyên gia giúp bạn SEO lên top Google. Tăng traffic, doanh thu và nhận sự hỗ trợ từ các freelancer chất lượng tại Fastwork.",
-    },
+  const defaultDescriptions: Record<string, string> = {
+    th: "จ้างฟรีแลนซ์มืออาชีพสำหรับโปรเจกต์ของคุณที่ Fastwork ธุรกิจและสตาร์ทอัปชั้นนำไว้วางใจเรา",
+    en: "Find professional freelancers for your project on Fastwork. Trusted by businesses and startups across Southeast Asia.",
+    vi: "Tìm freelancer chuyên nghiệp cho dự án của bạn tại Fastwork. Được các doanh nghiệp và startup trên toàn Đông Nam Á tin tưởng.",
   };
 
-  return generateLocalizedMetadata({
-    title: category.title[locale],
-    description: category.description[locale],
-  });
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ROUTES.job.get_category_by_slug}/${slug}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+        next: { revalidate: 3600 },
+      }
+    );
+
+    if (!res.ok) throw new Error("Failed to fetch category");
+
+    const categoryList = await res.json();
+    const raw = categoryList?.[0];
+
+    const title = raw?.title || "Fastwork";
+    const description = defaultDescriptions[locale] || defaultDescriptions.th;
+
+    return generateLocalizedMetadata({
+      title: `${title} - Fastwork`,
+      description,
+    });
+  } catch {
+    return generateLocalizedMetadata({
+      title: "Fastwork - Freelance Marketplace",
+      description: defaultDescriptions[locale] || defaultDescriptions.th,
+    });
+  }
 }
 
 export default async function SpecificCategory({
@@ -31,11 +58,11 @@ export default async function SpecificCategory({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const resolvedParams = await params;
+  const { slug } = await params;
 
-   return (
+  return (
     <main className="min-h-screen pt-10 sm:pt-0">
-      <CategoryDetail slug={resolvedParams.slug} />
+      <CategoryDetail slug={slug} />
     </main>
   );
 }
