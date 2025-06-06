@@ -8,7 +8,7 @@ export default function CategoryLayout({ children }: LayoutProps) {
   return (
     <>
       <div className="hidden sm:block">
-        <Header type="primary" />
+        <Header type="primary" forceShowSearch={true}/>
       </div>
       <div className="block sm:hidden">
         <SpHeader />

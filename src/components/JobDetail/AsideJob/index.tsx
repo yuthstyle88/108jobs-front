@@ -98,7 +98,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
       <div className="mt-4 overflow-hidden shadow-jobCard rounded-[0.5rem] ">
         <Link href="#">
           <div className="aspect-[320/68] h-[68px] w-full relative">
-            <Image src={JobDetailIcon.company} alt="company" className="" />
+            <Image src={JobDetailIcon.company} alt="company" width={500} height={500} className="object-cover bg-center" />
           </div>
         </Link>
       </div>
