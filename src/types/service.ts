@@ -21,4 +21,17 @@ export interface Service {
   last_approved_at: string | null;
   created_at: string;
   updated_at: string;
+  images: image[];
 }
+
+export type image = {
+  id: string;
+  job_id: string;
+  image_url: string;
+  is_cover_photo: boolean;
+  sort_order: number;
+  alt: string;
+  created_at: string;
+  updated_at: string;
+};
+

@@ -38,6 +38,14 @@ const config: Config = {
           background: "#f0f4fd",
         },
         darkOverlay: "rgba(43, 43, 43, 0.25)",
+        card: {
+					DEFAULT: 'hsl(var(--card))',
+					foreground: 'hsl(var(--card-foreground))'
+				},
+        muted: {
+					DEFAULT: 'hsl(var(--muted))',
+					foreground: 'hsl(var(--muted-foreground))'
+				},
       },
       boxShadow: {
         panel: "0 0 1.5rem 0 rgba(25,72,142,.15)",

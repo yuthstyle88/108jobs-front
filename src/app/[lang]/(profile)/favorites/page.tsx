@@ -32,7 +32,7 @@ const Favorites = () => {
           <h1 className="text-[18px] sm:text-[1.75rem] text-text_primary font-medium">
             {global?.menu_favorite_jobs}
           </h1>
-          <div className="w-full text-center py-8 px-4 rounded-sm bg-[#F6F7F8] mt-4 sm:mt-8">
+          <div className="w-full py-8 px-4 rounded-sm bg-[#F6F7F8] mt-4 sm:mt-8">
             <section className="grid grid-cols-1 md:grid-cols-[repeat(4,minmax(1px,1fr))] gap-5">
               {isLoadingFavorite ? (
                 Array.from({ length: 10 }).map((_, index) => (

@@ -23,6 +23,7 @@ type LangSeoData = {
   term: SEOPageContent;
   privacy: SEOPageContent;
   supportCenter: SEOPageContent;
+  chat: SEOPageContent;
 };
 
 export const seoTranslations: Record<SupportedLang, LangSeoData> = {
@@ -100,6 +101,11 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
       description:
         "แพลตฟอร์มตลาดฟรีแลนซ์อันดับหนึ่งในประเทศไทย จ้างฟรีแลนซ์มืออาชีพสำหรับทุกความต้องการทางธุรกิจของคุณ",
     },
+    chat: {
+      title: "Fastwork Chat",
+      description:
+        "คัดเฉพาะฟรีแลนซ์ผู้เชี่ยวชาญกว่า 5 หมื่นคน รับประกันได้งานตรงทุกความต้องการโดยทีมงานมืออาชีพ ที่ได้รับความไว้ใจจากลูกค้ากว่า 3 แสนราย ให้เราช่วยพัฒนาธุรกิจคุณ!",
+    },
   },
   en: {
     locale: "en_US",
@@ -171,6 +177,11 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
       title: "Fastwork - #1 Freelance Platform in Thailand",
       description:
         "The number one freelance marketplace platform in Thailand. Hire professional freelancers for all your business needs.",
+    },
+    chat: {
+      title: "Fastwork Chat",
+      description:
+        "Hire top freelancers in Thailand. Trusted by over 300,000 businesses. Get things done with quality and speed.",
     },
   },
   vi: {
@@ -244,6 +255,11 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
       title: "Fastwork - Nền tảng freelance số 1 tại Thái Lan",
       description:
         "Nền tảng marketplace freelance hàng đầu tại Thái Lan. Thuê freelancer chuyên nghiệp cho mọi nhu cầu kinh doanh của bạn.",
+    },
+    chat: {
+      title: "Fastwork Chat",
+      description:
+        "Tìm kiếm freelancer chất lượng cao, được tin dùng bởi hơn 300.000 doanh nghiệp. Hãy để chúng tôi giúp phát triển dự án của bạn!",
     },
   },
 };
