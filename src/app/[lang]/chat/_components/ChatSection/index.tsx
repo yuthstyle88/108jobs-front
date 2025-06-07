@@ -8,9 +8,8 @@ import {
   ChevronUp,
   Copy,
   Paperclip,
-  Phone,
   Send,
-  Smile,
+  Smile
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,6 +25,15 @@ type ChatMessage = {
   sender_id: string;
   content: string;
   created_at: string;
+};
+
+const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  const day = date.getDate();
+  const month = date.toLocaleString("th-TH", { month: "long" });
+  const year = date.getFullYear();
+
+  return `${day} ${month} ${year}`;
 };
 
 const ChatSection = () => {
@@ -87,62 +95,150 @@ const ChatSection = () => {
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <button className="bg-gray-100 p-2 rounded hover:bg-gray-200">
-              <Phone size={18} className="text-third" />
-            </button>
-            <Link href="#" className="text-blue-500 hover:underline text-sm">
+            <Link
+              href="#"
+              className="text-third hover:bg-gray-100 text-[14px] px-4 py-2 rounded-sm border-border_primary border-1"
+            >
               {chatLanguageData?.guide}
             </Link>
           </div>
         </div>
-        {/* Service Info */}
-        <div className="bg-gray-100 p-3 flex justify-between items-center">
-          <span className="text-gray-600 text-sm">เลือกที่นี่</span>
-          <span className="text-xs text-gray-500">20 วัน</span>
-        </div>
-
         {/* Chat messages */}
-        <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+        <div
+          data-testid="chat-list"
+          className="flex-1 overflow-y-auto p-4 bg-gray-50"
+        >
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 my-4 max-w-md ml-auto">
+            <div className="bg-white shadow-sm rounded-lg p-4">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h4 className="font-medium text-gray-900">
+                    LOGO Design and BRAND ID Tea Designer high level ใครทำดี
+                    Global
+                  </h4>
+                  <div className="mt-2 text-sm">
+                    <p className="text-gray-700">ราคา : 6,900 บาท</p>
+                  </div>
+                </div>
+                <Image
+                  src={CategoriesImage.seo_job}
+                  alt="seo_job"
+                  className="w-16 h-12 object-cover rounded"
+                />
+              </div>
+            </div>
+
+            <div className="mt-3 text-sm">
+              <p className="font-medium">รายละเอียดแพ็คเกจ:</p>
+              <ul className="mt-1 space-y-1 text-gray-700">
+                <li>• งานบริษัท/แบรนด์คุณภาพ 1 ชิ้น</li>
+                <li>• แก้ไม่เกินครั้งละ 3 ครั้ง</li>
+                <li>• ระยะเวลาโปรเจกต์งาน 4-7 วัน</li>
+                <li>• มอบแบบไฟล์หลากหลาย 3 ชิ้น</li>
+              </ul>
+            </div>
+
+            <div className="mt-3 text-sm">
+              <p className="font-medium">บริการพิเศษ:</p>
+              <ul className="mt-1 space-y-1 text-gray-700">
+                <li>• ไฟล์ๆ นามบัตร</li>
+                <li>• ไฟล์ความละเอียดสูง พร้อมนำไปใช้ 500DPI</li>
+                <li>• แถม : Corporate Identity</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center my-4">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mx-auto max-w-lg">
+              <div className="flex">
+                <div className="text-yellow-600 mr-2">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                </div>
+                <div className="text-sm text-gray-700">
+                  <p>{chatLanguageData?.unselect_warning}</p>
+                </div>
+              </div>
+            </div>
+          </div>
           {messages.map((msg, index) => {
             const isIncoming = msg.sender_id === partnerId;
+            const currentMsgDate = formatDate(msg.created_at);
+            const prevMsgDate =
+              index > 0 ? formatDate(messages[index - 1].created_at) : null;
+
+            const showDateLabel = currentMsgDate !== prevMsgDate;
+
             return (
-              <div
-                key={msg.id || index}
-                className={`flex mb-2 ${
-                  isIncoming ? "justify-start" : "justify-end"
-                }`}
-              >
-                {isIncoming && (
-                  <Image
-                    src={MessageImage.chat_avt}
-                    alt="avatar"
-                    className="w-6 h-6 rounded-full mr-2 self-end"
-                  />
+              <div data-testid="chat-message" key={msg.id || index}>
+                {showDateLabel && (
+                  <div className="w-full flex justify-center my-4">
+                    <div className="inline-block rounded-[10px] bg-border_secondary p-1 min-w-[120px] text-[#728197] text-[12.8px] text-center">
+                      {currentMsgDate}
+                    </div>
+                  </div>
                 )}
+
                 <div
-                  className={`max-w-xs px-3 py-2 rounded-xl text-sm ${
-                    isIncoming
-                      ? "bg-gray-200 text-gray-800 rounded-bl-none"
-                      : "bg-blue-500 text-white rounded-br-none"
+                  className={`flex mb-2 ${
+                    isIncoming ? "justify-start" : "justify-end"
                   }`}
                 >
-                  <p>{msg.content}</p>
-                  <p className="text-[10px] text-gray-400 mt-1 text-right">
-                    {new Date(msg.created_at).toLocaleTimeString("th-TH", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </p>
+                  {isIncoming && (
+                    <Image
+                      src={MessageImage.chat_avt}
+                      alt="avatar"
+                      className="w-6 h-6 rounded-full mr-2 self-end"
+                    />
+                  )}
+                  <div
+                    className={`flex flex-col gap-1 items-start ${
+                      isIncoming ? "items-start" : "items-end"
+                    }`}
+                  >
+                    <p className="font-sans px-3 text-[12.8px] text-[#728197] mt-1 text-right">
+                      {new Date(msg.created_at).toLocaleTimeString("th-TH", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                    <div
+                      className={`max-w-xs px-3 py-2 rounded-xl text-base font-sans ${
+                        isIncoming
+                          ? "bg-gray-200 text-gray-800 rounded-bl-none"
+                          : "bg-blue-500 text-white rounded-br-none"
+                      }`}
+                    >
+                      <p>{msg.content}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             );
           })}
+
           <div ref={endRef} />
         </div>
 
         {/* Message input */}
         <div className="border-t px-4 py-3 bg-white">
-          <form onSubmit={handleSubmit(onSubmit)} className="flex items-center">
+          <form
+            data-testid="chat-form"
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex items-center"
+          >
             <button
               type="button"
               className="text-gray-400 hover:text-gray-600 mr-3"
@@ -151,6 +247,7 @@ const ChatSection = () => {
             </button>
             <div className="flex-1 border rounded-lg overflow-hidden flex">
               <textarea
+                data-testid="chat-input"
                 {...register("message")}
                 placeholder={chatLanguageData?.type_message_here}
                 className="text-text_primary flex-1 px-3 py-2 resize-none focus:outline-none min-h-[40px] max-h-[150px]"
@@ -170,6 +267,7 @@ const ChatSection = () => {
               </button>
             </div>
             <button
+              data-testid="chat-send-button"
               type="submit"
               className="ml-3 text-blue-500 hover:text-blue-600"
             >
