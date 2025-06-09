@@ -16,7 +16,7 @@ type Props = {
 
 const CategoryCard = ({ data, username }: Props) => {
   const { data: jobCardLanguage } = useGlobalTranslate(LanguageFile.JOB_CARD);
-  const coverImage = data.images.find((image) => image.is_cover_photo);
+  const coverImage = data?.images?.find((image) => image.is_cover_photo);
   return (
     <Link
       href={`/user/${username}/${data?.slug}`}

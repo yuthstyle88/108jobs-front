@@ -33,7 +33,18 @@ type Props = {
 const ReviewCard = ({ language, data }: Props) => {
   const { data: session } = useSession();
   const rating = Number(data.rating) || 0;
-
+  const responseRating = parseFloat(
+    data.overall_rating.average_responsiveness_rating.toFixed(1)
+  );
+  const skillRating = parseFloat(
+    data.overall_rating.average_skill_rating.toFixed(1)
+  );
+  const serviceRating = parseFloat(
+    data.overall_rating.average_service_rating.toFixed(1)
+  );
+  const valueRating = parseFloat(
+    data.overall_rating.average_worth_rating.toFixed(1)
+  );
 
   return (
     <div className="grid grid-cols-[1fr] gap-y-6 pb-10">
@@ -46,7 +57,7 @@ const ReviewCard = ({ language, data }: Props) => {
           <div className="flex flex-col gap-2 items-center">
             <div className="bg-blue-100 rounded-full w-16 h-16 md:w-24 md:h-24 flex items-center justify-center">
               <span className="text-[24px] md:text-4xl font-bold text-blue-600">
-                4.9
+                {data.overall_rating.overall_rating.toFixed(1)}
               </span>
             </div>
             <span className="text-gray-500 text-[12px] md:text-sm ml-2">
@@ -59,25 +70,27 @@ const ReviewCard = ({ language, data }: Props) => {
                 <span className="text-gray-700 text-sm sm:text-base">
                   {language?.response_speed}
                 </span>
-                <RatingStars rating={5} />
+                <RatingStars
+                  rating={responseRating}
+                />
               </div>
               <div className="flex items-center gap-2 justify-between">
                 <span className="text-gray-700 text-sm sm:text-base">
                   {language?.friendly_and_expert}
                 </span>
-                <RatingStars rating={5} />
+                <RatingStars rating={skillRating} />
               </div>
               <div className="flex items-center gap-2 justify-between">
                 <span className="text-gray-700 text-sm sm:text-base">
                   {language?.service_provision}
                 </span>
-                <RatingStars rating={5} />
+                <RatingStars rating={serviceRating} />
               </div>
               <div className="flex items-center gap-2 justify-between">
                 <span className="text-gray-700 text-sm sm:text-base">
                   {language?.value_for_money}
                 </span>
-                <RatingStars rating={5} />
+                <RatingStars rating={valueRating} />
               </div>
             </div>
           </div>
@@ -85,7 +98,7 @@ const ReviewCard = ({ language, data }: Props) => {
       </div>
       {session ? (
         <div className="px-4 py-8">
-          <CommentSection rating={rating} userId={data.user.user_id} />
+          <CommentSection profileId={data.user.profile_id} />
         </div>
       ) : (
         <div className="w-full flex items-center py-12 justify-center gap-2 ">
