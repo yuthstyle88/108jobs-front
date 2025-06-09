@@ -1,10 +1,15 @@
+"use client";
 import { API_ROUTES } from "@/api/endpoints";
 import Error from "@/app/error";
 import Loading from "@/components/Loading";
-import { usePrivateFetchParams } from "@/hooks/api-hooks";
-import { useState } from "react";
+import {
+  usePrivateFetchParams,
+  usePrivatePost
+} from "@/hooks/api-hooks";
+import useNotification from "@/hooks/useNotification";
+import { ReviewResponse } from "@/types/review";
 import CommentForm from "./CommentForm";
-import CommentItem, { Comment } from "./CommentItem";
+import CommentItem from "./CommentItem";
 
 const StarIcon = ({ filled }: { filled: boolean }) => (
   <svg
@@ -17,80 +22,31 @@ const StarIcon = ({ filled }: { filled: boolean }) => (
 );
 
 type Props = {
-  userId: string;
-  rating: number;
+  profileId: string;
 };
-const CommentSection = ({ userId, rating }: Props) => {
+const CommentSection = ({ profileId }: Props) => {
+
+  const { success_message } = useNotification();
   const {
     data: reviewData,
     isLoading: isReviewLoading,
     error: errorReview,
-  } = usePrivateFetchParams(
-    `${API_ROUTES.profile.get_list_review}?profile_id=${userId}&page=1&limit=5`
+    mutate: mutateReviews,
+  } = usePrivateFetchParams<ReviewResponse>(
+    `${API_ROUTES.profile.get_list_review}?profile_id=${profileId}&page=1&limit=5`
   );
-  console.log("Review Data:", reviewData,rating);
 
-  const [comments, setComments] = useState<Comment[]>([
-    {
-      id: "1",
-      username: "Nguyễn Văn A",
-      avatar: "/placeholder.svg",
-      rating: 4.5,
-      comment:
-        "Freelancer làm việc rất chuyên nghiệp, giao hàng đúng hạn và chất lượng tốt. Tôi sẽ tiếp tục hợp tác trong các dự án tiếp theo.",
-      createdAt: "2 ngày trước",
-      isOwner: true,
-    },
-    {
-      id: "2",
-      username: "Trần Thị B",
-      avatar: "/placeholder.svg",
-      rating: 5.0,
-      comment:
-        "Rất hài lòng với dịch vụ! Code clean, documentation đầy đủ và support rất tận tình.",
-      createdAt: "1 tuần trước",
-      isOwner: false,
-    },
-    {
-      id: "3",
-      username: "Lê Văn C",
-      avatar: "/placeholder.svg",
-      rating: 4.0,
-      comment:
-        "Làm việc ok, có một số điểm cần cải thiện nhưng nhìn chung là hài lòng.",
-      createdAt: "2 tuần trước",
-      isOwner: false,
-    },
-  ]);
+  const { trigger: postComment, isMutating: isPostMutating } = usePrivatePost(
+    API_ROUTES.profile.comment_review
+  );
 
-  const handleAddComment = (data: { rating: number; comment: string }) => {
-    const newComment: Comment = {
-      id: Date.now().toString(),
-      username: "Người dùng hiện tại",
-      rating: data.rating,
-      comment: data.comment,
-      createdAt: "Vừa xong",
-      isOwner: true,
-    };
-
-    setComments([newComment, ...comments]);
-  };
-
-  const handleEditComment = (
-    id: string,
-    data: { rating: number; comment: string }
-  ) => {
-    setComments(
-      comments.map((comment) =>
-        comment.id === id
-          ? { ...comment, rating: data.rating, comment: data.comment }
-          : comment
-      )
-    );
-  };
-
-  const handleDeleteComment = (id: string) => {
-    setComments(comments.filter((comment) => comment.id !== id));
+  const handleSubmitComment = async (data: {
+    rating: number;
+    content: string;
+  }) => {
+    await postComment({ profile_id: profileId, ...data });
+    success_message("review", "post_comment");
+    mutateReviews();
   };
 
   if (isReviewLoading) return <Loading />;
@@ -98,9 +54,12 @@ const CommentSection = ({ userId, rating }: Props) => {
 
   return (
     <div className="mx-auto space-y-6">
-      <CommentForm onSubmit={handleAddComment} />
+      <CommentForm
+        onSubmit={handleSubmitComment}
+        isPostMutating={isPostMutating}
+      />
       <div className="space-y-4">
-        {comments.length === 0 ? (
+        {reviewData?.reviews.length === 0 ? (
           <div className="w-full flex items-center py-12 justify-center gap-2 ">
             <div className="flex flex-col gap-2">
               <div className="flex flex-row justify-center">
@@ -109,17 +68,16 @@ const CommentSection = ({ userId, rating }: Props) => {
                 ))}
               </div>
               <p className="text-[0.875rem] font-sans text-text_secondary text-center">
-                Bắt đầu thuê freelancer này và đánh giá
+                Start hiring this freelancer and rate
               </p>
             </div>
           </div>
         ) : (
-          comments.map((comment) => (
+          reviewData?.reviews.map((review) => (
             <CommentItem
-              key={comment.id}
-              comment={comment}
-              onEdit={handleEditComment}
-              onDelete={handleDeleteComment}
+              key={review.id}
+              comment={review}
+              mutate={mutateReviews}
             />
           ))
         )}

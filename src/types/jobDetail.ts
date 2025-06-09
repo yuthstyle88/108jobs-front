@@ -39,6 +39,7 @@ export type User = {
   avatar_url: string;
   bio: string;
   user_id: string;
+  profile_id: string;
 };
 
 export type ServiceCatalog = {

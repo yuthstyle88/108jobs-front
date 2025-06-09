@@ -6,13 +6,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as farHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fasHeart } from "@fortawesome/free-solid-svg-icons";
 import { API_ROUTES } from "@/api/endpoints";
-import { usePrivateDelete, usePrivateFetchParams, usePrivatePost } from "@/hooks/api-hooks";
+import {
+  usePrivateDelete,
+  usePrivateFetchParams,
+  usePrivatePost,
+} from "@/hooks/api-hooks";
 import useNotification from "@/hooks/useNotification";
 
 interface FavoriteButtonProps {
   label?: string;
   jobId: string;
 }
+
+type FavoriteResponse = {
+  is_favorite: boolean;
+  job_id: string;
+  success: boolean;
+};
 
 const HeartBurst = () => {
   const heartVariants = {
@@ -54,7 +64,7 @@ const FavoriteButton = ({ label, jobId }: FavoriteButtonProps) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [showBurst, setShowBurst] = useState(false);
   const { success_message } = useNotification();
-  const { data: checkFavorite } = usePrivateFetchParams<boolean>(
+  const { data: checkFavorite } = usePrivateFetchParams<FavoriteResponse>(
     `${API_ROUTES.job.check_is_favorite_job}/${jobId}`
   );
 
@@ -69,7 +79,7 @@ const FavoriteButton = ({ label, jobId }: FavoriteButtonProps) => {
 
   useEffect(() => {
     if (checkFavorite !== undefined) {
-      setIsFavorited(checkFavorite);
+      setIsFavorited(checkFavorite.is_favorite);
     }
   }, [checkFavorite]);
 
