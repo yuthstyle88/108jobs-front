@@ -10,20 +10,23 @@ import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
-  data?: Service;
+  data: Service;
   username: string;
 };
 
-const CategoryCard = ({ data,username }: Props) => {
+const CategoryCard = ({ data, username }: Props) => {
   const { data: jobCardLanguage } = useGlobalTranslate(LanguageFile.JOB_CARD);
-  
+  const coverImage = data?.images?.find((image) => image.is_cover_photo);
   return (
-    <Link href={`/user/${username}/${data?.slug}`} className="flex cursor-pointer w-full">
+    <Link
+      href={`/user/${username}/${data?.slug}`}
+      className="flex cursor-pointer w-full"
+    >
       <div className="hover:shadow-jobCard border border-border_primary w-full flex flex-col overflow-hidden rounded-md bg-white transition-all ease-in-out duration-150">
         <section className="grid grid-cols-[minmax(17px,170px)_1fr] grid-rows-[1fr_max-content] md:flex md:flex-col">
           <div className="relative aspect-[3/2] w-full">
             <Image
-              src={CategoriesImage.seo_job}
+              src={coverImage?.image_url || CategoriesImage.seo_job}
               alt="seo"
               className="object-cover w-full h-full bg-[#e8eaee]"
               fill

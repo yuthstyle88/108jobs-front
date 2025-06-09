@@ -30,6 +30,7 @@ export type Job = {
   completion_rate: number;
   overall_rating: OverallRating;
   rehire_orders_count: number;
+  images: image[];
 };
 
 export type User = {
@@ -72,3 +73,15 @@ export type OverallRating = {
   average_skill_rating: number;
   average_worth_rating: number;
 };
+
+export type image = {
+  id: string;
+  job_id: string;
+  image_url: string;
+  is_cover_photo: boolean;
+  sort_order: number;
+  alt: string;
+  created_at: string;
+  updated_at: string;
+};
+

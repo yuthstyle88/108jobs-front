@@ -9,6 +9,8 @@ export const API_ROUTES = {
     update_address_profile: "/profile/address",
     skip_address: "/profile/address/skip-country",
     update_new_address: "/profile/address/country",
+    get_list_review: "/profile/review",
+    comment_review: "/profile/review"
   },
   catalog: {
     get_all_catalog: "/service/catalogs/all",

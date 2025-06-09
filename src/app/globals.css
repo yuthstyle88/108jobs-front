@@ -221,6 +221,10 @@
   --border-primary: #d6dae1;
   --border-secondary: #e8eaee;
   --skeleton: #e8eaee;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
 }
 
 @media (prefers-color-scheme: dark) {
