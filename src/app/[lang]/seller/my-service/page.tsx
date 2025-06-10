@@ -4,11 +4,16 @@ import Loading from "@/components/Loading";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import { SellerImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { usePrivateDelete, usePrivateFetch } from "@/hooks/api-hooks";
+import {
+  useDynamicPrivatePut,
+  usePrivateDelete,
+  usePrivateFetch
+} from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import useNotification from "@/hooks/useNotification";
 import { JobListResponse } from "@/types/job";
 import { interpolateDouble } from "@/utils/interpolate";
-import { Eye, Info, Pencil, Plus, Trash2 } from "lucide-react";
+import { Eye, EyeOff, Info, Pencil, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -16,6 +21,7 @@ import ConfirmDeleteModal from "./_components/ConfirmDeleteModal";
 import JobCreatedStatus from "./_components/JobCreatedStatus";
 
 const MyServices = () => {
+  const { success_message } = useNotification();
   const {
     data: jobsData,
     isLoading,
@@ -36,10 +42,14 @@ const MyServices = () => {
     id: string;
     name: string;
   } | null>(null);
+  const [mutatingJobId, setMutatingJobId] = useState<string | null>(null);
 
   const { isMutating, trigger: deleteJob } = usePrivateDelete(
     API_ROUTES_SELLER.job.get_job + "/" + selectedJob?.id
   );
+
+  const { isMutating: isDisplayMutating, trigger: toggleJobVisibility } =
+    useDynamicPrivatePut();
 
   const handleOpenModal = (jobId: string, jobName: string) => {
     setSelectedJob({ id: jobId, name: jobName });
@@ -53,6 +63,25 @@ const MyServices = () => {
       await deleteJob();
       setSelectedJob(null);
       mutate();
+    }
+  };
+
+  const handleToggleVisibility = async (
+    jobId: string,
+    currentShow: boolean
+  ) => {
+    try {
+      setMutatingJobId(jobId);
+      await toggleJobVisibility({
+        url: `${API_ROUTES_SELLER.job.display_job}/${jobId}`,
+        data: { show: !currentShow },
+      });
+      mutate();
+      success_message("service", currentShow ? "hide_job" : "show_job");
+    } catch (error) {
+      console.error("Toggle visibility failed:", error);
+    } finally {
+      setMutatingJobId(null);
     }
   };
 
@@ -158,11 +187,28 @@ const MyServices = () => {
                     />
                   </td>
                   <td className="p-4">
-                    <Eye
-                      className={`w-5 h-5 ${
-                        job.show ? "text-gray-700" : "text-gray-400"
-                      }`}
-                    />
+                    <button
+                      disabled={isDisplayMutating}
+                      onClick={() => handleToggleVisibility(job.id, job.show)}
+                    >
+                      {job.show ? (
+                        <Eye
+                          className={`w-5 h-5 ${
+                            mutatingJobId === job.id
+                              ? "text-gray-400"
+                              : "text-gray-700"
+                          }`}
+                        />
+                      ) : (
+                        <EyeOff
+                          className={`w-5 h-5 ${
+                            mutatingJobId === job.id
+                              ? "text-gray-400"
+                              : "text-gray-700"
+                          }`}
+                        />
+                      )}
+                    </button>
                   </td>
                   <td className="p-4 space-x-2">
                     <Link target="_blank" href={`/manage-product/${job.id}`}>

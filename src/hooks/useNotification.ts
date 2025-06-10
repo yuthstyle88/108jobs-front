@@ -9,7 +9,7 @@ type NotificationGroup = {
   fail?: Record<string, string | undefined>;
 };
 
-type NotificationType = Record<"profile" | "job" | "review", NotificationGroup>;
+type NotificationType = Record<"profile" | "job" | "review" | "service", NotificationGroup>;
 
 function useNotification() {
   const { data: notiLanguage } = useGlobalTranslate(LanguageFile.NOTIFICATIONS);
@@ -43,6 +43,13 @@ function useNotification() {
         post_comment: "Successfully leave a comment",
         update_comment: "Successfully edit comment",
         delete_comment: "Successfully delete comment",
+      },
+      fail: {},
+    },
+    service:{
+      success: {
+        show_job: "Successfully public your job",
+        hide_job: "Successfully hide your job",
       },
       fail: {},
     }

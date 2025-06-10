@@ -384,7 +384,8 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                     }`}
                     onClick={() => setActiveTab("reviews")}
                   >
-                    {goToProfileLanguage?.review_tab} (928)
+                    {goToProfileLanguage?.review_tab} (
+                    {userProfile?.reviews.length})
                   </button>
                   <button
                     className={`py-2 text-sm font-medium border-b-2 ${
@@ -400,66 +401,46 @@ const CurrentProfileFreelance = ({ username }: Props) => {
               </div>
 
               <div className="space-y-6">
-                <div className="border-b border-border_primary pb-6">
-                  <div className="flex items-start mb-3">
-                    <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-3 text-gray-600 font-bold">
-                      B
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium text-text_primary">
-                            BBLL
-                          </h4>
-                          <span className="text-sm text-text_secondary">
-                            23/02/2025
-                          </span>
-                        </div>
-                        <div className="flex items-center">
-                          <svg
-                            className="w-5 h-5 text-yellow-400"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.799-2.034c-.784-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                          <span className="ml-1 font-medium text-text_primary">
-                            5.0
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="border-b border-border_primary pb-6">
-                  <div className="flex items-start mb-3">
-                    <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-3 text-gray-600 font-bold">
-                      B
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium text-text_primary">
-                            BBLL
-                          </h4>
-                        </div>
-                        <div className="flex items-center">
-                          <svg
-                            className="w-5 h-5 text-yellow-400"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.799-2.034c-.784-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                          <span className="ml-1 font-medium text-text_primary">
-                            5.0
-                          </span>
+                {userProfile?.reviews.map((review) => (
+                  <div
+                    key={review.id}
+                    className="border-b border-border_primary pb-6"
+                  >
+                    <div className="flex items-start mb-3">
+                      <Image
+                        src={review.reviewer_avatar || ProfileImage.avatar}
+                        alt={review.reviewer_name || "username"}
+                        width={32}
+                        height={32}
+                        className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-3"
+                      />
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="font-medium text-text_primary">
+                              {review.reviewer_name || "username"}
+                            </h4>
+                            <span className="text-sm text-text_secondary">
+                              {formatDateToLong(review.created_at)}
+                            </span>
+                          </div>
+                          <div className="flex items-center">
+                            <svg
+                              className="w-5 h-5 text-yellow-400"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.799-2.034c-.784-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                            <span className="ml-1 font-medium text-text_primary">
+                              {review.rating}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
           </section>
