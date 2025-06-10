@@ -1,5 +1,6 @@
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { Service } from "@/types/service";
 import { formatThaiBaht } from "@/utils/formatMoney";
@@ -17,9 +18,10 @@ type Props = {
 const CategoryCard = ({ data, username }: Props) => {
   const { data: jobCardLanguage } = useGlobalTranslate(LanguageFile.JOB_CARD);
   const coverImage = data?.images?.find((image) => image.is_cover_photo);
+  const { lang: currentLang } = useLanguage();
   return (
     <Link
-      href={`/user/${username}/${data?.slug}`}
+      href={`/${currentLang}/user/${username}/${data.slug}`}
       className="flex cursor-pointer w-full"
     >
       <div className="hover:shadow-jobCard border border-border_primary w-full flex flex-col overflow-hidden rounded-md bg-white transition-all ease-in-out duration-150">

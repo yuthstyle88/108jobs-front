@@ -3,6 +3,11 @@ import type { AxiosError } from "axios";
 import useSWR, { SWRConfiguration } from "swr";
 import useSWRMutation from "swr/mutation";
 
+type DynamicPutArgs<D> = {
+  url: string;
+  data: D;
+};
+
 // Public GET
 export const usePublicFetch = <T>(url: string | null) => {
   return useSWR<T, AxiosError>(
@@ -104,6 +109,18 @@ export const usePrivatePut = <T, D = unknown>(url: string) => {
     async (url, { arg }) => (await axiosPrivate.put<T>(url, arg)).data
   );
 };
+
+export const useDynamicPrivatePut = <T = void, D = unknown>() => {
+  return useSWRMutation<T, AxiosError, string, DynamicPutArgs<D>>(
+    "dynamic-private-put", // key chỉ để định danh mutation, không ảnh hưởng
+    async (_key, { arg }) => {
+      const { url, data } = arg;
+      const res = await axiosPrivate.put<T>(url, data);
+      return res.data;
+    }
+  );
+};
+
 
 // Private DELETE
 export const usePrivateDelete = <T, D = unknown>(url: string) => {
