@@ -9,6 +9,7 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { JobDetailResponse } from "@/types/jobDetail";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import "swiper/css";
 import "swiper/css/navigation";
 import CategoryRelated from "../CategoryDetail/components/CategoryRelated";
@@ -91,7 +92,7 @@ const JobDetail = ({ username, slug }: Props) => {
 
   if (isLoading || isLoadingCategory || isJobDetailLoading) return <Loading />;
   if (error || errorCategory || errorJobDetail)
-    return <div>Error loading language data</div>;
+    return notFound();
   return (
     <>
       <section className="grid-container-job-detail mb-4 px-4 py-2 h-16 md:h-12 md:p-0 md:my-0 bg-[#E3EDFD]">

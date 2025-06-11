@@ -68,6 +68,7 @@ export interface ProfileShow {
   ratings: number;
   user_id: string;
   reviews:Review[];
+  user: User;
 }
 
 export interface Review {
@@ -80,4 +81,11 @@ export interface Review {
   reviewer_name: string;
   reviewer_avatar: string;
   is_owner:string;
+}
+
+export interface User{
+  user: UserInfo;
+}
+export interface UserInfo{
+  available: boolean;
 }

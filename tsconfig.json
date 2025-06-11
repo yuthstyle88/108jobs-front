@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "src/components/ServiceCard", "src/components/ui/SocialLoginButton"  ],
+, "src/components/ServiceCard", "src/components/ui/SocialLoginButton", "tests/applyFreelancer/apply-step3.spects"  ],
   "exclude": [
     "node_modules"
   ]

@@ -40,6 +40,7 @@ export type User = {
   bio: string;
   user_id: string;
   profile_id: string;
+  available:boolean
 };
 
 export type ServiceCatalog = {

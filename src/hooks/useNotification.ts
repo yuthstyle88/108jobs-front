@@ -26,9 +26,12 @@ function useNotification() {
         change_password: notiLanguage?.change_password,
         update_favorite: "Successfully saved job to favorites",
         delete_favorite: "Successfully unsaved job from favorites",
+        update_available: "You are now accepting new jobs.",
+        update_not_available: "You are no longer accepting new jobs."
       },
       fail: {
         set_default: "Failed set default address",
+        update_available_fail: "Failed to update job availability. Please try again."
       },
     },
     job: {
