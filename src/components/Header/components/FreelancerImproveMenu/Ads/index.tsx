@@ -17,7 +17,7 @@ const Ads = () => {
       <Link
         target="_blank"
         rel="noopener noreferrer"
-        href="https://docs.google.com/forms/d/e/1FAIpQLSesGWrCFtS0BfIszgQyVe33KA2jinuqMjpgWTUcypTzGO0xuQ/viewform?source=web_marketplace_top-nav-bar_mega-menu"
+        href="https://form.jotform.com/251484529705059"
         className="mt-6"
       >
         <span className="text-[0.875rem] font-medium text-third">

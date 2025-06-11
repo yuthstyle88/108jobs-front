@@ -18,7 +18,7 @@ import { formatDateToLong } from "@/utils/formatDateToLong";
 import { interpolateDouble } from "@/utils/interpolate";
 import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { SquarePen } from "lucide-react";
+import { ClipboardX, SquarePen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -87,6 +87,14 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                   />
                 ))}
               </div>
+              {userProfile?.user.user.available === false && (
+                <div className="flex items-center justify-center w-full">
+                  <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-red-500 text-white w-fit">
+                    <ClipboardX className="w-4 h-4 mr-1" />
+                    <span className="text-sm font-medium">Not receive job</span>
+                  </div>
+                </div>
+              )}
               <div className="w-full mt-4 space-y-3 px-4">
                 <div className="flex justify-between items-center">
                   <div className="text-text_secondary">

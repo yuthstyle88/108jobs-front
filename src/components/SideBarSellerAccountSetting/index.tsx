@@ -80,7 +80,7 @@ const SideBarSellerAccountSetting = () => {
 
         <div className="p-4 border-t border-gray-200">
           <h3 className="font-medium text-gray-800 mb-2">
-            {sellerSidebarLanguage?.client_document_section}
+            Job availability information
           </h3>
           <ul>
             <li>
@@ -93,7 +93,7 @@ const SideBarSellerAccountSetting = () => {
                 }`}
               >
                 <FileText className="min-w-5 w-5 h-5 text-gray-500" />
-                {sellerSidebarLanguage?.client_document_info}
+                Availability Settings
               </Link>
             </li>
           </ul>

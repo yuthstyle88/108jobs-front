@@ -1,5 +1,7 @@
+"use client";
 import { JobDetailIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
 import Image from "next/image";
@@ -11,6 +13,7 @@ type Props = {
 };
 
 const Freelance = ({ language, data }: Props) => {
+  const { lang: currentLang } = useLanguage();
   const freelancer = [
     {
       title: language?.work_completed,
@@ -50,7 +53,7 @@ const Freelance = ({ language, data }: Props) => {
       </h2>
       <div className="mx-auto bg-white rounded-xl border-border_primary border-1 shadow-sm p-6">
         <div className="flex items-start justify-between mb-4">
-          <Link href={`/user/${data.user.username}`} className="flex items-start space-x-4">
+          <Link href={`/${currentLang}/user/${data.user.username}`} className="flex items-start space-x-4">
             <Image
               src={data.user.avatar_url || ProfileImage.avatar}
               alt="Profile"

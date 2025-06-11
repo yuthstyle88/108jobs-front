@@ -17,9 +17,9 @@ const Hiring = () => {
         2. {global?.company_registration_step_2} <br />
         3. {global?.company_registration_step_3}
       </p>
-      <Link href="/account-setting" className="mt-6">
+      <Link href="#" className="mt-6">
         <span className="text-[0.875rem] font-medium text-third">
-          {global?.company_registration_button}
+          {global?.chat_to_hire_button}
           <FontAwesomeIcon icon={faArrowRight} className="pl-2 text-third" />
         </span>
       </Link>

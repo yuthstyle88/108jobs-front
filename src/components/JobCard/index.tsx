@@ -12,7 +12,7 @@ import Link from "next/link";
 
 type Props = {
   data: Job;
-};
+};  
 
 const JobCard = ({ data }: Props) => {
   const { data: jobCardLanguage } = useGlobalTranslate(LanguageFile.JOB_CARD);
@@ -37,15 +37,10 @@ const JobCard = ({ data }: Props) => {
               {data.title}
             </h3>
             <div className="flex flex-row items-center mt-2 text-[12px]">
-              <div className="text-text_secondary font-sans">
-                <span>
-                  {jobCardLanguage?.sold} {data.purchase_count}
-                </span>
-              </div>
-              <div className="pl-2 ml-2 border-l border-[#2b323b66] flex items-center gap-1">
+              <div className="flex items-center gap-1">
                 <FontAwesomeIcon icon={faStar} className="text-[#e9b10c]" />
                 <span className="text-[12px] font-sans text-text_secondary">
-                  {data.reviews_count}
+                  {Number(data.rating).toFixed()}
                 </span>
               </div>
             </div>

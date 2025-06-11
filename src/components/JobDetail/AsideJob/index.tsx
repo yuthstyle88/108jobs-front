@@ -1,9 +1,12 @@
 "use client";
+import { API_ROUTES } from "@/api/endpoints";
 import FavoriteButton from "@/components/FavoriteButton";
 import ShareJobModal from "@/components/ShareJob";
 import { JobDetailIcon } from "@/constants/icons";
+import { usePrivateFetch } from "@/hooks/api-hooks";
 import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
+import { ProfileData } from "@/types/userData";
 import { formatThaiBaht } from "@/utils/formatMoney";
 import { scrollToElementById } from "@/utils/scrollSmooth";
 import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
@@ -18,6 +21,11 @@ interface AsideJobProps {
 }
 
 const AsideJob = ({ language, data }: AsideJobProps) => {
+  const { data: user } = usePrivateFetch<ProfileData>(
+    API_ROUTES.profile.get_profile
+  );
+  console.log("user", user);
+
   const [selectedPackage, setSelectedPackage] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -25,6 +33,10 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
     e.preventDefault();
     scrollToElementById("package");
   };
+
+  const isCurrentUser = data?.user.user_id === user?.user.id;
+
+  const isAvailable = data.user.available === true;
 
   return (
     <aside className="text-black sticky top-40 self-start">
@@ -83,22 +95,54 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
             {language?.view_package_info}
           </Link>
           <hr className="mt-4 bg-border_primary block overflow-visible w-full h-[1px] m-0" />
-          <Link href={`/chat/message/${data.user.user_id}`} target="_blank" className="w-full">
-            <button className="relative inline-flex justify-center items-center overflow-hidden min-h-[2.5rem] px-[1.125rem] border-none rounded-[0.25rem] bg-third text-[0.875rem] font-medium w-full text-white">
-              <span>{language?.chat_with_freelancers}</span>
-            </button>
-          </Link>
-          <div className="text-center mt-2">
-            <small className="text-[0.75rem] text-text_secondary">
-              {language?.no_charges_message}
-            </small>
-          </div>
+          {!isCurrentUser && (
+            <>
+              {isAvailable ? (
+                <Link
+                  href={`/chat/message/${data.user.user_id}`}
+                  target="_blank"
+                  className="w-full"
+                >
+                  <button className="relative inline-flex justify-center items-center overflow-hidden min-h-[2.5rem] px-[1.125rem] border-none rounded-[0.25rem] bg-third text-[0.875rem] font-medium w-full text-white">
+                    <span>{language?.chat_with_freelancers}</span>
+                  </button>
+                </Link>
+              ) : (
+                <div className="w-full">
+                  <button
+                    disabled
+                    className="relative inline-flex justify-center items-center overflow-hidden min-h-[2.5rem] px-[1.125rem] border-none rounded-[0.25rem] bg-third text-[0.875rem] font-medium w-full text-white opacity-50 cursor-not-allowed"
+                  >
+                    <span>{language?.chat_with_freelancers}</span>
+                  </button>
+                </div>
+              )}
+
+              <div className="text-center mt-2">
+                {!isAvailable ? (
+                  <small className="text-[0.75rem] text-red-600">
+                    *This freelancer is currently not accepting new jobs.
+                  </small>
+                ) : (
+                  <small className="text-[0.75rem] text-text_secondary">
+                    {language?.no_charges_message}
+                  </small>
+                )}
+              </div>
+            </>
+          )}
         </section>
       </div>
       <div className="mt-4 overflow-hidden shadow-jobCard rounded-[0.5rem] ">
         <Link href="#">
           <div className="aspect-[320/68] h-[68px] w-full relative">
-            <Image src={JobDetailIcon.company} alt="company" width={500} height={500} className="object-cover bg-center" />
+            <Image
+              src={JobDetailIcon.company}
+              alt="company"
+              width={500}
+              height={500}
+              className="object-cover bg-center"
+            />
           </div>
         </Link>
       </div>

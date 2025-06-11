@@ -1,69 +1,66 @@
 "use client";
 
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
-import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { API_ROUTES } from "@/api/endpoints";
+import * as Switch from "@radix-ui/react-switch";
+import { useState } from "react";
+import { usePrivatePut } from "@/hooks/api-hooks";
+import useNotification from "@/hooks/useNotification";
 
 const DocumentInfo = () => {
-  const {
-    data: sellerDocumentLanguage,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.SELLER_DOCUMENT_INFO);
+  const [isAvailable, setIsAvailable] = useState(false);
+  const { success_message, error_message } = useNotification();
+  const { trigger: updateStatus, isMutating } = usePrivatePut(
+    API_ROUTES.profile.update_available
+  );
 
-  const { data: global } = useGlobalTranslate(
-      LanguageFile.GLOBAL
-    );
-
-  const handleSave = () => {
-    console.log("Saving account settings");
-    // Logic to save data would go here
+  const handleToggle = async (value: boolean) => {
+    setIsAvailable(value);
+    try {
+      await updateStatus({ available: value });
+      success_message(
+        "profile",
+        value ? "update_available" : "update_not_available"
+      );
+    } catch (err) {
+      console.error("Failed to update availability", err);
+      setIsAvailable((prev) => !prev);
+      error_message("profile", "update_available_fail");
+    }
   };
-  if (isLoading) return <Loading />;
-  if (error) return <Error />;
+
   return (
     <div className="bg-white rounded-md shadow-sm overflow-hidden">
       <div className="border-b border-gray-200 p-5">
         <h2 className="text-lg font-medium text-gray-800">
-          {sellerDocumentLanguage?.title}
+          Job availability information
         </h2>
         <p className="text-sm text-gray-500">
-          {sellerDocumentLanguage?.subtitle}
+          Toggle this setting to let clients know you&apos;re currently accepting new
+          jobs or not.
         </p>
       </div>
 
       <div className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {sellerDocumentLanguage?.firstname_label}
-            </label>
-            <input
-              type="text"
-              placeholder={sellerDocumentLanguage?.firstname_placeholder}
-              className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {sellerDocumentLanguage?.lastname_label}
-            </label>
-            <input
-              type="text"
-              placeholder={sellerDocumentLanguage?.lastname_placeholder}
-              className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-        </div>
-
-        <div className="flex justify-end">
-          <button
-            onClick={handleSave}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        <div className="flex items-center justify-between">
+          <span className="text-base font-medium text-gray-700">
+            Accepting Jobs
+          </span>
+          <Switch.Root
+            checked={isAvailable}
+            onCheckedChange={handleToggle}
+            disabled={isMutating}
+            className={`w-[42px] h-[24px] rounded-full relative transition-colors ${
+              isAvailable ? "bg-blue-600" : "bg-gray-300"
+            } ${
+              isMutating ? "opacity-50 pointer-events-none" : "cursor-pointer"
+            }`}
           >
-            {global?.button_save}
-          </button>
+            <Switch.Thumb
+              className={`block w-[18px] h-[18px] bg-white rounded-full shadow-md transition-transform duration-200 ${
+                isAvailable ? "translate-x-[18px]" : "translate-x-[3px]"
+              }`}
+            />
+          </Switch.Root>
         </div>
       </div>
     </div>

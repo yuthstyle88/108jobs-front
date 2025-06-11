@@ -18,6 +18,7 @@ import { formatDateToLong } from "@/utils/formatDateToLong";
 import { interpolateDouble } from "@/utils/interpolate";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ClipboardX } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 type Props = {
@@ -100,6 +101,14 @@ const FreelancerProfile = ({ username }: Props) => {
                     <span className="text-sm font-medium">
                       Verified Freelance
                     </span>
+                  </div>
+                </div>
+              )}
+              {userProfile?.user.user.available === false && (
+                <div className="flex items-center justify-center w-full">
+                  <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-red-500 text-white w-fit">
+                    <ClipboardX className="w-4 h-4 mr-1" />
+                    <span className="text-sm font-medium">Not receive job</span>
                   </div>
                 </div>
               )}

@@ -2,7 +2,6 @@ import { JobDetailIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
-import { interpolateDouble } from "@/utils/interpolate";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -21,16 +20,9 @@ const Overview = ({ language, data }: Props) => {
       </h1>
       <div className="flex flex-wrap mt-3 gap-3">
         <div className="pr-2 border-r-1 border-r-border_primary flex items-center">
-          <span className="font-sans text-text_primary">
-            {interpolateDouble(language?.sold_times || "", {
-              sell_count: data.purchase_count,
-            })}
-          </span>
-        </div>
-        <div className="pr-2 border-r-1 border-r-border_primary flex items-center">
           <FontAwesomeIcon icon={faStar} className="text-[#E9B10C]" />
           <span className="ml-1 font-sans text-text_primary">
-            {Number(data.rating)}
+            {Number(data.rating).toFixed(1)}
           </span>
         </div>
         <Link href="#" className="">
