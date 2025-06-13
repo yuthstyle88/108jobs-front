@@ -242,7 +242,7 @@ export default function Home() {
           <SpAdsSlider />
         </section>
         <section className="block sm:hidden p-[0.75rem] border-b-[0.25rem] border-border_primary ">
-          <SpCatalog />
+          <SpCatalog activeCatalog={activeCatalog}/>
         </section>
 
         <section className="py-6 sm:py-24 grid grid-container-desktop-banner gap-y-4 sm:gap-y-12 ">

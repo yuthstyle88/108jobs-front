@@ -43,6 +43,9 @@ export const API_ROUTES = {
     check_is_favorite_job: "/jobs/favorite",
     delete_favorite_job: "/jobs/favorite",
   },
+  chat:{
+    get_chat_history:"/messages/rooms"
+  }
 };
 export const API_ROUTES_SELLER = {
   profile: {

@@ -1,7 +1,7 @@
 "use client";
 import { LANGUAGES } from "@/constants/language";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { faBullhorn, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CircleUserRound, Grip, House, Search } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -10,6 +10,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import LanguageBottomSheet from "../SpBottomTab";
+import SPSearch from "./components/SPSearch";
 import SpUserAvatar from "./components/SpUserProfile";
 
 type SpHeaderProps = {
@@ -91,19 +92,7 @@ const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
           )}
         </div>
         {showSearch && (
-          <section className="flex items-center gap-x-4 w-full md:w-auto">
-            <div className="flex text-black h-[40px] w-full md:w-[250px] relative transition-all duration-300 mx-3 my-3">
-              <input
-                type="text"
-                placeholder="Find freelancers..."
-                className="focus:outline-none rounded-[20px] border-2-white px-5 text-sm font-mono w-full"
-              />
-              <FontAwesomeIcon
-                icon={faSearch}
-                className="w-[14px] h-[14px] text-primary absolute right-3 top-1/2 -translate-y-1/2"
-              />
-            </div>
-          </section>
+          <SPSearch/>
         )}
       </nav>
       <LanguageBottomSheet open={showLang} onClose={() => setShowLang(false)} />

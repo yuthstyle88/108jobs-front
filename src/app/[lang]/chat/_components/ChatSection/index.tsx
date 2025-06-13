@@ -1,15 +1,23 @@
 "use client";
+import { API_ROUTES } from "@/api/endpoints";
+import LoadingBlur from "@/components/LoadingBlur";
 import { JobDetailIcon } from "@/constants/icons";
-import { CategoriesImage, MessageImage } from "@/constants/images";
+import {
+  CategoriesImage,
+  MessageImage,
+  ProfileImage,
+} from "@/constants/images";
 import { useChatLanguage } from "@/contexts/ChatLanguage";
 import { useWebSocket } from "@/contexts/RealtimeChatContext";
+import { usePrivateFetch } from "@/hooks/api-hooks";
+import { ChatResponse } from "@/types/chat";
 import {
   ChevronDown,
   ChevronUp,
   Copy,
   Paperclip,
   Send,
-  Smile
+  Smile,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -54,6 +62,16 @@ const ChatSection = () => {
 
   const { sendMessage, partnerId } = useWebSocket("chat-message", onMessage);
 
+  const {
+    data: chatData,
+    isLoading: isChatLoading,
+  } = usePrivateFetch<ChatResponse[]>(API_ROUTES.chat.get_chat_history, {
+    revalidateOnFocus: true,
+    dedupingInterval: 10000,
+  });
+
+  const currentRoom = chatData?.find((room) => room.partner_id === partnerId);
+
   const { register, handleSubmit, reset } = useForm<MessageForm>();
 
   const onSubmit = (data: MessageForm) => {
@@ -75,6 +93,10 @@ const ChatSection = () => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  if (isChatLoading) {
+    return <LoadingBlur text="" />;
+  }
+
   return (
     <>
       {/* Chat area */}
@@ -83,15 +105,16 @@ const ChatSection = () => {
         <div className="border-b p-4 flex justify-between items-center bg-white">
           <div className="flex items-center gap-2">
             <Image
-              src={MessageImage.chat_avt}
+              src={currentRoom?.partner_avatar || ProfileImage.avatar}
               alt="User"
+              width={40}
+              height={40}
               className="w-10 h-10 object-cover rounded-full"
             />
             <div className="mr-4">
               <span className="text-sm font-medium text-text_primary">
-                Vanint
+                {currentRoom?.partner_display_name}
               </span>
-              <span className="text-xs text-gray-500 ml-2">#RSQCU4KL</span>
             </div>
           </div>
           <div className="flex items-center space-x-4">
