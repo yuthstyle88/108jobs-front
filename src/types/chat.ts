@@ -9,3 +9,13 @@ export interface ChatMessage {
   updated_at: string;
   room_id: string;
 }
+
+export interface ChatResponse {
+  room_id: string;
+  partner_id: string;
+  sender_id: string;
+  partner_avatar: string;
+  partner_username: string;
+  partner_display_name: string;
+  last_message: ChatMessage;
+}

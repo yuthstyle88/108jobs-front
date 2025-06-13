@@ -4,6 +4,7 @@ import Loading from "@/components/Loading";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { ROLE } from "@/constants/role";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useLogout } from "@/hooks/useLogout";
 import { ProfileData } from "@/types/userData";
@@ -25,7 +26,7 @@ const SpProfile = () => {
   const { data: user, isLoading } = usePrivateFetch<ProfileData>(
     API_ROUTES.profile.get_profile
   );
-
+  const { lang: currentLang } = useLanguage();
   const { logout } = useLogout();
 
   if (isLoading) return <Loading />;
@@ -46,7 +47,7 @@ const SpProfile = () => {
         </svg>
         <div className="grid grid-cols-1 z-10 text-center absolute left-1/2 -translate-x-1/2 top-0 pt-6 justify-center">
           <strong className="text-[1.125rem] text-white">My Profile</strong>
-          <Link href={`/user/${user?.user.username}`}>
+          <Link href={`/${currentLang}/user/${user?.user.username}`}>
             <Image
               src={user?.user.avatar_url || ProfileImage.avatar}
               width={80}
@@ -55,13 +56,13 @@ const SpProfile = () => {
               className="inline-flex justify-center items-center w-[80px] min-h-[80px]  rounded-full object-cover object-center mt-4"
             />
           </Link>
-          <Link href={`/user/${user?.user.username}`}>
+          <Link href={`/${currentLang}/user/${user?.user.username}`}>
             <strong className="text-[1.125rem] text-third">
               {user?.user.username}
             </strong>
           </Link>
           <Link
-            href={`/user/${user?.user.username}`}
+            href={`/${currentLang}/user/${user?.user.username}`}
             className="inline-block max-w-full whitespace-nowrap"
           >
             <strong className="text-sm font-sans text-text_primary">

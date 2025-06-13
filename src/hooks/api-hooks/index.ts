@@ -46,7 +46,10 @@ export const usePublicDelete = <T>(url: string) => {
 };
 
 // Private GET
-export const usePrivateFetch = <T>(url: string | null) => {
+export const usePrivateFetch = <T>(
+  url: string | null,
+  options?: SWRConfiguration
+) => {
   return useSWR<T, AxiosError>(
     url,
     async (url: string) => (await axiosPrivate.get<T>(url)).data,
@@ -54,6 +57,7 @@ export const usePrivateFetch = <T>(url: string | null) => {
       revalidateOnFocus: false,
       dedupingInterval: 60000,
       keepPreviousData: true,
+      ...options,
     }
   );
 };
@@ -68,18 +72,13 @@ export const usePrivateFetchParams = <T>(
     return response.data;
   };
 
-  return useSWR<T, AxiosError>(
-    url,
-    url ? fetcher : null,
-    {
-      revalidateOnFocus: false,
-      dedupingInterval: 60000,
-      keepPreviousData: true,
-      ...options,
-    }
-  );
+  return useSWR<T, AxiosError>(url, url ? fetcher : null, {
+    revalidateOnFocus: false,
+    dedupingInterval: 60000,
+    keepPreviousData: true,
+    ...options,
+  });
 };
-
 
 // Private POST
 export const usePrivatePost = <T, D = unknown>(url: string) => {
@@ -121,7 +120,6 @@ export const useDynamicPrivatePut = <T = void, D = unknown>() => {
   );
 };
 
-
 // Private DELETE
 export const usePrivateDelete = <T, D = unknown>(url: string) => {
   return useSWRMutation<T, AxiosError, string, D>(
@@ -130,4 +128,3 @@ export const usePrivateDelete = <T, D = unknown>(url: string) => {
       (await axiosPrivate.delete<T>(url, { data: arg })).data
   );
 };
-
