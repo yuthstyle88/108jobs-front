@@ -14,7 +14,7 @@ import { formatMessageTime } from "@/utils/formatMessageTime";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound, useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const ChatWrapper = () => {
@@ -48,7 +48,13 @@ const ChatWrapper = () => {
     }
   }, [isChatLoading, chatData, activeRoomId, router]);
 
-  if (!activeRoomId && (!chatData || isChatLoading)) {
+  useEffect(() => {
+    if (!isChatLoading && chatData && chatData.length === 0) {
+      router.push("/chat/no-message");
+    }
+  }, [isChatLoading, chatData, router]);
+
+   if (!activeRoomId && (!chatData || isChatLoading)) {
     return <LoadingBlur text="" />;
   }
 
@@ -58,10 +64,6 @@ const ChatWrapper = () => {
 
   if (isUserLoading || isChatLoading) return <Loading />;
   if (isUserError || chatError) return <Error />;
-
-  if (!chatData || chatData.length === 0) {
-    notFound();
-  }
 
   return (
     <div
@@ -83,7 +85,7 @@ const ChatWrapper = () => {
       </div>
 
       <div className="max-w-[340px] overflow-y-auto flex-1">
-        {chatData.map((chat) => {
+        {chatData?.map((chat) => {
           const chatMessage = chat.last_message;
           if (!chatMessage) return null;
 
