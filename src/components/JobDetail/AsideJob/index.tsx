@@ -99,7 +99,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
             <>
               {isAvailable ? (
                 <Link
-                  href={`/chat/message/${data.user.user_id}`}
+                  href={`/chat/message/${data.id}`}
                   target="_blank"
                   className="w-full"
                 >
