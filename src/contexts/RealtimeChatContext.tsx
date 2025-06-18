@@ -41,14 +41,15 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   const router = useRouter();
 
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const isManuallyClosingRef = useRef(false); // ✅ New flag
+  const isManuallyClosingRef = useRef(false);
+  const [connectionAttemptKey, setConnectionAttemptKey] = useState(0);
 
-  const wsUrl = `wss://fastwork.ibrowe.com/api/v4/ws/?token=${token}&partner_id=${partnerId}`;
+  const wsUrl = `wss://fastwork.ibrowe.com/api/v4/ws/?token=${token}&job_id=${partnerId}`;
 
   useEffect(() => {
     const newSocket = new WebSocket(wsUrl);
     setSocket(newSocket);
-    isManuallyClosingRef.current = false; // reset at connect
+    isManuallyClosingRef.current = false;
 
     newSocket.onopen = () => {
       setIsConnected(true);
@@ -84,6 +85,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
       reconnectTimeoutRef.current = setTimeout(() => {
         setSocket(null);
+        setConnectionAttemptKey((prev) => prev + 1); // Trigger reconnect
       }, 3000);
     };
 
@@ -101,7 +103,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
       setSocket(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wsUrl]);
+  }, [wsUrl, connectionAttemptKey]);
 
   useEffect(() => {
     if (connectionError) {

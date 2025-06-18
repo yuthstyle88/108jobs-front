@@ -23,6 +23,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { mutate } from "swr";
 
 type MessageForm = {
   message: string;
@@ -31,8 +32,10 @@ type MessageForm = {
 type ChatMessage = {
   id: string;
   sender_id: string;
+  partner_id: string;
   content: string;
   created_at: string;
+  is_owner: boolean;
 };
 
 const formatDate = (dateStr: string) => {
@@ -62,15 +65,14 @@ const ChatSection = () => {
 
   const { sendMessage, partnerId } = useWebSocket("chat-message", onMessage);
 
-  const {
-    data: chatData,
-    isLoading: isChatLoading,
-  } = usePrivateFetch<ChatResponse[]>(API_ROUTES.chat.get_chat_history, {
+  const { data: chatData, isLoading: isChatLoading } = usePrivateFetch<
+    ChatResponse[]
+  >(API_ROUTES.chat.get_chat_history, {
     revalidateOnFocus: true,
     dedupingInterval: 10000,
   });
 
-  const currentRoom = chatData?.find((room) => room.partner_id === partnerId);
+  const currentRoom = chatData?.find((room) => room.job.id === partnerId);
 
   const { register, handleSubmit, reset } = useForm<MessageForm>();
 
@@ -78,6 +80,7 @@ const ChatSection = () => {
     if (data.message.trim()) {
       sendMessage({ message: data.message });
       reset();
+      mutate(API_ROUTES.chat.get_chat_history);
     }
   };
 
@@ -136,11 +139,10 @@ const ChatSection = () => {
               <div className="flex justify-between items-start">
                 <div>
                   <h4 className="font-medium text-gray-900">
-                    LOGO Design and BRAND ID Tea Designer high level ใครทำดี
-                    Global
+                    {currentRoom?.job.title}
                   </h4>
                   <div className="mt-2 text-sm">
-                    <p className="text-gray-700">ราคา : 6,900 บาท</p>
+                    <p className="text-gray-700">ราคา : {currentRoom?.job.base_price} บาท</p>
                   </div>
                 </div>
                 <Image
@@ -152,7 +154,7 @@ const ChatSection = () => {
             </div>
 
             <div className="mt-3 text-sm">
-              <p className="font-medium">รายละเอียดแพ็คเกจ:</p>
+              <p className="font-medium text-text_primary">รายละเอียดแพ็คเกจ:</p>
               <ul className="mt-1 space-y-1 text-gray-700">
                 <li>• งานบริษัท/แบรนด์คุณภาพ 1 ชิ้น</li>
                 <li>• แก้ไม่เกินครั้งละ 3 ครั้ง</li>
@@ -162,7 +164,7 @@ const ChatSection = () => {
             </div>
 
             <div className="mt-3 text-sm">
-              <p className="font-medium">บริการพิเศษ:</p>
+              <p className="font-medium text-text_primary">บริการพิเศษ:</p>
               <ul className="mt-1 space-y-1 text-gray-700">
                 <li>• ไฟล์ๆ นามบัตร</li>
                 <li>• ไฟล์ความละเอียดสูง พร้อมนำไปใช้ 500DPI</li>
@@ -197,7 +199,7 @@ const ChatSection = () => {
             </div>
           </div>
           {messages.map((msg, index) => {
-            const isIncoming = msg.sender_id === partnerId;
+            const isIncoming = !msg.is_owner === true;
             const currentMsgDate = formatDate(msg.created_at);
             const prevMsgDate =
               index > 0 ? formatDate(messages[index - 1].created_at) : null;
@@ -221,8 +223,10 @@ const ChatSection = () => {
                 >
                   {isIncoming && (
                     <Image
-                      src={MessageImage.chat_avt}
+                      src={currentRoom?.partner_avatar || MessageImage.chat_avt}
                       alt="avatar"
+                      width={24}
+                      height={24}
                       className="w-6 h-6 rounded-full mr-2 self-end"
                     />
                   )}
@@ -244,7 +248,9 @@ const ChatSection = () => {
                           : "bg-blue-500 text-white rounded-br-none"
                       }`}
                     >
-                      <p>{msg.content}</p>
+                      <p className="break-words whitespace-pre-line">
+                        {msg.content}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -330,8 +336,7 @@ const ChatSection = () => {
             </div>
             <div>
               <p className="text-sm text-text_primary font-sans line-clamp-2">
-                Increase traffic and high quality backlinks, push the website to
-                be ...
+                {currentRoom?.job.title}
               </p>
             </div>
           </div>

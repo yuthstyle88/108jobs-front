@@ -17,6 +17,17 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+function extractRealImageUrl(url: string): string {
+  try {
+    const u = new URL(url);
+    const realUrl = u.searchParams.get("url");
+    return realUrl ? decodeURIComponent(realUrl) : url;
+  } catch (err) {
+    console.log("err", err);
+    return url;
+  }
+}
+
 const ChatWrapper = () => {
   const params = useParams();
   const router = useRouter();
@@ -54,7 +65,7 @@ const ChatWrapper = () => {
     }
   }, [isChatLoading, chatData, router]);
 
-   if (!activeRoomId && (!chatData || isChatLoading)) {
+  if (!activeRoomId && (!chatData || isChatLoading)) {
     return <LoadingBlur text="" />;
   }
 
@@ -90,11 +101,11 @@ const ChatWrapper = () => {
           if (!chatMessage) return null;
 
           const isUser = userData?.user.id === chatMessage.sender_id;
-          const isActive = String(chat.partner_id) === activeRoomId;
+          const isActive = String(chat.job.id) === activeRoomId;
           return (
             <Link
               key={chat.room_id}
-              href={`/chat/message/${chat.partner_id}`}
+              href={`/chat/message/${chat.job.id}`}
               className="block"
             >
               <div
@@ -106,7 +117,10 @@ const ChatWrapper = () => {
               >
                 <div className="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
                   <Image
-                    src={chat.partner_avatar || ProfileImage.avatar}
+                    src={
+                      extractRealImageUrl(chat.partner_avatar) ||
+                      ProfileImage.avatar
+                    }
                     alt="User"
                     width={40}
                     height={40}
@@ -125,7 +139,7 @@ const ChatWrapper = () => {
                       )}
                     </span>
                   </div>
-                  <p className="text-sm font-sans text-text_primary mt-1 line-clamp-1 overflow-hidden break-words max-w-[200px]">
+                  <p className="text-sm font-sans text-text_primary mt-1 line-clamp-1 overflow-hidden break-all max-w-[200px]">
                     {isUser && "You: "}
                     {chatMessage.content}
                   </p>

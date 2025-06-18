@@ -6,6 +6,8 @@ const nextConfig = {
       "images.unsplash.com",
       "azpet.com.vn",
       "fastwork.ibrowe.com",
+      "cdn.shopify.com",
+      "pottybuddy.co",
     ],
     remotePatterns: [
       {
@@ -30,9 +32,9 @@ export default nextConfig;
 
 
 // const nextConfig = {
-//   output: "export", 
+//   output: "export",
 //   images: {
-//     unoptimized: true, 
+//     unoptimized: true,
 //   },
 // };
 // export default nextConfig;
