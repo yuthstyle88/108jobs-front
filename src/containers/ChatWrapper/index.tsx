@@ -52,7 +52,7 @@ const ChatWrapper = () => {
 
   useEffect(() => {
     if (!isChatLoading && !activeRoomId && chatData && chatData.length > 0) {
-      const firstSenderId = chatData[0]?.partner_id;
+      const firstSenderId = chatData[0]?.room_id;
       if (firstSenderId) {
         router.replace(`/chat/message/${firstSenderId}`);
       }
@@ -101,11 +101,14 @@ const ChatWrapper = () => {
           if (!chatMessage) return null;
 
           const isUser = userData?.user.id === chatMessage.sender_id;
-          const isActive = String(chat.job.id) === activeRoomId;
+          const isActive =
+            String(chat.room_id) === activeRoomId ||
+            String(chat.job?.id) === activeRoomId;
+
           return (
             <Link
               key={chat.room_id}
-              href={`/chat/message/${chat.job.id}`}
+              href={`/chat/message/${chat.room_id}`}
               className="block"
             >
               <div

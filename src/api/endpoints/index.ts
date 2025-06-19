@@ -44,7 +44,9 @@ export const API_ROUTES = {
     delete_favorite_job: "/jobs/favorite",
   },
   chat:{
-    get_chat_history:"/messages/rooms"
+    get_chat_history:"/messages/rooms",
+    upload_file: "/chat/file",
+    create_room: "/messages/rooms",
   }
 };
 export const API_ROUTES_SELLER = {

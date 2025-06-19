@@ -1,5 +1,8 @@
 "use client";
 
+import { API_ROUTES } from "@/api/endpoints";
+import { usePrivateFetch } from "@/hooks/api-hooks";
+import { ProfileData } from "@/types/userData";
 import { useRouter } from "next/navigation";
 import React, {
   createContext,
@@ -12,6 +15,9 @@ import React, {
 
 interface MessagePayload {
   message: string;
+  file_url?: string;
+  file_type?: string;
+  file_name?: string;
 }
 
 interface WebSocketContextValue {
@@ -39,14 +45,18 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [connectionError, setConnectionError] = useState(false);
   const router = useRouter();
+  const { data: userData } = usePrivateFetch<ProfileData>(
+    API_ROUTES.profile.get_profile
+  );
 
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isManuallyClosingRef = useRef(false);
   const [connectionAttemptKey, setConnectionAttemptKey] = useState(0);
 
-  const wsUrl = `wss://fastwork.ibrowe.com/api/v4/ws/?token=${token}&job_id=${partnerId}`;
+  const wsUrl = `wss://fastwork.ibrowe.com/api/v4/ws/?token=${token}&room_id=${partnerId}&user_id=${userData?.user.id}`;
 
   useEffect(() => {
+    if (!token || !partnerId || !userData) return;
     const newSocket = new WebSocket(wsUrl);
     setSocket(newSocket);
     isManuallyClosingRef.current = false;
@@ -77,7 +87,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
         return;
       }
 
-      // Only redirect if partnerId truly invalid or blocked
       if ([1008, 4000, 4400].includes(event.code)) {
         setConnectionError(true);
         return;
@@ -85,7 +94,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
       reconnectTimeoutRef.current = setTimeout(() => {
         setSocket(null);
-        setConnectionAttemptKey((prev) => prev + 1); // Trigger reconnect
+        setConnectionAttemptKey((prev) => prev + 1);
       }, 3000);
     };
 
@@ -100,7 +109,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     return () => {
       isManuallyClosingRef.current = true;
       newSocket.close();
-      setSocket(null);
+      // setSocket(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wsUrl, connectionAttemptKey]);
@@ -110,6 +119,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
       router.replace("/not-found");
     }
   }, [connectionError, router]);
+
+  useEffect(() => {
+    if (!socket) return;
+    console.log("📡 Socket state:", socket.readyState);
+  }, [socket]);
 
   const sendMessage = useCallback(
     (data: MessagePayload) => {
