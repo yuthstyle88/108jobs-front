@@ -4,10 +4,12 @@ export type ChatMessage = {
   content: string;
   file_url: string | null;
   file_type: string | null;
+  file_name: string | null;
   status: number;
   created_at: string;
   updated_at: string;
   room_id: string;
+  is_owner:boolean;
 };
 
 export type Job = {
@@ -44,4 +46,5 @@ export type ChatResponse = {
   partner_display_name: string;
   last_message: ChatMessage;
   job: Job;
+  job_cover_image:string;
 };

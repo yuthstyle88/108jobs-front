@@ -1,9 +1,10 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
 import FavoriteButton from "@/components/FavoriteButton";
+import LoadingBlur from "@/components/LoadingBlur";
 import ShareJobModal from "@/components/ShareJob";
 import { JobDetailIcon } from "@/constants/icons";
-import { usePrivateFetch } from "@/hooks/api-hooks";
+import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
 import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
 import { ProfileData } from "@/types/userData";
@@ -13,6 +14,7 @@ import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface AsideJobProps {
@@ -20,11 +22,19 @@ interface AsideJobProps {
   data: JobDetailResponse;
 }
 
+type CreateRoomData = {
+  data: string;
+};
+
 const AsideJob = ({ language, data }: AsideJobProps) => {
+  const route = useRouter();
   const { data: user } = usePrivateFetch<ProfileData>(
     API_ROUTES.profile.get_profile
   );
-  console.log("user", user);
+
+  const { trigger: createRoom, isMutating } = usePrivatePost<CreateRoomData>(
+    API_ROUTES.chat.create_room
+  );
 
   const [selectedPackage, setSelectedPackage] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,10 +44,17 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
     scrollToElementById("package");
   };
 
+  const handleCreateRoom = async () => {
+    const res = await createRoom({ job_id: data.id });
+    if (res) {
+      route.push(`/chat/message/${res.data}`);
+    }
+  };
   const isCurrentUser = data?.user.user_id === user?.user.id;
 
   const isAvailable = data.user.available === true;
 
+  if (isMutating) return <LoadingBlur text="" />;
   return (
     <aside className="text-black sticky top-40 self-start">
       <div className="bg-[#F6F9FE] rounded-md shadow-jobCard p-4">
@@ -98,15 +115,14 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
           {!isCurrentUser && (
             <>
               {isAvailable ? (
-                <Link
-                  href={`/chat/message/${data.id}`}
-                  target="_blank"
-                  className="w-full"
-                >
-                  <button className="relative inline-flex justify-center items-center overflow-hidden min-h-[2.5rem] px-[1.125rem] border-none rounded-[0.25rem] bg-third text-[0.875rem] font-medium w-full text-white">
+                <div className="w-full">
+                  <button
+                    onClick={handleCreateRoom}
+                    className="relative inline-flex justify-center items-center overflow-hidden min-h-[2.5rem] px-[1.125rem] border-none rounded-[0.25rem] bg-third text-[0.875rem] font-medium w-full text-white"
+                  >
                     <span>{language?.chat_with_freelancers}</span>
                   </button>
-                </Link>
+                </div>
               ) : (
                 <div className="w-full">
                   <button
