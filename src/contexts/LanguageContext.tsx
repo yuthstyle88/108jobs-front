@@ -32,7 +32,8 @@ export function LanguageProvider({
     if (isLocalhost) {
       window.location.pathname = `/${newLang}${cleanPath}`;
     } else {
-      window.location.href = `https://${newLang}.yourdomain.com/${newLang}${cleanPath}`;
+      window.location.pathname = `/${newLang}${cleanPath}`;
+      // window.location.href = `https://${newLang}.test-fastwork.vercel.app/${newLang}${cleanPath}`;
     }
   };
 

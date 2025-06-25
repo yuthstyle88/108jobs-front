@@ -8,6 +8,9 @@ const nextConfig = {
       "fastwork.ibrowe.com",
       "cdn.shopify.com",
       "pottybuddy.co",
+      "storage.googleapis.com",
+      "fw-fileupload-vn-production.s3.ap-southeast-1.amazonaws.com",
+      "fastlance.vn"
     ],
     remotePatterns: [
       {
