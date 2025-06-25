@@ -9,17 +9,40 @@ import { ServiceCatalogData } from "@/types/catalog";
 import { JobType } from "@/types/job";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Info } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import WarningLeaveModal from "../WarningLeaveModal";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getSchema = (createJobLanguage: any) =>
   z.object({
-    category: z.string().nonempty(createJobLanguage?.select_service_category_error || "Vui lòng chọn danh mục dịch vụ"),
-    type: z.string().nonempty(createJobLanguage?.select_sub_service_error || "Vui lòng chọn loại dịch vụ"),
-    name: z.string().min(5, createJobLanguage?.service_title_error || "Tiêu đề phải có ít nhất 5 ký tự"),
-    description: z.string().min(10, createJobLanguage?.service_description_error || "Mô tả phải có ít nhất 10 ký tự"),
+    category: z
+      .string()
+      .nonempty(
+        createJobLanguage?.select_service_category_error ||
+          "Vui lòng chọn danh mục dịch vụ"
+      ),
+    type: z
+      .string()
+      .nonempty(
+        createJobLanguage?.select_sub_service_error ||
+          "Vui lòng chọn loại dịch vụ"
+      ),
+    name: z
+      .string()
+      .min(
+        5,
+        createJobLanguage?.service_title_error ||
+          "Tiêu đề phải có ít nhất 5 ký tự"
+      ),
+    description: z
+      .string()
+      .min(
+        10,
+        createJobLanguage?.service_description_error ||
+          "Mô tả phải có ít nhất 10 ký tự"
+      ),
   });
 
 type FormData = z.infer<ReturnType<typeof getSchema>>;
@@ -33,6 +56,7 @@ interface Props {
 
 const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
   const createJobLanguage = useTranslateFile(LanguageFile.SELLER_CREATE_JOBS);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: jobsData, isLoading } = usePrivateFetch<ServiceCatalogData>(
     API_ROUTES.catalog.get_all_catalog
@@ -57,6 +81,10 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
   });
 
   const selectedCategory = watch("category");
+
+  const handleClose = () => {
+    setIsModalOpen(false);
+  };
 
   const subCategories = useMemo(() => {
     const selected = jobsData?.service_catalogs.find(
@@ -185,14 +213,12 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
           <div className="mt-2 p-3 bg-[#f6f7f8] rounded-lg flex">
             <Info className="w-5 h-5 text-[#728197] mr-2 flex-shrink-0 mt-0.5" />
             <div className="text-[0.875rem] leading-[1.65] text-[#728197]">
-              <p className="font-medium mb-1">{createJobLanguage?.service_title_guide_header}</p>
+              <p className="font-medium mb-1">
+                {createJobLanguage?.service_title_guide_header}
+              </p>
               <ul className="list-disc pl-5 space-y-1">
-                <li>
-                 {createJobLanguage?.service_title_guide_1}
-                </li>
-                <li>
-                  {createJobLanguage?.service_title_guide_2}
-                </li>
+                <li>{createJobLanguage?.service_title_guide_1}</li>
+                <li>{createJobLanguage?.service_title_guide_2}</li>
               </ul>
             </div>
           </div>
@@ -220,10 +246,17 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
             className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
             disabled={isMutating}
           >
-            {isMutating ? <LoadingCircle/> : createJobLanguage?.next_button}
+            {isMutating ? <LoadingCircle /> : createJobLanguage?.next_button}
           </button>
         </div>
       </div>
+      <WarningLeaveModal
+        isOpen={isModalOpen}
+        onClose={handleClose}
+        handleConfirmChange={() => {
+          
+        }}
+      />
     </form>
   );
 };

@@ -5,13 +5,11 @@ import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import LoadingBlur from "@/components/LoadingBlur";
 import { ProfileImage } from "@/constants/images";
-import { useChatLanguage } from "@/contexts/ChatLanguage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { ChatResponse } from "@/types/chat";
 import { ProfileData } from "@/types/userData";
 import { formatMessageTime } from "@/utils/formatMessageTime";
-import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -32,7 +30,6 @@ const ChatWrapper = () => {
   const params = useParams();
   const router = useRouter();
   const activeRoomId = params?.senderId;
-  const { languageData: chatLanguageData } = useChatLanguage();
   const { lang: currentLang } = useLanguage();
 
   const {
@@ -83,15 +80,7 @@ const ChatWrapper = () => {
     >
       <div className="p-4 border-b">
         <div className="relative">
-          <input
-            type="text"
-            placeholder={chatLanguageData?.search_placeholder}
-            className="w-full pl-8 pr-3 py-2 border rounded-md focus:outline-none focus:border-fastwork-blue"
-          />
-          <Search
-            size={18}
-            className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400"
-          />
+          <p className="text-text_primary text-center font-semibold w-full py-2 ">Chat History</p>
         </div>
       </div>
 

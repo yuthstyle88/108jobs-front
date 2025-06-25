@@ -15,7 +15,6 @@ const Ads = () => {
         {global?.ads_section_description}
       </p>
       <Link
-        target="_blank"
         rel="noopener noreferrer"
         href="https://form.jotform.com/251484529705059"
         className="mt-6"

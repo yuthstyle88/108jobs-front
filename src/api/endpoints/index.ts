@@ -42,6 +42,7 @@ export const API_ROUTES = {
     update_favorite_job: "/jobs/favorite",
     check_is_favorite_job: "/jobs/favorite",
     delete_favorite_job: "/jobs/favorite",
+    job_board_detail:"/public/job-post"
   },
   chat:{
     get_chat_history:"/messages/rooms",

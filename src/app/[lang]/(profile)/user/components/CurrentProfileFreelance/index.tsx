@@ -152,7 +152,6 @@ const CurrentProfileFreelance = ({ username }: Props) => {
 
               <Link
                 href="/seller-account-setting/freelance-profile"
-                target="_blank"
                 className="absolute top-4 right-4"
               >
                 <FontAwesomeIcon

@@ -88,7 +88,6 @@ const SellerHeader = () => {
                 <div className="py-2">
                   <Link
                     href={`/user/${user?.user.username}`}
-                    target="_blank"
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <User className="w-4 h-4 mr-3 text-gray-500" />
@@ -96,7 +95,6 @@ const SellerHeader = () => {
                   </Link>
                   <Link
                     href="/seller-account-setting/freelance-profile"
-                    target="_blank"
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <Settings className="w-4 h-4 mr-3 text-gray-500" />

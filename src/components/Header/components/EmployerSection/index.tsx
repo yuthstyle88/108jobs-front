@@ -50,7 +50,6 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
       </Link>
       <Link
         href="/chat"
-        target="_blank"
         className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
       >
         <FontAwesomeIcon
@@ -61,7 +60,6 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
       </Link>
       <NotificationDropdown />
       <Link
-        target="_blank"
         href="/reward/earn"
         className="text-white text-sm hover:bg-blue-800 hover:text-white"
       >

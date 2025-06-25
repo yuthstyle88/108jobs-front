@@ -8,18 +8,25 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useCategories } from "./hooks/useCategories";
 import { useJobPosts } from "./hooks/useJobPosts";
+import { useRouter } from "next/navigation";
+import LoadingMultiCircle from "@/components/LoadingMultiCircle";
+import Error from "@/app/error";
 
 const JobBoard = () => {
-  const [activeTab, setActiveTab] = useState<"myPosts" | "closedPosts">("myPosts");
+  const [activeTab, setActiveTab] = useState<"myPosts" | "closedPosts">(
+    "myPosts"
+  );
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  
+
+  const route = useRouter();
+
   const { categories } = useCategories();
-  const { 
-    jobPosts, 
-    pagination, 
-    isLoading: isJobsLoading 
+  const {
+    jobPosts,
+    pagination,
+    isLoading: isJobsLoading,
   } = useJobPosts({
-    categoryId: selectedCategory
+    categoryId: selectedCategory,
   });
 
   const {
@@ -29,15 +36,15 @@ const JobBoard = () => {
   } = useGlobalTranslate(LanguageFile.JOB_BOARD);
 
   if (isLanguageLoading) return <Loading />;
-  if (languageError) return <div>Error loading language data</div>;
+  if (languageError) return <Error/>;
 
   const formatDate = (dateString: string) => {
     if (!dateString || dateString === "-") return "-";
     const date = new Date(dateString);
-    return date.toLocaleDateString('th-TH', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
+    return date.toLocaleDateString("th-TH", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
     });
   };
 
@@ -49,7 +56,7 @@ const JobBoard = () => {
             {jobBoardLanguageData?.section_job_board}
           </h2>
           <p className="text-gray-600">
-          {jobBoardLanguageData?.subtitle_job_board}
+            {jobBoardLanguageData?.subtitle_job_board}
           </p>
         </div>
 
@@ -83,12 +90,14 @@ const JobBoard = () => {
             <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
               <div className="w-full sm:w-48">
                 <div className="relative">
-                  <select 
+                  <select
                     className="appearance-none bg-white border border-gray-300 rounded-lg w-full py-2.5 px-4 text-gray-700 leading-tight focus:outline-none focus:border-blue-500"
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
                   >
-                    <option value="">{jobBoardLanguageData?.dropdown_search_category}</option>
+                    <option value="">
+                      {jobBoardLanguageData?.dropdown_search_category}
+                    </option>
                     {categories.map((category) => (
                       <option key={category.id} value={category.id}>
                         {category.name}
@@ -147,123 +156,135 @@ const JobBoard = () => {
             </div>
 
             <div className="flex items-center gap-4 w-full md:w-auto">
-              <Link href="/start-selling" className="text-blue-600 text-sm hover:underline">
+              <Link
+                href="/start-selling"
+                className="text-blue-600 text-sm hover:underline"
+              >
                 {jobBoardLanguageData?.want_to_get_job_board}
               </Link>
-              <Link 
-                href="/job-board/create-job" 
+              <Link
+                href="/job-board/create-job"
                 className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
               >
                 {jobBoardLanguageData?.button_post_job || "Post a Job"} (0/3)
               </Link>
             </div>
-          </div>  
+          </div>
 
           <div className="overflow-x-auto border-1 border-border_primary rounded-lg">
             {isJobsLoading ? (
               <div className="py-12 text-center">
-                <Loading />
+                <LoadingMultiCircle />
               </div>
             ) : (
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    {jobBoardLanguageData?.table_header_title}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    {jobBoardLanguageData?.table_header_category}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    {jobBoardLanguageData?.table_header_job_type}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    {jobBoardLanguageData?.table_header_budget}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px] visible"
-                  >
-                    {jobBoardLanguageData?.table_header_post_date || "Posted Date"}
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px] visible"
-                  >
-                    {jobBoardLanguageData?.table_header_deadline || "Deadline"}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {jobPosts.length > 0 ? (
-                  jobPosts.map((job) => (
-                    <tr key={job.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-start">
-                          <div className="mr-2 mt-1">
-                            <svg
-                              className="h-5 w-5 text-gray-400"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M9 12h6m-3-3v6M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      {jobBoardLanguageData?.table_header_title}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      {jobBoardLanguageData?.table_header_category}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      {jobBoardLanguageData?.table_header_job_type}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      {jobBoardLanguageData?.table_header_budget}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px] visible"
+                    >
+                      {jobBoardLanguageData?.table_header_post_date ||
+                        "Posted Date"}
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px] visible"
+                    >
+                      {jobBoardLanguageData?.table_header_deadline ||
+                        "Deadline"}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {jobPosts.length > 0 ? (
+                    jobPosts.map((job) => (
+                      <tr
+                        onClick={() => route.push(`/job-board/${job.id}`)}
+                        key={job.id}
+                        className="hover:bg-gray-50"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-start">
+                            <div className="mr-2 mt-1">
+                              <svg
+                                className="h-5 w-5 text-gray-400"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M9 12h6m-3-3v6M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <div>
+                              <Link
+                                href={`/job-board/${job.id}`}
+                                className=" hover:text-blue-600 font-medium text-[14px] text-text_primary font-sans"
+                              >
+                                {job.job_title}
+                              </Link>
+                            </div>
                           </div>
-                          <div>
-                            <Link
-                              href="#"
-                              className=" hover:text-blue-600 font-medium text-[14px] text-text_primary font-sans"
-                            >
-                              {job.job_title}
-                            </Link>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {job.category}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {job.working_from}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                        {parseFloat(job.budget).toLocaleString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 visible">
-                        {formatDate(job.created_at)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 visible">
-                        {formatDate(job.deadline) || "-"}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {job.category}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {job.working_from}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
+                          {parseFloat(job.budget).toLocaleString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 visible">
+                          {formatDate(job.created_at)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 visible">
+                          {formatDate(job.deadline) || "-"}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={6}
+                        className="px-6 py-8 text-center text-gray-500"
+                      >
+                        No job posts found
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-                      No job posts found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  )}
+                </tbody>
+              </table>
             )}
           </div>
 
@@ -310,8 +331,10 @@ const JobBoard = () => {
                   </svg>
                 </Link>
                 <span className="mx-3 text-gray-700">
-                  <span className="font-medium text-blue-600">{pagination.page}</span> จาก{" "}
-                  <span>{pagination.totalPages}</span>
+                  <span className="font-medium text-blue-600">
+                    {pagination.page}
+                  </span>{" "}
+                  จาก <span>{pagination.totalPages}</span>
                 </span>
                 <Link
                   href="#"

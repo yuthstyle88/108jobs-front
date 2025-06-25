@@ -30,7 +30,7 @@ export type Profile = {
   created_at: string;
   updated_at: string;
   membership_level_id: string;
-  is_verified: boolean;
+  is_verified: string;
   freelancer_type: string;
 };
 
