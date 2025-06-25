@@ -190,7 +190,6 @@ const SellerHome = () => {
               </div>
             </div>
             <Link
-              target="_blank"
               href={`/user/${user?.user.username}`}
               className="flex flex-row items-center gap-2"
             >

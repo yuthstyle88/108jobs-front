@@ -363,7 +363,6 @@ const MyServices = () => {
             <div className="mt-4 mb-6">
               <Link
                 href="/seller"
-                target="_blank"
                 className="text-blue-600 underline text-sm"
               >
                 {commissionLanguage?.check_your_tier}

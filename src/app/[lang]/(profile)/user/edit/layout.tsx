@@ -74,7 +74,6 @@ export default function StartSellingLayout({
 
               <div className="px-4 py-2 mt-4 border-1 border-border_primary rounded-lg">
                 <Link
-                  target="_blank"
                   href={`/user/${user?.user.username}`}
                   className="text-blue-600 flex justify-center items-center gap-2"
                 >

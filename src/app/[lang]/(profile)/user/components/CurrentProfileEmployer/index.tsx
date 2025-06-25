@@ -107,7 +107,6 @@ const CurrentProfileEmployer = ({ username }: Props) => {
               )}
               <Link
                 href="/account-setting/basic-info"
-                target="_blank"
                 className="absolute top-4 right-4"
               >
                 <FontAwesomeIcon

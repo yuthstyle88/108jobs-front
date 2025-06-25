@@ -72,7 +72,7 @@ const SpProfile = () => {
         </div>
       </section>
       <section>
-        <Link target="_blank" href="/coin">
+        <Link href="/coin">
           <div
             style={{ height: "52px", borderRadius: "12px 12px 0 0" }}
             className="flex flex-row justify-between items-center gap-2 px-4 profile-gradient "
@@ -125,7 +125,7 @@ const SpProfile = () => {
                 <div>Seller center</div>
               </div>
             </Link>
-            <Link target="_blank" href="/reward/earn">
+            <Link href="/reward/earn">
               <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text_secondary font-sans">
                 <FontAwesomeIcon
                   icon={faGift}
@@ -157,7 +157,7 @@ const SpProfile = () => {
       {user?.roles.includes(ROLE.EMPLOYER) &&
         !user?.roles.includes(ROLE.FREELANCER) && (
           <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
-            <Link target="_blank" href="/reward/earn">
+            <Link href="/reward/earn">
               <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text_secondary font-sans">
                 <FontAwesomeIcon
                   icon={faGift}
@@ -175,7 +175,7 @@ const SpProfile = () => {
                 <div>Coupons</div>
               </div>
             </Link>
-            <Link target="_blank" href="/coin">
+            <Link href="/coin">
               <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
                 <FontAwesomeIcon
                   icon={faCoins}
@@ -250,7 +250,6 @@ const SpProfile = () => {
             <li>
               <Link
                 href="/job-board"
-                target="_blank"
                 className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
               >
                 <span>Job board</span>

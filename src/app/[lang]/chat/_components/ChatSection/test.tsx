@@ -331,7 +331,6 @@ const ChatSection = () => {
                             ) : (
                               <a
                                 href={msg.file_url}
-                                target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-blue-600 underline mt-2 block"
                               >

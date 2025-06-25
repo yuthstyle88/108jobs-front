@@ -190,7 +190,6 @@ export const RegisterForm = ({
             {authen?.checkbox_terms_conditions}{" "}
             <Link
               href="/content/terms"
-              target="_blank"
               className="text-text_secondary underline"
             >
               {authen?.checkbox_terms_conditions_redirect}
@@ -212,7 +211,6 @@ export const RegisterForm = ({
             {authen?.checkbox_terms_conditions}{" "}
             <Link
               href="/content/privacy"
-              target="_blank"
               className="text-text_secondary underline"
             >
               {authen?.checkbox_privacy_policy_redirect}

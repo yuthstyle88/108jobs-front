@@ -147,7 +147,7 @@ const SellerMenu = ({ isOpen, onClose }: SellerMenuProps) => {
                 Find freelancer
               </button>
             </Link>
-            <Link target="_blank" href="/job-board" className="flex-1">
+            <Link href="/job-board" className="flex-1">
               <button className="py-2 w-full cursor-pointer bg-white text-third font-semibold rounded-md border-1 border-border_primary">
                 Job board
               </button>

@@ -59,7 +59,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
           />
         </div>
       </Link>
-      <Link href="/seller" target="_blank">
+      <Link href="/seller">
         <div className="relative">
           <div className="text-[13px] font-light text-white relative hover:bg-black/20 transition-all duration-150 ease-in-out z-10 px-6 py-3">
             {interpolateElement(data?.label_freelancer_level || "", {
@@ -80,7 +80,6 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
       <div className="py-2">
         <Link
           href="/seller-account-setting/freelance-profile"
-          target="_blank"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
@@ -121,7 +120,6 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
         </Link>
         <Link
           href="/seller"
-          target="_blank"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
         >
           <FontAwesomeIcon
@@ -132,7 +130,6 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
         </Link>
         <Link
           href="/job-board"
-          target="_blank"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
@@ -143,7 +140,6 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
         </Link>
         <Link
           href="/reward/earn"
-          target="_blank"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
@@ -157,7 +153,6 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
         </Link>
         <Link
           href="/seller/my-service"
-          target="_blank"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
@@ -168,7 +163,6 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
         </Link>
         <Link
           href="/seller/withdrawal"
-          target="_blank"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon

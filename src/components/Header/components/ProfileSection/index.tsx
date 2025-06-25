@@ -110,7 +110,6 @@ const ProfileSection = ({ data, user }: ProfileSectionProps) => {
         </Link>
         <Link
           href="/job-board"
-          target="_blank"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
         >
           <FontAwesomeIcon
@@ -120,7 +119,6 @@ const ProfileSection = ({ data, user }: ProfileSectionProps) => {
           <span className="text-gray-700">{data?.menu_job_board}</span>
         </Link>
         <Link
-          target="_blank"
           href="/reward/earn"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >

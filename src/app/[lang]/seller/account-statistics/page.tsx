@@ -78,7 +78,6 @@ const AccountStats = () => {
               <Link
                 className="bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-md"
                 href="/job-board"
-                target="_blank"
               >
                 {sellerAccStatsLanguage?.find_jobs_button}
               </Link>
