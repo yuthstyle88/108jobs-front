@@ -7,6 +7,8 @@ import FontAwesomeConfig from "./fontawesome";
 import "./globals.css";
 import { Providers } from "./providers";
 import { generateLocalizedMetadata } from "@/lib/metadata";
+import { SWRConfig } from "swr";
+import swrConfig from "@/config/swrConfig";
 
 const kanit = Kanit({
   subsets: ["latin", "vietnamese", "thai"],
@@ -36,10 +38,12 @@ export default async function RootLayout({
         className={`${kanit.className} antialiased bg-white`}
       >
         <Providers session={session}>
+          <SWRConfig value={swrConfig}>
           <Toaster richColors closeButton position="top-right" />
           <SessionUserProvider initialSession={session}>
             <LanguageProvider initialLang="th">{children}</LanguageProvider>
           </SessionUserProvider>
+          </SWRConfig>
         </Providers>
       </body>
     </html>

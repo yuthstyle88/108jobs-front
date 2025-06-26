@@ -5,9 +5,11 @@ import { LandingImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import Image from "next/image";
+interface ErrorProps {
+  message?: string;
+}
 
-
-export default function Error() {
+export default function Error({ message }: ErrorProps) {
   const {
     data: errorLanguageData,
     isLoading,
@@ -15,7 +17,7 @@ export default function Error() {
   } = useGlobalTranslate(LanguageFile.ERROR);
 
   if (isLoading) return <Loading />;
-  if (isError) return <div>Error loading language data</div>;
+  // if (isError) return <div>Error loading language data</div>;
 
   return (
     <div className="min-h-screen w-full h-full flex items-center justify-center bg-secondary">
@@ -37,9 +39,16 @@ export default function Error() {
           alt="error"
           className="w-[80%] h-[280px] sm:w-full"
         />
+        {isError ? 
+        <p className="text-center text-[20px] md:text-[32px] text-text_primary font-sans">
+          {message}
+        </p>
+        :
         <p className="text-center text-[20px] md:text-[32px] text-text_primary font-sans">
           {errorLanguageData?.title}
         </p>
+        }
+       
       </div>
     </div>
   );

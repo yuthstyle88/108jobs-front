@@ -38,8 +38,11 @@ function useNotification() {
       success: {
         update_favorite: "Successfully saved job to favorites",
         delete_favorite: "Successfully unsaved job from favorites",
+        create_job_board: "Successfully create new job board"
       },
-      fail: {},
+      fail: {
+        create_job_board: "Failed create new job board"
+      },
     },
     review:{
       success: {
