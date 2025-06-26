@@ -43,14 +43,13 @@ import SpCatalog from "@/containers/SpCatalog";
 import SpHeader from "@/containers/SpHeader";
 import { usePublicFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import useHandleFetchError from "@/hooks/useHandleFetchError";
 import { ServiceCatalogData } from "@/types/catalog";
 import { catalogIcons } from "@/types/catalogIcon";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import Error from "../error";
-import useNotification from "@/hooks/useNotification";
-import useHandleFetchError from "@/hooks/useHandleFetchError";
 
 const interestImages = [
   LandingImage.interest_1,
@@ -85,7 +84,6 @@ export default function Home() {
   const { data: session } = useSession();
   const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
   const [expanded, setExpanded] = useState(false);
-  const { success_message, error_message } = useNotification();
   const [isOpenLocationSelection, setIsOpenLocationSelection] = useState(false);
 
   const {

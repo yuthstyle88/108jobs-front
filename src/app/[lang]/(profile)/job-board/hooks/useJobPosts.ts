@@ -23,31 +23,30 @@ export interface JobPostsResponse {
 interface UseJobPostsProps {
   categoryId?: string;
   jobType?: string;
+  page?: number;
 }
 
-export const useJobPosts = ({ categoryId, jobType }: UseJobPostsProps = {}) => {
-  // Build query string for filters
+export const useJobPosts = ({ categoryId, jobType, page = 1 }: UseJobPostsProps = {}) => {
   const queryParams = useMemo(() => {
     const params = new URLSearchParams();
-    
+
     if (categoryId) {
       params.append('service_catalog_id', categoryId);
     }
-    
+
     if (jobType) {
       params.append('job_type', jobType);
     }
-    
-    const queryString = params.toString();
-    return queryString ? `?${queryString}` : '';
-  }, [categoryId, jobType]);
 
-  const {
-    data,
-    isLoading,
-    error,
-    mutate
-  } = usePublicFetch<JobPostsResponse>(`${process.env.NEXT_PUBLIC_API_BASE_URL}/job-board/posts${queryParams}`);
+    params.append('page', page.toString());
+    params.append('page_size', '5'); // Page size có thể thay đổi theo nhu cầu
+
+    return `?${params.toString()}`;
+  }, [categoryId, jobType, page]);
+
+  const { data, isLoading, error, mutate } = usePublicFetch<JobPostsResponse>(
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/job-board/posts${queryParams}`
+  );
 
   return {
     jobPosts: data?.items || [],
@@ -61,4 +60,4 @@ export const useJobPosts = ({ categoryId, jobType }: UseJobPostsProps = {}) => {
     error,
     mutate
   };
-}; 
+};
