@@ -1,6 +1,8 @@
 import axios from "axios";
 import { getSession } from "next-auth/react";
 
+let cachedAccessToken: string | null = null;
+
 export const axiosPublic = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   timeout: 10000,
@@ -18,13 +20,17 @@ export const axiosPrivate = axios.create({
 });
 
 axiosPrivate.interceptors.request.use(async (config) => {
-  const session = await getSession();
-  if (session?.accessToken) {
-    config.headers.Authorization = `Bearer ${session.accessToken}`;
+  if (!cachedAccessToken) {
+    const session = await getSession();
+    cachedAccessToken = session?.accessToken || null;
   }
+
+  if (cachedAccessToken) {
+    config.headers.Authorization = `Bearer ${cachedAccessToken}`;
+  }
+
   return config;
 });
-
 export const axiosFileUpload = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   timeout: 10000,
