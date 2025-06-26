@@ -3,7 +3,7 @@ import { API_ROUTES } from "@/api/endpoints";
 import Loading from "@/components/Loading";
 import LoadingCircle from "@/components/LoadingCircle";
 import { LanguageFile } from "@/constants/language";
-import { usePublicFetch } from "@/hooks/api-hooks";
+import { usePublicFetch, usePrivatePost } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { ServiceCatalogData } from "@/types/catalog";
 import {
@@ -11,158 +11,80 @@ import {
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CreateJobPayload } from "@/types/job-board";
+import useNotification from "@/hooks/useNotification";
+
+const jobSchema = z.object({
+  service_catalog_id: z.string().min(1, "Service catalog is required"),
+  job_title: z.string().min(5, "Job title must be at least 5 characters"),
+  description: z
+    .string()
+    .min(20, "Job description must be at least 20 characters"),
+  is_english_required: z.boolean(),
+  example_url: z.string().url().optional().or(z.literal("")),
+  budget: z.string().min(1, "Budget is required"),
+  deadline: z.string().optional().or(z.literal("")),
+  is_anonymous_post: z.boolean(),
+  working_from: z.enum(["Freelance", "Contract", "Parttime", "Fulltime"]),
+  intended_use: z.enum(["Business", "Personal", "Unknown"]),
+});
 
 const CreateJobPage = () => {
   const router = useRouter();
-  const { data: session } = useSession();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const { trigger: createJob, isMutating } = usePrivatePost<CreateJobPayload>(
+    API_ROUTES.job.create_job_board
+  );
+
+  const { success_message, error_message } = useNotification();
 
   const {
     data: createJobLanguage,
     isLoading: isLanguageLoading,
     error: languageError,
   } = useGlobalTranslate(LanguageFile.JOB_BOARD_CREATE);
-
   const {
     data: catalogData,
     isLoading: isCatalogLoading,
     error: catalogError,
   } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.get_all_catalog);
 
-  const [formData, setFormData] = useState({
-    service_catalog_id: "",
-    job_title: "",
-    description: "",
-    is_english_required: false,
-    example_url: "",
-    budget: "",
-    deadline: "",
-    is_anonymous_post: false,
-    working_from: "Freelance",
-    intended_use: "Personal",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useForm({
+    resolver: zodResolver(jobSchema),
+    defaultValues: {
+      service_catalog_id: "",
+      job_title: "",
+      description: "",
+      is_english_required: false,
+      example_url: "",
+      budget: "",
+      deadline: "",
+      is_anonymous_post: false,
+      working_from: "Freelance",
+      intended_use: "Personal",
+    },
   });
 
-  const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: checked,
-    });
-  };
-
-  const handleRadioChange = (field: string, value: string) => {
-    setFormData({
-      ...formData,
-      [field]: value,
-    });
-  };
-
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    // Job title validation
-    if (!formData.job_title.trim()) {
-      newErrors.job_title = "Job title is required";
-    } else if (formData.job_title.trim().length < 5) {
-      newErrors.job_title = "Job title must be at least 5 characters";
-    }
-
-    // Description validation
-    if (!formData.description.trim()) {
-      newErrors.description = "Job description is required";
-    } else if (formData.description.trim().length < 20) {
-      newErrors.description = "Job description must be at least 20 characters";
-    }
-
-    // Service category validation
-    if (!formData.service_catalog_id) {
-      newErrors.service_catalog_id = "Service catalog is required";
-    }
-
-    // Budget validation
-    if (!formData.budget) {
-      newErrors.budget = "Budget is required";
-    } else if (parseFloat(formData.budget) <= 0) {
-      newErrors.budget = "Budget must be greater than 0";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Validate form before submission
-    if (!validateForm()) {
-      // Scroll to the first error
-      const firstErrorField = Object.keys(errors)[0];
-      if (firstErrorField) {
-        const element = document.getElementById(firstErrorField);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-          element.focus();
-        }
-      }
-      return;
-    }
-
-    setIsSubmitting(true);
-
+  const onSubmit = async (data: CreateJobPayload) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/job-post`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session?.accessToken}`,
-          },
-          body: JSON.stringify({
-            service_catalog_id: formData.service_catalog_id,
-            job_title: formData.job_title,
-            description: formData.description,
-            is_english_required: formData.is_english_required,
-            example_url: formData.example_url || undefined,
-            budget: parseFloat(formData.budget),
-            deadline: formData.deadline || undefined,
-            is_anonymous_post: formData.is_anonymous_post,
-            working_from: formData.working_from,
-            intended_use: formData.intended_use,
-          }),
-        }
-      );
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to create job post");
-      }
-
-      // Redirect to job board on success
+      await createJob({ ...data });
+      success_message("job", "create_job_board");
       router.push("/job-board");
     } catch (error) {
-      console.error("Error submitting job post:", error);
-      // Here you would typically show an error message to the user
-    } finally {
-      setIsSubmitting(false);
+      error_message("job", `create_job_board`);
+      console.error("Error creating job:", error);
     }
   };
 
@@ -187,7 +109,7 @@ const CreateJobPage = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             {/* Job Title */}
             <div className="mb-6">
               <label
@@ -197,16 +119,12 @@ const CreateJobPage = () => {
                 {createJobLanguage?.job_title_label}
               </label>
               <input
-                type="text"
                 id="job_title"
-                name="job_title"
-                value={formData.job_title}
-                onChange={handleInputChange}
+                {...register("job_title")}
                 placeholder={createJobLanguage?.job_title_placeholder}
                 className={`w-full text-text_primary placeholder:text-text_secondary placeholder:font-sans p-3 border ${
                   errors.job_title ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                required
               />
               {errors.job_title && (
                 <p className="mt-1 text-red-500 text-sm flex items-center">
@@ -214,12 +132,12 @@ const CreateJobPage = () => {
                     icon={faExclamationCircle}
                     className="mr-1"
                   />
-                  {errors.job_title}
+                  {errors.job_title.message}
                 </p>
               )}
             </div>
 
-            {/* Working From Type */}
+            {/* Working From */}
             <div className="mb-6">
               <label className="block text-gray-700 font-medium mb-2">
                 {createJobLanguage?.employment_type_label}
@@ -229,12 +147,8 @@ const CreateJobPage = () => {
                   <input
                     type="radio"
                     id="freelance"
-                    name="working_from"
                     value="Freelance"
-                    checked={formData.working_from === "Freelance"}
-                    onChange={() =>
-                      handleRadioChange("working_from", "Freelance")
-                    }
+                    {...register("working_from")}
                     className="h-4 w-4 text-blue-600"
                   />
                   <label htmlFor="freelance" className="ml-2 text-gray-700">
@@ -246,12 +160,8 @@ const CreateJobPage = () => {
                   <input
                     type="radio"
                     id="contract"
-                    name="working_from"
                     value="Contract"
-                    checked={formData.working_from === "Contract"}
-                    onChange={() =>
-                      handleRadioChange("working_from", "Contract")
-                    }
+                    {...register("working_from")}
                     className="h-4 w-4 text-blue-600"
                   />
                   <label htmlFor="contract" className="ml-2 text-gray-700">
@@ -263,12 +173,8 @@ const CreateJobPage = () => {
                   <input
                     type="radio"
                     id="parttime"
-                    name="working_from"
                     value="Parttime"
-                    checked={formData.working_from === "Parttime"}
-                    onChange={() =>
-                      handleRadioChange("working_from", "Parttime")
-                    }
+                    {...register("working_from")}
                     className="h-4 w-4 text-blue-600"
                   />
                   <label htmlFor="parttime" className="ml-2 text-gray-700">
@@ -280,12 +186,8 @@ const CreateJobPage = () => {
                   <input
                     type="radio"
                     id="fulltime"
-                    name="working_from"
                     value="Fulltime"
-                    checked={formData.working_from === "Fulltime"}
-                    onChange={() =>
-                      handleRadioChange("working_from", "Fulltime")
-                    }
+                    {...register("working_from")}
                     className="h-4 w-4 text-blue-600"
                   />
                   <label htmlFor="fulltime" className="ml-2 text-gray-700">
@@ -308,22 +210,19 @@ const CreateJobPage = () => {
               </p>
               <textarea
                 id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
+                {...register("description")}
                 placeholder={createJobLanguage?.job_description_details}
                 className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border ${
                   errors.description ? "border-red-500" : "border-gray-300"
                 } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[200px]`}
-                required
-              ></textarea>
+              />
               {errors.description && (
                 <p className="mt-1 text-red-500 text-sm flex items-center">
                   <FontAwesomeIcon
                     icon={faExclamationCircle}
                     className="mr-1"
                   />
-                  {errors.description}
+                  {errors.description.message}
                 </p>
               )}
             </div>
@@ -334,9 +233,7 @@ const CreateJobPage = () => {
                 <input
                   type="checkbox"
                   id="is_english_required"
-                  name="is_english_required"
-                  checked={formData.is_english_required}
-                  onChange={handleCheckboxChange}
+                  {...register("is_english_required")}
                   className="h-4 w-4 text-blue-600"
                 />
                 <label
@@ -358,11 +255,8 @@ const CreateJobPage = () => {
                   {createJobLanguage?.example_url}
                 </label>
                 <input
-                  type="url"
                   id="example_url"
-                  name="example_url"
-                  value={formData.example_url}
-                  onChange={handleInputChange}
+                  {...register("example_url")}
                   placeholder={
                     createJobLanguage?.service_category_placeholder_url
                   }
@@ -370,7 +264,6 @@ const CreateJobPage = () => {
                 />
               </div>
 
-              {/* Service Catalog */}
               <div>
                 <label
                   htmlFor="service_catalog_id"
@@ -380,15 +273,12 @@ const CreateJobPage = () => {
                 </label>
                 <select
                   id="service_catalog_id"
-                  name="service_catalog_id"
-                  value={formData.service_catalog_id}
-                  onChange={handleInputChange}
+                  {...register("service_catalog_id")}
                   className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border ${
                     errors.service_catalog_id
                       ? "border-red-500"
                       : "border-gray-300"
                   } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                  required
                 >
                   <option disabled value="">
                     {createJobLanguage?.service_category_placeholder_select}
@@ -405,7 +295,7 @@ const CreateJobPage = () => {
                       icon={faExclamationCircle}
                       className="mr-1"
                     />
-                    {errors.service_catalog_id}
+                    {errors.service_catalog_id.message}
                   </p>
                 )}
               </div>
@@ -422,16 +312,13 @@ const CreateJobPage = () => {
                 </label>
                 <div className="relative">
                   <input
-                    type="number"
+                    type="text"
                     id="budget"
-                    name="budget"
-                    value={formData.budget}
+                    {...register("budget")}
                     placeholder="0"
-                    onChange={handleInputChange}
                     className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border ${
                       errors.budget ? "border-red-500" : "border-gray-300"
                     } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    required
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                     THB
@@ -443,7 +330,7 @@ const CreateJobPage = () => {
                       icon={faExclamationCircle}
                       className="mr-1"
                     />
-                    {errors.budget}
+                    {errors.budget.message}
                   </p>
                 )}
               </div>
@@ -458,9 +345,7 @@ const CreateJobPage = () => {
                 <input
                   type="date"
                   id="deadline"
-                  name="deadline"
-                  value={formData.deadline}
-                  onChange={handleInputChange}
+                  {...register("deadline")}
                   className="text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -477,11 +362,11 @@ const CreateJobPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
                 <div
                   className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer ${
-                    formData.intended_use === "Business"
+                    watch("intended_use") === "Business"
                       ? "bg-blue-100 border border-blue-300"
                       : "bg-white border border-gray-200"
                   }`}
-                  onClick={() => handleRadioChange("intended_use", "Business")}
+                  onClick={() => setValue("intended_use", "Business")}
                 >
                   <div className="text-blue-600 mb-2">
                     <svg
@@ -499,16 +384,18 @@ const CreateJobPage = () => {
                       />
                     </svg>
                   </div>
-                  <span className="text-gray-700">{createJobLanguage?.intended_use_business}</span>
+                  <span className="text-gray-700">
+                    {createJobLanguage?.intended_use_business}
+                  </span>
                 </div>
 
                 <div
                   className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer ${
-                    formData.intended_use === "Personal"
+                    watch("intended_use") === "Personal"
                       ? "bg-blue-100 border border-blue-300"
                       : "bg-white border border-gray-200"
                   }`}
-                  onClick={() => handleRadioChange("intended_use", "Personal")}
+                  onClick={() => setValue("intended_use", "Personal")}
                 >
                   <div className="text-blue-600 mb-2">
                     <svg
@@ -526,16 +413,18 @@ const CreateJobPage = () => {
                       />
                     </svg>
                   </div>
-                  <span className="text-gray-700">{createJobLanguage?.intended_use_personal}</span>
+                  <span className="text-gray-700">
+                    {createJobLanguage?.intended_use_personal}
+                  </span>
                 </div>
 
                 <div
                   className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer ${
-                    formData.intended_use === "Unknown"
+                    watch("intended_use") === "Unknown"
                       ? "bg-blue-100 border border-blue-300"
                       : "bg-white border border-gray-200"
                   }`}
-                  onClick={() => handleRadioChange("intended_use", "Unknown")}
+                  onClick={() => setValue("intended_use", "Unknown")}
                 >
                   <div className="text-blue-600 mb-2">
                     <svg
@@ -553,33 +442,29 @@ const CreateJobPage = () => {
                       />
                     </svg>
                   </div>
-                  <span className="text-gray-700">{createJobLanguage?.intended_use_unknown}</span>
+                  <span className="text-gray-700">
+                    {createJobLanguage?.intended_use_unknown}
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Anonymous Post Toggle */}
+            {/* Anonymous Post */}
             <div className="mb-6 flex items-center">
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
                   className="sr-only peer"
-                  checked={formData.is_anonymous_post}
-                  onChange={(e) =>
-                    handleCheckboxChange({
-                      target: {
-                        name: "is_anonymous_post",
-                        checked: e.target.checked,
-                      },
-                    } as React.ChangeEvent<HTMLInputElement>)
-                  }
+                  {...register("is_anonymous_post")}
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                <span className="ms-3 text-gray-700">{createJobLanguage?.anonymous_post_label}</span>
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                <span className="ml-3 text-gray-700">
+                  {createJobLanguage?.anonymous_post_label}
+                </span>
               </label>
             </div>
 
-            {/* Action Buttons */}
+            {/* Buttons */}
             <div className="flex justify-end space-x-4 mt-10">
               <Link
                 href="/job-board"
@@ -590,9 +475,13 @@ const CreateJobPage = () => {
               <button
                 type="submit"
                 className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
-                disabled={isSubmitting}
+                disabled={isMutating}
               >
-                {isSubmitting ? <LoadingCircle/> : createJobLanguage?.submit_button}
+                {isMutating ? (
+                  <LoadingCircle />
+                ) : (
+                  createJobLanguage?.submit_button
+                )}
               </button>
             </div>
           </form>

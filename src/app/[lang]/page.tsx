@@ -11,7 +11,7 @@ import {
   faArrowRight,
   faCheck,
   faPlay,
-  faQuoteLeft
+  faQuoteLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -48,6 +48,9 @@ import { catalogIcons } from "@/types/catalogIcon";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
+import Error from "../error";
+import useNotification from "@/hooks/useNotification";
+import useHandleFetchError from "@/hooks/useHandleFetchError";
 
 const interestImages = [
   LandingImage.interest_1,
@@ -82,7 +85,7 @@ export default function Home() {
   const { data: session } = useSession();
   const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
   const [expanded, setExpanded] = useState(false);
-
+  const { success_message, error_message } = useNotification();
   const [isOpenLocationSelection, setIsOpenLocationSelection] = useState(false);
 
   const {
@@ -121,8 +124,11 @@ export default function Home() {
   const serviceCatalogs = catalogData?.service_catalogs || [];
   const activeCatalog = serviceCatalogs[activeCatalogIndex];
 
+  const errorMsg = useHandleFetchError(error || homeError);
   if (isLoading || homeLoading || isCatalogLoading) return <Loading />;
-  if (error || homeError) return <div>Error loading language data</div>;
+
+  if (errorMsg) return <Error message={errorMsg} />;
+
   return (
     <div className="min-h-[100vh] bg-white">
       {/* <Header type="transparent" languageData={globalLanguageData} /> */}
@@ -142,7 +148,7 @@ export default function Home() {
             <p className="text-[18px] font-medium">
               {homeLanguageData?.title_banner_home_page_2}
             </p>
-            <SearchInput language={globalLanguageData}/>
+            <SearchInput language={globalLanguageData} />
           </div>
         </section>
         <section className="hidden sm:block">
@@ -242,7 +248,7 @@ export default function Home() {
           <SpAdsSlider />
         </section>
         <section className="block sm:hidden p-[0.75rem] border-b-[0.25rem] border-border_primary ">
-          <SpCatalog activeCatalog={activeCatalog}/>
+          <SpCatalog activeCatalog={activeCatalog} />
         </section>
 
         <section className="py-6 sm:py-24 grid grid-container-desktop-banner gap-y-4 sm:gap-y-12 ">
