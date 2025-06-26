@@ -80,8 +80,8 @@ const CreateJobPage = () => {
   const onSubmit = async (data: CreateJobPayload) => {
     try {
       await createJob({ ...data });
+      await router.push("/job-board");
       success_message("job", "create_job_board");
-      router.push("/job-board");
     } catch (error) {
       error_message("job", `create_job_board`);
       console.error("Error creating job:", error);
@@ -124,7 +124,7 @@ const CreateJobPage = () => {
                 placeholder={createJobLanguage?.job_title_placeholder}
                 className={`w-full text-text_primary placeholder:text-text_secondary placeholder:font-sans p-3 border ${
                   errors.job_title ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-red-200`}
               />
               {errors.job_title && (
                 <p className="mt-1 text-red-500 text-sm flex items-center">
@@ -214,7 +214,7 @@ const CreateJobPage = () => {
                 placeholder={createJobLanguage?.job_description_details}
                 className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border ${
                   errors.description ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[200px]`}
+                } rounded-lg focus:outline-none focus:ring-2 focus:ring-red-200 min-h-[200px]`}
               />
               {errors.description && (
                 <p className="mt-1 text-red-500 text-sm flex items-center">
@@ -260,7 +260,7 @@ const CreateJobPage = () => {
                   placeholder={
                     createJobLanguage?.service_category_placeholder_url
                   }
-                  className="text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-200"
                 />
               </div>
 
@@ -278,7 +278,7 @@ const CreateJobPage = () => {
                     errors.service_catalog_id
                       ? "border-red-500"
                       : "border-gray-300"
-                  } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  } rounded-lg focus:outline-none focus:ring-2 focus:ring-red-200`}
                 >
                   <option disabled value="">
                     {createJobLanguage?.service_category_placeholder_select}
@@ -318,7 +318,7 @@ const CreateJobPage = () => {
                     placeholder="0"
                     className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border ${
                       errors.budget ? "border-red-500" : "border-gray-300"
-                    } rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    } rounded-lg focus:outline-none focus:ring-2 focus:ring-red-200`}
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                     THB
@@ -346,7 +346,7 @@ const CreateJobPage = () => {
                   type="date"
                   id="deadline"
                   {...register("deadline")}
-                  className="text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-200"
                 />
               </div>
             </div>

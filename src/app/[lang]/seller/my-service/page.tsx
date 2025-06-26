@@ -21,7 +21,7 @@ import {
   Info,
   Pencil,
   Plus,
-  Trash2
+  Trash2,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -143,16 +143,18 @@ const MyServices = () => {
           </button>
         </Link>
       </div>
-
-      <div className="bg-orange-100 border border-blue-100 rounded-lg p-4 mb-4 flex items-start">
-        <Info className="w-5 h-5 text-orange-600 mr-3 mt-0.5 flex-shrink-0" />
-        <div className="text-sm">
-          <span className="text-gray-700">
-            You are currently pending approval by Fastwork. You will be able to
-            post jobs once you are approved.
-          </span>
+      {notVerified && (
+        <div className="bg-orange-100 border border-blue-100 rounded-lg p-4 mb-4 flex items-start">
+          <Info className="w-5 h-5 text-orange-600 mr-3 mt-0.5 flex-shrink-0" />
+          <div className="text-sm">
+            <span className="text-gray-700">
+              You are currently pending approval by Fastwork. You will be able
+              to post jobs once you are approved.
+            </span>
+          </div>
         </div>
-      </div>
+      )}
+
       <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6 flex items-start">
         <ClockAlert className="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
         <div className="text-sm">

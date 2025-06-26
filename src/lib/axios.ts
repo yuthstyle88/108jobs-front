@@ -1,6 +1,7 @@
-import useNotification from "@/hooks/useNotification";
 import axios from "axios";
 import { getSession } from "next-auth/react";
+
+let cachedAccessToken: string | null = null;
 
 export const axiosPublic = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -19,13 +20,17 @@ export const axiosPrivate = axios.create({
 });
 
 axiosPrivate.interceptors.request.use(async (config) => {
-  const session = await getSession();
-  if (session?.accessToken) {
-    config.headers.Authorization = `Bearer ${session.accessToken}`;
+  if (!cachedAccessToken) {
+    const session = await getSession();
+    cachedAccessToken = session?.accessToken || null;
   }
+
+  if (cachedAccessToken) {
+    config.headers.Authorization = `Bearer ${cachedAccessToken}`;
+  }
+
   return config;
 });
-
 export const axiosFileUpload = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   timeout: 10000,
@@ -41,29 +46,3 @@ axiosFileUpload.interceptors.request.use(async (config) => {
   }
   return config;
 });
-
-const handleAxiosError = (error: any) => {
-  const { error_message } = useNotification();
-
-  if (error.code === "ECONNABORTED") {
-    error_message(null, null, "Connection took too long, please try again.");
-  } else if (!error.response) {
-    error_message(null, null, "No network connection, please check again.");
-  }
-  return Promise.reject(error);
-};
-
-axiosPrivate.interceptors.response.use(
-  (response) => response,
-  (error) => handleAxiosError(error)
-);
-
-axiosPublic.interceptors.response.use(
-  (response) => response,
-  (error) => handleAxiosError(error)
-);
-
-axiosFileUpload.interceptors.response.use(
-  (response) => response,
-  (error) => handleAxiosError(error)
-);

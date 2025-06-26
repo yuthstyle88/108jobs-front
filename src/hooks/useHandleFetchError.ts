@@ -1,5 +1,6 @@
 import useNotification from "@/hooks/useNotification";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function useHandleFetchError(error: any) {
   const { error_message } = useNotification();
 
