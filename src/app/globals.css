@@ -110,6 +110,13 @@
   background: linear-gradient(90deg, #ffe8ae, #fffdf9);
 }
 
+.job-board-gradient {
+  background: linear-gradient(to right, #D1EEFA, #FFF);
+}
+.job-board-gradient-left {
+  background: linear-gradient(to right, #D0E1FB, #FFF);
+}
+
 
 .grid-container-desktop {
   display: grid;

@@ -48,19 +48,24 @@ export const usePublicDelete = <T>(url: string) => {
 // Private GET
 export const usePrivateFetch = <T>(
   url: string | null,
-  options?: SWRConfiguration
+  options?: SWRConfiguration & { enabled?: boolean }
 ) => {
+  const { enabled = true, ...restOptions } = options || {};
+
   return useSWR<T, AxiosError>(
-    url,
-    async (url: string) => (await axiosPrivate.get<T>(url)).data,
+    url && enabled ? url : null,
+    url && enabled
+      ? async (url: string) => (await axiosPrivate.get<T>(url)).data
+      : null,
     {
       revalidateOnFocus: false,
       dedupingInterval: 60000,
       keepPreviousData: true,
-      ...options,
+      ...restOptions,
     }
   );
 };
+
 
 // Private GET with params
 export const usePrivateFetchParams = <T>(

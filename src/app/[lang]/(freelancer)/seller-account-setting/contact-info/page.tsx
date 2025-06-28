@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useBasicInfoForm } from "../../account-setting/hooks/useBasicInfoForm";
+import { useBasicInfoForm } from "../hooks/useBasicInfoForm"; 
 import ZipcodeSearch from "../components/SearchZipcode";
 import { CountriesResponse } from "@/types/location";
 

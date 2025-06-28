@@ -1,24 +1,7 @@
+import { API_ROUTES } from "@/api/endpoints";
 import { usePublicFetch } from "@/hooks/api-hooks";
+import { JobPostsResponse } from "@/types/job-board";
 import { useMemo } from "react";
-
-export interface JobPost {
-  id: string;
-  job_title: string;
-  category: string;
-  working_from: string;
-  intended_use: string;
-  budget: string;
-  created_at: string;
-  deadline: string;
-}
-
-export interface JobPostsResponse {
-  items: JobPost[];
-  page: number;
-  page_size: number;
-  total_items: number;
-  total_pages: number;
-}
 
 interface UseJobPostsProps {
   categoryId?: string;
@@ -39,13 +22,13 @@ export const useJobPosts = ({ categoryId, jobType, page = 1 }: UseJobPostsProps 
     }
 
     params.append('page', page.toString());
-    params.append('page_size', '5'); // Page size có thể thay đổi theo nhu cầu
+    params.append('page_size', '13');
 
     return `?${params.toString()}`;
   }, [categoryId, jobType, page]);
 
   const { data, isLoading, error, mutate } = usePublicFetch<JobPostsResponse>(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/job-board/posts${queryParams}`
+    `${API_ROUTES.job.get_job_board}${queryParams}`
   );
 
   return {

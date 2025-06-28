@@ -51,8 +51,10 @@ const SellerSidebar = () => {
               <div className="relative overflow-hidden flex items-center p-4">
                 <Link href="/">
                   <Image
-                    src={AssetIcon.logo_seller}
+                    src={AssetIcon.logo_freelancer}
                     alt="avatar"
+                    width={500}
+                    height={500}
                     className="w-full h-full"
                   />
                 </Link>
