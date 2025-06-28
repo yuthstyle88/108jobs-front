@@ -12,7 +12,7 @@ import { Info } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import WarningLeaveModal from "../WarningLeaveModal";
+import WarningLeaveModal from "../../../../../components/WarningLeaveModal";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getSchema = (createJobLanguage: any) =>

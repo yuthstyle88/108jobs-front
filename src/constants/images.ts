@@ -180,6 +180,8 @@ import job_board from "../assets/images/profile/banner.webp";
 import decal from "../assets/images/profile/decal.svg";
 import back_card from "../assets/images/profile/back-vn.jpg";
 import front_card from "../assets/images/profile/front-vn.jpg";
+import banner_apply from "../assets/images/profile/banner__apply-seller.webp";
+import proposal from "../assets/images/profile/offering-form.c7efb8e0.svg";
 
 import leakage1 from "../assets/images/apply-freelancer/leakage-1.jpg";
 import leakage2 from "../assets/images/apply-freelancer/leakage-2.jpg";
@@ -205,6 +207,8 @@ export const ProfileImage = {
   decal,
   back_card,
   front_card,
+  banner_apply,
+  proposal,
 };
 export const CompareImage = {
   compare1,

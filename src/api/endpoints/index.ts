@@ -43,7 +43,9 @@ export const API_ROUTES = {
     check_is_favorite_job: "/jobs/favorite",
     delete_favorite_job: "/jobs/favorite",
     job_board_detail:"/public/job-post",
-    create_job_board:"/job-post"
+    create_job_board:"/job-post",
+    get_job_board:"/job-board/posts",
+    get_my_job_board:"/job-board/my-posts",
   },
   chat:{
     get_chat_history:"/messages/rooms",

@@ -40,7 +40,7 @@ const SpSellerHeader = () => {
           className="overflow-hidden relative whitespace-nowrap flex self-center"
         >
           <Image
-            src={AssetIcon.logo_seller}
+            src={AssetIcon.logo_freelancer}
             alt="avatar"
             width={140}
             height={40}

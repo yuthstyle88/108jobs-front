@@ -65,6 +65,7 @@ const config: Config = {
         topWorkShadow: "0 0 1.5rem 0 rgba(24, 85, 184, .25);",
         reviewShadow: "0 0 1.5rem 0 rgba(24, 85, 184, .1);",
         howShadow: "0 8px 24px -4px #13376d0a,0 7px 12px -6px #13376d0f",
+        jobBoardShadow: "0 1px 1px hsl(333deg 0% 50% /5%),0 2px 2px hsl(333deg 0% 50% /5%),0 4px 4px hsl(333deg 0% 50% /5%),0 8px 8px hsl(333deg 0% 50% /5%)",
       },
       borderWidth: {
         1: "1px",

@@ -19,6 +19,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateJobPayload } from "@/types/job-board";
 import useNotification from "@/hooks/useNotification";
+import { mutate as globalMutate } from "swr";
 
 const jobSchema = z.object({
   service_catalog_id: z.string().min(1, "Service catalog is required"),
@@ -27,9 +28,20 @@ const jobSchema = z.object({
     .string()
     .min(20, "Job description must be at least 20 characters"),
   is_english_required: z.boolean(),
-  example_url: z.string().url().optional().or(z.literal("")),
-  budget: z.string().min(1, "Budget is required"),
-  deadline: z.string().optional().or(z.literal("")),
+  example_url: z
+    .string()
+    .optional()
+    .refine((val) => !val || /^https?:\/\/.+$/.test(val), {
+      message: "Example URL must be a valid URL",
+    }),
+  budget: z
+    .string()
+    .min(1, "Budget is required")
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: "Budget must be a positive number",
+    }),
+
+  deadline: z.string().optional(),
   is_anonymous_post: z.boolean(),
   working_from: z.enum(["Freelance", "Contract", "Parttime", "Fulltime"]),
   intended_use: z.enum(["Business", "Personal", "Unknown"]),
@@ -79,8 +91,21 @@ const CreateJobPage = () => {
 
   const onSubmit = async (data: CreateJobPayload) => {
     try {
-      await createJob({ ...data });
+      const payload = { ...data };
+
+      if (!payload.deadline) {
+        delete payload.deadline;
+      }
+
+      await createJob(payload);
       await router.push("/job-board");
+      await globalMutate(
+        (key) =>
+          typeof key === "string" &&
+          key.startsWith(API_ROUTES.job.get_job_board),
+        undefined,
+        { revalidate: true }
+      );
       success_message("job", "create_job_board");
     } catch (error) {
       error_message("job", `create_job_board`);
@@ -122,10 +147,13 @@ const CreateJobPage = () => {
                 id="job_title"
                 {...register("job_title")}
                 placeholder={createJobLanguage?.job_title_placeholder}
-                className={`w-full text-text_primary placeholder:text-text_secondary placeholder:font-sans p-3 border ${
-                  errors.job_title ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:outline-none focus:ring-2 focus:ring-red-200`}
+                className={`w-full text-text_primary placeholder:text-text_secondary placeholder:font-sans p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                  errors.job_title
+                    ? "border-red-200 focus:ring-red-500"
+                    : "border-gray-300 focus:ring-blue-500"
+                }`}
               />
+
               {errors.job_title && (
                 <p className="mt-1 text-red-500 text-sm flex items-center">
                   <FontAwesomeIcon
@@ -212,10 +240,13 @@ const CreateJobPage = () => {
                 id="description"
                 {...register("description")}
                 placeholder={createJobLanguage?.job_description_details}
-                className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border ${
-                  errors.description ? "border-red-500" : "border-gray-300"
-                } rounded-lg focus:outline-none focus:ring-2 focus:ring-red-200 min-h-[200px]`}
+                className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 min-h-[200px] ${
+                  errors.description
+                    ? "border-red-200 focus:ring-red-500"
+                    : "border-gray-300 focus:ring-blue-500"
+                }`}
               />
+
               {errors.description && (
                 <p className="mt-1 text-red-500 text-sm flex items-center">
                   <FontAwesomeIcon
@@ -260,8 +291,22 @@ const CreateJobPage = () => {
                   placeholder={
                     createJobLanguage?.service_category_placeholder_url
                   }
-                  className="text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-200"
+                  className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                    errors.example_url
+                      ? "border-red-200 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-blue-500"
+                  }`}
                 />
+
+                {errors.example_url && (
+                  <p className="mt-1 text-red-500 text-sm flex items-center">
+                    <FontAwesomeIcon
+                      icon={faExclamationCircle}
+                      className="mr-1"
+                    />
+                    {errors.example_url.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -274,21 +319,24 @@ const CreateJobPage = () => {
                 <select
                   id="service_catalog_id"
                   {...register("service_catalog_id")}
-                  className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border ${
+                  className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
                     errors.service_catalog_id
-                      ? "border-red-500"
-                      : "border-gray-300"
-                  } rounded-lg focus:outline-none focus:ring-2 focus:ring-red-200`}
+                      ? "border-red-200 focus:ring-red-500"
+                      : "border-gray-300 focus:ring-blue-500"
+                  }`}
                 >
                   <option disabled value="">
                     {createJobLanguage?.service_category_placeholder_select}
                   </option>
-                  {catalogData?.service_catalogs?.map((catalog) => (
-                    <option key={catalog.id} value={catalog.id}>
-                      {catalog.name}
-                    </option>
-                  ))}
+                  {catalogData?.service_catalogs
+                    ?.filter((catalog) => catalog.slug !== "popular-service")
+                    .map((catalog) => (
+                      <option key={catalog.id} value={catalog.id}>
+                        {catalog.name}
+                      </option>
+                    ))}
                 </select>
+
                 {errors.service_catalog_id && (
                   <p className="mt-1 text-red-500 text-sm flex items-center">
                     <FontAwesomeIcon
@@ -316,10 +364,13 @@ const CreateJobPage = () => {
                     id="budget"
                     {...register("budget")}
                     placeholder="0"
-                    className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border ${
-                      errors.budget ? "border-red-500" : "border-gray-300"
-                    } rounded-lg focus:outline-none focus:ring-2 focus:ring-red-200`}
+                    className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                      errors.budget
+                        ? "border-red-200 focus:ring-red-500"
+                        : "border-gray-300 focus:ring-blue-500"
+                    }`}
                   />
+
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                     THB
                   </div>
@@ -345,8 +396,9 @@ const CreateJobPage = () => {
                 <input
                   type="date"
                   id="deadline"
+                  min={new Date().toISOString().split("T")[0]}
                   {...register("deadline")}
-                  className="text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-200"
+                  className="text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
             </div>
