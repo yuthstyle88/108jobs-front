@@ -10,21 +10,18 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { CaptchaField } from "../Capcha";
 const registerSchema = z
   .object({
     email: z.string().email("กรุณากรอกอีเมลให้ถูกต้อง"),
     username: z.string().min(3, "ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร"),
     password: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
     confirmPassword: z.string(),
-    phone: z
-      .string()
-      .optional()
-      .refine((value) => !value || value.length >= 10, {
-        message: "เบอร์โทรศัพท์ต้องมีอย่างน้อย 10 หลัก",
-      }),
     termsAccepted: z.literal(true),
     privacyAccepted: z.literal(true),
     promotionalAccepted: z.boolean().optional(),
+    captcha_uuid: z.string().optional(),
+    captcha_answer: z.string().min(1, "กรุณากรอก captcha"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "รหัสผ่านไม่ตรงกัน",
@@ -36,7 +33,7 @@ type RegisterFormProps = {
   setDataRegister: (data: RegisterDataProps) => void;
 };
 
-type RegisterFormData = z.infer<typeof registerSchema>;
+export type RegisterFormData = z.infer<typeof registerSchema>;
 
 export const RegisterForm = ({
   switchToVerifyEmail,
@@ -65,7 +62,6 @@ export const RegisterForm = ({
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       if (parsedData.email) setValue("email", parsedData.email);
-      if (parsedData.phone) setValue("phone", parsedData.phone);
       if (parsedData.termsAccepted) setValue("termsAccepted", true);
       if (parsedData.privacyAccepted) setValue("privacyAccepted", true);
     }
@@ -76,6 +72,14 @@ export const RegisterForm = ({
       setApiError(null);
 
       sessionStorage.setItem("registerData", JSON.stringify(data));
+
+      console.log("Submitting data:", data);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      if (data.captcha_answer !== "9vwqUj") {
+        setApiError("Captcha ไม่ถูกต้อง กรุณาลองใหม่");
+        return;
+      }
 
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -166,13 +170,10 @@ export const RegisterForm = ({
         toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
       />
 
-      <CustomInput
-        label={authen?.label_phone}
-        name="phone"
-        register={register("phone")}
-        error={errors.phone?.message}
-        placeholder={authen?.placeholder_phone}
-        type="tel"
+      <CaptchaField
+        setCaptchaUuid={(uuid) => setValue("captcha_uuid", uuid)}
+        register={register}
+        error={errors.captcha_answer?.message}
       />
 
       <div className="space-y-4">

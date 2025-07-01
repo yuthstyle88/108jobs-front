@@ -114,12 +114,6 @@ const JobBoard = () => {
 
             <div className="flex items-center gap-4 w-full md:w-auto">
               <Link
-                href="/start-selling"
-                className="text-blue-600 text-sm hover:underline"
-              >
-                {jobBoardLanguageData?.want_to_get_job_board}
-              </Link>
-              <Link
                 href="/job-board/create-job"
                 className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
               >
