@@ -1,27 +1,30 @@
 "use client";
+import Error from "@/app/error";
+import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function AccountSettingWrapper() {
   const pathname = usePathname();
+  const { lang } = useLanguage();
+  const isActive = (path: string) => pathname === `/${lang}${path}`;
 
-  const isActive = (path: string) => pathname === path;
+  const {
+    data: navbarAccountData,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.ACCOUNT_NAVBAR);
 
-   const {
-     data: navbarAccountData,
-     isLoading,
-     error,
-   } = useGlobalTranslate(LanguageFile.ACCOUNT_NAVBAR);
-
-   if (isLoading) return <p>Loading...</p>;
-   if (error) return <p>Error loading data.</p>;
+  if (isLoading) return <Loading/>
+  if (error) return <Error/>;
 
   return (
     <div>
       <p className="font-medium text-[16px] text-text_primary pb-[16px]">
-      {navbarAccountData?.section_account}
+        {navbarAccountData?.section_account}
       </p>
       <div className="flex flex-col mt-4">
         <Link
@@ -71,7 +74,7 @@ export default function AccountSettingWrapper() {
         </Link>
 
         <p className="font-medium text-[16px] text-text_primary py-4">
-        {navbarAccountData?.section_hiring}
+          {navbarAccountData?.section_hiring}
         </p>
 
         <Link
@@ -97,7 +100,7 @@ export default function AccountSettingWrapper() {
           <span>{navbarAccountData?.personal_hiring_info}</span>
         </Link>
 
-         <Link
+        <Link
           href="/account-setting/company-info"
           className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-4 ${
             isActive("/account-setting/company-info")

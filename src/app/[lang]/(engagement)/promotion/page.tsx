@@ -1,4 +1,5 @@
 "use client";
+import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
@@ -32,7 +33,7 @@ const Promotion = () => {
   ];
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
   return (
     <>
       {/* <CategoryDetail /> */}

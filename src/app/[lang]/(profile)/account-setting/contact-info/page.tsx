@@ -16,6 +16,7 @@ import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
 import { addressSchema } from "@/utils/validation/addressSchema";
 import { API_ROUTES } from "@/api/endpoints";
 import useNotification from "@/hooks/useNotification";
+import ErrorPage from "@/app/error";
 
 const emailSchema = z.object({
   email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์").optional(),
@@ -205,7 +206,7 @@ export default function ContactPage() {
   };
 
   if (isLoading || !isReady) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <ErrorPage />;
 
   return (
     <div>

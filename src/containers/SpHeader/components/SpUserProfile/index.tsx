@@ -1,6 +1,7 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
 import { ProfileImage } from "@/constants/images";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { ProfileData } from "@/types/userData";
 import Image from "next/image";
@@ -10,6 +11,7 @@ import React from "react";
 
 const SpUserAvatar = () => {
   const pathname = usePathname();
+  const { lang } = useLanguage();
   const { data: user } = usePrivateFetch<ProfileData>(
     API_ROUTES.profile.get_profile
   );
@@ -17,7 +19,7 @@ const SpUserAvatar = () => {
     <Link
       href="/profile"
       className={`flex-1 flex items-center justify-center p-2 text-white text-[24px] cursor-pointer ${
-        pathname === "/profile" ? "bg-primary" : ""
+        pathname === `/${lang}/profile` ? "bg-primary" : ""
       }`}
     >
       <Image

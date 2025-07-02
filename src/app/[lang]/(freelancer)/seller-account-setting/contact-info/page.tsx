@@ -14,16 +14,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useBasicInfoForm } from "../hooks/useBasicInfoForm"; 
+import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
 import ZipcodeSearch from "../components/SearchZipcode";
 import { CountriesResponse } from "@/types/location";
+import ErrorPage from "@/app/error";
 
 const emailSchema = z.object({
   email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์").optional(),
 });
 
 type VerifyEmailFormData = z.infer<typeof emailSchema>;
-
 
 export interface AddressFormData {
   country: string;
@@ -62,9 +62,9 @@ const ContactInfo = () => {
     LanguageFile.SELLER_CONTACT_INFO
   );
 
-  const {
-      data: contactInfoLanguageData,
-    } = useGlobalTranslate(LanguageFile.CONTACT);
+  const { data: contactInfoLanguageData } = useGlobalTranslate(
+    LanguageFile.CONTACT
+  );
 
   const { data: global } = useGlobalTranslate(LanguageFile.GLOBAL);
 
@@ -135,7 +135,7 @@ const ContactInfo = () => {
 
       if (normalized.country !== "Thailand") {
         setLocationType("Foreign");
-        setDefaultForeignCountry(normalized.country); 
+        setDefaultForeignCountry(normalized.country);
       } else {
         setLocationType("Thailand");
       }
@@ -206,7 +206,7 @@ const ContactInfo = () => {
   };
 
   if (isLoadingProfile || !isReady) return <Loading />;
-  if (isErrorProfile) return <div>Error loading language data</div>;
+  if (isErrorProfile) return <ErrorPage />;
 
   return (
     <div className="bg-white rounded-md shadow-sm overflow-hidden">
@@ -245,7 +245,11 @@ const ContactInfo = () => {
                     disabled={isSubmittingEmail}
                     className="px-3 py-[8px] submit-button"
                   >
-                    {isSubmittingEmail ? <LoadingCircle /> : global?.button_change}
+                    {isSubmittingEmail ? (
+                      <LoadingCircle />
+                    ) : (
+                      global?.button_change
+                    )}
                   </button>
                 </div>
               </div>

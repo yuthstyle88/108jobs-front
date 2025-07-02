@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { FaChevronUp } from "react-icons/fa";
 import Loading from "../Loading";
+import Error from "@/app/error";
 
 const FaqReward = () => {
   const {
@@ -27,7 +28,7 @@ const FaqReward = () => {
     });
   };
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
   const faqs = [
     {
       question: footerLanguageData?.faq_join_rewards,

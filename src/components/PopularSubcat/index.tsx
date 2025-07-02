@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Loading from "../Loading";
 import { notFound } from "next/navigation";
+import Error from "@/app/error";
 
 type Props = {
   slug: string;
@@ -52,7 +53,7 @@ const PopularSubCat = ({ slug }: Props) => {
 }, [catalogData, slug]);
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading data</div>;
+  if (error) return <Error/>;
 
   return (
     <section className="col-start-2 col-end-3 grid grid-cols-2 sm:grid-cols-[280px_1fr] pt-12 sm:pt-8 pb-9 gap-6 text-[0.875rem]">

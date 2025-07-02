@@ -18,6 +18,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Loading from "../Loading";
+import { useLanguage } from "@/contexts/LanguageContext";
+import Error from "@/app/error";
 
 const SellerSidebar = () => {
   const {
@@ -27,13 +29,14 @@ const SellerSidebar = () => {
   } = useGlobalTranslate(LanguageFile.GLOBAL);
   const [isClose, setIsClose] = useState(false);
   const pathname = usePathname();
+  const { lang } = useLanguage();
 
-  const isActive = (path: string) => pathname === path;
+  const isActive = (path: string) => pathname === `/${lang}${path}`;
 
   const sidebarWidth = isClose ? "w-16" : "w-64";
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <>

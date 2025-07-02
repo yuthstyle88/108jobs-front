@@ -5,6 +5,7 @@ import { JobType } from "@/types/job";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { LanguageFile } from "@/constants/language";
 import Loading from "@/components/Loading";
+import Error from "@/app/error";
 
 const CreateService = () => {
   const router = useRouter();
@@ -20,7 +21,7 @@ const CreateService = () => {
   };
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <div className="min-h-screen pt-[4.5rem] bg-[#F8F9FB]">

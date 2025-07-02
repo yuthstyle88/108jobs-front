@@ -206,7 +206,7 @@ const FreelancerProfile = ({ username }: Props) => {
                   <div className="bg-white rounded-lg py-6">
                     <div className="mb-2">
                       <h2 className="text-blue-600 font-medium">
-                        Kinh nghiệm làm việc
+                        {goToProfileLanguage?.experience_title}
                       </h2>
                     </div>
                     {userProfile && userProfile?.work_experience.length > 0 ? (

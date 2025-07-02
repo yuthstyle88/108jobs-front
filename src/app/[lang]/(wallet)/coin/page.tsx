@@ -1,4 +1,5 @@
 "use client";
+import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import TopUpHistory from "@/components/TopUpHistory";
 import { ProfileImage } from "@/constants/images";
@@ -20,7 +21,7 @@ const FastworkCoin = () => {
   } = useGlobalTranslate(LanguageFile.COINS);
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <div className="w-full">

@@ -1,5 +1,6 @@
 "use client";
 
+import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
@@ -12,7 +13,7 @@ export default function LocationPage() {
   } = useGlobalTranslate(LanguageFile.INDIVIDUAL);
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error />;
 
   return (
     <div>

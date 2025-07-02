@@ -136,7 +136,7 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white rounded-lg shadow-sm p-6"
     >
-      {isMutating && <LoadingBlur text="Đang lưu dữ liệu" />}
+      {isMutating && <LoadingBlur text="Saving data" />}
       {isLoading && <Loading />}
       <h2 className="text-[32px] font-medium mb-6 text-text_primary">
         {createJobLanguage?.service_info_title}

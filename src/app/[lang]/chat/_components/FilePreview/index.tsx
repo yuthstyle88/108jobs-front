@@ -25,7 +25,6 @@ const FilePreview: React.FC<FilePreviewProps> = ({
 
   return (
     <div className="flex items-center bg-white border border-[#cfd4d8] p-4 rounded-[4px] cursor-pointer">
-      {/* Icon hoặc thumbnail */}
       <div className="w-10 h-10 flex items-center justify-center bg-gray-100 border rounded overflow-hidden">
         {isLoading ? (
           <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />

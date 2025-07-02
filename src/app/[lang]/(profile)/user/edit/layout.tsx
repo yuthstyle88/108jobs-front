@@ -1,7 +1,9 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
+import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { ProfileData } from "@/types/userData";
@@ -18,7 +20,7 @@ export default function StartSellingLayout({
   children,
 }: StartSellingLayoutProps) {
   const pathname = usePathname();
-
+  const { lang } = useLanguage();
   const {
     data: userEditLanguage,
     isLoading,
@@ -34,11 +36,14 @@ export default function StartSellingLayout({
     { href: "/user/edit/experience", label: userEditLanguage?.work_experience },
     { href: "/user/edit/skills", label: userEditLanguage?.skills },
     { href: "/user/edit/languages", label: userEditLanguage?.languages },
-    { href: "/user/edit/certifications", label: userEditLanguage?.certificates_awards },
+    {
+      href: "/user/edit/certifications",
+      label: userEditLanguage?.certificates_awards,
+    },
   ];
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <>
@@ -60,7 +65,7 @@ export default function StartSellingLayout({
                       <Link
                         href={item.href}
                         className={`flex items-center px-4 py-2 ${
-                          pathname === item.href
+                          pathname === `/${lang}${item.href}`
                             ? "text-blue-600 bg-blue-50 border-l-4 border-blue-500"
                             : "text-gray-700 hover:bg-gray-50"
                         }`}
@@ -77,7 +82,9 @@ export default function StartSellingLayout({
                   href={`/user/${user?.user.username}`}
                   className="text-blue-600 flex justify-center items-center gap-2"
                 >
-                  <p className="font-medium">{userEditLanguage?.view_profile}</p>
+                  <p className="font-medium">
+                    {userEditLanguage?.view_profile}
+                  </p>
                   <ExternalLink className="w-4 h-4 mr-2" />
                 </Link>
               </div>

@@ -1,6 +1,7 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
 import { ProfileImage } from "@/constants/images";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useLogout } from "@/hooks/useLogout";
 import { ProfileData } from "@/types/userData";
@@ -31,7 +32,7 @@ const SellerMenu = ({ isOpen, onClose }: SellerMenuProps) => {
   const { data: user } = usePrivateFetch<ProfileData>(
     API_ROUTES.profile.get_profile
   );
-
+const { lang } = useLanguage();
   const pathname = usePathname();
 
   const menuItems = [
@@ -80,7 +81,7 @@ const SellerMenu = ({ isOpen, onClose }: SellerMenuProps) => {
   ];
   const menuSettingItems = [
     {
-      href: `/user/${user?.user.username}`,
+      href: `${lang}/user/${user?.user.username}`,
       label: "Freelancer profile",
       icon: faUserPen,
       target: "_blank",
@@ -156,7 +157,7 @@ const SellerMenu = ({ isOpen, onClose }: SellerMenuProps) => {
         </div>
         <ul className="flex flex-col gap-0 mt-3 m-0 p-0 list-none">
           {menuItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = pathname === `/${lang}${item.href}`;
             return (
               <li
                 key={item.href}

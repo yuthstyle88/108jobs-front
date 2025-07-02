@@ -1,4 +1,5 @@
 import { ProfileImage } from "@/constants/images";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useLogout } from "@/hooks/useLogout";
 import { GlobalLanguage } from "@/types/language";
 import { ProfileData } from "@/types/userData";
@@ -25,10 +26,10 @@ type ProfileSectionProps = {
 
 const ProfileSection = ({ data, user }: ProfileSectionProps) => {
   const { logout } = useLogout();
-
+const { lang } = useLanguage();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-jobCard z-50 select-none">
-      <Link href={`/user/${user?.user.username}`}>
+      <Link href={`${lang}/user/${user?.user.username}`}>
         <div className="p-4 bg-secondary hover:bg-[#D0E1FB] duration-150 rounded-tl-lg rounded-tr-lg relative">
           <div className="flex items-center space-x-3">
             <div className="rounded-full bg-gray-200 flex items-center justify-center">

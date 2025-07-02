@@ -35,23 +35,23 @@ const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
           <Link
             href="/"
             className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${
-              pathname === "/" ? "bg-primary" : ""
+              pathname === `/${lang}` ? "bg-primary" : ""
             }`}
           >
             <House className="w-[27px] h-full mx-2 py-1" />
           </Link>
           <Link
-            href="/popular-subcat"
+            href="/categories/popular-service"
             className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${
-              pathname === "/popular-subcat" ? "bg-primary" : ""
+              pathname === `/${lang}/categories/popular-service` ? "bg-primary" : ""
             }`}
           >
             <Grip className="w-[27px] h-full mx-2 py-1" />
           </Link>
           <Link
-            href="/search"
+            href="/job/search"
             className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${
-              pathname === "/search" ? "bg-primary" : ""
+              pathname === `/${lang}/job/search` ? "bg-primary" : ""
             }`}
           >
             <Search className="w-[27px] h-full mx-2 py-1" />
@@ -59,7 +59,7 @@ const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
           <Link
             href="/job-board"
             className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${
-              pathname === "/job-board" ? "bg-primary" : ""
+              pathname === `/${lang}/job-board` ? "bg-primary" : ""
             }`}
           >
             <FontAwesomeIcon

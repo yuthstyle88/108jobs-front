@@ -1,4 +1,6 @@
 "use client";
+import Error from "@/app/error";
+import Loading from "@/components/Loading";
 import { ProfileIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
@@ -11,8 +13,8 @@ export default function BusinessPage() {
     error,
   } = useGlobalTranslate(LanguageFile.COMPANY);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading data.</p>;
+  if (isLoading) return <Loading/>;
+  if (error) return <Error />;
 
   return (
     <div>

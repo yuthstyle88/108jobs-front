@@ -8,6 +8,7 @@ import LoadingCircle from "../LoadingCircle";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { LanguageFile } from "@/constants/language";
 import Loading from "../Loading";
+import Error from "@/app/error";
 
 interface ConfirmTermsFreelancerModalProps {
   isOpen: boolean;
@@ -37,7 +38,7 @@ const ConfirmTermsFreelancerModal: React.FC<
   });
 
   if (isTermLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <Modal

@@ -1,5 +1,6 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
+import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
@@ -24,7 +25,7 @@ const AccountStats = () => {
   const daysOfWeek = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <div className="flex-1">

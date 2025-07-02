@@ -6,6 +6,7 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { LanguageFile } from "@/constants/language";
 import { interpolateDouble } from "@/utils/interpolate";
 import Loading from "@/components/Loading";
+import Error from "@/app/error";
 
 // Define the interface for a single transaction
 interface Transaction {
@@ -32,7 +33,7 @@ const Withdrawal = () => {
   const transactions: Transaction[] = [];
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <div className="container mx-auto px-4 py-8 ">

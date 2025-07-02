@@ -28,6 +28,7 @@ import Link from "next/link";
 import { useState } from "react";
 import ConfirmDeleteModal from "./_components/ConfirmDeleteModal";
 import JobCreatedStatus from "./_components/JobCreatedStatus";
+import Error from "@/app/error";
 
 const MyServices = () => {
   const { success_message } = useNotification();
@@ -99,7 +100,7 @@ const MyServices = () => {
   };
 
   if (isLoading || languageLoading || isLoadingProfile) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <div className="p-4 md:p-0">

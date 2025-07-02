@@ -1,4 +1,5 @@
 "use client";
+import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { FreelancerImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
@@ -15,7 +16,7 @@ const LandingApplyFreelancer = () => {
   } = useGlobalTranslate(LanguageFile.APPLY_FREELANCER_SUCCESS);
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
   return (
     <div className="min-h-screen flex justify-center items-center bg-white overflow-hidden relative">
       <Image

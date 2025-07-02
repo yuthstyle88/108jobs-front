@@ -19,6 +19,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useFetchUser } from "./hooks/useFetchUserProfile";
 import { useFormStorage } from "./hooks/useFormStorage";
+import Error from "@/app/error";
 
 const FreelancerRegistration = () => {
   const { user: userData } = useUserStore();
@@ -121,7 +122,7 @@ const FreelancerRegistration = () => {
   }, [userData, isInitialized, saveFormToStorage]);
 
   if (isLoading || isLanguageLoading) return <Loading />;
-  if (isError || error) return <p>Error loading profile</p>;
+  if (isError || error) return <Error/>;
 
   const renderStep = () => {
     const stepProps = { formData, updateFormData, nextStep,applyFreelancerLanguage };
