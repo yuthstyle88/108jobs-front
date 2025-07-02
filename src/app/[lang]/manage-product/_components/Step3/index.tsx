@@ -21,11 +21,13 @@ const Step3Media = ({
   nextStep,
   prevStep,
   mutate,
+  setIsFormDirty,
 }: {
   job: JobType;
   nextStep: () => void;
   prevStep: () => void;
   mutate: () => void;
+  setIsFormDirty?: (dirty: boolean) => void;
 }) => {
   const createJobLanguage = useTranslateFile(LanguageFile.SELLER_CREATE_JOBS);
 
@@ -33,6 +35,7 @@ const Step3Media = ({
   const multi = useMultiImageUpload();
   const [coverError, setCoverError] = useState<string | null>(null);
   const [galleryError, setGalleryError] = useState<string | null>(null);
+  const [isDirty, setIsDirty] = useState(false);
 
   const { handleSubmit } = useForm();
 
@@ -110,18 +113,53 @@ const Step3Media = ({
     }
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const [initialCover, setInitialCover] = useState<string | null>(null);
+  const [initialGallery, setInitialGallery] = useState<string[]>([]);
+
   useEffect(() => {
     if (job?.images?.length) {
       const coverImg = job.images.find((img) => img.is_cover_photo);
       const galleryImgs = job.images.filter((img) => !img.is_cover_photo);
-      if (coverImg) cover.setImagePreview(coverImg.image_url);
-      if (galleryImgs.length > 0)
-        multi.setImages(galleryImgs.map((img) => img.image_url));
-    }
 
+      if (coverImg) {
+        cover.setImagePreview(coverImg.image_url);
+        setInitialCover(coverImg.image_url);
+      }
+
+      if (galleryImgs.length > 0) {
+        const galleryUrls = galleryImgs.map((img) => img.image_url);
+        multi.setImages(galleryUrls);
+        setInitialGallery(galleryUrls);
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [job]);
+
+  useEffect(() => {
+    if (cover.imagePreview !== initialCover) {
+      setIsDirty(true);
+      return;
+    }
+
+    if (multi.images.length !== initialGallery.length) {
+      setIsDirty(true);
+      return;
+    }
+
+    const isGalleryChanged = multi.images.some(
+      (img, index) => img !== initialGallery[index]
+    );
+    if (isGalleryChanged) {
+      setIsDirty(true);
+      return;
+    }
+    setIsDirty(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cover.imagePreview, multi.images, initialCover, initialGallery]);
+
+  useEffect(() => {
+    setIsFormDirty?.(isDirty);
+  }, [isDirty, setIsFormDirty]);
 
   useEffect(() => {
     if (cover.imagePreview) setCoverError(null);

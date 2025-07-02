@@ -38,9 +38,16 @@ type Props = {
   nextStep: () => void;
   prevStep: () => void;
   mutate: () => void;
+  setIsFormDirty?: (dirty: boolean) => void;
 };
 
-const Step4WorkSteps = ({ job, nextStep, prevStep, mutate }: Props) => {
+const Step4WorkSteps = ({
+  job,
+  nextStep,
+  prevStep,
+  mutate,
+  setIsFormDirty,
+}: Props) => {
   const createJobLanguage = useTranslateFile(LanguageFile.SELLER_CREATE_JOBS);
 
   const schema = useMemo(
@@ -53,7 +60,7 @@ const Step4WorkSteps = ({ job, nextStep, prevStep, mutate }: Props) => {
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<FormData>({
     defaultValues: {
       worksteps: [
@@ -91,6 +98,10 @@ const Step4WorkSteps = ({ job, nextStep, prevStep, mutate }: Props) => {
       console.error("Submit step 4 error:", err);
     }
   };
+
+  useEffect(() => {
+    setIsFormDirty?.(isDirty);
+  }, [isDirty, setIsFormDirty]);
 
   useEffect(() => {
     if (job?.worksteps?.length) {

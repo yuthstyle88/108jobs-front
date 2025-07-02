@@ -1,7 +1,11 @@
 "use client";
 import { API_ROUTES_SELLER } from "@/api/endpoints";
+import NotFound from "@/app/not-found";
 import Loading from "@/components/Loading";
+import WarningLeaveModal from "@/components/WarningLeaveModal";
+import { LanguageFile } from "@/constants/language";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { JobType, Onboarding } from "@/types/job";
 import { Check } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -12,9 +16,6 @@ import Step3Media from "../_components/Step3";
 import Step4WorkSteps from "../_components/Step4";
 import Step5Confirm from "../_components/Step5";
 import SuccessCreateJobModal from "../_components/SuccessCreateJobModal";
-import NotFound from "@/app/not-found";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { LanguageFile } from "@/constants/language";
 
 const getNextStep = (onboarding: Onboarding | undefined): number => {
   if (!onboarding) return 1;
@@ -42,7 +43,10 @@ const ServiceOnboardingPage = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [job, setJob] = useState<JobType>();
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFormDirty, setIsFormDirty] = useState(false);
+  const [pendingStep, setPendingStep] = useState<number | null>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showWarningModal, setShowWarningModal] = useState(false);
 
   useEffect(() => {
     if (jobData) {
@@ -62,35 +66,56 @@ const ServiceOnboardingPage = () => {
         setCompletedSteps([...completedSteps, currentStep]);
       }
       setCurrentStep(currentStep + 1);
+      setIsFormDirty(false);
       window.scrollTo(0, 0);
     }
   };
 
   const prevStep = () => {
-    if (currentStep > 1) {
+    if (isFormDirty) {
+      setPendingStep(currentStep - 1);
+      setShowWarningModal(true);
+    } else if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+      setIsFormDirty(false);
       window.scrollTo(0, 0);
     }
   };
 
   const goToStep = (step: number) => {
-    if (
+    if (step === currentStep) return;
+
+    if (isFormDirty) {
+      setPendingStep(step);
+      setShowWarningModal(true);
+    } else if (
       step === 1 ||
-      step === currentStep ||
       completedSteps.includes(step - 1) ||
       step === completedSteps.length + 1
     ) {
       setCurrentStep(step);
+      setIsFormDirty(false);
       window.scrollTo(0, 0);
     }
   };
 
   const handleSubmitSteps = () => {
-    setIsModalOpen(true);
+    setShowSuccessModal(true);
   };
 
-  const handleClose = () => {
-    setIsModalOpen(false);
+  const handleCloseWarning = () => {
+    setShowWarningModal(false);
+    setPendingStep(null);
+  };
+
+  const handleConfirmLeave = () => {
+    if (pendingStep !== null) {
+      setCurrentStep(pendingStep);
+      setPendingStep(null);
+      setIsFormDirty(false);
+      setShowWarningModal(false);
+      window.scrollTo(0, 0);
+    }
   };
 
   const stepProps = {
@@ -100,6 +125,7 @@ const ServiceOnboardingPage = () => {
     prevStep,
     handleSubmitSteps,
     mutate,
+    setIsFormDirty,
   };
 
   const stepComponents = useMemo(
@@ -112,6 +138,10 @@ const ServiceOnboardingPage = () => {
     }),
     []
   );
+
+  useEffect(() => {
+    setIsFormDirty(false);
+  }, [currentStep]);
 
   const CurrentComponent =
     stepComponents[currentStep as keyof typeof stepComponents];
@@ -184,13 +214,19 @@ const ServiceOnboardingPage = () => {
         </div>
       </div>
       <SuccessCreateJobModal
-        isOpen={isModalOpen}
-        onClose={handleClose}
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
         handleConfirmChange={() => {
-          setIsModalOpen(false);
+          setShowSuccessModal(false);
           window.location.href = "/seller/my-service";
         }}
         language={createJobLanguage}
+      />
+
+      <WarningLeaveModal
+        isOpen={showWarningModal}
+        onClose={handleCloseWarning}
+        handleConfirmChange={handleConfirmLeave}
       />
     </div>
   );
