@@ -18,7 +18,7 @@ const ChatJob = ({ currentRoom }: Props) => {
             </h4>
             <div className="mt-2 text-sm">
               <p className="text-gray-700">
-                ราคา : {currentRoom?.job.base_price} บาท
+                Price : {currentRoom?.job.base_price} bath
               </p>
             </div>
           </div>

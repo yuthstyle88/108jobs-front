@@ -22,9 +22,7 @@ const getSchema = (lang: any) =>
             .nonempty(lang?.package_name_error || "Tên gói là bắt buộc"),
           description: z
             .string()
-            .nonempty(
-              lang?.package_description_error || "Vui lòng nhập mô tả"
-            ),
+            .nonempty(lang?.package_description_error || "Vui lòng nhập mô tả"),
           price: z
             .string()
             .nonempty(lang?.package_price_error || "Giá là bắt buộc"),
@@ -44,9 +42,16 @@ type Props = {
   nextStep: () => void;
   prevStep: () => void;
   mutate: () => void;
+  setIsFormDirty?: (dirty: boolean) => void;
 };
 
-const Step2Packages = ({ job, nextStep, prevStep, mutate }: Props) => {
+const Step2Packages = ({
+  job,
+  nextStep,
+  prevStep,
+  mutate,
+  setIsFormDirty,
+}: Props) => {
   const createJobLanguage = useTranslateFile(LanguageFile.SELLER_CREATE_JOBS);
 
   const schema = useMemo(
@@ -58,7 +63,7 @@ const Step2Packages = ({ job, nextStep, prevStep, mutate }: Props) => {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
   } = useForm<FormData>({
     defaultValues: {
@@ -97,6 +102,10 @@ const Step2Packages = ({ job, nextStep, prevStep, mutate }: Props) => {
   };
 
   useEffect(() => {
+    setIsFormDirty?.(isDirty);
+  }, [isDirty, setIsFormDirty]);
+
+  useEffect(() => {
     if (job?.packages?.length) {
       reset({
         packages: job.packages.map((pkg) => ({
@@ -119,7 +128,9 @@ const Step2Packages = ({ job, nextStep, prevStep, mutate }: Props) => {
         {createJobLanguage?.package_title}
       </h2>
       <div className="mb-6">
-        <p className="text-[20px] text-text_primary">{createJobLanguage?.create_package_title}</p>
+        <p className="text-[20px] text-text_primary">
+          {createJobLanguage?.create_package_title}
+        </p>
         <p className="text-[14px] text-text_secondary mb-6">
           {createJobLanguage?.create_package_description}
         </p>

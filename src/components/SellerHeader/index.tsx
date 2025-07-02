@@ -16,8 +16,11 @@ import LanguageDropdown from "../LanguageDropDown";
 import Loading from "../Loading";
 import Image from "next/image";
 import { ProfileImage } from "@/constants/images";
+import { useLanguage } from "@/contexts/LanguageContext";
+import Error from "@/app/error";
 
 const SellerHeader = () => {
+    const { lang } = useLanguage();
   const { data: globalLanguageData } = useGlobalTranslate(LanguageFile.GLOBAL);
   const {
     data: user,
@@ -37,7 +40,7 @@ const SellerHeader = () => {
   };
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <header className="bg-white border-b border-gray-200">
@@ -87,7 +90,7 @@ const SellerHeader = () => {
               <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
                 <div className="py-2">
                   <Link
-                    href={`/user/${user?.user.username}`}
+                    href={`${lang}/user/${user?.user.username}`}
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <User className="w-4 h-4 mr-3 text-gray-500" />

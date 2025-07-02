@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   const fullPath = `/auth/google/callback${search}`;
 
   try {
-    const response = await fetch(`https://fastwork.ibrowe.com${fullPath}`);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_GOOGLE_BASE_URL}${fullPath}`);
 
     const data = await response.json();
 

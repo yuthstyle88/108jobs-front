@@ -16,6 +16,7 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { LanguageFile } from "@/constants/language";
 import Loading from "../Loading";
 import { ApplyToBeFreelancerLanguage } from "@/types/language";
+import ErrorPage from "@/app/error";
 
 const forgotPasswordSchema = z.object({
   email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์"),
@@ -154,7 +155,7 @@ const StepEight: React.FC<StepEightProps> = ({
   };
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <ErrorPage/>;
 
   return (
     <div className="py-8 md:p-0 h-full min-h-screen bg-white rounded-lg shadow-jobCard">

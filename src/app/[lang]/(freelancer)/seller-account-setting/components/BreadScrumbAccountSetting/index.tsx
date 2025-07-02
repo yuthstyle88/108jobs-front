@@ -1,6 +1,7 @@
 "use client";
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,6 +13,7 @@ const BreadCrumbAccountSetting = () => {
   );
 
   const pathname = usePathname();
+  const { lang } = useLanguage();
 
   const menuItems = [
     {
@@ -36,7 +38,9 @@ const BreadCrumbAccountSetting = () => {
     },
   ];
 
-  const currentItem = menuItems.find((item) => item.href === pathname);
+  const currentItem = menuItems.find(
+    (item) => `/${lang}${item.href}` === pathname
+  );
 
   if (isLoading) return <Loading />;
   return (
@@ -45,7 +49,9 @@ const BreadCrumbAccountSetting = () => {
         {breadcrumbLanguage?.seller_center_breadcrumb}
       </Link>
       <span className="mx-2 text-gray-400">/</span>
-      <span className="text-gray-600">{breadcrumbLanguage?.account_settings_breadcrumb}</span>
+      <span className="text-gray-600">
+        {breadcrumbLanguage?.account_settings_breadcrumb}
+      </span>
       <span className="mx-2 text-gray-400">/</span>
       <span className="text-gray-600">{currentItem?.label}</span>
     </div>

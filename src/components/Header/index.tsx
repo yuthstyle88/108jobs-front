@@ -15,6 +15,7 @@ import FreelancerSession from "./components/FreelancerSection";
 import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
 import { useScrollHandler } from "./hooks/useScrollHandler";
+import Error from "@/app/error";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -43,7 +44,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
   const { bg } = TYPES[type];
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <header

@@ -26,6 +26,7 @@ import buildQueryParams from "@/utils/buildJobQueryParams";
 import { ServiceCatalogData } from "@/types/catalog";
 import { Category } from "@/types/category";
 import JobCardSkeleton from "../ui/JobCardSkeleton";
+import Error from "@/app/error";
 
 const category_related = [
   {
@@ -177,7 +178,7 @@ const CategoryDetail = ({ slug }: Props) => {
   if (isLoading || !jobCategoryLanguage || !jobList) return <Loading />;
 
   if (error || errorJobList || errorCategory || errorCatalog)
-    return <div>Error loading data</div>;
+    return <Error/>;
 
   return (
     <>

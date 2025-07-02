@@ -6,10 +6,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import Loading from "../Loading";
+import Error from "@/app/error";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const SideBarSellerAccountSetting = () => {
   const pathname = usePathname();
-
+const { lang } = useLanguage();
   const {
     data: sellerSidebarLanguage,
     isLoading,
@@ -45,7 +47,7 @@ const SideBarSellerAccountSetting = () => {
   ];
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <div className="md:col-span-1">
@@ -58,7 +60,7 @@ const SideBarSellerAccountSetting = () => {
         <nav>
           <ul>
             {menuItems.map(({ href, label, icon: Icon }) => {
-              const isActive = pathname === href;
+              const isActive = pathname === `/${lang}${href}`;
               return (
                 <li key={href}>
                   <Link
@@ -69,7 +71,7 @@ const SideBarSellerAccountSetting = () => {
                         : "text-gray-700 hover:bg-gray-100"
                     }`}
                   >
-                    <Icon className="w-5 h-5 mr-3 text-gray-500" />
+                    <Icon className={`w-5 h-5 mr-3 ${isActive ? "text-blue-600":"text-gray-500"}`} />
                     {label}
                   </Link>
                 </li>

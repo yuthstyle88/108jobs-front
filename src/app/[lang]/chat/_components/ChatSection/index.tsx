@@ -1,6 +1,5 @@
 "use client";
 
-import { ChevronDown, ChevronUp, Copy } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { mutate } from "swr";
@@ -13,10 +12,7 @@ import { useWebSocket } from "@/contexts/RealtimeChatContext";
 import { usePrivateFetch, usePrivateImagePost } from "@/hooks/api-hooks";
 
 import { JobDetailIcon } from "@/constants/icons";
-import {
-  CategoriesImage,
-  ProfileImage
-} from "@/constants/images";
+import { CategoriesImage, ProfileImage } from "@/constants/images";
 import { ChatMessage, ChatResponse } from "@/types/chat";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
@@ -34,8 +30,6 @@ type UploadedFile = {
 };
 const ChatSection = () => {
   const { languageData: chatLanguageData } = useChatLanguage();
-  const [isEmploymentOpen, setIsEmploymentOpen] = useState(true);
-  const [isDocumentsOpen, setIsDocumentsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
@@ -60,10 +54,9 @@ const ChatSection = () => {
   );
 
   const currentRoom = chatData?.find(
-  (room) =>
-    String(room.room_id) === partnerId ||
-    String(room.job?.id) === partnerId
-);
+    (room) =>
+      String(room.room_id) === partnerId || String(room.job?.id) === partnerId
+  );
 
   const onSubmit = (data: MessageForm) => {
     const message = data.message?.trim() || "";
@@ -99,9 +92,6 @@ const ChatSection = () => {
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  const toggleEmployment = () => setIsEmploymentOpen((prev) => !prev);
-  const toggleDocuments = () => setIsDocumentsOpen((prev) => !prev);
 
   if (isChatLoading) return <LoadingBlur text="" />;
 
@@ -192,7 +182,7 @@ const ChatSection = () => {
           <div className="flex">
             <div className="w-12 h-12 rounded bg-gray-200 overflow-hidden mr-3 flex-shrink-0">
               <Image
-                src={currentRoom?.job_cover_image|| CategoriesImage.seo_job}
+                src={currentRoom?.job_cover_image || CategoriesImage.seo_job}
                 alt="seo_job"
                 width={64}
                 height={48}
@@ -207,8 +197,7 @@ const ChatSection = () => {
           </div>
         </div>
 
-        {/* Employment Info */}
-        <div className="border-b">
+        {/* <div className="border-b">
           <button
             className="flex items-center justify-between w-full p-4 text-sm hover:bg-gray-50 transition-colors"
             onClick={toggleEmployment}
@@ -256,7 +245,6 @@ const ChatSection = () => {
           )}
         </div>
 
-        {/* Employment Documents */}
         <div className="border-b">
           <button
             className="flex items-center justify-between w-full p-4 text-sm hover:bg-gray-50 transition-colors"
@@ -296,7 +284,7 @@ const ChatSection = () => {
               </p>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     </>
   );

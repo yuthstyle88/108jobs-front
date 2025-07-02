@@ -9,10 +9,9 @@ import { ServiceCatalogData } from "@/types/catalog";
 import { JobType } from "@/types/job";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Info } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import WarningLeaveModal from "../../../../../components/WarningLeaveModal";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getSchema = (createJobLanguage: any) =>
@@ -52,11 +51,17 @@ interface Props {
   job?: JobType;
   setJob?: (job: JobType) => void;
   nextStep?: () => void;
+  setIsFormDirty?: (dirty: boolean) => void;
 }
 
-const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
+const Step1ServiceInfo = ({
+  onCreated,
+  job,
+  setJob,
+  nextStep,
+  setIsFormDirty,
+}: Props) => {
   const createJobLanguage = useTranslateFile(LanguageFile.SELLER_CREATE_JOBS);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: jobsData, isLoading } = usePrivateFetch<ServiceCatalogData>(
     API_ROUTES.catalog.get_all_catalog
@@ -73,18 +78,21 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     setValue,
     watch,
+    reset,
   } = useForm<FormData>({
+    defaultValues: {
+      category: job?.service_catalog?.id || "",
+      type: job?.service_type?.id || "",
+      name: job?.title || "",
+      description: job?.description || "",
+    },
     resolver: zodResolver(schema),
   });
 
   const selectedCategory = watch("category");
-
-  const handleClose = () => {
-    setIsModalOpen(false);
-  };
 
   const subCategories = useMemo(() => {
     const selected = jobsData?.service_catalogs.find(
@@ -94,22 +102,19 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
   }, [jobsData, selectedCategory]);
 
   useEffect(() => {
-    if (!job || !jobsData?.service_catalogs?.length) return;
+  if (!job || !jobsData?.service_catalogs?.length) return;
 
-    const catalogId = job.service_catalog?.id || "";
-    const typeId = job.service_type?.id || "";
+  const catalogId = job.service_catalog?.id || "";
+  const typeId = job.service_type?.id || "";
 
-    setValue("category", catalogId);
-    setValue("name", job.title);
-    setValue("description", job.description);
+  reset({
+    category: catalogId,
+    type: typeId,
+    name: job.title,
+    description: job.description,
+  });
+}, [job, jobsData, reset]);
 
-    const selected = jobsData.service_catalogs.find((c) => c.id === catalogId);
-    if (selected) {
-      const subs = selected.sections.flatMap((s) => s.categories);
-      const match = subs.find((c) => c.id === typeId);
-      if (match) setTimeout(() => setValue("type", typeId), 0);
-    }
-  }, [job, jobsData, setValue]);
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -131,12 +136,16 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
     }
   };
 
+  useEffect(() => {
+    setIsFormDirty?.(isDirty);
+  }, [isDirty, setIsFormDirty]);
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="bg-white rounded-lg shadow-sm p-6"
     >
-      {isMutating && <LoadingBlur text="Đang lưu dữ liệu" />}
+      {isMutating && <LoadingBlur text="Saving data" />}
       {isLoading && <Loading />}
       <h2 className="text-[32px] font-medium mb-6 text-text_primary">
         {createJobLanguage?.service_info_title}
@@ -250,13 +259,6 @@ const Step1ServiceInfo = ({ onCreated, job, setJob, nextStep }: Props) => {
           </button>
         </div>
       </div>
-      <WarningLeaveModal
-        isOpen={isModalOpen}
-        onClose={handleClose}
-        handleConfirmChange={() => {
-          
-        }}
-      />
     </form>
   );
 };

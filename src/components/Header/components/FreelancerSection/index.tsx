@@ -1,23 +1,24 @@
 "use client";
+import { API_ROUTES } from "@/api/endpoints";
+import LanguageDropdown from "@/components/LanguageDropDown";
 import NotificationDropdown from "@/components/NotificationDropdown";
+import AvatarSkeleton from "@/components/ui/AvatarSkeleton";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { ROLE } from "@/constants/role";
+import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useToggle } from "@/hooks/useToggle";
 import { GlobalLanguage } from "@/types/language";
-import { faChevronDown, faComment } from "@fortawesome/free-solid-svg-icons";
+import { ProfileData } from "@/types/userData";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
+import ChatBadge from "../ChatBadge";
 import FreelanceMegaMenu from "../FreelanceMegaMenu";
 import FreelanceImproveMenu from "../FreelancerImproveMenu";
 import ProfileFreelancer from "../ProfileFreelancer";
-import { Session } from "next-auth";
-import { ProfileData } from "@/types/userData";
-import { usePrivateFetch } from "@/hooks/api-hooks";
-import { API_ROUTES } from "@/api/endpoints";
-import LanguageDropdown from "@/components/LanguageDropDown";
-import AvatarSkeleton from "@/components/ui/AvatarSkeleton";
 
 interface FreelancerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
@@ -69,16 +70,7 @@ const FreelancerSession = ({
           <FreelanceMegaMenu />
         </div>
       </div>
-      <Link
-        href="/chat"
-        className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
-      >
-        <FontAwesomeIcon
-          icon={faComment}
-          className="w-[24px] h-[24px] text-white"
-          size="4x"
-        />
-      </Link>
+      <ChatBadge/>
       <NotificationDropdown />
       <Link
         href="/reward/earn"

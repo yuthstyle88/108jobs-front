@@ -1,4 +1,5 @@
 "use client";
+import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { CategoriesImage, LandingImage } from "@/constants/images";
@@ -51,7 +52,7 @@ export default function NotFound() {
   } = useGlobalTranslate(LanguageFile.NOT_FOUND);
 
   if (isLoading) return <Loading />;
-  if (isError) return <div>Error loading language data</div>;
+  if (isError) return <Error/>;
   return (
     <div className="min-h-screen flex flex-col ">
       {/* Header */}

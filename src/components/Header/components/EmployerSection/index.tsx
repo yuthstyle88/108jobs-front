@@ -9,11 +9,12 @@ import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useToggle } from "@/hooks/useToggle";
 import { GlobalLanguage } from "@/types/language";
 import { ProfileData } from "@/types/userData";
-import { faChevronDown, faComment } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Session } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
+import ChatBadge from "../ChatBadge";
 import MegaMenu from "../MegaMenu";
 import ProfileSection from "../ProfileSection";
 
@@ -48,16 +49,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
       >
         {globalLanguageData?.label_apply_to_be_freelancer_button}
       </Link>
-      <Link
-        href="/chat"
-        className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
-      >
-        <FontAwesomeIcon
-          icon={faComment}
-          className="w-[24px] h-[24px] text-white"
-          size="4x"
-        />
-      </Link>
+      <ChatBadge />
       <NotificationDropdown />
       <Link
         href="/reward/earn"

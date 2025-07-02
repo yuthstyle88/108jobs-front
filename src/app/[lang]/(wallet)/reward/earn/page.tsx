@@ -1,4 +1,5 @@
 "use client";
+import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import PointCard from "@/components/PointIcon/PointCard";
 import { BannerImage, RewardImage } from "@/constants/images";
@@ -20,7 +21,7 @@ const EarnPage = () => {
   const route = useRouter();
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <>

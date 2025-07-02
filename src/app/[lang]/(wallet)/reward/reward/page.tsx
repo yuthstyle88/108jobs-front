@@ -1,4 +1,5 @@
 "use client";
+import Error from "@/app/error";
 import CouponCard from "@/components/CouponCard/CouponCard";
 import Loading from "@/components/Loading";
 import { BannerImage, RewardImage } from "@/constants/images";
@@ -37,7 +38,7 @@ const RewardPage = () => {
   const [activeButton, setActiveButton] = useState(0);
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
   return (
     <>
       <section className="relative">

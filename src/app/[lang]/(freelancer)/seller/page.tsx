@@ -1,7 +1,9 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
+import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { ProfileData } from "@/types/userData";
@@ -43,7 +45,7 @@ const SellerHome = () => {
   const { data: user } = usePrivateFetch<ProfileData>(
     API_ROUTES.profile.get_profile
   );
-
+const { lang } = useLanguage();
   const {
     data: sellerOverviewLanguage,
     isLoading,
@@ -51,7 +53,7 @@ const SellerHome = () => {
   } = useGlobalTranslate(LanguageFile.SELLER_OVERVIEW);
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <main className="min-h-screen">
@@ -190,7 +192,7 @@ const SellerHome = () => {
               </div>
             </div>
             <Link
-              href={`/user/${user?.user.username}`}
+              href={`${lang}/user/${user?.user.username}`}
               className="flex flex-row items-center gap-2"
             >
               <button className="text-blue-600 hover:underline">

@@ -20,6 +20,7 @@ import ProfileFreelancer from "../Header/components/ProfileFreelancer";
 import ProfileSection from "../Header/components/ProfileSection";
 import LanguageDropdown from "../LanguageDropDown";
 import Loading from "../Loading";
+import Error from "@/app/error";
 
 const RewardHeader = () => {
   const { data: session } = useSession();
@@ -39,7 +40,7 @@ const RewardHeader = () => {
   const currentLang = LANGUAGES[lang as keyof typeof LANGUAGES];
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading language data</div>;
+  if (error) return <Error/>;
 
   return (
     <header className="sticky top-0 z-[999] w-full transition-all duration-300 bg-transparent">

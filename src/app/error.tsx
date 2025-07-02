@@ -41,7 +41,7 @@ export default function Error({ message }: ErrorProps) {
         />
         {isError ? 
         <p className="text-center text-[20px] md:text-[32px] text-text_primary font-sans">
-          {message}
+          {message || "Something not work. Please try latter"}
         </p>
         :
         <p className="text-center text-[20px] md:text-[32px] text-text_primary font-sans">

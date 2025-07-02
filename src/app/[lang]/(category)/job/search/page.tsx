@@ -1,5 +1,6 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
+import Error from "@/app/error";
 import CategoryFilter from "@/components/CategoryDetail/components/CategoryFilter";
 import CategoryFooter from "@/components/CategoryDetail/components/CategoryFooter";
 import CategoryRelated from "@/components/CategoryDetail/components/CategoryRelated";
@@ -141,7 +142,7 @@ const CategoryDetail = () => {
 
   if (isLoading || !jobCategoryLanguage || !searchResults) return <Loading />;
 
-  if (error || errorJobList) return <div>Error loading data</div>;
+  if (error || errorJobList) return <Error/>;
 
   return (
     <>
