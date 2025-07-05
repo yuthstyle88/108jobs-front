@@ -16,7 +16,6 @@ const BankCard = ({
   bankName = "Bangkok Bank",
   className,
 }: BankCardProps) => {
-  // Format the account number with spaces for readability
   const formattedAccountNumber = accountNumber
     .replace(/\s/g, '')
     .match(/.{1,4}/g)
@@ -50,7 +49,7 @@ const BankCard = ({
           <div className="w-12 h-12 mr-3 rounded-md bg-gradient-to-br from-[#FFD700] to-[#FFA500] flex items-center justify-center">
             <CreditCard className="text-[#1A1F2C]" size={24} />
           </div>
-          <div className="text-2xl tracking-wider text-white/80 animate-shimmer bg-gradient-to-r from-transparent via-white/10 to-transparent bg-[length:200%_100%]">
+          <div className="text-2xl tracking-wider text-white/80 bg-gradient-to-r from-transparent via-white/10 to-transparent bg-[length:200%_100%]">
             {formattedAccountNumber}
           </div>
         </div>

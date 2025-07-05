@@ -7,20 +7,26 @@ export async function POST(request: Request) {
 
   try {
     const res = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE_URL + API_ROUTES.auth.register,
+      // process.env.NEXT_PUBLIC_API_BASE_URL + API_ROUTES.auth.register,
+      process.env.NEXT_PUBLIC_API_BASE_URL_V2 + API_ROUTES.auth.register_v2,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: body.email,
           username: body.username,
+          email: body.email,
+          password: body.password,
+          password_verify: body.password_verify,
+          captcha_uuid: body.captcha_uuid,
+          captcha_answer: body.captcha_answer,
         }),
       }
     );
     
     const data = await res.json();
+console.log("dataa",data);
 
     
 
@@ -38,7 +44,7 @@ export async function POST(request: Request) {
       }
       return NextResponse.json(
         {
-          error: data.error || ERROR_CONSTANTS.LIMIT_SEND_EMAIL,
+          error: data.message || ERROR_CONSTANTS.LIMIT_SEND_EMAIL,
         },
         { status: 400 }
       );

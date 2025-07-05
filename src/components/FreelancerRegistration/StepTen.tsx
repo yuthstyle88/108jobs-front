@@ -1,5 +1,5 @@
 import { API_ROUTES } from "@/api/endpoints";
-import { useFormStorage } from "@/app/[lang]/apply-freelance/hooks/useFormStorage"; 
+import { useFormStorage } from "@/app/[lang]/apply-freelance/hooks/useFormStorage";
 import { FreelancerImage } from "@/constants/images";
 import { usePrivatePost } from "@/hooks/api-hooks";
 import { FreelancerFormData } from "@/types/applyFreelancer";
@@ -9,18 +9,26 @@ import React, { useState } from "react";
 import ConfirmTermsFreelancerModal from "../ConfirmTermsFreelancerModal";
 import SwipeToConfirm from "./components/SlideToConfirm";
 import { ApplyToBeFreelancerLanguage } from "@/types/language";
+import LoadingBlur from "../LoadingBlur";
 
 interface StepTenProps {
   formData: FreelancerFormData;
   currentStep: number;
-  applyFreelancerLanguage:Partial<ApplyToBeFreelancerLanguage> | undefined | null;
+  applyFreelancerLanguage:
+    | Partial<ApplyToBeFreelancerLanguage>
+    | undefined
+    | null;
 }
 
 interface ApplyFreelancerResponse {
   jwt: string;
 }
 
-const StepTen: React.FC<StepTenProps> = ({ formData, currentStep,applyFreelancerLanguage }) => {
+const StepTen: React.FC<StepTenProps> = ({
+  formData,
+  currentStep,
+  applyFreelancerLanguage,
+}) => {
   const [isLogin, setIsLogin] = useState(false);
   const { clearFormStorage } = useFormStorage<FreelancerFormData>({
     currentStep,
@@ -36,6 +44,7 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep,applyFreelancer
     usePrivatePost(API_ROUTES.profile.apply_freelancer);
 
   const handleCheckTerms = () => {
+    setApiError(null);
     setIsLoadingSwipe(true);
     setTimeout(() => {
       setIsLoadingSwipe(false);
@@ -96,8 +105,10 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep,applyFreelancer
 
       if (!res) {
         setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+        setIsOpenTerm(false);
         return;
       }
+
       if (res?.jwt) {
         setIsLogin(true);
         const loginResult = await signIn("credentials", {
@@ -114,23 +125,28 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep,applyFreelancer
           setIsOpenTerm(false);
           window.location.href = path;
         } else {
+          setIsOpenTerm(false);
           setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
         }
       } else {
+        setIsOpenTerm(false);
         setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
       }
     } catch (error) {
+      setIsOpenTerm(false);
       console.log("Error:", error);
       setApiError("สมัครฟรีแลนซ์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
     }
   };
+
+  if (isLogin) return <LoadingBlur text="" />;
 
   return (
     <div className="p-6 h-full">
       <div className="flex flex-col justify-between h-full">
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold text-text_primary">
-           {applyFreelancerLanguage?.fastwork_usage_tip}
+            {applyFreelancerLanguage?.fastwork_usage_tip}
           </h2>
           <p className="text-text_secondary mt-2">
             {applyFreelancerLanguage?.compliance_tip}
@@ -210,7 +226,7 @@ const StepTen: React.FC<StepTenProps> = ({ formData, currentStep,applyFreelancer
         isOpen={isOpenTerm}
         onClose={handleCloseTerms}
         handleConfirmChange={handleConfirm}
-        isLoading={isUpdateMuting || isLogin}
+        isLoading={isUpdateMuting}
       />
     </div>
   );

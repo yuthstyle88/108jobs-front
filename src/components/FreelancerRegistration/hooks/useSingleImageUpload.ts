@@ -15,7 +15,7 @@ export const useSingleImageUpload = (
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { trigger: uploadImage } = usePrivateImagePost<
+  const { trigger: uploadImage,isMutating } = usePrivateImagePost<
     ImageUploadResponse,
     FormData
   >(API_ROUTES.image.upload);
@@ -67,5 +67,6 @@ export const useSingleImageUpload = (
     handleFileChange,
     handleSelectFile,
     resetImage,
+    isMutating
   };
 };

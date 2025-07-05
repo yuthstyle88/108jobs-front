@@ -3,7 +3,6 @@ import { usePrivateFetchParams } from "@/hooks/api-hooks";
 import { ApplyToBeFreelancerLanguage } from "@/types/language";
 import debounce from "lodash.debounce";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 
 type Geography = {
   province_name_th: string;
@@ -16,6 +15,9 @@ type Geography = {
 interface CardZipcodeSearchProps {
   formData: {
     card_zip_code: string;
+    card_subdistrict_or_district: string;
+    card_district_or_subdistrict: string;
+    card_province: string;
   };
   onSelect: (data: {
     card_zip_code: string;
@@ -23,17 +25,17 @@ interface CardZipcodeSearchProps {
     card_district_or_subdistrict: string;
     card_province: string;
   }) => void;
-  language:Partial<ApplyToBeFreelancerLanguage> | undefined | null;
+  language: Partial<ApplyToBeFreelancerLanguage> | undefined | null;
 }
 
 export default function CardZipcodeSearch({
   formData,
   onSelect,
-  language
+  language,
 }: CardZipcodeSearchProps) {
-  const { setValue, watch } = useForm();
   const [searchUrl, setSearchUrl] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -42,31 +44,6 @@ export default function CardZipcodeSearch({
     error,
     isLoading,
   } = usePrivateFetchParams<{ geographies: Geography[] }>(searchUrl);
-
-  const [zipcodeValue, setZipcodeValue] = useState("");
-  const zipcode = watch("zipcode", "");
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        !(event.target as Element).closest("input")
-      ) {
-        setShowDropdown(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    if (formData.card_zip_code) {
-      setZipcodeValue(formData.card_zip_code);
-      setValue("zipcode", formData.card_zip_code);
-    }
-  }, [formData.card_zip_code, setValue]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateSearchUrl = useCallback(
@@ -77,21 +54,66 @@ export default function CardZipcodeSearch({
         setSearchUrl(null);
       }
       setShowDropdown(true);
-    }, 500),
+    }, 400),
     []
   );
 
+  useEffect(() => {
+    const isValid = /^\d{5}$/.test(formData.card_zip_code || "");
+
+    if (formData.card_zip_code === "") {
+      setErrorMsg(null);
+    } else if (!isValid) {
+      setErrorMsg("รหัสไปรษณีย์ไม่ถูกต้อง");
+    } else {
+      setErrorMsg(null);
+    }
+  }, [formData.card_zip_code]);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const handleChange = (value: string) => {
+    if (!/^\d{0,5}$/.test(value)) return;
+
+    const isValid = /^\d{5}$/.test(value);
+
+    if (!isValid) {
+      onSelect({
+        card_zip_code: value,
+        card_province: formData.card_province,
+        card_district_or_subdistrict: formData.card_district_or_subdistrict,
+        card_subdistrict_or_district: formData.card_subdistrict_or_district,
+      });
+    } else {
+      onSelect({
+        card_zip_code: value,
+        card_province: formData.card_province,
+        card_district_or_subdistrict: formData.card_district_or_subdistrict,
+        card_subdistrict_or_district: formData.card_subdistrict_or_district,
+      });
+    }
+
+    updateSearchUrl(value);
+  };
+
   const handleSelect = (geo: Geography) => {
     onSelect({
+      card_zip_code: geo.postal_code.toString(),
       card_province: geo.province_name_th,
       card_district_or_subdistrict: geo.district_name_th,
       card_subdistrict_or_district: geo.subdistrict_name_th,
-      card_zip_code: geo.postal_code.toString(),
     });
-
-    const selectedZip = geo.postal_code.toString();
-    setZipcodeValue(selectedZip);
-    setValue("zipcode", selectedZip);
     setShowDropdown(false);
     inputRef.current?.blur();
   };
@@ -107,29 +129,28 @@ export default function CardZipcodeSearch({
         {language?.postal_code}
       </label>
       <input
-        value={zipcodeValue}
-        onChange={(e) => {
-          const value = e.target.value;
-          setZipcodeValue(value);
-          setValue("zipcode", value);
-          updateSearchUrl(value);
-        }}
         ref={inputRef}
-        placeholder={language?.enter_postal_code}
-        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary transition-all"
-        autoComplete="off"
+        autoComplete="postal-code"
+        value={formData.card_zip_code}
+        onChange={(e) => handleChange(e.target.value)}
         onFocus={() => {
-          if (zipcodeValue.length >= 2) {
-            updateSearchUrl(zipcodeValue);
+          if (formData.card_zip_code?.length >= 2) {
+            updateSearchUrl(formData.card_zip_code);
           }
           setShowDropdown(true);
         }}
+        placeholder={language?.enter_postal_code}
+        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary transition-all"
       />
+
+      {errorMsg && <p className="text-red-500 text-sm px-2 mt-1">{errorMsg}</p>}
+
       {error && (
         <p className="text-red-500 text-sm px-2">
           Failed to load data. Please try again.
         </p>
       )}
+
       {showDropdown && (
         <div className="absolute top-full left-0 right-0 z-20 mt-1">
           <div className="border rounded-lg bg-white shadow-lg max-h-60 overflow-y-auto">
@@ -139,12 +160,12 @@ export default function CardZipcodeSearch({
               </div>
             ) : (
               <>
-                {zipcodeValue.length < 2 ? (
+                {formData.card_zip_code.length < 2 ? (
                   <div className="flex justify-center items-center px-3 py-3 text-[12px] font-sans text-black">
                     -- {language?.min_characters} --
                   </div>
                 ) : (searchResults?.geographies?.length ?? 0) > 0 ? (
-                  searchResults!.geographies.map((geo, index) => (
+                  (searchResults?.geographies ?? []).map((geo, index) => (
                     <div
                       key={index}
                       onMouseDown={(e) => {
@@ -167,7 +188,8 @@ export default function CardZipcodeSearch({
                     className="p-3 hover:bg-blue-50 cursor-pointer transition-colors text-center"
                   >
                     <span className="text-[12px] font-sans text-black">
-                      {language?.create_postal_code}: &quot;{zipcode}&quot;
+                      {language?.create_postal_code}: &quot;
+                      {formData.card_zip_code}&quot;
                     </span>
                   </div>
                 )}

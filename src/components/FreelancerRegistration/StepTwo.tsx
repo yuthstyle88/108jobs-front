@@ -10,18 +10,22 @@ interface StepTwoProps {
   };
   updateFormData: (data: { avatar_url: string | null }) => void;
   nextStep: () => void;
-  applyFreelancerLanguage:Partial<ApplyToBeFreelancerLanguage> | undefined | null;
+  applyFreelancerLanguage:
+    | Partial<ApplyToBeFreelancerLanguage>
+    | undefined
+    | null;
 }
 
 const StepTwo: React.FC<StepTwoProps> = ({
   formData,
   updateFormData,
   nextStep,
-  applyFreelancerLanguage
+  applyFreelancerLanguage,
 }) => {
   const {
     imageUrl,
     isUploading,
+    isMutating,
     error,
     fileInputRef,
     handleFileChange,
@@ -38,7 +42,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
           {applyFreelancerLanguage?.choose_profile_picture}
         </h2>
         <p className="text-text_secondary mt-2">
-         {applyFreelancerLanguage?.profile_picture_tip}
+          {applyFreelancerLanguage?.profile_picture_tip}
         </p>
       </div>
 
@@ -65,11 +69,12 @@ const StepTwo: React.FC<StepTwoProps> = ({
                     height={500}
                   />
                 </div>
-                {isUploading && (
-                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-full ">
+                {(isUploading || isMutating) && (
+                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-full">
                     <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   </div>
                 )}
+
                 <button
                   onClick={handleSelectFile}
                   className="absolute bottom-2 right-2 bg-third text-white p-2 rounded-full shadow-md"
@@ -99,7 +104,7 @@ const StepTwo: React.FC<StepTwoProps> = ({
             ) : (
               <div
                 onClick={handleSelectFile}
-                className="w-48 h-48 bg-gray-100 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors"
+                className="w-48 h-48 bg-gray-100 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors relative"
               >
                 <div className="text-center">
                   <svg
@@ -120,6 +125,11 @@ const StepTwo: React.FC<StepTwoProps> = ({
                     {applyFreelancerLanguage?.upload_profile_picture}
                   </span>
                 </div>
+                {(isUploading || isMutating) && (
+                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-full">
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  </div>
+                )}
               </div>
             )}
 
