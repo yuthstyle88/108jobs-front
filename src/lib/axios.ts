@@ -10,6 +10,13 @@ export const axiosPublic = axios.create({
     "Content-Type": "application/json",
   },
 });
+export const axiosPublicV2 = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL_V2,
+  timeout: 10000,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
 export const axiosPrivate = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,

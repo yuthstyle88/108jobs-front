@@ -70,7 +70,16 @@ export const RegisterForm = ({
   const onSubmit = async (data: RegisterFormData) => {
     try {
       setApiError(null);
+
       sessionStorage.setItem("registerData", JSON.stringify(data));
+
+      console.log("Submitting data:", data);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      if (data.captcha_answer !== "9vwqUj") {
+        setApiError("Captcha ไม่ถูกต้อง กรุณาลองใหม่");
+        return;
+      }
 
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -78,18 +87,12 @@ export const RegisterForm = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: data.username,
           email: data.email,
-          password: data.password,
-          password_verify: data.confirmPassword,
-          captcha_uuid: data.captcha_uuid,
-          captcha_answer: data.captcha_answer,
+          username: data.username,
         }),
       });
 
       const result = await response.json();
-      console.log("result",result);
-      
 
       if (!response.ok) {
         if (result.fieldErrors?.email) {

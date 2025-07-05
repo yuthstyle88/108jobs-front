@@ -70,7 +70,7 @@ const FreelancerSession = ({
           <FreelanceMegaMenu />
         </div>
       </div>
-      <ChatBadge/>
+      <ChatBadge />
       <NotificationDropdown />
       <Link
         href="/reward/earn"
@@ -91,27 +91,28 @@ const FreelancerSession = ({
       <div className="relative px-4">
         <button
           onClick={() => toggle()}
-          className="flex items-center justify-center gap-2 w-12 h-12 rounded-full "
+          className="flex items-center justify-center gap-2 "
         >
-          {isLoading ? (
-            <AvatarSkeleton />
-          ) : (
-            user && (
-              <Image
-                src={user?.user.avatar_url || ProfileImage.avatar}
-                alt="avatar"
-                className="rounded-full w-12 h-12 object-cover"
-                width={500}
-                height={500}
-              />
-            )
-          )}
+          <div className="flex items-center w-12 h-12 rounded-full overflow-hidden bg-white">
+            {isLoading ? (
+              <AvatarSkeleton />
+            ) : (
+              user && (
+                <Image
+                  src={user?.user.avatar_url || ProfileImage.avatar}
+                  alt="avatar"
+                  className="w-full h-full object-cover object-center"
+                  width={48}
+                  height={48}
+                />
+              )
+            )}
+          </div>
           <FontAwesomeIcon
             icon={faChevronDown}
             className="w-[14px] h-[14px] text-white"
           />
         </button>
-
         {isOpen && <ProfileFreelancer user={user} data={globalLanguageData} />}
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()} />

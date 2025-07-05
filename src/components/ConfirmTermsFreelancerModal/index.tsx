@@ -9,6 +9,7 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { LanguageFile } from "@/constants/language";
 import Loading from "../Loading";
 import Error from "@/app/error";
+import { useEffect } from "react";
 
 interface ConfirmTermsFreelancerModalProps {
   isOpen: boolean;
@@ -32,13 +33,19 @@ const ConfirmTermsFreelancerModal: React.FC<
     error,
   } = useGlobalTranslate(LanguageFile.TERMS_AND_CONDITIONS);
 
-  const { watch, register } = useForm({
+  const { watch, register, reset } = useForm({
     resolver: zodResolver(registerSchema),
     mode: "onChange",
   });
 
+  useEffect(() => {
+  if (!isOpen) {
+    reset(); 
+  }
+}, [isOpen, reset]);
+
   if (isTermLoading) return <Loading />;
-  if (error) return <Error/>;
+  if (error) return <Error />;
 
   return (
     <Modal
@@ -53,7 +60,7 @@ const ConfirmTermsFreelancerModal: React.FC<
           {termLanguage?.terms_title}
         </p>
         <div className="border-1 border-border_primary p-3 rounded-lg text-[12px] list-decimal max-h-[280px] overflow-auto">
-          <TermsAndCondition language={termLanguage}/>
+          <TermsAndCondition language={termLanguage} />
         </div>
         <div className="space-y-2 pt-2">
           <div className="flex items-center gap-3">

@@ -1,6 +1,7 @@
+"use client";
 import { AssetIcon } from "@/constants/icons";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import CardZipcodeSearch from "./components/CardSearchZipcode";
 import { ApplyToBeFreelancerLanguage } from "@/types/language";
 
@@ -18,17 +19,51 @@ interface StepSixProps {
   };
   updateFormData: (data: Partial<StepSixProps["formData"]>) => void;
   nextStep: () => void;
-   applyFreelancerLanguage:Partial<ApplyToBeFreelancerLanguage> | undefined | null;
+  applyFreelancerLanguage:
+    | Partial<ApplyToBeFreelancerLanguage>
+    | undefined
+    | null;
 }
 
 const StepSix: React.FC<StepSixProps> = ({
   formData,
   updateFormData,
   nextStep,
-  applyFreelancerLanguage
+  applyFreelancerLanguage,
 }) => {
   const [idNumberError, setIdNumberError] = React.useState("");
+  const hasRestoredAddress = useRef(false);
 
+  useEffect(() => {
+    if (hasRestoredAddress.current) return;
+
+    const isMissingAddress =
+      !formData.card_zip_code ||
+      !formData.card_province ||
+      !formData.card_district_or_subdistrict ||
+      !formData.card_subdistrict_or_district;
+
+    if (isMissingAddress && typeof window !== "undefined") {
+      const saved = localStorage.getItem("freelancerFormData");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (parsed.card_zip_code) {
+            updateFormData({
+              card_zip_code: parsed.card_zip_code,
+              card_province: parsed.card_province,
+              card_district_or_subdistrict: parsed.card_district_or_subdistrict,
+              card_subdistrict_or_district: parsed.card_subdistrict_or_district,
+            });
+          }
+        } catch (e) {
+          console.error("Error parsing saved address:", e);
+        }
+      }
+    }
+
+    hasRestoredAddress.current = true;
+  }, [formData, updateFormData]);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -40,7 +75,9 @@ const StepSix: React.FC<StepSixProps> = ({
     const value = e.target.value;
 
     if (!/^\d*$/.test(value)) {
-      setIdNumberError(applyFreelancerLanguage?.id_number_only ?? "Invalid ID number");
+      setIdNumberError(
+        applyFreelancerLanguage?.id_number_only ?? "Invalid ID number"
+      );
       return;
     }
 
@@ -53,7 +90,9 @@ const StepSix: React.FC<StepSixProps> = ({
     if (value.length === 13) {
       setIdNumberError("");
     } else {
-      setIdNumberError(applyFreelancerLanguage?.id_number_length ?? "Invalid ID number");
+      setIdNumberError(
+        applyFreelancerLanguage?.id_number_length ?? "Invalid ID number"
+      );
     }
   };
 
@@ -168,7 +207,9 @@ const StepSix: React.FC<StepSixProps> = ({
                 value={formData.card_address_details}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                placeholder={applyFreelancerLanguage?.address_details_instruction}
+                placeholder={
+                  applyFreelancerLanguage?.address_details_instruction
+                }
               />
             </div>
 
@@ -285,13 +326,15 @@ const StepSix: React.FC<StepSixProps> = ({
                     {formData.title} {formData.name} {formData.surname}
                   </p>
                   <p className="text-[12px] leading-[13.8px] text-text_primary capitalize">
-                    {applyFreelancerLanguage?.address}: {formData.card_address_details}{" "}
+                    {applyFreelancerLanguage?.address}:{" "}
+                    {formData.card_address_details}{" "}
                     {formData.card_subdistrict_or_district}{" "}
                     {formData.card_district_or_subdistrict}{" "}
                     {formData.card_province} {formData.card_zip_code}
                   </p>
                   <p className="text-[12px] leading-[13.8px] text-text_primary">
-                    {applyFreelancerLanguage?.postal_code}: {formData.card_number}
+                    {applyFreelancerLanguage?.postal_code}:{" "}
+                    {formData.card_number}
                   </p>
                 </div>
                 <div className="flex-[2_1] flex flex-col gap-2">

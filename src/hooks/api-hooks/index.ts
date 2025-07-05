@@ -1,4 +1,9 @@
-import { axiosFileUpload, axiosPrivate, axiosPublic } from "./../../lib/axios";
+import {
+  axiosFileUpload,
+  axiosPrivate,
+  axiosPublic,
+  axiosPublicV2,
+} from "./../../lib/axios";
 import type { AxiosError } from "axios";
 import useSWR, { SWRConfiguration } from "swr";
 import useSWRMutation from "swr/mutation";
@@ -19,6 +24,23 @@ export const usePublicFetch = <T>(url: string | null) => {
       errorRetryCount: 3,
     }
   );
+};
+// Public GET V2
+export const usePublicFetchV2 = <T>(url: string | null) => {
+  const swr = useSWR<T, AxiosError>(
+    url,
+    async (url: string) => (await axiosPublicV2.get<T>(url)).data,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 60000,
+      errorRetryCount: 3,
+    }
+  );
+
+  return {
+    ...swr,
+    refetch: swr.mutate,
+  };
 };
 
 // Public POST
@@ -65,7 +87,6 @@ export const usePrivateFetch = <T>(
     }
   );
 };
-
 
 // Private GET with params
 export const usePrivateFetchParams = <T>(

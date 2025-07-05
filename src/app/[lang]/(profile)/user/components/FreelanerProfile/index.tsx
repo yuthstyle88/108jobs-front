@@ -67,8 +67,8 @@ const FreelancerProfile = ({ username }: Props) => {
                 <Image
                   src={userProfile?.avatar_url || ProfileImage.avatar}
                   alt="Avatar"
-                  className="rounded-full w-[175px] object-cover"
-                  width={175}
+                  className="rounded-full w-[175px] h-[175px] object-cover overflow-hidden"
+                  width={500}
                   height={500}
                 />
               </div>

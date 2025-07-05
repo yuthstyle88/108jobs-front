@@ -103,7 +103,7 @@ const FreelancerRegistration = () => {
       setFormData((prev) => {
         const updated = {
           ...prev,
-          avatar_url: userData.user.avatar_url || null,
+          avatar_url: userData.user.avatar_url || prev.avatar_url,
           username: userData.user.username || prev.username,
           display_name: userData.user.display_name || prev.display_name,
           birth_date: userData.user.birth_date

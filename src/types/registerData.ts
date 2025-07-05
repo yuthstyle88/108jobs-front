@@ -9,3 +9,5 @@ export type RegisterDataProps = {
   promotionalAccepted?: boolean | undefined;
   token?: string;
 };
+
+
