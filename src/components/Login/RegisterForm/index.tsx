@@ -11,6 +11,9 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CaptchaField } from "../CaptchaField";
+import { usePublicFetchV2 } from "@/hooks/api-hooks";
+import { CaptchaResponse } from "@/types/capcha";
+import { API_ROUTES } from "@/api/endpoints";
 const registerSchema = z
   .object({
     email: z.string().email("กรุณากรอกอีเมลให้ถูกต้อง"),
@@ -57,6 +60,10 @@ export const RegisterForm = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
+  const { refetch } = usePublicFetchV2<CaptchaResponse>(
+    API_ROUTES.auth.get_capcha
+  );
+
   useEffect(() => {
     const storedData = sessionStorage.getItem("registerData");
     if (storedData) {
@@ -88,8 +95,7 @@ export const RegisterForm = ({
       });
 
       const result = await response.json();
-      console.log("result",result);
-      
+      // console.log("result", result.fieldErrors?.captcha_answer);
 
       if (!response.ok) {
         if (result.fieldErrors?.email) {
@@ -104,18 +110,25 @@ export const RegisterForm = ({
             message: result.fieldErrors.username,
           });
         }
+        if (result.fieldErrors?.captcha_answer) {
+          setError("captcha_answer", {
+            type: "manual",
+            message: result.fieldErrors.captcha_answer,
+          });
+        }
 
         if (
           result.error &&
           !result.fieldErrors?.email &&
-          !result.fieldErrors?.username
+          !result.fieldErrors?.username &&
+          !result.fieldErrors?.captcha_answer
         ) {
           setApiError(ERROR_CONSTANTS.LIMIT_SEND_EMAIL);
         }
-
+        refetch();
         return;
       }
-
+      refetch();
       switchToVerifyEmail();
       setDataRegister(data);
     } catch (error) {
@@ -123,6 +136,7 @@ export const RegisterForm = ({
       setApiError(
         error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลงทะเบียน"
       );
+      refetch();
     }
   };
 

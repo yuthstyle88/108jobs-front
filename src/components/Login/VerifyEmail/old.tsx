@@ -16,7 +16,8 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
   dataRegister,
   resendDelay = 60,
 }) => {
-  const authen = useTranslateFile(LanguageFile.AUTHEN);
+
+    const authen = useTranslateFile(LanguageFile.AUTHEN);
 
   const [code, setCode] = useState<string[]>(Array(6).fill(""));
   const [timeLeft, setTimeLeft] = useState<number>(resendDelay);
@@ -80,7 +81,14 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          token: enteredCode,
+          register: {
+            email: dataRegister?.email,
+            username: dataRegister?.username,
+            password: dataRegister?.password,
+            password_verify: dataRegister?.confirmPassword,
+            phone: dataRegister?.phone,
+          },
+          code: enteredCode,
         }),
       });
 
@@ -152,7 +160,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
     } catch (error) {
       console.error("Verification error:", error);
       setApiError(ERROR_CONSTANTS.SERVER_ERROR);
-    } finally {
+    }finally {
       setIsSendAgain(false);
     }
   };
@@ -160,12 +168,12 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
   return (
     <div className="text-center max-w-md mx-auto">
       <div className="my-[3rem]">
-        <p className="text-text_primary text-base font-sans">
-          {authen?.message_verification_sent} <br /> {dataRegister?.email}
-        </p>
-        <p className="text-text_primary text-base font-sans">
-          {authen?.message_enter_code}
-        </p>
+      <p className="text-text_primary text-base font-sans">
+        {authen?.message_verification_sent} <br/> {dataRegister?.email}
+      </p>
+      <p className="text-text_primary text-base font-sans">
+        {authen?.message_enter_code}
+      </p>
       </div>
       <div className="flex justify-center gap-2 mb-4">
         {[0, 1, 2, 3, 4, 5].map((index) => (
@@ -205,7 +213,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
         }`}
         disabled={code.join("").length !== 6 || isSubmitting}
       >
-        {isSubmitting ? <LoadingCircle /> : authen?.button_verify_email}
+        {isSubmitting ? <LoadingCircle/> : authen?.button_verify_email}
       </button>
 
       {apiError && (
@@ -221,10 +229,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
           isResendDisabled ? "opacity-50 cursor-not-allowed" : ""
         }`}
       >
-        {isSendAgain
-          ? `${authen?.button_resend_code}...`
-          : authen?.button_resend_code}{" "}
-        {isResendDisabled ? `again (${timeLeft})` : ""}
+        {isSendAgain ? `${authen?.button_resend_code}...` : authen?.button_resend_code} {isResendDisabled ? `again (${timeLeft})` : ""}
       </button>
     </div>
   );

@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const loginSchema = z.object({
-  username_or_email: z.string().min(1, "กรุณากรอกอีเมลหรือชื่อผู้ใช้"),
+  email: z.string().email("Email ไม่ถูกต้อง"),
   password: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
 });
 
@@ -39,7 +39,7 @@ export const LoginForm = ({
 
   const route = useRouter();
 
-  const authen = useTranslateFile(LanguageFile.AUTHEN);
+    const authen = useTranslateFile(LanguageFile.AUTHEN);
 
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/";
@@ -48,13 +48,13 @@ export const LoginForm = ({
     try {
       const result = await signIn("credentials", {
         redirect: false,
-        username_or_email: data.username_or_email,
+        email: data.email,
         password: data.password,
         callbackUrl: redirectUrl,
       });
 
       if (result?.error) {
-        setError("username_or_email", {
+        setError("email", {
           type: "manual",
           message: " ",
         });
@@ -87,11 +87,11 @@ export const LoginForm = ({
       )}
 
       <CustomInput
-        label={"Username or email"}
-        name="username_or_email"
-        register={register("username_or_email")}
-        error={errors.username_or_email?.message}
-        placeholder={"Enter your username or email"}
+        label={authen?.label_email}
+        name="email"
+        register={register("email")}
+        error={errors.email?.message}
+        placeholder={authen?.placeholder_email}
       />
 
       <CustomInput
@@ -111,7 +111,11 @@ export const LoginForm = ({
           disabled={isSubmitting}
           className="submit-button py-2"
         >
-          {isSubmitting ? <LoadingCircle /> : authen?.button_proceed}
+          {isSubmitting ? (
+            <LoadingCircle />
+          ) : (
+            authen?.button_proceed
+          )}
         </button>
 
         <div className="flex justify-between text-sm text-blue-600 mt-4">
@@ -134,7 +138,9 @@ export const LoginForm = ({
 
       <div className="flex items-center justify-center space-x-4 text-center mt-6">
         <hr className="flex-grow border-t border-gray-300" />
-        <span className="text-gray-600 px-2">{authen?.label_or}</span>
+        <span className="text-gray-600 px-2">
+          {authen?.label_or}
+        </span>
         <hr className="flex-grow border-t border-gray-300" />
       </div>
 

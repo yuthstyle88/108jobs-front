@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   try {
     const res = await fetch(
       // process.env.NEXT_PUBLIC_API_BASE_URL + API_ROUTES.auth.register,
-      process.env.NEXT_PUBLIC_API_BASE_URL_V2 + API_ROUTES.auth.register_v2,
+      process.env.NEXT_PUBLIC_API_BASE_URL_V2 + API_ROUTES.auth_v2.register_v2,
       {
         method: "POST",
         headers: {
@@ -24,27 +24,38 @@ export async function POST(request: Request) {
         }),
       }
     );
-    
-    const data = await res.json();
-console.log("dataa",data);
 
-    
+    const data = await res.json();
+    console.log("dataa", data);
 
     if (!res.ok) {
-      if (data.error === "auth") {
-        return NextResponse.json(
-          {
-            error: ERROR_CONSTANTS.EMAIL_EXIST,
-            fieldErrors: {
-              email: ERROR_CONSTANTS.EMAIL_EXIST,
-            },
-          },
-          { status: 400 }
-        );
+      const fieldErrors: Record<string, string> = {};
+
+      switch (data.error) {
+        case "invalid_name":
+          fieldErrors.username = ERROR_CONSTANTS.USERNAME_INVALID;
+          break;
+        case "username_already_exists":
+          fieldErrors.username = ERROR_CONSTANTS.USERNAME_EXIST;
+          break;
+        case "email_already_exists":
+          fieldErrors.email = ERROR_CONSTANTS.EMAIL_EXIST;
+          break;
+        case "captcha_incorrect":
+          fieldErrors.captcha_answer = ERROR_CONSTANTS.CAPTCHA_WRONG;
+          break;
       }
+
+      const errorMessage =
+        fieldErrors.email ||
+        fieldErrors.username ||
+        fieldErrors.captcha_answer ||
+        ERROR_CONSTANTS.LIMIT_SEND_EMAIL;
+
       return NextResponse.json(
         {
-          error: data.message || ERROR_CONSTANTS.LIMIT_SEND_EMAIL,
+          error: errorMessage,
+          fieldErrors,
         },
         { status: 400 }
       );
