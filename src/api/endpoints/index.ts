@@ -11,7 +11,7 @@ export const API_ROUTES = {
     update_new_address: "/profile/address/country",
     get_list_review: "/profile/review",
     comment_review: "/profile/review",
-    update_available: "/profile/available"
+    update_available: "/profile/available",
   },
   catalog: {
     get_all_catalog: "/service/catalogs/all",
@@ -28,7 +28,11 @@ export const API_ROUTES = {
     update_password: "/profile/change/password",
     verify_forgot_password: "/users/verify/reset-password",
     get_capcha: "/account/auth/get_captcha",
+  },
+  auth_v2: {
     register_v2: "/account/auth/register",
+    verify_email_v2: "/account/auth/verify_email",
+    login_google_v2: "/google_login_url",
   },
   location: {
     get_provinces: "/profile/countries",
@@ -44,16 +48,16 @@ export const API_ROUTES = {
     update_favorite_job: "/jobs/favorite",
     check_is_favorite_job: "/jobs/favorite",
     delete_favorite_job: "/jobs/favorite",
-    job_board_detail:"/public/job-post",
-    create_job_board:"/job-post",
-    get_job_board:"/job-board/posts",
-    get_my_job_board:"/job-board/my-posts",
+    job_board_detail: "/public/job-post",
+    create_job_board: "/job-post",
+    get_job_board: "/job-board/posts",
+    get_my_job_board: "/job-board/my-posts",
   },
-  chat:{
-    get_chat_history:"/messages/rooms",
+  chat: {
+    get_chat_history: "/messages/rooms",
     upload_file: "/chat/file",
     create_room: "/messages/rooms",
-  }
+  },
 };
 export const API_ROUTES_SELLER = {
   profile: {
@@ -73,6 +77,6 @@ export const API_ROUTES_SELLER = {
     post_job_step_3: "/freelancer/jobs/step/3",
     post_job_step_4: "/freelancer/jobs/step/4",
     post_job_step_5: "/freelancer/jobs/step/5",
-    display_job: "/freelancer/jobs/show"
+    display_job: "/freelancer/jobs/show",
   },
 };

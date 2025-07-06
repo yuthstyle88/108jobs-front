@@ -7,15 +7,17 @@ export async function POST(request: Request) {
     const body = await request.json();
 
     const res = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE_URL + API_ROUTES.auth.verify_email,
+      process.env.NEXT_PUBLIC_API_BASE_URL_V2 +
+        API_ROUTES.auth_v2.verify_email_v2,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          register: body.register,
-          code: body.code,
+          // register: body.register,
+          // code: body.code,
+          token: body.token,
         }),
       }
     );

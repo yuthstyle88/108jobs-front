@@ -211,6 +211,12 @@
   }
 }
 
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 /* * {
   outline: 1px solid red;
 }

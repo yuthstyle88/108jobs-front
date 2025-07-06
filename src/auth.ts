@@ -15,7 +15,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Credentials({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        username_or_email: { label: "Email/Username", type: "text" },
         password: { label: "Password", type: "password" },
         token: { label: "Token", type: "text" },
       },
@@ -37,14 +37,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             };
           }
 
-          if (credentials.email && credentials.password) {
+          if (credentials.username_or_email && credentials.password) {
             const parsed = await signInSchema.parseAsync({
-              email: credentials.email,
+              username_or_email: credentials.username_or_email,
               password: credentials.password,
+              // email: credentials.email,
+              // password: credentials.password,
             });
 
             const res = await fetch(
-              process.env.NEXT_PUBLIC_API_BASE_URL + "/users/login",
+              // process.env.NEXT_PUBLIC_API_BASE_URL + "/users/login",
+              process.env.NEXT_PUBLIC_API_BASE_URL_V2 + "/account/auth/login",
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },

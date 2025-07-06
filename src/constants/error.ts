@@ -25,5 +25,7 @@ export const ERROR_CONSTANTS = {
   EMAIL_NOT_EXIST: "ข้อมูลไม่ถูกต้อง โปรดตรวจสอบอีกครั้ง",
   INVALID_PASSWORD: "รหัสผ่านไม่ถูกต้อง",
   INVALID_OLD_PASSWORD: "รหัสผ่านเดิมไม่ถูกต้อง",
-  CHANGE_PASSWORD_FAILED: "มีข้อผิดพลาดในการเปลี่ยนรหัสผ่านของคุณ"
+  CHANGE_PASSWORD_FAILED: "มีข้อผิดพลาดในการเปลี่ยนรหัสผ่านของคุณ",
+  CAPTCHA_WRONG: "Captcha ไม่ถูกต้อง",
+  USERNAME_INVALID: "ชื่อผู้ใช้ไม่ถูกต้อง กรุณาใช้ชื่ออื่น",
 };
