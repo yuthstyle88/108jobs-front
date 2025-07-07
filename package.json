@@ -45,7 +45,6 @@
     "swiper": "^11.2.4",
     "swr": "^2.3.2",
     "tailwind-merge": "^3.0.2",
-    "webcryptobox": "^4.0.0",
     "zod": "^3.24.2",
     "zustand": "^5.0.3"
   },

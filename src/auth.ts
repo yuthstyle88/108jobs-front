@@ -3,7 +3,7 @@ import NextAuth, {type AuthError} from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import {signInSchema} from "./lib/zod";
 import {exchangePublicKey} from "./lib/api/auth";
-import {generateKeys} from '@/lib/crypto';
+import {generateKeys} from './lib/web-crypto';
 
 declare module "next-auth" {
     interface User extends AdapterUser {
