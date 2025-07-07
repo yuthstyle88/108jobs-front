@@ -4,7 +4,6 @@ export async function generateKeys(): Promise<{ privateKey: CryptoKey; publicKey
     }
 
     try {
-        // สร้าง key pair
         const keyPair = await window.crypto.subtle.generateKey(
             {
                 name: "RSA-OAEP",
@@ -12,22 +11,24 @@ export async function generateKeys(): Promise<{ privateKey: CryptoKey; publicKey
                 publicExponent: new Uint8Array([1, 0, 1]),
                 hash: "SHA-256",
             },
-            true,
+            true, // extractable
             ["encrypt", "decrypt"]
         );
 
-        // แปลง public key เป็น PEM format
-        const publicKeyExported = await window.crypto.subtle.exportKey(
-            "spki",
-            keyPair.publicKey
-        );
-        const publicKeyBase64 = btoa(String.fromCharCode(...new Uint8Array(publicKeyExported)));
-        const publicKeyPEM = `-----BEGIN PUBLIC KEY-----\n${publicKeyBase64}\n-----END PUBLIC KEY-----`;
+        // ✅ Export public key เป็น SPKI
+        const spkiBuffer = await window.crypto.subtle.exportKey("spki", keyPair.publicKey);
+
+        // ✅ แปลงเป็น Base64 PEM format (64 chars per line)
+        const binary = new Uint8Array(spkiBuffer);
+        const base64 = btoa(String.fromCharCode(...binary));
+        const formattedBase64 = base64.match(/.{1,64}/g)?.join('\n') ?? base64;
+        const publicKeyPEM = `-----BEGIN PUBLIC KEY-----\n${formattedBase64}\n-----END PUBLIC KEY-----`;
 
         return {
             privateKey: keyPair.privateKey,
             publicKey: publicKeyPEM
         };
+
     } catch (error) {
         console.error('Error generating keys:', error);
         throw new Error('Failed to generate encryption keys');
@@ -41,6 +42,13 @@ export async function exportPublicKeyToPem(publicKey: CryptoKey) {
     return pem;
 }
 
+export async function exportPrivateKeyToPem(privateKey: CryptoKey) {
+    const pkcs8 = await window.crypto.subtle.exportKey('pkcs8', privateKey);
+    const b64 = btoa(String.fromCharCode(...new Uint8Array(pkcs8)));
+    const pem = `-----BEGIN PRIVATE KEY-----\n${b64.match(/.{1,64}/g)?.join('\n')}\n-----END PRIVATE KEY-----`;
+    return pem;
+}
+
 export async function importRsaPublicKey(pem: string) {
     const binaryDer = pemToBinary(pem);
     return await window.crypto.subtle.importKey(
@@ -51,9 +59,21 @@ export async function importRsaPublicKey(pem: string) {
         ["encrypt"]
     );
 }
+export async function importRsaPrivateKey(pem: string) {
+    const binaryDer = pemToBinary(pem);
+    return await window.crypto.subtle.importKey(
+        "pkcs8",
+        binaryDer,
+        { name: "RSA-OAEP", hash: "SHA-256" },
+        true,
+        ["decrypt"]
+    );
+}
 
 function pemToBinary(pem: string) {
-    const b64 = pem.replace(/-----.*?-----/g, '').replace(/\s+/g, '');
+    const b64 = pem
+        .replace(/-----(BEGIN|END) (PUBLIC|PRIVATE) KEY-----/g, '')
+        .replace(/\s+/g, '');
     const binary = atob(b64);
     return new Uint8Array([...binary].map(c => c.charCodeAt(0)));
 }
