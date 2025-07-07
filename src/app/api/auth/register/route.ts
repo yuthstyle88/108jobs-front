@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     );
 
     const data = await res.json();
-    console.log("dataa", data);
+    console.log("data", data);
 
     if (!res.ok) {
       const fieldErrors: Record<string, string> = {};

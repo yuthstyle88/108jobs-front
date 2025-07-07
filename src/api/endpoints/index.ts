@@ -27,7 +27,7 @@ export const API_ROUTES = {
     verify_change_email: "/profile/contact/verify/email",
     update_password: "/profile/change/password",
     verify_forgot_password: "/users/verify/reset-password",
-    get_capcha: "/account/auth/get_captcha",
+    get_capcha: "/site/get_captcha",
     exchange_key: "/account/auth/exchange_key",
   },
   auth_v2: {
