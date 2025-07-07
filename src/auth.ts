@@ -1,11 +1,52 @@
+import {
+  axiosPublic,
+} from "./lib/axios";
 import { jwtDecode } from "jwt-decode";
 import NextAuth, { type AuthError } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "./lib/zod";
 
+declare module "next-auth" {
+  interface User extends AdapterUser {
+    id?: string;
+    email?: string | null;
+    exchange_key?: string;
+    roles?: string[];
+  }
+
+  interface AdapterUser {
+    id?: string;
+    email?: string | null;
+    exchange_key?: string;
+    roles?: string[];
+  }
+
+  interface Session {
+    user: {
+      id?: string;
+      email?: string | null;
+      exchange_key?: string;
+      roles?: string[];
+    };
+    accessToken?: string;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id?: string;
+    exchange_key?: string;
+    roles?: string[];
+    accessToken?: string;
+    email?: string;
+    token: string;
+  }
+}
+
 interface JWTPayload {
   sub: string;
   roles: string[];
+  exchange_key?: string;
   iat: number;
   exp: number;
 }
@@ -64,6 +105,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 email: decoded.sub,
                 roles: decoded.roles,
                 token: data.jwt,
+                exchange_key: data.exchange_key, // เพิ่ม exchange key จาก response
               };
             }
           }
@@ -83,8 +125,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.accessToken = user.token;
         token.roles = user.roles;
         token.email = user.email!;
+        token.exchange_key = user.exchange_key; // เพิ่ม exchange key
       }
-      return token;
+      if (user?.exchange_key) {
+        try {
+          const exchangeResult = await axiosPublic.post(user.exchange_key);
+          token.accessToken = exchangeResult.token;
+          // อัพเดทข้อมูลอื่นๆ ถ้าจำเป็น
+          token.roles = exchangeResult.user.roles;
+          token.exchange_key = user.exchange_key;
+        } catch (error) {
+          console.error("Failed to exchange token:", error);
+        }
+
+        return token;
     },
     async session({ session, token }) {
       session.accessToken = token.accessToken as string;
@@ -92,6 +146,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         ...session.user,
         email: token.email!,
         roles: Array.isArray(token.roles) ? token.roles : [],
+        exchange_key: token.exchange_key, // เพิ่ม exchange key
       };
       return session;
     },
