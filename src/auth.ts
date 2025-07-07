@@ -2,7 +2,7 @@ import {jwtDecode} from "jwt-decode";
 import NextAuth, {type AuthError} from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import {signInSchema} from "./lib/zod";
-import {exchangeToken} from "./lib/api/auth";
+import {exchangePublicKey} from "./lib/api/auth";
 import {generateKeys} from '@/lib/crypto';
 
 declare module "next-auth" {
@@ -129,7 +129,7 @@ export const {handlers, auth, signIn, signOut} = NextAuth({
 
             try {
                 const publicKey = await generateKeys()
-                const exchangeResult = await exchangeToken(publicKey.publicKey);
+                const exchangeResult = await exchangePublicKey(publicKey.publicKey);
                 token.exchange_key = exchangeResult.publicKey;
             } catch (error) {
                 console.error("Failed to exchange token:", error);

@@ -1,6 +1,6 @@
 import { API_ROUTES } from "@/api/endpoints";
 
-export async function exchangeToken(exchange_key: string) {
+export async function exchangePublicKey(exchange_key: string) {
     try {
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ROUTES.auth.exchange_key}`,
