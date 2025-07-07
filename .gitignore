@@ -41,3 +41,9 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+.env.development
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

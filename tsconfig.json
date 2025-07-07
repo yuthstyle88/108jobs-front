@@ -36,5 +36,9 @@
 , "src/components/ServiceCard", "src/components/ui/SocialLoginButton", "tests/applyFreelancer/apply-step3.spects"  ],
   "exclude": [
     "node_modules"
+  ],
+  "typeRoots": [
+    "./node_modules/@types",
+    "./types"
   ]
 }

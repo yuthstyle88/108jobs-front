@@ -1,0 +1,33 @@
+import { API_ROUTES } from "@/api/endpoints";
+
+export async function exchangeToken(exchange_key: string) {
+    try {
+        const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ROUTES.auth.exchange_key}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ exchange_key }),
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error('Exchange token request failed');
+        }
+
+        const data = await response.json();
+
+        return {
+            token: data.jwt,
+            user: {
+                roles: data.roles,
+                // เพิ่มข้อมูลอื่นๆ ที่ต้องการจาก response
+            }
+        };
+    } catch (error) {
+        console.error('Token exchange error:', error);
+        throw error;
+    }
+}

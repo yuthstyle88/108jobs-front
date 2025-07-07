@@ -1,10 +1,8 @@
-import {
-  axiosPublic,
-} from "./lib/axios";
 import { jwtDecode } from "jwt-decode";
 import NextAuth, { type AuthError } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "./lib/zod";
+import { exchangeToken } from "./lib/api/auth";
 
 declare module "next-auth" {
   interface User extends AdapterUser {
@@ -129,7 +127,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       if (user?.exchange_key) {
         try {
-          const exchangeResult = await axiosPublic.post(user.exchange_key);
+          const exchangeResult = await exchangeToken(user.exchange_key);
           token.accessToken = exchangeResult.token;
           // อัพเดทข้อมูลอื่นๆ ถ้าจำเป็น
           token.roles = exchangeResult.user.roles;
@@ -137,7 +135,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         } catch (error) {
           console.error("Failed to exchange token:", error);
         }
-
+      }
         return token;
     },
     async session({ session, token }) {
