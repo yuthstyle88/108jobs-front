@@ -34,67 +34,52 @@ export async function generateKeys(): Promise<{ privateKey: CryptoKey; publicKey
     }
 }
 
-export async function encryptData(data: string, publicKeyPem: string): Promise<string> {
-    if (typeof window === 'undefined') {
-        throw new Error('encryptData must be called in browser environment');
-    }
-
-    try {
-        // แปลง PEM กลับเป็น CryptoKey
-        const publicKeyBase64 = publicKeyPem
-            .replace('-----BEGIN PUBLIC KEY-----', '')
-            .replace('-----END PUBLIC KEY-----', '')
-            .replace(/\n/g, '');
-        const publicKeyBinary = Uint8Array.from(atob(publicKeyBase64), c => c.charCodeAt(0));
-        const publicKey = await window.crypto.subtle.importKey(
-            "spki",
-            publicKeyBinary,
-            {
-                name: "RSA-OAEP",
-                hash: "SHA-256"
-            },
-            true,
-            ["encrypt"]
-        );
-
-        // เข้ารหัสข้อมูล
-        const encodedData = new TextEncoder().encode(data);
-        const encrypted = await window.crypto.subtle.encrypt(
-            {
-                name: "RSA-OAEP"
-            },
-            publicKey,
-            encodedData
-        );
-
-        return btoa(String.fromCharCode(...new Uint8Array(encrypted)));
-    } catch (error) {
-        console.error('Error encrypting data:', error);
-        throw new Error('Failed to encrypt data');
-    }
+export async function exportPublicKeyToPem(publicKey: CryptoKey) {
+    const spki = await window.crypto.subtle.exportKey('spki', publicKey);
+    const b64 = btoa(String.fromCharCode(...new Uint8Array(spki)));
+    const pem = `-----BEGIN PUBLIC KEY-----\n${b64.match(/.{1,64}/g)?.join('\n')}\n-----END PUBLIC KEY-----`;
+    return pem;
 }
 
+export async function importRsaPublicKey(pem: string) {
+    const binaryDer = pemToBinary(pem);
+    return await window.crypto.subtle.importKey(
+        "spki",
+        binaryDer,
+        { name: "RSA-OAEP", hash: "SHA-256" },
+        true,
+        ["encrypt"]
+    );
+}
+
+function pemToBinary(pem: string) {
+    const b64 = pem.replace(/-----.*?-----/g, '').replace(/\s+/g, '');
+    const binary = atob(b64);
+    return new Uint8Array([...binary].map(c => c.charCodeAt(0)));
+}
+
+export async function encryptData(data: string, publicKeyPem: string): Promise<string> {
+    const publicKey = await importRsaPublicKey(publicKeyPem);
+    const encodedData = new TextEncoder().encode(data);
+
+    const encrypted = await window.crypto.subtle.encrypt(
+        { name: "RSA-OAEP" },
+        publicKey,
+        encodedData
+    );
+
+    return btoa(String.fromCharCode(...new Uint8Array(encrypted)));
+}
+
+
 export async function decryptData(encryptedData: string, privateKey: CryptoKey): Promise<string> {
-    if (typeof window === 'undefined') {
-        throw new Error('decryptData must be called in browser environment');
-    }
+    const encryptedBuffer = Uint8Array.from(atob(encryptedData), c => c.charCodeAt(0));
 
-    try {
-        // แปลง base64 string กลับเป็น ArrayBuffer
-        const encryptedBuffer = Uint8Array.from(atob(encryptedData), c => c.charCodeAt(0));
+    const decrypted = await window.crypto.subtle.decrypt(
+        { name: "RSA-OAEP" },
+        privateKey,
+        encryptedBuffer
+    );
 
-        // ถอดรหัสข้อมูล
-        const decrypted = await window.crypto.subtle.decrypt(
-            {
-                name: "RSA-OAEP"
-            },
-            privateKey,
-            encryptedBuffer
-        );
-
-        return new TextDecoder().decode(decrypted);
-    } catch (error) {
-        console.error('Error decrypting data:', error);
-        throw new Error('Failed to decrypt data');
-    }
+    return new TextDecoder().decode(decrypted);
 }
