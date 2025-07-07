@@ -120,21 +120,21 @@ export const {handlers, auth, signIn, signOut} = NextAuth({
     ],
     callbacks: {
         async jwt({token, user}) {
-            if (user) {
-                token.accessToken = user.token;
-                token.roles = user.roles;
-                token.email = user.email!;
-                token.exchange_key = user.exchange_key; // เพิ่ม exchange key
-            }
+          if (user) {
+            token.accessToken = user.token;
+            token.roles = user.roles;
+            token.email = user.email!;
 
+            // ทำ exchange ครั้งแรกหลัง login
             try {
-                const publicKey = await generateKeys()
-                const exchangeResult = await exchangePublicKey(publicKey.publicKey);
-                token.exchange_key = exchangeResult.publicKey;
+              const publicKey = await generateKeys();
+              const exchangeResult = await exchangePublicKey(publicKey.publicKey);
+              token.exchange_key = exchangeResult.publicKey;
             } catch (error) {
-                console.error("Failed to exchange token:", error);
+              console.error("Initial token exchange failed:", error);
             }
-            return token;
+          }
+          return token;
         },
         async session({session, token}) {
             session.accessToken = token.accessToken as string;
