@@ -20,11 +20,7 @@ export async function exchangeToken(exchange_key: string) {
         const data = await response.json();
 
         return {
-            token: data.jwt,
-            user: {
-                roles: data.roles,
-                // เพิ่มข้อมูลอื่นๆ ที่ต้องการจาก response
-            }
+            publicKey: data.publicKey,
         };
     } catch (error) {
         console.error('Token exchange error:', error);
