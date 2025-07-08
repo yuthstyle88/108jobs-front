@@ -49,3 +49,8 @@ export async function decrypt(ciphertextBase64: string, sessionId: string, key: 
 
     return new TextDecoder().decode(decryptedBuffer);
 }
+
+export function random36Chars(): string {
+    const bytes = crypto.getRandomValues(new Uint8Array(18));
+    return Array.from(bytes, b => (b % 36).toString(36)).join('');
+}
