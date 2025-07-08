@@ -34,7 +34,6 @@ const nextConfig = {
     '192.168.1.*',           // เผื่อวง LAN ย่อย
     'my-proxy.local',        // โดเมน dev reverse-proxy
   ],
-  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;
