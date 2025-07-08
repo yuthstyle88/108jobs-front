@@ -1,13 +1,14 @@
 import { API_ROUTES } from "@/api/endpoints";
 
-export async function exchangePublicKey(exchange_key: string) {
+export async function exchangePublicKey(exchange_key: string, token: string) {
     try {
         const response = await fetch(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ROUTES.auth.exchange_key}`,
             {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({ exchange_key }),
             }
@@ -21,6 +22,7 @@ export async function exchangePublicKey(exchange_key: string) {
 
         return {
             publicKey: data.publicKey,
+            session: data.session
         };
     } catch (error) {
         console.error('Token exchange error:', error);
