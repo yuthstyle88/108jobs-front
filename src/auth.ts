@@ -11,6 +11,7 @@ declare module "next-auth" {
         email?: string | null;
         exchange_key?: string;
         roles?: string[];
+        sessionId?: string;
     }
 
     interface AdapterUser {
@@ -18,6 +19,7 @@ declare module "next-auth" {
         email?: string | null;
         exchange_key?: string;
         roles?: string[];
+        sessionId?: string;
     }
 
     interface Session {
@@ -28,6 +30,7 @@ declare module "next-auth" {
             roles?: string[];
         };
         accessToken?: string;
+        sessionId?: string;
     }
 }
 
@@ -39,6 +42,7 @@ declare module "next-auth/jwt" {
         accessToken?: string;
         email?: string;
         token: string;
+        sessionId?: string;
     }
 }
 
@@ -48,8 +52,8 @@ interface JWTPayload {
     exchange_key?: string;
     iat: number;
     exp: number;
+    sessionId?: string;
 }
-
 export const {handlers, auth, signIn, signOut} = NextAuth({
     providers: [
         Credentials({
