@@ -11,18 +11,12 @@ export async function generateKey(): Promise<CryptoKey> {
 
 export async function exportKey(key: CryptoKey): Promise<string> {
     const rawKey = await window.crypto.subtle.exportKey("raw", key);
-    return btoa(String.fromCharCode(...new Uint8Array(rawKey)));
+    return Array.from(new Uint8Array(rawKey)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-export async function importAesKeyFromBase64(base64Key: string): Promise<CryptoKey> {
-    const raw = Uint8Array.from(atob(base64Key), c => c.charCodeAt(0));
-    return await window.crypto.subtle.importKey(
-        "raw",
-        raw,
-        { name: "AES-CBC" },
-        true,
-        ["encrypt", "decrypt"]
-    );
+export async function importKey(hexKey: string): Promise<CryptoKey> {
+    const raw = new Uint8Array(hexKey.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
+    return await window.crypto.subtle.importKey("raw", raw, { name: "AES-CBC" }, false, ["encrypt", "decrypt"]);
 }
 
 export async function encrypt(data: string, key: CryptoKey, sessionId: string): Promise<{ ciphertext: string, iv: string }> {
