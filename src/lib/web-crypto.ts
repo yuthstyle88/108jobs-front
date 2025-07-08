@@ -1,5 +1,4 @@
-import { webcrypto } from 'node:crypto';
-const crypto = webcrypto;
+const crypto = globalThis.crypto;
 
 export async function generateKey(): Promise<CryptoKey> {
     return await crypto.subtle.generateKey(
