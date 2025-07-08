@@ -29,6 +29,12 @@ const nextConfig = {
   },
   reactStrictMode: true,
   output: "standalone",
+  allowedDevOrigins: [
+    '192.168.1.35',          // ไอพีเครื่องที่เปิดหน้าเว็บ
+    '192.168.1.*',           // เผื่อวง LAN ย่อย
+    'my-proxy.local',        // โดเมน dev reverse-proxy
+  ],
+  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;

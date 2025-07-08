@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as farHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as fasHeart } from "@fortawesome/free-solid-svg-icons";
 import { API_ROUTES } from "@/api/endpoints";
+import { Variants } from 'framer-motion';
+
 import {
   usePrivateDelete,
   usePrivateFetchParams,
@@ -35,6 +37,24 @@ const HeartBurst = () => {
       transition: { duration: 0.6, ease: "easeOut" },
     }),
   };
+  const createHeartVariants = (i: number): Variants => ({
+    initial: {
+      opacity: 0,
+      scale: 0,
+      y: 0
+    },
+    animate: {
+      opacity: 1,
+      scale: [1, 1.2, 1], // array สำหรับ keyframes
+      y: -10,
+      x: i * 10,
+      transition: {
+        duration: 0.6,
+        ease: "easeInOut" // ใช้ string preset แทน array
+      }
+    }
+  });
+
 
   return (
     <>
@@ -44,7 +64,7 @@ const HeartBurst = () => {
           custom={i}
           initial="initial"
           animate="animate"
-          variants={heartVariants}
+          variants={createHeartVariants(i)}
           className="absolute text-red-500 text-sm"
           style={{
             top: -10,

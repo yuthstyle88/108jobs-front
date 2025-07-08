@@ -1,9 +1,9 @@
 import {jwtDecode} from "jwt-decode";
-import NextAuth, {type AuthError} from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import {signInSchema} from "./lib/zod";
 import {exchangePublicKey} from "./lib/api/auth";
 import {exportKey, generateKey} from './lib/web-crypto';
+import NextAuth from "next-auth";
+import type { User } from 'next-auth';
 
 declare module "next-auth" {
     interface User extends AdapterUser {
@@ -54,6 +54,11 @@ interface JWTPayload {
     exp: number;
     sessionId?: string;
 }
+interface LoginResponse {
+    jwt: string;
+    exchange_key?: string;
+}
+
 export const {handlers, auth, signIn, signOut} = NextAuth({
     providers: [
         Credentials({
@@ -63,61 +68,77 @@ export const {handlers, auth, signIn, signOut} = NextAuth({
                 password: {label: "Password", type: "password"},
                 token: {label: "Token", type: "text"},
             },
-            authorize: async (credentials) => {
+            authorize: async (credentials): Promise<User | null> => {
                 try {
-                    if (credentials.token) {
-                        const token = credentials.token as string;
-                        const decoded = jwtDecode<JWTPayload>(token);
-
-                        if (Date.now() >= decoded.exp * 1000) {
-                            throw new Error("Token expired");
+                    if (credentials?.token) {
+                        try {
+                            const decoded = jwtDecode<JWTPayload>(credentials.token as string);
+                            if (Date.now() >= decoded.exp * 1000) {
+                                console.warn("Token หมดอายุ");
+                                return null;
+                            }
+                            return {
+                                id: decoded.sub,
+                                email: decoded.sub,
+                                roles: decoded.roles || [],
+                                token: credentials.token as string,
+                                name: decoded.sub
+                            } as User;
+                        } catch (e) {
+                            console.error("Token ไม่ถูกต้อง:", e);
+                            return null;
                         }
-
-                        return {
-                            id: decoded.sub,
-                            email: decoded.sub,
-                            roles: decoded.roles,
-                            token: token,
-                        };
                     }
 
-                    if (credentials.username_or_email && credentials.password) {
-                        const parsed = await signInSchema.parseAsync({
-                            username_or_email: credentials.username_or_email,
-                            password: credentials.password,
-                            // email: credentials.email,
-                            // password: credentials.password,
-                        });
+                    if (credentials?.username_or_email && credentials?.password) {
+                        try {
+                            const response = await fetch(
+                                `${process.env.NEXT_PUBLIC_API_BASE_URL_V2}/account/auth/login`,
+                                {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({
+                                        username_or_email: credentials.username_or_email,
+                                        password: credentials.password
+                                    })
+                                }
+                            );
 
-                        const res = await fetch(
-                            // process.env.NEXT_PUBLIC_API_BASE_URL + "/users/login",
-                            process.env.NEXT_PUBLIC_API_BASE_URL_V2 + "/account/auth/login",
-                            {
-                                method: "POST",
-                                headers: {"Content-Type": "application/json"},
-                                body: JSON.stringify(parsed),
+                            const data: LoginResponse = await response.json();
+
+                            // ปรับการจัดการ error ใน authorize callback
+                            if (!response.ok) {
+                                throw new Error('CredentialsSignin');
                             }
-                        );
 
-                        const data = await res.json();
+                            if (!response.ok || !data.jwt) {
+                                return null;
+                            }
 
-                        if (res.ok && data.jwt) {
                             const decoded = jwtDecode<JWTPayload>(data.jwt);
                             return {
                                 id: decoded.sub,
                                 email: decoded.sub,
-                                roles: decoded.roles,
+                                roles: decoded.roles || [],
                                 token: data.jwt,
-                                exchange_key: data.exchange_key, // เพิ่ม exchange key จาก response
-                            };
+                                name: decoded.sub,
+                                exchange_key: data.exchange_key
+                            } as User;
+                        } catch (error) {
+                            if (process.env.NODE_ENV === 'development') {
+                                console.error("เกิดข้อผิดพลาดในการ authorize:", error);
+                            }
+                            throw new Error('CredentialsSignin');
                         }
                     }
 
                     return null;
                 } catch (error) {
-                    const e = error as AuthError;
-                    console.error("Authentication error:", e);
-                    throw new Error(e.type || "Authentication failed");
+                    if (process.env.NODE_ENV === 'development') {
+                        console.error("เกิดข้อผิดพลาดในการ authorize:", error);
+                    }
+                    throw new Error('CredentialsSignin');
+
                 }
             },
         }),
