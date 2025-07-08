@@ -1,105 +1,55 @@
-export async function generateKeys(): Promise<{ privateKey: CryptoKey; publicKey: string }> {
-    if (typeof window === 'undefined') {
-        throw new Error('generateKeys must be called in browser environment');
-    }
-
-    try {
-        const keyPair = await window.crypto.subtle.generateKey(
-            {
-                name: "RSA-OAEP",
-                modulusLength: 2048,
-                publicExponent: new Uint8Array([1, 0, 1]),
-                hash: "SHA-256",
-            },
-            true, // extractable
-            ["encrypt", "decrypt"]
-        );
-
-        // ✅ Export public key เป็น SPKI
-        const spkiBuffer = await window.crypto.subtle.exportKey("spki", keyPair.publicKey);
-
-        // ✅ แปลงเป็น Base64 PEM format (64 chars per line)
-        const binary = new Uint8Array(spkiBuffer);
-        const base64 = btoa(String.fromCharCode(...binary));
-        const formattedBase64 = base64.match(/.{1,64}/g)?.join('\n') ?? base64;
-        const publicKeyPEM = `-----BEGIN PUBLIC KEY-----\n${formattedBase64}\n-----END PUBLIC KEY-----`;
-
-        return {
-            privateKey: keyPair.privateKey,
-            publicKey: publicKeyPEM
-        };
-
-    } catch (error) {
-        console.error('Error generating keys:', error);
-        throw new Error('Failed to generate encryption keys');
-    }
+export async function generateKey(): Promise<CryptoKey> {
+    return await window.crypto.subtle.generateKey(
+        {
+            name: "AES-CBC",
+            length: 256, // AES-256
+        },
+        true, // extractable
+        ["encrypt", "decrypt"]
+    );
 }
 
-export async function exportPublicKeyToPem(publicKey: CryptoKey) {
-    const spki = await window.crypto.subtle.exportKey('spki', publicKey);
-    const b64 = btoa(String.fromCharCode(...new Uint8Array(spki)));
-    const pem = `-----BEGIN PUBLIC KEY-----\n${b64.match(/.{1,64}/g)?.join('\n')}\n-----END PUBLIC KEY-----`;
-    return pem;
+export async function exportKey(key: CryptoKey): Promise<string> {
+    const rawKey = await window.crypto.subtle.exportKey("raw", key);
+    return btoa(String.fromCharCode(...new Uint8Array(rawKey)));
 }
 
-export async function exportPrivateKeyToPem(privateKey: CryptoKey) {
-    const pkcs8 = await window.crypto.subtle.exportKey('pkcs8', privateKey);
-    const b64 = btoa(String.fromCharCode(...new Uint8Array(pkcs8)));
-    const pem = `-----BEGIN PRIVATE KEY-----\n${b64.match(/.{1,64}/g)?.join('\n')}\n-----END PRIVATE KEY-----`;
-    return pem;
-}
-
-export async function importRsaPublicKey(pem: string) {
-    const binaryDer = pemToBinary(pem);
+export async function importAesKeyFromBase64(base64Key: string): Promise<CryptoKey> {
+    const raw = Uint8Array.from(atob(base64Key), c => c.charCodeAt(0));
     return await window.crypto.subtle.importKey(
-        "spki",
-        binaryDer,
-        { name: "RSA-OAEP", hash: "SHA-256" },
+        "raw",
+        raw,
+        { name: "AES-CBC" },
         true,
-        ["encrypt"]
-    );
-}
-export async function importRsaPrivateKey(pem: string) {
-    const binaryDer = pemToBinary(pem);
-    return await window.crypto.subtle.importKey(
-        "pkcs8",
-        binaryDer,
-        { name: "RSA-OAEP", hash: "SHA-256" },
-        true,
-        ["decrypt"]
+        ["encrypt", "decrypt"]
     );
 }
 
-function pemToBinary(pem: string) {
-    const b64 = pem
-        .replace(/-----(BEGIN|END) (PUBLIC|PRIVATE) KEY-----/g, '')
-        .replace(/\s+/g, '');
-    const binary = atob(b64);
-    return new Uint8Array([...binary].map(c => c.charCodeAt(0)));
-}
+export async function encrypt(data: string, key: CryptoKey, sessionId: string): Promise<{ ciphertext: string, iv: string }> {
+    const iv = new TextEncoder().encode(sessionId.padEnd(21, '0').slice(5, 21)).slice(0, 16);
+    const encoded = new TextEncoder().encode(data);
 
-export async function encryptData(data: string, publicKeyPem: string): Promise<string> {
-    const publicKey = await importRsaPublicKey(publicKeyPem);
-    const encodedData = new TextEncoder().encode(data);
-
-    const encrypted = await window.crypto.subtle.encrypt(
-        { name: "RSA-OAEP" },
-        publicKey,
-        encodedData
+    const ciphertextBuffer = await window.crypto.subtle.encrypt(
+        { name: "AES-CBC", iv },
+        key,
+        encoded
     );
 
-    return btoa(String.fromCharCode(...new Uint8Array(encrypted)));
+    return {
+        ciphertext: btoa(String.fromCharCode(...new Uint8Array(ciphertextBuffer))),
+        iv: btoa(String.fromCharCode(...iv))
+    };
 }
 
+export async function decrypt(ciphertextBase64: string, sessionId: string, key: CryptoKey): Promise<string> {
+    const ciphertext = Uint8Array.from(atob(ciphertextBase64), c => c.charCodeAt(0));
+    const iv = new TextEncoder().encode(sessionId.padEnd(21, '0').slice(5, 21)).slice(0, 16);
 
-export async function decryptData(encryptedData: string, privateKey: CryptoKey): Promise<string> {
-    const encryptedBuffer = Uint8Array.from(atob(encryptedData), c => c.charCodeAt(0));
-
-    const decrypted = await window.crypto.subtle.decrypt(
-        { name: "RSA-OAEP" },
-        privateKey,
-        encryptedBuffer
+    const decryptedBuffer = await window.crypto.subtle.decrypt(
+        { name: "AES-CBC", iv },
+        key,
+        ciphertext
     );
 
-    return new TextDecoder().decode(decrypted);
+    return new TextDecoder().decode(decryptedBuffer);
 }

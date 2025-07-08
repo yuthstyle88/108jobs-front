@@ -3,7 +3,7 @@ import NextAuth, {type AuthError} from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import {signInSchema} from "./lib/zod";
 import {exchangePublicKey} from "./lib/api/auth";
-import {generateKeys} from './lib/web-crypto';
+import {exportKey, generateKey} from './lib/web-crypto';
 
 declare module "next-auth" {
     interface User extends AdapterUser {
@@ -127,9 +127,8 @@ export const {handlers, auth, signIn, signOut} = NextAuth({
 
             // ทำ exchange ครั้งแรกหลัง login
             try {
-              const publicKey = await generateKeys();
-              const exchangeResult = await exchangePublicKey(publicKey.publicKey);
-              token.exchange_key = exchangeResult.publicKey;
+              const key = await generateKey();
+              token.exchange_key = await exportKey(key);
             } catch (error) {
               console.error("Initial token exchange failed:", error);
             }
