@@ -41,7 +41,7 @@ const ConsentManagement = () => {
               </h3>
               <p className="text-text_primary mb-4 font-sans">
                 ยินยอมการรับข่าวสารและโปรโมชันที่พิเศษต่าง ๆ ผ่านทุกช่องทางจาก
-                Fastwork{" "}
+                Fastjob{" "}
                 <Link href="#" className="text-blue-600 underline">
                   นโยบายคุ้มครองความเป็นส่วนตัว
                 </Link>
@@ -80,7 +80,7 @@ const ConsentManagement = () => {
           <div className="p-6">
             <div className="mb-8">
               <p className="text-gray-600 mb-4">
-                Fastwork
+                Fastjob
                 มีการเก็บและใช้งานคุกกี้เพื่อช่วยปรับปรุงพัฒนาประสบการณ์การใช้งานให้ดียิ่งขึ้นเมื่อคุณเข้าเยี่ยมชมเว็บไซต์ของเรา
                 คุณสามารถเลือกให้ความยินยอมคุกกี้แต่ละประเภทได้
                 (ยกเว้นคุกกี้ที่จำเป็น){" "}

@@ -1,22 +1,30 @@
-import axios from "axios";
-import { getSession } from "next-auth/react";
+import axios, {AxiosError, AxiosHeaders, InternalAxiosRequestConfig} from "axios";
+import { getSession, signOut } from "next-auth/react";
+import {jwtDecode, JwtPayload} from "jwt-decode";
 
 let cachedAccessToken: string | null = null;
 
-export const axiosPublic = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  timeout: 10000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-export const axiosPublicV2 = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL_V2,
-  timeout: 10000,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+const isTokenExpired = (token?: string | null) => {
+  if (!token) return true;
+  try {
+    const { exp } = jwtDecode<JwtPayload>(token);
+    return Date.now() >= (exp ?? 0) * 1_000 - 60_000;
+  } catch {
+    return true;
+  }
+};
+
+function createPublic(baseURL: string) {
+  return axios.create({
+    baseURL,
+    timeout: 10_000,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+export const axiosPublic   = createPublic(`${process.env.NEXT_PUBLIC_API_BASE_URL}`);
+export const axiosPublicV2 = createPublic(`${process.env.NEXT_PUBLIC_API_BASE_URL_V2}`);
+
 
 export const axiosPrivate = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -26,30 +34,63 @@ export const axiosPrivate = axios.create({
   },
 });
 
-axiosPrivate.interceptors.request.use(async (config) => {
-  if (!cachedAccessToken) {
+async function attachToken(
+  config: InternalAxiosRequestConfig,
+): Promise<InternalAxiosRequestConfig> {
+  /* 1. Refresh token if absent or near expiry */
+  if (isTokenExpired(cachedAccessToken)) {
     const session = await getSession();
-    cachedAccessToken = session?.accessToken || null;
+    cachedAccessToken = session?.accessToken ?? null;
   }
 
+  /* 2. Append the token (if any) */
   if (cachedAccessToken) {
-    config.headers.Authorization = `Bearer ${cachedAccessToken}`;
+    // Ensure headers object exists
+    config.headers = config.headers ?? {};
+
+    // Compatible with both AxiosHeaders and plain object
+    if (typeof (config.headers as any).set === "function") {
+      (config.headers as any).set(
+        "Authorization",
+        `Bearer ${cachedAccessToken}`,
+      );
+    } else {
+      (config.headers as Record<string, string>).Authorization =
+        `Bearer ${cachedAccessToken}`;
+    }
   }
 
   return config;
-});
+}
+
+axiosPrivate.interceptors.request.use(attachToken);
+axiosPrivate.interceptors.response.use(
+    (res) => res,
+    async (error: AxiosError) => {
+      if (error.response?.status === 401) {
+        cachedAccessToken = null;
+        const url = `${process.env.NEXT_PUBLIC_API_BASE_URL_V2}/account/auth/login`;
+        await signOut({ callbackUrl: url});
+      }
+      return Promise.reject(error);
+    },
+);
+
 export const axiosFileUpload = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   timeout: 10000,
-  headers: {
-    "Content-Type": "multipart/form-data",
-  },
 });
 
-axiosFileUpload.interceptors.request.use(async (config) => {
-  const session = await getSession();
-  if (session?.accessToken) {
-    config.headers.Authorization = `Bearer ${session.accessToken}`;
+axiosFileUpload.interceptors.request.use(attachToken);
+
+const handle401 = async (error: AxiosError) => {
+  if (error.response?.status === 401) {
+    cachedAccessToken = null;
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL_V2}/not-found`;
+    await signOut({ callbackUrl: url });
   }
-  return config;
-});
+  return Promise.reject(error);
+};
+
+axiosPrivate.interceptors.response.use((r) => r, handle401);
+axiosFileUpload.interceptors.response.use((r) => r, handle401);

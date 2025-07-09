@@ -135,7 +135,7 @@ export default function NotFound() {
       {/* Footer */}
       <footer className="bg-gray-100 py-8">
         <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
-          <p>© {new Date().getFullYear()} Fastwork. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Fastjob. All rights reserved.</p>
         </div>
       </footer>
     </div>

@@ -1,16 +1,26 @@
 import { API_ROUTES } from "@/api/endpoints";
 
-export async function exchangePublicKey(exchange_key: string, token: string) {
+export async function exchangePublicKey(public_key: string, token: string) {
     try {
+        const base = process.env.NEXT_PUBLIC_API_BASE_URL_V2;
+        if (!base) {
+            throw new Error("❌ NEXT_PUBLIC_API_BASE_URL_V2 is not set");
+        }
+
+        const url = `${base}${API_ROUTES.auth.exchange_key}`;
+
         const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL_V2}${API_ROUTES.auth.exchange_key}`,
+             url,
             {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ exchange_key }),
+                body: JSON.stringify({
+                     token: token,
+                     public_key: public_key,
+                })
             }
         );
 

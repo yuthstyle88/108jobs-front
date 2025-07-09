@@ -81,7 +81,7 @@ const AccountSettings = () => {
               </p>
               <div className="flex">
                 <span className="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                  Fastwork.co/user/
+                  Fastjob.co/user/
                 </span>
                 <input
                   {...register("username")}

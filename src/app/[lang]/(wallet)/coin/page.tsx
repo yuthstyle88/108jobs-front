@@ -11,7 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-const FastworkCoin = () => {
+const FastjobCoin = () => {
   const [amount, setAmount] = useState("");
 
   const {
@@ -157,4 +157,4 @@ const FastworkCoin = () => {
   );
 };
 
-export default FastworkCoin;
+export default FastjobCoin;

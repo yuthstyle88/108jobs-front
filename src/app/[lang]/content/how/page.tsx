@@ -42,10 +42,10 @@ const EMPLOYERS = [
       "The system works as a mediator holding your money until a freelance completes his job.",
     list: [
       "Verify hiring detail in quotation",
-      "You can make payment via Fastwork by the following methods:",
+      "You can make payment via Fastjob by the following methods:",
       "Scan promptpay QR code",
       "Credit Card",
-      "Fastwork Coin",
+      "Fastjob Coin",
       "TrueMoney Wallet",
       "After payment successfully, you can exchange the personal contact info.",
     ],
@@ -68,7 +68,7 @@ const EMPLOYERS = [
     description: "To develop fastwork's community",
     list: [
       "Rate and Review buyer for the benefit of other freelancers",
-      "Rate and review your satisfaction with Fastwork system to improve the service even further",
+      "Rate and review your satisfaction with Fastjob system to improve the service even further",
     ],
   },
 ];
@@ -76,7 +76,7 @@ const EMPLOYERS = [
 const SELLERS = [
   {
     id: 1,
-    title: "Post your work on Fastwork to present your ability to buyer",
+    title: "Post your work on Fastjob to present your ability to buyer",
     description: "Post your service under the following categories:",
     list: [
       "Graphic & Design",
@@ -159,7 +159,7 @@ const HowSellAndBuy = () => {
         >
           <div className="px-[1.5rem] relative">
             <div className="text-center text-white">
-              <h1 className="text-[28px]">How to buy/sell on Fastwork?</h1>
+              <h1 className="text-[28px]">How to buy/sell on Fastjob?</h1>
               <p className="text-[16px]">
                 Number one, freelance market-place website.
               </p>
@@ -178,7 +178,7 @@ const HowSellAndBuy = () => {
           <div className="col-start-2 col-end-3">
             <div className="text-center w-full">
               <h1 className="font-sans text-[1.5rem] text-text_primary font-semibold mb-12">
-                Easy steps to get started with Fastwork
+                Easy steps to get started with Fastjob
               </h1>
             </div>
           </div>

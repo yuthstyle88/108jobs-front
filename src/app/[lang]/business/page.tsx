@@ -62,7 +62,7 @@ const Index = () => {
               <div className="relative z-20">
                 <Image
                   src={BusinessImage.business1}
-                  alt="Fastwork for Business"
+                  alt="Fastjob for Business"
                   className="w-full object-cover rounded-lg shadow-lg animate-float"
                   width={600}
                   height={400}

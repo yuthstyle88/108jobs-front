@@ -44,7 +44,7 @@ import {
                   src={AssetIcon.favicon}
                   width={18}
                   height={18}
-                  alt="Fastwork Logo"
+                  alt="Fastjob Logo"
                 />
                 <div className="w-[180px] h-[10px] rounded-md skeleton-gray"></div>
               </div>
@@ -59,7 +59,7 @@ import {
           <div className="flex gap-2 items-center flex-row px-3 h-[28px] rounded-[14px] flex-1 bg-fourth ">
             <Lock width={15} color="gray" />
             <span className="text-text_primary text-[12px]">
-              Fastwork.co/user/{formData.username || "username"}
+              Fastjob.co/user/{formData.username || "username"}
             </span>
           </div>
         </div>

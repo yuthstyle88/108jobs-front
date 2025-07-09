@@ -28,7 +28,7 @@ const testimonials: TestimonialType[] = [
     logoSrc: BusinessImage.logo_customer2,
     logoAlt: "Google",
     testimonial:
-      "Fastwork has been an absolute pleasure to work with. My team has been using Fastwork for several years to create beautiful graphics to explain our products. Over this time, Fastwork has been a driving force in our graphic production, and has always delivered the utmost quality in a reasonable time frame.",
+      "Fastjob has been an absolute pleasure to work with. My team has been using Fastjob for several years to create beautiful graphics to explain our products. Over this time, Fastjob has been a driving force in our graphic production, and has always delivered the utmost quality in a reasonable time frame.",
     author: "Ben Hershey",
     position: "Operations Lead",
   },
@@ -37,7 +37,7 @@ const testimonials: TestimonialType[] = [
     logoSrc: BusinessImage.logo_customer3,
     logoAlt: "Alipay",
     testimonial:
-      "Fastwork help us understand and ship localized products in an international manner.",
+      "Fastjob help us understand and ship localized products in an international manner.",
     author: "Songyan Hou",
     position: "Senior Product Designer",
   },

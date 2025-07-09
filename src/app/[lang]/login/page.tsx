@@ -139,7 +139,7 @@ export default function LoginPage() {
 
           {currentView === "register" && (
             <AuthFormContainer
-              title={`${loginLanguageData?.link_create_account} Fastwork`}
+              title={`${loginLanguageData?.link_create_account} Fastjob`}
               onBack={() => setCurrentView("login")}
             >
               <RegisterForm

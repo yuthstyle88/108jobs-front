@@ -250,7 +250,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
             Interested Freelancers for mobile game character design (0
             proposals)
           </h4>
-          <InforMessage message="We recommend communicating and paying through Fastwork - guaranteed no scams! We protect your payment until you receive work from the freelancer" />
+          <InforMessage message="We recommend communicating and paying through Fastjob - guaranteed no scams! We protect your payment until you receive work from the freelancer" />
         </div>
         <JobBoardProposal />
       </section>

@@ -29,14 +29,14 @@ export async function generateLocalizedMetadata(
 
   return {
     metadataBase: new URL("https://fastwork.co"),
-    applicationName: "Fastwork.co",
+    applicationName: "Fastjob.co",
     title: page.title,
     description: page.description,
     openGraph: {
       title: page.title,
       description: page.description,
       url: overrides?.openGraph?.url ?? "https://fastwork.co",
-      siteName: "Fastwork.co",
+      siteName: "Fastjob.co",
       images: [
         {
           url: t.ogImage,

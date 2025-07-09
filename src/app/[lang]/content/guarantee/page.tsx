@@ -19,9 +19,9 @@ const Guarantee = () => {
       <section className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-20">
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="md:text-left text-center">
-            <h1 className="text-3xl md:text-5xl font-bold mb-6">Fastwork Guarantee</h1>
+            <h1 className="text-3xl md:text-5xl font-bold mb-6">Fastjob Guarantee</h1>
             <p className="text-base md:text-xl mb-4">
-              Hiring freelancer through Fastwork platform gain every steps
+              Hiring freelancer through Fastjob platform gain every steps
               protection.
             </p>
             <p className="text-xl">
@@ -51,7 +51,7 @@ const Guarantee = () => {
       <section className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-4xl font-bold text-center text-blue-600 mb-16">
-            &quot;Fastwork Guarantee&quot; every steps hiring protection
+            &quot;Fastjob Guarantee&quot; every steps hiring protection
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8 text-text_primary">
@@ -135,7 +135,7 @@ const Guarantee = () => {
                   <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <p className="text-gray-700">
                     Final has not been manually approved or auto approved in the
-                    Fastwork Platform
+                    Fastjob Platform
                   </p>
                 </div>
               </div>
@@ -155,7 +155,7 @@ const Guarantee = () => {
                 <div className="flex items-start space-x-3">
                   <XCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
                   <p className="text-gray-700">
-                    Customer didn&apos;t hire and payment through the Fastwork
+                    Customer didn&apos;t hire and payment through the Fastjob
                     Platform
                   </p>
                 </div>
@@ -163,7 +163,7 @@ const Guarantee = () => {
                   <XCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
                   <p className="text-gray-700">
                     Final has been manually approved or auto approved in the
-                    Fastwork Platform
+                    Fastjob Platform
                   </p>
                 </div>
               </div>
@@ -200,7 +200,7 @@ const Guarantee = () => {
       <section className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center text-blue-600 mb-4">
-            Confident in hiring with Fastwork. Freedom to choose to accept final
+            Confident in hiring with Fastjob. Freedom to choose to accept final
             work or request money back.
           </h2>
 
@@ -245,7 +245,7 @@ const Guarantee = () => {
                       "2. Evaluate by giving score and comment regarding the final work"}
                     {step === 3 && "3. More confident with secret review"}
                     {step === 4 &&
-                      "4. Give a score of how much would you like to recommend Fastwork to others"}
+                      "4. Give a score of how much would you like to recommend Fastjob to others"}
                   </h3>
                   <p className="text-gray-600">
                     {step === 1 &&
@@ -253,9 +253,9 @@ const Guarantee = () => {
                     {step === 2 &&
                       "Evaluate skill, quality, satisfaction, and comments to freelancer's work. This will be valuable information to other customer. The information in the first review page will be accumulative and display to freelance profile and product."}
                     {step === 3 &&
-                      "Let us know your expectation with freelancer's work and service quality. No one will be able to access this secret review except key person at Fastwork. This is critical for us to improve quality of our freelancer to serve you to the most satisfaction."}
+                      "Let us know your expectation with freelancer's work and service quality. No one will be able to access this secret review except key person at Fastjob. This is critical for us to improve quality of our freelancer to serve you to the most satisfaction."}
                     {step === 4 &&
-                      "You can share us the issue or problem you found while using the platform. You can also give comments and suggestions to the Fastwork team. We value all of your feedback and take it seriously for improvement."}
+                      "You can share us the issue or problem you found while using the platform. You can also give comments and suggestions to the Fastjob team. We value all of your feedback and take it seriously for improvement."}
                   </p>
                 </div>
               </div>

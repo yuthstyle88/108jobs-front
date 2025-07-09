@@ -98,7 +98,7 @@ const JobApplication = () => {
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 flex items-start gap-2">
               <AlertTriangle className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
               <p className="text-sm text-yellow-800">
-                Warning: Inviting clients to make payments outside the Fastwork
+                Warning: Inviting clients to make payments outside the Fastjob
                 system is against the terms of use and will result in account
                 suspension.
               </p>

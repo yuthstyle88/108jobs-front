@@ -149,7 +149,7 @@ const MyServices = () => {
           <Info className="w-5 h-5 text-orange-600 mr-3 mt-0.5 flex-shrink-0" />
           <div className="text-sm">
             <span className="text-gray-700">
-              You are currently pending approval by Fastwork. You will be able
+              You are currently pending approval by Fastjob. You will be able
               to post jobs once you are approved.
             </span>
           </div>

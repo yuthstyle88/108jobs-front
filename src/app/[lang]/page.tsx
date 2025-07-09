@@ -863,7 +863,7 @@ export default function Home() {
                         className="text-[#E3EDFD] w-[24px] h-[28px] sm:w-[28px] sm:h-[32px]"
                       />
                       <blockquote className="text-base leading-[1.65] text-[#728197] font-sans italic">
-                        &ldquo;Fastwork ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
+                        &ldquo;Fastjob ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ
                         เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ&rdquo;
                       </blockquote>
                     </div>

@@ -94,15 +94,15 @@ const Footer = () => {
           <h3 className="font-bold mb-3">{global?.tittle_footer_3}</h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/">Fastwork</Link>
+              <Link href="/">Fastjob</Link>
             </li>
             <li>
-              <Link href="/business">Fastwork for Business</Link>
+              <Link href="/business">Fastjob for Business</Link>
             </li>
           </ul>
         </div>
 
-        {/* About Fastwork */}
+        {/* About Fastjob */}
         <div>
           <h3 className="font-bold mb-3">{global?.tittle_footer_4}</h3>
           <ul className="space-y-2 text-sm">
@@ -171,7 +171,7 @@ const Footer = () => {
 
             {/* Copyright */}
             <p className="text-sm font-sans text-white mt-3 md:mt-0">
-              © 2025 Fastwork
+              © 2025 Fastjob
             </p>
           </div>
         </div>
