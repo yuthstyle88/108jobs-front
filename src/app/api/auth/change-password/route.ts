@@ -1,29 +1,28 @@
 import { API_ROUTES } from "@/api/endpoints";
-import { ERROR_CONSTANTS, ERROR_VERIFY_EMAIL, ERROR_VERIFY_PASSWORD } from "@/constants/error";
+import {
+  ERROR_CONSTANTS,
+  ERROR_VERIFY_EMAIL,
+  ERROR_VERIFY_PASSWORD,
+} from "@/constants/error";
+import { axiosPublic } from "@/lib/axios";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE_URL + API_ROUTES.auth.change_password,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token: body.token,
-          password: body.password,
-          password_verify: body.password_verify,
-        }),
-      }
-    );
+    const response = await axiosPublic.post(API_ROUTES.auth.change_password, {
+      token: body.token,
+      password: body.password,
+      password_verify: body.password_verify,
+    });
 
-    const data = await res.json();
+    return NextResponse.json(response.data);
 
-    if (!res.ok) {
+  } catch (error: any) {
+    if (error.response) {
+      const data = error.response.data;
+
       if (data.error === ERROR_VERIFY_PASSWORD.invalid_password) {
         return NextResponse.json(
           {
@@ -33,6 +32,7 @@ export async function POST(request: Request) {
           { status: 400 }
         );
       }
+
       if (data.error === ERROR_VERIFY_EMAIL.verification_code_expired) {
         return NextResponse.json(
           {
@@ -42,14 +42,13 @@ export async function POST(request: Request) {
           { status: 400 }
         );
       }
+
       return NextResponse.json(
         { error: data.error || "Xác thực email không thành công" },
         { status: 400 }
       );
     }
 
-    return NextResponse.json(data);
-  } catch (error) {
     console.error("Verification error:", error);
     return NextResponse.json(
       { error: ERROR_CONSTANTS.SERVER_ERROR },

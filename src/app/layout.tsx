@@ -14,6 +14,8 @@ const kanit = Kanit({
   subsets: ["latin", "vietnamese", "thai"],
   weight: ["400", "500", "600"],
   style: ["normal", "italic"],
+  display: "swap",
+  preload: true,
 });
 
 export async function generateMetadata() {

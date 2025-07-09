@@ -1,34 +1,26 @@
 import { API_ROUTES } from "@/api/endpoints";
 import { ERROR_CONSTANTS } from "@/constants/error";
+import { axiosPublicV2 } from "@/lib/axios";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const body = await request.json();
 
   try {
-    const res = await fetch(
-      // process.env.NEXT_PUBLIC_API_BASE_URL + API_ROUTES.auth.register,
-      process.env.NEXT_PUBLIC_API_BASE_URL_V2 + API_ROUTES.auth_v2.register_v2,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: body.username,
-          email: body.email,
-          password: body.password,
-          password_verify: body.password_verify,
-          captcha_uuid: body.captcha_uuid,
-          captcha_answer: body.captcha_answer,
-        }),
-      }
-    );
+    await axiosPublicV2.post(API_ROUTES.auth_v2.register_v2, {
+      username: body.username,
+      email: body.email,
+      password: body.password,
+      password_verify: body.password_verify,
+      captcha_uuid: body.captcha_uuid,
+      captcha_answer: body.captcha_answer,
+    });
 
-    const data = await res.json();
-    console.log("data", data);
+    return NextResponse.json({ success: true });
 
-    if (!res.ok) {
+  } catch (error: any) {
+    if (error.response) {
+      const data = error.response.data;
       const fieldErrors: Record<string, string> = {};
 
       switch (data.error) {
@@ -61,15 +53,10 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error("Registration error:", error);
-      return NextResponse.json(
-        { error: error.message || "Lỗi server" },
-        { status: 500 }
-      );
-    }
-    return NextResponse.json({ error: "Lỗi không xác định" }, { status: 500 });
+    console.error("Registration error:", error);
+    return NextResponse.json(
+      { error: ERROR_CONSTANTS.SERVER_ERROR },
+      { status: 500 }
+    );
   }
 }

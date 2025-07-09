@@ -13,7 +13,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const loginSchema = z.object({
-  username_or_email: z.string().min(1, "กรุณากรอกอีเมลหรือชื่อผู้ใช้"),
+  username_or_email: z
+    .string()
+    .min(6, "กรุณากรอกอีเมลหรือชื่อผู้ใช้อย่างน้อย 6 ตัวอักษร")
+    .max(32, "ชื่อผู้ใช้ต้องไม่เกิน 32 ตัวอักษร"),
   password: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
 });
 
