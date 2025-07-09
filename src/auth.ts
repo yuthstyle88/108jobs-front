@@ -26,8 +26,10 @@ declare module "next-auth" {
     interface Session {
         accessToken?: string;
         user: {
-            shared_key?: CryptoKey;
+            email?: string;
             roles?: string[];
+            shared_key?: CryptoKey;
+            session?: string;
         } & DefaultSession["user"];
     }
 }
@@ -36,6 +38,7 @@ interface JWTPayload {
     sub: string;
     roles: string[];
     exp: number;
+    session: string
 }
 
 
@@ -97,13 +100,13 @@ export const { handlers, auth, signIn} = NextAuth({
                         email: decoded?.sub,
                         roles: decoded?.roles,
                         token: data.jwt,
+                        session: decoded?.session
                     } as User;
                 }
               return null;
             },
         }),
     ],
-
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
@@ -112,6 +115,7 @@ export const { handlers, auth, signIn} = NextAuth({
                     roles: user.roles,
                     email: user.email,
                     shared_key: user.shared_key,
+                    session: user.session,
                 });
 
                 /* ทำ exchange key เฉพาะรอบแรก */
@@ -121,13 +125,12 @@ export const { handlers, auth, signIn} = NextAuth({
                         const { publicKey, privateKey } = await generateEcKeyPair();
                         const pub = await exportPublicKey(publicKey);
                         const resp = await exchangePublicKey(pub, tokenStr);
-                        const serverPubKey = await importEcPublicKeyHex(resp.publicKey);
+                        const serverPubKey = await importEcPublicKeyHex(resp.public_key);
                         token.shared_key = await crypto.subtle.deriveBits(
                             {name: "ECDH", public: serverPubKey},
                             privateKey,
                             256,
                         )
-                        token.session =  resp.session;
                     } catch (e) {
                         console.error("exchangePublicKey:", e);
                     }
