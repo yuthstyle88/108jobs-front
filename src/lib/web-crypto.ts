@@ -38,11 +38,7 @@ export async function generateEcKeyPair(
 export async function exportPublicKey(key: CryptoKey): Promise<string> {
 
     const spki = await crypto.subtle.exportKey("spki", key);
-
-    const info = AsnParser.parse(spki, SubjectPublicKeyInfo);
-
-    const raw = new Uint8Array(info.subjectPublicKey);
-    return uint8ArrayToHex(raw);
+    return uint8ArrayToHex(new Uint8Array(spki));
 }
 
 
@@ -156,4 +152,8 @@ export function hexToUint8Array(hex: string): Uint8Array {
  */
 export function uint8ArrayToHex(buf: Uint8Array): string {
     return [...buf].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+export function arrayBufferToHex(buffer: ArrayBuffer): string {
+    return uint8ArrayToHex(new Uint8Array(buffer));
 }

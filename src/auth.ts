@@ -2,7 +2,13 @@ import NextAuth, {DefaultSession, User} from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import {jwtDecode} from "jwt-decode";
 import {exchangePublicKey} from "@/lib/api/auth";
-import {exportPublicKey, generateEcKeyPair, importEcPublicKeyHex} from "@/lib/web-crypto";
+import {
+    arrayBufferToHex,
+    exportPublicKey,
+    generateEcKeyPair,
+    importEcPublicKeyHex,
+    uint8ArrayToHex
+} from "@/lib/web-crypto";
 
 
 declare module "next-auth/jwt" {
@@ -124,13 +130,14 @@ export const { handlers, auth, signIn} = NextAuth({
                         const tokenStr = (user as any).token;
                         const { publicKey, privateKey } = await generateEcKeyPair();
                         const pub = await exportPublicKey(publicKey);
-                        const resp = await exchangePublicKey(pub, tokenStr);
-                        const serverPubKey = await importEcPublicKeyHex(resp.public_key);
+                        const public_key = await exchangePublicKey(pub, tokenStr);
+                        const serverPubKey = await importEcPublicKeyHex(public_key);
                         token.shared_key = await crypto.subtle.deriveBits(
                             {name: "ECDH", public: serverPubKey},
                             privateKey,
                             256,
                         )
+                        console.log(arrayBufferToHex(token.shared_key))
                     } catch (e) {
                         console.error("exchangePublicKey:", e);
                     }
