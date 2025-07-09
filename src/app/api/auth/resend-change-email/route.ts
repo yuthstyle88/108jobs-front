@@ -1,59 +1,43 @@
-import { API_ROUTES } from "@/api/endpoints";
-import { auth } from "@/auth";
-import { ERROR_CONSTANTS } from "@/constants/error";
 import { NextResponse } from "next/server";
+import { ERROR_CONSTANTS } from "@/constants/error";
+import { API_ROUTES } from "@/api/endpoints";
+import { axiosPrivate } from "@/lib/axios";
 
 export async function POST(request: Request) {
-  const body = await request.json();
-const session = await auth()
   try {
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE_URL + API_ROUTES.auth.resend_change_email,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session?.accessToken}`, 
-        },
-        body: JSON.stringify({
-          new_email: body.email,
-        }),
-      }
-    );
-    
-    const data = await res.json();
+    const { email } = await request.json();
 
-    
-
-    if (!res.ok) {
-      if (data.error === "auth") {
-        return NextResponse.json(
-          {
-            error: ERROR_CONSTANTS.EMAIL_EXIST,
-            fieldErrors: {
-              email: ERROR_CONSTANTS.EMAIL_EXIST,
-            },
-          },
-          { status: 400 }
-        );
-      }
+    if (!email) {
       return NextResponse.json(
-        {
-          error: data.error || ERROR_CONSTANTS.LIMIT_SEND_EMAIL,
-        },
+        { error: ERROR_CONSTANTS.EMAIL_REQUIRED },
         { status: 400 }
       );
     }
 
+    await axiosPrivate.post(API_ROUTES.auth.resend_verify_email, { email });
+
     return NextResponse.json({ success: true });
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error("Registration error:", error);
+  } catch (error: any) {
+    if (error.response) {
+      const data = error.response.data;
+
+      if (data.error === "email_verified") {
+        return NextResponse.json(
+          { error: ERROR_CONSTANTS.EMAIL_VERIFIED },
+          { status: 400 }
+        );
+      }
+
       return NextResponse.json(
-        { error: error.message || "Lỗi server" },
-        { status: 500 }
+        { error: data.error || ERROR_CONSTANTS.RESEND_FAILED },
+        { status: error.response.status || 400 }
       );
     }
-    return NextResponse.json({ error: "Lỗi không xác định" }, { status: 500 });
+
+    console.error("Resend error:", error);
+    return NextResponse.json(
+      { error: ERROR_CONSTANTS.SERVER_ERROR },
+      { status: 500 }
+    );
   }
 }

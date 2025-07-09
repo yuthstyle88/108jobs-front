@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
-import { ERROR_CONSTANTS } from "@/constants/error";
 import { API_ROUTES } from "@/api/endpoints";
+import { ERROR_CONSTANTS } from "@/constants/error";
+import { axiosPublic } from "@/lib/axios";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
@@ -13,34 +14,26 @@ export async function POST(request: Request) {
       );
     }
 
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE_URL + API_ROUTES.auth.resend_verify_email,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      }
-    );
+    await axiosPublic.post(API_ROUTES.auth.resend_verify_email, { email });
 
-    const data = await res.json();
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    if (error.response) {
+      const data = error.response.data;
 
-    if (!res.ok) {
       if (data.error === "email_verified") {
         return NextResponse.json(
           { error: ERROR_CONSTANTS.EMAIL_VERIFIED },
           { status: 400 }
         );
       }
+
       return NextResponse.json(
         { error: data.error || ERROR_CONSTANTS.RESEND_FAILED },
-        { status: res.status }
+        { status: error.response.status || 400 }
       );
     }
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
     console.error("Resend error:", error);
     return NextResponse.json(
       { error: ERROR_CONSTANTS.SERVER_ERROR },

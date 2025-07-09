@@ -1,29 +1,22 @@
 import { API_ROUTES } from "@/api/endpoints";
 import { ERROR_CONSTANTS } from "@/constants/error";
+import { axiosPublic } from "@/lib/axios";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const body = await request.json();
 
   try {
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_API_BASE_URL + API_ROUTES.auth.forgot_password,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: body.email,
-        }),
-      }
-    );
-    
-    const data = await res.json();
+    await axiosPublic.post(API_ROUTES.auth.forgot_password, {
+      email: body.email,
+    });
 
-    
+    return NextResponse.json({ success: true });
 
-    if (!res.ok) {
+  } catch (error: any) {
+    if (error.response) {
+      const data = error.response.data;
+
       if (data.error === "auth") {
         return NextResponse.json(
           {
@@ -35,6 +28,7 @@ export async function POST(request: Request) {
           { status: 400 }
         );
       }
+
       return NextResponse.json(
         {
           error: data.error || ERROR_CONSTANTS.LIMIT_SEND_EMAIL,
@@ -43,15 +37,10 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error("Registration error:", error);
-      return NextResponse.json(
-        { error: error.message || "Lỗi server" },
-        { status: 500 }
-      );
-    }
-    return NextResponse.json({ error: "Lỗi không xác định" }, { status: 500 });
+    console.error("Forgot password error:", error);
+    return NextResponse.json(
+      { error: ERROR_CONSTANTS.SERVER_ERROR },
+      { status: 500 }
+    );
   }
 }
