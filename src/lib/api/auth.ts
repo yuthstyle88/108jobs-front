@@ -1,6 +1,11 @@
-import { API_ROUTES } from "@/api/endpoints";
+import {API_ROUTES} from "@/api/endpoints";
+import {axiosPrivate} from "@/lib/axios";
 
-export async function exchangePublicKey(public_key: string, token: string) {
+interface ExchangeKeyResponse {
+    publicKey: string;
+}
+
+export async function exchangePublicKey(public_key: string) {
     try {
         const base = process.env.NEXT_PUBLIC_API_BASE_URL_V2;
         if (!base) {
@@ -9,31 +14,16 @@ export async function exchangePublicKey(public_key: string, token: string) {
 
         const url = `${base}${API_ROUTES.auth.exchange_key}`;
 
-        const response = await fetch(
-             url,
-            {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                     token: token,
-                     public_key: public_key,
-                })
-            }
-        );
+        const response = await axiosPrivate.post<ExchangeKeyResponse>(url, {
+            public_key,
+        });
 
-        if (!response.ok) {
-            throw new Error('Exchange token request failed');
+
+        if (response.status !== 200) {
+            throw new Error("Exchange token request failed");
         }
 
-        const data = await response.json();
-
-        return {
-            publicKey: data.publicKey,
-            session: data.session
-        };
+        return response.data;
     } catch (error) {
         console.error('Token exchange error:', error);
         throw error;
