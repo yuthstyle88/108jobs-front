@@ -3,7 +3,7 @@ import { API_ROUTES } from "@/api/endpoints";
 export async function exchangePublicKey(exchange_key: string, token: string) {
     try {
         const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ROUTES.auth.exchange_key}`,
+            `${process.env.NEXT_PUBLIC_API_BASE_URL_V2}${API_ROUTES.auth.exchange_key}`,
             {
                 method: 'POST',
                 headers: {

@@ -1,15 +1,14 @@
 import NextAuth, {DefaultSession, User} from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { jwtDecode } from "jwt-decode";
-import { exchangePublicKey } from "@/lib/api/auth";
-import { exportKey, generateKey } from "@/lib/web-crypto";
-
+import {jwtDecode} from "jwt-decode";
+import {exchangePublicKey} from "@/lib/api/auth";
+import {exportPublicKey, generateEcKeyPair, importEcPublicKeyHex} from "@/lib/web-crypto";
 
 
 declare module "next-auth/jwt" {
     interface JWT {
         session?: string;
-        exchange_key?: string;
+        shared_key?: ArrayBuffer;
         accessToken?: string;
         roles?: string[];
         email?: string;
@@ -18,7 +17,7 @@ declare module "next-auth/jwt" {
 
 declare module "next-auth" {
     interface User {
-        exchange_key?: string;
+        shared_key?: CryptoKey;
         token: string;
         roles?: string[];
         session?: string;
@@ -27,7 +26,7 @@ declare module "next-auth" {
     interface Session {
         accessToken?: string;
         user: {
-            exchange_key?: string;
+            shared_key?: CryptoKey;
             roles?: string[];
         } & DefaultSession["user"];
     }
@@ -112,17 +111,22 @@ export const { handlers, auth, signIn} = NextAuth({
                     accessToken: (user as any).token,
                     roles: user.roles,
                     email: user.email,
-                    exchange_key: user.exchange_key,
+                    shared_key: user.shared_key,
                 });
 
                 /* ทำ exchange key เฉพาะรอบแรก */
-                if (!token.exchange_key) {
+                if (!token.shared_key) {
                     try {
                         const tokenStr = (user as any).token;
-                        const key = await generateKey();
-                        const pub = await exportKey(key);
+                        const { publicKey, privateKey } = await generateEcKeyPair();
+                        const pub = await exportPublicKey(publicKey);
                         const resp = await exchangePublicKey(pub, tokenStr);
-                        token.exchange_key = resp.publicKey;
+                        const serverPubKey = await importEcPublicKeyHex(resp.publicKey);
+                        token.shared_key = await crypto.subtle.deriveBits(
+                            {name: "ECDH", public: serverPubKey},
+                            privateKey,
+                            256,
+                        )
                         token.session =  resp.session;
                     } catch (e) {
                         console.error("exchangePublicKey:", e);
@@ -139,7 +143,7 @@ export const { handlers, auth, signIn} = NextAuth({
                 session: token.session,
                 email: token.email as string,
                 roles: (token.roles as string[]) ?? [],
-                exchange_key: token.exchange_key as string | undefined,
+                shared_key: token.shared_key as CryptoKey | undefined,
             };
             return session;
         },
