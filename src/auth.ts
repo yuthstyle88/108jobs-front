@@ -87,7 +87,7 @@ export const { handlers, auth, signIn} = NextAuth({
                 Object.assign(token, {
                     accessToken: (user as any).token,
                     roles: user.roles,
-                    email: user.email,
+                    email: user.email ?? "",
                     session: user.session,
                 });
 
