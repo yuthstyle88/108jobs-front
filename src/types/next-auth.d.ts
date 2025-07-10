@@ -4,15 +4,14 @@ import { JWT } from "next-auth/jwt";
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
-    user: {
-      email?: string;
-      roles?: string[];
-    } & DefaultSession["user"];
+    shared_key?: string;
+    user: User & DefaultSession["user"];
   }
 
   interface User extends DefaultUser {
     token: string;
     roles?: string[];
+    session?: string;
   }
 
   interface EventCallbacks {
@@ -25,5 +24,7 @@ declare module "next-auth/jwt" {
     accessToken?: string;
     email?: string;
     roles?: string[];
+    shared_key?: string;
+    session?: string;
   }
 }

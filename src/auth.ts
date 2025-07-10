@@ -7,38 +7,7 @@ import {
     exportPublicKey,
     generateEcKeyPair,
     importEcPublicKeyHex,
-    uint8ArrayToHex
 } from "@/lib/web-crypto";
-
-
-declare module "next-auth/jwt" {
-    interface JWT {
-        session?: string;
-        shared_key?: ArrayBuffer;
-        accessToken?: string;
-        roles?: string[];
-        email?: string;
-    }
-}
-
-declare module "next-auth" {
-    interface User {
-        shared_key?: CryptoKey;
-        token: string;
-        roles?: string[];
-        session?: string;
-    }
-
-    interface Session {
-        accessToken?: string;
-        user: {
-            email?: string;
-            roles?: string[];
-            shared_key?: CryptoKey;
-            session?: string;
-        } & DefaultSession["user"];
-    }
-}
 
 interface JWTPayload {
     sub: string;
@@ -103,7 +72,6 @@ export const { handlers, auth, signIn} = NextAuth({
                     const decoded = parseJwt(data.jwt);
                     return {
                         id: decoded?.sub,
-                        email: decoded?.sub,
                         roles: decoded?.roles,
                         token: data.jwt,
                         session: decoded?.session
@@ -120,7 +88,6 @@ export const { handlers, auth, signIn} = NextAuth({
                     accessToken: (user as any).token,
                     roles: user.roles,
                     email: user.email,
-                    shared_key: user.shared_key,
                     session: user.session,
                 });
 
@@ -132,12 +99,13 @@ export const { handlers, auth, signIn} = NextAuth({
                         const pub = await exportPublicKey(publicKey);
                         const public_key = await exchangePublicKey(pub, tokenStr);
                         const serverPubKey = await importEcPublicKeyHex(public_key);
-                        token.shared_key = await crypto.subtle.deriveBits(
+                        const shared_key = await crypto.subtle.deriveBits(
                             {name: "ECDH", public: serverPubKey},
                             privateKey,
                             256,
                         )
-                        console.log(arrayBufferToHex(token.shared_key))
+                        token.shared_key = arrayBufferToHex(shared_key)
+                        console.log(arrayBufferToHex(shared_key))
                     } catch (e) {
                         console.error("exchangePublicKey:", e);
                     }
@@ -148,12 +116,12 @@ export const { handlers, auth, signIn} = NextAuth({
 
         async session({ session, token }) {
             session.accessToken = token.accessToken as string;
+            session.shared_key = token.shared_key as string;
             session.user = {
                 ...session.user,
                 session: token.session,
                 email: token.email as string,
                 roles: (token.roles as string[]) ?? [],
-                shared_key: token.shared_key as CryptoKey | undefined,
             };
             return session;
         },

@@ -67,11 +67,11 @@ axiosPrivate.interceptors.request.use(attachToken);
 axiosPrivate.interceptors.response.use(
     (res) => res,
     async (error: AxiosError) => {
-      if (error.response?.status === 401) {
-        cachedAccessToken = null;
-        const url = `${process.env.NEXT_PUBLIC_API_BASE_URL_V2}/account/auth/login`;
-        await signOut({ callbackUrl: url});
-      }
+      // if (error.response?.status === 401) {
+      //   cachedAccessToken = null;
+      //   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL_V2}/account/auth/login`;
+      //   await signOut({ callbackUrl: url});
+      // }
       return Promise.reject(error);
     },
 );
@@ -83,14 +83,3 @@ export const axiosFileUpload = axios.create({
 
 axiosFileUpload.interceptors.request.use(attachToken);
 
-const handle401 = async (error: AxiosError) => {
-  if (error.response?.status === 401) {
-    cachedAccessToken = null;
-    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL_V2}/not-found`;
-    await signOut({ callbackUrl: url });
-  }
-  return Promise.reject(error);
-};
-
-axiosPrivate.interceptors.response.use((r) => r, handle401);
-axiosFileUpload.interceptors.response.use((r) => r, handle401);
