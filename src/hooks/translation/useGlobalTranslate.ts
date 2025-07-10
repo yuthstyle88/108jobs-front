@@ -1,20 +1,19 @@
-import { useLanguage } from "@/contexts/LanguageContext";
-import { usePublicFetch } from "../api-hooks";
-import { useLanguageStore } from "@/store/useLanguageStore";
-import { useEffect, useMemo } from "react";
 import { LanguageFile } from "@/constants/language";
-import { LanguageDataType } from "@/store/useLanguageStore";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { LanguageDataType, useLanguageStore } from "@/store/useLanguageStore";
+import { useEffect, useMemo } from "react";
+import { usePublicFetchV2 } from "../api-hooks";
 
 export const useGlobalTranslate = (file: LanguageFile) => {
   const { languageData, setLanguageData } = useLanguageStore();
   const { lang } = useLanguage();
 
-  const path = useMemo(() => `/lang/${lang}/${file}_${lang}.json`, [lang, file]);
+  const path = useMemo(() => `/i18n/${lang}/${file}`, [lang, file]);
 
   const cacheEntry = languageData?.[file];
   const isSameLang = cacheEntry?.lang === lang;
 
-  const { data, error, isLoading } = usePublicFetch<LanguageDataType>(
+  const { data, error, isLoading } = usePublicFetchV2<LanguageDataType>(
     isSameLang ? null : path
   );
 
