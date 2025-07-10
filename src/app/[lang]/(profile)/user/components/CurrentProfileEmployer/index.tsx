@@ -105,7 +105,7 @@ const CurrentProfileEmployer = ({ username }: Props) => {
                   </div>
                 </div>
               )}
-              <Link
+              <Link prefetch={false}
                 href="/account-setting/basic-info"
                 className="absolute top-4 right-4"
               >

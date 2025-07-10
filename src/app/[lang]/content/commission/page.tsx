@@ -154,7 +154,7 @@ const MyServices = () => {
                   )}
                 </div>
                 <div className="mt-2">
-                  <Link
+                  <Link prefetch={false}
                     href="#"
                     className="text-blue-600 hover:underline text-xs"
                   >
@@ -275,7 +275,7 @@ const MyServices = () => {
                   <ul className="space-y-4 pt-2 text-sm text-gray-700">
                     <li className="flex items-start">
                       <span className="text-blue-500 mr-2">•</span>
-                      <Link
+                      <Link prefetch={false}
                         href="/content/commission#section1"
                         onClick={(e) => handleClick(e, 1)}
                       >
@@ -288,7 +288,7 @@ const MyServices = () => {
                     </li>
                     <li className="flex items-start">
                       <span className="text-blue-500 mr-2">•</span>
-                      <Link
+                      <Link prefetch={false}
                         href="/content/commission#section2"
                         onClick={(e) => handleClick(e, 2)}
                       >
@@ -302,7 +302,7 @@ const MyServices = () => {
                       <ul className="mt-2 pl-5 space-y-2">
                         <li className="flex items-start">
                           <span className="text-blue-500 mr-2">•</span>
-                          <Link
+                          <Link prefetch={false}
                             href="/content/commission#section3"
                             onClick={(e) => handleClick(e, 3)}
                           >
@@ -313,7 +313,7 @@ const MyServices = () => {
                         </li>
                         <li className="flex items-start">
                           <span className="text-blue-500 mr-2">•</span>
-                          <Link
+                          <Link prefetch={false}
                             href="/content/commission#section4"
                             onClick={(e) => handleClick(e, 4)}
                           >
@@ -324,7 +324,7 @@ const MyServices = () => {
                         </li>
                         <li className="flex items-start">
                           <span className="text-blue-500 mr-2">•</span>
-                          <Link
+                          <Link prefetch={false}
                             href="/content/commission#section5"
                             onClick={(e) => handleClick(e, 5)}
                           >
@@ -337,7 +337,7 @@ const MyServices = () => {
                     </li>
                     <li className="flex items-start">
                       <span className="text-blue-500 mr-2">•</span>
-                      <Link
+                      <Link prefetch={false}
                         href="/content/commission#section6"
                         onClick={(e) => handleClick(e, 6)}
                       >
@@ -362,7 +362,7 @@ const MyServices = () => {
             </p>
 
             <div className="mt-4 mb-6">
-              <Link
+              <Link prefetch={false}
                 href="/seller"
                 className="text-blue-600 underline text-sm"
               >
@@ -901,7 +901,7 @@ const MyServices = () => {
                   )}
                 </div>
                 <div className="mt-2">
-                  <Link
+                  <Link prefetch={false}
                     href="#"
                     className="text-blue-600 hover:underline text-xs"
                   >

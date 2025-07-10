@@ -12,7 +12,7 @@ const Post = () => {
       <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
         {global?.job_board_description}
       </p>
-      <Link href="/job-board" className="mt-6">
+      <Link prefetch={false} href="/job-board" className="mt-6">
         <span className="text-[0.875rem] font-medium text-third">
           {global?.job_board_button}
           <FontAwesomeIcon icon={faArrowRight} className="pl-2 text-third" />

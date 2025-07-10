@@ -46,10 +46,11 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import useHandleFetchError from "@/hooks/useHandleFetchError";
 import { ServiceCatalogData } from "@/types/catalog";
 import { catalogIcons } from "@/types/catalogIcon";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import Error from "../error";
+import {useSessionContext} from "@/contexts/SessionContext";
 
 const interestImages = [
   LandingImage.interest_1,
@@ -81,7 +82,8 @@ const CustomNavigation = () => {
 };
 
 export default function Home() {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
+  const { session } = useSessionContext();
   const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
   const [expanded, setExpanded] = useState(false);
   const [isOpenLocationSelection, setIsOpenLocationSelection] = useState(false);
@@ -207,7 +209,7 @@ export default function Home() {
                         : `url("/categories-image/web-development-02032022.jpg")`;
 
                       return (
-                        <Link
+                        <Link prefetch={false}
                           key={category.id}
                           href={`/job/${category.slug}`}
                           className="group"
@@ -229,7 +231,7 @@ export default function Home() {
                     })}
                 </div>
                 <div className="my-4 flex justify-end">
-                  <Link
+                  <Link prefetch={false}
                     href="/categories/popular-service"
                     className="text-primary py-[0.75rem] relative no-underline cursor-pointer outline-none ease-in-out duration-150 transition-all"
                   >
@@ -790,7 +792,7 @@ export default function Home() {
             {Array.from({ length: 6 }, (_, index) => (
               <SwiperSlide key={index}>
                 <div className="bg-white p-4 sm:p-6 pb-8">
-                  <Link
+                  <Link prefetch={false}
                     href="/"
                     className="block rounded-lg mx-auto w-[350px] shadow-topWorkShadow"
                   >
@@ -1038,18 +1040,18 @@ export default function Home() {
                     {homeLanguageData?.graphic_design}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    {/* <Link href="/social-media-banner">ออกแบบแบนเนอร์</Link>
+                    {/* <Link prefetch={false} href="/social-media-banner">ออกแบบแบนเนอร์</Link>
                     ,&nbsp;
-                    <Link href="/publication/namecard">ออกแบบนามบัตร</Link>
+                    <Link prefetch={false} href="/publication/namecard">ออกแบบนามบัตร</Link>
                     ,&nbsp;
-                    <Link href="/publication/poster">ออกแบบโปสเตอร์</Link>
+                    <Link prefetch={false} href="/publication/poster">ออกแบบโปสเตอร์</Link>
                     ,&nbsp;
-                    <Link href="/infographics">ทำ Infographic</Link>,&nbsp;
-                    <Link href="/portfolio-resume">รับทำเรซูเม่</Link>,&nbsp;
-                    <Link href="/tattoo-design">ออกแบบลายสัก</Link>,&nbsp;
-                    <Link href="/packaging">ออกแบบแพคเกจจิ้ง</Link>,&nbsp;
-                    <Link href="/corporate-identity">ออกแบบ CI</Link>,&nbsp;
-                    <Link href="/design-graphic">ดูเพิ่มเติม</Link> */}
+                    <Link prefetch={false} href="/infographics">ทำ Infographic</Link>,&nbsp;
+                    <Link prefetch={false} href="/portfolio-resume">รับทำเรซูเม่</Link>,&nbsp;
+                    <Link prefetch={false} href="/tattoo-design">ออกแบบลายสัก</Link>,&nbsp;
+                    <Link prefetch={false} href="/packaging">ออกแบบแพคเกจจิ้ง</Link>,&nbsp;
+                    <Link prefetch={false} href="/corporate-identity">ออกแบบ CI</Link>,&nbsp;
+                    <Link prefetch={false} href="/design-graphic">ดูเพิ่มเติม</Link> */}
                     {homeLanguageData?.graphic_design_services}
                   </p>
                 </div>
@@ -1058,37 +1060,37 @@ export default function Home() {
                     {homeLanguageData?.architecture_engineering}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    {/* <Link href="/architect-and-interior/renovation">
+                    {/* <Link prefetch={false} href="/architect-and-interior/renovation">
                       รีโนเวทบ้าน
                     </Link>
                     ,&nbsp;
-                    <Link href="/architect-and-interior/home-design">
+                    <Link prefetch={false} href="/architect-and-interior/home-design">
                       ออกแบบบ้าน
                     </Link>
                     ,&nbsp;
-                    <Link href="/engineering-structural-design/boq">
+                    <Link prefetch={false} href="/engineering-structural-design/boq">
                       ถอดแบบประมาณราคา
                     </Link>
                     ,&nbsp;
-                    <Link href="/engineering-structural-design">
+                    <Link prefetch={false} href="/engineering-structural-design">
                       เขียนแบบก่อสร้าง
                     </Link>
-                    ,&nbsp;<Link href="/home-inspection">ตรวจรับบ้าน</Link>
+                    ,&nbsp;<Link prefetch={false} href="/home-inspection">ตรวจรับบ้าน</Link>
                     ,&nbsp;
-                    <Link href="/landscape">จัดสวนหน้าบ้าน งบน้อย</Link>,&nbsp;
-                    <Link href="/engineering-structural-design/residence">
+                    <Link prefetch={false} href="/landscape">จัดสวนหน้าบ้าน งบน้อย</Link>,&nbsp;
+                    <Link prefetch={false} href="/engineering-structural-design/residence">
                       เขียนแบบบ้านชั้นเดียว
                     </Link>
                     ,&nbsp;
-                    <Link href="/architect-and-interior/furniture">
+                    <Link prefetch={false} href="/architect-and-interior/furniture">
                       ออกแบบเตียงนอน
                     </Link>
                     ,&nbsp;
-                    <Link href="/engineering-structural-design/machine">
+                    <Link prefetch={false} href="/engineering-structural-design/machine">
                       ถอดแบบเครื่องกล
                     </Link>
                     ,&nbsp;
-                    <Link href="/architect-and-engineer">ดูเพิ่มเติม</Link> */}
+                    <Link prefetch={false} href="/architect-and-engineer">ดูเพิ่มเติม</Link> */}
                     {homeLanguageData?.architecture_engineering_services}
                   </p>
                 </div>
@@ -1097,24 +1099,24 @@ export default function Home() {
                     {homeLanguageData?.website_programming}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    {/* <Link href="/ux-ui-design-web-app">ออกแบบเว็บไซต์</Link>
+                    {/* <Link prefetch={false} href="/ux-ui-design-web-app">ออกแบบเว็บไซต์</Link>
                     ,&nbsp;
-                    <Link href="/web-development/ecommerce">
+                    <Link prefetch={false} href="/web-development/ecommerce">
                       สร้างเว็บขายของ
                     </Link>
                     ,&nbsp;
-                    <Link href="/web-development/instant-builder">
+                    <Link prefetch={false} href="/web-development/instant-builder">
                       เว็บไซต์สำเร็จรูป
                     </Link>
                     ,&nbsp;
-                    <Link href="/desktop-application">รับเขียนโปรแกรม</Link>
-                    ,&nbsp;<Link href="/chatbot">Chatbot Facebook</Link>,&nbsp;
-                    <Link href="/chatbot">สร้างบอทไลน์</Link>,&nbsp;
-                    <Link href="/web-scraping">Website Scraping</Link>,&nbsp;
-                    <Link href="/it-solution-and-support/software">
+                    <Link prefetch={false} href="/desktop-application">รับเขียนโปรแกรม</Link>
+                    ,&nbsp;<Link prefetch={false} href="/chatbot">Chatbot Facebook</Link>,&nbsp;
+                    <Link prefetch={false} href="/chatbot">สร้างบอทไลน์</Link>,&nbsp;
+                    <Link prefetch={false} href="/web-scraping">Website Scraping</Link>,&nbsp;
+                    <Link prefetch={false} href="/it-solution-and-support/software">
                       รับลงโปรแกรม
                     </Link>
-                    ,&nbsp;<Link href="/web-programming">ดูเพิ่มเติม</Link> */}
+                    ,&nbsp;<Link prefetch={false} href="/web-programming">ดูเพิ่มเติม</Link> */}
                     {homeLanguageData?.website_programming_services}
                   </p>
                 </div>
@@ -1123,24 +1125,24 @@ export default function Home() {
                     {homeLanguageData?.marketing_advertising}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    {/* <Link href="/seo">รับทำ SEO</Link>,&nbsp;
-                    <Link href="/google-ads">โฆษณา Google</Link>,&nbsp;
-                    <Link href="/social-media-ads/facebook-ads">
+                    {/* <Link prefetch={false} href="/seo">รับทำ SEO</Link>,&nbsp;
+                    <Link prefetch={false} href="/google-ads">โฆษณา Google</Link>,&nbsp;
+                    <Link prefetch={false} href="/social-media-ads/facebook-ads">
                       โฆษณา Facebook
                     </Link>
                     ,&nbsp;
-                    <Link href="/social-media-ads/tiktok-ads">
+                    <Link prefetch={false} href="/social-media-ads/tiktok-ads">
                       โฆษณา TikTok
                     </Link>
-                    ,&nbsp;<Link href="/blogger-netidol">บล็อกเกอร์รีวิว</Link>
+                    ,&nbsp;<Link prefetch={false} href="/blogger-netidol">บล็อกเกอร์รีวิว</Link>
                     ,&nbsp;
-                    <Link href="/promote-page/product">โปรโมทสินค้า</Link>
+                    <Link prefetch={false} href="/promote-page/product">โปรโมทสินค้า</Link>
                     ,&nbsp;
-                    <Link href="/focus-group">รับจ้างทดลองสินค้า</Link>,&nbsp;
-                    <Link href="/promote-real-estate">รับฝากขายบ้าน</Link>
+                    <Link prefetch={false} href="/focus-group">รับจ้างทดลองสินค้า</Link>,&nbsp;
+                    <Link prefetch={false} href="/promote-real-estate">รับฝากขายบ้าน</Link>
                     ,&nbsp;
-                    <Link href="/google-map">ปักหมุด google map</Link>,&nbsp;
-                    <Link href="/marketing-advertising">ดูเพิ่มเติม</Link> */}
+                    <Link prefetch={false} href="/google-map">ปักหมุด google map</Link>,&nbsp;
+                    <Link prefetch={false} href="/marketing-advertising">ดูเพิ่มเติม</Link> */}
                     {homeLanguageData?.marketing_advertising_services}
                   </p>
                 </div>
@@ -1149,24 +1151,24 @@ export default function Home() {
                     {homeLanguageData?.writing_translation}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    {/* <Link href="/translation">แปลภาษา</Link>,&nbsp;
-                    <Link href="/translator">ล่ามแปลภาษา</Link>,&nbsp;
-                    <Link href="/transcription">ถอดไฟล์เสียง</Link>,&nbsp;
-                    <Link href="/content-writing">เขียนคอนเทนต์</Link>,&nbsp;
-                    <Link href="/content-writing/seo">เขียนบทความ SEO</Link>
+                    {/* <Link prefetch={false} href="/translation">แปลภาษา</Link>,&nbsp;
+                    <Link prefetch={false} href="/translator">ล่ามแปลภาษา</Link>,&nbsp;
+                    <Link prefetch={false} href="/transcription">ถอดไฟล์เสียง</Link>,&nbsp;
+                    <Link prefetch={false} href="/content-writing">เขียนคอนเทนต์</Link>,&nbsp;
+                    <Link prefetch={false} href="/content-writing/seo">เขียนบทความ SEO</Link>
                     ,&nbsp;
-                    <Link href="/content-writing/foreign-language">
+                    <Link prefetch={false} href="/content-writing/foreign-language">
                       เขียนบทความภาษาอังกฤษ
                     </Link>
                     ,&nbsp;
-                    <Link href="/content-writing/thesis-report">
+                    <Link prefetch={false} href="/content-writing/thesis-report">
                       รับเขียนรายงาน
                     </Link>
-                    ,&nbsp;<Link href="/proofreading">พิสูจน์อักษร</Link>,&nbsp;
-                    <Link href="/story-writing/poets-and-poems">
+                    ,&nbsp;<Link prefetch={false} href="/proofreading">พิสูจน์อักษร</Link>,&nbsp;
+                    <Link prefetch={false} href="/story-writing/poets-and-poems">
                       รับแต่งกลอน
                     </Link>
-                    ,&nbsp;<Link href="/writing-translation">ดูเพิ่มเติม</Link> */}
+                    ,&nbsp;<Link prefetch={false} href="/writing-translation">ดูเพิ่มเติม</Link> */}
                     {homeLanguageData?.writing_translation_services}
                   </p>
                 </div>
@@ -1175,21 +1177,21 @@ export default function Home() {
                     {homeLanguageData?.media_audio}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    {/* <Link href="/photography">ตากล้อง</Link>,&nbsp;
-                    <Link href="/photography/wedding">ถ่ายพรีเวดดิ้ง</Link>
+                    {/* <Link prefetch={false} href="/photography">ตากล้อง</Link>,&nbsp;
+                    <Link prefetch={false} href="/photography/wedding">ถ่ายพรีเวดดิ้ง</Link>
                     ,&nbsp;
-                    <Link href="/podcast">สร้าง Podcast</Link>,&nbsp;
-                    <Link href="/sound-engineering/edit-mixing-mastering">
+                    <Link prefetch={false} href="/podcast">สร้าง Podcast</Link>,&nbsp;
+                    <Link prefetch={false} href="/sound-engineering/edit-mixing-mastering">
                       ตัดต่อเพลง
                     </Link>
-                    ,&nbsp;<Link href="/videography">ตัดต่อวีดีโอ</Link>,&nbsp;
-                    <Link href="/subtitle">ทำซับไตเติ้ล</Link>,&nbsp;
-                    <Link href="/motion-graphics">Motion Graphic</Link>,&nbsp;
-                    <Link href="/videography/live-streaming">รับไลฟ์สด</Link>
+                    ,&nbsp;<Link prefetch={false} href="/videography">ตัดต่อวีดีโอ</Link>,&nbsp;
+                    <Link prefetch={false} href="/subtitle">ทำซับไตเติ้ล</Link>,&nbsp;
+                    <Link prefetch={false} href="/motion-graphics">Motion Graphic</Link>,&nbsp;
+                    <Link prefetch={false} href="/videography/live-streaming">รับไลฟ์สด</Link>
                     ,&nbsp;
-                    <Link href="/animations">ทำอนิเมชั่น</Link>,&nbsp;
-                    <Link href="/voice-over">พากย์เสียง</Link>,&nbsp;
-                    <Link href="/photography-video">ดูเพิ่มเติม</Link> */}
+                    <Link prefetch={false} href="/animations">ทำอนิเมชั่น</Link>,&nbsp;
+                    <Link prefetch={false} href="/voice-over">พากย์เสียง</Link>,&nbsp;
+                    <Link prefetch={false} href="/photography-video">ดูเพิ่มเติม</Link> */}
                     {homeLanguageData?.media_audio_services}
                   </p>
                 </div>
@@ -1198,22 +1200,22 @@ export default function Home() {
                     {homeLanguageData?.business_consulting}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    {/* <Link href="/accounting-and-finance/accounting-service">
+                    {/* <Link prefetch={false} href="/accounting-and-finance/accounting-service">
                       รับทำบัญชี
                     </Link>
-                    ,&nbsp;<Link href="/counseling">รับปรึกษาปัญหาชีวิต</Link>
+                    ,&nbsp;<Link prefetch={false} href="/counseling">รับปรึกษาปัญหาชีวิต</Link>
                     ,&nbsp;
-                    <Link href="/financial-planning">ที่ปรึกษาทางการเงิน</Link>
+                    <Link prefetch={false} href="/financial-planning">ที่ปรึกษาทางการเงิน</Link>
                     ,&nbsp;
-                    <Link href="/legal">ที่ปรึกษากฎหมาย</Link>,&nbsp;
-                    <Link href="/psychologist">ปรึกษาสุขภาพจิต</Link>,&nbsp;
-                    <Link href="/order-from-china">สั่งสินค้าจากจีน</Link>
+                    <Link prefetch={false} href="/legal">ที่ปรึกษากฎหมาย</Link>,&nbsp;
+                    <Link prefetch={false} href="/psychologist">ปรึกษาสุขภาพจิต</Link>,&nbsp;
+                    <Link prefetch={false} href="/order-from-china">สั่งสินค้าจากจีน</Link>
                     ,&nbsp;
-                    <Link href="/secretary">เลขาส่วนตัว</Link>,&nbsp;
-                    <Link href="/commercial-registration">จดทะเบียนบริษัท</Link>
+                    <Link prefetch={false} href="/secretary">เลขาส่วนตัว</Link>,&nbsp;
+                    <Link prefetch={false} href="/commercial-registration">จดทะเบียนบริษัท</Link>
                     ,&nbsp;
-                    <Link href="/business">ปรึกษาธุรกิจ</Link>,&nbsp;
-                    <Link href="/consultant">ดูเพิ่มเติม</Link> */}
+                    <Link prefetch={false} href="/business">ปรึกษาธุรกิจ</Link>,&nbsp;
+                    <Link prefetch={false} href="/consultant">ดูเพิ่มเติม</Link> */}
                     {homeLanguageData?.business_consulting_services}
                   </p>
                 </div>
@@ -1222,17 +1224,17 @@ export default function Home() {
                     {homeLanguageData?.lifestyle}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
-                    {/* <Link href="/car-inspection">ตรวจรถมือสอง</Link>,&nbsp;
-                    <Link href="/feng-shui">ซินแสดูฮวงจุ้ยบ้าน</Link>,&nbsp;
-                    <Link href="/gaming">รับจ้างเล่นเกม</Link>,&nbsp;
-                    <Link href="/horoscope">ดูดวง</Link>,&nbsp;
-                    <Link href="/makeup">ช่างแต่งหน้า</Link>,&nbsp;
-                    <Link href="/personnal-trainer">จ้างเทรนเนอร์</Link>,&nbsp;
-                    <Link href="/nutrition">ปรึกษานักโภชนาการ</Link>,&nbsp;
-                    <Link href="/singer-band">หานักร้อง</Link>,&nbsp;
-                    <Link href="/trip-planner">รับวางแผนเที่ยว</Link>,&nbsp;
-                    <Link href="/prop-stylist">สไตล์ลิส</Link>,&nbsp;
-                    <Link href="/lifestyle">ดูเพิ่มเติม</Link> */}
+                    {/* <Link prefetch={false} href="/car-inspection">ตรวจรถมือสอง</Link>,&nbsp;
+                    <Link prefetch={false} href="/feng-shui">ซินแสดูฮวงจุ้ยบ้าน</Link>,&nbsp;
+                    <Link prefetch={false} href="/gaming">รับจ้างเล่นเกม</Link>,&nbsp;
+                    <Link prefetch={false} href="/horoscope">ดูดวง</Link>,&nbsp;
+                    <Link prefetch={false} href="/makeup">ช่างแต่งหน้า</Link>,&nbsp;
+                    <Link prefetch={false} href="/personnal-trainer">จ้างเทรนเนอร์</Link>,&nbsp;
+                    <Link prefetch={false} href="/nutrition">ปรึกษานักโภชนาการ</Link>,&nbsp;
+                    <Link prefetch={false} href="/singer-band">หานักร้อง</Link>,&nbsp;
+                    <Link prefetch={false} href="/trip-planner">รับวางแผนเที่ยว</Link>,&nbsp;
+                    <Link prefetch={false} href="/prop-stylist">สไตล์ลิส</Link>,&nbsp;
+                    <Link prefetch={false} href="/lifestyle">ดูเพิ่มเติม</Link> */}
                     {homeLanguageData?.lifestyle_services}
                   </p>
                 </div>
@@ -1263,7 +1265,7 @@ export default function Home() {
                 </p>
                 <div className="mt-[1.5rem] flex">
                   <div className="grid grid-cols-1 min-w-0 min-h-0 gap-4">
-                    <Link href="https://apps.apple.com/us/app/fastwork-hire-freelancers/id1154830520?ls=1">
+                    <Link prefetch={false} href="https://apps.apple.com/us/app/fastwork-hire-freelancers/id1154830520?ls=1">
                       <Image
                         src={apple}
                         alt="Apple Store"
@@ -1272,7 +1274,7 @@ export default function Home() {
                         className="max-w-full h-auto"
                       />
                     </Link>
-                    <Link href="https://play.google.com/store/apps/details?id=com.fastwork.app&hl=en">
+                    <Link prefetch={false} href="https://play.google.com/store/apps/details?id=com.fastwork.app&hl=en">
                       <Image
                         src={google}
                         alt="Google Play"

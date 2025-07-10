@@ -51,7 +51,7 @@ const FreelancerSession = ({
         </div>
       </div>
       {session?.user.roles?.includes(ROLE.FREELANCER) && (
-        <Link
+        <Link prefetch={false}
           href="/seller"
           className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
         >
@@ -72,7 +72,7 @@ const FreelancerSession = ({
       </div>
       <ChatBadge />
       <NotificationDropdown />
-      <Link
+      <Link prefetch={false}
         href="/reward/earn"
         className="text-white text-sm hover:bg-blue-800 hover:text-white"
       >

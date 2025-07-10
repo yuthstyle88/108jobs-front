@@ -51,7 +51,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({
         </strong>
 
         {showDownloadLink && blobUrl && (
-          <Link
+          <Link prefetch={false}
             href={blobUrl}
             rel="noopener noreferrer"
             className="text-blue-600 underline"

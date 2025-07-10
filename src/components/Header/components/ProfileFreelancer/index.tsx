@@ -31,7 +31,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
   const { lang: currentLang } = useLanguage();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-jobCard z-50 select-none">
-      <Link href={`/${currentLang}/user/${user?.user.username}`}>
+      <Link prefetch={false} href={`/${currentLang}/user/${user?.user.username}`}>
         <div className="p-4 bg-secondary hover:bg-[#D0E1FB] duration-150 rounded-tl-lg rounded-tr-lg relative">
           <div className="flex items-center space-x-3">
             <div className="bg-gray-200 flex items-center justify-center rounded-full">
@@ -59,7 +59,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
           />
         </div>
       </Link>
-      <Link href="/seller">
+      <Link prefetch={false} href="/seller">
         <div className="relative">
           <div className="text-[13px] font-light text-white relative hover:bg-black/20 transition-all duration-150 ease-in-out z-10 px-6 py-3">
             {interpolateElement(data?.label_freelancer_level || "", {
@@ -78,7 +78,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
         </div>
       </Link>
       <div className="py-2">
-        <Link
+        <Link prefetch={false}
           href="/seller-account-setting/freelance-profile"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -88,7 +88,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
           />
           <span className="text-gray-700">{data?.menu_account_settings}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/chat"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -98,7 +98,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
           />
           <span className="text-gray-700">{data?.menu_messages_orders}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/promotion"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -108,7 +108,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
           />
           <span className="text-gray-700">{data?.menu_coupons}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/favorites"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -118,7 +118,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
           />
           <span className="text-gray-700">{data?.menu_favorite_jobs}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/seller"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
         >
@@ -128,7 +128,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
           />
           <span className="text-gray-700">{data?.menu_seller_center}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/job-board"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -138,7 +138,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
           />
           <span className="text-gray-700">{data?.menu_job_board}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/reward/earn"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -151,7 +151,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             New
           </span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/seller/my-service"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -161,7 +161,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
           />
           <span className="text-gray-700">{data?.menu_my_job}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/seller/withdrawal"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -171,7 +171,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
           />
           <span className="text-gray-700">{data?.menu_accumulate}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/consent-management"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
         >

@@ -163,7 +163,7 @@ const { lang } = useLanguage();
                 </p>
               </div>
             </div>
-            <Link
+            <Link prefetch={false}
               href="/seller/my-service"
               className="flex flex-row items-center gap-2"
             >
@@ -191,7 +191,7 @@ const { lang } = useLanguage();
                 </p>
               </div>
             </div>
-            <Link
+            <Link prefetch={false}
               href={`${lang}/user/${user?.user.username}`}
               className="flex flex-row items-center gap-2"
             >
@@ -233,7 +233,7 @@ const { lang } = useLanguage();
               </p>
             </div>
           </div>
-          <Link
+          <Link prefetch={false}
             href="/seller/project-management"
             className="text-blue-600 hover:underline flex items-center text-sm"
           >

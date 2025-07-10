@@ -6,8 +6,9 @@ import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
 import { ReviewResponse } from "@/types/review";
 import { Coins, Handshake, MessageCircleReply, ShoppingBag } from "lucide-react";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import Link from "next/link";
+import {useSessionContext} from "@/contexts/SessionContext";
 
 const StarIcon = ({ filled }: { filled: boolean }) => (
   <svg
@@ -25,7 +26,8 @@ type Props = {
 };
 
 const ReviewCard = ({ language, data }: Props) => {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
+  const { session } = useSessionContext();
   const {
     data: reviewData,
   } = usePrivateFetchParams<ReviewResponse>(
@@ -95,7 +97,7 @@ const ReviewCard = ({ language, data }: Props) => {
             </div>
             <div className="text-[0.875rem] font-sans text-text_secondary text-center">
               Vui lòng{" "}
-              <Link href="/login" className="text-third underline">
+              <Link prefetch={false} href="/login" className="text-third underline">
                 đăng nhập
               </Link>{" "}
               để đánh giá

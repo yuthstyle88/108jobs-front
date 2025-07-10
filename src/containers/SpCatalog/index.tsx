@@ -21,7 +21,7 @@ const SpCatalog = ({ activeCatalog }: Props) => {
                 : `url("/categories-image/web-development-02032022.jpg")`;
 
               return (
-                <Link
+                <Link prefetch={false}
                   key={category.id}
                   href={`/job/${category.slug}`}
                   className="group"
@@ -43,7 +43,7 @@ const SpCatalog = ({ activeCatalog }: Props) => {
             })}
         </div>
       </div>
-      <Link
+      <Link prefetch={false}
         href="/categories/popular-service"
         className="w-full flex justify-center items-center text-primary font-semibold text-[1.125rem] leading-[1.15]"
       >

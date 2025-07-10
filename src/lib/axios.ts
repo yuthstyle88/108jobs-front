@@ -1,5 +1,5 @@
 import axios, {AxiosError, AxiosHeaders, InternalAxiosRequestConfig} from "axios";
-import { getSession, signOut } from "next-auth/react";
+// import { getSession, signOut } from "next-auth/react";
 import {jwtDecode, JwtPayload} from "jwt-decode";
 
 let cachedAccessToken: string | null = null;
@@ -39,8 +39,9 @@ async function attachToken(
 ): Promise<InternalAxiosRequestConfig> {
   /* 1. Refresh token if absent or near expiry */
   if (isTokenExpired(cachedAccessToken)) {
-    const session = await getSession();
-    cachedAccessToken = session?.accessToken ?? null;
+    // const session = await getSession();
+    return config;
+    // cachedAccessToken = session?.accessToken ?? null;
   }
 
   /* 2. Append the token (if any) */

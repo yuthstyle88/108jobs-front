@@ -74,7 +74,7 @@ const StartSelling = () => {
           <p className="text-xl md:text-2xl mb-8">
             {applyFreelancerData?.subtitle}
           </p>
-          <Link href="/apply-freelance">
+          <Link prefetch={false} href="/apply-freelance">
             <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
               {applyFreelancerData?.apply_button}
             </button>
@@ -92,7 +92,7 @@ const StartSelling = () => {
           </h2>
           <div className="grid min-h-0 min-w-0 grid-cols-[1fr_1fr_1fr_1fr] gap-[0.75rem] ">
             {category_images.map((category, index) => (
-              <Link key={index} href="/seo" className="group">
+              <Link prefetch={false} key={index} href="/seo" className="group">
                 <div
                   style={{
                     backgroundImage: `url("/categories-image/web-development-02032022.jpg")`,

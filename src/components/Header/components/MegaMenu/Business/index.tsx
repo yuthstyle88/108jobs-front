@@ -14,7 +14,7 @@ const Business = () => {
       <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
         {global?.business_service_description}
       </p>
-      <Link href="/business" className="mt-6">
+      <Link prefetch={false} href="/business" className="mt-6">
         <span className="text-[0.875rem] font-medium text-third">
           {global?.go_to_fastwork_business}
           <FontAwesomeIcon icon={faArrowRight} className="pl-2 text-third" />

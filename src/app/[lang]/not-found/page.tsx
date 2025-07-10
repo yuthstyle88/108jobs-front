@@ -58,7 +58,7 @@ export default function NotFound() {
       {/* Header */}
       <header className="px-[1rem] flex h-[70px] items-center justify-start bg-primary">
         <div className=" px-4">
-          <Link href="/">
+          <Link prefetch={false} href="/">
             <Image
               src={AssetIcon.logo}
               alt="logo"
@@ -82,7 +82,7 @@ export default function NotFound() {
                 <p className="text-[#728197] text-[20px] font-sans mb-8">
                   {notFoundLanguageData?.error_description}
                 </p>
-                <Link
+                <Link prefetch={false}
                   href="/"
                   className="inline-flex items-center gap-2 bg-third text-white px-6 py-3 rounded-md font-medium transition-all hover:bg-fastwork-dark-blue"
                 >
@@ -112,7 +112,7 @@ export default function NotFound() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {category_images.map((category, index) => (
-                <Link key={index} href="/seo" className="group">
+                <Link prefetch={false} key={index} href="/seo" className="group">
                   <div
                     style={{
                       backgroundImage: `url("/categories-image/web-development-02032022.jpg")`,

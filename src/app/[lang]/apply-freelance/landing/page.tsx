@@ -54,14 +54,14 @@ const LandingApplyFreelancer = () => {
           </div>
 
           <div className="mt-12 w-full max-w-md flex flex-col gap-4">
-            <Link
+            <Link prefetch={false}
               href="/seller/my-service"
               className="w-full py-3 bg-blue-600 text-white text-center font-medium rounded-md hover:bg-blue-700 transition-colors"
             >
               {landingLanguage?.start_posting_job}
             </Link>
 
-            <Link
+            <Link prefetch={false}
               href="/"
               className="w-full py-3 text-blue-600 text-center font-medium border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
             >

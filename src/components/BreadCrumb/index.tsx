@@ -24,7 +24,7 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({ items }) => {
             return (
               <li key={index} className="flex flex-row items-center gap-2">
                 {shouldLink ? (
-                  <Link
+                  <Link prefetch={false}
                     href={item.href!}
                     className="text-third hover:text-primary transition-all duration-300"
                   >

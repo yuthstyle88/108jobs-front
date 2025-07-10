@@ -95,7 +95,7 @@ const ChatWrapper = () => {
             String(chat.job?.id) === activeRoomId;
 
           return (
-            <Link
+            <Link prefetch={false}
               key={chat.room_id}
               href={`/chat/message/${chat.room_id}`}
               className="block"

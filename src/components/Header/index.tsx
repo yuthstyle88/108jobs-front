@@ -5,7 +5,7 @@ import { ROLE } from "@/constants/role";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import LanguageDropdown from "../LanguageDropDown";
@@ -16,6 +16,7 @@ import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
 import { useScrollHandler } from "./hooks/useScrollHandler";
 import Error from "@/app/error";
+import {useSessionContext} from "@/contexts/SessionContext";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -32,7 +33,8 @@ interface BgProps {
 }
 
 const Header = ({ type, forceShowSearch = false }: BgProps) => {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
+  const { session } = useSessionContext();
   const { scrollY, showSearch } = useScrollHandler(forceShowSearch);
 
   const {
@@ -54,7 +56,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
     >
       <nav className="mx-[1.5rem] flex flex-wrap items-center justify-center h-auto min-h-[70px] py-4 xl:py-1 xl:justify-between">
         <section className="flex items-center gap-x-4 w-full md:w-auto">
-          <Link href="/" className="shrink-0">
+          <Link prefetch={false} href="/" className="shrink-0">
             <Image
               src={AssetIcon.logo}
               alt="logo"
@@ -86,7 +88,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
             </div>
           )}
           {!session && (
-            <Link
+            <Link prefetch={false}
               href="/apply-freelancer"
               className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
             >
@@ -108,7 +110,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
               />
             )}
           {!session && (
-            <Link
+            <Link prefetch={false}
               href="/login"
               className="text-white text-sm hover:bg-blue-800 hover:text-white"
             >
@@ -194,7 +196,7 @@ export default Header;
 //     >
 //       <nav className="mx-[1.5rem] flex h-[70px] items-center justify-between">
 //         <div className="grid grid-flow-col items-center gap-x-4">
-//           <Link href="/">
+//           <Link prefetch={false} href="/">
 //             <Image src={AssetIcon.logo} alt="logo" className="w-full h-full" />
 //           </Link>
 
@@ -226,25 +228,25 @@ export default Header;
 //               <MegaMenu />
 //             </div>
 //           </div>
-//           <Link
+//           <Link prefetch={false}
 //             href="/seller"
 //             className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
 //           >
 //             {languageData?.label_seller_center}
 //           </Link>
-//           <Link
+//           <Link prefetch={false}
 //             href="/start-selling"
 //             className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
 //           >
 //             {languageData?.label_apply_to_be_freelancer_button}
 //           </Link>
-//           <Link
+//           <Link prefetch={false}
 //             href="/login"
 //             className="text-white text-sm hover:bg-blue-800 hover:text-white"
 //           >
 //             {languageData?.label_login_button}
 //           </Link>
-//           <Link
+//           <Link prefetch={false}
 //             href="/chat"
 //             className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
 //           >
@@ -255,7 +257,7 @@ export default Header;
 //             />
 //           </Link>
 //           <NotificationDropdown />
-//           <Link
+//           <Link prefetch={false}
 //             href="/login"
 //             className="text-white text-sm hover:bg-blue-800 hover:text-white"
 //           >
@@ -297,7 +299,7 @@ export default Header;
 //                     </div>
 //                     <div>
 //                       <p className="font-medium text-gray-900">uykpfzno</p>
-//                       <Link
+//                       <Link prefetch={false}
 //                         href="/user"
 //                         className="text-sm text-blue-600 hover:underline"
 //                       >
@@ -308,7 +310,7 @@ export default Header;
 //                 </div>
 
 //                 <div className="py-2">
-//                   <Link
+//                   <Link prefetch={false}
 //                     href="/coin"
 //                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
 //                   >
@@ -318,7 +320,7 @@ export default Header;
 //                     />
 //                     <span className="text-gray-700">Coins 0.00</span>
 //                   </Link>
-//                   <Link
+//                   <Link prefetch={false}
 //                     href="/account-setting"
 //                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
 //                   >
@@ -330,7 +332,7 @@ export default Header;
 //                       {languageData?.menu_account_settings}
 //                     </span>
 //                   </Link>
-//                   <Link
+//                   <Link prefetch={false}
 //                     href="/chat"
 //                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
 //                   >
@@ -342,7 +344,7 @@ export default Header;
 //                       {languageData?.menu_messages_orders}
 //                     </span>
 //                   </Link>
-//                   <Link
+//                   <Link prefetch={false}
 //                     href="/promotion"
 //                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
 //                   >
@@ -354,7 +356,7 @@ export default Header;
 //                       {languageData?.menu_coupons}
 //                     </span>
 //                   </Link>
-//                   <Link
+//                   <Link prefetch={false}
 //                     href="/favorites"
 //                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
 //                   >
@@ -366,7 +368,7 @@ export default Header;
 //                       {languageData?.menu_favorite_jobs}
 //                     </span>
 //                   </Link>
-//                   <Link
+//                   <Link prefetch={false}
 //                     href="/job-board"
 //                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
 //                   >
@@ -378,7 +380,7 @@ export default Header;
 //                       {languageData?.menu_job_board}
 //                     </span>
 //                   </Link>
-//                   <Link
+//                   <Link prefetch={false}
 //                     href="/reward/earn"
 //                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
 //                   >
@@ -391,7 +393,7 @@ export default Header;
 //                       New
 //                     </span>
 //                   </Link>
-//                   <Link
+//                   <Link prefetch={false}
 //                     href="/start-selling"
 //                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
 //                   >
@@ -403,7 +405,7 @@ export default Header;
 //                       {languageData?.menu_become_freelancer}
 //                     </span>
 //                   </Link>
-//                   <Link
+//                   <Link prefetch={false}
 //                     href="/consent-management"
 //                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
 //                   >
@@ -415,7 +417,7 @@ export default Header;
 //                       {languageData?.menu_data_management}
 //                     </span>
 //                   </Link>
-//                   <Link
+//                   <Link prefetch={false}
 //                     href="#"
 //                     className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
 //                   >

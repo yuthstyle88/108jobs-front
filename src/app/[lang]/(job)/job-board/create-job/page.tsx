@@ -518,7 +518,7 @@ const CreateJobPage = () => {
 
             {/* Buttons */}
             <div className="flex justify-end space-x-4 mt-10">
-              <Link
+              <Link prefetch={false}
                 href="/job-board"
                 className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50"
               >

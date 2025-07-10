@@ -118,7 +118,7 @@ const OurWorks = () => {
             </p>
           </div>
 
-          <Link
+          <Link prefetch={false}
             href="/works"
             className="flex items-center gap-2 text-fastwork-blue font-medium group transition-all duration-300 animate-on-scroll animate-fade-in self-start md:self-auto"
           >
@@ -133,7 +133,7 @@ const OurWorks = () => {
               key={item.id}
               className="portfolio-item relative overflow-hidden rounded-xl shadow-sm hover:shadow-xl bg-white animate-fade-in"
             >
-              <Link href="/works" className="block h-full">
+              <Link prefetch={false} href="/works" className="block h-full">
                 <div className="aspect-[4/3] overflow-hidden bg-gray-100">
                   <Image
                     src={item.image}
@@ -161,7 +161,7 @@ const OurWorks = () => {
         </div>
 
         <div className="flex justify-center mt-12">
-          <Link
+          <Link prefetch={false}
             href="/works"
             className="bg-white border-2 border-fastwork-blue text-fastwork-blue hover:bg-fastwork-blue hover:text-white py-3 px-8 rounded-md font-medium transition-all duration-300 animate-fade-in"
           >

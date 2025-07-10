@@ -19,7 +19,7 @@ const JobCard = ({ data }: Props) => {
   const coverImage = data.images?.find((image) => image.is_cover_photo);
   const { lang: currentLang } = useLanguage();
   return (
-    <Link href={`/${currentLang}/user/${data.user.username}/${data.slug}`} className="flex cursor-pointer w-full">
+    <Link prefetch={false} href={`/${currentLang}/user/${data.user.username}/${data.slug}`} className="flex cursor-pointer w-full">
       <div className="hover:shadow-jobCard border border-border_primary w-full flex flex-col overflow-hidden rounded-md bg-white transition-all ease-in-out duration-150">
         <section className="grid grid-cols-[minmax(17px,170px)_1fr] grid-rows-[1fr_max-content] md:flex md:flex-col">
           <div className="relative aspect-[3/2] w-full">

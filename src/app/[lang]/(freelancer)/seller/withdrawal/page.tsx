@@ -70,7 +70,7 @@ const Withdrawal = () => {
                 <span className="text-gray-700">
                   {sellerWithdrawalLanguage?.verification_id}: {""}
                 </span>
-                <Link href="#" className="text-blue-600 hover:underline">
+                <Link prefetch={false} href="#" className="text-blue-600 hover:underline">
                   {sellerWithdrawalLanguage?.check_your_info}
                 </Link>
               </div>
@@ -81,7 +81,7 @@ const Withdrawal = () => {
                 <span className="text-gray-700">
                   {sellerWithdrawalLanguage?.verification_tax}: {""}
                 </span>
-                <Link href="#" className="text-blue-600 hover:underline">
+                <Link prefetch={false} href="#" className="text-blue-600 hover:underline">
                   {sellerWithdrawalLanguage?.add_data} →
                 </Link>
               </div>
@@ -92,7 +92,7 @@ const Withdrawal = () => {
                 <span className="text-gray-700">
                   {sellerWithdrawalLanguage?.verification_bank}: {""}
                 </span>
-                <Link href="#" className="text-blue-600 hover:underline">
+                <Link prefetch={false} href="#" className="text-blue-600 hover:underline">
                   {sellerWithdrawalLanguage?.add_data} →
                 </Link>
               </div>

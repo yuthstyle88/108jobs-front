@@ -22,7 +22,7 @@ const PopularType = () => {
 
   return (
     <div className="relative flex items-center justify-center hover:bg-[#F6F9FE] group after:block after:w-0 after:h-[0.25rem] after:rounded-full after:bg-primary after:absolute after:bottom-0 after:left-1/2 after:transform after:-translate-x-1/2 after:transition-all after:duration-100 after:ease-in-out hover:after:w-[80%] hover:after:opacity-100">
-      <Link
+      <Link prefetch={false}
         href={`/categories/${popularService.slug}`}
         className="px-2 text-[#485261] whitespace-nowrap sm:whitespace-normal"
       >

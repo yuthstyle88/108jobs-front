@@ -183,7 +183,7 @@ const CategoryDetail = ({ slug }: Props) => {
   return (
     <>
       <section className="grid-container-job h-12 bg-[#E3EDFD]">
-        <Link
+        <Link prefetch={false}
           href="#"
           className="col-start-2 col-end-auto flex justify-center items-center gap-3"
         >

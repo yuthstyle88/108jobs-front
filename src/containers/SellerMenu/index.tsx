@@ -143,12 +143,12 @@ const { lang } = useLanguage();
             </div>
           </section>
           <section className="flex flex-col gap-2 p-4">
-            <Link href="/" className="flex-1">
+            <Link prefetch={false} href="/" className="flex-1">
               <button className="py-2 w-full cursor-pointer bg-third text-white font-semibold rounded-md border-1 border-border_primary">
                 Find freelancer
               </button>
             </Link>
-            <Link href="/job-board" className="flex-1">
+            <Link prefetch={false} href="/job-board" className="flex-1">
               <button className="py-2 w-full cursor-pointer bg-white text-third font-semibold rounded-md border-1 border-border_primary">
                 Job board
               </button>
@@ -167,7 +167,7 @@ const { lang } = useLanguage();
                     : "bg-white text-text_secondary"
                 } leading-[25px] cursor-pointer`}
               >
-                <Link
+                <Link prefetch={false}
                   onClick={onClose}
                   target={item.target}
                   href={item.href}
@@ -200,7 +200,7 @@ const { lang } = useLanguage();
                     : "bg-white text-text_secondary"
                 } leading-[25px] cursor-pointer`}
               >
-                <Link
+                <Link prefetch={false}
                   target={item.target}
                   href={item.href}
                   className="px-5 py-4 flex-1"

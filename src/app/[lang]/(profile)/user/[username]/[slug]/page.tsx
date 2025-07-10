@@ -3,8 +3,9 @@ import { generateLocalizedMetadata } from "@/lib/metadata";
 import { getCurrentLanguage } from "@/actions/getCurrentLanguage";
 import { isSupportedLang } from "@/lib/metadata";
 import { Metadata } from "next";
-import { auth } from "@/auth";
+// import { auth } from "@/auth";
 import { API_ROUTES } from "@/api/endpoints";
+import {getCachedSession} from "@/lib/authUtils";
 
 export async function generateMetadata({
   params,
@@ -14,7 +15,7 @@ export async function generateMetadata({
   const { username, slug } = await params;
   const lang = await getCurrentLanguage();
   const locale = isSupportedLang(lang) ? lang : "th";
-  const session = await auth();
+  const session = await getCachedSession();
 
   const defaultDescriptions: Record<string, string> = {
     th: "จ้างฟรีแลนซ์มืออาชีพสำหรับโปรเจกต์ของคุณที่ Fastjob ธุรกิจและสตาร์ทอัปชั้นนำไว้วางใจเรา",

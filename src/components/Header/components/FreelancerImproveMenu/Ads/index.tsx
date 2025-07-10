@@ -14,7 +14,7 @@ const Ads = () => {
       <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
         {global?.ads_section_description}
       </p>
-      <Link
+      <Link prefetch={false}
         rel="noopener noreferrer"
         href="https://form.jotform.com/251484529705059"
         className="mt-6"

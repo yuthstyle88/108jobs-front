@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { auth } from "./auth";
+// import { auth } from "./auth";
 import { middleware as langMiddleware } from "./middleware-lang";
+import {getCachedSession} from "@/lib/authUtils";
 
 const VALID_LANGS = ["vi", "en", "th"];
 
@@ -60,7 +61,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (cleanPathname === "/login") {
-    const session = await auth();
+    const session = await getCachedSession();
     if (!session?.user) return NextResponse.next();
     return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
   }
@@ -69,7 +70,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const session = await auth();
+  const session = await getCachedSession();
   if (!session?.user) {
     const callbackUrl = encodeURIComponent(cleanPathname);
     return NextResponse.redirect(
@@ -102,11 +103,18 @@ export async function middleware(request: NextRequest) {
   if (!isAuthorized) {
     return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
   }
-
+  if (
+    pathname.startsWith('/login') ||
+    pathname.startsWith('/job-board') ||
+    pathname.startsWith('/promotion')
+  ) {
+    return NextResponse.next();
+  }
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
 };
-

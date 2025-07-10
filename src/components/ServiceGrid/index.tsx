@@ -32,7 +32,7 @@ const ServiceItem: React.FC<ServiceItemProps> = ({
       </div>
       <div className="flex justify-between items-center p-4">
         <h3 className="text-fastwork-blue font-medium">{title}</h3>
-        <Link href="/services" className="text-fastwork-blue">
+        <Link prefetch={false} href="/services" className="text-fastwork-blue">
           <Search size={20} className="transition-transform hover:scale-110" />
         </Link>
       </div>
@@ -95,7 +95,7 @@ const ServiceGrid: React.FC = () => {
         </div>
 
         <div className="flex justify-center">
-          <Link
+          <Link prefetch={false}
             href="/business#contact"
             onClick={handleClick}
             className="border border-gray-300 text-gray-700 py-3 px-12 rounded-md font-medium transition-all duration-300 hover:bg-gray-100"

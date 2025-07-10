@@ -28,7 +28,7 @@ const parseJwt = (token: string): JWTPayload | null => {
 };
 
 export const { handlers, auth, signIn} = NextAuth({
-    session: { strategy: "jwt", maxAge: 60 * 60 * 24 },
+    session: { strategy: "jwt", maxAge: 60 * 60 * 24 , updateAge: 0},
     secret: process.env.AUTH_SECRET,
     trustHost: true,
     pages: { signIn: "/login", error: "/error" },

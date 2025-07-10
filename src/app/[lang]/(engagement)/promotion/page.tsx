@@ -7,14 +7,15 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { faGift } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tags } from "lucide-react";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
+import {useSessionContext} from "@/contexts/SessionContext";
 
 const Promotion = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const { data: session } = useSession();
-
+  // const { data: session } = useSession();
+  const { session } = useSessionContext();
   const {
     data: couponLanguageData,
     isLoading,
