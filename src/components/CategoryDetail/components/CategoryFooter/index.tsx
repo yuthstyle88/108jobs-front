@@ -14,27 +14,27 @@ const CategoryFooter = () => {
           <p>
             <strong>
               บริการรับทำ SEO สายขาว{" "}
-              <Link href="https://fastwork.co/seo/backlink">
+              <Link prefetch={false} href="https://fastwork.co/seo/backlink">
                 รับทำ Backlink&nbsp;
               </Link>
             </strong>
-            <Link href="https://fastwork.co/seo/wordpress">
+            <Link prefetch={false} href="https://fastwork.co/seo/wordpress">
               <strong>รับทำ SEO Wordpress</strong>
             </Link>
             <strong>&nbsp;</strong>
-            <Link href="https://fastwork.co/seo/youtube">
+            <Link prefetch={false} href="https://fastwork.co/seo/youtube">
               <strong>รับทำ SEO Youtube</strong>
             </Link>
             <strong>&nbsp;</strong>
-            <Link href="https://fastwork.co/seo/youtube">
+            <Link prefetch={false} href="https://fastwork.co/seo/youtube">
               <strong>รับทำ SEO Facebook</strong>
             </Link>
             <strong>&nbsp;</strong>
-            <Link href="https://fastwork.co/seo/audit">
+            <Link prefetch={false} href="https://fastwork.co/seo/audit">
               <strong>SEO Audit</strong>
             </Link>
             <strong>&nbsp;</strong>
-            <Link href="https://fastwork.co/seo/full-service">
+            <Link prefetch={false} href="https://fastwork.co/seo/full-service">
               <strong>ทำ SEO รายเดือน</strong>
             </Link>
             <strong>&nbsp;</strong>คุณภาพ ช่วยให้เว็บไซต์ของคุณแสดงเป็นอันดับต้น

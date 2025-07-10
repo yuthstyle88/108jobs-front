@@ -95,7 +95,7 @@ const ReviewCard = ({ language, data }: Props) => {
             </div>
             <div className="text-[0.875rem] font-sans text-text_secondary text-center">
               Vui lòng{" "}
-              <Link href="/login" className="text-third underline">
+              <Link prefetch={false} href="/login" className="text-third underline">
                 đăng nhập
               </Link>{" "}
               để đánh giá

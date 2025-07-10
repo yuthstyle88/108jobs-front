@@ -133,7 +133,7 @@ const FastjobCoin = () => {
                     return (
                       <li key={index}>
                         {parts[0]}
-                        <Link href="" className="text-third underline">
+                        <Link prefetch={false} href="" className="text-third underline">
                           <span>{keyword}</span>
                         </Link>
                         {parts[1]}

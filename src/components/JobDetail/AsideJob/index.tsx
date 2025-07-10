@@ -73,7 +73,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
             <p className="mt-1 text-[0.75rem] text-text_secondary font-sans">
               {language?.fastwork_guarantee_description}
             </p>
-            <Link href="#" className="text-third text-[0.75rem] font-sans">
+            <Link prefetch={false} href="#" className="text-third text-[0.75rem] font-sans">
               {language?.read_additional_protection_terms}
             </Link>
           </div>
@@ -104,7 +104,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
           <p className="line-clamp-2 text-ellipsis overflow-hidden break-words mt-2 text-[0.875rem] text-text_secondary font-sans ">
             {data.packages[selectedPackage].description}
           </p>
-          <Link
+          <Link prefetch={false}
             href="#package"
             onClick={(e) => handleClick(e)}
             className="text-third mt-2 font-semibold text-[0.875rem] cursor-pointer font-sans"
@@ -150,7 +150,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
         </section>
       </div>
       <div className="mt-4 overflow-hidden shadow-jobCard rounded-[0.5rem] ">
-        <Link href="#">
+        <Link prefetch={false} href="#">
           <div className="aspect-[320/68] h-[68px] w-full relative">
             <Image
               src={JobDetailIcon.company}

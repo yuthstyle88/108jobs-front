@@ -25,7 +25,7 @@ const NotFoundJob = ({ language }: Props) => {
             {language?.no_results_message}
           </h4>
           <div className="mt-4">
-            <Link href="/job-board">
+            <Link prefetch={false} href="/job-board">
               <button className="submit-button-custom px-5 py-[10px]">
                 {language?.post_job_board}
               </button>

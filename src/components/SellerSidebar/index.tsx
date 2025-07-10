@@ -52,7 +52,7 @@ const SellerSidebar = () => {
               }`}
             >
               <div className="relative overflow-hidden flex items-center p-4">
-                <Link href="/">
+                <Link prefetch={false} href="/">
                   <Image
                     src={AssetIcon.logo_freelancer}
                     alt="avatar"
@@ -107,7 +107,7 @@ const SellerSidebar = () => {
                 target: "_blank",
               },
             ].map((item) => (
-              <Link
+              <Link prefetch={false}
                 key={item.href}
                 href={item.href}
                 target={item.target}
@@ -138,13 +138,13 @@ const SellerSidebar = () => {
 
           <div className="p-4 border-t border-gray-200">
             <div className={`${isClose ? "hidden" : "block"}`}>
-              <Link
+              <Link prefetch={false}
                 href="#"
                 className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
               >
                 {globalLanguageData?.sidebar_feedback}
               </Link>
-              <Link
+              <Link prefetch={false}
                 href="#"
                 className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
               >

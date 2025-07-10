@@ -150,7 +150,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                 </div>
               )}
 
-              <Link
+              <Link prefetch={false}
                 href="/seller-account-setting/freelance-profile"
                 className="absolute top-4 right-4"
               >
@@ -169,7 +169,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                       <h2 className="text-blue-600 font-medium">
                         {goToProfileLanguage?.education_title}
                       </h2>
-                      <Link
+                      <Link prefetch={false}
                         href="/user/edit/education"
                         className="text-gray-500"
                       >
@@ -207,7 +207,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                       <h2 className="text-blue-600 font-medium">
                         {goToProfileLanguage?.experience_title}
                       </h2>
-                      <Link
+                      <Link prefetch={false}
                         href="/user/edit/experience"
                         className="text-gray-500"
                       >
@@ -254,7 +254,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                       <h2 className="text-blue-600 font-medium">
                         {goToProfileLanguage?.skill_title}
                       </h2>
-                      <Link href="/user/edit/skills" className="text-gray-500">
+                      <Link prefetch={false} href="/user/edit/skills" className="text-gray-500">
                         <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
@@ -290,7 +290,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                       <h2 className="text-blue-600 font-medium">
                         {goToProfileLanguage?.language_title}
                       </h2>
-                      <Link
+                      <Link prefetch={false}
                         href="/user/edit/languages"
                         className="text-gray-500"
                       >
@@ -331,7 +331,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                       <h2 className="text-blue-600 font-medium">
                         {goToProfileLanguage?.certification_title}
                       </h2>
-                      <Link
+                      <Link prefetch={false}
                         href="/user/edit/certifications"
                         className="text-gray-500"
                       >

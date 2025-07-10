@@ -147,7 +147,7 @@ const CategoryDetail = () => {
   return (
     <>
       <section className="grid-container-job h-12 bg-[#E3EDFD]">
-        <Link
+        <Link prefetch={false}
           href="#"
           className="col-start-2 col-end-auto flex justify-center items-center gap-3"
         >
@@ -168,7 +168,7 @@ const CategoryDetail = () => {
           <h1 className="text-[20px] md:text-[32px] text-text_primary font-semibold ">
             Search results “ {titleSearch} ” in
           </h1>
-          <Link href={`/categories`}>
+          <Link prefetch={false} href={`/categories`}>
             <h3 className="text-third underline text-[20px] md:text-[32px] font-semibold">
               {jobCategoryLanguage?.all_job_types}
             </h3>

@@ -9,7 +9,7 @@ const HeaderSimple = () => {
     <header className="z-[999] w-full transition-all duration-300 bg-primary">
       <nav className="mx-[1.5rem] flex items-center h-auto min-h-[70px] py-1 justify-between">
         <section className="flex items-center gap-x-4 w-full md:w-auto">
-          <Link href="/" className="shrink-0">
+          <Link prefetch={false} href="/" className="shrink-0">
             <Image src={AssetIcon.logo} alt="logo" className="w-full h-full" />
           </Link>
         </section>

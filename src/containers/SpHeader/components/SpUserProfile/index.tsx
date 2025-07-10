@@ -16,7 +16,7 @@ const SpUserAvatar = () => {
     API_ROUTES.profile.get_profile
   );
   return (
-    <Link
+    <Link prefetch={false}
       href="/profile"
       className={`flex-1 flex items-center justify-center p-2 text-white text-[24px] cursor-pointer ${
         pathname === `/${lang}/profile` ? "bg-primary" : ""

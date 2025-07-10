@@ -35,7 +35,7 @@ const SpSellerHeader = () => {
             </div>
           )}
         </div>
-        <Link
+        <Link prefetch={false}
           href="/seller"
           className="overflow-hidden relative whitespace-nowrap flex self-center"
         >

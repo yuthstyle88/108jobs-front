@@ -45,7 +45,7 @@ const BreadCrumbAccountSetting = () => {
   if (isLoading) return <Loading />;
   return (
     <div className="flex items-center text-blue-600 text-[13px]">
-      <Link href="/seller" className="text-blue-600 font-medium">
+      <Link prefetch={false} href="/seller" className="text-blue-600 font-medium">
         {breadcrumbLanguage?.seller_center_breadcrumb}
       </Link>
       <span className="mx-2 text-gray-400">/</span>

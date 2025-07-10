@@ -82,7 +82,7 @@ const TopUpHistory = ({ data }: Props) => {
                 </div>
               </td>
               <td className="py-4 px-4">
-                <Link
+                <Link prefetch={false}
                   href="#"
                   className="text-blue-600 hover:underline text-sm"
                 >

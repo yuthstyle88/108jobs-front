@@ -45,7 +45,7 @@ const TermAndConditions = () => {
                 <ul className="mt-3 list-disc pl-[48px] grid gap-2">
                   <li>
                     “แพลตฟอร์ม” หมายถึง เว็บไซต์ (
-                    <Link href="/">https://fastwork.co</Link>)
+                    <Link prefetch={false} href="/">https://fastwork.co</Link>)
                     หรือแอปพลิเคชั่น Fastjob ของบริษัทฯ
                     เป็นช่องทางและเป็นพื้นที่กลางที่เปิดให้ผู้ใช้งานสามารถสร้าง
                     แบ่งปัน ขาย
@@ -917,7 +917,7 @@ const TermAndConditions = () => {
                   บริษัทฯ
                   ให้ความสำคัญและตระหนักถึงการคุ้มครองความปลอดภัยของข้อมูลส่วนบุคคลของท่านตามกฎหมาย
                   โดยท่านสามารถศึกษานโยบายความเป็นส่วนตัวได้ที่
-                  <Link className="text-third underline" href="/content/privacy">
+                  <Link prefetch={false} className="text-third underline" href="/content/privacy">
                     https://fastwork.co/privacy
                   </Link>
                   ซึ่งนโยบายความเป็นส่วนตัวนี้ถือเป็นส่วนหนึ่งของข้อตกลงการใช้งานฉบับนี้ด้วย
@@ -969,7 +969,7 @@ const TermAndConditions = () => {
                   เบอร์โทรศัพท์ 02-114-7008
                   <br />
                   เว็บไซต์ {" "}
-                  <Link className="text-third underline" href="/content/support-center">
+                  <Link prefetch={false} className="text-third underline" href="/content/support-center">
                     https://static.fastwork.co/contents/support-center
                   </Link>
                 </p>

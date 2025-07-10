@@ -62,7 +62,7 @@ export default function StartSellingLayout({
                 <ul>
                   {menuItems.map((item) => (
                     <li key={item.href}>
-                      <Link
+                      <Link prefetch={false}
                         href={item.href}
                         className={`flex items-center px-4 py-2 ${
                           pathname === `/${lang}${item.href}`
@@ -78,7 +78,7 @@ export default function StartSellingLayout({
               </nav>
 
               <div className="px-4 py-2 mt-4 border-1 border-border_primary rounded-lg">
-                <Link
+                <Link prefetch={false}
                   href={`/user/${user?.user.username}`}
                   className="text-blue-600 flex justify-center items-center gap-2"
                 >

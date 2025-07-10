@@ -25,14 +25,14 @@ const Overview = ({ language, data }: Props) => {
             {Number(data.rating).toFixed(1)}
           </span>
         </div>
-        <Link href="#" className="">
+        <Link prefetch={false} href="#" className="">
           <Image
             src={CategoriesImage.specialist}
             alt="badge_rehire"
             className="h-6 w-full"
           />
         </Link>
-        <Link href="#" className="">
+        <Link prefetch={false} href="#" className="">
           <Image
             src={CategoriesImage.badge_rehire}
             alt="badge_rehire"

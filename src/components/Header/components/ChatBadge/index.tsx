@@ -19,7 +19,7 @@ const ChatBadge = () => {
   if (isChatLoading) return <Loading />;
   if (chatError) return <Error />;
   return (
-    <Link
+    <Link prefetch={false}
       href="/chat"
       className="relative text-white text-sm hover:bg-blue-800 hover:text-white px-3"
     >

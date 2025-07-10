@@ -62,7 +62,7 @@ const VideoPromo = () => {
               </div>
             </div>
 
-            <Link
+            <Link prefetch={false}
               href="/contact"
               className="inline-block bg-white border-2 border-fastwork-blue text-fastwork-blue py-2 px-8 rounded-md font-medium transition-all duration-300 hover:bg-fastwork-blue hover:text-white"
             >

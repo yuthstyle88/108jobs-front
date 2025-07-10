@@ -89,14 +89,14 @@ const SellerHeader = () => {
             {isProfileMenuOpen && (
               <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
                 <div className="py-2">
-                  <Link
+                  <Link prefetch={false}
                     href={`${lang}/user/${user?.user.username}`}
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <User className="w-4 h-4 mr-3 text-gray-500" />
                     <span>{globalLanguageData?.freelancer_profile}</span>
                   </Link>
-                  <Link
+                  <Link prefetch={false}
                     href="/seller-account-setting/freelance-profile"
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >

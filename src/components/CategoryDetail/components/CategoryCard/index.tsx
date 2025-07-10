@@ -20,7 +20,7 @@ const CategoryCard = ({ data, username }: Props) => {
   const coverImage = data?.images?.find((image) => image.is_cover_photo);
   const { lang: currentLang } = useLanguage();
   return (
-    <Link
+    <Link prefetch={false}
       href={`/${currentLang}/user/${username}/${data.slug}`}
       className="flex cursor-pointer w-full"
     >

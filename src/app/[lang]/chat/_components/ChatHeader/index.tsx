@@ -29,7 +29,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
           {displayName}
         </span>
       </div>
-      <Link
+      <Link prefetch={false}
         href="#"
         className="text-third hover:bg-gray-100 text-[14px] px-4 py-2 rounded-sm border border-border_primary"
       >
