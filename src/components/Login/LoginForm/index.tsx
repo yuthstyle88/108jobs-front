@@ -1,4 +1,5 @@
 "use client";
+import { auth } from "@/auth";
 import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
 import { SocialLoginButton } from "@/components/ui/SocialLoginButton";
@@ -57,18 +58,26 @@ export const LoginForm = ({
       });
 
       if (result?.error) {
-        setError("username_or_email", {
-          type: "manual",
-          message: " ",
-        });
-        setError("password", {
-          type: "manual",
-          message: " ",
-        });
-        setError("root", {
-          type: "manual",
-          message: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
-        });
+        console.log("reseult",result.error);
+        switch (result.error) {
+          case "not_found":
+            setError("username_or_email", {
+              type: "manual",
+              message: authen?.not_found,
+            });
+            break;
+          case "incorrect_password":
+            setError("password", {
+              type: "manual",
+              message: "รหัสผ่านไม่ถูกต้อง",
+            });
+            break;
+          default:
+            setError("root", {
+              type: "manual",
+              message: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
+            });
+        }
       } else {
         route.push(result?.url || "/");
       }
@@ -90,11 +99,11 @@ export const LoginForm = ({
       )}
 
       <CustomInput
-        label={"Username or email"}
+        label={authen?.label_username_or_email}
         name="username_or_email"
         register={register("username_or_email")}
         error={errors.username_or_email?.message}
-        placeholder={"Enter your username or email"}
+        placeholder={authen?.placeholder_username_or_email}
       />
 
       <CustomInput
@@ -142,11 +151,11 @@ export const LoginForm = ({
       </div>
 
       <div className="flex flex-col gap-4 mt-6">
-        <SocialLoginButton
+        {/* <SocialLoginButton
           icon={AuthenticateIcon.fb}
           provider={authen?.button_login_facebook}
           onClick={() => signIn("facebook")}
-        />
+        /> */}
         <SocialLoginButton
           icon={AuthenticateIcon.gg}
           provider={authen?.button_login_google}

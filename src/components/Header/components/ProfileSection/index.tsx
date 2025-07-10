@@ -29,7 +29,7 @@ const ProfileSection = ({ data, user }: ProfileSectionProps) => {
 const { lang } = useLanguage();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-jobCard z-50 select-none">
-      <Link href={`${lang}/user/${user?.user.username}`}>
+      <Link prefetch={false} href={`${lang}/user/${user?.user.username}`}>
         <div className="p-4 bg-secondary hover:bg-[#D0E1FB] duration-150 rounded-tl-lg rounded-tr-lg relative">
           <div className="flex items-center space-x-3">
             <div className="rounded-full bg-gray-200 flex items-center justify-center">
@@ -59,7 +59,7 @@ const { lang } = useLanguage();
       </Link>
 
       <div className="py-2">
-        <Link
+        <Link prefetch={false}
           href="/coin"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -69,7 +69,7 @@ const { lang } = useLanguage();
           />
           <span className="text-gray-700">Coins 0.00</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/account-setting/basic-info"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -79,7 +79,7 @@ const { lang } = useLanguage();
           />
           <span className="text-gray-700">{data?.menu_account_settings}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/chat"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -89,7 +89,7 @@ const { lang } = useLanguage();
           />
           <span className="text-gray-700">{data?.menu_messages_orders}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/promotion"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -99,7 +99,7 @@ const { lang } = useLanguage();
           />
           <span className="text-gray-700">{data?.menu_coupons}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/favorites"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -109,7 +109,7 @@ const { lang } = useLanguage();
           />
           <span className="text-gray-700">{data?.menu_favorite_jobs}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/job-board"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
         >
@@ -119,7 +119,7 @@ const { lang } = useLanguage();
           />
           <span className="text-gray-700">{data?.menu_job_board}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/reward/earn"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -132,7 +132,7 @@ const { lang } = useLanguage();
             New
           </span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/start-selling"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
@@ -142,7 +142,7 @@ const { lang } = useLanguage();
           />
           <span className="text-gray-700">{data?.menu_become_freelancer}</span>
         </Link>
-        <Link
+        <Link prefetch={false}
           href="/consent-management"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t w-full"
         >

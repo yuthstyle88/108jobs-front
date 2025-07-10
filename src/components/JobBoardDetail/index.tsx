@@ -256,7 +256,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
       </section>
 
       <section className="grid-cols-1 grid md:grid-cols-2 gap-8 w-full lg:max-w-7xl mx-auto py-6 rounded-lg pb-24">
-        <Link href={"/job-board"}>
+        <Link prefetch={false} href={"/job-board"}>
           <section className="w-full  job-board-gradient-left rounded-lg shadow-jobBoardShadow h-[100px] md:h-[130px] xl:h-[100px] cursor-pointer inline-block">
             <div className="grid grid-cols-[100px_1fr_32px] gap-2">
               <div className="w-[100px] h-[100px] relative">
@@ -283,7 +283,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
             </div>
           </section>
         </Link>
-        <Link href={"/start-selling"}>
+        <Link prefetch={false} href={"/start-selling"}>
           <section className="w-full  job-board-gradient rounded-lg shadow-jobBoardShadow h-[100px] md:h-[130px] xl:h-[100px] cursor-pointer inline-block">
             <div className="grid grid-cols-[100px_1fr_32px] gap-2">
               <div className="w-[100px] h-[100px] relative">

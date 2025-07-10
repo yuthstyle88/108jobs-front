@@ -299,7 +299,7 @@ const PrivacyPolicy = () => {
                 การปรับปรุงสินค้า บริการ หรือประสบการณ์การใช้งาน ฯลฯ บริษัทฯ
                 จะดำเนินการขอความยินยอมของท่านก่อนหรือในขณะเก็บรวบรวมข้อมูลส่วนบุคคลเสมอ
                 โดยท่านสามารถให้ความยินยอมผ่าน{" "}
-                <Link className="text-third underline" href="/consent-management">
+                <Link prefetch={false} className="text-third underline" href="/consent-management">
                   https://fastwork.co/consent-management
                 </Link>{" "}
                 หรือช่องทางอื่นใดตามแต่ที่ได้ตกลงกัน
@@ -506,7 +506,7 @@ const PrivacyPolicy = () => {
                 ในกรณีที่ท่านยกเลิกบัญชีผู้ใช้งานของ Fastjob บริษัทฯ
                 จะเก็บรักษาข้อมูลส่วนบุคคลของท่านเท่าที่จำเป็นเพื่อให้บรรลุวัตถุประสงค์ที่กำหนดไว้ในนโยบายฯ
                 หรือตามอำนาจแห่งกฎหมาย โดยท่านสามารถทำรายการผ่าน Fastjob (
-                <Link
+                <Link prefetch={false}
                   className="text-third underline"
                   href="/content/support-center"
                 >
@@ -633,7 +633,7 @@ const PrivacyPolicy = () => {
                   </p>
                   <p className="mb-6 m-0 leading-[1.5]">
                     ท่านสามารถใช้สิทธิได้โดยการเข้าใช้งานบัญชีผ่านของ Fastjob (
-                    <Link
+                    <Link prefetch={false}
                       className="text-third underline"
                       href="/content/support-center"
                     >
@@ -771,7 +771,7 @@ const PrivacyPolicy = () => {
                 เพื่อพัฒนาการเข้าถึงสินค้าหรือบริการ หรือเพื่อโฆษณาที่เหมาะสม
                 ในกรณีที่ท่านไม่ประสงค์ให้มีการติดตามโดย Cookies
                 ท่านสามารถตั้งค่าสิทธิการติดตามของ Cookies ได้ผ่าน
-                <Link className="text-third underline" href="/consent-management">
+                <Link prefetch={false} className="text-third underline" href="/consent-management">
                   https://fastwork.co/consent-management
                 </Link>
                 <br /> ทั้งนี้
@@ -804,7 +804,7 @@ const PrivacyPolicy = () => {
                 สปายแวร์ (Spyware) หรือไวรัส (Virus) อนึ่ง
                 ท่านสามารถรายงานเหตุการณ์ที่อาจกระทบความมั่นคงปลอดภัยของบริษัทฯ
                 ได้ที่ (
-                <Link
+                <Link prefetch={false}
                   className="text-third underline"
                   href="/content/support-center"
                 >
@@ -898,7 +898,7 @@ const PrivacyPolicy = () => {
                     </li>
                     <li>
                       ติดต่อศูนย์ช่วยเหลือ
-                      <Link
+                      <Link prefetch={false}
                         className="text-third underline"
                         href="/content/support-center"
                       >

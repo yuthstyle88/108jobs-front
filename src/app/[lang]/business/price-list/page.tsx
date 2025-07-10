@@ -75,7 +75,7 @@ const PriceListPage = () => {
           </h1>
           <div className="flex justify-center gap-2 mt-8">
             <div className="bg-white rounded-lg shadow-md w-60 md:w-72 p-1">
-              <Link
+              <Link prefetch={false}
                 href="#"
                 className="block w-full py-2 px-4 rounded-lg bg-fastwork-blue text-white"
               >
@@ -83,7 +83,7 @@ const PriceListPage = () => {
               </Link>
             </div>
             <div className="bg-white rounded-lg shadow-md w-60 md:w-72 p-1">
-              <Link
+              <Link prefetch={false}
                 href="/bussiness/package-details"
                 className="block w-full py-2 px-4 rounded-lg bg-white text-gray-700"
               >
@@ -276,7 +276,7 @@ const PriceListPage = () => {
               <p className="text-sm">Copyright © 2024 Fastjob for Business.</p>
             </div>
             <div className="flex space-x-4">
-              <Link href="#" className="text-gray-400 hover:text-white">
+              <Link prefetch={false} href="#" className="text-gray-400 hover:text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -291,7 +291,7 @@ const PriceListPage = () => {
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                 </svg>
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-white">
+              <Link prefetch={false} href="#" className="text-gray-400 hover:text-white">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"

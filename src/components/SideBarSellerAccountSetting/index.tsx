@@ -63,7 +63,7 @@ const { lang } = useLanguage();
               const isActive = pathname === `/${lang}${href}`;
               return (
                 <li key={href}>
-                  <Link
+                  <Link prefetch={false}
                     href={href}
                     className={`flex items-center w-full px-4 py-3 text-left ${
                       isActive
@@ -86,7 +86,7 @@ const { lang } = useLanguage();
           </h3>
           <ul>
             <li>
-              <Link
+              <Link prefetch={false}
                 href="/seller-account-setting/document-info"
                 className={`flex items-center gap-3 w-full text-left ${
                   pathname === "/seller-account-setting/document-info"

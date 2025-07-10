@@ -200,7 +200,7 @@ export const RegisterForm = ({
             className="text-sm text-text_secondary font-sans"
           >
             {authen?.checkbox_terms_conditions}{" "}
-            <Link
+            <Link prefetch={false}
               href="/content/terms"
               className="text-text_secondary underline"
             >
@@ -221,7 +221,7 @@ export const RegisterForm = ({
             className="text-sm text-text_secondary font-sans"
           >
             {authen?.checkbox_terms_conditions}{" "}
-            <Link
+            <Link prefetch={false}
               href="/content/privacy"
               className="text-text_secondary underline"
             >

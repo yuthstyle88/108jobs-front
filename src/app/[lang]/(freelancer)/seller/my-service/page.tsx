@@ -112,7 +112,7 @@ const MyServices = () => {
           <p className="text-gray-600 text-sm">
             {sellerMyServiceLanguage?.service_fee_description}
           </p>
-          <Link href="/content/commission">
+          <Link prefetch={false} href="/content/commission">
             <button className="mt-4 bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded">
               {sellerMyServiceLanguage?.service_fee_button}
             </button>
@@ -134,7 +134,7 @@ const MyServices = () => {
             max: 5,
           })}
         </h2>
-        <Link href="/manage-product/create">
+        <Link prefetch={false} href="/manage-product/create">
           <button
             disabled={lengthOfJobs >= 5 || notVerified}
             className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium disabled:bg-blue-300 disabled:cursor-not-allowed"
@@ -236,7 +236,7 @@ const MyServices = () => {
                     </button>
                   </td>
                   <td className="p-4 space-x-2">
-                    <Link href={`/manage-product/${job.id}`}>
+                    <Link prefetch={false} href={`/manage-product/${job.id}`}>
                       <button className="p-1 text-gray-500 hover:text-gray-700">
                         <Pencil className="w-4 h-4" />
                       </button>
@@ -305,7 +305,7 @@ const MyServices = () => {
                     <Eye className="w-4 h-4 text-text_secondary" />
                   </div>
 
-                  <Link
+                  <Link prefetch={false}
                     href={`/manage-product/${job.id}`}
                     className="text-sm text-text_secondary flex flex-row justify-between items-center pt-4"
                   >

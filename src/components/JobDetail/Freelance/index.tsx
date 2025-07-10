@@ -53,7 +53,7 @@ const Freelance = ({ language, data }: Props) => {
       </h2>
       <div className="mx-auto bg-white rounded-xl border-border_primary border-1 shadow-sm p-6">
         <div className="flex items-start justify-between mb-4">
-          <Link href={`/${currentLang}/user/${data.user.username}`} className="flex items-start space-x-4">
+          <Link prefetch={false} href={`/${currentLang}/user/${data.user.username}`} className="flex items-start space-x-4">
             <Image
               src={data.user.avatar_url || ProfileImage.avatar}
               alt="Profile"

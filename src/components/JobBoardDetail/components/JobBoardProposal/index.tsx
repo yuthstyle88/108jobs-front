@@ -34,7 +34,7 @@ const JobBoardProposal = () => {
               <p className="text-start text-[16px] font-sans text-text_primary">
                 <strong>Portfolio URL</strong>
               </p>
-              <Link href="/">
+              <Link prefetch={false} href="/">
                 <p className="text-start text-text_primary font-sans">
                   https://jobboard.fastlance.vn/en/jobs/5118a80a-b9ba-4e62-a766-c327e9ec0c97
                 </p>
@@ -90,7 +90,7 @@ const JobBoardProposal = () => {
                   className="w-full h-full absolute inset-0 object-contain"
                 />
               </div>
-              <Link href="/">
+              <Link prefetch={false} href="/">
                 <p className="text-start text-text_primary font-sans">
                   Content writings & content creation
                 </p>

@@ -27,7 +27,7 @@ export default function AccountSettingWrapper() {
         {navbarAccountData?.section_account}
       </p>
       <div className="flex flex-col mt-4">
-        <Link
+        <Link prefetch={false}
           href="/account-setting/basic-info"
           className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-4 ${
             isActive("/account-setting/basic-info")
@@ -50,7 +50,7 @@ export default function AccountSettingWrapper() {
           <span>{navbarAccountData?.account_info}</span>
         </Link>
 
-        <Link
+        <Link prefetch={false}
           href="/account-setting/contact-info"
           className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-4  ${
             isActive("/account-setting/contact-info")
@@ -77,7 +77,7 @@ export default function AccountSettingWrapper() {
           {navbarAccountData?.section_hiring}
         </p>
 
-        <Link
+        <Link prefetch={false}
           href="/account-setting/document-info"
           className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-4 ${
             isActive("/account-setting/document-info")
@@ -100,7 +100,7 @@ export default function AccountSettingWrapper() {
           <span>{navbarAccountData?.personal_hiring_info}</span>
         </Link>
 
-        <Link
+        <Link prefetch={false}
           href="/account-setting/company-info"
           className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-4 ${
             isActive("/account-setting/company-info")

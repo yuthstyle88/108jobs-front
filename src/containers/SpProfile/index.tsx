@@ -47,7 +47,7 @@ const SpProfile = () => {
         </svg>
         <div className="grid grid-cols-1 z-10 text-center absolute left-1/2 -translate-x-1/2 top-0 pt-6 justify-center">
           <strong className="text-[1.125rem] text-white">My Profile</strong>
-          <Link href={`/${currentLang}/user/${user?.user.username}`}>
+          <Link prefetch={false} href={`/${currentLang}/user/${user?.user.username}`}>
             <Image
               src={user?.user.avatar_url || ProfileImage.avatar}
               width={80}
@@ -56,12 +56,12 @@ const SpProfile = () => {
               className="inline-flex justify-center items-center w-[80px] min-h-[80px]  rounded-full object-cover object-center mt-4"
             />
           </Link>
-          <Link href={`/${currentLang}/user/${user?.user.username}`}>
+          <Link prefetch={false} href={`/${currentLang}/user/${user?.user.username}`}>
             <strong className="text-[1.125rem] text-third">
               {user?.user.username}
             </strong>
           </Link>
-          <Link
+          <Link prefetch={false}
             href={`/${currentLang}/user/${user?.user.username}`}
             className="inline-block max-w-full whitespace-nowrap"
           >
@@ -72,7 +72,7 @@ const SpProfile = () => {
         </div>
       </section>
       <section>
-        <Link href="/coin">
+        <Link prefetch={false} href="/coin">
           <div
             style={{ height: "52px", borderRadius: "12px 12px 0 0" }}
             className="flex flex-row justify-between items-center gap-2 px-4 profile-gradient "
@@ -98,7 +98,7 @@ const SpProfile = () => {
       {user?.roles.includes(ROLE.EMPLOYER) &&
         user?.roles.includes(ROLE.FREELANCER) && (
           <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
-            <Link href="/seller/my-service">
+            <Link prefetch={false} href="/seller/my-service">
               <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text_secondary font-sans">
                 <FontAwesomeIcon
                   icon={faBriefcase}
@@ -107,7 +107,7 @@ const SpProfile = () => {
                 <div>My job</div>
               </div>
             </Link>
-            <Link href="/seller/withdrawal">
+            <Link prefetch={false} href="/seller/withdrawal">
               <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
                 <FontAwesomeIcon
                   icon={faMoneyBillTrendUp}
@@ -116,7 +116,7 @@ const SpProfile = () => {
                 <div>Withdraw</div>
               </div>
             </Link>
-            <Link href="/seller">
+            <Link prefetch={false} href="/seller">
               <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
                 <FontAwesomeIcon
                   icon={faMoneyBill1}
@@ -125,7 +125,7 @@ const SpProfile = () => {
                 <div>Seller center</div>
               </div>
             </Link>
-            <Link href="/reward/earn">
+            <Link prefetch={false} href="/reward/earn">
               <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text_secondary font-sans">
                 <FontAwesomeIcon
                   icon={faGift}
@@ -134,7 +134,7 @@ const SpProfile = () => {
                 <div>Rewards</div>
               </div>
             </Link>
-            <Link href="/promotion">
+            <Link prefetch={false} href="/promotion">
               <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
                 <FontAwesomeIcon
                   icon={faTicket}
@@ -143,7 +143,7 @@ const SpProfile = () => {
                 <div>Coupons</div>
               </div>
             </Link>
-            <Link href="/favorites">
+            <Link prefetch={false} href="/favorites">
               <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
                 <FontAwesomeIcon
                   icon={faHeart}
@@ -157,7 +157,7 @@ const SpProfile = () => {
       {user?.roles.includes(ROLE.EMPLOYER) &&
         !user?.roles.includes(ROLE.FREELANCER) && (
           <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
-            <Link href="/reward/earn">
+            <Link prefetch={false} href="/reward/earn">
               <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text_secondary font-sans">
                 <FontAwesomeIcon
                   icon={faGift}
@@ -166,7 +166,7 @@ const SpProfile = () => {
                 <div>Rewards</div>
               </div>
             </Link>
-            <Link href="/promotion">
+            <Link prefetch={false} href="/promotion">
               <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
                 <FontAwesomeIcon
                   icon={faTicket}
@@ -175,7 +175,7 @@ const SpProfile = () => {
                 <div>Coupons</div>
               </div>
             </Link>
-            <Link href="/coin">
+            <Link prefetch={false} href="/coin">
               <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
                 <FontAwesomeIcon
                   icon={faCoins}
@@ -184,7 +184,7 @@ const SpProfile = () => {
                 <div>Coins</div>
               </div>
             </Link>
-            <Link href="/favorites">
+            <Link prefetch={false} href="/favorites">
               <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
                 <FontAwesomeIcon
                   icon={faHeart}
@@ -205,7 +205,7 @@ const SpProfile = () => {
             {user?.roles.includes(ROLE.EMPLOYER) &&
               !user?.roles.includes(ROLE.FREELANCER) && (
                 <li>
-                  <Link
+                  <Link prefetch={false}
                     href="/account-setting/basic-info"
                     className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
                   >
@@ -217,7 +217,7 @@ const SpProfile = () => {
             {user?.roles.includes(ROLE.EMPLOYER) &&
               user?.roles.includes(ROLE.FREELANCER) && (
                 <li>
-                  <Link
+                  <Link prefetch={false}
                     href="/seller-account-setting/freelance-profile"
                     className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
                   >
@@ -229,7 +229,7 @@ const SpProfile = () => {
             {user?.roles.includes(ROLE.EMPLOYER) &&
               !user?.roles.includes(ROLE.FREELANCER) && (
                 <li>
-                  <Link
+                  <Link prefetch={false}
                     href="/start-selling"
                     className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
                   >
@@ -248,7 +248,7 @@ const SpProfile = () => {
         <div style={{ borderBottom: "solid 8px", borderColor: "#f6f7f8" }}>
           <ul className="p-0 m-0 list-none">
             <li>
-              <Link
+              <Link prefetch={false}
                 href="/job-board"
                 className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
               >
@@ -266,7 +266,7 @@ const SpProfile = () => {
         <div style={{ borderBottom: "solid 8px", borderColor: "#f6f7f8" }}>
           <ul className="p-0 m-0 list-none">
             <li>
-              <Link
+              <Link prefetch={false}
                 href="/promotion"
                 className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
               >
@@ -275,7 +275,7 @@ const SpProfile = () => {
               </Link>
             </li>
             <li>
-              <Link
+              <Link prefetch={false}
                 href="/consent-management"
                 className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
               >

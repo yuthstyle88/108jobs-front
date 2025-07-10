@@ -76,7 +76,7 @@ const AccountStats = () => {
             </div>
 
             <div className="mt-6 flex justify-center">
-              <Link
+              <Link prefetch={false}
                 className="bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-md"
                 href="/job-board"
               >
@@ -111,7 +111,7 @@ const AccountStats = () => {
             <div className="text-black">
               {sellerAccStatsLanguage?.no_data_available}
             </div>
-            <Link href="/manage-product/create">
+            <Link prefetch={false} href="/manage-product/create">
               <button className="mt-4 bg-blue-100 text-blue-700 text-sm font-medium py-2 px-4 rounded">
                 {sellerAccStatsLanguage?.start_selling_button}
               </button>

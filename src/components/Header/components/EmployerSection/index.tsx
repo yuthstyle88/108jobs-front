@@ -43,7 +43,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           <MegaMenu />
         </div>
       </div>
-      <Link
+      <Link prefetch={false}
         href="/start-selling"
         className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
       >
@@ -51,7 +51,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
       </Link>
       <ChatBadge />
       <NotificationDropdown />
-      <Link
+      <Link prefetch={false}
         href="/reward/earn"
         className="text-white text-sm hover:bg-blue-800 hover:text-white"
       >

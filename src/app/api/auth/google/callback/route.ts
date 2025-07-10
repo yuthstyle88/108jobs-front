@@ -1,17 +1,33 @@
+import { API_ROUTES } from "@/api/endpoints";
 import { signIn } from "@/auth";
+import { ERROR_CONSTANTS } from "@/constants/error";
+import { axiosPublicV2 } from "@/lib/axios";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  const { search } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
+  const rawCode = searchParams.get("code");
 
-  const fullPath = `/auth/google/callback${search}`;
+  if (!rawCode) {
+    return NextResponse.json(
+      { error: "Missing authorization code" },
+      { status: 400 }
+    );
+  }
+
+  const code = decodeURIComponent(rawCode);
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_GOOGLE_BASE_URL}${fullPath}`);
+    const response = await axiosPublicV2.get(API_ROUTES.auth.oauth_google, {
+      params: {
+        code,
+        oauth_provider_id: 1,
+      },
+    });
 
-    const data = await response.json();
+    const data = response.data;
 
-    if (!response.ok || !data.jwt) {
+    if (!data.jwt) {
       return NextResponse.json(
         { error: "Failed to retrieve token from backend" },
         { status: 401 }
@@ -31,10 +47,19 @@ export async function GET(request: Request) {
     }
 
     return NextResponse.redirect(new URL("/", request.url));
-  } catch (error) {
-    console.error("Server error:", error);
+  } catch (error: any) {
+    if (error.response) {
+      const data = error.response.data;
+
+      return NextResponse.json(
+        { error: data.error || "Google OAuth failed" },
+        { status: error.response.status || 400 }
+      );
+    }
+
+    console.error("OAuth callback error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: ERROR_CONSTANTS.SERVER_ERROR },
       { status: 500 }
     );
   }

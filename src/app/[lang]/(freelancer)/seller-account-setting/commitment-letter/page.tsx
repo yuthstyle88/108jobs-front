@@ -69,7 +69,7 @@ const CommitmentLetter = () => {
               </h3>
               <p className="text-sm text-gray-500 mb-2">
                 {sellerCommitmentLanguage?.step_2_note} {""}
-                <Link href="#" className="text-blue-600 font-medium">
+                <Link prefetch={false} href="#" className="text-blue-600 font-medium">
                   {sellerCommitmentLanguage?.step_2_link}
                 </Link>
               </p>

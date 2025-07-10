@@ -79,7 +79,7 @@ const FreelanceImproveMenu = () => {
                   freelancer.key === hoveredItem && "bg-[#F6F9FE]"
                 }`}
               >
-                <Link
+                <Link prefetch={false}
                   href="#"
                   className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4"
                 >

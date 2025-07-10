@@ -32,7 +32,7 @@ const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
     >
       <nav className="flex flex-wrap items-center justify-center h-auto min-h-[2.75rem] xl:justify-between">
         <div className="flex items-center w-full md:w-auto">
-          <Link
+          <Link prefetch={false}
             href="/"
             className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${
               pathname === `/${lang}` ? "bg-primary" : ""
@@ -40,7 +40,7 @@ const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
           >
             <House className="w-[27px] h-full mx-2 py-1" />
           </Link>
-          <Link
+          <Link prefetch={false}
             href="/categories/popular-service"
             className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${
               pathname === `/${lang}/categories/popular-service` ? "bg-primary" : ""
@@ -48,7 +48,7 @@ const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
           >
             <Grip className="w-[27px] h-full mx-2 py-1" />
           </Link>
-          <Link
+          <Link prefetch={false}
             href="/job/search"
             className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${
               pathname === `/${lang}/job/search` ? "bg-primary" : ""
@@ -56,7 +56,7 @@ const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
           >
             <Search className="w-[27px] h-full mx-2 py-1" />
           </Link>
-          <Link
+          <Link prefetch={false}
             href="/job-board"
             className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${
               pathname === `/${lang}/job-board` ? "bg-primary" : ""
@@ -81,7 +81,7 @@ const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
           {session ? (
             <SpUserAvatar />
           ) : (
-            <Link
+            <Link prefetch={false}
               href="/login"
               className="flex-1 flex items-center justify-center p-2 text-white text-[24px] cursor-pointer"
             >

@@ -10,7 +10,7 @@ import Link from "next/link";
 const CategoryCardMock = () => {
   const { data: jobCardLanguage } = useGlobalTranslate(LanguageFile.JOB_CARD);
   return (
-    <Link href="/seo/job-detail" className="flex cursor-pointer w-full">
+    <Link prefetch={false} href="/seo/job-detail" className="flex cursor-pointer w-full">
       <div className="hover:shadow-jobCard border border-border_primary w-full flex flex-col overflow-hidden rounded-md bg-white transition-all ease-in-out duration-150">
         <section className="flex flex-row md:flex-col">
           <div className="relative aspect-[3/2] w-full">

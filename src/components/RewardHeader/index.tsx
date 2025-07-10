@@ -46,7 +46,7 @@ const RewardHeader = () => {
     <header className="sticky top-0 z-[999] w-full transition-all duration-300 bg-transparent">
       <nav className="mx-3 sm:mx-[1.5rem] flex items-center justify-between h-auto min-h-[70px] py-4 ">
         <section className="flex items-center gap-x-4 w-full md:w-auto">
-          <Link href="/" className="shrink-0">
+          <Link prefetch={false} href="/" className="shrink-0">
             <Image
               src={AssetIcon.logo_reward}
               alt="logo"
@@ -72,7 +72,7 @@ const RewardHeader = () => {
               />
             </button>
           </div>
-          <Link
+          <Link prefetch={false}
             href="/profile"
             className="flex sm:hidden items-center justify-center p-2 text-white text-[24px] cursor-pointer"
           >

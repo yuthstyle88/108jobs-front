@@ -91,7 +91,7 @@ const PopularSubCat = ({ slug }: Props) => {
                   const catalogSlug = subcategory.slug ?? fallbackSlug;
 
                   return (
-                    <Link
+                    <Link prefetch={false}
                       key={subcategory.id}
                       href={`/categories/${catalogSlug}`}
                       className="block w-full text-left px-4 py-2 hover:bg-gray-50 text-gray-700"
@@ -110,7 +110,7 @@ const PopularSubCat = ({ slug }: Props) => {
               {selectedCategory.sections
                 .flatMap((section) => section.categories)
                 .map((cat) => (
-                  <Link
+                  <Link prefetch={false}
                     key={cat.id}
                     href={`/job/${cat.slug}`}
                     className="text-text_secondary hover:underline"
@@ -132,7 +132,7 @@ const PopularSubCat = ({ slug }: Props) => {
             {selectedCategory.sections
               .flatMap((section) => section.categories)
               .map((cat) => (
-                <Link
+                <Link prefetch={false}
                   key={cat.id}
                   href={`/job/${cat.slug}`}
                   className="group relative overflow-hidden rounded-lg"

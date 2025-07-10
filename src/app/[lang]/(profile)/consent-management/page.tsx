@@ -42,7 +42,7 @@ const ConsentManagement = () => {
               <p className="text-text_primary mb-4 font-sans">
                 ยินยอมการรับข่าวสารและโปรโมชันที่พิเศษต่าง ๆ ผ่านทุกช่องทางจาก
                 Fastjob{" "}
-                <Link href="#" className="text-blue-600 underline">
+                <Link prefetch={false} href="#" className="text-blue-600 underline">
                   นโยบายคุ้มครองความเป็นส่วนตัว
                 </Link>
               </p>
@@ -84,7 +84,7 @@ const ConsentManagement = () => {
                 มีการเก็บและใช้งานคุกกี้เพื่อช่วยปรับปรุงพัฒนาประสบการณ์การใช้งานให้ดียิ่งขึ้นเมื่อคุณเข้าเยี่ยมชมเว็บไซต์ของเรา
                 คุณสามารถเลือกให้ความยินยอมคุกกี้แต่ละประเภทได้
                 (ยกเว้นคุกกี้ที่จำเป็น){" "}
-                <Link href="#" className="text-blue-600 hover:underline">
+                <Link prefetch={false} href="#" className="text-blue-600 hover:underline">
                   นโยบายคุกกี้
                 </Link>
               </p>
@@ -205,14 +205,14 @@ const ConsentManagement = () => {
           <div className="mb-[2rem] text-text_primary font-sans">
             {concentLanguageData?.terms_conditions}
             {/* อ่าน{" "}
-            <Link
+            <Link prefetch={false}
               href="https://static.fastwork.co/contents/terms"
               className="text-third underline"
             >
               เงื่อนไขข้อตกลงการใช้บริการ
             </Link>{" "}
             และ{" "}
-            <Link
+            <Link prefetch={false}
               href="https://static.fastwork.co/contents/privacy"
               className="text-third underline"
             >

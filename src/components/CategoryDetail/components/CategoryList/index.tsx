@@ -21,7 +21,7 @@ const CategoryList: React.FC<CategoryListProps> = ({ title, items }) => {
             key={index}
             className="hover:bg-[#e3edfd] text-text_secondary hover:text-third"
           >
-            <Link href={`/job/${item.slug}`} className="block px-2 py-[6px] rounded-[4px] font-sans">
+            <Link prefetch={false} href={`/job/${item.slug}`} className="block px-2 py-[6px] rounded-[4px] font-sans">
               <span>{item.title}</span>
               {item.new && (
                 <div className="inline-block bg-third text-white text-[0.6875rem] rounded-[4px] font-bold px-1 py-[1px] ml-1">

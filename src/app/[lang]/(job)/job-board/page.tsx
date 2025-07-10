@@ -113,7 +113,7 @@ const JobBoard = () => {
             </div>
 
             <div className="flex items-center gap-4 w-full md:w-auto">
-              <Link
+              <Link prefetch={false}
                 href="/job-board/create-job"
                 className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
               >
@@ -182,7 +182,7 @@ const JobBoard = () => {
                               </svg>
                             </div>
                             <div>
-                              <Link
+                              <Link prefetch={false}
                                 prefetch={false}
                                 href={`/job-board/${job.id}`}
                                 className="hover:text-blue-600 font-medium text-base text-text_primary font-sans max-w-[300px] line-clamp-1 truncate"

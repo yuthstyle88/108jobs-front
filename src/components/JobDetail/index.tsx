@@ -96,7 +96,7 @@ const JobDetail = ({ username, slug }: Props) => {
   return (
     <>
       <section className="grid-container-job-detail mb-4 px-4 py-2 h-16 md:h-12 md:p-0 md:my-0 bg-[#E3EDFD]">
-        <Link
+        <Link prefetch={false}
           href="#"
           className="col-start-2 col-end-auto flex justify-center items-center gap-3"
         >

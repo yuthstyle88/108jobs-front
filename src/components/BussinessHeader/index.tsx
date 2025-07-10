@@ -5,7 +5,7 @@ const BussinessHeader = () => {
   return (
     <header className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm animate-fade-in">
       <div className="container mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center">
+        <Link prefetch={false} href="/" className="flex items-center">
           <Image
             src={BusinessImage.logo_business}
             alt="Background"
@@ -16,25 +16,25 @@ const BussinessHeader = () => {
         </Link>
 
         <nav className="hidden md:flex items-center space-x-6">
-          <Link
+          <Link prefetch={false}
             href="/services"
             className="text-gray-700 hover:text-fastwork-blue transition-colors duration-300"
           >
             บริการ
           </Link>
-          <Link
+          <Link prefetch={false}
             href="/work"
             className="text-gray-700 hover:text-fastwork-blue transition-colors duration-300"
           >
             ผลงาน
           </Link>
-          <Link
+          <Link prefetch={false}
             href="/about"
             className="text-gray-700 hover:text-fastwork-blue transition-colors duration-300"
           >
             เกี่ยวกับเรา
           </Link>
-          <Link
+          <Link prefetch={false}
             href="/contact"
             className="bg-fastwork-blue text-white px-4 py-2 rounded-md hover:bg-fastwork-deep-blue transition-colors duration-300"
           >

@@ -237,14 +237,14 @@ const HowSellAndBuy = () => {
           </div>
           <div className="col-start-2 col-end-3 mt-12 block md:flex justify-end items-end px-4 md:px-0">
             {selectedTab === 0 ? (
-              <Link href="/" className="">
+              <Link prefetch={false} href="/" className="">
                 <button className="submit-button-custom py-2 px-4 w-full md:w-fit flex flex-row justify-center md:justify-start gap-2">
                   <p>Choose a service that you want.</p>
                   <ArrowRight className="w-5" />
                 </button>
               </Link>
             ) : (
-              <Link href="/start-selling" className="">
+              <Link prefetch={false} href="/start-selling" className="">
                 <button className="submit-button-custom py-2 px-4 w-full md:w-fit flex flex-row justify-center md:justify-start gap-2">
                   <p>Register to be a Freelancer.</p>
                   <ArrowRight className="w-5" />

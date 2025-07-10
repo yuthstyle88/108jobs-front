@@ -50,7 +50,7 @@ const Index = () => {
               <p className="text-lg md:text-xl mb-8 opacity-90 animate-fade-in">
                 ผู้ช่วยจัดหาฟรีแลนซ์สำหรับกลุ่มธุรกิจ
               </p>
-              <Link
+              <Link prefetch={false}
                 href="/contact"
                 className="inline-block bg-white text-fastwork-blue py-3 px-8 rounded-md font-medium transition-all duration-300 hover:shadow-lg hover:bg-gray-50 animate-fade-in"
               >

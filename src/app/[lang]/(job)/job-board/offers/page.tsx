@@ -123,7 +123,7 @@ const Offers = () => {
                               </svg>
                             </div>
                             <div>
-                              <Link
+                              <Link prefetch={false}
                                 prefetch={false}
                                 href={`/job-board/${job.id}`}
                                 className="hover:text-blue-600 font-medium text-base text-text_primary font-sans max-w-[300px] line-clamp-1 truncate"
