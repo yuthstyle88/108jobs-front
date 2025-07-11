@@ -240,6 +240,14 @@ export interface LoginLanguage {
   placeholder_username: string;
   email_placeholder: string;
   label_or: string;
+  placeholder_captcha_answer: string;
+  reload_captcha: string;
+  captcha_incorrect: string;
+  username_min_6: string;
+  invalid_email: string;
+  not_match_password: string;
+  error_loading_captcha: string;
+  required: string;
 }
 
 export interface HomeLanguage {
