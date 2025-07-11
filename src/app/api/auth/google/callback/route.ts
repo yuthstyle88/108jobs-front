@@ -1,5 +1,5 @@
 import { API_ROUTES } from "@/api/endpoints";
-import { signIn } from "next-auth/react";
+import { signIn } from "@/auth";
 
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { axiosPublicV2 } from "@/lib/axios";

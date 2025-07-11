@@ -3,7 +3,7 @@ import { useFormStorage } from "@/app/[lang]/apply-freelance/hooks/useFormStorag
 import { FreelancerImage } from "@/constants/images";
 import { usePrivatePost } from "@/hooks/api-hooks";
 import { FreelancerFormData } from "@/types/applyFreelancer";
-import { signIn } from "next-auth/react";
+import { signIn } from "@/auth";
 import Image from "next/image";
 import React, { useState } from "react";
 import ConfirmTermsFreelancerModal from "../ConfirmTermsFreelancerModal";

@@ -1,5 +1,4 @@
 "use client";
-// import { auth } from "@/auth";
 import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
 import { SocialLoginButton } from "@/components/ui/SocialLoginButton";
@@ -7,7 +6,7 @@ import { AuthenticateIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
+import { signIn } from "@/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";

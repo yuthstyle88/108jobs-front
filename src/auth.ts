@@ -1,4 +1,4 @@
-import { NextAuthOptions } from "next-auth";
+import NextAuth  from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import AppleProvider from "next-auth/providers/apple";
@@ -24,7 +24,7 @@ const parseJwt = (token: string): JWTPayload | null => {
   }
 };
 
-export const authOptions: NextAuthOptions = {
+export const {handlers, auth, signIn} = NextAuth({
   session: {
     strategy: "jwt",
     maxAge: 60 * 60 * 24,
@@ -52,7 +52,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.APPLE_SECRET || "",
     }),
     CredentialsProvider({
-      id: "",
+      id: "credentials",
       type: "credentials",
       name: "Credentials",
       credentials: {
@@ -175,4 +175,4 @@ export const authOptions: NextAuthOptions = {
       console.debug(code, ...message);
     },
   },
-};
+});
