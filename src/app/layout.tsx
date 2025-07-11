@@ -1,4 +1,5 @@
-import { auth } from "@/auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/auth";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Kanit } from "next/font/google";
 import { Toaster } from "sonner";
@@ -21,13 +22,19 @@ export async function generateMetadata() {
   return generateLocalizedMetadata("home", { lang: "th" });
 }
 
+export async function getSessionServer() {
+  const session = await getServerSession(authOptions);
+
+  console.log("Session:", session);
+  return session;
+}
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
 
-  const session = await auth();
+  const session = await getSessionServer();
 
   return (
     <html lang="th" suppressHydrationWarning>

@@ -4,8 +4,7 @@ import { getCurrentLanguage } from "@/actions/getCurrentLanguage";
 import { isSupportedLang } from "@/lib/metadata";
 import type { Metadata } from "next";
 import { API_ROUTES } from "@/api/endpoints";
-// import { auth } from "@/auth";
-import {getCachedSession} from "@/lib/authUtils";
+import {axiosPrivate} from "@/lib/axios";
 
 export async function generateMetadata({
   params,
@@ -15,7 +14,6 @@ export async function generateMetadata({
   const lang = await getCurrentLanguage();
   const { slug } = await params;
   const locale = isSupportedLang(lang) ? lang : "th";
-  const session = await getCachedSession();
 
   const defaultDescriptions: Record<string, string> = {
     th: "จ้างฟรีแลนซ์มืออาชีพสำหรับโปรเจกต์ของคุณที่ Fastjob ธุรกิจและสตาร์ทอัปชั้นนำไว้วางใจเรา",
@@ -24,19 +22,13 @@ export async function generateMetadata({
   };
 
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ROUTES.job.get_category_by_slug}/${slug}`,
-      {
-        headers: {
-          Authorization: `Bearer ${session?.accessToken}`,
-        },
-        next: { revalidate: 3600 },
-      }
+    const res = await  axiosPrivate.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ROUTES.job.get_category_by_slug}/${slug}`
     );
 
-    if (!res.ok) throw new Error("Failed to fetch category");
+    if (!res.status) throw new Error("Failed to fetch category");
 
-    const categoryList = await res.json();
+    const categoryList = await res.data.json();
     const raw = categoryList?.[0];
 
     const title = raw?.title || "Fastjob";

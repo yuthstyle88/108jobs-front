@@ -1,18 +1,14 @@
 import { API_ROUTES } from "@/api/endpoints";
-// import { auth } from "@/auth";
 import { axiosPrivate } from "@/lib/axios";
 import {
   ERROR_CONSTANTS,
   ERROR_VERIFY_EMAIL,
 } from "@/constants/error";
 import { NextResponse } from "next/server";
-import {getCachedSession} from "@/lib/authUtils";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-
-    await getCachedSession();
 
     const response = await axiosPrivate.post(API_ROUTES.auth.verify_change_email, {
       code: body.code,

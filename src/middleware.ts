@@ -1,7 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-// import { auth } from "./auth";
 import { middleware as langMiddleware } from "./middleware-lang";
-import {getCachedSession} from "@/lib/authUtils";
 
 const VALID_LANGS = ["vi", "en", "th"];
 
@@ -35,15 +33,13 @@ const publicRoutes = [
 
 const protectedRoutes = Object.values(roleBasedRoutes).flat();
 
-function getRolesAllowedForPath(
-  pathname: string
-): ("employer" | "freelancer")[] {
+function getRolesAllowedForPath(pathname: string): ("employer" | "freelancer")[] {
   return (["employer", "freelancer"] as const).filter((role) =>
     roleBasedRoutes[role].some((route) => pathname.startsWith(route))
   );
 }
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname, origin } = request.nextUrl;
 
   const langRedirect = langMiddleware(request);
@@ -51,18 +47,21 @@ export async function middleware(request: NextRequest) {
 
   const pathSegments = pathname.split("/");
   const firstSegment = pathSegments[1];
-  const langPrefix = VALID_LANGS.includes(firstSegment)
-    ? `/${firstSegment}`
-    : "";
+  const langPrefix = VALID_LANGS.includes(firstSegment) ? `/${firstSegment}` : "";
   const cleanPathname = pathname.replace(langPrefix, "") || "/";
 
   if (publicRoutes.includes(cleanPathname)) {
     return NextResponse.next();
   }
 
+  const sessionToken =
+    request.cookies.get("next-auth.session-token")?.value ||
+    request.cookies.get("__Secure-next-auth.session-token")?.value;
+
+  const isLoggedIn = Boolean(sessionToken);
+
   if (cleanPathname === "/login") {
-    const session = await getCachedSession();
-    if (!session?.user) return NextResponse.next();
+    if (!isLoggedIn) return NextResponse.next();
     return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
   }
 
@@ -70,46 +69,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const session = await getCachedSession();
-  if (!session?.user) {
+  if (!isLoggedIn) {
     const callbackUrl = encodeURIComponent(cleanPathname);
     return NextResponse.redirect(
       new URL(`${langPrefix}/login?redirect=${callbackUrl}`, origin)
     );
   }
 
-  const userRoles = session.user.roles as string[];
+  // 🚨 จุดนี้ไม่สามารถอ่าน role ได้จาก cookie ตรง ๆ เพราะ cookie เป็น JWT เข้ารหัสอยู่
+  // ใน Middleware (Edge) จะไม่มีทาง decode JWT ได้โดยไม่มี Node.js
+  // วิธีที่ดีที่สุดคือ: ให้ตรวจแค่ "มี token ไหม" แล้วไปเช็ค role จริงใน Client หรือ Server (หลังจากโหลดหน้า)
 
-  if (
-    cleanPathname.startsWith("/seller") &&
-    !userRoles.includes("freelancer")
-  ) {
-    return NextResponse.redirect(
-      new URL(`${langPrefix}/start-selling`, origin)
-    );
-  }
-
-  const allowedRoles = getRolesAllowedForPath(cleanPathname);
-
-  if (
-    allowedRoles.length === 1 &&
-    allowedRoles[0] === "employer" &&
-    userRoles.includes("freelancer")
-  ) {
-    return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
-  }
-
-  const isAuthorized = allowedRoles.some((role) => userRoles.includes(role));
-  if (!isAuthorized) {
-    return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
-  }
-  if (
-    pathname.startsWith('/login') ||
-    pathname.startsWith('/job-board') ||
-    pathname.startsWith('/promotion')
-  ) {
-    return NextResponse.next();
-  }
   return NextResponse.next();
 }
 

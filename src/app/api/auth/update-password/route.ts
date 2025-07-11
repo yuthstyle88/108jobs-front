@@ -1,5 +1,4 @@
 import { API_ROUTES } from "@/api/endpoints";
-import { auth } from "@/auth";
 import { axiosPrivate } from "@/lib/axios";
 import { ERROR_CONSTANTS, ERROR_VERIFY_PASSWORD } from "@/constants/error";
 import { NextResponse } from "next/server";
