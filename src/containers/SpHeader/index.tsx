@@ -4,7 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CircleUserRound, Grip, House, Search } from "lucide-react";
-// import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,15 +12,13 @@ import { useState } from "react";
 import LanguageBottomSheet from "../SpBottomTab";
 import SPSearch from "./components/SPSearch";
 import SpUserAvatar from "./components/SpUserProfile";
-import {useSessionContext} from "@/contexts/SessionContext";
 
 type SpHeaderProps = {
   showSearch?: boolean;
 };
 
 const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
-  // const { data: session } = useSession();
-  const { session } = useSessionContext();
+  const { data: session } = useSession();
   const pathname = usePathname();
 
   const [showLang, setShowLang] = useState(false);

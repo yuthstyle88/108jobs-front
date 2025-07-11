@@ -5,18 +5,17 @@ import { ROLE } from "@/constants/role";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import LanguageDropdown from "../LanguageDropDown";
-import Loading from "../Loading";
+// import Loading from "../Loading";
 import EmployerSection from "./components/EmployerSection";
 import FreelancerSession from "./components/FreelancerSection";
 import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
 import { useScrollHandler } from "./hooks/useScrollHandler";
 import Error from "@/app/error";
-import {useSessionContext} from "@/contexts/SessionContext";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -33,8 +32,7 @@ interface BgProps {
 }
 
 const Header = ({ type, forceShowSearch = false }: BgProps) => {
-  // const { data: session } = useSession();
-  const { session } = useSessionContext();
+  const { data: session } = useSession();
   const roles = session?.user.roles;
   const isEmployer = Array.isArray(roles)
     ? roles.includes(ROLE.EMPLOYER)

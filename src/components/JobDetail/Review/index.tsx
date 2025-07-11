@@ -6,9 +6,8 @@ import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
 import { ReviewResponse } from "@/types/review";
 import { Coins, Handshake, MessageCircleReply, ShoppingBag } from "lucide-react";
-// import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import {useSessionContext} from "@/contexts/SessionContext";
 
 const StarIcon = ({ filled }: { filled: boolean }) => (
   <svg
@@ -26,8 +25,7 @@ type Props = {
 };
 
 const ReviewCard = ({ language, data }: Props) => {
-  // const { data: session } = useSession();
-  const { session } = useSessionContext();
+  const { data: session } = useSession();
   const {
     data: reviewData,
   } = usePrivateFetchParams<ReviewResponse>(

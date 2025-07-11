@@ -46,11 +46,10 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import useHandleFetchError from "@/hooks/useHandleFetchError";
 import { ServiceCatalogData } from "@/types/catalog";
 import { catalogIcons } from "@/types/catalogIcon";
-// import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import Error from "../error";
-import {useSessionContext} from "@/contexts/SessionContext";
 
 const interestImages = [
   LandingImage.interest_1,
@@ -82,8 +81,7 @@ const CustomNavigation = () => {
 };
 
 export default function Home() {
-  // const { data: session } = useSession();
-  const { session } = useSessionContext();
+  const { data: session } = useSession();
   const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
   const [expanded, setExpanded] = useState(false);
   const [isOpenLocationSelection, setIsOpenLocationSelection] = useState(false);

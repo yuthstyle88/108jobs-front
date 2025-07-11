@@ -1,13 +1,11 @@
 "use client";
 
 import { WebSocketProvider } from "@/contexts/RealtimeChatContext";
-// import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import ChatSection from "../../_components/ChatSection";
-import {useSessionContext} from "@/contexts/SessionContext";
 
 export default function MessageClient({ senderId }: { senderId: string }) {
-  // const { data: session, status } = useSession();
-  const { session } = useSessionContext();
+  const { data: session, status } = useSession();
   if (status !== "authenticated" || !session?.accessToken) return null;
 
   return (

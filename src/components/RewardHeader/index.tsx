@@ -12,7 +12,7 @@ import { useToggle } from "@/hooks/useToggle";
 import { ProfileData } from "@/types/userData";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -21,11 +21,9 @@ import ProfileSection from "../Header/components/ProfileSection";
 import LanguageDropdown from "../LanguageDropDown";
 import Loading from "../Loading";
 import Error from "@/app/error";
-import {useSessionContext} from "@/contexts/SessionContext";
 
 const RewardHeader = () => {
-  // const { data: session } = useSession();
-  const { session } = useSessionContext();
+  const { data: session } = useSession();
   const { data: user } = usePrivateFetch<ProfileData>(
     API_ROUTES.profile.get_profile
   );
