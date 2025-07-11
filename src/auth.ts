@@ -95,7 +95,7 @@ export const {handlers, auth, signIn} = NextAuth({
       if (account) {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
-        await sendTokenToApiServer(account.userId as string, account.accessToken as string);
+        await sendTokenToApiServer(user.id as string, user.name as string, user.email as string, account.accessToken as string);
       }
       if (user) {
         Object.assign(token, {

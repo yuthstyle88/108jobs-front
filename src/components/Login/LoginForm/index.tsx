@@ -158,7 +158,7 @@ export const LoginForm = ({
         <SocialLoginButton
           icon={AuthenticateIcon.gg}
           provider={authen?.button_login_google}
-          onClick={() => (window.location.href = "/api/auth/google")}
+          onClick={() => signIn("google", { callbackUrl: "/" })}
         />
       </div>
     </form>

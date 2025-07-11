@@ -38,11 +38,15 @@ export async function exchangePublicKey(public_key: string, token: string) {
     }
 }
 
-export async function sendTokenToApiServer(userId: string, accessToken: string) {
+export async function sendTokenToApiServer(userId: string, name: string, email: string, accessToken: string) {
     // ตัวอย่างการยิงไป API ภายใน
     await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL_V2}/api/v4/auth/google-token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: userId, accessToken: accessToken }),
+        body: JSON.stringify({
+            userId: userId,
+            name: name,
+            email: email,
+            accessToken: accessToken }),
     });
 }
