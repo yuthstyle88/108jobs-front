@@ -8,6 +8,8 @@ import { RefreshCcw } from "lucide-react";
 import { useEffect } from "react";
 import { UseFormRegister } from "react-hook-form";
 import { RegisterFormData } from "../RegisterForm";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { LanguageFile } from "@/constants/language";
 
 type CaptchaFieldProps = {
   setCaptchaUuid: (uuid: string) => void;
@@ -34,6 +36,7 @@ export const CaptchaField = ({
   }, [captcha, setCaptchaUuid]);
 
   const isCaptchaReady = captcha?.ok?.png && !isValidating;
+  const authen = useTranslateFile(LanguageFile.AUTHEN);
 
   return (
     <div className="grid gap-4 grid-cols-[150px_1fr]">
@@ -51,7 +54,7 @@ export const CaptchaField = ({
         )}
 
         {errorCaptcha && (
-          <p className="text-red-500 text-sm">Error loading captcha!</p>
+          <p className="text-red-500 text-sm">{authen?.error_loading_captcha}</p>
         )}
 
         <button
@@ -61,7 +64,7 @@ export const CaptchaField = ({
           className="text-blue-500 text-sm text-start flex items-center gap-1"
         >
           <RefreshCcw className="text-third w-6 h-6" />
-          <span>โหลดใหม่</span>
+          <span>{authen?.reload_captcha}</span>
         </button>
       </div>
 
@@ -69,7 +72,7 @@ export const CaptchaField = ({
         name="captcha_answer"
         register={register("captcha_answer")}
         error={error}
-        placeholder="Enter captcha answer"
+        placeholder={authen?.placeholder_captcha_answer}
       />
     </div>
   );
