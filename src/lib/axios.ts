@@ -1,8 +1,12 @@
-import axios, {AxiosError, AxiosHeaders, InternalAxiosRequestConfig} from "axios";
+import axios, {AxiosError, InternalAxiosRequestConfig} from "axios";
 // import { getSession, signOut } from "next-auth/react";
 import {jwtDecode, JwtPayload} from "jwt-decode";
 
 let cachedAccessToken: string | null = null;
+
+export const setCachedToken = (token: string | null) => {
+  cachedAccessToken = token;
+};
 
 const isTokenExpired = (token?: string | null) => {
   if (!token) return true;

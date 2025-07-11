@@ -1,7 +1,4 @@
 const crypto = globalThis.crypto;
-import { AsnParser } from "@peculiar/asn1-schema";
-import { SubjectPublicKeyInfo } from "@peculiar/asn1-x509";
-
 
 /**
  * Generate an Elliptic-Curve key pair for either ECDH (default) or ECDSA.

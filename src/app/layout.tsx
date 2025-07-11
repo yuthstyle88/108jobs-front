@@ -9,6 +9,7 @@ import { Providers } from "./providers";
 import { generateLocalizedMetadata } from "@/lib/metadata";
 import { SWRConfig } from "swr";
 import swrConfig from "@/config/swrConfig";
+import AppWrapper from "@/components/AppWrapper";  // ✅ เพิ่มตรงนี้
 
 const kanit = Kanit({
   subsets: ["latin", "vietnamese", "thai"],
@@ -22,32 +23,33 @@ export async function generateMetadata() {
   return generateLocalizedMetadata("home", { lang: "th" });
 }
 
-
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
+
   const session = await auth();
+
   return (
     <html lang="th" suppressHydrationWarning>
-      <head>
-        <FontAwesomeConfig />
-      </head>
-      <body
-        suppressHydrationWarning
-        className={`${kanit.className} antialiased bg-white`}
-      >
-        <Providers session={session}>
-          <SWRConfig value={swrConfig}>
+    <head>
+      <FontAwesomeConfig />
+    </head>
+    <body suppressHydrationWarning className={`${kanit.className} antialiased bg-white`}>
+    <Providers session={session}>
+      <AppWrapper>
+        <SWRConfig value={swrConfig}>
           <Toaster richColors closeButton position="top-right" />
           <SessionUserProvider initialSession={session}>
-            <LanguageProvider initialLang="th">{children}</LanguageProvider>
+            <LanguageProvider initialLang="th">
+              {children}
+            </LanguageProvider>
           </SessionUserProvider>
-          </SWRConfig>
-        </Providers>
-      </body>
+        </SWRConfig>
+      </AppWrapper>
+    </Providers>
+    </body>
     </html>
   );
 }

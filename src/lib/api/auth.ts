@@ -1,5 +1,4 @@
 import {API_ROUTES} from "@/api/endpoints";
-import {axiosPrivate} from "@/lib/axios";
 
 interface ExchangeKeyResponse {
     public_key: string;

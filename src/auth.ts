@@ -1,4 +1,4 @@
-import NextAuth, {DefaultSession, User} from "next-auth";
+import NextAuth, {User} from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import {jwtDecode} from "jwt-decode";
 import {exchangePublicKey} from "@/lib/api/auth";
