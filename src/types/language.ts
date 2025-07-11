@@ -39,7 +39,8 @@ export type LanguageDataType = Partial<
     JobCardLanguage &
     JobCategoryLanguage &
     JobDetailLanguage &
-    TermAndConditionLanguage
+    TermAndConditionLanguage &
+    CategoryFooterLanguage
 >;
 export interface GlobalLanguage {
   label_employment_button: string;
@@ -1621,3 +1622,48 @@ export type TermAndConditionLanguage = {
   marketing_opt_in: string;
   freelancer_signup: string;
 };
+
+export type CategoryFooterLanguage = {
+  seo_title: string;
+  seo_description_1: string;
+  seo_links_backlink: string;
+  seo_links_wordpress: string;
+  seo_links_youtube: string;
+  seo_links_facebook: string;
+  seo_links_audit: string;
+  seo_links_monthly: string;
+
+  seo_description_2_part1: string;
+  seo_description_2_strong_1: string;
+  seo_description_2_middle: string;
+  seo_description_2_strong_2: string;
+  seo_description_2_part2: string;
+
+  seo_description_3_part1: string;
+  seo_description_3_strong_1: string;
+  seo_description_3_middle1: string;
+  seo_description_3_strong_2: string;
+  seo_description_3_part2: string;
+
+  seo_principles_title: string;
+  seo_principles_0: string;
+  seo_principles_1: string;
+  seo_principles_2: string;
+  seo_principles_3: string;
+  seo_principles_4: string;
+
+  seo_conclusion_part1: string;
+  seo_conclusion_strong_1: string;
+  seo_conclusion_middle: string;
+  seo_conclusion_strong_2: string;
+  seo_conclusion_part2: string;
+
+  how_to_hire_title: string;
+  how_to_hire_steps_0: string;
+  how_to_hire_steps_1: string;
+  how_to_hire_steps_2: string;
+  how_to_hire_steps_3: string;
+};
+
+
+

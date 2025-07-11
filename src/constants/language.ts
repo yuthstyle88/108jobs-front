@@ -43,7 +43,7 @@ export enum LanguageFile {
   JOB_CATEGORY = "job_category",
   JOB_DETAIL = "job_detail",
   TERMS_AND_CONDITIONS = "terms",
-  
+  CATEGORY_FOOTER = "category_footer"
 }
 
 export const LANGUAGES = {
