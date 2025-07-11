@@ -35,6 +35,14 @@ interface BgProps {
 const Header = ({ type, forceShowSearch = false }: BgProps) => {
   // const { data: session } = useSession();
   const { session } = useSessionContext();
+  const roles = session?.user.roles;
+  const isEmployer = Array.isArray(roles)
+    ? roles.includes(ROLE.EMPLOYER)
+    : roles === ROLE.EMPLOYER;
+
+  const isFreelancer = Array.isArray(roles)
+    ? roles.includes(ROLE.FREELANCER)
+    : roles === ROLE.FREELANCER;
   const { scrollY, showSearch } = useScrollHandler(forceShowSearch);
 
   const {
@@ -45,7 +53,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
 
   const { bg } = TYPES[type];
 
-  if (isLoading) return <Loading />;
+  // if (isLoading) return <Loading />;
   if (error) return <Error/>;
 
   return (
@@ -95,15 +103,13 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
               {globalLanguageData?.label_apply_to_be_freelancer_button}
             </Link>
           )}
-          {session?.user.roles?.includes(ROLE.EMPLOYER) &&
-            session?.user.roles?.includes(ROLE.FREELANCER) && (
+          {isFreelancer && (
               <FreelancerSession
                 globalLanguageData={globalLanguageData}
                 session={session}
               />
             )}
-          {session?.user.roles?.includes(ROLE.EMPLOYER) &&
-            !session?.user.roles?.includes(ROLE.FREELANCER) && (
+          {isEmployer && (
               <EmployerSection
                 globalLanguageData={globalLanguageData}
                 session={session}

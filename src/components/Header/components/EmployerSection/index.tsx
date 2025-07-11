@@ -20,11 +20,12 @@ import ProfileSection from "../ProfileSection";
 
 interface EmployerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
-  session?: Session;
+  session?: Session | null;
 }
 
 const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
   const { isOpen, toggle, close } = useToggle();
+
   const { data: user, isLoading } = usePrivateFetch<ProfileData>(
     API_ROUTES.profile.get_profile
   );

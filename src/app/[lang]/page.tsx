@@ -125,7 +125,7 @@ export default function Home() {
   const activeCatalog = serviceCatalogs[activeCatalogIndex];
 
   const errorMsg = useHandleFetchError(error || homeError);
-  if (isLoading || homeLoading || isCatalogLoading) return <Loading />;
+  // if (isLoading || homeLoading || isCatalogLoading) return <Loading />;
 
   if (errorMsg) return <Error message={errorMsg} />;
 

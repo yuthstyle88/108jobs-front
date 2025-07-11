@@ -5,7 +5,6 @@ import NotificationDropdown from "@/components/NotificationDropdown";
 import AvatarSkeleton from "@/components/ui/AvatarSkeleton";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
-import { ROLE } from "@/constants/role";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useToggle } from "@/hooks/useToggle";
 import { GlobalLanguage } from "@/types/language";
@@ -22,7 +21,7 @@ import ProfileFreelancer from "../ProfileFreelancer";
 
 interface FreelancerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
-  session?: Session;
+  session?: Session | null;
 }
 
 const FreelancerSession = ({
@@ -50,14 +49,12 @@ const FreelancerSession = ({
           <FreelanceImproveMenu />
         </div>
       </div>
-      {session?.user.roles?.includes(ROLE.FREELANCER) && (
         <Link prefetch={false}
           href="/seller"
           className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
         >
           {globalLanguageData?.label_seller_center}
         </Link>
-      )}
       <div className="group hidden md:block">
         <div className="relative">
           <div className="border-r-[1px] border-[#4f8ce8] pr-8 text-[14px] text-white px-3 py-2 font-medium flex flex-row items-center gap-2 cursor-pointer">
