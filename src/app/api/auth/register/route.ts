@@ -17,7 +17,6 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ success: true });
-
   } catch (error: any) {
     if (error.response) {
       const data = error.response.data;
@@ -25,30 +24,21 @@ export async function POST(request: Request) {
 
       switch (data.error) {
         case "invalid_name":
-          fieldErrors.username = ERROR_CONSTANTS.USERNAME_INVALID;
+          fieldErrors.username = "invalid_name";
           break;
         case "username_already_exists":
-          fieldErrors.username = ERROR_CONSTANTS.USERNAME_EXIST;
+          fieldErrors.username = "username_already_exists";
           break;
         case "email_already_exists":
-          fieldErrors.email = ERROR_CONSTANTS.EMAIL_EXIST;
+          fieldErrors.email = "email_already_exists";
           break;
         case "captcha_incorrect":
-          fieldErrors.captcha_answer = ERROR_CONSTANTS.CAPTCHA_WRONG;
+          fieldErrors.captcha_answer = "captcha_incorrect";
           break;
       }
 
-      const errorMessage =
-        fieldErrors.email ||
-        fieldErrors.username ||
-        fieldErrors.captcha_answer ||
-        ERROR_CONSTANTS.LIMIT_SEND_EMAIL;
-
       return NextResponse.json(
-        {
-          error: errorMessage,
-          fieldErrors,
-        },
+        { fieldErrors, error: data.error },
         { status: 400 }
       );
     }

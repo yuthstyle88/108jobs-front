@@ -4,23 +4,24 @@ import CaptChaSkeleton from "@/components/ui/CaptChaSkeleton";
 import { CustomInput } from "@/components/ui/InputField";
 import { usePublicFetchV2 } from "@/hooks/api-hooks";
 import { CaptchaResponse } from "@/types/capcha";
+import { RegisterFormData } from "@/types/formTypes/register";
+import { LoginLanguage } from "@/types/language";
 import { RefreshCcw } from "lucide-react";
 import { useEffect } from "react";
 import { UseFormRegister } from "react-hook-form";
-import { RegisterFormData } from "../RegisterForm";
-import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
-import { LanguageFile } from "@/constants/language";
 
 type CaptchaFieldProps = {
   setCaptchaUuid: (uuid: string) => void;
   register: UseFormRegister<RegisterFormData>;
   error?: string;
+  language: Partial<LoginLanguage> | null | undefined;
 };
 
 export const CaptchaField = ({
   setCaptchaUuid,
   register,
   error,
+  language,
 }: CaptchaFieldProps) => {
   const {
     data: captcha,
@@ -36,7 +37,6 @@ export const CaptchaField = ({
   }, [captcha, setCaptchaUuid]);
 
   const isCaptchaReady = captcha?.ok?.png && !isValidating;
-  const authen = useTranslateFile(LanguageFile.AUTHEN);
 
   return (
     <div className="grid gap-4 grid-cols-[150px_1fr]">
@@ -54,7 +54,9 @@ export const CaptchaField = ({
         )}
 
         {errorCaptcha && (
-          <p className="text-red-500 text-sm">{authen?.error_loading_captcha}</p>
+          <p className="text-red-500 text-sm">
+            {language?.error_loading_captcha}
+          </p>
         )}
 
         <button
@@ -64,7 +66,7 @@ export const CaptchaField = ({
           className="text-blue-500 text-sm text-start flex items-center gap-1"
         >
           <RefreshCcw className="text-third w-6 h-6" />
-          <span>{authen?.reload_captcha}</span>
+          <span>{language?.reload_captcha}</span>
         </button>
       </div>
 
@@ -72,7 +74,7 @@ export const CaptchaField = ({
         name="captcha_answer"
         register={register("captcha_answer")}
         error={error}
-        placeholder={authen?.placeholder_captcha_answer}
+        placeholder={language?.placeholder_captcha_answer}
       />
     </div>
   );
