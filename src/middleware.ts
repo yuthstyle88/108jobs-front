@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { middleware as langMiddleware } from "./middleware-lang";
+import {auth} from "@/auth";
 
 const VALID_LANGS = ["vi", "en", "th"];
 
@@ -39,7 +40,7 @@ function getRolesAllowedForPath(pathname: string): ("employer" | "freelancer")[]
   );
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname, origin } = request.nextUrl;
 
   const langRedirect = langMiddleware(request);
@@ -75,10 +76,32 @@ export function middleware(request: NextRequest) {
       new URL(`${langPrefix}/login?redirect=${callbackUrl}`, origin)
     );
   }
+  const session = await auth();
+  const userRoles = (session?.user?.roles ?? []) as string[];
 
-  // 🚨 จุดนี้ไม่สามารถอ่าน role ได้จาก cookie ตรง ๆ เพราะ cookie เป็น JWT เข้ารหัสอยู่
-  // ใน Middleware (Edge) จะไม่มีทาง decode JWT ได้โดยไม่มี Node.js
-  // วิธีที่ดีที่สุดคือ: ให้ตรวจแค่ "มี token ไหม" แล้วไปเช็ค role จริงใน Client หรือ Server (หลังจากโหลดหน้า)
+  if (
+    cleanPathname.startsWith("/seller") &&
+    !userRoles.includes("freelancer")
+  ) {
+    return NextResponse.redirect(
+      new URL(`${langPrefix}/start-selling`, origin)
+    );
+  }
+
+  const allowedRoles = getRolesAllowedForPath(cleanPathname);
+
+  if (
+    allowedRoles.length === 1 &&
+    allowedRoles[0] === "employer" &&
+    userRoles.includes("freelancer")
+  ) {
+    return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
+  }
+
+  const isAuthorized = allowedRoles.some((role) => userRoles.includes(role));
+  if (!isAuthorized) {
+    return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
+  }
 
   return NextResponse.next();
 }

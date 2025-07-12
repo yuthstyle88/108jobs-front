@@ -6,6 +6,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { jwtDecode } from "jwt-decode";
 import { generateEcKeyPair, exportPublicKey, importEcPublicKeyHex, arrayBufferToHex } from "@/lib/web-crypto";
 import { exchangePublicKey, sendTokenToApiServer } from "@/lib/api/auth";
+import {axiosPrivate, axiosPublicV2} from "@/lib/axios";
+
 
 interface JWTPayload {
   sub: string;
@@ -63,17 +65,13 @@ export const {handlers, auth, signIn} = NextAuth({
         if (!credentials) return null;
 
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL_V2}/account/auth/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
+          const res = await axiosPublicV2.post(`/account/auth/login`,
+            {
               username_or_email: credentials.username_or_email,
               password: credentials.password,
-            }),
-          });
-
-          const data = await res.json();
-          if (res.ok && data.jwt) {
+            });
+          const data = res.data;
+          if (res.status === 200 && data.jwt) {
             const decoded = parseJwt(data.jwt);
             return {
               id: decoded?.sub ?? "",
@@ -152,13 +150,8 @@ export const {handlers, auth, signIn} = NextAuth({
       const token = "token" in message ? message.token : undefined;
       if (!token) return;
       try {
-        await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/profile/logout`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await axiosPrivate.post(`/profile/logout`,
+          {});
       } catch (err) {
         console.error("Sign-out error:", err);
       }

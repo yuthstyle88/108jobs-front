@@ -1,4 +1,5 @@
 import {API_ROUTES} from "@/api/endpoints";
+import {axiosPublicV2} from "@/lib/axios";
 
 interface ExchangeKeyResponse {
     public_key: string;
@@ -39,14 +40,11 @@ export async function exchangePublicKey(public_key: string, token: string) {
 }
 
 export async function sendTokenToApiServer(userId: string, name: string, email: string, accessToken: string) {
-    // ตัวอย่างการยิงไป API ภายใน
-    await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL_V2}/api/v4/auth/google-token`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            userId: userId,
-            name: name,
-            email: email,
-            accessToken: accessToken }),
-    });
+    await axiosPublicV2.post(`/api/v4/auth/authorize`,
+      {
+          userId: userId,
+          name: name,
+          email: email,
+          accessToken: accessToken
+      });
 }
