@@ -223,6 +223,7 @@ export interface LoginLanguage {
   email_phone_placeholder: string;
   label_username: string;
   button_login_google: string;
+  button_register_google: string;
   enter_code_prompt: string;
   label_username_or_email: string;
   password_placeholder: string;

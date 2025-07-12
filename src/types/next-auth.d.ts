@@ -6,12 +6,14 @@ declare module "next-auth" {
     accessToken?: string;
     shared_key?: string;
     user: User & DefaultSession["user"];
+    isNewUser?: boolean;
   }
 
   interface User extends DefaultUser {
     token: string;
     roles?: string[];
     session?: string;
+    isNewUser?: boolean;
   }
 
   interface EventCallbacks {
@@ -22,10 +24,10 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     accessToken?: string;
-    refreshToken?: string;
-    email?: string;
+    email: string;
     roles?: string[];
     shared_key?: string;
     session?: string;
+    isNewUser?: boolean;
   }
 }

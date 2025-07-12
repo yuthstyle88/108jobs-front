@@ -13,6 +13,7 @@ type InputProps = {
   showPassword?: boolean;
   toggleShowPassword?: () => void;
   placeholder?: string;
+  readonly?: boolean,
 };
 
 export const CustomInput = ({
@@ -24,6 +25,7 @@ export const CustomInput = ({
   showPassword,
   toggleShowPassword,
   placeholder,
+  readonly = false,
 }: InputProps) => (
   <div className="mb-4">
     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -38,6 +40,7 @@ export const CustomInput = ({
         }`}
         placeholder={placeholder}
         name={name}
+        readOnly={readonly}
       />
       {type === "password" && (
         <button

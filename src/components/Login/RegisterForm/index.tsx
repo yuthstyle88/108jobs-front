@@ -15,6 +15,10 @@ import { usePublicFetchV2 } from "@/hooks/api-hooks";
 import { CaptchaResponse } from "@/types/capcha";
 import { API_ROUTES } from "@/api/endpoints";
 import { RegisterFormData } from "@/types/formTypes/register";
+import {AuthenticateIcon} from "@/constants/icons";
+import {SocialLoginButton} from "@/components/ui/SocialLoginButton";
+import {router} from "next/client";
+import {signIn} from "next-auth/react";
 
 type RegisterFormProps = {
   switchToVerifyEmail: () => void;
@@ -281,6 +285,19 @@ export const RegisterForm = ({
         >
           {isSubmitting ? <LoadingCircle /> : authen?.link_create_account}
         </button>
+      </div>
+      <div className="flex flex-col gap-3 mt-6">
+        <div className="text-center text-sm text-gray-500">หรือสมัครด้วยบัญชีโซเชียล</div>
+
+        <SocialLoginButton
+          icon={AuthenticateIcon.gg}
+          provider={authen?.button_register_google}
+          onClick={() =>
+            signIn("google", {
+              callbackUrl: `/`,
+            })
+          }
+        />
       </div>
     </form>
   );

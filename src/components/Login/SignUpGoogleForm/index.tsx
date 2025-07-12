@@ -11,6 +11,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import {useSession} from "next-auth/react";
+import {axiosPublicV2} from "@/lib/axios";
 
 type RegisterFormProps = {
   switchToVerifyEmail: () => void;
@@ -30,6 +32,7 @@ export const SignUpGoogleForm = ({
   });
 
   type RegisterFormDataType = z.infer<typeof registerSchema>;
+  const { data: session } = useSession();
 
   const {
     register,
@@ -40,38 +43,37 @@ export const SignUpGoogleForm = ({
     watch,
   } = useForm<SignUpGoogleFormData>({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      email: "",      // ให้ว่างไว้ก่อน เดี๋ยวเติมใน useEffect
+      name: "",
+      termsAccepted: false,
+      accountType: "employer",
+    },
     mode: "onChange",
   });
 
   const [apiError, setApiError] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedData = sessionStorage.getItem("registerData");
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
-      if (parsedData.email) setValue("email", parsedData.email);
-      if (parsedData.termsAccepted) setValue("termsAccepted", true);
+    if (session?.user) {
+      setValue("email", session.user.email ?? "");
+      setValue("name", session.user.name ?? "");
     }
-  }, [setValue]);
+  }, [session, setValue]);
+
 
   const onSubmit = async (data: RegisterFormDataType) => {
     try {
       setApiError(null);
-      sessionStorage.setItem("registerData", JSON.stringify(data));
+      sessionStorage.setItem("registerData", JSON.stringify({ ...data }));
 
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await axiosPublicV2.post("/oauth/register_with_oauth", {
           username: data.name,
           email: data.email,
-        }),
       });
 
-      const result = await response.json();
-      if (!response.ok) {
+      const result = await response.data;
+      if (result.statusCode == 200){
         if (result.fieldErrors?.email) {
           setError("email", {
             type: "manual",
@@ -130,6 +132,7 @@ export const SignUpGoogleForm = ({
           error={errors.email?.message}
           placeholder={authen?.placeholder_email}
           type="email"
+          readonly
         />
 
         <div className="space-y-2">

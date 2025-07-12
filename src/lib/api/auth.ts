@@ -42,3 +42,14 @@ export async function sendTokenToApiServer(oauthProvider: string, providerAccoun
       email: email,
     });
 }
+export async function sendAplicationFormToApiServer(oauthProvider: string, providerAccountId: string, name: string, email: string) {
+  // ตัวอย่างการยิงไป API ภายใน
+  return await axiosPublicV2.post(`/oauth/register_with_oauth`,
+    {
+      oauthProvider: oauthProvider,
+      providerAccountId: providerAccountId,
+      name: name,
+      email: email,
+      roles: "freelancer"
+    });
+}

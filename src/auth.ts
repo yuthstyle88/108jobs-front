@@ -3,9 +3,9 @@ import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import AppleProvider from "next-auth/providers/apple";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { jwtDecode } from "jwt-decode";
-import { generateEcKeyPair, exportPublicKey, importEcPublicKeyHex, arrayBufferToHex } from "@/lib/web-crypto";
-import { exchangePublicKey, sendTokenToApiServer } from "@/lib/api/auth";
+import {jwtDecode} from "jwt-decode";
+import {generateEcKeyPair, exportPublicKey, importEcPublicKeyHex, arrayBufferToHex} from "@/lib/web-crypto";
+import {exchangePublicKey, sendAplicationFormToApiServer, sendTokenToApiServer} from "@/lib/api/auth";
 import {axiosPrivate, axiosPublicV2} from "@/lib/axios";
 
 
@@ -36,6 +36,7 @@ export const {handlers, auth, signIn} = NextAuth({
   pages: {
     signIn: "/login",
     error: "/error",
+    newUser: '/login?view=signUpGoogle',
   },
   providers: [
     GoogleProvider({
@@ -63,10 +64,10 @@ export const {handlers, auth, signIn} = NextAuth({
       type: "credentials",
       name: "Credentials",
       credentials: {
-        username_or_email: { label: "Email / Username", type: "text" },
-        password: { label: "Password", type: "password" },
+        username_or_email: {label: "Email / Username", type: "text"},
+        password: {label: "Password", type: "password"},
       },
-      async authorize(credentials, req): Promise<User | null> {
+      async authorize(credentials): Promise<User | null> {
         if (!credentials) return null;
 
         try {
@@ -86,7 +87,8 @@ export const {handlers, auth, signIn} = NextAuth({
             } as User;
           }
         } catch (err) {
-          console.error("Login failed:", err);
+          console.error("Login failed:",
+            err);
         }
 
         return null;
@@ -94,32 +96,29 @@ export const {handlers, auth, signIn} = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
-      if (account) {
-        token.accessToken = account.access_token;
-        token.refreshToken = account.refresh_token;
-        await sendTokenToApiServer(account.provider, account.providerAccountId as string, user.name as string, user.email as string);
-      }
-      if (user) {
-        Object.assign(token, {
-          accessToken: (user as any).token,
-          roles: user.roles,
-          email: user.email ?? "",
-          session: user.session,
-        });
-      }
-      if (!token.shared_key) {
+    async jwt({token, user, account, trigger}) {
+      console.log("▶️ JWT callback:", { trigger, hasAccount: !!account, hasUser: !!user });
+
+      if (account && user) {
         try {
-          const { publicKey, privateKey } = await generateEcKeyPair();
-          const pub = await exportPublicKey(publicKey);
-          const public_key = await exchangePublicKey(pub, token.accessToken as string);
-          const serverPubKey = await importEcPublicKeyHex(public_key);
-          const shared_key = await crypto.subtle.deriveBits(
-            { name: "ECDH", public: serverPubKey },
-            privateKey,
-            256
-          );
-          token.shared_key = arrayBufferToHex(shared_key);
+          if (trigger === "signIn" && account && user) {
+            const res = await sendTokenToApiServer(
+              account.provider,
+              account.providerAccountId,
+              user.name ?? "",
+              user.email ?? ""
+            );
+            console.log("🧾 sendTokenToApiServer response:", res.data);
+
+            const decoded = res.data?.jwt ? parseJwt(res.data.jwt) : null;
+
+            token.id = decoded?.sub ?? user.id ?? "";
+            token.accessToken = res.data?.jwt ?? "";
+            token.roles = decoded?.roles ?? [];
+            token.session = decoded?.session;
+            token.isNewUser = res?.data?.registration_created === true;
+            console.log("🟢 JWT token set:", token);
+          }
         } catch (e) {
           console.error("Key exchange error:", e);
         }
@@ -127,30 +126,47 @@ export const {handlers, auth, signIn} = NextAuth({
 
       return token;
     },
-    async session({ session, token }) {
-      session.accessToken = token.accessToken as string;
-      session.shared_key = token.shared_key as string;
-      session.user = {
-        ...session.user,
-        session: token.session,
-        email: token.email as string,
-        roles: (token.roles as string[]) ?? [],
-      };
+    async session({session, token}) {
+      session.isNewUser = token.isNewUser ?? false;
+
+      // ✅ DEBUG log เพื่อดูว่าได้ isNewUser จริงไหม
+      console.log("📦 Session created:", {
+        email: session.user.email,
+        isNewUser: session.isNewUser,
+      });
+
+      session.user.email = token.email ?? "";
+      session.user.roles = token.roles ?? [];
+      session.user.session = token.session;
+      session.accessToken = token.accessToken;
+      session.shared_key = token.shared_key;
+      session.isNewUser = token.isNewUser ?? false;  // ✅ ให้แน่ใจว่ามี
       return session;
     },
-    async redirect({ url, baseUrl }) {
+    async redirect({url, baseUrl}) {
       try {
-        const _url = new URL(url, baseUrl);
+        const _url = new URL(url,
+          baseUrl);
         return _url.origin === baseUrl ? _url.href : baseUrl;
       } catch {
         return baseUrl;
       }
     },
-    async signIn({ account }) {
-      return true;
-    },
+
   },
   events: {
+    async signIn({user, account, profile, isNewUser}) {
+      try {
+        console.log("✅ User signed in:", {
+          provider: account?.provider,
+          isNewUser,
+          userId: user.id,
+          email: user.email,
+        });
+      } catch (err) {
+        console.error("🚨 Error in signIn event:", err);
+      }
+    },
     async signOut(message) {
       const token = "token" in message ? message.token : undefined;
       if (!token) return;
@@ -158,19 +174,23 @@ export const {handlers, auth, signIn} = NextAuth({
         await axiosPrivate.post(`/profile/logout`,
           {});
       } catch (err) {
-        console.error("Sign-out error:", err);
+        console.error("Sign-out error:",
+          err);
       }
     },
   },
   logger: {
     error(code, ...message) {
-      console.error(code, ...message);
+      console.error(code,
+        ...message);
     },
     warn(code, ...message) {
-      console.warn(code, ...message);
+      console.warn(code,
+        ...message);
     },
     debug(code, ...message) {
-      console.debug(code, ...message);
+      console.debug(code,
+        ...message);
     },
   },
 });

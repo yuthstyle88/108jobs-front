@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { middleware as langMiddleware } from "./middleware-lang";
 import {auth} from "@/auth";
+import {getToken} from "@auth/core/jwt";
 
 const VALID_LANGS = ["vi", "en", "th"];
 
@@ -40,10 +41,15 @@ function getRolesAllowedForPath(pathname: string): ("employer" | "freelancer")[]
   );
 }
 
-export async function middleware(request: NextRequest) {
-  const { pathname, origin } = request.nextUrl;
+export async function middleware(req: NextRequest) {
+  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
+  console.log(secret);
+  const token = await getToken({ req, secret: secret });
 
-  const langRedirect = langMiddleware(request);
+
+  const { pathname, origin } = req.nextUrl;
+
+  const langRedirect = langMiddleware(req);
   if (langRedirect) return langRedirect;
 
   const pathSegments = pathname.split("/");
@@ -51,13 +57,20 @@ export async function middleware(request: NextRequest) {
   const langPrefix = VALID_LANGS.includes(firstSegment) ? `/${firstSegment}` : "";
   const cleanPathname = pathname.replace(langPrefix, "") || "/";
 
+  if (token?.isNewUser && !req.nextUrl.pathname.includes(`${langPrefix}/login`)) {
+    const url = req.nextUrl.clone();
+    url.pathname = `${langPrefix}/login`;
+    url.searchParams.set("view", "signUpGoogle");
+    return NextResponse.redirect(url);
+  }
+
   if (publicRoutes.includes(cleanPathname)) {
     return NextResponse.next();
   }
 
   const sessionToken =
-    request.cookies.get("next-auth.session-token")?.value ||
-    request.cookies.get("__Secure-next-auth.session-token")?.value;
+    req.cookies.get("next-auth.session-token")?.value ||
+    req.cookies.get("__Secure-next-auth.session-token")?.value;
 
   const isLoggedIn = Boolean(sessionToken);
 

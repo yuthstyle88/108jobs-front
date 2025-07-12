@@ -6,11 +6,11 @@ import { AuthenticateIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import {signIn} from "next-auth/react";
 
 type LoginFormProps = {
   switchToRegister: () => void;
@@ -157,11 +157,16 @@ export const LoginForm = ({
           provider={authen?.button_login_facebook}
           onClick={() => signIn("facebook")}
         />
-        <SocialLoginButton
+    <SocialLoginButton
           icon={AuthenticateIcon.gg}
           provider={authen?.button_login_google}
-          // onClick={() => signIn("google", { callbackUrl: "/" })}
-          onClick={switchToSignUpGoogle}
+          onClick={async () => {
+            const result = await signIn("google", {
+              callbackUrl: "/",
+              redirect: false,
+            });
+            if (result?.url) window.location.href = result.url;
+          }}
         />
       </div>
     </form>

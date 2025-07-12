@@ -14,8 +14,8 @@ import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { RegisterDataProps } from "@/types/registerData";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import {useRouter, useSearchParams} from "next/navigation";
+import {useEffect, useState} from "react";
 
 type ViewState =
   | "login"
@@ -33,13 +33,49 @@ export default function LoginPage() {
     error,
   } = useGlobalTranslate(LanguageFile.AUTHEN);
 
-  const [currentView, setCurrentView] = useState<ViewState>("login");
+  const params = useSearchParams();
+  const viewParam = params.get("view") as ViewState | null;
 
-  const [dataRegister, setDataRegister] = useState<RegisterDataProps>();
+  // Set currentView from viewParam only once on mount
+  useEffect(() => {
+    if (viewParam) {
+      setCurrentView(viewParam);
+    }
+  }, []);
+
+  const [currentView, setCurrentView] = useState<ViewState>(
+    viewParam ?? "login"
+  );
+
+  const [dataRegister, setDataRegister] = useState<RegisterDataProps | null>(null);
   const [forgotEmail, setForgotEmail] = useState<RegisterDataProps>();
   const [tokenPassword, setTokenPassword] = useState<RegisterDataProps>();
-
+  // Load registerData from sessionStorage if available, only on client
+  console.log("🧭 currentView:", currentView);
   const route = useRouter();
+
+  useEffect(() => {
+    if (currentView !== "verify-email") return;
+    if (typeof window === "undefined") return;
+
+    const stored = window.sessionStorage.getItem("registerData");
+    console.log("📦 Checking sessionStorage for registerData:", stored);
+
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setDataRegister(parsed);
+        console.log("📦 Loaded registerData from sessionStorage into state:", parsed);
+      } catch (err) {
+        console.error("❌ Failed to parse registerData from sessionStorage:", err);
+      }
+    } else {
+      console.warn("⚠️ No registerData found in sessionStorage");
+    }
+  }, [currentView]);
+  console.log("🧭 currentView 11:", currentView);
+
+
 
   if (isLoading) return <Loading />;
   if (error) return <div>Error</div>;
@@ -182,12 +218,16 @@ export default function LoginPage() {
               title={loginLanguageData?.title_verify_email}
               onBack={() => setCurrentView("register")}
             >
+            {dataRegister ? (
               <VerificationEmail
                 onVerifySuccess={() => {
                   route.push("/");
                 }}
                 dataRegister={dataRegister}
               />
+            ) : (
+              <div className="text-red-500">⚠️ Missing registration data. Please sign up again.</div>
+            )}
             </AuthFormContainer>
           )}
           {currentView === "verify-forgot-password" && (
