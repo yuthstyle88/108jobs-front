@@ -97,7 +97,8 @@ export const {handlers, auth, signIn} = NextAuth({
   ],
   callbacks: {
     async jwt({token, user, account, trigger}) {
-      console.log("▶️ JWT callback:", { trigger, hasAccount: !!account, hasUser: !!user });
+      console.log("▶️ JWT callback:",
+        {trigger, hasAccount: !!account, hasUser: !!user});
 
       if (account && user) {
         try {
@@ -108,7 +109,8 @@ export const {handlers, auth, signIn} = NextAuth({
               user.name ?? "",
               user.email ?? ""
             );
-            console.log("🧾 sendTokenToApiServer response:", res.data);
+            console.log("🧾 sendTokenToApiServer response:",
+              res.data);
 
             const decoded = res.data?.jwt ? parseJwt(res.data.jwt) : null;
 
@@ -117,10 +119,30 @@ export const {handlers, auth, signIn} = NextAuth({
             token.roles = decoded?.roles ?? [];
             token.session = decoded?.session;
             token.isNewUser = res?.data?.registration_created === true;
-            console.log("🟢 JWT token set:", token);
+            console.log("🟢 JWT token set:",
+              token);
+          }
+          if (!token.shared_key && token.accessToken) {
+            try {
+              const {publicKey, privateKey} = await generateEcKeyPair();
+              const pub = await exportPublicKey(publicKey);
+              const public_key = await exchangePublicKey(pub,
+                token.accessToken as string);
+              const serverPubKey = await importEcPublicKeyHex(public_key);
+              const shared_key = await crypto.subtle.deriveBits(
+                {name: "ECDH", public: serverPubKey},
+                privateKey,
+                256
+              );
+              token.shared_key = arrayBufferToHex(shared_key);
+            } catch (e) {
+              console.error("Key exchange error:",
+                e);
+            }
           }
         } catch (e) {
-          console.error("Key exchange error:", e);
+          console.error("Key exchange error:",
+            e);
         }
       }
 
@@ -130,10 +152,11 @@ export const {handlers, auth, signIn} = NextAuth({
       session.isNewUser = token.isNewUser ?? false;
 
       // ✅ DEBUG log เพื่อดูว่าได้ isNewUser จริงไหม
-      console.log("📦 Session created:", {
-        email: session.user.email,
-        isNewUser: session.isNewUser,
-      });
+      console.log("📦 Session created:",
+        {
+          email: session.user.email,
+          isNewUser: session.isNewUser,
+        });
 
       session.user.email = token.email ?? "";
       session.user.roles = token.roles ?? [];
@@ -157,14 +180,16 @@ export const {handlers, auth, signIn} = NextAuth({
   events: {
     async signIn({user, account, profile, isNewUser}) {
       try {
-        console.log("✅ User signed in:", {
-          provider: account?.provider,
-          isNewUser,
-          userId: user.id,
-          email: user.email,
-        });
+        console.log("✅ User signed in:",
+          {
+            provider: account?.provider,
+            isNewUser,
+            userId: user.id,
+            email: user.email,
+          });
       } catch (err) {
-        console.error("🚨 Error in signIn event:", err);
+        console.error("🚨 Error in signIn event:",
+          err);
       }
     },
     async signOut(message) {
