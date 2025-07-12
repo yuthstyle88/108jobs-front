@@ -5,6 +5,7 @@ import { ChangePassword } from "@/components/Login/ChangePassword";
 import { ForgotPasswordForm } from "@/components/Login/ForgotPasswordForm";
 import { LoginForm } from "@/components/Login/LoginForm";
 import { RegisterForm } from "@/components/Login/RegisterForm";
+import { SignUpGoogleForm } from "@/components/Login/SignUpGoogleForm";
 import VerificationEmail from "@/components/Login/VerifyEmail";
 import VerificationForgotPassword from "@/components/Login/VerifyForgotPassword";
 import { AuthenticateIcon } from "@/constants/icons";
@@ -22,7 +23,8 @@ type ViewState =
   | "forgot-password"
   | "verify-email"
   | "verify-forgot-password"
-  | "change-password";
+  | "change-password"
+  | "signUpGoogle";
 
 export default function LoginPage() {
   const {
@@ -133,6 +135,7 @@ export default function LoginPage() {
               <LoginForm
                 switchToRegister={() => setCurrentView("register")}
                 switchToForgotPassword={() => setCurrentView("forgot-password")}
+                switchToSignUpGoogle={() => setCurrentView("signUpGoogle")}
               />
             </AuthFormContainer>
           )}
@@ -143,6 +146,17 @@ export default function LoginPage() {
               onBack={() => setCurrentView("login")}
             >
               <RegisterForm
+                switchToVerifyEmail={() => setCurrentView("verify-email")}
+                setDataRegister={setDataRegister}
+              />
+            </AuthFormContainer>
+          )}
+          {currentView === "signUpGoogle" && (
+            <AuthFormContainer
+              title={`Sign up FastJob`}
+              onBack={() => setCurrentView("login")}
+            >
+              <SignUpGoogleForm
                 switchToVerifyEmail={() => setCurrentView("verify-email")}
                 setDataRegister={setDataRegister}
               />

@@ -15,11 +15,13 @@ import { z } from "zod";
 type LoginFormProps = {
   switchToRegister: () => void;
   switchToForgotPassword: () => void;
+  switchToSignUpGoogle: () => void;
 };
 
 export const LoginForm = ({
   switchToRegister,
   switchToForgotPassword,
+  switchToSignUpGoogle
 }: LoginFormProps) => {
   const authen = useTranslateFile(LanguageFile.AUTHEN);
 
@@ -158,7 +160,8 @@ export const LoginForm = ({
         <SocialLoginButton
           icon={AuthenticateIcon.gg}
           provider={authen?.button_login_google}
-          onClick={() => signIn("google", { callbackUrl: "/" })}
+          // onClick={() => signIn("google", { callbackUrl: "/" })}
+          onClick={switchToSignUpGoogle}
         />
       </div>
     </form>
