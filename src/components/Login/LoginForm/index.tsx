@@ -12,14 +12,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const loginSchema = z.object({
-  username_or_email: z
-    .string()
-    .min(6, "กรุณากรอกอีเมลหรือชื่อผู้ใช้อย่างน้อย 6 ตัวอักษร")
-    .max(32, "ชื่อผู้ใช้ต้องไม่เกิน 32 ตัวอักษร"),
-  password: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
-});
-
 type LoginFormProps = {
   switchToRegister: () => void;
   switchToForgotPassword: () => void;
@@ -29,6 +21,16 @@ export const LoginForm = ({
   switchToRegister,
   switchToForgotPassword,
 }: LoginFormProps) => {
+  const authen = useTranslateFile(LanguageFile.AUTHEN);
+
+  const loginSchema = z.object({
+    username_or_email: z
+      .string()
+      .min(6, authen?.please_enter_email_or_username_min_6)
+      .max(32, authen?.username_max_32),
+    password: z.string().min(6, authen?.password_min_6),
+  });
+
   const {
     register,
     handleSubmit,
@@ -41,8 +43,6 @@ export const LoginForm = ({
   const [showPassword, setShowPassword] = useState(false);
 
   const route = useRouter();
-
-  const authen = useTranslateFile(LanguageFile.AUTHEN);
 
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/";
@@ -57,7 +57,7 @@ export const LoginForm = ({
       });
 
       if (result?.error) {
-        console.log("reseult",result.error);
+        console.log("reseult", result.error);
         switch (result.error) {
           case "not_found":
             setError("username_or_email", {

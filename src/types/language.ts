@@ -250,6 +250,7 @@ export interface LoginLanguage {
   message_enter_code: string;
   require_captcha: string;
   invalid_name: string;
+  not_found: string;
 }
 
 export interface HomeLanguage {
