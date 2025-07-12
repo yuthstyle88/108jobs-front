@@ -11,34 +11,41 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CaptchaField } from "../CaptchaField";
-const registerSchema = z
-  .object({
-    email: z.string().email("กรุณากรอกอีเมลให้ถูกต้อง"),
-    username: z.string().min(3, "ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร"),
-    password: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
-    confirmPassword: z.string(),
-    termsAccepted: z.literal(true),
-    privacyAccepted: z.literal(true),
-    promotionalAccepted: z.boolean().optional(),
-    captcha_uuid: z.string().optional(),
-    captcha_answer: z.string().min(1, "กรุณากรอก captcha"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "รหัสผ่านไม่ตรงกัน",
-    path: ["confirmPassword"],
-  });
+import { usePublicFetchV2 } from "@/hooks/api-hooks";
+import { CaptchaResponse } from "@/types/capcha";
+import { API_ROUTES } from "@/api/endpoints";
+import { RegisterFormData } from "@/types/formTypes/register";
 
 type RegisterFormProps = {
   switchToVerifyEmail: () => void;
   setDataRegister: (data: RegisterDataProps) => void;
 };
 
-export type RegisterFormData = z.infer<typeof registerSchema>;
-
 export const RegisterForm = ({
   switchToVerifyEmail,
   setDataRegister,
 }: RegisterFormProps) => {
+  const authen = useTranslateFile(LanguageFile.AUTHEN);
+  const registerSchema = z
+  .object({
+    email: z.string().email(authen?.invalid_email),
+    username: z.string().min(6, authen?.username_min_6),
+    password: z.string().min(6, authen?.password_min_6),
+    confirmPassword: z.string(),
+    termsAccepted: z.boolean().refine((val) => val === true),
+    privacyAccepted: z.boolean().refine((val) => val === true),
+    promotionalAccepted: z.boolean().optional(),
+    captcha_uuid: z.string().optional(),
+    captcha_answer: z.string().min(1, authen?.require_captcha),
+    accountType: z.enum(["employer", "freelancer"]).default("employer"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: authen?.not_match_password,
+    path: ["confirmPassword"],
+  });
+
+  type RegisterFormDataType = z.infer<typeof registerSchema>;
+
   const {
     register,
     handleSubmit,
@@ -46,16 +53,18 @@ export const RegisterForm = ({
     setError,
     setValue,
     watch,
-  } = useForm({
+  } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     mode: "onChange",
   });
 
-  const authen = useTranslateFile(LanguageFile.AUTHEN);
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+
+  const { refetch } = usePublicFetchV2<CaptchaResponse>(
+    API_ROUTES.auth.get_capcha
+  );
 
   useEffect(() => {
     const storedData = sessionStorage.getItem("registerData");
@@ -67,19 +76,10 @@ export const RegisterForm = ({
     }
   }, [setValue]);
 
-  const onSubmit = async (data: RegisterFormData) => {
+  const onSubmit = async (data: RegisterFormDataType) => {
     try {
       setApiError(null);
-
       sessionStorage.setItem("registerData", JSON.stringify(data));
-
-      console.log("Submitting data:", data);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      if (data.captcha_answer !== "9vwqUj") {
-        setApiError("Captcha ไม่ถูกต้อง กรุณาลองใหม่");
-        return;
-      }
 
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -87,38 +87,55 @@ export const RegisterForm = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: data.email,
           username: data.username,
+          email: data.email,
+          password: data.password,
+          password_verify: data.confirmPassword,
+          captcha_uuid: data.captcha_uuid,
+          captcha_answer: data.captcha_answer,
         }),
       });
 
       const result = await response.json();
-
       if (!response.ok) {
         if (result.fieldErrors?.email) {
           setError("email", {
             type: "manual",
-            message: result.fieldErrors.email,
+            message: authen?.email_already_exists,
           });
         }
         if (result.fieldErrors?.username) {
+          const code = result.fieldErrors.username;
+          const message =
+            code === "invalid_name"
+              ? authen?.invalid_name
+              : authen?.username_already_exists;
+          console.log("message", message);
           setError("username", {
             type: "manual",
-            message: result.fieldErrors.username,
+            message,
+          });
+        }
+        if (result.fieldErrors?.captcha_answer) {
+          setError("captcha_answer", {
+            type: "manual",
+            message: authen?.captcha_incorrect,
           });
         }
 
         if (
           result.error &&
           !result.fieldErrors?.email &&
-          !result.fieldErrors?.username
+          !result.fieldErrors?.username &&
+          !result.fieldErrors?.captcha_answer
         ) {
           setApiError(ERROR_CONSTANTS.LIMIT_SEND_EMAIL);
         }
-
+        refetch();
+        setValue("captcha_answer", "");
         return;
       }
-
+      refetch();
       switchToVerifyEmail();
       setDataRegister(data);
     } catch (error) {
@@ -126,6 +143,7 @@ export const RegisterForm = ({
       setApiError(
         error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลงทะเบียน"
       );
+      refetch();
     }
   };
 
@@ -169,13 +187,36 @@ export const RegisterForm = ({
         showPassword={showConfirmPassword}
         toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
       />
-
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {"Account Type"}
+        </label>
+        <div className="flex gap-6 items-center text-base text-text_primary">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              value="employer"
+              {...register("accountType")}
+              defaultChecked
+            />
+            {"Employer"}
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              value="freelancer"
+              {...register("accountType")}
+            />
+            {"Freelancer"}
+          </label>
+        </div>
+      </div>
       <CaptchaField
         setCaptchaUuid={(uuid) => setValue("captcha_uuid", uuid)}
         register={register}
         error={errors.captcha_answer?.message}
+        language={authen}
       />
-
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <input
@@ -189,7 +230,8 @@ export const RegisterForm = ({
             className="text-sm text-text_secondary font-sans"
           >
             {authen?.checkbox_terms_conditions}{" "}
-            <Link prefetch={false}
+            <Link
+              prefetch={false}
               href="/content/terms"
               className="text-text_secondary underline"
             >
@@ -210,27 +252,13 @@ export const RegisterForm = ({
             className="text-sm text-text_secondary font-sans"
           >
             {authen?.checkbox_terms_conditions}{" "}
-            <Link prefetch={false}
+            <Link
+              prefetch={false}
               href="/content/privacy"
               className="text-text_secondary underline"
             >
               {authen?.checkbox_privacy_policy_redirect}
             </Link>
-          </label>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            id="promotionalAccepted"
-            {...register("promotionalAccepted")}
-            className="w-[1.3em] h-[1.3em] flex-shrink-0 border-[0.0625em] border-neutral-500 rounded-xl bg-transparent cursor-pointer checked:border-primary checked:bg-primary "
-          />
-          <label
-            htmlFor="promotionalAccepted"
-            className="text-sm text-text_secondary font-sans"
-          >
-            {authen?.checkbox_email_promotion}
           </label>
         </div>
       </div>

@@ -1,17 +1,13 @@
-import NextAuth from "next-auth";
+import NextAuth, {User} from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import AppleProvider from "next-auth/providers/apple";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { jwtDecode } from "jwt-decode";
-import {
-  generateEcKeyPair,
-  exportPublicKey,
-  importEcPublicKeyHex,
-  arrayBufferToHex,
-} from "@/lib/web-crypto";
+import { generateEcKeyPair, exportPublicKey, importEcPublicKeyHex, arrayBufferToHex } from "@/lib/web-crypto";
 import { exchangePublicKey, sendTokenToApiServer } from "@/lib/api/auth";
-import { axiosPrivate, axiosPublicV2 } from "@/lib/axios";
+import {axiosPrivate, axiosPublicV2} from "@/lib/axios";
+
 
 interface JWTPayload {
   sub: string;
@@ -30,7 +26,7 @@ const parseJwt = (token: string): JWTPayload | null => {
   }
 };
 
-export const { handlers, auth, signIn } = NextAuth({
+export const {handlers, auth, signIn} = NextAuth({
   session: {
     strategy: "jwt",
     maxAge: 60 * 60 * 24,
@@ -47,10 +43,11 @@ export const { handlers, auth, signIn } = NextAuth({
       clientSecret: process.env.GOOGLE_SECRET || "",
       authorization: {
         params: {
-          prompt: "consent",
+          prompt: "select_account",
           access_type: "offline",
           response_type: "code",
-        },
+          scope: "openid email profile"
+        }
       },
     }),
     FacebookProvider({
@@ -69,14 +66,15 @@ export const { handlers, auth, signIn } = NextAuth({
         username_or_email: { label: "Email / Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials, req): Promise<User | null> {
         if (!credentials) return null;
 
         try {
-          const res = await axiosPublicV2.post(`/account/auth/login`, {
-            username_or_email: credentials.username_or_email,
-            password: credentials.password,
-          });
+          const res = await axiosPublicV2.post(`/account/auth/login`,
+            {
+              username_or_email: credentials.username_or_email,
+              password: credentials.password,
+            });
           const data = res.data;
           if (res.status === 200 && data.jwt) {
             const decoded = parseJwt(data.jwt);
@@ -85,16 +83,14 @@ export const { handlers, auth, signIn } = NextAuth({
               roles: decoded?.roles ?? [],
               token: data.jwt,
               session: decoded?.session,
-              email: data.email ?? "",
-              name: data.username ?? "",
-            };
+            } as User;
           }
         } catch (err) {
           console.error("Login failed:", err);
         }
 
         return null;
-      },
+      }
     }),
   ],
   callbacks: {
@@ -102,14 +98,7 @@ export const { handlers, auth, signIn } = NextAuth({
       if (account) {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
-        if (user?.id && user?.email && user?.name) {
-          await sendTokenToApiServer(
-            user.id,
-            user.name,
-            user.email,
-            account.accessToken as string
-          );
-        }
+        await sendTokenToApiServer(account.provider, account.providerAccountId as string, user.name as string, user.email as string);
       }
       if (user) {
         Object.assign(token, {
@@ -123,10 +112,7 @@ export const { handlers, auth, signIn } = NextAuth({
         try {
           const { publicKey, privateKey } = await generateEcKeyPair();
           const pub = await exportPublicKey(publicKey);
-          const public_key = await exchangePublicKey(
-            pub,
-            token.accessToken as string
-          );
+          const public_key = await exchangePublicKey(pub, token.accessToken as string);
           const serverPubKey = await importEcPublicKeyHex(public_key);
           const shared_key = await crypto.subtle.deriveBits(
             { name: "ECDH", public: serverPubKey },
@@ -169,7 +155,8 @@ export const { handlers, auth, signIn } = NextAuth({
       const token = "token" in message ? message.token : undefined;
       if (!token) return;
       try {
-        await axiosPrivate.post(`/profile/logout`, {});
+        await axiosPrivate.post(`/profile/logout`,
+          {});
       } catch (err) {
         console.error("Sign-out error:", err);
       }

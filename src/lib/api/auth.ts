@@ -2,49 +2,43 @@ import {API_ROUTES} from "@/api/endpoints";
 import {axiosPublicV2} from "@/lib/axios";
 
 interface ExchangeKeyResponse {
-    public_key: string;
+  public_key: string;
 }
 
 export async function exchangePublicKey(public_key: string, token: string) {
-    try {
-        const base = process.env.NEXT_PUBLIC_API_BASE_URL_V2;
-        if (!base) {
-            throw new Error("❌ NEXT_PUBLIC_API_BASE_URL_V2 is not set");
+  try {
+
+    const url = `${API_ROUTES.auth.exchange_key}`;
+
+    const response = await axiosPublicV2.post(url,
+      {
+        public_key: public_key,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         }
+      });
 
-        const url = `${base}${API_ROUTES.auth.exchange_key}`;
-
-        const response = await fetch(url,    
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    public_key: public_key,
-                })
-            },
-        );
-
-        if (!response.ok) {
-            throw new Error("Exchange token request failed");
-        }
-
-        const data = await response.json() as ExchangeKeyResponse;
-        return data.public_key;
-    } catch (error) {
-        console.error('Token exchange error:', error);
-        throw error;
+    if (response.status !== 200) {
+      throw new Error("Exchange token request failed");
     }
+    return (response.data as ExchangeKeyResponse).public_key;
+  } catch (error) {
+    console.error('Token exchange error:',
+      error);
+    throw error;
+  }
 }
 
-export async function sendTokenToApiServer(oauth_user_id: string, name: string, email: string, accessToken: string) {
-    await axiosPublicV2.post(`/oauth/authenticate`,
-      {
-          oauth_user_id: oauth_user_id,
-          name: name,
-          email: email,
-          accessToken: accessToken
-      });
+export async function sendTokenToApiServer(oauthProvider: string, providerAccountId: string, name: string, email: string) {
+  // ตัวอย่างการยิงไป API ภายใน
+  return await axiosPublicV2.post(`/oauth/authenticate`,
+    {
+      oauthProvider: oauthProvider,
+      providerAccountId: providerAccountId,
+      name: name,
+      email: email,
+    });
 }

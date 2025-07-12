@@ -152,11 +152,11 @@ export const LoginForm = ({
       </div>
 
       <div className="flex flex-col gap-4 mt-6">
-        {/* <SocialLoginButton
+        <SocialLoginButton
           icon={AuthenticateIcon.fb}
           provider={authen?.button_login_facebook}
           onClick={() => signIn("facebook")}
-        /> */}
+        />
         <SocialLoginButton
           icon={AuthenticateIcon.gg}
           provider={authen?.button_login_google}
