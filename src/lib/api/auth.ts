@@ -39,12 +39,14 @@ export async function exchangePublicKey(public_key: string, token: string) {
     }
 }
 
-export async function sendTokenToApiServer(oauth_user_id: string, name: string, email: string, accessToken: string) {
-    await axiosPublicV2.post(`/oauth/authenticate`,
-      {
-          oauth_user_id: oauth_user_id,
-          name: name,
-          email: email,
-          accessToken: accessToken
-      });
+export async function sendTokenToApiServer(oauthProvider: string, providerAccountId: string, name: string, email: string) {
+  // ตัวอย่างการยิงไป API ภายใน
+  const resp = await axiosPublicV2.post(`/oauth/authenticate`, {
+      oauthProvider: oauthProvider,
+      providerAccountId: providerAccountId,
+      name: name,
+      email: email,
+  });
+  console.log(resp);
+  return resp;
 }

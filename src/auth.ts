@@ -1,4 +1,4 @@
-import NextAuth  from "next-auth";
+import NextAuth, {User} from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import AppleProvider from "next-auth/providers/apple";
@@ -42,7 +42,12 @@ export const {handlers, auth, signIn} = NextAuth({
       clientId: process.env.GOOGLE_ID || "",
       clientSecret: process.env.GOOGLE_SECRET || "",
       authorization: {
-        params: { prompt: "consent", access_type: "offline", response_type: "code" },
+        params: {
+          prompt: "select_account",
+          access_type: "offline",
+          response_type: "code",
+          scope: "openid email profile"
+        }
       },
     }),
     FacebookProvider({
@@ -61,7 +66,7 @@ export const {handlers, auth, signIn} = NextAuth({
         username_or_email: { label: "Email / Username", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials, req): Promise<User | null> {
         if (!credentials) return null;
 
         try {
@@ -78,7 +83,7 @@ export const {handlers, auth, signIn} = NextAuth({
               roles: decoded?.roles ?? [],
               token: data.jwt,
               session: decoded?.session,
-            };
+            } as User;
           }
         } catch (err) {
           console.error("Login failed:", err);
@@ -93,7 +98,7 @@ export const {handlers, auth, signIn} = NextAuth({
       if (account) {
         token.accessToken = account.access_token;
         token.refreshToken = account.refresh_token;
-        await sendTokenToApiServer(user.id as string, user.name as string, user.email as string, account.accessToken as string);
+        await sendTokenToApiServer(account.provider, account.providerAccountId as string, user.name as string, user.email as string);
       }
       if (user) {
         Object.assign(token, {
