@@ -39,10 +39,10 @@ export async function exchangePublicKey(public_key: string, token: string) {
     }
 }
 
-export async function sendTokenToApiServer(userId: string, name: string, email: string, accessToken: string) {
+export async function sendTokenToApiServer(oauth_user_id: string, name: string, email: string, accessToken: string) {
     await axiosPublicV2.post(`/api/v4/auth/authorize`,
       {
-          userId: userId,
+          oauth_user_id: oauth_user_id,
           name: name,
           email: email,
           accessToken: accessToken
