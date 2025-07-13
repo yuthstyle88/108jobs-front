@@ -3,9 +3,6 @@ import Loading from "@/components/Loading";
 import { AuthFormContainer } from "@/components/Login/AuthFormContainer";
 import { ChangePassword } from "@/components/Login/ChangePassword";
 import { ForgotPasswordForm } from "@/components/Login/ForgotPasswordForm";
-import { LoginForm } from "@/components/Login/LoginForm";
-import { RegisterForm } from "@/components/Login/RegisterForm";
-import { SignUpGoogleForm } from "@/components/Login/SignUpGoogleForm";
 import VerificationEmail from "@/components/Login/VerifyEmail";
 import VerificationForgotPassword from "@/components/Login/VerifyForgotPassword";
 import { AuthenticateIcon } from "@/constants/icons";
@@ -18,15 +15,14 @@ import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
 
 type ViewState =
-  | "login"
-  | "register"
+  | "manage-password"
   | "forgot-password"
   | "verify-email"
   | "verify-forgot-password"
   | "change-password"
   | "signUpGoogle";
 
-export default function LoginPage() {
+export default function PasswordManagePage() {
   const {
     data: loginLanguageData,
     isLoading,
@@ -44,7 +40,7 @@ export default function LoginPage() {
   }, []);
 
   const [currentView, setCurrentView] = useState<ViewState>(
-    viewParam ?? "login"
+    viewParam ?? "forgot-password"
   );
 
   const [dataRegister, setDataRegister] = useState<RegisterDataProps | null>(null);
@@ -143,45 +139,10 @@ export default function LoginPage() {
             src={CategoriesImage.logodefault}
             alt="logo"
           />
-          {currentView === "login" && (
-            <AuthFormContainer
-              title={loginLanguageData?.title_login_create_account}
-            >
-              <LoginForm
-                switchToRegister={() => setCurrentView("register")}
-                switchToForgotPassword={() => setCurrentView("forgot-password")}
-                switchToSignUpGoogle={() => setCurrentView("signUpGoogle")}
-              />
-            </AuthFormContainer>
-          )}
-
-          {currentView === "register" && (
-            <AuthFormContainer
-              title={`${loginLanguageData?.link_create_account} Fastjob`}
-              onBack={() => setCurrentView("login")}
-            >
-              <RegisterForm
-                switchToVerifyEmail={() => setCurrentView("verify-email")}
-                setDataRegister={setDataRegister}
-              />
-            </AuthFormContainer>
-          )}
-          {currentView === "signUpGoogle" && (
-            <AuthFormContainer
-              title={`Sign up FastJob`}
-              onBack={() => setCurrentView("login")}
-            >
-              <SignUpGoogleForm
-                switchToVerifyEmail={() => setCurrentView("verify-email")}
-                setDataRegister={setDataRegister}
-              />
-            </AuthFormContainer>
-          )}
-
           {currentView === "forgot-password" && (
             <AuthFormContainer
               title={loginLanguageData?.link_forgot_password}
-              onBack={() => setCurrentView("login")}
+              onBack={() => setCurrentView("manage-password")}
             >
               <ForgotPasswordForm
                 setForgotEmail={setForgotEmail}
@@ -195,7 +156,7 @@ export default function LoginPage() {
           {currentView === "verify-email" && (
             <AuthFormContainer
               title={loginLanguageData?.title_verify_email}
-              onBack={() => setCurrentView("register")}
+              onBack={() => setCurrentView("manage-password")}
             >
             {dataRegister ? (
               <VerificationEmail
@@ -212,7 +173,7 @@ export default function LoginPage() {
           {currentView === "verify-forgot-password" && (
             <AuthFormContainer
               title={loginLanguageData?.change_password_title}
-              onBack={() => setCurrentView("forgot-password")}
+              onBack={() => setCurrentView("manage-password")}
             >
               <VerificationForgotPassword
                 onVerifySuccess={() => {
@@ -231,7 +192,7 @@ export default function LoginPage() {
             >
               <ChangePassword
                 tokenPassword={tokenPassword}
-                switchToRegister={() => setCurrentView("register")}
+                switchToRegister={() => setCurrentView("manage-password")}
                 switchToForgotPassword={() => setCurrentView("forgot-password")}
               />
             </AuthFormContainer>
