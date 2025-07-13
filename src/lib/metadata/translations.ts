@@ -152,7 +152,7 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
         "Browse quality freelance services across all categories – design, marketing, development and more, only on Fastjob.",
     },
     login: {
-      title: "Login to fastwork.co",
+      title: "Authentication to fastwork.co",
       description:
         "Sign in to manage your projects, hire freelancers and grow your business on Fastjob.",
     },

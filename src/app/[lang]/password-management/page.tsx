@@ -1,10 +1,10 @@
 "use client";
 import Loading from "@/components/Loading";
-import { AuthFormContainer } from "@/components/Login/AuthFormContainer";
-import { ChangePassword } from "@/components/Login/ChangePassword";
-import { ForgotPasswordForm } from "@/components/Login/ForgotPasswordForm";
-import VerificationEmail from "@/components/Login/VerifyEmail";
-import VerificationForgotPassword from "@/components/Login/VerifyForgotPassword";
+import { AuthFormContainer } from "@/components/Authentication/AuthFormContainer";
+import { ChangePassword } from "@/components/Authentication/ChangePassword";
+import { ForgotPasswordForm } from "@/components/Authentication/ForgotPasswordForm";
+import VerificationEmail from "@/components/Authentication/VerifyEmail";
+import VerificationForgotPassword from "@/components/Authentication/VerifyForgotPassword";
 import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";

@@ -91,7 +91,7 @@ export const {handlers, auth, signIn} = NextAuth({
             } as User;
           }
         } catch (err) {
-          console.error("Login failed:",
+          console.error("Authentication failed:",
             err);
         }
 

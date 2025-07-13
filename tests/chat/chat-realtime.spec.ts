@@ -9,9 +9,9 @@ test.describe('Chat real-time', () => {
     // Chụp hình debug nếu cần xem trạng thái
     await page.screenshot({ path: 'debug-chat-entry.png' });
 
-    // Kiểm tra xem có bị redirect về login không
+    // Kiểm tra xem có bị redirect về sign-in không
     const currentUrl = page.url();
-    if (currentUrl.includes('/login')) {
+    if (currentUrl.includes('/sign-in')) {
       throw new Error('❌ Bạn chưa đăng nhập hoặc phiên đăng nhập đã hết hạn.');
     }
 

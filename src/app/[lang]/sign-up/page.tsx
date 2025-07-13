@@ -1,7 +1,7 @@
 "use client";
 import Loading from "@/components/Loading";
-import { AuthFormContainer } from "@/components/Login/AuthFormContainer";
-import { SignUpGoogleForm } from "@/components/Login/SignUpGoogleForm";
+import { AuthFormContainer } from "@/components/Authentication/AuthFormContainer";
+import { SignUpGoogleForm } from "@/components/Authentication/SignUpGoogleForm";
 
 import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";

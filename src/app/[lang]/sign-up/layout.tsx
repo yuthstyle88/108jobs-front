@@ -5,7 +5,7 @@ export async function generateMetadata() {
   return generateLocalizedMetadata("login");
 }
 
-export default function Login({ children }: LayoutProps) {
+export default function SingUP({ children }: LayoutProps) {
   return (
     <>
         {children}
