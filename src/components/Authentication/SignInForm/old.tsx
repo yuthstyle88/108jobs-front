@@ -6,7 +6,7 @@ import { AuthenticateIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "@/auth";
+import { signIn } from "@/lib/auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";

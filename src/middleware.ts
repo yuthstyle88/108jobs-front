@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { middleware as langMiddleware } from "./middleware-lang";
-import {auth} from "@/auth";
+import {auth} from "@/lib/auth";
 import {getToken} from "@auth/core/jwt";
 
 const VALID_LANGS = ["vi", "en", "th"];

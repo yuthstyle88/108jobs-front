@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth } from "@/lib/auth";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Kanit } from "next/font/google";
 import { Toaster } from "sonner";
