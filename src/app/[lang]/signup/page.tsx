@@ -1,59 +1,29 @@
 "use client";
 import Loading from "@/components/Loading";
 import { AuthFormContainer } from "@/components/Login/AuthFormContainer";
-import { ChangePassword } from "@/components/Login/ChangePassword";
-import { ForgotPasswordForm } from "@/components/Login/ForgotPasswordForm";
-import { LoginForm } from "@/components/Login/LoginForm";
-import { RegisterForm } from "@/components/Login/RegisterForm";
 import { SignUpGoogleForm } from "@/components/Login/SignUpGoogleForm";
-import VerificationEmail from "@/components/Login/VerifyEmail";
-import VerificationForgotPassword from "@/components/Login/VerifyForgotPassword";
+
 import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { RegisterDataProps } from "@/types/registerData";
 import Image from "next/image";
-import {useRouter, useSearchParams} from "next/navigation";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
-type ViewState =
-  | "login"
-  | "register"
-  | "forgot-password"
-  | "verify-email"
-  | "verify-forgot-password"
-  | "change-password"
-  | "signUpGoogle";
+type ViewState = "google-signup" | "login" | "verify-email";
 
-export default function LoginPage() {
+export default function SingUpPage() {
   const {
     data: loginLanguageData,
     isLoading,
     error,
   } = useGlobalTranslate(LanguageFile.AUTHEN);
 
-  const params = useSearchParams();
-  const viewParam = params.get("view") as ViewState | null;
 
-  // Set currentView from viewParam only once on mount
-  useEffect(() => {
-    if (viewParam) {
-      setCurrentView(viewParam);
-    }
-  }, []);
 
-  const [currentView, setCurrentView] = useState<ViewState>(
-    viewParam ?? "login"
-  );
-
+  const [currentView, setCurrentView] = useState<ViewState>("google-signup");
   const [dataRegister, setDataRegister] = useState<RegisterDataProps | null>(null);
-  const [forgotEmail, setForgotEmail] = useState<RegisterDataProps>();
-  const [tokenPassword, setTokenPassword] = useState<RegisterDataProps>();
-  // Load registerData from sessionStorage if available, only on client
-  console.log("🧭 currentView:", currentView);
-  const route = useRouter();
-
 
 
   if (isLoading) return <Loading />;
@@ -143,30 +113,7 @@ export default function LoginPage() {
             src={CategoriesImage.logodefault}
             alt="logo"
           />
-          {currentView === "login" && (
-            <AuthFormContainer
-              title={loginLanguageData?.title_login_create_account}
-            >
-              <LoginForm
-                switchToRegister={() => setCurrentView("register")}
-                switchToForgotPassword={() => setCurrentView("forgot-password")}
-                switchToSignUpGoogle={() => setCurrentView("signUpGoogle")}
-              />
-            </AuthFormContainer>
-          )}
-
-          {currentView === "register" && (
-            <AuthFormContainer
-              title={`${loginLanguageData?.link_create_account} Fastjob`}
-              onBack={() => setCurrentView("login")}
-            >
-              <RegisterForm
-                switchToVerifyEmail={() => setCurrentView("verify-email")}
-                setDataRegister={setDataRegister}
-              />
-            </AuthFormContainer>
-          )}
-          {currentView === "signUpGoogle" && (
+          {currentView === "google-signup" && (
             <AuthFormContainer
               title={`Sign up FastJob`}
               onBack={() => setCurrentView("login")}
@@ -178,64 +125,6 @@ export default function LoginPage() {
             </AuthFormContainer>
           )}
 
-          {currentView === "forgot-password" && (
-            <AuthFormContainer
-              title={loginLanguageData?.link_forgot_password}
-              onBack={() => setCurrentView("login")}
-            >
-              <ForgotPasswordForm
-                setForgotEmail={setForgotEmail}
-                switchToVerifyForgotPassword={() =>
-                  setCurrentView("verify-forgot-password")
-                }
-              />
-            </AuthFormContainer>
-          )}
-
-          {currentView === "verify-email" && (
-            <AuthFormContainer
-              title={loginLanguageData?.title_verify_email}
-              onBack={() => setCurrentView("register")}
-            >
-            {dataRegister ? (
-              <VerificationEmail
-                onVerifySuccess={() => {
-                  route.push("/");
-                }}
-                dataRegister={dataRegister}
-              />
-            ) : (
-              <div className="text-red-500">⚠️ Missing registration data. Please sign up again.</div>
-            )}
-            </AuthFormContainer>
-          )}
-          {currentView === "verify-forgot-password" && (
-            <AuthFormContainer
-              title={loginLanguageData?.change_password_title}
-              onBack={() => setCurrentView("forgot-password")}
-            >
-              <VerificationForgotPassword
-                onVerifySuccess={() => {
-                  route.push("/");
-                }}
-                forgotEmail={forgotEmail}
-                setTokenPassword={setTokenPassword}
-                switchToChangePassword={() => setCurrentView("change-password")}
-              />
-            </AuthFormContainer>
-          )}
-          {currentView === "change-password" && (
-            <AuthFormContainer
-              title="Change Password"
-              onBack={() => setCurrentView("verify-forgot-password")}
-            >
-              <ChangePassword
-                tokenPassword={tokenPassword}
-                switchToRegister={() => setCurrentView("register")}
-                switchToForgotPassword={() => setCurrentView("forgot-password")}
-              />
-            </AuthFormContainer>
-          )}
         </div>
       </div>
     </div>

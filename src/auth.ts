@@ -4,10 +4,8 @@ import FacebookProvider from "next-auth/providers/facebook";
 import AppleProvider from "next-auth/providers/apple";
 import CredentialsProvider from "next-auth/providers/credentials";
 import {jwtDecode} from "jwt-decode";
-import {generateEcKeyPair, exportPublicKey, importEcPublicKeyHex, arrayBufferToHex} from "@/lib/web-crypto";
-import {exchangePublicKey, sendAplicationFormToApiServer, sendTokenToApiServer} from "@/lib/api/auth";
+import {authenticateWithOAuth, checkEmailExists, exchange, exchangePublicKey} from "@/lib/api/auth";
 import {axiosPrivate, axiosPublicV2} from "@/lib/axios";
-
 
 interface JWTPayload {
   sub: string;
@@ -16,7 +14,7 @@ interface JWTPayload {
   session: string;
 }
 
-const parseJwt = (token: string): JWTPayload | null => {
+export const parseJwt = (token: string): JWTPayload | null => {
   try {
     const decoded = jwtDecode<JWTPayload>(token);
     if (Date.now() >= decoded.exp * 1_000) return null;
@@ -36,7 +34,6 @@ export const {handlers, auth, signIn} = NextAuth({
   pages: {
     signIn: "/login",
     error: "/error",
-    newUser: '/login?view=signUpGoogle',
   },
   providers: [
     GoogleProvider({
@@ -64,25 +61,32 @@ export const {handlers, auth, signIn} = NextAuth({
       type: "credentials",
       name: "Credentials",
       credentials: {
-        username_or_email: {label: "Email / Username", type: "text"},
-        password: {label: "Password", type: "password"},
+        username_or_email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password", required: false },
+        token: { label: "Token", type: "text", required: false },
       },
       async authorize(credentials): Promise<User | null> {
         if (!credentials) return null;
-
+        let jwt = credentials.token as string | undefined;
         try {
-          const res = await axiosPublicV2.post(`/account/auth/login`,
-            {
-              username_or_email: credentials.username_or_email,
-              password: credentials.password,
-            });
-          const data = res.data;
-          if (res.status === 200 && data.jwt) {
-            const decoded = parseJwt(data.jwt);
+          if(credentials.password !== "dummy_password"){
+            const res = await axiosPublicV2.post(`/account/auth/login`,
+              {
+                username_or_email: credentials.username_or_email,
+                password: credentials.password,
+              });
+            const data = res.data;
+            if (res.status === 200 && data.jwt) {
+              jwt = data.jwt;
+            }
+          }
+
+          if (jwt) {
+            const decoded = parseJwt(jwt);
             return {
-              id: decoded?.sub ?? "",
+              id: decoded?.sub as string,
               roles: decoded?.roles ?? [],
-              token: data.jwt,
+              token: jwt,
               session: decoded?.session,
             } as User;
           }
@@ -103,50 +107,53 @@ export const {handlers, auth, signIn} = NextAuth({
       if (account && user) {
         try {
           if (trigger === "signIn" && account && user) {
-            const res = await sendTokenToApiServer(
+            const res1 = await checkEmailExists(user.email ?? "");
+            console.log("🧾 checkEmailExists response:",
+              res1.data);
+
+            token.isNewUser = res1.data?.exists === false;
+
+            if (res1.status === 200 && !token.isNewUser) {
+              return token;
+            }
+            const res2 = await authenticateWithOAuth(
               account.provider,
               account.providerAccountId,
               user.name ?? "",
-              user.email ?? ""
-            );
-            console.log("🧾 sendTokenToApiServer response:",
-              res.data);
+              user.email ?? "");
 
-            const decoded = res.data?.jwt ? parseJwt(res.data.jwt) : null;
+            if (res2.status !== 200) {
+              return null;
+            }
 
-            token.id = decoded?.sub ?? user.id ?? "";
-            token.accessToken = res.data?.jwt ?? "";
+            const decoded = parseJwt(res2.data.jwt);
+            token.accessToken = res2.data?.jwt ?? "";
             token.roles = decoded?.roles ?? [];
             token.session = decoded?.session;
-            token.isNewUser = res?.data?.registration_created === true;
+            token.sub = decoded?.sub || "";
             console.log("🟢 JWT token set:",
               token);
           }
-          if (!token.shared_key && token.accessToken) {
+          //token from authorize or authenticateWithOAuth
+          const accessToken = token.accessToken ?? user.token;
+          if (!token.shared_key && accessToken) {
             try {
-              const {publicKey, privateKey} = await generateEcKeyPair();
-              const pub = await exportPublicKey(publicKey);
-              const public_key = await exchangePublicKey(pub,
-                token.accessToken as string);
-              const serverPubKey = await importEcPublicKeyHex(public_key);
-              const shared_key = await crypto.subtle.deriveBits(
-                {name: "ECDH", public: serverPubKey},
-                privateKey,
-                256
-              );
-              token.shared_key = arrayBufferToHex(shared_key);
+              token.shared_key = await exchange(accessToken);
             } catch (e) {
               console.error("Key exchange error:",
                 e);
             }
           }
         } catch (e) {
-          console.error("Key exchange error:",
+          console.error("Sign-in error:",
             e);
         }
       }
 
-      return token;
+      return {
+        ...token,
+        sub: token.sub,
+      };
     },
     async session({session, token}) {
       session.isNewUser = token.isNewUser ?? false;
@@ -164,6 +171,7 @@ export const {handlers, auth, signIn} = NextAuth({
       session.accessToken = token.accessToken;
       session.shared_key = token.shared_key;
       session.isNewUser = token.isNewUser ?? false;  // ✅ ให้แน่ใจว่ามี
+      session.user.id = token.sub!;
       return session;
     },
     async redirect({url, baseUrl}) {
@@ -178,20 +186,6 @@ export const {handlers, auth, signIn} = NextAuth({
 
   },
   events: {
-    async signIn({user, account, profile, isNewUser}) {
-      try {
-        console.log("✅ User signed in:",
-          {
-            provider: account?.provider,
-            isNewUser,
-            userId: user.id,
-            email: user.email,
-          });
-      } catch (err) {
-        console.error("🚨 Error in signIn event:",
-          err);
-      }
-    },
     async signOut(message) {
       const token = "token" in message ? message.token : undefined;
       if (!token) return;

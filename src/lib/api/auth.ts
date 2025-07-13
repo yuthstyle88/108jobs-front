@@ -1,5 +1,6 @@
 import {API_ROUTES} from "@/api/endpoints";
 import {axiosPublicV2} from "@/lib/axios";
+import {arrayBufferToHex, exportPublicKey, generateEcKeyPair, importEcPublicKeyHex} from "@/lib/web-crypto";
 
 interface ExchangeKeyResponse {
   public_key: string;
@@ -32,24 +33,64 @@ export async function exchangePublicKey(public_key: string, token: string) {
   }
 }
 
-export async function sendTokenToApiServer(oauthProvider: string, providerAccountId: string, name: string, email: string) {
-  // ตัวอย่างการยิงไป API ภายใน
-  return await axiosPublicV2.post(`/oauth/authenticate`,
-    {
-      oauthProvider: oauthProvider,
-      providerAccountId: providerAccountId,
-      name: name,
-      email: email,
-    });
+/**
+ * Authenticate a returning user via an external OAuth provider and receive
+ * our application's token in exchange.
+ *
+ * @param provider            OAuth provider name (e.g. "google")
+ * @param providerAccountId   Provider‑specific user ID
+ * @param fullName            User’s full display name
+ * @param emailAddress        User’s email
+ */
+export async function authenticateWithOAuth(
+  provider: string,
+  providerAccountId: string,
+  fullName: string,
+  emailAddress: string,
+) {
+  return axiosPublicV2.post("/oauth/authenticate", {
+    oauthProvider: provider,
+    providerAccountId,
+    name: fullName,
+    email: emailAddress,
+  });
 }
-export async function sendAplicationFormToApiServer(oauthProvider: string, providerAccountId: string, name: string, email: string) {
-  // ตัวอย่างการยิงไป API ภายใน
-  return await axiosPublicV2.post(`/oauth/register_with_oauth`,
-    {
-      oauthProvider: oauthProvider,
-      providerAccountId: providerAccountId,
-      name: name,
-      email: email,
-      roles: "freelancer"
-    });
+export async function checkEmailExists(email: string) {
+  return axiosPublicV2.post("/oauth/email-exists", { email });
+}
+/**
+ * Register a brand‑new user coming from an OAuth provider.
+ *
+ * @param provider            OAuth provider name (e.g. "google")
+ * @param providerAccountId   Provider‑specific user ID
+ * @param fullName            User’s full display name
+ * @param emailAddress        User’s email
+ * @param [roles="freelancer"]    Optional role(s) to assign. Defaults to "freelancer".
+ */
+export async function registerUserWithOAuth(
+  provider: string,
+  providerAccountId: string,
+  fullName: string,
+  emailAddress: string,
+  roles: string,
+) {
+  return axiosPublicV2.post("/oauth/register-with-oauth", {
+    oauthProvider: provider,
+    providerAccountId,
+    name: fullName,
+    email: emailAddress,
+    roles,
+  });
+}
+export async  function  exchange(accessToken: string) {
+  const {publicKey, privateKey} = await generateEcKeyPair();
+  const pub = await exportPublicKey(publicKey);
+  const public_key = await exchangePublicKey(pub, accessToken as string);
+  const serverPubKey = await importEcPublicKeyHex(public_key);
+  const shared_key = await crypto.subtle.deriveBits(
+    {name: "ECDH", public: serverPubKey},
+    privateKey,
+    256
+  );
+  return arrayBufferToHex(shared_key);
 }

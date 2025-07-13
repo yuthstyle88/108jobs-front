@@ -44,8 +44,6 @@ function getRolesAllowedForPath(pathname: string): ("employer" | "freelancer")[]
 export async function middleware(req: NextRequest) {
   const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
   console.log(secret);
-  const token = await getToken({ req, secret: secret });
-
 
   const { pathname, origin } = req.nextUrl;
 
@@ -57,12 +55,6 @@ export async function middleware(req: NextRequest) {
   const langPrefix = VALID_LANGS.includes(firstSegment) ? `/${firstSegment}` : "";
   const cleanPathname = pathname.replace(langPrefix, "") || "/";
 
-  if (token?.isNewUser && !req.nextUrl.pathname.includes(`${langPrefix}/login`)) {
-    const url = req.nextUrl.clone();
-    url.pathname = `${langPrefix}/login`;
-    url.searchParams.set("view", "signUpGoogle");
-    return NextResponse.redirect(url);
-  }
 
   if (publicRoutes.includes(cleanPathname)) {
     return NextResponse.next();

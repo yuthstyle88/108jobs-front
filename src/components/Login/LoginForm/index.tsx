@@ -157,16 +157,10 @@ export const LoginForm = ({
           provider={authen?.button_login_facebook}
           onClick={() => signIn("facebook")}
         />
-    <SocialLoginButton
+      <SocialLoginButton
           icon={AuthenticateIcon.gg}
           provider={authen?.button_login_google}
-          onClick={async () => {
-            const result = await signIn("google", {
-              callbackUrl: "/",
-              redirect: false,
-            });
-            if (result?.url) window.location.href = result.url;
-          }}
+          onClick={() => signIn("google", { callbackUrl: "/oauth-redirect" })}
         />
       </div>
     </form>
