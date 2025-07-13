@@ -10,7 +10,7 @@ export default function OAuthRedirectPage() {
   useEffect(() => {
     if (status === "authenticated") {
       if (session?.isNewUser) {
-        router.replace("/signup");
+        router.replace("/login?newUser=true");
       } else {
         router.replace("/");
       }

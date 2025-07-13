@@ -19,7 +19,7 @@ export const API_ROUTES = {
   auth: {
     change_password: "/users/password-change",
     forgot_password: "/email/reset/password",
-    login_google: "/login/google",
+    login_google: "/sign-in/google",
     oauth_google: "/oauth/authenticate",
     register: "/email/send/verify",
     resend_change_email: "/profile/contact/send/email",

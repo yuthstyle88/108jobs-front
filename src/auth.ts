@@ -32,7 +32,7 @@ export const {handlers, auth, signIn} = NextAuth({
   },
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/login",
+    signIn: "/sign-in",
     error: "/error",
   },
   providers: [

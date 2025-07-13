@@ -66,7 +66,7 @@ export async function middleware(req: NextRequest) {
 
   const isLoggedIn = Boolean(sessionToken);
 
-  if (cleanPathname === "/login") {
+  if (cleanPathname === "/sign-in") {
     if (!isLoggedIn) return NextResponse.next();
     return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
   }
