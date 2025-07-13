@@ -134,7 +134,6 @@ export const {handlers, auth, signIn} = NextAuth({
             console.log("🟢 JWT token set:",
               token);
           }
-          //token from authorize or authenticateWithOAuth
           const accessToken = token.accessToken ?? user.token;
           if (!token.shared_key && accessToken) {
             try {

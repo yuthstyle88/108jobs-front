@@ -12,9 +12,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { axiosPublicV2 } from "@/lib/axios";
-import {error} from "next/dist/build/output/log";
-import {exchange} from "@/lib/api/auth";
-import {parseJwt} from "@/auth";
 
 type RegisterFormProps = {
   switchToVerifyEmail: () => void;
@@ -73,16 +70,14 @@ export const SignUpGoogleForm = ({
         setApiError("Session an expire");
         return;
       }
-
+      const providerAccountId = session?.user?.id;
       // 🔹 Step 1: Register กับระบบของคุณเอง
       const res = await axiosPublicV2.post("/oauth/register_with_oauth", {
-        oauth_provider: "google",
-        provider_account_id: session?.user?.id,
+        oauthProvider: "google",
+        providerAccountId,
         name: data.name,
         email,
         roles: data.accountType,
-        self_promotion: undefined,
-        answer: undefined,
       });
 
       const result = res.data;
