@@ -70,7 +70,7 @@ export const {handlers, auth, signIn} = NextAuth({
         let jwt = credentials.token as string | undefined;
         try {
           if(credentials.password !== "dummy_password"){
-            const res = await axiosPublicV2.post(`/account/auth/login`,
+            const res = await axiosPublicV2.post(`/account/auth/sign-in`,
               {
                 username_or_email: credentials.username_or_email,
                 password: credentials.password,

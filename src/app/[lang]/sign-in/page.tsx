@@ -1,34 +1,25 @@
 "use client";
 import Loading from "@/components/Loading";
 import { AuthFormContainer } from "@/components/Authentication/AuthFormContainer";
-import { ChangePassword } from "@/components/Authentication/ChangePassword";
-import { ForgotPasswordForm } from "@/components/Authentication/ForgotPasswordForm";
 import { LoginForm } from "@/components/Authentication/SignInForm";
-import { RegisterForm } from "@/components/Authentication/SignUpForm";
-import { SignUpGoogleForm } from "@/components/Authentication/SignUpGoogleForm";
-import VerificationEmail from "@/components/Authentication/VerifyEmail";
-import VerificationForgotPassword from "@/components/Authentication/VerifyForgotPassword";
 import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { RegisterDataProps } from "@/types/registerData";
 import Image from "next/image";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
+import {ForgotPasswordForm} from "@/components/Authentication/ForgotPasswordForm";
+import {RegisterDataProps} from "@/types/registerData";
 
 type ViewState =
-  | "login"
-  | "register"
+  | "signIn"
   | "forgot-password"
-  | "verify-email"
-  | "verify-forgot-password"
-  | "change-password"
-  | "signUpGoogle";
+  | "verify-forgot-password";
 
 export default function LoginPage() {
   const {
-    data: loginLanguageData,
+    data: signInLanguageData,
     isLoading,
     error,
   } = useGlobalTranslate(LanguageFile.AUTHEN);
@@ -43,20 +34,16 @@ export default function LoginPage() {
     }
   }, []);
 
-  const [currentView, setCurrentView] = useState<ViewState>(
-    viewParam ?? "login"
-  );
+  const [currentView, setCurrentView] = useState<ViewState>("signIn");
 
-  const [dataRegister, setDataRegister] = useState<RegisterDataProps | null>(null);
   const [forgotEmail, setForgotEmail] = useState<RegisterDataProps>();
-  const [tokenPassword, setTokenPassword] = useState<RegisterDataProps>();
   // Load registerData from sessionStorage if available, only on client
   console.log("🧭 currentView:", currentView);
   const route = useRouter();
 
 
 
-  if (isLoading) return <Loading />;
+  // if (isLoading) return <Loading />;
   if (error) return <div>Error</div>;
 
   return (
@@ -66,13 +53,13 @@ export default function LoginPage() {
           <div className="flex flex-col gap-2">
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
-                {loginLanguageData?.title_hire_through}
+                {signInLanguageData?.title_hire_through}
               </h2>
               <Image src={CategoriesImage.logodefault} alt="logo" />
             </div>
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
-                {loginLanguageData?.subtitle_safe_money}
+                {signInLanguageData?.subtitle_safe_money}
               </h2>
             </div>
           </div>
@@ -91,7 +78,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {loginLanguageData?.label_guaranteed_pay}
+                {signInLanguageData?.label_guaranteed_pay}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -101,7 +88,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {loginLanguageData?.label_professional_license}
+                {signInLanguageData?.label_professional_license}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -111,7 +98,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {loginLanguageData?.label_refund_policy}
+                {signInLanguageData?.label_refund_policy}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -121,7 +108,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {loginLanguageData?.label_hiring_advice}
+                {signInLanguageData?.label_hiring_advice}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -131,7 +118,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {loginLanguageData?.label_freelancer_verified}
+                {signInLanguageData?.label_freelancer_verified}
               </span>
             </div>
           </div>
@@ -143,96 +130,26 @@ export default function LoginPage() {
             src={CategoriesImage.logodefault}
             alt="logo"
           />
-          {currentView === "login" && (
+          {currentView === "signIn" && (
             <AuthFormContainer
-              title={loginLanguageData?.title_login_create_account}
+              title={signInLanguageData?.title_sign_in_create_account}
             >
               <LoginForm
-                switchToRegister={() => setCurrentView("register")}
+                switchToRegister={() => route.push("/sign-up")}
                 switchToForgotPassword={() => setCurrentView("forgot-password")}
-                switchToSignUpGoogle={() => setCurrentView("signUpGoogle")}
               />
             </AuthFormContainer>
           )}
-
-          {currentView === "register" && (
-            <AuthFormContainer
-              title={`${loginLanguageData?.link_create_account} Fastjob`}
-              onBack={() => setCurrentView("login")}
-            >
-              <RegisterForm
-                switchToVerifyEmail={() => setCurrentView("verify-email")}
-                setDataRegister={setDataRegister}
-              />
-            </AuthFormContainer>
-          )}
-          {currentView === "signUpGoogle" && (
-            <AuthFormContainer
-              title={`Sign up FastJob`}
-              onBack={() => setCurrentView("login")}
-            >
-              <SignUpGoogleForm
-                switchToVerifyEmail={() => setCurrentView("verify-email")}
-                setDataRegister={setDataRegister}
-              />
-            </AuthFormContainer>
-          )}
-
           {currentView === "forgot-password" && (
             <AuthFormContainer
-              title={loginLanguageData?.link_forgot_password}
-              onBack={() => setCurrentView("login")}
+              title={signInLanguageData?.link_forgot_password}
+              onBack={() => setCurrentView("signIn")}
             >
               <ForgotPasswordForm
                 setForgotEmail={setForgotEmail}
                 switchToVerifyForgotPassword={() =>
                   setCurrentView("verify-forgot-password")
                 }
-              />
-            </AuthFormContainer>
-          )}
-
-          {currentView === "verify-email" && (
-            <AuthFormContainer
-              title={loginLanguageData?.title_verify_email}
-              onBack={() => setCurrentView("register")}
-            >
-            {dataRegister ? (
-              <VerificationEmail
-                onVerifySuccess={() => {
-                  route.push("/");
-                }}
-                dataRegister={dataRegister}
-              />
-            ) : (
-              <div className="text-red-500">⚠️ Missing registration data. Please sign up again.</div>
-            )}
-            </AuthFormContainer>
-          )}
-          {currentView === "verify-forgot-password" && (
-            <AuthFormContainer
-              title={loginLanguageData?.change_password_title}
-              onBack={() => setCurrentView("forgot-password")}
-            >
-              <VerificationForgotPassword
-                onVerifySuccess={() => {
-                  route.push("/");
-                }}
-                forgotEmail={forgotEmail}
-                setTokenPassword={setTokenPassword}
-                switchToChangePassword={() => setCurrentView("change-password")}
-              />
-            </AuthFormContainer>
-          )}
-          {currentView === "change-password" && (
-            <AuthFormContainer
-              title="Change Password"
-              onBack={() => setCurrentView("verify-forgot-password")}
-            >
-              <ChangePassword
-                tokenPassword={tokenPassword}
-                switchToRegister={() => setCurrentView("register")}
-                switchToForgotPassword={() => setCurrentView("forgot-password")}
               />
             </AuthFormContainer>
           )}

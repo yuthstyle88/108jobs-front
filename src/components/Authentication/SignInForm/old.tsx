@@ -12,7 +12,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const loginSchema = z.object({
+const signInSchema = z.object({
   email: z.string().email("Email ไม่ถูกต้อง"),
   password: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
 });
@@ -31,8 +31,8 @@ export const LoginForm = ({
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -44,7 +44,7 @@ export const LoginForm = ({
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/";
 
-  const handleLogin = async (data: z.infer<typeof loginSchema>) => {
+  const handleLogin = async (data: z.infer<typeof signInSchema>) => {
     try {
       const result = await signIn("credentials", {
         redirect: false,
@@ -147,12 +147,12 @@ export const LoginForm = ({
       <div className="flex flex-col gap-4 mt-6">
         <SocialLoginButton
           icon={AuthenticateIcon.fb}
-          provider={authen?.button_login_facebook}
+          provider={authen?.button_sign_in_facebook}
           onClick={() => signIn("facebook")}
         />
         <SocialLoginButton
           icon={AuthenticateIcon.gg}
-          provider={authen?.button_login_google}
+          provider={authen?.button_sign_in_google}
           onClick={() => (window.location.href = "/api/auth/google")}
         />
       </div>

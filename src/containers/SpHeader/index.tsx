@@ -82,7 +82,7 @@ const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
             <SpUserAvatar />
           ) : (
             <Link prefetch={false}
-              href="/login"
+              href="/sign-in"
               className="flex-1 flex items-center justify-center p-2 text-white text-[24px] cursor-pointer"
             >
               <button className="flex items-center justify-center gap-2 w-8 h-8 rounded-full">

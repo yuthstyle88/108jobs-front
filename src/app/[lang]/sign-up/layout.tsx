@@ -2,7 +2,7 @@ import { generateLocalizedMetadata } from "@/lib/metadata";
 import { LayoutProps } from "@/types/layout";
 
 export async function generateMetadata() {
-  return generateLocalizedMetadata("login");
+  return generateLocalizedMetadata("signIn");
 }
 
 export default function SingUP({ children }: LayoutProps) {

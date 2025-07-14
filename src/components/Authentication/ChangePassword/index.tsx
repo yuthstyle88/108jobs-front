@@ -73,7 +73,7 @@ export const ChangePassword = ({
       }
 
       if (result.success === true) {
-        const loginResponse = await fetch("/api/auth/token-login", {
+        const signInResponse = await fetch("/api/auth/token-sign-in", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -81,7 +81,7 @@ export const ChangePassword = ({
           body: JSON.stringify({ token: tokenPassword }),
         });
 
-        if (loginResponse.ok) {
+        if (signInResponse.ok) {
           window.location.href = "/";
         } else {
           setApiError("Đăng nhập tự động thất bại");

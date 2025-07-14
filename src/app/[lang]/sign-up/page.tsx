@@ -1,7 +1,6 @@
 "use client";
 import Loading from "@/components/Loading";
 import { AuthFormContainer } from "@/components/Authentication/AuthFormContainer";
-import { SignUpGoogleForm } from "@/components/Authentication/SignUpGoogleForm";
 
 import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
@@ -11,11 +10,11 @@ import { RegisterDataProps } from "@/types/registerData";
 import Image from "next/image";
 import {useState} from "react";
 
-type ViewState = "google-signup" | "login" | "verify-email";
+type ViewState = "google-signup" | "signIn" | "verify-email";
 
 export default function SingUpPage() {
   const {
-    data: loginLanguageData,
+    data: signInLanguageData,
     isLoading,
     error,
   } = useGlobalTranslate(LanguageFile.AUTHEN);
@@ -36,13 +35,13 @@ export default function SingUpPage() {
           <div className="flex flex-col gap-2">
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
-                {loginLanguageData?.title_hire_through}
+                {signInLanguageData?.title_hire_through}
               </h2>
               <Image src={CategoriesImage.logodefault} alt="logo" />
             </div>
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
-                {loginLanguageData?.subtitle_safe_money}
+                {signInLanguageData?.subtitle_safe_money}
               </h2>
             </div>
           </div>
@@ -61,7 +60,7 @@ export default function SingUpPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {loginLanguageData?.label_guaranteed_pay}
+                {signInLanguageData?.label_guaranteed_pay}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -71,7 +70,7 @@ export default function SingUpPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {loginLanguageData?.label_professional_license}
+                {signInLanguageData?.label_professional_license}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -81,7 +80,7 @@ export default function SingUpPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {loginLanguageData?.label_refund_policy}
+                {signInLanguageData?.label_refund_policy}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -91,7 +90,7 @@ export default function SingUpPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {loginLanguageData?.label_hiring_advice}
+                {signInLanguageData?.label_hiring_advice}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -101,7 +100,7 @@ export default function SingUpPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {loginLanguageData?.label_freelancer_verified}
+                {signInLanguageData?.label_freelancer_verified}
               </span>
             </div>
           </div>
@@ -113,17 +112,6 @@ export default function SingUpPage() {
             src={CategoriesImage.logodefault}
             alt="logo"
           />
-          {currentView === "google-signup" && (
-            <AuthFormContainer
-              title={`Sign up FastJob`}
-              onBack={() => setCurrentView("login")}
-            >
-              <SignUpGoogleForm
-                switchToVerifyEmail={() => setCurrentView("verify-email")}
-                setDataRegister={setDataRegister}
-              />
-            </AuthFormContainer>
-          )}
 
         </div>
       </div>

@@ -107,7 +107,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
       }
 
       if (data.jwt) {
-        const loginResponse = await fetch("/api/auth/token-login", {
+        const signInResponse = await fetch("/api/auth/token-signIn", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -115,7 +115,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
           body: JSON.stringify({ token: data.jwt }),
         });
 
-        if (loginResponse.ok) {
+        if (signInResponse.ok) {
           window.location.href = "/";
         } else {
           setApiError("Đăng nhập tự động thất bại");

@@ -46,7 +46,7 @@ export interface GlobalLanguage {
   label_employment_button: string;
   label_seller_center: string;
   label_apply_to_be_freelancer_button: string;
-  label_login_button: string;
+  label_sign_in_button: string;
   hint_text_header_search: string;
   tittle_popular_header_search: string;
   tittle_header_menu_section_1: string;
@@ -148,7 +148,7 @@ export interface GlobalLanguage {
   fastwork_rewards_button: string;
   fastwork_rewards_subtext: string;
   go_to_fastwork_business: string;
-  login_steps_intro: string;
+  signIn_steps_intro: string;
   increase_hiring_opportunity: string;
   recruitment: string;
   hire_opportunity_title: string;
@@ -184,6 +184,7 @@ export interface LoginLanguage {
   placeholder_captcha_answer: string;
   label_freelancer_verified: string;
   invalid_email: string;
+  invalid_password: string;
   placeholder_password: string;
   placeholder_phone: string;
   verification_forgot_message: string;
@@ -197,7 +198,7 @@ export interface LoginLanguage {
   reload_captcha: string;
   username_already_exists: string;
   reset_password_title: string;
-  button_login_facebook: string;
+  button_sign_in_facebook: string;
   checkbox_terms_conditions: string;
   label_or: string;
   confirm_password_placeholder: string;
@@ -222,7 +223,7 @@ export interface LoginLanguage {
   password_label: string;
   email_phone_placeholder: string;
   label_username: string;
-  button_login_google: string;
+  button_sign_in_google: string;
   button_register_google: string;
   enter_code_prompt: string;
   label_username_or_email: string;
@@ -242,7 +243,7 @@ export interface LoginLanguage {
   error_username_length: string;
   username_max_32: string;
   button_proceed: string;
-  title_login_create_account: string;
+  title_sign_in_create_account: string;
   email_placeholder: string;
   checkbox_terms_conditions_redirect: string;
   change_password_title: string;
@@ -252,6 +253,9 @@ export interface LoginLanguage {
   require_captcha: string;
   invalid_name: string;
   not_found: string;
+  sign_in_error: string;
+  system_error: string;
+  label_or_sign_in_with: string;
 }
 
 export interface HomeLanguage {

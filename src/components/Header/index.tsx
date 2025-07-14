@@ -115,10 +115,10 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
             )}
           {!session && (
             <Link prefetch={false}
-              href="/login"
+              href="/sign-in"
               className="text-white text-sm hover:bg-blue-800 hover:text-white"
             >
-              {globalLanguageData?.label_login_button}
+              {globalLanguageData?.label_sign_in_button}
             </Link>
           )}
           {!session && <LanguageDropdown />}
@@ -248,7 +248,7 @@ export default Header;
 //             href="/sign-in"
 //             className="text-white text-sm hover:bg-blue-800 hover:text-white"
 //           >
-//             {languageData?.label_login_button}
+//             {languageData?.label_signIn_button}
 //           </Link>
 //           <Link prefetch={false}
 //             href="/chat"

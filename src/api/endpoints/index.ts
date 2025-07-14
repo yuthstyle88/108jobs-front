@@ -19,7 +19,7 @@ export const API_ROUTES = {
   auth: {
     change_password: "/users/password-change",
     forgot_password: "/email/reset/password",
-    login_google: "/sign-in/google",
+    sign_in_google: "/sign-in/google",
     oauth_google: "/oauth/authenticate",
     register: "/email/send/verify",
     resend_change_email: "/profile/contact/send/email",
@@ -34,7 +34,7 @@ export const API_ROUTES = {
   auth_v2: {
     register_v2: "/account/auth/register",
     verify_email_v2: "/account/auth/verify_email",
-    login_google_v2: "/google_login_url",
+    signIn_google_v2: "/google_sign_in_url",
   },
   location: {
     get_provinces: "/profile/countries",

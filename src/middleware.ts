@@ -78,7 +78,7 @@ export async function middleware(req: NextRequest) {
   if (!isLoggedIn) {
     const callbackUrl = encodeURIComponent(cleanPathname);
     return NextResponse.redirect(
-      new URL(`${langPrefix}/login?redirect=${callbackUrl}`, origin)
+      new URL(`${langPrefix}/sign-in?redirect=${callbackUrl}`, origin)
     );
   }
   const session = await auth();

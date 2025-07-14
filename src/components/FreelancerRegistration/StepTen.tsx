@@ -111,14 +111,14 @@ const StepTen: React.FC<StepTenProps> = ({
 
       if (res?.jwt) {
         setIsLogin(true);
-        const loginResult = await signIn("credentials", {
+        const signInResult = await signIn("credentials", {
           token: res.jwt,
           redirect: false,
           callbackUrl: "/apply-freelance/landing",
         });
 
-        if (loginResult?.url) {
-          const path = new URL(loginResult.url).pathname;
+        if (signInResult?.url) {
+          const path = new URL(signInResult.url).pathname;
           clearFormStorage();
           setIsSuccess(true);
           setIsLogin(false);
