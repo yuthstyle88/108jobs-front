@@ -1,5 +1,6 @@
 import { Language } from "lemmy-js-client";
-import { UserService } from "../../services";
+import {UserService} from "@/lib/services";
+
 
 /**
  * This shows what language you can select

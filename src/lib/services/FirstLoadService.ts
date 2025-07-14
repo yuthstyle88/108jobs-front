@@ -1,4 +1,4 @@
-import { isBrowser } from "@utils/browser";
+import { isBrowser } from "@/utils/browser";
 
 export class FirstLoadService {
   #isFirstLoad: boolean;

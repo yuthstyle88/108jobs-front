@@ -4,7 +4,7 @@ import { CustomInput } from "@/components/ui/InputField";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
-import { RegisterDataProps } from "@/types/registerData";
+import { SignUpDataProps } from "@/types/sign-up-data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -21,8 +21,8 @@ const changePasswordSchema = z
   });
 
 type ChangePasswordProps = {
-  tokenPassword?: RegisterDataProps;
-  switchToRegister: () => void;
+  tokenPassword?: SignUpDataProps;
+  switchToSingUp: () => void;
   switchToForgotPassword: () => void;
 };
 

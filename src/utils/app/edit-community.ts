@@ -1,4 +1,4 @@
-import { editListImmutable } from "@utils/helpers";
+import { editListImmutable } from "@/utils/helpers";
 import { CommunityView } from "lemmy-js-client";
 
 export default function editCommunity(

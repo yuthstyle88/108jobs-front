@@ -9,7 +9,7 @@ import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { RegisterDataProps } from "@/types/registerData";
+import { SignUpDataProps } from "@/types/sign-up-data";
 import Image from "next/image";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
@@ -43,10 +43,10 @@ export default function PasswordManagePage() {
     viewParam ?? "forgot-password"
   );
 
-  const [dataRegister, setDataRegister] = useState<RegisterDataProps | null>(null);
-  const [forgotEmail, setForgotEmail] = useState<RegisterDataProps>();
-  const [tokenPassword, setTokenPassword] = useState<RegisterDataProps>();
-  // Load registerData from sessionStorage if available, only on client
+  const [dataSingUp, setDataSingUp] = useState<SignUpDataProps | null>(null);
+  const [forgotEmail, setForgotEmail] = useState<SignUpDataProps>();
+  const [tokenPassword, setTokenPassword] = useState<SignUpDataProps>();
+  // Load singUpData from sessionStorage if available, only on client
   console.log("🧭 currentView:", currentView);
   const route = useRouter();
 
@@ -158,12 +158,12 @@ export default function PasswordManagePage() {
               title={signInLanguageData?.title_verify_email}
               onBack={() => setCurrentView("manage-password")}
             >
-            {dataRegister ? (
+            {dataSingUp ? (
               <VerificationEmail
                 onVerifySuccess={() => {
                   route.push("/");
                 }}
-                dataRegister={dataRegister}
+                dataSingUp={dataSingUp}
               />
             ) : (
               <div className="text-red-500">⚠️ Missing registration data. Please sign up again.</div>
@@ -192,7 +192,7 @@ export default function PasswordManagePage() {
             >
               <ChangePassword
                 tokenPassword={tokenPassword}
-                switchToRegister={() => setCurrentView("manage-password")}
+                switchToSingUp={() => setCurrentView("manage-password")}
                 switchToForgotPassword={() => setCurrentView("forgot-password")}
               />
             </AuthFormContainer>

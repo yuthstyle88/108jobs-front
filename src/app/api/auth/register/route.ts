@@ -7,7 +7,7 @@ export async function POST(request: Request) {
   const body = await request.json();
 
   try {
-    await axiosPublicV2.post(API_ROUTES.auth_v2.register_v2, {
+    await axiosPublicV2.post(API_ROUTES.auth_v2.singUp_v2, {
       username: body.username,
       email: body.email,
       password: body.password,

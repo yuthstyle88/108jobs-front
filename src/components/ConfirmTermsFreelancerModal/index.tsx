@@ -18,7 +18,7 @@ interface ConfirmTermsFreelancerModalProps {
   isLoading?: boolean;
 }
 
-const registerSchema = z.object({
+const signUpSchema = z.object({
   termsAccepted: z.literal(true),
   privacyAccepted: z.literal(true),
   promotionalAccepted: z.boolean().optional(),
@@ -34,7 +34,7 @@ const ConfirmTermsFreelancerModal: React.FC<
   } = useGlobalTranslate(LanguageFile.TERMS_AND_CONDITIONS);
 
   const { watch, register, reset } = useForm({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(signUpSchema),
     mode: "onChange",
   });
 

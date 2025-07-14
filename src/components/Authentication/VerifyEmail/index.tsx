@@ -2,18 +2,18 @@ import LoadingCircle from "@/components/LoadingCircle";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
-import { RegisterDataProps } from "@/types/registerData";
+import { SignUpDataProps } from "@/types/sign-up-data";
 import { useEffect, useRef, useState } from "react";
 
 interface VerificationEmailProps {
-  dataRegister?: RegisterDataProps;
+  dataSingUp?: SignUpDataProps;
   resendDelay?: number;
   onBack?: () => void;
   onVerifySuccess?: () => void;
 }
 
 const VerificationEmail: React.FC<VerificationEmailProps> = ({
-  dataRegister,
+  dataSingUp,
   resendDelay = 60,
 }) => {
   const authen = useTranslateFile(LanguageFile.AUTHEN);
@@ -113,7 +113,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
           setApiError("Đăng nhập tự động thất bại");
         }
       }
-      sessionStorage.removeItem("registerData");
+      sessionStorage.removeItem("singUpData");
     } catch (error) {
       console.error("Verification error:", error);
       setApiError(ERROR_CONSTANTS.SERVER_ERROR);
@@ -128,14 +128,14 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
 
     try {
       setIsSendAgain(true);
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch("/api/auth/singUp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: dataRegister?.email,
-          username: dataRegister?.username,
+          email: dataSingUp?.email,
+          username: dataSingUp?.username,
         }),
       });
 
@@ -161,7 +161,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
     <div className="text-center max-w-md mx-auto">
       <div className="my-[3rem]">
         <p className="text-text_primary text-base font-sans">
-          {authen?.message_verification_sent} <br /> {dataRegister?.email}
+          {authen?.message_verification_sent} <br /> {dataSingUp?.email}
         </p>
         <p className="text-text_primary text-base font-sans">
           {authen?.message_enter_code}

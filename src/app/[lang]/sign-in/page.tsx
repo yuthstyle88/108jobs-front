@@ -10,7 +10,7 @@ import Image from "next/image";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import {ForgotPasswordForm} from "@/components/Authentication/ForgotPasswordForm";
-import {RegisterDataProps} from "@/types/registerData";
+import {SignUpDataProps} from "@/types/sign-up-data";
 
 type ViewState =
   | "signIn"
@@ -36,8 +36,8 @@ export default function LoginPage() {
 
   const [currentView, setCurrentView] = useState<ViewState>("signIn");
 
-  const [forgotEmail, setForgotEmail] = useState<RegisterDataProps>();
-  // Load registerData from sessionStorage if available, only on client
+  const [forgotEmail, setForgotEmail] = useState<SignUpDataProps>();
+  // Load singUpData from sessionStorage if available, only on client
   console.log("🧭 currentView:", currentView);
   const route = useRouter();
 
@@ -135,7 +135,7 @@ export default function LoginPage() {
               title={signInLanguageData?.title_sign_in_create_account}
             >
               <LoginForm
-                switchToRegister={() => route.push("/sign-up")}
+                switchToSingUp={() => route.push("/sign-up")}
                 switchToForgotPassword={() => setCurrentView("forgot-password")}
               />
             </AuthFormContainer>

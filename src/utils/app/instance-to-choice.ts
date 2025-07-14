@@ -1,4 +1,4 @@
-import { Choice } from "@utils/types";
+import { Choice } from "@/utils/types";
 import { Instance } from "lemmy-js-client";
 
 export default function instanceToChoice({ id, domain }: Instance): Choice {

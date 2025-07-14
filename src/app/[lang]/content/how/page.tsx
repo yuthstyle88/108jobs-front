@@ -246,7 +246,7 @@ const HowSellAndBuy = () => {
             ) : (
               <Link prefetch={false} href="/start-selling" className="">
                 <button className="submit-button-custom py-2 px-4 w-full md:w-fit flex flex-row justify-center md:justify-start gap-2">
-                  <p>Register to be a Freelancer.</p>
+                  <p>SingUp to be a Freelancer.</p>
                   <ArrowRight className="w-5" />
                 </button>
               </Link>

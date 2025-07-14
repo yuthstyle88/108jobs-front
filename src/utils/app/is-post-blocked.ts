@@ -1,5 +1,5 @@
 import { MyUserInfo, PostView } from "lemmy-js-client";
-import { UserService } from "../../services";
+import {UserService} from "@/lib/services";
 
 export default function isPostBlocked(
   pv: PostView,

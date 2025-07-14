@@ -297,7 +297,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
               </div>
               <div className="flex flex-col gap-1 self-center">
                 <p className="text-base text-third font-semibold">
-                  Want to get work through Fastlance, register as a freelancer
+                  Want to get work through Fastlance, singUp as a freelancer
                   now!
                 </p>
                 <p className="text-[0.875rem] text-text_secondary">

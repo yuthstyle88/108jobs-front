@@ -6,11 +6,12 @@ import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { RegisterDataProps } from "@/types/registerData";
+import { SignUpDataProps } from "@/types/sign-up-data";
 import Image from "next/image";
 import {useState} from "react";
+import {SignUpForm} from "@/components/Authentication/SignUpForm";
 
-type ViewState = "google-signup" | "signIn" | "verify-email";
+type ViewState = "sign-up" | "verify-email";
 
 export default function SingUpPage() {
   const {
@@ -21,8 +22,8 @@ export default function SingUpPage() {
 
 
 
-  const [currentView, setCurrentView] = useState<ViewState>("google-signup");
-  const [dataRegister, setDataRegister] = useState<RegisterDataProps | null>(null);
+  const [currentView, setCurrentView] = useState<ViewState>("sign-up");
+  const [dataDataSignUp, setDataDataSignUp] = useState<SignUpDataProps | null>(null);
 
 
   if (isLoading) return <Loading />;
@@ -112,6 +113,17 @@ export default function SingUpPage() {
             src={CategoriesImage.logodefault}
             alt="logo"
           />
+          {currentView === "sign-up" && (
+            <AuthFormContainer
+              title={`Sign up FastJob`}
+              onBack={() => setCurrentView("sign-up")}
+            >
+              <SignUpForm
+                switchToVerifyEmail={() => setCurrentView("verify-email")}
+                setDataSignUp={setDataDataSignUp}
+              />
+            </AuthFormContainer>
+          )}
 
         </div>
       </div>

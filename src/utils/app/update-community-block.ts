@@ -1,6 +1,6 @@
 import { BlockCommunityResponse, MyUserInfo } from "lemmy-js-client";
-import { I18NextService, UserService } from "../../services";
-import { toast } from "../../toast";
+import { toast } from "@/toast";
+import {UserService} from "@/lib/services";
 
 export default function updateCommunityBlock(
   data: BlockCommunityResponse,
@@ -10,7 +10,7 @@ export default function updateCommunityBlock(
     if (data.blocked) {
       myUserInfo.community_blocks.push(data.community_view.community);
       toast(
-        `${I18NextService.i18n.t("blocked")} ${
+        `blocked ${
           data.community_view.community.name
         }`,
       );
@@ -19,7 +19,7 @@ export default function updateCommunityBlock(
         c => c.id !== data.community_view.community.id,
       );
       toast(
-        `${I18NextService.i18n.t("unblocked")} ${
+        `unblocked ${
           data.community_view.community.name
         }`,
       );

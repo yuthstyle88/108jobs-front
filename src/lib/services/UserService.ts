@@ -1,13 +1,12 @@
-import { isAuthPath } from "@utils/app";
-import { clearAuthCookie, isBrowser, setAuthCookie } from "@utils/browser";
+import { isAuthPath } from "@/utils/app";
+import { clearAuthCookie, isBrowser, setAuthCookie } from "@/utils/browser";
 import * as cookie from "cookie";
 import { jwtDecode } from "jwt-decode";
 import { LoginResponse, MyUserInfo } from "lemmy-js-client";
-import { toast } from "../toast";
-import { I18NextService } from "./I18NextService";
-import { amAdmin } from "@utils/roles";
+import { toast } from "@/toast";
+import { amAdmin } from "@/utils/roles";
 import { HttpService } from ".";
-import { authCookieName } from "../config";
+import {authCookieName} from "@/config";
 
 interface Claims {
   sub: number;
@@ -38,7 +37,7 @@ export class UserService {
   }) {
     if (isBrowser() && res.jwt) {
       if (showToast) {
-        toast(I18NextService.i18n.t("logged_in"));
+        toast("logged_in");
       }
       setAuthCookie(res.jwt);
       this.#setAuthInfo();
@@ -75,7 +74,7 @@ export class UserService {
 
       if (throwErr && isBrowser()) {
         console.error(msg);
-        toast(I18NextService.i18n.t("not_logged_in"), "danger");
+        toast("not_logged_in");
       }
 
       return undefined;

@@ -1,15 +1,14 @@
 import { Search, SearchType } from "lemmy-js-client";
-import { fetchLimit } from "../../config";
-import { HttpService } from "../../services";
+import { fetchLimit } from "@/config";
+import {HttpService} from "@/lib/services";
 
-export default function fetchSearchResults(q: string, type_: SearchType) {
+
+export default function fetchSearchResults(q: string, type_: string) {
   const form: Search = {
     q,
-    type_,
-    sort: "TopAll",
     listing_type: "All",
-    page: 1,
     limit: fetchLimit,
+    sort: "New"
   };
 
   return HttpService.client.search(form);

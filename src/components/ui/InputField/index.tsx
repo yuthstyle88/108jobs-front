@@ -2,13 +2,13 @@
 "use client";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { UseFormRegisterReturn } from "react-hook-form";
+import { UseFormSignUpReturn } from "react-hook-form";
 
 type InputProps = {
   type?: string;
   label?: string;
   name: string;
-  register?: UseFormRegisterReturn;
+  register?: UseFormSignUpReturn;
   error?: string;
   showPassword?: boolean;
   toggleShowPassword?: () => void;

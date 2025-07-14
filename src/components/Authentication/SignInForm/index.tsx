@@ -20,7 +20,7 @@ import {
   RequestState,
 } from "@/lib/services/HttpService";
 type LoginFormProps = {
-  switchToRegister: () => void;
+  switchToSingUp: () => void;
   switchToForgotPassword: () => void;
 };
 
@@ -37,7 +37,7 @@ interface State {
 
 
 export const LoginForm = ({
-  switchToRegister,
+  switchToSingUp,
   switchToForgotPassword,
 }: LoginFormProps) => {
   // Lemmy client – base URL configurable via env
@@ -211,7 +211,7 @@ export const LoginForm = ({
         <div className="flex justify-between text-sm text-blue-600 mt-4">
           <button
             type="button"
-            onClick={switchToRegister}
+            onClick={switchToSingUp}
             className="hover:underline"
           >
             {authen?.link_create_account}

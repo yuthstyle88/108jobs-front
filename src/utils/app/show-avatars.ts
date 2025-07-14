@@ -1,4 +1,5 @@
-import { UserService } from "../../services";
+import {UserService} from "@/lib/services";
+
 
 export default function showAvatars(
   myUserInfo = UserService.Instance.myUserInfo,

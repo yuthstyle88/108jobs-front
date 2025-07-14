@@ -4,7 +4,7 @@ import { CustomInput } from "@/components/ui/InputField";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
-import { RegisterDataProps } from "@/types/registerData";
+import { SignUpDataProps } from "@/types/sign-up-data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -14,23 +14,19 @@ import { CaptchaField } from "../CaptchaField";
 import { usePublicFetchV2 } from "@/hooks/api-hooks";
 import { CaptchaResponse } from "@/types/capcha";
 import { API_ROUTES } from "@/api/endpoints";
-import { RegisterFormData } from "@/types/formTypes/register";
-import {AuthenticateIcon} from "@/constants/icons";
-import {SocialLoginButton} from "@/components/ui/SocialLoginButton";
-import {router} from "next/client";
-import {signIn} from "next-auth/react";
+import { SignUpFormData } from "@/types/formTypes/sign-up";
 
-type RegisterFormProps = {
+type SignUpFormProps = {
   switchToVerifyEmail: () => void;
-  setDataRegister: (data: RegisterDataProps) => void;
+  setDataSignUp: (data: SignUpDataProps) => void;
 };
 
-export const RegisterForm = ({
+export const SignUpForm = ({
   switchToVerifyEmail,
-  setDataRegister,
-}: RegisterFormProps) => {
+  setDataSignUp,
+}: SignUpFormProps) => {
   const authen = useTranslateFile(LanguageFile.AUTHEN);
-  const registerSchema = z
+  const SignUpSchema = z
     .object({
       email: z.string().email(authen?.invalid_email),
       username: z.string().min(6, authen?.username_min_6),
@@ -48,7 +44,7 @@ export const RegisterForm = ({
       path: ["confirmPassword"],
     });
 
-  type RegisterFormDataType = z.infer<typeof registerSchema>;
+  type SignUpFormDataType = z.infer<typeof SignUpSchema>;
 
   const {
     register,
@@ -57,8 +53,8 @@ export const RegisterForm = ({
     setError,
     setValue,
     watch,
-  } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<SignUpFormData>({
+    resolver: zodResolver(SignUpSchema),
     mode: "onChange",
   });
 
@@ -71,7 +67,7 @@ export const RegisterForm = ({
   );
 
   useEffect(() => {
-    const storedData = sessionStorage.getItem("registerData");
+    const storedData = sessionStorage.getItem("SignUpData");
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       if (parsedData.email) setValue("email", parsedData.email);
@@ -80,12 +76,12 @@ export const RegisterForm = ({
     }
   }, [setValue]);
 
-  const onSubmit = async (data: RegisterFormDataType) => {
+  const onSubmit = async (data: SignUpFormDataType) => {
     try {
       setApiError(null);
-      sessionStorage.setItem("registerData", JSON.stringify(data));
+      sessionStorage.setItem("SignUpData", JSON.stringify(data));
 
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch("/api/auth/sign-up", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -141,7 +137,7 @@ export const RegisterForm = ({
       }
       refetch();
       switchToVerifyEmail();
-      setDataRegister(data);
+      setDataSignUp(data);
     } catch (error) {
       console.error("Registration error:", error);
       setApiError(
@@ -288,16 +284,6 @@ export const RegisterForm = ({
       </div>
       <div className="flex flex-col gap-3 mt-6">
         <div className="text-center text-sm text-gray-500">หรือสมัครด้วยบัญชีโซเชียล</div>
-
-        <SocialLoginButton
-          icon={AuthenticateIcon.gg}
-          provider={authen?.button_register_google}
-          onClick={() =>
-            signIn("google", {
-              callbackUrl: `/`,
-            })
-          }
-        />
       </div>
     </form>
   );

@@ -59,7 +59,7 @@ export async function checkEmailExists(email: string) {
   return axiosPublicV2.post("/oauth/email-exists", { email });
 }
 /**
- * Register a brand‑new user coming from an OAuth provider.
+ * SingUp a brand‑new user coming from an OAuth provider.
  *
  * @param provider            OAuth provider name (e.g. "google")
  * @param providerAccountId   Provider‑specific user ID
@@ -67,14 +67,14 @@ export async function checkEmailExists(email: string) {
  * @param emailAddress        User’s email
  * @param [roles="freelancer"]    Optional role(s) to assign. Defaults to "freelancer".
  */
-export async function registerUserWithOAuth(
+export async function singUpUserWithOAuth(
   provider: string,
   providerAccountId: string,
   fullName: string,
   emailAddress: string,
   roles: string,
 ) {
-  return axiosPublicV2.post("/oauth/register-with-oauth", {
+  return axiosPublicV2.post("/oauth/singUp-with-oauth", {
     oauthProvider: provider,
     providerAccountId,
     name: fullName,

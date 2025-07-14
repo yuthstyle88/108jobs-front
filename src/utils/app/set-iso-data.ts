@@ -1,5 +1,5 @@
-import { isBrowser } from "@utils/browser";
-import { IsoData, RouteData } from "../../interfaces";
+import { isBrowser } from "@/utils/browser";
+import { IsoData, RouteData } from "@/interfaces";
 
 export default function setIsoData<T extends RouteData>(
   context: any,
