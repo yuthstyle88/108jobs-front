@@ -123,7 +123,7 @@ export const LoginForm = ({
    console.log(requestUri);
     // store state in local storage
     localStorage.setItem(
-      "oauth_state",
+      "jwt",
       JSON.stringify({
         state,
         oauth_provider_id: params.oauth_provider.id,

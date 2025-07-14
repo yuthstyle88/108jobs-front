@@ -1,9 +1,24 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { middleware as langMiddleware } from "./middleware-lang";
-import {auth} from "@/lib/auth";
-import {getToken} from "@auth/core/jwt";
+import jwt from "jsonwebtoken";
 
+const TOKEN_COOKIE = "fastjob.session";
+const JWT_SECRET  = process.env.JWT_SECRET!;
 const VALID_LANGS = ["vi", "en", "th"];
+
+function getUserRoles(req: NextRequest): string[] {
+  const token = req.cookies.get(TOKEN_COOKIE)?.value;
+  if (!token) return [];
+
+  try {
+    // payload ควรมี { sub, roles, exp, ... }
+    const payload = jwt.verify(token, JWT_SECRET) as { roles?: string[] };
+    return payload.roles ?? [];
+  } catch (e) {
+    // token หมดอายุ / ปลอม
+    return [];
+  }
+}
 
 const roleBasedRoutes: Record<"employer" | "freelancer", string[]> = {
   employer: [
@@ -81,8 +96,7 @@ export async function middleware(req: NextRequest) {
       new URL(`${langPrefix}/sign-in?redirect=${callbackUrl}`, origin)
     );
   }
-  const session = await auth();
-  const userRoles = (session?.user?.roles ?? []) as string[];
+  const userRoles = getUserRoles(req);
 
   if (
     cleanPathname.startsWith("/seller") &&
