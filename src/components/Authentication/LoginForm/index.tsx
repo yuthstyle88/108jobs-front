@@ -165,14 +165,20 @@ class LoginFormClass extends Component<LoginFormProps & {
 
     this.hasFetchedSite = true;
     try {
-      const site = await new LemmyHttp(`${process.env.NEXT_PUBLIC_API_BASE_URL_V3}`).getSite({});
-      this.setState({
-        siteRes: site,
-        oauthProviders: site.oauth_providers ?? [],
-        hasFetchedSite: true,
-      });
+      const site = await HttpService.client.getSite();
+      if (site.state === "success") {
+        this.setState({
+          siteRes: site,
+          oauthProviders: site.data.oauth_providers ?? [],
+          hasFetchedSite: true,
+        });
+      }
     } catch (e) {
       console.error("fetch oauth providers failed", e);
+      this.setState({
+        hasFetchedSite: true,
+        oauthProviders: [],
+      });
     }
   }
 
