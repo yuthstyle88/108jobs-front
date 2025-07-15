@@ -20,8 +20,8 @@ import {
   HttpService,
   RequestState,
 } from "@/lib/services/HttpService";
-import {setIsoData} from "@/utils/app";
 import {IsoData} from "@/interfaces";
+import {toast} from "@/toast";
 
 type LoginFormProps = {
   switchToSingUp: () => void;
@@ -50,12 +50,12 @@ interface LoginFormState {
 }
 
 const withHooks = (Component: any) => {
-  return (props: any) => {
+  const WrappedWithHooks = (props: any) => {
     const authen = useTranslateFile(LanguageFile.AUTHEN);
     const router = useRouter();
     const searchParams = useSearchParams();
     const redirectUrl = searchParams.get("redirect") || "/";
-    
+
     const signInSchema = z.object({
       username_or_email: z
         .string()
@@ -63,7 +63,7 @@ const withHooks = (Component: any) => {
         .max(32, authen?.username_max_32),
       password: z.string().min(6, authen?.password_min_6),
     });
-    
+
     const formMethods = useForm<z.infer<typeof signInSchema>>({
       resolver: zodResolver(signInSchema),
     });
@@ -79,6 +79,11 @@ const withHooks = (Component: any) => {
       />
     );
   };
+
+  /* add explicit display name to satisfy react/display-name */
+  WrappedWithHooks.displayName = `withHooks(${Component.displayName || Component.name || 'Component'})`;
+
+  return WrappedWithHooks;
 };
 
 class LoginFormClass extends Component<LoginFormProps & {
@@ -104,6 +109,13 @@ class LoginFormClass extends Component<LoginFormProps & {
     oauthProviders: [],
     hasFetchedSite: false
   };
+
+  constructor(props: any, context: any) {
+    super(props, context);
+
+    this.handleSubmitTotp = this.handleSubmitTotp.bind(this);
+    this.handleLoginWithProvider = this.handleLoginWithProvider.bind(this);
+  }
 
 
   async componentDidMount() {
@@ -213,6 +225,24 @@ class LoginFormClass extends Component<LoginFormProps & {
       });
     }
   };
+
+  async handleSubmitTotp(totp: string) {
+    const loginRes = await HttpService.client.login({
+      password: this.state.form.password,
+      username_or_email: this.state.form.username_or_email,
+      totp_2fa_token: totp,
+    });
+
+    const successful = loginRes.state === "success";
+    if (successful) {
+      this.setState({ show2faModal: false });
+      await this.handleLoginSuccess(loginRes.data);
+    } else {
+      toast("incorrect_totp_code");
+    }
+
+    return successful;
+  }
 
   render() {
     const { switchToSingUp, switchToForgotPassword, authen, formMethods } = this.props;
