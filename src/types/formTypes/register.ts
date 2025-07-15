@@ -8,5 +8,5 @@ export type RegisterFormData = {
   promotionalAccepted?: boolean;
   captcha_uuid?: string;
   captcha_answer: string;
-  accountType: "employer" | "freelancer";
+  role: "Employer" | "Freelancer";
 };

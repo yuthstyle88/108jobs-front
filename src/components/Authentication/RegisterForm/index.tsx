@@ -37,7 +37,7 @@ export const RegisterForm = ({
       promotionalAccepted: z.boolean().optional(),
       captcha_uuid: z.string().optional(),
       captcha_answer: z.string().min(1, authen?.require_captcha),
-      accountType: z.enum(["employer", "freelancer"]).default("employer"),
+      role: z.enum(["Employer", "Freelancer"]).default("Employer"),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: authen?.not_match_password,
@@ -195,8 +195,8 @@ export const RegisterForm = ({
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
-              value="employer"
-              {...register("accountType")}
+              value="Employer"
+              {...register("role")}
               defaultChecked
             />
             {"Employer"}
@@ -204,8 +204,8 @@ export const RegisterForm = ({
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
-              value="freelancer"
-              {...register("accountType")}
+              value="Freelancer"
+              {...register("role")}
             />
             {"Freelancer"}
           </label>

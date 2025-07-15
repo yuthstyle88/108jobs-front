@@ -1,5 +1,4 @@
-import axios, {AxiosError, InternalAxiosRequestConfig} from "axios";
-// import { getSession, signOut } from "next-auth/react";
+import axios, {AxiosError} from "axios";
 import {jwtDecode, JwtPayload} from "jwt-decode";
 
 let cachedAccessToken: string | null = null;
@@ -8,15 +7,48 @@ export const setCachedToken = (token: string | null) => {
   cachedAccessToken = token;
 };
 
-const isTokenExpired = (token?: string | null) => {
-  if (!token) return true;
-  try {
-    const { exp } = jwtDecode<JwtPayload>(token);
-    return Date.now() >= (exp ?? 0) * 1_000 - 60_000;
-  } catch {
+const BUFFER_MS = 60_000;     // 1 min safety-buffer
+
+export function isTokenExpired(token?: string | null): boolean {
+  console.log("🔍  raw token:", token);
+
+  if (!token) {
+    console.log("❌  token is undefined/null → treat as expired");
     return true;
   }
-};
+
+  try {
+    /* ── decode ───────────────────────────────────────────── */
+    const payload = jwtDecode<JwtPayload>(token);
+    const expSec  = payload.exp ?? 0;          // epoch-seconds (0 = missing)
+    const expMs   = expSec * 1_000;            // epoch-milliseconds
+
+    /* ── timestamps ───────────────────────────────────────── */
+    const nowMs   = Date.now();
+    const nowIso  = new Date(nowMs).toISOString();
+    const expIso  = new Date(expMs).toISOString();
+    const diffMs  = expMs - nowMs;
+
+    /* ── compare with buffer ─────────────────────────────── */
+    const expired = nowMs >= expMs - BUFFER_MS;
+
+    /* ── pretty log table ─────────────────────────────────── */
+    console.table({
+      nowMs,
+      nowIso,
+      expSec,
+      expIso,
+      diffMs,
+      bufferMs: BUFFER_MS,
+      expired,
+    });
+   console.log("expired", expired)
+    return expired;
+  } catch (err) {
+    console.error("💥  jwtDecode failed:", err);
+    return true;                               // malformed token ⇒ treat expired
+  }
+}
 
 function createPublic(baseURL: string) {
   return axios.create({
@@ -31,42 +63,21 @@ export const axiosPublicV2 = createPublic(`${process.env.NEXT_PUBLIC_API_BASE_UR
 
 
 export const axiosPrivate = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL_V2,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-async function attachToken(
-  config: InternalAxiosRequestConfig,
-): Promise<InternalAxiosRequestConfig> {
-  /* 1. Refresh token if absent or near expiry */
+export const attachToken = (config: any) => {
   const token = sessionStorage.getItem("jwt");
-  if (isTokenExpired(token)) {
-    return config;
+  console.log("expired", token)
+  if (token && !isTokenExpired(token)) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-  cachedAccessToken = token;
-
-  /* 2. Append the token (if any) */
-  if (cachedAccessToken) {
-    // Ensure headers object exists
-    config.headers = config.headers ?? {};
-
-    // Compatible with both AxiosHeaders and plain object
-    if (typeof (config.headers as any).set === "function") {
-      (config.headers as any).set(
-        "Authorization",
-        `Bearer ${cachedAccessToken}`,
-      );
-    } else {
-      (config.headers as Record<string, string>).Authorization =
-        `Bearer ${cachedAccessToken}`;
-    }
-  }
-
   return config;
-}
+};
 
 axiosPrivate.interceptors.request.use(attachToken);
 axiosPrivate.interceptors.response.use(

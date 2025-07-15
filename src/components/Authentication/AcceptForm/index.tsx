@@ -32,7 +32,7 @@ export const AcceptForm = ({
     termsAccepted: z.boolean().refine((val) => val === true),
     privacyAccepted: z.boolean().refine((val) => val === true),
     promotionalAccepted: z.boolean().optional(),
-    accountType: z.enum(["employer", "freelancer"]).default("employer"),
+    role: z.enum(["Employer", "Freelancer"]).default("Employer"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: authen?.not_match_password,
@@ -56,7 +56,6 @@ export const AcceptForm = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const { data: session } = useSession();
-
   useEffect(() => {
     if (session) {
       try {
@@ -80,7 +79,7 @@ export const AcceptForm = ({
           email: data.email,
           password: data.password,
           passwordVerify: data.confirmPassword,
-          accountType: data.accountType,
+          role: data.role,
           termsAccepted: data.termsAccepted
       });
       if (response.status === 200) {
@@ -135,8 +134,8 @@ export const AcceptForm = ({
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
-              value="employer"
-              {...register("accountType")}
+              value="Employer"
+              {...register("role")}
               defaultChecked
             />
             {"Employer"}
@@ -144,8 +143,8 @@ export const AcceptForm = ({
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
-              value="freelancer"
-              {...register("accountType")}
+              value="Freelancer"
+              {...register("role")}
             />
             {"Freelancer"}
           </label>

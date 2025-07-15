@@ -4,5 +4,5 @@ export type RegisterOAuthFormData = {
   confirmPassword: string;
   privacyAccepted: boolean;
   termsAccepted: boolean;
-  accountType: "employer" | "freelancer";
+  role: "Employer" | "Freelancer";
 };
