@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {axiosPublicV2} from "@/lib/axios";
+import {LoginResponse} from "lemmy-js-client";
 
 export default function CallbackPage() {
 
@@ -44,9 +45,6 @@ export default function CallbackPage() {
           oauthProviderId: oauthState.oauth_provider_id,
           redirectUri: redirectUri ,
           answer: "FastJob",
-          name: oauthState.username ?? undefined,
-          email: oauthState.email ?? undefined,
-          roles: oauthState.roles ?? undefined,
         };
 
         const res = await axiosPublicV2.post("/oauth/authenticate", payload);
@@ -58,8 +56,12 @@ export default function CallbackPage() {
         // Clean up stored oauth state
         localStorage.removeItem("jwt");
         sessionStorage.setItem("jwt", res.data.jwt);
-        if (res.data.registration_created) {
-          router.replace("/sign-up?newUser=true");
+        const jwt = async (loginInRes: LoginResponse) => {
+          sessionStorage.setItem("jwt", loginInRes.jwt || "");
+        };
+
+        if (res.data.registrationCreated || res.data.applicationPending) {
+          router.replace("/update-term?newUser=true");
         } else {
           router.replace( "/");
         }
