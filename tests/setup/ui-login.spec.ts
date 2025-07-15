@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 test('Đăng nhập bằng UI và lưu session', async ({ page, context }) => {
-  await page.goto('/sign-in');
+  await page.goto('/login');
 
   await page.getByLabel('อีเมล').fill('giang.cat.luongg@gmail.com');
   await page.getByLabel('รหัสผ่าน').fill('giang4520022');

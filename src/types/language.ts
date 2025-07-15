@@ -148,7 +148,7 @@ export interface GlobalLanguage {
   fastwork_rewards_button: string;
   fastwork_rewards_subtext: string;
   go_to_fastwork_business: string;
-  signIn_steps_intro: string;
+  login_steps_intro: string;
   increase_hiring_opportunity: string;
   recruitment: string;
   hire_opportunity_title: string;
@@ -223,8 +223,8 @@ export interface LoginLanguage {
   password_label: string;
   email_phone_placeholder: string;
   label_username: string;
-  button_sign_in_google: string;
-  button_singUp_google: string;
+  button_login_google: string;
+  button_register_google: string;
   enter_code_prompt: string;
   label_username_or_email: string;
   password_placeholder: string;
@@ -424,8 +424,8 @@ export type ProfileCompanyInfoLanguage = {
   label_tax_id: string;
   placeholder_tax_id: string;
   button_search_company: string;
-  process_title_singUp_company: string;
-  process_description_singUp: string;
+  process_title_register_company: string;
+  process_description_register: string;
   process_title_approval: string;
   process_description_approval: string;
   process_title_notify_freelancer: string;
@@ -1116,7 +1116,7 @@ export type Commission = {
 };
 
 export type ApplyFreelancerSuccessLanguage = {
-  singUp_to_become_a_successful_freelancer: string;
+  register_to_become_a_successful_freelancer: string;
   you_can_start_posting_your_job_right_away_just_click_start_posting_job: string;
   start_posting_job: string;
   return_to_home_page: string;

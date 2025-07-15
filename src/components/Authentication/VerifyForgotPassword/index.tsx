@@ -2,15 +2,15 @@ import LoadingCircle from "@/components/LoadingCircle";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
-import { SignUpDataProps } from "@/types/sign-up-data";
+import { RegisterDataProps } from "@/types/register-data";
 import { useEffect, useRef, useState } from "react";
 interface VerificationForgotPasswordProps {
-  forgotEmail?: SignUpDataProps;
+  forgotEmail?: RegisterDataProps;
   resendDelay?: number;
   onBack?: () => void;
   onVerifySuccess?: () => void;
   switchToChangePassword: () => void;
-  setTokenPassword: (data: SignUpDataProps) => void;
+  setTokenPassword: (data: RegisterDataProps) => void;
 }
 
 const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({

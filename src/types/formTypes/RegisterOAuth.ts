@@ -1,4 +1,4 @@
-export type SignUpGoogleFormData = {
+export type RegisterOAuthFormData = {
   email: string;
   name: string;
   termsAccepted: boolean; 

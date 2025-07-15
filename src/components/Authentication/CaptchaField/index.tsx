@@ -4,15 +4,15 @@ import CaptChaSkeleton from "@/components/ui/CaptChaSkeleton";
 import { CustomInput } from "@/components/ui/InputField";
 import { usePublicFetchV2 } from "@/hooks/api-hooks";
 import { CaptchaResponse } from "@/types/capcha";
-import { SignUpFormData } from "@/types/formTypes/sign-up";
+import { RegisterFormData } from "@/types/formTypes/register";
 import { LoginLanguage } from "@/types/language";
 import { RefreshCcw } from "lucide-react";
 import { useEffect } from "react";
-import { UseFormRegister as UseFormSignUp} from "react-hook-form";
+import { UseFormRegister} from "react-hook-form";
 
 type CaptchaFieldProps = {
   setCaptchaUuid: (uuid: string) => void;
-  register: UseFormSignUp<SignUpFormData>;
+  register: UseFormRegister<RegisterFormData>;
   error?: string;
   language: Partial<LoginLanguage> | null | undefined;
 };

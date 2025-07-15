@@ -19,9 +19,9 @@ export const API_ROUTES = {
   auth: {
     change_password: "/users/password-change",
     forgot_password: "/email/reset/password",
-    sign_in_google: "/sign-in/google",
+    sign_in_google: "/login/google",
     oauth_google: "/oauth/authenticate",
-    singUp: "/email/send/verify",
+    register: "/email/send/verify",
     resend_change_email: "/profile/contact/send/email",
     verify_email: "/users/verify-email",
     resend_verify_email: "/users/resend-verify-email",
@@ -32,9 +32,9 @@ export const API_ROUTES = {
     exchange_key: "/account/auth/exchange_key",
   },
   auth_v2: {
-    singUp_v2: "/account/auth/sing-up",
+    register_v2: "/account/auth/register",
     verify_email_v2: "/account/auth/verify_email",
-    signIn_google_v2: "/google_sign_in_url",
+    login_google_v2: "/google_sign_in_url",
   },
   location: {
     get_provinces: "/profile/countries",

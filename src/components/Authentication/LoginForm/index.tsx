@@ -26,12 +26,12 @@ import {UserService} from "@/lib/services";
 import {setIsoData} from "@/utils/app";
 
 type LoginFormProps = {
-  switchToSingUp: () => void;
+  switchToRegister: () => void;
   switchToForgotPassword: () => void;
 };
 
 interface State {
-  signInRes: RequestState<LoginResponse>;
+  loginRes: RequestState<LoginResponse>;
   form: {
     username_or_email: string;
     password: string;
@@ -50,12 +50,10 @@ interface LoginFormState {
   oauthProviders: PublicOAuthProvider[];
   hasFetchedSite: boolean;
 }
-interface MyLoginResponse extends LoginResponse{
-  myUserInfo: MyUserInfo;
-}
+
 
 async function handleLoginSuccess(i: LoginFormClass, loginRes: LoginResponse) {
-  UserService.Instance.signIn({
+  UserService.Instance.login({
     res: loginRes,
   });
   const site = await HttpService.client.getSite();
@@ -90,7 +88,7 @@ const withHooks = (Component: any) => {
     const searchParams = useSearchParams();
     const redirectUrl = searchParams.get("redirect") || "/";
 
-    const signInSchema = z.object({
+    const loginSchema = z.object({
       username_or_email: z
         .string()
         .min(6, authen?.please_enter_email_or_username_min_6)
@@ -98,8 +96,8 @@ const withHooks = (Component: any) => {
       password: z.string().min(6, authen?.password_min_6),
     });
 
-    const formMethods = useForm<z.infer<typeof signInSchema>>({
-      resolver: zodResolver(signInSchema),
+    const formMethods = useForm<z.infer<typeof loginSchema>>({
+      resolver: zodResolver(loginSchema),
     });
 
     return (
@@ -109,7 +107,7 @@ const withHooks = (Component: any) => {
         router={router}
         redirectUrl={redirectUrl}
         formMethods={formMethods}
-        signInSchema={signInSchema}
+        loginSchema={loginSchema}
       />
     );
   };
@@ -125,13 +123,13 @@ class LoginFormClass extends Component<LoginFormProps & {
   router: any;
   redirectUrl: string;
   formMethods: any;
-  signInSchema: any;
+  loninSchema: any;
 }> {
   private isoData: IsoData | null = null;
   private hasFetchedSite = false;
 
   state: State = {
-    signInRes: EMPTY_REQUEST,
+    loginRes: EMPTY_REQUEST,
     form: {
       username_or_email: "",
       password: "",
@@ -229,17 +227,17 @@ class LoginFormClass extends Component<LoginFormProps & {
     window.location.assign(requestUri);
   };
 
-  handleLoginSuccess = async (signInRes: LoginResponse) => {
-    sessionStorage.setItem("jwt", signInRes.jwt || "");
+  handleLoginSuccess = async (loginInRes: LoginResponse) => {
+    sessionStorage.setItem("jwt", loginInRes.jwt || "");
   };
   handleLogin = async (data: any) => {
     try {
-      const signInRes = await HttpService.client.login({
+      const loginRes = await HttpService.client.login({
         username_or_email: data.username_or_email,
         password: data.password,
       });
       
-      switch (signInRes.state) {
+      switch (loginRes.state) {
         case "failed": {
           this.props.formMethods.setError("password", {
             type: "manual",
@@ -248,7 +246,7 @@ class LoginFormClass extends Component<LoginFormProps & {
           break;
         }
         case "success": {
-          await handleLoginSuccess(this, signInRes.data);
+          await handleLoginSuccess(this, loginRes.data);
           break;
         }
       }
@@ -280,7 +278,7 @@ class LoginFormClass extends Component<LoginFormProps & {
   }
 
   render() {
-    const { switchToSingUp, switchToForgotPassword, authen, formMethods } = this.props;
+    const { switchToRegister, switchToForgotPassword, authen, formMethods } = this.props;
     const { showPassword, oauthProviders } = this.state;
     const { register, handleSubmit, formState: { errors, isSubmitting } } = formMethods;
 
@@ -323,7 +321,7 @@ class LoginFormClass extends Component<LoginFormProps & {
           <div className="flex justify-between text-sm text-blue-600 mt-4">
             <button
               type="button"
-              onClick={switchToSingUp}
+              onClick={switchToRegister}
               className="hover:underline"
             >
               {authen?.link_create_account}

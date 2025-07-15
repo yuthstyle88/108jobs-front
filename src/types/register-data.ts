@@ -1,4 +1,4 @@
-export type SignUpDataProps = {
+export type RegisterDataProps = {
   email: string;
   username?: string;
   password?: string;

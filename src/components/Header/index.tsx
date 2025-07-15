@@ -115,7 +115,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
             )}
           {!session && (
             <Link prefetch={false}
-              href="/sign-in"
+              href="/login"
               className="text-white text-sm hover:bg-blue-800 hover:text-white"
             >
               {globalLanguageData?.label_sign_in_button}
@@ -245,7 +245,7 @@ export default Header;
 //             {languageData?.label_apply_to_be_freelancer_button}
 //           </Link>
 //           <Link prefetch={false}
-//             href="/sign-in"
+//             href="/login"
 //             className="text-white text-sm hover:bg-blue-800 hover:text-white"
 //           >
 //             {languageData?.label_signIn_button}
@@ -262,7 +262,7 @@ export default Header;
 //           </Link>
 //           <NotificationDropdown />
 //           <Link prefetch={false}
-//             href="/sign-in"
+//             href="/login"
 //             className="text-white text-sm hover:bg-blue-800 hover:text-white"
 //           >
 //             <div className="flex items-center gap-2 bg-white rounded-full h-[2rem]">

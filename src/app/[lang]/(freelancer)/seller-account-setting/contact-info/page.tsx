@@ -90,7 +90,7 @@ const ContactInfo = () => {
   } = form;
 
   const {
-    register: emailSignUp,
+    register: emailRegister,
     handleSubmit: handleEmailSubmit,
     reset: resetEmail,
     formState: { isSubmitting: isSubmittingEmail },
@@ -230,7 +230,7 @@ const ContactInfo = () => {
                   </label>
                   <input
                     type="email"
-                    {...emailSignUp("email")}
+                    {...emailRegister("email")}
                     className={`text-text_primary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                       apiError
                         ? "border-[#ea6357] text-[#ea6357]"

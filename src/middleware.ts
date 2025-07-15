@@ -81,7 +81,7 @@ export async function middleware(req: NextRequest) {
 
   const isLoggedIn = Boolean(sessionToken);
 
-  if (cleanPathname === "/sign-in") {
+  if (cleanPathname === "/login") {
     if (!isLoggedIn) return NextResponse.next();
     return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
   }
@@ -93,7 +93,7 @@ export async function middleware(req: NextRequest) {
   if (!isLoggedIn) {
     const callbackUrl = encodeURIComponent(cleanPathname);
     return NextResponse.redirect(
-      new URL(`${langPrefix}/sign-in?redirect=${callbackUrl}`, origin)
+      new URL(`${langPrefix}/login?redirect=${callbackUrl}`, origin)
     );
   }
   const userRoles = getUserRoles(req);

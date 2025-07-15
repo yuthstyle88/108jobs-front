@@ -6,24 +6,24 @@ import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { SignUpDataProps } from "@/types/sign-up-data";
+import { RegisterDataProps } from "@/types/register-data";
 import Image from "next/image";
 import {useState} from "react";
-import {SignUpForm} from "@/components/Authentication/SignUpForm";
+import {RegisterForm} from "@/components/Authentication/RegisterForm";
 
-type ViewState = "sign-up" | "verify-email";
+type ViewState = "register" | "verify-email";
 
-export default function SingUpPage() {
+export default function RegisterPage() {
   const {
-    data: signInLanguageData,
+    data: loginLanguageData,
     isLoading,
     error,
   } = useGlobalTranslate(LanguageFile.AUTHEN);
 
 
 
-  const [currentView, setCurrentView] = useState<ViewState>("sign-up");
-  const [dataDataSignUp, setDataDataSignUp] = useState<SignUpDataProps | null>(null);
+  const [currentView, setCurrentView] = useState<ViewState>("register");
+  const [dataDataRegister, setDataDataRegister] = useState<RegisterDataProps | null>(null);
 
 
   if (isLoading) return <Loading />;
@@ -36,13 +36,13 @@ export default function SingUpPage() {
           <div className="flex flex-col gap-2">
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
-                {signInLanguageData?.title_hire_through}
+                {loginLanguageData?.title_hire_through}
               </h2>
               <Image src={CategoriesImage.logodefault} alt="logo" />
             </div>
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
-                {signInLanguageData?.subtitle_safe_money}
+                {loginLanguageData?.subtitle_safe_money}
               </h2>
             </div>
           </div>
@@ -61,7 +61,7 @@ export default function SingUpPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_guaranteed_pay}
+                {loginLanguageData?.label_guaranteed_pay}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -71,7 +71,7 @@ export default function SingUpPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_professional_license}
+                {loginLanguageData?.label_professional_license}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -81,7 +81,7 @@ export default function SingUpPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_refund_policy}
+                {loginLanguageData?.label_refund_policy}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -91,7 +91,7 @@ export default function SingUpPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_hiring_advice}
+                {loginLanguageData?.label_hiring_advice}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -101,7 +101,7 @@ export default function SingUpPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_freelancer_verified}
+                {loginLanguageData?.label_freelancer_verified}
               </span>
             </div>
           </div>
@@ -113,14 +113,14 @@ export default function SingUpPage() {
             src={CategoriesImage.logodefault}
             alt="logo"
           />
-          {currentView === "sign-up" && (
+          {currentView === "register" && (
             <AuthFormContainer
               title={`Sign up FastJob`}
-              onBack={() => setCurrentView("sign-up")}
+              onBack={() => setCurrentView("register")}
             >
-              <SignUpForm
+              <RegisterForm
                 switchToVerifyEmail={() => setCurrentView("verify-email")}
-                setDataSignUp={setDataDataSignUp}
+                setDataRegister={setDataDataRegister}
               />
             </AuthFormContainer>
           )}

@@ -12,7 +12,7 @@ const Hiring = () => {
         {global?.company_registration_title}
       </span>
       <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
-        {global?.signIn_steps_intro} <br />
+        {global?.login_steps_intro} <br />
         1. {global?.company_registration_step_1} <br />
         2. {global?.company_registration_step_2} <br />
         3. {global?.company_registration_step_3}

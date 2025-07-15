@@ -74,7 +74,7 @@ axiosPrivate.interceptors.response.use(
     async (error: AxiosError) => {
       // if (error.response?.status === 401) {
       //   cachedAccessToken = null;
-      //   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL_V2}/account/auth/sign-in`;
+      //   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL_V2}/account/auth/login`;
       //   await signOut({ callbackUrl: url});
       // }
       return Promise.reject(error);

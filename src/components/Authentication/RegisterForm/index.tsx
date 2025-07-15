@@ -4,7 +4,7 @@ import { CustomInput } from "@/components/ui/InputField";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
-import { SignUpDataProps } from "@/types/sign-up-data";
+import { RegisterDataProps } from "@/types/register-data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -14,19 +14,19 @@ import { CaptchaField } from "../CaptchaField";
 import { usePublicFetchV2 } from "@/hooks/api-hooks";
 import { CaptchaResponse } from "@/types/capcha";
 import { API_ROUTES } from "@/api/endpoints";
-import { SignUpFormData } from "@/types/formTypes/sign-up";
+import { RegisterFormData } from "@/types/formTypes/register";
 
-type SignUpFormProps = {
+type RegisterFormProps = {
   switchToVerifyEmail: () => void;
-  setDataSignUp: (data: SignUpDataProps) => void;
+  setDataRegister: (data: RegisterDataProps) => void;
 };
 
-export const SignUpForm = ({
+export const RegisterForm = ({
   switchToVerifyEmail,
-  setDataSignUp,
-}: SignUpFormProps) => {
+  setDataRegister,
+}: RegisterFormProps) => {
   const authen = useTranslateFile(LanguageFile.AUTHEN);
-  const SignUpSchema = z
+  const RegisterSchema = z
     .object({
       email: z.string().email(authen?.invalid_email),
       username: z.string().min(6, authen?.username_min_6),
@@ -44,7 +44,7 @@ export const SignUpForm = ({
       path: ["confirmPassword"],
     });
 
-  type SignUpFormDataType = z.infer<typeof SignUpSchema>;
+  type RegisterFormDataType = z.infer<typeof RegisterSchema>;
 
   const {
     register,
@@ -53,8 +53,8 @@ export const SignUpForm = ({
     setError,
     setValue,
     watch,
-  } = useForm<SignUpFormData>({
-    resolver: zodResolver(SignUpSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(RegisterSchema),
     mode: "onChange",
   });
 
@@ -67,7 +67,7 @@ export const SignUpForm = ({
   );
 
   useEffect(() => {
-    const storedData = sessionStorage.getItem("SignUpData");
+    const storedData = sessionStorage.getItem("RegisterData");
     if (storedData) {
       const parsedData = JSON.parse(storedData);
       if (parsedData.email) setValue("email", parsedData.email);
@@ -76,12 +76,12 @@ export const SignUpForm = ({
     }
   }, [setValue]);
 
-  const onSubmit = async (data: SignUpFormDataType) => {
+  const onSubmit = async (data: RegisterFormDataType) => {
     try {
       setApiError(null);
-      sessionStorage.setItem("SignUpData", JSON.stringify(data));
+      sessionStorage.setItem("RegisterUpData", JSON.stringify(data));
 
-      const response = await fetch("/api/auth/sign-up", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -137,7 +137,7 @@ export const SignUpForm = ({
       }
       refetch();
       switchToVerifyEmail();
-      setDataSignUp(data);
+      setDataRegister(data);
     } catch (error) {
       console.error("Registration error:", error);
       setApiError(

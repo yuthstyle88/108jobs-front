@@ -9,7 +9,7 @@ import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { SignUpDataProps } from "@/types/sign-up-data";
+import { RegisterDataProps } from "@/types/register-data";
 import Image from "next/image";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
@@ -24,7 +24,7 @@ type ViewState =
 
 export default function PasswordManagePage() {
   const {
-    data: signInLanguageData,
+    data: loginLanguageData,
     isLoading,
     error,
   } = useGlobalTranslate(LanguageFile.AUTHEN);
@@ -43,9 +43,9 @@ export default function PasswordManagePage() {
     viewParam ?? "forgot-password"
   );
 
-  const [dataSingUp, setDataSingUp] = useState<SignUpDataProps | null>(null);
-  const [forgotEmail, setForgotEmail] = useState<SignUpDataProps>();
-  const [tokenPassword, setTokenPassword] = useState<SignUpDataProps>();
+  const [dataRegister, setDataRegister] = useState<RegisterDataProps | null>(null);
+  const [forgotEmail, setForgotEmail] = useState<RegisterDataProps>();
+  const [tokenPassword, setTokenPassword] = useState<RegisterDataProps>();
   // Load singUpData from sessionStorage if available, only on client
   console.log("🧭 currentView:", currentView);
   const route = useRouter();
@@ -62,13 +62,13 @@ export default function PasswordManagePage() {
           <div className="flex flex-col gap-2">
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
-                {signInLanguageData?.title_hire_through}
+                {loginLanguageData?.title_hire_through}
               </h2>
               <Image src={CategoriesImage.logodefault} alt="logo" />
             </div>
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
-                {signInLanguageData?.subtitle_safe_money}
+                {loginLanguageData?.subtitle_safe_money}
               </h2>
             </div>
           </div>
@@ -87,7 +87,7 @@ export default function PasswordManagePage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_guaranteed_pay}
+                {loginLanguageData?.label_guaranteed_pay}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -97,7 +97,7 @@ export default function PasswordManagePage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_professional_license}
+                {loginLanguageData?.label_professional_license}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -107,7 +107,7 @@ export default function PasswordManagePage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_refund_policy}
+                {loginLanguageData?.label_refund_policy}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -117,7 +117,7 @@ export default function PasswordManagePage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_hiring_advice}
+                {loginLanguageData?.label_hiring_advice}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -127,7 +127,7 @@ export default function PasswordManagePage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_freelancer_verified}
+                {loginLanguageData?.label_freelancer_verified}
               </span>
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function PasswordManagePage() {
           />
           {currentView === "forgot-password" && (
             <AuthFormContainer
-              title={signInLanguageData?.link_forgot_password}
+              title={loginLanguageData?.link_forgot_password}
               onBack={() => setCurrentView("manage-password")}
             >
               <ForgotPasswordForm
@@ -155,15 +155,15 @@ export default function PasswordManagePage() {
 
           {currentView === "verify-email" && (
             <AuthFormContainer
-              title={signInLanguageData?.title_verify_email}
+              title={loginLanguageData?.title_verify_email}
               onBack={() => setCurrentView("manage-password")}
             >
-            {dataSingUp ? (
+            {dataRegister ? (
               <VerificationEmail
                 onVerifySuccess={() => {
                   route.push("/");
                 }}
-                dataSingUp={dataSingUp}
+                dataRegister={dataRegister}
               />
             ) : (
               <div className="text-red-500">⚠️ Missing registration data. Please sign up again.</div>
@@ -172,7 +172,7 @@ export default function PasswordManagePage() {
           )}
           {currentView === "verify-forgot-password" && (
             <AuthFormContainer
-              title={signInLanguageData?.change_password_title}
+              title={loginLanguageData?.change_password_title}
               onBack={() => setCurrentView("manage-password")}
             >
               <VerificationForgotPassword
@@ -192,7 +192,7 @@ export default function PasswordManagePage() {
             >
               <ChangePassword
                 tokenPassword={tokenPassword}
-                switchToSingUp={() => setCurrentView("manage-password")}
+                switchToRegister={() => setCurrentView("manage-password")}
                 switchToForgotPassword={() => setCurrentView("forgot-password")}
               />
             </AuthFormContainer>

@@ -4,7 +4,7 @@ import { CustomInput } from "@/components/ui/InputField";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
-import { SignUpDataProps } from "@/types/sign-up-data";
+import { RegisterDataProps } from "@/types/register-data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -21,8 +21,8 @@ const changePasswordSchema = z
   });
 
 type ChangePasswordProps = {
-  tokenPassword?: SignUpDataProps;
-  switchToSingUp: () => void;
+  tokenPassword?: RegisterDataProps;
+  switchToRegister: () => void;
   switchToForgotPassword: () => void;
 };
 
@@ -73,7 +73,7 @@ export const ChangePassword = ({
       }
 
       if (result.success === true) {
-        const signInResponse = await fetch("/api/auth/token-sign-in", {
+        const loginResponse = await fetch("/api/auth/token-login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -81,7 +81,7 @@ export const ChangePassword = ({
           body: JSON.stringify({ token: tokenPassword }),
         });
 
-        if (signInResponse.ok) {
+        if (loginResponse.ok) {
           window.location.href = "/";
         } else {
           setApiError("Đăng nhập tự động thất bại");

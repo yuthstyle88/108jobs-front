@@ -2,18 +2,18 @@ import LoadingCircle from "@/components/LoadingCircle";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
-import { SignUpDataProps } from "@/types/sign-up-data";
+import { RegisterDataProps } from "@/types/register-data";
 import { useEffect, useRef, useState } from "react";
 
 interface VerificationEmailProps {
-  dataSingUp?: SignUpDataProps;
+  dataRegister?: RegisterDataProps;
   resendDelay?: number;
   onBack?: () => void;
   onVerifySuccess?: () => void;
 }
 
 const VerificationEmail: React.FC<VerificationEmailProps> = ({
-  dataSingUp,
+  dataRegister,
   resendDelay = 60,
 }) => {
   const authen = useTranslateFile(LanguageFile.AUTHEN);
@@ -99,7 +99,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
       }
 
       if (data.jwt) {
-        const signInResponse = await fetch("/api/auth/token-signIn", {
+        const loginResponse = await fetch("/api/auth/token-login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -107,13 +107,13 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
           body: JSON.stringify({ token: data.jwt }),
         });
 
-        if (signInResponse.ok) {
+        if (loginResponse.ok) {
           window.location.href = "/";
         } else {
           setApiError("Đăng nhập tự động thất bại");
         }
       }
-      sessionStorage.removeItem("singUpData");
+      sessionStorage.removeItem("registerData");
     } catch (error) {
       console.error("Verification error:", error);
       setApiError(ERROR_CONSTANTS.SERVER_ERROR);
@@ -128,14 +128,14 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
 
     try {
       setIsSendAgain(true);
-      const response = await fetch("/api/auth/singUp", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: dataSingUp?.email,
-          username: dataSingUp?.username,
+          email: dataRegister?.email,
+          username: dataRegister?.username,
         }),
       });
 
@@ -161,7 +161,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
     <div className="text-center max-w-md mx-auto">
       <div className="my-[3rem]">
         <p className="text-text_primary text-base font-sans">
-          {authen?.message_verification_sent} <br /> {dataSingUp?.email}
+          {authen?.message_verification_sent} <br /> {dataRegister?.email}
         </p>
         <p className="text-text_primary text-base font-sans">
           {authen?.message_enter_code}

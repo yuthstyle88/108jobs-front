@@ -28,7 +28,7 @@ export class UserService {
     this.#setAuthInfo();
   }
 
-  public signIn({
+  public login({
     res,
     showToast = true,
   }: {

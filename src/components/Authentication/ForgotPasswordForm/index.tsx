@@ -4,7 +4,7 @@ import { CustomInput } from "@/components/ui/InputField";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
-import { SignUpDataProps } from "@/types/sign-up-data";
+import { RegisterDataProps } from "@/types/register-data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -16,7 +16,7 @@ const forgotPasswordSchema = z.object({
 
 type VerifyForgotPasswordProps = {
   switchToVerifyForgotPassword: () => void;
-  setForgotEmail: (data: SignUpDataProps) => void;
+  setForgotEmail: (data: RegisterDataProps) => void;
 };
 
 type VerifyForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;

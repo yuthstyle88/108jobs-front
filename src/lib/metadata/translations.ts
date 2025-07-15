@@ -17,7 +17,7 @@ type LangSeoData = {
   jobBoard: SEOPageContent;
   promotion: SEOPageContent;
   catalog: SEOPageContent;
-  signIn: SEOPageContent;
+  login: SEOPageContent;
   how: SEOPageContent;
   guarantee: SEOPageContent;
   term: SEOPageContent;
@@ -73,7 +73,7 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
       description:
         "เลือกบริการจากฟรีแลนซ์คุณภาพทุกหมวดหมู่ ไม่ว่าจะเป็นออกแบบ การตลาด เขียนโปรแกรม และอื่นๆ บนแพลตฟอร์ม Fastjob",
     },
-    signIn: {
+    login: {
       title: "เข้าสู่ระบบ fastwork.co",
       description:
         "เข้าสู่ระบบเพื่อเริ่มต้นใช้งานแพลตฟอร์มฟรีแลนซ์อันดับ 1 ของไทย",
@@ -151,7 +151,7 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
       description:
         "Browse quality freelance services across all categories – design, marketing, development and more, only on Fastjob.",
     },
-    signIn: {
+    login: {
       title: "Authentication to fastwork.co",
       description:
         "Sign in to manage your projects, hire freelancers and grow your business on Fastjob.",
@@ -229,7 +229,7 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
       description:
         "Khám phá các dịch vụ freelancer chất lượng trong mọi lĩnh vực: thiết kế, marketing, lập trình và nhiều hơn nữa tại Fastjob.",
     },
-    signIn: {
+    login: {
       title: "Đăng nhập fastwork.co",
       description:
         "Đăng nhập để quản lý dự án và thuê freelancer chất lượng trên nền tảng Fastjob.",

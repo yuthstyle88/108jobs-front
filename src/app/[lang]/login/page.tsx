@@ -1,7 +1,7 @@
 "use client";
 import Loading from "@/components/Loading";
 import { AuthFormContainer } from "@/components/Authentication/AuthFormContainer";
-import { LoginForm } from "@/components/Authentication/SignInForm";
+import { LoginForm } from "@/components/Authentication/LoginForm";
 import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
@@ -10,16 +10,16 @@ import Image from "next/image";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import {ForgotPasswordForm} from "@/components/Authentication/ForgotPasswordForm";
-import {SignUpDataProps} from "@/types/sign-up-data";
+import {RegisterDataProps} from "@/types/register-data";
 
 type ViewState =
-  | "signIn"
+  | "login"
   | "forgot-password"
   | "verify-forgot-password";
 
 export default function LoginPage() {
   const {
-    data: signInLanguageData,
+    data: loginLanguageData,
     isLoading,
     error,
   } = useGlobalTranslate(LanguageFile.AUTHEN);
@@ -34,9 +34,9 @@ export default function LoginPage() {
     }
   }, []);
 
-  const [currentView, setCurrentView] = useState<ViewState>("signIn");
+  const [currentView, setCurrentView] = useState<ViewState>("login");
 
-  const [forgotEmail, setForgotEmail] = useState<SignUpDataProps>();
+  const [forgotEmail, setForgotEmail] = useState<RegisterDataProps>();
   // Load singUpData from sessionStorage if available, only on client
   console.log("🧭 currentView:", currentView);
   const route = useRouter();
@@ -53,13 +53,13 @@ export default function LoginPage() {
           <div className="flex flex-col gap-2">
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
-                {signInLanguageData?.title_hire_through}
+                {loginLanguageData?.title_hire_through}
               </h2>
               <Image src={CategoriesImage.logodefault} alt="logo" />
             </div>
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
-                {signInLanguageData?.subtitle_safe_money}
+                {loginLanguageData?.subtitle_safe_money}
               </h2>
             </div>
           </div>
@@ -78,7 +78,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_guaranteed_pay}
+                {loginLanguageData?.label_guaranteed_pay}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -88,7 +88,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_professional_license}
+                {loginLanguageData?.label_professional_license}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -98,7 +98,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_refund_policy}
+                {loginLanguageData?.label_refund_policy}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -108,7 +108,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_hiring_advice}
+                {loginLanguageData?.label_hiring_advice}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -118,7 +118,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {signInLanguageData?.label_freelancer_verified}
+                {loginLanguageData?.label_freelancer_verified}
               </span>
             </div>
           </div>
@@ -130,20 +130,20 @@ export default function LoginPage() {
             src={CategoriesImage.logodefault}
             alt="logo"
           />
-          {currentView === "signIn" && (
+          {currentView === "login" && (
             <AuthFormContainer
-              title={signInLanguageData?.title_sign_in_create_account}
+              title={loginLanguageData?.title_sign_in_create_account}
             >
               <LoginForm
-                switchToSingUp={() => route.push("/sign-up")}
+                switchToRegister={() => route.push("/register")}
                 switchToForgotPassword={() => setCurrentView("forgot-password")}
               />
             </AuthFormContainer>
           )}
           {currentView === "forgot-password" && (
             <AuthFormContainer
-              title={signInLanguageData?.link_forgot_password}
-              onBack={() => setCurrentView("signIn")}
+              title={loginLanguageData?.link_forgot_password}
+              onBack={() => setCurrentView("login")}
             >
               <ForgotPasswordForm
                 setForgotEmail={setForgotEmail}

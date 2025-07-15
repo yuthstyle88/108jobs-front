@@ -1,5 +1,5 @@
 export default function isAnonymousPath(pathname: string) {
-  return /^\/(signIn.*|signup|password_change.*|verify_email.*)\b/g.test(
+  return /^\/(login.*|register|password_change.*|verify_email.*)\b/g.test(
     pathname,
   );
 }
