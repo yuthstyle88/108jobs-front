@@ -80,3 +80,10 @@ export enum VoteContentType {
   Post,
   Comment,
 }
+
+declare global {
+  interface Window {
+    isoData: IsoData;
+    checkLazyScripts?: () => void;
+  }
+}

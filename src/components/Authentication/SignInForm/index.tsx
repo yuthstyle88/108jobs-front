@@ -13,7 +13,7 @@ import {
   GetSiteResponse,
   LoginResponse,
   OAuthProvider,
-  PublicOAuthProvider,
+  PublicOAuthProvider, MyUserInfo,
 } from "lemmy-js-client";
 import {
   EMPTY_REQUEST,
@@ -22,6 +22,8 @@ import {
 } from "@/lib/services/HttpService";
 import {IsoData} from "@/interfaces";
 import {toast} from "@/toast";
+import {UserService} from "@/lib/services";
+import {setIsoData} from "@/utils/app";
 
 type LoginFormProps = {
   switchToSingUp: () => void;
@@ -47,6 +49,38 @@ interface LoginFormState {
   showPassword: boolean;
   oauthProviders: PublicOAuthProvider[];
   hasFetchedSite: boolean;
+}
+interface MyLoginResponse extends LoginResponse{
+  myUserInfo: MyUserInfo;
+}
+
+async function handleLoginSuccess(i: LoginFormClass, loginRes: LoginResponse) {
+  UserService.Instance.signIn({
+    res: loginRes,
+  });
+  const site = await HttpService.client.getSite();
+
+  if (site.state === "success") {
+    try {
+      const isoData = setIsoData(i.context);
+      if (isoData && isoData.site_res) {
+        isoData.site_res.oauth_providers = site.data.oauth_providers;
+        isoData.site_res.admin_oauth_providers = site.data.admin_oauth_providers;
+      }
+    } catch (error) {
+      console.error("Error updating isoData:", error);
+    }
+  }
+
+  // ใช้ redirectUrl จาก props แทน prev
+  const { redirectUrl } = i.props;
+
+  // ใช้ router จาก props แทน history
+  if (redirectUrl) {
+    i.props.router.replace(redirectUrl);
+  } else {
+    i.props.router.replace("/");
+  }
 }
 
 const withHooks = (Component: any) => {
@@ -115,10 +149,12 @@ class LoginFormClass extends Component<LoginFormProps & {
 
     this.handleSubmitTotp = this.handleSubmitTotp.bind(this);
     this.handleLoginWithProvider = this.handleLoginWithProvider.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
   }
 
 
   async componentDidMount() {
+    this.isoData = setIsoData(this.context);
     if (this.isoData?.site_res) {
       this.setState({
         siteRes: this.isoData.site_res,
@@ -196,10 +232,9 @@ class LoginFormClass extends Component<LoginFormProps & {
   handleLoginSuccess = async (signInRes: LoginResponse) => {
     sessionStorage.setItem("jwt", signInRes.jwt || "");
   };
-
   handleLogin = async (data: any) => {
     try {
-      const signInRes = await HttpService.client.signIn({
+      const signInRes = await HttpService.client.login({
         username_or_email: data.username_or_email,
         password: data.password,
       });
@@ -213,7 +248,7 @@ class LoginFormClass extends Component<LoginFormProps & {
           break;
         }
         case "success": {
-          await this.handleLoginSuccess(signInRes.data);
+          await handleLoginSuccess(this, signInRes.data);
           break;
         }
       }

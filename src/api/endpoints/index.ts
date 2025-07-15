@@ -32,7 +32,7 @@ export const API_ROUTES = {
     exchange_key: "/account/auth/exchange_key",
   },
   auth_v2: {
-    singUp_v2: "/account/auth/singUp",
+    singUp_v2: "/account/auth/sing-up",
     verify_email_v2: "/account/auth/verify_email",
     signIn_google_v2: "/google_sign_in_url",
   },
