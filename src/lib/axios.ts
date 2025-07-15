@@ -7,46 +7,14 @@ export const setCachedToken = (token: string | null) => {
   cachedAccessToken = token;
 };
 
-const BUFFER_MS = 60_000;     // 1 min safety-buffer
-
 export function isTokenExpired(token?: string | null): boolean {
-  console.log("🔍  raw token:", token);
-
-  if (!token) {
-    console.log("❌  token is undefined/null → treat as expired");
-    return true;
-  }
+  if (!token) return true;
 
   try {
-    /* ── decode ───────────────────────────────────────────── */
-    const payload = jwtDecode<JwtPayload>(token);
-    const expSec  = payload.exp ?? 0;          // epoch-seconds (0 = missing)
-    const expMs   = expSec * 1_000;            // epoch-milliseconds
-
-    /* ── timestamps ───────────────────────────────────────── */
-    const nowMs   = Date.now();
-    const nowIso  = new Date(nowMs).toISOString();
-    const expIso  = new Date(expMs).toISOString();
-    const diffMs  = expMs - nowMs;
-
-    /* ── compare with buffer ─────────────────────────────── */
-    const expired = nowMs >= expMs - BUFFER_MS;
-
-    /* ── pretty log table ─────────────────────────────────── */
-    console.table({
-      nowMs,
-      nowIso,
-      expSec,
-      expIso,
-      diffMs,
-      bufferMs: BUFFER_MS,
-      expired,
-    });
-   console.log("expired", expired)
-    return expired;
-  } catch (err) {
-    console.error("💥  jwtDecode failed:", err);
-    return true;                               // malformed token ⇒ treat expired
+    const { exp = 0 } = jwtDecode<JwtPayload>(token);
+    return Date.now() >= exp * 1000 - BUFFER_MS;
+  } catch {
+    return true;
   }
 }
 
