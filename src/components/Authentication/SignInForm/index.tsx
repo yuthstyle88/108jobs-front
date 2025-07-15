@@ -89,6 +89,7 @@ class LoginFormClass extends Component<LoginFormProps & {
   signInSchema: any;
 }> {
   private isoData: IsoData | null = null;
+  private hasFetchedSite = false;
 
   state: State = {
     signInRes: EMPTY_REQUEST,
@@ -105,41 +106,29 @@ class LoginFormClass extends Component<LoginFormProps & {
   };
 
 
-  componentDidMount() {
+  async componentDidMount() {
+    if (this.isoData?.site_res) {
+      this.setState({
+        siteRes: this.isoData.site_res,
+        oauthProviders: this.isoData.site_res.oauth_providers ?? [],
+        hasFetchedSite: true,
+      });
+      return;
+    }
+    if (this.hasFetchedSite || this.state.hasFetchedSite) return;
+
+    this.hasFetchedSite = true;
     try {
-      this.isoData = setIsoData(this.context);
-      if (this.isoData?.site_res) {
-        this.setState({
-          siteRes: this.isoData.site_res,
-          oauthProviders: this.isoData.site_res.oauth_providers || [],
-          hasFetchedSite: true
-        });
-      } else {
-        this.fetchOAuthProviders();
-      }
-    } catch (error) {
-      console.error("Error initializing isoData:", error);
-      this.fetchOAuthProviders();
+      const site = await new LemmyHttp(`${process.env.NEXT_PUBLIC_API_BASE_URL_V3}`).getSite({});
+      this.setState({
+        siteRes: site,
+        oauthProviders: site.oauth_providers ?? [],
+        hasFetchedSite: true,
+      });
+    } catch (e) {
+      console.error("fetch oauth providers failed", e);
     }
   }
-
-  fetchOAuthProviders = async () => {
-    if (this.state.hasFetchedSite) return;
-    
-    try {
-      const lemmy = new LemmyHttp(
-        process.env.NEXT_PUBLIC_API_BASE_URL_V3 ?? "http://localhost:1234"
-      );
-      const site = await lemmy.getSite({}) as GetSiteResponse;
-      this.setState({
-        oauthProviders: site.oauth_providers ?? [],
-        siteRes: site,
-        hasFetchedSite: true
-      });
-    } catch (err) {
-      console.error("Failed to load OAuth providers", err);
-    }
-  };
 
   toggleShowPassword = () => {
     this.setState((prevState: LoginFormState) => ({
