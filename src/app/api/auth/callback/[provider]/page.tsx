@@ -59,7 +59,7 @@ export default function CallbackPage() {
         localStorage.removeItem("jwt");
         sessionStorage.setItem("jwt", res.data.jwt);
         if (res.data.registration_created) {
-          router.replace("/sign-in?newUser=true");
+          router.replace("/sign-up?newUser=true");
         } else {
           router.replace( "/");
         }
