@@ -42,11 +42,11 @@ async function attachToken(
   config: InternalAxiosRequestConfig,
 ): Promise<InternalAxiosRequestConfig> {
   /* 1. Refresh token if absent or near expiry */
-  if (isTokenExpired(cachedAccessToken)) {
-    // const session = await getSession();
+  const token = sessionStorage.getItem("jwt");
+  if (isTokenExpired(token)) {
     return config;
-    // cachedAccessToken = session?.accessToken ?? null;
   }
+  cachedAccessToken = token;
 
   /* 2. Append the token (if any) */
   if (cachedAccessToken) {
