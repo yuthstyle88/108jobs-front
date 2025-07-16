@@ -4,7 +4,7 @@ export type UpdateDataProps = {
   confirmPassword?: string;
   termsAccepted?: boolean;
   privacyAccepted?: boolean;
-  role: "employer" | "freelancer";
+  role: "Employer" | "Freelancer";
 };
 
 
