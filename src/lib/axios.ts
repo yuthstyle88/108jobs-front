@@ -7,15 +7,9 @@ export const setCachedToken = (token: string | null) => {
   cachedAccessToken = token;
 };
 
-export function isTokenExpired(token?: string | null): boolean {
-  if (!token) return true;
-
-  try {
-    const { exp = 0 } = jwtDecode<JwtPayload>(token);
-    return Date.now() >= exp * 1000 - BUFFER_MS;
-  } catch {
-    return true;
-  }
+export function isTokenExpired(token: string): boolean {
+  const payload = jwtDecode<{ exp: number }>(token);
+  return Date.now() >= payload.exp * 1000;
 }
 
 function createPublic(baseURL: string) {

@@ -1,5 +1,5 @@
-import { PostView } from "lemmy-js-client";
-import {UserService} from "@/lib/services";
+import { PostView } from "../../lib/lemmy-js-client";
+import {UserService} from "@/services";
 
 export default function nsfwCheck(
   pv: PostView,

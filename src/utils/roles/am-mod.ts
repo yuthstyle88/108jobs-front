@@ -1,5 +1,5 @@
-import { CommunityId } from "lemmy-js-client";
-import {UserService} from "@/lib/services";
+import { CommunityId } from "../../lib/lemmy-js-client";
+import {UserService} from "@/services";
 
 
 export default function amMod(

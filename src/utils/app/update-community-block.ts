@@ -1,6 +1,6 @@
-import { BlockCommunityResponse, MyUserInfo } from "lemmy-js-client";
+import { BlockCommunityResponse, MyUserInfo } from "../../lib/lemmy-js-client";
 import { toast } from "@/toast";
-import {UserService} from "@/lib/services";
+import {UserService} from "@/services";
 
 export default function updateCommunityBlock(
   data: BlockCommunityResponse,

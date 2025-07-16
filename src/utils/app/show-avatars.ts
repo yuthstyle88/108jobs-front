@@ -1,4 +1,4 @@
-import {UserService} from "@/lib/services";
+import {UserService} from "@/services";
 
 
 export default function showAvatars(

@@ -1,5 +1,5 @@
-import { Language } from "lemmy-js-client";
-import {UserService} from "@/lib/services";
+import { Language } from "../../lib/lemmy-js-client";
+import {UserService} from "@/services";
 
 
 /**

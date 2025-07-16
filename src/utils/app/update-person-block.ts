@@ -1,7 +1,7 @@
-import { BlockPersonResponse, MyUserInfo } from "lemmy-js-client";
+import { BlockPersonResponse, MyUserInfo } from "../../lib/lemmy-js-client";
 
 import { toast } from "@/toast";
-import {UserService} from "@/lib/services";
+import {UserService} from "@/services";
 
 export default function updatePersonBlock(
   data: BlockPersonResponse,

@@ -7,6 +7,7 @@ import getIdFromString from "./get-id-from-string";
 import getBoolFromString from "./get-bool-from-string";
 import getPageFromString from "./get-page-from-string";
 import getQueryString from "./get-query-string";
+import getQueryParams from "./get-query-params";
 import getRandomCharFromAlphabet from "./get-random-char-from-alphabet";
 import getRandomFromList from "./get-random-from-list";
 import { groupBy } from "./group-by";
@@ -35,6 +36,7 @@ export {
   getBoolFromString,
   getPageFromString,
   getQueryString,
+  getQueryParams,
   getRandomCharFromAlphabet,
   getRandomFromList,
   groupBy,

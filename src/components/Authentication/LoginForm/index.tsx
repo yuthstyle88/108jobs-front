@@ -9,20 +9,19 @@ import React, { Component } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
-  LemmyHttp,
   GetSiteResponse,
   LoginResponse,
   OAuthProvider,
-  PublicOAuthProvider, MyUserInfo,
-} from "lemmy-js-client";
+  PublicOAuthProvider,
+} from "../../../lib/lemmy-js-client";
 import {
   EMPTY_REQUEST,
   HttpService,
   RequestState,
-} from "@/lib/services/HttpService";
+} from "@/services/HttpService";
 import {IsoData} from "@/interfaces";
 import {toast} from "@/toast";
-import {UserService} from "@/lib/services";
+import {UserService} from "@/services";
 import {setIsoData} from "@/utils/app";
 
 type LoginFormProps = {
@@ -123,7 +122,7 @@ class LoginFormClass extends Component<LoginFormProps & {
   router: any;
   redirectUrl: string;
   formMethods: any;
-  loninSchema: any;
+  loginSchema: any;
 }> {
   private isoData: IsoData | null = null;
   private hasFetchedSite = false;
@@ -215,18 +214,17 @@ class LoginFormClass extends Component<LoginFormProps & {
         `state=${state}`,
       ].join("&");
     console.log(requestUri);
-    
+
     localStorage.setItem(
-      "jwt",
+      "oauth_state",
       JSON.stringify({
         state,
-        oauth_provider_id: params.oauth_provider.id,
-        redirect_uri: redirectUri,
+        oauthProviderId: params.oauth_provider.id,
+        redirectUri: redirectUri,
         prev: params.prev ?? "/",
         username: params.username,
         answer: params.answer,
-        show_nsfw: params.show_nsfw,
-        expires_at: Date.now() + 5 * 60_000,
+        expiresAt: Date.now() + 5 * 60_000,
       }),
     );
 

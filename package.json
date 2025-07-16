@@ -31,7 +31,7 @@
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
-    "lemmy-js-client": "^1.0.0-vote-view.0",
+    "lemmy-js-client": "file:./src/lib/lemmy-js-client",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.476.0",

@@ -1,4 +1,4 @@
-import { CommunityView } from "lemmy-js-client";
+import { CommunityView } from "../../lib/lemmy-js-client";
 
 export default interface CommunityTribute {
   key: string;

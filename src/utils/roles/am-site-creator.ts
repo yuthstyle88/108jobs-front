@@ -1,5 +1,5 @@
-import { PersonView } from "lemmy-js-client";
-import {UserService} from "@/lib/services";
+import { PersonView } from "../../lib/lemmy-js-client";
+import {UserService} from "@/services";
 
 export default function amSiteCreator(
   creator_id: number,

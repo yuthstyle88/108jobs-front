@@ -1,77 +1,152 @@
 "use client";
 
-import { LandingImage } from "@/constants/images";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import {axiosPublicV2} from "@/lib/axios";
-import {LoginResponse} from "lemmy-js-client";
+import { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner"; // หรือไลบรารีที่คุณใช้สำหรับ toast notifications
 
-export default function CallbackPage() {
+import { HttpService } from "@/services/HttpService";
+import { UserService } from "@/services";
 
+// ฟังก์ชันสำหรับดึงค่า query parameters
+function getOAuthCallbackQueryParams() {
   const searchParams = useSearchParams();
+  return {
+    code: searchParams.get("code") || undefined,
+    state: searchParams.get("state") || undefined,
+  };
+}
+
+export default function OAuthCallbackPage() {
   const router = useRouter();
-  const [sending, setSending] = useState(true);
-  const [sendError, setSendError] = useState<null | string>(null);
+  const { code, state } = getOAuthCallbackQueryParams();
 
   useEffect(() => {
-    // Grab OAuth params from the URL
-    const code = searchParams.get("code");
+    async function handleOAuth() {
+      try {
+        // ดึงข้อมูล state จาก localStorage
+        const localOAuthState = JSON.parse(
+          localStorage.getItem("oauth_state") || "{}"
+        );
 
-    const pathname = window.location.pathname;
-    const segments = pathname.split("/");
-    const oauth_provider = segments[segments.length - 1];
+        // ตรวจสอบความถูกต้องของ OAuth state
+        if (
+          !(
+            state &&
+            code &&
+            localOAuthState?.state &&
+            localOAuthState?.oauthProviderId &&
+            localOAuthState?.expiresAt &&
+            state === localOAuthState.state
+          ) ||
+          localOAuthState.expiresAt < Date.now()
+        ) {
+          // OAuth ล้มเหลวหรือหมดอายุ
+          toast.error("การตรวจสอบ OAuth ไม่ถูกต้อง");
+          router.replace("/login");
+          return;
+        }
 
-    if (!code) {
-      setSendError("Missing OAuth code");
-      setSending(false);
-      return;
+        // เรียก API เพื่อยืนยันตัวตนด้วย OAuth
+        const loginRes = await HttpService.client.authenticateWithOAuth({
+          code,
+          oauthProviderId: localOAuthState.oauthProviderId,
+          redirectUri: localOAuthState.redirectUri,
+          name: localOAuthState.name,
+          email: localOAuthState.email,
+          answer: localOAuthState.answer,
+        });
+
+        if (loginRes.state === "success") {
+          if (loginRes.data.jwt) {
+            // Login สำเร็จ
+            await handleLoginSuccess(loginRes.data, localOAuthState.prev);
+          } else {
+            // ไม่มี JWT แต่มีการตอบกลับอื่นๆ
+            if (loginRes.data.verifyEmailSent) {
+              toast.info("อีเมลยืนยันตัวตนถูกส่งแล้ว");
+            }
+            if (loginRes.data.registrationCreated) {
+              toast.info("ส่งคำขอลงทะเบียนแล้ว");
+            }
+            router.push("/login");
+          }
+        } else if (loginRes.state === "failed") {
+          // จัดการกับข้อผิดพลาด
+          let errRedirect = "/login";
+
+          switch (loginRes.err.message) {
+            case "registration_username_required":
+            case "registration_application_answer_required":
+              errRedirect = `/signup?sso_provider_id=${localOAuthState.oauthProviderId}`;
+              toast.error(loginRes.err.message);
+              break;
+            case "registration_application_is_pending":
+              toast.error("คำขอลงทะเบียนของคุณอยู่ระหว่างดำเนินการ");
+              break;
+            case "registration_denied":
+            case "oauth_authorization_invalid":
+            case "oauth_login_failed":
+            case "oauth_registration_closed":
+            case "email_already_exists":
+            case "username_already_exists":
+            case "no_email_setup":
+              toast.error(loginRes.err.message);
+              break;
+            default:
+              toast.error("การเข้าสู่ระบบไม่ถูกต้อง");
+              break;
+          }
+
+          router.push(errRedirect);
+        }
+      } catch (error) {
+        console.error("OAuth error:", error);
+        toast.error("เกิดข้อผิดพลาดในการเข้าสู่ระบบ");
+        router.replace("/login");
+      }
     }
 
-    (async () => {
-      try {
-        // Retrieve the information we stored before redirecting to Google
-        const oauthStateRaw = localStorage.getItem("jwt");
-        let oauthState: any = {};
-        try {
-          oauthState = oauthStateRaw ? JSON.parse(oauthStateRaw) : {};
-        } catch {
-          /* ignore JSON parse errors – we'll fall back to empty object */
-        }
-        const redirectUri = `${window.location.origin}/api/auth/callback/${oauth_provider}`;
-        const payload = {
-          code,
-          oauthProvider: oauth_provider,
-          oauthProviderId: oauthState.oauth_provider_id,
-          redirectUri: redirectUri ,
-          answer: "FastJob",
-        };
+   handleOAuth().then(r => console.log("login success"));
+  }, [code, state, router]);
 
-        const res = await axiosPublicV2.post("/oauth/authenticate", payload);
+  return (
+    <div className="container mx-auto flex justify-center items-center min-h-[50vh]">
+      <div className="text-center">กำลังเข้าสู่ระบบ...</div>
+    </div>
+  );
+}
 
-        if (res.status !== 200) {
-          throw new Error(`Server responded ${res.status}`);
-        }
+// ฟังก์ชันช่วยจัดการการเข้าสู่ระบบที่สำเร็จ
+async function handleLoginSuccess(loginData: any, prev?: string) {
+  try {
+    // บันทึกข้อมูลการเข้าสู่ระบบ
+    UserService.Instance.login({
+      res: loginData,
+    });
 
-        // Clean up stored oauth state
-        localStorage.removeItem("jwt");
-        sessionStorage.setItem("jwt", res.data.jwt);
-        const jwt = async (loginInRes: LoginResponse) => {
-          sessionStorage.setItem("jwt", loginInRes.jwt || "");
-        };
+    // ดึงข้อมูลไซต์หลังจากเข้าสู่ระบบ
+    const site = await HttpService.client.getSite();
 
-        if (res.data.registrationCreated || res.data.applicationPending) {
-          router.replace("/update-term?newUser=true");
-        } else {
-          router.replace( "/");
-        }
+    if (site.state === "success") {
+      UserService.Instance.myUserInfo = site.data.my_user;
 
-      } catch (err: any) {
-        console.error("Failed to complete OAuth flow:", err);
-        setSendError(err.message ?? "Unknown error");
-      } finally {
-        setSending(false);
-      }
-    })();
-  }, [searchParams, router]);
+      // อาจต้องเรียกใช้ฟังก์ชันอัพเดทธีม หรือตั้งค่าอื่นๆ ตามต้องการ
+      // refreshTheme();
+    }
+
+    if (prev) {
+      window.location.href = prev;
+    } else if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.location.href = "/";
+    }
+
+    // อัปเดตข้อมูลการแจ้งเตือนและข้อความที่ยังไม่ได้อ่าน (ถ้ามี)
+    // UnreadCounterService.Instance.updateAll();
+  } catch (error) {
+    console.error("Login success handler error:", error);
+    // ถ้าเกิดข้อผิดพลาด นำทางไปยังหน้าหลัก
+    window.location.href = "/";
+  }
 }

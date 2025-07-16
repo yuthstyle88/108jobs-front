@@ -1,4 +1,4 @@
-import { Comment } from "lemmy-js-client";
+import { Comment } from "../../lib/lemmy-js-client";
 
 export default function getDepthFromComment(
   comment?: Comment,

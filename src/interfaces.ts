@@ -1,8 +1,8 @@
 import { ErrorPageData } from "@/utils/types";
 import {
   GetSiteResponse,
-} from "lemmy-js-client";
-import {RequestState} from "@/lib/services/HttpService";
+} from "./lib/lemmy-js-client";
+import {RequestState} from "@/services/HttpService";
 
 export type RouteData = Record<string, RequestState<any>>;
 /**

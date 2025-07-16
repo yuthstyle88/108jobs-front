@@ -1,5 +1,5 @@
 import { editListImmutable } from "@/utils/helpers";
-import { CommentView } from "lemmy-js-client";
+import { CommentView } from "../../lib/lemmy-js-client";
 
 export default function editComment(
   data: CommentView,

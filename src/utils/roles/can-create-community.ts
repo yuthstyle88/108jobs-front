@@ -1,6 +1,6 @@
 import { amAdmin } from "@/utils/roles";
-import { GetSiteResponse } from "lemmy-js-client";
-import {UserService} from "@/lib/services";
+import { GetSiteResponse } from "../../lib/lemmy-js-client";
+import {UserService} from "@/services";
 
 
 export default function canCreateCommunity(

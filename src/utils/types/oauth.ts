@@ -1,4 +1,4 @@
-import { CreateOAuthProvider } from "lemmy-js-client";
+import { CreateOAuthProvider } from "../../lib/lemmy-js-client";
 
 export type ProviderToEdit = Omit<
   CreateOAuthProvider,
