@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title?: string;
+  title?: string | React.ReactNode;
   children: React.ReactNode;
   className?: string;
   contentClassName?: string;
@@ -46,14 +46,14 @@ const Modal: React.FC<ModalProps> = ({
 
   useEffect(() => {
   if (isOpen) {
-    document.body.style.overflow = "hidden"; // ✅ chặn scroll ngoài modal
+    document.body.style.overflow = "hidden";
     setIsVisible(true);
   } else {
     handleClose();
   }
 
   return () => {
-    document.body.style.overflow = ""; // reset scroll khi đóng modal
+    document.body.style.overflow = "";
   };
 }, [isOpen, handleClose]);
 
