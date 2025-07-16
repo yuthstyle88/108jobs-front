@@ -94,7 +94,7 @@ const SliderJob = ({ images }: Props) => {
           <SwiperSlide key={index}>
             <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden">
               <Image
-                src={image.image_url}
+                src={image.imageUrl}
                 alt={`Image ${index + 1}`}
                 fill
                 sizes="(max-width: 768px) 100vw, 840px"
@@ -141,7 +141,7 @@ const SliderJob = ({ images }: Props) => {
             <SwiperSlide key={index}>
               <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden">
                 <Image
-                  src={image.image_url}
+                  src={image.imageUrl}
                   alt={`Thumbnail ${index + 1}`}
                   fill
                   sizes="100px"

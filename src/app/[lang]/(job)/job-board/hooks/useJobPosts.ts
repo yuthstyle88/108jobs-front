@@ -14,30 +14,30 @@ export const useJobPosts = ({ categoryId, jobType, page = 1 }: UseJobPostsProps 
     const params = new URLSearchParams();
 
     if (categoryId) {
-      params.append('service_catalog_id', categoryId);
+      params.append('serviceCatalogId', categoryId);
     }
 
     if (jobType) {
-      params.append('job_type', jobType);
+      params.append('jobType', jobType);
     }
 
     params.append('page', page.toString());
-    params.append('page_size', '13');
+    params.append('pageSize', '13');
 
     return `?${params.toString()}`;
   }, [categoryId, jobType, page]);
 
   const { data, isLoading, error, mutate } = usePublicFetch<JobPostsResponse>(
-    `${API_ROUTES.job.get_job_board}${queryParams}`
+    `${API_ROUTES.job.getJobBoard}${queryParams}`
   );
 
   return {
     jobPosts: data?.items || [],
     pagination: data ? {
       page: data.page,
-      pageSize: data.page_size,
-      totalItems: data.total_items,
-      totalPages: data.total_pages
+      pageSize: data.pageSize,
+      totalItems: data.totalItems,
+      totalPages: data.totalPages
     } : null,
     isLoading,
     error,

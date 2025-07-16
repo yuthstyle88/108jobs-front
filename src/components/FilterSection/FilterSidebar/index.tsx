@@ -10,13 +10,13 @@ interface FilterSidebarProps {
   onClose: () => void;
   language: Partial<JobCategoryLanguage> | undefined | null;
   onApply: (filters: {
-    min_price?: number;
-    max_price?: number;
+    minPrice?: number;
+    maxPrice?: number;
     rating?: string;
   }) => void;
   currentFilters: {
-    min_price?: number;
-    max_price?: number;
+    minPrice?: number;
+    maxPrice?: number;
     rating: string;
   };
 }
@@ -28,14 +28,14 @@ const FilterSidebar = ({
   onApply,
   currentFilters,
 }: FilterSidebarProps) => {
-  const [min, setMin] = useState<number | undefined>(currentFilters.min_price);
-  const [max, setMax] = useState<number | undefined>(currentFilters.max_price);
+  const [min, setMin] = useState<number | undefined>(currentFilters.minPrice);
+  const [max, setMax] = useState<number | undefined>(currentFilters.maxPrice);
   const [rating, setRating] = useState(currentFilters.rating || "");
 
   useEffect(() => {
     if (isOpen) {
-      setMin(currentFilters.min_price);
-      setMax(currentFilters.max_price);
+      setMin(currentFilters.minPrice);
+      setMax(currentFilters.maxPrice);
       setRating(currentFilters.rating);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,8 +58,8 @@ const FilterSidebar = ({
 
   const handleApply = () => {
     onApply({
-      min_price: min,
-      max_price: max,
+      minPrice: min,
+      maxPrice: max,
       rating,
     });
     onClose();
@@ -97,8 +97,8 @@ const FilterSidebar = ({
           <div className="flex-1 overflow-y-auto p-6">
             {/* Price Filter */}
             <div className="mb-8">
-              <h3 className="text-lg font-medium mb-4 text-text_primary">
-                {language?.price_range}
+              <h3 className="text-lg font-medium mb-4 text-textPrimary">
+                {language?.priceRange}
               </h3>
               <div className="flex items-center space-x-2">
                 <input
@@ -108,29 +108,29 @@ const FilterSidebar = ({
                   onChange={(e) =>
                     setMin(e.target.value ? Number(e.target.value) : undefined)
                   }
-                  className="text-text_primary w-full p-3 border border-gray-300 rounded-md focus:outline-blue-500"
+                  className="text-textPrimary w-full p-3 border border-gray-300 rounded-md focus:outline-blue-500"
                 />
                 <span>-</span>
                 <input
                   type="number"
-                  placeholder={language?.highest_price}
+                  placeholder={language?.highestPrice}
                   value={max ?? ""}
                   onChange={(e) =>
                     setMax(e.target.value ? Number(e.target.value) : undefined)
                   }
-                  className="text-text_primary w-full p-3 border border-gray-300 rounded-md focus:outline-blue-500"
+                  className="text-textPrimary w-full p-3 border border-gray-300 rounded-md focus:outline-blue-500"
                 />
               </div>
             </div>
 
             {/* Rating Filter */}
             <div className="mb-8">
-              <h3 className="text-lg font-medium mb-4 text-text_primary">
-                {language?.points_received}
+              <h3 className="text-lg font-medium mb-4 text-textPrimary">
+                {language?.pointsReceived}
               </h3>
-              <div className="grid grid-cols-2 gap-2 text-text_primary">
+              <div className="grid grid-cols-2 gap-2 text-textPrimary">
                 {[5, 4, 3, 2, 1].map((n) => {
-                  const value = n === 5 ? "5" : `${n}_plus`;
+                  const value = n === 5 ? "5" : `${n}Plus`;
                   return (
                     <button
                       key={value}
@@ -161,7 +161,7 @@ const FilterSidebar = ({
               className="px-4 py-2 text-blue-600 font-medium hover:bg-blue-50 rounded-md"
               onClick={handleClear}
             >
-              {language?.clean_the_filters}
+              {language?.cleanTheFilters}
             </button>
             <button
               className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700"

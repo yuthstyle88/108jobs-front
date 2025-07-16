@@ -1,5 +1,5 @@
 type ServiceCatalogData = {
-    service_catalogs: ServiceCatalog[];
+    serviceCatalogs: ServiceCatalog[];
   };
   
   type ServiceCatalog = {
@@ -11,7 +11,7 @@ type ServiceCatalogData = {
   };
   
   type Section = {
-    section_title: string;
+    sectionTitle: string;
     categories: Category[];
   };
   

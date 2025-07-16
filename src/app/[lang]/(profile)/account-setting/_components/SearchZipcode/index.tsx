@@ -12,11 +12,11 @@ import { AddressFormData } from "../../contact-info/page";
 import { SellerContactInfo } from "@/types/language";
 
 type Geography = {
-  province_name_th: string;
-  district_name_th: string;
-  subdistrict_name_th: string;
-  postal_code: number;
-  full_address_th: string;
+  provinceNameTh: string;
+  districtNameTh: string;
+  subdistrictNameTh: string;
+  postalCode: number;
+  fullAddressTh: string;
 };
 
 interface ZipcodeSearchProps {
@@ -44,7 +44,7 @@ export default function ZipcodeSearch({
     isLoading,
   } = usePrivateFetchParams<{ geographies: Geography[] }>(searchUrl);
 
-  const zipCode = useWatch({ control, name: "zip_code" });
+  const zipCode = useWatch({ control, name: "zipCode" });
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -80,21 +80,21 @@ export default function ZipcodeSearch({
   }, [debouncedSearch]);
 
   const handleSelect = (geo: Geography) => {
-    setValue("province", geo.province_name_th, { shouldValidate: true });
-    setValue("district_or_subdistrict", geo.district_name_th, {
+    setValue("province", geo.provinceNameTh, { shouldValidate: true });
+    setValue("districtOrSubdistrict", geo.districtNameTh, {
       shouldValidate: true,
     });
-    setValue("subdistrict_or_district", geo.subdistrict_name_th, {
+    setValue("subdistrictOrDistrict", geo.subdistrictNameTh, {
       shouldValidate: true,
     });
-    setValue("zip_code", geo.postal_code.toString(), { shouldValidate: true });
+    setValue("zipCode", geo.postalCode.toString(), { shouldValidate: true });
     setShowDropdown(false);
     inputRef.current?.blur();
   };
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <label className="block text-sm text-text_primary font-semibold mb-2">
+      <label className="block text-sm text-textPrimary font-semibold mb-2">
         {language?.zipcode}
       </label>
       <input
@@ -102,16 +102,16 @@ export default function ZipcodeSearch({
         value={zipCode ?? ""}
         onChange={(e) => {
           const value = e.target.value;
-          setValue("zip_code", value, { shouldValidate: true });
+          setValue("zipCode", value, { shouldValidate: true });
           debouncedSearch(value);
         }}
         onFocus={() => {
           if ((zipCode ?? "").length >= 2) debouncedSearch(zipCode ?? "");
           setShowDropdown(true);
         }}
-        placeholder={language?.zipcode_placeholder}
+        placeholder={language?.zipcodePlaceholder}
         autoComplete="off"
-        className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary transition-all"
+        className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary transition-all"
       />
       {error && (
         <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -145,7 +145,7 @@ export default function ZipcodeSearch({
                   className="px-3 py-1 hover:bg-secondary cursor-pointer border-b last:border-b-0 transition-colors"
                 >
                   <p className="p-0 text-[12px] font-sans text-black font-normal">
-                    {geo.full_address_th}
+                    {geo.fullAddressTh}
                   </p>
                 </div>
               ))

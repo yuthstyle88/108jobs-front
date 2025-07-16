@@ -32,7 +32,7 @@ type LoginFormProps = {
 interface State {
   loginRes: RequestState<LoginResponse>;
   form: {
-    username_or_email: string;
+    usernameOrEmail: string;
     password: string;
   };
 
@@ -60,9 +60,9 @@ async function handleLoginSuccess(i: LoginFormClass, loginRes: LoginResponse) {
   if (site.state === "success") {
     try {
       const isoData = setIsoData(i.context);
-      if (isoData && isoData.site_res) {
-        isoData.site_res.oauth_providers = site.data.oauth_providers;
-        isoData.site_res.admin_oauth_providers = site.data.admin_oauth_providers;
+      if (isoData && isoData.siteRes) {
+        isoData.siteRes.oauthProviders = site.data.oauthProviders;
+        isoData.siteRes.adminOauthProviders = site.data.adminOauthProviders;
       }
     } catch (error) {
       console.error("Error updating isoData:", error);
@@ -88,11 +88,11 @@ const withHooks = (Component: any) => {
     const redirectUrl = searchParams.get("redirect") || "/";
 
     const loginSchema = z.object({
-      username_or_email: z
+      usernameOrEmail: z
         .string()
-        .min(6, authen?.please_enter_email_or_username_min_6)
-        .max(32, authen?.username_max_32),
-      password: z.string().min(6, authen?.password_min_6),
+        .min(6, authen?.pleaseEnterEmailOrUsernameMin6)
+        .max(32, authen?.usernameMax32),
+      password: z.string().min(6, authen?.passwordMin6),
     });
 
     const formMethods = useForm<z.infer<typeof loginSchema>>({
@@ -130,7 +130,7 @@ class LoginFormClass extends Component<LoginFormProps & {
   state: State = {
     loginRes: EMPTY_REQUEST,
     form: {
-      username_or_email: "",
+      usernameOrEmail: "",
       password: "",
     },
     siteRes:  null,
@@ -152,10 +152,10 @@ class LoginFormClass extends Component<LoginFormProps & {
 
   async componentDidMount() {
     this.isoData = setIsoData(this.context);
-    if (this.isoData?.site_res) {
+    if (this.isoData?.siteRes) {
       this.setState({
-        siteRes: this.isoData.site_res,
-        oauthProviders: this.isoData.site_res.oauth_providers ?? [],
+        siteRes: this.isoData.siteRes,
+        oauthProviders: this.isoData.siteRes.oauthProviders ?? [],
         hasFetchedSite: true,
       });
       return;
@@ -168,7 +168,7 @@ class LoginFormClass extends Component<LoginFormProps & {
       if (site.state === "success") {
         this.setState({
           siteRes: site,
-          oauthProviders: site.data.oauth_providers ?? [],
+          oauthProviders: site.data.oauthProviders ?? [],
           hasFetchedSite: true,
         });
       }
@@ -189,37 +189,37 @@ class LoginFormClass extends Component<LoginFormProps & {
 
   handleLoginWithProvider = (provider: OAuthProvider) => {
     this.handleUseOAuthProvider({
-      oauth_provider: provider,
+      oauthProvider: provider,
       prev: this.props.redirectUrl,
     });
   };
 
   handleUseOAuthProvider = async (params: {
-    oauth_provider: OAuthProvider;
+    oauthProvider: OAuthProvider;
     username?: string;
     prev?: string;
     answer?: string;
-    show_nsfw?: boolean;
+    showNsfw?: boolean;
   }) => {
-    const redirectUri = `${window.location.origin}/api/auth/callback/${params.oauth_provider.display_name}`;
+    const redirectUri = `${window.location.origin}/api/auth/callback/${params.oauthProvider.displayName}`;
     const state = crypto.randomUUID();
     const requestUri =
-      params.oauth_provider.authorization_endpoint +
+      params.oauthProvider.authorizationEndpoint +
       "?" +
       [
-        `client_id=${encodeURIComponent(params.oauth_provider.client_id)}`,
-        `response_type=code`,
-        `scope=${encodeURIComponent(params.oauth_provider.scopes)}`,
-        `redirect_uri=${encodeURIComponent(redirectUri)}`,
+        `clientId=${encodeURIComponent(params.oauthProvider.clientId)}`,
+        `responseType=code`,
+        `scope=${encodeURIComponent(params.oauthProvider.scopes)}`,
+        `redirectUri=${encodeURIComponent(redirectUri)}`,
         `state=${state}`,
       ].join("&");
     console.log(requestUri);
 
     localStorage.setItem(
-      "oauth_state",
+      "oauthState",
       JSON.stringify({
         state,
-        oauthProviderId: params.oauth_provider.id,
+        oauthProviderId: params.oauthProvider.id,
         redirectUri: redirectUri,
         prev: params.prev ?? "/",
         username: params.username,
@@ -237,7 +237,7 @@ class LoginFormClass extends Component<LoginFormProps & {
   handleLogin = async (data: any) => {
     try {
       const loginRes = await HttpService.client.login({
-        username_or_email: data.username_or_email,
+        usernameOrEmail: data.usernameOrEmail,
         password: data.password,
       });
       
@@ -245,7 +245,7 @@ class LoginFormClass extends Component<LoginFormProps & {
         case "failed": {
           this.props.formMethods.setError("password", {
             type: "manual",
-            message: this.props.authen?.invalid_password ?? "รหัสผ่านไม่ถูกต้อง",
+            message: this.props.authen?.invalidPassword ?? "รหัสผ่านไม่ถูกต้อง",
           });
           break;
         }
@@ -258,7 +258,7 @@ class LoginFormClass extends Component<LoginFormProps & {
       console.error(error);
       this.props.formMethods.setError("root", {
         type: "manual",
-        message: this.props.authen?.system_error ?? "เกิดข้อผิดพลาดของระบบ กรุณาลองใหม่อีกครั้ง",
+        message: this.props.authen?.systemError ?? "เกิดข้อผิดพลาดของระบบ กรุณาลองใหม่อีกครั้ง",
       });
     }
   };
@@ -266,8 +266,8 @@ class LoginFormClass extends Component<LoginFormProps & {
   async handleSubmitTotp(totp: string) {
     const loginRes = await HttpService.client.login({
       password: this.state.form.password,
-      username_or_email: this.state.form.username_or_email,
-      totp_2fa_token: totp,
+      usernameOrEmail: this.state.form.usernameOrEmail,
+      totp2faToken: totp,
     });
 
     const successful = loginRes.state === "success";
@@ -275,7 +275,7 @@ class LoginFormClass extends Component<LoginFormProps & {
       this.setState({ show2faModal: false });
       await this.handleLoginSuccess(loginRes.data);
     } else {
-      toast("incorrect_totp_code");
+      toast("incorrectTotpCode");
     }
 
     return successful;
@@ -295,20 +295,20 @@ class LoginFormClass extends Component<LoginFormProps & {
         )}
 
         <CustomInput
-          label={authen?.label_username_or_email}
-          name="username_or_email"
-          register={register("username_or_email")}
-          error={errors.username_or_email?.message}
-          placeholder={authen?.placeholder_username_or_email}
+          label={authen?.labelUsernameOrEmail}
+          name="usernameOrEmail"
+          register={register("usernameOrEmail")}
+          error={errors.usernameOrEmail?.message}
+          placeholder={authen?.placeholderUsernameOrEmail}
         />
 
         <CustomInput
-          label={authen?.label_password}
+          label={authen?.labelPassword}
           name="password"
           type="password"
           register={register("password")}
           error={errors.password?.message}
-          placeholder={authen?.placeholder_password}
+          placeholder={authen?.placeholderPassword}
           showPassword={showPassword}
           toggleShowPassword={this.toggleShowPassword}
         />
@@ -319,7 +319,7 @@ class LoginFormClass extends Component<LoginFormProps & {
             disabled={isSubmitting}
             className="submit-button py-2"
           >
-            {isSubmitting ? <LoadingCircle /> : authen?.button_proceed}
+            {isSubmitting ? <LoadingCircle /> : authen?.buttonProceed}
           </button>
 
           <div className="flex justify-between text-sm text-blue-600 mt-4">
@@ -328,14 +328,14 @@ class LoginFormClass extends Component<LoginFormProps & {
               onClick={switchToRegister}
               className="hover:underline"
             >
-              {authen?.link_create_account}
+              {authen?.linkCreateAccount}
             </button>
             <button
               type="button"
               onClick={switchToForgotPassword}
               className="hover:underline"
             >
-              {authen?.link_forgot_password}
+              {authen?.linkForgotPassword}
             </button>
           </div>
         </div>
@@ -344,7 +344,7 @@ class LoginFormClass extends Component<LoginFormProps & {
           <>
             <hr className="my-6" />
             <p className="text-center text-sm text-gray-600 mb-3">
-              {authen?.label_or_sign_in_with ?? "หรือเข้าสู่ระบบด้วย"}
+              {authen?.labelOrSignInWith ?? "หรือเข้าสู่ระบบด้วย"}
             </p>
             <div className="flex flex-col gap-3">
               {oauthProviders.map((p) => (
@@ -354,7 +354,7 @@ class LoginFormClass extends Component<LoginFormProps & {
                   onClick={() => this.handleLoginWithProvider(p)}
                   className="oauth-button py-2 px-4 border rounded-md flex justify-center items-center hover:bg-gray-100"
                 >
-                  {p.display_name}
+                  {p.displayName}
                 </button>
               ))}
             </div>

@@ -36,20 +36,20 @@ const ChatWrapper = () => {
     data: userData,
     isLoading: isUserLoading,
     error: isUserError,
-  } = usePrivateFetch<ProfileData>(API_ROUTES.profile.get_profile);
+  } = usePrivateFetch<ProfileData>(API_ROUTES.profile.getProfile);
 
   const {
     data: chatData,
     isLoading: isChatLoading,
     error: chatError,
-  } = usePrivateFetch<ChatResponse[]>(API_ROUTES.chat.get_chat_history, {
+  } = usePrivateFetch<ChatResponse[]>(API_ROUTES.chat.getChatHistory, {
     revalidateOnFocus: true,
     dedupingInterval: 10000,
   });
 
   useEffect(() => {
     if (!isChatLoading && !activeRoomId && chatData && chatData.length > 0) {
-      const firstSenderId = chatData[0]?.room_id;
+      const firstSenderId = chatData[0]?.roomId;
       if (firstSenderId) {
         router.replace(`/chat/message/${firstSenderId}`);
       }
@@ -80,24 +80,24 @@ const ChatWrapper = () => {
     >
       <div className="p-4 border-b">
         <div className="relative">
-          <p className="text-text_primary text-center font-semibold w-full py-2 ">Chat History</p>
+          <p className="text-textPrimary text-center font-semibold w-full py-2 ">Chat History</p>
         </div>
       </div>
 
       <div className="max-w-[340px] overflow-y-auto flex-1">
         {chatData?.map((chat) => {
-          const chatMessage = chat.last_message;
+          const chatMessage = chat.lastMessage;
           if (!chatMessage) return null;
 
-          const isUser = userData?.user.id === chatMessage.sender_id;
+          const isUser = userData?.user.id === chatMessage.senderId;
           const isActive =
-            String(chat.room_id) === activeRoomId ||
+            String(chat.roomId) === activeRoomId ||
             String(chat.job?.id) === activeRoomId;
 
           return (
             <Link prefetch={false}
-              key={chat.room_id}
-              href={`/chat/message/${chat.room_id}`}
+              key={chat.roomId}
+              href={`/chat/message/${chat.roomId}`}
               className="block"
             >
               <div
@@ -110,7 +110,7 @@ const ChatWrapper = () => {
                 <div className="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
                   <Image
                     src={
-                      extractRealImageUrl(chat.partner_avatar) ||
+                      extractRealImageUrl(chat.partnerAvatar) ||
                       ProfileImage.avatar
                     }
                     alt="User"
@@ -121,17 +121,17 @@ const ChatWrapper = () => {
                 </div>
                 <div className="ml-3">
                   <div className="flex items-center">
-                    <h4 className="font-medium text-sm text-text_primary">
-                      {chat.partner_display_name}
+                    <h4 className="font-medium text-sm text-textPrimary">
+                      {chat.partnerDisplayName}
                     </h4>
                     <span className="ml-2 text-xs text-gray-400">
                       {formatMessageTime(
-                        chatMessage.created_at,
+                        chatMessage.createdAt,
                         currentLang || "th"
                       )}
                     </span>
                   </div>
-                  <p className="text-sm font-sans text-text_primary mt-1 line-clamp-1 overflow-hidden break-all max-w-[200px]">
+                  <p className="text-sm font-sans text-textPrimary mt-1 line-clamp-1 overflow-hidden break-all max-w-[200px]">
                     {isUser && "You: "}
                     {chatMessage.content}
                   </p>

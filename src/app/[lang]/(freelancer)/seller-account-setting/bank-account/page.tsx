@@ -43,20 +43,20 @@ const BankAccount = () => {
     <div className="bg-white rounded-md shadow-sm overflow-hidden">
       <div className="border-b border-gray-200 p-5">
         <h2 className="text-lg font-medium text-gray-800">
-          {sellerBankAccountLanguage?.bank_info_title}
+          {sellerBankAccountLanguage?.bankInfoTitle}
         </h2>
         <p className="text-sm text-gray-500">
-          {sellerBankAccountLanguage?.bank_info_description}
+          {sellerBankAccountLanguage?.bankInfoDescription}
         </p>
       </div>
 
       <div className="p-6">
         <div className="mb-8">
           <h3 className="text-base font-medium text-gray-800 mb-4">
-            {sellerBankAccountLanguage?.bank_qr_upload_title}
+            {sellerBankAccountLanguage?.bankQrUploadTitle}
           </h3>
           <p className="text-sm text-gray-500 mb-4">
-            {sellerBankAccountLanguage?.bank_qr_upload_note}
+            {sellerBankAccountLanguage?.bankQrUploadNote}
           </p>
 
           <div className="flex items-center justify-center p-6 bg-gray-100 rounded-lg mb-4">
@@ -74,7 +74,7 @@ const BankAccount = () => {
             className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mx-auto"
           >
             <Upload className="w-5 h-5 mr-2" />
-            {sellerBankAccountLanguage?.upload_button}
+            {sellerBankAccountLanguage?.uploadButton}
           </button>
           <input
             type="file"
@@ -87,11 +87,11 @@ const BankAccount = () => {
 
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {sellerBankAccountLanguage?.bank_name_label}
+            {sellerBankAccountLanguage?.bankNameLabel}
           </label>
-          <select className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+          <select className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
             <option selected disabled>
-              {sellerBankAccountLanguage?.bank_name_placeholder}
+              {sellerBankAccountLanguage?.bankNamePlaceholder}
             </option>
             <option>VietComBank</option>
             <option>BIDV</option>
@@ -103,14 +103,14 @@ const BankAccount = () => {
 
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {sellerBankAccountLanguage?.bank_account_number_label}
+            {sellerBankAccountLanguage?.bankAccountNumberLabel}
           </label>
           <input
             type="text"
             placeholder={
-              sellerBankAccountLanguage?.bank_account_number_placeholder
+              sellerBankAccountLanguage?.bankAccountNumberPlaceholder
             }
-            className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
@@ -119,7 +119,7 @@ const BankAccount = () => {
             onClick={handleSave}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            {global?.button_save}
+            {global?.buttonSave}
           </button>
         </div>
       </div>

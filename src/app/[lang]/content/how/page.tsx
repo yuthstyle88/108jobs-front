@@ -137,12 +137,12 @@ const HowSellAndBuy = () => {
 
   const tabs = [
     {
-      name: couponLanguageData?.tab_for_hiring,
-      content: couponLanguageData?.message_no_offers,
+      name: couponLanguageData?.tabForHiring,
+      content: couponLanguageData?.messageNoOffers,
     },
     {
-      name: couponLanguageData?.tab_for_freelancers,
-      content: couponLanguageData?.message_no_offers,
+      name: couponLanguageData?.tabForFreelancers,
+      content: couponLanguageData?.messageNoOffers,
     },
   ];
 
@@ -167,7 +167,7 @@ const HowSellAndBuy = () => {
           </div>
           <div className="absolute right-[-100px] bottom-[150px] h-[150px] ml-auto opacity-30 pointer-events-none">
             <Image
-              src={AssetIcon.logo_icon}
+              src={AssetIcon.logoIcon}
               alt="Logo"
               width={350}
               height={350}
@@ -177,7 +177,7 @@ const HowSellAndBuy = () => {
         <section className="py-24 grid grid-container-desktop-banner pt-[4rem]">
           <div className="col-start-2 col-end-3">
             <div className="text-center w-full">
-              <h1 className="font-sans text-[1.5rem] text-text_primary font-semibold mb-12">
+              <h1 className="font-sans text-[1.5rem] text-textPrimary font-semibold mb-12">
                 Easy steps to get started with Fastjob
               </h1>
             </div>
@@ -212,20 +212,20 @@ const HowSellAndBuy = () => {
                 {currentSteps.map((item, index) => (
                   <div
                     key={`${item.id}` + `${index}`}
-                    className="shadow-howShadow border-1 border-border_secondary rounded-xl bg-white p-6"
+                    className="shadow-howShadow border-1 border-borderSecondary rounded-xl bg-white p-6"
                   >
                     <div className="flex items-center flex-row gap-3">
                       <div className="w-8 flex justify-center items-center h-8 text-[1.25rem] text-white bg-third rounded-full">
                         {item.id}
                       </div>
-                      <p className="text-[1.25rem] font-semibold flex-1 font-sans text-text_primary">
+                      <p className="text-[1.25rem] font-semibold flex-1 font-sans text-textPrimary">
                         {item.title}
                       </p>
                     </div>
-                    <p className="text-[0.875rem] mt-3 text-text_secondary ">
+                    <p className="text-[0.875rem] mt-3 text-textSecondary ">
                       {item.description}
                     </p>
-                    <ul className="pl-6 mt-2 list-disc gap-2 text-[0.875rem] text-text_secondary grid grid-cols-1">
+                    <ul className="pl-6 mt-2 list-disc gap-2 text-[0.875rem] text-textSecondary grid grid-cols-1">
                       {item.list.map((list, index) => (
                         <li key={index}>{list}</li>
                       ))}

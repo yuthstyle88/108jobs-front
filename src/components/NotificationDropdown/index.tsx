@@ -44,12 +44,12 @@ const NotificationDropdown = ({
         }`}
       >
         <div className="py-3 px-4 border-b border-gray-200">
-          <h3 className="text-gray-800 font-medium">{global?.label_notification}</h3>
+          <h3 className="text-gray-800 font-medium">{global?.labelNotification}</h3>
         </div>
         <div className="py-2">
           {/* You can map through notifications here */}
           <div className="py-8 flex flex-col items-center justify-center text-gray-500">
-            <p className="text-sm">{global?.label_empty_notification}</p>
+            <p className="text-sm">{global?.labelEmptyNotification}</p>
           </div>
         </div>
       </div>

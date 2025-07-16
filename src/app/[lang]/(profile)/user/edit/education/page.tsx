@@ -14,7 +14,7 @@ import { z } from "zod";
 
 type EducationFromServer = {
   id: string;
-  school_name: string;
+  schoolName: string;
   major: string;
 };
 
@@ -26,8 +26,8 @@ const EditEducation = () => {
     educationItems: z.array(
       z.object({
         id: z.string().optional(),
-        school: z.string().min(1, userEditLanguage?.school_name_require),
-        major: z.string().min(1, userEditLanguage?.major_require),
+        school: z.string().min(1, userEditLanguage?.schoolNameRequire),
+        major: z.string().min(1, userEditLanguage?.majorRequire),
       })
     ),
   });
@@ -47,7 +47,7 @@ const EditEducation = () => {
     },
   });
 
-  const { success_message } = useNotification();
+  const { successMessage } = useNotification();
   const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "educationItems",
@@ -67,7 +67,7 @@ const EditEducation = () => {
     if (educationData?.educations) {
       const mapped = educationData.educations.map((edu) => ({
         id: edu.id,
-        school: edu.school_name,
+        school: edu.schoolName,
         major: edu.major,
       }));
 
@@ -81,14 +81,14 @@ const EditEducation = () => {
     const body = {
       educations: data.educationItems.map((item) => ({
         ...(item.id ? { id: item.id } : {}),
-        school_name: item.school,
+        schoolName: item.school,
         major: item.major,
       })),
     };
 
     try {
       await sendEducation(body);
-      success_message("profile", "update_education");
+      successMessage("profile", "updateEducation");
     } catch (error) {
       console.error("Lỗi khi lưu thông tin học vấn:", error);
     }
@@ -111,7 +111,7 @@ const EditEducation = () => {
         ) : fields.length === 0 ? (
           <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
             <p className="text-gray-500 mb-4">
-              {userEditLanguage?.no_education_info}
+              {userEditLanguage?.noEducationInfo}
             </p>
             <button
               type="button"
@@ -119,7 +119,7 @@ const EditEducation = () => {
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
               <Plus className="w-5 h-5 mr-2" />{" "}
-              {userEditLanguage?.add_more_button}
+              {userEditLanguage?.addMoreButton}
             </button>
             <div className="flex justify-end">
               <button
@@ -131,7 +131,7 @@ const EditEducation = () => {
                 {isUpdateMuting ? (
                   <LoadingCircle />
                 ) : (
-                  userEditLanguage?.save_button
+                  userEditLanguage?.saveButton
                 )}
               </button>
             </div>
@@ -146,12 +146,12 @@ const EditEducation = () => {
                 <div className="grid grid-cols-2 gap-6">
                   <div>
                     <label className="block text-gray-700 mb-2">
-                      {userEditLanguage?.school_name}
+                      {userEditLanguage?.schoolName}
                     </label>
                     <input
                       type="text"
-                      className="text-text_primary w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder={userEditLanguage?.school_name_placeholder}
+                      className="text-textPrimary w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder={userEditLanguage?.schoolNamePlaceholder}
                       {...register(`educationItems.${index}.school`)}
                     />
                     {errors.educationItems?.[index]?.school && (
@@ -166,8 +166,8 @@ const EditEducation = () => {
                     </label>
                     <input
                       type="text"
-                      className="text-text_primary w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder={userEditLanguage?.major_placeholder}
+                      className="text-textPrimary w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder={userEditLanguage?.majorPlaceholder}
                       {...register(`educationItems.${index}.major`)}
                     />
                     {errors.educationItems?.[index]?.major && (
@@ -182,11 +182,11 @@ const EditEducation = () => {
                   <button
                     type="button"
                     onClick={() => remove(index)}
-                    className="border-1 border-border_secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
+                    className="border-1 border-borderSecondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                   >
                     <Trash2 className="w-4" />
                     <span className="ml-2 font-medium">
-                      {userEditLanguage?.delete_info}
+                      {userEditLanguage?.deleteInfo}
                     </span>
                   </button>
                 </div>
@@ -198,7 +198,7 @@ const EditEducation = () => {
               onClick={() => append({ id: undefined, school: "", major: "" })}
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.add_info}
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.addInfo}
             </button>
 
             <div className="flex justify-end">
@@ -210,7 +210,7 @@ const EditEducation = () => {
                 {isUpdateMuting ? (
                   <LoadingCircle />
                 ) : (
-                  userEditLanguage?.save_info
+                  userEditLanguage?.saveInfo
                 )}
               </button>
             </div>

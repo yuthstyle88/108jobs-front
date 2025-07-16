@@ -26,8 +26,8 @@ export const AcceptForm = ({
 
   const UpdateSchema = z
   .object({
-    email: z.string().email(authen?.invalid_email),
-    password: z.string().min(6, authen?.password_min_6),
+    email: z.string().email(authen?.invalidEmail),
+    password: z.string().min(6, authen?.passwordMin6),
     confirmPassword: z.string(),
     termsAccepted: z.boolean().refine((val) => val === true),
     privacyAccepted: z.boolean().refine((val) => val === true),
@@ -35,12 +35,12 @@ export const AcceptForm = ({
     role: z.enum(["Employer", "Freelancer"]).default("Employer"),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: authen?.not_match_password,
+    message: authen?.notMatchPassword,
     path: ["confirmPassword"],
   });
 
   type UpdateFormDataType = z.infer<typeof UpdateSchema>;
-  let resolver = zodResolver(UpdateSchema);
+  const resolver = zodResolver(UpdateSchema);
   const {
     register,
     handleSubmit,
@@ -96,33 +96,33 @@ export const AcceptForm = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <CustomInput
-        label={authen?.label_email}
+        label={authen?.labelEmail}
         name="email"
         register={register("email")}
         error={errors.email?.message}
-        placeholder={authen?.placeholder_email}
+        placeholder={authen?.placeholderEmail}
         readonly
         type="email"
       />
 
       <CustomInput
-        label={authen?.label_password}
+        label={authen?.labelPassword}
         name="password"
         type="password"
         register={register("password")}
         error={errors.password?.message}
-        placeholder={authen?.placeholder_password}
+        placeholder={authen?.placeholderPassword}
         showPassword={showPassword}
         toggleShowPassword={() => setShowPassword(!showPassword)}
       />
 
       <CustomInput
-        label={authen?.label_confirm_password}
+        label={authen?.labelConfirmPassword}
         name="confirmPassword"
         type="password"
         register={register("confirmPassword")}
         error={errors.confirmPassword?.message}
-        placeholder={authen?.placeholder_confirm_password}
+        placeholder={authen?.placeholderConfirmPassword}
         showPassword={showConfirmPassword}
         toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
       />
@@ -130,7 +130,7 @@ export const AcceptForm = ({
         <label className="block text-sm font-medium text-gray-700 mb-2">
           {"Account Type"}
         </label>
-        <div className="flex gap-6 items-center text-base text-text_primary">
+        <div className="flex gap-6 items-center text-base text-textPrimary">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
@@ -160,15 +160,15 @@ export const AcceptForm = ({
           />
           <label
             htmlFor="termsAccepted"
-            className="text-sm text-text_secondary font-sans"
+            className="text-sm text-textSecondary font-sans"
           >
-            {authen?.checkbox_terms_conditions}{" "}
+            {authen?.checkboxTermsConditions}{" "}
             <Link
               prefetch={false}
               href="/content/terms"
-              className="text-text_secondary underline"
+              className="text-textSecondary underline"
             >
-              {authen?.checkbox_terms_conditions_redirect}
+              {authen?.checkboxTermsConditionsRedirect}
             </Link>
           </label>
         </div>
@@ -182,15 +182,15 @@ export const AcceptForm = ({
           />
           <label
             htmlFor="privacyAccepted"
-            className="text-sm text-text_secondary font-sans"
+            className="text-sm text-textSecondary font-sans"
           >
-            {authen?.checkbox_terms_conditions}{" "}
+            {authen?.checkboxTermsConditions}{" "}
             <Link
               prefetch={false}
               href="/content/privacy"
-              className="text-text_secondary underline"
+              className="text-textSecondary underline"
             >
-              {authen?.checkbox_privacy_policy_redirect}
+              {authen?.checkboxPrivacyPolicyRedirect}
             </Link>
           </label>
         </div>
@@ -212,7 +212,7 @@ export const AcceptForm = ({
             !watch("privacyAccepted")
           }
         >
-          {isSubmitting ? <LoadingCircle /> : authen?.link_create_account}
+          {isSubmitting ? <LoadingCircle /> : authen?.linkCreateAccount}
         </button>
       </div>
     </form>

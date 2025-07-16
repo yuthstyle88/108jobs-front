@@ -27,7 +27,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
   const { isOpen, toggle, close } = useToggle();
 
   const { data: user, isLoading } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
+    API_ROUTES.profile.getProfile
   );
 
   return (
@@ -35,7 +35,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
       <div className="group">
         <div className="relative">
           <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
-            <p className="">{globalLanguageData?.label_employment_button}</p>
+            <p className="">{globalLanguageData?.labelEmploymentButton}</p>
             <FontAwesomeIcon icon={faChevronDown} />
           </div>
           <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
@@ -48,7 +48,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
         href="/start-selling"
         className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
       >
-        {globalLanguageData?.label_apply_to_be_freelancer_button}
+        {globalLanguageData?.labelApplyToBeFreelancerButton}
       </Link>
       <ChatBadge />
       <NotificationDropdown />
@@ -78,7 +78,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           ) : (
             user && (
               <Image
-                src={user?.user.avatar_url || ProfileImage.avatar}
+                src={user?.user.avatarUrl || ProfileImage.avatar}
                 alt="avatar"
                 className="w-12 h-12 rounded-full object-cover"
                 width={500}

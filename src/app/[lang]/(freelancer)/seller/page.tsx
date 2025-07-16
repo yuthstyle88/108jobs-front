@@ -43,7 +43,7 @@ const SellerHome = () => {
   ];
 
   const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
+    API_ROUTES.profile.getProfile
   );
 const { lang } = useLanguage();
   const {
@@ -62,9 +62,9 @@ const { lang } = useLanguage();
           <div className="flex flex-row md:flex-col gap-6 md:gap-0">
             <div className="bg-blue-600 text-white px-4 py-2 rounded-lg inline-block mb-2">
               <h3 className="font-medium">
-                {sellerOverviewLanguage?.member_label}
+                {sellerOverviewLanguage?.memberLabel}
               </h3>
-              <p className="text-sm">{sellerOverviewLanguage?.service_fee}</p>
+              <p className="text-sm">{sellerOverviewLanguage?.serviceFee}</p>
             </div>
             <div>
               <div className="flex items-baseline gap-1 mt-2">
@@ -74,7 +74,7 @@ const { lang } = useLanguage();
               <div className="flex items-center mt-2">
                 <span className="text-sm text-gray-500">
                   {interpolateDouble(
-                    sellerOverviewLanguage?.accumulated_income || "",
+                    sellerOverviewLanguage?.accumulatedIncome || "",
                     { n: 3 }
                   )}
                 </span>
@@ -84,12 +84,12 @@ const { lang } = useLanguage();
           <div className="flex gap-4">
             <button className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm">
               {interpolateDouble(
-                sellerOverviewLanguage?.accumulate_more || "",
+                sellerOverviewLanguage?.accumulateMore || "",
                 { n: "đ1.800.000,00" }
               )}
             </button>
             <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">
-              {sellerOverviewLanguage?.upgrade_membership}
+              {sellerOverviewLanguage?.upgradeMembership}
             </button>
           </div>
         </div>
@@ -112,11 +112,11 @@ const { lang } = useLanguage();
               />
             </svg>
           </div>
-          <h2 className="text-lg text-text_primary font-medium">
-            {sellerOverviewLanguage?.freelancer_setup_title}
+          <h2 className="text-lg text-textPrimary font-medium">
+            {sellerOverviewLanguage?.freelancerSetupTitle}
           </h2>
           <span className="text-sm text-gray-500">
-            {sellerOverviewLanguage?.freelancer_setup_steps}
+            {sellerOverviewLanguage?.freelancerSetupSteps}
           </span>
         </div>
 
@@ -139,13 +139,13 @@ const { lang } = useLanguage();
                 </svg>
               </div>
               <div>
-                <p className="font-medium text-text_primary">
-                  {sellerOverviewLanguage?.step_1_title}
+                <p className="font-medium text-textPrimary">
+                  {sellerOverviewLanguage?.step1Title}
                 </p>
               </div>
             </div>
             <span className="text-green-500">
-              {sellerOverviewLanguage?.step_1_status}
+              {sellerOverviewLanguage?.step1Status}
             </span>
           </div>
 
@@ -155,11 +155,11 @@ const { lang } = useLanguage();
                 <span className="text-gray-500 text-sm">2</span>
               </div>
               <div>
-                <p className="font-medium text-text_primary">
-                  {sellerOverviewLanguage?.step_2_title}
+                <p className="font-medium text-textPrimary">
+                  {sellerOverviewLanguage?.step2Title}
                 </p>
                 <p className="text-sm text-gray-500">
-                  {sellerOverviewLanguage?.step_2_desc}
+                  {sellerOverviewLanguage?.step2Desc}
                 </p>
               </div>
             </div>
@@ -168,7 +168,7 @@ const { lang } = useLanguage();
               className="flex flex-row items-center gap-2"
             >
               <button className="text-blue-600 hover:underline">
-                {sellerOverviewLanguage?.step_2_action}
+                {sellerOverviewLanguage?.step2Action}
               </button>
               <FontAwesomeIcon
                 icon={faArrowRight}
@@ -183,11 +183,11 @@ const { lang } = useLanguage();
                 <span className="text-gray-500 text-sm">3</span>
               </div>
               <div>
-                <p className="font-medium text-text_primary">
-                  {sellerOverviewLanguage?.step_3_title}
+                <p className="font-medium text-textPrimary">
+                  {sellerOverviewLanguage?.step3Title}
                 </p>
                 <p className="text-sm text-gray-500">
-                  {sellerOverviewLanguage?.step_3_desc}
+                  {sellerOverviewLanguage?.step3Desc}
                 </p>
               </div>
             </div>
@@ -196,7 +196,7 @@ const { lang } = useLanguage();
               className="flex flex-row items-center gap-2"
             >
               <button className="text-blue-600 hover:underline">
-                {sellerOverviewLanguage?.step_3_action}
+                {sellerOverviewLanguage?.step3Action}
               </button>
               <FontAwesomeIcon
                 icon={faArrowRight}
@@ -225,11 +225,11 @@ const { lang } = useLanguage();
               </svg>
             </div>
             <div>
-              <h2 className="font-medium text-text_primary">
-                {sellerOverviewLanguage?.ongoing_projects_title}
+              <h2 className="font-medium text-textPrimary">
+                {sellerOverviewLanguage?.ongoingProjectsTitle}
               </h2>
               <p className="text-sm text-gray-500">
-                0 {sellerOverviewLanguage?.ongoing_projects_count}
+                0 {sellerOverviewLanguage?.ongoingProjectsCount}
               </p>
             </div>
           </div>
@@ -237,7 +237,7 @@ const { lang } = useLanguage();
             href="/seller/project-management"
             className="text-blue-600 hover:underline flex items-center text-sm"
           >
-            {sellerOverviewLanguage?.see_more}
+            {sellerOverviewLanguage?.seeMore}
             <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4 ml-1" />
           </Link>
         </div>
@@ -246,7 +246,7 @@ const { lang } = useLanguage();
           <div className="grid grid-cols-4 gap-4 bg-gray-50 p-4 border-b border-gray-200">
             <div className="flex items-center">
               <span className="font-medium text-sm text-gray-700">
-                {sellerOverviewLanguage?.project_column_name}
+                {sellerOverviewLanguage?.projectColumnName}
               </span>
               <FontAwesomeIcon
                 icon={faInfoCircle}
@@ -254,16 +254,16 @@ const { lang } = useLanguage();
               />
             </div>
             <div className="font-medium text-sm text-gray-700">
-              {sellerOverviewLanguage?.project_column_code}
+              {sellerOverviewLanguage?.projectColumnCode}
             </div>
             <div className="flex items-center">
               <span className="font-medium text-sm text-gray-700">
-                {sellerOverviewLanguage?.project_column_amount}
+                {sellerOverviewLanguage?.projectColumnAmount}
               </span>
             </div>
             <div className="flex items-center">
               <span className="font-medium text-sm text-gray-700">
-                {sellerOverviewLanguage?.project_column_deadline}
+                {sellerOverviewLanguage?.projectColumnDeadline}
               </span>
               <FontAwesomeIcon
                 icon={faInfoCircle}
@@ -285,14 +285,14 @@ const { lang } = useLanguage();
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            <p className="text-sm">{sellerOverviewLanguage?.no_projects}</p>
+            <p className="text-sm">{sellerOverviewLanguage?.noProjects}</p>
           </div>
         </div>
       </section>
 
       {/* Detailed Statistics Section */}
       <h2 className="text-xl font-semibold mb-4 text-gray-800 px-4">
-        {sellerOverviewLanguage?.details_title}
+        {sellerOverviewLanguage?.detailsTitle}
       </h2>
 
       {/* Overview Chart */}
@@ -305,11 +305,11 @@ const { lang } = useLanguage();
             />
           </div>
           <div>
-            <h3 className="font-medium text-text_primary">
-              {sellerOverviewLanguage?.hiring_overview_title}
+            <h3 className="font-medium text-textPrimary">
+              {sellerOverviewLanguage?.hiringOverviewTitle}
             </h3>
             <p className="text-sm text-gray-500">
-              {sellerOverviewLanguage?.hiring_note}
+              {sellerOverviewLanguage?.hiringNote}
             </p>
           </div>
         </div>
@@ -318,18 +318,18 @@ const { lang } = useLanguage();
           <div className="flex items-center gap-2">
             <span className="w-4 h-4 bg-blue-300 rounded-full"></span>
             <span className="text-sm text-gray-600">
-              {sellerOverviewLanguage?.legend_income}
+              {sellerOverviewLanguage?.legendIncome}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <span className="w-4 h-4 bg-gray-800 rounded-full"></span>
             <span className="text-sm text-gray-600">
-              {sellerOverviewLanguage?.legend_completed_projects}
+              {sellerOverviewLanguage?.legendCompletedProjects}
             </span>
           </div>
         </div>
 
-        <div className="h-64 text-text_primary">
+        <div className="h-64 text-textPrimary">
           <ResponsiveContainer width="100%" height="100%">
             <RechartsLineChart
               data={chartData}
@@ -377,11 +377,11 @@ const { lang } = useLanguage();
             <FontAwesomeIcon icon={faEye} className="w-5 h-5 text-blue-500" />
           </div>
           <div>
-            <h3 className="font-medium text-text_primary">
-              {sellerOverviewLanguage?.access_hire_rate_title}
+            <h3 className="font-medium text-textPrimary">
+              {sellerOverviewLanguage?.accessHireRateTitle}
             </h3>
             <p className="text-sm text-gray-500">
-              {sellerOverviewLanguage?.access_hire_note}
+              {sellerOverviewLanguage?.accessHireNote}
             </p>
           </div>
         </div>
@@ -400,7 +400,7 @@ const { lang } = useLanguage();
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <p className="text-sm">{sellerOverviewLanguage?.no_data}</p>
+          <p className="text-sm">{sellerOverviewLanguage?.noData}</p>
         </div>
       </section>
     </main>

@@ -90,7 +90,7 @@ const SpAdsSlider = () => {
         <div className="col-span-1 hidden sm:block">
           <div className="grid grid-cols-1 gap-y-6">
             <Image
-              src={LandingImage.award_bg}
+              src={LandingImage.awardBg}
               alt="Picture 1"
               className="rounded-lg"
               width={400}

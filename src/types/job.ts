@@ -3,22 +3,22 @@ export interface Job {
   user: User;
   slug: string;
   title: string;
-  base_price: string;
-  price_before_discount: string;
+  basePrice: string;
+  priceBeforeDiscount: string;
   show: boolean;
   rating: string;
   status: number;
-  is_hot: boolean;
-  is_pro: boolean;
+  isHot: boolean;
+  isPro: boolean;
   description: string;
-  is_instant_hire: boolean;
-  purchase_count: number;
-  reviews_count: number;
+  isInstantHire: boolean;
+  purchaseCount: number;
+  reviewsCount: number;
   onboarding: Onboarding;
-  created_at: string;
-  updated_at: string;
-  service_catalog: ServiceCatalog;
-  service_type: ServiceType;
+  createdAt: string;
+  updatedAt: string;
+  serviceCatalog: ServiceCatalog;
+  serviceType: ServiceType;
   packages: Package[];
   images: JobImage[];
   worksteps: WorkStep[];
@@ -26,14 +26,14 @@ export interface Job {
 
 export interface User {
   username: string;
-  display_name: string;
-  avatar_url: string;
+  displayName: string;
+  avatarUrl: string;
   bio: string;
 }
 
 export interface Onboarding {
   id: string;
-  job_id: string;
+  jobId: string;
   step1: boolean;
   step2: boolean;
   step3: boolean;
@@ -44,59 +44,59 @@ export interface Onboarding {
 export interface ServiceCatalog {
   id: string;
   title: string;
-  second_title: string | null;
-  created_at: string;
-  updated_at: string;
-  parent_id: string | null;
-  service_topic: string | null;
-  image_url: string | null;
+  secondTitle: string | null;
+  createdAt: string;
+  updatedAt: string;
+  parentId: string | null;
+  serviceTopic: string | null;
+  imageUrl: string | null;
 }
 
 export interface ServiceType {
   id: string;
   title: string;
-  second_title: string | null;
-  created_at: string;
-  updated_at: string;
-  parent_id: string | null;
-  service_topic: string | null;
-  image_url: string | null;
+  secondTitle: string | null;
+  createdAt: string;
+  updatedAt: string;
+  parentId: string | null;
+  serviceTopic: string | null;
+  imageUrl: string | null;
 }
 
 export interface Package {
   id: string;
-  job_id: string;
+  jobId: string;
   description: string;
   price: string;
-  sort_order: number;
-  created_at: string;
-  updated_at: string;
-  package_name: string;
-  execution_time: number;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+  packageName: string;
+  executionTime: number;
 }
 
 export interface JobImage {
   id: string;
-  job_id: string;
-  image_url: string;
-  is_cover_photo: boolean;
-  sort_order: number;
+  jobId: string;
+  imageUrl: string;
+  isCoverPhoto: boolean;
+  sortOrder: number;
   alt: string | null;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface WorkStep {
   id: string;
-  job_id: string;
+  jobId: string;
   description: string;
-  sort_order: number;
+  sortOrder: number;
 }
 
 export interface JobListResponse {
   jobs: Job[];
-  total_items: number;
-  total_pages: number;
+  totalItems: number;
+  totalPages: number;
   page: number;
   limit: number;
 }

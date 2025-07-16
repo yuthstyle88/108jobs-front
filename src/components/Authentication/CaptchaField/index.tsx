@@ -28,7 +28,7 @@ export const CaptchaField = ({
     isValidating,
     error: errorCaptcha,
     refetch,
-  } = usePublicFetchV2<CaptchaResponse>(API_ROUTES.auth.get_capcha);
+  } = usePublicFetchV2<CaptchaResponse>(API_ROUTES.auth.getCapcha);
 
   useEffect(() => {
     if (captcha?.ok?.uuid) {
@@ -55,7 +55,7 @@ export const CaptchaField = ({
 
         {errorCaptcha && (
           <p className="text-red-500 text-sm">
-            {language?.error_loading_captcha}
+            {language?.errorLoadingCaptcha}
           </p>
         )}
 
@@ -66,15 +66,15 @@ export const CaptchaField = ({
           className="text-blue-500 text-sm text-start flex items-center gap-1"
         >
           <RefreshCcw className="text-third w-6 h-6" />
-          <span>{language?.reload_captcha}</span>
+          <span>{language?.reloadCaptcha}</span>
         </button>
       </div>
 
       <CustomInput
-        name="captcha_answer"
-        register={register("captcha_answer")}
+        name="captchaAnswer"
+        register={register("captchaAnswer")}
         error={error}
-        placeholder={language?.placeholder_captcha_answer}
+        placeholder={language?.placeholderCaptchaAnswer}
       />
     </div>
   );

@@ -5,5 +5,5 @@ export default function editRegistrationApplication(
   data: RegistrationApplicationView,
   apps: RegistrationApplicationView[],
 ): RegistrationApplicationView[] {
-  return editListImmutable("registration_application", data, apps);
+  return editListImmutable("registrationApplication", data, apps);
 }

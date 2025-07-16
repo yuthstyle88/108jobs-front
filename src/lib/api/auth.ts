@@ -3,17 +3,17 @@ import {axiosPublicV2} from "@/lib/axios";
 import {arrayBufferToHex, exportPublicKey, generateEcKeyPair, importEcPublicKeyHex} from "@/lib/web-crypto";
 
 interface ExchangeKeyResponse {
-  public_key: string;
+  publicKey: string;
 }
 
-export async function exchangePublicKey(public_key: string, token: string) {
+export async function exchangePublicKey(publicKey: string, token: string) {
   try {
 
-    const url = `${API_ROUTES.auth.exchange_key}`;
+    const url = `${API_ROUTES.auth.exchangeKey}`;
 
     const response = await axiosPublicV2.post(url,
       {
-        public_key: public_key,
+        publicKey: publicKey,
       },
       {
         headers: {
@@ -25,7 +25,7 @@ export async function exchangePublicKey(public_key: string, token: string) {
     if (response.status !== 200) {
       throw new Error("Exchange token request failed");
     }
-    return (response.data as ExchangeKeyResponse).public_key;
+    return (response.data as ExchangeKeyResponse).publicKey;
   } catch (error) {
     console.error('Token exchange error:',
       error);
@@ -59,15 +59,22 @@ export async function checkEmailExists(email: string) {
   return axiosPublicV2.post("/oauth/email-exists", { email });
 }
 
-export async  function  exchange(accessToken: string) {
-  const {publicKey, privateKey} = await generateEcKeyPair();
+export async function exchange(accessToken: string) {
+  // รับทั้ง privateKey และ publicKey
+  const { privateKey, publicKey } = await generateEcKeyPair();
+
+  // ส่งออกคีย์สาธารณะโดยใช้ publicKey (ไม่ใช่ privateKey)
   const pub = await exportPublicKey(publicKey);
-  const public_key = await exchangePublicKey(pub, accessToken as string);
-  const serverPubKey = await importEcPublicKeyHex(public_key);
-  const shared_key = await crypto.subtle.deriveBits(
-    {name: "ECDH", public: serverPubKey},
+  const publicKeyHex = await exchangePublicKey(pub, accessToken);
+
+  const serverPubKey = await importEcPublicKeyHex(publicKeyHex);
+
+  const sharedKey = await crypto.subtle.deriveBits(
+    { name: "ECDH", public: serverPubKey },
     privateKey,
     256
   );
-  return arrayBufferToHex(shared_key);
+
+  return arrayBufferToHex(sharedKey);
 }
+

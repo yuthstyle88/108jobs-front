@@ -7,7 +7,7 @@ export interface Category {
 }
 
 interface CategoriesResponse {
-  service_catalogs: { id: string; name: string; slug: string }[]; // Thêm slug nếu cần filter
+  serviceCatalogs: { id: string; name: string; slug: string }[]; // Thêm slug nếu cần filter
 }
 
 export const useCategories = () => {
@@ -15,10 +15,10 @@ export const useCategories = () => {
     data,
     isLoading,
     error
-  } = usePublicFetch<CategoriesResponse>(API_ROUTES.catalog.get_all_catalog);
+  } = usePublicFetch<CategoriesResponse>(API_ROUTES.catalog.getAllCatalog);
 
-  const categories = data?.service_catalogs
-    ? data.service_catalogs
+  const categories = data?.serviceCatalogs
+    ? data.serviceCatalogs
         .filter((catalog) => catalog.slug !== "popular-service") 
         .map((catalog) => ({
           id: catalog.id,

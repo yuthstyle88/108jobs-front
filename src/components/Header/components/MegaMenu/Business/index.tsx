@@ -9,14 +9,14 @@ const Business = () => {
   return (
     <div className="flex flex-col w-[420px] mt-8">
       <span className="text-third font-medium">
-        {global?.business_service_title}
+        {global?.businessServiceTitle}
       </span>
-      <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
-        {global?.business_service_description}
+      <p className="mt-3 text-[0.875rem] text-textSecondary font-sans">
+        {global?.businessServiceDescription}
       </p>
       <Link prefetch={false} href="/business" className="mt-6">
         <span className="text-[0.875rem] font-medium text-third">
-          {global?.go_to_fastwork_business}
+          {global?.goToFastworkBusiness}
           <FontAwesomeIcon icon={faArrowRight} className="pl-2 text-third" />
         </span>
       </Link>

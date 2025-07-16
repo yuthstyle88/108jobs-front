@@ -6,6 +6,6 @@ export default function nsfwCheck(
   myUserInfo = UserService.Instance.myUserInfo,
 ): boolean {
   const nsfw = pv.post.nsfw || pv.community.nsfw;
-  const myShowNsfw = myUserInfo?.local_user_view.local_user.show_nsfw ?? false;
+  const myShowNsfw = myUserInfo?.localUserView.localUser.showNsfw ?? false;
   return !nsfw || (nsfw && myShowNsfw);
 }

@@ -24,7 +24,7 @@ const SearchInput = ({ language }: Props) => {
     const trimmed = data.query.trim();
     if (trimmed) {
       const encoded = encodeURIComponent(trimmed);
-      router.push(`/job/search?title_search=${encoded}`);
+      router.push(`/job/search?titleSearch=${encoded}`);
     }
   };
   return (
@@ -35,7 +35,7 @@ const SearchInput = ({ language }: Props) => {
       <div className="flex text-black h-[40px] relative w-[624px]">
         <input
           type="text"
-          placeholder={`${language?.hint_text_header_search}...`}
+          placeholder={`${language?.hintTextHeaderSearch}...`}
           className="focus:outline-none rounded-[20px] border-2-white px-5 text-sm font-mono w-full"
           {...register("query")}
         />

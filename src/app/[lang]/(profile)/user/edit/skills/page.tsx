@@ -19,8 +19,8 @@ type SkillLevel = {
 
 type SkillFromServer = {
   id: string;
-  skill_name: string;
-  level_name: string;
+  skillName: string;
+  levelName: string;
 };
 
 const EditSkills = () => {
@@ -32,7 +32,7 @@ const EditSkills = () => {
     skillItems: z.array(
       z.object({
         id: z.string().optional(),
-        skill: z.string().min(1, userEditLanguage?.skills_require),
+        skill: z.string().min(1, userEditLanguage?.skillsRequire),
         level: z.string().min(1, "Vui lòng chọn cấp độ"),
       })
     ),
@@ -41,8 +41,8 @@ const EditSkills = () => {
   type SkillFormData = z.infer<typeof skillSchema>;
 
   const levelMap: Record<string, string> = {
-    Medium: userEditLanguage?.medium_level || "",
-    High: userEditLanguage?.high_level || "",
+    Medium: userEditLanguage?.mediumLevel || "",
+    High: userEditLanguage?.highLevel || "",
   };
 
   const {
@@ -56,7 +56,7 @@ const EditSkills = () => {
     defaultValues: { skillItems: [] },
   });
 
-  const { success_message } = useNotification();
+  const { successMessage } = useNotification();
   const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "skillItems",
@@ -66,10 +66,10 @@ const EditSkills = () => {
 
   const { data: levelData, isLoading: isLevelLoading } = usePrivateFetch<{
     levels: SkillLevel[];
-  }>(API_ROUTES_SELLER.profile.skill_level);
+  }>(API_ROUTES_SELLER.profile.skillLevel);
 
   const { data: skillData, isLoading: isSkillLoading } = usePrivateFetch<{
-    skill_profiles: SkillFromServer[];
+    skillProfiles: SkillFromServer[];
   }>(API_ROUTES_SELLER.profile.skills);
 
   const { trigger: sendSkills, isMutating } = usePrivatePost(
@@ -79,10 +79,10 @@ const EditSkills = () => {
   useEffect(() => {
     if (!isSkillLoading && !isLevelLoading) {
       const mapped =
-        skillData?.skill_profiles.map((item) => ({
+        skillData?.skillProfiles.map((item) => ({
           id: item.id,
-          skill: item.skill_name,
-          level: item.level_name,
+          skill: item.skillName,
+          level: item.levelName,
         })) || [];
 
       reset({ skillItems: mapped });
@@ -99,16 +99,16 @@ const EditSkills = () => {
         const level = levelData.levels.find((lvl) => lvl.title === item.level);
         return {
           ...(item.id ? { id: item.id } : {}),
-          skill_name: item.skill,
-          level_name: item.level,
-          level_id: level?.id || "",
+          skillName: item.skill,
+          levelName: item.level,
+          levelId: level?.id || "",
         };
       }),
     };
 
     try {
       await sendSkills(body);
-      success_message("profile", "update_skill");
+      successMessage("profile", "updateSkill");
     } catch (err) {
       console.error("Lỗi khi lưu kỹ năng:", err);
     }
@@ -132,7 +132,7 @@ const EditSkills = () => {
           </div>
         ) : fields.length === 0 ? (
           <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
-            <p className="text-gray-500 mb-4">{userEditLanguage?.no_skills_info}.</p>
+            <p className="text-gray-500 mb-4">{userEditLanguage?.noSkillsInfo}.</p>
             <button
               type="button"
               onClick={() =>
@@ -144,7 +144,7 @@ const EditSkills = () => {
               }
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.add_info}
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.addInfo}
             </button>
 
             <div className="flex justify-end">
@@ -154,7 +154,7 @@ const EditSkills = () => {
                 disabled={isMutating}
                 className="min-w-[128px] px-2 py-2 submit-button-custom"
               >
-                {isMutating ? <LoadingCircle /> : userEditLanguage?.save_info}
+                {isMutating ? <LoadingCircle /> : userEditLanguage?.saveInfo}
               </button>
             </div>
           </div>
@@ -172,7 +172,7 @@ const EditSkills = () => {
                     </label>
                     <input
                       type="text"
-                      className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="text-textPrimary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Ví dụ: Photoshop, AutoCAD"
                       {...register(`skillItems.${index}.skill`)}
                     />
@@ -185,7 +185,7 @@ const EditSkills = () => {
                   <div>
                     <label className="block text-gray-700 mb-2">{userEditLanguage?.level}</label>
                     <select
-                      className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="text-textPrimary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       {...register(`skillItems.${index}.level`)}
                     >
                       {levelOptions.map((level) => (
@@ -206,11 +206,11 @@ const EditSkills = () => {
                   <button
                     type="button"
                     onClick={() => remove(index)}
-                    className="border-1 border-border_secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
+                    className="border-1 border-borderSecondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                   >
                     <Trash2 className="w-4" />
                     <span className="ml-2 font-medium">
-                      {userEditLanguage?.delete_button}
+                      {userEditLanguage?.deleteButton}
                     </span>
                   </button>
                 </div>
@@ -229,7 +229,7 @@ const EditSkills = () => {
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
               <Plus className="w-5 h-5 mr-2" />{" "}
-              {userEditLanguage?.add_more_button}
+              {userEditLanguage?.addMoreButton}
             </button>
 
             <div className="flex justify-end">
@@ -238,7 +238,7 @@ const EditSkills = () => {
                 disabled={isMutating}
                 className="min-w-[128px] px-2 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                {isMutating ? <LoadingCircle /> : userEditLanguage?.save_info}
+                {isMutating ? <LoadingCircle /> : userEditLanguage?.saveInfo}
               </button>
             </div>
           </form>

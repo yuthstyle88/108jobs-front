@@ -29,26 +29,26 @@ const FreelanceImproveMenu = () => {
   > = {
     post: {
       component: <Post />,
-      image: MegaMenuImage.buyer_job,
+      image: MegaMenuImage.buyerJob,
     },
     ads: {
       component: <Ads />,
-      image: MegaMenuImage.ads_bg,
+      image: MegaMenuImage.adsBg,
     },
   };
 
-  const mega_freelancer: FreelanceImproveMenuItem[] = [
+  const megaFreelancer: FreelanceImproveMenuItem[] = [
     {
       key: "post",
       icon: MegaMenuImage.job,
-      title: global?.job_board_freelancer_title,
-      description: global?.job_board_desc,
+      title: global?.jobBoardFreelancerTitle,
+      description: global?.jobBoardDesc,
     },
     {
       key: "ads",
       icon: MegaMenuImage.ads,
-      title: global?.ads_coming_title,
-      description: global?.hire_opportunity_title,
+      title: global?.adsComingTitle,
+      description: global?.hireOpportunityTitle,
     },
   ];
 
@@ -67,10 +67,10 @@ const FreelanceImproveMenu = () => {
                 className="w-3 h-3 inline-flex items-center justify-center cursor-pointer"
               />
               <span className="text-[0.875rem] font-semibold text-[rgba(43,50,59,.6)]">
-                {global?.hire_opportunity_title}
+                {global?.hireOpportunityTitle}
               </span>
             </div>
-            {mega_freelancer.map((freelancer, index) => (
+            {megaFreelancer.map((freelancer, index) => (
               <div
                 onMouseEnter={() => setHoveredItem(freelancer.key)}
                 onMouseLeave={() => setHoveredItem(freelancer.key)}
@@ -86,7 +86,7 @@ const FreelanceImproveMenu = () => {
                   <Image src={freelancer.icon} alt="search" className="w-9" />
                   <div className="gap-x-1 flex flex-col flex-1 ">
                     <span
-                      className={`text-[0.875rem] font-medium text-text_primary ${
+                      className={`text-[0.875rem] font-medium text-textPrimary ${
                         freelancer.key === hoveredItem && "text-third"
                       }`}
                     >

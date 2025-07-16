@@ -13,7 +13,7 @@ import Link from "next/link";
 
 const AccountStats = () => {
   const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
+    API_ROUTES.profile.getProfile
   );
 
   const {
@@ -31,14 +31,14 @@ const AccountStats = () => {
     <div className="flex-1">
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-6 text-black">
-          {sellerAccStatsLanguage?.account_statistics_title}
+          {sellerAccStatsLanguage?.accountStatisticsTitle}
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 text-black">
           <div className="bg-white rounded-lg p-6 flex flex-col justify-center items-center">
             <figure className="w-20 h-20 rounded-full">
               <Image
-                src={user?.user.avatar_url || ProfileImage.avatar}
+                src={user?.user.avatarUrl || ProfileImage.avatar}
                 alt="avatar"
                 width={80}
                 height={80}
@@ -51,7 +51,7 @@ const AccountStats = () => {
           <div className="bg-white rounded-lg p-6">
             <div className="flex items-center mb-4">
               <h3 className="text-base font-medium flex-grow text-black">
-                {sellerAccStatsLanguage?.online_activity_title}
+                {sellerAccStatsLanguage?.onlineActivityTitle}
               </h3>
               <Info className="w-4 h-4 text-gray-400" />
             </div>
@@ -72,7 +72,7 @@ const AccountStats = () => {
             </div>
 
             <div className="text-sm text-black text-center mt-4">
-              {sellerAccStatsLanguage?.online_activity_hint}
+              {sellerAccStatsLanguage?.onlineActivityHint}
             </div>
 
             <div className="mt-6 flex justify-center">
@@ -80,7 +80,7 @@ const AccountStats = () => {
                 className="bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-md"
                 href="/job-board"
               >
-                {sellerAccStatsLanguage?.find_jobs_button}
+                {sellerAccStatsLanguage?.findJobsButton}
               </Link>
             </div>
           </div>
@@ -88,32 +88,32 @@ const AccountStats = () => {
 
         <div className="bg-white rounded-lg p-6 mb-8 relative">
           <div className="flex items-center mb-4">
-            <h3 className="text-text_primary text-base font-medium flex-grow">
-              {sellerAccStatsLanguage?.average_response_time}
+            <h3 className="text-textPrimary text-base font-medium flex-grow">
+              {sellerAccStatsLanguage?.averageResponseTime}
             </h3>
             <Info className="w-4 h-4 text-black" />
           </div>
           <div className="text-sm text-black">
-            {sellerAccStatsLanguage?.no_data_available}
+            {sellerAccStatsLanguage?.noDataAvailable}
           </div>
         </div>
 
         <div className="mb-8">
           <h2 className="text-xl font-medium mb-4 text-black">
-            {sellerAccStatsLanguage?.service_statistics_title}
+            {sellerAccStatsLanguage?.serviceStatisticsTitle}
           </h2>
           <div className="text-sm text-black">
-            {sellerAccStatsLanguage?.service_statistics_note}
+            {sellerAccStatsLanguage?.serviceStatisticsNote}
           </div>
 
           <div className="mt-6 bg-white rounded-lg p-6 flex flex-col items-center justify-center text-center">
             <FileText className="w-12 h-12 text-gray-300 mb-4" />
             <div className="text-black">
-              {sellerAccStatsLanguage?.no_data_available}
+              {sellerAccStatsLanguage?.noDataAvailable}
             </div>
             <Link prefetch={false} href="/manage-product/create">
               <button className="mt-4 bg-blue-100 text-blue-700 text-sm font-medium py-2 px-4 rounded">
-                {sellerAccStatsLanguage?.start_selling_button}
+                {sellerAccStatsLanguage?.startSellingButton}
               </button>
             </Link>
           </div>

@@ -29,8 +29,8 @@ const Benefit = ({ data }: Props) => {
           />
         </svg>
       ),
-      title: data?.increase_hiring,
-      description: data?.increase_hiring_description,
+      title: data?.increaseHiring,
+      description: data?.increaseHiringDescription,
     },
     {
       icon: (
@@ -48,8 +48,8 @@ const Benefit = ({ data }: Props) => {
           />
         </svg>
       ),
-      title: data?.payment_security,
-      description: data?.payment_security_description,
+      title: data?.paymentSecurity,
+      description: data?.paymentSecurityDescription,
     },
     {
       icon: (
@@ -68,7 +68,7 @@ const Benefit = ({ data }: Props) => {
         </svg>
       ),
       title: data?.paperwork,
-      description: data?.paperwork_description,
+      description: data?.paperworkDescription,
     },
     {
       icon: (
@@ -86,8 +86,8 @@ const Benefit = ({ data }: Props) => {
           />
         </svg>
       ),
-      title: data?.support_team,
-      description: data?.support_team_description,
+      title: data?.supportTeam,
+      description: data?.supportTeamDescription,
     },
     {
       icon: (
@@ -105,8 +105,8 @@ const Benefit = ({ data }: Props) => {
           />
         </svg>
       ),
-      title: data?.career_growth,
-      description: data?.career_growth_description,
+      title: data?.careerGrowth,
+      description: data?.careerGrowthDescription,
     },
     {
       icon: (
@@ -125,24 +125,24 @@ const Benefit = ({ data }: Props) => {
         </svg>
       ),
       title: data?.privileges,
-      description: data?.privileges_description,
+      description: data?.privilegesDescription,
     },
   ];
   return (
     <div className="grid-container-desktop-banner w-full py-16 px-4 sm:px-6 lg:px-8">
       <div className="col-start-2 col-end-3">
         <h2 className="text-3xl font-bold text-center text-primary mb-12">
-          {data?.advantages_title}
+          {data?.advantagesTitle}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {benefits.map((benefit, index) => (
             <div key={index} className="flex flex-col items-start">
               <div className="rounded-lg p-2 bg-blue-50">{benefit.icon}</div>
-              <h3 className="mt-4 text-[18px] font-semibold text-text_primary">
+              <h3 className="mt-4 text-[18px] font-semibold text-textPrimary">
                 {benefit.title}
               </h3>
-              <p className="mt-2 font-sans text-text_primary">
+              <p className="mt-2 font-sans text-textPrimary">
                 {benefit.description}
               </p>
             </div>

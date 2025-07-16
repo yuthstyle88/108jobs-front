@@ -9,7 +9,7 @@ import { ImageUploadResponse } from "@/types/image";
 import { API_ROUTES_SELLER } from "@/api/endpoints";
 
 const profileSchema = z.object({
-  display_name: z
+  displayName: z
     .string()
     .min(2, "Tên hiển thị phải có ít nhất 2 ký tự")
     .max(50, "Tên hiển thị không được quá 50 ký tự"),
@@ -17,11 +17,11 @@ const profileSchema = z.object({
     .string()
     .min(3, "Username phải có ít nhất 3 ký tự")
     .max(30, "Username không được quá 30 ký tự"),
-    // .regex(/^[a-zA-Z0-9_]+$/, "Username chỉ chứa chữ, số và _"),
-  birth_day: z.string(),
-  birth_month: z.string(),
-  birth_year: z.string(),
-  freelancer_type: z.string(),
+    // .regex(/^[a-zA-Z0-9_]+$/, "Username chỉ chứa chữ, số và "),
+  birthDay: z.string(),
+  birthMonth: z.string(),
+  birthYear: z.string(),
+  freelancerType: z.string(),
   bio: z.string().optional(),
 });
 
@@ -45,74 +45,74 @@ export const useProfileForm = (
   });
 
   const { trigger: updateProfile, isMutating: isUpdateMuting } =
-    usePrivatePut<ProfileData>(API_ROUTES_SELLER.profile.update_Profile);
+    usePrivatePut<ProfileData>(API_ROUTES_SELLER.profile.updateProfile);
 
-  const { success_message } = useNotification();
+  const { successMessage } = useNotification();
 
   useEffect(() => {
     if (profileData?.user) {
-      const birthDate = profileData.user.birth_date;
+      const birthDate = profileData.user.birthDate;
       if (birthDate) {
         const [year, month, day] = birthDate.split("-");
         reset({
-          display_name: profileData.user.display_name,
+          displayName: profileData.user.displayName,
           username: profileData.user.username,
-          birth_day: day || "Day",
-          birth_month: month || "Month",
-          birth_year: year || "Year",
-          freelancer_type: profileData.profile.freelancer_type,
+          birthDay: day || "Day",
+          birthMonth: month || "Month",
+          birthYear: year || "Year",
+          freelancerType: profileData.profile.freelancerType,
           bio: profileData.profile.bio || "",
         });
       } else {
         reset({
-          display_name: profileData.user.display_name,
+          displayName: profileData.user.displayName,
           username: profileData.user.username,
-          birth_day: "Day",
-          birth_month: "Month",
-          birth_year: "Year",
-          freelancer_type: profileData.profile.freelancer_type,
+          birthDay: "Day",
+          birthMonth: "Month",
+          birthYear: "Year",
+          freelancerType: profileData.profile.freelancerType,
           bio: profileData.profile.bio || "",
         });
       }
-      setSelectedImage(profileData.user.avatar_url);
+      setSelectedImage(profileData.user.avatarUrl);
     }
   }, [profileData, reset, setSelectedImage]);
 
   const onSubmit = async (formData: FormValues) => {
     try {
-      let avatarUrl = profileData?.user.avatar_url;
+      let avatarUrl = profileData?.user.avatarUrl;
 
-      if (selectedImage && selectedImage !== profileData?.user.avatar_url) {
+      if (selectedImage && selectedImage !== profileData?.user.avatarUrl) {
         const imageFormData = new FormData();
         const blob = await fetch(selectedImage).then((res) => res.blob());
         imageFormData.append("images[]", blob, "profile.jpg");
         const result = await uploadImage(imageFormData);
-        const uploadedImageUrl = result?.images?.[0]?.image_url;
+        const uploadedImageUrl = result?.images?.[0]?.imageUrl;
         if (!uploadedImageUrl) throw new Error("Image upload failed");
         avatarUrl = uploadedImageUrl;
       }
 
       const isIncompleteBirthDate =
-        formData.birth_day === "Day" ||
-        formData.birth_month === "Month" ||
-        formData.birth_year === "Year";
+        formData.birthDay === "Day" ||
+        formData.birthMonth === "Month" ||
+        formData.birthYear === "Year";
 
       const updateData = {
-        update_user: {
-          display_name: formData.display_name,
+        updateUser: {
+          displayName: formData.displayName,
           username: formData.username,
-          avatar_url: avatarUrl || null,
-          birth_date: isIncompleteBirthDate
+          avatarUrl: avatarUrl || null,
+          birthDate: isIncompleteBirthDate
             ? null
-            : `${formData.birth_year}-${formData.birth_month}-${formData.birth_day}`,
+            : `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`,
         },
-        freelancer_type: formData.freelancer_type,
+        freelancerType: formData.freelancerType,
         bio: formData.bio,
       };
 
       await updateProfile(updateData);
       await mutate();
-      success_message("profile", "update");
+      successMessage("profile", "update");
     } catch (error) {
       console.error("Update error:", error);
     }

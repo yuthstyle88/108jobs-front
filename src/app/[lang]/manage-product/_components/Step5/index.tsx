@@ -17,17 +17,17 @@ const getSchema = (lang: any) =>
   z.object({
     isOwner: z.literal(true, {
       errorMap: () => ({
-        message: lang?.confirmation_error,
+        message: lang?.confirmationError,
       }),
     }),
     canComplete: z.literal(true, {
       errorMap: () => ({
-        message: lang?.confirmation_error,
+        message: lang?.confirmationError,
       }),
     }),
     agreeTerms: z.literal(true, {
       errorMap: () => ({
-        message: lang?.confirmation_error,
+        message: lang?.confirmationError,
       }),
     }),
   });
@@ -48,15 +48,15 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
   }[] = [
     {
       id: "isOwner",
-      label: createJobLanguage?.confirmation_check_1,
+      label: createJobLanguage?.confirmationCheck1,
     },
     {
       id: "canComplete",
-      label: createJobLanguage?.confirmation_check_2,
+      label: createJobLanguage?.confirmationCheck2,
     },
     {
       id: "agreeTerms",
-      label: <>{createJobLanguage?.confirmation_check_3}</>,
+      label: <>{createJobLanguage?.confirmationCheck3}</>,
     },
   ];
 
@@ -80,13 +80,13 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const { trigger: submitJob } = usePrivatePost(
-    API_ROUTES_SELLER.job.post_job_step_5
+    API_ROUTES_SELLER.job.postJobStep5
   );
 
   const onSubmit = async () => {
     setIsLoading(true);
     try {
-      await submitJob({ job_id: job.id });
+      await submitJob({ jobId: job.id });
       handleSubmitSteps();
     } catch (error) {
       console.error("Lỗi khi gửi bước 5", error);
@@ -101,20 +101,20 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
       className="bg-white rounded-lg shadow-sm p-6"
     >
       {isLoading && <LoadingBlur text={"Đang lưu dữ liệu"} />}
-      <h2 className="text-xl font-medium text-text_primary">
-        {createJobLanguage?.confirmation_title}
+      <h2 className="text-xl font-medium text-textPrimary">
+        {createJobLanguage?.confirmationTitle}
       </h2>
-      <p className="mb-6 text-[16px] text-text_secondary font-sans">
-        {createJobLanguage?.confirmation_warning}
+      <p className="mb-6 text-[16px] text-textSecondary font-sans">
+        {createJobLanguage?.confirmationWarning}
       </p>
 
       <div className="space-y-8 max-w-4xl">
         <div className="p-4 bg-secondary border border-third rounded-lg mb-6 flex">
           <Info className="w-5 h-5 text-primary mr-2 flex-shrink-0" />
           <p className="text-sm text-primary mb-2 font-normal font-sans leading-6">
-            {createJobLanguage?.system_note}
-            <br />• {createJobLanguage?.confirmation_notice_1}
-            <br />• {createJobLanguage?.confirmation_notice_2}
+            {createJobLanguage?.systemNote}
+            <br />• {createJobLanguage?.confirmationNotice1}
+            <br />• {createJobLanguage?.confirmationNotice2}
           </p>
         </div>
 
@@ -138,7 +138,7 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
 
           {(errors.agreeTerms || errors.isOwner || errors.canComplete) && (
             <p className="text-sm text-red-500">
-              {createJobLanguage?.confirmation_error}
+              {createJobLanguage?.confirmationError}
             </p>
           )}
         </div>
@@ -149,13 +149,13 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50"
             onClick={prevStep}
           >
-            {createJobLanguage?.back_button}
+            {createJobLanguage?.backButton}
           </button>
           <button
             type="submit"
             className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
           >
-            {global?.button_submit}
+            {global?.buttonSubmit}
           </button>
         </div>
       </div>

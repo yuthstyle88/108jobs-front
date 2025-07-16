@@ -21,27 +21,27 @@ const { lang } = useLanguage();
   const menuItems = [
     {
       href: "/seller-account-setting/freelance-profile",
-      label: sellerSidebarLanguage?.freelancer_account_info,
+      label: sellerSidebarLanguage?.freelancerAccountInfo,
       icon: User,
     },
     {
       href: "/seller-account-setting/contact-info",
-      label: sellerSidebarLanguage?.contact_info,
+      label: sellerSidebarLanguage?.contactInfo,
       icon: Mail,
     },
     {
       href: "/seller-account-setting/personal-info",
-      label: sellerSidebarLanguage?.id_info,
+      label: sellerSidebarLanguage?.idInfo,
       icon: FileText,
     },
     {
       href: "/seller-account-setting/commitment-letter",
-      label: sellerSidebarLanguage?.tax_info,
+      label: sellerSidebarLanguage?.taxInfo,
       icon: FileText,
     },
     {
       href: "/seller-account-setting/bank-account",
-      label: sellerSidebarLanguage?.bank_info,
+      label: sellerSidebarLanguage?.bankInfo,
       icon: CreditCard,
     },
   ];
@@ -54,7 +54,7 @@ const { lang } = useLanguage();
       <div className="bg-white rounded-md shadow-sm">
         <div className="p-4 border-b border-gray-200">
           <h3 className="font-medium text-gray-800">
-            {sellerSidebarLanguage?.freelancer_account_section}
+            {sellerSidebarLanguage?.freelancerAccountSection}
           </h3>
         </div>
         <nav>

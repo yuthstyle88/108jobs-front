@@ -6,8 +6,8 @@ export default function isPostBlocked(
   myUserInfo: MyUserInfo | undefined = UserService.Instance.myUserInfo,
 ): boolean {
   return (
-    (myUserInfo?.community_blocks.some(c => c.id === pv.community.id) ||
-      myUserInfo?.person_blocks.some(p => p.id === pv.creator.id)) ??
+    (myUserInfo?.communityBlocks.some(c => c.id === pv.community.id) ||
+      myUserInfo?.personBlocks.some(p => p.id === pv.creator.id)) ??
     false
   );
 }

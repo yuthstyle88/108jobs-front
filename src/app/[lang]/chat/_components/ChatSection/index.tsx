@@ -24,9 +24,9 @@ type MessageForm = {
 };
 
 type UploadedFile = {
-  file_url: string;
-  file_type: string;
-  file_name: string;
+  fileUrl: string;
+  fileType: string;
+  fileName: string;
 };
 const ChatSection = () => {
   const { languageData: chatLanguageData } = useChatLanguage();
@@ -47,15 +47,15 @@ const ChatSection = () => {
 
   const { data: chatData, isLoading: isChatLoading } = usePrivateFetch<
     ChatResponse[]
-  >(API_ROUTES.chat.get_chat_history);
+  >(API_ROUTES.chat.getChatHistory);
 
   const { trigger: uploadFile, isMutating: isUploading } = usePrivateImagePost(
-    API_ROUTES.chat.upload_file + `?room_id=${partnerId}`
+    API_ROUTES.chat.uploadFile + `?roomId=${partnerId}`
   );
 
   const currentRoom = chatData?.find(
     (room) =>
-      String(room.room_id) === partnerId || String(room.job?.id) === partnerId
+      String(room.roomId) === partnerId || String(room.job?.id) === partnerId
   );
 
   const onSubmit = (data: MessageForm) => {
@@ -64,13 +64,13 @@ const ChatSection = () => {
 
     sendMessage({
       message,
-      file_url: selectedFile?.file_url || "",
-      file_type: selectedFile?.file_type || "",
-      file_name: selectedFile?.file_name || "",
+      fileUrl: selectedFile?.fileUrl || "",
+      fileType: selectedFile?.fileType || "",
+      fileName: selectedFile?.fileName || "",
     });
 
     setSelectedFile(null);
-    mutate(API_ROUTES.chat.get_chat_history);
+    mutate(API_ROUTES.chat.getChatHistory);
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,8 +101,8 @@ const ChatSection = () => {
       <div className="flex-1 flex flex-col h-full">
         {/* Header */}
         <ChatHeader
-          avatarUrl={currentRoom?.partner_avatar || ProfileImage.avatar}
-          displayName={currentRoom?.partner_display_name || "User"}
+          avatarUrl={currentRoom?.partnerAvatar || ProfileImage.avatar}
+          displayName={currentRoom?.partnerDisplayName || "User"}
           guideText={chatLanguageData?.guide || "คู่มือการใช้งาน"}
         />
 
@@ -133,14 +133,14 @@ const ChatSection = () => {
                   </svg>
                 </div>
                 <div className="text-sm text-gray-700">
-                  <p>{chatLanguageData?.unselect_warning}</p>
+                  <p>{chatLanguageData?.unselectWarning}</p>
                 </div>
               </div>
             </div>
           </div>
           <ChatMessages
             messages={messages}
-            partnerAvatar={currentRoom?.partner_avatar || ProfileImage.avatar}
+            partnerAvatar={currentRoom?.partnerAvatar || ProfileImage.avatar}
           />
 
           <div ref={endRef} />
@@ -170,11 +170,11 @@ const ChatSection = () => {
         <div className="p-4 bg-[#DBE8FC] flex items-center">
           <Image
             src={JobDetailIcon.guarantee}
-            alt="seo_job"
+            alt="seoJob"
             className="w-5 mr-4"
           />
           <p className="text-sm text-gray-700">
-            {chatLanguageData?.secure_payment_note}
+            {chatLanguageData?.securePaymentNote}
           </p>
         </div>
 
@@ -182,15 +182,15 @@ const ChatSection = () => {
           <div className="flex">
             <div className="w-12 h-12 rounded bg-gray-200 overflow-hidden mr-3 flex-shrink-0">
               <Image
-                src={currentRoom?.job_cover_image || CategoriesImage.seo_job}
-                alt="seo_job"
+                src={currentRoom?.jobCoverImage || CategoriesImage.seoJob}
+                alt="seoJob"
                 width={64}
                 height={48}
                 className="w-full h-full object-cover"
               />
             </div>
             <div>
-              <p className="text-sm text-text_primary font-sans line-clamp-2">
+              <p className="text-sm text-textPrimary font-sans line-clamp-2">
                 {currentRoom?.job.title}
               </p>
             </div>

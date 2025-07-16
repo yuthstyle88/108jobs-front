@@ -7,11 +7,11 @@ import { ImageUploadResponse } from "@/types/image";
 import { API_ROUTES } from "@/api/endpoints";
 
 interface FormValues {
-  display_name: string;
+  displayName: string;
   username: string;
-  birth_day: string;
-  birth_month: string;
-  birth_year: string;
+  birthDay: string;
+  birthMonth: string;
+  birthYear: string;
 }
 
 export const useProfileForm = (
@@ -29,65 +29,65 @@ export const useProfileForm = (
   } = useForm<FormValues>();
 
   const { trigger: updateProfile, isMutating: isUpdateMuting } =
-    usePrivatePut<ProfileData>(API_ROUTES.profile.update_Profile);
+    usePrivatePut<ProfileData>(API_ROUTES.profile.updateProfile);
 
-  const { success_message } = useNotification();
+  const { successMessage } = useNotification();
 
   useEffect(() => {
     if (profileData?.user) {
-      const birthDate = profileData.user.birth_date;
+      const birthDate = profileData.user.birthDate;
       if (birthDate) {
         const [year, month, day] = birthDate.split("-");
         reset({
-          display_name: profileData.user.display_name,
+          displayName: profileData.user.displayName,
           username: profileData.user.username,
-          birth_day: day || "Day",
-          birth_month: month || "Month",
-          birth_year: year || "Year",
+          birthDay: day || "Day",
+          birthMonth: month || "Month",
+          birthYear: year || "Year",
         });
       } else {
         reset({
-          display_name: profileData.user.display_name,
+          displayName: profileData.user.displayName,
           username: profileData.user.username,
-          birth_day: "Day",
-          birth_month: "Month",
-          birth_year: "Year",
+          birthDay: "Day",
+          birthMonth: "Month",
+          birthYear: "Year",
         });
       }
-      setSelectedImage(profileData.user.avatar_url);
+      setSelectedImage(profileData.user.avatarUrl);
     }
   }, [profileData, reset, setSelectedImage]);
 
   const onSubmit = async (formData: FormValues) => {
     try {
-      let avatarUrl = profileData?.user.avatar_url;
+      let avatarUrl = profileData?.user.avatarUrl;
 
-      if (selectedImage && selectedImage !== profileData?.user.avatar_url) {
+      if (selectedImage && selectedImage !== profileData?.user.avatarUrl) {
         const imageFormData = new FormData();
         const blob = await fetch(selectedImage).then((res) => res.blob());
         imageFormData.append("images[]", blob, "profile.jpg");
         const result = await uploadImage(imageFormData);
-        const uploadedImageUrl = result?.images?.[0]?.image_url;
+        const uploadedImageUrl = result?.images?.[0]?.imageUrl;
         if (!uploadedImageUrl) throw new Error("Image upload failed");
         avatarUrl = uploadedImageUrl;
       }
 
       const isIncompleteBirthDate =
-        formData.birth_day === "Day" ||
-        formData.birth_month === "Month" ||
-        formData.birth_year === "Year";
+        formData.birthDay === "Day" ||
+        formData.birthMonth === "Month" ||
+        formData.birthYear === "Year";
 
       const updateData = {
-        display_name: formData.display_name,
+        displayName: formData.displayName,
         username: formData.username,
-        birth_date: isIncompleteBirthDate
+        birthDate: isIncompleteBirthDate
           ? null
-          : `${formData.birth_year}-${formData.birth_month}-${formData.birth_day}`,
-        avatar_url: avatarUrl || null,
+          : `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`,
+        avatarUrl: avatarUrl || null,
       };
 
       await updateProfile(updateData);
-      success_message("profile", "update");
+      successMessage("profile", "update");
       await mutate();
     } catch (error) {
       console.error("Update error:", error);

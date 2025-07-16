@@ -8,23 +8,23 @@ import useNotification from "@/hooks/useNotification";
 
 const DocumentInfo = () => {
   const [isAvailable, setIsAvailable] = useState(false);
-  const { success_message, error_message } = useNotification();
+  const { successMessage, errorMessage } = useNotification();
   const { trigger: updateStatus, isMutating } = usePrivatePut(
-    API_ROUTES.profile.update_available
+    API_ROUTES.profile.updateAvailable
   );
 
   const handleToggle = async (value: boolean) => {
     setIsAvailable(value);
     try {
       await updateStatus({ available: value });
-      success_message(
+      successMessage(
         "profile",
-        value ? "update_available" : "update_not_available"
+        value ? "updateAvailable" : "updateNotAvailable"
       );
     } catch (err) {
       console.error("Failed to update availability", err);
       setIsAvailable((prev) => !prev);
-      error_message("profile", "update_available_fail");
+      errorMessage("profile", "updateAvailableFail");
     }
   };
 

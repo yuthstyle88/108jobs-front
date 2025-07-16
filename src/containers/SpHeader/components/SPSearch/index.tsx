@@ -18,7 +18,7 @@ const SPSearch = () => {
     const trimmed = data.query.trim();
     if (trimmed) {
       const encoded = encodeURIComponent(trimmed);
-      router.push(`/job/search?title_search=${encoded}`);
+      router.push(`/job/search?titleSearch=${encoded}`);
     }
   };
   return (

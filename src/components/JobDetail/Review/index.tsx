@@ -29,14 +29,14 @@ const ReviewCard = ({ language, data }: Props) => {
   const {
     data: reviewData,
   } = usePrivateFetchParams<ReviewResponse>(
-    `${API_ROUTES.profile.get_list_review}?profile_id=${data.user.profile_id}`
+    `${API_ROUTES.profile.getListReview}?profileId=${data.user.profileId}`
   );
 
 
   return (
     <div className="grid grid-cols-[1fr] gap-y-6 pb-10">
       <h2 className="text-[1.25rem] text-third font-medium">
-        {language?.reviews_from_employers}
+        {language?.reviewsFromEmployers}
         {` (${reviewData?.reviews.length})`}
       </h2>
       <div className="bg-white rounded-xl shadow-sm p-2 md:p-6">
@@ -54,27 +54,27 @@ const ReviewCard = ({ language, data }: Props) => {
           <div className="flex-1 w-full lg:mx-12">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-center gap-2">
-                <MessageCircleReply className="w-[20px] h-[20px] text-text_primary"/>
+                <MessageCircleReply className="w-[20px] h-[20px] text-textPrimary"/>
                 <span className="text-gray-700 text-sm sm:text-base">
-                  {language?.response_speed}
+                  {language?.responseSpeed}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Handshake className="w-[20px] h-[20px] text-text_primary"/>
+                <Handshake className="w-[20px] h-[20px] text-textPrimary"/>
                 <span className="text-gray-700 text-sm sm:text-base">
-                  {language?.friendly_and_expert}
+                  {language?.friendlyAndExpert}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <ShoppingBag className="w-[20px] h-[20px] text-text_primary"/>
+                <ShoppingBag className="w-[20px] h-[20px] text-textPrimary"/>
                 <span className="text-gray-700 text-sm sm:text-base">
-                  {language?.service_provision}
+                  {language?.serviceProvision}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Coins className="w-[20px] h-[20px] text-text_primary"/>
+                <Coins className="w-[20px] h-[20px] text-textPrimary"/>
                 <span className="text-gray-700 text-sm sm:text-base">
-                  {language?.value_for_money}
+                  {language?.valueForMoney}
                 </span>
               </div>
             </div>
@@ -83,7 +83,7 @@ const ReviewCard = ({ language, data }: Props) => {
       </div>
       {session ? (
         <div className="px-4 py-8">
-          <CommentSection profileId={data.user.profile_id} />
+          <CommentSection profileId={data.user.profileId} />
         </div>
       ) : (
         <div className="w-full flex items-center py-12 justify-center gap-2 ">
@@ -93,7 +93,7 @@ const ReviewCard = ({ language, data }: Props) => {
                 <StarIcon key={star} filled={false} />
               ))}
             </div>
-            <div className="text-[0.875rem] font-sans text-text_secondary text-center">
+            <div className="text-[0.875rem] font-sans text-textSecondary text-center">
               Vui lòng{" "}
               <Link prefetch={false} href="/login" className="text-third underline">
                 đăng nhập

@@ -18,50 +18,50 @@ function useNotification() {
     profile: {
       success: {
         update: notiLanguage?.update,
-        update_education: notiLanguage?.update_education,
-        update_work_experience: notiLanguage?.update_work_experience,
-        update_certification: notiLanguage?.update_certification,
-        update_skill: notiLanguage?.update_skill,
-        update_language: notiLanguage?.update_language,
-        change_password: notiLanguage?.change_password,
-        update_favorite: "Successfully saved job to favorites",
-        delete_favorite: "Successfully unsaved job from favorites",
-        update_available: "You are now accepting new jobs.",
-        update_not_available: "You are no longer accepting new jobs."
+        updateEducation: notiLanguage?.updateEducation,
+        updateWorkExperience: notiLanguage?.updateWorkExperience,
+        updateCertification: notiLanguage?.updateCertification,
+        updateSkill: notiLanguage?.updateSkill,
+        updateLanguage: notiLanguage?.updateLanguage,
+        changePassword: notiLanguage?.changePassword,
+        updateFavorite: "Successfully saved job to favorites",
+        deleteFavorite: "Successfully unsaved job from favorites",
+        updateAvailable: "You are now accepting new jobs.",
+        updateNotAvailable: "You are no longer accepting new jobs."
       },
       fail: {
-        set_default: "Failed set default address",
-        update_available_fail: "Failed to update job availability. Please try again."
+        setDefault: "Failed set default address",
+        updateAvailableFail: "Failed to update job availability. Please try again."
       },
     },
     job: {
       success: {
-        update_favorite: "Successfully saved job to favorites",
-        delete_favorite: "Successfully unsaved job from favorites",
-        create_job_board: "Successfully create new job board"
+        updateFavorite: "Successfully saved job to favorites",
+        deleteFavorite: "Successfully unsaved job from favorites",
+        createJobBoard: "Successfully create new job board"
       },
       fail: {
-        create_job_board: "Failed create new job board"
+        createJobBoard: "Failed create new job board"
       },
     },
     review:{
       success: {
-        post_comment: "Successfully leave a comment",
-        update_comment: "Successfully edit comment",
-        delete_comment: "Successfully delete comment",
+        postComment: "Successfully leave a comment",
+        updateComment: "Successfully edit comment",
+        deleteComment: "Successfully delete comment",
       },
       fail: {},
     },
     service:{
       success: {
-        show_job: "Successfully public your job",
-        hide_job: "Successfully hide your job",
+        showJob: "Successfully public your job",
+        hideJob: "Successfully hide your job",
       },
       fail: {},
     }
   };
 
-  const success_message = (
+  const successMessage = (
     group: keyof NotificationType | null,
     action: string | null,
     custom?: string
@@ -81,7 +81,7 @@ function useNotification() {
     }
   };
 
-  const error_message = (
+  const errorMessage = (
     group: keyof NotificationType | null,
     action: string | null,
     custom?: string
@@ -102,8 +102,8 @@ function useNotification() {
   };
 
   return {
-    success_message,
-    error_message,
+    successMessage,
+    errorMessage,
   };
 }
 

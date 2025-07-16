@@ -54,7 +54,7 @@ const SellerSidebar = () => {
               <div className="relative overflow-hidden flex items-center p-4">
                 <Link prefetch={false} href="/">
                   <Image
-                    src={AssetIcon.logo_freelancer}
+                    src={AssetIcon.logoFreelancer}
                     alt="avatar"
                     width={500}
                     height={500}
@@ -66,7 +66,7 @@ const SellerSidebar = () => {
             <button onClick={() => setIsClose(!isClose)} className="ml-1">
               <FontAwesomeIcon
                 icon={faArrowRightToBracket}
-                className={`text-[18px] text-text_primary transition-transform ${
+                className={`text-[18px] text-textPrimary transition-transform ${
                   isClose ? "" : "rotate-180"
                 }`}
               />
@@ -78,33 +78,33 @@ const SellerSidebar = () => {
               {
                 href: "/seller",
                 icon: faFileContract,
-                label: globalLanguageData?.sidebar_overview,
+                label: globalLanguageData?.sidebarOverview,
               },
               {
                 href: "/seller/project-management",
                 icon: faListCheck,
-                label: globalLanguageData?.sidebar_project_management,
+                label: globalLanguageData?.sidebarProjectManagement,
               },
               {
                 href: "/seller/account-statistics",
                 icon: faIdCard,
-                label: globalLanguageData?.sidebar_account_statistics,
+                label: globalLanguageData?.sidebarAccountStatistics,
               },
               {
                 href: "/seller/my-service",
                 icon: faCalendar,
-                label: globalLanguageData?.sidebar_my_services,
+                label: globalLanguageData?.sidebarMyServices,
               },
               {
                 href: "/seller/withdrawal",
                 icon: faMoneyBill1Wave,
-                label: globalLanguageData?.sidebar_withdraw_freelancer,
+                label: globalLanguageData?.sidebarWithdrawFreelancer,
               },
               {
                 href: "/reward/earn",
                 icon: faGift,
-                label: globalLanguageData?.sidebar_fastwork_rewards,
-                target: "_blank",
+                label: globalLanguageData?.sidebarFastworkRewards,
+                target: "Blank",
               },
             ].map((item) => (
               <Link prefetch={false}
@@ -114,7 +114,7 @@ const SellerSidebar = () => {
                 className={`group flex items-center gap-3 px-3 py-4 text-base ${
                   isActive(item.href)
                     ? "text-third border-primary bg-secondary"
-                    : "text-text_secondary bg-white hover:border-primary hover:bg-secondary hover:text-third"
+                    : "text-textSecondary bg-white hover:border-primary hover:bg-secondary hover:text-third"
                 } border-l-4 `}
               >
                 <FontAwesomeIcon
@@ -122,7 +122,7 @@ const SellerSidebar = () => {
                   className={`text-[16px] ${
                     isActive(item.href)
                       ? "text-third"
-                      : "text-text_secondary group-hover:text-third"
+                      : "text-textSecondary group-hover:text-third"
                   }`}
                 />
                 <span
@@ -142,13 +142,13 @@ const SellerSidebar = () => {
                 href="#"
                 className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
               >
-                {globalLanguageData?.sidebar_feedback}
+                {globalLanguageData?.sidebarFeedback}
               </Link>
               <Link prefetch={false}
                 href="#"
                 className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
               >
-                {globalLanguageData?.sidebar_support_center}
+                {globalLanguageData?.sidebarSupportCenter}
               </Link>
             </div>
           </div>

@@ -13,7 +13,7 @@ const SpUserAvatar = () => {
   const pathname = usePathname();
   const { lang } = useLanguage();
   const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
+    API_ROUTES.profile.getProfile
   );
   return (
     <Link prefetch={false}
@@ -23,7 +23,7 @@ const SpUserAvatar = () => {
       }`}
     >
       <Image
-        src={user?.user.avatar_url || ProfileImage.avatar}
+        src={user?.user.avatarUrl || ProfileImage.avatar}
         alt="avatar"
         className="rounded-full w-8 h-8 object-cover"
         width={500}

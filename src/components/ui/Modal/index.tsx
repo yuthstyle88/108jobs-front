@@ -105,7 +105,7 @@ const Modal: React.FC<ModalProps> = ({
         {(title || showCloseButton) && (
           <div className={`flex items-center justify-between p-4 ${title ? "border-b" : ""}`}>
             {title && (
-              <h2 className="text-lg font-medium flex justify-center items-center w-full text-text_primary">
+              <h2 className="text-lg font-medium flex justify-center items-center w-full text-textPrimary">
                 {title}
               </h2>
             )}

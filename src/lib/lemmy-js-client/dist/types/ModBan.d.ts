@@ -1,0 +1,16 @@
+import type { InstanceId } from "./InstanceId";
+import type { ModBanId } from "./ModBanId";
+import type { PersonId } from "./PersonId";
+/**
+ * When someone is banned from the site.
+ */
+export type ModBan = {
+    id: ModBanId;
+    modPersonId: PersonId;
+    otherPersonId: PersonId;
+    reason?: string;
+    banned: boolean;
+    expiresAt?: string;
+    publishedAt: string;
+    instanceId: InstanceId;
+};

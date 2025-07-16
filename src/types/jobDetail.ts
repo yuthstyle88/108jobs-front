@@ -1,58 +1,58 @@
 export type JobDetailResponse = {
   id: string;
   user: User;
-  service_catalog: ServiceCatalog;
-  service_type: ServiceType;
+  serviceCatalog: ServiceCatalog;
+  serviceType: ServiceType;
   slug: string;
   title: string;
-  base_price: string;
-  price_before_discount: string;
+  basePrice: string;
+  priceBeforeDiscount: string;
   show: boolean;
   rating: string;
   status: number;
-  is_hot: boolean;
-  is_pro: boolean;
+  isHot: boolean;
+  isPro: boolean;
   description: string;
-  is_instant_hire: boolean;
-  purchase_count: number;
-  reviews_count: number;
+  isInstantHire: boolean;
+  purchaseCount: number;
+  reviewsCount: number;
   packages: Package[];
   images: JobImage[];
   worksteps: Workstep[];
   onboarding: Onboarding;
-  created_at: string;
-  updated_at: string;
-  tag_ids: string[];
-  completion_rate: number;
+  createdAt: string;
+  updatedAt: string;
+  tagIds: string[];
+  completionRate: number;
   badges: Badge[];
-  overall_rating: OverallRating;
-  rehire_orders_count: number;
-  additional_attributes: AdditionalAttributes;
+  overallRating: OverallRating;
+  rehireOrdersCount: number;
+  additionalAttributes: AdditionalAttributes;
   socials: SocialLink[];
   websites: WebsiteLink[];
-  related_jobs: RelatedJob[];
+  relatedJobs: RelatedJob[];
 };
 
 export type User = {
   username: string;
-  display_name: string;
-  avatar_url: string;
+  displayName: string;
+  avatarUrl: string;
   bio: string;
-  user_id: string;
-  profile_id: string;
+  userId: string;
+  profileId: string;
   available:boolean
 };
 
 export type ServiceCatalog = {
   id: string;
   title: string;
-  second_title: string | null;
-  created_at: string;
-  updated_at: string;
-  parent_id: string | null;
-  service_topic: string | null;
-  image_url: string | null;
-  is_popular: boolean;
+  secondTitle: string | null;
+  createdAt: string;
+  updatedAt: string;
+  parentId: string | null;
+  serviceTopic: string | null;
+  imageUrl: string | null;
+  isPopular: boolean;
   slug: string;
 };
 
@@ -60,37 +60,37 @@ export type ServiceType = ServiceCatalog;
 
 export type Package = {
   id: string;
-  job_id: string;
+  jobId: string;
   description: string;
   price: string;
-  sort_order: number;
-  created_at: string;
-  updated_at: string;
-  package_name: string;
-  execution_time: number;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+  packageName: string;
+  executionTime: number;
 };
 
 export type JobImage = {
   id: string;
-  job_id: string;
-  image_url: string;
-  is_cover_photo: boolean;
-  sort_order: number;
+  jobId: string;
+  imageUrl: string;
+  isCoverPhoto: boolean;
+  sortOrder: number;
   alt: string | null;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type Workstep = {
   id: string;
-  job_id: string;
+  jobId: string;
   description: string;
-  sort_order: number;
+  sortOrder: number;
 };
 
 export type Onboarding = {
   id: string;
-  job_id: string;
+  jobId: string;
   step1: boolean;
   step2: boolean;
   step3: boolean;
@@ -104,16 +104,16 @@ export type Badge = {
 };
 
 export type OverallRating = {
-  overall_rating: number;
-  average_responsiveness_rating: number;
-  average_service_rating: number;
-  average_skill_rating: number;
-  average_worth_rating: number;
+  overallRating: number;
+  averageResponsivenessRating: number;
+  averageServiceRating: number;
+  averageSkillRating: number;
+  averageWorthRating: number;
 };
 
 export type AdditionalAttributes = {
-  certificate_badge: boolean;
-  rehire_guarantee_badge: boolean;
+  certificateBadge: boolean;
+  rehireGuaranteeBadge: boolean;
 };
 
 export type SocialLink = {

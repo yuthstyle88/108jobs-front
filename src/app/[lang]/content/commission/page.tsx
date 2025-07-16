@@ -18,7 +18,7 @@ const MyServices = () => {
   const MEMBER_TIERS = [
     {
       id: "member",
-      name: commissionLanguage?.tier_table_rows_0_level,
+      name: commissionLanguage?.tierTableRows0Level,
       feePercent: 12,
       minIncome: 0,
       maxIncome: 1799999,
@@ -27,7 +27,7 @@ const MyServices = () => {
     },
     {
       id: "bronze",
-      name: commissionLanguage?.tier_table_rows_1_level,
+      name: commissionLanguage?.tierTableRows1Level,
       feePercent: 10,
       minIncome: 1800000,
       maxIncome: 8199999,
@@ -36,7 +36,7 @@ const MyServices = () => {
     },
     {
       id: "silver",
-      name: commissionLanguage?.tier_table_rows_2_level,
+      name: commissionLanguage?.tierTableRows2Level,
       feePercent: 9,
       minIncome: 8200000,
       maxIncome: 24999999,
@@ -45,7 +45,7 @@ const MyServices = () => {
     },
     {
       id: "gold",
-      name: commissionLanguage?.tier_table_rows_3_level,
+      name: commissionLanguage?.tierTableRows3Level,
       feePercent: 8,
       minIncome: 25000000,
       maxIncome: 109999999,
@@ -54,7 +54,7 @@ const MyServices = () => {
     },
     {
       id: "platinum",
-      name: commissionLanguage?.tier_table_rows_4_level,
+      name: commissionLanguage?.tierTableRows4Level,
       feePercent: 7,
       minIncome: 110000000,
       maxIncome: 349999999,
@@ -63,7 +63,7 @@ const MyServices = () => {
     },
     {
       id: "diamond",
-      name: commissionLanguage?.tier_table_rows_5_level,
+      name: commissionLanguage?.tierTableRows5Level,
       feePercent: 6,
       minIncome: 350000000,
       maxIncome: Infinity,
@@ -114,7 +114,7 @@ const MyServices = () => {
             <div className="p-4 space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {commissionLanguage?.translator_type_label}
+                  {commissionLanguage?.translatorTypeLabel}
                 </label>
                 <div className="relative">
                   <button
@@ -123,7 +123,7 @@ const MyServices = () => {
                   >
                     <span className="text-gray-700">
                       {memberTier.name} (
-                      {commissionLanguage?.translation_fee_label}{" "}
+                      {commissionLanguage?.translationFeeLabel}{" "}
                       {memberTier.feePercent}%)
                     </span>
                     <ChevronDown
@@ -134,7 +134,7 @@ const MyServices = () => {
                   </button>
 
                   {dropdownOpen && (
-                    <div className="text-text_primary absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                    <div className="text-textPrimary absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
                       {MEMBER_TIERS.map((tier) => (
                         <div
                           key={tier.id}
@@ -145,7 +145,7 @@ const MyServices = () => {
                         >
                           <span>
                             {tier.name} (
-                            {commissionLanguage?.translation_fee_label}{" "}
+                            {commissionLanguage?.translationFeeLabel}{" "}
                             {tier.feePercent}%)
                           </span>
                         </div>
@@ -158,19 +158,19 @@ const MyServices = () => {
                     href="#"
                     className="text-blue-600 hover:underline text-xs"
                   >
-                    {commissionLanguage?.translator_type_additional_info}
+                    {commissionLanguage?.translatorTypeAdditionalInfo}
                   </Link>
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {commissionLanguage?.unit_price_label}
+                  {commissionLanguage?.unitPriceLabel}
                 </label>
                 <div className="flex">
                   <input
                     type="text"
-                    className="text-text_primary flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-blue-500 focus:border-blue-500"
+                    className="text-textPrimary flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-blue-500 focus:border-blue-500"
                     placeholder="0"
                     value={projectPrice}
                     onChange={(e) => {
@@ -187,7 +187,7 @@ const MyServices = () => {
               <div className="border-t border-gray-200 pt-4">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-gray-700">
-                    {commissionLanguage?.translation_fee_label}
+                    {commissionLanguage?.translationFeeLabel}
                   </span>
                   <span className="text-blue-600 font-medium">
                     {projectPrice
@@ -205,7 +205,7 @@ const MyServices = () => {
                 <div className="flex justify-between items-center border-t border-gray-200 pt-4">
                   <div>
                     <div className="text-gray-700">
-                      {commissionLanguage?.additional_fee_label}
+                      {commissionLanguage?.additionalFeeLabel}
                     </div>
                   </div>
                   <div className="text-blue-600 font-bold">
@@ -259,8 +259,8 @@ const MyServices = () => {
                       d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <span className="font-medium text-text_primary">
-                    {commissionLanguage?.all_content_title}
+                  <span className="font-medium text-textPrimary">
+                    {commissionLanguage?.allContentTitle}
                   </span>
                 </div>
                 <ChevronDown
@@ -281,7 +281,7 @@ const MyServices = () => {
                       >
                         <span className="cursor-pointer hover:underline">
                           {
-                            commissionLanguage?.all_content_what_is_fee_based_on_accumulated_income
+                            commissionLanguage?.allContentWhatIsFeeBasedOnAccumulatedIncome
                           }
                         </span>
                       </Link>
@@ -294,7 +294,7 @@ const MyServices = () => {
                       >
                         <span>
                           {
-                            commissionLanguage?.all_content_how_is_fee_calculated
+                            commissionLanguage?.allContentHowIsFeeCalculated
                           }
                         </span>
                       </Link>
@@ -307,7 +307,7 @@ const MyServices = () => {
                             onClick={(e) => handleClick(e, 3)}
                           >
                             <span>
-                              {commissionLanguage?.all_content_example_1_title}
+                              {commissionLanguage?.allContentExample1Title}
                             </span>
                           </Link>
                         </li>
@@ -318,7 +318,7 @@ const MyServices = () => {
                             onClick={(e) => handleClick(e, 4)}
                           >
                             <span>
-                              {commissionLanguage?.all_content_example_2_title}
+                              {commissionLanguage?.allContentExample2Title}
                             </span>
                           </Link>
                         </li>
@@ -329,7 +329,7 @@ const MyServices = () => {
                             onClick={(e) => handleClick(e, 5)}
                           >
                             <span>
-                              {commissionLanguage?.all_content_example_3_title}
+                              {commissionLanguage?.allContentExample3Title}
                             </span>
                           </Link>
                         </li>
@@ -342,7 +342,7 @@ const MyServices = () => {
                         onClick={(e) => handleClick(e, 6)}
                       >
                         <span>
-                          {commissionLanguage?.all_content_what_is_fee_used_for}
+                          {commissionLanguage?.allContentWhatIsFeeUsedFor}
                         </span>
                       </Link>
                     </li>
@@ -354,11 +354,11 @@ const MyServices = () => {
 
           {/* Membership Tiers Table */}
           <div id="section1" className="mb-8">
-            <h2 className="text-xl font-medium mb-6 text-text_primary">
-              {commissionLanguage?.what_is_accumulated_income_fee_title}
+            <h2 className="text-xl font-medium mb-6 text-textPrimary">
+              {commissionLanguage?.whatIsAccumulatedIncomeFeeTitle}
             </h2>
             <p className="text-gray-700 mb-6">
-              {commissionLanguage?.what_is_accumulated_income_fee_description}
+              {commissionLanguage?.whatIsAccumulatedIncomeFeeDescription}
             </p>
 
             <div className="mt-4 mb-6">
@@ -366,25 +366,25 @@ const MyServices = () => {
                 href="/seller"
                 className="text-blue-600 underline text-sm"
               >
-                {commissionLanguage?.check_your_tier}
+                {commissionLanguage?.checkYourTier}
               </Link>
             </div>
 
             <p className="text-gray-700 mb-6">
-              {commissionLanguage?.tier_table_header_name}
+              {commissionLanguage?.tierTableHeaderName}
             </p>
 
-            <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 text-text_primary">
+            <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 text-textPrimary">
               <div className="grid grid-cols-3 text-sm">
                 <div className="font-medium p-4 bg-gray-100">
-                  {commissionLanguage?.tier_table_headers_member_level}
+                  {commissionLanguage?.tierTableHeadersMemberLevel}
                 </div>
                 <div className="font-medium p-4 bg-gray-100">
-                  {commissionLanguage?.tier_table_headers_accumulated_income}
+                  {commissionLanguage?.tierTableHeadersAccumulatedIncome}
                 </div>
                 <div className="font-medium p-4 bg-gray-100">
                   {
-                    commissionLanguage?.tier_table_headers_service_fee_percentage
+                    commissionLanguage?.tierTableHeadersServiceFeePercentage
                   }
                 </div>
               </div>
@@ -416,7 +416,7 @@ const MyServices = () => {
                           tier.maxIncome
                         )}`
                       : `${formatNumber(tier.minIncome)} ${
-                          commissionLanguage?.tier_table_rows_5_income_range_upper
+                          commissionLanguage?.tierTableRows5IncomeRangeUpper
                         }`}
                   </div>
                   <div
@@ -430,7 +430,7 @@ const MyServices = () => {
               ))}
             </div>
             <p className="text-gray-500 text-xs mt-2">
-              *{commissionLanguage?.tier_table_note}
+              *{commissionLanguage?.tierTableNote}
             </p>
           </div>
 
@@ -438,47 +438,47 @@ const MyServices = () => {
           <div className="mb-8">
             <h2
               id="section2"
-              className="text-xl font-medium mb-6 text-text_primary"
+              className="text-xl font-medium mb-6 text-textPrimary"
             >
-              {commissionLanguage?.how_is_fee_calculated_section_title}
+              {commissionLanguage?.howIsFeeCalculatedSectionTitle}
             </h2>
             <ul className="list-disc pl-5 space-y-2 text-gray-700 mb-6">
               <li>
                 {
-                  commissionLanguage?.how_is_fee_calculated_section_description_1
+                  commissionLanguage?.howIsFeeCalculatedSectionDescription1
                 }
               </li>
               <li>
                 {
-                  commissionLanguage?.how_is_fee_calculated_section_description_2
+                  commissionLanguage?.howIsFeeCalculatedSectionDescription2
                 }
               </li>
               <li>
                 {
-                  commissionLanguage?.how_is_fee_calculated_section_description_3
+                  commissionLanguage?.howIsFeeCalculatedSectionDescription3
                 }
               </li>
             </ul>
 
             <p className="text-gray-700 mb-6">
               {
-                commissionLanguage?.how_is_fee_calculated_section_freelancer_reference
+                commissionLanguage?.howIsFeeCalculatedSectionFreelancerReference
               }
             </p>
 
             {/* Table for Phí dịch vụ được tính như thế nào */}
-            <div className="overflow-hidden border border-gray-200 rounded-lg mb-6 text-text_primary">
+            <div className="overflow-hidden border border-gray-200 rounded-lg mb-6 text-textPrimary">
               <table className="w-full">
                 <thead>
                   <tr className="bg-gray-50">
                     <th className="p-4 text-left font-medium text-sm text-gray-700">
                       {
-                        commissionLanguage?.how_is_fee_calculated_section_calculation_steps_title
+                        commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsTitle
                       }
                     </th>
                     <th className="p-4 text-left font-medium text-sm text-gray-700">
                       {
-                        commissionLanguage?.how_is_fee_calculated_section_calculation_steps_title_method
+                        commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsTitleMethod
                       }
                     </th>
                   </tr>
@@ -489,14 +489,14 @@ const MyServices = () => {
                       <div className="flex items-center">
                         <span className="font-medium mr-2">
                           {
-                            commissionLanguage?.how_is_fee_calculated_section_calculation_steps_step_1_title
+                            commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep1Title
                           }
                         </span>
                       </div>
                     </td>
                     <td className="p-4">
                       {
-                        commissionLanguage?.how_is_fee_calculated_section_calculation_steps_step_1_description
+                        commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep1Description
                       }
                     </td>
                   </tr>
@@ -505,14 +505,14 @@ const MyServices = () => {
                       <div className="flex items-center">
                         <span className="font-medium mr-2">
                           {
-                            commissionLanguage?.how_is_fee_calculated_section_calculation_steps_step_2_title
+                            commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep2Title
                           }
                         </span>
                       </div>
                     </td>
                     <td className="p-4">
                       {
-                        commissionLanguage?.how_is_fee_calculated_section_calculation_steps_step_2_description
+                        commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep2Description
                       }
                     </td>
                   </tr>
@@ -521,14 +521,14 @@ const MyServices = () => {
                       <div className="flex items-center">
                         <span className="font-medium mr-2">
                           {
-                            commissionLanguage?.how_is_fee_calculated_section_calculation_steps_step_3_title
+                            commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep3Title
                           }
                         </span>
                       </div>
                     </td>
                     <td className="p-4">
                       {
-                        commissionLanguage?.how_is_fee_calculated_section_calculation_steps_step_3_description
+                        commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep3Description
                       }
                     </td>
                   </tr>
@@ -540,74 +540,74 @@ const MyServices = () => {
           {/* Example 1 */}
           <div
             id="section3"
-            className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary"
+            className="mb-8 bg-blue-50 rounded-lg p-6 text-textPrimary"
           >
             <div className="bg-blue-100 rounded-lg px-4 py-2 inline-block mb-4">
               <h3 className="text-blue-800 font-medium">
                 {" "}
-                {commissionLanguage?.example_1_title}
+                {commissionLanguage?.example1Title}
               </h3>
               <span className="text-blue-700">
-                {commissionLanguage?.example_1_subtitle}
+                {commissionLanguage?.example1Subtitle}
               </span>
             </div>
 
             <ul className="space-y-3 mb-4">
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>{commissionLanguage?.example_1_details_date}</span>
+                <span>{commissionLanguage?.example1DetailsDate}</span>
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>{commissionLanguage?.example_1_details_status}</span>
+                <span>{commissionLanguage?.example1DetailsStatus}</span>
               </li>
             </ul>
 
             <p className="mb-4">
-              {commissionLanguage?.example_1_details_calculation_intro}
+              {commissionLanguage?.example1DetailsCalculationIntro}
             </p>
 
             <div className="grid grid-cols-4 gap-3 mb-6">
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
-                  {commissionLanguage?.example_1_details_months_0_month}
+                  {commissionLanguage?.example1DetailsMonths0Month}
                 </div>
                 <div className="mt-2">
                   <div>
-                    {commissionLanguage?.example_1_details_months_0_label}
+                    {commissionLanguage?.example1DetailsMonths0Label}
                   </div>
                   <div className="font-bold">5.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
-                  {commissionLanguage?.example_1_details_months_1_month}
+                  {commissionLanguage?.example1DetailsMonths1Month}
                 </div>
                 <div className="mt-2">
                   <div>
-                    {commissionLanguage?.example_1_details_months_0_label}
+                    {commissionLanguage?.example1DetailsMonths0Label}
                   </div>
                   <div className="font-bold">2.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
-                  {commissionLanguage?.example_1_details_months_2_month}
+                  {commissionLanguage?.example1DetailsMonths2Month}
                 </div>
                 <div className="mt-2">
                   <div>
-                    {commissionLanguage?.example_1_details_months_0_label}
+                    {commissionLanguage?.example1DetailsMonths0Label}
                   </div>
                   <div className="font-bold">1.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-600 text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
-                  {commissionLanguage?.example_1_details_months_3_month}
+                  {commissionLanguage?.example1DetailsMonths3Month}
                 </div>
                 <div className="mt-2">
                   <div>
-                    {commissionLanguage?.example_1_details_months_3_label}
+                    {commissionLanguage?.example1DetailsMonths3Label}
                   </div>
                   <div className="font-bold">0 VND</div>
                 </div>
@@ -619,96 +619,96 @@ const MyServices = () => {
                 <div className="absolute inset-0 bg-blue-600 w-3/4"></div>
               </div>
               <div className="text-gray-700">
-                {commissionLanguage?.example_1_details_total} 8.000.000 + 0 ={" "}
+                {commissionLanguage?.example1DetailsTotal} 8.000.000 + 0 ={" "}
                 <span className="font-bold">8.000.000 VND</span>
               </div>
 
               <div className="mt-6 bg-amber-500 text-white px-6 py-2 rounded-full flex items-center">
                 <span className="mr-2">
-                  {commissionLanguage?.tier_table_rows_1_level}
+                  {commissionLanguage?.tierTableRows1Level}
                 </span>
                 <span className="font-bold">
-                  {commissionLanguage?.translation_fee_label} 10%
+                  {commissionLanguage?.translationFeeLabel} 10%
                 </span>
               </div>
             </div>
 
-            <p>{commissionLanguage?.example_1_note}</p>
+            <p>{commissionLanguage?.example1Note}</p>
             <p className="text-sm text-gray-500 mt-2 italic">
-              {commissionLanguage?.example_1_additional_note}
+              {commissionLanguage?.example1AdditionalNote}
             </p>
           </div>
 
           {/* Example 2 */}
           <div
             id="section4"
-            className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary"
+            className="mb-8 bg-blue-50 rounded-lg p-6 text-textPrimary"
           >
             <div className="bg-blue-100 rounded-lg px-4 py-2 inline-block mb-4">
               <h3 className="text-blue-800 font-medium">
-                {commissionLanguage?.example_2_title}
+                {commissionLanguage?.example2Title}
               </h3>
               <span className="text-blue-700">
-                {commissionLanguage?.example_2_subtitle}
+                {commissionLanguage?.example2Subtitle}
               </span>
             </div>
 
             <ul className="space-y-3 mb-4">
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>{commissionLanguage?.example_2_details_date}</span>
+                <span>{commissionLanguage?.example2DetailsDate}</span>
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>{commissionLanguage?.example_2_details_status}</span>
+                <span>{commissionLanguage?.example2DetailsStatus}</span>
               </li>
             </ul>
 
             <p className="mb-4">
-              {commissionLanguage?.example_2_details_calculation_intro}
+              {commissionLanguage?.example2DetailsCalculationIntro}
             </p>
 
             <div className="grid grid-cols-4 gap-3 mb-6">
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
-                  {commissionLanguage?.example_2_details_months_0_month}
+                  {commissionLanguage?.example2DetailsMonths0Month}
                 </div>
                 <div className="mt-2">
                   <div>
-                    {commissionLanguage?.example_2_details_months_0_label}
+                    {commissionLanguage?.example2DetailsMonths0Label}
                   </div>
                   <div className="font-bold">5.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
-                  {commissionLanguage?.example_2_details_months_1_month}
+                  {commissionLanguage?.example2DetailsMonths1Month}
                 </div>
                 <div className="mt-2">
                   <div>
-                    {commissionLanguage?.example_2_details_months_0_label}
+                    {commissionLanguage?.example2DetailsMonths0Label}
                   </div>
                   <div className="font-bold">2.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
-                  {commissionLanguage?.example_2_details_months_2_month}
+                  {commissionLanguage?.example2DetailsMonths2Month}
                 </div>
                 <div className="mt-2">
                   <div>
-                    {commissionLanguage?.example_2_details_months_0_label}
+                    {commissionLanguage?.example2DetailsMonths0Label}
                   </div>
                   <div className="font-bold">1.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-600 text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
-                  {commissionLanguage?.example_2_details_months_3_month}
+                  {commissionLanguage?.example2DetailsMonths3Month}
                 </div>
                 <div className="mt-2">
                   <div>
-                    {commissionLanguage?.example_2_details_months_3_label}
+                    {commissionLanguage?.example2DetailsMonths3Label}
                   </div>
                   <div className="font-bold">7.000.000 VND</div>
                 </div>
@@ -720,63 +720,63 @@ const MyServices = () => {
                 <div className="absolute inset-0 bg-blue-600 w-5/6"></div>
               </div>
               <div className="text-gray-700">
-                {commissionLanguage?.example_2_details_total} 8.000.000 +
+                {commissionLanguage?.example2DetailsTotal} 8.000.000 +
                 7.000.000 = <span className="font-bold">15.000.000 VND</span>
               </div>
 
               <div className="mt-6 bg-gray-300 text-white px-6 py-2 rounded-full flex items-center">
                 <span className="mr-2">
-                  {commissionLanguage?.tier_table_rows_2_level}
+                  {commissionLanguage?.tierTableRows2Level}
                 </span>
                 <span className="font-bold">
-                  {commissionLanguage?.translation_fee_label} 9%
+                  {commissionLanguage?.translationFeeLabel} 9%
                 </span>
               </div>
             </div>
 
-            <p>{commissionLanguage?.example_2_note}</p>
+            <p>{commissionLanguage?.example2Note}</p>
             <p className="text-sm text-gray-500 mt-2 italic">
-              {commissionLanguage?.example_2_additional_note}
+              {commissionLanguage?.example2AdditionalNote}
             </p>
           </div>
 
           {/* Example 3 */}
           <div
             id="section5"
-            className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary"
+            className="mb-8 bg-blue-50 rounded-lg p-6 text-textPrimary"
           >
             <div className="bg-blue-100 rounded-lg px-4 py-2 inline-block mb-4">
               <h3 className="text-blue-800 font-medium">
-                {commissionLanguage?.example_3_title}
+                {commissionLanguage?.example3Title}
               </h3>
               <span className="text-blue-700">
-                {commissionLanguage?.example_3_subtitle}
+                {commissionLanguage?.example3Subtitle}
               </span>
             </div>
 
             <ul className="space-y-3 mb-4">
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>{commissionLanguage?.example_3_details_date}</span>
+                <span>{commissionLanguage?.example3DetailsDate}</span>
               </li>
               <li className="flex items-start">
                 <span className="text-blue-500 mr-2">•</span>
-                <span>{commissionLanguage?.example_3_details_status}</span>
+                <span>{commissionLanguage?.example3DetailsStatus}</span>
               </li>
             </ul>
 
             <p className="mb-4">
-              {commissionLanguage?.example_3_details_calculation_intro}
+              {commissionLanguage?.example3DetailsCalculationIntro}
             </p>
 
             <div className="grid grid-cols-4 gap-3 mb-6">
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
-                  {commissionLanguage?.example_3_details_months_0_month}
+                  {commissionLanguage?.example3DetailsMonths0Month}
                 </div>
                 <div className="mt-2">
                   <div>
-                    {commissionLanguage?.example_2_details_months_0_label}
+                    {commissionLanguage?.example2DetailsMonths0Label}
                   </div>
                   <div className="font-bold text-gray-300 line-through">
                     2.000.000 VND
@@ -785,29 +785,29 @@ const MyServices = () => {
               </div>
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
-                  {commissionLanguage?.example_3_details_months_1_month}
+                  {commissionLanguage?.example3DetailsMonths1Month}
                 </div>
                 <div className="mt-2">
                   <div>
-                    {commissionLanguage?.example_2_details_months_0_label}
+                    {commissionLanguage?.example2DetailsMonths0Label}
                   </div>
                   <div className="font-bold">1.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-400 text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
-                  {commissionLanguage?.example_3_details_months_2_month}
+                  {commissionLanguage?.example3DetailsMonths2Month}
                 </div>
                 <div className="mt-2">
                   <div>
-                    {commissionLanguage?.example_2_details_months_0_label}
+                    {commissionLanguage?.example2DetailsMonths0Label}
                   </div>
                   <div className="font-bold">7.000.000 VND</div>
                 </div>
               </div>
               <div className="bg-blue-600 text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
-                  {commissionLanguage?.example_3_details_months_3_month}
+                  {commissionLanguage?.example3DetailsMonths3Month}
                 </div>
                 <div className="mt-2">
                   <div>Thu nhập tính đến ngày 1 tháng 7</div>
@@ -821,33 +821,33 @@ const MyServices = () => {
                 <div className="absolute inset-0 bg-blue-600 w-1/2"></div>
               </div>
               <div className="text-gray-700">
-                {commissionLanguage?.example_3_details_total} 1.000.000 +
+                {commissionLanguage?.example3DetailsTotal} 1.000.000 +
                 7.000.000 + 0 = <span className="font-bold">8.000.000 VND</span>
               </div>
 
               <div className="mt-6 bg-amber-500 text-white px-6 py-2 rounded-full flex items-center">
                 <span className="mr-2">
-                  {commissionLanguage?.tier_table_rows_1_level}
+                  {commissionLanguage?.tierTableRows1Level}
                 </span>
                 <span className="font-bold">
-                  {commissionLanguage?.translation_fee_label} 10%
+                  {commissionLanguage?.translationFeeLabel} 10%
                 </span>
               </div>
             </div>
 
-            <p>{commissionLanguage?.example_3_note}</p>
+            <p>{commissionLanguage?.example3Note}</p>
             <p className="text-sm text-gray-500 mt-2 italic">
-              {commissionLanguage?.example_3_additional_note}
+              {commissionLanguage?.example3AdditionalNote}
             </p>
           </div>
 
           {/* Service Fee Purpose */}
           <div id="section6" className="mb-8">
-            <h2 className="text-xl font-medium mb-6 text-text_primary">
-              {commissionLanguage?.fastlane_fee_purpose_quest}
+            <h2 className="text-xl font-medium mb-6 text-textPrimary">
+              {commissionLanguage?.fastlaneFeePurposeQuest}
             </h2>
             <p className="text-gray-700">
-              {commissionLanguage?.fastlane_fee_purpose}
+              {commissionLanguage?.fastlaneFeePurpose}
             </p>
           </div>
         </div>
@@ -861,7 +861,7 @@ const MyServices = () => {
             <div className="p-4 space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {commissionLanguage?.translator_type_label}
+                  {commissionLanguage?.translatorTypeLabel}
                 </label>
                 <div className="relative">
                   <button
@@ -870,7 +870,7 @@ const MyServices = () => {
                   >
                     <span className="text-gray-700">
                       {memberTier.name} (
-                      {commissionLanguage?.translation_fee_label}{" "}
+                      {commissionLanguage?.translationFeeLabel}{" "}
                       {memberTier.feePercent}%)
                     </span>
                     <ChevronDown
@@ -881,7 +881,7 @@ const MyServices = () => {
                   </button>
 
                   {dropdownOpen && (
-                    <div className="text-text_primary absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                    <div className="text-textPrimary absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
                       {MEMBER_TIERS.map((tier) => (
                         <div
                           key={tier.id}
@@ -892,7 +892,7 @@ const MyServices = () => {
                         >
                           <span>
                             {tier.name} (
-                            {commissionLanguage?.translation_fee_label}{" "}
+                            {commissionLanguage?.translationFeeLabel}{" "}
                             {tier.feePercent}%)
                           </span>
                         </div>
@@ -905,19 +905,19 @@ const MyServices = () => {
                     href="#"
                     className="text-blue-600 hover:underline text-xs"
                   >
-                    {commissionLanguage?.translator_type_additional_info}
+                    {commissionLanguage?.translatorTypeAdditionalInfo}
                   </Link>
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {commissionLanguage?.unit_price_label}
+                  {commissionLanguage?.unitPriceLabel}
                 </label>
                 <div className="flex">
                   <input
                     type="text"
-                    className="text-text_primary flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-blue-500 focus:border-blue-500"
+                    className="text-textPrimary flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-blue-500 focus:border-blue-500"
                     placeholder="0"
                     value={projectPrice}
                     onChange={(e) => {
@@ -935,7 +935,7 @@ const MyServices = () => {
               <div className="border-t border-gray-200 pt-4">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-gray-700">
-                    {commissionLanguage?.translation_fee_label}
+                    {commissionLanguage?.translationFeeLabel}
                   </span>
                   <span className="text-blue-600 font-medium">
                     {projectPrice
@@ -953,7 +953,7 @@ const MyServices = () => {
                 <div className="flex justify-between items-center border-t border-gray-200 pt-4">
                   <div>
                     <div className="text-gray-700">
-                      {commissionLanguage?.additional_fee_label}
+                      {commissionLanguage?.additionalFeeLabel}
                     </div>
                   </div>
                   <div className="text-blue-600 font-bold">

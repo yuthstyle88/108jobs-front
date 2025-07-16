@@ -9,37 +9,37 @@ import Image from "next/image";
 import Link from "next/link";
 import Error from "./error";
 
-const category_images = [
+const categoryImages = [
   {
-    image: CategoriesImage.seo_image,
+    image: CategoriesImage.seoImage,
     title: "ทำ SEO",
   },
   {
-    image: CategoriesImage.seo_image,
+    image: CategoriesImage.seoImage,
     title: "ทำ SEO",
   },
   {
-    image: CategoriesImage.seo_image,
+    image: CategoriesImage.seoImage,
     title: "ทำ SEO",
   },
   {
-    image: CategoriesImage.seo_image,
+    image: CategoriesImage.seoImage,
     title: "ทำ SEO",
   },
   {
-    image: CategoriesImage.seo_image,
+    image: CategoriesImage.seoImage,
     title: "ทำ SEO",
   },
   {
-    image: CategoriesImage.seo_image,
+    image: CategoriesImage.seoImage,
     title: "ทำ SEO",
   },
   {
-    image: CategoriesImage.seo_image,
+    image: CategoriesImage.seoImage,
     title: "ทำ SEO",
   },
   {
-    image: CategoriesImage.seo_image,
+    image: CategoriesImage.seoImage,
     title: "ทำ SEO",
   },
 ];
@@ -77,17 +77,17 @@ export default function NotFound() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div className="fade-in">
                 <h1 className="text-[32px] md:text-4xl font-medium text-gray-800 mb-4">
-                  {notFoundLanguageData?.error_title}
+                  {notFoundLanguageData?.errorTitle}
                 </h1>
                 <p className="text-[#728197] text-[20px] font-sans mb-8">
-                  {notFoundLanguageData?.error_description}
+                  {notFoundLanguageData?.errorDescription}
                 </p>
                 <Link prefetch={false}
                   href="/"
                   className="inline-flex items-center gap-2 bg-third text-white px-6 py-3 rounded-md font-medium transition-all hover:bg-fastwork-dark-blue"
                 >
                   <Home className="w-5 h-5" />
-                  {notFoundLanguageData?.back_button}
+                  {notFoundLanguageData?.backButton}
                 </Link>
               </div>
               <div className="fade-in stagger-1">
@@ -108,10 +108,10 @@ export default function NotFound() {
         <section className="py-12 px-4 bg-white">
           <div className="container mx-auto max-w-6xl">
             <h2 className="text-2xl font-bold text-gray-800 mb-8">
-              {notFoundLanguageData?.recommended_section_title}
+              {notFoundLanguageData?.recommendedSectionTitle}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {category_images.map((category, index) => (
+              {categoryImages.map((category, index) => (
                 <Link prefetch={false} key={index} href="/seo" className="group">
                   <div
                     style={{

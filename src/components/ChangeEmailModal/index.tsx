@@ -11,11 +11,11 @@ import { z } from "zod";
 
 const changePasswordSchema = z
   .object({
-    old_password: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
-    new_password: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
+    oldPassword: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
+    newPassword: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
     confirmPassword: z.string(),
   })
-  .refine((data) => data.new_password === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmPassword, {
     message: "รหัสผ่านไม่ตรงกัน",
     path: ["confirmPassword"],
   });
@@ -185,11 +185,11 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
       <section className="px-[12px] w-full flex flex-col gap-8 justify-center items-center">
         <Mailbox className="w-[60px] h-[60px] text-third" />
         <article>
-          <h1 className="text-base font-bold text-text_primary text-center">
-            {language?.email_verification_title}
+          <h1 className="text-base font-bold text-textPrimary text-center">
+            {language?.emailVerificationTitle}
           </h1>
-          <p className="text-[14px] font-sans text-text_secondary text-center">
-            {language?.email_verification_description}
+          <p className="text-[14px] font-sans text-textSecondary text-center">
+            {language?.emailVerificationDescription}
             <br /> {formEmail}
           </p>
         </article>
@@ -210,7 +210,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
                   inputRefs.current[index - 1]?.focus();
                 }
               }}
-              className={`text-text_primary w-12 h-12 text-center border rounded ${
+              className={`text-textPrimary w-12 h-12 text-center border rounded ${
                 codeError ? "border-red-500" : "border-gray-300"
               } focus:outline-none focus:border-blue-500`}
               maxLength={1}
@@ -232,7 +232,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
             isResendDisabled ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          {isSendAgain ? `${language?.resend_code}...` : language?.resend_code}
+          {isSendAgain ? `${language?.resendCode}...` : language?.resendCode}
           {isResendDisabled ? `(${timeLeft})` : ""}
         </button>
         <button
@@ -244,7 +244,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
           }`}
           disabled={code.join("").length !== 6 || isSubmitting}
         >
-          {isSubmitting ? <LoadingCircle /> : language?.verify_button}
+          {isSubmitting ? <LoadingCircle /> : language?.verifyButton}
         </button>
       </div>
       {apiError && (

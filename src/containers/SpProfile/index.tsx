@@ -24,7 +24,7 @@ import Link from "next/link";
 
 const SpProfile = () => {
   const { data: user, isLoading } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
+    API_ROUTES.profile.getProfile
   );
   const { lang: currentLang } = useLanguage();
   const { logout } = useLogout();
@@ -49,7 +49,7 @@ const SpProfile = () => {
           <strong className="text-[1.125rem] text-white">My Profile</strong>
           <Link prefetch={false} href={`/${currentLang}/user/${user?.user.username}`}>
             <Image
-              src={user?.user.avatar_url || ProfileImage.avatar}
+              src={user?.user.avatarUrl || ProfileImage.avatar}
               width={80}
               height={80}
               alt="avatar"
@@ -65,7 +65,7 @@ const SpProfile = () => {
             href={`/${currentLang}/user/${user?.user.username}`}
             className="inline-block max-w-full whitespace-nowrap"
           >
-            <strong className="text-sm font-sans text-text_primary">
+            <strong className="text-sm font-sans text-textPrimary">
               {user?.contact.email}
             </strong>
           </Link>
@@ -85,7 +85,7 @@ const SpProfile = () => {
                 height={20}
               />
               <div className="flex flex-row items-center text-[0.75rem] font-semibold gap-1">
-                <span className="text-text_primary">0.00 Points</span>
+                <span className="text-textPrimary">0.00 Points</span>
                 <span className="text-third">≈ 0.00 THB</span>
               </div>
             </div>
@@ -99,55 +99,55 @@ const SpProfile = () => {
         user?.roles.includes(ROLE.FREELANCER) && (
           <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
             <Link prefetch={false} href="/seller/my-service">
-              <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-textSecondary font-sans">
                 <FontAwesomeIcon
                   icon={faBriefcase}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-textSecondary"
                 />
                 <div>My job</div>
               </div>
             </Link>
             <Link prefetch={false} href="/seller/withdrawal">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-textSecondary font-sans">
                 <FontAwesomeIcon
                   icon={faMoneyBillTrendUp}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-textSecondary"
                 />
                 <div>Withdraw</div>
               </div>
             </Link>
             <Link prefetch={false} href="/seller">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-textSecondary font-sans">
                 <FontAwesomeIcon
                   icon={faMoneyBill1}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-textSecondary"
                 />
                 <div>Seller center</div>
               </div>
             </Link>
             <Link prefetch={false} href="/reward/earn">
-              <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-textSecondary font-sans">
                 <FontAwesomeIcon
                   icon={faGift}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-textSecondary"
                 />
                 <div>Rewards</div>
               </div>
             </Link>
             <Link prefetch={false} href="/promotion">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-textSecondary font-sans">
                 <FontAwesomeIcon
                   icon={faTicket}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-textSecondary"
                 />
                 <div>Coupons</div>
               </div>
             </Link>
             <Link prefetch={false} href="/favorites">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-textSecondary font-sans">
                 <FontAwesomeIcon
                   icon={faHeart}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-textSecondary"
                 />
                 <div>Favorites</div>
               </div>
@@ -158,37 +158,37 @@ const SpProfile = () => {
         !user?.roles.includes(ROLE.FREELANCER) && (
           <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
             <Link prefetch={false} href="/reward/earn">
-              <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-textSecondary font-sans">
                 <FontAwesomeIcon
                   icon={faGift}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-textSecondary"
                 />
                 <div>Rewards</div>
               </div>
             </Link>
             <Link prefetch={false} href="/promotion">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-textSecondary font-sans">
                 <FontAwesomeIcon
                   icon={faTicket}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-textSecondary"
                 />
                 <div>Coupons</div>
               </div>
             </Link>
             <Link prefetch={false} href="/coin">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-textSecondary font-sans">
                 <FontAwesomeIcon
                   icon={faCoins}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-textSecondary"
                 />
                 <div>Coins</div>
               </div>
             </Link>
             <Link prefetch={false} href="/favorites">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-textSecondary font-sans">
                 <FontAwesomeIcon
                   icon={faHeart}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-textSecondary"
                 />
                 <div>Favorites</div>
               </div>
@@ -207,7 +207,7 @@ const SpProfile = () => {
                 <li>
                   <Link prefetch={false}
                     href="/account-setting/basic-info"
-                    className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                    className="flex items-center justify-between w-full px-6 py-3 text-textPrimary text-[15px] font-sans cursor-pointer"
                   >
                     <span>Account Setting</span>
                     <ChevronRight className="w-6 h-6 text-gray-400" />
@@ -219,7 +219,7 @@ const SpProfile = () => {
                 <li>
                   <Link prefetch={false}
                     href="/seller-account-setting/freelance-profile"
-                    className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                    className="flex items-center justify-between w-full px-6 py-3 text-textPrimary text-[15px] font-sans cursor-pointer"
                   >
                     <span>Account Setting</span>
                     <ChevronRight className="w-6 h-6 text-gray-400" />
@@ -231,7 +231,7 @@ const SpProfile = () => {
                 <li>
                   <Link prefetch={false}
                     href="/start-selling"
-                    className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                    className="flex items-center justify-between w-full px-6 py-3 text-textPrimary text-[15px] font-sans cursor-pointer"
                   >
                     <span>Apply to be a freelancer</span>
                     <ChevronRight className="w-6 h-6 text-gray-400" />
@@ -242,7 +242,7 @@ const SpProfile = () => {
         </div>
       </section>
       <section className="block">
-        <div className="font-semibold inline-block pt-6 px-6 pb-2 text-text_primary">
+        <div className="font-semibold inline-block pt-6 px-6 pb-2 text-textPrimary">
           About Freelancer
         </div>
         <div style={{ borderBottom: "solid 8px", borderColor: "#f6f7f8" }}>
@@ -250,7 +250,7 @@ const SpProfile = () => {
             <li>
               <Link prefetch={false}
                 href="/job-board"
-                className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                className="flex items-center justify-between w-full px-6 py-3 text-textPrimary text-[15px] font-sans cursor-pointer"
               >
                 <span>Job board</span>
                 <ChevronRight className="w-6 h-6 text-gray-400" />
@@ -260,7 +260,7 @@ const SpProfile = () => {
         </div>
       </section>
       <section className="block">
-        <div className="font-semibold inline-block pt-6 px-6 pb-2 text-text_primary">
+        <div className="font-semibold inline-block pt-6 px-6 pb-2 text-textPrimary">
           Other Services
         </div>
         <div style={{ borderBottom: "solid 8px", borderColor: "#f6f7f8" }}>
@@ -268,7 +268,7 @@ const SpProfile = () => {
             <li>
               <Link prefetch={false}
                 href="/promotion"
-                className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                className="flex items-center justify-between w-full px-6 py-3 text-textPrimary text-[15px] font-sans cursor-pointer"
               >
                 <span>Coupons</span>
                 <ChevronRight className="w-6 h-6 text-gray-400" />
@@ -277,7 +277,7 @@ const SpProfile = () => {
             <li>
               <Link prefetch={false}
                 href="/consent-management"
-                className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                className="flex items-center justify-between w-full px-6 py-3 text-textPrimary text-[15px] font-sans cursor-pointer"
               >
                 <span>Data management</span>
                 <ChevronRight className="w-6 h-6 text-gray-400" />
@@ -292,7 +292,7 @@ const SpProfile = () => {
             <li>
               <button
                 onClick={logout}
-                className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                className="flex items-center justify-between w-full px-6 py-3 text-textPrimary text-[15px] font-sans cursor-pointer"
               >
                 <span>Logout</span>
                 <ChevronRight className="w-6 h-6 text-gray-400" />

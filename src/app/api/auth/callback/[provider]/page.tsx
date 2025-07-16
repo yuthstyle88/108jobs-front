@@ -8,7 +8,7 @@ import { HttpService } from "@/services/HttpService";
 import { UserService } from "@/services";
 
 // ฟังก์ชันสำหรับดึงค่า query parameters
-function getOAuthCallbackQueryParams() {
+function useOAuthCallbackQueryParams() {
   const searchParams = useSearchParams();
   return {
     code: searchParams.get("code") || undefined,
@@ -18,14 +18,14 @@ function getOAuthCallbackQueryParams() {
 
 export default function OAuthCallbackPage() {
   const router = useRouter();
-  const { code, state } = getOAuthCallbackQueryParams();
+  const { code, state } = useOAuthCallbackQueryParams();
 
   useEffect(() => {
     async function handleOAuth() {
       try {
         // ดึงข้อมูล state จาก localStorage
         const localOAuthState = JSON.parse(
-          localStorage.getItem("oauth_state") || "{}"
+          localStorage.getItem("oauthState") || "{}"
         );
 
         // ตรวจสอบความถูกต้องของ OAuth state
@@ -75,21 +75,21 @@ export default function OAuthCallbackPage() {
           let errRedirect = "/login";
 
           switch (loginRes.err.message) {
-            case "registration_username_required":
-            case "registration_application_answer_required":
-              errRedirect = `/signup?sso_provider_id=${localOAuthState.oauthProviderId}`;
+            case "registrationUsernameRequired":
+            case "registrationApplicationAnswerRequired":
+              errRedirect = `/signup?ssoProviderId=${localOAuthState.oauthProviderId}`;
               toast.error(loginRes.err.message);
               break;
-            case "registration_application_is_pending":
+            case "registrationApplicationIsPending":
               toast.error("คำขอลงทะเบียนของคุณอยู่ระหว่างดำเนินการ");
               break;
-            case "registration_denied":
-            case "oauth_authorization_invalid":
-            case "oauth_login_failed":
-            case "oauth_registration_closed":
-            case "email_already_exists":
-            case "username_already_exists":
-            case "no_email_setup":
+            case "registrationDenied":
+            case "oauthAuthorizationInvalid":
+            case "oauthLoginFailed":
+            case "oauthRegistrationClosed":
+            case "emailAlreadyExists":
+            case "usernameAlreadyExists":
+            case "noEmailSetup":
               toast.error(loginRes.err.message);
               break;
             default:
@@ -109,11 +109,7 @@ export default function OAuthCallbackPage() {
    handleOAuth().then(r => console.log("login success"));
   }, [code, state, router]);
 
-  return (
-    <div className="container mx-auto flex justify-center items-center min-h-[50vh]">
-      <div className="text-center">กำลังเข้าสู่ระบบ...</div>
-    </div>
-  );
+  return true
 }
 
 // ฟังก์ชันช่วยจัดการการเข้าสู่ระบบที่สำเร็จ
@@ -128,7 +124,7 @@ async function handleLoginSuccess(loginData: any, prev?: string) {
     const site = await HttpService.client.getSite();
 
     if (site.state === "success") {
-      UserService.Instance.myUserInfo = site.data.my_user;
+      UserService.Instance.myUserInfo = site.data.myUser;
 
       // อาจต้องเรียกใช้ฟังก์ชันอัพเดทธีม หรือตั้งค่าอื่นๆ ตามต้องการ
       // refreshTheme();

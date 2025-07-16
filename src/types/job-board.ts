@@ -1,31 +1,31 @@
 export type CreateJobPayload = {
-  service_catalog_id: string;
-  job_title: string;
+  serviceCatalogId: string;
+  jobTitle: string;
   description: string;
-  is_english_required: boolean;
-  example_url?: string;
+  isEnglishRequired: boolean;
+  exampleUrl?: string;
   budget: string;
   deadline?: string;
-  is_anonymous_post: boolean;
-  working_from: "Freelance" | "Contract" | "Parttime" | "Fulltime";
-  intended_use: "Business" | "Personal" | "Unknown";
+  isAnonymousPost: boolean;
+  workingFrom: "Freelance" | "Contract" | "Parttime" | "Fulltime";
+  intendedUse: "Business" | "Personal" | "Unknown";
 };
 
 export interface JobPost {
   id: string;
-  job_title: string;
+  jobTitle: string;
   category: string;
-  working_from: string;
-  intended_use: string;
+  workingFrom: string;
+  intendedUse: string;
   budget: string;
-  created_at: string;
+  createdAt: string;
   deadline: string;
 }
 
 export interface JobPostsResponse {
   items: JobPost[];
   page: number;
-  page_size: number;
-  total_items: number;
-  total_pages: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
 }

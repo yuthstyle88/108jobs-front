@@ -17,7 +17,7 @@ interface Props {
 
 export default function CheckRoleProfile({ username }: Props) {
   const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
+    API_ROUTES.profile.getProfile
   );
 
   const {
@@ -30,7 +30,7 @@ export default function CheckRoleProfile({ username }: Props) {
   if (error) return <NotFound />;
   const roles = userProfile?.roles || [];
 
-  const isCurrentUser = userProfile?.user_id === user?.user.id;
+  const isCurrentUser = userProfile?.userId === user?.user.id;
   const isCurrentEmployer =
     isCurrentUser &&
     roles.includes("employer") &&

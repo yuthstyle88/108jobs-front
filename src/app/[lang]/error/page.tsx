@@ -7,13 +7,13 @@ export default function Error() {
     <div className="relative min-h-screen w-full h-full flex items-center justify-center bg-secondary">
 
       <Image
-        src={LandingImage.bg_error}
+        src={LandingImage.bgError}
         alt="error"
         fill
         className="object-cover md:block hidden"
       />
       <Image
-        src={LandingImage.error_mobile}
+        src={LandingImage.errorMobile}
         alt="error"
         fill
         className="object-cover"
@@ -24,7 +24,7 @@ export default function Error() {
         alt="error"
         className="w-[80%] h-[280px] sm:w-full"
       />
-      <p className="text-center text-[20px] md:text-[32px] text-text_primary font-sans">ขออภัย มีข้อผิดพลาดบางอย่างเกิดขึ้น</p>
+      <p className="text-center text-[20px] md:text-[32px] text-textPrimary font-sans">ขออภัย มีข้อผิดพลาดบางอย่างเกิดขึ้น</p>
       </div>
     </div>
   );

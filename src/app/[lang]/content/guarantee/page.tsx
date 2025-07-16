@@ -54,12 +54,12 @@ const Guarantee = () => {
             &quot;Fastjob Guarantee&quot; every steps hiring protection
           </h2>
 
-          <div className="grid md:grid-cols-3 gap-8 text-text_primary">
+          <div className="grid md:grid-cols-3 gap-8 text-textPrimary">
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-4 text-text_primary">
+              <h3 className="text-xl font-semibold mb-4 text-textPrimary">
                 Verified freelancers
               </h3>
               <p className="text-gray-600">
@@ -72,7 +72,7 @@ const Guarantee = () => {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <DollarSign className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-4 text-text_primary">
+              <h3 className="text-xl font-semibold mb-4 text-textPrimary">
                 Guarantee money back in case no delivery
               </h3>
               <p className="text-gray-600">
@@ -86,7 +86,7 @@ const Guarantee = () => {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <HeadphonesIcon className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-4 text-text_primary">
+              <h3 className="text-xl font-semibold mb-4 text-textPrimary">
                 Support team ready to serve customer and freelancer
               </h3>
               <p className="text-gray-600">
@@ -180,7 +180,7 @@ const Guarantee = () => {
                 className="w-16 h-16"
               />
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-text_primary">
+                <h3 className="text-xl font-semibold mb-2 text-textPrimary">
                   Tell us more!
                 </h3>
                 <p className="text-gray-700 mb-2">
@@ -239,7 +239,7 @@ const Guarantee = () => {
                 />
 
                 <div>
-                  <h3 className="text-xl font-semibold mb-3 text-text_primary">
+                  <h3 className="text-xl font-semibold mb-3 text-textPrimary">
                     {step === 1 && '1. Click "Evaluate" button in chat screen'}
                     {step === 2 &&
                       "2. Evaluate by giving score and comment regarding the final work"}
@@ -279,10 +279,10 @@ const Guarantee = () => {
               <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Facebook className="w-8 h-8 text-blue-600" />
               </div>
-              <div className="text-sm font-medium text-text_primary">
+              <div className="text-sm font-medium text-textPrimary">
                 Facebook
               </div>
-              <div className="text-sm text-gray-600 text-text_primary">
+              <div className="text-sm text-gray-600 text-textPrimary">
                 Messenger
               </div>
             </div>
@@ -290,7 +290,7 @@ const Guarantee = () => {
               <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
                 <Mail className="w-8 h-8 text-blue-600" />
               </div>
-              <div className="text-sm font-medium text-text_primary">
+              <div className="text-sm font-medium text-textPrimary">
                 support@fastwork.co
               </div>
             </div>

@@ -8,8 +8,8 @@ import { ChevronDown } from "lucide-react";
 import { LocationForm } from "../..";
 
 interface Province {
-  province_name_en: string;
-  province_name_th: string;
+  provinceNameEn: string;
+  provinceNameTh: string;
 }
 
 interface ProvinceSearchProps {
@@ -106,12 +106,12 @@ export default function ProvinceSearch({
   }, [provinceValue]);
 
   const handleSelect = (province: Province) => {
-    setValue(fieldName, province.province_name_en, { shouldValidate: true });
-    setSelectedValue(province.province_name_en);
+    setValue(fieldName, province.provinceNameEn, { shouldValidate: true });
+    setSelectedValue(province.provinceNameEn);
     setQuery("");
     setShowDropdown(false);
     inputRef.current?.blur();
-    onSelect?.(province.province_name_en, province.province_name_th);
+    onSelect?.(province.provinceNameEn, province.provinceNameTh);
   };
 
   return (
@@ -133,7 +133,7 @@ export default function ProvinceSearch({
             setShowDropdown(true);
           }
         }}
-        className="text-[14px] w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary placeholder:text-text_primary placeholder:font-sans"
+        className="text-[14px] w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary placeholder:text-textPrimary placeholder:font-sans"
       />
       <span className="absolute right-3 top-2.5 text-gray-500 pointer-events-none">
         <ChevronDown size={16} />
@@ -155,7 +155,7 @@ export default function ProvinceSearch({
               </div>
             ) : results.length ? (
               results.map((item, idx) => {
-                const isSelected = item.province_name_en === provinceValue;
+                const isSelected = item.provinceNameEn === provinceValue;
                 return (
                   <div
                     key={idx}
@@ -170,12 +170,12 @@ export default function ProvinceSearch({
                         : "hover:bg-gray-100 text-black"
                     }`}
                   >
-                    {item.province_name_en}
+                    {item.provinceNameEn}
                   </div>
                 );
               })
             ) : (
-              <div className="p-3 text-sm font-sans text-center text-text_primary">
+              <div className="p-3 text-sm font-sans text-center text-textPrimary">
                 No results
               </div>
             )}

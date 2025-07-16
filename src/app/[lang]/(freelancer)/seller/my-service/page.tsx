@@ -31,16 +31,16 @@ import JobCreatedStatus from "./_components/JobCreatedStatus";
 import Error from "@/app/error";
 
 const MyServices = () => {
-  const { success_message } = useNotification();
+  const { successMessage } = useNotification();
   const { data: profileData, isLoading: isLoadingProfile } =
-    usePrivateFetch<ProfileData>(API_ROUTES.profile.get_profile);
+    usePrivateFetch<ProfileData>(API_ROUTES.profile.getProfile);
 
-  const notVerified = profileData?.profile.is_verified === "Pending";
+  const notVerified = profileData?.profile.isVerified === "Pending";
   const {
     data: jobsData,
     isLoading,
     mutate,
-  } = usePrivateFetch<JobListResponse>(API_ROUTES_SELLER.job.get_job);
+  } = usePrivateFetch<JobListResponse>(API_ROUTES_SELLER.job.getJob);
 
   const {
     data: sellerMyServiceLanguage,
@@ -59,7 +59,7 @@ const MyServices = () => {
   const [mutatingJobId, setMutatingJobId] = useState<string | null>(null);
 
   const { isMutating, trigger: deleteJob } = usePrivateDelete(
-    API_ROUTES_SELLER.job.get_job + "/" + selectedJob?.id
+    API_ROUTES_SELLER.job.getJob + "/" + selectedJob?.id
   );
 
   const { isMutating: isDisplayMutating, trigger: toggleJobVisibility } =
@@ -87,11 +87,11 @@ const MyServices = () => {
     try {
       setMutatingJobId(jobId);
       await toggleJobVisibility({
-        url: `${API_ROUTES_SELLER.job.display_job}/${jobId}`,
+        url: `${API_ROUTES_SELLER.job.displayJob}/${jobId}`,
         data: { show: !currentShow },
       });
       mutate();
-      success_message("service", currentShow ? "hide_job" : "show_job");
+      successMessage("service", currentShow ? "hideJob" : "showJob");
     } catch (error) {
       console.error("Toggle visibility failed:", error);
     } finally {
@@ -106,15 +106,15 @@ const MyServices = () => {
     <div className="p-4 md:p-0">
       <div className="my-service-gradient rounded-lg shadow-sm p-6 mb-8 flex justify-between items-center hover:shadow-jobCard duration-300">
         <div className="flex-1">
-          <h2 className="text-lg font-medium mb-2 text-text_primary">
-            {sellerMyServiceLanguage?.service_fee_title}
+          <h2 className="text-lg font-medium mb-2 text-textPrimary">
+            {sellerMyServiceLanguage?.serviceFeeTitle}
           </h2>
           <p className="text-gray-600 text-sm">
-            {sellerMyServiceLanguage?.service_fee_description}
+            {sellerMyServiceLanguage?.serviceFeeDescription}
           </p>
           <Link prefetch={false} href="/content/commission">
             <button className="mt-4 bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded">
-              {sellerMyServiceLanguage?.service_fee_button}
+              {sellerMyServiceLanguage?.serviceFeeButton}
             </button>
           </Link>
         </div>
@@ -128,8 +128,8 @@ const MyServices = () => {
       </div>
 
       <div className="mb-6 flex justify-between items-center">
-        <h2 className="text-xl font-medium text-text_primary">
-          {interpolateDouble(sellerMyServiceLanguage?.my_services_title || "", {
+        <h2 className="text-xl font-medium text-textPrimary">
+          {interpolateDouble(sellerMyServiceLanguage?.myServicesTitle || "", {
             n: lengthOfJobs || 0,
             max: 5,
           })}
@@ -140,7 +140,7 @@ const MyServices = () => {
             className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium disabled:bg-blue-300 disabled:cursor-not-allowed"
           >
             <Plus className="w-4 h-4" />
-            {sellerMyServiceLanguage?.add_new_service}
+            {sellerMyServiceLanguage?.addNewService}
           </button>
         </Link>
       </div>
@@ -160,7 +160,7 @@ const MyServices = () => {
         <ClockAlert className="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
         <div className="text-sm">
           <span className="text-gray-700">
-            {sellerMyServiceLanguage?.approval_note}
+            {sellerMyServiceLanguage?.approvalNote}
           </span>
         </div>
       </div>
@@ -169,15 +169,15 @@ const MyServices = () => {
         <table className="min-w-full table-auto text-left text-sm">
           <thead className="bg-gray-50 text-gray-700 font-medium">
             <tr>
-              <th className="p-4">{sellerMyServiceLanguage?.column_service}</th>
+              <th className="p-4">{sellerMyServiceLanguage?.columnService}</th>
               <th className="p-4">
-                {sellerMyServiceLanguage?.column_fee_percent}
+                {sellerMyServiceLanguage?.columnFeePercent}
               </th>
-              <th className="p-4">{sellerMyServiceLanguage?.column_status}</th>
+              <th className="p-4">{sellerMyServiceLanguage?.columnStatus}</th>
               <th className="p-4">
-                {sellerMyServiceLanguage?.column_visibility}
+                {sellerMyServiceLanguage?.columnVisibility}
               </th>
-              <th className="p-4">{sellerMyServiceLanguage?.column_manage}</th>
+              <th className="p-4">{sellerMyServiceLanguage?.columnManage}</th>
             </tr>
           </thead>
           <tbody>
@@ -193,18 +193,18 @@ const MyServices = () => {
                   <td className="p-4 flex items-center">
                     <div className="w-12 h-12 bg-gray-100 rounded overflow-hidden mr-3 flex-shrink-0">
                       <Image
-                        src={job.user.avatar_url || SellerImage.calculation}
+                        src={job.user.avatarUrl || SellerImage.calculation}
                         alt={job.title}
                         className="w-full h-full object-cover"
                         width={48}
                         height={48}
                       />
                     </div>
-                    <div className="font-medium text-text_primary">
+                    <div className="font-medium text-textPrimary">
                       {job.title}
                     </div>
                   </td>
-                  <td className="p-4 text-text_primary">15%</td>
+                  <td className="p-4 text-textPrimary">15%</td>
                   <td className="p-4">
                     <JobCreatedStatus
                       languageMap={sellerMyServiceLanguage}
@@ -253,7 +253,7 @@ const MyServices = () => {
             ) : (
               <tr>
                 <td colSpan={5} className="p-6 text-center text-gray-500">
-                  {sellerMyServiceLanguage?.no_service}
+                  {sellerMyServiceLanguage?.noService}
                 </td>
               </tr>
             )}
@@ -283,33 +283,33 @@ const MyServices = () => {
                 <div className="flex flex-col gap-3 mb-2">
                   <div className="w-10 h-10 rounded-md overflow-hidden mr-3 flex-shrink-0 bg-gray-100">
                     <Image
-                      src={job.user.avatar_url || SellerImage.calculation}
+                      src={job.user.avatarUrl || SellerImage.calculation}
                       alt={job.title}
                       width={40}
                       height={40}
                       className="object-cover"
                     />
                   </div>
-                  <div className="font-sans text-sm font-semibold text-text_primary line-clamp-2">
+                  <div className="font-sans text-sm font-semibold text-textPrimary line-clamp-2">
                     {job.title}
                   </div>
                 </div>
 
                 <div className="inline-block bg-blue-100 text-blue-600 text-xs font-medium px-2 py-1 rounded">
-                  {sellerMyServiceLanguage?.column_fee_percent} 15%
+                  {sellerMyServiceLanguage?.columnFeePercent} 15%
                 </div>
 
-                <div className="pb-4 border-b-1 border-border_secondary w-full font-sans">
-                  <div className="text-sm text-text_secondary flex flex-row justify-between items-center pt-4">
-                    <p>{sellerMyServiceLanguage?.column_visibility}</p>
-                    <Eye className="w-4 h-4 text-text_secondary" />
+                <div className="pb-4 border-b-1 border-borderSecondary w-full font-sans">
+                  <div className="text-sm text-textSecondary flex flex-row justify-between items-center pt-4">
+                    <p>{sellerMyServiceLanguage?.columnVisibility}</p>
+                    <Eye className="w-4 h-4 text-textSecondary" />
                   </div>
 
                   <Link prefetch={false}
                     href={`/manage-product/${job.id}`}
-                    className="text-sm text-text_secondary flex flex-row justify-between items-center pt-4"
+                    className="text-sm text-textSecondary flex flex-row justify-between items-center pt-4"
                   >
-                    <p>{global?.button_edit}</p>
+                    <p>{global?.buttonEdit}</p>
                     <Pencil className="w-4 h-4 text-gray-400" />
                   </Link>
                 </div>
@@ -320,7 +320,7 @@ const MyServices = () => {
                     className="font-sans text-red-500 text-sm font-medium flex items-center gap-1 hover:underline"
                   >
                     <Trash2 className="w-4 h-4" />
-                    {global?.button_delete}
+                    {global?.buttonDelete}
                   </button>
                 </div>
               </div>

@@ -36,29 +36,29 @@ interface CountriesResponse {
 export interface AddressFormData {
   country: string;
   province?: string;
-  district_or_subdistrict?: string;
-  subdistrict_or_district?: string;
-  zip_code?: string;
-  address_details?: string;
+  districtOrSubdistrict?: string;
+  subdistrictOrDistrict?: string;
+  zipCode?: string;
+  addressDetails?: string;
 }
 
 interface RawAddress {
   country?: string | null;
   province?: string | null;
-  district_or_subdistrict?: string | null;
-  subdistrict_or_district?: string | null;
-  zip_code?: string | null;
-  address_details?: string | null;
+  districtOrSubdistrict?: string | null;
+  subdistrictOrDistrict?: string | null;
+  zipCode?: string | null;
+  addressDetails?: string | null;
 }
 
 function normalizeAddress(address: RawAddress | undefined): AddressFormData {
   return {
     country: address?.country ?? "Thailand",
     province: address?.province ?? "",
-    district_or_subdistrict: address?.district_or_subdistrict ?? "",
-    subdistrict_or_district: address?.subdistrict_or_district ?? "",
-    zip_code: address?.zip_code ?? "",
-    address_details: address?.address_details ?? "",
+    districtOrSubdistrict: address?.districtOrSubdistrict ?? "",
+    subdistrictOrDistrict: address?.subdistrictOrDistrict ?? "",
+    zipCode: address?.zipCode ?? "",
+    addressDetails: address?.addressDetails ?? "",
   };
 }
 
@@ -115,9 +115,9 @@ export default function ContactPage() {
   const { data: global } = useGlobalTranslate(LanguageFile.GLOBAL);
 
   const { trigger: updateAddressProfile, isMutating: isUpdateMuting } =
-    usePrivatePut<AddressFormData>(API_ROUTES.profile.update_address_profile);
+    usePrivatePut<AddressFormData>(API_ROUTES.profile.updateAddressProfile);
 
-  const { success_message } = useNotification();
+  const { successMessage } = useNotification();
   const LOCATION_OPTIONS = ["Thailand", "Foreign"] as const;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmChange, setIsConfirmChange] = useState(false);
@@ -194,7 +194,7 @@ export default function ContactPage() {
 
       await updateAddressProfile(payload);
       await mutate();
-      success_message("profile", "update");
+      successMessage("profile", "update");
       if (data.country !== "Thailand") {
         setDefaultForeignCountry(data.country);
       } else {
@@ -210,13 +210,13 @@ export default function ContactPage() {
 
   return (
     <div>
-      <div className="bg-white rounded-lg shadow-sm border-1 border-border_primary mb-6">
+      <div className="bg-white rounded-lg shadow-sm border-1 border-borderPrimary mb-6">
         <div className="border-b p-6">
-          <h2 className="text-[16px] font-medium mb-2 text-text_primary">
-            {contactInfoLanguageData?.section_contact_info}
+          <h2 className="text-[16px] font-medium mb-2 text-textPrimary">
+            {contactInfoLanguageData?.sectionContactInfo}
           </h2>
           <p className="text-gray-600 text-[14px] font-sans">
-            {contactInfoLanguageData?.subtitle_contact_info}
+            {contactInfoLanguageData?.subtitleContactInfo}
           </p>
         </div>
 
@@ -226,13 +226,13 @@ export default function ContactPage() {
               <div className="mb-6">
                 <div className="flex gap-2 items-end w-full">
                   <div className="flex-1">
-                    <label className="block text-sm text-text_primary font-semibold mb-2">
-                      {contactInfoLanguageData?.label_contact_email}
+                    <label className="block text-sm text-textPrimary font-semibold mb-2">
+                      {contactInfoLanguageData?.labelContactEmail}
                     </label>
                     <input
                       type="email"
                       {...emailRegister("email")}
-                      className={`text-text_primary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                      className={`text-textPrimary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                         apiError
                           ? "border-[#ea6357] text-[#ea6357]"
                           : "border-gray-300"
@@ -249,7 +249,7 @@ export default function ContactPage() {
                       {isSubmittingEmail ? (
                         <LoadingCircle />
                       ) : (
-                        global?.button_change
+                        global?.buttonChange
                       )}
                     </button>
                   </div>
@@ -264,14 +264,14 @@ export default function ContactPage() {
           ) : (
             <div className="mb-6 flex gap-2 items-end w-full">
               <div className="flex-1">
-                <label className="block text-sm text-text_primary font-semibold mb-2">
-                  {contactInfoLanguageData?.label_contact_email}
+                <label className="block text-sm text-textPrimary font-semibold mb-2">
+                  {contactInfoLanguageData?.labelContactEmail}
                 </label>
                 <input
                   type="email"
                   value={profileData?.contact.email ?? ""}
                   disabled
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary disabled:cursor-not-allowed"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary disabled:cursor-not-allowed"
                   placeholder="your.email@example.com"
                 />
               </div>
@@ -280,28 +280,28 @@ export default function ContactPage() {
                   onClick={() => setIsModalOpen(true)}
                   className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
                 >
-                  {global?.button_edit}
+                  {global?.buttonEdit}
                 </button>
               </div>
             </div>
           )}
 
           <div>
-            <h3 className="text-sm text-text_primary font-semibold text-gray-600 mb-1 font-sans">
-              {contactInfoLanguageData?.label_contact_phone}
+            <h3 className="text-sm text-textPrimary font-semibold text-gray-600 mb-1 font-sans">
+              {contactInfoLanguageData?.labelContactPhone}
             </h3>
             <p className="text-[12px] text-gray-500 mb-2 font-sans">
-              {contactInfoLanguageData?.note_contact_phone}
+              {contactInfoLanguageData?.noteContactPhone}
             </p>
             <div className="flex gap-4">
               <input
                 type="tel"
-                className="text-text_primary flex-1 border border-gray-300 rounded-lg px-3 py-2"
+                className="text-textPrimary flex-1 border border-gray-300 rounded-lg px-3 py-2"
                 placeholder="ระบุเบอร์โทร"
                 defaultValue="0981893238"
               />
               <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                {global?.button_edit}
+                {global?.buttonEdit}
               </button>
             </div>
           </div>
@@ -310,19 +310,19 @@ export default function ContactPage() {
 
       <form
         onSubmit={handleSubmit(onSubmitAddress)}
-        className="bg-white rounded-lg text-sm text-text_primary font-semibold font-sans mb-6 shadow-sm border-1 border-border_primary"
+        className="bg-white rounded-lg text-sm text-textPrimary font-semibold font-sans mb-6 shadow-sm border-1 border-borderPrimary"
       >
         <div className="p-6 border-b">
-          <h2 className="text-[16px] font-medium mb-2 text-text_primary">
-            {contactInfoLanguageData?.section_address_info}
+          <h2 className="text-[16px] font-medium mb-2 text-textPrimary">
+            {contactInfoLanguageData?.sectionAddressInfo}
           </h2>
           <p className="text-gray-600 text-[14px] font-sans font-normal">
-            {contactInfoLanguageData?.subtitle_address_info}
+            {contactInfoLanguageData?.subtitleAddressInfo}
           </p>
         </div>
         <div className="p-6 flex flex-col border-b">
           <h3 className="text-base font-medium mb-3">
-            {contactInfoLanguageData?.label_current_location}
+            {contactInfoLanguageData?.labelCurrentLocation}
           </h3>
           <div className="grid grid-cols-2 gap-4 mb-4">
             {LOCATION_OPTIONS.map((option) => (
@@ -346,8 +346,8 @@ export default function ContactPage() {
                   className="text-blue-600 mr-3"
                 />
                 {option === "Thailand"
-                  ? contactInfoLanguageData?.option_thailand
-                  : contactInfoLanguageData?.option_foreign_country}
+                  ? contactInfoLanguageData?.optionThailand
+                  : contactInfoLanguageData?.optionForeignCountry}
               </label>
             ))}
           </div>
@@ -355,17 +355,17 @@ export default function ContactPage() {
           {locationType === "Foreign" ? (
             <>
               <label className="block text-sm mb-1">
-                {contactInfoLanguageData?.placeholder_select_country}
+                {contactInfoLanguageData?.placeholderSelectCountry}
               </label>
               <select
                 {...register("country")}
                 value={country}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary ${
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary ${
                   errors.country ? "border-red-500" : "border-gray-300"
                 }`}
               >
                 <option value="">
-                  -- {contactInfoLanguageData?.placeholder_select_country} --
+                  -- {contactInfoLanguageData?.placeholderSelectCountry} --
                 </option>
                 {countryOptions.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -382,40 +382,40 @@ export default function ContactPage() {
           ) : (
             <>
               <div className="mb-4">
-                <label className="block text-sm text-text_primary font-semibold mb-2">
-                  {sellerContactLanguage?.address_detail}
+                <label className="block text-sm text-textPrimary font-semibold mb-2">
+                  {sellerContactLanguage?.addressDetail}
                 </label>
                 <input
-                  {...register("address_details")}
-                  className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                  placeholder={sellerContactLanguage?.address_placeholder}
+                  {...register("addressDetails")}
+                  className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary"
+                  placeholder={sellerContactLanguage?.addressPlaceholder}
                 />
-                {errors.address_details && (
+                {errors.addressDetails && (
                   <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
-                    {errors.address_details.message}
+                    {errors.addressDetails.message}
                   </p>
                 )}
               </div>
 
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <ZipcodeSearch
-                  error={errors.zip_code}
+                  error={errors.zipCode}
                   control={control}
                   setValue={setValue}
                   language={sellerContactLanguage}
                 />
                 <div>
                   <label className="block font-semibold mb-1">
-                    {sellerContactLanguage?.sub_district}
+                    {sellerContactLanguage?.subDistrict}
                   </label>
                   <input
-                    placeholder={sellerContactLanguage?.sub_district}
-                    {...register("subdistrict_or_district")}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                    placeholder={sellerContactLanguage?.subDistrict}
+                    {...register("subdistrictOrDistrict")}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary"
                   />
-                  {errors.subdistrict_or_district && (
+                  {errors.subdistrictOrDistrict && (
                     <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
-                      {errors.subdistrict_or_district.message}
+                      {errors.subdistrictOrDistrict.message}
                     </p>
                   )}
                 </div>
@@ -428,12 +428,12 @@ export default function ContactPage() {
                   </label>
                   <input
                     placeholder={sellerContactLanguage?.district}
-                    {...register("district_or_subdistrict")}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                    {...register("districtOrSubdistrict")}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary"
                   />
-                  {errors.district_or_subdistrict && (
+                  {errors.districtOrSubdistrict && (
                     <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
-                      {errors.district_or_subdistrict.message}
+                      {errors.districtOrSubdistrict.message}
                     </p>
                   )}
                 </div>
@@ -444,7 +444,7 @@ export default function ContactPage() {
                   <input
                     placeholder={sellerContactLanguage?.province}
                     {...register("province")}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary"
                   />
                   {errors.province && (
                     <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -465,7 +465,7 @@ export default function ContactPage() {
               {isSubmitting || isUpdateMuting ? (
                 <LoadingCircle />
               ) : (
-                global?.button_save
+                global?.buttonSave
               )}
             </button>
           </div>

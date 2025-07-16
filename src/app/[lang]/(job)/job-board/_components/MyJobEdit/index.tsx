@@ -20,13 +20,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const jobSchema = z.object({
-  service_catalog_id: z.string().min(1, "Service catalog is required"),
-  job_title: z.string().min(5, "Job title must be at least 5 characters"),
+  serviceCatalogId: z.string().min(1, "Service catalog is required"),
+  jobTitle: z.string().min(5, "Job title must be at least 5 characters"),
   description: z
     .string()
     .min(20, "Job description must be at least 20 characters"),
-  is_english_required: z.boolean(),
-  example_url: z
+  isEnglishRequired: z.boolean(),
+  exampleUrl: z
     .string()
     .optional()
     .refine((val) => !val || /^https?:\/\/.+$/.test(val), {
@@ -40,9 +40,9 @@ const jobSchema = z.object({
     }),
 
   deadline: z.string().optional(),
-  is_anonymous_post: z.boolean(),
-  working_from: z.enum(["Freelance", "Contract", "Parttime", "Fulltime"]),
-  intended_use: z.enum(["Business", "Personal", "Unknown"]),
+  isAnonymousPost: z.boolean(),
+  workingFrom: z.enum(["Freelance", "Contract", "Parttime", "Fulltime"]),
+  intendedUse: z.enum(["Business", "Personal", "Unknown"]),
 });
 type Props = {
   jobId: string;
@@ -54,10 +54,10 @@ const MyJobEdit = ({ jobId }: Props) => {
     isLoading,
     error,
   } = usePublicFetch<JobPostDetail>(
-    API_ROUTES.job.job_board_detail + "/" + jobId
+    API_ROUTES.job.jobBoardDetail + "/" + jobId
   );
 
-  const { success_message, error_message } = useNotification();
+  const { successMessage, errorMessage } = useNotification();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -69,7 +69,7 @@ const MyJobEdit = ({ jobId }: Props) => {
     data: catalogData,
     isLoading: isCatalogLoading,
     error: catalogError,
-  } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.get_all_catalog);
+  } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.getAllCatalog);
 
   const {
     register,
@@ -81,36 +81,36 @@ const MyJobEdit = ({ jobId }: Props) => {
   } = useForm({
     resolver: zodResolver(jobSchema),
     defaultValues: {
-      service_catalog_id: "",
-      job_title: "",
+      serviceCatalogId: "",
+      jobTitle: "",
       description: "",
-      is_english_required: false,
-      example_url: "",
+      isEnglishRequired: false,
+      exampleUrl: "",
       budget: "",
       deadline: "",
-      is_anonymous_post: false,
-      working_from: "Freelance",
-      intended_use: "Personal",
+      isAnonymousPost: false,
+      workingFrom: "Freelance",
+      intendedUse: "Personal",
     },
   });
 
   useEffect(() => {
-    if (jobDetail?.job_post) {
+    if (jobDetail?.jobPost) {
       reset({
-        service_catalog_id: jobDetail.job_post.service_catalog_id,
-        job_title: jobDetail.job_post.job_title,
-        description: jobDetail.job_post.description,
-        is_english_required: jobDetail.job_post.is_english_required,
-        example_url: jobDetail.job_post.example_url,
-        budget: jobDetail.job_post.budget,
-        deadline: jobDetail.job_post.deadline?.split("T")[0] || "",
-        is_anonymous_post: jobDetail.job_post.is_anonymous_post,
-        working_from: jobDetail.job_post.working_from as
+        serviceCatalogId: jobDetail.jobPost.serviceCatalogId,
+        jobTitle: jobDetail.jobPost.jobTitle,
+        description: jobDetail.jobPost.description,
+        isEnglishRequired: jobDetail.jobPost.isEnglishRequired,
+        exampleUrl: jobDetail.jobPost.exampleUrl,
+        budget: jobDetail.jobPost.budget,
+        deadline: jobDetail.jobPost.deadline?.split("T")[0] || "",
+        isAnonymousPost: jobDetail.jobPost.isAnonymousPost,
+        workingFrom: jobDetail.jobPost.workingFrom as
           | "Freelance"
           | "Contract"
           | "Parttime"
           | "Fulltime",
-        intended_use: jobDetail.job_post.intended_use as
+        intendedUse: jobDetail.jobPost.intendedUse as
           | "Business"
           | "Personal"
           | "Unknown",
@@ -140,9 +140,9 @@ const MyJobEdit = ({ jobId }: Props) => {
       }
       //   console.log("data", data);
 
-      success_message("job", "create_job_board");
+      successMessage("job", "createJobBoard");
     } catch (error) {
-      error_message("job", `create_job_board`);
+      errorMessage("job", `createJobBoard`);
       console.error("Error creating job:", error);
     }
   };
@@ -166,29 +166,29 @@ const MyJobEdit = ({ jobId }: Props) => {
               {/* Job Title */}
               <div className="mb-6">
                 <label
-                  htmlFor="job_title"
+                  htmlFor="jobTitle"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  {createJobLanguage?.job_title_label}
+                  {createJobLanguage?.jobTitleLabel}
                 </label>
                 <input
-                  id="job_title"
-                  {...register("job_title")}
-                  placeholder={createJobLanguage?.job_title_placeholder}
-                  className={`w-full text-text_primary placeholder:text-text_secondary placeholder:font-sans p-3 border rounded-lg focus:outline-none focus:ring-1 ${
-                    errors.job_title
+                  id="jobTitle"
+                  {...register("jobTitle")}
+                  placeholder={createJobLanguage?.jobTitlePlaceholder}
+                  className={`w-full text-textPrimary placeholder:text-textSecondary placeholder:font-sans p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                    errors.jobTitle
                       ? "border-red-200 focus:ring-red-500"
                       : "border-gray-300 focus:ring-blue-500"
                   }`}
                 />
 
-                {errors.job_title && (
+                {errors.jobTitle && (
                   <p className="mt-1 text-red-500 text-sm flex items-center">
                     <FontAwesomeIcon
                       icon={faExclamationCircle}
                       className="mr-1"
                     />
-                    {errors.job_title.message}
+                    {errors.jobTitle.message}
                   </p>
                 )}
               </div>
@@ -196,7 +196,7 @@ const MyJobEdit = ({ jobId }: Props) => {
               {/* Working From */}
               <div className="mb-6">
                 <label className="block text-gray-700 font-medium mb-2">
-                  {createJobLanguage?.employment_type_label}
+                  {createJobLanguage?.employmentTypeLabel}
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div className="flex items-center p-3 border border-gray-300 rounded-lg">
@@ -204,11 +204,11 @@ const MyJobEdit = ({ jobId }: Props) => {
                       type="radio"
                       id="freelance"
                       value="Freelance"
-                      {...register("working_from")}
+                      {...register("workingFrom")}
                       className="h-4 w-4 text-blue-600"
                     />
                     <label htmlFor="freelance" className="ml-2 text-gray-700">
-                      {createJobLanguage?.employment_type_freelance}
+                      {createJobLanguage?.employmentTypeFreelance}
                     </label>
                   </div>
 
@@ -217,11 +217,11 @@ const MyJobEdit = ({ jobId }: Props) => {
                       type="radio"
                       id="contract"
                       value="Contract"
-                      {...register("working_from")}
+                      {...register("workingFrom")}
                       className="h-4 w-4 text-blue-600"
                     />
                     <label htmlFor="contract" className="ml-2 text-gray-700">
-                      {createJobLanguage?.employment_type_contract}
+                      {createJobLanguage?.employmentTypeContract}
                     </label>
                   </div>
 
@@ -230,11 +230,11 @@ const MyJobEdit = ({ jobId }: Props) => {
                       type="radio"
                       id="parttime"
                       value="Parttime"
-                      {...register("working_from")}
+                      {...register("workingFrom")}
                       className="h-4 w-4 text-blue-600"
                     />
                     <label htmlFor="parttime" className="ml-2 text-gray-700">
-                      {createJobLanguage?.employment_type_part_time}
+                      {createJobLanguage?.employmentTypePartTime}
                     </label>
                   </div>
 
@@ -243,11 +243,11 @@ const MyJobEdit = ({ jobId }: Props) => {
                       type="radio"
                       id="fulltime"
                       value="Fulltime"
-                      {...register("working_from")}
+                      {...register("workingFrom")}
                       className="h-4 w-4 text-blue-600"
                     />
                     <label htmlFor="fulltime" className="ml-2 text-gray-700">
-                      {createJobLanguage?.employment_type_full_time}
+                      {createJobLanguage?.employmentTypeFullTime}
                     </label>
                   </div>
                 </div>
@@ -259,16 +259,16 @@ const MyJobEdit = ({ jobId }: Props) => {
                   htmlFor="description"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  {createJobLanguage?.job_description_label}
+                  {createJobLanguage?.jobDescriptionLabel}
                 </label>
                 <p className="text-gray-500 text-sm mb-2">
-                  {createJobLanguage?.job_description_notice}
+                  {createJobLanguage?.jobDescriptionNotice}
                 </p>
                 <textarea
                   id="description"
                   {...register("description")}
-                  placeholder={createJobLanguage?.job_description_details}
-                  className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 min-h-[200px] ${
+                  placeholder={createJobLanguage?.jobDescriptionDetails}
+                  className={`text-textPrimary placeholder:text-textSecondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 min-h-[200px] ${
                     errors.description
                       ? "border-red-200 focus:ring-red-500"
                       : "border-gray-300 focus:ring-blue-500"
@@ -291,15 +291,15 @@ const MyJobEdit = ({ jobId }: Props) => {
                 <div className="flex items-center">
                   <input
                     type="checkbox"
-                    id="is_english_required"
-                    {...register("is_english_required")}
+                    id="isEnglishRequired"
+                    {...register("isEnglishRequired")}
                     className="h-4 w-4 text-blue-600"
                   />
                   <label
-                    htmlFor="is_english_required"
+                    htmlFor="isEnglishRequired"
                     className="ml-2 text-gray-700"
                   >
-                    {createJobLanguage?.english_speaker_label}
+                    {createJobLanguage?.englishSpeakerLabel}
                   </label>
                 </div>
               </div>
@@ -308,55 +308,55 @@ const MyJobEdit = ({ jobId }: Props) => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <label
-                    htmlFor="example_url"
+                    htmlFor="exampleUrl"
                     className="block text-gray-700 font-medium mb-2"
                   >
-                    {createJobLanguage?.example_url}
+                    {createJobLanguage?.exampleUrl}
                   </label>
                   <input
-                    id="example_url"
-                    {...register("example_url")}
+                    id="exampleUrl"
+                    {...register("exampleUrl")}
                     placeholder={
-                      createJobLanguage?.service_category_placeholder_url
+                      createJobLanguage?.serviceCategoryPlaceholderUrl
                     }
-                    className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
-                      errors.example_url
+                    className={`text-textPrimary placeholder:text-textSecondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                      errors.exampleUrl
                         ? "border-red-200 focus:ring-red-500"
                         : "border-gray-300 focus:ring-blue-500"
                     }`}
                   />
 
-                  {errors.example_url && (
+                  {errors.exampleUrl && (
                     <p className="mt-1 text-red-500 text-sm flex items-center">
                       <FontAwesomeIcon
                         icon={faExclamationCircle}
                         className="mr-1"
                       />
-                      {errors.example_url.message}
+                      {errors.exampleUrl.message}
                     </p>
                   )}
                 </div>
 
                 <div>
                   <label
-                    htmlFor="service_catalog_id"
+                    htmlFor="serviceCatalogId"
                     className="block text-gray-700 font-medium mb-2"
                   >
-                    {createJobLanguage?.service_category_label}
+                    {createJobLanguage?.serviceCategoryLabel}
                   </label>
                   <select
-                    id="service_catalog_id"
-                    {...register("service_catalog_id")}
-                    className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
-                      errors.service_catalog_id
+                    id="serviceCatalogId"
+                    {...register("serviceCatalogId")}
+                    className={`text-textPrimary placeholder:text-textSecondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                      errors.serviceCatalogId
                         ? "border-red-200 focus:ring-red-500"
                         : "border-gray-300 focus:ring-blue-500"
                     }`}
                   >
                     <option disabled value="">
-                      {createJobLanguage?.service_category_placeholder_select}
+                      {createJobLanguage?.serviceCategoryPlaceholderSelect}
                     </option>
-                    {catalogData?.service_catalogs
+                    {catalogData?.serviceCatalogs
                       ?.filter((catalog) => catalog.slug !== "popular-service")
                       .map((catalog) => (
                         <option key={catalog.id} value={catalog.id}>
@@ -365,13 +365,13 @@ const MyJobEdit = ({ jobId }: Props) => {
                       ))}
                   </select>
 
-                  {errors.service_catalog_id && (
+                  {errors.serviceCatalogId && (
                     <p className="mt-1 text-red-500 text-sm flex items-center">
                       <FontAwesomeIcon
                         icon={faExclamationCircle}
                         className="mr-1"
                       />
-                      {errors.service_catalog_id.message}
+                      {errors.serviceCatalogId.message}
                     </p>
                   )}
                 </div>
@@ -384,7 +384,7 @@ const MyJobEdit = ({ jobId }: Props) => {
                     htmlFor="budget"
                     className="block text-gray-700 font-medium mb-2"
                   >
-                    {createJobLanguage?.budget_label}
+                    {createJobLanguage?.budgetLabel}
                   </label>
                   <div className="relative">
                     <input
@@ -392,7 +392,7 @@ const MyJobEdit = ({ jobId }: Props) => {
                       id="budget"
                       {...register("budget")}
                       placeholder="0"
-                      className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                      className={`text-textPrimary placeholder:text-textSecondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
                         errors.budget
                           ? "border-red-200 focus:ring-red-500"
                           : "border-gray-300 focus:ring-blue-500"
@@ -419,14 +419,14 @@ const MyJobEdit = ({ jobId }: Props) => {
                     htmlFor="deadline"
                     className="block text-gray-700 font-medium mb-2"
                   >
-                    {createJobLanguage?.deadline_label}
+                    {createJobLanguage?.deadlineLabel}
                   </label>
                   <input
                     type="date"
                     id="deadline"
                     min={new Date().toISOString().split("T")[0]}
                     {...register("deadline")}
-                    className="text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="text-textPrimary placeholder:text-textSecondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -434,19 +434,19 @@ const MyJobEdit = ({ jobId }: Props) => {
               {/* Intended Use */}
               <div className="mb-6">
                 <label className="block text-gray-700 font-medium mb-2">
-                  {createJobLanguage?.intended_use_label}
+                  {createJobLanguage?.intendedUseLabel}
                 </label>
                 <p className="text-gray-500 text-sm mb-2">
-                  {createJobLanguage?.intended_use_notice}
+                  {createJobLanguage?.intendedUseNotice}
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
                   <div
                     className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer ${
-                      watch("intended_use") === "Business"
+                      watch("intendedUse") === "Business"
                         ? "bg-blue-100 border border-blue-300"
                         : "bg-white border border-gray-200"
                     }`}
-                    onClick={() => setValue("intended_use", "Business")}
+                    onClick={() => setValue("intendedUse", "Business")}
                   >
                     <div className="text-blue-600 mb-2">
                       <svg
@@ -465,17 +465,17 @@ const MyJobEdit = ({ jobId }: Props) => {
                       </svg>
                     </div>
                     <span className="text-gray-700">
-                      {createJobLanguage?.intended_use_business}
+                      {createJobLanguage?.intendedUseBusiness}
                     </span>
                   </div>
 
                   <div
                     className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer ${
-                      watch("intended_use") === "Personal"
+                      watch("intendedUse") === "Personal"
                         ? "bg-blue-100 border border-blue-300"
                         : "bg-white border border-gray-200"
                     }`}
-                    onClick={() => setValue("intended_use", "Personal")}
+                    onClick={() => setValue("intendedUse", "Personal")}
                   >
                     <div className="text-blue-600 mb-2">
                       <svg
@@ -494,17 +494,17 @@ const MyJobEdit = ({ jobId }: Props) => {
                       </svg>
                     </div>
                     <span className="text-gray-700">
-                      {createJobLanguage?.intended_use_personal}
+                      {createJobLanguage?.intendedUsePersonal}
                     </span>
                   </div>
 
                   <div
                     className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer ${
-                      watch("intended_use") === "Unknown"
+                      watch("intendedUse") === "Unknown"
                         ? "bg-blue-100 border border-blue-300"
                         : "bg-white border border-gray-200"
                     }`}
-                    onClick={() => setValue("intended_use", "Unknown")}
+                    onClick={() => setValue("intendedUse", "Unknown")}
                   >
                     <div className="text-blue-600 mb-2">
                       <svg
@@ -523,7 +523,7 @@ const MyJobEdit = ({ jobId }: Props) => {
                       </svg>
                     </div>
                     <span className="text-gray-700">
-                      {createJobLanguage?.intended_use_unknown}
+                      {createJobLanguage?.intendedUseUnknown}
                     </span>
                   </div>
                 </div>
@@ -535,11 +535,11 @@ const MyJobEdit = ({ jobId }: Props) => {
                   <input
                     type="checkbox"
                     className="sr-only peer"
-                    {...register("is_anonymous_post")}
+                    {...register("isAnonymousPost")}
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                   <span className="ml-3 text-gray-700">
-                    {createJobLanguage?.anonymous_post_label}
+                    {createJobLanguage?.anonymousPostLabel}
                   </span>
                 </label>
               </div>
@@ -551,7 +551,7 @@ const MyJobEdit = ({ jobId }: Props) => {
                   onClick={handleBackClick}
                   className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50"
                 >
-                  {createJobLanguage?.preview_button}
+                  {createJobLanguage?.previewButton}
                 </button>
                 <button
                   type="submit"
@@ -561,9 +561,9 @@ const MyJobEdit = ({ jobId }: Props) => {
                   {/* {isMutating ? (
                     <LoadingCircle />
                   ) : (
-                    createJobLanguage?.submit_button
+                    createJobLanguage?.submitButton
                   )} */}
-                  {createJobLanguage?.submit_button}
+                  {createJobLanguage?.submitButton}
                 </button>
               </div>
             </form>

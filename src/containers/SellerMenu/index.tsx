@@ -30,7 +30,7 @@ interface SellerMenuProps {
 
 const SellerMenu = ({ isOpen, onClose }: SellerMenuProps) => {
   const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
+    API_ROUTES.profile.getProfile
   );
 const { lang } = useLanguage();
   const pathname = usePathname();
@@ -40,43 +40,43 @@ const { lang } = useLanguage();
       href: "/seller",
       label: "Overall",
       icon: faFileContract,
-      target: "_self",
+      target: "Self",
     },
     {
       href: "/chat",
       label: "Chat and order",
       icon: faMessage,
-      target: "_blank",
+      target: "Blank",
     },
     {
       href: "/seller/project-management",
       label: "Order Management",
       icon: faListCheck,
-      target: "_self",
+      target: "Self",
     },
     {
       href: "/seller/account-statistics",
       label: "Stats",
       icon: faIdCard,
-      target: "_self",
+      target: "Self",
     },
     {
       href: "/seller/my-service",
       label: "My job",
       icon: faCalendar,
-      target: "_self",
+      target: "Self",
     },
     {
       href: "/seller/withdrawal",
       label: "Balance information",
       icon: faMoneyBill1Wave,
-      target: "_self",
+      target: "Self",
     },
     {
       href: "/reward/earn",
       label: "Freelance Rewards",
       icon: faGift,
-      target: "_blank",
+      target: "Blank",
     },
   ];
   const menuSettingItems = [
@@ -84,13 +84,13 @@ const { lang } = useLanguage();
       href: `${lang}/user/${user?.user.username}`,
       label: "Freelancer profile",
       icon: faUserPen,
-      target: "_blank",
+      target: "Blank",
     },
     {
       href: "/seller-account-setting/freelance-profile",
       label: "Account setting",
       icon: faGear,
-      target: "_blank",
+      target: "Blank",
     },
   ];
 
@@ -131,25 +131,25 @@ const { lang } = useLanguage();
           <section className="flex gap-3 items-center flex-col pt-8 px-4 pb-1">
             <figure className="rounded-full overflow-hidden relative">
               <Image
-                src={user?.user.avatar_url || ProfileImage.avatar}
+                src={user?.user.avatarUrl || ProfileImage.avatar}
                 alt="avatar"
                 width={80}
                 height={80}
                 className="rounded-full w-20 h-20  object-cover"
               />
             </figure>
-            <div className="text-[0.875rem] font-semibold text-text_primary">
+            <div className="text-[0.875rem] font-semibold text-textPrimary">
               {user?.user.username}
             </div>
           </section>
           <section className="flex flex-col gap-2 p-4">
             <Link prefetch={false} href="/" className="flex-1">
-              <button className="py-2 w-full cursor-pointer bg-third text-white font-semibold rounded-md border-1 border-border_primary">
+              <button className="py-2 w-full cursor-pointer bg-third text-white font-semibold rounded-md border-1 border-borderPrimary">
                 Find freelancer
               </button>
             </Link>
             <Link prefetch={false} href="/job-board" className="flex-1">
-              <button className="py-2 w-full cursor-pointer bg-white text-third font-semibold rounded-md border-1 border-border_primary">
+              <button className="py-2 w-full cursor-pointer bg-white text-third font-semibold rounded-md border-1 border-borderPrimary">
                 Job board
               </button>
             </Link>
@@ -164,7 +164,7 @@ const { lang } = useLanguage();
                 className={`flex flex-row items-center gap-2 ${
                   isActive
                     ? "bg-secondary text-third border-l-4 border-primary"
-                    : "bg-white text-text_secondary"
+                    : "bg-white text-textSecondary"
                 } leading-[25px] cursor-pointer`}
               >
                 <Link prefetch={false}
@@ -177,7 +177,7 @@ const { lang } = useLanguage();
                     <FontAwesomeIcon
                       icon={item.icon}
                       className={`text-[18px] ${
-                        isActive ? "text-third" : "text-text_secondary"
+                        isActive ? "text-third" : "text-textSecondary"
                       }`}
                     />
                     <span className="font-sans whitespace-nowrap text-[0.875rem] flex items-center">
@@ -188,7 +188,7 @@ const { lang } = useLanguage();
               </li>
             );
           })}
-          <hr className="h-[1px] bg-border_secondary w-full inline-block" />
+          <hr className="h-[1px] bg-borderSecondary w-full inline-block" />
           {menuSettingItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -197,7 +197,7 @@ const { lang } = useLanguage();
                 className={`flex flex-row items-center gap-2 ${
                   isActive
                     ? "bg-secondary text-third border-l-4 border-primary"
-                    : "bg-white text-text_secondary"
+                    : "bg-white text-textSecondary"
                 } leading-[25px] cursor-pointer`}
               >
                 <Link prefetch={false}
@@ -209,7 +209,7 @@ const { lang } = useLanguage();
                     <FontAwesomeIcon
                       icon={item.icon}
                       className={`text-[18px] ${
-                        isActive ? "text-third" : "text-text_secondary"
+                        isActive ? "text-third" : "text-textSecondary"
                       }`}
                     />
                     <span className="font-sans whitespace-nowrap text-[0.875rem] flex items-center">
@@ -220,13 +220,13 @@ const { lang } = useLanguage();
               </li>
             );
           })}
-          <hr className="h-[1px] bg-border_secondary w-full inline-block" />
-          <li className="flex flex-row items-center gap-2 bg-white text-text_secondary">
+          <hr className="h-[1px] bg-borderSecondary w-full inline-block" />
+          <li className="flex flex-row items-center gap-2 bg-white text-textSecondary">
             <button onClick={logout} className="px-5 py-4 flex-1">
               <div className="flex flex-row items-center gap-4">
                 <FontAwesomeIcon
                   icon={faRightFromBracket}
-                  className="text-[18px] text-text_secondary"
+                  className="text-[18px] text-textSecondary"
                 />
                 <span className="font-sans whitespace-nowrap text-[0.875rem] flex items-center">
                   Sign out

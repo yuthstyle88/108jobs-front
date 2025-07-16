@@ -24,11 +24,11 @@ const getSchema = (lang: any) =>
             .string()
             .min(
               1,
-              lang?.workflow_description_error || "Vui lòng nhập mô tả bước"
+              lang?.workflowDescriptionError || "Vui lòng nhập mô tả bước"
             ),
         })
       )
-      .min(2, lang?.worksteps_min || "Cần ít nhất 2 bước"),
+      .min(2, lang?.workstepsMin || "Cần ít nhất 2 bước"),
   });
 
 type FormData = z.infer<ReturnType<typeof getSchema>>;
@@ -77,17 +77,17 @@ const Step4WorkSteps = ({
   });
 
   const { trigger: sendWorksteps, isMutating } = usePrivatePost(
-    API_ROUTES_SELLER.job.post_job_step_4
+    API_ROUTES_SELLER.job.postJobStep4
   );
 
   const onSubmit = async (data: FormData) => {
     try {
       const payload = {
-        job_id: job.id,
+        jobId: job.id,
         worksteps: data.worksteps.map((step, idx) => ({
           id: step.id ?? null,
           description: step.description,
-          sort_order: idx + 1,
+          sortOrder: idx + 1,
         })),
       };
 
@@ -120,13 +120,13 @@ const Step4WorkSteps = ({
       className="bg-white rounded-lg shadow-sm p-6"
     >
       {isMutating && <LoadingBlur text={"Đang lưu dữ liệu"} />}
-      <h2 className="text-[32px] font-medium text-text_primary">
-        {createJobLanguage?.workflow_title}
+      <h2 className="text-[32px] font-medium text-textPrimary">
+        {createJobLanguage?.workflowTitle}
       </h2>
 
       <div className="space-y-8 max-w-4xl mb-6">
         <p className="text-sm text-gray-600">
-          {createJobLanguage?.define_work_steps_description}
+          {createJobLanguage?.defineWorkStepsDescription}
         </p>
 
         {fields.map((field, index) => (
@@ -135,7 +135,7 @@ const Step4WorkSteps = ({
             className="border border-gray-200 rounded-lg p-6 relative"
           >
             <div className="absolute -top-3 left-4 bg-blue-600 text-white text-[16px] font-medium px-3 py-1 rounded-full">
-              {createJobLanguage?.step_label} {index + 1}
+              {createJobLanguage?.stepLabel} {index + 1}
             </div>
 
             {fields.length > 2 && (
@@ -150,12 +150,12 @@ const Step4WorkSteps = ({
 
             <div className="mt-4">
               <label className="block text-base font-medium text-gray-700 mb-1">
-                {createJobLanguage?.workflow_description_label}
+                {createJobLanguage?.workflowDescriptionLabel}
               </label>
               <textarea
-                className="text-text_primary w-full p-3 border border-gray-300 rounded-lg min-h-24"
+                className="text-textPrimary w-full p-3 border border-gray-300 rounded-lg min-h-24"
                 placeholder={
-                  createJobLanguage?.workflow_description_placeholder
+                  createJobLanguage?.workflowDescriptionPlaceholder
                 }
                 {...register(`worksteps.${index}.description`)}
               ></textarea>
@@ -174,7 +174,7 @@ const Step4WorkSteps = ({
           className="flex items-center gap-2 text-blue-600 font-medium"
         >
           <Plus className="w-4 h-4" />
-          {createJobLanguage?.add_step}
+          {createJobLanguage?.addStep}
         </button>
 
         {errors.worksteps && (
@@ -189,14 +189,14 @@ const Step4WorkSteps = ({
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50"
             onClick={prevStep}
           >
-            {createJobLanguage?.back_button}
+            {createJobLanguage?.backButton}
           </button>
           <button
             type="submit"
             className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
             disabled={isMutating}
           >
-            {isMutating ? <LoadingCircle /> : createJobLanguage?.next_button}
+            {isMutating ? <LoadingCircle /> : createJobLanguage?.nextButton}
           </button>
         </div>
       </div>

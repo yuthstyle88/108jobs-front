@@ -75,7 +75,7 @@ const EarnPage = () => {
         <div className="absolute top-0 left-0 right-0 flex justify-center items-center h-[200px] text-black">
           <div className="flex flex-col justify-center items-center text-center">
             <div className="text-[20px] font-[500] leading-[23px]">
-              {pointLanguageData?.section_rewards_points}
+              {pointLanguageData?.sectionRewardsPoints}
             </div>
             <div className="flex items-center">
               <Image
@@ -91,7 +91,7 @@ const EarnPage = () => {
               ≈ 0.00 บาท
             </div>
             <div className="text-[14px] font-[400] leading-[16.1px] text-[rgba(43,50,59,0.6)]">
-              0.00 {pointLanguageData?.label_total_points} 28/02/2025
+              0.00 {pointLanguageData?.labelTotalPoints} 28/02/2025
             </div>
           </div>
         </div>
@@ -103,19 +103,19 @@ const EarnPage = () => {
               className="text-center cursor-pointer text-third border-b-2 border-third"
               onClick={() => route.push("/reward/earn")}
             >
-              {pointLanguageData?.tab_collect_points}
+              {pointLanguageData?.tabCollectPoints}
             </div>
             <div
               className="text-center cursor-pointer text-gray-400"
               onClick={() => route.push("/reward/reward")}
             >
-              {pointLanguageData?.tab_redeem_rewards}
+              {pointLanguageData?.tabRedeemRewards}
             </div>
             <div
               className="text-center cursor-pointer text-gray-400"
               onClick={() => route.push("/reward/point-history")}
             >
-              {pointLanguageData?.tab_usage_history}
+              {pointLanguageData?.tabUsageHistory}
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@ const EarnPage = () => {
           <div className="flex">
             <div className="h-[40px] w-[5px] bg-blue-600 mr-2 " />
             <div className="text-[31px] font-semibold text-black">
-              {pointLanguageData?.section_free_points_mission}
+              {pointLanguageData?.sectionFreePointsMission}
             </div>
           </div>
           <div className="flex justify-left space-x-4 py-8">
@@ -137,7 +137,7 @@ const EarnPage = () => {
               }`}
               onClick={() => setActiveButton(0)}
             >
-              {pointLanguageData?.filter_all}
+              {pointLanguageData?.filterAll}
             </button>
             <button
               className={`py-1 px-3 sm:py-2 sm:px-6 rounded-full ${
@@ -147,7 +147,7 @@ const EarnPage = () => {
               }`}
               onClick={() => setActiveButton(1)}
             >
-              {pointLanguageData?.filter_general}
+              {pointLanguageData?.filterGeneral}
             </button>
             <button
               className={`py-1 px-3 sm:py-2 sm:px-6 rounded-full ${
@@ -157,53 +157,53 @@ const EarnPage = () => {
               }`}
               onClick={() => setActiveButton(2)}
             >
-              {pointLanguageData?.filter_employment}
+              {pointLanguageData?.filterEmployment}
             </button>
           </div>
           <div className="text-[24px] font-[500] leading-[27.6px] text-[rgb(29,108,226)] pt-8">
-            {pointLanguageData?.label_general_mission}
+            {pointLanguageData?.labelGeneralMission}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 pt-[2rem]">
             <PointCard
-              title={pointLanguageData?.task_daily_points}
+              title={pointLanguageData?.taskDailyPoints}
               subtitle="เหลือเวลาอีก 8 ชั่วโมง"
               points={1.0}
               onCheckPoints={() => {}}
-              buttonLabel={pointLanguageData?.button_check_get_points}
-              viewLabel={pointLanguageData?.label_view_other_rewards}
+              buttonLabel={pointLanguageData?.buttonCheckGetPoints}
+              viewLabel={pointLanguageData?.labelViewOtherRewards}
             />
           </div>
           <div className="text-[24px] font-[500] leading-[27.6px] text-[rgb(29,108,226)] pt-8">
-            {pointLanguageData?.label_employment_mission}{" "}
+            {pointLanguageData?.labelEmploymentMission}{" "}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             <PointCard
-              title={pointLanguageData?.task_first_payment}
+              title={pointLanguageData?.taskFirstPayment}
               points={50.0}
               onCheckPoints={() => {}}
-              buttonLabel={pointLanguageData?.button_check_get_points}
-              viewLabel={pointLanguageData?.label_view_other_rewards}
+              buttonLabel={pointLanguageData?.buttonCheckGetPoints}
+              viewLabel={pointLanguageData?.labelViewOtherRewards}
             />
             <PointCard
-              title={pointLanguageData?.task_successful_hire}
+              title={pointLanguageData?.taskSuccessfulHire}
               points={100.0}
               onCheckPoints={() => {}}
-              buttonLabel={pointLanguageData?.button_check_get_points}
-              viewLabel={pointLanguageData?.label_view_other_rewards}
+              buttonLabel={pointLanguageData?.buttonCheckGetPoints}
+              viewLabel={pointLanguageData?.labelViewOtherRewards}
             />
             <PointCard
-              title={pointLanguageData?.task_repeat_hire}
+              title={pointLanguageData?.taskRepeatHire}
               points={100.0}
               onCheckPoints={() => {}}
-              buttonLabel={pointLanguageData?.button_check_get_points}
-              viewLabel={pointLanguageData?.label_view_other_rewards}
+              buttonLabel={pointLanguageData?.buttonCheckGetPoints}
+              viewLabel={pointLanguageData?.labelViewOtherRewards}
             />
             <PointCard
-              title={pointLanguageData?.task_first_job_post}
+              title={pointLanguageData?.taskFirstJobPost}
               points={10.0}
               onCheckPoints={() => {}}
-              buttonLabel={pointLanguageData?.button_check_get_points}
-              viewLabel={pointLanguageData?.label_view_other_rewards}
+              buttonLabel={pointLanguageData?.buttonCheckGetPoints}
+              viewLabel={pointLanguageData?.labelViewOtherRewards}
             />
           </div>
         </div>

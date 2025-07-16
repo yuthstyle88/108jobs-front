@@ -10,11 +10,11 @@ const PopularType = () => {
     data: catalogData,
     isLoading,
     error,
-  } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.get_all_catalog);
+  } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.getAllCatalog);
 
   if (isLoading || error) return null;
 
-  const popularService = catalogData?.service_catalogs.find(
+  const popularService = catalogData?.serviceCatalogs.find(
     (catalog) => catalog.name.toLowerCase() === "popular service"
   );
 
@@ -32,8 +32,8 @@ const PopularType = () => {
         <div className="min-w-[rem] max-w-[12rem] ">
             {popularService.sections.map((section) => (
               <CategoryList
-                key={section.section_title}
-                title={section.section_title}
+                key={section.sectionTitle}
+                title={section.sectionTitle}
                 items={section.categories.map((cat) => ({
                   title: cat.name,
                   slug: cat.slug,

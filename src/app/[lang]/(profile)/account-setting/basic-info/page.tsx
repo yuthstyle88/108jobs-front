@@ -34,7 +34,7 @@ export default function BasicInformation() {
     handleSelectFile,
     handleImageUpload,
     closeImageModal,
-  } = useImageUpload(profileData?.user?.avatar_url);
+  } = useImageUpload(profileData?.user?.avatarUrl);
 
   const {
     register,
@@ -62,14 +62,14 @@ export default function BasicInformation() {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="border-1 border-border_primary rounded-lg bg-white py-6"
+        className="border-1 border-borderPrimary rounded-lg bg-white py-6"
       >
         <div className="border-b-1 px-6">
-          <h2 className="text-[16px] font-medium mb-2 text-text_primary">
-            {languageData?.section_account_info}
+          <h2 className="text-[16px] font-medium mb-2 text-textPrimary">
+            {languageData?.sectionAccountInfo}
           </h2>
           <p className="text-gray-600 mb-6 text-[14px] font-sans">
-            {languageData?.subtitle_account_info}
+            {languageData?.subtitleAccountInfo}
           </p>
         </div>
 
@@ -116,49 +116,49 @@ export default function BasicInformation() {
 
         <div className="flex flex-col gap-6 px-6 font-sans">
           <div>
-            <label className="block text-sm text-text_primary font-semibold mb-2">
-              {languageData?.label_username}
+            <label className="block text-sm text-textPrimary font-semibold mb-2">
+              {languageData?.labelUsername}
             </label>
             <div className="flex items-center">
               <span className="text-gray-500 mr-2">fastwork.co/user/</span>
               <input
                 {...register("username")}
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-text_primary font-sans outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-textPrimary font-sans outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm text-text_primary font-semibold text-gray-600 mb-2">
-              {languageData?.label_display_name}
+            <label className="block text-sm text-textPrimary font-semibold text-gray-600 mb-2">
+              {languageData?.labelDisplayName}
             </label>
             <p className="text-[12px] text-gray-500 mb-2">
-              {languageData?.name_trust_note}
+              {languageData?.nameTrustNote}
             </p>
             <input
-              {...register("display_name", {
-                required: languageData?.account_info,
+              {...register("displayName", {
+                required: languageData?.accountInfo,
                 validate: (value) =>
                   value.trim().length > 0 || "Invalid display name",
               })}
-              className="text-text_primary w-full px-4 py-2 border border-border_primary rounded-lg outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+              className="text-textPrimary w-full px-4 py-2 border border-borderPrimary rounded-lg outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
             />
-            {errors.display_name && (
+            {errors.displayName && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.display_name.message}
+                {errors.displayName.message}
               </p>
             )}
           </div>
 
           <div className="col-span-2">
-            <label className="block text-sm text-text_primary font-semibold text-gray-600 mb-2">
-              {languageData?.label_birthdate}
+            <label className="block text-sm text-textPrimary font-semibold text-gray-600 mb-2">
+              {languageData?.labelBirthdate}
             </label>
             <div className="grid grid-cols-3 gap-4">
               <select
-                {...register("birth_day")}
+                {...register("birthDay")}
                 defaultValue="Day"
-                className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-textPrimary"
               >
                 <option disabled value="Day">
                   Day
@@ -170,9 +170,9 @@ export default function BasicInformation() {
                 ))}
               </select>
               <select
-                {...register("birth_month")}
+                {...register("birthMonth")}
                 defaultValue="Month"
-                className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-textPrimary"
               >
                 <option disabled value="Month">
                   Month
@@ -184,9 +184,9 @@ export default function BasicInformation() {
                 ))}
               </select>
               <select
-                {...register("birth_year")}
+                {...register("birthYear")}
                 defaultValue="Year"
-                className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-textPrimary"
               >
                 <option disabled value="Year">
                   Year
@@ -216,11 +216,11 @@ export default function BasicInformation() {
         </div>
       </form>
 
-      <div className="border-1 border-border_primary rounded-lg bg-white mt-5 p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
-        <div className="text-[16px] text-text_primary font-medium">
-          {languageData?.section_password}
-          <p className="text-[14px] text-text_secondary font-normal">
-            {languageData?.password_description}
+      <div className="border-1 border-borderPrimary rounded-lg bg-white mt-5 p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
+        <div className="text-[16px] text-textPrimary font-medium">
+          {languageData?.sectionPassword}
+          <p className="text-[14px] text-textSecondary font-normal">
+            {languageData?.passwordDescription}
           </p>
         </div>
         <div className="self-end w-full sm:w-fit">
@@ -228,7 +228,7 @@ export default function BasicInformation() {
             onClick={openModal}
             className="w-full bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            {languageData?.button_set_password}
+            {languageData?.buttonSetPassword}
           </button>
         </div>
       </div>

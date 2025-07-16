@@ -40,14 +40,14 @@ const PersonalInfo = () => {
     previewUrl: frontPreview,
     handleSelectImage: handleSelectFront,
     setPreviewUrl: setSelectedFront,
-  } = useImagePreviewOnly(profileData?.card.front_card);
+  } = useImagePreviewOnly(profileData?.card.frontCard);
 
   const {
     file: backFile,
     previewUrl: backPreview,
     handleSelectImage: handleSelectBack,
     setPreviewUrl: setSelectedBack,
-  } = useImagePreviewOnly(profileData?.card.back_card);
+  } = useImagePreviewOnly(profileData?.card.backCard);
 
   const {
     register,
@@ -78,9 +78,9 @@ const PersonalInfo = () => {
     >
       <div className="border-b border-gray-200 p-5">
         <h2 className="text-lg font-medium text-gray-800">
-          {sellerPersonalInfoLanguage?.id_info_title}
+          {sellerPersonalInfoLanguage?.idInfoTitle}
         </h2>
-        <p className="text-sm text-gray-500">{sellerPersonalInfoLanguage?.id_info_description}</p>
+        <p className="text-sm text-gray-500">{sellerPersonalInfoLanguage?.idInfoDescription}</p>
       </div>
 
       <div className="p-6">
@@ -90,10 +90,10 @@ const PersonalInfo = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* ID front */}
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-            <h4 className="text-sm font-medium mb-1 text-text_primary">
-              {sellerPersonalInfoLanguage?.front_id_image}
+            <h4 className="text-sm font-medium mb-1 text-textPrimary">
+              {sellerPersonalInfoLanguage?.frontIdImage}
             </h4>
-            <p className="text-xs text-gray-500 mb-3">{sellerPersonalInfoLanguage?.image_hint}</p>
+            <p className="text-xs text-gray-500 mb-3">{sellerPersonalInfoLanguage?.imageHint}</p>
             <div className="relative border border-gray-200 rounded-lg overflow-hidden mb-3">
               {frontPreview ? (
                 <>
@@ -113,7 +113,7 @@ const PersonalInfo = () => {
                 </>
               ) : (
                 <Image
-                  src={ProfileImage.front_card}
+                  src={ProfileImage.frontCard}
                   alt="ID back"
                   className="w-full h-60 object-contain"
                   width={500}
@@ -136,16 +136,16 @@ const PersonalInfo = () => {
               onClick={() => frontInputRef.current?.click()}
               className="w-full py-2 text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              {frontPreview ?  sellerPersonalInfoLanguage?.change_image : sellerPersonalInfoLanguage?.change_image}
+              {frontPreview ?  sellerPersonalInfoLanguage?.changeImage : sellerPersonalInfoLanguage?.changeImage}
             </button>
           </div>
 
           {/* ID back */}
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-            <h4 className="text-sm font-medium mb-1 text-text_primary">
-              {sellerPersonalInfoLanguage?.back_id_image}
+            <h4 className="text-sm font-medium mb-1 text-textPrimary">
+              {sellerPersonalInfoLanguage?.backIdImage}
             </h4>
-            <p className="text-xs text-gray-500 mb-3">{sellerPersonalInfoLanguage?.image_hint}</p>
+            <p className="text-xs text-gray-500 mb-3">{sellerPersonalInfoLanguage?.imageHint}</p>
             <div className="relative border border-gray-200 rounded-lg overflow-hidden mb-3">
               {backPreview ? (
                 <>
@@ -165,7 +165,7 @@ const PersonalInfo = () => {
                 </>
               ) : (
                 <Image
-                  src={ProfileImage.back_card}
+                  src={ProfileImage.backCard}
                   alt="ID back"
                   className="w-full h-60 object-contain"
                   width={500}
@@ -188,7 +188,7 @@ const PersonalInfo = () => {
               onClick={() => backInputRef.current?.click()}
               className="w-full py-2 text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              {backPreview ? sellerPersonalInfoLanguage?.change_image : sellerPersonalInfoLanguage?.change_image}
+              {backPreview ? sellerPersonalInfoLanguage?.changeImage : sellerPersonalInfoLanguage?.changeImage}
             </button>
           </div>
         </div>
@@ -198,21 +198,21 @@ const PersonalInfo = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              {sellerPersonalInfoLanguage?.first_name}
+              {sellerPersonalInfoLanguage?.firstName}
             </label>
             <input
               {...register("name")}
-              className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
             <InputError message={errors.name?.message} />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              {sellerPersonalInfoLanguage?.last_name}
+              {sellerPersonalInfoLanguage?.lastName}
             </label>
             <input
               {...register("surname")}
-              className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
             <InputError message={errors.surname?.message} />
           </div>
@@ -220,23 +220,23 @@ const PersonalInfo = () => {
 
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {sellerPersonalInfoLanguage?.id_number}
+            {sellerPersonalInfoLanguage?.idNumber}
           </label>
           <input
-            {...register("card_number")}
-            className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            {...register("cardNumber")}
+            className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
-          <InputError message={errors.card_number?.message} />
+          <InputError message={errors.cardNumber?.message} />
         </div>
 
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {sellerPersonalInfoLanguage?.date_of_birth}
+            {sellerPersonalInfoLanguage?.dateOfBirth}
           </label>
           <div className="grid grid-cols-3 gap-4">
             <select
-              {...register("birth_day")}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
+              {...register("birthDay")}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-textPrimary"
             >
               <option disabled value="Day">
                 วัน
@@ -248,8 +248,8 @@ const PersonalInfo = () => {
               ))}
             </select>
             <select
-              {...register("birth_month")}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
+              {...register("birthMonth")}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-textPrimary"
             >
               <option disabled value="Month">
                 เดือน
@@ -261,8 +261,8 @@ const PersonalInfo = () => {
               ))}
             </select>
             <select
-              {...register("birth_year")}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
+              {...register("birthYear")}
+              className="border border-gray-300 rounded-lg px-3 py-2 text-textPrimary"
             >
               <option disabled value="Year">
                 ปี
@@ -276,53 +276,53 @@ const PersonalInfo = () => {
           </div>
           <InputError
             message={
-              errors.birth_day?.message ||
-              errors.birth_month?.message ||
-              errors.birth_year?.message
+              errors.birthDay?.message ||
+              errors.birthMonth?.message ||
+              errors.birthYear?.message
             }
           />
         </div>
 
         <div className="mb-6">
           <h3 className="text-sm font-medium text-gray-700 mb-2">
-            {sellerPersonalInfoLanguage?.address_info_title}
+            {sellerPersonalInfoLanguage?.addressInfoTitle}
           </h3>
           <p className="text-sm text-gray-500 mb-2">
-            {sellerPersonalInfoLanguage?.address_info_note}
+            {sellerPersonalInfoLanguage?.addressInfoNote}
           </p>
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              {sellerPersonalInfoLanguage?.address_detail}
+              {sellerPersonalInfoLanguage?.addressDetail}
             </label>
             <input
-              {...register("card_address_details")}
-              className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              {...register("cardAddressDetails")}
+              className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
-            <InputError message={errors.card_address_details?.message} />
+            <InputError message={errors.cardAddressDetails?.message} />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-               {sellerPersonalInfoLanguage?.postal_code}
+               {sellerPersonalInfoLanguage?.postalCode}
               </label>
               <input
-                {...register("card_zip_code")}
-                className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                {...register("cardZipCode")}
+                className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
-              <InputError message={errors.card_zip_code?.message} />
+              <InputError message={errors.cardZipCode?.message} />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {sellerPersonalInfoLanguage?.sub_district}
+                {sellerPersonalInfoLanguage?.subDistrict}
               </label>
               <input
-                {...register("card_subdistrict_or_district")}
-                className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                {...register("cardSubdistrictOrDistrict")}
+                className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
               <InputError
-                message={errors.card_subdistrict_or_district?.message}
+                message={errors.cardSubdistrictOrDistrict?.message}
               />
             </div>
           </div>
@@ -333,11 +333,11 @@ const PersonalInfo = () => {
                 {sellerPersonalInfoLanguage?.district}
               </label>
               <input
-                {...register("card_district_or_subdistrict")}
-                className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                {...register("cardDistrictOrSubdistrict")}
+                className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
               <InputError
-                message={errors.card_district_or_subdistrict?.message}
+                message={errors.cardDistrictOrSubdistrict?.message}
               />
             </div>
             <div>
@@ -345,10 +345,10 @@ const PersonalInfo = () => {
                 {sellerPersonalInfoLanguage?.province}
               </label>
               <input
-                {...register("card_province")}
-                className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                {...register("cardProvince")}
+                className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
-              <InputError message={errors.card_province?.message} />
+              <InputError message={errors.cardProvince?.message} />
             </div>
           </div>
         </div>
@@ -359,9 +359,9 @@ const PersonalInfo = () => {
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             {isSubmitting || isUpdateMuting || isUploadMuting ? (
-              <span>{global?.button_save}...</span>
+              <span>{global?.buttonSave}...</span>
             ) : (
-              global?.button_save
+              global?.buttonSave
             )}
           </button>
         </div>

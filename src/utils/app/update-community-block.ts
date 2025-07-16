@@ -8,19 +8,19 @@ export default function updateCommunityBlock(
 ) {
   if (myUserInfo) {
     if (data.blocked) {
-      myUserInfo.community_blocks.push(data.community_view.community);
+      myUserInfo.communityBlocks.push(data.communityView.community);
       toast(
         `blocked ${
-          data.community_view.community.name
+          data.communityView.community.name
         }`,
       );
     } else {
-      myUserInfo.community_blocks = myUserInfo.community_blocks.filter(
-        c => c.id !== data.community_view.community.id,
+      myUserInfo.communityBlocks = myUserInfo.communityBlocks.filter(
+        c => c.id !== data.communityView.community.id,
       );
       toast(
         `unblocked ${
-          data.community_view.community.name
+          data.communityView.community.name
         }`,
       );
     }

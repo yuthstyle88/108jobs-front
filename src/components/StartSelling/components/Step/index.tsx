@@ -19,37 +19,37 @@ const Step = ({ data }: Props) => {
     {
       number: 1,
       title: data?.step1,
-      description: <>{data?.step1_description}</>,
+      description: <>{data?.step1Description}</>,
       image: StartSellingImage.step1,
     },
     {
       number: 2,
       title: data?.step2,
-      description: data?.step2_description,
+      description: data?.step2Description,
       image: StartSellingImage.step2,
     },
     {
       number: 3,
       title: data?.step3,
-      description: data?.step3_description,
+      description: data?.step3Description,
       image: StartSellingImage.step3,
     },
     {
       number: 4,
       title: data?.step4,
-      description: data?.step4_description,
+      description: data?.step4Description,
       image: StartSellingImage.step4,
     },
     {
       number: 5,
       title: data?.step5,
-      description: data?.step5_description,
+      description: data?.step5Description,
       image: StartSellingImage.step5,
     },
     {
       number: 6,
       title: data?.step6,
-      description: data?.step6_description,
+      description: data?.step6Description,
       image: StartSellingImage.step6,
     },
   ];
@@ -58,7 +58,7 @@ const Step = ({ data }: Props) => {
       <div className="col-start-2 col-end-3">
         <div className="flex flex-col justify-center items-center py-16 px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center text-primary mb-12">
-            {data?.steps_title}
+            {data?.stepsTitle}
           </h2>
 
           <div className="space-y-4 max-w-[800px] ">
@@ -78,7 +78,7 @@ const Step = ({ data }: Props) => {
                   <h3 className="text-xl font-semibold text-primary">
                     {step.number}. {step.title}
                   </h3>
-                  <p className="mt-2 text-text_primary font-sans">
+                  <p className="mt-2 text-textPrimary font-sans">
                     {step.description}
                   </p>
                 </div>

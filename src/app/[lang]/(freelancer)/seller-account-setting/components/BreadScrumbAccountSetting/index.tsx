@@ -18,23 +18,23 @@ const BreadCrumbAccountSetting = () => {
   const menuItems = [
     {
       href: "/seller-account-setting/freelance-profile",
-      label: breadcrumbLanguage?.freelancer_infor_breadcrumb,
+      label: breadcrumbLanguage?.freelancerInforBreadcrumb,
     },
     {
       href: "/seller-account-setting/contact-info",
-      label: breadcrumbLanguage?.contact_info_breadcrumb,
+      label: breadcrumbLanguage?.contactInfoBreadcrumb,
     },
     {
       href: "/seller-account-setting/personal-info",
-      label: breadcrumbLanguage?.id_card_information_breadcrumb,
+      label: breadcrumbLanguage?.idCardInformationBreadcrumb,
     },
     {
       href: "/seller-account-setting/commitment-letter",
-      label: breadcrumbLanguage?.commitment_letter_breadcrumb,
+      label: breadcrumbLanguage?.commitmentLetterBreadcrumb,
     },
     {
       href: "/seller-account-setting/bank-account",
-      label: breadcrumbLanguage?.bank_account_information_breadcrumb,
+      label: breadcrumbLanguage?.bankAccountInformationBreadcrumb,
     },
   ];
 
@@ -46,11 +46,11 @@ const BreadCrumbAccountSetting = () => {
   return (
     <div className="flex items-center text-blue-600 text-[13px]">
       <Link prefetch={false} href="/seller" className="text-blue-600 font-medium">
-        {breadcrumbLanguage?.seller_center_breadcrumb}
+        {breadcrumbLanguage?.sellerCenterBreadcrumb}
       </Link>
       <span className="mx-2 text-gray-400">/</span>
       <span className="text-gray-600">
-        {breadcrumbLanguage?.account_settings_breadcrumb}
+        {breadcrumbLanguage?.accountSettingsBreadcrumb}
       </span>
       <span className="mx-2 text-gray-400">/</span>
       <span className="text-gray-600">{currentItem?.label}</span>

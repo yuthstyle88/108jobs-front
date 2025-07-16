@@ -40,7 +40,7 @@ const CouponCard = ({
         transition={{ duration: 0.2 }}
       >
         <div className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-sm shadow">
-          {data?.label_discount}
+          {data?.labelDiscount}
         </div>
       </motion.div>
       {/* Coupon Card */}
@@ -109,7 +109,7 @@ const CouponCard = ({
             }}
             transition={{ duration: 0.2 }}
           >
-            {points} {data?.label_points}
+            {points} {data?.labelPoints}
           </motion.button>
         </div>
       </div>

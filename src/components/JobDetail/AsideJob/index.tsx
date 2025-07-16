@@ -29,11 +29,11 @@ type CreateRoomData = {
 const AsideJob = ({ language, data }: AsideJobProps) => {
   const route = useRouter();
   const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
+    API_ROUTES.profile.getProfile
   );
 
   const { trigger: createRoom, isMutating } = usePrivatePost<CreateRoomData>(
-    API_ROUTES.chat.create_room
+    API_ROUTES.chat.createRoom
   );
 
   const [selectedPackage, setSelectedPackage] = useState(0);
@@ -45,12 +45,12 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
   };
 
   const handleCreateRoom = async () => {
-    const res = await createRoom({ job_id: data.id });
+    const res = await createRoom({ jobId: data.id });
     if (res) {
       route.push(`/chat/message/${res.data}`);
     }
   };
-  const isCurrentUser = data?.user.user_id === user?.user.id;
+  const isCurrentUser = data?.user.userId === user?.user.id;
 
   const isAvailable = data.user.available === true;
 
@@ -68,13 +68,13 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
           </div>
           <div className="">
             <strong className="text-third ">
-              {language?.fastwork_guarantee}
+              {language?.fastworkGuarantee}
             </strong>
-            <p className="mt-1 text-[0.75rem] text-text_secondary font-sans">
-              {language?.fastwork_guarantee_description}
+            <p className="mt-1 text-[0.75rem] text-textSecondary font-sans">
+              {language?.fastworkGuaranteeDescription}
             </p>
             <Link prefetch={false} href="#" className="text-third text-[0.75rem] font-sans">
-              {language?.read_additional_protection_terms}
+              {language?.readAdditionalProtectionTerms}
             </Link>
           </div>
         </div>
@@ -99,9 +99,9 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
         </section>
         <section className="p-6 bg-white">
           <h3 className="font-medium text-third">
-            {data.packages[selectedPackage].package_name}
+            {data.packages[selectedPackage].packageName}
           </h3>
-          <p className="line-clamp-2 text-ellipsis overflow-hidden break-words mt-2 text-[0.875rem] text-text_secondary font-sans ">
+          <p className="line-clamp-2 text-ellipsis overflow-hidden break-words mt-2 text-[0.875rem] text-textSecondary font-sans ">
             {data.packages[selectedPackage].description}
           </p>
           <Link prefetch={false}
@@ -109,9 +109,9 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
             onClick={(e) => handleClick(e)}
             className="text-third mt-2 font-semibold text-[0.875rem] cursor-pointer font-sans"
           >
-            {language?.view_package_info}
+            {language?.viewPackageInfo}
           </Link>
-          <hr className="mt-4 bg-border_primary block overflow-visible w-full h-[1px] m-0" />
+          <hr className="mt-4 bg-borderPrimary block overflow-visible w-full h-[1px] m-0" />
           {!isCurrentUser && (
             <>
               {isAvailable ? (
@@ -120,7 +120,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
                     onClick={handleCreateRoom}
                     className="relative inline-flex justify-center items-center overflow-hidden min-h-[2.5rem] px-[1.125rem] border-none rounded-[0.25rem] bg-third text-[0.875rem] font-medium w-full text-white"
                   >
-                    <span>{language?.chat_with_freelancers}</span>
+                    <span>{language?.chatWithFreelancers}</span>
                   </button>
                 </div>
               ) : (
@@ -129,7 +129,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
                     disabled
                     className="relative inline-flex justify-center items-center overflow-hidden min-h-[2.5rem] px-[1.125rem] border-none rounded-[0.25rem] bg-third text-[0.875rem] font-medium w-full text-white opacity-50 cursor-not-allowed"
                   >
-                    <span>{language?.chat_with_freelancers}</span>
+                    <span>{language?.chatWithFreelancers}</span>
                   </button>
                 </div>
               )}
@@ -140,8 +140,8 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
                     *This freelancer is currently not accepting new jobs.
                   </small>
                 ) : (
-                  <small className="text-[0.75rem] text-text_secondary">
-                    {language?.no_charges_message}
+                  <small className="text-[0.75rem] text-textSecondary">
+                    {language?.noChargesMessage}
                   </small>
                 )}
               </div>
@@ -162,13 +162,13 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
           </div>
         </Link>
       </div>
-      <div className="grid grid-cols-[1fr_1fr] text-center mt-4 font-medium text-text_secondary ">
+      <div className="grid grid-cols-[1fr_1fr] text-center mt-4 font-medium text-textSecondary ">
         <FavoriteButton jobId={data.id} label={language?.save} />
         <button
           onClick={() => setIsModalOpen(true)}
           className="flex flex-row items-center justify-center min-w-[34px] p-2 cursor-pointer"
         >
-          <FontAwesomeIcon icon={faShareAlt} className="text-text_secondary" />
+          <FontAwesomeIcon icon={faShareAlt} className="text-textSecondary" />
           <p className="ml-2 cursor-pointer text-center">{language?.share}</p>
         </button>
       </div>

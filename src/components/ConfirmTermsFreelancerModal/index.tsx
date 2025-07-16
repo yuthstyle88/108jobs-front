@@ -56,10 +56,10 @@ const ConfirmTermsFreelancerModal: React.FC<
       closeOnOutsideClick={false}
     >
       <section className="px-[12px] w-full flex flex-col gap-3 justify-center">
-        <p className="text-sm text-text_primary font-semibold">
-          {termLanguage?.terms_title}
+        <p className="text-sm text-textPrimary font-semibold">
+          {termLanguage?.termsTitle}
         </p>
-        <div className="border-1 border-border_primary p-3 rounded-lg text-[12px] list-decimal max-h-[280px] overflow-auto">
+        <div className="border-1 border-borderPrimary p-3 rounded-lg text-[12px] list-decimal max-h-[280px] overflow-auto">
           <TermsAndCondition language={termLanguage} />
         </div>
         <div className="space-y-2 pt-2">
@@ -72,9 +72,9 @@ const ConfirmTermsFreelancerModal: React.FC<
             />
             <label
               htmlFor="termsAccepted"
-              className="text-[12px] text-text_primary font-sans"
+              className="text-[12px] text-textPrimary font-sans"
             >
-              {termLanguage?.terms_acceptance}
+              {termLanguage?.termsAcceptance}
             </label>
           </div>
 
@@ -87,9 +87,9 @@ const ConfirmTermsFreelancerModal: React.FC<
             />
             <label
               htmlFor="privacyAccepted"
-              className="text-[12px] text-text_primary font-sans"
+              className="text-[12px] text-textPrimary font-sans"
             >
-              {termLanguage?.privacy_acceptance}
+              {termLanguage?.privacyAcceptance}
             </label>
           </div>
 
@@ -102,20 +102,20 @@ const ConfirmTermsFreelancerModal: React.FC<
             />
             <label
               htmlFor="promotionalAccepted"
-              className="text-[12px] text-text_primary font-sans"
+              className="text-[12px] text-textPrimary font-sans"
             >
-              {termLanguage?.marketing_opt_in}
+              {termLanguage?.marketingOptIn}
             </label>
           </div>
         </div>
       </section>
-      <div className="flex flex-row gap-2 justify-end items-end pt-4 mt-4 w-full border-t-1 border-border_secondary">
+      <div className="flex flex-row gap-2 justify-end items-end pt-4 mt-4 w-full border-t-1 border-borderSecondary">
         <button
           onClick={handleConfirmChange}
           disabled={!watch("termsAccepted") || !watch("privacyAccepted")}
           className="px-3 py-2 cursor-pointer w-full bg-blue-600 text-white font-normal rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
         >
-          {isLoading ? <LoadingCircle /> : termLanguage?.freelancer_signup}
+          {isLoading ? <LoadingCircle /> : termLanguage?.freelancerSignup}
         </button>
       </div>
     </Modal>

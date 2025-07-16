@@ -74,15 +74,15 @@ export const ForgotPasswordForm = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <div className="text-sm text-gray-600 mb-6">
-        {authen?.verification_message}
+        {authen?.verificationMessage}
       </div>
 
       <CustomInput
-        label={authen?.label_contact_email_phone}
+        label={authen?.labelContactEmailPhone}
         name="email"
         register={register("email")}
         error={errors.email?.message}
-        placeholder={authen?.placeholder_email_phone}
+        placeholder={authen?.placeholderEmailPhone}
       />
 
       {apiError && (
@@ -100,7 +100,7 @@ export const ForgotPasswordForm = ({
           {isSubmitting ? (
             <LoadingCircle />
           ) : (
-            authen?.send_code_button
+            authen?.sendCodeButton
           )}
         </button>
       </div>

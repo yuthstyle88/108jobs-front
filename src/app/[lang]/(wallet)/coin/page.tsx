@@ -27,13 +27,13 @@ const FastjobCoin = () => {
     <div className="w-full">
       <div className="coin-gradient h-[300px] sm:h-[200px] px-4 flex flex-col justify-center items-center relative overflow-hidden">
         <h1 className="text-3xl font-bold text-white mb-2">
-          {coinLanguageData?.title_fastwork_coin}
+          {coinLanguageData?.titleFastworkCoin}
         </h1>
         <p className="text-white text-lg text-center">
-          {coinLanguageData?.subtitle_fastwork_coin}
+          {coinLanguageData?.subtitleFastworkCoin}
         </p>
         <Image
-          src={ProfileImage.coin_bg}
+          src={ProfileImage.coinBg}
           alt="avatar"
           className="h-full absolute top-0 right-[-130px] sm:right-0"
         />
@@ -44,7 +44,7 @@ const FastjobCoin = () => {
           <div className="max-w-[528px]">
             <div className="coin-popup-gradient rounded-lg p-6 text-center shadow-lg w-full">
               <p className="text-blue-100 mb-2">
-                {coinLanguageData?.label_your_coin}
+                {coinLanguageData?.labelYourCoin}
               </p>
               <p className="text-4xl font-bold text-white">0.00</p>
             </div>
@@ -52,13 +52,13 @@ const FastjobCoin = () => {
             <div className="mt-8 space-y-6">
               <div>
                 <h3 className="text-gray-700 font-medium mb-1">
-                  {coinLanguageData?.label_specify_amount}
+                  {coinLanguageData?.labelSpecifyAmount}
                 </h3>
                 <p className="text-sm text-gray-500 mb-4">
-                  {coinLanguageData?.note_min_max}
+                  {coinLanguageData?.noteMinMax}
                 </p>
 
-                <div className="flex items-center space-x-2 border-1 border-border_primary rounded-lg py-4 px-4 shadow-md">
+                <div className="flex items-center space-x-2 border-1 border-borderPrimary rounded-lg py-4 px-4 shadow-md">
                   <FontAwesomeIcon
                     icon={faCoins}
                     className="text-[20px] text-[#EAB84B] pr-2"
@@ -68,7 +68,7 @@ const FastjobCoin = () => {
                     <input
                       type="text"
                       placeholder="Specify the amount 100-500,000"
-                      className="text-text_primary pl-10 pr-16 py-2.5 w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                      className="text-textPrimary pl-10 pr-16 py-2.5 w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                     />
@@ -77,14 +77,14 @@ const FastjobCoin = () => {
                     </div>
                   </div>
                   <button className="bg-blue-100 text-blue-600 px-6 py-2.5 rounded-lg hover:bg-blue-200 transition-colors font-medium">
-                    {coinLanguageData?.button_top_up}
+                    {coinLanguageData?.buttonTopUp}
                   </button>
                 </div>
               </div>
 
               <div>
                 <h3 className="text-gray-700 font-medium mb-4">
-                  {coinLanguageData?.label_choose_amount}
+                  {coinLanguageData?.labelChooseAmount}
                 </h3>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
@@ -96,7 +96,7 @@ const FastjobCoin = () => {
                       <span className="text-gray-700">5,000 Coins</span>
                     </div>
                     <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                      {coinLanguageData?.button_top_up} 5,000 baht
+                      {coinLanguageData?.buttonTopUp} 5,000 baht
                     </button>
                   </div>
 
@@ -109,16 +109,16 @@ const FastjobCoin = () => {
                       <span className="text-gray-700">10,000 Coins</span>
                     </div>
                     <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                      {coinLanguageData?.button_top_up} 10,000 baht
+                      {coinLanguageData?.buttonTopUp} 10,000 baht
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="mt-8 p-4 text-[0.75rem] text-text_secondary border-1 border-border_primary rounded-lg bg-[#F6F7F8] ">
+            <div className="mt-8 p-4 text-[0.75rem] text-textSecondary border-1 border-borderPrimary rounded-lg bg-[#F6F7F8] ">
               <p>note :</p>
               <ul>
-                {coinLanguageData?.note_coin_terms?.map((term, index) => {
+                {coinLanguageData?.noteCoinTerms?.map((term, index) => {
                   const keywords = [
                     "the Support Center",
                     "Trung tâm hỗ trợ",

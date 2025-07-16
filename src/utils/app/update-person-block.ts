@@ -9,16 +9,16 @@ export default function updatePersonBlock(
 ) {
   if (myUserInfo) {
     if (data.blocked) {
-      myUserInfo.person_blocks.push(data.person_view.person);
+      myUserInfo.personBlocks.push(data.personView.person);
       toast(
-        `blocked ${data.person_view.person.name}`,
+        `blocked ${data.personView.person.name}`,
       );
     } else {
-      myUserInfo.person_blocks = myUserInfo.person_blocks.filter(
-        p => p.id !== data.person_view.person.id,
+      myUserInfo.personBlocks = myUserInfo.personBlocks.filter(
+        p => p.id !== data.personView.person.id,
       );
       toast(
-        `unblocked ${data.person_view.person.name}`,
+        `unblocked ${data.personView.person.name}`,
       );
     }
   }

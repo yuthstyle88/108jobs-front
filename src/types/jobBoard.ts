@@ -1,28 +1,28 @@
 export interface JobPost {
   id: string;
-  job_title: string;
+  jobTitle: string;
   description: string;
-  is_english_required: boolean;
-  example_url: string;
+  isEnglishRequired: boolean;
+  exampleUrl: string;
   budget: string;
   deadline: string;
-  is_anonymous_post: boolean;
-  service_catalog_id: string;
-  working_from: string;
-  intended_use: string;
-  created_at: string;
-  updated_at: string;
+  isAnonymousPost: boolean;
+  serviceCatalogId: string;
+  workingFrom: string;
+  intendedUse: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Creator {
   id: string;
   username: string;
-  display_name: string;
-  avatar_url: string;
+  displayName: string;
+  avatarUrl: string;
 }
 
 export interface JobPostDetail {
-  job_post: JobPost;
-  category_name: string;
+  jobPost: JobPost;
+  categoryName: string;
   creator: Creator;
 }

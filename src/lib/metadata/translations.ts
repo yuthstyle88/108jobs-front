@@ -28,7 +28,7 @@ type LangSeoData = {
 
 export const seoTranslations: Record<SupportedLang, LangSeoData> = {
   th: {
-    locale: "th_TH",
+    locale: "thTh",
     ogImage: "https://fastwork.co/static-v4/images/home/og-image-home-th.jpg",
     home: {
       title:
@@ -108,7 +108,7 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
     },
   },
   en: {
-    locale: "en_US",
+    locale: "enUs",
     ogImage: "https://fastwork.co/static-v4/images/home/og-image-home-en.jpg",
     home: {
       title: "Fastjob.co - Thailand’s #1 Freelance Platform",
@@ -185,7 +185,7 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
     },
   },
   vi: {
-    locale: "vi_VN",
+    locale: "viVn",
     ogImage: "https://fastwork.co/static-v4/images/home/og-image-home-vi.jpg",
     home: {
       title: "Fastjob.co - Nền tảng freelancer hàng đầu tại Thái Lan",

@@ -33,7 +33,7 @@ const ProjectManagement = () => {
               onClick={() => setActiveTab("inProgress")}
             >
               {interpolateDouble(
-                sellerPrjManagementLanguage?.project_in_progress_tab || "",
+                sellerPrjManagementLanguage?.projectInProgressTab || "",
                 { n: 3 }
               )}
             </button>
@@ -46,7 +46,7 @@ const ProjectManagement = () => {
               onClick={() => setActiveTab("pending")}
             >
               {interpolateDouble(
-                sellerPrjManagementLanguage?.project_pending_tab || "",
+                sellerPrjManagementLanguage?.projectPendingTab || "",
                 { n: 3 }
               )}
             </button>
@@ -74,11 +74,11 @@ const ProjectManagement = () => {
               </div>
               <div>
                 <div className="font-medium text-black">
-                  {sellerPrjManagementLanguage?.project_in_progress_title}
+                  {sellerPrjManagementLanguage?.projectInProgressTitle}
                 </div>
                 <div className="text-sm text-black">
                   {interpolateDouble(
-                    sellerPrjManagementLanguage?.project_in_progress_count ||
+                    sellerPrjManagementLanguage?.projectInProgressCount ||
                       "",
                     { n: 3 }
                   )}
@@ -90,26 +90,26 @@ const ProjectManagement = () => {
               <div className="grid grid-cols-5 p-4 border-b border-gray-200 bg-gray-50 text-black">
                 <div className="flex items-center">
                   <span className="font-medium text-sm">
-                    {sellerPrjManagementLanguage?.project_column_title}
+                    {sellerPrjManagementLanguage?.projectColumnTitle}
                   </span>
                   <Info className="w-4 h-4 ml-1 text-gray-400" />
                 </div>
                 <div className="font-medium text-sm">
-                  {sellerPrjManagementLanguage?.project_column_code}
+                  {sellerPrjManagementLanguage?.projectColumnCode}
                 </div>
                 <div className="font-medium text-sm flex items-center">
                   <span>
-                    {sellerPrjManagementLanguage?.project_column_amount}
+                    {sellerPrjManagementLanguage?.projectColumnAmount}
                   </span>
                 </div>
                 <div className="font-medium text-sm flex items-center">
                   <span>
-                    {sellerPrjManagementLanguage?.project_column_deadline}
+                    {sellerPrjManagementLanguage?.projectColumnDeadline}
                   </span>
                   <Info className="w-4 h-4 ml-1 text-gray-400" />
                 </div>
                 <div className="font-medium text-sm">
-                  {sellerPrjManagementLanguage?.project_column_chat}
+                  {sellerPrjManagementLanguage?.projectColumnChat}
                 </div>
               </div>
               <div className="p-12 flex flex-col items-center justify-center">
@@ -127,7 +127,7 @@ const ProjectManagement = () => {
                   />
                 </svg>
                 <div className="text-gray-500 text-center">
-                  {sellerPrjManagementLanguage?.project_empty_text}
+                  {sellerPrjManagementLanguage?.projectEmptyText}
                 </div>
               </div>
             </div>
@@ -156,13 +156,13 @@ const ProjectManagement = () => {
               <div>
                 <div className="font-medium text-black">
                   {interpolateDouble(
-                    sellerPrjManagementLanguage?.project_pending_title || "",
+                    sellerPrjManagementLanguage?.projectPendingTitle || "",
                     { n: 3 }
                   )}
                 </div>
                 <div className="text-sm text-black">
                   {interpolateDouble(
-                    sellerPrjManagementLanguage?.project_in_progress_count ||
+                    sellerPrjManagementLanguage?.projectInProgressCount ||
                       "",
                     { n: 3 }
                   )}
@@ -174,20 +174,20 @@ const ProjectManagement = () => {
               <div className="grid grid-cols-5 p-4 border-b border-gray-200 bg-gray-50 text-black">
                 <div className="flex items-center">
                   <span className="font-medium text-sm">
-                    {sellerPrjManagementLanguage?.project_column_title}
+                    {sellerPrjManagementLanguage?.projectColumnTitle}
                   </span>
                   <Info className="w-4 h-4 ml-1 text-gray-400" />
                 </div>
                 <div className="font-medium text-sm">
-                  {sellerPrjManagementLanguage?.project_column_code}
+                  {sellerPrjManagementLanguage?.projectColumnCode}
                 </div>
                 <div className="font-medium text-sm flex items-center">
                   <span>
-                    {sellerPrjManagementLanguage?.project_column_amount}
+                    {sellerPrjManagementLanguage?.projectColumnAmount}
                   </span>
                 </div>
                 <div className="font-medium text-sm">
-                  {sellerPrjManagementLanguage?.project_column_chat}
+                  {sellerPrjManagementLanguage?.projectColumnChat}
                 </div>
               </div>
               <div className="p-12 flex flex-col items-center justify-center">
@@ -205,7 +205,7 @@ const ProjectManagement = () => {
                   />
                 </svg>
                 <div className="text-gray-500 text-center">
-                  {sellerPrjManagementLanguage?.project_empty_text}
+                  {sellerPrjManagementLanguage?.projectEmptyText}
                 </div>
               </div>
             </div>

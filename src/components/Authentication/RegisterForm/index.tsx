@@ -28,19 +28,19 @@ export const RegisterForm = ({
   const authen = useTranslateFile(LanguageFile.AUTHEN);
   const RegisterSchema = z
     .object({
-      email: z.string().email(authen?.invalid_email),
-      username: z.string().min(6, authen?.username_min_6),
-      password: z.string().min(6, authen?.password_min_6),
+      email: z.string().email(authen?.invalidEmail),
+      username: z.string().min(6, authen?.usernameMin6),
+      password: z.string().min(6, authen?.passwordMin6),
       confirmPassword: z.string(),
       termsAccepted: z.boolean().refine((val) => val === true),
       privacyAccepted: z.boolean().refine((val) => val === true),
       promotionalAccepted: z.boolean().optional(),
-      captcha_uuid: z.string().optional(),
-      captcha_answer: z.string().min(1, authen?.require_captcha),
+      captchaUuid: z.string().optional(),
+      captchaAnswer: z.string().min(1, authen?.requireCaptcha),
       role: z.enum(["Employer", "Freelancer"]).default("Employer"),
     })
     .refine((data) => data.password === data.confirmPassword, {
-      message: authen?.not_match_password,
+      message: authen?.notMatchPassword,
       path: ["confirmPassword"],
     });
 
@@ -63,7 +63,7 @@ export const RegisterForm = ({
   const [apiError, setApiError] = useState<string | null>(null);
 
   const { refetch } = usePublicFetchV2<CaptchaResponse>(
-    API_ROUTES.auth.get_capcha
+    API_ROUTES.auth.getCapcha
   );
 
   useEffect(() => {
@@ -90,9 +90,9 @@ export const RegisterForm = ({
           username: data.username,
           email: data.email,
           password: data.password,
-          password_verify: data.confirmPassword,
-          captcha_uuid: data.captcha_uuid,
-          captcha_answer: data.captcha_answer,
+          passwordVerify: data.confirmPassword,
+          captchaUuid: data.captchaUuid,
+          captchaAnswer: data.captchaAnswer,
         }),
       });
 
@@ -101,25 +101,25 @@ export const RegisterForm = ({
         if (result.fieldErrors?.email) {
           setError("email", {
             type: "manual",
-            message: authen?.email_already_exists,
+            message: authen?.emailAlreadyExists,
           });
         }
         if (result.fieldErrors?.username) {
           const code = result.fieldErrors.username;
           const message =
-            code === "invalid_name"
-              ? authen?.invalid_name
-              : authen?.username_already_exists;
+            code === "invalidName"
+              ? authen?.invalidName
+              : authen?.usernameAlreadyExists;
           console.log("message", message);
           setError("username", {
             type: "manual",
             message,
           });
         }
-        if (result.fieldErrors?.captcha_answer) {
-          setError("captcha_answer", {
+        if (result.fieldErrors?.captchaAnswer) {
+          setError("captchaAnswer", {
             type: "manual",
-            message: authen?.captcha_incorrect,
+            message: authen?.captchaIncorrect,
           });
         }
 
@@ -127,12 +127,12 @@ export const RegisterForm = ({
           result.error &&
           !result.fieldErrors?.email &&
           !result.fieldErrors?.username &&
-          !result.fieldErrors?.captcha_answer
+          !result.fieldErrors?.captchaAnswer
         ) {
           setApiError(ERROR_CONSTANTS.LIMIT_SEND_EMAIL);
         }
         refetch();
-        setValue("captcha_answer", "");
+        setValue("captchaAnswer", "");
         return;
       }
       refetch();
@@ -150,40 +150,40 @@ export const RegisterForm = ({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <CustomInput
-        label={authen?.label_username}
+        label={authen?.labelUsername}
         name="username"
         register={register("username")}
         error={errors.username?.message}
-        placeholder={authen?.placeholder_username}
+        placeholder={authen?.placeholderUsername}
         type="text"
       />
       <CustomInput
-        label={authen?.label_email}
+        label={authen?.labelEmail}
         name="email"
         register={register("email")}
         error={errors.email?.message}
-        placeholder={authen?.placeholder_email}
+        placeholder={authen?.placeholderEmail}
         type="email"
       />
 
       <CustomInput
-        label={authen?.label_password}
+        label={authen?.labelPassword}
         name="password"
         type="password"
         register={register("password")}
         error={errors.password?.message}
-        placeholder={authen?.placeholder_password}
+        placeholder={authen?.placeholderPassword}
         showPassword={showPassword}
         toggleShowPassword={() => setShowPassword(!showPassword)}
       />
 
       <CustomInput
-        label={authen?.label_confirm_password}
+        label={authen?.labelConfirmPassword}
         name="confirmPassword"
         type="password"
         register={register("confirmPassword")}
         error={errors.confirmPassword?.message}
-        placeholder={authen?.placeholder_confirm_password}
+        placeholder={authen?.placeholderConfirmPassword}
         showPassword={showConfirmPassword}
         toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
       />
@@ -191,7 +191,7 @@ export const RegisterForm = ({
         <label className="block text-sm font-medium text-gray-700 mb-2">
           {"Account Type"}
         </label>
-        <div className="flex gap-6 items-center text-base text-text_primary">
+        <div className="flex gap-6 items-center text-base text-textPrimary">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
@@ -212,9 +212,9 @@ export const RegisterForm = ({
         </div>
       </div>
       <CaptchaField
-        setCaptchaUuid={(uuid) => setValue("captcha_uuid", uuid)}
+        setCaptchaUuid={(uuid) => setValue("captchaUuid", uuid)}
         register={register}
-        error={errors.captcha_answer?.message}
+        error={errors.captchaAnswer?.message}
         language={authen}
       />
       <div className="space-y-4">
@@ -227,15 +227,15 @@ export const RegisterForm = ({
           />
           <label
             htmlFor="termsAccepted"
-            className="text-sm text-text_secondary font-sans"
+            className="text-sm text-textSecondary font-sans"
           >
-            {authen?.checkbox_terms_conditions}{" "}
+            {authen?.checkboxTermsConditions}{" "}
             <Link
               prefetch={false}
               href="/content/terms"
-              className="text-text_secondary underline"
+              className="text-textSecondary underline"
             >
-              {authen?.checkbox_terms_conditions_redirect}
+              {authen?.checkboxTermsConditionsRedirect}
             </Link>
           </label>
         </div>
@@ -249,15 +249,15 @@ export const RegisterForm = ({
           />
           <label
             htmlFor="privacyAccepted"
-            className="text-sm text-text_secondary font-sans"
+            className="text-sm text-textSecondary font-sans"
           >
-            {authen?.checkbox_terms_conditions}{" "}
+            {authen?.checkboxTermsConditions}{" "}
             <Link
               prefetch={false}
               href="/content/privacy"
-              className="text-text_secondary underline"
+              className="text-textSecondary underline"
             >
-              {authen?.checkbox_privacy_policy_redirect}
+              {authen?.checkboxPrivacyPolicyRedirect}
             </Link>
           </label>
         </div>
@@ -279,7 +279,7 @@ export const RegisterForm = ({
             !watch("privacyAccepted")
           }
         >
-          {isSubmitting ? <LoadingCircle /> : authen?.link_create_account}
+          {isSubmitting ? <LoadingCircle /> : authen?.linkCreateAccount}
         </button>
       </div>
       <div className="flex flex-col gap-3 mt-6">

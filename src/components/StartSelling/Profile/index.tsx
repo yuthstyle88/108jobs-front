@@ -72,7 +72,7 @@ const ProfileSelling = ({ data }: Props) => {
     <div className="mt-12">
       <div className="header-gradient h-[300px] px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-center text-white pt-12">
-          {data?.why_choose_title}
+          {data?.whyChooseTitle}
         </h2>
       </div>
       <div className=" mt-[-4rem] mx-6">
@@ -96,7 +96,7 @@ const ProfileSelling = ({ data }: Props) => {
                 <div className="min-w-[300px] bg-white rounded-lg p-6 shadow-lg ">
                   <div className="flex items-start space-x-4 mb-4">
                     <Image
-                      src={StartSellingImage.profile_selling}
+                      src={StartSellingImage.profileSelling}
                       alt={testimonial.name}
                       className="w-12 h-12 rounded-full object-cover"
                     />

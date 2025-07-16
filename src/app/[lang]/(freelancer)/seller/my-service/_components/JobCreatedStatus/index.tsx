@@ -16,22 +16,22 @@ const statusType: Record<
   0: {
     bgColor: "bg-[#e8eaee]",
     textColor: "text-[#728197]",
-    key: "status_draft",
+    key: "statusDraft",
   },
   1: {
     bgColor: "bg-[#f9edc8]",
     textColor: "text-[#8e6f10]",
-    key: "status_pending",
+    key: "statusPending",
   },
   2: {
     bgColor: "bg-green-100",
     textColor: "text-green-700",
-    key: "status_approved",
+    key: "statusApproved",
   },
   3: {
     bgColor: "bg-[#fde5e3]",
     textColor: "text-[#b82214]",
-    key: "status_rejected",
+    key: "statusRejected",
   },
 };
 
@@ -39,7 +39,7 @@ const JobCreatedStatus = ({ status, languageMap }: Props) => {
   const statusInfo = statusType[status] || {
     bgColor: "bg-gray-200",
     textColor: "text-gray-500",
-    key: "status_draft" as keyof SellerMyService,
+    key: "statusDraft" as keyof SellerMyService,
   };
 
   const text = languageMap?.[statusInfo.key] ?? "Unknown status";

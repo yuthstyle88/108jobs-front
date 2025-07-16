@@ -1,5 +1,5 @@
 import { GetSiteResponse } from "../../lib/lemmy-js-client";
 
 export default function enableNsfw(siteRes: GetSiteResponse): boolean {
-  return !!siteRes.site_view.site.content_warning;
+  return !!siteRes.siteView.site.contentWarning;
 }

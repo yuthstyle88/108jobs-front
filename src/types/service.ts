@@ -1,37 +1,37 @@
 export interface Service {
   id: string;
-  user_id: string;
-  service_type_id: string;
+  userId: string;
+  serviceTypeId: string;
   slug: string;
   title: string;
-  base_price: string;
-  price_before_discount: string;
-  ban_type: string | null;
-  banned_at: string | null;
+  basePrice: string;
+  priceBeforeDiscount: string;
+  banType: string | null;
+  bannedAt: string | null;
   show: boolean;
   rating: string;
   status: number;
-  is_hot: boolean;
-  is_pro: boolean;
+  isHot: boolean;
+  isPro: boolean;
   description: string;
-  ready_to_work_at: string | null;
-  is_instant_hire: boolean;
-  purchase_count: number;
-  reviews_count: number;
-  last_approved_at: string | null;
-  created_at: string;
-  updated_at: string;
+  readyToWorkAt: string | null;
+  isInstantHire: boolean;
+  purchaseCount: number;
+  reviewsCount: number;
+  lastApprovedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
   images: image[];
 }
 
 export type image = {
   id: string;
-  job_id: string;
-  image_url: string;
-  is_cover_photo: boolean;
-  sort_order: number;
+  jobId: string;
+  imageUrl: string;
+  isCoverPhoto: boolean;
+  sortOrder: number;
   alt: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 };
 

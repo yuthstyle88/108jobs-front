@@ -20,7 +20,7 @@ const Favorites = () => {
     data: favoriteData,
     isLoading: isLoadingFavorite,
     error: isErrorFavorite,
-  } = usePrivateFetch<FavoriteJob>(API_ROUTES.job.get_favorite_job);
+  } = usePrivateFetch<FavoriteJob>(API_ROUTES.job.getFavoriteJob);
 
   if (isLoading) return <Loading />;
   if (error || isErrorFavorite) return <Error/>;
@@ -29,8 +29,8 @@ const Favorites = () => {
     <div className="w-full min-h-screen">
       <div className="grid-container-desktop-banner w-full mt-6 sm:my-12 min-h-[400px]">
         <div className="col-start-2 col-end-3">
-          <h1 className="text-[18px] sm:text-[1.75rem] text-text_primary font-medium">
-            {global?.menu_favorite_jobs}
+          <h1 className="text-[18px] sm:text-[1.75rem] text-textPrimary font-medium">
+            {global?.menuFavoriteJobs}
           </h1>
           <div className="w-full py-8 px-4 rounded-sm bg-[#F6F7F8] mt-4 sm:mt-8">
             <section className="grid grid-cols-1 md:grid-cols-[repeat(4,minmax(1px,1fr))] gap-5">
@@ -39,7 +39,7 @@ const Favorites = () => {
                   <JobCardSkeleton key={index} />
                 ))
               ) : favoriteData && favoriteData.jobs.length === 0 ? (
-                <p className="text-[1.5rem] leading-[1.5] font-medium text-text_secondary">
+                <p className="text-[1.5rem] leading-[1.5] font-medium text-textSecondary">
                   ไม่มีฟรีแลนซ์ที่ถูกใจ
                 </p>
               ) : (

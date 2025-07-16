@@ -3,10 +3,10 @@ import { fetchLimit } from "@/config";
 import {HttpService} from "@/services";
 
 
-export default function fetchSearchResults(q: string, type_: string) {
+export default function fetchSearchResults(q: string, type: string) {
   const form: Search = {
     q,
-    listing_type: "All",
+    listingType: "All",
     limit: fetchLimit,
     sort: "New"
   };

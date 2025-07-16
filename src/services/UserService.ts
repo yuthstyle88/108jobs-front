@@ -37,7 +37,7 @@ export class UserService {
   }) {
     if (isBrowser() && res.jwt) {
       if (showToast) {
-        toast("logged_in");
+        toast("loggedIn");
       }
       setAuthCookie(res.jwt);
       this.#setAuthInfo();
@@ -74,7 +74,7 @@ export class UserService {
 
       if (throwErr && isBrowser()) {
         console.error(msg);
-        toast("not_logged_in");
+        toast("notLoggedIn");
       }
 
       return undefined;

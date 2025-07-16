@@ -67,11 +67,11 @@ const Offers = () => {
   return (
     <div className="bg-[#F6F9FE] min-h-screen">
       <div className="max-w-[1280px] mx-auto py-8 px-4 md:px-6 lg:px-8 rounded-lg shadow-sm">
-        <div className="border-1 border-border_primary bg-white p-4 rounded-lg">
+        <div className="border-1 border-borderPrimary bg-white p-4 rounded-lg">
           <div className="border-b mb-6">
             <JobBoardTab />
           </div>
-          <div className="overflow-x-auto border-1 border-border_primary rounded-lg">
+          <div className="overflow-x-auto border-1 border-borderPrimary rounded-lg">
             {isJobsLoading ? (
               <div className="py-12 text-center">
                 <LoadingMultiCircle />
@@ -125,9 +125,9 @@ const Offers = () => {
                             <div>
                               <Link prefetch={false}
                                 href={`/job-board/${job.id}`}
-                                className="hover:text-blue-600 font-medium text-base text-text_primary font-sans max-w-[300px] line-clamp-1 truncate"
+                                className="hover:text-blue-600 font-medium text-base text-textPrimary font-sans max-w-[300px] line-clamp-1 truncate"
                               >
-                                {job.job_title}
+                                {job.jobTitle}
                               </Link>
                             </div>
                           </div>
@@ -138,13 +138,13 @@ const Offers = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
                           {getStatusBadge("closed")}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-text_primary visible">
-                          {formatDateTime(job.created_at, "datetime")}
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-textPrimary visible">
+                          {formatDateTime(job.createdAt, "datetime")}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-text_primary visible">
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-textPrimary visible">
                           {formatDateTime(job.deadline, "date")}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-text_primary visible">
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-textPrimary visible">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -183,7 +183,7 @@ const Offers = () => {
 
         <div className="mt-12 h-[148px] bg-[#D0E1FB] rounded-lg overflow-hidden flex justify-center items-center">
           <Image
-            src={ProfileImage.job_board}
+            src={ProfileImage.jobBoard}
             alt="Job Board"
             className="w-auto h-full object-contain"
           />

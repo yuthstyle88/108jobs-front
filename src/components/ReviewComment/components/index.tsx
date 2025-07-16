@@ -26,26 +26,26 @@ type Props = {
 };
 const CommentSection = ({ profileId }: Props) => {
 
-  const { success_message } = useNotification();
+  const { successMessage } = useNotification();
   const {
     data: reviewData,
     isLoading: isReviewLoading,
     error: errorReview,
     mutate: mutateReviews,
   } = usePrivateFetchParams<ReviewResponse>(
-    `${API_ROUTES.profile.get_list_review}?profile_id=${profileId}&page=1&limit=5`
+    `${API_ROUTES.profile.getListReview}?profileId=${profileId}&page=1&limit=5`
   );
 
   const { trigger: postComment, isMutating: isPostMutating } = usePrivatePost(
-    API_ROUTES.profile.comment_review
+    API_ROUTES.profile.commentReview
   );
 
   const handleSubmitComment = async (data: {
     rating: number;
     content: string;
   }) => {
-    await postComment({ profile_id: profileId, ...data });
-    success_message("review", "post_comment");
+    await postComment({ profileId: profileId, ...data });
+    successMessage("review", "postComment");
     mutateReviews();
   };
 
@@ -67,7 +67,7 @@ const CommentSection = ({ profileId }: Props) => {
                   <StarIcon key={star} filled={false} />
                 ))}
               </div>
-              <p className="text-[0.875rem] font-sans text-text_secondary text-center">
+              <p className="text-[0.875rem] font-sans text-textSecondary text-center">
                 Start hiring this freelancer and rate
               </p>
             </div>

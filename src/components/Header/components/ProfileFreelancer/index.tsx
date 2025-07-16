@@ -36,17 +36,17 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
           <div className="flex items-center space-x-3">
             <div className="bg-gray-200 flex items-center justify-center rounded-full">
               <Image
-                src={user?.user.avatar_url || ProfileImage.avatar}
+                src={user?.user.avatarUrl || ProfileImage.avatar}
                 alt="avatar"
-                className="rounded-full w-12 h-12 object-cover border-1 border-border_primary"
+                className="rounded-full w-12 h-12 object-cover border-1 border-borderPrimary"
                 width={500}
                 height={500}
               />
             </div>
             <div>
               <p className="font-medium text-gray-900">{user?.user.username}</p>
-              <p className="text-sm font-sans text-text_secondary underline">
-                {data?.label_view_profile}
+              <p className="text-sm font-sans text-textSecondary underline">
+                {data?.labelViewProfile}
               </p>
             </div>
           </div>
@@ -62,7 +62,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
       <Link prefetch={false} href="/seller">
         <div className="relative">
           <div className="text-[13px] font-light text-white relative hover:bg-black/20 transition-all duration-150 ease-in-out z-10 px-6 py-3">
-            {interpolateElement(data?.label_freelancer_level || "", {
+            {interpolateElement(data?.labelFreelancerLevel || "", {
               level: (
                 <span className="font-semibold text-[0.875rem] ml-1">
                   Member
@@ -86,7 +86,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faGear}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_account_settings}</span>
+          <span className="text-gray-700">{data?.menuAccountSettings}</span>
         </Link>
         <Link prefetch={false}
           href="/chat"
@@ -96,7 +96,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faMessage}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_messages_orders}</span>
+          <span className="text-gray-700">{data?.menuMessagesOrders}</span>
         </Link>
         <Link prefetch={false}
           href="/promotion"
@@ -106,7 +106,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faTicket}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_coupons}</span>
+          <span className="text-gray-700">{data?.menuCoupons}</span>
         </Link>
         <Link prefetch={false}
           href="/favorites"
@@ -116,7 +116,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faHeart}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_favorite_jobs}</span>
+          <span className="text-gray-700">{data?.menuFavoriteJobs}</span>
         </Link>
         <Link prefetch={false}
           href="/seller"
@@ -126,7 +126,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faMoneyBill1}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_seller_center}</span>
+          <span className="text-gray-700">{data?.menuSellerCenter}</span>
         </Link>
         <Link prefetch={false}
           href="/job-board"
@@ -136,7 +136,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faBullhorn}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_job_board}</span>
+          <span className="text-gray-700">{data?.menuJobBoard}</span>
         </Link>
         <Link prefetch={false}
           href="/reward/earn"
@@ -146,7 +146,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faGift}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_rewards}</span>
+          <span className="text-gray-700">{data?.menuRewards}</span>
           <span className="ml-[-6px] px-3 py-1 text-xs text-white bg-third rounded">
             New
           </span>
@@ -159,7 +159,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faBriefcase}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_my_job}</span>
+          <span className="text-gray-700">{data?.menuMyJob}</span>
         </Link>
         <Link prefetch={false}
           href="/seller/withdrawal"
@@ -169,7 +169,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faMoneyBillTrendUp}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_accumulate}</span>
+          <span className="text-gray-700">{data?.menuAccumulate}</span>
         </Link>
         <Link prefetch={false}
           href="/consent-management"
@@ -179,7 +179,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faBarsProgress}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_data_management}</span>
+          <span className="text-gray-700">{data?.menuDataManagement}</span>
         </Link>
         <button
           onClick={logout}
@@ -189,7 +189,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             icon={faSignOut}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_logout}</span>
+          <span className="text-gray-700">{data?.menuLogout}</span>
         </button>
       </div>
     </div>

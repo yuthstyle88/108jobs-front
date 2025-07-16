@@ -7,7 +7,7 @@ const BussinessHeader = () => {
       <div className="container mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
         <Link prefetch={false} href="/" className="flex items-center">
           <Image
-            src={BusinessImage.logo_business}
+            src={BusinessImage.logoBusiness}
             alt="Background"
             width={150}
             height={34}

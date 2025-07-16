@@ -51,8 +51,8 @@ const FreelancerProfile = ({ username }: Props) => {
       <div className="relative bg-primary h-[200px]">
         <div className="relative block sm:hidden">
           <Image
-            src={AssetIcon.logo_icon}
-            alt="logo_icon"
+            src={AssetIcon.logoIcon}
+            alt="logoIcon"
             className="absolute top-[-110px] left-1/2 -translate-x-1/2 object-cover opacity-30"
             width={200}
             height={200}
@@ -62,17 +62,17 @@ const FreelancerProfile = ({ username }: Props) => {
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_1216px_1fr] w-full pb-16">
         <div className="col-start-2 col-end-3 gap-x-[4rem] flex flex-col sm:flex-row sm:items-start">
           <aside>
-            <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-border_primary bg-white rounded-[0.25rem]">
+            <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-borderPrimary bg-white rounded-[0.25rem]">
               <div className="flex items-center justify-center">
                 <Image
-                  src={userProfile?.avatar_url || ProfileImage.avatar}
+                  src={userProfile?.avatarUrl || ProfileImage.avatar}
                   alt="Avatar"
                   className="rounded-full w-[175px] h-[175px] object-cover overflow-hidden"
                   width={500}
                   height={500}
                 />
               </div>
-              <p className="text-[28px] font-medium text-text_primary text-center pt-2">
+              <p className="text-[28px] font-medium text-textPrimary text-center pt-2">
                 {userProfile?.username}
               </p>
               <div className="flex items-center justify-center pt-2">
@@ -84,7 +84,7 @@ const FreelancerProfile = ({ username }: Props) => {
                   />
                 ))}
               </div>
-              {userProfile?.is_verified && (
+              {userProfile?.isVerified && (
                 <div className="flex items-center justify-center w-full">
                   <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-[#1EB899] text-white w-fit">
                     <svg
@@ -114,42 +114,42 @@ const FreelancerProfile = ({ username }: Props) => {
               )}
               <div className="w-full mt-4 space-y-3 px-4">
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">
-                    {goToProfileLanguage?.member_since}
+                  <div className="text-textSecondary">
+                    {goToProfileLanguage?.memberSince}
                   </div>
                   <div className="text-third font-medium">
-                    {formatDateToLong(userProfile?.member_since)}
+                    {formatDateToLong(userProfile?.memberSince)}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">
-                    {goToProfileLanguage?.job_count}
+                  <div className="text-textSecondary">
+                    {goToProfileLanguage?.jobCount}
                   </div>
                   <div className="text-third font-medium">
                     1.2K {goToProfileLanguage?.times}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">
-                    {goToProfileLanguage?.average_response_time}
+                  <div className="text-textSecondary">
+                    {goToProfileLanguage?.averageResponseTime}
                   </div>
                   <div className="text-third font-medium">
                     34 {goToProfileLanguage?.minutes}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">
-                    {goToProfileLanguage?.success_rate}
+                  <div className="text-textSecondary">
+                    {goToProfileLanguage?.successRate}
                   </div>
                   <div className="text-third font-medium">100%</div>
                 </div>
               </div>
               {userProfile?.bio && (
                 <div className="mt-6 px-6">
-                  <div className="text-text_secondary px-4 py-3 border border-border_secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
+                  <div className="text-textSecondary px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
                       ref={bioRef}
-                      className={`text-text_secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
+                      className={`text-textSecondary text-[0.875rem] leading-[1.65] p-0 break-words ${
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
@@ -158,23 +158,23 @@ const FreelancerProfile = ({ username }: Props) => {
                     {userProfile?.bio && isClamped && !showFullBio && (
                       <button
                         onClick={() => setShowFullBio(true)}
-                        className="mt-2 text-text_primary font-sans text-sm font-medium underline"
+                        className="mt-2 text-textPrimary font-sans text-sm font-medium underline"
                       >
-                        {goToProfileLanguage?.see_more}
+                        {goToProfileLanguage?.seeMore}
                       </button>
                     )}
                   </div>
                 </div>
               )}
             </div>
-            <div className="w-full sm:w-[320px] mt-4 relative border-[0.0625rem] border-border_primary bg-white rounded-[0.25rem]">
+            <div className="w-full sm:w-[320px] mt-4 relative border-[0.0625rem] border-borderPrimary bg-white rounded-[0.25rem]">
               <div className="max-w-4xl mx-auto">
                 <div className="p-6">
                   {/* Education Section */}
                   <div className="bg-white rounded-lg pb-6">
                     <div className="mb-2">
                       <h2 className="text-blue-600 font-medium">
-                        {goToProfileLanguage?.education_title}
+                        {goToProfileLanguage?.educationTitle}
                       </h2>
                     </div>
                     {userProfile && userProfile?.education.length > 0 ? (
@@ -185,10 +185,10 @@ const FreelancerProfile = ({ username }: Props) => {
                               key={education.id}
                               className="text-[14px] leading-[1.65] p-0 font-sans font-medium"
                             >
-                              <p className="text-text_primary break-words line-clamp-2">
-                                {education?.school_name}
+                              <p className="text-textPrimary break-words line-clamp-2">
+                                {education?.schoolName}
                               </p>
-                              <p className="text-text_secondary break-words line-clamp-2">
+                              <p className="text-textSecondary break-words line-clamp-2">
                                 {education?.major}
                               </p>
                             </div>
@@ -197,38 +197,38 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        {goToProfileLanguage?.not_provided}
+                        {goToProfileLanguage?.notProvided}
                       </div>
                     )}
                   </div>
-                  <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-borderSecondary h-[1px] block w-full border-none m-0 box-content" />
                   {/* Work Experience Section */}
                   <div className="bg-white rounded-lg py-6">
                     <div className="mb-2">
                       <h2 className="text-blue-600 font-medium">
-                        {goToProfileLanguage?.experience_title}
+                        {goToProfileLanguage?.experienceTitle}
                       </h2>
                     </div>
-                    {userProfile && userProfile?.work_experience.length > 0 ? (
+                    {userProfile && userProfile?.workExperience.length > 0 ? (
                       <div className="flex flex-col gap-4">
-                        {userProfile?.work_experience.map(
+                        {userProfile?.workExperience.map(
                           (experience: WorkExperience) => {
                             return (
                               <div
                                 key={experience.id}
-                                className="px-4 py-3 border border-border_secondary rounded-[4px] max-w-full bg-[#FBFBFC] font-sans"
+                                className="px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC] font-sans"
                               >
-                                <p className="text-text_primary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words font-medium">
-                                  {experience?.company_name}
+                                <p className="text-textPrimary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words font-medium">
+                                  {experience?.companyName}
                                 </p>
-                                <p className="text-text_secondary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words pt-2">
+                                <p className="text-textSecondary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words pt-2">
                                   {experience?.position}
                                 </p>
-                                <p className="text-text_secondary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words">
-                                  {experience?.start_month}{" "}
-                                  {experience?.start_year} -{" "}
-                                  {experience?.start_month}{" "}
-                                  {experience?.start_year}
+                                <p className="text-textSecondary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words">
+                                  {experience?.startMonth}{" "}
+                                  {experience?.startYear} -{" "}
+                                  {experience?.startMonth}{" "}
+                                  {experience?.startYear}
                                 </p>
                               </div>
                             );
@@ -237,17 +237,17 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        {goToProfileLanguage?.not_provided}
+                        {goToProfileLanguage?.notProvided}
                       </div>
                     )}
                   </div>
-                  <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-borderSecondary h-[1px] block w-full border-none m-0 box-content" />
 
                   {/* Skills Section */}
                   <div className="bg-white rounded-lg py-6">
                     <div className="mb-2">
                       <h2 className="text-blue-600 font-medium">
-                        {goToProfileLanguage?.skill_title}
+                        {goToProfileLanguage?.skillTitle}
                       </h2>
                     </div>
                     {userProfile && userProfile?.skill.length > 0 ? (
@@ -258,11 +258,11 @@ const FreelancerProfile = ({ username }: Props) => {
                               key={skill.id}
                               className="flex flex-row justify-between gap-[0.75rem] items-center text-[14px] leading-[1.65] p-0 font-sans font-medium"
                             >
-                              <p className="text-text_primary break-words line-clamp-2 font-sans leading-[16.1px] p-0 font-medium">
-                                {skill?.skill_name}
+                              <p className="text-textPrimary break-words line-clamp-2 font-sans leading-[16.1px] p-0 font-medium">
+                                {skill?.skillName}
                               </p>
                               <p className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
-                                {skill?.level_name}
+                                {skill?.levelName}
                               </p>
                             </div>
                           );
@@ -270,17 +270,17 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        {goToProfileLanguage?.not_provided}
+                        {goToProfileLanguage?.notProvided}
                       </div>
                     )}
                   </div>
-                  <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-borderSecondary h-[1px] block w-full border-none m-0 box-content" />
 
                   {/* Languages Section */}
                   <div className="bg-white rounded-lg py-6">
                     <div className="mb-2">
                       <h2 className="text-blue-600 font-medium">
-                        {goToProfileLanguage?.language_title}
+                        {goToProfileLanguage?.languageTitle}
                       </h2>
                     </div>
                     {userProfile && userProfile?.language.length > 0 ? (
@@ -292,11 +292,11 @@ const FreelancerProfile = ({ username }: Props) => {
                                 key={language.id}
                                 className="flex flex-row justify-between gap-[0.75rem] items-center text-[14px] leading-[1.65] p-0 font-sans font-medium"
                               >
-                                <p className="text-text_primary break-words line-clamp-2 font-sans leading-[16.1px] p-0 font-medium">
+                                <p className="text-textPrimary break-words line-clamp-2 font-sans leading-[16.1px] p-0 font-medium">
                                   {language?.lang}
                                 </p>
                                 <p className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
-                                  {language?.level_name}
+                                  {language?.levelName}
                                 </p>
                               </div>
                             );
@@ -305,29 +305,29 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        {goToProfileLanguage?.not_provided}
+                        {goToProfileLanguage?.notProvided}
                       </div>
                     )}
                   </div>
-                  <hr className="bg-border_secondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-borderSecondary h-[1px] block w-full border-none m-0 box-content" />
 
                   {/* Certifications Section */}
                   <div className="bg-white rounded-lg py-6">
                     <div className="mb-2">
                       <h2 className="text-blue-600 font-medium">
-                        {goToProfileLanguage?.certification_title}
+                        {goToProfileLanguage?.certificationTitle}
                       </h2>
                     </div>
-                    {userProfile && userProfile?.cert_and_award.length > 0 ? (
+                    {userProfile && userProfile?.certAndAward.length > 0 ? (
                       <div className="flex flex-col gap-4">
-                        {userProfile?.cert_and_award.map(
+                        {userProfile?.certAndAward.map(
                           (cert: Certificate) => {
                             return (
                               <div
                                 key={cert.id}
                                 className="text-[14px] leading-[1.65] p-0 font-sans font-medium"
                               >
-                                <p className="text-text_primary break-words line-clamp-2 font-sans leading-[16.1px] p-0 font-medium">
+                                <p className="text-textPrimary break-words line-clamp-2 font-sans leading-[16.1px] p-0 font-medium">
                                   {cert?.name}
                                 </p>
                               </div>
@@ -337,7 +337,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     ) : (
                       <div className="text-gray-500 text-sm">
-                        {goToProfileLanguage?.not_provided}
+                        {goToProfileLanguage?.notProvided}
                       </div>
                     )}
                   </div>
@@ -347,8 +347,8 @@ const FreelancerProfile = ({ username }: Props) => {
           </aside>
 
           <section className="w-full px-4">
-            <h2 className="pt-8 pb-4 text-[28px] font-medium text-text_primary w-full">
-              {interpolateDouble(goToProfileLanguage?.work_title || "", {
+            <h2 className="pt-8 pb-4 text-[28px] font-medium text-textPrimary w-full">
+              {interpolateDouble(goToProfileLanguage?.workTitle || "", {
                 username: userProfile?.username,
               })}
             </h2>
@@ -362,28 +362,28 @@ const FreelancerProfile = ({ username }: Props) => {
               ))}
             </section>
             <div className="mt-8">
-              <div className="border-b border-border_primary mb-6">
+              <div className="border-b border-borderPrimary mb-6">
                 <div className="flex -mb-px">
                   <button
                     className={`mr-6 py-2 text-sm font-medium border-b-2 ${
                       activeTab === "reviews"
                         ? "text-third border-third"
-                        : "text-text_secondary border-transparent hover:text-gray-700"
+                        : "text-textSecondary border-transparent hover:text-gray-700"
                     }`}
                     onClick={() => setActiveTab("reviews")}
                   >
-                    {goToProfileLanguage?.review_tab} (
+                    {goToProfileLanguage?.reviewTab} (
                     {userProfile?.reviews.length})
                   </button>
                   <button
                     className={`py-2 text-sm font-medium border-b-2 ${
                       activeTab === "clients"
                         ? "text-third border-third"
-                        : "text-text_secondary border-transparent hover:text-gray-700"
+                        : "text-textSecondary border-transparent hover:text-gray-700"
                     }`}
                     onClick={() => setActiveTab("clients")}
                   >
-                    {goToProfileLanguage?.freelancer_review} (1)
+                    {goToProfileLanguage?.freelancerReview} (1)
                   </button>
                 </div>
               </div>
@@ -392,12 +392,12 @@ const FreelancerProfile = ({ username }: Props) => {
                 {userProfile?.reviews.map((review) => (
                   <div
                     key={review.id}
-                    className="border-b border-border_primary pb-6"
+                    className="border-b border-borderPrimary pb-6"
                   >
                     <div className="flex items-start mb-3">
                       <Image
-                        src={review.reviewer_avatar || ProfileImage.avatar}
-                        alt={review.reviewer_name || "username"}
+                        src={review.reviewerAvatar || ProfileImage.avatar}
+                        alt={review.reviewerName || "username"}
                         width={32}
                         height={32}
                         className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-3"
@@ -405,11 +405,11 @@ const FreelancerProfile = ({ username }: Props) => {
                       <div className="flex-1">
                         <div className="flex justify-between items-start">
                           <div>
-                            <h4 className="font-medium text-text_primary">
-                              {review.reviewer_name || "username"}
+                            <h4 className="font-medium text-textPrimary">
+                              {review.reviewerName || "username"}
                             </h4>
-                            <span className="text-sm text-text_secondary">
-                              {formatDateToLong(review.created_at)}
+                            <span className="text-sm text-textSecondary">
+                              {formatDateToLong(review.createdAt)}
                             </span>
                           </div>
                           <div className="flex items-center">
@@ -420,7 +420,7 @@ const FreelancerProfile = ({ username }: Props) => {
                             >
                               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.799-2.034c-.784-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                             </svg>
-                            <span className="ml-1 font-medium text-text_primary">
+                            <span className="ml-1 font-medium text-textPrimary">
                               {review.rating}
                             </span>
                           </div>

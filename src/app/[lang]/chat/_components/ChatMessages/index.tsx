@@ -24,16 +24,16 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
   return (
     <>
       {messages.map((msg, index) => {
-        const currentDate = formatDate(msg.created_at);
+        const currentDate = formatDate(msg.createdAt);
         const prevDate =
-          index > 0 ? formatDate(messages[index - 1].created_at) : null;
+          index > 0 ? formatDate(messages[index - 1].createdAt) : null;
         const showDate = currentDate !== prevDate;
 
         return (
           <div key={msg.id || index}>
             {showDate && (
               <div className="w-full flex justify-center my-4">
-                <div className="inline-block rounded-[10px] bg-border_secondary p-1 min-w-[120px] text-[#728197] text-[12.8px] text-center">
+                <div className="inline-block rounded-[10px] bg-borderSecondary p-1 min-w-[120px] text-[#728197] text-[12.8px] text-center">
                   {currentDate}
                 </div>
               </div>

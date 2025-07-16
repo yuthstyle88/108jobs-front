@@ -1,0 +1,29 @@
+import type { CommunityId } from "./CommunityId";
+import type { DbUrl } from "./DbUrl";
+import type { TagId } from "./TagId";
+/**
+ * A tag that can be assigned to a post within a community.
+ * The tag object is created by the community moderators.
+ * The assignment happens by the post creator and can be updated by the community moderators.
+ *
+ * A tag is a federatable object that gives additional context to another object, which can be
+ * displayed and filtered on. Currently, we only have community post tags, which is a tag that is
+ * created by the mods of a community, then assigned to posts by post authors as well as mods of a
+ * community, to categorize a post.
+ *
+ * In the future we may add more tag types, depending on the requirements, this will lead to either
+ * expansion of this table (communityId optional, addition of tagType enum) or split of this
+ * table / creation of new tables.
+ */
+export type Tag = {
+    id: TagId;
+    apId: DbUrl;
+    displayName: string;
+    /**
+     * the community that owns this tag
+     */
+    communityId: CommunityId;
+    publishedAt: string;
+    updatedAt?: string;
+    deleted: boolean;
+};

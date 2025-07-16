@@ -80,79 +80,79 @@ const ClientsCarousel = () => {
   const clientsData = [
     [
       {
-        src: BusinessImage.logo_customer1,
+        src: BusinessImage.logoCustomer1,
         alt: "Netflix",
       },
       {
-        src: BusinessImage.logo_customer3,
+        src: BusinessImage.logoCustomer3,
         alt: "Netflix",
       },
       {
-        src: BusinessImage.logo_customer2,
+        src: BusinessImage.logoCustomer2,
         alt: "Amazon",
       },
       {
-        src: BusinessImage.logo_customer1,
+        src: BusinessImage.logoCustomer1,
         alt: "Slack",
       },
       {
-        src: BusinessImage.logo_customer3,
+        src: BusinessImage.logoCustomer3,
         alt: "Apple",
       },
       {
-        src: BusinessImage.logo_customer2,
+        src: BusinessImage.logoCustomer2,
         alt: "Apple",
       },
     ],
     [
       {
-        src: BusinessImage.logo_customer3,
+        src: BusinessImage.logoCustomer3,
         alt: "Google",
       },
       {
-        src: BusinessImage.logo_customer1,
+        src: BusinessImage.logoCustomer1,
         alt: "Netflix",
       },
       {
-        src: BusinessImage.logo_customer2,
+        src: BusinessImage.logoCustomer2,
         alt: "Amazon",
       },
       {
-        src: BusinessImage.logo_customer3,
+        src: BusinessImage.logoCustomer2,
         alt: "Slack",
       },
       {
-        src: BusinessImage.logo_customer1,
+        src: BusinessImage.logoCustomer1,
         alt: "Apple",
       },
       {
-        src: BusinessImage.logo_customer2,
+        src: BusinessImage.logoCustomer2,
         alt: "Apple",
       },
     ],
     [
       {
-        src: BusinessImage.logo_customer3,
+        src: BusinessImage.logoCustomer3,
         alt: "Google",
       },
       {
-        src: BusinessImage.logo_customer1,
+        src: BusinessImage.logoCustomer1,
         alt: "Netflix",
       },
       {
-        src: BusinessImage.logo_customer2,
+        src: BusinessImage.logoCustomer2,
         alt: "Amazon",
       },
       {
-        src: BusinessImage.logo_customer1,
+        src: BusinessImage.logoCustomer1,
         alt: "Slack",
       },
       {
-        src: BusinessImage.logo_customer3,
+        src: BusinessImage.logoCustomer3,
         alt: "Apple",
       },
       {
-        src: BusinessImage.logo_customer1,
+        src: BusinessImage.logoCustomer1,
         alt: "Apple",
       },
     ],

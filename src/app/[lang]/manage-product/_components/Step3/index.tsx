@@ -40,7 +40,7 @@ const Step3Media = ({
   const { handleSubmit } = useForm();
 
   const { trigger: sendImages, isMutating } = usePrivatePost(
-    API_ROUTES_SELLER.job.post_job_step_3
+    API_ROUTES_SELLER.job.postJobStep3
   );
   const { trigger: uploadImage, isMutating: isUploadImage } =
     usePrivateImagePost<ImageUploadResponse>(API_ROUTES.image.upload);
@@ -54,13 +54,13 @@ const Step3Media = ({
   const validateImages = () => {
     let valid = true;
     if (!cover.imagePreview) {
-      setCoverError(`${createJobLanguage?.upload_cover_error}`);
+      setCoverError(`${createJobLanguage?.uploadCoverError}`);
       valid = false;
     } else {
       setCoverError(null);
     }
     if (multi.images.length < 2) {
-      setGalleryError(`${createJobLanguage?.upload_gallery_error}`);
+      setGalleryError(`${createJobLanguage?.uploadGalleryError}`);
       valid = false;
     } else {
       setGalleryError(null);
@@ -75,7 +75,7 @@ const Step3Media = ({
       const coverFormData = new FormData();
       coverFormData.append("images[]", coverFile);
       const coverUploadResult = await uploadImage(coverFormData);
-      const coverUrl = coverUploadResult?.images?.[0]?.image_url;
+      const coverUrl = coverUploadResult?.images?.[0]?.imageUrl;
 
       const uploadedServiceUrls = await Promise.all(
         multi.images.map(async (img, index) => {
@@ -83,27 +83,27 @@ const Step3Media = ({
           const formData = new FormData();
           formData.append("images[]", file);
           const result = await uploadImage(formData);
-          return result?.images?.[0]?.image_url;
+          return result?.images?.[0]?.imageUrl;
         })
       );
 
       const imagesPayload = [
         {
-          image_url: coverUrl,
-          is_cover_photo: true,
-          sort_order: 1,
+          imageUrl: coverUrl,
+          isCoverPhoto: true,
+          sortOrder: 1,
           alt: "Ảnh bìa",
         },
         ...uploadedServiceUrls.map((url, i) => ({
-          image_url: url,
-          is_cover_photo: false,
-          sort_order: i + 2,
+          imageUrl: url,
+          isCoverPhoto: false,
+          sortOrder: i + 2,
           alt: `Hình dịch vụ ${i + 1}`,
         })),
       ];
 
       await sendImages({
-        job_id: job.id,
+        jobId: job.id,
         images: imagesPayload,
       });
       await mutate();
@@ -118,16 +118,16 @@ const Step3Media = ({
 
   useEffect(() => {
     if (job?.images?.length) {
-      const coverImg = job.images.find((img) => img.is_cover_photo);
-      const galleryImgs = job.images.filter((img) => !img.is_cover_photo);
+      const coverImg = job.images.find((img) => img.isCoverPhoto);
+      const galleryImgs = job.images.filter((img) => !img.isCoverPhoto);
 
       if (coverImg) {
-        cover.setImagePreview(coverImg.image_url);
-        setInitialCover(coverImg.image_url);
+        cover.setImagePreview(coverImg.imageUrl);
+        setInitialCover(coverImg.imageUrl);
       }
 
       if (galleryImgs.length > 0) {
-        const galleryUrls = galleryImgs.map((img) => img.image_url);
+        const galleryUrls = galleryImgs.map((img) => img.imageUrl);
         multi.setImages(galleryUrls);
         setInitialGallery(galleryUrls);
       }
@@ -178,21 +178,21 @@ const Step3Media = ({
         <LoadingBlur text="Đang lưu dữ liệu" />
       ) : null}
 
-      <h2 className="text-[32px] font-medium mb-6 text-text_primary">
-        {createJobLanguage?.upload_service_images_title}
+      <h2 className="text-[32px] font-medium mb-6 text-textPrimary">
+        {createJobLanguage?.uploadServiceImagesTitle}
       </h2>
 
       <div className="space-y-8 max-w-4xl">
         <div>
-          <h3 className="text-[20px] font-medium mb-2 text-text_primary">
-            {createJobLanguage?.upload_cover_image_title}
+          <h3 className="text-[20px] font-medium mb-2 text-textPrimary">
+            {createJobLanguage?.uploadCoverImageTitle}
           </h3>
           <div className="p-4 bg-amber-50 border border-amber-100 rounded-lg mb-6 flex">
             <Info className="w-5 h-5 text-amber-500 mr-2 flex-shrink-0" />
             <p className="text-sm text-gray-700 font-normal font-sans leading-6">
-              {createJobLanguage?.upload_cover_image_title}
-              <br />• {createJobLanguage?.cover_image_note}
-              <br />• {createJobLanguage?.cover_image_note_2}
+              {createJobLanguage?.uploadCoverImageTitle}
+              <br />• {createJobLanguage?.coverImageNote}
+              <br />• {createJobLanguage?.coverImageNote2}
             </p>
           </div>
           {!cover.imagePreview ? (
@@ -245,17 +245,17 @@ const Step3Media = ({
         </div>
 
         <div>
-          <h3 className="text-[20px] font-medium mb-2 text-text_primary">
-            {/* {createJobLanguage?.upload_at_least_2_images_title} */}
+          <h3 className="text-[20px] font-medium mb-2 text-textPrimary">
+            {/* {createJobLanguage?.uploadAtLeast2ImagesTitle} */}
             {interpolateDouble(
-              createJobLanguage?.upload_at_least_2_images_title || "",
+              createJobLanguage?.uploadAtLeast2ImagesTitle || "",
               {
                 n: multi.images.length,
               }
             )}
           </h3>
-          <p className="text-sm text-text_secondary mb-4">
-            {createJobLanguage?.upload_at_least_2_images_note}
+          <p className="text-sm text-textSecondary mb-4">
+            {createJobLanguage?.uploadAtLeast2ImagesNote}
           </p>
 
           <div className="grid grid-cols-4 gap-4 mb-4">
@@ -294,7 +294,7 @@ const Step3Media = ({
                 <div className="flex flex-col items-center justify-center">
                   <Plus className="w-6 h-6 text-gray-400 mb-1" />
                   <p className="text-xs text-gray-500">
-                    {createJobLanguage?.add_image_button}
+                    {createJobLanguage?.addImageButton}
                   </p>
                 </div>
               </label>
@@ -311,7 +311,7 @@ const Step3Media = ({
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50"
             onClick={prevStep}
           >
-            {createJobLanguage?.back_button}
+            {createJobLanguage?.backButton}
           </button>
           <button
             type="submit"
@@ -321,7 +321,7 @@ const Step3Media = ({
             {isMutating || isUploadImage ? (
               <LoadingCircle />
             ) : (
-              createJobLanguage?.next_button
+              createJobLanguage?.nextButton
             )}
           </button>
         </div>

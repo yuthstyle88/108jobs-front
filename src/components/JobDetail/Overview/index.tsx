@@ -19,45 +19,45 @@ const Overview = ({ language, data }: Props) => {
         {data.title}
       </h1>
       <div className="flex flex-wrap mt-3 gap-3">
-        <div className="pr-2 border-r-1 border-r-border_primary flex items-center">
+        <div className="pr-2 border-r-1 border-r-borderPrimary flex items-center">
           <FontAwesomeIcon icon={faStar} className="text-[#E9B10C]" />
-          <span className="ml-1 font-sans text-text_primary">
+          <span className="ml-1 font-sans text-textPrimary">
             {Number(data.rating).toFixed(1)}
           </span>
         </div>
         <Link prefetch={false} href="#" className="">
           <Image
             src={CategoriesImage.specialist}
-            alt="badge_rehire"
+            alt="badgeRehire"
             className="h-6 w-full"
           />
         </Link>
         <Link prefetch={false} href="#" className="">
           <Image
-            src={CategoriesImage.badge_rehire}
-            alt="badge_rehire"
+            src={CategoriesImage.badgeRehire}
+            alt="badgeRehire"
             className="h-6 w-full"
           />
         </Link>
       </div>
       <div className="px-3 py-2 gap-x-2 flex rounded-lg bg-[#F6F7F8] items-center my-6 ">
         <Image
-          src={JobDetailIcon.icon_rehire}
-          alt="icon_rehire"
+          src={JobDetailIcon.iconRehire}
+          alt="iconRehire"
           className="w-8 h-8"
         />
-        <div className="text-[0.875rem] text-text_primary font-sans">
-          {language?.employers_trust}
+        <div className="text-[0.875rem] text-textPrimary font-sans">
+          {language?.employersTrust}
         </div>
       </div>
-      <hr className="mt-4 bg-border_primary block overflow-visible w-full h-[1px] m-0" />
+      <hr className="mt-4 bg-borderPrimary block overflow-visible w-full h-[1px] m-0" />
       <div className="break-words whitespace-pre-wrap m-0 leading-[1.65]  mt-6">
-        <div className="text-text_primary font-sans">
+        <div className="text-textPrimary font-sans">
           <p className="">{data.description}</p>
 
           <hr className="my-4" />
 
-          <p className="text-base font-semibold text-text_primary">
+          <p className="text-base font-semibold text-textPrimary">
             Working step for
             {` `}
             {data.title}

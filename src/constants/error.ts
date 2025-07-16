@@ -1,16 +1,17 @@
 export const ERROR_REGISTER = {
-  email_already_exists: "email_already_exists",
-  database_error: "database_error",
-  rate_limit_error: "rate_limit_error",
+  emailAlreadyExists: "EMAIL_ALREADY_EXISTS",
+  databaseError: "DATABASE_ERROR",
+  rateLimitError: "RATE_LIMIT_ERROR",
 };
+
 export const ERROR_VERIFY_EMAIL = {
-  verification_code_expired: "verification_code_expired",
-  invalid_verification_code: "invalid_verification_code",
+  verificationCodeExpired: "VERIFICATION_CODE_EXPIRED",
+  invalidVerificationCode: "INVALID_VERIFICATION_CODE",
 };
 
 export const ERROR_VERIFY_PASSWORD = {
-  invalid_password: "invalid_password",
-  invalid_credentials: "invalid_credentials",
+  invalidPassword: "INVALID_PASSWORD",
+  invalidCredentials: "INVALID_CREDENTIALS",
 };
 
 export const ERROR_CONSTANTS = {

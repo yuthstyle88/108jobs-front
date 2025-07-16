@@ -31,12 +31,12 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({ items }) => {
                     {item.label}
                   </Link>
                 ) : (
-                  <span className="text-text_primary">{item.label}</span>
+                  <span className="text-textPrimary">{item.label}</span>
                 )}
 
                 {!isLast && (
                   <span className="text-neutral-400 pr-2 relative top-[2px]">
-                    <ChevronRight className="w-4 text-text_secondary" />
+                    <ChevronRight className="w-4 text-textSecondary" />
                   </span>
                 )}
               </li>

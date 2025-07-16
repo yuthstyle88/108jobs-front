@@ -1,0 +1,14 @@
+import type { ModRemovePostId } from "./ModRemovePostId";
+import type { PersonId } from "./PersonId";
+import type { PostId } from "./PostId";
+/**
+ * When a moderator removes a post.
+ */
+export type ModRemovePost = {
+    id: ModRemovePostId;
+    modPersonId: PersonId;
+    postId: PostId;
+    reason?: string;
+    removed: boolean;
+    publishedAt: string;
+};

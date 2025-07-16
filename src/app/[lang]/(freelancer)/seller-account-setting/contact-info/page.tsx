@@ -28,29 +28,29 @@ type VerifyEmailFormData = z.infer<typeof emailSchema>;
 export interface AddressFormData {
   country: string;
   province?: string;
-  district_or_subdistrict?: string;
-  subdistrict_or_district?: string;
-  zip_code?: string;
-  address_details?: string;
+  districtOrSubdistrict?: string;
+  subdistrictOrDistrict?: string;
+  zipCode?: string;
+  addressDetails?: string;
 }
 
 interface RawAddress {
   country?: string | null;
   province?: string | null;
-  district_or_subdistrict?: string | null;
-  subdistrict_or_district?: string | null;
-  zip_code?: string | null;
-  address_details?: string | null;
+  districtOrSubdistrict?: string | null;
+  subdistrictOrDistrict?: string | null;
+  zipCode?: string | null;
+  addressDetails?: string | null;
 }
 
 function normalizeAddress(address: RawAddress | undefined): AddressFormData {
   return {
     country: address?.country ?? "Thailand",
     province: address?.province ?? "",
-    district_or_subdistrict: address?.district_or_subdistrict ?? "",
-    subdistrict_or_district: address?.subdistrict_or_district ?? "",
-    zip_code: address?.zip_code ?? "",
-    address_details: address?.address_details ?? "",
+    districtOrSubdistrict: address?.districtOrSubdistrict ?? "",
+    subdistrictOrDistrict: address?.subdistrictOrDistrict ?? "",
+    zipCode: address?.zipCode ?? "",
+    addressDetails: address?.addressDetails ?? "",
   };
 }
 
@@ -107,9 +107,9 @@ const ContactInfo = () => {
     usePrivateFetch<CountriesResponse>("/profile/countries");
 
   const { trigger: updateAddressProfile, isMutating: isUpdateMuting } =
-    usePrivatePut<AddressFormData>(API_ROUTES.profile.update_address_profile);
+    usePrivatePut<AddressFormData>(API_ROUTES.profile.updateAddressProfile);
 
-  const { success_message } = useNotification();
+  const { successMessage } = useNotification();
   const LOCATION_OPTIONS = ["Thailand", "Foreign"] as const;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmChange, setIsConfirmChange] = useState(false);
@@ -186,15 +186,15 @@ const ContactInfo = () => {
 
       await updateAddressProfile(payload);
       await mutate();
-      success_message("profile", "update");
+      successMessage("profile", "update");
       if (data.country !== "Thailand") {
         setDefaultForeignCountry(data.country);
         reset({
           country: data.country,
-          address_details: "",
-          district_or_subdistrict: "",
-          subdistrict_or_district: "",
-          zip_code: "",
+          addressDetails: "",
+          districtOrSubdistrict: "",
+          subdistrictOrDistrict: "",
+          zipCode: "",
           province: "",
         });
       } else {
@@ -212,10 +212,10 @@ const ContactInfo = () => {
     <div className="bg-white rounded-md shadow-sm overflow-hidden">
       <div className="border-b border-gray-200 p-5">
         <h2 className="text-lg font-medium text-gray-800">
-          {sellerContactLanguage?.contact_info_title}
+          {sellerContactLanguage?.contactInfoTitle}
         </h2>
         <p className="text-sm text-gray-500">
-          {sellerContactLanguage?.contact_info_description}
+          {sellerContactLanguage?.contactInfoDescription}
         </p>
       </div>
 
@@ -225,13 +225,13 @@ const ContactInfo = () => {
             <div className="mb-6">
               <div className="flex gap-2 items-end w-full">
                 <div className="flex-1">
-                  <label className="block text-sm text-text_primary font-semibold mb-2">
-                    {sellerContactLanguage?.email_contact}
+                  <label className="block text-sm text-textPrimary font-semibold mb-2">
+                    {sellerContactLanguage?.emailContact}
                   </label>
                   <input
                     type="email"
                     {...emailRegister("email")}
-                    className={`text-text_primary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                    className={`text-textPrimary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                       apiError
                         ? "border-[#ea6357] text-[#ea6357]"
                         : "border-gray-300"
@@ -248,7 +248,7 @@ const ContactInfo = () => {
                     {isSubmittingEmail ? (
                       <LoadingCircle />
                     ) : (
-                      global?.button_change
+                      global?.buttonChange
                     )}
                   </button>
                 </div>
@@ -263,14 +263,14 @@ const ContactInfo = () => {
         ) : (
           <div className="mb-6 flex gap-2 items-end w-full">
             <div className="flex-1">
-              <label className="block text-sm text-text_primary font-semibold mb-2">
-                {sellerContactLanguage?.email_contact}
+              <label className="block text-sm text-textPrimary font-semibold mb-2">
+                {sellerContactLanguage?.emailContact}
               </label>
               <input
                 type="email"
                 value={profileData?.contact.email ?? ""}
                 disabled
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary disabled:cursor-not-allowed"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary disabled:cursor-not-allowed"
                 placeholder="your.email@example.com"
               />
             </div>
@@ -279,7 +279,7 @@ const ContactInfo = () => {
                 onClick={() => setIsModalOpen(true)}
                 className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
               >
-                {global?.button_edit}
+                {global?.buttonEdit}
               </button>
             </div>
           </div>
@@ -287,19 +287,19 @@ const ContactInfo = () => {
 
         <form
           onSubmit={handleSubmit(onSubmitAddress)}
-          className="bg-white rounded-lg text-sm text-text_primary font-semibold font-sans mb-6"
+          className="bg-white rounded-lg text-sm text-textPrimary font-semibold font-sans mb-6"
         >
           <div className="pb-4 pt-4 border-b">
-            <h2 className="text-[16px] font-medium mb-2 text-text_primary">
-              {sellerContactLanguage?.address_info_title}
+            <h2 className="text-[16px] font-medium mb-2 text-textPrimary">
+              {sellerContactLanguage?.addressInfoTitle}
             </h2>
             <p className="text-gray-600 text-[14px] font-sans font-normal">
-              {sellerContactLanguage?.address_info_description}
+              {sellerContactLanguage?.addressInfoDescription}
             </p>
           </div>
           <div className="pt-6 flex flex-col">
             <h3 className="text-base font-medium mb-3">
-              {sellerContactLanguage?.current_address}
+              {sellerContactLanguage?.currentAddress}
             </h3>
             <div className="grid grid-cols-2 gap-4 mb-4">
               {LOCATION_OPTIONS.map((option) => (
@@ -332,12 +332,12 @@ const ContactInfo = () => {
             {locationType === "Foreign" ? (
               <>
                 <label className="block text-sm mb-1">
-                  {sellerContactLanguage?.select_country}
+                  {sellerContactLanguage?.selectCountry}
                 </label>
                 <select
                   {...register("country")}
                   value={country}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary ${
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary ${
                     errors.country ? "border-red-500" : "border-gray-300"
                   }`}
                 >
@@ -357,40 +357,40 @@ const ContactInfo = () => {
             ) : (
               <>
                 <div className="mb-4">
-                  <label className="block text-sm text-text_primary font-semibold mb-2">
-                    {sellerContactLanguage?.address_detail}
+                  <label className="block text-sm text-textPrimary font-semibold mb-2">
+                    {sellerContactLanguage?.addressDetail}
                   </label>
                   <input
-                    {...register("address_details")}
-                    className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
-                    placeholder={sellerContactLanguage?.address_placeholder}
+                    {...register("addressDetails")}
+                    className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary"
+                    placeholder={sellerContactLanguage?.addressPlaceholder}
                   />
-                  {errors.address_details && (
+                  {errors.addressDetails && (
                     <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
-                      {errors.address_details.message}
+                      {errors.addressDetails.message}
                     </p>
                   )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <ZipcodeSearch
-                    error={errors.zip_code}
+                    error={errors.zipCode}
                     control={control}
                     setValue={setValue}
                     language={sellerContactLanguage}
                   />
                   <div>
                     <label className="block font-semibold mb-1">
-                      {sellerContactLanguage?.sub_district}
+                      {sellerContactLanguage?.subDistrict}
                     </label>
                     <input
-                      placeholder={sellerContactLanguage?.sub_district}
-                      {...register("subdistrict_or_district")}
-                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                      placeholder={sellerContactLanguage?.subDistrict}
+                      {...register("subdistrictOrDistrict")}
+                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary"
                     />
-                    {errors.subdistrict_or_district && (
+                    {errors.subdistrictOrDistrict && (
                       <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
-                        {errors.subdistrict_or_district.message}
+                        {errors.subdistrictOrDistrict.message}
                       </p>
                     )}
                   </div>
@@ -403,12 +403,12 @@ const ContactInfo = () => {
                     </label>
                     <input
                       placeholder={sellerContactLanguage?.district}
-                      {...register("district_or_subdistrict")}
-                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                      {...register("districtOrSubdistrict")}
+                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary"
                     />
-                    {errors.district_or_subdistrict && (
+                    {errors.districtOrSubdistrict && (
                       <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
-                        {errors.district_or_subdistrict.message}
+                        {errors.districtOrSubdistrict.message}
                       </p>
                     )}
                   </div>
@@ -419,7 +419,7 @@ const ContactInfo = () => {
                     <input
                       placeholder={sellerContactLanguage?.province}
                       {...register("province")}
-                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary"
                     />
                     {errors.province && (
                       <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -438,9 +438,9 @@ const ContactInfo = () => {
                 className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
               >
                 {isSubmitting || isUpdateMuting ? (
-                  <span>{global?.button_save}...</span>
+                  <span>{global?.buttonSave}...</span>
                 ) : (
-                  global?.button_save
+                  global?.buttonSave
                 )}
               </button>
             </div>

@@ -46,15 +46,15 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
   );
 
   const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
+    API_ROUTES.profile.getProfile
   );
 
   const { trigger: skipAddress, isMutating: isSkipMutating } = usePrivatePost(
-    API_ROUTES.profile.skip_address
+    API_ROUTES.profile.skipAddress
   );
 
   const { trigger: updateNewAddress, isMutating: isUpdateMutating } =
-    usePrivatePut(API_ROUTES.profile.update_new_address);
+    usePrivatePut(API_ROUTES.profile.updateNewAddress);
 
   const [provinceConfirmed, setProvinceConfirmed] = useState<{
     en: string;
@@ -94,7 +94,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
   };
 
   const onSkipAddress = async () => {
-    await skipAddress({ skip_days: 1 });
+    await skipAddress({ skipDays: 1 });
     onClose();
   };
 
@@ -103,7 +103,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
     (selectedGeo === "other" && !!countryConfirmed);
 
   useEffect(() => {
-    if (user && user.show_country_selection_box) {
+    if (user && user.showCountrySelectionBox) {
       onOpen();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,7 +119,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
       showCloseButton={false}
     >
       <main className="px-[12px] w-full flex flex-col gap-3 justify-center">
-        <section className="pb-4 border-b-1 border-border_secondary font-semibold text-[1.125rem] text-text_primary font-sans">
+        <section className="pb-4 border-b-1 border-borderSecondary font-semibold text-[1.125rem] text-textPrimary font-sans">
           <p className="text-base">Help us improve by sharing your location.</p>
           <p className="text-[1.5rem] text-[#1754b0]">Where are you located?</p>
         </section>
@@ -131,11 +131,11 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
                 className={`group ${
                   selectedGeo === "thailand"
                     ? "bg-[#f6f9fe] border-fifth grayscale-0"
-                    : "bg-white border-border_secondary grayscale-[0.8]"
+                    : "bg-white border-borderSecondary grayscale-[0.8]"
                 } border-1 cursor-pointer flex items-center flex-col justify-center w-[170px] h-[210px] rounded-xl p-6 hover:bg-fourth`}
               >
                 <Image
-                  src={AssetIcon.thailand_geo}
+                  src={AssetIcon.thailandGeo}
                   alt="thailand"
                   width={500}
                   height={500}
@@ -152,11 +152,11 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
                 className={`group ${
                   selectedGeo === "other"
                     ? "bg-[#f6f9fe] border-fifth grayscale-0"
-                    : "bg-white border-border_secondary grayscale-[0.8]"
+                    : "bg-white border-borderSecondary grayscale-[0.8]"
                 } border-1 cursor-pointer flex items-center flex-col justify-center w-[170px] h-[210px] rounded-xl p-6 hover:bg-fourth`}
               >
                 <Image
-                  src={AssetIcon.other_geo}
+                  src={AssetIcon.otherGeo}
                   alt="other"
                   width={500}
                   height={500}
@@ -192,7 +192,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
 
       <div className="flex flex-row gap-2 justify-between items-end pt-4w-full">
         <button onClick={() => onSkipAddress()} disabled={isSkipMutating}>
-          <p className="text-text_secondary font-semibold text-[18px] font-sans underline">
+          <p className="text-textSecondary font-semibold text-[18px] font-sans underline">
             Later
           </p>
         </button>

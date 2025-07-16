@@ -26,14 +26,14 @@ const PopularSubCat = ({ slug }: Props) => {
     data: catalogData,
     isLoading,
     error,
-  } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.get_all_catalog);
+  } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.getAllCatalog);
 
   useEffect(() => {
-  if (!catalogData?.service_catalogs) return;
+  if (!catalogData?.serviceCatalogs) return;
 
   const normalizedSlug = slug.toLowerCase().replace(/\s+/g, "-");
 
-  const matchedCatalog = catalogData.service_catalogs.find(
+  const matchedCatalog = catalogData.serviceCatalogs.find(
     (catalog) =>
       catalog.slug === slug ||
       (!catalog.slug &&
@@ -84,7 +84,7 @@ const PopularSubCat = ({ slug }: Props) => {
           {isOpen && (
             <div className="absolute left-0 mt-2 w-[250px] bg-white rounded-lg shadow-lg z-50 flex animate-fade-down">
               <div className="w-64 py-4">
-                {catalogData?.service_catalogs.map((subcategory) => {
+                {catalogData?.serviceCatalogs.map((subcategory) => {
                   const fallbackSlug = subcategory.name
                     .toLowerCase()
                     .replace(/\s+/g, "-");
@@ -113,7 +113,7 @@ const PopularSubCat = ({ slug }: Props) => {
                   <Link prefetch={false}
                     key={cat.id}
                     href={`/job/${cat.slug}`}
-                    className="text-text_secondary hover:underline"
+                    className="text-textSecondary hover:underline"
                   >
                     {cat.name}
                   </Link>
@@ -124,7 +124,7 @@ const PopularSubCat = ({ slug }: Props) => {
       </div>
 
       <div className="flex-1">
-        <h2 className="text-[24px] md:text-[32px] font-semibold text-text_primary pb-4">
+        <h2 className="text-[24px] md:text-[32px] font-semibold text-textPrimary pb-4">
           {selectedCategory?.name}
         </h2>
         {selectedCategory && (
@@ -139,7 +139,7 @@ const PopularSubCat = ({ slug }: Props) => {
                 >
                   <div className="relative h-48 w-full overflow-hidden">
                     <Image
-                      src={cat.image || CategoriesImage.web_development}
+                      src={cat.image || CategoriesImage.webDevelopment}
                       alt={cat.name}
                       width={500}
                       height={500}

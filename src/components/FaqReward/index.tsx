@@ -31,20 +31,20 @@ const FaqReward = () => {
   if (error) return <Error/>;
   const faqs = [
     {
-      question: footerLanguageData?.faq_join_rewards,
-      answer: footerLanguageData?.faq_join_rewards_answer,
+      question: footerLanguageData?.faqJoinRewards,
+      answer: footerLanguageData?.faqJoinRewardsAnswer,
     },
     {
-      question: footerLanguageData?.faq_more_points,
-      answer: footerLanguageData?.faq_more_points_answer,
+      question: footerLanguageData?.faqMorePoints,
+      answer: footerLanguageData?.faqMorePointsAnswer,
     },
     {
-      question: footerLanguageData?.faq_benefits,
-      answer: footerLanguageData?.faq_benefits_answer,
+      question: footerLanguageData?.faqBenefits,
+      answer: footerLanguageData?.faqBenefitsAnswer,
     },
     {
-      question: footerLanguageData?.faq_expiration,
-      answer: footerLanguageData?.faq_expiration_answer,
+      question: footerLanguageData?.faqExpiration,
+      answer: footerLanguageData?.faqExpirationAnswer,
     },
   ];
   return (
@@ -56,7 +56,7 @@ const FaqReward = () => {
         <div className="w-full mx-auto max-w-[980px] border-0 border-solid border-[#dadce8] box-border tab-[4] text-[100%]">
           <div>
             <h2 className="text-[2.25rem] font-bold mb-4 text-gray-900 text-center">
-              {footerLanguageData?.section_faq}
+              {footerLanguageData?.sectionFaq}
             </h2>
           </div>
           <div className="border-b border-gray-200 last:border-b-0 py-4" />
@@ -98,14 +98,14 @@ const FaqReward = () => {
       <section className="bg-[#F6F7F8]  py-24 grid grid-container-desktop-banner gap-y-12 pt-[4rem]">
         <div className="col-start-2 col-end-3 text-black">
           <h2 className="text-[20px] font-bold">
-            {footerLanguageData?.section_terms_conditions}
+            {footerLanguageData?.sectionTermsConditions}
           </h2>
           <p className="text-[16px]">
-            1. {footerLanguageData?.terms_1}
+            1. {footerLanguageData?.terms1}
             <br />
-            2. {footerLanguageData?.terms_2}
+            2. {footerLanguageData?.terms2}
             <br />
-            3. {footerLanguageData?.terms_3}
+            3. {footerLanguageData?.terms3}
           </p>
         </div>
       </section>

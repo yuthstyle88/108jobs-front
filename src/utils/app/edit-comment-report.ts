@@ -5,5 +5,5 @@ export default function editCommentReport(
   data: CommentReportView,
   reports: CommentReportView[],
 ): CommentReportView[] {
-  return editListImmutable("comment_report", data, reports);
+  return editListImmutable("commentReport", data, reports);
 }

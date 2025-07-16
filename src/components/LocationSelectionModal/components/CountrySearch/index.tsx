@@ -134,7 +134,7 @@ export default function CountrySearch({
             setShowDropdown(true);
           }
         }}
-        className="text-[14px] w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary placeholder:text-text_primary placeholder:font-sans"
+        className="text-[14px] w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary placeholder:text-textPrimary placeholder:font-sans"
       />
       <span className="absolute right-3 top-2.5 text-gray-500 pointer-events-none">
         <ChevronDown size={16} />
@@ -176,7 +176,7 @@ export default function CountrySearch({
                 );
               })
             ) : (
-              <div className="p-3 text-sm font-sans text-center text-text_primary">
+              <div className="p-3 text-sm font-sans text-center text-textPrimary">
                 No results
               </div>
             )}

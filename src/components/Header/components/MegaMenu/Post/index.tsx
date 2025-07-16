@@ -8,13 +8,13 @@ const Post = () => {
   const global = useTranslateFile(LanguageFile.GLOBAL);
   return (
     <div className="flex flex-col w-[420px] mt-8">
-      <span className="text-third font-medium">{global?.job_board_title}</span>
-      <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
-        {global?.job_board_description}
+      <span className="text-third font-medium">{global?.jobBoardTitle}</span>
+      <p className="mt-3 text-[0.875rem] text-textSecondary font-sans">
+        {global?.jobBoardDescription}
       </p>
       <Link prefetch={false} href="/job-board" className="mt-6">
         <span className="text-[0.875rem] font-medium text-third">
-          {global?.job_board_button}
+          {global?.jobBoardButton}
           <FontAwesomeIcon icon={faArrowRight} className="pl-2 text-third" />
         </span>
       </Link>

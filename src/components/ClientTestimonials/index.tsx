@@ -16,7 +16,7 @@ type TestimonialType = {
 const testimonials: TestimonialType[] = [
   {
     id: 1,
-    logoSrc: BusinessImage.logo_customer1,
+    logoSrc: BusinessImage.logoCustomer1,
     logoAlt: "tangerine",
     testimonial:
       "การทำงานกับ fastwork เป็นไปได้อย่างเสมอต้นเสมอปลาย ตั้งแต่เริ่มต้น จนถึงขั้นตอนการส่งงาน คือยอดเยี่ยมความสามารถหลังจากมีการส่งรูปโน๊ะ ไม่รำเนิน ต้องคอยตามงาน หรือถูกจักกับงาน ทำให้มีความ คล่องตัวมากขึ้นในการทำงาน และมีการส่งงานที่ตรง ตามที่กำหนดเวลา ไม่เคยสาย รวมถึงการช่วยแก้ ปัญหาต่างได้เร็วมาก ๆ",
@@ -25,7 +25,7 @@ const testimonials: TestimonialType[] = [
   },
   {
     id: 2,
-    logoSrc: BusinessImage.logo_customer2,
+    logoSrc: BusinessImage.logoCustomer2,
     logoAlt: "Google",
     testimonial:
       "Fastjob has been an absolute pleasure to work with. My team has been using Fastjob for several years to create beautiful graphics to explain our products. Over this time, Fastjob has been a driving force in our graphic production, and has always delivered the utmost quality in a reasonable time frame.",
@@ -34,7 +34,7 @@ const testimonials: TestimonialType[] = [
   },
   {
     id: 3,
-    logoSrc: BusinessImage.logo_customer3,
+    logoSrc: BusinessImage.logoCustomer3,
     logoAlt: "Alipay",
     testimonial:
       "Fastjob help us understand and ship localized products in an international manner.",

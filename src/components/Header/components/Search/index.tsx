@@ -19,7 +19,7 @@ type SearchForm = {
 const Search = ({ language, showSearch }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const titleSearch = searchParams.get("title_search") || "";
+  const titleSearch = searchParams.get("titleSearch") || "";
 
   const { register, handleSubmit, setValue } = useForm<SearchForm>({
     defaultValues: {
@@ -37,7 +37,7 @@ const Search = ({ language, showSearch }: Props) => {
     const trimmed = data.query.trim();
     if (trimmed) {
       const encoded = encodeURIComponent(trimmed);
-      router.push(`/job/search?title_search=${encoded}`);
+      router.push(`/job/search?titleSearch=${encoded}`);
     }
   };
 
@@ -51,7 +51,7 @@ const Search = ({ language, showSearch }: Props) => {
       <input
         type="text"
         placeholder={
-          titleSearch || language?.hint_text_header_search || "Search..."
+          titleSearch || language?.hintTextHeaderSearch || "Search..."
         }
         className="focus:outline-none rounded-[20px] border-2-white pl-5 pr-10 text-sm font-mono w-full"
         {...register("query")}

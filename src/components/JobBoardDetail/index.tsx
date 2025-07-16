@@ -37,19 +37,19 @@ const JobBoardDetail = ({ jobId }: Props) => {
     isLoading,
     error,
   } = usePublicFetch<JobPostDetail>(
-    API_ROUTES.job.job_board_detail + "/" + jobId
+    API_ROUTES.job.jobBoardDetail + "/" + jobId
   );
 
   const {
     data: profileData,
     isLoading: isLoadingProfile,
     error: isErrorProfile,
-  } = usePrivateFetch<ProfileData>(API_ROUTES.profile.get_profile, {
+  } = usePrivateFetch<ProfileData>(API_ROUTES.profile.getProfile, {
     enabled: shouldFetchProfile,
   });
 
   const userRole = profileData?.roles;
-  const isVerify = profileData?.profile?.is_verified;
+  const isVerify = profileData?.profile?.isVerified;
   const isOnlyEmployer = userRole?.length === 1 && userRole[0] === "employer";
   const isFreelancer = userRole?.includes("freelancer");
   const canShowProposalButton = !isGuest && isFreelancer && !isOnlyEmployer;
@@ -94,22 +94,22 @@ const JobBoardDetail = ({ jobId }: Props) => {
                   Open
                 </Badge>
                 <Badge variant="outline" className="text-xs px-2 py-1">
-                  {jobDetailData?.category_name}
+                  {jobDetailData?.categoryName}
                 </Badge>
-                {jobDetailData?.job_post.is_english_required && (
+                {jobDetailData?.jobPost.isEnglishRequired && (
                   <Badge variant="outline" className="text-xs px-2 py-1">
                     English Required
                   </Badge>
                 )}
               </div>
               <h1 className="text-xl font-bold text-blue-600 mb-4 break-words whitespace-pre-wrap">
-                {jobDetailData?.job_post.job_title}
+                {jobDetailData?.jobPost.jobTitle}
               </h1>
               <div className="flex items-center text-gray-600 mb-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <Image
                   src={
-                    jobDetailData?.creator?.avatar_url || ProfileImage.avatar
+                    jobDetailData?.creator?.avatarUrl || ProfileImage.avatar
                   }
                   alt="avatar"
                   className="w-8 h-8 rounded-full mr-2"
@@ -121,9 +121,9 @@ const JobBoardDetail = ({ jobId }: Props) => {
                   }}
                 />
                 <span className="font-medium">
-                  {jobDetailData?.creator?.display_name || "Anonymous"}
+                  {jobDetailData?.creator?.displayName || "Anonymous"}
                 </span>
-                {!jobDetailData?.job_post.is_anonymous_post && (
+                {!jobDetailData?.jobPost.isAnonymousPost && (
                   <span className="text-sm ml-2">
                     (@{jobDetailData?.creator?.username})
                   </span>
@@ -132,13 +132,13 @@ const JobBoardDetail = ({ jobId }: Props) => {
               <div className="text-sm text-gray-500 mb-4">
                 <span>
                   Posted:{" "}
-                  {formatDateToLong(jobDetailData?.job_post?.created_at)}
+                  {formatDateToLong(jobDetailData?.jobPost?.createdAt)}
                 </span>
-                {jobDetailData?.job_post.updated_at !==
-                  jobDetailData?.job_post.created_at && (
+                {jobDetailData?.jobPost.updatedAt !==
+                  jobDetailData?.jobPost.createdAt && (
                   <span className="ml-4">
                     Updated:{" "}
-                    {formatDateToLong(jobDetailData?.job_post.updated_at)}
+                    {formatDateToLong(jobDetailData?.jobPost.updatedAt)}
                   </span>
                 )}
               </div>
@@ -149,16 +149,16 @@ const JobBoardDetail = ({ jobId }: Props) => {
                 Job Details
               </h3>
               <div className="break-words whitespace-pre-wrap space-y-2 text-gray-700">
-                <p>{jobDetailData?.job_post.description}</p>
-                {jobDetailData?.job_post.example_url && (
+                <p>{jobDetailData?.jobPost.description}</p>
+                {jobDetailData?.jobPost.exampleUrl && (
                   <div className="mt-4">
                     <span className="font-medium">Reference URL: </span>
                     <a
-                      href={jobDetailData?.job_post.example_url}
+                      href={jobDetailData?.jobPost.exampleUrl}
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:underline"
                     >
-                      {jobDetailData?.job_post.example_url}
+                      {jobDetailData?.jobPost.exampleUrl}
                     </a>
                   </div>
                 )}
@@ -171,8 +171,8 @@ const JobBoardDetail = ({ jobId }: Props) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-gray-600">Intended Use:</span>
-                    <span className="ml-2 font-medium text-text_primary">
-                      {jobDetailData?.job_post.intended_use}
+                    <span className="ml-2 font-medium text-textPrimary">
+                      {jobDetailData?.jobPost.intendedUse}
                     </span>
                   </div>
                 </div>
@@ -180,23 +180,23 @@ const JobBoardDetail = ({ jobId }: Props) => {
             </div>
           </div>
 
-          <div className="bg-gray-50 h-fit flex flex-col p-6 rounded-lg text-text_primary">
+          <div className="bg-gray-50 h-fit flex flex-col p-6 rounded-lg text-textPrimary">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Project Information
             </h3>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">Deadline</span>
-                {jobDetailData?.job_post.deadline ? (
+                {jobDetailData?.jobPost.deadline ? (
                   <span className="font-medium">
-                    {formatDateToLong(jobDetailData?.job_post.deadline)}
+                    {formatDateToLong(jobDetailData?.jobPost.deadline)}
                     {calculateDaysUntil(
-                      jobDetailData?.job_post?.deadline || "2"
+                      jobDetailData?.jobPost?.deadline || "2"
                     ) > 0 ? (
                       <span className="text-green-600 ml-1">
                         (
                         {calculateDaysUntil(
-                          jobDetailData?.job_post?.deadline || "2"
+                          jobDetailData?.jobPost?.deadline || "2"
                         )}{" "}
                         days left)
                       </span>
@@ -212,22 +212,22 @@ const JobBoardDetail = ({ jobId }: Props) => {
               <div className="flex justify-between">
                 <span className="text-gray-600">Budget</span>
                 <span className="font-medium">
-                  {Number(jobDetailData?.job_post.budget).toFixed()} BATH
+                  {Number(jobDetailData?.jobPost.budget).toFixed()} BATH
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Work Type</span>
                 <span className="font-medium">
-                  {jobDetailData?.job_post.working_from}
+                  {jobDetailData?.jobPost.workingFrom}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Category</span>
                 <span className="font-medium">
-                  {jobDetailData?.category_name}
+                  {jobDetailData?.categoryName}
                 </span>
               </div>
-              {jobDetailData?.job_post.is_english_required && (
+              {jobDetailData?.jobPost.isEnglishRequired && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Special Requirements</span>
                   <span className="font-medium text-blue-600">English</span>
@@ -273,7 +273,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
                   Want to get find freelancer on Fastlance, find for excellent
                   freelancer now!
                 </p>
-                <p className="text-[0.875rem] text-text_secondary">
+                <p className="text-[0.875rem] text-textSecondary">
                   Generate income through job boards and platforms
                 </p>
               </div>
@@ -288,7 +288,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
             <div className="grid grid-cols-[100px_1fr_32px] gap-2">
               <div className="w-[100px] h-[100px] relative">
                 <Image
-                  src={ProfileImage.banner_apply}
+                  src={ProfileImage.bannerApply}
                   alt="banner apply"
                   width={500}
                   height={500}
@@ -300,7 +300,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
                   Want to get work through Fastlance, Register as a freelancer
                   now!
                 </p>
-                <p className="text-[0.875rem] text-text_secondary">
+                <p className="text-[0.875rem] text-textSecondary">
                   Generate income through job boards and platforms
                 </p>
               </div>

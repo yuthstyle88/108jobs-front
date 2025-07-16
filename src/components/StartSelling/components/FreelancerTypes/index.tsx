@@ -23,57 +23,57 @@ const FreelancerTypes = ({ data }: Props) => {
   const freelancerTypes: FreelancerType[] = [
     {
       title: {
-        main: data?.freelancer_standard,
-        sub: data?.freelancer_label,
+        main: data?.freelancerStandard,
+        sub: data?.freelancerLabel,
       },
       image: StartSellingImage.compare1,
-      description: data?.freelancer_standard_description,
+      description: data?.freelancerStandardDescription,
       benefits: [
-        data?.freelancer_2 ?? "",
-        data?.freelancer_3 ?? "",
-        data?.freelancer_4 ?? "",
-        data?.freelancer_5 ?? "",
-        data?.freelancer_6 ?? "",
+        data?.freelancer2 ?? "",
+        data?.freelancer3 ?? "",
+        data?.freelancer4 ?? "",
+        data?.freelancer5 ?? "",
+        data?.freelancer6 ?? "",
       ],
     },
     {
       title: {
-        main: data?.freelancer_specialist,
-        sub: data?.specialist_label,
+        main: data?.freelancerSpecialist,
+        sub: data?.specialistLabel,
       },
       image: StartSellingImage.compare2,
       badgeClass: "bg-blue-100 text-blue-600",
-      description: data?.freelancer_specialist_description,
+      description: data?.freelancerSpecialistDescription,
       benefits: [
-        data?.specialist_2 ?? "",
-        data?.specialist_3 ?? "",
-        data?.specialist_4 ?? "",
-        data?.specialist_5 ?? "",
-        data?.specialist_6 ?? "",
-        data?.specialist_7 ?? "",
+        data?.specialist2 ?? "",
+        data?.specialist3 ?? "",
+        data?.specialist4 ?? "",
+        data?.specialist5 ?? "",
+        data?.specialist6 ?? "",
+        data?.specialist7 ?? "",
       ],
     },
     {
       title: {
-        main: data?.freelancer_professional,
-        sub: data?.professional_label,
+        main: data?.freelancerProfessional,
+        sub: data?.professionalLabel,
       },
       image: StartSellingImage.compare3,
       badgeClass: "bg-blue-600 text-white",
       description:
-      data?.freelancer_professional_description,
+      data?.freelancerProfessionalDescription,
       benefits: [
-        data?.professional_2 ?? "",
-        data?.professional_3 ?? "",
-        data?.professional_4 ?? "",
-        data?.professional_5 ?? "",
+        data?.professional2 ?? "",
+        data?.professional3 ?? "",
+        data?.professional4 ?? "",
+        data?.professional5 ?? "",
       ],
     },
   ];
   return (
     <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
       <h2 className="text-3xl font-bold text-center text-primary mb-12">
-        {data?.freelancer_types_title}
+        {data?.freelancerTypesTitle}
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -125,11 +125,11 @@ const FreelancerTypes = ({ data }: Props) => {
       <div className="grid-container-desktop-banner w-full pt-[64px]">
         <div className="col-start-2 col-end-3 flex flex-col justify-center items-center">
           <h2 className="text-3xl font-bold text-center text-primary mb-4">
-            {data?.cta_title}
+            {data?.ctaTitle}
           </h2>
           <Link prefetch={false} href="/apply-freelance">
             <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
-            {data?.cta_button}
+            {data?.ctaButton}
             </button>
           </Link>
         </div>

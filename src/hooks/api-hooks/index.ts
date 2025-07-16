@@ -138,7 +138,7 @@ export const usePrivatePut = <T, D = unknown>(url: string) => {
 export const useDynamicPrivatePut = <T = void, D = unknown>() => {
   return useSWRMutation<T, AxiosError, string, DynamicPutArgs<D>>(
     "dynamic-private-put", // key chỉ để định danh mutation, không ảnh hưởng
-    async (_key, { arg }) => {
+    async (Key, { arg }) => {
       const { url, data } = arg;
       const res = await axiosPrivate.put<T>(url, data);
       return res.data;

@@ -91,7 +91,7 @@ const RewardPage = () => {
         <div className="absolute top-0 left-0 right-0 flex justify-center items-center h-[200px] text-black">
           <div className="flex flex-col justify-center items-center text-center">
             <div className="text-[20px] font-[500] leading-[23px]">
-              {rewardLanguageData?.section_rewards_points}
+              {rewardLanguageData?.sectionRewardsPoints}
             </div>
             <div className="flex items-center">
               <Image
@@ -107,7 +107,7 @@ const RewardPage = () => {
               ≈ 0.00 บาท
             </div>
             <div className="text-[14px] font-[400] leading-[16.1px] text-[rgba(43,50,59,0.6)]">
-              0.00 {rewardLanguageData?.label_total_points} 28/02/2025
+              0.00 {rewardLanguageData?.labelTotalPoints} 28/02/2025
             </div>
           </div>
         </div>
@@ -119,19 +119,19 @@ const RewardPage = () => {
               className="text-center cursor-pointer text-gray-400"
               onClick={() => route.push("/reward/earn")}
             >
-              {rewardLanguageData?.tab_collect_points}
+              {rewardLanguageData?.tabCollectPoints}
             </div>
             <div
               className="text-center cursor-pointer text-third border-b-2 border-third"
               onClick={() => route.push("/reward/reward")}
             >
-              {rewardLanguageData?.tab_redeem_rewards}
+              {rewardLanguageData?.tabRedeemRewards}
             </div>
             <div
               className="text-center cursor-pointer text-gray-400"
               onClick={() => route.push("/reward/point-history")}
             >
-              {rewardLanguageData?.tab_usage_history}
+              {rewardLanguageData?.tabUsageHistory}
             </div>
           </div>
         </div>
@@ -141,7 +141,7 @@ const RewardPage = () => {
           <div className="flex">
             <div className="h-[40px] w-[5px] bg-blue-600 mr-2 " />
             <div className="text-[31px] font-semibold text-black">
-              {rewardLanguageData?.section_awards}{" "}
+              {rewardLanguageData?.sectionAwards}{" "}
             </div>
           </div>
           <div className="flex justify-left space-x-4 py-8">
@@ -153,7 +153,7 @@ const RewardPage = () => {
               }`}
               onClick={() => setActiveButton(0)}
             >
-              {rewardLanguageData?.button_all_awards}{" "}
+              {rewardLanguageData?.buttonAllAwards}{" "}
             </button>
             <button
               className={`py-1 px-3 sm:py-2 sm:px-6 rounded-full ${
@@ -163,11 +163,11 @@ const RewardPage = () => {
               }`}
               onClick={() => setActiveButton(1)}
             >
-              {rewardLanguageData?.button_for_employment}{" "}
+              {rewardLanguageData?.buttonForEmployment}{" "}
             </button>
           </div>
           <div className="text-[24px] font-[500] leading-[27.6px] text-[rgb(29,108,226)] py-8">
-            {rewardLanguageData?.section_general}
+            {rewardLanguageData?.sectionGeneral}
           </div>
           <motion.div
             className="text-center mb-12"

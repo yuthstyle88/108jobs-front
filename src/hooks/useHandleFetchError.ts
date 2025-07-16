@@ -2,7 +2,7 @@ import useNotification from "@/hooks/useNotification";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function useHandleFetchError(error: any) {
-  const { error_message } = useNotification();
+  const { errorMessage } = useNotification();
 
   if (!error) return null;
 
@@ -18,7 +18,7 @@ export default function useHandleFetchError(error: any) {
     errorMsg = "An unknown error occurred.";
   }
 
-  error_message(null, null, errorMsg);
+  errorMessage(null, null, errorMsg);
 
   return errorMsg;
 }

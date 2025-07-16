@@ -12,14 +12,14 @@ export const useMyJobs = ({ page = 1 }: UseJobPostsProps = {}) => {
     const params = new URLSearchParams();
 
     params.append("page", page.toString());
-    params.append("page_size", "13");
+    params.append("pageSize", "13");
 
     return `?${params.toString()}`;
   }, [page]);
 
   const { data, isLoading, error, mutate } =
     usePrivateFetchParams<JobPostsResponse>(
-      `${API_ROUTES.job.get_my_job_board}${queryParams}`
+      `${API_ROUTES.job.getMyJobBoard}${queryParams}`
     );
 
   return {
@@ -27,9 +27,9 @@ export const useMyJobs = ({ page = 1 }: UseJobPostsProps = {}) => {
     pagination: data
       ? {
           page: data.page,
-          pageSize: data.page_size,
-          totalItems: data.total_items,
-          totalPages: data.total_pages,
+          pageSize: data.pageSize,
+          totalItems: data.totalItems,
+          totalPages: data.totalPages,
         }
       : null,
     isLoading,

@@ -18,23 +18,23 @@ export type RoleType = "employer" | "freelancer";
 
 export interface Skill {
   id: string;
-  profile_id: string;
-  level_id: string;
-  skill_name: string;
-  created_at: string;
-  updated_at: string;
-  level_name: string;
+  profileId: string;
+  levelId: string;
+  skillName: string;
+  createdAt: string;
+  updatedAt: string;
+  levelName: string;
 }
 export interface Education {
   id: string;
-  school_name: string;
+  schoolName: string;
   major: string;
 }
 export interface LanguageSkill {
   id: string;
   lang: string;
-  level_id: string;
-  level_name: string;
+  levelId: string;
+  levelName: string;
 }
 export interface Certificate {
   id: string;
@@ -43,44 +43,44 @@ export interface Certificate {
 
 export interface WorkExperience {
   id: string;
-  company_name: string;
+  companyName: string;
   position: string;
-  start_month: Month;
-  start_year: number;
-  is_current: boolean;
-  end_month: Month | null;
-  end_year: number | null;
+  startMonth: Month;
+  startYear: number;
+  isCurrent: boolean;
+  endMonth: Month | null;
+  endYear: number | null;
 }
 
 export interface ProfileShow {
   username: string;
   bio: string;
-  avatar_url: string;
-  is_verified: boolean;
-  member_since: string;
+  avatarUrl: string;
+  isVerified: boolean;
+  memberSince: string;
   education: Education[];
-  work_experience: WorkExperience[];
+  workExperience: WorkExperience[];
   skill: Skill[];
   language: LanguageSkill[];
-  cert_and_award: Certificate[];
+  certAndAward: Certificate[];
   roles: RoleType[];
   services: Service[];
   ratings: number;
-  user_id: string;
+  userId: string;
   reviews:Review[];
   user: User;
 }
 
 export interface Review {
   id: string;
-  profile_id: string;
-  reviewer_id: string;
+  profileId: string;
+  reviewerId: string;
   content: string;
   rating: number;
-  created_at: string; 
-  reviewer_name: string;
-  reviewer_avatar: string;
-  is_owner:string;
+  createdAt: string; 
+  reviewerName: string;
+  reviewerAvatar: string;
+  isOwner:string;
 }
 
 export interface User{

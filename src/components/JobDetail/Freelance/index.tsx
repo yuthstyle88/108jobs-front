@@ -16,34 +16,34 @@ const Freelance = ({ language, data }: Props) => {
   const { lang: currentLang } = useLanguage();
   const freelancer = [
     {
-      title: language?.work_completed,
+      title: language?.workCompleted,
       icon: JobDetailIcon.completed,
       percentage:
-        data.completion_rate === 0 ? "-" : `${data.completion_rate}%`,
+        data.completionRate === 0 ? "-" : `${data.completionRate}%`,
     },
     {
-      title: language?.can_be_sold,
+      title: language?.canBeSold,
       icon: JobDetailIcon.sold,
       percentage:
-        data.completion_rate === 0
+        data.completionRate === 0
           ? "-"
-          : `${data.completion_rate} ${language?.times}`,
+          : `${data.completionRate} ${language?.times}`,
     },
     {
-      title: language?.re_hiring,
+      title: language?.reHiring,
       icon: JobDetailIcon.response,
       percentage:
-        data.rehire_orders_count === 0
+        data.rehireOrdersCount === 0
           ? "-"
-          : `${data.rehire_orders_count} ${language?.times}`,
+          : `${data.rehireOrdersCount} ${language?.times}`,
     },
     {
       title: language?.respond,
       icon: JobDetailIcon.hiring,
       percentage:
-        data.reviews_count === 0
+        data.reviewsCount === 0
           ? "-"
-          : `${data.reviews_count} ${language?.minutes}`,
+          : `${data.reviewsCount} ${language?.minutes}`,
     },
   ];
   return (
@@ -51,11 +51,11 @@ const Freelance = ({ language, data }: Props) => {
       <h2 className="text-[1.25rem] text-third font-medium">
         {language?.freelancer}
       </h2>
-      <div className="mx-auto bg-white rounded-xl border-border_primary border-1 shadow-sm p-6">
+      <div className="mx-auto bg-white rounded-xl border-borderPrimary border-1 shadow-sm p-6">
         <div className="flex items-start justify-between mb-4">
           <Link prefetch={false} href={`/${currentLang}/user/${data.user.username}`} className="flex items-start space-x-4">
             <Image
-              src={data.user.avatar_url || ProfileImage.avatar}
+              src={data.user.avatarUrl || ProfileImage.avatar}
               alt="Profile"
               width={88}
               height={88}
@@ -63,14 +63,14 @@ const Freelance = ({ language, data }: Props) => {
             />
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-lg text-text_primary font-semibold">
-                  {data.user.display_name}
+                <h2 className="text-lg text-textPrimary font-semibold">
+                  {data.user.displayName}
                 </h2>
                 <button className="px-3 py-1 text-blue-600 border border-blue-600 rounded-lg text-sm hover:bg-blue-50">
-                  {language?.view_profile}
+                  {language?.viewProfile}
                 </button>
               </div>
-              <p className="text-gray-600 text-sm mt-1 leading-relaxed font-sans text-text_secondary line-clamp-4">
+              <p className="text-gray-600 text-sm mt-1 leading-relaxed font-sans text-textSecondary line-clamp-4">
                 {data.user.bio}
               </p>
             </div>
@@ -85,7 +85,7 @@ const Freelance = ({ language, data }: Props) => {
             >
               <Image src={item.icon} alt="icon" className="h-6" />
               <div>
-                <div className="text-text_secondary font-sans">
+                <div className="text-textSecondary font-sans">
                   {item.title}
                 </div>
                 <div className="text-blue-600 font-semibold">

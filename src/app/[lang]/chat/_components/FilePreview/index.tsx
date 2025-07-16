@@ -45,7 +45,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({
         )}
       </div>
 
-      <div className="flex-1 flex flex-col ml-4 text-text_primary overflow-hidden">
+      <div className="flex-1 flex flex-col ml-4 text-textPrimary overflow-hidden">
         <strong className="line-clamp-1 break-all text-sm">
           {fileName || "Attach File"}
         </strong>

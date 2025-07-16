@@ -39,12 +39,12 @@ const Withdrawal = () => {
     <div className="container mx-auto px-4 py-8 ">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 space-y-4 sm:space-y-0">
         <h1 className="text-2xl font-semibold text-gray-800">
-          {sellerWithdrawalLanguage?.my_income}
+          {sellerWithdrawalLanguage?.myIncome}
         </h1>
         <div className="flex items-center space-x-2">
           <button className="text-blue-600 flex items-center text-sm font-medium">
             <Info className="w-4 h-4 mr-1" />
-            {sellerWithdrawalLanguage?.payment_steps}
+            {sellerWithdrawalLanguage?.paymentSteps}
           </button>
         </div>
       </div>
@@ -53,7 +53,7 @@ const Withdrawal = () => {
         <div className="bg-blue-600 text-white rounded-lg shadow p-6 lg:col-span-2">
           <div className="flex items-center space-x-2 mb-4">
             <h2 className="text-lg font-medium">
-              {sellerWithdrawalLanguage?.accumulated_balance}
+              {sellerWithdrawalLanguage?.accumulatedBalance}
             </h2>
             <Info className="w-5 h-5 text-white opacity-80" />
           </div>
@@ -61,17 +61,17 @@ const Withdrawal = () => {
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-medium text-gray-800 mb-4">
-            {sellerWithdrawalLanguage?.verification_info_title}
+            {sellerWithdrawalLanguage?.verificationInfoTitle}
           </h2>
           <ul className="space-y-3">
             <li className="flex items-start">
               <span className="text-gray-700 mr-2">•</span>
               <div>
                 <span className="text-gray-700">
-                  {sellerWithdrawalLanguage?.verification_id}: {""}
+                  {sellerWithdrawalLanguage?.verificationId}: {""}
                 </span>
                 <Link prefetch={false} href="#" className="text-blue-600 hover:underline">
-                  {sellerWithdrawalLanguage?.check_your_info}
+                  {sellerWithdrawalLanguage?.checkYourInfo}
                 </Link>
               </div>
             </li>
@@ -79,10 +79,10 @@ const Withdrawal = () => {
               <span className="text-gray-700 mr-2">•</span>
               <div>
                 <span className="text-gray-700">
-                  {sellerWithdrawalLanguage?.verification_tax}: {""}
+                  {sellerWithdrawalLanguage?.verificationTax}: {""}
                 </span>
                 <Link prefetch={false} href="#" className="text-blue-600 hover:underline">
-                  {sellerWithdrawalLanguage?.add_data} →
+                  {sellerWithdrawalLanguage?.addData} →
                 </Link>
               </div>
             </li>
@@ -90,10 +90,10 @@ const Withdrawal = () => {
               <span className="text-gray-700 mr-2">•</span>
               <div>
                 <span className="text-gray-700">
-                  {sellerWithdrawalLanguage?.verification_bank}: {""}
+                  {sellerWithdrawalLanguage?.verificationBank}: {""}
                 </span>
                 <Link prefetch={false} href="#" className="text-blue-600 hover:underline">
-                  {sellerWithdrawalLanguage?.add_data} →
+                  {sellerWithdrawalLanguage?.addData} →
                 </Link>
               </div>
             </li>
@@ -105,12 +105,12 @@ const Withdrawal = () => {
           <div className="flex items-center">
             <MessageSquare className="w-5 h-5 text-blue-600 mr-2" />
             <h2 className="text-lg font-medium text-gray-800">
-              {sellerWithdrawalLanguage?.transaction_history}
+              {sellerWithdrawalLanguage?.transactionHistory}
             </h2>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-3 sm:space-y-0">
             <select
-              className="px-4 py-2 border text-text_primary border-gray-300 rounded-md focus:outline-none"
+              className="px-4 py-2 border text-textPrimary border-gray-300 rounded-md focus:outline-none"
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
             >
@@ -128,7 +128,7 @@ const Withdrawal = () => {
               <option value="December">December</option>
             </select>
             <select
-              className="px-4 py-2 text-text_primary border border-gray-300 rounded-md focus:outline-none"
+              className="px-4 py-2 text-textPrimary border border-gray-300 rounded-md focus:outline-none"
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
@@ -145,7 +145,7 @@ const Withdrawal = () => {
               <Info className="w-5 h-5 text-blue-600" />
             </div>
             <p className="ml-3 text-sm text-blue-700">
-              {sellerWithdrawalLanguage?.transfer_note}
+              {sellerWithdrawalLanguage?.transferNote}
             </p>
           </div>
         </div>
@@ -155,28 +155,28 @@ const Withdrawal = () => {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {sellerWithdrawalLanguage?.column_withdrawal_code}
+                  {sellerWithdrawalLanguage?.columnWithdrawalCode}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {sellerWithdrawalLanguage?.column_closing_date}
+                  {sellerWithdrawalLanguage?.columnClosingDate}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {sellerWithdrawalLanguage?.column_transfer_date}
+                  {sellerWithdrawalLanguage?.columnTransferDate}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {sellerWithdrawalLanguage?.column_account}
+                  {sellerWithdrawalLanguage?.columnAccount}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {sellerWithdrawalLanguage?.column_bank}
+                  {sellerWithdrawalLanguage?.columnBank}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {sellerWithdrawalLanguage?.column_amount}
+                  {sellerWithdrawalLanguage?.columnAmount}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {sellerWithdrawalLanguage?.column_status}
+                  {sellerWithdrawalLanguage?.columnStatus}
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  {sellerWithdrawalLanguage?.column_note}
+                  {sellerWithdrawalLanguage?.columnNote}
                 </th>
               </tr>
             </thead>
@@ -219,7 +219,7 @@ const Withdrawal = () => {
                       </div>
                       <p className="text-gray-500 text-sm">
                         {interpolateDouble(
-                          sellerWithdrawalLanguage?.no_transactions || "",
+                          sellerWithdrawalLanguage?.noTransactions || "",
                           { month: selectedMonth, year: selectedYear }
                         )}
                       </p>

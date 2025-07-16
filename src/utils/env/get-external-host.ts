@@ -5,7 +5,7 @@ import { isBrowser } from "@/utils/browser";
 export default function getExternalHost(): string {
   /* 1. safe-guard เมื่ออยู่บน browser */
   if (isBrowser()) {
-    const host = (window as any).isoData?.lemmy_external_host;
+    const host = (window as any).isoData?.lemmyExternalHost;
     if (host) return host;
   }
 

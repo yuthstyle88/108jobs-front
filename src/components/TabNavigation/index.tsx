@@ -41,14 +41,14 @@ export default function TabNavigation({
   return (
     <div className="">
       <div className="sticky top-[48px] md:top-[70px] z-10 w-full bg-white overflow-y-hidden">
-        <div className="grid grid-cols-[1fr_1fr_1fr_1fr] border-b-[2px] border-b-border_primary">
+        <div className="grid grid-cols-[1fr_1fr_1fr_1fr] border-b-[2px] border-b-borderPrimary">
           {tabLabel.map((value, index) => (
             <div
               key={index}
               className={`relative hover:text-third duration-150 flex justify-center items-center cursor-pointer px-4 py-3 font-bold ${
                 currentTab === index
                   ? "text-third  after:absolute after:bottom-[-2px] after:h-[2px] after:w-full after:bg-third"
-                  : "text-text_secondary"
+                  : "text-textSecondary"
               }`}
               onClick={() => {
                 setCurrentTab(index);

@@ -58,7 +58,7 @@ export const ChangePassword = ({
         body: JSON.stringify({
           token: tokenPassword,
           password: data.password,
-          password_verify: data.confirmPassword,
+          passwordVerify: data.confirmPassword,
         }),
       });
 
@@ -97,7 +97,7 @@ export const ChangePassword = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-      <p className="text-text_primary text-sm font-sans">
+      <p className="text-textPrimary text-sm font-sans">
         Create a new password. Your password must be at least 8 characters long
         and contain a mix of letters and numbers.
       </p>
@@ -108,23 +108,23 @@ export const ChangePassword = ({
       )}
 
       <CustomInput
-        label={authen?.label_password}
+        label={authen?.labelPassword}
         name="password"
         type="password"
         register={register("password")}
         error={errors.password?.message}
-        placeholder={authen?.placeholder_password}
+        placeholder={authen?.placeholderPassword}
         showPassword={showPassword}
         toggleShowPassword={() => setShowPassword(!showPassword)}
       />
 
       <CustomInput
-        label={authen?.label_confirm_password}
+        label={authen?.labelConfirmPassword}
         name="confirmPassword"
         type="password"
         register={register("confirmPassword")}
         error={errors.confirmPassword?.message}
-        placeholder={authen?.placeholder_confirm_password}
+        placeholder={authen?.placeholderConfirmPassword}
         showPassword={showConfirmPassword}
         toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
       />
@@ -141,7 +141,7 @@ export const ChangePassword = ({
           disabled={isSubmitting}
           className="submit-button py-3"
         >
-          {isSubmitting ? <LoadingCircle /> : authen?.confirm_button}
+          {isSubmitting ? <LoadingCircle /> : authen?.confirmButton}
         </button>
       </div>
     </form>

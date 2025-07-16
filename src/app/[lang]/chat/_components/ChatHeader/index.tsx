@@ -25,13 +25,13 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
           height={40}
           className="w-10 h-10 object-cover rounded-full"
         />
-        <span className="text-sm font-medium text-text_primary">
+        <span className="text-sm font-medium text-textPrimary">
           {displayName}
         </span>
       </div>
       <Link prefetch={false}
         href="#"
-        className="text-third hover:bg-gray-100 text-[14px] px-4 py-2 rounded-sm border border-border_primary"
+        className="text-third hover:bg-gray-100 text-[14px] px-4 py-2 rounded-sm border border-borderPrimary"
       >
         {guideText}
       </Link>

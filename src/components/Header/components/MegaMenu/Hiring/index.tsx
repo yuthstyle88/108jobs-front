@@ -9,17 +9,17 @@ const Hiring = () => {
   return (
     <div className="flex flex-col w-[420px] mt-8">
       <span className="text-third font-medium">
-        {global?.company_registration_title}
+        {global?.companyRegistrationTitle}
       </span>
-      <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
-        {global?.login_steps_intro} <br />
-        1. {global?.company_registration_step_1} <br />
-        2. {global?.company_registration_step_2} <br />
-        3. {global?.company_registration_step_3}
+      <p className="mt-3 text-[0.875rem] text-textSecondary font-sans">
+        {global?.loginStepsIntro} <br />
+        1. {global?.companyRegistrationStep1} <br />
+        2. {global?.companyRegistrationStep2} <br />
+        3. {global?.companyRegistrationStep3}
       </p>
       <Link prefetch={false} href="#" className="mt-6">
         <span className="text-[0.875rem] font-medium text-third">
-          {global?.chat_to_hire_button}
+          {global?.chatToHireButton}
           <FontAwesomeIcon icon={faArrowRight} className="pl-2 text-third" />
         </span>
       </Link>

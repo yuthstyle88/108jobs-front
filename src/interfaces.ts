@@ -11,16 +11,16 @@ export type RouteData = Record<string, RequestState<any>>;
 export interface IsoData<T extends RouteData = any> {
   path: string;
   routeData: T;
-  site_res: GetSiteResponse;
+  siteRes: GetSiteResponse;
   errorPageData?: ErrorPageData;
   showAdultConsentModal: boolean;
-  lemmy_external_host: string;
+  lemmyExternalHost: string;
 }
 
 export type IsoDataOptionalSite<T extends RouteData = any> = Partial<
   IsoData<T>
 > &
-  Pick<IsoData<T>, Exclude<keyof IsoData<T>, "site_res">>;
+  Pick<IsoData<T>, Exclude<keyof IsoData<T>, "siteRes">>;
 
 declare global {
   interface Window {
@@ -34,10 +34,10 @@ export interface PostFormParams {
   url?: string;
   body?: string;
   nsfw?: boolean;
-  language_id?: number;
-  community_id?: number;
-  custom_thumbnail?: string;
-  alt_text?: string;
+  languageId?: number;
+  communityId?: number;
+  customThumbnail?: string;
+  altText?: string;
 }
 
 export enum CommentViewType {

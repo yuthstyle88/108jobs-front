@@ -15,9 +15,9 @@ import React, {
 
 interface MessagePayload {
   message: string;
-  file_url?: string;
-  file_type?: string;
-  file_name?: string;
+  fileUrl?: string;
+  fileType?: string;
+  fileName?: string;
 }
 
 interface WebSocketContextValue {
@@ -46,14 +46,14 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   const [connectionError, setConnectionError] = useState(false);
   const router = useRouter();
   const { data: userData } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
+    API_ROUTES.profile.getProfile
   );
 
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isManuallyClosingRef = useRef(false);
   const [connectionAttemptKey, setConnectionAttemptKey] = useState(0);
 
-  const wsUrl = `wss://fastwork.ibrowe.com/api/v4/ws/?token=${token}&room_id=${partnerId}&user_id=${userData?.user.id}`;
+  const wsUrl = `wss://fastwork.ibrowe.com/api/v4/ws/?token=${token}&roomId=${partnerId}&userId=${userData?.user.id}`;
 
   useEffect(() => {
     if (!token || !partnerId || !userData) return;

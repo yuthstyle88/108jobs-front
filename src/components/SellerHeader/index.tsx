@@ -26,7 +26,7 @@ const SellerHeader = () => {
     data: user,
     isLoading,
     error,
-  } = usePrivateFetch<ProfileData>(API_ROUTES.profile.get_profile);
+  } = usePrivateFetch<ProfileData>(API_ROUTES.profile.getProfile);
 
   const { logout } = useLogout();
 
@@ -45,16 +45,16 @@ const SellerHeader = () => {
   return (
     <header className="bg-white border-b border-gray-200">
       <div className="flex items-center justify-between px-8 py-4">
-        <h1 className="text-xl text-text_primary">
-          {interpolate(globalLanguageData?.greeting_user || "", {
+        <h1 className="text-xl text-textPrimary">
+          {interpolate(globalLanguageData?.greetingUser || "", {
             username: user?.user.username || "",
           })}
         </h1>
         <div className="flex items-center space-x-4">
           <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center">
-            <span>{globalLanguageData?.fastwork_rewards_button}</span>
+            <span>{globalLanguageData?.fastworkRewardsButton}</span>
             <span className="ml-2 bg-blue-500 px-2 py-0.5 rounded text-xs">
-              {globalLanguageData?.fastwork_rewards_subtext}
+              {globalLanguageData?.fastworkRewardsSubtext}
             </span>
           </button>
           <button className="p-2 hover:bg-gray-100 rounded-full">
@@ -78,7 +78,7 @@ const SellerHeader = () => {
               className="flex justify-center items-center"
             >
               <Image
-                src={user?.user.avatar_url || ProfileImage.avatar}
+                src={user?.user.avatarUrl || ProfileImage.avatar}
                 alt="avatar"
                 className="w-8 h-8 rounded-full object-cover"
                 width={500}
@@ -94,14 +94,14 @@ const SellerHeader = () => {
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <User className="w-4 h-4 mr-3 text-gray-500" />
-                    <span>{globalLanguageData?.freelancer_profile}</span>
+                    <span>{globalLanguageData?.freelancerProfile}</span>
                   </Link>
                   <Link prefetch={false}
                     href="/seller-account-setting/freelance-profile"
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <Settings className="w-4 h-4 mr-3 text-gray-500" />
-                    <span>{globalLanguageData?.menu_account_settings}</span>
+                    <span>{globalLanguageData?.menuAccountSettings}</span>
                   </Link>
                   <div className="border-t border-gray-100 my-1"></div>
                   <button
@@ -109,7 +109,7 @@ const SellerHeader = () => {
                     className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <LogOut className="w-4 h-4 mr-3 text-gray-500" />
-                    <span>{globalLanguageData?.menu_logout}</span>
+                    <span>{globalLanguageData?.menuLogout}</span>
                   </button>
                 </div>
               </div>

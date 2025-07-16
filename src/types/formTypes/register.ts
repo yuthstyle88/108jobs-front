@@ -6,7 +6,7 @@ export type RegisterFormData = {
   termsAccepted: boolean; 
   privacyAccepted: boolean;
   promotionalAccepted?: boolean;
-  captcha_uuid?: string;
-  captcha_answer: string;
+  captchaUuid?: string;
+  captchaAnswer: string;
   role: "Employer" | "Freelancer";
 };

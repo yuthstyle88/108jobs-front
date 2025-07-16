@@ -34,7 +34,7 @@ const { lang } = useLanguage();
           <div className="flex items-center space-x-3">
             <div className="rounded-full bg-gray-200 flex items-center justify-center">
               <Image
-                src={user?.user.avatar_url || ProfileImage.avatar}
+                src={user?.user.avatarUrl || ProfileImage.avatar}
                 alt="avatar"
                 className="rounded-full w-12 h-12 object-cover"
                 width={500}
@@ -43,8 +43,8 @@ const { lang } = useLanguage();
             </div>
             <div>
               <p className="font-medium text-gray-900">{user?.user.username}</p>
-              <p className="text-sm font-sans text-text_secondary underline">
-                {data?.label_view_profile}
+              <p className="text-sm font-sans text-textSecondary underline">
+                {data?.labelViewProfile}
               </p>
             </div>
           </div>
@@ -77,7 +77,7 @@ const { lang } = useLanguage();
             icon={faGear}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_account_settings}</span>
+          <span className="text-gray-700">{data?.menuAccountSettings}</span>
         </Link>
         <Link prefetch={false}
           href="/chat"
@@ -87,7 +87,7 @@ const { lang } = useLanguage();
             icon={faMessage}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_messages_orders}</span>
+          <span className="text-gray-700">{data?.menuMessagesOrders}</span>
         </Link>
         <Link prefetch={false}
           href="/promotion"
@@ -97,7 +97,7 @@ const { lang } = useLanguage();
             icon={faTicket}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_coupons}</span>
+          <span className="text-gray-700">{data?.menuCoupons}</span>
         </Link>
         <Link prefetch={false}
           href="/favorites"
@@ -107,7 +107,7 @@ const { lang } = useLanguage();
             icon={faHeart}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_favorite_jobs}</span>
+          <span className="text-gray-700">{data?.menuFavoriteJobs}</span>
         </Link>
         <Link prefetch={false}
           href="/job-board"
@@ -117,7 +117,7 @@ const { lang } = useLanguage();
             icon={faBullhorn}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_job_board}</span>
+          <span className="text-gray-700">{data?.menuJobBoard}</span>
         </Link>
         <Link prefetch={false}
           href="/reward/earn"
@@ -140,7 +140,7 @@ const { lang } = useLanguage();
             icon={faCodePullRequest}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_become_freelancer}</span>
+          <span className="text-gray-700">{data?.menuBecomeFreelancer}</span>
         </Link>
         <Link prefetch={false}
           href="/consent-management"
@@ -150,7 +150,7 @@ const { lang } = useLanguage();
             icon={faBarsProgress}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_data_management}</span>
+          <span className="text-gray-700">{data?.menuDataManagement}</span>
         </Link>
         <button
           onClick={logout}
@@ -160,7 +160,7 @@ const { lang } = useLanguage();
             icon={faSignOut}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menu_logout}</span>
+          <span className="text-gray-700">{data?.menuLogout}</span>
         </button>
       </div>
     </div>

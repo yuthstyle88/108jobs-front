@@ -25,7 +25,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const category_related = [
+const categoryRelated = [
   {
     image: CategoriesImage.wordpress,
     title: "ทำเว็บไซต์ Wordpress เว็บสำเร็จรูป",
@@ -44,23 +44,23 @@ const CategoryDetail = () => {
 
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
   const selectedTag = searchParams.get("q") || "";
-  const minPrice = searchParams.get("min_price");
-  const maxPrice = searchParams.get("max_price");
+  const minPrice = searchParams.get("minPrice");
+  const maxPrice = searchParams.get("maxPrice");
   const rating = searchParams.get("rating") || "";
-  const sort = searchParams.get("sort_by") || "";
-  const titleSearch = searchParams.get("title_search") || "";
+  const sort = searchParams.get("sortBy") || "";
+  const titleSearch = searchParams.get("titleSearch") || "";
 
   const encodedTitleSearch = encodeURIComponent(titleSearch);
 
   const queryParams = buildQueryParams({
-    min_price: minPrice ? parseFloat(minPrice) : undefined,
-    max_price: maxPrice ? parseFloat(maxPrice) : undefined,
+    minPrice: minPrice ? parseFloat(minPrice) : undefined,
+    maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
     rating,
-    sort_by: sort,
+    sortBy: sort,
     page: currentPage,
     limit: 10,
     q: selectedTag,
-    title_search: encodedTitleSearch,
+    titleSearch: encodedTitleSearch,
   });
 
   const {
@@ -74,15 +74,15 @@ const CategoryDetail = () => {
     isLoading: isJobListLoading,
     error: errorJobList,
   } = usePrivateFetchParams<JobList>(
-    `${API_ROUTES.job.get_job_by_id}?${queryParams}`
+    `${API_ROUTES.job.getJobById}?${queryParams}`
   );
 
-  const serviceCategoryId = searchResults?.service_categories?.[0]?.id ?? null;
+  const serviceCategoryId = searchResults?.serviceCategories?.[0]?.id ?? null;
 
   const { data: tagsData, isLoading: isTagLoading } =
     usePrivateFetchParams<Tags>(
       serviceCategoryId
-        ? `${API_ROUTES.job.get_tags_by_id}/${serviceCategoryId}`
+        ? `${API_ROUTES.job.getTagsById}/${serviceCategoryId}`
         : null
     );
 
@@ -113,17 +113,17 @@ const CategoryDetail = () => {
   };
 
   const handleFilterChange = (filter: {
-    min_price?: number;
-    max_price?: number;
+    minPrice?: number;
+    maxPrice?: number;
     rating?: string;
   }) => {
     const newParams = new URLSearchParams(searchParams.toString());
 
-    if (filter.min_price === undefined) newParams.delete("min_price");
-    else newParams.set("min_price", filter.min_price.toString());
+    if (filter.minPrice === undefined) newParams.delete("minPrice");
+    else newParams.set("minPrice", filter.minPrice.toString());
 
-    if (filter.max_price === undefined) newParams.delete("max_price");
-    else newParams.set("max_price", filter.max_price.toString());
+    if (filter.maxPrice === undefined) newParams.delete("maxPrice");
+    else newParams.set("maxPrice", filter.maxPrice.toString());
 
     if (!filter.rating) newParams.delete("rating");
     else newParams.set("rating", filter.rating);
@@ -134,8 +134,8 @@ const CategoryDetail = () => {
 
   const handleSortChange = (sort: string) => {
     const newParams = new URLSearchParams(searchParams.toString());
-    if (!sort) newParams.delete("sort_by");
-    else newParams.set("sort_by", sort);
+    if (!sort) newParams.delete("sortBy");
+    else newParams.set("sortBy", sort);
     newParams.set("page", "1");
     router.push(`?${newParams.toString()}`);
   };
@@ -154,10 +154,10 @@ const CategoryDetail = () => {
           <Image src={CategoriesIcon.guaranteed} alt="guaranteed" width={22} />
           <p className="text-base font-medium">
             <span className="text-third">
-              {jobCategoryLanguage?.safe_no_scam}{" "}
+              {jobCategoryLanguage?.safeNoScam}{" "}
             </span>
-            <span className="text-text_primary">
-              {jobCategoryLanguage?.support_throughout}
+            <span className="text-textPrimary">
+              {jobCategoryLanguage?.supportThroughout}
             </span>
           </p>
         </Link>
@@ -165,12 +165,12 @@ const CategoryDetail = () => {
 
       <section className="grid-container-job pt-2 sm:pt-0">
         <div className="col-start-2 col-end-auto flex flex-row items-center gap-2 mb-2 sm:mb-6 mt-4 ">
-          <h1 className="text-[20px] md:text-[32px] text-text_primary font-semibold ">
+          <h1 className="text-[20px] md:text-[32px] text-textPrimary font-semibold ">
             Search results “ {titleSearch} ” in
           </h1>
           <Link prefetch={false} href={`/categories`}>
             <h3 className="text-third underline text-[20px] md:text-[32px] font-semibold">
-              {jobCategoryLanguage?.all_job_types}
+              {jobCategoryLanguage?.allJobTypes}
             </h3>
           </Link>
         </div>
@@ -199,8 +199,8 @@ const CategoryDetail = () => {
                 language={jobCategoryLanguage}
                 onFilterChange={handleFilterChange}
                 currentFilters={{
-                  min_price: minPrice ? parseFloat(minPrice) : undefined,
-                  max_price: maxPrice ? parseFloat(maxPrice) : undefined,
+                  minPrice: minPrice ? parseFloat(minPrice) : undefined,
+                  maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
                   rating,
                 }}
               />
@@ -217,20 +217,20 @@ const CategoryDetail = () => {
 
       <section className="pb-10 mt-4">
         <div className="grid-container-job">
-          <div className="flex justify-between col-start-2 col-end-auto mb-3 text-[0.875rem] text-text_primary font-sans">
+          <div className="flex justify-between col-start-2 col-end-auto mb-3 text-[0.875rem] text-textPrimary font-sans">
             <div>
-              {interpolateDouble(jobCategoryLanguage?.found_jobs || "", {
-                job_number: searchResults.jobs.length,
+              {interpolateDouble(jobCategoryLanguage?.foundJobs || "", {
+                jobNumber: searchResults.jobs.length,
               })}
             </div>
             <div>
-              {interpolateDouble(jobCategoryLanguage?.page_info || "", {
-                current_page: searchResults.page,
-                total_pages: searchResults.total_pages,
+              {interpolateDouble(jobCategoryLanguage?.pageInfo || "", {
+                currentPage: searchResults.page,
+                totalPages: searchResults.totalPages,
               })}
             </div>
           </div>
-          <div className="col-start-2 col-end-auto text-[0.875rem] text-text_primary font-sans">
+          <div className="col-start-2 col-end-auto text-[0.875rem] text-textPrimary font-sans">
             {isJobListLoading ? (
               <section className="col-start-2 col-end-auto grid grid-cols-1 sm:grid-cols-[repeat(2,minmax(1px,1fr))] md:grid-cols-[repeat(3,minmax(1px,1fr))] lg:grid-cols-[repeat(4,minmax(1px,1fr))] 2xl:grid-cols-[repeat(5,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
                 {Array.from({ length: 20 }).map((_, index) => (
@@ -249,23 +249,23 @@ const CategoryDetail = () => {
           </div>
 
           <section className="flex justify-center col-start-2 col-end-auto mt-12">
-            {searchResults.total_pages > 1 && (
+            {searchResults.totalPages > 1 && (
               <Pagination
-                totalPages={searchResults.total_pages}
+                totalPages={searchResults.totalPages}
                 currentPage={searchResults.page}
                 onPageChange={handlePageChange}
               />
             )}
           </section>
           <section className="col-start-2 col-end-auto mt-12">
-            <h2 className="mb-6 text-text_primary font-medium text-[1.5rem] leading-[1.15]">
+            <h2 className="mb-6 text-textPrimary font-medium text-[1.5rem] leading-[1.15]">
               {interpolateDouble(
-                jobCategoryLanguage?.categories_related_to_job_type || "",
-                { job_type: "SEO" }
+                jobCategoryLanguage?.categoriesRelatedToJobType || "",
+                { jobType: "SEO" }
               )}
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-[repeat(4,minmax(1px,1fr))] gap-[1.25rem] my-3">
-              {category_related.map((category, index) => (
+              {categoryRelated.map((category, index) => (
                 <CategoryRelated items={category} key={index} />
               ))}
             </div>

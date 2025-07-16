@@ -33,7 +33,7 @@ const AccountSettings = () => {
     handleSelectFile,
     handleImageUpload,
     closeImageModal,
-  } = useImageUpload(profileData?.user?.avatar_url);
+  } = useImageUpload(profileData?.user?.avatarUrl);
 
   const {
     register,
@@ -62,10 +62,10 @@ const AccountSettings = () => {
     >
       <div className="border-b border-gray-200 p-5">
         <h2 className="text-lg font-medium text-gray-800">
-          {sellerProfileLanguage?.freelancer_account_info_title}
+          {sellerProfileLanguage?.freelancerAccountInfoTitle}
         </h2>
         <p className="text-sm text-gray-500">
-          {sellerProfileLanguage?.freelancer_account_info_subtitle}
+          {sellerProfileLanguage?.freelancerAccountInfoSubtitle}
         </p>
       </div>
 
@@ -74,10 +74,10 @@ const AccountSettings = () => {
           <div className="md:w-2/3">
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {sellerProfileLanguage?.username_label}
+                {sellerProfileLanguage?.usernameLabel}
               </label>
               <p className="text-xs text-gray-500 mb-2">
-                {sellerProfileLanguage?.username_note}
+                {sellerProfileLanguage?.usernameNote}
               </p>
               <div className="flex">
                 <span className="inline-flex items-center px-3 py-2 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
@@ -85,7 +85,7 @@ const AccountSettings = () => {
                 </span>
                 <input
                   {...register("username")}
-                  className="text-text_primary flex-1 px-3 py-2 border border-gray-300 rounded-r-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="text-textPrimary flex-1 px-3 py-2 border border-gray-300 rounded-r-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
               {errors.username && (
@@ -97,58 +97,58 @@ const AccountSettings = () => {
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {sellerProfileLanguage?.display_name_label}
+                {sellerProfileLanguage?.displayNameLabel}
               </label>
               <p className="text-xs text-gray-500 mb-2 ">
-                {sellerProfileLanguage?.display_name_note}
+                {sellerProfileLanguage?.displayNameNote}
               </p>
               <input
-                {...register("display_name")}
-                className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                {...register("displayName")}
+                className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
-              {errors.display_name && (
+              {errors.displayName && (
                 <p className="text-red-500 text-[12px] font-sans mt-1">
-                  {errors.display_name.message}
+                  {errors.displayName.message}
                 </p>
               )}
             </div>
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {sellerProfileLanguage?.freelancer_type_label}
+                {sellerProfileLanguage?.freelancerTypeLabel}
               </label>
               <p className="text-xs text-gray-500 mb-2">
-                {sellerProfileLanguage?.freelancer_type_note}
+                {sellerProfileLanguage?.freelancerTypeNote}
               </p>
               <div className="flex space-x-4">
                 <label
                   className={`flex items-center border rounded-md px-4 py-2 cursor-pointer ${
-                    watch("freelancer_type") === "Parttime" && "border-third"
+                    watch("freelancerType") === "Parttime" && "border-third"
                   }`}
                 >
                   <input
                     type="radio"
                     className="mr-2 text-third"
                     value="Parttime"
-                    {...register("freelancer_type")}
+                    {...register("freelancerType")}
                   />
-                  <span className="text-text_primary">
-                    {sellerProfileLanguage?.part_time}
+                  <span className="text-textPrimary">
+                    {sellerProfileLanguage?.partTime}
                   </span>
                 </label>
                 <label
                   className={`flex items-center border rounded-md px-4 py-2 cursor-pointer ${
-                    watch("freelancer_type") === "Fulltime" && "border-third"
+                    watch("freelancerType") === "Fulltime" && "border-third"
                   }`}
                 >
                   <input
                     type="radio"
-                    {...register("freelancer_type")}
+                    {...register("freelancerType")}
                     value="Fulltime"
                     className="mr-2 text-third"
                   />
-                  <span className="text-text_primary">
-                    {sellerProfileLanguage?.full_time}
+                  <span className="text-textPrimary">
+                    {sellerProfileLanguage?.fullTime}
                   </span>
                 </label>
               </div>
@@ -198,13 +198,13 @@ const AccountSettings = () => {
 
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {sellerProfileLanguage?.about_freelancer_label}
+            {sellerProfileLanguage?.aboutFreelancerLabel}
           </label>
           <textarea
             {...register("bio")}
             placeholder="Mô tả ngắn gọn điểm mạnh của bạn để giúp khách hàng quyết định"
             rows={5}
-            className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           ></textarea>
         </div>
 
@@ -215,9 +215,9 @@ const AccountSettings = () => {
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting || isUpdateMuting || isUploadMuting ? (
-              <span>{sellerProfileLanguage?.save_button}...</span>
+              <span>{sellerProfileLanguage?.saveButton}...</span>
             ) : (
-              sellerProfileLanguage?.save_button
+              sellerProfileLanguage?.saveButton
             )}
           </button>
         </div>

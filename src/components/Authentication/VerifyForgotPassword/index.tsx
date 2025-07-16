@@ -148,12 +148,12 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
   return (
     <div className="text-center max-w-md mx-auto">
       <div className="my-[3rem]">
-        <p className="text-text_primary text-base font-sans">
-          {authen?.verification_forgot_message} <br />{" "}
+        <p className="text-textPrimary text-base font-sans">
+          {authen?.verificationForgotMessage} <br />{" "}
           {forgotEmail?.email}
         </p>
-        <p className="text-text_primary text-base font-sans">
-          {authen?.enter_code_prompt}
+        <p className="text-textPrimary text-base font-sans">
+          {authen?.enterCodePrompt}
         </p>
       </div>
       <div className="flex justify-center gap-2 mb-4">
@@ -171,7 +171,7 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
                 inputRefs.current[index - 1]?.focus();
               }
             }}
-            className={`text-text_primary w-12 h-12 text-center border rounded ${
+            className={`text-textPrimary w-12 h-12 text-center border rounded ${
               codeError ? "border-red-500" : "border-gray-300"
             } focus:outline-none focus:border-blue-500`}
             maxLength={1}
@@ -197,7 +197,7 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
         {isSubmitting ? (
           <LoadingCircle />
         ) : (
-          authen?.change_password_button
+          authen?.changePasswordButton
         )}
       </button>
 
@@ -215,8 +215,8 @@ const VerificationForgotPassword: React.FC<VerificationForgotPasswordProps> = ({
         }`}
       >
         {isSendAgain
-          ? `${authen?.button_resend_code}...`
-          : authen?.button_resend_code}{" "}
+          ? `${authen?.buttonResendCode}...`
+          : authen?.buttonResendCode}{" "}
         {isResendDisabled ? `(${timeLeft})` : ""}
       </button>
     </div>

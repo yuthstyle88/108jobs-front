@@ -31,11 +31,11 @@ const SuccessCreateJobModal: React.FC<SuccessCreateJobModalProps> = ({
       <section className="px-[12px] w-full flex flex-col gap-8 justify-center items-center">
         <CircleCheck className="w-[65px] h-[65px] text-[#1EB899]" />
         <article>
-          <h1 className="text-[18px] font-medium text-text_primary text-center">
-            {language?.submission_success}
+          <h1 className="text-[18px] font-medium text-textPrimary text-center">
+            {language?.submissionSuccess}
           </h1>
-          <p className="text-[14px] font-sans text-text_secondary text-center pt-3">
-            {language?.submission_success_message}{" "}
+          <p className="text-[14px] font-sans text-textSecondary text-center pt-3">
+            {language?.submissionSuccessMessage}{" "}
           </p>
         </article>
       </section>
@@ -44,7 +44,7 @@ const SuccessCreateJobModal: React.FC<SuccessCreateJobModalProps> = ({
           onClick={handleConfirmChange}
           className="px-10 py-3 cursor-pointer w-fit bg-blue-600 text-white font-normal rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
         >
-          {language?.got_it_button}
+          {language?.gotItButton}
         </button>
       </div>
     </Modal>

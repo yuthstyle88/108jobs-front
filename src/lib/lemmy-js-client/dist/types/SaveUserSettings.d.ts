@@ -1,0 +1,133 @@
+import type { CommentSortType } from "./CommentSortType";
+import type { LanguageId } from "./LanguageId";
+import type { ListingType } from "./ListingType";
+import type { PostListingMode } from "./PostListingMode";
+import type { PostSortType } from "./PostSortType";
+import type { SensitiveString } from "./SensitiveString";
+import type { VoteShow } from "./VoteShow";
+/**
+ * Saves settings for your user.
+ */
+export type SaveUserSettings = {
+    /**
+     * Show nsfw posts.
+     */
+    showNsfw?: boolean;
+    /**
+     * Blur nsfw posts.
+     */
+    blurNsfw?: boolean;
+    /**
+     * Your user's theme.
+     */
+    theme?: string;
+    /**
+     * The default post listing type, usually "local"
+     */
+    defaultListingType?: ListingType;
+    /**
+     * A post-view mode that changes how multiple post listings look.
+     */
+    postListingMode?: PostListingMode;
+    /**
+     * The default post sort, usually "active"
+     */
+    defaultPostSortType?: PostSortType;
+    /**
+     * A default time range limit to apply to post sorts, in seconds. 0 means none.
+     */
+    defaultPostTimeRangeSeconds?: number;
+    /**
+     * The default comment sort, usually "hot"
+     */
+    defaultCommentSortType?: CommentSortType;
+    /**
+     * The language of the lemmy interface
+     */
+    interfaceLanguage?: string;
+    /**
+     * Your display name, which can contain strange characters, and does not need to be unique.
+     */
+    displayName?: string;
+    /**
+     * Your email.
+     */
+    email?: SensitiveString;
+    /**
+     * Your bio / info, in markdown.
+     */
+    bio?: string;
+    /**
+     * Your matrix user id. Ex: @myUser:matrix.org
+     */
+    matrixUserId?: string;
+    /**
+     * Whether to show or hide avatars.
+     */
+    showAvatars?: boolean;
+    /**
+     * Sends notifications to your email.
+     */
+    sendNotificationsToEmail?: boolean;
+    /**
+     * Whether this account is a bot account. Users can hide these accounts easily if they wish.
+     */
+    botAccount?: boolean;
+    /**
+     * Whether to show bot accounts.
+     */
+    showBotAccounts?: boolean;
+    /**
+     * Whether to show read posts.
+     */
+    showReadPosts?: boolean;
+    /**
+     * A list of languages you are able to see discussion in.
+     */
+    discussionLanguages?: Array<LanguageId>;
+    blockingKeywords?: Array<string>;
+    /**
+     * Open links in a new tab
+     */
+    openLinksInNewTab?: boolean;
+    /**
+     * Enable infinite scroll
+     */
+    infiniteScrollEnabled?: boolean;
+    /**
+     * Whether to allow keyboard navigation (for browsing and interacting with posts and comments).
+     */
+    enableKeyboardNavigation?: boolean;
+    /**
+     * Whether user avatars or inline images in the UI that are gifs should be allowed to play or
+     * should be paused
+     */
+    enableAnimatedImages?: boolean;
+    /**
+     * Whether a user can send / receive private messages
+     */
+    enablePrivateMessages?: boolean;
+    /**
+     * Whether to auto-collapse bot comments.
+     */
+    collapseBotComments?: boolean;
+    /**
+     * Some vote display mode settings
+     */
+    showScores?: boolean;
+    showUpvotes?: boolean;
+    showDownvotes?: VoteShow;
+    showUpvotePercentage?: boolean;
+    /**
+     * Whether to automatically mark fetched posts as read.
+     */
+    autoMarkFetchedPostsAsRead?: boolean;
+    /**
+     * Whether to hide posts containing images/videos.
+     */
+    hideMedia?: boolean;
+    /**
+     * Whether to show vote totals given to others.
+     */
+    showPersonVotes?: boolean;
+};

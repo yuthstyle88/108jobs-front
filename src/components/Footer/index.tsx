@@ -22,68 +22,68 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-5 gap-6">
         {/* Categories */}
         <div>
-          <h3 className="font-bold mb-3">{global?.tittle_footer_1}</h3>
+          <h3 className="font-bold mb-3">{global?.tittleFooter1}</h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link prefetch={false} href="#">{global?.label_nav_bar_item_2}</Link>
+              <Link prefetch={false} href="#">{global?.labelNavBarItem2}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.label_nav_bar_item_3}</Link>
+              <Link prefetch={false} href="#">{global?.labelNavBarItem3}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.label_nav_bar_item_4}</Link>
+              <Link prefetch={false} href="#">{global?.labelNavBarItem4}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.label_nav_bar_item_5}</Link>
+              <Link prefetch={false} href="#">{global?.labelNavBarItem5}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.label_nav_bar_item_6}</Link>
+              <Link prefetch={false} href="#">{global?.labelNavBarItem6}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.label_nav_bar_item_7}</Link>
+              <Link prefetch={false} href="#">{global?.labelNavBarItem7}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.label_nav_bar_item_8}</Link>
+              <Link prefetch={false} href="#">{global?.labelNavBarItem8}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.label_nav_bar_item_9}</Link>
+              <Link prefetch={false} href="#">{global?.labelNavBarItem9}</Link>
             </li>
           </ul>
         </div>
 
         {/* How to Use */}
         <div>
-          <h3 className="font-bold mb-3">{global?.tittle_footer_2}</h3>
+          <h3 className="font-bold mb-3">{global?.tittleFooter2}</h3>
           <ul className="space-y-2 text-sm">
             <li>
               <Link prefetch={false} href="/start-selling">
-                {global?.menu_become_freelancer}
+                {global?.menuBecomeFreelancer}
               </Link>
             </li>
             <li>
               <Link prefetch={false} href="/content/how">
-                {global?.label_start_selling_work}
+                {global?.labelStartSellingWork}
               </Link>
             </li>
             {/* <li>
-              <Link prefetch={false} href="/">{global?.label_payment_wages}</Link>
+              <Link prefetch={false} href="/">{global?.labelPaymentWages}</Link>
             </li> */}
             <li>
               <Link prefetch={false} href="/content/guarantee">
-                {global?.label_employment_guarantee}
+                {global?.labelEmploymentGuarantee}
               </Link>
             </li>
             {/* <li>
-              <Link prefetch={false} href="#">{global?.label_knowledge_blog}</Link>
+              <Link prefetch={false} href="#">{global?.labelKnowledgeBlog}</Link>
             </li> */}
             <li>
               <Link prefetch={false} href="/content/support-center">
-                {global?.label_faq}
+                {global?.labelFaq}
               </Link>
             </li>
             <li>
               <Link prefetch={false} href="/consent-management">
-                {global?.label_manage_data_usage}
+                {global?.labelManageDataUsage}
               </Link>
             </li>
           </ul>
@@ -91,7 +91,7 @@ const Footer = () => {
 
         {/* Products */}
         <div>
-          <h3 className="font-bold mb-3">{global?.tittle_footer_3}</h3>
+          <h3 className="font-bold mb-3">{global?.tittleFooter3}</h3>
           <ul className="space-y-2 text-sm">
             <li>
               <Link prefetch={false} href="/">Fastjob</Link>
@@ -104,26 +104,26 @@ const Footer = () => {
 
         {/* About Fastjob */}
         <div>
-          <h3 className="font-bold mb-3">{global?.tittle_footer_4}</h3>
+          <h3 className="font-bold mb-3">{global?.tittleFooter4}</h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link prefetch={false} href="https://form.jotform.com/251484529705059">{global?.label_feedback_us}</Link>
+              <Link prefetch={false} href="https://form.jotform.com/251484529705059">{global?.labelFeedbackUs}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="/">{global?.label_work_with_fastwork}</Link>
+              <Link prefetch={false} href="/">{global?.labelWorkWithFastwork}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="/content/terms">{global?.label_terms_of_service}</Link>
+              <Link prefetch={false} href="/content/terms">{global?.labelTermsOfService}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="/content/privacy">{global?.label_privacy_policy}</Link>
+              <Link prefetch={false} href="/content/privacy">{global?.labelPrivacyPolicy}</Link>
             </li>
           </ul>
         </div>
 
         {/* Contact */}
         <div>
-          <h3 className="font-bold mb-3">{global?.tittle_footer_5}</h3>
+          <h3 className="font-bold mb-3">{global?.tittleFooter5}</h3>
           <ul className="space-y-2 text-sm">
             <li>
               Email:{" "}
@@ -134,8 +134,8 @@ const Footer = () => {
             </li>
           </ul>
           <p className="mt-3 text-xs">
-            {global?.label_working_hours_weekdays} <br />
-            {global?.label_working_hours_weekends}
+            {global?.labelWorkingHoursWeekdays} <br />
+            {global?.labelWorkingHoursWeekends}
           </p>
         </div>
       </div>

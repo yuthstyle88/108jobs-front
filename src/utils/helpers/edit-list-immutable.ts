@@ -1,14 +1,14 @@
 type ImmutableListKey =
   | "comment"
-  | "comment_reply"
-  | "person_mention"
+  | "commentReply"
+  | "personMention"
   | "community"
-  | "private_message"
+  | "privateMessage"
   | "post"
-  | "post_report"
-  | "comment_report"
-  | "private_message_report"
-  | "registration_application";
+  | "postReport"
+  | "commentReport"
+  | "privateMessageReport"
+  | "registrationApplication";
 
 export default function editListImmutable<
   T extends { [key in F]: { id: number } },

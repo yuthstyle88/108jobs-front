@@ -24,24 +24,24 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
   const schema = useMemo(() => {
     return z
       .object({
-        old_password: z
+        oldPassword: z
           .string()
           .min(
             6,
-            languageData?.password_min_length_error ||
+            languageData?.passwordMinLengthError ||
               "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
           ),
-        new_password: z
+        newPassword: z
           .string()
           .min(
             6,
-            languageData?.password_min_length_error ||
+            languageData?.passwordMinLengthError ||
               "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
           ),
         confirmPassword: z.string(),
       })
-      .refine((data) => data.new_password === data.confirmPassword, {
-        message: languageData?.password_min_length_error || "รหัสผ่านไม่ตรงกัน",
+      .refine((data) => data.newPassword === data.confirmPassword, {
+        message: languageData?.passwordMinLengthError || "รหัสผ่านไม่ตรงกัน",
         path: ["confirmPassword"],
       });
   }, [languageData]);
@@ -59,7 +59,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
     mode: "onChange",
   });
 
-  const { success_message } = useNotification();
+  const { successMessage } = useNotification();
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -80,28 +80,28 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          old_password: data.old_password,
-          new_password: data.new_password,
+          oldPassword: data.oldPassword,
+          newPassword: data.newPassword,
         }),
       });
 
       const result = await response.json();
 
       if (!response.ok) {
-        if (result.fieldErrors?.old_password) {
-          setError("old_password", {
+        if (result.fieldErrors?.oldPassword) {
+          setError("oldPassword", {
             type: "manual",
-            message: result.fieldErrors.old_password,
+            message: result.fieldErrors.oldPassword,
           });
         }
-        if (result.error && !result.fieldErrors?.old_password) {
+        if (result.error && !result.fieldErrors?.oldPassword) {
           setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);
         }
         return;
       }
       reset();
       onClose();
-      success_message("profile", "change_password");
+      successMessage("profile", "changePassword");
     } catch (error) {
       setApiError(
         error instanceof Error
@@ -121,33 +121,33 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <CustomInput
-          label={languageData?.old_password}
-          name="old_password"
+          label={languageData?.oldPassword}
+          name="oldPassword"
           type="password"
-          register={register("old_password")}
-          error={errors.old_password?.message}
-          placeholder={languageData?.password_placeholder}
+          register={register("oldPassword")}
+          error={errors.oldPassword?.message}
+          placeholder={languageData?.passwordPlaceholder}
           showPassword={showOldPassword}
           toggleShowPassword={() => setShowOldPassword(!showOldPassword)}
         />
         <CustomInput
-          label={languageData?.new_password}
-          name="new_password"
+          label={languageData?.newPassword}
+          name="newPassword"
           type="password"
-          register={register("new_password")}
-          error={errors.new_password?.message}
-          placeholder={languageData?.password_placeholder}
+          register={register("newPassword")}
+          error={errors.newPassword?.message}
+          placeholder={languageData?.passwordPlaceholder}
           showPassword={showNewPassword}
           toggleShowPassword={() => setShowNewPassword(!showNewPassword)}
         />
 
         <CustomInput
-          label={languageData?.confirm_password_label}
+          label={languageData?.confirmPasswordLabel}
           name="confirmPassword"
           type="password"
           register={register("confirmPassword")}
           error={errors.confirmPassword?.message}
-          placeholder={languageData?.password_placeholder}
+          placeholder={languageData?.passwordPlaceholder}
           showPassword={showConfirmPassword}
           toggleShowPassword={() =>
             setShowConfirmPassword(!showConfirmPassword)
@@ -165,7 +165,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
           disabled={isSubmitting}
           className="submit-button py-2"
         >
-          {isSubmitting ? <LoadingCircle /> : languageData?.submit_button}
+          {isSubmitting ? <LoadingCircle /> : languageData?.submitButton}
         </button>
       </form>
     </Modal>

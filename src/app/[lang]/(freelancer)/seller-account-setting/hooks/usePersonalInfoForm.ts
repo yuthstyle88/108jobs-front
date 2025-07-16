@@ -12,15 +12,15 @@ const cardSchema = z.object({
   title: z.string().min(1, "Vui lòng nhập thông tin"),
   name: z.string().min(1, "Vui lòng nhập thông tin"),
   surname: z.string().min(1, "Vui lòng nhập thông tin"),
-  birth_day: z.string(),
-  birth_month: z.string(),
-  birth_year: z.string(),
-  card_number: z.string().regex(/^\d{13}$/, "Vui lòng nhập số CMND/CCCD 12 số"),
-  card_address_details: z.string().min(1, "Vui lòng nhập thông tin"),
-  card_zip_code: z.string().min(1, "Vui lòng nhập thông tin"),
-  card_subdistrict_or_district: z.string().min(1, "Vui lòng nhập thông tin"),
-  card_district_or_subdistrict: z.string().min(1, "Vui lòng nhập thông tin"),
-  card_province: z.string().min(1, "Vui lòng nhập thông tin"),
+  birthDay: z.string(),
+  birthMonth: z.string(),
+  birthYear: z.string(),
+  cardNumber: z.string().regex(/^\d{13}$/, "Vui lòng nhập số CMND/CCCD 12 số"),
+  cardAddressDetails: z.string().min(1, "Vui lòng nhập thông tin"),
+  cardZipCode: z.string().min(1, "Vui lòng nhập thông tin"),
+  cardSubdistrictOrDistrict: z.string().min(1, "Vui lòng nhập thông tin"),
+  cardDistrictOrSubdistrict: z.string().min(1, "Vui lòng nhập thông tin"),
+  cardProvince: z.string().min(1, "Vui lòng nhập thông tin"),
 });
 
 type FormValues = z.infer<typeof cardSchema>;
@@ -47,30 +47,30 @@ export const usePersonalInfoForm = (
   });
 
   const { trigger: updateCardInfo, isMutating: isUpdateMuting } = usePrivatePut(
-    API_ROUTES_SELLER.profile.update_personal_info
+    API_ROUTES_SELLER.profile.updatePersonalInfo
   );
 
-  const { success_message } = useNotification();
+  const { successMessage } = useNotification();
 
   useEffect(() => {
     if (profileData) {
-      const [year, month, day] = profileData.user.birth_date?.split("-") ?? [];
+      const [year, month, day] = profileData.user.birthDate?.split("-") ?? [];
       reset({
         title: profileData.card.title,
         name: profileData.card.name,
         surname: profileData.card.surname,
-        birth_day: day || "Day",
-        birth_month: month || "Month",
-        birth_year: year || "Year",
-        card_number: profileData.card.card_number,
-        card_address_details: profileData.card.address_details,
-        card_zip_code: profileData.card.zip_code,
-        card_subdistrict_or_district: profileData.card.subdistrict_or_district,
-        card_district_or_subdistrict: profileData.card.district_or_subdistrict,
-        card_province: profileData.card.province,
+        birthDay: day || "Day",
+        birthMonth: month || "Month",
+        birthYear: year || "Year",
+        cardNumber: profileData.card.cardNumber,
+        cardAddressDetails: profileData.card.addressDetails,
+        cardZipCode: profileData.card.zipCode,
+        cardSubdistrictOrDistrict: profileData.card.subdistrictOrDistrict,
+        cardDistrictOrSubdistrict: profileData.card.districtOrSubdistrict,
+        cardProvince: profileData.card.province,
       });
-      setSelectedFront(profileData.card.front_card);
-      setSelectedBack(profileData.card.back_card);
+      setSelectedFront(profileData.card.frontCard);
+      setSelectedBack(profileData.card.backCard);
     }
   }, [profileData, reset, setSelectedFront, setSelectedBack]);
 
@@ -84,14 +84,14 @@ export const usePersonalInfoForm = (
         return;
       }
 
-      let frontUrl = profileData?.card.front_card;
-      let backUrl = profileData?.card.back_card;
+      let frontUrl = profileData?.card.frontCard;
+      let backUrl = profileData?.card.backCard;
 
       if (frontFile) {
         const frontForm = new FormData();
         frontForm.append("images[]", frontFile);
         const result = await uploadImage(frontForm);
-        frontUrl = result?.images?.[0]?.image_url;
+        frontUrl = result?.images?.[0]?.imageUrl;
         if (!frontUrl) throw new Error("Upload ảnh mặt trước thất bại");
       }
 
@@ -99,7 +99,7 @@ export const usePersonalInfoForm = (
         const backForm = new FormData();
         backForm.append("images[]", backFile);
         const result = await uploadImage(backForm);
-        backUrl = result?.images?.[0]?.image_url;
+        backUrl = result?.images?.[0]?.imageUrl;
         if (!backUrl) throw new Error("Upload ảnh mặt sau thất bại");
       }
 
@@ -108,30 +108,30 @@ export const usePersonalInfoForm = (
       }
 
       const isIncompleteBirth =
-        formData.birth_day === "Day" ||
-        formData.birth_month === "Month" ||
-        formData.birth_year === "Year";
+        formData.birthDay === "Day" ||
+        formData.birthMonth === "Month" ||
+        formData.birthYear === "Year";
 
       const payload = {
-        front_card: frontUrl,
-        back_card: backUrl,
+        frontCard: frontUrl,
+        backCard: backUrl,
         title: formData.title,
         name: formData.name,
         surname: formData.surname,
-        birth_date: isIncompleteBirth
+        birthDate: isIncompleteBirth
           ? null
-          : `${formData.birth_year}-${formData.birth_month}-${formData.birth_day}`,
-        card_number: formData.card_number,
-        card_address_details: formData.card_address_details,
-        card_zip_code: formData.card_zip_code,
-        card_subdistrict_or_district: formData.card_subdistrict_or_district,
-        card_district_or_subdistrict: formData.card_district_or_subdistrict,
-        card_province: formData.card_province,
+          : `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`,
+        cardNumber: formData.cardNumber,
+        cardAddressDetails: formData.cardAddressDetails,
+        cardZipCode: formData.cardZipCode,
+        cardSubdistrictOrDistrict: formData.cardSubdistrictOrDistrict,
+        cardDistrictOrSubdistrict: formData.cardDistrictOrSubdistrict,
+        cardProvince: formData.cardProvince,
       };
 
       await updateCardInfo(payload);
       await mutate();
-      success_message("profile", "update");
+      successMessage("profile", "update");
     } catch (error) {
       console.error("Lỗi cập nhật thẻ:", error);
       setError("root", {

@@ -36,10 +36,10 @@ const ConsentManagement = () => {
         return (
           <div className="p-6">
             <div className="mb-6">
-              <h3 className="text-lg text-text_primary font-medium mb-2">
-                {concentLanguageData?.newsletter_promotions}
+              <h3 className="text-lg text-textPrimary font-medium mb-2">
+                {concentLanguageData?.newsletterPromotions}
               </h3>
-              <p className="text-text_primary mb-4 font-sans">
+              <p className="text-textPrimary mb-4 font-sans">
                 ยินยอมการรับข่าวสารและโปรโมชันที่พิเศษต่าง ๆ ผ่านทุกช่องทางจาก
                 Fastjob{" "}
                 <Link prefetch={false} href="#" className="text-blue-600 underline">
@@ -55,8 +55,8 @@ const ConsentManagement = () => {
                     checked={preferences.marketing}
                     onChange={() => handleToggle("marketing")}
                   />
-                  <span className="text-text_primary">
-                    {concentLanguageData?.newsletter_accept}
+                  <span className="text-textPrimary">
+                    {concentLanguageData?.newsletterAccept}
                   </span>
                 </label>
                 <label className="flex items-center gap-2">
@@ -67,8 +67,8 @@ const ConsentManagement = () => {
                     checked={!preferences.marketing}
                     onChange={() => handleToggle("marketing")}
                   />
-                  <span className="text-text_primary">
-                    {concentLanguageData?.newsletter_decline}
+                  <span className="text-textPrimary">
+                    {concentLanguageData?.newsletterDecline}
                   </span>
                 </label>
               </div>
@@ -93,11 +93,11 @@ const ConsentManagement = () => {
                 <div className="border rounded-lg p-6">
                   <div className="flex flex-col gap-4 md:gap-0 md:flex-row justify-between items-start mb-4">
                     <div>
-                      <h4 className="font-medium text-text_primary mb-1">
-                        {concentLanguageData?.functional_cookies}
+                      <h4 className="font-medium text-textPrimary mb-1">
+                        {concentLanguageData?.functionalCookies}
                       </h4>
                       <p className="text-gray-600 text-sm font-sans">
-                        {concentLanguageData?.functional_cookies_description}
+                        {concentLanguageData?.functionalCookiesDescription}
                       </p>
                     </div>
                     <div className="ml-0 md:ml-6">
@@ -111,33 +111,33 @@ const ConsentManagement = () => {
                 <div className="border rounded-lg p-6">
                   <div className="flex flex-col gap-4 md:gap-0 md:flex-row justify-between items-start">
                     <div className="flex-1">
-                      <h4 className="font-medium text-text_primary mb-1">
-                        {concentLanguageData?.marketing_cookies}
+                      <h4 className="font-medium text-textPrimary mb-1">
+                        {concentLanguageData?.marketingCookies}
                       </h4>
                       <p className="text-gray-600 text-sm font-sans">
-                      {concentLanguageData?.marketing_cookies_description}
+                      {concentLanguageData?.marketingCookiesDescription}
                       </p>
                     </div>
                     <div className="flex items-center gap-4 ml-0 md:ml-6">
                       <label className="flex items-center gap-2">
                         <input
                           type="radio"
-                          name="marketing_cookie"
+                          name="marketingCookie"
                           className="w-4 h-4 text-blue-600"
                           checked={preferences.marketing}
                           onChange={() => handleToggle("marketing")}
                         />
-                        <span className="text-text_primary">{concentLanguageData?.newsletter_accept}</span>
+                        <span className="text-textPrimary">{concentLanguageData?.newsletterAccept}</span>
                       </label>
                       <label className="flex items-center gap-2">
                         <input
                           type="radio"
-                          name="marketing_cookie"
+                          name="marketingCookie"
                           className="w-4 h-4 text-blue-600"
                           checked={!preferences.marketing}
                           onChange={() => handleToggle("marketing")}
                         />
-                        <span className="text-text_primary">{concentLanguageData?.newsletter_decline}</span>
+                        <span className="text-textPrimary">{concentLanguageData?.newsletterDecline}</span>
                       </label>
                     </div>
                   </div>
@@ -146,33 +146,33 @@ const ConsentManagement = () => {
                 <div className="border rounded-lg p-6">
                   <div className="flex flex-col gap-4 md:gap-0 md:flex-row justify-between items-start">
                     <div className="flex-1">
-                      <h4 className="font-medium mb-1 text-text_primary">
-                        {concentLanguageData?.analytics_cookies}
+                      <h4 className="font-medium mb-1 text-textPrimary">
+                        {concentLanguageData?.analyticsCookies}
                       </h4>
                       <p className="text-gray-600 text-sm font-sans">
-                      {concentLanguageData?.analytics_cookies_description}
+                      {concentLanguageData?.analyticsCookiesDescription}
                       </p>
                     </div>
                     <div className="flex items-center gap-4 ml-0 md:ml-6">
                       <label className="flex items-center gap-2">
                         <input
                           type="radio"
-                          name="analytics_cookie"
+                          name="analyticsCookie"
                           className="w-4 h-4 text-blue-600"
                           checked={preferences.analytics}
                           onChange={() => handleToggle("analytics")}
                         />
-                        <span className="text-text_primary">{concentLanguageData?.newsletter_accept}</span>
+                        <span className="text-textPrimary">{concentLanguageData?.newsletterAccept}</span>
                       </label>
                       <label className="flex items-center gap-2">
                         <input
                           type="radio"
-                          name="analytics_cookie"
+                          name="analyticsCookie"
                           className="w-4 h-4 text-blue-600"
                           checked={!preferences.analytics}
                           onChange={() => handleToggle("analytics")}
                         />
-                        <span className="text-text_primary">{concentLanguageData?.newsletter_decline}</span>
+                        <span className="text-textPrimary">{concentLanguageData?.newsletterDecline}</span>
                       </label>
                     </div>
                   </div>
@@ -185,7 +185,7 @@ const ConsentManagement = () => {
         return (
           <div className="p-6">
             <div className="w-full text-center py-8 px-4 rounded-sm bg-[#F6F7F8] mt-2">
-              <p className="text-[1.5rem] leading-[1.5] font-medium text-text_secondary">
+              <p className="text-[1.5rem] leading-[1.5] font-medium text-textSecondary">
                 ไม่มีฟรีแลนซ์ที่ถูกใจ
               </p>
             </div>
@@ -199,11 +199,11 @@ const ConsentManagement = () => {
     <div className="w-full">
       <div className="grid-container-desktop-banner w-full my-4 md:my-12 min-h-[400px]">
         <div className="col-start-2 col-end-3 max-w-[800px]">
-          <h1 className="text-[2.25rem] text-text_primary font-medium">
-            {concentLanguageData?.data_management}
+          <h1 className="text-[2.25rem] text-textPrimary font-medium">
+            {concentLanguageData?.dataManagement}
           </h1>
-          <div className="mb-[2rem] text-text_primary font-sans">
-            {concentLanguageData?.terms_conditions}
+          <div className="mb-[2rem] text-textPrimary font-sans">
+            {concentLanguageData?.termsConditions}
             {/* อ่าน{" "}
             <Link prefetch={false}
               href="https://static.fastwork.co/contents/terms"
@@ -230,7 +230,7 @@ const ConsentManagement = () => {
                   }`}
                   onClick={() => setActiveTab("fastwork")}
                 >
-                  {concentLanguageData?.data_usage_fastwork}
+                  {concentLanguageData?.dataUsageFastwork}
                 </button>
                 <button
                   className={`px-6 py-4 font-medium text-sm ${
@@ -240,7 +240,7 @@ const ConsentManagement = () => {
                   }`}
                   onClick={() => setActiveTab("all")}
                 >
-                  {concentLanguageData?.cookies_management}
+                  {concentLanguageData?.cookiesManagement}
                 </button>
                 <button
                   className={`px-6 py-4 font-medium text-sm ${
@@ -250,7 +250,7 @@ const ConsentManagement = () => {
                   }`}
                   onClick={() => setActiveTab("thirdParty")}
                 >
-                  {concentLanguageData?.third_party_data_sharing}
+                  {concentLanguageData?.thirdPartyDataSharing}
                 </button>
               </div>
             </div>
@@ -259,7 +259,7 @@ const ConsentManagement = () => {
 
             <div className="p-6 border-t bg-gray-50">
               <button className="w-full bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors">
-                {concentLanguageData?.save_data}
+                {concentLanguageData?.saveData}
               </button>
             </div>
           </div>

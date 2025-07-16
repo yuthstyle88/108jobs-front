@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 interface PaginationProps {
-  totalPages: number;       // từ API: total_pages
+  totalPages: number;       // từ API: totalPages
   currentPage: number;      // từ API: page
   onPageChange: (page: number) => void;
 }

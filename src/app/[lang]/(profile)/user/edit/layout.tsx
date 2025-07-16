@@ -28,17 +28,17 @@ export default function StartSellingLayout({
   } = useGlobalTranslate(LanguageFile.PROFILE_USER_EDIT);
 
   const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
+    API_ROUTES.profile.getProfile
   );
 
   const menuItems = [
     { href: "/user/edit/education", label: userEditLanguage?.education },
-    { href: "/user/edit/experience", label: userEditLanguage?.work_experience },
+    { href: "/user/edit/experience", label: userEditLanguage?.workExperience },
     { href: "/user/edit/skills", label: userEditLanguage?.skills },
     { href: "/user/edit/languages", label: userEditLanguage?.languages },
     {
       href: "/user/edit/certifications",
-      label: userEditLanguage?.certificates_awards,
+      label: userEditLanguage?.certificatesAwards,
     },
   ];
 
@@ -50,7 +50,7 @@ export default function StartSellingLayout({
       <section className="bg-[#FBFBFC] mb-12">
         <div className="h-[200px] relative flex justify-center items-center w-full edit-profile-gradient">
           <p className="text-[1.75rem] font-semibold text-white">
-            {userEditLanguage?.user_edit_heading}
+            {userEditLanguage?.userEditHeading}
           </p>
         </div>
 
@@ -58,7 +58,7 @@ export default function StartSellingLayout({
           <div className="min-h-screen flex pt-12">
             {/* Left sidebar */}
             <div className="w-56">
-              <nav className="py-2 bg-white border-1 border-border_primary rounded-lg">
+              <nav className="py-2 bg-white border-1 border-borderPrimary rounded-lg">
                 <ul>
                   {menuItems.map((item) => (
                     <li key={item.href}>
@@ -77,13 +77,13 @@ export default function StartSellingLayout({
                 </ul>
               </nav>
 
-              <div className="px-4 py-2 mt-4 border-1 border-border_primary rounded-lg">
+              <div className="px-4 py-2 mt-4 border-1 border-borderPrimary rounded-lg">
                 <Link prefetch={false}
                   href={`/user/${user?.user.username}`}
                   className="text-blue-600 flex justify-center items-center gap-2"
                 >
                   <p className="font-medium">
-                    {userEditLanguage?.view_profile}
+                    {userEditLanguage?.viewProfile}
                   </p>
                   <ExternalLink className="w-4 h-4 mr-2" />
                 </Link>

@@ -23,7 +23,7 @@ export async function generateMetadata({
 
   try {
     const res = await  axiosPrivate.get(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ROUTES.job.get_category_by_slug}/${slug}`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ROUTES.job.getCategoryBySlug}/${slug}`
     );
 
     if (!res.status) throw new Error("Failed to fetch category");

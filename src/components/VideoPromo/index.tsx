@@ -24,7 +24,7 @@ const VideoPromo = () => {
             {/* Main video */}
             <video
               className="w-[300px] h-[500px] relative z-10"
-              src="https://www.fastworkbusiness.com/wp-content/uploads/2023/06/aniamated_final.mp4"
+              src="https://www.fastworkbusiness.com/wp-content/uploads/2023/06/aniamatedFinal.mp4"
               autoPlay
               controls
               playsInline
@@ -52,7 +52,7 @@ const VideoPromo = () => {
                   {/* Fastjob logo */}
                   <div className="flex items-center">
                     <Image
-                      src={BusinessImage.logo_business}
+                      src={BusinessImage.logoBusiness}
                       alt="Background"
                       width={320}
                       height={450}

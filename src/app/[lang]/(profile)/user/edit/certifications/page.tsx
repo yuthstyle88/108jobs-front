@@ -15,7 +15,7 @@ import { LanguageFile } from "@/constants/language";
 type CertificationFromServer = {
   id: string;
   name: string;
-  profile_id: string;
+  profileId: string;
 };
 
 const EditCertifications = () => {
@@ -26,7 +26,7 @@ const EditCertifications = () => {
     certificationItems: z.array(
       z.object({
         id: z.string().optional(),
-        name: z.string().min(1, userEditLanguage?.certificates_placeholder),
+        name: z.string().min(1, userEditLanguage?.certificatesPlaceholder),
       })
     ),
   });
@@ -46,7 +46,7 @@ const EditCertifications = () => {
     },
   });
 
-  const { success_message } = useNotification();
+  const { successMessage } = useNotification();
   const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "certificationItems",
@@ -55,7 +55,7 @@ const EditCertifications = () => {
   const [isFormReady, setIsFormReady] = useState(false);
 
   const { data, isLoading } = usePrivateFetch<{
-    cert_or_awards: CertificationFromServer[];
+    certOrAwards: CertificationFromServer[];
   }>(API_ROUTES_SELLER.profile.certificate);
 
   const { trigger: sendCertificates, isMutating } = usePrivatePost(
@@ -63,8 +63,8 @@ const EditCertifications = () => {
   );
 
   useEffect(() => {
-    if (data?.cert_or_awards) {
-      const mapped = data.cert_or_awards.map((item) => ({
+    if (data?.certOrAwards) {
+      const mapped = data.certOrAwards.map((item) => ({
         id: item.id,
         name: item.name,
       }));
@@ -78,7 +78,7 @@ const EditCertifications = () => {
 
   const onSubmit = async (formData: CertificationFormData) => {
     const body = {
-      cert_or_awards: formData.certificationItems.map((item) => ({
+      certOrAwards: formData.certificationItems.map((item) => ({
         ...(item.id ? { id: item.id } : {}),
         name: item.name,
       })),
@@ -86,7 +86,7 @@ const EditCertifications = () => {
 
     try {
       await sendCertificates(body);
-      success_message("profile", "update_certification");
+      successMessage("profile", "updateCertification");
     } catch (error) {
       console.error("Lỗi khi lưu chứng chỉ:", error);
     }
@@ -98,7 +98,7 @@ const EditCertifications = () => {
     <div className="flex-1">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-semibold text-blue-600 mb-8">
-          {userEditLanguage?.certificates_awards}
+          {userEditLanguage?.certificatesAwards}
         </h1>
 
         {isFetching ? (
@@ -108,14 +108,14 @@ const EditCertifications = () => {
         ) : fields.length === 0 ? (
           <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
             <p className="text-gray-500 mb-4">
-              {userEditLanguage?.no_certificates_info}
+              {userEditLanguage?.noCertificatesInfo}
             </p>
             <button
               type="button"
               onClick={() => append({ id: undefined, name: "" })}
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.add_more_button}
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.addMoreButton}
             </button>
 
             <div className="flex justify-end">
@@ -125,7 +125,7 @@ const EditCertifications = () => {
                 disabled={isMutating}
                 className="w-[128px] py-2 submit-button-custom"
               >
-                {isMutating ? <LoadingCircle /> : userEditLanguage?.save_button}
+                {isMutating ? <LoadingCircle /> : userEditLanguage?.saveButton}
               </button>
             </div>
           </div>
@@ -138,12 +138,12 @@ const EditCertifications = () => {
               >
                 <div>
                   <label className="block text-gray-700 mb-2">
-                    {userEditLanguage?.certificates_name}
+                    {userEditLanguage?.certificatesName}
                   </label>
                   <input
                     type="text"
-                    className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder={userEditLanguage?.award_placeholder}
+                    className="text-textPrimary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder={userEditLanguage?.awardPlaceholder}
                     {...register(`certificationItems.${index}.name`)}
                   />
                   {errors.certificationItems?.[index]?.name && (
@@ -157,10 +157,10 @@ const EditCertifications = () => {
                   <button
                     type="button"
                     onClick={() => remove(index)}
-                    className="border-1 border-border_secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
+                    className="border-1 border-borderSecondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                   >
                     <Trash2 className="w-4" />
-                    <span className="ml-2 font-medium">{userEditLanguage?.delete_info}</span>
+                    <span className="ml-2 font-medium">{userEditLanguage?.deleteInfo}</span>
                   </button>
                 </div>
               </div>
@@ -171,7 +171,7 @@ const EditCertifications = () => {
               onClick={() => append({ id: undefined, name: "" })}
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.add_info}
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.addInfo}
             </button>
 
             <div className="flex justify-end">
@@ -180,7 +180,7 @@ const EditCertifications = () => {
                 disabled={isMutating}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                {isMutating ? <LoadingCircle /> : userEditLanguage?.save_info}
+                {isMutating ? <LoadingCircle /> : userEditLanguage?.saveInfo}
               </button>
             </div>
           </form>

@@ -22,13 +22,13 @@ export default function Error({ message }: ErrorProps) {
   return (
     <div className="min-h-screen w-full h-full flex items-center justify-center bg-secondary">
       <Image
-        src={LandingImage.bg_error}
+        src={LandingImage.bgError}
         alt="error"
         fill
         className="object-cover md:block hidden"
       />
       <Image
-        src={LandingImage.error_mobile}
+        src={LandingImage.errorMobile}
         alt="error"
         fill
         className="object-cover"
@@ -40,11 +40,11 @@ export default function Error({ message }: ErrorProps) {
           className="w-[80%] h-[280px] sm:w-full"
         />
         {isError ? 
-        <p className="text-center text-[20px] md:text-[32px] text-text_primary font-sans">
+        <p className="text-center text-[20px] md:text-[32px] text-textPrimary font-sans">
           {message || "Something not work. Please try latter"}
         </p>
         :
-        <p className="text-center text-[20px] md:text-[32px] text-text_primary font-sans">
+        <p className="text-center text-[20px] md:text-[32px] text-textPrimary font-sans">
           {errorLanguageData?.title}
         </p>
         }

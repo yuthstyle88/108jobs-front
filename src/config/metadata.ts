@@ -22,7 +22,7 @@ export const defaultMetadata:Metadata  = {
         },
       ],
       type: "website",
-      locale: "th_TH",
+      locale: "thTh",
     },
     alternates: {
       canonical: "https://test-fastwork.vercel.app",

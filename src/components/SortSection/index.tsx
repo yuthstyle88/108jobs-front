@@ -28,10 +28,10 @@ const SortSection = ({
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   const sortOptions = [
-    { value: "rating", label: language?.high_review_score },
-    { value: "price_asc", label: language?.price_low_to_high },
-    { value: "price_desc", label: language?.price_high_to_low },
-    { value: "purchase_count", label: language?.sell_a_lot },
+    { value: "rating", label: language?.highReviewScore },
+    { value: "priceAsc", label: language?.priceLowToHigh },
+    { value: "priceDesc", label: language?.priceHighToLow },
+    { value: "purchaseCount", label: language?.sellALot },
   ];
 
   const updatePosition = () => {
@@ -75,7 +75,7 @@ const SortSection = ({
         <FontAwesomeIcon icon={faUpDown} className="text-third" />
         {selectedOption
           ? sortOptions.find((opt) => opt.value === selectedOption)?.label
-          : language?.sort_by}
+          : language?.sortBy}
         {selectedOption && (
           <X
             onClick={(e) => {

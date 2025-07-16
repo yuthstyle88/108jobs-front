@@ -1,0 +1,20 @@
+import type { Comment } from "./Comment";
+import type { CommentActions } from "./CommentActions";
+import type { InstanceActions } from "./InstanceActions";
+import type { Person } from "./Person";
+import type { PersonActions } from "./PersonActions";
+/**
+ * A slimmer comment view, without the post, or community.
+ */
+export type CommentSlimView = {
+    comment: Comment;
+    creator: Person;
+    commentActions?: CommentActions;
+    personActions?: PersonActions;
+    instanceActions?: InstanceActions;
+    creatorIsAdmin: boolean;
+    canMod: boolean;
+    creatorBanned: boolean;
+    creatorIsModerator: boolean;
+    creatorBannedFromCommunity: boolean;
+};

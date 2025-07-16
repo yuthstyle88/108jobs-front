@@ -26,22 +26,22 @@ interface CommentItemProps {
 
 const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const { success_message } = useNotification();
+  const { successMessage } = useNotification();
   const { lang: currentLang } = useLanguage();
   const locale = dateFnsLocaleMap[currentLang] || dateFnsLocaleMap["en"];
 
   const { trigger: updateComment, isMutating: isUpdating } = usePrivatePut(
-    `${API_ROUTES.profile.comment_review}/${comment.id}`
+    `${API_ROUTES.profile.commentReview}/${comment.id}`
   );
 
   const { trigger: deleteComment, isMutating: isDeleting } = usePrivateDelete(
-    `${API_ROUTES.profile.comment_review}/${comment.id}`
+    `${API_ROUTES.profile.commentReview}/${comment.id}`
   );
 
   const handleEdit = async (data: { rating: number; content: string }) => {
     await updateComment(data);
     await mutate();
-    success_message("review", "update_comment");
+    successMessage("review", "updateComment");
     setIsEditing(false);
   };
 
@@ -49,7 +49,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
     if (confirm("Are you sure you want to delete this review?")) {
       await deleteComment({});
       await mutate();
-      success_message("review", "delete_comment");
+      successMessage("review", "deleteComment");
     }
   };
 
@@ -71,11 +71,11 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
         <div className="flex items-start space-x-4">
           <Avatar className="w-10 h-10">
             <AvatarImage
-              src={comment.reviewer_avatar}
-              alt={comment.reviewer_name}
+              src={comment.reviewerAvatar}
+              alt={comment.reviewerName}
             />
             <AvatarFallback>
-              {comment.reviewer_name.charAt(0).toUpperCase()}
+              {comment.reviewerName.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
 
@@ -83,16 +83,16 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
             <div className="flex items-center justify-between mb-2">
               <div>
                 <h4 className="font-semibold text-sm">
-                  {comment.reviewer_name}
+                  {comment.reviewerName}
                 </h4>
                 <p className="text-xs text-muted-foreground">
-                  {formatDistanceToNow(new Date(comment.created_at), {
+                  {formatDistanceToNow(new Date(comment.createdAt), {
                     addSuffix: true,
                     locale: locale,
                   })}
                 </p>
               </div>
-              {comment.is_owner && (
+              {comment.isOwner && (
                 <div className="flex space-x-2">
                   <Button
                     variant="ghost"
@@ -119,7 +119,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
               <StarRating rating={comment.rating} readonly size={16} />
             </div>
 
-            <p className="text-sm text-text_primary leading-relaxed">
+            <p className="text-sm text-textPrimary leading-relaxed">
               {comment.content}
             </p>
           </div>

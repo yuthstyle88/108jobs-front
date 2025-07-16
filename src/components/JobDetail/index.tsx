@@ -22,7 +22,7 @@ import Package from "./Package";
 import Review from "./Review";
 import SliderJob from "./SliderJob";
 
-const category_related = [
+const categoryRelated = [
   {
     image: CategoriesImage.wordpress,
     title: "ทำเว็บไซต์ Wordpress เว็บสำเร็จรูป",
@@ -64,18 +64,18 @@ const JobDetail = ({ username, slug }: Props) => {
     isLoading: isJobDetailLoading,
     error: errorJobDetail,
   } = usePrivateFetchParams<JobDetailResponse>(
-    `${API_ROUTES.job.get_job_detail_by_id}/${username}/${slug}`
+    `${API_ROUTES.job.getJobDetailById}/${username}/${slug}`
   );
 
   const jobImages = jobDetailData?.images ?? [];
 
-  const catalogTitle = jobDetailData?.service_catalog.title || "";
-  const categoryTitle = jobDetailData?.service_type.title || "";
-  const catalogSlug = jobDetailData?.service_catalog.slug || "";
-  const categorySlug = jobDetailData?.service_type.slug || "";
+  const catalogTitle = jobDetailData?.serviceCatalog.title || "";
+  const categoryTitle = jobDetailData?.serviceType.title || "";
+  const catalogSlug = jobDetailData?.serviceCatalog.slug || "";
+  const categorySlug = jobDetailData?.serviceType.slug || "";
 
   const breadcrumbItems = [
-    { label: jobCategoryLanguage?.all_job_types || "", href: "/categories" },
+    { label: jobCategoryLanguage?.allJobTypes || "", href: "/categories" },
     ...(catalogTitle
       ? [{ label: catalogTitle, href: `/categories/${catalogSlug}` }]
       : []),
@@ -103,10 +103,10 @@ const JobDetail = ({ username, slug }: Props) => {
           <Image src={CategoriesIcon.guaranteed} alt="guaranteed" width={22} />
           <p className="text-base font-medium text-center ">
             <span className="text-third">
-              {jobCategoryLanguage?.safe_no_scam}{" "}
+              {jobCategoryLanguage?.safeNoScam}{" "}
             </span>
-            <span className="text-text_primary">
-              {jobCategoryLanguage?.support_throughout}
+            <span className="text-textPrimary">
+              {jobCategoryLanguage?.supportThroughout}
             </span>
           </p>
         </Link>
@@ -126,8 +126,8 @@ const JobDetail = ({ username, slug }: Props) => {
             <div className="pt-4 md:pt-12 relative h-full">
               <TabNavigation
                 tabLabel={[
-                  jobDetailLanguage?.overview_tab || "Overview",
-                  jobDetailLanguage?.package_tab || "Packages",
+                  jobDetailLanguage?.overviewTab || "Overview",
+                  jobDetailLanguage?.packageTab || "Packages",
                   jobDetailLanguage?.freelancer || "Reviews",
                   jobDetailLanguage?.review || "Reviews",
                 ]}
@@ -174,11 +174,11 @@ const JobDetail = ({ username, slug }: Props) => {
         <section className="grid-container-job-detail">
           <div className="col-start-2 col-end-auto pb-6">
             <div className="mt-6">
-              <h2 className="text-[1.5rem] text-text_primary font-medium pb-6">
-                {jobDetailLanguage?.similar_jobs}
+              <h2 className="text-[1.5rem] text-textPrimary font-medium pb-6">
+                {jobDetailLanguage?.similarJobs}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-[repeat(4,minmax(1px,1fr))] grid-rows-[1fr] gap-[1.25rem] my-3 ">
-                {/* {Array.from({ length: 4 }, (_, index) => (
+                {/* {Array.from({ length: 4 }, (, index) => (
                   <CategoryCard key={index} />
                 ))} */}
               </div>
@@ -186,11 +186,11 @@ const JobDetail = ({ username, slug }: Props) => {
           </div>
           <div className="col-start-2 col-end-auto pb-2 md:pb-6">
             <div>
-              <h2 className="text-[1.5rem] text-text_primary font-medium pb-6">
-                {jobDetailLanguage?.other_jobs_section}
+              <h2 className="text-[1.5rem] text-textPrimary font-medium pb-6">
+                {jobDetailLanguage?.otherJobsSection}
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-[repeat(4,minmax(1px,1fr))] gap-[1.25rem] my-3">
-                {category_related.map((category, index) => (
+                {categoryRelated.map((category, index) => (
                   <CategoryRelated items={category} key={index} />
                 ))}
               </div>

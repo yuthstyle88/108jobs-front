@@ -60,14 +60,14 @@ const JobBoard = () => {
       <div className="max-w-[1280px] mx-auto py-8 px-4 md:px-6 lg:px-8 rounded-lg shadow-sm">
         <div className="mb-6">
           <h2 className="text-2xl font-bold text-blue-600 mb-1">
-            {jobBoardLanguageData?.section_job_board}
+            {jobBoardLanguageData?.sectionJobBoard}
           </h2>
           <p className="text-gray-600">
-            {jobBoardLanguageData?.subtitle_job_board}
+            {jobBoardLanguageData?.subtitleJobBoard}
           </p>
         </div>
 
-        <div className="border-1 border-border_primary bg-white p-4 rounded-lg">
+        <div className="border-1 border-borderPrimary bg-white p-4 rounded-lg">
           <div className="border-b mb-6">
             <JobBoardTab />
           </div>
@@ -85,7 +85,7 @@ const JobBoard = () => {
                     }}
                   >
                     <option value="">
-                      {jobBoardLanguageData?.dropdown_search_category}
+                      {jobBoardLanguageData?.dropdownSearchCategory}
                     </option>
                     {categories.map((category) => (
                       <option key={category.id} value={category.id}>
@@ -117,12 +117,12 @@ const JobBoard = () => {
                 href="/job-board/create-job"
                 className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
               >
-                {jobBoardLanguageData?.button_post_job || "Post a Job"} (0/3)
+                {jobBoardLanguageData?.buttonPostJob || "Post a Job"} (0/3)
               </Link>
             </div>
           </div>
 
-          <div className="overflow-x-auto border-1 border-border_primary rounded-lg">
+          <div className="overflow-x-auto border-1 border-borderPrimary rounded-lg">
             {isJobsLoading ? (
               <div className="py-12 text-center">
                 <LoadingMultiCircle />
@@ -132,23 +132,23 @@ const JobBoard = () => {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      {jobBoardLanguageData?.table_header_title}
+                      {jobBoardLanguageData?.tableHeaderTitle}
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      {jobBoardLanguageData?.table_header_category}
+                      {jobBoardLanguageData?.tableHeaderCategory}
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      {jobBoardLanguageData?.table_header_job_type}
+                      {jobBoardLanguageData?.tableHeaderJobType}
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      {jobBoardLanguageData?.table_header_budget}
+                      {jobBoardLanguageData?.tableHeaderBudget}
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[120px] visible">
-                      {jobBoardLanguageData?.table_header_post_date ||
+                      {jobBoardLanguageData?.tableHeaderPostDate ||
                         "Posted Date"}
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[120px] visible">
-                      {jobBoardLanguageData?.table_header_deadline ||
+                      {jobBoardLanguageData?.tableHeaderDeadline ||
                         "Deadline"}
                     </th>
                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[120px] visible">
@@ -184,9 +184,9 @@ const JobBoard = () => {
                             <div>
                               <Link prefetch={false}
                                 href={`/job-board/${job.id}`}
-                                className="hover:text-blue-600 font-medium text-base text-text_primary font-sans max-w-[300px] line-clamp-1 truncate"
+                                className="hover:text-blue-600 font-medium text-base text-textPrimary font-sans max-w-[300px] line-clamp-1 truncate"
                               >
-                                {job.job_title}
+                                {job.jobTitle}
                               </Link>
                             </div>
                           </div>
@@ -195,15 +195,15 @@ const JobBoard = () => {
                           {job.category}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
-                          {job.working_from}
+                          {job.workingFrom}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-base text-gray-900 font-medium">
                           {parseFloat(job.budget).toLocaleString()}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-text_primary visible">
-                          {formatDate(job.created_at)}
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-textPrimary visible">
+                          {formatDate(job.createdAt)}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-text_primary visible">
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-textPrimary visible">
                           {formatDate(job.deadline) || "-"}
                         </td>
                       </tr>
@@ -234,7 +234,7 @@ const JobBoard = () => {
 
         <div className="mt-12 h-[148px] bg-[#D0E1FB] rounded-lg overflow-hidden flex justify-center items-center">
           <Image
-            src={ProfileImage.job_board}
+            src={ProfileImage.jobBoard}
             alt="Job Board"
             className="w-auto h-full object-contain"
           />

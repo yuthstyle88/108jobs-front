@@ -39,8 +39,8 @@ const CategoryFilter = () => {
         <span className="inline-flex items-center">
           <div className="mr-2">
             <Image
-              src={CategoriesImage.fast_reply}
-              alt="fast_reply"
+              src={CategoriesImage.fastReply}
+              alt="fastReply"
               className="align-top h-[26px] w-full"
             />
           </div>

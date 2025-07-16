@@ -1,17 +1,17 @@
 export interface Review {
   id: string;
-  profile_id: string;
-  reviewer_id: string;
+  profileId: string;
+  reviewerId: string;
   content: string;
   rating: number;
-  created_at: string; 
-  reviewer_name: string;
-  reviewer_avatar: string;
-  is_owner:string;
+  createdAt: string; 
+  reviewerName: string;
+  reviewerAvatar: string;
+  isOwner:string;
 }
 
 export interface ReviewResponse {
   reviews: Review[];
   total: number;
-  average_rating: number;
+  averageRating: number;
 }

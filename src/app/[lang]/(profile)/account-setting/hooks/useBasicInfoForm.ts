@@ -8,7 +8,7 @@ export const useBasicInfoForm = () => {
     isLoading: isLoadingProfile,
     error: isErrorProfile,
     mutate,
-  } = usePrivateFetch<ProfileData>(API_ROUTES.profile.get_profile);
+  } = usePrivateFetch<ProfileData>(API_ROUTES.profile.getProfile);
 
   return {
     profileData,

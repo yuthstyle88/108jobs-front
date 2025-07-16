@@ -11,11 +11,11 @@ const Marketing: React.FC = () => {
     data: catalogData,
     isLoading,
     error,
-  } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.get_all_catalog);
+  } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.getAllCatalog);
 
   if (isLoading || error) return null;
 
-  const marketingService = catalogData?.service_catalogs.find(
+  const marketingService = catalogData?.serviceCatalogs.find(
     (catalog) => catalog.name.toLowerCase() === "marketing & advertising"
   );
 
@@ -27,8 +27,8 @@ const Marketing: React.FC = () => {
       <div className="grid grid-cols-[1fr_1fr_1fr] gap-y-4 absolute left-0 w-[630px] right-0 opacity-0 scale-y-0 origin-top top-[3.5rem] shadow-subMenu px-[1rem] py-[1rem] text-[rgba(43,50,59,.95)] z-50 bg-white border-t-[1px] border-t-secondary border-b-2 border-b-third group-hover:opacity-100 group-hover:scale-y-100 transition-all duration-300">
         {marketingService.sections.map((section) => (
           <CategoryList
-            key={section.section_title}
-            title={section.section_title}
+            key={section.sectionTitle}
+            title={section.sectionTitle}
             items={section.categories.map((cat) => ({
               title: cat.name,
               slug: cat.slug,

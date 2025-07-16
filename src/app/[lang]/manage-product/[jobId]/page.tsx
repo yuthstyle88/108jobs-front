@@ -34,7 +34,7 @@ const ServiceOnboardingPage = () => {
     isLoading,
     mutate,
   } = usePrivateFetchParams<JobType>(
-    API_ROUTES_SELLER.job.get_job + "/" + jobId
+    API_ROUTES_SELLER.job.getJob + "/" + jobId
   );
 
   const { data: createJobLanguage, isLoading: isCreateJobLoading } =
@@ -198,11 +198,11 @@ const ServiceOnboardingPage = () => {
         ${isPending && !isActive ? "text-gray-500" : ""}
       `}
                 >
-                  {step === 1 && createJobLanguage?.step_1}
-                  {step === 2 && createJobLanguage?.step_2}
-                  {step === 3 && createJobLanguage?.step_3}
-                  {step === 4 && createJobLanguage?.step_4}
-                  {step === 5 && createJobLanguage?.step_5}
+                  {step === 1 && createJobLanguage?.step1}
+                  {step === 2 && createJobLanguage?.step2}
+                  {step === 3 && createJobLanguage?.step3}
+                  {step === 4 && createJobLanguage?.step4}
+                  {step === 5 && createJobLanguage?.step5}
                 </span>
               </div>
             );

@@ -29,26 +29,26 @@ const FreelanceMegaMenu = () => {
   > = {
     find: {
       component: <Find />,
-      image: MegaMenuImage.job_bg,
+      image: MegaMenuImage.jobBg,
     },
     post: {
       component: <Post />,
-      image: MegaMenuImage.buyer_job,
+      image: MegaMenuImage.buyerJob,
     },
   };
 
-  const mega_freelancer: FreelanceMegaMenuItem[] = [
+  const megaFreelancer: FreelanceMegaMenuItem[] = [
     {
       key: "find",
       icon: MegaMenuImage.search,
-      title: global?.label_menu_option_1_1,
-      description: global?.hint_label_menu_option_find_hire,
+      title: global?.labelMenuOption11,
+      description: global?.hintLabelMenuOptionFindHire,
     },
     {
       key: "post",
       icon: MegaMenuImage.job,
-      title: global?.label_menu_option_1_2,
-      description: global?.hint_label_menu_option_search_job_board,
+      title: global?.labelMenuOption12,
+      description: global?.hintLabelMenuOptionSearchJobBoard,
     },
   ];
 
@@ -67,10 +67,10 @@ const FreelanceMegaMenu = () => {
                 className="w-3 h-3 inline-flex items-center justify-center cursor-pointer"
               />
               <span className="text-[0.875rem] font-semibold text-[rgba(43,50,59,.6)]">
-                {global?.tittle_header_menu_section_1}
+                {global?.tittleHeaderMenuSection1}
               </span>
             </div>
-            {mega_freelancer.map((freelancer, index) => (
+            {megaFreelancer.map((freelancer, index) => (
               <div
                 onMouseEnter={() => setHoveredItem(freelancer.key)}
                 onMouseLeave={() => setHoveredItem(freelancer.key)}
@@ -92,7 +92,7 @@ const FreelanceMegaMenu = () => {
                   />
                   <div className="gap-x-1 flex flex-col flex-1 ">
                     <span
-                      className={`text-[0.875rem] font-medium text-text_primary ${
+                      className={`text-[0.875rem] font-medium text-textPrimary ${
                         freelancer.key === hoveredItem && "text-third"
                       }`}
                     >

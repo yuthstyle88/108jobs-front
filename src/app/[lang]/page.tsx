@@ -52,12 +52,12 @@ import { useState } from "react";
 import Error from "../error";
 
 const interestImages = [
-  LandingImage.interest_1,
-  LandingImage.interest_2,
-  LandingImage.interest_3,
-  LandingImage.interest_4,
-  LandingImage.interest_5,
-  LandingImage.interest_6,
+  LandingImage.interest1,
+  LandingImage.interest2,
+  LandingImage.interest3,
+  LandingImage.interest4,
+  LandingImage.interest5,
+  LandingImage.interest6,
 ];
 
 const CustomNavigation = () => {
@@ -99,27 +99,27 @@ export default function Home() {
   } = useGlobalTranslate(LanguageFile.HOME);
 
   const { data: catalogData, isLoading: isCatalogLoading } =
-    usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.get_all_catalog);
+    usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.getAllCatalog);
 
-  const freelancer_intro = [
+  const freelancerIntro = [
     {
       icon: AssetsImage.group,
-      title: homeLanguageData?.tittle_first_slogan,
-      description: homeLanguageData?.content_freelancer_verification,
+      title: homeLanguageData?.tittleFirstSlogan,
+      description: homeLanguageData?.contentFreelancerVerification,
     },
     {
       icon: AssetsImage.shield,
-      title: homeLanguageData?.tittle_second_slogan,
-      description: homeLanguageData?.content_payment_protection,
+      title: homeLanguageData?.tittleSecondSlogan,
+      description: homeLanguageData?.contentPaymentProtection,
     },
     {
       icon: AssetsImage.paper,
-      title: homeLanguageData?.tittle_third_slogan,
-      description: homeLanguageData?.content_quality_freelancers,
+      title: homeLanguageData?.tittleThirdSlogan,
+      description: homeLanguageData?.contentQualityFreelancers,
     },
   ];
 
-  const serviceCatalogs = catalogData?.service_catalogs || [];
+  const serviceCatalogs = catalogData?.serviceCatalogs || [];
   const activeCatalog = serviceCatalogs[activeCatalogIndex];
 
   const errorMsg = useHandleFetchError(error || homeError);
@@ -140,11 +140,11 @@ export default function Home() {
         <section className="hidden sm:block h-auto header-gradient pt-[6.5rem] md:pt-[4.5rem]">
           <div className="pt-[3rem] pb-[8rem] flex justify-center flex-col gap-4 text-center">
             <h1 className="text-[24px] font-medium text-white">
-              {homeLanguageData?.title_banner_home_page_1}
+              {homeLanguageData?.titleBannerHomePage1}
             </h1>
             <TypingText />
             <p className="text-[18px] font-medium">
-              {homeLanguageData?.title_banner_home_page_2}
+              {homeLanguageData?.titleBannerHomePage2}
             </p>
             <SearchInput language={globalLanguageData} />
           </div>
@@ -188,7 +188,7 @@ export default function Home() {
                             }`}
                           />
                         </div>
-                        <p className="text-base font-medium text-text_primary leading-[18.4px]">
+                        <p className="text-base font-medium text-textPrimary leading-[18.4px]">
                           {catalog.name}
                         </p>
                       </div>
@@ -233,7 +233,7 @@ export default function Home() {
                     href="/categories/popular-service"
                     className="text-primary py-[0.75rem] relative no-underline cursor-pointer outline-none ease-in-out duration-150 transition-all"
                   >
-                    {homeLanguageData?.label_see_more_tittle}
+                    {homeLanguageData?.labelSeeMoreTittle}
                     <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
                   </Link>
                 </div>
@@ -245,21 +245,21 @@ export default function Home() {
         <section className="block sm:hidden pt-[4.5rem]">
           <SpAdsSlider />
         </section>
-        <section className="block sm:hidden p-[0.75rem] border-b-[0.25rem] border-border_primary ">
+        <section className="block sm:hidden p-[0.75rem] border-b-[0.25rem] border-borderPrimary ">
           <SpCatalog activeCatalog={activeCatalog} />
         </section>
 
         <section className="py-6 sm:py-24 grid grid-container-desktop-banner gap-y-4 sm:gap-y-12 ">
           <div className="col-start-2 col-end-3">
             <h4 className="text-[16px] sm:text-[1.5rem] text-[#38404c] font-medium leading-[1.15]">
-              {homeLanguageData?.tittle_primary_why_section}
+              {homeLanguageData?.tittlePrimaryWhySection}
             </h4>
             <h2 className="home-title-head text-[18px] sm:text-[2.25rem]">
-              {homeLanguageData?.tittle_secondary_why_section}
+              {homeLanguageData?.tittleSecondaryWhySection}
             </h2>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-[1.5rem] gap-y-[1rem] lg:gap-y-0 min-h-0 min-w-0 col-start-2 col-end-3">
-            {freelancer_intro.map((freelancer, index) => (
+            {freelancerIntro.map((freelancer, index) => (
               <div key={index} className="flex flex-col items-center sm:block">
                 <Image
                   src={freelancer.icon}
@@ -268,7 +268,7 @@ export default function Home() {
                   height={62}
                   className="max-w-full h-auto align-top self-center"
                 />
-                <div className="grid grid-cols-[1fr] mt-4 gap-y-1 text-text_primary font-medium">
+                <div className="grid grid-cols-[1fr] mt-4 gap-y-1 text-textPrimary font-medium">
                   <h5 className="text-base sm:text-[1.25rem] leading-[1.15]">
                     {freelancer.title}
                   </h5>
@@ -285,12 +285,12 @@ export default function Home() {
           <div className="grid grid-container-desktop-banner gap-y-4 sm:gap-y-12">
             <div className="col-start-2 col-end-3">
               <h2 className="home-title-head text-[18px] sm:text-[2.25rem]">
-                {homeLanguageData?.title_start_hiring_section}
+                {homeLanguageData?.titleStartHiringSection}
               </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
               {/* Cột 1 */}
-              <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium">
+              <div className="grid grid-rows-2 gap-y-6 text-textPrimary font-medium">
                 <div className="flex gap-x-5">
                   <div className="flex-shrink-0">
                     <Image
@@ -302,10 +302,10 @@ export default function Home() {
                   </div>
                   <div>
                     <h1 className="text-[1.25rem] leading-[1.15]">
-                      {homeLanguageData?.label_start_hiring_section_1}
+                      {homeLanguageData?.labelStartHiringSection1}
                     </h1>
                     <p className="m-0 text-base font-sans leading-[1.65]">
-                      {homeLanguageData?.content_start_hiring_section_1}
+                      {homeLanguageData?.contentStartHiringSection1}
                     </p>
                   </div>
                 </div>
@@ -320,17 +320,17 @@ export default function Home() {
                   </div>
                   <div>
                     <h1 className="text-[1.25rem] leading-[1.15]">
-                      {homeLanguageData?.label_start_hiring_section_3}
+                      {homeLanguageData?.labelStartHiringSection3}
                     </h1>
                     <p className="m-0 text-base font-sans leading-[1.65]">
-                      {homeLanguageData?.content_start_hiring_section_3}
+                      {homeLanguageData?.contentStartHiringSection3}
                     </p>
                   </div>
                 </div>
               </div>
 
               {/* Cột 2 */}
-              <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium">
+              <div className="grid grid-rows-2 gap-y-6 text-textPrimary font-medium">
                 <div className="flex gap-x-5">
                   <div className="flex-shrink-0">
                     <Image
@@ -342,10 +342,10 @@ export default function Home() {
                   </div>
                   <div>
                     <h1 className="text-[1.25rem] leading-[1.15]">
-                      {homeLanguageData?.label_start_hiring_section_2}
+                      {homeLanguageData?.labelStartHiringSection2}
                     </h1>
                     <p className="m-0 text-base font-sans leading-[1.65]">
-                      {homeLanguageData?.content_start_hiring_section_2}
+                      {homeLanguageData?.contentStartHiringSection2}
                     </p>
                   </div>
                 </div>
@@ -360,10 +360,10 @@ export default function Home() {
                   </div>
                   <div>
                     <h1 className="text-[1.25rem] leading-[1.15]">
-                      {homeLanguageData?.label_start_hiring_section_4}
+                      {homeLanguageData?.labelStartHiringSection4}
                     </h1>
                     <p className="m-0 text-base font-sans leading-[1.65]">
-                      {homeLanguageData?.content_start_hiring_section_4}
+                      {homeLanguageData?.contentStartHiringSection4}
                     </p>
                   </div>
                 </div>
@@ -372,7 +372,7 @@ export default function Home() {
               {/* Cột 3 */}
               <div className="rounded-lg relative cursor-pointer h-[219px] mt-8 md:mt-0">
                 <Image
-                  src={LandingImage.video_bg}
+                  src={LandingImage.videoBg}
                   alt="video background"
                   className="rounded-lg object-cover w-full h-full"
                   width={500}
@@ -398,7 +398,7 @@ export default function Home() {
         <section className="grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3">
             <h2 className="home-title-head text-[18px] sm:text-[2.25rem] pb-4">
-              {homeLanguageData?.label_recommend_section}
+              {homeLanguageData?.labelRecommendSection}
             </h2>
           </div>
         </section>
@@ -441,7 +441,7 @@ export default function Home() {
         >
           <div className="col-start-2 col-end-3">
             <h2 className="home-title-head text-[18px] sm:text-[2.25rem] text-center">
-              {homeLanguageData?.tittle_quality_offer_section}
+              {homeLanguageData?.tittleQualityOfferSection}
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-[1.5rem] gap-y-[1.5rem] lg:gap-y-0 min-h-0 min-w-0 col-start-2 col-end-3">
@@ -451,11 +451,11 @@ export default function Home() {
                 <div className="flex justify-center mt-8 items-center">
                   <Image src={CompareImage.compare1} alt="Freelancer" />
                 </div>
-                <div className="text-text_primary mt-6">
+                <div className="text-textPrimary mt-6">
                   <h3 className="font-semibold text-[1.25rem] mb-2">
                     Freelancer
                   </h3>
-                  <ul className="text-sm text-left text-text_secondary grid grid-cols-[1fr] gap-1">
+                  <ul className="text-sm text-left text-textSecondary grid grid-cols-[1fr] gap-1">
                     <li className="flex flex-row gap-3 items-center">
                       <FontAwesomeIcon
                         icon={faCheck}
@@ -463,7 +463,7 @@ export default function Home() {
                       />
                       <p className="text-[0.875rem] leading-[1.65]">
                         {
-                          homeLanguageData?.content_quality_offer_freelancer_card_1
+                          homeLanguageData?.contentQualityOfferFreelancerCard1
                         }{" "}
                       </p>
                     </li>
@@ -474,7 +474,7 @@ export default function Home() {
                       />
                       <p className="text-[0.875rem] leading-[1.65]">
                         {
-                          homeLanguageData?.content_quality_offer_freelancer_card_2
+                          homeLanguageData?.contentQualityOfferFreelancerCard2
                         }{" "}
                       </p>
                     </li>
@@ -482,10 +482,10 @@ export default function Home() {
                 </div>
               </div>
               <div>
-                <hr className="w-full h-[1px] m-0 bg-border_secondary" />
+                <hr className="w-full h-[1px] m-0 bg-borderSecondary" />
                 <div className="h-[60px] px-6 flex justify-end items-center ">
-                  <div className="opacity-70 text-[0.875rem] cursor-pointer text-text_secondary">
-                    {homeLanguageData?.label_see_more_tittle}
+                  <div className="opacity-70 text-[0.875rem] cursor-pointer text-textSecondary">
+                    {homeLanguageData?.labelSeeMoreTittle}
                     <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
                   </div>
                 </div>
@@ -495,17 +495,17 @@ export default function Home() {
               <div className="p-6 flex-1 text-center bg-white rounded-lg gap-6">
                 <div className="w-full flex justify-end">
                   <button className="w-fit pointer-events-none bg-blue-200 text-blue-500 font-semibold py-1 px-4 rounded-full shadow-md hover:bg-blue-400 ">
-                    {homeLanguageData?.tittle_quality_offer_specialist_card}
+                    {homeLanguageData?.tittleQualityOfferSpecialistCard}
                   </button>
                 </div>
                 <div className="flex justify-center mt-8 items-center">
                   <Image src={CompareImage.compare2} alt="Specialist" />
                 </div>
-                <div className="text-text_primary mt-6">
+                <div className="text-textPrimary mt-6">
                   <h3 className="font-semibold text-[1.25rem] mb-2">
-                    {homeLanguageData?.tittle_quality_offer_specialist_card}
+                    {homeLanguageData?.tittleQualityOfferSpecialistCard}
                   </h3>
-                  <ul className="text-sm text-left text-text_secondary grid grid-cols-[1fr] gap-1">
+                  <ul className="text-sm text-left text-textSecondary grid grid-cols-[1fr] gap-1">
                     <li className="flex flex-row gap-3 items-center">
                       <FontAwesomeIcon
                         icon={faCheck}
@@ -513,7 +513,7 @@ export default function Home() {
                       />
                       <p className="text-[0.875rem] leading-[1.65]">
                         {
-                          homeLanguageData?.content_quality_offer_specialist_card_1
+                          homeLanguageData?.contentQualityOfferSpecialistCard1
                         }
                       </p>
                     </li>
@@ -524,7 +524,7 @@ export default function Home() {
                       />
                       <p className="text-[0.875rem] leading-[1.65]">
                         {
-                          homeLanguageData?.content_quality_offer_specialist_card_2
+                          homeLanguageData?.contentQualityOfferSpecialistCard2
                         }
                       </p>
                     </li>
@@ -535,7 +535,7 @@ export default function Home() {
                       />
                       <p className="text-[0.875rem] leading-[1.65]">
                         {
-                          homeLanguageData?.content_quality_offer_specialist_card_3
+                          homeLanguageData?.contentQualityOfferSpecialistCard3
                         }
                       </p>
                     </li>
@@ -546,7 +546,7 @@ export default function Home() {
                       />
                       <p className="text-[0.875rem] leading-[1.65]">
                         {
-                          homeLanguageData?.content_quality_offer_specialist_card_4
+                          homeLanguageData?.contentQualityOfferSpecialistCard4
                         }
                       </p>
                     </li>
@@ -554,10 +554,10 @@ export default function Home() {
                 </div>
               </div>
               <div>
-                <hr className="w-full h-[1px] m-0 bg-border_secondary" />
+                <hr className="w-full h-[1px] m-0 bg-borderSecondary" />
                 <div className="h-[60px] px-6 flex justify-end items-center ">
-                  <div className="opacity-70 text-[0.875rem] cursor-pointer text-text_secondary">
-                    {homeLanguageData?.label_see_more_tittle}
+                  <div className="opacity-70 text-[0.875rem] cursor-pointer text-textSecondary">
+                    {homeLanguageData?.labelSeeMoreTittle}
                     <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
                   </div>
                 </div>
@@ -568,17 +568,17 @@ export default function Home() {
               <div className="p-6 flex-1 text-center bg-white rounded-lg gap-6">
                 <div className="w-full flex justify-end">
                   <button className="w-fit pointer-events-none bg-blue-500 text-white font-semibold py-1 px-4 rounded-full shadow-md hover:bg-blue-400">
-                    {homeLanguageData?.tittle_quality_offer_professional_card}
+                    {homeLanguageData?.tittleQualityOfferProfessionalCard}
                   </button>
                 </div>
                 <div className="flex justify-center mt-8 items-center">
                   <Image src={CompareImage.compare3} alt="Professional" />
                 </div>
-                <div className="text-text_primary mt-6">
+                <div className="text-textPrimary mt-6">
                   <h3 className="font-semibold text-[1.25rem] mb-2">
-                    {homeLanguageData?.tittle_quality_offer_professional_card}
+                    {homeLanguageData?.tittleQualityOfferProfessionalCard}
                   </h3>
-                  <ul className="text-sm text-left text-text_secondary grid grid-cols-[1fr] gap-1">
+                  <ul className="text-sm text-left text-textSecondary grid grid-cols-[1fr] gap-1">
                     <li className="flex flex-row gap-3 items-center">
                       <FontAwesomeIcon
                         icon={faCheck}
@@ -586,7 +586,7 @@ export default function Home() {
                       />
                       <p className="text-[0.875rem] leading-[1.65]">
                         {
-                          homeLanguageData?.content_quality_offer_professional_card_1
+                          homeLanguageData?.contentQualityOfferProfessionalCard1
                         }
                       </p>
                     </li>
@@ -597,7 +597,7 @@ export default function Home() {
                       />
                       <p className="text-[0.875rem] leading-[1.65]">
                         {
-                          homeLanguageData?.content_quality_offer_professional_card_2
+                          homeLanguageData?.contentQualityOfferProfessionalCard2
                         }
                       </p>
                     </li>
@@ -608,7 +608,7 @@ export default function Home() {
                       />
                       <p className="text-[0.875rem] leading-[1.65]">
                         {
-                          homeLanguageData?.content_quality_offer_professional_card_3
+                          homeLanguageData?.contentQualityOfferProfessionalCard3
                         }
                       </p>
                     </li>
@@ -619,7 +619,7 @@ export default function Home() {
                       />
                       <p className="text-[0.875rem] leading-[1.65]">
                         {
-                          homeLanguageData?.content_quality_offer_professional_card_4
+                          homeLanguageData?.contentQualityOfferProfessionalCard4
                         }
                       </p>
                     </li>
@@ -630,7 +630,7 @@ export default function Home() {
                       />
                       <p className="text-[0.875rem] leading-[1.65]">
                         {
-                          homeLanguageData?.content_quality_offer_professional_card_5
+                          homeLanguageData?.contentQualityOfferProfessionalCard5
                         }
                       </p>
                     </li>
@@ -641,7 +641,7 @@ export default function Home() {
                       />
                       <p className="text-[0.875rem] leading-[1.65]">
                         {
-                          homeLanguageData?.content_quality_offer_professional_card_6
+                          homeLanguageData?.contentQualityOfferProfessionalCard6
                         }
                       </p>
                     </li>
@@ -649,10 +649,10 @@ export default function Home() {
                 </div>
               </div>
               <div>
-                <hr className="w-full h-[1px] m-0 bg-border_secondary" />
+                <hr className="w-full h-[1px] m-0 bg-borderSecondary" />
                 <div className="h-[60px] px-6 flex justify-end items-center ">
-                  <div className="opacity-70 text-[0.875rem] cursor-pointer text-text_secondary">
-                    {homeLanguageData?.label_see_more_tittle}
+                  <div className="opacity-70 text-[0.875rem] cursor-pointer text-textSecondary">
+                    {homeLanguageData?.labelSeeMoreTittle}
                     <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
                   </div>
                 </div>
@@ -664,7 +664,7 @@ export default function Home() {
 
         <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-            {homeLanguageData?.title_popular_freelancers}
+            {homeLanguageData?.titlePopularFreelancers}
           </div>
         </section>
 
@@ -698,7 +698,7 @@ export default function Home() {
 
         <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-            {homeLanguageData?.title_astrology_freelancers}
+            {homeLanguageData?.titleAstrologyFreelancers}
           </div>
         </section>
 
@@ -732,7 +732,7 @@ export default function Home() {
 
         <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-            {homeLanguageData?.title_logo_design_freelancers}
+            {homeLanguageData?.titleLogoDesignFreelancers}
           </div>
         </section>
 
@@ -766,7 +766,7 @@ export default function Home() {
 
         <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-            {homeLanguageData?.title_featured_works}
+            {homeLanguageData?.titleFeaturedWorks}
           </div>
         </section>
         <div className="max-w-[1280px] mx-auto px-4 xl:px-8 pb-16 pt-8">
@@ -796,7 +796,7 @@ export default function Home() {
                   >
                     <div className="h-[256px] relative">
                       <Image
-                        src={LandingImage.top_works}
+                        src={LandingImage.topWorks}
                         alt="Hotel Image"
                         width={400}
                         height={200}
@@ -815,10 +815,10 @@ export default function Home() {
                           />
                         </div>
                         <div>
-                          <p className="font-semibold text-text_primary p-0">
+                          <p className="font-semibold text-textPrimary p-0">
                             Line sticker
                           </p>
-                          <p className="text-[14px] text-text_secondary p-0">
+                          <p className="text-[14px] text-textSecondary p-0">
                             by designdee
                           </p>
                         </div>
@@ -833,7 +833,7 @@ export default function Home() {
 
         <section className="bg-white grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-            {homeLanguageData?.label_reviews_customer}
+            {homeLanguageData?.labelReviewsCustomer}
           </div>
         </section>
         <div className="max-w-[1280px] mx-auto px-4 xl:px-8 pb-16 pt-4">
@@ -900,7 +900,7 @@ export default function Home() {
           <div className="py-8 grid grid-container-desktop gap-y-[1.5rem]">
             <div className="col-start-2 col-end-3 w-full text-center">
               <h5 className="text-[1.25rem] text-[#2B323BF2] font-medium font-secondary leading-[1.15] mb-[1.5rem]">
-                {homeLanguageData?.title_trusted_companies}
+                {homeLanguageData?.titleTrustedCompanies}
               </h5>
               <div className="grid grid-cols-6 grid-rows-2 gap-x-8 gap-y-4">
                 <Image
@@ -996,24 +996,24 @@ export default function Home() {
           <div className="bg-white pt-24 pb-16 grid grid-container-desktop gap-y-12">
             <div className="col-start-2 col-end-3 w-full text-left">
               <h2 className="block text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px] mt-[0.83em] mb-[0.83em] mx-0">
-                {homeLanguageData?.title_platform}
+                {homeLanguageData?.titlePlatform}
               </h2>
               <div
                 className={`text-gray-700 overflow-hidden transition-all duration-300 ${
                   expanded ? "max-h-[500px]" : "max-h-20"
                 }`}
               >
-                <p>{homeLanguageData?.content_fastwork_1}</p>
+                <p>{homeLanguageData?.contentFastwork1}</p>
                 <br />
-                <p>{homeLanguageData?.content_fastwork_2}</p>
-                <br /> <p>{homeLanguageData?.content_fastwork_3}</p>
+                <p>{homeLanguageData?.contentFastwork2}</p>
+                <br /> <p>{homeLanguageData?.contentFastwork3}</p>
               </div>
               {!expanded && (
                 <div
                   className="text-blue-600 cursor-pointer text-center mt-4"
                   onClick={() => setExpanded(true)}
                 >
-                  {homeLanguageData?.button_job_categories_view_more} ▼
+                  {homeLanguageData?.buttonJobCategoriesViewMore} ▼
                 </div>
               )}
             </div>
@@ -1022,7 +1022,7 @@ export default function Home() {
 
         <div className="grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 w-full">
-            <hr className="w-full h-[1px] m-0 bg-border_secondary" />
+            <hr className="w-full h-[1px] m-0 bg-borderSecondary" />
           </div>
         </div>
 
@@ -1030,12 +1030,12 @@ export default function Home() {
           <div className="bg-white pt-24 pb-16 grid grid-container-desktop gap-y-12">
             <div className="col-start-2 col-end-3 w-full">
               <h2 className="block text-[rgb(8,67,155)] font-[500] text-[36px] leading-[41.4px] mb-[0.83em] mx-0">
-                {homeLanguageData?.title_job_categories}
+                {homeLanguageData?.titleJobCategories}
               </h2>
               <div className="grid w-full gap-x-8 gap-y-6 grid-cols-4 grid-rows-2">
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    {homeLanguageData?.graphic_design}
+                    {homeLanguageData?.graphicDesign}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
                     {/* <Link prefetch={false} href="/social-media-banner">ออกแบบแบนเนอร์</Link>
@@ -1050,12 +1050,12 @@ export default function Home() {
                     <Link prefetch={false} href="/packaging">ออกแบบแพคเกจจิ้ง</Link>,&nbsp;
                     <Link prefetch={false} href="/corporate-identity">ออกแบบ CI</Link>,&nbsp;
                     <Link prefetch={false} href="/design-graphic">ดูเพิ่มเติม</Link> */}
-                    {homeLanguageData?.graphic_design_services}
+                    {homeLanguageData?.graphicDesignServices}
                   </p>
                 </div>
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    {homeLanguageData?.architecture_engineering}
+                    {homeLanguageData?.architectureEngineering}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
                     {/* <Link prefetch={false} href="/architect-and-interior/renovation">
@@ -1089,12 +1089,12 @@ export default function Home() {
                     </Link>
                     ,&nbsp;
                     <Link prefetch={false} href="/architect-and-engineer">ดูเพิ่มเติม</Link> */}
-                    {homeLanguageData?.architecture_engineering_services}
+                    {homeLanguageData?.architectureEngineeringServices}
                   </p>
                 </div>
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    {homeLanguageData?.website_programming}
+                    {homeLanguageData?.websiteProgramming}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
                     {/* <Link prefetch={false} href="/ux-ui-design-web-app">ออกแบบเว็บไซต์</Link>
@@ -1115,12 +1115,12 @@ export default function Home() {
                       รับลงโปรแกรม
                     </Link>
                     ,&nbsp;<Link prefetch={false} href="/web-programming">ดูเพิ่มเติม</Link> */}
-                    {homeLanguageData?.website_programming_services}
+                    {homeLanguageData?.websiteProgrammingServices}
                   </p>
                 </div>
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    {homeLanguageData?.marketing_advertising}
+                    {homeLanguageData?.marketingAdvertising}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
                     {/* <Link prefetch={false} href="/seo">รับทำ SEO</Link>,&nbsp;
@@ -1141,12 +1141,12 @@ export default function Home() {
                     ,&nbsp;
                     <Link prefetch={false} href="/google-map">ปักหมุด google map</Link>,&nbsp;
                     <Link prefetch={false} href="/marketing-advertising">ดูเพิ่มเติม</Link> */}
-                    {homeLanguageData?.marketing_advertising_services}
+                    {homeLanguageData?.marketingAdvertisingServices}
                   </p>
                 </div>
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    {homeLanguageData?.writing_translation}
+                    {homeLanguageData?.writingTranslation}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
                     {/* <Link prefetch={false} href="/translation">แปลภาษา</Link>,&nbsp;
@@ -1167,12 +1167,12 @@ export default function Home() {
                       รับแต่งกลอน
                     </Link>
                     ,&nbsp;<Link prefetch={false} href="/writing-translation">ดูเพิ่มเติม</Link> */}
-                    {homeLanguageData?.writing_translation_services}
+                    {homeLanguageData?.writingTranslationServices}
                   </p>
                 </div>
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    {homeLanguageData?.media_audio}
+                    {homeLanguageData?.mediaAudio}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
                     {/* <Link prefetch={false} href="/photography">ตากล้อง</Link>,&nbsp;
@@ -1190,12 +1190,12 @@ export default function Home() {
                     <Link prefetch={false} href="/animations">ทำอนิเมชั่น</Link>,&nbsp;
                     <Link prefetch={false} href="/voice-over">พากย์เสียง</Link>,&nbsp;
                     <Link prefetch={false} href="/photography-video">ดูเพิ่มเติม</Link> */}
-                    {homeLanguageData?.media_audio_services}
+                    {homeLanguageData?.mediaAudioServices}
                   </p>
                 </div>
                 <div className="block">
                   <strong className="mb-2 !important font-[Kanit] text-[#2B323BF2]">
-                    {homeLanguageData?.business_consulting}
+                    {homeLanguageData?.businessConsulting}
                   </strong>
                   <p className="mt-[0.5rem] text-[hsl(216,15%,52%)] text-opacity-[var(--cl-opacity)] text-[0.875rem] leading-[1.65] font-[system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',sans-serif]">
                     {/* <Link prefetch={false} href="/accounting-and-finance/accounting-service">
@@ -1214,7 +1214,7 @@ export default function Home() {
                     ,&nbsp;
                     <Link prefetch={false} href="/business">ปรึกษาธุรกิจ</Link>,&nbsp;
                     <Link prefetch={false} href="/consultant">ดูเพิ่มเติม</Link> */}
-                    {homeLanguageData?.business_consulting_services}
+                    {homeLanguageData?.businessConsultingServices}
                   </p>
                 </div>
                 <div className="block">
@@ -1233,7 +1233,7 @@ export default function Home() {
                     <Link prefetch={false} href="/trip-planner">รับวางแผนเที่ยว</Link>,&nbsp;
                     <Link prefetch={false} href="/prop-stylist">สไตล์ลิส</Link>,&nbsp;
                     <Link prefetch={false} href="/lifestyle">ดูเพิ่มเติม</Link> */}
-                    {homeLanguageData?.lifestyle_services}
+                    {homeLanguageData?.lifestyleServices}
                   </p>
                 </div>
               </div>
@@ -1242,7 +1242,7 @@ export default function Home() {
         </section>
       </main>
       <div className="bg-[#E3EDFD]  hidden lg:block">
-        <div className=" bg-no-repeat w-4/6 bg-[105%_30px] grid place-self-start gap-x-8 grid-cols-[minmax(1rem,_1fr)_minmax(calc(var(--breakpoint-lg)_-_4rem),_calc(var(--breakpoint-lg)_-_4rem))_minmax(1rem,_1fr)] mx-auto grid-rows-auto">
+        <div className=" bg-no-repeat w-4/6 bg-[105%30px] grid place-self-start gap-x-8 grid-cols-[minmax(1rem,1fr)Minmax(calc(var(--breakpoint-lg)-4rem),Calc(var(--breakpoint-lg)-4rem))Minmax(1rem,1fr)] mx-auto grid-rows-auto">
           <div className="grid grid-cols-[7fr_5fr] min-w-0 min-h-0 ">
             <Image
               alt="Download Application"
@@ -1256,10 +1256,10 @@ export default function Home() {
             <div className="flex items-center pl-[2rem]">
               <div>
                 <h4 className="text-black text-[1.125rem] font-[500] leading-[20.7px] flex items-center font-[Kanit, -apple-system, system-ui, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', sans-serif]">
-                  {homeLanguageData?.button_download_app}
+                  {homeLanguageData?.buttonDownloadApp}
                 </h4>
                 <p className="mt-[0.5rem] text-[1rem] text-black font-[Kanit, -apple-system, system-ui, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', sans-serif] leading-[1.65] m-0 p-0 block mb-[1em] mt-[1em] mx-0">
-                  {homeLanguageData?.subtitle_download_app}
+                  {homeLanguageData?.subtitleDownloadApp}
                 </p>
                 <div className="mt-[1.5rem] flex">
                   <div className="grid grid-cols-1 min-w-0 min-h-0 gap-4">

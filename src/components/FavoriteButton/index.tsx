@@ -21,8 +21,8 @@ interface FavoriteButtonProps {
 }
 
 type FavoriteResponse = {
-  is_favorite: boolean;
-  job_id: string;
+  isFavorite: boolean;
+  jobId: string;
   success: boolean;
 };
 
@@ -83,23 +83,23 @@ const HeartBurst = () => {
 const FavoriteButton = ({ label, jobId }: FavoriteButtonProps) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const [showBurst, setShowBurst] = useState(false);
-  const { success_message } = useNotification();
+  const { successMessage } = useNotification();
   const { data: checkFavorite } = usePrivateFetchParams<FavoriteResponse>(
-    `${API_ROUTES.job.check_is_favorite_job}/${jobId}`
+    `${API_ROUTES.job.checkIsFavoriteJob}/${jobId}`
   );
 
   const { trigger: sendFavorite, isMutating: isAddMutating } = usePrivatePost(
-    API_ROUTES.job.update_favorite_job
+    API_ROUTES.job.updateFavoriteJob
   );
 
   const { trigger: deleteFavorite, isMutating: isDeleteMutating } =
-    usePrivateDelete(API_ROUTES.job.delete_favorite_job);
+    usePrivateDelete(API_ROUTES.job.deleteFavoriteJob);
 
   const isMutating = isAddMutating || isDeleteMutating;
 
   useEffect(() => {
     if (checkFavorite !== undefined) {
-      setIsFavorited(checkFavorite.is_favorite);
+      setIsFavorited(checkFavorite.isFavorite);
     }
   }, [checkFavorite]);
 
@@ -110,15 +110,15 @@ const FavoriteButton = ({ label, jobId }: FavoriteButtonProps) => {
 
     try {
       if (willFavorite) {
-        await sendFavorite({ job_id: jobId });
+        await sendFavorite({ jobId: jobId });
         setIsFavorited(true);
         setShowBurst(true);
         setTimeout(() => setShowBurst(false), 600);
-        success_message("job", "update_favorite");
+        successMessage("job", "updateFavorite");
       } else {
-        await deleteFavorite({ job_id: jobId });
+        await deleteFavorite({ jobId: jobId });
         setIsFavorited(false);
-        success_message("job", "delete_favorite");
+        successMessage("job", "deleteFavorite");
       }
     } catch (err) {
       console.error("Toggle favorite failed", err);
@@ -127,7 +127,7 @@ const FavoriteButton = ({ label, jobId }: FavoriteButtonProps) => {
 
   return (
     <div
-      className={`select-none relative flex flex-row items-center justify-center min-w-[34px] border-r-1 border-border_primary p-2 cursor-pointer ${
+      className={`select-none relative flex flex-row items-center justify-center min-w-[34px] border-r-1 border-borderPrimary p-2 cursor-pointer ${
         isMutating ? "opacity-60 cursor-not-allowed" : ""
       }`}
       onClick={handleFavoriteClick}
@@ -135,7 +135,7 @@ const FavoriteButton = ({ label, jobId }: FavoriteButtonProps) => {
       <FontAwesomeIcon
         icon={isFavorited ? fasHeart : farHeart}
         className={`transition-all duration-300 ${
-          isFavorited ? "text-red-500 scale-110" : "text-text_secondary"
+          isFavorited ? "text-red-500 scale-110" : "text-textSecondary"
         }`}
       />
       <p className="ml-2 text-center cursor-pointer">{label}</p>

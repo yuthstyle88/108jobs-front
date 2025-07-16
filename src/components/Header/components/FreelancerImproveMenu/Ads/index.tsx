@@ -9,10 +9,10 @@ const Ads = () => {
   return (
     <div className="flex flex-col w-[420px] mt-8">
       <span className="text-third font-medium">
-        {global?.hire_opportunity_title}
+        {global?.hireOpportunityTitle}
       </span>
-      <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
-        {global?.ads_section_description}
+      <p className="mt-3 text-[0.875rem] text-textSecondary font-sans">
+        {global?.adsSectionDescription}
       </p>
       <Link prefetch={false}
         rel="noopener noreferrer"
@@ -20,7 +20,7 @@ const Ads = () => {
         className="mt-6"
       >
         <span className="text-[0.875rem] font-medium text-third">
-          {global?.ads_feedback_link}
+          {global?.adsFeedbackLink}
           <FontAwesomeIcon icon={faArrowRight} className="pl-2 text-third" />
         </span>
       </Link>

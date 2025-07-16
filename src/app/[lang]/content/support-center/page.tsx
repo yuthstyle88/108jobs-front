@@ -53,7 +53,7 @@ const SupportCenter = () => {
           </div>
           <div className="absolute right-[-100px] bottom-[150px] h-[150px] ml-auto opacity-30 pointer-events-none">
             <Image
-              src={AssetIcon.logo_icon}
+              src={AssetIcon.logoIcon}
               alt="Logo"
               width={350}
               height={350}
@@ -64,7 +64,7 @@ const SupportCenter = () => {
           <div className="col-start-2 col-end-3 flex flex-row items-start gap-6 p-4 md:p-0">
             <div className="px-6 w-full">
               <div className="text-center mb-12">
-                <h1 className="font-sans text-[1.5rem] text-text_primary font-semibold mb-4">
+                <h1 className="font-sans text-[1.5rem] text-textPrimary font-semibold mb-4">
                   คำถามที่พบบ่อย
                 </h1>
                 <div className="w-20 h-[2px] rounded-full bg-blue-500 mx-auto"></div>
@@ -113,7 +113,7 @@ const SupportCenter = () => {
             <div className="bg-gray-50 py-16 mt-2">
               <div className="max-w-6xl mx-auto px-6">
                 <div className="text-center mb-12">
-                  <h1 className="font-sans text-[1.5rem] text-text_primary font-semibold mb-4">
+                  <h1 className="font-sans text-[1.5rem] text-textPrimary font-semibold mb-4">
                     ติดต่อเรา
                   </h1>
                   <div className="w-20 h-[2px] rounded-full bg-blue-500 mx-auto"></div>

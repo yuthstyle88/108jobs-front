@@ -17,18 +17,18 @@ const getSchema = (lang: any) =>
     packages: z
       .array(
         z.object({
-          package_name: z
+          packageName: z
             .string()
-            .nonempty(lang?.package_name_error || "Tên gói là bắt buộc"),
+            .nonempty(lang?.packageNameError || "Tên gói là bắt buộc"),
           description: z
             .string()
-            .nonempty(lang?.package_description_error || "Vui lòng nhập mô tả"),
+            .nonempty(lang?.packageDescriptionError || "Vui lòng nhập mô tả"),
           price: z
             .string()
-            .nonempty(lang?.package_price_error || "Giá là bắt buộc"),
-          execution_time: z.coerce
+            .nonempty(lang?.packagePriceError || "Giá là bắt buộc"),
+          executionTime: z.coerce
             .number()
-            .min(1, lang?.package_delivery_label || "Tối thiểu 1 phút"),
+            .min(1, lang?.packageDeliveryLabel || "Tối thiểu 1 phút"),
         })
       )
       .min(1)
@@ -69,10 +69,10 @@ const Step2Packages = ({
     defaultValues: {
       packages: [
         {
-          package_name: "",
+          packageName: "",
           description: "",
           price: "",
-          execution_time: 1,
+          executionTime: 1,
         },
       ],
     },
@@ -85,13 +85,13 @@ const Step2Packages = ({
   });
 
   const { trigger: sendPackages, isMutating } = usePrivatePost(
-    API_ROUTES_SELLER.job.post_job_step_2
+    API_ROUTES_SELLER.job.postJobStep2
   );
 
   const onSubmit = async (data: FormData) => {
     try {
       await sendPackages({
-        job_id: job.id,
+        jobId: job.id,
         packages: data.packages,
       });
       await mutate();
@@ -109,10 +109,10 @@ const Step2Packages = ({
     if (job?.packages?.length) {
       reset({
         packages: job.packages.map((pkg) => ({
-          package_name: pkg.package_name,
+          packageName: pkg.packageName,
           description: pkg.description,
           price: pkg.price,
-          execution_time: pkg.execution_time,
+          executionTime: pkg.executionTime,
         })),
       });
     }
@@ -124,15 +124,15 @@ const Step2Packages = ({
       className="bg-white rounded-lg shadow-sm p-6"
     >
       {isMutating && <LoadingBlur text={"Đang lưu dữ liệu"} />}
-      <h2 className="text-[32px] font-medium mb-2 text-text_primary">
-        {createJobLanguage?.package_title}
+      <h2 className="text-[32px] font-medium mb-2 text-textPrimary">
+        {createJobLanguage?.packageTitle}
       </h2>
       <div className="mb-6">
-        <p className="text-[20px] text-text_primary">
-          {createJobLanguage?.create_package_title}
+        <p className="text-[20px] text-textPrimary">
+          {createJobLanguage?.createPackageTitle}
         </p>
-        <p className="text-[14px] text-text_secondary mb-6">
-          {createJobLanguage?.create_package_description}
+        <p className="text-[14px] text-textSecondary mb-6">
+          {createJobLanguage?.createPackageDescription}
         </p>
       </div>
 
@@ -143,7 +143,7 @@ const Step2Packages = ({
             className="border border-gray-200 rounded-lg p-6 relative"
           >
             <div className="absolute -top-3 left-4 bg-blue-600 text-white text-[16px] font-medium px-3 py-1 rounded-full">
-              {createJobLanguage?.package_label} {index + 1}
+              {createJobLanguage?.packageLabel} {index + 1}
             </div>
 
             {fields.length > 1 && (
@@ -159,25 +159,25 @@ const Step2Packages = ({
             <div className="mt-4 space-y-6">
               <div>
                 <label className="block text-base font-medium text-gray-700 mb-1">
-                  {createJobLanguage?.package_name_label}
+                  {createJobLanguage?.packageNameLabel}
                 </label>
                 <input
-                  className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
-                  {...register(`packages.${index}.package_name`)}
+                  className="text-textPrimary w-full p-3 border border-gray-300 rounded-lg"
+                  {...register(`packages.${index}.packageName`)}
                 />
-                {errors.packages?.[index]?.package_name && (
+                {errors.packages?.[index]?.packageName && (
                   <p className="text-sm text-red-500 mt-1">
-                    {errors.packages[index]?.package_name?.message}
+                    {errors.packages[index]?.packageName?.message}
                   </p>
                 )}
               </div>
 
               <div>
                 <label className="block text-base font-medium text-gray-700 mb-1">
-                  {createJobLanguage?.package_description_label}
+                  {createJobLanguage?.packageDescriptionLabel}
                 </label>
                 <textarea
-                  className="text-text_primary w-full p-3 border border-gray-300 rounded-lg min-h-24"
+                  className="text-textPrimary w-full p-3 border border-gray-300 rounded-lg min-h-24"
                   {...register(`packages.${index}.description`)}
                 ></textarea>
                 {errors.packages?.[index]?.description && (
@@ -190,11 +190,11 @@ const Step2Packages = ({
               <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-base font-medium text-gray-700 mb-1">
-                    {createJobLanguage?.package_price_label}
+                    {createJobLanguage?.packagePriceLabel}
                   </label>
                   <input
                     type="text"
-                    className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
+                    className="text-textPrimary w-full p-3 border border-gray-300 rounded-lg"
                     {...register(`packages.${index}.price`)}
                   />
                   {errors.packages?.[index]?.price && (
@@ -206,16 +206,16 @@ const Step2Packages = ({
 
                 <div>
                   <label className="block text-base font-medium text-gray-700 mb-1">
-                    {createJobLanguage?.package_delivery_label}
+                    {createJobLanguage?.packageDeliveryLabel}
                   </label>
                   <input
                     type="number"
-                    className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
-                    {...register(`packages.${index}.execution_time`)}
+                    className="text-textPrimary w-full p-3 border border-gray-300 rounded-lg"
+                    {...register(`packages.${index}.executionTime`)}
                   />
-                  {errors.packages?.[index]?.execution_time && (
+                  {errors.packages?.[index]?.executionTime && (
                     <p className="text-sm text-red-500 mt-1">
-                      {errors.packages[index]?.execution_time?.message}
+                      {errors.packages[index]?.executionTime?.message}
                     </p>
                   )}
                 </div>
@@ -229,16 +229,16 @@ const Step2Packages = ({
             type="button"
             onClick={() =>
               append({
-                package_name: "",
+                packageName: "",
                 description: "",
                 price: "",
-                execution_time: 1,
+                executionTime: 1,
               })
             }
             className="flex items-center gap-2 text-blue-600 font-medium"
           >
             <Plus className="w-4 h-4" />
-            {createJobLanguage?.add_package}
+            {createJobLanguage?.addPackage}
           </button>
         )}
 
@@ -248,14 +248,14 @@ const Step2Packages = ({
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50"
             onClick={prevStep}
           >
-            {createJobLanguage?.back_button}
+            {createJobLanguage?.backButton}
           </button>
           <button
             type="submit"
             className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
             disabled={isMutating}
           >
-            {isMutating ? <LoadingCircle /> : createJobLanguage?.next_button}
+            {isMutating ? <LoadingCircle /> : createJobLanguage?.nextButton}
           </button>
         </div>
       </div>

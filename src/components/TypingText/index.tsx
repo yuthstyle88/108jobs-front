@@ -11,19 +11,19 @@ const TypingText = () => {
     <TypeAnimation
       key={JSON.stringify(global)}
       sequence={[
-        global?.label_nav_bar_item_2 || "",
+        global?.labelNavBarItem2 || "",
         1200,
-        global?.label_nav_bar_item_3 || "",
+        global?.labelNavBarItem3 || "",
         1200,
-        global?.label_nav_bar_item_4 || "",
+        global?.labelNavBarItem4 || "",
         1200,
-        global?.label_nav_bar_item_5 || "",
+        global?.labelNavBarItem5 || "",
         1200,
-        global?.label_nav_bar_item_6 || "",
+        global?.labelNavBarItem6 || "",
         1200,
-        global?.label_nav_bar_item_7 || "",
+        global?.labelNavBarItem7 || "",
         1200,
-        global?.label_nav_bar_item_8 || "",
+        global?.labelNavBarItem8 || "",
         1200,
       ]}
       omitDeletionAnimation

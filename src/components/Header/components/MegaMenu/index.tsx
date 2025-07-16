@@ -33,19 +33,19 @@ const MegaMenu = () => {
   > = {
     find: {
       component: <Find />,
-      image: MegaMenuImage.job_bg,
+      image: MegaMenuImage.jobBg,
     },
     post: {
       component: <Post />,
-      image: MegaMenuImage.buyer_job,
+      image: MegaMenuImage.buyerJob,
     },
     chat: {
       component: <Chat />,
-      image: MegaMenuImage.chat_to_hire,
+      image: MegaMenuImage.chatToHire,
     },
     hire: {
       component: <Hiring />,
-      image: MegaMenuImage.company_th,
+      image: MegaMenuImage.companyTh,
     },
     business: {
       component: <Business />,
@@ -53,39 +53,39 @@ const MegaMenu = () => {
     },
   };
 
-  const mega_freelancer: MegaMenuItem[] = [
+  const megaFreelancer: MegaMenuItem[] = [
     {
       key: "find",
       icon: MegaMenuImage.search,
-      title: global?.label_menu_option_1_1,
-      description: global?.hint_label_menu_option_find_hire,
+      title: global?.labelMenuOption11,
+      description: global?.hintLabelMenuOptionFindHire,
     },
     {
       key: "post",
       icon: MegaMenuImage.job,
-      title: global?.label_menu_option_1_2,
-      description: global?.hint_label_menu_option_search_job_board,
+      title: global?.labelMenuOption12,
+      description: global?.hintLabelMenuOptionSearchJobBoard,
     },
     {
       key: "chat",
       icon: MegaMenuImage.chat,
-      title: global?.label_menu_option_1_3,
-      description: global?.hint_freelance_search_assistant,
+      title: global?.labelMenuOption13,
+      description: global?.hintFreelanceSearchAssistant,
     },
   ];
 
-  const mega_business: MegaMenuItem[] = [
+  const megaBusiness: MegaMenuItem[] = [
     {
       key: "hire",
       icon: MegaMenuImage.company,
-      title: global?.label_menu_option_2_1,
-      description: global?.hint_hire_on_behalf,
+      title: global?.labelMenuOption21,
+      description: global?.hintHireOnBehalf,
     },
     {
       key: "business",
       icon: MegaMenuImage.business,
-      title: global?.label_menu_option_2_2,
-      description: global?.hint_freelance_services_business,
+      title: global?.labelMenuOption22,
+      description: global?.hintFreelanceServicesBusiness,
     },
   ];
 
@@ -104,10 +104,10 @@ const MegaMenu = () => {
                 className="w-3 h-3 inline-flex items-center justify-center cursor-pointer"
               />
               <span className="text-[0.875rem] font-semibold text-[rgba(43,50,59,.6)]">
-                {global?.tittle_header_menu_section_1}
+                {global?.tittleHeaderMenuSection1}
               </span>
             </div>
-            {mega_freelancer.map((freelancer, index) => (
+            {megaFreelancer.map((freelancer, index) => (
               <div
                 onMouseEnter={() => setHoveredItem(freelancer.key)}
                 onMouseLeave={() => setHoveredItem(freelancer.key)}
@@ -123,7 +123,7 @@ const MegaMenu = () => {
                   <Image src={freelancer.icon} alt="search" className="w-9" />
                   <div className="gap-x-1 flex flex-col flex-1 ">
                     <span
-                      className={`text-[0.875rem] font-medium text-text_primary ${
+                      className={`text-[0.875rem] font-medium text-textPrimary ${
                         freelancer.key === hoveredItem && "text-third"
                       }`}
                     >
@@ -150,10 +150,10 @@ const MegaMenu = () => {
                 className="w-3 h-3  inline-flex items-center justify-center cursor-pointer"
               />
               <span className="text-[0.875rem] font-semibold text-[rgba(43,50,59,.6)]">
-                {global?.tittle_header_menu_section_2}
+                {global?.tittleHeaderMenuSection2}
               </span>
             </div>
-            {mega_business.map((freelancer, index) => (
+            {megaBusiness.map((freelancer, index) => (
               <div
                 onMouseEnter={() => setHoveredItem(freelancer.key)}
                 onMouseLeave={() => setHoveredItem(freelancer.key)}
@@ -169,7 +169,7 @@ const MegaMenu = () => {
                   <Image src={freelancer.icon} alt="search" className="w-9" />
                   <div className="gap-x-1 flex flex-col flex-1">
                     <span
-                      className={`text-[0.875rem] font-medium text-text_primary ${
+                      className={`text-[0.875rem] font-medium text-textPrimary ${
                         freelancer.key === hoveredItem && "text-third"
                       }`}
                     >

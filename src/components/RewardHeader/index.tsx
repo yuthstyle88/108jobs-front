@@ -25,7 +25,7 @@ import Error from "@/app/error";
 const RewardHeader = () => {
   const { data: session } = useSession();
   const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
+    API_ROUTES.profile.getProfile
   );
 
   const {
@@ -48,7 +48,7 @@ const RewardHeader = () => {
         <section className="flex items-center gap-x-4 w-full md:w-auto">
           <Link prefetch={false} href="/" className="shrink-0">
             <Image
-              src={AssetIcon.logo_reward}
+              src={AssetIcon.logoReward}
               alt="logo"
               className="w-full h-full"
             />
@@ -77,7 +77,7 @@ const RewardHeader = () => {
             className="flex sm:hidden items-center justify-center p-2 text-white text-[24px] cursor-pointer"
           >
             <Image
-              src={user?.user.avatar_url || ProfileImage.avatar}
+              src={user?.user.avatarUrl || ProfileImage.avatar}
               alt="avatar"
               className="rounded-full w-8 h-8"
               width={500}
@@ -93,7 +93,7 @@ const RewardHeader = () => {
                     className="flex items-center justify-center gap-2 w-12 h-12 rounded-full "
                   >
                     <Image
-                      src={user?.user.avatar_url || ProfileImage.avatar}
+                      src={user?.user.avatarUrl || ProfileImage.avatar}
                       alt="avatar"
                       className="rounded-full"
                       width={500}

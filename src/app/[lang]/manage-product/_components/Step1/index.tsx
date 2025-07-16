@@ -19,27 +19,27 @@ const getSchema = (createJobLanguage: any) =>
     category: z
       .string()
       .nonempty(
-        createJobLanguage?.select_service_category_error ||
+        createJobLanguage?.selectServiceCategoryError ||
           "Vui lòng chọn danh mục dịch vụ"
       ),
     type: z
       .string()
       .nonempty(
-        createJobLanguage?.select_sub_service_error ||
+        createJobLanguage?.selectSubServiceError ||
           "Vui lòng chọn loại dịch vụ"
       ),
     name: z
       .string()
       .min(
         5,
-        createJobLanguage?.service_title_error ||
+        createJobLanguage?.serviceTitleError ||
           "Tiêu đề phải có ít nhất 5 ký tự"
       ),
     description: z
       .string()
       .min(
         10,
-        createJobLanguage?.service_description_error ||
+        createJobLanguage?.serviceDescriptionError ||
           "Mô tả phải có ít nhất 10 ký tự"
       ),
   });
@@ -64,10 +64,10 @@ const Step1ServiceInfo = ({
   const createJobLanguage = useTranslateFile(LanguageFile.SELLER_CREATE_JOBS);
 
   const { data: jobsData, isLoading } = usePrivateFetch<ServiceCatalogData>(
-    API_ROUTES.catalog.get_all_catalog
+    API_ROUTES.catalog.getAllCatalog
   );
   const { trigger: sendLanguages, isMutating } = usePrivatePost(
-    API_ROUTES_SELLER.job.post_job_step_1
+    API_ROUTES_SELLER.job.postJobStep1
   );
 
   const schema = useMemo(
@@ -84,8 +84,8 @@ const Step1ServiceInfo = ({
     reset,
   } = useForm<FormData>({
     defaultValues: {
-      category: job?.service_catalog?.id || "",
-      type: job?.service_type?.id || "",
+      category: job?.serviceCatalog?.id || "",
+      type: job?.serviceType?.id || "",
       name: job?.title || "",
       description: job?.description || "",
     },
@@ -95,17 +95,17 @@ const Step1ServiceInfo = ({
   const selectedCategory = watch("category");
 
   const subCategories = useMemo(() => {
-    const selected = jobsData?.service_catalogs.find(
+    const selected = jobsData?.serviceCatalogs.find(
       (c) => c.id === selectedCategory
     );
     return selected ? selected.sections.flatMap((s) => s.categories) : [];
   }, [jobsData, selectedCategory]);
 
   useEffect(() => {
-  if (!job || !jobsData?.service_catalogs?.length) return;
+  if (!job || !jobsData?.serviceCatalogs?.length) return;
 
-  const catalogId = job.service_catalog?.id || "";
-  const typeId = job.service_type?.id || "";
+  const catalogId = job.serviceCatalog?.id || "";
+  const typeId = job.serviceType?.id || "";
 
   reset({
     category: catalogId,
@@ -119,10 +119,10 @@ const Step1ServiceInfo = ({
   const onSubmit = async (data: FormData) => {
     try {
       const res = await sendLanguages({
-        ...(job?.id && { job_id: job.id }),
-        service_type_id: data.type,
-        job_title: data.name,
-        job_description: data.description,
+        ...(job?.id && { jobId: job.id }),
+        serviceTypeId: data.type,
+        jobTitle: data.name,
+        jobDescription: data.description,
       });
       const newJob = res as JobType;
       setJob?.(newJob);
@@ -147,18 +147,18 @@ const Step1ServiceInfo = ({
     >
       {isMutating && <LoadingBlur text="Saving data" />}
       {isLoading && <Loading />}
-      <h2 className="text-[32px] font-medium mb-6 text-text_primary">
-        {createJobLanguage?.service_info_title}
+      <h2 className="text-[32px] font-medium mb-6 text-textPrimary">
+        {createJobLanguage?.serviceInfoTitle}
       </h2>
 
       <div className="space-y-6 max-w-4xl">
         <div className="grid grid-cols-2 gap-6">
           <div>
             <label className="block text-base font-medium text-gray-700 mb-1">
-              {createJobLanguage?.service_category_label}
+              {createJobLanguage?.serviceCategoryLabel}
             </label>
             <select
-              className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
+              className="text-textPrimary w-full p-3 border border-gray-300 rounded-lg"
               {...register("category")}
               onChange={(e) => {
                 setValue("category", e.target.value);
@@ -166,9 +166,9 @@ const Step1ServiceInfo = ({
               }}
             >
               <option value="">
-                {createJobLanguage?.select_service_category_placeholder}
+                {createJobLanguage?.selectServiceCategoryPlaceholder}
               </option>
-              {jobsData?.service_catalogs?.map((cat) => (
+              {jobsData?.serviceCatalogs?.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.name}
                 </option>
@@ -183,15 +183,15 @@ const Step1ServiceInfo = ({
 
           <div>
             <label className="block text-base font-medium text-gray-700 mb-1">
-              {createJobLanguage?.sub_service_label}
+              {createJobLanguage?.subServiceLabel}
             </label>
             <select
-              className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
+              className="text-textPrimary w-full p-3 border border-gray-300 rounded-lg"
               {...register("type")}
               disabled={!selectedCategory || subCategories.length === 0}
             >
               <option value="">
-                {createJobLanguage?.select_sub_service_placeholder}
+                {createJobLanguage?.selectSubServicePlaceholder}
               </option>
               {subCategories.map((sub) => (
                 <option key={sub.id} value={sub.id}>
@@ -207,12 +207,12 @@ const Step1ServiceInfo = ({
 
         <div>
           <label className="block text-base font-medium text-gray-700 mb-1">
-            {createJobLanguage?.service_title_label}
+            {createJobLanguage?.serviceTitleLabel}
           </label>
           <input
             type="text"
-            className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
-            placeholder={createJobLanguage?.service_title_placeholder}
+            className="text-textPrimary w-full p-3 border border-gray-300 rounded-lg"
+            placeholder={createJobLanguage?.serviceTitlePlaceholder}
             {...register("name")}
           />
           {errors.name && (
@@ -223,11 +223,11 @@ const Step1ServiceInfo = ({
             <Info className="w-5 h-5 text-[#728197] mr-2 flex-shrink-0 mt-0.5" />
             <div className="text-[0.875rem] leading-[1.65] text-[#728197]">
               <p className="font-medium mb-1">
-                {createJobLanguage?.service_title_guide_header}
+                {createJobLanguage?.serviceTitleGuideHeader}
               </p>
               <ul className="list-disc pl-5 space-y-1">
-                <li>{createJobLanguage?.service_title_guide_1}</li>
-                <li>{createJobLanguage?.service_title_guide_2}</li>
+                <li>{createJobLanguage?.serviceTitleGuide1}</li>
+                <li>{createJobLanguage?.serviceTitleGuide2}</li>
               </ul>
             </div>
           </div>
@@ -235,11 +235,11 @@ const Step1ServiceInfo = ({
 
         <div>
           <label className="block text-base font-medium text-gray-700 mb-1">
-            {createJobLanguage?.service_description_label}
+            {createJobLanguage?.serviceDescriptionLabel}
           </label>
           <textarea
-            className="text-text_primary w-full p-3 border border-gray-300 rounded-lg min-h-40"
-            placeholder={createJobLanguage?.service_description_placeholder}
+            className="text-textPrimary w-full p-3 border border-gray-300 rounded-lg min-h-40"
+            placeholder={createJobLanguage?.serviceDescriptionPlaceholder}
             {...register("description")}
           ></textarea>
           {errors.description && (
@@ -255,7 +255,7 @@ const Step1ServiceInfo = ({
             className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
             disabled={isMutating}
           >
-            {isMutating ? <LoadingCircle /> : createJobLanguage?.next_button}
+            {isMutating ? <LoadingCircle /> : createJobLanguage?.nextButton}
           </button>
         </div>
       </div>

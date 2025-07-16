@@ -14,8 +14,8 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   message,
   partnerAvatar,
 }) => {
-  const isIncoming = !message.is_owner;
-  const time = new Date(message.created_at).toLocaleTimeString("th-TH", {
+  const isIncoming = !message.isOwner;
+  const time = new Date(message.createdAt).toLocaleTimeString("th-TH", {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -26,7 +26,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     >
       {isIncoming && (
         <Image
-          src={partnerAvatar || MessageImage.chat_avt}
+          src={partnerAvatar || MessageImage.chatAvt}
           alt="avatar"
           width={24}
           height={24}
@@ -53,12 +53,12 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
           </div>
         )}
 
-        {message.file_url && (
+        {message.fileUrl && (
           <div className="mt-1 max-w-xs">
             <FilePreview
-              fileUrl={message.file_url}
-              fileType={message.file_type || "application/octet-stream"}
-              fileName={message?.file_name || "Attach file"}
+              fileUrl={message.fileUrl}
+              fileType={message.fileType || "application/octet-stream"}
+              fileName={message?.fileName || "Attach file"}
             />
           </div>
         )}

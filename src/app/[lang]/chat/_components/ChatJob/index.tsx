@@ -18,13 +18,13 @@ const ChatJob = ({ currentRoom }: Props) => {
             </h4>
             <div className="mt-2 text-sm">
               <p className="text-gray-700">
-                Price : {currentRoom?.job.base_price} bath
+                Price : {currentRoom?.job.basePrice} bath
               </p>
             </div>
           </div>
           <Image
-            src={currentRoom?.job_cover_image || CategoriesImage.seo_job}
-            alt="seo_job"
+            src={currentRoom?.jobCoverImage || CategoriesImage.seoJob}
+            alt="seoJob"
             width={64}
             height={48}
             className="w-16 h-12 object-cover rounded"

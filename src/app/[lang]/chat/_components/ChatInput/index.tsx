@@ -14,9 +14,9 @@ interface ChatInputProps {
   onSubmit: (data: MessageForm) => void;
   onFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   selectedFile: {
-    file_url: string;
-    file_type: string;
-    file_name: string;
+    fileUrl: string;
+    fileType: string;
+    fileName: string;
   } | null;
   setSelectedFile: (file: null) => void;
   isUploading: boolean;
@@ -85,9 +85,9 @@ const ChatInput: React.FC<ChatInputProps> = ({
               messageRef.current = e;
             }}
             placeholder={
-              chatLanguageData?.type_message_here || "Type a message..."
+              chatLanguageData?.typeMessageHere || "Type a message..."
             }
-            className="text-text_primary flex-1 px-3 py-2 resize-none focus:outline-none min-h-[40px] max-h-[150px] overflow-y-auto break-words whitespace-pre-wrap"
+            className="text-textPrimary flex-1 px-3 py-2 resize-none focus:outline-none min-h-[40px] max-h-[150px] overflow-y-auto break-words whitespace-pre-wrap"
             rows={1}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
@@ -115,9 +115,9 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
       {selectedFile && (
         <FilePreview
-          fileUrl={selectedFile.file_url}
-          fileType={selectedFile.file_type}
-          fileName={selectedFile.file_name}
+          fileUrl={selectedFile.fileUrl}
+          fileType={selectedFile.fileType}
+          fileName={selectedFile.fileName}
           showDownloadLink={false}
         />
       )}

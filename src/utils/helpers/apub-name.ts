@@ -2,10 +2,10 @@ import hostname from "./hostname";
 
 export default function getApubName({
   name,
-  actor_id,
+  actorId,
 }: {
   name: string;
-  actor_id: string;
+  actorId: string;
 }) {
-  return `${name}@${hostname(actor_id)}`;
+  return `${name}@${hostname(actorId)}`;
 }

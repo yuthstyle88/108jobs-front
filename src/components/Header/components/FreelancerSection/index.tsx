@@ -29,7 +29,7 @@ const FreelancerSession = ({
   session,
 }: FreelancerProps) => {
   const { data: user, isLoading } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.get_profile
+    API_ROUTES.profile.getProfile
   );
   const { isOpen, toggle, close } = useToggle();
 
@@ -39,7 +39,7 @@ const FreelancerSession = ({
         <div className="relative">
           <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
             <p className="">
-              {globalLanguageData?.increase_hiring_opportunity}
+              {globalLanguageData?.increaseHiringOpportunity}
             </p>
             <FontAwesomeIcon icon={faChevronDown} />
           </div>
@@ -53,7 +53,7 @@ const FreelancerSession = ({
           href="/seller"
           className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
         >
-          {globalLanguageData?.label_seller_center}
+          {globalLanguageData?.labelSellerCenter}
         </Link>
       <div className="group hidden md:block">
         <div className="relative">
@@ -96,7 +96,7 @@ const FreelancerSession = ({
             ) : (
               user && (
                 <Image
-                  src={user?.user.avatar_url || ProfileImage.avatar}
+                  src={user?.user.avatarUrl || ProfileImage.avatar}
                   alt="avatar"
                   className="w-full h-full object-cover object-center"
                   width={48}

@@ -1,6 +1,6 @@
 export interface ImageUploadResponse {
     images: {
-      image_url: string;
+      imageUrl: string;
       filename: string;
     }[];
   }

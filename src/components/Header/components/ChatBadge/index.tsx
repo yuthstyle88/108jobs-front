@@ -12,7 +12,7 @@ const ChatBadge = () => {
     data: chatData,
     isLoading: isChatLoading,
     error: chatError,
-  } = usePrivateFetch<ChatResponse[]>(API_ROUTES.chat.get_chat_history, {
+  } = usePrivateFetch<ChatResponse[]>(API_ROUTES.chat.getChatHistory, {
     dedupingInterval: 10000,
   });
   const unreadCount = chatData?.length || 0;

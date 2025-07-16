@@ -5,5 +5,5 @@ export default function editPostReport(
   data: PostReportView,
   reports: PostReportView[],
 ) {
-  return editListImmutable("post_report", data, reports);
+  return editListImmutable("postReport", data, reports);
 }

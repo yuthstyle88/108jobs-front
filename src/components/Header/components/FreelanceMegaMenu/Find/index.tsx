@@ -12,31 +12,31 @@ const Find = () => {
 
   const {
     data: catalogData,
-  } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.get_all_catalog);
+  } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.getAllCatalog);
 
   const popularCategories =
-    catalogData?.service_catalogs?.find(
+    catalogData?.serviceCatalogs?.find(
       (catalog) => catalog.name === "Popular service"
     )?.sections?.[0]?.categories || [];
 
   return (
     <div className="flex flex-col w-[420px] mt-8">
       <span className="text-third font-medium">
-        {global?.hint_label_menu_option_find_hire}
+        {global?.hintLabelMenuOptionFindHire}
       </span>
-      <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
-        {global?.freelancer_selection_description}
+      <p className="mt-3 text-[0.875rem] text-textSecondary font-sans">
+        {global?.freelancerSelectionDescription}
       </p>
       <div className="mt-6">
-        <span className="text-[0.875rem] font-medium text-text_primary">
-          {global?.label_nav_bar_item_1}
+        <span className="text-[0.875rem] font-medium text-textPrimary">
+          {global?.labelNavBarItem1}
         </span>
         <div className="mt-2 flex flex-col mr-4">
           {popularCategories.map((job, index) => (
             <Link prefetch={false}
               href={`/job/${job.slug}`}
               key={index}
-              className="text-[0.875rem] text-text_secondary px-2 py-[4px] flex-1 flex items-center justify-between rounded-sm transition-all duration-150 ease-in-out"
+              className="text-[0.875rem] text-textSecondary px-2 py-[4px] flex-1 flex items-center justify-between rounded-sm transition-all duration-150 ease-in-out"
             >
               {job.name}
               <FontAwesomeIcon

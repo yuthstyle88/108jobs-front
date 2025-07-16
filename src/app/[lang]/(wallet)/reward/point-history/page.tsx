@@ -84,7 +84,7 @@ const PointHistoryPage = () => {
         <div className="absolute top-0 left-0 right-0 flex justify-center items-center h-[200px] text-black">
           <div className="flex flex-col justify-center items-center text-center">
             <div className="text-[20px] font-[500] leading-[23px]">
-              {historyLanguageData?.section_rewards_points}
+              {historyLanguageData?.sectionRewardsPoints}
             </div>
             <div className="flex items-center">
               <Image
@@ -100,7 +100,7 @@ const PointHistoryPage = () => {
               ≈ 0.00 บาท
             </div>
             <div className="text-[14px] font-[400] leading-[16.1px] text-[rgba(43,50,59,0.6)]">
-              0.00 {historyLanguageData?.label_total_points} 28/02/2025
+              0.00 {historyLanguageData?.labelTotalPoints} 28/02/2025
             </div>
           </div>
         </div>
@@ -112,19 +112,19 @@ const PointHistoryPage = () => {
               className="text-center cursor-pointer text-gray-400"
               onClick={() => route.push("/reward/earn")}
             >
-              {historyLanguageData?.tab_collect_points}
+              {historyLanguageData?.tabCollectPoints}
             </div>
             <div
               className="text-center cursor-pointer text-gray-400"
               onClick={() => route.push("/reward/reward")}
             >
-              {historyLanguageData?.tab_redeem_rewards}
+              {historyLanguageData?.tabRedeemRewards}
             </div>
             <div
               className="text-center cursor-pointer text-third border-b-2 border-third"
               onClick={() => route.push("/reward/point-history")}
             >
-              {historyLanguageData?.tab_usage_history}
+              {historyLanguageData?.tabUsageHistory}
             </div>
           </div>
         </div>
@@ -134,7 +134,7 @@ const PointHistoryPage = () => {
           <div className="flex pb-4">
             <div className="h-[40px] w-[5px] bg-blue-600 mr-2 " />
             <div className="text-[31px] font-semibold text-black">
-              {historyLanguageData?.tab_earned_points}
+              {historyLanguageData?.tabEarnedPoints}
             </div>
           </div>
           <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-6 ">
@@ -145,7 +145,7 @@ const PointHistoryPage = () => {
                 }`}
                 onClick={() => setActiveTab1("received")}
               >
-                {historyLanguageData?.tab_earned_points}
+                {historyLanguageData?.tabEarnedPoints}
               </button>
               <button
                 className={`py-4 text-center font-medium ${
@@ -153,7 +153,7 @@ const PointHistoryPage = () => {
                 }`}
                 onClick={() => setActiveTab1("exchange")}
               >
-                {historyLanguageData?.tab_redeemed_expired}
+                {historyLanguageData?.tabRedeemedExpired}
               </button>
             </div>
           </div>
@@ -161,10 +161,10 @@ const PointHistoryPage = () => {
           {/* Table Header */}
           <div className="bg-white rounded-lg shadow-sm">
             <div className="grid grid-cols-3 py-4 px-6 bg-gray-50 border-b border-gray-200 text-sm font-medium text-gray-600">
-              <div>{historyLanguageData?.column_date_received}</div>
-              <div>{historyLanguageData?.column_details}</div>
+              <div>{historyLanguageData?.columnDateReceived}</div>
+              <div>{historyLanguageData?.columnDetails}</div>
               <div className="text-right">
-                {historyLanguageData?.column_points_amount}
+                {historyLanguageData?.columnPointsAmount}
               </div>
             </div>
 
@@ -186,7 +186,7 @@ const PointHistoryPage = () => {
               ))
             ) : (
               <div className="py-12 text-center text-gray-500">
-                {historyLanguageData?.label_no_data}
+                {historyLanguageData?.labelNoData}
               </div>
             )}
           </div>

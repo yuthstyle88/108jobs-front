@@ -17,18 +17,18 @@ type Props = {
 
 const CategoryCard = ({ data, username }: Props) => {
   const { data: jobCardLanguage } = useGlobalTranslate(LanguageFile.JOB_CARD);
-  const coverImage = data?.images?.find((image) => image.is_cover_photo);
+  const coverImage = data?.images?.find((image) => image.isCoverPhoto);
   const { lang: currentLang } = useLanguage();
   return (
     <Link prefetch={false}
       href={`/${currentLang}/user/${username}/${data.slug}`}
       className="flex cursor-pointer w-full"
     >
-      <div className="hover:shadow-jobCard border border-border_primary w-full flex flex-col overflow-hidden rounded-md bg-white transition-all ease-in-out duration-150">
-        <section className="grid grid-cols-[minmax(17px,170px)_1fr] grid-rows-[1fr_max-content] md:flex md:flex-col">
+      <div className="hover:shadow-jobCard border border-borderPrimary w-full flex flex-col overflow-hidden rounded-md bg-white transition-all ease-in-out duration-150">
+        <section className="grid grid-cols-[minmax(17px,170px)1fr] grid-rows-[1fr_max-content] md:flex md:flex-col">
           <div className="relative aspect-[3/2] w-full">
             <Image
-              src={coverImage?.image_url || CategoriesImage.seo_job}
+              src={coverImage?.imageUrl || CategoriesImage.seoJob}
               alt="seo"
               className="object-cover w-full h-full bg-[#e8eaee]"
               fill
@@ -37,13 +37,13 @@ const CategoryCard = ({ data, username }: Props) => {
             />
           </div>
           <div className="flex flex-col p-2 bg-white border-b md:border-none">
-            <h3 className="overflow-hidden leading-[1.25em] text-text_primary text-clip break-words font-normal text-sm font-sans line-clamp-2">
+            <h3 className="overflow-hidden leading-[1.25em] text-textPrimary text-clip break-words font-normal text-sm font-sans line-clamp-2">
               {data?.title}
             </h3>
             <div className="flex flex-row items-center mt-2 text-[12px]">
               <div className="flex items-center gap-1">
                 <FontAwesomeIcon icon={faStar} className="text-[#e9b10c]" />
-                <span className="text-[12px] font-sans text-text_secondary">
+                <span className="text-[12px] font-sans text-textSecondary">
                   {Number(data?.rating).toFixed()}
                 </span>
               </div>
@@ -56,25 +56,25 @@ const CategoryCard = ({ data, username }: Props) => {
                 className="h-[1.125rem] w-auto align-top"
               />
               <Image
-                src={CategoriesImage.badge_rehire}
-                alt="badge_rehire"
+                src={CategoriesImage.badgeRehire}
+                alt="badgeRehire"
                 className="h-[1.125rem] w-auto align-top"
               />
             </div>
           </div>
         </section>
         <div className="mt-0 md:mt-2 flex gap-1 items-end md:min-h-10 pt-2 md:pt-1 px-2 pb-2 md:pb-3 bg-white font-sans">
-          <div className="text-text_secondary text-[0.75rem] overflow-hidden text-ellipsis whitespace-nowrap">
-            {interpolateDouble(jobCardLanguage?.response_time || "", {
+          <div className="text-textSecondary text-[0.75rem] overflow-hidden text-ellipsis whitespace-nowrap">
+            {interpolateDouble(jobCardLanguage?.responseTime || "", {
               n: 2,
             })}
           </div>
-          <div className="flex flex-row gap-2 md:gap-0 md:flex-col items-end min-w-fit ml-auto text-text_secondary overflow-hidden text-ellipsis whitespace-nowrap">
+          <div className="flex flex-row gap-2 md:gap-0 md:flex-col items-end min-w-fit ml-auto text-textSecondary overflow-hidden text-ellipsis whitespace-nowrap">
             <span className="text-[0.75rem]">
-              {jobCardLanguage?.starting_price}
+              {jobCardLanguage?.startingPrice}
             </span>
             <span className="text-[0.75rem] text-third text-right break-words">
-              {formatThaiBaht(data?.base_price || 0)}
+              {formatThaiBaht(data?.basePrice || 0)}
             </span>
           </div>
         </div>

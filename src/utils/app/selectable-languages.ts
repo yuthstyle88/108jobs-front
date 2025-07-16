@@ -17,7 +17,7 @@ export default function selectableLanguages(
   myUserInfo = UserService.Instance.myUserInfo,
 ): Language[] {
   const allLangIds = allLanguages.map(l => l.id);
-  let myLangs = myUserInfo?.discussion_languages ?? allLangIds;
+  let myLangs = myUserInfo?.discussionLanguages ?? allLangIds;
   myLangs = myLangs.length === 0 ? allLangIds : myLangs;
   const siteLangs = siteLanguages.length === 0 ? allLangIds : siteLanguages;
 

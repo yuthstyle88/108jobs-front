@@ -12,5 +12,13 @@
     }],
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-namespace": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/src/lib/lemmy-js-client/**/*.ts", "**/src/lib/lemmy-js-client/**/*.d.ts"],
+      "rules": {
+        "@typescript-eslint/no-empty-object-type": "off"
+      }
+    }
+  ]
 }
