@@ -5,7 +5,7 @@ import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { Component } from "react";
+import React, {Component, useState} from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -23,6 +23,7 @@ import {IsoData} from "@/interfaces";
 import {toast} from "@/toast";
 import {UserService} from "@/services";
 import {setIsoData} from "@/utils/app";
+
 
 type LoginFormProps = {
   switchToRegister: () => void;
@@ -99,6 +100,8 @@ const withHooks = (Component: any) => {
       resolver: zodResolver(loginSchema),
     });
 
+    const [apiError, setApiError] = useState<string | null>(null);
+
     return (
       <Component
         {...props}
@@ -107,6 +110,8 @@ const withHooks = (Component: any) => {
         redirectUrl={redirectUrl}
         formMethods={formMethods}
         loginSchema={loginSchema}
+        apiError={apiError}
+        setApiError={setApiError}
       />
     );
   };
@@ -123,10 +128,11 @@ class LoginFormClass extends Component<LoginFormProps & {
   redirectUrl: string;
   formMethods: any;
   loginSchema: any;
+  apiError: string | null;
+  setApiError: (value: string | null) => void;
 }> {
   private isoData: IsoData | null = null;
   private hasFetchedSite = false;
-
   state: State = {
     loginRes: EMPTY_REQUEST,
     form: {
@@ -164,7 +170,7 @@ class LoginFormClass extends Component<LoginFormProps & {
     if (this.hasFetchedSite || this.state.hasFetchedSite) return;
 
     this.hasFetchedSite = true;
-    try {
+
       const site = await HttpService.client.getSite();
       if (site.state === "success") {
         this.setState({
@@ -172,10 +178,9 @@ class LoginFormClass extends Component<LoginFormProps & {
           oauthProviders: site.data.oauthProviders ?? [],
           hasFetchedSite: true,
         });
-      }
-    } catch (e) {
-      console.error("fetch oauth providers failed", e);
-      this.setState({
+      }else{
+        this.props.setApiError("เกิดข้อผิดพลาดในการดึงข้อมูลเว็บไซต์");
+       this.setState({
         hasFetchedSite: true,
         oauthProviders: [],
       });
@@ -236,12 +241,12 @@ class LoginFormClass extends Component<LoginFormProps & {
     sessionStorage.setItem("jwt", loginInRes.jwt || "");
   };
   handleLogin = async (data: any) => {
-    try {
+
       const loginRes = await HttpService.client.login({
         usernameOrEmail: data.usernameOrEmail,
         password: data.password,
       });
-      
+
       switch (loginRes.state) {
         case "failed": {
           this.props.formMethods.setError("password", {
@@ -255,13 +260,6 @@ class LoginFormClass extends Component<LoginFormProps & {
           break;
         }
       }
-    } catch (error) {
-      console.error(error);
-      this.props.formMethods.setError("root", {
-        type: "manual",
-        message: this.props.authen?.systemError ?? "เกิดข้อผิดพลาดของระบบ กรุณาลองใหม่อีกครั้ง",
-      });
-    }
   };
 
   async handleSubmitTotp(totp: string) {
@@ -289,6 +287,11 @@ class LoginFormClass extends Component<LoginFormProps & {
 
     return (
       <form onSubmit={handleSubmit(this.handleLogin)} className="space-y-5">
+        {this.props.apiError && (
+          <p className="text-red-500 text-sm text-center mb-4">
+            {this.props.apiError}
+          </p>
+        )}
         {errors.root && (
           <p className="text-red-500 text-sm text-center mb-4">
             {errors.root.message}

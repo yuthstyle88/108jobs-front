@@ -566,7 +566,7 @@ let LemmyHttp = class LemmyHttp extends runtime_1.Controller {
      * @summary Fetch a Captcha.
      */
     async getCaptcha(options) {
-        return __classPrivateFieldGet(this, _LemmyHttp_instances, "m", _LemmyHttp_wrapper).call(this, HttpType.Get, "/account/auth/get_captcha", {}, options);
+        return __classPrivateFieldGet(this, _LemmyHttp_instances, "m", _LemmyHttp_wrapper).call(this, HttpType.Get, "/site/get-captcha", {}, options);
     }
     /**
      * @summary Delete your account.

@@ -28,8 +28,8 @@ export const API_ROUTES = {
     verifyChangeEmail: "/profile/contact/verify/email",
     updatePassword: "/profile/change/password",
     verifyForgotPassword: "/users/verify/reset-password",
-    getCapcha: "/site/getCaptcha",
-    exchangeKey: "/account/auth/exchangeKey",
+    getCaptcha: "/site/get-captcha",
+    exchangeKey: "/account/auth/exchange-key",
   },
   authV2: {
     registerV2: "/account/auth/register",
