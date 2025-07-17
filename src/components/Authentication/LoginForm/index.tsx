@@ -5,7 +5,7 @@ import {LanguageFile} from "@/constants/language";
 import {useTranslateFile} from "@/hooks/translation/useTranslateFile";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useRouter, useSearchParams} from "next/navigation";
-import React, {Component} from "react";
+import React, {Component, useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {
@@ -114,17 +114,21 @@ const withHooks = (Component: any) => {
             resolver: zodResolver(loginSchema),
         });
 
-        return (
-            <Component
-                {...props}
-                authen={authen}
-                router={router}
-                redirectUrl={redirectUrl}
-                formMethods={formMethods}
-                loginSchema={loginSchema}
-            />
-        );
-    };
+    const [apiError, setApiError] = useState<string | null>(null);
+
+    return (
+      <Component
+        {...props}
+        authen={authen}
+        router={router}
+        redirectUrl={redirectUrl}
+        formMethods={formMethods}
+        loginSchema={loginSchema}
+        apiError={apiError}
+        setApiError={setApiError}
+      />
+    );
+  };
 
     /* add explicit display name to satisfy react/display-name */
     WrappedWithHooks.displayName = `withHooks(${Component.displayName || Component.name || 'Component'})`;
@@ -138,7 +142,10 @@ class LoginFormClass extends Component<
     router: any;
     redirectUrl: string;
     formMethods: any;
-    loginSchema: any; },
+    loginSchema: any;
+    apiError: string | null;
+    setApiError: (value: string | null) => void;
+    },
     State> {
     private isoData: IsoData | null = null;
     private hasFetchedSite = false;
@@ -180,17 +187,16 @@ class LoginFormClass extends Component<
         if (this.hasFetchedSite || this.state.hasFetchedSite) return;
 
         this.hasFetchedSite = true;
-        try {
-            const site = await HttpService.client.getSite();
-            if (site.state === "success") {
-                this.setState({
-                    siteRes: site.data,
-                    oauthProviders: site.data.oauthProviders ?? [],
-                    hasFetchedSite: true,
-                });
-            }
-        } catch (e) {
-            console.error("fetch oauth providers failed", e);
+
+        const site = await HttpService.client.getSite();
+        if (site.state === "success") {
+            this.setState({
+                siteRes: site.data,
+                oauthProviders: site.data.oauthProviders ?? [],
+                hasFetchedSite: true,
+            });
+        }else{
+            this.props.setApiError("เกิดข้อผิดพลาดในการดึงข้อมูลเว็บไซต์");
             this.setState({
                 hasFetchedSite: true,
                 oauthProviders: [],
@@ -330,13 +336,18 @@ class LoginFormClass extends Component<
         const {showPassword, oauthProviders} = this.state;
         const {register, handleSubmit, formState: {errors, isSubmitting}} = formMethods;
 
-        return (
-            <form onSubmit={handleSubmit(this.handleLogin)} className="space-y-5">
-                {errors.root && (
-                    <p className="text-red-500 text-sm text-center mb-4">
-                        {errors.root.message}
-                    </p>
-                )}
+    return (
+      <form onSubmit={handleSubmit(this.handleLogin)} className="space-y-5">
+        {this.props.apiError && (
+          <p className="text-red-500 text-sm text-center mb-4">
+            {this.props.apiError}
+          </p>
+        )}
+        {errors.root && (
+          <p className="text-red-500 text-sm text-center mb-4">
+            {errors.root.message}
+          </p>
+        )}
 
                 <CustomInput
                     label={authen?.labelUsernameOrEmail}
