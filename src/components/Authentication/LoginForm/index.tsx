@@ -152,6 +152,7 @@ class LoginFormClass extends Component<LoginFormProps & {
 
   async componentDidMount() {
     this.isoData = setIsoData(this.context);
+
     if (this.isoData?.siteRes) {
       this.setState({
         siteRes: this.isoData.siteRes,
@@ -207,10 +208,10 @@ class LoginFormClass extends Component<LoginFormProps & {
       params.oauthProvider.authorizationEndpoint +
       "?" +
       [
-        `clientId=${encodeURIComponent(params.oauthProvider.clientId)}`,
-        `responseType=code`,
+        `client_id=${encodeURIComponent(params.oauthProvider.clientId)}`,
+        `response_type=code`,
         `scope=${encodeURIComponent(params.oauthProvider.scopes)}`,
-        `redirectUri=${encodeURIComponent(redirectUri)}`,
+        `redirect_uri=${encodeURIComponent(redirectUri)}`,
         `state=${state}`,
       ].join("&");
     console.log(requestUri);
