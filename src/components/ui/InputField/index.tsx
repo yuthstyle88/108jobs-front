@@ -9,6 +9,8 @@ type InputProps = {
   label?: string;
   name: string;
   register?: UseFormRegisterReturn;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
   showPassword?: boolean;
   toggleShowPassword?: () => void;

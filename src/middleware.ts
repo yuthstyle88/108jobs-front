@@ -116,11 +116,11 @@ export async function middleware(req: NextRequest) {
   ) {
     return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
   }
-
-  const isAuthorized = allowedRoles.some((role) => userRoles.includes(role));
-  if (!isAuthorized) {
-    return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
-  }
+  //
+  // const isAuthorized = allowedRoles.some((role) => userRoles.includes(role));
+  // if (!isAuthorized) {
+  //   return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
+  // }
 
   return NextResponse.next();
 }
