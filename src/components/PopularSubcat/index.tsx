@@ -113,7 +113,7 @@ const PopularSubCat = ({ slug }: Props) => {
                   <Link prefetch={false}
                     key={cat.id}
                     href={`/job/${cat.slug}`}
-                    className="text-textSecondary hover:underline"
+                    className="text-text_secondary hover:underline"
                   >
                     {cat.name}
                   </Link>
@@ -124,7 +124,7 @@ const PopularSubCat = ({ slug }: Props) => {
       </div>
 
       <div className="flex-1">
-        <h2 className="text-[24px] md:text-[32px] font-semibold text-textPrimary pb-4">
+        <h2 className="text-[24px] md:text-[32px] font-semibold text-text_primary pb-4">
           {selectedCategory?.name}
         </h2>
         {selectedCategory && (

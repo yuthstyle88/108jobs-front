@@ -147,7 +147,7 @@ const Step1ServiceInfo = ({
     >
       {isMutating && <LoadingBlur text="Saving data" />}
       {isLoading && <Loading />}
-      <h2 className="text-[32px] font-medium mb-6 text-textPrimary">
+      <h2 className="text-[32px] font-medium mb-6 text-text_primary">
         {createJobLanguage?.serviceInfoTitle}
       </h2>
 
@@ -158,7 +158,7 @@ const Step1ServiceInfo = ({
               {createJobLanguage?.serviceCategoryLabel}
             </label>
             <select
-              className="text-textPrimary w-full p-3 border border-gray-300 rounded-lg"
+              className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
               {...register("category")}
               onChange={(e) => {
                 setValue("category", e.target.value);
@@ -186,7 +186,7 @@ const Step1ServiceInfo = ({
               {createJobLanguage?.subServiceLabel}
             </label>
             <select
-              className="text-textPrimary w-full p-3 border border-gray-300 rounded-lg"
+              className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
               {...register("type")}
               disabled={!selectedCategory || subCategories.length === 0}
             >
@@ -211,7 +211,7 @@ const Step1ServiceInfo = ({
           </label>
           <input
             type="text"
-            className="text-textPrimary w-full p-3 border border-gray-300 rounded-lg"
+            className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
             placeholder={createJobLanguage?.serviceTitlePlaceholder}
             {...register("name")}
           />
@@ -238,7 +238,7 @@ const Step1ServiceInfo = ({
             {createJobLanguage?.serviceDescriptionLabel}
           </label>
           <textarea
-            className="text-textPrimary w-full p-3 border border-gray-300 rounded-lg min-h-40"
+            className="text-text_primary w-full p-3 border border-gray-300 rounded-lg min-h-40"
             placeholder={createJobLanguage?.serviceDescriptionPlaceholder}
             {...register("description")}
           ></textarea>

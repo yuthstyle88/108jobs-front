@@ -78,7 +78,7 @@ const Step = ({ data }: Props) => {
                   <h3 className="text-xl font-semibold text-primary">
                     {step.number}. {step.title}
                   </h3>
-                  <p className="mt-2 text-textPrimary font-sans">
+                  <p className="mt-2 text-text_primary font-sans">
                     {step.description}
                   </p>
                 </div>

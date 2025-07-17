@@ -40,11 +40,11 @@ export default function Error({ message }: ErrorProps) {
           className="w-[80%] h-[280px] sm:w-full"
         />
         {isError ? 
-        <p className="text-center text-[20px] md:text-[32px] text-textPrimary font-sans">
+        <p className="text-center text-[20px] md:text-[32px] text-text_primary font-sans">
           {message || "Something not work. Please try latter"}
         </p>
         :
-        <p className="text-center text-[20px] md:text-[32px] text-textPrimary font-sans">
+        <p className="text-center text-[20px] md:text-[32px] text-text_primary font-sans">
           {errorLanguageData?.title}
         </p>
         }

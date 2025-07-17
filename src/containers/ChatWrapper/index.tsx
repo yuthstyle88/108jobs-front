@@ -80,7 +80,7 @@ const ChatWrapper = () => {
     >
       <div className="p-4 border-b">
         <div className="relative">
-          <p className="text-textPrimary text-center font-semibold w-full py-2 ">Chat History</p>
+          <p className="text-text_primary text-center font-semibold w-full py-2 ">Chat History</p>
         </div>
       </div>
 
@@ -121,7 +121,7 @@ const ChatWrapper = () => {
                 </div>
                 <div className="ml-3">
                   <div className="flex items-center">
-                    <h4 className="font-medium text-sm text-textPrimary">
+                    <h4 className="font-medium text-sm text-text_primary">
                       {chat.partnerDisplayName}
                     </h4>
                     <span className="ml-2 text-xs text-gray-400">
@@ -131,7 +131,7 @@ const ChatWrapper = () => {
                       )}
                     </span>
                   </div>
-                  <p className="text-sm font-sans text-textPrimary mt-1 line-clamp-1 overflow-hidden break-all max-w-[200px]">
+                  <p className="text-sm font-sans text-text_primary mt-1 line-clamp-1 overflow-hidden break-all max-w-[200px]">
                     {isUser && "You: "}
                     {chatMessage.content}
                   </p>

@@ -73,9 +73,9 @@ const Promotion = () => {
             <div className=" flex col-start-2 col-end-3 py-[8rem] justify-center items-center">
               <div className="grid-cols-1 items-center justify-center text-center">
                 <div className="flex justify-center items-center">
-                  <Tags className="text-textSecondary w-9 h-9" />
+                  <Tags className="text-text_secondary w-9 h-9" />
                 </div>
-                <div className="text-textSecondary mt-2">
+                <div className="text-text_secondary mt-2">
                   {" "}
                   {couponLanguageData?.messageNoCoupons}
                 </div>
@@ -113,10 +113,10 @@ const Promotion = () => {
               <div className="grid-cols-1 items-center justify-center text-center">
                 <FontAwesomeIcon
                   icon={faGift}
-                  className="text-textSecondary text-[28px]"
+                  className="text-text_secondary text-[28px]"
                 />
 
-                <p className="text-textSecondary mt-2">
+                <p className="text-text_secondary mt-2">
                   {tabs[selectedTab].content}
                 </p>
               </div>

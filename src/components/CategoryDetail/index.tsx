@@ -192,7 +192,7 @@ const CategoryDetail = ({ slug }: Props) => {
             <span className="text-third">
               {jobCategoryLanguage?.safeNoScam}{" "}
             </span>
-            <span className="text-textPrimary">
+            <span className="text-text_primary">
               {jobCategoryLanguage?.supportThroughout}
             </span>
           </p>
@@ -204,7 +204,7 @@ const CategoryDetail = ({ slug }: Props) => {
           <BreadCrumb items={breadcrumbItems} />
         )}
         <div className="col-start-2 col-end-auto">
-          <h1 className="mb-2 sm:mb-6 mt-4 text-[20px] md:text-[32px] text-textPrimary font-semibold">
+          <h1 className="mb-2 sm:mb-6 mt-4 text-[20px] md:text-[32px] text-text_primary font-semibold">
             {categoryTitle} Service, Hire Freelancer to {categoryTitle}
           </h1>
         </div>
@@ -251,7 +251,7 @@ const CategoryDetail = ({ slug }: Props) => {
 
       <section className="pb-10 mt-4">
         <div className="grid-container-job">
-          <div className="flex justify-between col-start-2 col-end-auto mb-3 text-[0.875rem] text-textPrimary font-sans">
+          <div className="flex justify-between col-start-2 col-end-auto mb-3 text-[0.875rem] text-text_primary font-sans">
             <div>
               {interpolateDouble(jobCategoryLanguage?.foundJobs || "", {
                 jobNumber: jobList.jobs.length,
@@ -264,7 +264,7 @@ const CategoryDetail = ({ slug }: Props) => {
               })}
             </div>
           </div>
-          <div className="col-start-2 col-end-auto text-[0.875rem] text-textPrimary font-sans">
+          <div className="col-start-2 col-end-auto text-[0.875rem] text-text_primary font-sans">
             {isJobListLoading ? (
               <section className="col-start-2 col-end-auto grid grid-cols-1 sm:grid-cols-[repeat(2,minmax(1px,1fr))] md:grid-cols-[repeat(3,minmax(1px,1fr))] lg:grid-cols-[repeat(4,minmax(1px,1fr))] 2xl:grid-cols-[repeat(5,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
                 {Array.from({ length: 20 }).map((_, index) => (
@@ -292,7 +292,7 @@ const CategoryDetail = ({ slug }: Props) => {
             )}
           </section>
           <section className="col-start-2 col-end-auto mt-12">
-            <h2 className="mb-6 text-textPrimary font-medium text-[1.5rem] leading-[1.15]">
+            <h2 className="mb-6 text-text_primary font-medium text-[1.5rem] leading-[1.15]">
               {interpolateDouble(
                 jobCategoryLanguage?.categoriesRelatedToJobType || "",
                 { jobType: "SEO" }

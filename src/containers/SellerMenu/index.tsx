@@ -138,7 +138,7 @@ const { lang } = useLanguage();
                 className="rounded-full w-20 h-20  object-cover"
               />
             </figure>
-            <div className="text-[0.875rem] font-semibold text-textPrimary">
+            <div className="text-[0.875rem] font-semibold text-text_primary">
               {user?.user.username}
             </div>
           </section>
@@ -164,7 +164,7 @@ const { lang } = useLanguage();
                 className={`flex flex-row items-center gap-2 ${
                   isActive
                     ? "bg-secondary text-third border-l-4 border-primary"
-                    : "bg-white text-textSecondary"
+                    : "bg-white text-text_secondary"
                 } leading-[25px] cursor-pointer`}
               >
                 <Link prefetch={false}
@@ -177,7 +177,7 @@ const { lang } = useLanguage();
                     <FontAwesomeIcon
                       icon={item.icon}
                       className={`text-[18px] ${
-                        isActive ? "text-third" : "text-textSecondary"
+                        isActive ? "text-third" : "text-text_secondary"
                       }`}
                     />
                     <span className="font-sans whitespace-nowrap text-[0.875rem] flex items-center">
@@ -197,7 +197,7 @@ const { lang } = useLanguage();
                 className={`flex flex-row items-center gap-2 ${
                   isActive
                     ? "bg-secondary text-third border-l-4 border-primary"
-                    : "bg-white text-textSecondary"
+                    : "bg-white text-text_secondary"
                 } leading-[25px] cursor-pointer`}
               >
                 <Link prefetch={false}
@@ -209,7 +209,7 @@ const { lang } = useLanguage();
                     <FontAwesomeIcon
                       icon={item.icon}
                       className={`text-[18px] ${
-                        isActive ? "text-third" : "text-textSecondary"
+                        isActive ? "text-third" : "text-text_secondary"
                       }`}
                     />
                     <span className="font-sans whitespace-nowrap text-[0.875rem] flex items-center">
@@ -221,12 +221,12 @@ const { lang } = useLanguage();
             );
           })}
           <hr className="h-[1px] bg-borderSecondary w-full inline-block" />
-          <li className="flex flex-row items-center gap-2 bg-white text-textSecondary">
+          <li className="flex flex-row items-center gap-2 bg-white text-text_secondary">
             <button onClick={logout} className="px-5 py-4 flex-1">
               <div className="flex flex-row items-center gap-4">
                 <FontAwesomeIcon
                   icon={faRightFromBracket}
-                  className="text-[18px] text-textSecondary"
+                  className="text-[18px] text-text_secondary"
                 />
                 <span className="font-sans whitespace-nowrap text-[0.875rem] flex items-center">
                   Sign out

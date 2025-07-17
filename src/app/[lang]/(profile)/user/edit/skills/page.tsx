@@ -172,7 +172,7 @@ const EditSkills = () => {
                     </label>
                     <input
                       type="text"
-                      className="text-textPrimary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Ví dụ: Photoshop, AutoCAD"
                       {...register(`skillItems.${index}.skill`)}
                     />
@@ -185,7 +185,7 @@ const EditSkills = () => {
                   <div>
                     <label className="block text-gray-700 mb-2">{userEditLanguage?.level}</label>
                     <select
-                      className="text-textPrimary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       {...register(`skillItems.${index}.level`)}
                     >
                       {levelOptions.map((level) => (

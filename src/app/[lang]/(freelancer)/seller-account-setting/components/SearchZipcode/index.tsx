@@ -94,7 +94,7 @@ export default function ZipcodeSearch({
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <label className="block text-sm text-textPrimary font-semibold mb-2">
+      <label className="block text-sm text-text_primary font-semibold mb-2">
         {language?.zipcode}
       </label>
       <input
@@ -111,7 +111,7 @@ export default function ZipcodeSearch({
         }}
         placeholder={language?.zipcodePlaceholder}
         autoComplete="off"
-        className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary transition-all"
+        className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary transition-all"
       />
       {error && (
         <p className="text-red-500 text-[12px] font-normal font-sans mt-1">

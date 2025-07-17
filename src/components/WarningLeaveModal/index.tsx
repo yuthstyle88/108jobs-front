@@ -24,10 +24,10 @@ const WarningLeaveModal: React.FC<WarningLeaveModalProps> = ({
       <section className="px-[12px] w-full flex flex-col gap-8 justify-center items-center">
         <CircleAlert className="w-[65px] h-[65px] text-red-500" />
         <article>
-          <h1 className="text-[18px] font-medium text-textPrimary text-center">
+          <h1 className="text-[18px] font-medium text-text_primary text-center">
             You haven&apos;t saved your changes yet.
           </h1>
-          <p className="text-[14px] font-sans text-textSecondary text-center pt-3">
+          <p className="text-[14px] font-sans text-text_secondary text-center pt-3">
             Please save before leaving this page to avoid losing your data.
           </p>
         </article>

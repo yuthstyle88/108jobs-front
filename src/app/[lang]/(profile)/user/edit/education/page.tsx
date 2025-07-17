@@ -150,7 +150,7 @@ const EditEducation = () => {
                     </label>
                     <input
                       type="text"
-                      className="text-textPrimary w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="text-text_primary w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder={userEditLanguage?.schoolNamePlaceholder}
                       {...register(`educationItems.${index}.school`)}
                     />
@@ -166,7 +166,7 @@ const EditEducation = () => {
                     </label>
                     <input
                       type="text"
-                      className="text-textPrimary w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="text-text_primary w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder={userEditLanguage?.majorPlaceholder}
                       {...register(`educationItems.${index}.major`)}
                     />
