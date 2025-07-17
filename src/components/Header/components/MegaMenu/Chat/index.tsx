@@ -10,7 +10,7 @@ const Chat = () => {
       <span className="text-third font-medium">
         {global?.chatToHireTitle}
       </span>
-      <p className="mt-3 text-[0.875rem] text-textSecondary font-sans">
+      <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
         {global?.chatToHireDescription}
       </p>
       <div className="mt-6">

@@ -106,7 +106,7 @@ const MyServices = () => {
     <div className="p-4 md:p-0">
       <div className="my-service-gradient rounded-lg shadow-sm p-6 mb-8 flex justify-between items-center hover:shadow-jobCard duration-300">
         <div className="flex-1">
-          <h2 className="text-lg font-medium mb-2 text-textPrimary">
+          <h2 className="text-lg font-medium mb-2 text-text_primary">
             {sellerMyServiceLanguage?.serviceFeeTitle}
           </h2>
           <p className="text-gray-600 text-sm">
@@ -128,7 +128,7 @@ const MyServices = () => {
       </div>
 
       <div className="mb-6 flex justify-between items-center">
-        <h2 className="text-xl font-medium text-textPrimary">
+        <h2 className="text-xl font-medium text-text_primary">
           {interpolateDouble(sellerMyServiceLanguage?.myServicesTitle || "", {
             n: lengthOfJobs || 0,
             max: 5,
@@ -200,11 +200,11 @@ const MyServices = () => {
                         height={48}
                       />
                     </div>
-                    <div className="font-medium text-textPrimary">
+                    <div className="font-medium text-text_primary">
                       {job.title}
                     </div>
                   </td>
-                  <td className="p-4 text-textPrimary">15%</td>
+                  <td className="p-4 text-text_primary">15%</td>
                   <td className="p-4">
                     <JobCreatedStatus
                       languageMap={sellerMyServiceLanguage}
@@ -290,7 +290,7 @@ const MyServices = () => {
                       className="object-cover"
                     />
                   </div>
-                  <div className="font-sans text-sm font-semibold text-textPrimary line-clamp-2">
+                  <div className="font-sans text-sm font-semibold text-text_primary line-clamp-2">
                     {job.title}
                   </div>
                 </div>
@@ -300,14 +300,14 @@ const MyServices = () => {
                 </div>
 
                 <div className="pb-4 border-b-1 border-borderSecondary w-full font-sans">
-                  <div className="text-sm text-textSecondary flex flex-row justify-between items-center pt-4">
+                  <div className="text-sm text-text_secondary flex flex-row justify-between items-center pt-4">
                     <p>{sellerMyServiceLanguage?.columnVisibility}</p>
-                    <Eye className="w-4 h-4 text-textSecondary" />
+                    <Eye className="w-4 h-4 text-text_secondary" />
                   </div>
 
                   <Link prefetch={false}
                     href={`/manage-product/${job.id}`}
-                    className="text-sm text-textSecondary flex flex-row justify-between items-center pt-4"
+                    className="text-sm text-text_secondary flex flex-row justify-between items-center pt-4"
                   >
                     <p>{global?.buttonEdit}</p>
                     <Pencil className="w-4 h-4 text-gray-400" />

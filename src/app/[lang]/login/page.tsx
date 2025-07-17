@@ -132,7 +132,7 @@ export default function LoginPage() {
           />
           {currentView === "login" && (
             <AuthFormContainer
-              title={loginLanguageData?.titleSignInCreateAccount}
+              title="Sign in FastJob"
             >
               <LoginForm
                 switchToRegister={() => route.push("/register")}

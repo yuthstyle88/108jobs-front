@@ -66,7 +66,7 @@ const SellerSidebar = () => {
             <button onClick={() => setIsClose(!isClose)} className="ml-1">
               <FontAwesomeIcon
                 icon={faArrowRightToBracket}
-                className={`text-[18px] text-textPrimary transition-transform ${
+                className={`text-[18px] text-text_primary transition-transform ${
                   isClose ? "" : "rotate-180"
                 }`}
               />
@@ -114,7 +114,7 @@ const SellerSidebar = () => {
                 className={`group flex items-center gap-3 px-3 py-4 text-base ${
                   isActive(item.href)
                     ? "text-third border-primary bg-secondary"
-                    : "text-textSecondary bg-white hover:border-primary hover:bg-secondary hover:text-third"
+                    : "text-text_secondary bg-white hover:border-primary hover:bg-secondary hover:text-third"
                 } border-l-4 `}
               >
                 <FontAwesomeIcon
@@ -122,7 +122,7 @@ const SellerSidebar = () => {
                   className={`text-[16px] ${
                     isActive(item.href)
                       ? "text-third"
-                      : "text-textSecondary group-hover:text-third"
+                      : "text-text_secondary group-hover:text-third"
                   }`}
                 />
                 <span

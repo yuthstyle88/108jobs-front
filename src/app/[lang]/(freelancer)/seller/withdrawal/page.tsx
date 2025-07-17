@@ -110,7 +110,7 @@ const Withdrawal = () => {
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 space-y-3 sm:space-y-0">
             <select
-              className="px-4 py-2 border text-textPrimary border-gray-300 rounded-md focus:outline-none"
+              className="px-4 py-2 border text-text_primary border-gray-300 rounded-md focus:outline-none"
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
             >
@@ -128,7 +128,7 @@ const Withdrawal = () => {
               <option value="December">December</option>
             </select>
             <select
-              className="px-4 py-2 text-textPrimary border border-gray-300 rounded-md focus:outline-none"
+              className="px-4 py-2 text-text_primary border border-gray-300 rounded-md focus:outline-none"
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >

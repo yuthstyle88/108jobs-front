@@ -90,7 +90,7 @@ const PersonalInfo = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* ID front */}
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-            <h4 className="text-sm font-medium mb-1 text-textPrimary">
+            <h4 className="text-sm font-medium mb-1 text-text_primary">
               {sellerPersonalInfoLanguage?.frontIdImage}
             </h4>
             <p className="text-xs text-gray-500 mb-3">{sellerPersonalInfoLanguage?.imageHint}</p>
@@ -142,7 +142,7 @@ const PersonalInfo = () => {
 
           {/* ID back */}
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
-            <h4 className="text-sm font-medium mb-1 text-textPrimary">
+            <h4 className="text-sm font-medium mb-1 text-text_primary">
               {sellerPersonalInfoLanguage?.backIdImage}
             </h4>
             <p className="text-xs text-gray-500 mb-3">{sellerPersonalInfoLanguage?.imageHint}</p>
@@ -202,7 +202,7 @@ const PersonalInfo = () => {
             </label>
             <input
               {...register("name")}
-              className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
             <InputError message={errors.name?.message} />
           </div>
@@ -212,7 +212,7 @@ const PersonalInfo = () => {
             </label>
             <input
               {...register("surname")}
-              className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
             <InputError message={errors.surname?.message} />
           </div>
@@ -224,7 +224,7 @@ const PersonalInfo = () => {
           </label>
           <input
             {...register("cardNumber")}
-            className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
           <InputError message={errors.cardNumber?.message} />
         </div>
@@ -236,7 +236,7 @@ const PersonalInfo = () => {
           <div className="grid grid-cols-3 gap-4">
             <select
               {...register("birthDay")}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-textPrimary"
+              className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
             >
               <option disabled value="Day">
                 วัน
@@ -249,7 +249,7 @@ const PersonalInfo = () => {
             </select>
             <select
               {...register("birthMonth")}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-textPrimary"
+              className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
             >
               <option disabled value="Month">
                 เดือน
@@ -262,7 +262,7 @@ const PersonalInfo = () => {
             </select>
             <select
               {...register("birthYear")}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-textPrimary"
+              className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
             >
               <option disabled value="Year">
                 ปี
@@ -297,7 +297,7 @@ const PersonalInfo = () => {
             </label>
             <input
               {...register("cardAddressDetails")}
-              className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
             <InputError message={errors.cardAddressDetails?.message} />
           </div>
@@ -309,7 +309,7 @@ const PersonalInfo = () => {
               </label>
               <input
                 {...register("cardZipCode")}
-                className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
               <InputError message={errors.cardZipCode?.message} />
             </div>
@@ -319,7 +319,7 @@ const PersonalInfo = () => {
               </label>
               <input
                 {...register("cardSubdistrictOrDistrict")}
-                className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
               <InputError
                 message={errors.cardSubdistrictOrDistrict?.message}
@@ -334,7 +334,7 @@ const PersonalInfo = () => {
               </label>
               <input
                 {...register("cardDistrictOrSubdistrict")}
-                className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
               <InputError
                 message={errors.cardDistrictOrSubdistrict?.message}
@@ -346,7 +346,7 @@ const PersonalInfo = () => {
               </label>
               <input
                 {...register("cardProvince")}
-                className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
               <InputError message={errors.cardProvince?.message} />
             </div>

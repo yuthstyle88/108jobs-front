@@ -10,10 +10,12 @@ import { RegisterDataProps } from "@/types/register-data";
 import Image from "next/image";
 import {useState} from "react";
 import {RegisterForm} from "@/components/Authentication/RegisterForm";
+import { useRouter } from "next/navigation";
 
 type ViewState = "register" | "verify-email";
 
 export default function RegisterPage() {
+  const route = useRouter();
   const {
     data: loginLanguageData,
     isLoading,
@@ -116,7 +118,7 @@ export default function RegisterPage() {
           {currentView === "register" && (
             <AuthFormContainer
               title={`Sign up FastJob`}
-              onBack={() => setCurrentView("register")}
+              onBack={() => route.push("/login")}
             >
               <RegisterForm
                 switchToVerifyEmail={() => setCurrentView("verify-email")}

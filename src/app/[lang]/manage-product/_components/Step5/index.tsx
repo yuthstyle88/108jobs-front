@@ -101,10 +101,10 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
       className="bg-white rounded-lg shadow-sm p-6"
     >
       {isLoading && <LoadingBlur text={"Đang lưu dữ liệu"} />}
-      <h2 className="text-xl font-medium text-textPrimary">
+      <h2 className="text-xl font-medium text-text_primary">
         {createJobLanguage?.confirmationTitle}
       </h2>
-      <p className="mb-6 text-[16px] text-textSecondary font-sans">
+      <p className="mb-6 text-[16px] text-text_secondary font-sans">
         {createJobLanguage?.confirmationWarning}
       </p>
 

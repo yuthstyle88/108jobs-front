@@ -85,7 +85,7 @@ const AccountSettings = () => {
                 </span>
                 <input
                   {...register("username")}
-                  className="text-textPrimary flex-1 px-3 py-2 border border-gray-300 rounded-r-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="text-text_primary flex-1 px-3 py-2 border border-gray-300 rounded-r-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
               {errors.username && (
@@ -104,7 +104,7 @@ const AccountSettings = () => {
               </p>
               <input
                 {...register("displayName")}
-                className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
               {errors.displayName && (
                 <p className="text-red-500 text-[12px] font-sans mt-1">
@@ -132,7 +132,7 @@ const AccountSettings = () => {
                     value="Parttime"
                     {...register("freelancerType")}
                   />
-                  <span className="text-textPrimary">
+                  <span className="text-text_primary">
                     {sellerProfileLanguage?.partTime}
                   </span>
                 </label>
@@ -147,7 +147,7 @@ const AccountSettings = () => {
                     value="Fulltime"
                     className="mr-2 text-third"
                   />
-                  <span className="text-textPrimary">
+                  <span className="text-text_primary">
                     {sellerProfileLanguage?.fullTime}
                   </span>
                 </label>
@@ -204,7 +204,7 @@ const AccountSettings = () => {
             {...register("bio")}
             placeholder="Mô tả ngắn gọn điểm mạnh của bạn để giúp khách hàng quyết định"
             rows={5}
-            className="text-textPrimary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           ></textarea>
         </div>
 

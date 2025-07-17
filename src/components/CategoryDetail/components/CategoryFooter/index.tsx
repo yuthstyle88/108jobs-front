@@ -10,12 +10,12 @@ const CategoryFooter = () => {
   return (
     <div className="grid-cols-[1fr] grid m-0 p-0 col-start-2 col-end-auto mt-12 gap-y-6">
       <div>
-        <h2 className="text-[1.125rem] mb-2 font-semibold leading-[1.5] text-textPrimary">
+        <h2 className="text-[1.125rem] mb-2 font-semibold leading-[1.5] text-text_primary">
           {categoryFooterLanguage?.seoTitle}
         </h2>
       </div>
       <div className="grid-cols-[1fr] m-0 p-0 grid">
-        <div className="text-[0.75rem] leading-[1.5] font-sans text-textPrimary">
+        <div className="text-[0.75rem] leading-[1.5] font-sans text-text_primary">
           <p>
             <strong>
               {categoryFooterLanguage?.seoDescription1}{" "}
@@ -79,8 +79,8 @@ const CategoryFooter = () => {
         </div>
       </div>
       <div className="grid-cols-[1fr] m-0 p-0 grid">
-        <div className="text-[0.75rem] leading-[1.5] font-sans text-textPrimary">
-          <h2 className="text-[1.125rem] mb-2 font-semibold leading-[1.5] text-textPrimary">
+        <div className="text-[0.75rem] leading-[1.5] font-sans text-text_primary">
+          <h2 className="text-[1.125rem] mb-2 font-semibold leading-[1.5] text-text_primary">
             {categoryFooterLanguage?.howToHireTitle}
           </h2>
           <ol className="list-decimal ml-4 text-[0.75rem] leading-[1.5] font-sans">

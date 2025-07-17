@@ -63,14 +63,14 @@ const Freelance = ({ language, data }: Props) => {
             />
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-lg text-textPrimary font-semibold">
+                <h2 className="text-lg text-text_primary font-semibold">
                   {data.user.displayName}
                 </h2>
                 <button className="px-3 py-1 text-blue-600 border border-blue-600 rounded-lg text-sm hover:bg-blue-50">
                   {language?.viewProfile}
                 </button>
               </div>
-              <p className="text-gray-600 text-sm mt-1 leading-relaxed font-sans text-textSecondary line-clamp-4">
+              <p className="text-gray-600 text-sm mt-1 leading-relaxed font-sans text-text_secondary line-clamp-4">
                 {data.user.bio}
               </p>
             </div>
@@ -85,7 +85,7 @@ const Freelance = ({ language, data }: Props) => {
             >
               <Image src={item.icon} alt="icon" className="h-6" />
               <div>
-                <div className="text-textSecondary font-sans">
+                <div className="text-text_secondary font-sans">
                   {item.title}
                 </div>
                 <div className="text-blue-600 font-semibold">

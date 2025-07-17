@@ -28,14 +28,14 @@ const Package = ({ language, data }: Props) => {
               </h3>
               <strong>{formatThaiBaht(pkg.price)}</strong>
             </div>
-            <div className="mt-2 text-[0.875rem] text-textSecondary flex flex-row gap-2 items-center font-sans">
+            <div className="mt-2 text-[0.875rem] text-text_secondary flex flex-row gap-2 items-center font-sans">
               <FontAwesomeIcon
                 icon={faCalendar}
-                className="text-textSecondary"
+                className="text-text_secondary"
               />
               <p>ระยะเวลาในการทำงาน {pkg.executionTime} วัน</p>
             </div>
-            <div className="pt-4 text-[14px] font-sans text-textPrimary break-words whitespace-pre-wrap">
+            <div className="pt-4 text-[14px] font-sans text-text_primary break-words whitespace-pre-wrap">
               <p>{pkg.description}</p>
             </div>
             <hr className="my-4 bg-borderPrimary block overflow-visible w-full h-[1px] m-0" />

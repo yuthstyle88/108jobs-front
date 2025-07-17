@@ -208,7 +208,7 @@ export class AcceptFormClass extends Component<AcceptFormProps, AcceptFormState>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {"Account Type"}
           </label>
-          <div className="flex gap-6 items-center text-base text-textPrimary">
+          <div className="flex gap-6 items-center text-base text-text_primary">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="radio"
@@ -243,13 +243,13 @@ export class AcceptFormClass extends Component<AcceptFormProps, AcceptFormState>
             />
             <label
               htmlFor="termsAccepted"
-              className="text-sm text-textSecondary font-sans"
+              className="text-sm text-text_secondary font-sans"
             >
               {authen?.checkboxTermsConditions}{" "}
               <Link
                 prefetch={false}
                 href="/content/terms"
-                className="text-textSecondary underline"
+                className="text-text_secondary underline"
               >
                 {authen?.checkboxTermsConditionsRedirect}
               </Link>
@@ -267,12 +267,12 @@ export class AcceptFormClass extends Component<AcceptFormProps, AcceptFormState>
             />
             <label
               htmlFor="privacyAccepted"
-              className="text-sm text-textSecondary font-sans"
+              className="text-sm text-text_secondary font-sans"
             >
               <Link
                 prefetch={false}
                 href="/content/privacy"
-                className="text-textSecondary underline"
+                className="text-text_secondary underline"
               >
                 {authen?.checkboxPrivacyPolicyRedirect}
               </Link>

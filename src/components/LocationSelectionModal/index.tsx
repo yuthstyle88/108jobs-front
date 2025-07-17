@@ -119,7 +119,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
       showCloseButton={false}
     >
       <main className="px-[12px] w-full flex flex-col gap-3 justify-center">
-        <section className="pb-4 border-b-1 border-borderSecondary font-semibold text-[1.125rem] text-textPrimary font-sans">
+        <section className="pb-4 border-b-1 border-borderSecondary font-semibold text-[1.125rem] text-text_primary font-sans">
           <p className="text-base">Help us improve by sharing your location.</p>
           <p className="text-[1.5rem] text-[#1754b0]">Where are you located?</p>
         </section>
@@ -192,7 +192,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
 
       <div className="flex flex-row gap-2 justify-between items-end pt-4w-full">
         <button onClick={() => onSkipAddress()} disabled={isSkipMutating}>
-          <p className="text-textSecondary font-semibold text-[18px] font-sans underline">
+          <p className="text-text_secondary font-semibold text-[18px] font-sans underline">
             Later
           </p>
         </button>

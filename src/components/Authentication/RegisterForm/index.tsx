@@ -236,17 +236,18 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
     this.setState({ isSubmitting: true, apiError: null });
 
     const data = {
-      email: this.state.form.email,
-      username: this.state.form.username,
-      password: this.state.form.password,
-      confirmPassword: this.state.form.confirmPassword,
-      termsAccepted: this.state.form.termsAccepted,
-      privacyAccepted: this.state.form.privacyAccepted,
-      promotionalAccepted: this.state.form.promotionalAccepted,
-      captchaUuid: this.state.form.captchaUuid,
-      captchaAnswer: this.state.form.captchaAnswer,
-      role: this.state.form.role,
-    };
+  email: this.state.form.email ?? "",
+  username: this.state.form.username ?? "",
+  password: this.state.form.password ?? "",
+  confirmPassword: this.state.form.confirmPassword ?? "",
+  termsAccepted: this.state.form.termsAccepted,
+  privacyAccepted: this.state.form.privacyAccepted,
+  promotionalAccepted: this.state.form.promotionalAccepted,
+  captchaUuid: this.state.form.captchaUuid ?? "",
+  captchaAnswer: this.state.form.captchaAnswer ?? "",
+  role: this.state.form.role,
+};
+
 
     sessionStorage.setItem("RegisterUpData", JSON.stringify(data));
 
@@ -392,6 +393,7 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
         <CustomInput
           label={authen?.labelUsername}
           name="username"
+          value={username ?? ""}
           onChange={this.handleInputChange}
           error={errors.username}
           placeholder={authen?.placeholderUsername}
@@ -400,6 +402,7 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
         <CustomInput
           label={authen?.labelEmail}
           name="email"
+          value={email ?? ""}
           onChange={this.handleInputChange}
           error={errors.email}
           placeholder={authen?.placeholderEmail}
@@ -410,6 +413,7 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
           label={authen?.labelPassword}
           name="password"
           type="password"
+          value={password ?? ""}
           onChange={this.handleInputChange}
           error={errors.password}
           placeholder={authen?.placeholderPassword}
@@ -420,6 +424,7 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
         <CustomInput
           label={authen?.labelConfirmPassword}
           name="confirmPassword"
+          value={confirmPassword ?? ""}
           type="password"
           onChange={this.handleInputChange}
           error={errors.confirmPassword}
@@ -433,7 +438,7 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {"Account Type"}
           </label>
-          <div className="flex gap-6 items-center text-base text-textPrimary">
+          <div className="flex gap-6 items-center text-base text-text_primary">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="radio"
@@ -478,13 +483,13 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
             />
             <label
               htmlFor="termsAccepted"
-              className="text-sm text-textSecondary font-sans"
+              className="text-sm text-text_secondary font-sans"
             >
               {authen?.checkboxTermsConditions}{" "}
               <Link
                 prefetch={false}
                 href="/content/terms"
-                className="text-textSecondary underline"
+                className="text-text_secondary underline"
               >
                 {authen?.checkboxTermsConditionsRedirect}
               </Link>
@@ -502,13 +507,13 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
             />
             <label
               htmlFor="privacyAccepted"
-              className="text-sm text-textSecondary font-sans"
+              className="text-sm text-text_secondary font-sans"
             >
               {authen?.checkboxTermsConditions}{" "}
               <Link
                 prefetch={false}
                 href="/content/privacy"
-                className="text-textSecondary underline"
+                className="text-text_secondary underline"
               >
                 {authen?.checkboxPrivacyPolicyRedirect}
               </Link>
