@@ -1,10 +1,10 @@
 "use client";
 
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "@/components/ui/Modal";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {QRCodeCanvas} from "qrcode.react";
+import { QRCodeCanvas } from "qrcode.react";
 
 interface TotpModalProps {
     show: boolean;
@@ -44,6 +44,7 @@ export default function TotpModal({
         setPending(false);
 
         if (!ok) {
+            toast.error("Invalid code");
             setTotp("");
             inputRef.current?.focus();
         }
@@ -78,18 +79,27 @@ export default function TotpModal({
                 : "Enter TOTP Code";
 
     return (
-        <Modal isOpen={show} onClose={onClose} title={<span className="text-black">{modalTitle}</span>}>
-            <div className="flex flex-col items-center gap-4 text-black">
+        <Modal
+            isOpen={show}
+            onClose={onClose}
+            title={<span className="text-lg font-semibold text-gray-800">{modalTitle}</span>}
+        >
+            <div className="flex flex-col gap-6 text-gray-800 px-2">
                 {type === "generate" && secretUrl && (
-                    <>
-                        <a href={secretUrl} className="btn btn-secondary hover:underline">
-                            View TOTP Setup Link
+                    <div className="flex flex-col items-center gap-3 text-center">
+                        <a
+                            href={secretUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 text-sm underline hover:text-blue-800"
+                        >
+                            Open TOTP Setup Link
                         </a>
-                        <div className="text-center text-black">
-                            <strong className="text-black">Scan QR Code</strong>
-                            <QRCodeCanvas value={secretUrl} size={180} className="mx-auto mt-2" />
+                        <div>
+                            <p className="font-medium text-sm mb-2">Scan QR Code with Authenticator App</p>
+                            <QRCodeCanvas value={secretUrl} size={180} className="mx-auto" />
                         </div>
-                    </>
+                    </div>
                 )}
 
                 <form
@@ -97,41 +107,50 @@ export default function TotpModal({
                         e.preventDefault();
                         if (totp.length === TOTP_LENGTH) await handleSubmit(totp);
                     }}
+                    className="flex flex-col gap-2 items-center"
                 >
-                    <label htmlFor="totp-input" className="block font-bold mb-2 text-center text-black">
+                    <label htmlFor="totp-input" className="text-sm font-medium">
                         Enter TOTP Code
                     </label>
                     <input
+                        id="totp-input"
+                        ref={inputRef}
                         type="text"
                         inputMode="numeric"
                         autoComplete="one-time-code"
                         maxLength={TOTP_LENGTH}
-                        id="totp-input"
-                        ref={inputRef}
-                        className="form-control text-center text-lg px-4 py-2 text-black border border-black focus:border-black focus:ring-black"
                         value={totp}
                         onChange={handleInput}
                         onPaste={handlePaste}
                         disabled={pending}
+                        className="text-center text-lg w-40 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="123456"
                         required
                     />
                 </form>
-            </div>
 
-            <div className="flex justify-end gap-2 mt-6">
-                <button
-                    className="btn btn-success text-black"
-                    type="submit"
-                    disabled={totp.length !== TOTP_LENGTH || pending}
-                    onClick={async () => await handleSubmit(totp)}
-                >
-                    Submit
-                </button>
-                <button className="btn btn-danger text-black" onClick={onClose}>
-                    Cancel
-                </button>
+                <div className="flex justify-end gap-3 mt-4">
+                    <button
+                        type="submit"
+                        onClick={async () => await handleSubmit(totp)}
+                        disabled={totp.length !== TOTP_LENGTH || pending}
+                        className={`px-4 py-2 rounded-md text-white text-sm font-medium transition-colors ${
+                            totp.length === TOTP_LENGTH && !pending
+                                ? "bg-green-600 hover:bg-green-700"
+                                : "bg-gray-400 cursor-not-allowed"
+                        }`}
+                    >
+                        {pending ? "Verifying..." : "Submit"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="px-4 py-2 rounded-md text-sm border border-gray-300 text-gray-700 hover:bg-gray-100"
+                    >
+                        Cancel
+                    </button>
+                </div>
             </div>
         </Modal>
     );
-
 }
