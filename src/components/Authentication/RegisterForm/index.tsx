@@ -5,7 +5,6 @@ import {Icon, Spinner} from "@/components/icon";
 import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { RegisterDataProps } from "@/types/register-data";
-import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import React from "react";
 import { z } from "zod";
@@ -18,10 +17,7 @@ import {
   GetCaptchaResponse,
   GetSiteResponse,
   LoginResponse,
-  SiteView,
 } from "lemmy-js-client";
-import {IsoData} from "@/interfaces";
-import {setIsoData} from "@/utils/app";
 import { isBrowser } from "@/utils/browser";
 
 interface RegisterFormState {
@@ -58,16 +54,9 @@ interface RegisterFormState {
   };
 }
 
-class RegisterFormClass extends React.Component<
-  RegisterFormProps,
-  RegisterFormState
-> {
-  // ลบบรรทัดนี้ออก
-  // authen = useTranslateFile(LanguageFile.AUTHEN);
-  private isoData = setIsoData(this.context);
+class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormState> {
   private audio: HTMLAudioElement | undefined;
   private hasFetchedSite = false;
-  // ใช้ authen จาก props แทน
   RegisterSchema = z
     .object({
       email: z.string().email(this.props.authen?.invalidEmail),
@@ -105,8 +94,8 @@ class RegisterFormClass extends React.Component<
     errors: {},
     hasFetchedSite: false
   };
-  constructor(props: { isoData?: any; history?: any; switchToVerifyEmail?: () => void; setDataRegister?: (data: RegisterDataProps) => void; refetch?: (() => void) | undefined; register?: any; errors?: any; authen?: any; }) {
-    super(props as RegisterFormProps);
+  constructor(props: RegisterFormProps) {
+    super(props);
     this.handleRadioChange = this.handleRadioChange.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
@@ -158,9 +147,9 @@ class RegisterFormClass extends React.Component<
   setCaptchaUuid(uuid: string) {
     this.setState((prevState) => ({
       ...prevState,
-      captchaRes: {
-        ...prevState.captchaRes,
-        uuid: uuid
+      form: {
+        ...prevState.form,
+        captchaUuid: uuid
       }
     }));
   }
@@ -329,44 +318,41 @@ class RegisterFormClass extends React.Component<
   async fetchCaptcha() {
     console.log("fetchCaptcha")
     this.setState({ captchaRes: LOADING_REQUEST });
-    this.setState({
-      captchaRes: await HttpService.client.getCaptcha(),
-    });
-
-    this.setState(s => {
-      if (s.captchaRes.state === "success") {
-        s.form.captchaUuid = s.captchaRes.data.ok?.uuid;
+    const captchaRes = await HttpService.client.getCaptcha();
+    let captchaUuid = undefined;
+    if (captchaRes.state === "success") {
+      captchaUuid = captchaRes.data.ok?.uuid;
+    }
+    this.setState((prevState) => ({
+      ...prevState,
+      captchaRes,
+      form: {
+        ...prevState.form,
+        captchaUuid,
       }
-      return s;
-    });
+    }));
   }
-  handleCaptchaPlay(i: RegisterFormClass) {
-    // This was a bad bug, it should only build the new audio on a new file.
-    // Replays would stop prematurely if this was rebuilt every time.
-
-    if (i.state.captchaRes.state === "success" && i.state.captchaRes.data.ok) {
-      const captchaRes = i.state.captchaRes.data.ok;
-      if (!i.audio) {
+  handleCaptchaPlay = () => {
+    if (this.state.captchaRes.state === "success" && this.state.captchaRes.data.ok) {
+      const captchaRes = this.state.captchaRes.data.ok;
+      if (!this.audio) {
         const base64 = `data:audio/wav;base64,${captchaRes.wav}`;
-        i.audio = new Audio(base64);
-        i.audio.play();
-
-        i.setState({ captchaPlaying: true });
-
-        i.audio.addEventListener("ended", () => {
-          if (i.audio) {
-            i.audio.currentTime = 0;
-            i.setState({ captchaPlaying: false });
+        this.audio = new Audio(base64);
+        this.audio.play();
+        this.setState({ captchaPlaying: true });
+        this.audio.addEventListener("ended", () => {
+          if (this.audio) {
+            this.audio.currentTime = 0;
+            this.setState({ captchaPlaying: false });
           }
         });
       }
     }
   }
-  async handleRegenCaptcha(i: RegisterFormClass) {
-    console.log("handleRegenCaptcha")
-    i.audio = undefined;
-    i.setState({ captchaPlaying: false });
-    await i.fetchCaptcha();
+  handleRegenCaptcha = async () => {
+    this.audio = undefined;
+    this.setState({ captchaPlaying: false });
+    await this.fetchCaptcha();
   }
 
   captchaPngSrc(captcha: CaptchaResponse) {
@@ -400,12 +386,6 @@ class RegisterFormClass extends React.Component<
 
     const authen = this.props.authen;
 
-    // ในส่วน render method
-  
-  // ตรวจสอบว่า register มีค่าและเป็นฟังก์ชันหรือไม่
-  const registerProp = typeof this.props.register === 'function' 
-    ? this.props.register 
-    : (name: string) => ({ name });  // ฟังก์ชันเริ่มต้นถ้า register ไม่ใช่ฟังก์ชัน
 
     return (
       <form onSubmit={this.handleSubmit} className="space-y-5" noValidate>
@@ -576,7 +556,7 @@ class RegisterFormClass extends React.Component<
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={(e) => this.handleRegenCaptcha}
+                onClick={this.handleRegenCaptcha}
                 aria-label="captcha"
               >
                 <Icon icon="refresh-cw" classes="icon-refresh-cw" />
@@ -598,6 +578,8 @@ class RegisterFormClass extends React.Component<
           </div>
         );
       }
+      default:
+        return null;
     }
   }
 
@@ -615,7 +597,7 @@ class RegisterFormClass extends React.Component<
             <button
               className="rounded-bottom btn btn-sm btn-secondary d-block"
               title="play_captcha_audio"
-              onClick={async (e) => this.handleRegenCaptcha}
+              onClick={this.handleCaptchaPlay}
               type="button"
               disabled={this.state.captchaPlaying}
             >
