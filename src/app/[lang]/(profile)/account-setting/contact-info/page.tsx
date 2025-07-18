@@ -212,7 +212,7 @@ export default function ContactPage() {
     <div>
       <div className="bg-white rounded-lg shadow-sm border-1 border-borderPrimary mb-6">
         <div className="border-b p-6">
-          <h2 className="text-[16px] font-medium mb-2 text-textPrimary">
+          <h2 className="text-[16px] font-medium mb-2 text-text_primary">
             {contactInfoLanguageData?.sectionContactInfo}
           </h2>
           <p className="text-gray-600 text-[14px] font-sans">
@@ -226,13 +226,13 @@ export default function ContactPage() {
               <div className="mb-6">
                 <div className="flex gap-2 items-end w-full">
                   <div className="flex-1">
-                    <label className="block text-sm text-textPrimary font-semibold mb-2">
+                    <label className="block text-sm text-text_primary font-semibold mb-2">
                       {contactInfoLanguageData?.labelContactEmail}
                     </label>
                     <input
                       type="email"
                       {...emailRegister("email")}
-                      className={`text-textPrimary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                      className={`text-text_primary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                         apiError
                           ? "border-[#ea6357] text-[#ea6357]"
                           : "border-gray-300"
@@ -264,14 +264,14 @@ export default function ContactPage() {
           ) : (
             <div className="mb-6 flex gap-2 items-end w-full">
               <div className="flex-1">
-                <label className="block text-sm text-textPrimary font-semibold mb-2">
+                <label className="block text-sm text-text_primary font-semibold mb-2">
                   {contactInfoLanguageData?.labelContactEmail}
                 </label>
                 <input
                   type="email"
                   value={profileData?.contact.email ?? ""}
                   disabled
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary disabled:cursor-not-allowed"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary disabled:cursor-not-allowed"
                   placeholder="your.email@example.com"
                 />
               </div>
@@ -287,7 +287,7 @@ export default function ContactPage() {
           )}
 
           <div>
-            <h3 className="text-sm text-textPrimary font-semibold text-gray-600 mb-1 font-sans">
+            <h3 className="text-sm text-text_primary font-semibold text-gray-600 mb-1 font-sans">
               {contactInfoLanguageData?.labelContactPhone}
             </h3>
             <p className="text-[12px] text-gray-500 mb-2 font-sans">
@@ -296,7 +296,7 @@ export default function ContactPage() {
             <div className="flex gap-4">
               <input
                 type="tel"
-                className="text-textPrimary flex-1 border border-gray-300 rounded-lg px-3 py-2"
+                className="text-text_primary flex-1 border border-gray-300 rounded-lg px-3 py-2"
                 placeholder="ระบุเบอร์โทร"
                 defaultValue="0981893238"
               />
@@ -310,10 +310,10 @@ export default function ContactPage() {
 
       <form
         onSubmit={handleSubmit(onSubmitAddress)}
-        className="bg-white rounded-lg text-sm text-textPrimary font-semibold font-sans mb-6 shadow-sm border-1 border-borderPrimary"
+        className="bg-white rounded-lg text-sm text-text_primary font-semibold font-sans mb-6 shadow-sm border-1 border-borderPrimary"
       >
         <div className="p-6 border-b">
-          <h2 className="text-[16px] font-medium mb-2 text-textPrimary">
+          <h2 className="text-[16px] font-medium mb-2 text-text_primary">
             {contactInfoLanguageData?.sectionAddressInfo}
           </h2>
           <p className="text-gray-600 text-[14px] font-sans font-normal">
@@ -360,7 +360,7 @@ export default function ContactPage() {
               <select
                 {...register("country")}
                 value={country}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary ${
+                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary ${
                   errors.country ? "border-red-500" : "border-gray-300"
                 }`}
               >
@@ -382,12 +382,12 @@ export default function ContactPage() {
           ) : (
             <>
               <div className="mb-4">
-                <label className="block text-sm text-textPrimary font-semibold mb-2">
+                <label className="block text-sm text-text_primary font-semibold mb-2">
                   {sellerContactLanguage?.addressDetail}
                 </label>
                 <input
                   {...register("addressDetails")}
-                  className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary"
+                  className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   placeholder={sellerContactLanguage?.addressPlaceholder}
                 />
                 {errors.addressDetails && (
@@ -411,7 +411,7 @@ export default function ContactPage() {
                   <input
                     placeholder={sellerContactLanguage?.subDistrict}
                     {...register("subdistrictOrDistrict")}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   />
                   {errors.subdistrictOrDistrict && (
                     <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -429,7 +429,7 @@ export default function ContactPage() {
                   <input
                     placeholder={sellerContactLanguage?.district}
                     {...register("districtOrSubdistrict")}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   />
                   {errors.districtOrSubdistrict && (
                     <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -444,7 +444,7 @@ export default function ContactPage() {
                   <input
                     placeholder={sellerContactLanguage?.province}
                     {...register("province")}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-textPrimary"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
                   />
                   {errors.province && (
                     <p className="text-red-500 text-[12px] font-normal font-sans mt-1">

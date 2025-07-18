@@ -23,7 +23,7 @@ export default function AccountSettingWrapper() {
 
   return (
     <div>
-      <p className="font-medium text-[16px] text-textPrimary pb-[16px]">
+      <p className="font-medium text-[16px] text-text_primary pb-[16px]">
         {navbarAccountData?.sectionAccount}
       </p>
       <div className="flex flex-col mt-4">
@@ -73,7 +73,7 @@ export default function AccountSettingWrapper() {
           <span>{navbarAccountData?.contactInfo}</span>
         </Link>
 
-        <p className="font-medium text-[16px] text-textPrimary py-4">
+        <p className="font-medium text-[16px] text-text_primary py-4">
           {navbarAccountData?.sectionHiring}
         </p>
 

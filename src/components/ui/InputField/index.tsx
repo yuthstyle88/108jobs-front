@@ -9,13 +9,13 @@ type InputProps = {
   label?: string;
   name: string;
   register?: UseFormRegisterReturn;
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
   showPassword?: boolean;
   toggleShowPassword?: () => void;
   placeholder?: string;
-  readonly?: boolean,
+  readonly?: boolean;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const CustomInput = ({
@@ -37,24 +37,30 @@ export const CustomInput = ({
     </label>
     <div className="relative">
       <input
-        type={showPassword ? "text" : type}
-        name={name}
-        value={value}
-        onChange={onChange}
+        id={name}
+        {...(register ?? {
+          name,
+          value,
+          onChange,
+        })}
         className={`text-text_primary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 ${
-          error ? "border-red-500 focus:ring-red-500 focus:shadow-inputShadow" : "border-gray-300 focus:ring-blue-500"
+          error
+            ? "border-red-500 focus:ring-red-500 focus:shadow-inputShadow"
+            : "border-gray-300 focus:ring-blue-500"
         }`}
+        type={showPassword ? "text" : type}
         placeholder={placeholder}
         readOnly={readonly}
       />
+
       {type === "password" && (
         <button
           type="button"
           onClick={toggleShowPassword}
           className="absolute right-3 top-1/2 transform -translate-y-1/2"
         >
-          <FontAwesomeIcon 
-            icon={showPassword ? faEyeSlash : faEye} 
+          <FontAwesomeIcon
+            icon={showPassword ? faEyeSlash : faEye}
             className="text-text_secondary"
           />
         </button>

@@ -63,7 +63,7 @@ const UserProfile = ({ username }: Props) => {
                   height={500}
                 />
               </div>
-              <p className="text-[28px] font-medium text-textPrimary text-center pt-2">
+              <p className="text-[28px] font-medium text-text_primary text-center pt-2">
                 {userProfile?.username}
               </p>
               <div className="flex items-center justify-center pt-2">
@@ -76,7 +76,7 @@ const UserProfile = ({ username }: Props) => {
                 ))}
               </div>
               <div className="flex flex-row justify-between pt-10 gap-4 px-6">
-                <p className="text-[14px] text-textPrimary">
+                <p className="text-[14px] text-text_primary">
                   {goToProfileLanguage?.memberSince}
                 </p>
                 <p className="text-[14px] text-third">
@@ -85,10 +85,10 @@ const UserProfile = ({ username }: Props) => {
               </div>
               {userProfile?.bio && (
                 <div className="mt-6 px-6">
-                  <div className="text-textSecondary px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC]">
+                  <div className="text-text_secondary px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
                       ref={bioRef}
-                      className={`text-textSecondary text-[0.875rem] leading-[1.65] p-0 break-words ${
+                      className={`text-text_secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
@@ -108,7 +108,7 @@ const UserProfile = ({ username }: Props) => {
             </div>
           </aside>
           <section className="w-full px-4">
-            <h2 className="py-[3rem] text-[28px] font-medium text-textPrimary w-full">
+            <h2 className="py-[3rem] text-[28px] font-medium text-text_primary w-full">
               {interpolateDouble(goToProfileLanguage?.workTitle || "", {
                 username: userProfile?.username,
               })}

@@ -19,7 +19,7 @@ export default function LocationPage() {
     <div>
       <div className="border-1 border-borderPrimary rounded-lg bg-white py-6">
         <div className="border-b-1 px-6">
-          <h2 className="text-[16px] font-medium mb-2 text-textPrimary">
+          <h2 className="text-[16px] font-medium mb-2 text-text_primary">
             {individualLanguageData?.sectionIndividualHiring}
           </h2>
           <p className="text-gray-600 mb-6 text-[14px] font-sans">
@@ -29,23 +29,23 @@ export default function LocationPage() {
         <div className="flex flex-col gap-6 px-6 pt-6 font-sans">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm text-textPrimary font-semibold text-gray-600 mb-2">
+              <label className="block text-sm text-text_primary font-semibold text-gray-600 mb-2">
                 {individualLanguageData?.labelFirstName}
               </label>
               <input
                 type="text"
-                className="border w-full border-gray-300 rounded-lg px-3 py-2 text-textSecondary font-sans"
+                className="border w-full border-gray-300 rounded-lg px-3 py-2 text-text_secondary font-sans"
                 defaultValue="uykpfzno"
                 placeholder={individualLanguageData?.placeholderFirstName}
               />
             </div>
             <div>
-              <label className="block text-sm text-textPrimary font-semibold text-gray-600 mb-2">
+              <label className="block text-sm text-text_primary font-semibold text-gray-600 mb-2">
                 {individualLanguageData?.labelLastName}
               </label>
               <input
                 type="text"
-                className="border w-full border-gray-300 rounded-lg px-3 py-2 text-textSecondary font-sans"
+                className="border w-full border-gray-300 rounded-lg px-3 py-2 text-text_secondary font-sans"
                 defaultValue="uykpfzno"
                 placeholder={individualLanguageData?.placeholderLastName}
               />

@@ -105,7 +105,7 @@ const JobDetail = ({ username, slug }: Props) => {
             <span className="text-third">
               {jobCategoryLanguage?.safeNoScam}{" "}
             </span>
-            <span className="text-textPrimary">
+            <span className="text-text_primary">
               {jobCategoryLanguage?.supportThroughout}
             </span>
           </p>
@@ -174,7 +174,7 @@ const JobDetail = ({ username, slug }: Props) => {
         <section className="grid-container-job-detail">
           <div className="col-start-2 col-end-auto pb-6">
             <div className="mt-6">
-              <h2 className="text-[1.5rem] text-textPrimary font-medium pb-6">
+              <h2 className="text-[1.5rem] text-text_primary font-medium pb-6">
                 {jobDetailLanguage?.similarJobs}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-[repeat(4,minmax(1px,1fr))] grid-rows-[1fr] gap-[1.25rem] my-3 ">
@@ -186,7 +186,7 @@ const JobDetail = ({ username, slug }: Props) => {
           </div>
           <div className="col-start-2 col-end-auto pb-2 md:pb-6">
             <div>
-              <h2 className="text-[1.5rem] text-textPrimary font-medium pb-6">
+              <h2 className="text-[1.5rem] text-text_primary font-medium pb-6">
                 {jobDetailLanguage?.otherJobsSection}
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-[repeat(4,minmax(1px,1fr))] gap-[1.25rem] my-3">

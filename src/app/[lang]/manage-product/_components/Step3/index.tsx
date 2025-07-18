@@ -178,13 +178,13 @@ const Step3Media = ({
         <LoadingBlur text="Đang lưu dữ liệu" />
       ) : null}
 
-      <h2 className="text-[32px] font-medium mb-6 text-textPrimary">
+      <h2 className="text-[32px] font-medium mb-6 text-text_primary">
         {createJobLanguage?.uploadServiceImagesTitle}
       </h2>
 
       <div className="space-y-8 max-w-4xl">
         <div>
-          <h3 className="text-[20px] font-medium mb-2 text-textPrimary">
+          <h3 className="text-[20px] font-medium mb-2 text-text_primary">
             {createJobLanguage?.uploadCoverImageTitle}
           </h3>
           <div className="p-4 bg-amber-50 border border-amber-100 rounded-lg mb-6 flex">
@@ -245,7 +245,7 @@ const Step3Media = ({
         </div>
 
         <div>
-          <h3 className="text-[20px] font-medium mb-2 text-textPrimary">
+          <h3 className="text-[20px] font-medium mb-2 text-text_primary">
             {/* {createJobLanguage?.uploadAtLeast2ImagesTitle} */}
             {interpolateDouble(
               createJobLanguage?.uploadAtLeast2ImagesTitle || "",
@@ -254,7 +254,7 @@ const Step3Media = ({
               }
             )}
           </h3>
-          <p className="text-sm text-textSecondary mb-4">
+          <p className="text-sm text-text_secondary mb-4">
             {createJobLanguage?.uploadAtLeast2ImagesNote}
           </p>
 

@@ -68,7 +68,7 @@ const FastjobCoin = () => {
                     <input
                       type="text"
                       placeholder="Specify the amount 100-500,000"
-                      className="text-textPrimary pl-10 pr-16 py-2.5 w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                      className="text-text_primary pl-10 pr-16 py-2.5 w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                     />
@@ -115,7 +115,7 @@ const FastjobCoin = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-8 p-4 text-[0.75rem] text-textSecondary border-1 border-borderPrimary rounded-lg bg-[#F6F7F8] ">
+            <div className="mt-8 p-4 text-[0.75rem] text-text_secondary border-1 border-borderPrimary rounded-lg bg-[#F6F7F8] ">
               <p>note :</p>
               <ul>
                 {coinLanguageData?.noteCoinTerms?.map((term, index) => {

@@ -64,7 +64,7 @@ const SubCategory = ({
           onClick={() => scroll("left")}
           className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white  border-1 border-borderSecondary shadow-md p-1 rounded-full hidden md:block"
         >
-          <ChevronLeft className="text-textSecondary" size={20} />
+          <ChevronLeft className="text-text_secondary" size={20} />
         </button>
       )}
 
@@ -75,7 +75,7 @@ const SubCategory = ({
             className={`${
               selectedTag === ""
                 ? "text-third border-third bg-[#E3EDFD]"
-                : "hover:bg-[#F6F7F8] text-textSecondary border-borderPrimary"
+                : "hover:bg-[#F6F7F8] text-text_secondary border-borderPrimary"
             } text-[14px] sm:text-base font-medium leading-[1.5] px-2 py-[5px] sm:px-4 sm:py-[7px] border-[1px] rounded-[4px] cursor-pointer select-none flex justify-center items-center`}
           >
             <span>{language?.allCategories}</span>
@@ -91,7 +91,7 @@ const SubCategory = ({
                 className={`${
                   isActive
                     ? "text-third border-third bg-[#E3EDFD]"
-                    : "hover:bg-[#F6F7F8] text-textSecondary border-borderPrimary"
+                    : "hover:bg-[#F6F7F8] text-text_secondary border-borderPrimary"
                 } text-[14px] sm:text-base font-medium leading-[1.5] px-2 py-[5px] sm:px-4 sm:py-[7px] border-[1px] rounded-[4px] cursor-pointer select-none flex justify-center items-center`}
               >
                 <span>{item.name}</span>
@@ -106,7 +106,7 @@ const SubCategory = ({
           onClick={() => scroll("right")}
           className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white border-1 border-borderSecondary shadow-md p-1 rounded-full hidden md:block"
         >
-          <ChevronRight className="text-textSecondary" size={20} />
+          <ChevronRight className="text-text_secondary" size={20} />
         </button>
       )}
     </div>

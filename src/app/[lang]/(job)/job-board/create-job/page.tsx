@@ -147,7 +147,7 @@ const CreateJobPage = () => {
                 id="jobTitle"
                 {...register("jobTitle")}
                 placeholder={createJobLanguage?.jobTitlePlaceholder}
-                className={`w-full text-textPrimary placeholder:text-textSecondary placeholder:font-sans p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                className={`w-full text-text_primary placeholder:text-text_secondary placeholder:font-sans p-3 border rounded-lg focus:outline-none focus:ring-1 ${
                   errors.jobTitle
                     ? "border-red-200 focus:ring-red-500"
                     : "border-gray-300 focus:ring-blue-500"
@@ -240,7 +240,7 @@ const CreateJobPage = () => {
                 id="description"
                 {...register("description")}
                 placeholder={createJobLanguage?.jobDescriptionDetails}
-                className={`text-textPrimary placeholder:text-textSecondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 min-h-[200px] ${
+                className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 min-h-[200px] ${
                   errors.description
                     ? "border-red-200 focus:ring-red-500"
                     : "border-gray-300 focus:ring-blue-500"
@@ -291,7 +291,7 @@ const CreateJobPage = () => {
                   placeholder={
                     createJobLanguage?.serviceCategoryPlaceholderUrl
                   }
-                  className={`text-textPrimary placeholder:text-textSecondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                  className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
                     errors.exampleUrl
                       ? "border-red-200 focus:ring-red-500"
                       : "border-gray-300 focus:ring-blue-500"
@@ -319,7 +319,7 @@ const CreateJobPage = () => {
                 <select
                   id="serviceCatalogId"
                   {...register("serviceCatalogId")}
-                  className={`text-textPrimary placeholder:text-textSecondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                  className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
                     errors.serviceCatalogId
                       ? "border-red-200 focus:ring-red-500"
                       : "border-gray-300 focus:ring-blue-500"
@@ -364,7 +364,7 @@ const CreateJobPage = () => {
                     id="budget"
                     {...register("budget")}
                     placeholder="0"
-                    className={`text-textPrimary placeholder:text-textSecondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                    className={`text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
                       errors.budget
                         ? "border-red-200 focus:ring-red-500"
                         : "border-gray-300 focus:ring-blue-500"
@@ -398,7 +398,7 @@ const CreateJobPage = () => {
                   id="deadline"
                   min={new Date().toISOString().split("T")[0]}
                   {...register("deadline")}
-                  className="text-textPrimary placeholder:text-textSecondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="text-text_primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
                 />
               </div>
             </div>

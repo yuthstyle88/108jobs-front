@@ -26,17 +26,17 @@ const RejectJobCreateModal: React.FC<RejectJobCreateModalProps> = ({
     >
       <section className="px-[12px] w-full flex flex-col">
         <article>
-          <h1 className="text-[14px] font-medium text-textPrimary">
+          <h1 className="text-[14px] font-medium text-text_primary">
             Thông tin dịch vụ
           </h1>
-          <ul className="list-disc pl-4 text-textSecondary">
+          <ul className="list-disc pl-4 text-text_secondary">
             <li>
-              <p className="text-[14px] font-sans text-textSecondary">
+              <p className="text-[14px] font-sans text-text_secondary">
                 Nộp thành công! Vui lòng đợi kết quả phê duyệt từ hệ thống.
               </p>
             </li>
             <li>
-              <p className="text-[14px] font-sans text-textSecondary">
+              <p className="text-[14px] font-sans text-text_secondary">
                 Vui lòng mô tả trực quan công việc của bạn, bao gồm các dịch vụ
                 bạn cung cấp như thiết kế, dịch thuật, in ấn, tư vấn, v.v....
                 Nếu có sẵn mẫu sản phẩm, bạn có thể giải thích và đính kèm hình
@@ -48,12 +48,12 @@ const RejectJobCreateModal: React.FC<RejectJobCreateModalProps> = ({
           </ul>
         </article>
         <article>
-          <h1 className="text-[14px] font-medium text-textPrimary pt-2">
+          <h1 className="text-[14px] font-medium text-text_primary pt-2">
             Tải lên hình ảnh dịch vụ
           </h1>
-          <ul className="list-disc pl-4 text-textSecondary">
+          <ul className="list-disc pl-4 text-text_secondary">
             <li>
-              <p className="text-[14px] font-sans text-textSecondary">
+              <p className="text-[14px] font-sans text-text_secondary">
                 Vui lòng tải lên ít nhất 3 hình ảnh sản phẩm liên quan đến danh
                 mục công việc của bạn, đảm bảo không trùng lặp. Điều này giúp hồ
                 sơ của bạn thể hiện được sự đa dạng.

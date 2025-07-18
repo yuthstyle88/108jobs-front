@@ -190,7 +190,7 @@ const ChatSection = () => {
               />
             </div>
             <div>
-              <p className="text-sm text-textPrimary font-sans line-clamp-2">
+              <p className="text-sm text-text_primary font-sans line-clamp-2">
                 {currentRoom?.job.title}
               </p>
             </div>

@@ -184,7 +184,7 @@ const JobBoard = () => {
                             <div>
                               <Link prefetch={false}
                                 href={`/job-board/${job.id}`}
-                                className="hover:text-blue-600 font-medium text-base text-textPrimary font-sans max-w-[300px] line-clamp-1 truncate"
+                                className="hover:text-blue-600 font-medium text-base text-text_primary font-sans max-w-[300px] line-clamp-1 truncate"
                               >
                                 {job.jobTitle}
                               </Link>
@@ -200,10 +200,10 @@ const JobBoard = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-base text-gray-900 font-medium">
                           {parseFloat(job.budget).toLocaleString()}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-textPrimary visible">
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-text_primary visible">
                           {formatDate(job.createdAt)}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-textPrimary visible">
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-text_primary visible">
                           {formatDate(job.deadline) || "-"}
                         </td>
                       </tr>

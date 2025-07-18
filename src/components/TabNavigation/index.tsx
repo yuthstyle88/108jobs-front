@@ -48,7 +48,7 @@ export default function TabNavigation({
               className={`relative hover:text-third duration-150 flex justify-center items-center cursor-pointer px-4 py-3 font-bold ${
                 currentTab === index
                   ? "text-third  after:absolute after:bottom-[-2px] after:h-[2px] after:w-full after:bg-third"
-                  : "text-textSecondary"
+                  : "text-text_secondary"
               }`}
               onClick={() => {
                 setCurrentTab(index);

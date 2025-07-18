@@ -88,7 +88,7 @@ const AccountStats = () => {
 
         <div className="bg-white rounded-lg p-6 mb-8 relative">
           <div className="flex items-center mb-4">
-            <h3 className="text-textPrimary text-base font-medium flex-grow">
+            <h3 className="text-text_primary text-base font-medium flex-grow">
               {sellerAccStatsLanguage?.averageResponseTime}
             </h3>
             <Info className="w-4 h-4 text-black" />

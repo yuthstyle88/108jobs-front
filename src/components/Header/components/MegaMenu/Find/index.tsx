@@ -24,11 +24,11 @@ const Find = () => {
       <span className="text-third font-medium">
         {global?.freelancerSelectionTitle}
       </span>
-      <p className="mt-3 text-[0.875rem] text-textSecondary font-sans">
+      <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
         {global?.freelancerSelectionDescription}
       </p>
       <div className="mt-6">
-        <span className="text-[0.875rem] font-medium text-textPrimary">
+        <span className="text-[0.875rem] font-medium text-text_primary">
           {global?.labelNavBarItem1}
         </span>
         <div className="mt-2 flex flex-col mr-4">
@@ -36,7 +36,7 @@ const Find = () => {
             <Link prefetch={false}
                href={`/job/${job.slug}`}
               key={index}
-              className="text-[0.875rem] text-textSecondary px-2 py-[4px] flex-1 flex items-center justify-between rounded-sm transition-all duration-150 ease-in-out"
+              className="text-[0.875rem] text-text_secondary px-2 py-[4px] flex-1 flex items-center justify-between rounded-sm transition-all duration-150 ease-in-out"
             >
               {job.name}
               <FontAwesomeIcon

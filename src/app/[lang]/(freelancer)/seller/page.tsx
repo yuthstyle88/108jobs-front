@@ -112,7 +112,7 @@ const { lang } = useLanguage();
               />
             </svg>
           </div>
-          <h2 className="text-lg text-textPrimary font-medium">
+          <h2 className="text-lg text-text_primary font-medium">
             {sellerOverviewLanguage?.freelancerSetupTitle}
           </h2>
           <span className="text-sm text-gray-500">
@@ -139,7 +139,7 @@ const { lang } = useLanguage();
                 </svg>
               </div>
               <div>
-                <p className="font-medium text-textPrimary">
+                <p className="font-medium text-text_primary">
                   {sellerOverviewLanguage?.step1Title}
                 </p>
               </div>
@@ -155,7 +155,7 @@ const { lang } = useLanguage();
                 <span className="text-gray-500 text-sm">2</span>
               </div>
               <div>
-                <p className="font-medium text-textPrimary">
+                <p className="font-medium text-text_primary">
                   {sellerOverviewLanguage?.step2Title}
                 </p>
                 <p className="text-sm text-gray-500">
@@ -183,7 +183,7 @@ const { lang } = useLanguage();
                 <span className="text-gray-500 text-sm">3</span>
               </div>
               <div>
-                <p className="font-medium text-textPrimary">
+                <p className="font-medium text-text_primary">
                   {sellerOverviewLanguage?.step3Title}
                 </p>
                 <p className="text-sm text-gray-500">
@@ -225,7 +225,7 @@ const { lang } = useLanguage();
               </svg>
             </div>
             <div>
-              <h2 className="font-medium text-textPrimary">
+              <h2 className="font-medium text-text_primary">
                 {sellerOverviewLanguage?.ongoingProjectsTitle}
               </h2>
               <p className="text-sm text-gray-500">
@@ -305,7 +305,7 @@ const { lang } = useLanguage();
             />
           </div>
           <div>
-            <h3 className="font-medium text-textPrimary">
+            <h3 className="font-medium text-text_primary">
               {sellerOverviewLanguage?.hiringOverviewTitle}
             </h3>
             <p className="text-sm text-gray-500">
@@ -329,7 +329,7 @@ const { lang } = useLanguage();
           </div>
         </div>
 
-        <div className="h-64 text-textPrimary">
+        <div className="h-64 text-text_primary">
           <ResponsiveContainer width="100%" height="100%">
             <RechartsLineChart
               data={chartData}
@@ -377,7 +377,7 @@ const { lang } = useLanguage();
             <FontAwesomeIcon icon={faEye} className="w-5 h-5 text-blue-500" />
           </div>
           <div>
-            <h3 className="font-medium text-textPrimary">
+            <h3 className="font-medium text-text_primary">
               {sellerOverviewLanguage?.accessHireRateTitle}
             </h3>
             <p className="text-sm text-gray-500">

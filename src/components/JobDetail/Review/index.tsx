@@ -54,25 +54,25 @@ const ReviewCard = ({ language, data }: Props) => {
           <div className="flex-1 w-full lg:mx-12">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-center gap-2">
-                <MessageCircleReply className="w-[20px] h-[20px] text-textPrimary"/>
+                <MessageCircleReply className="w-[20px] h-[20px] text-text_primary"/>
                 <span className="text-gray-700 text-sm sm:text-base">
                   {language?.responseSpeed}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Handshake className="w-[20px] h-[20px] text-textPrimary"/>
+                <Handshake className="w-[20px] h-[20px] text-text_primary"/>
                 <span className="text-gray-700 text-sm sm:text-base">
                   {language?.friendlyAndExpert}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <ShoppingBag className="w-[20px] h-[20px] text-textPrimary"/>
+                <ShoppingBag className="w-[20px] h-[20px] text-text_primary"/>
                 <span className="text-gray-700 text-sm sm:text-base">
                   {language?.serviceProvision}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Coins className="w-[20px] h-[20px] text-textPrimary"/>
+                <Coins className="w-[20px] h-[20px] text-text_primary"/>
                 <span className="text-gray-700 text-sm sm:text-base">
                   {language?.valueForMoney}
                 </span>
@@ -93,7 +93,7 @@ const ReviewCard = ({ language, data }: Props) => {
                 <StarIcon key={star} filled={false} />
               ))}
             </div>
-            <div className="text-[0.875rem] font-sans text-textSecondary text-center">
+            <div className="text-[0.875rem] font-sans text-text_secondary text-center">
               Vui lòng{" "}
               <Link prefetch={false} href="/login" className="text-third underline">
                 đăng nhập

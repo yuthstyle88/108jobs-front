@@ -171,7 +171,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-gray-600">Intended Use:</span>
-                    <span className="ml-2 font-medium text-textPrimary">
+                    <span className="ml-2 font-medium text-text_primary">
                       {jobDetailData?.jobPost.intendedUse}
                     </span>
                   </div>
@@ -180,7 +180,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
             </div>
           </div>
 
-          <div className="bg-gray-50 h-fit flex flex-col p-6 rounded-lg text-textPrimary">
+          <div className="bg-gray-50 h-fit flex flex-col p-6 rounded-lg text-text_primary">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Project Information
             </h3>
@@ -273,7 +273,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
                   Want to get find freelancer on Fastlance, find for excellent
                   freelancer now!
                 </p>
-                <p className="text-[0.875rem] text-textSecondary">
+                <p className="text-[0.875rem] text-text_secondary">
                   Generate income through job boards and platforms
                 </p>
               </div>
@@ -300,7 +300,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
                   Want to get work through Fastlance, Register as a freelancer
                   now!
                 </p>
-                <p className="text-[0.875rem] text-textSecondary">
+                <p className="text-[0.875rem] text-text_secondary">
                   Generate income through job boards and platforms
                 </p>
               </div>

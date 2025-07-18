@@ -21,7 +21,7 @@ const Overview = ({ language, data }: Props) => {
       <div className="flex flex-wrap mt-3 gap-3">
         <div className="pr-2 border-r-1 border-r-borderPrimary flex items-center">
           <FontAwesomeIcon icon={faStar} className="text-[#E9B10C]" />
-          <span className="ml-1 font-sans text-textPrimary">
+          <span className="ml-1 font-sans text-text_primary">
             {Number(data.rating).toFixed(1)}
           </span>
         </div>
@@ -46,18 +46,18 @@ const Overview = ({ language, data }: Props) => {
           alt="iconRehire"
           className="w-8 h-8"
         />
-        <div className="text-[0.875rem] text-textPrimary font-sans">
+        <div className="text-[0.875rem] text-text_primary font-sans">
           {language?.employersTrust}
         </div>
       </div>
       <hr className="mt-4 bg-borderPrimary block overflow-visible w-full h-[1px] m-0" />
       <div className="break-words whitespace-pre-wrap m-0 leading-[1.65]  mt-6">
-        <div className="text-textPrimary font-sans">
+        <div className="text-text_primary font-sans">
           <p className="">{data.description}</p>
 
           <hr className="my-4" />
 
-          <p className="text-base font-semibold text-textPrimary">
+          <p className="text-base font-semibold text-text_primary">
             Working step for
             {` `}
             {data.title}

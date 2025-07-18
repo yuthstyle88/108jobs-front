@@ -45,7 +45,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
             </div>
             <div>
               <p className="font-medium text-gray-900">{user?.user.username}</p>
-              <p className="text-sm font-sans text-textSecondary underline">
+              <p className="text-sm font-sans text-text_secondary underline">
                 {data?.labelViewProfile}
               </p>
             </div>

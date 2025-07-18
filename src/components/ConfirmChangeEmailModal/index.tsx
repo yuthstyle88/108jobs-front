@@ -56,10 +56,10 @@ const ConfirmChangeEmailModal: React.FC<ConfirmChangeEmailModalProps> = ({
       <section className="px-[12px] w-full flex flex-col gap-8 justify-center items-center">
         <Mail className="w-[60px] h-[60px] text-third" />
         <article>
-          <h1 className="text-base font-bold text-textPrimary text-center">
+          <h1 className="text-base font-bold text-text_primary text-center">
             {language?.emailChangeTitle}
           </h1>
-          <p className="text-[14px] font-sans text-textSecondary text-center">
+          <p className="text-[14px] font-sans text-text_secondary text-center">
             {language?.emailChangeDescription}
           </p>
         </article>
@@ -68,7 +68,7 @@ const ConfirmChangeEmailModal: React.FC<ConfirmChangeEmailModalProps> = ({
         <button
           onClick={onClose}
           disabled={isSubmitting}
-          className="px-3 py-2 cursor-pointer w-fit text-textSecondary rounded-md font-semibold hover:bg-gray-200 transition duration-300 "
+          className="px-3 py-2 cursor-pointer w-fit text-text_secondary rounded-md font-semibold hover:bg-gray-200 transition duration-300 "
         >
           {isSubmitting ? <LoadingCircle /> : language?.cancelButton}
         </button>

@@ -139,10 +139,10 @@ const Benefit = ({ data }: Props) => {
           {benefits.map((benefit, index) => (
             <div key={index} className="flex flex-col items-start">
               <div className="rounded-lg p-2 bg-blue-50">{benefit.icon}</div>
-              <h3 className="mt-4 text-[18px] font-semibold text-textPrimary">
+              <h3 className="mt-4 text-[18px] font-semibold text-text_primary">
                 {benefit.title}
               </h3>
-              <p className="mt-2 font-sans text-textPrimary">
+              <p className="mt-2 font-sans text-text_primary">
                 {benefit.description}
               </p>
             </div>

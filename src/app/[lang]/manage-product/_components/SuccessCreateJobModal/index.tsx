@@ -31,10 +31,10 @@ const SuccessCreateJobModal: React.FC<SuccessCreateJobModalProps> = ({
       <section className="px-[12px] w-full flex flex-col gap-8 justify-center items-center">
         <CircleCheck className="w-[65px] h-[65px] text-[#1EB899]" />
         <article>
-          <h1 className="text-[18px] font-medium text-textPrimary text-center">
+          <h1 className="text-[18px] font-medium text-text_primary text-center">
             {language?.submissionSuccess}
           </h1>
-          <p className="text-[14px] font-sans text-textSecondary text-center pt-3">
+          <p className="text-[14px] font-sans text-text_secondary text-center pt-3">
             {language?.submissionSuccessMessage}{" "}
           </p>
         </article>
