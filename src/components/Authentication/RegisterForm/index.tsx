@@ -355,6 +355,7 @@ class RegisterFormClass extends Component<
                     showConfirmPassword: false,
                     showPassword: false,
                 });
+                await this.fetchCaptcha();
                 break;
             }
             case "success": {
