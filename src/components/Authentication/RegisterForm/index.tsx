@@ -373,6 +373,7 @@ class RegisterFormClass extends Component<
                     showConfirmPassword: false,
                     showPassword: false,
                 });
+                this.props.setApiError(registerRes.err.name);
                 await this.fetchCaptcha();
                 break;
             }
@@ -512,7 +513,7 @@ class RegisterFormClass extends Component<
           <form onSubmit={handleSubmit(this.handleSubmit)} className="space-y-5" noValidate>
               {this.props.apiError && (
                 <p className="text-red-500 text-sm text-center mb-4">
-                    {this.props.apiError}
+                    {authen?.[this.props.apiError]}
                 </p>
               )}
               {errors.root && (

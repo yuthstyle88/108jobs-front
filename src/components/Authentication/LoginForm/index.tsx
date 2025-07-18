@@ -273,7 +273,6 @@ class LoginFormClass extends Component<
             switch (loginRes.state) {
                 case "failed": {
                     const {name, message} = loginRes.err ?? {};
-                    console.log("error ", name);
                     if (name === "missing_totp_token") {
                         // Trigger modal to ask for TOTP token
                         this.setState({show2faModal: true});
