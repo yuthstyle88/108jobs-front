@@ -88,7 +88,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
                 </div>
                 <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
               </div>
-              <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-megaMenu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
+              <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
                 <MegaMenu />
               </div>
             </div>
@@ -228,7 +228,7 @@ export default Header;
 //               </div>
 //               <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
 //             </div>
-//             <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-megaMenu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
+//             <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
 //               <MegaMenu />
 //             </div>
 //           </div>
@@ -291,7 +291,7 @@ export default Header;
 //             </button>
 
 //             {isOpen && (
-//               <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-jobCard z-50 select-none">
+//               <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">
 //                 <div className="p-4 border-b border-gray-100 bg-[#D0E1FB] rounded-tl-lg rounded-tr-lg">
 //                   <div className="flex items-center space-x-3">
 //                     <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">

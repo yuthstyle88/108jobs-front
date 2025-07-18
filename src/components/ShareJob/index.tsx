@@ -45,21 +45,21 @@ const ShareJobModal: React.FC<ShareJobModalProps> = ({ isOpen, onClose }) => {
             icon={faFacebook}
             className="text-[50px] text-third"
           />
-          <p className="text-[14px] font-sans text-text_primary">Facebook</p>
+          <p className="text-[14px] font-sans text-text-primary">Facebook</p>
         </div>
         <div className="flex flex-col items-center">
           <FontAwesomeIcon
             icon={faLinkedin}
             className="text-[50px] text-[#006699]"
           />
-          <p className="text-[14px] font-sans text-text_primary">Linkedin</p>
+          <p className="text-[14px] font-sans text-text-primary">Linkedin</p>
         </div>
         <div className="flex flex-col items-center">
           <FontAwesomeIcon
             icon={faTwitter}
             className="text-[50px] text-[#1da1f2]"
           />
-          <p className="text-[14px] font-sans text-text_primary">Twitter</p>
+          <p className="text-[14px] font-sans text-text-primary">Twitter</p>
         </div>
         <div
           className="flex flex-col items-center cursor-pointer"
@@ -68,7 +68,7 @@ const ShareJobModal: React.FC<ShareJobModalProps> = ({ isOpen, onClose }) => {
           <div className="w-[50px] h-[50px] bg-[#9ba6b5] rounded-full flex items-center justify-center">
             <FontAwesomeIcon icon={faLink} className="text-[22px] text-white" />
           </div>
-          <p className="text-[14px] font-sans text-text_primary">Copy Link</p>
+          <p className="text-[14px] font-sans text-text-primary">Copy Link</p>
         </div>
       </div>
     </Modal>

@@ -54,25 +54,25 @@ const ReviewCard = ({ language, data }: Props) => {
           <div className="flex-1 w-full lg:mx-12">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-center gap-2">
-                <MessageCircleReply className="w-[20px] h-[20px] text-text_primary"/>
+                <MessageCircleReply className="w-[20px] h-[20px] text-text-primary"/>
                 <span className="text-gray-700 text-sm sm:text-base">
                   {language?.responseSpeed}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Handshake className="w-[20px] h-[20px] text-text_primary"/>
+                <Handshake className="w-[20px] h-[20px] text-text-primary"/>
                 <span className="text-gray-700 text-sm sm:text-base">
                   {language?.friendlyAndExpert}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <ShoppingBag className="w-[20px] h-[20px] text-text_primary"/>
+                <ShoppingBag className="w-[20px] h-[20px] text-text-primary"/>
                 <span className="text-gray-700 text-sm sm:text-base">
                   {language?.serviceProvision}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Coins className="w-[20px] h-[20px] text-text_primary"/>
+                <Coins className="w-[20px] h-[20px] text-text-primary"/>
                 <span className="text-gray-700 text-sm sm:text-base">
                   {language?.valueForMoney}
                 </span>

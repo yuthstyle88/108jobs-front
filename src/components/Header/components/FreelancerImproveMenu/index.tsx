@@ -86,7 +86,7 @@ const FreelanceImproveMenu = () => {
                   <Image src={freelancer.icon} alt="search" className="w-9" />
                   <div className="gap-x-1 flex flex-col flex-1 ">
                     <span
-                      className={`text-[0.875rem] font-medium text-text_primary ${
+                      className={`text-[0.875rem] font-medium text-text-primary ${
                         freelancer.key === hoveredItem && "text-third"
                       }`}
                     >

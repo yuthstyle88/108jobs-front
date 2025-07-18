@@ -168,10 +168,10 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
   return (
     <div className="text-center max-w-md mx-auto">
       <div className="my-[3rem]">
-      <p className="text-text_primary text-base font-sans">
+      <p className="text-text-primary text-base font-sans">
         {authen?.messageVerificationSent} <br/> {dataRegister?.email}
       </p>
-      <p className="text-text_primary text-base font-sans">
+      <p className="text-text-primary text-base font-sans">
         {authen?.messageEnterCode}
       </p>
       </div>
@@ -190,7 +190,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
                 inputRefs.current[index - 1]?.focus();
               }
             }}
-            className={`text-text_primary w-12 h-12 text-center border rounded ${
+            className={`text-text-primary w-12 h-12 text-center border rounded ${
               codeError ? "border-red-500" : "border-gray-300"
             } focus:outline-none focus:border-blue-500`}
             maxLength={1}

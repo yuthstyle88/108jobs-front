@@ -28,11 +28,11 @@ const PrivacyPolicy = () => {
         <section className="py-24 grid grid-container-content pt-[4rem]">
           <div className="col-start-2 col-end-3">
             <div className="text-center w-full">
-              <h1 className="font-sans text-[1.5rem] text-text_primary font-semibold mb-12">
+              <h1 className="font-sans text-[1.5rem] text-text-primary font-semibold mb-12">
                 นโยบายความเป็นส่วนตัว (Privacy Policy)
                 <br /> ของ <br /> บริษัท ฟาสต์เวิร์ค เทคโนโลยีส์ จำกัด
               </h1>
-              <p className="text-text_primary my-6 text-left">
+              <p className="text-text-primary my-6 text-left">
                 โดยที่พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562
                 <strong>(“กฎหมาย”)</strong>
                 ได้บังคับใช้โดยมีวัตถุประสงค์ในการคุ้มครองสิทธิส่วนบุคคลของเจ้าของข้อมูลส่วนบุคคล
@@ -48,7 +48,7 @@ const PrivacyPolicy = () => {
             </div>
           </div>
           <div className="col-start-2 col-end-3 flex flex-row items-start gap-6 p-4 md:p-0">
-            <ol className="text-text_primary pt-3 list-decimal grid gap-2 mb-2 font-sans">
+            <ol className="text-text-primary pt-3 list-decimal grid gap-2 mb-2 font-sans">
               <p className="mb-4 leading-[1.5]">
                 <strong>นิยาม</strong>
               </p>

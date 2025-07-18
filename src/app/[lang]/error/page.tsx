@@ -24,7 +24,7 @@ export default function Error() {
         alt="error"
         className="w-[80%] h-[280px] sm:w-full"
       />
-      <p className="text-center text-[20px] md:text-[32px] text-text_primary font-sans">ขออภัย มีข้อผิดพลาดบางอย่างเกิดขึ้น</p>
+      <p className="text-center text-[20px] md:text-[32px] text-text-primary font-sans">ขออภัย มีข้อผิดพลาดบางอย่างเกิดขึ้น</p>
       </div>
     </div>
   );

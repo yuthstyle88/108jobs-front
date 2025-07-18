@@ -63,7 +63,7 @@ const Freelance = ({ language, data }: Props) => {
             />
             <div>
               <div className="flex items-center space-x-2">
-                <h2 className="text-lg text-text_primary font-semibold">
+                <h2 className="text-lg text-text-primary font-semibold">
                   {data.user.displayName}
                 </h2>
                 <button className="px-3 py-1 text-blue-600 border border-blue-600 rounded-lg text-sm hover:bg-blue-50">

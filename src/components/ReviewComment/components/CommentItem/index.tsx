@@ -119,7 +119,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
               <StarRating rating={comment.rating} readonly size={16} />
             </div>
 
-            <p className="text-sm text-text_primary leading-relaxed">
+            <p className="text-sm text-text-primary leading-relaxed">
               {comment.content}
             </p>
           </div>

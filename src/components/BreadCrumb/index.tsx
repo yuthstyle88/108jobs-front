@@ -31,7 +31,7 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({ items }) => {
                     {item.label}
                   </Link>
                 ) : (
-                  <span className="text-text_primary">{item.label}</span>
+                  <span className="text-text-primary">{item.label}</span>
                 )}
 
                 {!isLast && (

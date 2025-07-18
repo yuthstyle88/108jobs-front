@@ -21,7 +21,7 @@ const CategoryRelated: React.FC<CategoryRelatedProps> = ({ items }) => {
           className="h-[98px] w-full object-cover"
         />
         <div className="px-3 pt-3 pb-4 flex-1 flex items-start">
-          <p className="text-text_primary text-sm leading-snug line-clamp-2">
+          <p className="text-text-primary text-sm leading-snug line-clamp-2">
             {items.title}
           </p>
         </div>

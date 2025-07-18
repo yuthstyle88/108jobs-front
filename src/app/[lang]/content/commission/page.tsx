@@ -134,7 +134,7 @@ const MyServices = () => {
                   </button>
 
                   {dropdownOpen && (
-                    <div className="text-text_primary absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                    <div className="text-text-primary absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
                       {MEMBER_TIERS.map((tier) => (
                         <div
                           key={tier.id}
@@ -170,7 +170,7 @@ const MyServices = () => {
                 <div className="flex">
                   <input
                     type="text"
-                    className="text-text_primary flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-blue-500 focus:border-blue-500"
+                    className="text-text-primary flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-blue-500 focus:border-blue-500"
                     placeholder="0"
                     value={projectPrice}
                     onChange={(e) => {
@@ -259,7 +259,7 @@ const MyServices = () => {
                       d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <span className="font-medium text-text_primary">
+                  <span className="font-medium text-text-primary">
                     {commissionLanguage?.allContentTitle}
                   </span>
                 </div>
@@ -354,7 +354,7 @@ const MyServices = () => {
 
           {/* Membership Tiers Table */}
           <div id="section1" className="mb-8">
-            <h2 className="text-xl font-medium mb-6 text-text_primary">
+            <h2 className="text-xl font-medium mb-6 text-text-primary">
               {commissionLanguage?.whatIsAccumulatedIncomeFeeTitle}
             </h2>
             <p className="text-gray-700 mb-6">
@@ -374,7 +374,7 @@ const MyServices = () => {
               {commissionLanguage?.tierTableHeaderName}
             </p>
 
-            <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 text-text_primary">
+            <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 text-text-primary">
               <div className="grid grid-cols-3 text-sm">
                 <div className="font-medium p-4 bg-gray-100">
                   {commissionLanguage?.tierTableHeadersMemberLevel}
@@ -438,7 +438,7 @@ const MyServices = () => {
           <div className="mb-8">
             <h2
               id="section2"
-              className="text-xl font-medium mb-6 text-text_primary"
+              className="text-xl font-medium mb-6 text-text-primary"
             >
               {commissionLanguage?.howIsFeeCalculatedSectionTitle}
             </h2>
@@ -467,7 +467,7 @@ const MyServices = () => {
             </p>
 
             {/* Table for Phí dịch vụ được tính như thế nào */}
-            <div className="overflow-hidden border border-gray-200 rounded-lg mb-6 text-text_primary">
+            <div className="overflow-hidden border border-gray-200 rounded-lg mb-6 text-text-primary">
               <table className="w-full">
                 <thead>
                   <tr className="bg-gray-50">
@@ -540,7 +540,7 @@ const MyServices = () => {
           {/* Example 1 */}
           <div
             id="section3"
-            className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary"
+            className="mb-8 bg-blue-50 rounded-lg p-6 text-text-primary"
           >
             <div className="bg-blue-100 rounded-lg px-4 py-2 inline-block mb-4">
               <h3 className="text-blue-800 font-medium">
@@ -642,7 +642,7 @@ const MyServices = () => {
           {/* Example 2 */}
           <div
             id="section4"
-            className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary"
+            className="mb-8 bg-blue-50 rounded-lg p-6 text-text-primary"
           >
             <div className="bg-blue-100 rounded-lg px-4 py-2 inline-block mb-4">
               <h3 className="text-blue-800 font-medium">
@@ -743,7 +743,7 @@ const MyServices = () => {
           {/* Example 3 */}
           <div
             id="section5"
-            className="mb-8 bg-blue-50 rounded-lg p-6 text-text_primary"
+            className="mb-8 bg-blue-50 rounded-lg p-6 text-text-primary"
           >
             <div className="bg-blue-100 rounded-lg px-4 py-2 inline-block mb-4">
               <h3 className="text-blue-800 font-medium">
@@ -843,7 +843,7 @@ const MyServices = () => {
 
           {/* Service Fee Purpose */}
           <div id="section6" className="mb-8">
-            <h2 className="text-xl font-medium mb-6 text-text_primary">
+            <h2 className="text-xl font-medium mb-6 text-text-primary">
               {commissionLanguage?.fastlaneFeePurposeQuest}
             </h2>
             <p className="text-gray-700">
@@ -881,7 +881,7 @@ const MyServices = () => {
                   </button>
 
                   {dropdownOpen && (
-                    <div className="text-text_primary absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                    <div className="text-text-primary absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
                       {MEMBER_TIERS.map((tier) => (
                         <div
                           key={tier.id}
@@ -917,7 +917,7 @@ const MyServices = () => {
                 <div className="flex">
                   <input
                     type="text"
-                    className="text-text_primary flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-blue-500 focus:border-blue-500"
+                    className="text-text-primary flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-blue-500 focus:border-blue-500"
                     placeholder="0"
                     value={projectPrice}
                     onChange={(e) => {

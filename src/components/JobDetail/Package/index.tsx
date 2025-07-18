@@ -35,7 +35,7 @@ const Package = ({ language, data }: Props) => {
               />
               <p>ระยะเวลาในการทำงาน {pkg.executionTime} วัน</p>
             </div>
-            <div className="pt-4 text-[14px] font-sans text-text_primary break-words whitespace-pre-wrap">
+            <div className="pt-4 text-[14px] font-sans text-text-primary break-words whitespace-pre-wrap">
               <p>{pkg.description}</p>
             </div>
             <hr className="my-4 bg-borderPrimary block overflow-visible w-full h-[1px] m-0" />

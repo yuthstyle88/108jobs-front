@@ -57,7 +57,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
   if (isMutating) return <LoadingBlur text="" />;
   return (
     <aside className="text-black sticky top-40 self-start">
-      <div className="bg-[#F6F9FE] rounded-md shadow-jobCard p-4">
+      <div className="bg-[#F6F9FE] rounded-md shadow-job-card p-4">
         <div className="flex items-center ">
           <div className="mr-4">
             <Image
@@ -79,7 +79,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
           </div>
         </div>
       </div>
-      <div className="rounded-md overflow-hidden mt-4 shadow-jobCard ">
+      <div className="rounded-md overflow-hidden mt-4 shadow-job-card ">
         <section className="grid-cols-[1fr_1fr_1fr] grid min-w-0 min-h-0">
           {data.packages.map((pkg, index) => (
             <div
@@ -149,7 +149,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
           )}
         </section>
       </div>
-      <div className="mt-4 overflow-hidden shadow-jobCard rounded-[0.5rem] ">
+      <div className="mt-4 overflow-hidden shadow-job-card rounded-[0.5rem] ">
         <Link prefetch={false} href="#">
           <div className="aspect-[320/68] h-[68px] w-full relative">
             <Image

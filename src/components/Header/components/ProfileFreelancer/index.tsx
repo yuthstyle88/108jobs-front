@@ -30,7 +30,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
   const { logout } = useLogout();
   const { lang: currentLang } = useLanguage();
   return (
-    <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-jobCard z-50 select-none">
+    <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">
       <Link prefetch={false} href={`/${currentLang}/user/${user?.user.username}`}>
         <div className="p-4 bg-secondary hover:bg-[#D0E1FB] duration-150 rounded-tl-lg rounded-tr-lg relative">
           <div className="flex items-center space-x-3">

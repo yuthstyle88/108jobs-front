@@ -63,7 +63,7 @@ const CurrentProfileEmployer = ({ username }: Props) => {
                   height={500}
                 />
               </div>
-              <p className="text-[28px] font-medium text-text_primary text-center pt-2">
+              <p className="text-[28px] font-medium text-text-primary text-center pt-2">
                 {userProfile?.username}
               </p>
               <div className="flex items-center justify-center pt-2">
@@ -76,7 +76,7 @@ const CurrentProfileEmployer = ({ username }: Props) => {
                 ))}
               </div>
               <div className="flex flex-row justify-between pt-10 gap-4 px-6">
-                <p className="text-[14px] text-text_primary">
+                <p className="text-[14px] text-text-primary">
                   {goToProfileLanguage?.memberSince}
                 </p>
                 <p className="text-[14px] text-third">
@@ -117,7 +117,7 @@ const CurrentProfileEmployer = ({ username }: Props) => {
             </div>
           </aside>
           <section className="w-full px-4">
-            <h2 className="py-[3rem] text-[28px] font-medium text-text_primary w-full">
+            <h2 className="py-[3rem] text-[28px] font-medium text-text-primary w-full">
               {interpolateDouble(goToProfileLanguage?.workTitle || "", {
                 username: userProfile?.username,
               })}

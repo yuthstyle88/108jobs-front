@@ -56,7 +56,7 @@ const ConfirmTermsFreelancerModal: React.FC<
       closeOnOutsideClick={false}
     >
       <section className="px-[12px] w-full flex flex-col gap-3 justify-center">
-        <p className="text-sm text-text_primary font-semibold">
+        <p className="text-sm text-text-primary font-semibold">
           {termLanguage?.termsTitle}
         </p>
         <div className="border-1 border-borderPrimary p-3 rounded-lg text-[12px] list-decimal max-h-[280px] overflow-auto">
@@ -72,7 +72,7 @@ const ConfirmTermsFreelancerModal: React.FC<
             />
             <label
               htmlFor="termsAccepted"
-              className="text-[12px] text-text_primary font-sans"
+              className="text-[12px] text-text-primary font-sans"
             >
               {termLanguage?.termsAcceptance}
             </label>
@@ -87,7 +87,7 @@ const ConfirmTermsFreelancerModal: React.FC<
             />
             <label
               htmlFor="privacyAccepted"
-              className="text-[12px] text-text_primary font-sans"
+              className="text-[12px] text-text-primary font-sans"
             >
               {termLanguage?.privacyAcceptance}
             </label>
@@ -102,7 +102,7 @@ const ConfirmTermsFreelancerModal: React.FC<
             />
             <label
               htmlFor="promotionalAccepted"
-              className="text-[12px] text-text_primary font-sans"
+              className="text-[12px] text-text-primary font-sans"
             >
               {termLanguage?.marketingOptIn}
             </label>

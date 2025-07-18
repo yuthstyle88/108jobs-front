@@ -156,7 +156,7 @@ const CategoryDetail = () => {
             <span className="text-third">
               {jobCategoryLanguage?.safeNoScam}{" "}
             </span>
-            <span className="text-text_primary">
+            <span className="text-text-primary">
               {jobCategoryLanguage?.supportThroughout}
             </span>
           </p>
@@ -165,7 +165,7 @@ const CategoryDetail = () => {
 
       <section className="grid-container-job pt-2 sm:pt-0">
         <div className="col-start-2 col-end-auto flex flex-row items-center gap-2 mb-2 sm:mb-6 mt-4 ">
-          <h1 className="text-[20px] md:text-[32px] text-text_primary font-semibold ">
+          <h1 className="text-[20px] md:text-[32px] text-text-primary font-semibold ">
             Search results “ {titleSearch} ” in
           </h1>
           <Link prefetch={false} href={`/categories`}>
@@ -189,7 +189,7 @@ const CategoryDetail = () => {
 
       <section
         className={`grid-container-job sticky top-[110px] sm:top-[70px] overflow-hidden bg-white z-10 transition-shadow duration-300 ${
-          isSticky ? "shadow-filterSection" : ""
+          isSticky ? "shadow-filter-section" : ""
         }`}
       >
         <div className="col-start-2 col-end-auto">
@@ -217,7 +217,7 @@ const CategoryDetail = () => {
 
       <section className="pb-10 mt-4">
         <div className="grid-container-job">
-          <div className="flex justify-between col-start-2 col-end-auto mb-3 text-[0.875rem] text-text_primary font-sans">
+          <div className="flex justify-between col-start-2 col-end-auto mb-3 text-[0.875rem] text-text-primary font-sans">
             <div>
               {interpolateDouble(jobCategoryLanguage?.foundJobs || "", {
                 jobNumber: searchResults.jobs.length,
@@ -230,7 +230,7 @@ const CategoryDetail = () => {
               })}
             </div>
           </div>
-          <div className="col-start-2 col-end-auto text-[0.875rem] text-text_primary font-sans">
+          <div className="col-start-2 col-end-auto text-[0.875rem] text-text-primary font-sans">
             {isJobListLoading ? (
               <section className="col-start-2 col-end-auto grid grid-cols-1 sm:grid-cols-[repeat(2,minmax(1px,1fr))] md:grid-cols-[repeat(3,minmax(1px,1fr))] lg:grid-cols-[repeat(4,minmax(1px,1fr))] 2xl:grid-cols-[repeat(5,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
                 {Array.from({ length: 20 }).map((_, index) => (
@@ -258,7 +258,7 @@ const CategoryDetail = () => {
             )}
           </section>
           <section className="col-start-2 col-end-auto mt-12">
-            <h2 className="mb-6 text-text_primary font-medium text-[1.5rem] leading-[1.15]">
+            <h2 className="mb-6 text-text-primary font-medium text-[1.5rem] leading-[1.15]">
               {interpolateDouble(
                 jobCategoryLanguage?.categoriesRelatedToJobType || "",
                 { jobType: "SEO" }

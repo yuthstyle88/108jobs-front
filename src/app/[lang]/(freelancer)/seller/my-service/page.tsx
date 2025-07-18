@@ -104,9 +104,9 @@ const MyServices = () => {
 
   return (
     <div className="p-4 md:p-0">
-      <div className="my-service-gradient rounded-lg shadow-sm p-6 mb-8 flex justify-between items-center hover:shadow-jobCard duration-300">
+      <div className="my-service-gradient rounded-lg shadow-sm p-6 mb-8 flex justify-between items-center hover:shadow-job-card duration-300">
         <div className="flex-1">
-          <h2 className="text-lg font-medium mb-2 text-text_primary">
+          <h2 className="text-lg font-medium mb-2 text-text-primary">
             {sellerMyServiceLanguage?.serviceFeeTitle}
           </h2>
           <p className="text-gray-600 text-sm">
@@ -128,7 +128,7 @@ const MyServices = () => {
       </div>
 
       <div className="mb-6 flex justify-between items-center">
-        <h2 className="text-xl font-medium text-text_primary">
+        <h2 className="text-xl font-medium text-text-primary">
           {interpolateDouble(sellerMyServiceLanguage?.myServicesTitle || "", {
             n: lengthOfJobs || 0,
             max: 5,
@@ -200,11 +200,11 @@ const MyServices = () => {
                         height={48}
                       />
                     </div>
-                    <div className="font-medium text-text_primary">
+                    <div className="font-medium text-text-primary">
                       {job.title}
                     </div>
                   </td>
-                  <td className="p-4 text-text_primary">15%</td>
+                  <td className="p-4 text-text-primary">15%</td>
                   <td className="p-4">
                     <JobCreatedStatus
                       languageMap={sellerMyServiceLanguage}
@@ -290,7 +290,7 @@ const MyServices = () => {
                       className="object-cover"
                     />
                   </div>
-                  <div className="font-sans text-sm font-semibold text-text_primary line-clamp-2">
+                  <div className="font-sans text-sm font-semibold text-text-primary line-clamp-2">
                     {job.title}
                   </div>
                 </div>

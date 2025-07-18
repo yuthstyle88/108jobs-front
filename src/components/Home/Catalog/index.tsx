@@ -64,7 +64,7 @@ const CatalogBanner = (props: Props) => {
                         }`}
                       />
                     </div>
-                    <p className="text-base font-medium text-text_primary leading-[18.4px]">
+                    <p className="text-base font-medium text-text-primary leading-[18.4px]">
                       {catalog.name}
                     </p>
                   </div>

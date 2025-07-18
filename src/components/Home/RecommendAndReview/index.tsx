@@ -78,7 +78,7 @@ const RecommendAndReview = (props: Props) => {
                 <Link
                   prefetch={false}
                   href="/"
-                  className="block rounded-lg mx-auto w-[350px] shadow-topWorkShadow"
+                  className="block rounded-lg mx-auto w-[350px] shadow-top-work-shadow"
                 >
                   <div className="h-[256px] relative">
                     <Image
@@ -101,7 +101,7 @@ const RecommendAndReview = (props: Props) => {
                         />
                       </div>
                       <div>
-                        <p className="font-semibold text-text_primary p-0">
+                        <p className="font-semibold text-text-primary p-0">
                           Line sticker
                         </p>
                         <p className="text-[14px] text-text_secondary p-0">
@@ -142,7 +142,7 @@ const RecommendAndReview = (props: Props) => {
           {Array.from({ length: 6 }, (_, index) => (
             <SwiperSlide key={index}>
               <div className="w-full max-w-[350px] m-auto bg-white px-4 py-6">
-                <div className="shadow-reviewShadow rounded-lg p-4 sm:p-6">
+                <div className="shadow-review-shadow rounded-lg p-4 sm:p-6">
                   <div className="mb-6 flex flex-row gap-4 sm:gap-8">
                     <FontAwesomeIcon
                       icon={faQuoteLeft}

@@ -28,7 +28,7 @@ const PopularType = () => {
       >
         {popularService.name}
       </Link>
-      <div className="absolute left-0 w-[250px] right-0 opacity-0 scale-y-0 origin-top top-[3.5rem] shadow-subMenu px-[1rem] py-[1rem] text-[rgba(43,50,59,.95)] z-50 bg-white border-t-[1px] border-t-secondary border-b-2 border-b-third  group-hover:opacity-100 group-hover:scale-y-100 transition-all duration-300">
+      <div className="absolute left-0 w-[250px] right-0 opacity-0 scale-y-0 origin-top top-[3.5rem] shadow-sub-menu px-[1rem] py-[1rem] text-[rgba(43,50,59,.95)] z-50 bg-white border-t-[1px] border-t-secondary border-b-2 border-b-third  group-hover:opacity-100 group-hover:scale-y-100 transition-all duration-300">
         <div className="min-w-[rem] max-w-[12rem] ">
             {popularService.sections.map((section) => (
               <CategoryList

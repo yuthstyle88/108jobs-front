@@ -124,11 +124,11 @@ const Step2Packages = ({
       className="bg-white rounded-lg shadow-sm p-6"
     >
       {isMutating && <LoadingBlur text={"Đang lưu dữ liệu"} />}
-      <h2 className="text-[32px] font-medium mb-2 text-text_primary">
+      <h2 className="text-[32px] font-medium mb-2 text-text-primary">
         {createJobLanguage?.packageTitle}
       </h2>
       <div className="mb-6">
-        <p className="text-[20px] text-text_primary">
+        <p className="text-[20px] text-text-primary">
           {createJobLanguage?.createPackageTitle}
         </p>
         <p className="text-[14px] text-text_secondary mb-6">
@@ -162,7 +162,7 @@ const Step2Packages = ({
                   {createJobLanguage?.packageNameLabel}
                 </label>
                 <input
-                  className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
+                  className="text-text-primary w-full p-3 border border-gray-300 rounded-lg"
                   {...register(`packages.${index}.packageName`)}
                 />
                 {errors.packages?.[index]?.packageName && (
@@ -177,7 +177,7 @@ const Step2Packages = ({
                   {createJobLanguage?.packageDescriptionLabel}
                 </label>
                 <textarea
-                  className="text-text_primary w-full p-3 border border-gray-300 rounded-lg min-h-24"
+                  className="text-text-primary w-full p-3 border border-gray-300 rounded-lg min-h-24"
                   {...register(`packages.${index}.description`)}
                 ></textarea>
                 {errors.packages?.[index]?.description && (
@@ -194,7 +194,7 @@ const Step2Packages = ({
                   </label>
                   <input
                     type="text"
-                    className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
+                    className="text-text-primary w-full p-3 border border-gray-300 rounded-lg"
                     {...register(`packages.${index}.price`)}
                   />
                   {errors.packages?.[index]?.price && (
@@ -210,7 +210,7 @@ const Step2Packages = ({
                   </label>
                   <input
                     type="number"
-                    className="text-text_primary w-full p-3 border border-gray-300 rounded-lg"
+                    className="text-text-primary w-full p-3 border border-gray-300 rounded-lg"
                     {...register(`packages.${index}.executionTime`)}
                   />
                   {errors.packages?.[index]?.executionTime && (

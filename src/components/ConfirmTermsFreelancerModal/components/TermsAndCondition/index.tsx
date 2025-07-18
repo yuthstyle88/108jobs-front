@@ -6,7 +6,7 @@ type Props = {
 
 const TermsAndCondition = ({ language }: Props) => {
   return (
-    <div className="mb-0 text-text_primary font-sans leading-[1.5]">
+    <div className="mb-0 text-text-primary font-sans leading-[1.5]">
       <p className="text-[24px] text-center mb-[1.5rem] leading-[1.5] ">
         <strong>{language?.termsAndConditionsTitle}</strong>
       </p>

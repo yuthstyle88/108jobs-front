@@ -80,7 +80,7 @@ const FreelancerTypes = ({ data }: Props) => {
         {freelancerTypes.map((type, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg shadow-jobCard p-6 border border-gray-200"
+            className="bg-white rounded-lg shadow-job-card p-6 border border-gray-200"
           >
             <div className="text-center mb-6">
               <h3 className="text-xl font-bold text-primary">

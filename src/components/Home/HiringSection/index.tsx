@@ -51,7 +51,7 @@ const HiringSection = (props: Props) => {
                 height={62}
                 className="max-w-full h-auto align-top self-center"
               />
-              <div className="grid grid-cols-[1fr] mt-4 gap-y-1 text-text_primary font-medium">
+              <div className="grid grid-cols-[1fr] mt-4 gap-y-1 text-text-primary font-medium">
                 <h5 className="text-base sm:text-[1.25rem] leading-[1.15]">
                   {freelancer.title}
                 </h5>
@@ -73,7 +73,7 @@ const HiringSection = (props: Props) => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
             {/* Cột 1 */}
-            <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium">
+            <div className="grid grid-rows-2 gap-y-6 text-text-primary font-medium">
               <div className="flex gap-x-5">
                 <div className="flex-shrink-0">
                   <Image
@@ -113,7 +113,7 @@ const HiringSection = (props: Props) => {
             </div>
 
             {/* Cột 2 */}
-            <div className="grid grid-rows-2 gap-y-6 text-text_primary font-medium">
+            <div className="grid grid-rows-2 gap-y-6 text-text-primary font-medium">
               <div className="flex gap-x-5">
                 <div className="flex-shrink-0">
                   <Image

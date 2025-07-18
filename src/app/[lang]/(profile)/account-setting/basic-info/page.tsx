@@ -65,7 +65,7 @@ export default function BasicInformation() {
         className="border-1 border-borderPrimary rounded-lg bg-white py-6"
       >
         <div className="border-b-1 px-6">
-          <h2 className="text-[16px] font-medium mb-2 text-text_primary">
+          <h2 className="text-[16px] font-medium mb-2 text-text-primary">
             {languageData?.sectionAccountInfo}
           </h2>
           <p className="text-gray-600 mb-6 text-[14px] font-sans">
@@ -116,20 +116,20 @@ export default function BasicInformation() {
 
         <div className="flex flex-col gap-6 px-6 font-sans">
           <div>
-            <label className="block text-sm text-text_primary font-semibold mb-2">
+            <label className="block text-sm text-text-primary font-semibold mb-2">
               {languageData?.labelUsername}
             </label>
             <div className="flex items-center">
               <span className="text-gray-500 mr-2">fastwork.co/user/</span>
               <input
                 {...register("username")}
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-text_primary font-sans outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-text-primary font-sans outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm text-text_primary font-semibold text-gray-600 mb-2">
+            <label className="block text-sm text-text-primary font-semibold text-gray-600 mb-2">
               {languageData?.labelDisplayName}
             </label>
             <p className="text-[12px] text-gray-500 mb-2">
@@ -141,7 +141,7 @@ export default function BasicInformation() {
                 validate: (value) =>
                   value.trim().length > 0 || "Invalid display name",
               })}
-              className="text-text_primary w-full px-4 py-2 border border-borderPrimary rounded-lg outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+              className="text-text-primary w-full px-4 py-2 border border-borderPrimary rounded-lg outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
             />
             {errors.displayName && (
               <p className="text-red-500 text-sm mt-1">
@@ -151,14 +151,14 @@ export default function BasicInformation() {
           </div>
 
           <div className="col-span-2">
-            <label className="block text-sm text-text_primary font-semibold text-gray-600 mb-2">
+            <label className="block text-sm text-text-primary font-semibold text-gray-600 mb-2">
               {languageData?.labelBirthdate}
             </label>
             <div className="grid grid-cols-3 gap-4">
               <select
                 {...register("birthDay")}
                 defaultValue="Day"
-                className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-text-primary"
               >
                 <option disabled value="Day">
                   Day
@@ -172,7 +172,7 @@ export default function BasicInformation() {
               <select
                 {...register("birthMonth")}
                 defaultValue="Month"
-                className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-text-primary"
               >
                 <option disabled value="Month">
                   Month
@@ -186,7 +186,7 @@ export default function BasicInformation() {
               <select
                 {...register("birthYear")}
                 defaultValue="Year"
-                className="border border-gray-300 rounded-lg px-3 py-2 text-text_primary"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-text-primary"
               >
                 <option disabled value="Year">
                   Year
@@ -217,7 +217,7 @@ export default function BasicInformation() {
       </form>
 
       <div className="border-1 border-borderPrimary rounded-lg bg-white mt-5 p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
-        <div className="text-[16px] text-text_primary font-medium">
+        <div className="text-[16px] text-text-primary font-medium">
           {languageData?.sectionPassword}
           <p className="text-[14px] text-text_secondary font-normal">
             {languageData?.passwordDescription}
