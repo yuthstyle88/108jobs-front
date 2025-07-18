@@ -131,7 +131,7 @@ const withHooks = (Component: any) => {
             confirmPassword: z.string(),
             termsAccepted: z.boolean().refine((val) => val === true),
             privacyAccepted: z.boolean().refine((val) => val === true),
-            captchaAnswer: z.string().min(1,authen?.requireCaptcha),
+            captchaAnswer: z.string().length(6, authen?.requireCaptcha),
             role: z.enum(["Employer", "Freelancer"]).default("Employer"),
         })
         .refine((data) => data.password === data.confirmPassword, {
