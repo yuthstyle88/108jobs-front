@@ -72,7 +72,6 @@ interface RegisterFormState {
     };
     captchaPlaying: boolean;
     siteRes: GetSiteResponse | null;
-    isSubmitting: boolean;
     hasFetchedSite: boolean;
     isValid: boolean;
     errors: {
@@ -196,7 +195,6 @@ class RegisterFormClass extends Component<
         showPassword: false,
         showConfirmPassword: false,
         apiError: null,
-        isSubmitting: false,
         isValid: false,
         errors: {},
         hasFetchedSite: false
@@ -328,8 +326,6 @@ class RegisterFormClass extends Component<
             }
         }));
 
-        this.setState({ isSubmitting: true, apiError: null });
-
         sessionStorage.setItem("RegisterUpData", JSON.stringify(data));
 
         const registerRes = await HttpService.client.register({
@@ -356,7 +352,6 @@ class RegisterFormClass extends Component<
                     },
                     captchaRes: { state: "empty" },
                     errors: {},
-                    isSubmitting: false,
                     showConfirmPassword: false,
                     showPassword: false,
                 });
@@ -635,8 +630,14 @@ class RegisterFormClass extends Component<
                   <button
                     type="submit"
                     className="submit-button py-3"
-                    disabled={!formMethods.formState.isValid}>
-                      {isSubmitting ? <LoadingCircle /> : authen?.linkCreateAccount}
+                    disabled={
+                      !this.props.formMethods.formState.isValid ||
+                      this.props.formMethods.formState.isSubmitting
+                    }
+                  >
+                      {this.props.formMethods.formState.isSubmitting
+                        ? <LoadingCircle />
+                        : this.props.authen?.linkCreateAccount}
                   </button>
               </div>
               <div className="flex flex-col gap-3 mt-6">
