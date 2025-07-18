@@ -264,20 +264,18 @@ class RegisterFormClass extends Component<
 
     async fetchCaptcha() {
         console.log("fetchCaptcha")
-        this.setState({ captchaRes: LOADING_REQUEST });
+        this.setState({captchaRes: LOADING_REQUEST});
         const captchaRes = await HttpService.client.getCaptcha();
-        let captchaUuid = undefined;
         if (captchaRes.state === "success") {
-            captchaUuid = captchaRes.data.ok?.uuid;
+            this.setState((prevState) => ({
+                ...prevState,
+                captchaRes,
+                form: {
+                    ...prevState.form,
+                    captchaUuid: captchaRes.data.ok?.uuid
+                }
+            }));
         }
-        this.setState((prevState) => ({
-            ...prevState,
-            captchaRes,
-            form: {
-                ...prevState.form,
-                captchaUuid,
-            }
-        }));
     }
     handleCaptchaPlay = () => {
         if (this.state.captchaRes.state === "success" && this.state.captchaRes.data.ok) {
@@ -360,7 +358,6 @@ class RegisterFormClass extends Component<
                 confirmPassword,
                 termsAccepted,
                 privacyAccepted,
-                captchaUuid,
                 captchaAnswer,
                 role
             }
@@ -375,7 +372,7 @@ class RegisterFormClass extends Component<
             email: data.email,
             password: data.password || "",  // เพิ่มค่า default เป็น string เปล่า
             passwordVerify: data.confirmPassword || "",  // เพิ่มค่า default เป็น string เปล่า
-            captchaUuid: data.captchaUuid,
+            captchaUuid: this.state.form.captchaUuid,
             captchaAnswer: data.captchaAnswer,
         });
         switch (registerRes.state) {
