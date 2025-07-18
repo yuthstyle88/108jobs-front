@@ -20,11 +20,9 @@ export type Register = {
      */
     captchaAnswer?: string;
     /**
-     * A form field to trick signup bots. Should be None.
-     */
-    honeypot?: string;
-    /**
      * An answer is mandatory if require application is enabled on the server
      */
-    answer?: string;
+    role?: string;
+
+    acceptedApplication?: boolean;
 };

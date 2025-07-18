@@ -374,6 +374,8 @@ class RegisterFormClass extends Component<
             passwordVerify: data.confirmPassword || "",  // เพิ่มค่า default เป็น string เปล่า
             captchaUuid: this.state.form.captchaUuid,
             captchaAnswer: data.captchaAnswer,
+            role: data.role,
+            acceptedApplication: data.termsAccepted && data.privacyAccepted
         });
         switch (registerRes.state) {
             case "failed": {
