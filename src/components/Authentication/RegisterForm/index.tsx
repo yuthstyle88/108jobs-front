@@ -127,10 +127,10 @@ const withHooks = (Component: any) => {
             username: z.string().min(6,authen?.usernameMin6),
             password: z.string().min(6, authen?.passwordMin6),
             confirmPassword: z.string(),
-            termsAccepted: z.boolean().refine((val) => val === true),
-            privacyAccepted: z.boolean().refine((val) => val === true),
+            termsAccepted: z.boolean().refine((val) => val),
+            privacyAccepted: z.boolean().refine((val) => val),
             captchaAnswer: z.string().min(4, authen?.requireCaptcha),
-            role: z.enum(["Employer", "Freelancer"]).default("Employer"),
+            role: z.enum(["Employer", "Freelancer"]),
         })
         .refine((data) => data.password === data.confirmPassword, {
             message: authen?.notMatchPassword,
@@ -141,6 +141,9 @@ const withHooks = (Component: any) => {
             resolver: zodResolver(registerSchema),
             mode: "onChange",
             criteriaMode: "all",
+            defaultValues: {
+                role: "Employer",
+            },
         });
 
         const {
@@ -542,7 +545,7 @@ class RegisterFormClass extends Component<
               />
               <div className="space-y-2 w-full">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {"You want to be a:"}
+                      {"You want to be a/an:"}
                   </label>
                   <div className="flex gap-4 text-sm font-medium w-full max-w-md">
                       {["Employer", "Freelancer"].map((option) => (
@@ -551,8 +554,7 @@ class RegisterFormClass extends Component<
                               type="radio"
                               name="role"
                               value={option}
-                              checked={role === option}
-                              onChange={(e) => this.handleRadioChange(e)}
+                              {...register("role", { required: true })}
                               className="peer hidden"
                             />
                             <div
