@@ -256,6 +256,8 @@ export interface LoginLanguage {
   signInError: string;
   systemError: string;
   labelOrSignInWith: string;
+  termsRequired: string;
+  privacyRequired: string;
 }
 
 export interface HomeLanguage {

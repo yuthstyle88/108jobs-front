@@ -9,7 +9,7 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { RegisterDataProps } from "@/types/register-data";
 import Image from "next/image";
 import {useState} from "react";
-import {RegisterForm} from "@/components/Authentication/RegisterForm";
+import {RegisterForm} from "@/components/Authentication/RegisterForm/index";
 import { useRouter } from "next/navigation";
 
 type ViewState = "register" | "verify-email";
@@ -122,8 +122,9 @@ export default function RegisterPage() {
             >
               <RegisterForm
                 switchToVerifyEmail={() => setCurrentView("verify-email")}
-                setDataRegister={setDataDataRegister}
-              />
+                setDataRegister={setDataDataRegister} history={undefined} setApiError={function (err: string): void {
+                throw new Error("Function not implemented.");
+              }}              />
             </AuthFormContainer>
           )}
 
