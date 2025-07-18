@@ -73,7 +73,6 @@ interface RegisterFormState {
     captchaPlaying: boolean;
     siteRes: GetSiteResponse | null;
     hasFetchedSite: boolean;
-    isValid: boolean;
     errors: {
         username?: string;
         email?: string;
@@ -148,13 +147,8 @@ const withHooks = (Component: any) => {
 
         const {
             register,
-            handleSubmit,
-            getValues,
             formState: { isValid, errors },
         } = formMethods;
-
-        const { formState } = formMethods;
-        const watch = formMethods.watch;
 
         const [apiError, setApiError] = useState<string | null>(null);
 
@@ -198,7 +192,6 @@ class RegisterFormClass extends Component<
         showPassword: false,
         showConfirmPassword: false,
         apiError: null,
-        isValid: false,
         errors: {},
         hasFetchedSite: false
     };
@@ -303,27 +296,6 @@ class RegisterFormClass extends Component<
 
     captchaPngSrc(captcha: CaptchaResponse) {
         return `data:image/png;base64,${captcha.png}`;
-    }
-    refetchCaptcha() {
-        if (this.refetch) {
-            this.refetch();
-        }
-    }
-
-    refetch?: () => void;
-
-
-
-    handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-
-        this.setState((prevState) => ({
-            ...prevState,
-            form: {
-                ...prevState.form,
-                [name]: value,
-            }
-        }));
     }
 
     handleSubmit = async (data: any) => {
@@ -493,20 +465,12 @@ class RegisterFormClass extends Component<
     render() {
         const {authen, formMethods} = this.props;
         const {
-            form: {
-                username,
-                email,
-                password,
-                confirmPassword,
-                role
-            },
-            captchaRes: { state: captchaState },
             showPassword,
             showConfirmPassword,
             apiError,
         } = this.state;
 
-        const {register, handleSubmit, formState: {errors, isSubmitting}} = formMethods;
+        const {register, handleSubmit, formState: {errors}} = formMethods;
 
         return (
 
