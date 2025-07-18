@@ -87,11 +87,10 @@ interface RegisterFormState {
 }
 
 
-async function handleRegisterSuccess(i: RegisterFormClass, loginRes: LoginResponse) {
+async function handleRegisterSuccess(i: RegisterFormClass, loginRes: LoginResponse, site: RequestState<GetSiteResponse>) {
     UserService.Instance.login({
         res: loginRes,
     });
-    const site = await HttpService.client.getSite();
 
     if (site.state === "success") {
         try {
@@ -257,10 +256,6 @@ class RegisterFormClass extends Component<
             });
         }
     }
-    handleRegisterCaptchaAnswerChange(i: RegisterFormClass, event: any) {
-        i.state.form.captchaAnswer = event.target.value;
-        i.setState(i.state);
-    }
 
     async fetchCaptcha() {
         console.log("fetchCaptcha")
@@ -311,28 +306,7 @@ class RegisterFormClass extends Component<
 
     refetch?: () => void;
 
-    handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value } = e.target;
 
-        this.setState((prevState) => ({
-            ...prevState,
-            form: {
-                ...prevState.form,
-                [name]: value,
-            }
-        }));
-
-    }
-
-    handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, checked } = e.target;
-        this.setState(prevState => ({
-            form: {
-                ...prevState.form,
-                [name]: checked
-            }
-        }));
-    }
 
     handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -398,18 +372,18 @@ class RegisterFormClass extends Component<
                 break;
             }
             case "success": {
-                const data = registerRes.data;
-
+                const loginData = registerRes.data;
                 // Only log them in if a jwt was set
-                if (data.jwt) {
+                if (loginData.jwt) {
                     UserService.Instance.login({
-                        res: data,
+                        res: loginData,
                     });
 
                     const site = await HttpService.client.getSite();
 
                     if (site.state === "success") {
                         UserService.Instance.myUserInfo = site.data.myUser;
+                        await handleRegisterSuccess(this, loginData, site);
                     }
 
                     this.props.history.replace("/communities");
