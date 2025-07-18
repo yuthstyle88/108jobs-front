@@ -461,17 +461,8 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
             </label>
           </div>
         </div>
-        {/* สร้างปุ่มเล่นเสียง captcha */}
-        {/*<button*/}
-        {/*  type="button"*/}
-        {/*  onClick={() => this.handleCaptchaPlay(this)}*/}
-        {/*  className="captcha-play-button"*/}
-        {/*>*/}
-        {/*  /!*<IconSound className="icon-sound" />*!/*/}
-        {/*  เล่นเสียง*/}
-        {/*</button>*/}
         {this.renderCaptcha()}
-        <div className="space-y-4">
+        <div className="space-y-4 text-gray-700">
           <div className="flex items-center gap-3">
             <input
               type="checkbox"
@@ -547,74 +538,72 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
     );
   }
   renderCaptcha() {
-    switch (this.state.captchaRes.state) {
-      case "loading":
-        return <Spinner />;
-      case "success": {
-        const res = this.state.captchaRes.data;
-        return (
-          <div className="mb-3 row">
-            <label className="col-sm-2" htmlFor="register-captcha">
-              <span className="me-2">
-                 enter_code
-              </span>
+    const { captchaRes, form, captchaPlaying, errors } = this.state;
+
+    if (captchaRes.state === "loading") {
+      return (
+          <div className="animate-pulse flex items-center justify-center py-4">
+            <Spinner />
+          </div>
+      );
+    }
+
+    if (captchaRes.state !== "success" || !captchaRes.data.ok) return null;
+
+    const captcha = captchaRes.data.ok;
+
+    return (
+        <div className="border border-gray-300 rounded-lg p-4 space-y-3">
+          <label htmlFor="register-captcha" className="block text-sm font-semibold text-gray-700">
+            {this.props.authen?.captchaLabel || "Enter the code below"}
+          </label>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <img
+                src={this.captchaPngSrc(captcha)}
+                alt="Captcha"
+                className="rounded border w-[180px] h-[60px] object-contain"
+            />
+            <div className="flex gap-2">
               <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={this.handleRegenCaptcha}
-                aria-label="captcha"
+                  type="button"
+                  onClick={this.handleRegenCaptcha}
+                  className="inline-flex items-center px-3 py-2 border text-sm rounded-md text-gray-700 bg-white hover:bg-gray-100"
               >
-                <Icon icon="refresh-cw" classes="icon-refresh-cw" />
+                <Icon icon="refresh-cw" classes="w-4 h-4 mr-1" />
+                {this.props.authen?.refreshCaptcha || "Refresh"}
               </button>
-            </label>
-            {this.showCaptcha(res)}
-            <div className="col-sm-6">
-              <input
-                type="text"
-                className="form-control"
-                id="register-captcha"
-                value={this.state.form.captchaAnswer}
-                onInput={(e) => {
-                  this.handleRegisterCaptchaAnswerChange(this, e);
-                }}
-                required
-              />
+              {captcha.wav && (
+                  <button
+                      type="button"
+                      onClick={this.handleCaptchaPlay}
+                      className={`inline-flex items-center px-3 py-2 border text-sm rounded-md text-gray-700 bg-white hover:bg-gray-100 ${captchaPlaying ? "opacity-50 cursor-not-allowed" : ""}`}
+                      disabled={captchaPlaying}
+                  >
+                    <Icon icon="play" classes="w-4 h-4 mr-1" />
+                    {captchaPlaying ? "Playing..." : (this.props.authen?.playAudio || "Play Audio")}
+                  </button>
+              )}
             </div>
           </div>
-        );
-      }
-      default:
-        return null;
-    }
-  }
 
-  showCaptcha(res: GetCaptchaResponse) {
-    const captchaRes = res?.ok;
-    return captchaRes ? (
-      <div className="col-sm-4">
-        <>
-          <img
-            className="rounded-top img-fluid"
-            src={this.captchaPngSrc(captchaRes)}
-            alt="captcha"
+          <input
+              type="text"
+              id="register-captcha"
+              name="captchaAnswer"
+              className={`mt-2 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm ${
+                  errors.captchaAnswer ? "border-red-500" : "border-gray-300"
+              }`}
+              placeholder={this.props.authen?.placeholderCaptcha || "Enter CAPTCHA"}
+              value={form.captchaAnswer || ""}
+              onChange={(e) => this.handleRegisterCaptchaAnswerChange(this, e)}
           />
-          {captchaRes.wav && (
-            <button
-              className="rounded-bottom btn btn-sm btn-secondary d-block"
-              title="play_captcha_audio"
-              onClick={this.handleCaptchaPlay}
-              type="button"
-              disabled={this.state.captchaPlaying}
-            >
-              <Icon icon="play" classes="icon-play" />
-            </button>
+          {errors.captchaAnswer && (
+              <p className="text-red-500 text-sm mt-1">{errors.captchaAnswer}</p>
           )}
-        </>
-      </div>
-    ) : (
-      <></>
+        </div>
     );
   }
+
 }
 
 // แก้ไข HOC เพื่อส่ง authen ผ่าน props
