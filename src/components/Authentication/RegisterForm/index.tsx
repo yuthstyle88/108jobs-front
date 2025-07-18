@@ -420,51 +420,67 @@ class RegisterFormClass extends Component<
         const captcha = captchaRes.data.ok;
 
         return (
-          <div className="border border-gray-300 rounded-lg p-4 space-y-3">
-              <label htmlFor="register-captcha" className="block text-sm font-semibold text-gray-700">
-                  {this.props.authen?.captchaLabel || "Enter the code below"}
-              </label>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                  <img
-                    src={this.captchaPngSrc(captcha)}
-                    alt="Captcha"
-                    className="rounded border w-[180px] h-[60px] object-contain"
-                  />
-                  <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={this.handleRegenCaptcha}
-                        className="inline-flex items-center px-3 py-2 border text-sm rounded-md text-gray-700 bg-white hover:bg-gray-100"
-                      >
-                          <RefreshCcw className="w-4 h-4 mr-1" />
-                          {this.props.authen?.refreshCaptcha || "Refresh"}
-                      </button>
-                      {captcha.wav && (
-                        <button
-                          type="button"
-                          onClick={this.handleCaptchaPlay}
-                          className={`inline-flex items-center px-3 py-2 border text-sm rounded-md text-gray-700 bg-white hover:bg-gray-100 ${captchaPlaying ? "opacity-50 cursor-not-allowed" : ""}`}
-                          disabled={captchaPlaying}
-                        >
-                            <Play className="w-4 h-4 mr-1" />
-                            {captchaPlaying ? "Playing..." : (this.props.authen?.playAudio || "Audio")}
-                        </button>
-                      )}
-                  </div>
-              </div>
-              <CustomInput
-                label={this.props.authen?.labelCached}
-                name="captchaAnswer"
-                type="text"
-                placeholder={this.props.authen?.placeholderCaptcha || "Enter CAPTCHA"}
-                error={this.props.formMethods.formState.errors.captchaAnswer?.message}
-                register={this.props.formMethods.register("captchaAnswer")}
-              />
+            <div className="border border-gray-300 rounded-lg p-4 space-y-3">
+                <label
+                    htmlFor="register-captcha"
+                    className="block text-sm font-semibold text-gray-700"
+                >
+                    {this.props.authen?.captchaLabel || "Enter the code below"}
+                </label>
 
-              {errors.captchaAnswer && (
-                <p className="text-red-500 text-sm mt-1">{errors.captchaAnswer}</p>
-              )}
-          </div>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                    {/* CAPTCHA Image */}
+                    <img
+                        src={this.captchaPngSrc(captcha)}
+                        alt="Captcha"
+                        className="rounded border w-full sm:w-[180px] h-[60px] object-contain"
+                    />
+
+                    {/* Buttons */}
+                    <div className="flex flex-row sm:flex-col gap-2 shrink-0">
+                        <button
+                            type="button"
+                            onClick={this.handleRegenCaptcha}
+                            className="inline-flex items-center px-2.5 py-1.5 border text-xs rounded-md text-gray-700 bg-white hover:bg-gray-100"
+                        >
+                            <RefreshCcw className="w-4 h-4 mr-1" />
+                            {this.props.authen?.refreshCaptcha || "Refresh"}
+                        </button>
+
+                        {captcha.wav && (
+                            <button
+                                type="button"
+                                onClick={this.handleCaptchaPlay}
+                                className={`inline-flex items-center px-2.5 py-1.5 border text-xs rounded-md text-gray-700 bg-white hover:bg-gray-100 ${
+                                    captchaPlaying ? "opacity-50 cursor-not-allowed" : ""
+                                }`}
+                                disabled={captchaPlaying}
+                            >
+                                <Play className="w-4 h-4 mr-1" />
+                                {captchaPlaying ? "Playing..." : this.props.authen?.playAudio || "Audio"}
+                            </button>
+                        )}
+                    </div>
+                </div>
+
+                {/* CAPTCHA Input */}
+                <CustomInput
+                    label={this.props.authen?.labelCached}
+                    name="captchaAnswer"
+                    type="text"
+                    placeholder={this.props.authen?.placeholderCaptcha || "Enter CAPTCHA"}
+                    error={this.props.formMethods.formState.errors.captchaAnswer?.message}
+                    register={this.props.formMethods.register("captchaAnswer")}
+                />
+
+                {/* Error message */}
+                {errors.captchaAnswer && (
+                    <p className="text-red-500 text-sm mt-1">
+                        {errors.captchaAnswer}
+                    </p>
+                )}
+            </div>
+
         );
     }
 
