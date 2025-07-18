@@ -153,15 +153,6 @@ const withHooks = (Component: any) => {
 
         const { formState } = formMethods;
         const watch = formMethods.watch;
-        // ✅ เพิ่ม useEffect นี้เพื่อตรวจสอบค่า isValid และ errors
-        useEffect(() => {
-            const values = getValues();
-            console.log("📌 isValid:", isValid);
-            console.log("📌 errors:", errors);
-            console.log("📌 password:", values.password);
-            console.log("📌 confirmPassword:", values.confirmPassword);
-            console.log("📌 captchaAnswer:", values.captchaAnswer);
-        }, [watch(), isValid, errors]);
 
         const [apiError, setApiError] = useState<string | null>(null);
 
