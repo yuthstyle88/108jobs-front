@@ -259,10 +259,24 @@ class RegisterFormClass extends Component<
                 captchaRes,
                 form: {
                     ...prevState.form,
-                    captchaUuid: captchaRes.data.ok?.uuid
+                    captchaUuid: captchaRes.data.ok?.uuid,
                 }
             }));
+            this.setCaptchaAnswer("");
         }
+    }
+    setCaptchaAnswer = (value: string) => {
+        // อัปเดตสถานะ form
+        this.setState((prevState) => ({
+            ...prevState,
+            form: {
+                ...prevState.form,
+                captchaAnswer: value
+            }
+        }));
+
+        // อัปเดตค่าใน React Hook Form
+        this.props.formMethods.setValue("captchaAnswer", value);
     }
     handleCaptchaPlay = () => {
         if (this.state.captchaRes.state === "success" && this.state.captchaRes.data.ok) {
@@ -351,7 +365,8 @@ class RegisterFormClass extends Component<
                         username: "",
                         role: "Employer",
                         privacyAccepted: false,
-                        termsAccepted: false
+                        termsAccepted: false,
+                        captchaAnswer: "CAPTCHA"
                     },
                     captchaRes: { state: "empty" },
                     errors: {},
