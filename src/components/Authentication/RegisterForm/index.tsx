@@ -19,6 +19,8 @@ import {
   LoginResponse,
 } from "lemmy-js-client";
 import { isBrowser } from "@/utils/browser";
+import classNames from "classnames";
+import {Play, RefreshCcw} from "lucide-react";
 
 interface RegisterFormState {
   registerRes: RequestState<LoginResponse>;
@@ -434,34 +436,38 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
             this.setState({ showConfirmPassword: !showConfirmPassword })
           }
         />
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {"Account Type"}
-          </label>
-          <div className="flex gap-6 items-center text-base text-text-primary">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                value="Employer"
-                name="role"
-                checked={role === "Employer"}
-                onChange={(e) => this.handleRadioChange(e)}
-              />
-              {"Employer"}
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="radio"
-                value="Freelancer"
-                name="role"
-                checked={role === "Freelancer"}
-                onChange={(e) => this.handleRadioChange(e)}
-              />
-              {"Freelancer"}
-            </label>
+          <div className="space-y-2 w-full">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {"You want to be a:"}
+              </label>
+              <div className="flex gap-4 text-sm font-medium w-full max-w-md">
+                  {["Employer", "Freelancer"].map((option) => (
+                      <label key={option} className="flex-1 relative">
+                          <input
+                              type="radio"
+                              name="role"
+                              value={option}
+                              checked={role === option}
+                              onChange={(e) => this.handleRadioChange(e)}
+                              className="peer hidden"
+                          />
+                          <div
+                              className={classNames(
+                                  "peer-checked:bg-primary peer-checked:text-white",
+                                  "bg-white text-gray-600 border border-gray-300",
+                                  "hover:border-primary hover:text-primary",
+                                  "rounded-md text-center",
+                                  "h-10 flex items-center justify-center",
+                                  "transition-all duration-200 cursor-pointer"
+                              )}
+                          >
+                              {option}
+                          </div>
+                      </label>
+                  ))}
+              </div>
           </div>
-        </div>
-        {this.renderCaptcha()}
+          {this.renderCaptcha()}
         <div className="space-y-4 text-gray-700">
           <div className="flex items-center gap-3">
             <input
@@ -569,7 +575,7 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
                   onClick={this.handleRegenCaptcha}
                   className="inline-flex items-center px-3 py-2 border text-sm rounded-md text-gray-700 bg-white hover:bg-gray-100"
               >
-                <Icon icon="refresh-cw" classes="w-4 h-4 mr-1" />
+                <RefreshCcw className="w-4 h-4 mr-1" />
                 {this.props.authen?.refreshCaptcha || "Refresh"}
               </button>
               {captcha.wav && (
@@ -579,8 +585,8 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
                       className={`inline-flex items-center px-3 py-2 border text-sm rounded-md text-gray-700 bg-white hover:bg-gray-100 ${captchaPlaying ? "opacity-50 cursor-not-allowed" : ""}`}
                       disabled={captchaPlaying}
                   >
-                    <Icon icon="play" classes="w-4 h-4 mr-1" />
-                    {captchaPlaying ? "Playing..." : (this.props.authen?.playAudio || "Play Audio")}
+                    <Play className="w-4 h-4 mr-1" />
+                    {captchaPlaying ? "Playing..." : (this.props.authen?.playAudio || "Audio")}
                   </button>
               )}
             </div>
@@ -610,15 +616,15 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
 function withHooks(Component: typeof RegisterFormClass) {
   return function WrappedComponent(props: Omit<RegisterFormProps, 'authen' | 'register' | 'errors'>) {
     const authen = useTranslateFile(LanguageFile.AUTHEN);
-    
+
     // ใช้ useForm จริงๆ เพื่อให้ได้ register function ที่ถูกต้อง
     const { register, formState: { errors } } = useForm();
-    
-    return <Component 
+
+    return <Component
       {...props}
-      authen={authen} 
-      register={register} 
-      errors={errors} 
+      authen={authen}
+      register={register}
+      errors={errors}
     />;
   };
 }
