@@ -124,7 +124,7 @@ export default function TotpModal({
                         onPaste={handlePaste}
                         disabled={pending}
                         className="text-center text-lg w-40 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="123456"
+                        placeholder="xxxxxx"
                         required
                     />
                 </form>
