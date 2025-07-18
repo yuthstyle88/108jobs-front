@@ -549,7 +549,7 @@ const Services = () => {
                   {category.subcategories.map((subcategory, index) => (
                     <Collapsible key={index} open={true}>
                       <CollapsibleTrigger className="flex items-center justify-between w-full text-left p-2 bg-gray-100 rounded hover:bg-gray-200">
-                        <span className="font-medium text-sm text-text_primary">
+                        <span className="font-medium text-sm text-text-primary">
                           {subcategory.title}
                         </span>
                         <ChevronDown className="h-4 w-4" />
@@ -559,7 +559,7 @@ const Services = () => {
                           {subcategory.items.map((item, itemIndex) => (
                             <button
                               key={itemIndex}
-                              className="block text-left text-sm text-text_primary hover:text-blue-600 py-1"
+                              className="block text-left text-sm text-text-primary hover:text-blue-600 py-1"
                             >
                               ∟ {item}
                             </button>

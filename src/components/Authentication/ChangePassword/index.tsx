@@ -97,7 +97,7 @@ export const ChangePassword = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-      <p className="text-text_primary text-sm font-sans">
+      <p className="text-text-primary text-sm font-sans">
         Create a new password. Your password must be at least 8 characters long
         and contain a mix of letters and numbers.
       </p>

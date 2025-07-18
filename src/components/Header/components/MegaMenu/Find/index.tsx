@@ -28,7 +28,7 @@ const Find = () => {
         {global?.freelancerSelectionDescription}
       </p>
       <div className="mt-6">
-        <span className="text-[0.875rem] font-medium text-text_primary">
+        <span className="text-[0.875rem] font-medium text-text-primary">
           {global?.labelNavBarItem1}
         </span>
         <div className="mt-2 flex flex-col mr-4">

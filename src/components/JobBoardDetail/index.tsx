@@ -171,7 +171,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-gray-600">Intended Use:</span>
-                    <span className="ml-2 font-medium text-text_primary">
+                    <span className="ml-2 font-medium text-text-primary">
                       {jobDetailData?.jobPost.intendedUse}
                     </span>
                   </div>
@@ -180,7 +180,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
             </div>
           </div>
 
-          <div className="bg-gray-50 h-fit flex flex-col p-6 rounded-lg text-text_primary">
+          <div className="bg-gray-50 h-fit flex flex-col p-6 rounded-lg text-text-primary">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Project Information
             </h3>
@@ -257,7 +257,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
 
       <section className="grid-cols-1 grid md:grid-cols-2 gap-8 w-full lg:max-w-7xl mx-auto py-6 rounded-lg pb-24">
         <Link prefetch={false} href={"/job-board"}>
-          <section className="w-full  job-board-gradient-left rounded-lg shadow-jobBoardShadow h-[100px] md:h-[130px] xl:h-[100px] cursor-pointer inline-block">
+          <section className="w-full  job-board-gradient-left rounded-lg shadow-job-board-shadow h-[100px] md:h-[130px] xl:h-[100px] cursor-pointer inline-block">
             <div className="grid grid-cols-[100px_1fr_32px] gap-2">
               <div className="w-[100px] h-[100px] relative">
                 <Image
@@ -284,7 +284,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
           </section>
         </Link>
         <Link prefetch={false} href={"/start-selling"}>
-          <section className="w-full  job-board-gradient rounded-lg shadow-jobBoardShadow h-[100px] md:h-[130px] xl:h-[100px] cursor-pointer inline-block">
+          <section className="w-full  job-board-gradient rounded-lg shadow-job-board-shadow h-[100px] md:h-[130px] xl:h-[100px] cursor-pointer inline-block">
             <div className="grid grid-cols-[100px_1fr_32px] gap-2">
               <div className="w-[100px] h-[100px] relative">
                 <Image

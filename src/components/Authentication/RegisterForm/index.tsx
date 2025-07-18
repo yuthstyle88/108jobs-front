@@ -438,7 +438,7 @@ class RegisterFormClass extends React.Component<RegisterFormProps, RegisterFormS
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {"Account Type"}
           </label>
-          <div className="flex gap-6 items-center text-base text-text_primary">
+          <div className="flex gap-6 items-center text-base text-text-primary">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="radio"

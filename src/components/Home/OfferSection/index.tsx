@@ -24,13 +24,13 @@ const OfferSection = (props: Props) => {
         </h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-[1.5rem] gap-y-[1.5rem] lg:gap-y-0 min-h-0 min-w-0 col-start-2 col-end-3">
-        <div className="flex flex-col shadow-memberShipShadow rounded-lg bg-white">
+        <div className="flex flex-col shadow-member-ship-shadow rounded-lg bg-white">
           <div className="p-6 flex-1 text-center bg-white rounded-lg gap-6">
             <div className="h-[32px]"></div>
             <div className="flex justify-center mt-8 items-center">
               <Image src={CompareImage.compare1} alt="Freelancer" />
             </div>
-            <div className="text-text_primary mt-6">
+            <div className="text-text-primary mt-6">
               <h3 className="font-semibold text-[1.25rem] mb-2">Freelancer</h3>
               <ul className="text-sm text-left text-text_secondary grid grid-cols-[1fr] gap-1">
                 <li className="flex flex-row gap-3 items-center">
@@ -64,7 +64,7 @@ const OfferSection = (props: Props) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col shadow-memberShipShadow rounded-lg bg-white">
+        <div className="flex flex-col shadow-member-ship-shadow rounded-lg bg-white">
           <div className="p-6 flex-1 text-center bg-white rounded-lg gap-6">
             <div className="w-full flex justify-end">
               <button className="w-fit pointer-events-none bg-blue-200 text-blue-500 font-semibold py-1 px-4 rounded-full shadow-md hover:bg-blue-400 ">
@@ -74,7 +74,7 @@ const OfferSection = (props: Props) => {
             <div className="flex justify-center mt-8 items-center">
               <Image src={CompareImage.compare2} alt="Specialist" />
             </div>
-            <div className="text-text_primary mt-6">
+            <div className="text-text-primary mt-6">
               <h3 className="font-semibold text-[1.25rem] mb-2">
                 {homeLanguageData?.tittleQualityOfferSpecialistCard}
               </h3>
@@ -129,7 +129,7 @@ const OfferSection = (props: Props) => {
           </div>
         </div>
 
-        <div className="flex flex-col shadow-memberShipShadow rounded-lg bg-white">
+        <div className="flex flex-col shadow-member-ship-shadow rounded-lg bg-white">
           <div className="p-6 flex-1 text-center bg-white rounded-lg gap-6">
             <div className="w-full flex justify-end">
               <button className="w-fit pointer-events-none bg-blue-500 text-white font-semibold py-1 px-4 rounded-full shadow-md hover:bg-blue-400">
@@ -139,7 +139,7 @@ const OfferSection = (props: Props) => {
             <div className="flex justify-center mt-8 items-center">
               <Image src={CompareImage.compare3} alt="Professional" />
             </div>
-            <div className="text-text_primary mt-6">
+            <div className="text-text-primary mt-6">
               <h3 className="font-semibold text-[1.25rem] mb-2">
                 {homeLanguageData?.tittleQualityOfferProfessionalCard}
               </h3>

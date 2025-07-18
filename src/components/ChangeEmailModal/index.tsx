@@ -185,7 +185,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
       <section className="px-[12px] w-full flex flex-col gap-8 justify-center items-center">
         <Mailbox className="w-[60px] h-[60px] text-third" />
         <article>
-          <h1 className="text-base font-bold text-text_primary text-center">
+          <h1 className="text-base font-bold text-text-primary text-center">
             {language?.emailVerificationTitle}
           </h1>
           <p className="text-[14px] font-sans text-text_secondary text-center">
@@ -210,7 +210,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
                   inputRefs.current[index - 1]?.focus();
                 }
               }}
-              className={`text-text_primary w-12 h-12 text-center border rounded ${
+              className={`text-text-primary w-12 h-12 text-center border rounded ${
                 codeError ? "border-red-500" : "border-gray-300"
               } focus:outline-none focus:border-blue-500`}
               maxLength={1}

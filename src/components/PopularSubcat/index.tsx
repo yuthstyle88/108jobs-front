@@ -124,7 +124,7 @@ const PopularSubCat = ({ slug }: Props) => {
       </div>
 
       <div className="flex-1">
-        <h2 className="text-[24px] md:text-[32px] font-semibold text-text_primary pb-4">
+        <h2 className="text-[24px] md:text-[32px] font-semibold text-text-primary pb-4">
           {selectedCategory?.name}
         </h2>
         {selectedCategory && (

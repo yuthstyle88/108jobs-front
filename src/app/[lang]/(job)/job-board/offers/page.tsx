@@ -125,7 +125,7 @@ const Offers = () => {
                             <div>
                               <Link prefetch={false}
                                 href={`/job-board/${job.id}`}
-                                className="hover:text-blue-600 font-medium text-base text-text_primary font-sans max-w-[300px] line-clamp-1 truncate"
+                                className="hover:text-blue-600 font-medium text-base text-text-primary font-sans max-w-[300px] line-clamp-1 truncate"
                               >
                                 {job.jobTitle}
                               </Link>
@@ -138,13 +138,13 @@ const Offers = () => {
                         <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
                           {getStatusBadge("closed")}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-text_primary visible">
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
                           {formatDateTime(job.createdAt, "datetime")}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-text_primary visible">
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
                           {formatDateTime(job.deadline, "date")}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-text_primary visible">
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
                           <button
                             onClick={(e) => {
                               e.stopPropagation();

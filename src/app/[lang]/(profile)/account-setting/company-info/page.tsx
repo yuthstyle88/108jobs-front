@@ -36,7 +36,7 @@ export default function BusinessPage() {
       </div>
       <div className="border-1 border-borderPrimary rounded-lg bg-white py-6">
         <div className="border-b-1 px-6">
-          <h2 className="text-[16px] font-medium mb-2 text-text_primary">
+          <h2 className="text-[16px] font-medium mb-2 text-text-primary">
             {companyInfoLanguageData?.sectionCompanyHiring}
           </h2>
           <p className="text-gray-600 mb-6 text-[14px] font-sans">
@@ -44,7 +44,7 @@ export default function BusinessPage() {
           </p>
         </div>
         <div className="p-6">
-  <label className="block text-sm text-text_primary font-semibold text-gray-600 mb-2">
+  <label className="block text-sm text-text-primary font-semibold text-gray-600 mb-2">
     {companyInfoLanguageData?.labelTaxId}
   </label>
   

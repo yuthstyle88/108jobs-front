@@ -65,7 +65,7 @@ const SpProfile = () => {
             href={`/${currentLang}/user/${user?.user.username}`}
             className="inline-block max-w-full whitespace-nowrap"
           >
-            <strong className="text-sm font-sans text-text_primary">
+            <strong className="text-sm font-sans text-text-primary">
               {user?.contact.email}
             </strong>
           </Link>
@@ -85,7 +85,7 @@ const SpProfile = () => {
                 height={20}
               />
               <div className="flex flex-row items-center text-[0.75rem] font-semibold gap-1">
-                <span className="text-text_primary">0.00 Points</span>
+                <span className="text-text-primary">0.00 Points</span>
                 <span className="text-third">≈ 0.00 THB</span>
               </div>
             </div>
@@ -207,7 +207,7 @@ const SpProfile = () => {
                 <li>
                   <Link prefetch={false}
                     href="/account-setting/basic-info"
-                    className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                    className="flex items-center justify-between w-full px-6 py-3 text-text-primary text-[15px] font-sans cursor-pointer"
                   >
                     <span>Account Setting</span>
                     <ChevronRight className="w-6 h-6 text-gray-400" />
@@ -219,7 +219,7 @@ const SpProfile = () => {
                 <li>
                   <Link prefetch={false}
                     href="/seller-account-setting/freelance-profile"
-                    className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                    className="flex items-center justify-between w-full px-6 py-3 text-text-primary text-[15px] font-sans cursor-pointer"
                   >
                     <span>Account Setting</span>
                     <ChevronRight className="w-6 h-6 text-gray-400" />
@@ -231,7 +231,7 @@ const SpProfile = () => {
                 <li>
                   <Link prefetch={false}
                     href="/start-selling"
-                    className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                    className="flex items-center justify-between w-full px-6 py-3 text-text-primary text-[15px] font-sans cursor-pointer"
                   >
                     <span>Apply to be a freelancer</span>
                     <ChevronRight className="w-6 h-6 text-gray-400" />
@@ -242,7 +242,7 @@ const SpProfile = () => {
         </div>
       </section>
       <section className="block">
-        <div className="font-semibold inline-block pt-6 px-6 pb-2 text-text_primary">
+        <div className="font-semibold inline-block pt-6 px-6 pb-2 text-text-primary">
           About Freelancer
         </div>
         <div style={{ borderBottom: "solid 8px", borderColor: "#f6f7f8" }}>
@@ -250,7 +250,7 @@ const SpProfile = () => {
             <li>
               <Link prefetch={false}
                 href="/job-board"
-                className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                className="flex items-center justify-between w-full px-6 py-3 text-text-primary text-[15px] font-sans cursor-pointer"
               >
                 <span>Job board</span>
                 <ChevronRight className="w-6 h-6 text-gray-400" />
@@ -260,7 +260,7 @@ const SpProfile = () => {
         </div>
       </section>
       <section className="block">
-        <div className="font-semibold inline-block pt-6 px-6 pb-2 text-text_primary">
+        <div className="font-semibold inline-block pt-6 px-6 pb-2 text-text-primary">
           Other Services
         </div>
         <div style={{ borderBottom: "solid 8px", borderColor: "#f6f7f8" }}>
@@ -268,7 +268,7 @@ const SpProfile = () => {
             <li>
               <Link prefetch={false}
                 href="/promotion"
-                className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                className="flex items-center justify-between w-full px-6 py-3 text-text-primary text-[15px] font-sans cursor-pointer"
               >
                 <span>Coupons</span>
                 <ChevronRight className="w-6 h-6 text-gray-400" />
@@ -277,7 +277,7 @@ const SpProfile = () => {
             <li>
               <Link prefetch={false}
                 href="/consent-management"
-                className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                className="flex items-center justify-between w-full px-6 py-3 text-text-primary text-[15px] font-sans cursor-pointer"
               >
                 <span>Data management</span>
                 <ChevronRight className="w-6 h-6 text-gray-400" />
@@ -292,7 +292,7 @@ const SpProfile = () => {
             <li>
               <button
                 onClick={logout}
-                className="flex items-center justify-between w-full px-6 py-3 text-text_primary text-[15px] font-sans cursor-pointer"
+                className="flex items-center justify-between w-full px-6 py-3 text-text-primary text-[15px] font-sans cursor-pointer"
               >
                 <span>Logout</span>
                 <ChevronRight className="w-6 h-6 text-gray-400" />

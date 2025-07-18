@@ -45,7 +45,7 @@ const SellerHeader = () => {
   return (
     <header className="bg-white border-b border-gray-200">
       <div className="flex items-center justify-between px-8 py-4">
-        <h1 className="text-xl text-text_primary">
+        <h1 className="text-xl text-text-primary">
           {interpolate(globalLanguageData?.greetingUser || "", {
             username: user?.user.username || "",
           })}

@@ -68,7 +68,7 @@ const FastjobCoin = () => {
                     <input
                       type="text"
                       placeholder="Specify the amount 100-500,000"
-                      className="text-text_primary pl-10 pr-16 py-2.5 w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                      className="text-text-primary pl-10 pr-16 py-2.5 w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                     />

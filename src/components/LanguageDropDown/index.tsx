@@ -72,7 +72,7 @@ const LanguageDropdown = ({ className = "" }: LanguageDropdownProps) => {
               >
                 <Image src={lang.flag} alt={lang.label} width={26} height={26} style={{ height: "auto" }}/>
               </div>
-              <span className="text-text_primary text-sm">{lang.label}</span>
+              <span className="text-text-primary text-sm">{lang.label}</span>
             </div>
           );
         })}

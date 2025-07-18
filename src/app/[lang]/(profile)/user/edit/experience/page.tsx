@@ -217,7 +217,7 @@ const EditExperience = () => {
                       </label>
                       <input
                         type="text"
-                        className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder={userEditLanguage?.companyNamePlaceholder}
                         {...register(`experienceItems.${index}.company`)}
                       />
@@ -233,7 +233,7 @@ const EditExperience = () => {
                       </label>
                       <input
                         type="text"
-                        className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder={userEditLanguage?.jobTitlePlaceholder}
                         {...register(`experienceItems.${index}.position`)}
                       />
@@ -251,7 +251,7 @@ const EditExperience = () => {
                         {userEditLanguage?.startMonth}
                       </label>
                       <select
-                        className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md"
+                        className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md"
                         {...register(`experienceItems.${index}.startMonth`)}
                       >
                         {months.map((month) => (
@@ -266,7 +266,7 @@ const EditExperience = () => {
                         {userEditLanguage?.startYear}
                       </label>
                       <select
-                        className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md"
+                        className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md"
                         {...register(`experienceItems.${index}.startYear`)}
                       >
                         {years.map((year) => (
@@ -298,7 +298,7 @@ const EditExperience = () => {
                           {userEditLanguage?.endMonth}
                         </label>
                         <select
-                          className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md"
+                          className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md"
                           {...register(`experienceItems.${index}.endMonth`)}
                         >
                           {months.map((month) => (
@@ -313,7 +313,7 @@ const EditExperience = () => {
                           {userEditLanguage?.endYear}
                         </label>
                         <select
-                          className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md"
+                          className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md"
                           {...register(`experienceItems.${index}.endYear`)}
                         >
                           {years.map((year) => (

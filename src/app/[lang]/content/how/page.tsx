@@ -177,7 +177,7 @@ const HowSellAndBuy = () => {
         <section className="py-24 grid grid-container-desktop-banner pt-[4rem]">
           <div className="col-start-2 col-end-3">
             <div className="text-center w-full">
-              <h1 className="font-sans text-[1.5rem] text-text_primary font-semibold mb-12">
+              <h1 className="font-sans text-[1.5rem] text-text-primary font-semibold mb-12">
                 Easy steps to get started with Fastjob
               </h1>
             </div>
@@ -212,13 +212,13 @@ const HowSellAndBuy = () => {
                 {currentSteps.map((item, index) => (
                   <div
                     key={`${item.id}` + `${index}`}
-                    className="shadow-howShadow border-1 border-borderSecondary rounded-xl bg-white p-6"
+                    className="shadow-how-shadow border-1 border-borderSecondary rounded-xl bg-white p-6"
                   >
                     <div className="flex items-center flex-row gap-3">
                       <div className="w-8 flex justify-center items-center h-8 text-[1.25rem] text-white bg-third rounded-full">
                         {item.id}
                       </div>
-                      <p className="text-[1.25rem] font-semibold flex-1 font-sans text-text_primary">
+                      <p className="text-[1.25rem] font-semibold flex-1 font-sans text-text-primary">
                         {item.title}
                       </p>
                     </div>

@@ -24,7 +24,7 @@ const CategoryCard = ({ data, username }: Props) => {
       href={`/${currentLang}/user/${username}/${data.slug}`}
       className="flex cursor-pointer w-full"
     >
-      <div className="hover:shadow-jobCard border border-borderPrimary w-full flex flex-col overflow-hidden rounded-md bg-white transition-all ease-in-out duration-150">
+      <div className="hover:shadow-job-card border border-borderPrimary w-full flex flex-col overflow-hidden rounded-md bg-white transition-all ease-in-out duration-150">
         <section className="grid grid-cols-[minmax(17px,170px)1fr] grid-rows-[1fr_max-content] md:flex md:flex-col">
           <div className="relative aspect-[3/2] w-full">
             <Image
@@ -37,7 +37,7 @@ const CategoryCard = ({ data, username }: Props) => {
             />
           </div>
           <div className="flex flex-col p-2 bg-white border-b md:border-none">
-            <h3 className="overflow-hidden leading-[1.25em] text-text_primary text-clip break-words font-normal text-sm font-sans line-clamp-2">
+            <h3 className="overflow-hidden leading-[1.25em] text-text-primary text-clip break-words font-normal text-sm font-sans line-clamp-2">
               {data?.title}
             </h3>
             <div className="flex flex-row items-center mt-2 text-[12px]">

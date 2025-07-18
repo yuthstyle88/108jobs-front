@@ -120,7 +120,7 @@ const Step4WorkSteps = ({
       className="bg-white rounded-lg shadow-sm p-6"
     >
       {isMutating && <LoadingBlur text={"Đang lưu dữ liệu"} />}
-      <h2 className="text-[32px] font-medium text-text_primary">
+      <h2 className="text-[32px] font-medium text-text-primary">
         {createJobLanguage?.workflowTitle}
       </h2>
 
@@ -153,7 +153,7 @@ const Step4WorkSteps = ({
                 {createJobLanguage?.workflowDescriptionLabel}
               </label>
               <textarea
-                className="text-text_primary w-full p-3 border border-gray-300 rounded-lg min-h-24"
+                className="text-text-primary w-full p-3 border border-gray-300 rounded-lg min-h-24"
                 placeholder={
                   createJobLanguage?.workflowDescriptionPlaceholder
                 }

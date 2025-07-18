@@ -97,7 +97,7 @@ const FilterSidebar = ({
           <div className="flex-1 overflow-y-auto p-6">
             {/* Price Filter */}
             <div className="mb-8">
-              <h3 className="text-lg font-medium mb-4 text-text_primary">
+              <h3 className="text-lg font-medium mb-4 text-text-primary">
                 {language?.priceRange}
               </h3>
               <div className="flex items-center space-x-2">
@@ -108,7 +108,7 @@ const FilterSidebar = ({
                   onChange={(e) =>
                     setMin(e.target.value ? Number(e.target.value) : undefined)
                   }
-                  className="text-text_primary w-full p-3 border border-gray-300 rounded-md focus:outline-blue-500"
+                  className="text-text-primary w-full p-3 border border-gray-300 rounded-md focus:outline-blue-500"
                 />
                 <span>-</span>
                 <input
@@ -118,17 +118,17 @@ const FilterSidebar = ({
                   onChange={(e) =>
                     setMax(e.target.value ? Number(e.target.value) : undefined)
                   }
-                  className="text-text_primary w-full p-3 border border-gray-300 rounded-md focus:outline-blue-500"
+                  className="text-text-primary w-full p-3 border border-gray-300 rounded-md focus:outline-blue-500"
                 />
               </div>
             </div>
 
             {/* Rating Filter */}
             <div className="mb-8">
-              <h3 className="text-lg font-medium mb-4 text-text_primary">
+              <h3 className="text-lg font-medium mb-4 text-text-primary">
                 {language?.pointsReceived}
               </h3>
-              <div className="grid grid-cols-2 gap-2 text-text_primary">
+              <div className="grid grid-cols-2 gap-2 text-text-primary">
                 {[5, 4, 3, 2, 1].map((n) => {
                   const value = n === 5 ? "5" : `${n}Plus`;
                   return (

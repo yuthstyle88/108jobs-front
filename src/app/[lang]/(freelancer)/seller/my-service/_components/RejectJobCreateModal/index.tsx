@@ -26,7 +26,7 @@ const RejectJobCreateModal: React.FC<RejectJobCreateModalProps> = ({
     >
       <section className="px-[12px] w-full flex flex-col">
         <article>
-          <h1 className="text-[14px] font-medium text-text_primary">
+          <h1 className="text-[14px] font-medium text-text-primary">
             Thông tin dịch vụ
           </h1>
           <ul className="list-disc pl-4 text-text_secondary">
@@ -48,7 +48,7 @@ const RejectJobCreateModal: React.FC<RejectJobCreateModalProps> = ({
           </ul>
         </article>
         <article>
-          <h1 className="text-[14px] font-medium text-text_primary pt-2">
+          <h1 className="text-[14px] font-medium text-text-primary pt-2">
             Tải lên hình ảnh dịch vụ
           </h1>
           <ul className="list-disc pl-4 text-text_secondary">

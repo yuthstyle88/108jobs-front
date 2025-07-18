@@ -87,7 +87,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
             placeholder={
               chatLanguageData?.typeMessageHere || "Type a message..."
             }
-            className="text-text_primary flex-1 px-3 py-2 resize-none focus:outline-none min-h-[40px] max-h-[150px] overflow-y-auto break-words whitespace-pre-wrap"
+            className="text-text-primary flex-1 px-3 py-2 resize-none focus:outline-none min-h-[40px] max-h-[150px] overflow-y-auto break-words whitespace-pre-wrap"
             rows={1}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {

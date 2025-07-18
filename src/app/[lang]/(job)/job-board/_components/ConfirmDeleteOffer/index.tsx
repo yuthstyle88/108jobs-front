@@ -26,7 +26,7 @@ const ConfirmDeleteOffer: React.FC<ConfirmDeleteOfferProps> = ({
       <section className="px-[12px] w-full flex flex-col gap-8 justify-center items-center">
         <Trash2 className="w-[65px] h-[65px] text-[#EA6357]" />
         <article className="text-center">
-          <h1 className="text-[18px] font-medium text-text_primary">
+          <h1 className="text-[18px] font-medium text-text-primary">
             Confirm Proposal Deletion
           </h1>
         </article>

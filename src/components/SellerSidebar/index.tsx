@@ -66,7 +66,7 @@ const SellerSidebar = () => {
             <button onClick={() => setIsClose(!isClose)} className="ml-1">
               <FontAwesomeIcon
                 icon={faArrowRightToBracket}
-                className={`text-[18px] text-text_primary transition-transform ${
+                className={`text-[18px] text-text-primary transition-transform ${
                   isClose ? "" : "rotate-180"
                 }`}
               />

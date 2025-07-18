@@ -225,13 +225,13 @@ const ContactInfo = () => {
             <div className="mb-6">
               <div className="flex gap-2 items-end w-full">
                 <div className="flex-1">
-                  <label className="block text-sm text-text_primary font-semibold mb-2">
+                  <label className="block text-sm text-text-primary font-semibold mb-2">
                     {sellerContactLanguage?.emailContact}
                   </label>
                   <input
                     type="email"
                     {...emailRegister("email")}
-                    className={`text-text_primary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                    className={`text-text-primary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
                       apiError
                         ? "border-[#ea6357] text-[#ea6357]"
                         : "border-gray-300"
@@ -263,14 +263,14 @@ const ContactInfo = () => {
         ) : (
           <div className="mb-6 flex gap-2 items-end w-full">
             <div className="flex-1">
-              <label className="block text-sm text-text_primary font-semibold mb-2">
+              <label className="block text-sm text-text-primary font-semibold mb-2">
                 {sellerContactLanguage?.emailContact}
               </label>
               <input
                 type="email"
                 value={profileData?.contact.email ?? ""}
                 disabled
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary disabled:cursor-not-allowed"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary disabled:cursor-not-allowed"
                 placeholder="your.email@example.com"
               />
             </div>
@@ -287,10 +287,10 @@ const ContactInfo = () => {
 
         <form
           onSubmit={handleSubmit(onSubmitAddress)}
-          className="bg-white rounded-lg text-sm text-text_primary font-semibold font-sans mb-6"
+          className="bg-white rounded-lg text-sm text-text-primary font-semibold font-sans mb-6"
         >
           <div className="pb-4 pt-4 border-b">
-            <h2 className="text-[16px] font-medium mb-2 text-text_primary">
+            <h2 className="text-[16px] font-medium mb-2 text-text-primary">
               {sellerContactLanguage?.addressInfoTitle}
             </h2>
             <p className="text-gray-600 text-[14px] font-sans font-normal">
@@ -337,7 +337,7 @@ const ContactInfo = () => {
                 <select
                   {...register("country")}
                   value={country}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary ${
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary ${
                     errors.country ? "border-red-500" : "border-gray-300"
                   }`}
                 >
@@ -357,12 +357,12 @@ const ContactInfo = () => {
             ) : (
               <>
                 <div className="mb-4">
-                  <label className="block text-sm text-text_primary font-semibold mb-2">
+                  <label className="block text-sm text-text-primary font-semibold mb-2">
                     {sellerContactLanguage?.addressDetail}
                   </label>
                   <input
                     {...register("addressDetails")}
-                    className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                    className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
                     placeholder={sellerContactLanguage?.addressPlaceholder}
                   />
                   {errors.addressDetails && (
@@ -386,7 +386,7 @@ const ContactInfo = () => {
                     <input
                       placeholder={sellerContactLanguage?.subDistrict}
                       {...register("subdistrictOrDistrict")}
-                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
                     />
                     {errors.subdistrictOrDistrict && (
                       <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -404,7 +404,7 @@ const ContactInfo = () => {
                     <input
                       placeholder={sellerContactLanguage?.district}
                       {...register("districtOrSubdistrict")}
-                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
                     />
                     {errors.districtOrSubdistrict && (
                       <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -419,7 +419,7 @@ const ContactInfo = () => {
                     <input
                       placeholder={sellerContactLanguage?.province}
                       {...register("province")}
-                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text_primary"
+                      className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
                     />
                     {errors.province && (
                       <p className="text-red-500 text-[12px] font-normal font-sans mt-1">

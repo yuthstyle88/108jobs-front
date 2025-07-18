@@ -11,7 +11,7 @@ const CategoryCardMock = () => {
   const { data: jobCardLanguage } = useGlobalTranslate(LanguageFile.JOB_CARD);
   return (
     <Link prefetch={false} href="/seo/job-detail" className="flex cursor-pointer w-full">
-      <div className="hover:shadow-jobCard border border-borderPrimary w-full flex flex-col overflow-hidden rounded-md bg-white transition-all ease-in-out duration-150">
+      <div className="hover:shadow-job-card border border-borderPrimary w-full flex flex-col overflow-hidden rounded-md bg-white transition-all ease-in-out duration-150">
         <section className="flex flex-row md:flex-col">
           <div className="relative aspect-[3/2] w-full">
             <Image
@@ -23,7 +23,7 @@ const CategoryCardMock = () => {
             />
           </div>
           <div className="flex flex-col p-2 bg-white border-b md:border-none">
-            <h3 className="overflow-hidden leading-[1.25em] text-text_primary text-clip break-words font-normal text-sm font-sans line-clamp-2">
+            <h3 className="overflow-hidden leading-[1.25em] text-text-primary text-clip break-words font-normal text-sm font-sans line-clamp-2">
               เพิ่ม Traffic และ Backlink คุณภาพสูง ดัน Web ติดอันดับ SEO เร่ง
               index KW ให้ติดรัวๆ
             </h3>

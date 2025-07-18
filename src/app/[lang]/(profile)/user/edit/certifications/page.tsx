@@ -142,7 +142,7 @@ const EditCertifications = () => {
                   </label>
                   <input
                     type="text"
-                    className="text-text_primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder={userEditLanguage?.awardPlaceholder}
                     {...register(`certificationItems.${index}.name`)}
                   />

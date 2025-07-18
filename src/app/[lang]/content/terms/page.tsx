@@ -29,7 +29,7 @@ const TermAndConditions = () => {
         <section className="py-24 grid grid-container-content pt-[4rem]">
           <div className="col-start-2 col-end-3">
             <div className="text-center w-full">
-              <h1 className="font-sans text-[1.5rem] text-text_primary font-semibold mb-12">
+              <h1 className="font-sans text-[1.5rem] text-text-primary font-semibold mb-12">
                 เงื่อนไขและข้อตกลงการใช้บริการแพลตฟอร์มสำหรับผู้ว่าจ้าง
                 (Platform <br /> Terms & Conditions for Employer) <br /> ของ{" "}
                 <br /> บริษัท ฟาสต์เวิร์ค เทคโนโลยีส์ จำกัด
@@ -37,7 +37,7 @@ const TermAndConditions = () => {
             </div>
           </div>
           <div className="col-start-2 col-end-3 flex flex-row items-start gap-6 p-4 md:p-0">
-            <ol className="text-text_primary pt-3 list-decimal pl-[48px] grid gap-2 mb-4 font-sans">
+            <ol className="text-text-primary pt-3 list-decimal pl-[48px] grid gap-2 mb-4 font-sans">
               <li>
                 <p className="mb-6 leading-[1.5]">
                   <strong>นิยาม</strong>

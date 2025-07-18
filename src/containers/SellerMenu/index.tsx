@@ -138,7 +138,7 @@ const { lang } = useLanguage();
                 className="rounded-full w-20 h-20  object-cover"
               />
             </figure>
-            <div className="text-[0.875rem] font-semibold text-text_primary">
+            <div className="text-[0.875rem] font-semibold text-text-primary">
               {user?.user.username}
             </div>
           </section>

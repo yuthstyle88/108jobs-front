@@ -70,13 +70,13 @@ const JobApplication = () => {
       <div className="max-w-[1280px] w-[88vw] mx-auto px-4 py-6">
         <div className="flex items-center gap-4 mb-6">
           <button onClick={() => route.back()}>
-            <ArrowLeft className="w-[26px] h-[26px] text-text_primary" />
+            <ArrowLeft className="w-[26px] h-[26px] text-text-primary" />
           </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[441px_1fr] gap-8">
           <div>
-            <h1 className="text-[32px] text-text_primary font-bold">
+            <h1 className="text-[32px] text-text-primary font-bold">
               Increase Your Hiring Chances! With Relevant Experience and
               Portfolio
             </h1>
@@ -122,7 +122,7 @@ const JobApplication = () => {
                   <textarea
                     {...register("whyHireYou")}
                     placeholder="e.g. Relevant portfolio / Work history / Work process details"
-                    className="text-text_primary w-full min-h-[120px] px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="text-text-primary w-full min-h-[120px] px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
 
                   {errors.whyHireYou ? (
@@ -145,7 +145,7 @@ const JobApplication = () => {
                     type="url"
                     {...register("portfolioUrl")}
                     placeholder="e.g. https://example.com"
-                    className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   {errors.portfolioUrl && (
                     <p className="text-red-500 text-sm mt-1">
@@ -169,8 +169,8 @@ const JobApplication = () => {
                     onChange={handleFileChange}
                   />
                   <label htmlFor="portfolio-files">
-                    <Button variant="outline" type="button" className="w-full text-text_primary">
-                      <Paperclip className="w-4 h-4 mr-2 text-text_primary" />
+                    <Button variant="outline" type="button" className="w-full text-text-primary">
+                      <Paperclip className="w-4 h-4 mr-2 text-text-primary" />
                       Select Portfolio Files
                     </Button>
                   </label>
@@ -193,7 +193,7 @@ const JobApplication = () => {
                         type="number"
                         {...register("price", { valueAsNumber: true })}
                         placeholder="0"
-                        className="text-text_primary w-full px-3 py-2 pr-12 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="text-text-primary w-full px-3 py-2 pr-12 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                       <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                         BATH
@@ -215,7 +215,7 @@ const JobApplication = () => {
                         type="number"
                         {...register("timeline", { valueAsNumber: true })}
                         placeholder="0"
-                        className="text-text_primary w-full px-3 py-2 pr-12 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="text-text-primary w-full px-3 py-2 pr-12 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
                       <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
                         days
@@ -235,7 +235,7 @@ const JobApplication = () => {
                   </label>
                   <select
                     {...register("service")}
-                    className="text-text_primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="">Select Your Service</option>
                     <option value="web-development">Web Development</option>
@@ -255,7 +255,7 @@ const JobApplication = () => {
                   )}
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4 text-text_primary">
+                <div className="flex justify-end gap-3 pt-4 text-text-primary">
                   <Button
                     type="button"
                     variant="outline"
