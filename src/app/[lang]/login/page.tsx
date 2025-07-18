@@ -43,7 +43,7 @@ export default function LoginPage() {
 
 
 
-  // if (isLoading) return <Loading />;
+  if (isLoading) return <Loading />;
   if (error) return <div>Error</div>;
 
   return (

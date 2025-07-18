@@ -23,6 +23,7 @@ import {IsoData} from "@/interfaces";
 import {toast} from "@/toast";
 import {UserService} from "@/services";
 import {setIsoData} from "@/utils/app";
+import TotpModal from "@/components/Common/Modal/TotpModal";
 
 interface LoginFormProps {
     formState: {
@@ -39,7 +40,6 @@ interface LoginFormProps {
     >;
     switchToRegister: () => void;
     switchToForgotPassword: () => void;
-    openTotpModal: () => void;
 }
 
 
@@ -114,21 +114,21 @@ const withHooks = (Component: any) => {
             resolver: zodResolver(loginSchema),
         });
 
-    const [apiError, setApiError] = useState<string | null>(null);
+        const [apiError, setApiError] = useState<string | null>(null);
 
-    return (
-      <Component
-        {...props}
-        authen={authen}
-        router={router}
-        redirectUrl={redirectUrl}
-        formMethods={formMethods}
-        loginSchema={loginSchema}
-        apiError={apiError}
-        setApiError={setApiError}
-      />
-    );
-  };
+        return (
+            <Component
+                {...props}
+                authen={authen}
+                router={router}
+                redirectUrl={redirectUrl}
+                formMethods={formMethods}
+                loginSchema={loginSchema}
+                apiError={apiError}
+                setApiError={setApiError}
+            />
+        );
+    };
 
     /* add explicit display name to satisfy react/display-name */
     WrappedWithHooks.displayName = `withHooks(${Component.displayName || Component.name || 'Component'})`;
@@ -195,7 +195,7 @@ class LoginFormClass extends Component<
                 oauthProviders: site.data.oauthProviders ?? [],
                 hasFetchedSite: true,
             });
-        }else{
+        } else {
             this.props.setApiError("เกิดข้อผิดพลาดในการดึงข้อมูลเว็บไซต์");
             this.setState({
                 hasFetchedSite: true,
@@ -254,9 +254,6 @@ class LoginFormClass extends Component<
         window.location.assign(requestUri);
     };
 
-    handleLoginSuccess = async (loginInRes: LoginResponse) => {
-        sessionStorage.setItem("jwt", loginInRes.jwt || "");
-    };
     handleLogin = async (data: any) => {
         const {usernameOrEmail, password} = data;
         this.setState(prev => ({
@@ -280,7 +277,6 @@ class LoginFormClass extends Component<
                     if (name === "missing_totp_token") {
                         // Trigger modal to ask for TOTP token
                         this.setState({show2faModal: true});
-                        this.props.openTotpModal();
                     } else {
                         this.props.formMethods.setError("password", {
                             type: "manual",
@@ -323,7 +319,7 @@ class LoginFormClass extends Component<
         const successful = loginRes.state === "success";
         if (successful) {
             this.setState({show2faModal: false});
-            await this.handleLoginSuccess(loginRes.data);
+            await handleLoginSuccess(this, loginRes.data);
         } else {
             toast("incorrectTotpCode");
         }
@@ -336,100 +332,96 @@ class LoginFormClass extends Component<
         const {showPassword, oauthProviders} = this.state;
         const {register, handleSubmit, formState: {errors, isSubmitting}} = formMethods;
 
-    return (
-      <form onSubmit={handleSubmit(this.handleLogin)} className="space-y-5">
-        {this.props.apiError && (
-          <p className="text-red-500 text-sm text-center mb-4">
-            {this.props.apiError}
-          </p>
-        )}
-        {errors.root && (
-          <p className="text-red-500 text-sm text-center mb-4">
-            {errors.root.message}
-          </p>
-        )}
-
-                <CustomInput
-                    label={authen?.labelUsernameOrEmail}
-                    name="usernameOrEmail"
-                    register={register("usernameOrEmail")}
-                    value={this.props.formState.usernameOrEmail}
-                    onChange={(e) =>
-                        this.props.setFormState((prev) => ({
-                            ...prev,
-                            usernameOrEmail: e.target.value,
-                        }))
-                    }
-                    error={errors.usernameOrEmail?.message}
-                    placeholder={authen?.placeholderUsernameOrEmail}
-                />
-
-                <CustomInput
-                    label={authen?.labelPassword}
-                    name="password"
-                    type="password"
-                    register={register("password")}
-                    value={this.props.formState.password}
-                    onChange={(e) =>
-                        this.props.setFormState((prev) => ({
-                            ...prev,
-                            password: e.target.value,
-                        }))
-                    }
-                    error={errors.password?.message}
-                    placeholder={authen?.placeholderPassword}
-                    showPassword={showPassword}
-                    toggleShowPassword={this.toggleShowPassword}
-                />
-
-                <div className="text-center">
-                    <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="submit-button py-2"
-                    >
-                        {isSubmitting ? <LoadingCircle/> : authen?.buttonProceed}
-                    </button>
-
-                    <div className="flex justify-between text-sm text-blue-600 mt-4">
-                        <button
-                            type="button"
-                            onClick={switchToRegister}
-                            className="hover:underline"
-                        >
-                            {authen?.linkCreateAccount}
-                        </button>
-                        <button
-                            type="button"
-                            onClick={switchToForgotPassword}
-                            className="hover:underline"
-                        >
-                            {authen?.linkForgotPassword}
-                        </button>
-                    </div>
-                </div>
-
-                {oauthProviders.length > 0 && (
-                    <>
-                        <hr className="my-6"/>
-                        <p className="text-center text-sm text-gray-600 mb-3">
-                            {authen?.labelOrSignInWith ?? "หรือเข้าสู่ระบบด้วย"}
-                        </p>
-                        <div className="flex flex-col gap-3">
-                            {oauthProviders.map((p) => (
-                                <button
-                                    key={p.id}
-                                    type="button"
-                                    onClick={() => this.handleLoginWithProvider(p)}
-                                    className="oauth-button py-2 px-4 border rounded-md flex justify-center items-center hover:bg-gray-100"
-                                >
-                                    {p.displayName}
-                                </button>
-                            ))}
-                        </div>
-                    </>
+        return (
+            <div>
+                {this.state.show2faModal && (
+                    <TotpModal
+                        show={this.state.show2faModal}
+                        onClose={() => this.setState({ show2faModal: false })}
+                        onSubmit={this.handleSubmitTotp}
+                        type={"login"}
+                    />
                 )}
-            </form>
+                <form onSubmit={handleSubmit(this.handleLogin)} className="space-y-5">
+                    {this.props.apiError && (
+                        <p className="text-red-500 text-sm text-center mb-4">
+                            {this.props.apiError}
+                        </p>
+                    )}
+                    {errors.root && (
+                        <p className="text-red-500 text-sm text-center mb-4">
+                            {errors.root.message}
+                        </p>
+                    )}
+
+                    <CustomInput
+                        label={authen?.labelUsernameOrEmail}
+                        name="usernameOrEmail"
+                        register={register("usernameOrEmail")}
+                        error={errors.usernameOrEmail?.message}
+                        placeholder={authen?.placeholderUsernameOrEmail}
+                    />
+
+                    <CustomInput
+                        label={authen?.labelPassword}
+                        name="password"
+                        type="password"
+                        register={register("password")}
+                        error={errors.password?.message}
+                        placeholder={authen?.placeholderPassword}
+                        showPassword={showPassword}
+                        toggleShowPassword={this.toggleShowPassword}
+                    />
+
+                    <div className="text-center">
+                        <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="submit-button py-2"
+                        >
+                            {isSubmitting ? <LoadingCircle/> : authen?.buttonProceed}
+                        </button>
+
+                        <div className="flex justify-between text-sm text-blue-600 mt-4">
+                            <button
+                                type="button"
+                                onClick={switchToRegister}
+                                className="hover:underline"
+                            >
+                                {authen?.linkCreateAccount}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={switchToForgotPassword}
+                                className="hover:underline"
+                            >
+                                {authen?.linkForgotPassword}
+                            </button>
+                        </div>
+                    </div>
+
+                    {oauthProviders.length > 0 && (
+                        <>
+                            <hr className="my-6"/>
+                            <p className="text-center text-sm text-gray-600 mb-3">
+                                {authen?.labelOrSignInWith ?? "หรือเข้าสู่ระบบด้วย"}
+                            </p>
+                            <div className="flex flex-col gap-3">
+                                {oauthProviders.map((p) => (
+                                    <button
+                                        key={p.id}
+                                        type="button"
+                                        onClick={() => this.handleLoginWithProvider(p)}
+                                        className="oauth-button py-2 px-4 border rounded-md flex justify-center items-center hover:bg-gray-100"
+                                    >
+                                        {p.displayName}
+                                    </button>
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </form>
+            </div>
         );
     }
 }
