@@ -10,5 +10,5 @@ export default function getExternalHost(): string {
   }
 
   /* 2. SSR หรือยังไม่มี isoData → ดึงจาก ENV หรือ fallback */
-  return process.env.NEXT_PUBLIC_API_BASE_URL_V3 ?? testHost;
+  return process.env.NEXT_PUBLIC_API_HOST_NAME ?? testHost;
 }
