@@ -3,7 +3,7 @@ import type { CommunityFollowerState } from "./CommunityFollowerState";
 import type { CommunityNotificationsMode } from "./CommunityNotificationsMode";
 
 export type CommunityActions = {
-/**
+  /**
    * When the community was followed.
    */
   followedAt?: string;

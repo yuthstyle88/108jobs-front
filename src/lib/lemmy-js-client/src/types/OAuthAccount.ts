@@ -10,5 +10,5 @@ export type OAuthAccount = {
   oauthProviderId: OAuthProviderId;
   oauthUserId: string;
   publishedAt: string;
-  updated_at?: string;
+  updatedAt?: string;
 };

@@ -7,6 +7,6 @@ import type { PaginationCursor } from "./PaginationCursor";
  */
 export type GetCommentsResponse = {
   comments: Array<CommentView>;
-  next_page?: PaginationCursor;
-  prev_page?: PaginationCursor;
+  nextPage?: PaginationCursor;
+  prevPage?: PaginationCursor;
 };

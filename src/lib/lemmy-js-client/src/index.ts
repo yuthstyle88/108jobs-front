@@ -208,7 +208,6 @@ export { LocalUserId } from "./types/LocalUserId";
 export { LocalUserView } from "./types/LocalUserView";
 export { LockPost } from "./types/LockPost";
 export { Login } from "./types/Login";
-export { UpdateTerm } from "./types/UpdateTerm";
 export { LoginResponse } from "./types/LoginResponse";
 export { LoginToken } from "./types/LoginToken";
 export { MarkManyPostsAsRead } from "./types/MarkManyPostsAsRead";

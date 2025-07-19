@@ -5,5 +5,5 @@ import type { CommentView } from "./CommentView";
  * A comment response.
  */
 export type CommentResponse = {
-commentView: CommentView
+  commentView: CommentView;
 };

@@ -7,15 +7,15 @@ import type { PaginationCursor } from "./PaginationCursor";
  * Fetches a list of communities.
  */
 export type ListCommunities = {
-type_?: ListingType;
+  type_?: ListingType;
   sort?: CommunitySortType;
   /**
    * Filter to within a given time range, in seconds.
    * IE 60 would give results for the past minute.
    */
-  time_range_seconds?: number;
-  show_nsfw?: boolean;
-  page_cursor?: PaginationCursor;
-  page_back?: boolean;
+  timeRangeSeconds?: number;
+  showNsfw?: boolean;
+  pageCursor?: PaginationCursor;
+  pageBack?: boolean;
   limit?: number;
 };

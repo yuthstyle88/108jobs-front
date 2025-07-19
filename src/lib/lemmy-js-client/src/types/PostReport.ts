@@ -18,15 +18,15 @@ export type PostReport = {
   /**
    * The original post url.
    */
-  original_post_url?: DbUrl;
+  originalPostUrl?: DbUrl;
   /**
    * The original post body.
    */
-  original_post_body?: string;
+  originalPostBody?: string;
   reason: string;
   resolved: boolean;
-  resolver_id?: PersonId;
+  resolverId?: PersonId;
   publishedAt: string;
-  updated_at?: string;
+  updatedAt?: string;
   violatesInstanceRules: boolean;
 };

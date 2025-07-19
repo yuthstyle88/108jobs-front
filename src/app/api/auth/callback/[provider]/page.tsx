@@ -51,12 +51,11 @@ export default function OAuthCallbackPage() {
           code,
           oauthProviderId: localOAuthState.oauthProviderId,
           redirectUri: localOAuthState.redirectUri,
-          name: localOAuthState.name,
-          email: localOAuthState.email,
           answer: localOAuthState.answer,
         });
 
         if (loginRes.state === "success") {
+
           if (loginRes.data.jwt) {
             // Login สำเร็จ
             await handleLoginSuccess(loginRes.data, localOAuthState.prev);
@@ -69,6 +68,7 @@ export default function OAuthCallbackPage() {
               toast.info("ส่งคำขอลงทะเบียนแล้ว");
             }
             router.push("/login");
+            return
           }
         } else if (loginRes.state === "failed") {
           // จัดการกับข้อผิดพลาด

@@ -8,7 +8,7 @@ export type Register = {
   username: string;
   password: SensitiveString;
   passwordVerify: SensitiveString;
-  show_nsfw?: boolean;
+  showNsfw?: boolean;
   /**
    * email is mandatory if email verification is enabled on the server
    */
@@ -16,11 +16,11 @@ export type Register = {
   /**
    * The UUID of the captcha item.
    */
-  captcha_uuid?: string;
+  captchaUuid?: string;
   /**
    * Your captcha answer.
    */
-  captcha_answer?: string;
+  captchaAnswer?: string;
   /**
    * A form field to trick signup bots. Should be None.
    */

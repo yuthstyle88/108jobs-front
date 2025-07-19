@@ -6,5 +6,5 @@ import type { CommunityId } from "./CommunityId";
  * the image data.
  */
 export type CommunityIdQuery = {
-id: CommunityId
+  id: CommunityId;
 };

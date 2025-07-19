@@ -9,13 +9,13 @@ import type { PersonId } from "./PersonId";
  * Either person_id, or username are required.
  */
 export type ListPersonContent = {
-type_?: PersonContentType;
-  person_id?: PersonId;
+  type_?: PersonContentType;
+  personId?: PersonId;
   /**
    * Example: dessalines , or dessalines@xyz.tld
    */
   username?: string;
-  page_cursor?: PaginationCursor;
-  page_back?: boolean;
+  pageCursor?: PaginationCursor;
+  pageBack?: boolean;
   limit?: number;
 };

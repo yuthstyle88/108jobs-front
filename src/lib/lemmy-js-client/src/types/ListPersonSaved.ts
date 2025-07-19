@@ -6,8 +6,8 @@ import type { PersonContentType } from "./PersonContentType";
  * Gets your saved posts and comments
  */
 export type ListPersonSaved = {
-type_?: PersonContentType;
-  page_cursor?: PaginationCursor;
-  page_back?: boolean;
+  type_?: PersonContentType;
+  pageCursor?: PaginationCursor;
+  pageBack?: boolean;
   limit?: number;
 };

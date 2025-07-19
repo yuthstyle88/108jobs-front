@@ -6,7 +6,7 @@ import type { LanguageId } from "./LanguageId";
  * Create a community.
  */
 export type CreateCommunity = {
-/**
+  /**
    * The unique name.
    */
   name: string;

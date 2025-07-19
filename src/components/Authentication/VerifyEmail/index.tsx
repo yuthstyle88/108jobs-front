@@ -4,6 +4,7 @@ import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { RegisterDataProps } from "@/types/register-data";
 import { useEffect, useRef, useState } from "react";
+import {HttpService} from "@/services";
 
 interface VerificationEmailProps {
   dataRegister?: RegisterDataProps;
@@ -64,55 +65,53 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
   const handleVerify = async () => {
     setCodeError(null);
     setApiError(null);
-    const enteredCode = code.join("");
+    const enteredCode = code.join("") as string;
 
     if (enteredCode.length !== 6) {
       setCodeError(ERROR_CONSTANTS.INVALID_CODE);
       resetCode();
       return;
     }
-
+    const token = enteredCode;
     try {
       setIsSubmitting(true);
-      const response = await fetch("/api/auth/verify-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token: enteredCode,
-        }),
-      });
+      const response = await HttpService.client.verifyEmail({ token });
+      // const response = await fetch("/api/auth/verify-email", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     token: enteredCode,
+      //   }),
+      // });
 
-      const data = await response.json();
+      // const data = await response.json();
 
-      if (!response.ok) {
-        if (data.fieldErrors?.code) {
-          setCodeError(data.fieldErrors.code);
-        } else if (data.error) {
-          setApiError(data.error);
+      if (response.state === "failed") {
+          setCodeError(ERROR_CONSTANTS.INVALID_CODE);
         } else {
           setApiError("การยืนยันอีเมลไม่สำเร็จ");
         }
         resetCode();
         return;
       }
+      //
+      // if (data.jwt) {
+      //   const loginResponse = await fetch("/api/auth/token-login", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({ token: data.jwt }),
+      //   });
 
-      if (data.jwt) {
-        const loginResponse = await fetch("/api/auth/token-login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ token: data.jwt }),
-        });
-
-        if (loginResponse.ok) {
-          window.location.href = "/";
-        } else {
-          setApiError("Đăng nhập tự động thất bại");
-        }
-      }
+        // if (loginResponse.ok) {
+        //   window.location.href = "/";
+        // } else {
+        //   setApiError("Đăng nhập tự động thất bại");
+        // }
+      // }
       sessionStorage.removeItem("registerData");
     } catch (error) {
       console.error("Verification error:", error);

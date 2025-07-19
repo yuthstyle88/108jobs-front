@@ -13,7 +13,7 @@ export type PrivateMessage = {
   content: string;
   deleted: boolean;
   publishedAt: string;
-  updated_at?: string;
+  updatedAt?: string;
   apId: DbUrl;
   local: boolean;
   removed: boolean;

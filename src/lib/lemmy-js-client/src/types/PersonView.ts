@@ -8,6 +8,6 @@ import type { PersonActions } from "./PersonActions";
 export type PersonView = {
   person: Person;
   isAdmin: boolean;
-  person_actions?: PersonActions;
+  personActions?: PersonActions;
   creatorBanned: boolean;
 };

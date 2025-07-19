@@ -23,7 +23,7 @@ export type Community = {
    */
   removed: boolean;
   publishedAt: string;
-  updated_at?: string;
+  updatedAt?: string;
   /**
    * Whether the community has been deleted by its creator.
    */

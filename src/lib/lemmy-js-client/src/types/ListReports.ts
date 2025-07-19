@@ -8,10 +8,10 @@ import type { ReportType } from "./ReportType";
  * List reports.
  */
 export type ListReports = {
-/**
+  /**
    * Only shows the unresolved reports
    */
-  unresolved_only?: boolean;
+  unresolvedOnly?: boolean;
   /**
    * Filter the type of report.
    */
@@ -19,20 +19,20 @@ export type ListReports = {
   /**
    * Filter by the post id. Can return either comment or post reports.
    */
-  post_id?: PostId;
+  postId?: PostId;
   /**
    * if no community is given, it returns reports for all communities moderated by the auth user
    */
-  community_id?: CommunityId;
-  page_cursor?: PaginationCursor;
-  page_back?: boolean;
+  communityId?: CommunityId;
+  pageCursor?: PaginationCursor;
+  pageBack?: boolean;
   limit?: number;
   /**
    * Only for admins: also show reports with `violates_instance_rules=false`
    */
-  show_community_rule_violations?: boolean;
+  showCommunityRuleViolations?: boolean;
   /**
    * If true, view all your created reports. Works for non-admins/mods also.
    */
-  my_reports_only?: boolean;
+  myReportsOnly?: boolean;
 };

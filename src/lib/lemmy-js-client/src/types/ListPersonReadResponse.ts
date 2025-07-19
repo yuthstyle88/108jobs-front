@@ -10,6 +10,6 @@ export type ListPersonReadResponse = {
   /**
    * the pagination cursor to use to fetch the next page
    */
-  next_page?: PaginationCursor;
-  prev_page?: PaginationCursor;
+  nextPage?: PaginationCursor;
+  prevPage?: PaginationCursor;
 };

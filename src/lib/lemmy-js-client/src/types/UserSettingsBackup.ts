@@ -12,12 +12,12 @@ import type { LocalUser } from "./LocalUser";
  * importing older backups.
  */
 export type UserSettingsBackup = {
-display_name?: string;
+  displayName?: string;
   bio?: string;
   avatar?: string;
   banner?: string;
-  matrix_id?: string;
-  bot_account?: boolean;
+  matrixId?: string;
+  botAccount?: boolean;
   settings?: LocalUser;
   followedCommunities: Array<string>;
   savedPosts: Array<string>;

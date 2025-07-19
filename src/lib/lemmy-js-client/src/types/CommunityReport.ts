@@ -12,10 +12,10 @@ export type CommunityReport = {
   communityId: CommunityId;
   originalCommunityName: string;
   originalCommunityTitle: string;
-  original_community_description?: string;
-  original_community_sidebar?: string;
-  original_community_icon?: string;
-  original_community_banner?: string;
+  originalCommunityDescription?: string;
+  originalCommunitySidebar?: string;
+  originalCommunityIcon?: string;
+  originalCommunityBanner?: string;
   reason: string;
   resolved: boolean;
   resolverId?: PersonId;

@@ -5,7 +5,7 @@ import type { SensitiveString } from "./SensitiveString";
  * A response for your login.
  */
 export type LoginResponse = {
-/**
+  /**
    * This is None in response to `Register` if email verification is enabled, or the server
    * requires registration applications.
    */

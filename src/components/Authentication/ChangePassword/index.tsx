@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import {HttpService} from "@/services";
 
 const changePasswordSchema = z
   .object({
@@ -21,7 +22,7 @@ const changePasswordSchema = z
   });
 
 type ChangePasswordProps = {
-  tokenPassword?: RegisterDataProps;
+  tokenPassword: string;
   switchToRegister: () => void;
   switchToForgotPassword: () => void;
 };
@@ -50,43 +51,45 @@ export const ChangePassword = ({
     try {
       setApiError(null);
 
-      const response = await fetch("/api/auth/change-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token: tokenPassword,
-          password: data.password,
-          passwordVerify: data.confirmPassword,
-        }),
+      // const response = await fetch("/api/auth/change-password", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     token: tokenPassword,
+      //     password: data.password,
+      //     passwordVerify: data.confirmPassword,
+      //   }),
+      // });
+      const response = await HttpService.client.passwordChangeAfterReset({
+        token: tokenPassword,
+        password: data.password,
+        passwordVerify: data.confirmPassword,
       });
 
-      const result = await response.json();
+      // const result = await response.json();
 
-      if (!response.ok) {
-        if (result.error) {
+      if (response.state === "failed") {
           setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);
-        }
-
         return;
       }
 
-      if (result.success === true) {
-        const loginResponse = await fetch("/api/auth/token-login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ token: tokenPassword }),
-        });
-
-        if (loginResponse.ok) {
-          window.location.href = "/";
-        } else {
-          setApiError("Đăng nhập tự động thất bại");
-        }
-      }
+      // if (response.state === "success") {
+      //   const loginResponse = await fetch("/api/auth/token-login", {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({ token: tokenPassword }),
+      //   });
+      //
+      //   if (loginResponse.ok) {
+      //     window.location.href = "/";
+      //   } else {
+      //     setApiError("Đăng nhập tự động thất bại");
+      //   }
+      // }
     } catch (error) {
       console.error("Registration error:", error);
       setApiError(

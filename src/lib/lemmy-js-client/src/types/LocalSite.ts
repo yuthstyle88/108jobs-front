@@ -31,7 +31,7 @@ export type LocalSite = {
   /**
    * An optional registration application questionnaire in markdown.
    */
-  application_question?: string;
+  applicationQuestion?: string;
   /**
    * Whether the instance is private or public.
    */
@@ -44,7 +44,7 @@ export type LocalSite = {
   /**
    * An optional legal disclaimer page.
    */
-  legal_information?: string;
+  legalInformation?: string;
   /**
    * Whether new applications email admins.
    */
@@ -52,7 +52,7 @@ export type LocalSite = {
   /**
    * An optional regex to filter words.
    */
-  slur_filter_regex?: string;
+  slurFilterRegex?: string;
   /**
    * The max actor name length.
    */
@@ -70,7 +70,7 @@ export type LocalSite = {
    */
   captchaDifficulty: string;
   publishedAt: string;
-  updated_at?: string;
+  updatedAt?: string;
   registrationMode: RegistrationMode;
   /**
    * Whether to email admins on new reports.
@@ -116,7 +116,7 @@ export type LocalSite = {
   /**
    * A default time range limit to apply to post sorts, in seconds.
    */
-  default_post_time_range_seconds?: number;
+  defaultPostTimeRangeSeconds?: number;
   /**
    * Block NSFW content being created
    */
@@ -145,6 +145,6 @@ export type LocalSite = {
    * Dont send email notifications to users for new replies, mentions etc
    */
   disableEmailNotifications: boolean;
-  suggested_communities?: MultiCommunityId;
+  suggestedCommunities?: MultiCommunityId;
   multiCommFollower: PersonId;
 };

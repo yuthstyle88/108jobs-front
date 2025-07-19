@@ -12,7 +12,7 @@ export type ModBan = {
   otherPersonId: PersonId;
   reason?: string;
   banned: boolean;
-  expires_at?: string;
+  expiresAt?: string;
   publishedAt: string;
   instanceId: InstanceId;
 };

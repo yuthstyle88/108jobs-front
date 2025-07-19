@@ -9,10 +9,10 @@ import type { PrivateMessageId } from "./PrivateMessageId";
 export type Notification = {
   id: NotificationId;
   recipientId: PersonId;
-  comment_id?: CommentId;
+  commentId?: CommentId;
   read: boolean;
   publishedAt: string;
   kind: NotificationTypes;
-  post_id?: PostId;
-  private_message_id?: PrivateMessageId;
+  postId?: PostId;
+  privateMessageId?: PrivateMessageId;
 };

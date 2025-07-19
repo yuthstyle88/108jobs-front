@@ -12,13 +12,13 @@ export type Person = {
   /**
    * A shorter display name.
    */
-  display_name?: string;
+  displayName?: string;
   /**
    * A URL for an avatar.
    */
   avatar?: DbUrl;
   publishedAt: string;
-  updated_at?: string;
+  updatedAt?: string;
   /**
    * The federated ap_id.
    */
@@ -42,7 +42,7 @@ export type Person = {
   /**
    * A matrix id, usually given an @person:matrix.org
    */
-  matrix_user_id?: string;
+  matrixUserId?: string;
   /**
    * Whether the person is a bot account.
    */

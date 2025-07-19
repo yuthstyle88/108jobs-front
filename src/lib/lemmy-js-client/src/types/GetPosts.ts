@@ -9,39 +9,39 @@ import type { PostSortType } from "./PostSortType";
  * Get a list of posts.
  */
 export type GetPosts = {
-type_?: ListingType;
+  type_?: ListingType;
   sort?: PostSortType;
   /**
    * Filter to within a given time range, in seconds.
    * IE 60 would give results for the past minute.
    * Use Zero to override the local_site and local_user time_range.
    */
-  time_range_seconds?: number;
-  community_id?: CommunityId;
-  community_name?: string;
-  multi_community_id?: MultiCommunityId;
-  show_hidden?: boolean;
+  timeRangeSeconds?: number;
+  communityId?: CommunityId;
+  communityName?: string;
+  multiCommunityId?: MultiCommunityId;
+  showHidden?: boolean;
   /**
    * If true, then show the read posts (even if your user setting is to hide them)
    */
-  show_read?: boolean;
+  showRead?: boolean;
   /**
    * If true, then show the nsfw posts (even if your user setting is to hide them)
    */
-  show_nsfw?: boolean;
+  showNsfw?: boolean;
   /**
    * If false, then show posts with media attached (even if your user setting is to hide them)
    */
-  hide_media?: boolean;
+  hideMedia?: boolean;
   /**
    * Whether to automatically mark fetched posts as read.
    */
-  mark_as_read?: boolean;
+  markAsRead?: boolean;
   /**
    * If true, then only show posts with no comments
    */
-  no_comments_only?: boolean;
-  page_cursor?: PaginationCursor;
-  page_back?: boolean;
+  noCommentsOnly?: boolean;
+  pageCursor?: PaginationCursor;
+  pageBack?: boolean;
   limit?: number;
 };

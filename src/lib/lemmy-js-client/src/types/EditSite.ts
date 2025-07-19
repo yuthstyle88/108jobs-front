@@ -12,7 +12,7 @@ import type { RegistrationMode } from "./RegistrationMode";
  * Edits a site.
  */
 export type EditSite = {
-name?: string;
+  name?: string;
   /**
    * A sidebar for the site, in markdown.
    */
@@ -24,154 +24,154 @@ name?: string;
   /**
    * Limits community creation to admins only.
    */
-  community_creation_admin_only?: boolean;
+  communityCreationAdminOnly?: boolean;
   /**
    * Whether to require email verification.
    */
-  require_email_verification?: boolean;
+  requireEmailVerification?: boolean;
   /**
    * Your application question form. This is in markdown, and can be many questions.
    */
-  application_question?: string;
+  applicationQuestion?: string;
   /**
    * Whether your instance is public, or private.
    */
-  private_instance?: boolean;
+  privateInstance?: boolean;
   /**
    * The default theme. Usually "browser"
    */
-  default_theme?: string;
+  defaultTheme?: string;
   /**
    * The default post listing type, usually "local"
    */
-  default_post_listing_type?: ListingType;
+  defaultPostListingType?: ListingType;
   /**
    * Default value for listing mode, usually "list"
    */
-  default_post_listing_mode?: PostListingMode;
+  defaultPostListingMode?: PostListingMode;
   /**
    * The default post sort, usually "active"
    */
-  default_post_sort_type?: PostSortType;
+  defaultPostSortType?: PostSortType;
   /**
    * A default time range limit to apply to post sorts, in seconds. 0 means none.
    */
-  default_post_time_range_seconds?: number;
+  defaultPostTimeRangeSeconds?: number;
   /**
    * The default comment sort, usually "hot"
    */
-  default_comment_sort_type?: CommentSortType;
+  defaultCommentSortType?: CommentSortType;
   /**
    * An optional page of legal information
    */
-  legal_information?: string;
+  legalInformation?: string;
   /**
    * Whether to email admins when receiving a new application.
    */
-  application_email_admins?: boolean;
+  applicationEmailAdmins?: boolean;
   /**
    * A list of allowed discussion languages.
    */
-  discussion_languages?: Array<LanguageId>;
+  discussionLanguages?: Array<LanguageId>;
   /**
    * A regex string of items to filter.
    */
-  slur_filter_regex?: string;
+  slurFilterRegex?: string;
   /**
    * The max length of actor names.
    */
-  actor_name_max_length?: number;
+  actorNameMaxLength?: number;
   /**
    * The number of messages allowed in a given time frame.
    */
-  rate_limit_message_max_requests?: number;
-  rate_limit_message_interval_seconds?: number;
+  rateLimitMessageMaxRequests?: number;
+  rateLimitMessageIntervalSeconds?: number;
   /**
    * The number of posts allowed in a given time frame.
    */
-  rate_limit_post_max_requests?: number;
-  rate_limit_post_interval_seconds?: number;
+  rateLimitPostMaxRequests?: number;
+  rateLimitPostIntervalSeconds?: number;
   /**
    * The number of registrations allowed in a given time frame.
    */
-  rate_limit_register_max_requests?: number;
-  rate_limit_register_interval_seconds?: number;
+  rateLimitRegisterMaxRequests?: number;
+  rateLimitRegisterIntervalSeconds?: number;
   /**
    * The number of image uploads allowed in a given time frame.
    */
-  rate_limit_image_max_requests?: number;
-  rate_limit_image_interval_seconds?: number;
+  rateLimitImageMaxRequests?: number;
+  rateLimitImageIntervalSeconds?: number;
   /**
    * The number of comments allowed in a given time frame.
    */
-  rate_limit_comment_max_requests?: number;
-  rate_limit_comment_interval_seconds?: number;
+  rateLimitCommentMaxRequests?: number;
+  rateLimitCommentIntervalSeconds?: number;
   /**
    * The number of searches allowed in a given time frame.
    */
-  rate_limit_search_max_requests?: number;
-  rate_limit_search_interval_seconds?: number;
+  rateLimitSearchMaxRequests?: number;
+  rateLimitSearchIntervalSeconds?: number;
   /**
    * The number of settings imports or exports allowed in a given time frame.
    */
-  rate_limit_import_user_settings_max_requests?: number;
-  rate_limit_import_user_settings_interval_seconds?: number;
+  rateLimitImportUserSettingsMaxRequests?: number;
+  rateLimitImportUserSettingsIntervalSeconds?: number;
   /**
    * Whether to enable federation.
    */
-  federation_enabled?: boolean;
+  federationEnabled?: boolean;
   /**
    * Whether to enable captchas for signups.
    */
-  captcha_enabled?: boolean;
+  captchaEnabled?: boolean;
   /**
    * The captcha difficulty. Can be easy, medium, or hard
    */
-  captcha_difficulty?: string;
+  captchaDifficulty?: string;
   /**
    * A list of blocked URLs
    */
-  blocked_urls?: Array<string>;
-  registration_mode?: RegistrationMode;
+  blockedUrls?: Array<string>;
+  registrationMode?: RegistrationMode;
   /**
    * Whether to email admins for new reports.
    */
-  reports_email_admins?: boolean;
+  reportsEmailAdmins?: boolean;
   /**
    * If present, nsfw content is visible by default. Should be displayed by frontends/clients
    * when the site is first opened by a user.
    */
-  content_warning?: string;
+  contentWarning?: string;
   /**
    * Whether or not external auth methods can auto-register users.
    */
-  oauth_registration?: boolean;
+  oauthRegistration?: boolean;
   /**
    * What kind of post upvotes your site allows.
    */
-  post_upvotes?: FederationMode;
+  postUpvotes?: FederationMode;
   /**
    * What kind of post downvotes your site allows.
    */
-  post_downvotes?: FederationMode;
+  postDownvotes?: FederationMode;
   /**
    * What kind of comment upvotes your site allows.
    */
-  comment_upvotes?: FederationMode;
+  commentUpvotes?: FederationMode;
   /**
    * What kind of comment downvotes your site allows.
    */
-  comment_downvotes?: FederationMode;
+  commentDownvotes?: FederationMode;
   /**
    * Block NSFW content being created
    */
-  disallow_nsfw_content?: boolean;
+  disallowNsfwContent?: boolean;
   /**
    * Dont send email notifications to users for new replies, mentions etc
    */
-  disable_email_notifications?: boolean;
+  disableEmailNotifications?: boolean;
   /**
    * A multicommunity with suggested communities which is shown on the homepage
    */
-  suggested_communities?: MultiCommunityId;
+  suggestedCommunities?: MultiCommunityId;
 };

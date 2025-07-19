@@ -7,5 +7,5 @@ export type PendingFollow = {
   person: Person;
   community: Community;
   isNewInstance: boolean;
-  follow_state?: CommunityFollowerState;
+  followState?: CommunityFollowerState;
 };

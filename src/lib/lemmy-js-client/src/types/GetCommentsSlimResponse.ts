@@ -7,6 +7,6 @@ import type { PaginationCursor } from "./PaginationCursor";
  */
 export type GetCommentsSlimResponse = {
   comments: Array<CommentSlimView>;
-  next_page?: PaginationCursor;
-  prev_page?: PaginationCursor;
+  nextPage?: PaginationCursor;
+  prevPage?: PaginationCursor;
 };

@@ -11,26 +11,26 @@ import type { SearchType } from "./SearchType";
  */
 export type Search = {
   q: string;
-  community_id?: CommunityId;
-  community_name?: string;
-  creator_id?: PersonId;
+  communityId?: CommunityId;
+  communityName?: string;
+  creatorId?: PersonId;
   type_?: SearchType;
   sort?: SearchSortType;
   /**
    * Filter to within a given time range, in seconds.
    * IE 60 would give results for the past minute.
    */
-  time_range_seconds?: number;
-  listing_type?: ListingType;
-  title_only?: boolean;
-  post_url_only?: boolean;
-  liked_only?: boolean;
-  disliked_only?: boolean;
+  timeRangeSeconds?: number;
+  listingType?: ListingType;
+  titleOnly?: boolean;
+  postUrlOnly?: boolean;
+  likedOnly?: boolean;
+  dislikedOnly?: boolean;
   /**
    * If true, then show the nsfw posts (even if your user setting is to hide them)
    */
-  show_nsfw?: boolean;
-  page_cursor?: PaginationCursor;
-  page_back?: boolean;
+  showNsfw?: boolean;
+  pageCursor?: PaginationCursor;
+  pageBack?: boolean;
   limit?: number;
 };

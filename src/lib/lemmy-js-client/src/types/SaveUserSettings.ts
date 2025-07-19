@@ -11,14 +11,14 @@ import type { VoteShow } from "./VoteShow";
  * Saves settings for your user.
  */
 export type SaveUserSettings = {
-/**
+  /**
    * Show nsfw posts.
    */
-  show_nsfw?: boolean;
+  showNsfw?: boolean;
   /**
    * Blur nsfw posts.
    */
-  blur_nsfw?: boolean;
+  blurNsfw?: boolean;
   /**
    * Your user's theme.
    */
@@ -26,31 +26,31 @@ export type SaveUserSettings = {
   /**
    * The default post listing type, usually "local"
    */
-  default_listing_type?: ListingType;
+  defaultListingType?: ListingType;
   /**
    * A post-view mode that changes how multiple post listings look.
    */
-  post_listing_mode?: PostListingMode;
+  postListingMode?: PostListingMode;
   /**
    * The default post sort, usually "active"
    */
-  default_post_sort_type?: PostSortType;
+  defaultPostSortType?: PostSortType;
   /**
    * A default time range limit to apply to post sorts, in seconds. 0 means none.
    */
-  default_post_time_range_seconds?: number;
+  defaultPostTimeRangeSeconds?: number;
   /**
    * The default comment sort, usually "hot"
    */
-  default_comment_sort_type?: CommentSortType;
+  defaultCommentSortType?: CommentSortType;
   /**
    * The language of the lemmy interface
    */
-  interface_language?: string;
+  interfaceLanguage?: string;
   /**
    * Your display name, which can contain strange characters, and does not need to be unique.
    */
-  display_name?: string;
+  displayName?: string;
   /**
    * Your email.
    */
@@ -60,76 +60,76 @@ export type SaveUserSettings = {
    */
   bio?: string;
   /**
-   * Your matrix user id. Ex: @my_user:matrix.org
+   * Your matrix user id. Ex: @myUser:matrix.org
    */
-  matrix_user_id?: string;
+  matrixUserId?: string;
   /**
    * Whether to show or hide avatars.
    */
-  show_avatars?: boolean;
+  showAvatars?: boolean;
   /**
    * Sends notifications to your email.
    */
-  send_notifications_to_email?: boolean;
+  sendNotificationsToEmail?: boolean;
   /**
    * Whether this account is a bot account. Users can hide these accounts easily if they wish.
    */
-  bot_account?: boolean;
+  botAccount?: boolean;
   /**
    * Whether to show bot accounts.
    */
-  show_bot_accounts?: boolean;
+  showBotAccounts?: boolean;
   /**
    * Whether to show read posts.
    */
-  show_read_posts?: boolean;
+  showReadPosts?: boolean;
   /**
    * A list of languages you are able to see discussion in.
    */
-  discussion_languages?: Array<LanguageId>;
-  blocking_keywords?: Array<string>;
+  discussionLanguages?: Array<LanguageId>;
+  blockingKeywords?: Array<string>;
   /**
    * Open links in a new tab
    */
-  open_links_in_new_tab?: boolean;
+  openLinksInNewTab?: boolean;
   /**
    * Enable infinite scroll
    */
-  infinite_scroll_enabled?: boolean;
+  infiniteScrollEnabled?: boolean;
   /**
    * Whether to allow keyboard navigation (for browsing and interacting with posts and comments).
    */
-  enable_keyboard_navigation?: boolean;
+  enableKeyboardNavigation?: boolean;
   /**
    * Whether user avatars or inline images in the UI that are gifs should be allowed to play or
    * should be paused
    */
-  enable_animated_images?: boolean;
+  enableAnimatedImages?: boolean;
   /**
    * Whether a user can send / receive private messages
    */
-  enable_private_messages?: boolean;
+  enablePrivateMessages?: boolean;
   /**
    * Whether to auto-collapse bot comments.
    */
-  collapse_bot_comments?: boolean;
+  collapseBotComments?: boolean;
   /**
    * Some vote display mode settings
    */
-  show_scores?: boolean;
-  show_upvotes?: boolean;
-  show_downvotes?: VoteShow;
-  show_upvote_percentage?: boolean;
+  showScores?: boolean;
+  showUpvotes?: boolean;
+  showDownvotes?: VoteShow;
+  showUpvotePercentage?: boolean;
   /**
    * Whether to automatically mark fetched posts as read.
    */
-  auto_mark_fetched_posts_as_read?: boolean;
+  autoMarkFetchedPostsAsRead?: boolean;
   /**
    * Whether to hide posts containing images/videos.
    */
-  hide_media?: boolean;
+  hideMedia?: boolean;
   /**
    * Whether to show vote totals given to others.
    */
-  show_person_votes?: boolean;
+  showPersonVotes?: boolean;
 };

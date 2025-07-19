@@ -15,7 +15,7 @@ export type Site = {
    */
   sidebar?: string;
   publishedAt: string;
-  updated_at?: string;
+  updatedAt?: string;
   /**
    * An icon URL.
    */
@@ -46,5 +46,5 @@ export type Site = {
    * If present, nsfw content is visible by default. Should be displayed by frontends/clients
    * when the site is first opened by a user.
    */
-  content_warning?: string;
+  contentWarning?: string;
 };

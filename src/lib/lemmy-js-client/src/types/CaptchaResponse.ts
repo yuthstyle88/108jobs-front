@@ -4,7 +4,7 @@
  * A captcha response.
  */
 export type CaptchaResponse = {
-/**
+  /**
    * A Base64 encoded png
    */
   png: string;

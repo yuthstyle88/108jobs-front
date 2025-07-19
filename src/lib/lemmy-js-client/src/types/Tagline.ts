@@ -8,5 +8,5 @@ export type Tagline = {
   id: TaglineId;
   content: string;
   publishedAt: string;
-  updated_at?: string;
+  updatedAt?: string;
 };

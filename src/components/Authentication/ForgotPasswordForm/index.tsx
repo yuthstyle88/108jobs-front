@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import {HttpService} from "@/services";
 
 const forgotPasswordSchema = z.object({
   email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์"),
@@ -41,24 +42,23 @@ export const ForgotPasswordForm = ({
   const onSubmit = async (data: VerifyForgotPasswordFormData) => {
     try {
       setApiError(null);
+      const email = data.email;
+      const response = await HttpService.client.passwordReset({ email });
 
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: data.email,
-        }),
-      });
+      // const response = await fetch("/api/auth/forgot-password", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     email: data.email,
+      //   }),
+      // });
 
-      const result = await response.json();
+      // const result = await response.json();
 
-      if (!response.ok) {
-        if (result.error) {
+      if (response.state === "failed") {
           setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
-        }
-
         return;
       }
       setForgotEmail(data);

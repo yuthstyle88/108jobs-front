@@ -26,6 +26,6 @@ export type Tag = {
    */
   communityId: CommunityId;
   publishedAt: string;
-  updated_at?: string;
+  updatedAt?: string;
   deleted: boolean;
 };

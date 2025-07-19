@@ -8,6 +8,7 @@ import type { PluginMetadata } from "./PluginMetadata";
 import type { PublicOAuthProvider } from "./PublicOAuthProvider";
 import type { SiteView } from "./SiteView";
 import type { Tagline } from "./Tagline";
+import type { MyUserInfo} from "./MyUserInfo";
 
 /**
  * An expanded response for a site.
@@ -15,6 +16,7 @@ import type { Tagline } from "./Tagline";
 export type GetSiteResponse = {
   siteView: SiteView;
   admins: Array<PersonView>;
+  myUser?: MyUserInfo;
   version: string;
   allLanguages: Array<Language>;
   discussionLanguages: Array<LanguageId>;

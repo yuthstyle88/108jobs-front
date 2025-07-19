@@ -17,16 +17,16 @@ export type EditPost = {
   /**
    * An optional alt_text, usable for image posts.
    */
-  alt_text?: string;
+  altText?: string;
   nsfw?: boolean;
-  language_id?: LanguageId;
+  languageId?: LanguageId;
   /**
    * Instead of fetching a thumbnail, use a custom one.
    */
-  custom_thumbnail?: string;
+  customThumbnail?: string;
   /**
    * Time when this post should be scheduled. Null means publish immediately.
    */
-  scheduled_publish_time_at?: number;
+  scheduledPublishTimeAt?: number;
   tags?: Array<TagId>;
 };
