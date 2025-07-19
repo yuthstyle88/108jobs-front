@@ -10,8 +10,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { RegisterOAuthFormData } from "@/types/formTypes/RegisterOAuth";
-import {axiosPrivate} from "@/lib/axios";
-import {UserService} from "@/services"; // เพิ่ม import นี้
+import {HttpService, UserService} from "@/services"; // เพิ่ม import นี้
 
 type UpdateFormProps = {
   switchToVerifyEmail: () => void;
@@ -31,7 +30,6 @@ export const AcceptForm = ({
     confirmPassword: z.string(),
     termsAccepted: z.boolean().refine((val) => val === true),
     privacyAccepted: z.boolean().refine((val) => val === true),
-    promotionalAccepted: z.boolean().optional(),
     role: z.enum(["Employer", "Freelancer"]).default("Employer"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -71,26 +69,25 @@ export const AcceptForm = ({
 
 
   const onSubmit = async (data: UpdateFormDataType) => {
-    try {
+
       setApiError(null);
       sessionStorage.setItem("RegisterUpData", JSON.stringify(data));
 
-      const response = await axiosPrivate.post("/account/auth/update_term", {
+      const response = await HttpService.client.updateTerm({
           email: data.email,
           password: data.password,
           passwordVerify: data.confirmPassword,
           role: data.role,
           termsAccepted: data.termsAccepted
       });
-      if (response.status === 200) {
-        console.error("response:", response.data);
+
+      if (response.state === "success") {
+        console.log("response:", response.data);
+        //set cookie
+        UserService.Instance.login({
+          res: response.data,
+        });
       }
-    } catch (error) {
-      console.error("Registration error:", error);
-      setApiError(
-        error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลงทะเบียน"
-      );
-    }
   };
 
   return (
