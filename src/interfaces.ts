@@ -1,26 +1,26 @@
 import { ErrorPageData } from "@/utils/types";
 import {
+  CommentReply,
+  CommentView,
   GetSiteResponse,
 } from "./lib/lemmy-js-client";
 import {RequestState} from "@/services/HttpService";
 
-export type RouteData = Record<string, RequestState<any>>;
 /**
  * This contains serialized data, it needs to be deserialized before use.
  */
 export interface IsoData<T extends RouteData = any> {
   path: string;
   routeData: T;
-  siteRes: GetSiteResponse;
+  site_res: GetSiteResponse;
   errorPageData?: ErrorPageData;
-  showAdultConsentModal: boolean;
-  lemmyExternalHost: string;
+  lemmy_external_host: string;
 }
 
 export type IsoDataOptionalSite<T extends RouteData = any> = Partial<
   IsoData<T>
 > &
-  Pick<IsoData<T>, Exclude<keyof IsoData<T>, "siteRes">>;
+  Pick<IsoData<T>, Exclude<keyof IsoData<T>, "site_res">>;
 
 declare global {
   interface Window {
@@ -29,15 +29,26 @@ declare global {
   }
 }
 
+export interface InitialFetchRequest<
+  P extends Record<string, string> = Record<string, never>,
+  T extends Record<string, any> = Record<string, never>,
+> {
+  path: string;
+  query: T;
+  params: P;
+  site: GetSiteResponse;
+  headers: { [key: string]: string };
+}
+
 export interface PostFormParams {
   name?: string;
   url?: string;
   body?: string;
   nsfw?: boolean;
-  languageId?: number;
-  communityId?: number;
-  customThumbnail?: string;
-  altText?: string;
+  language_id?: number;
+  community_id?: number;
+  custom_thumbnail?: string;
+  alt_text?: string;
 }
 
 export enum CommentViewType {
@@ -81,9 +92,15 @@ export enum VoteContentType {
   Comment,
 }
 
-declare global {
-  interface Window {
-    isoData: IsoData;
-    checkLazyScripts?: () => void;
-  }
+export type CommentNodeView = Omit<CommentView, "bannedFromCommunity"> &
+  Partial<Pick<CommentView, "creatorBannedFromCommunity">> & {
+  comment_reply?: CommentReply;
+};
+
+export interface CommentNodeI {
+  comment_view: CommentNodeView;
+  children: Array<CommentNodeI>;
+  depth: number;
 }
+
+export type RouteData = Record<string, RequestState<any>>;
