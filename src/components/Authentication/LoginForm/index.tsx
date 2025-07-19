@@ -9,91 +9,19 @@ import React, {Component, useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {
-    GetSiteResponse,
-    LoginResponse,
     OAuthProvider,
-    PublicOAuthProvider,
 } from "../../../lib/lemmy-js-client";
 import {
     EMPTY_REQUEST,
     HttpService,
-    RequestState,
 } from "@/services/HttpService";
 import {IsoData} from "@/interfaces";
-import {toast} from "@/toast";
-import {UserService} from "@/services";
 import {setIsoData} from "@/utils/app";
 import TotpModal from "@/components/Common/Modal/TotpModal";
+import {OAuthButtons} from "@/components/Authentication/LoginForm/oauth-provider";
+import {handleLogin, handleSubmitTotp, handleUseOAuthProvider} from "@/components/Authentication/LoginForm/handlers";
+import {LoginFormProps, LoginFormState, State} from "@/components/Authentication/LoginForm/interface";
 
-interface LoginFormProps {
-    formState: {
-        usernameOrEmail: string;
-        password: string;
-        totp2faToken?: string;
-    };
-    setFormState: React.Dispatch<
-        React.SetStateAction<{
-            usernameOrEmail: string;
-            password: string;
-            totp2faToken?: string;
-        }>
-    >;
-    switchToRegister: () => void;
-    switchToForgotPassword: () => void;
-}
-
-
-interface State {
-    loginRes: RequestState<LoginResponse>;
-    form: {
-        usernameOrEmail: string;
-        password: string;
-        totp2faToken?: string;
-    };
-
-    siteRes: GetSiteResponse | null;
-    show2faModal: boolean;
-    showOAuthModal: boolean;
-    showPassword: boolean;
-    oauthProviders: PublicOAuthProvider[];
-    hasFetchedSite: boolean;
-}
-
-interface LoginFormState {
-    showPassword: boolean;
-    oauthProviders: PublicOAuthProvider[];
-    hasFetchedSite: boolean;
-}
-
-
-async function handleLoginSuccess(i: LoginFormClass, loginRes: LoginResponse) {
-    UserService.Instance.login({
-        res: loginRes,
-    });
-    const site = await HttpService.client.getSite();
-
-    if (site.state === "success") {
-        try {
-            const isoData = setIsoData(i.context);
-            if (isoData && isoData.siteRes) {
-                isoData.siteRes.oauthProviders = site.data.oauthProviders;
-                isoData.siteRes.adminOauthProviders = site.data.adminOauthProviders;
-            }
-        } catch (error) {
-            console.error("Error updating isoData:", error);
-        }
-    }
-
-    // ใช้ redirectUrl จาก props แทน prev
-    const {redirectUrl} = i.props;
-
-    // ใช้ router จาก props แทน history
-    if (redirectUrl) {
-        i.props.router.replace(redirectUrl);
-    } else {
-        i.props.router.replace("/");
-    }
-}
 
 const withHooks = (Component: any) => {
     const WrappedWithHooks = (props: any) => {
@@ -136,7 +64,7 @@ const withHooks = (Component: any) => {
     return WrappedWithHooks;
 };
 
-class LoginFormClass extends Component<
+export class LoginFormClass extends Component<
     LoginFormProps & {
     authen: any;
     router: any;
@@ -167,11 +95,8 @@ class LoginFormClass extends Component<
     constructor(props: any, context: any) {
         super(props, context);
 
-        this.handleSubmitTotp = this.handleSubmitTotp.bind(this);
         this.handleLoginWithProvider = this.handleLoginWithProvider.bind(this);
-        this.handleLogin = this.handleLogin.bind(this);
     }
-
 
     async componentDidMount() {
         this.isoData = setIsoData(this.context);
@@ -211,120 +136,11 @@ class LoginFormClass extends Component<
     };
 
     handleLoginWithProvider = (provider: OAuthProvider) => {
-        this.handleUseOAuthProvider({
+        handleUseOAuthProvider({
             oauthProvider: provider,
             prev: this.props.redirectUrl,
         });
     };
-
-    handleUseOAuthProvider = async (params: {
-        oauthProvider: OAuthProvider;
-        username?: string;
-        prev?: string;
-        answer?: string;
-        showNsfw?: boolean;
-    }) => {
-        const redirectUri = `${window.location.origin}/api/auth/callback/${params.oauthProvider.displayName}`;
-        const state = crypto.randomUUID();
-        const requestUri =
-            params.oauthProvider.authorizationEndpoint +
-            "?" +
-            [
-                `client_id=${encodeURIComponent(params.oauthProvider.clientId)}`,
-                `response_type=code`,
-                `scope=${encodeURIComponent(params.oauthProvider.scopes)}`,
-                `redirect_uri=${encodeURIComponent(redirectUri)}`,
-                `state=${state}`,
-            ].join("&");
-        console.log(requestUri);
-
-        localStorage.setItem(
-            "oauthState",
-            JSON.stringify({
-                state,
-                oauthProviderId: params.oauthProvider.id,
-                redirectUri: redirectUri,
-                prev: params.prev ?? "/",
-                username: params.username,
-                answer: params.answer,
-                expiresAt: Date.now() + 5 * 60_000,
-            }),
-        );
-
-        window.location.assign(requestUri);
-    };
-
-    handleLogin = async (data: any) => {
-        const {usernameOrEmail, password} = data;
-        this.setState(prev => ({
-            form: {
-                ...prev.form,
-                usernameOrEmail,
-                password,
-            }
-        }));
-        try {
-            const loginRes = await HttpService.client.login({
-                usernameOrEmail,
-                password,
-                totp2faToken: this.state.form.totp2faToken || undefined,
-            });
-
-            switch (loginRes.state) {
-                case "failed": {
-                    const {name, message} = loginRes.err ?? {};
-                    if (name === "missing_totp_token") {
-                        // Trigger modal to ask for TOTP token
-                        this.setState({show2faModal: true});
-                    } else {
-                        this.props.formMethods.setError("password", {
-                            type: "manual",
-                            message: this.props.authen?.invalidPassword ?? "รหัสผ่านไม่ถูกต้อง",
-                        });
-                    }
-                    this.setState({loginRes});
-                    break;
-                }
-                case "success": {
-                    await handleLoginSuccess(this, loginRes.data);
-                    break;
-                }
-            }
-        } catch (error) {
-            console.error(error);
-            this.props.formMethods.setError("root", {
-                type: "manual",
-                message: this.props.authen?.systemError ?? "เกิดข้อผิดพลาดของระบบ กรุณาลองใหม่อีกครั้ง",
-            });
-        }
-    };
-
-    async handleSubmitTotp(totp: string) {
-        const {usernameOrEmail, password} = this.state.form;
-
-        this.setState(prev => ({
-            form: {
-                ...prev.form,
-                totp2faToken: totp,
-            },
-        }));
-
-        const loginRes = await HttpService.client.login({
-            usernameOrEmail,
-            password,
-            totp2faToken: totp,
-        });
-
-        const successful = loginRes.state === "success";
-        if (successful) {
-            this.setState({show2faModal: false});
-            await handleLoginSuccess(this, loginRes.data);
-        } else {
-            toast("incorrectTotpCode");
-        }
-
-        return successful;
-    }
 
     render() {
         const {switchToRegister, switchToForgotPassword, authen, formMethods} = this.props;
@@ -337,11 +153,11 @@ class LoginFormClass extends Component<
                     <TotpModal
                         show={this.state.show2faModal}
                         onClose={() => this.setState({ show2faModal: false })}
-                        onSubmit={this.handleSubmitTotp}
+                        onSubmit={handleSubmit((data: string) => handleSubmitTotp(this, data))}
                         type={"login"}
                     />
                 )}
-                <form onSubmit={handleSubmit(this.handleLogin)} className="space-y-5">
+                <form onSubmit={handleSubmit((data: any) => handleLogin(this, data))} className="space-y-5">
                     {this.props.apiError && (
                         <p className="text-red-500 text-sm text-center mb-4">
                             {this.props.apiError}
@@ -398,27 +214,7 @@ class LoginFormClass extends Component<
                             </button>
                         </div>
                     </div>
-
-                    {oauthProviders.length > 0 && (
-                        <>
-                            <hr className="my-6"/>
-                            <p className="text-center text-sm text-gray-600 mb-3">
-                                {authen?.labelOrSignInWith ?? "หรือเข้าสู่ระบบด้วย"}
-                            </p>
-                            <div className="flex flex-col gap-3">
-                                {oauthProviders.map((p) => (
-                                    <button
-                                        key={p.id}
-                                        type="button"
-                                        onClick={() => this.handleLoginWithProvider(p)}
-                                        className="oauth-button py-2 px-4 border rounded-md flex justify-center items-center hover:bg-gray-100"
-                                    >
-                                        {p.displayName}
-                                    </button>
-                                ))}
-                            </div>
-                        </>
-                    )}
+                    <OAuthButtons providers={oauthProviders} onLogin={this.handleLoginWithProvider} label={authen?.labelOrSignInWith ?? "หรือเข้าสู่ระบบด้วย"}/>
                 </form>
             </div>
         );
