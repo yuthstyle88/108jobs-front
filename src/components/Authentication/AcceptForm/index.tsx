@@ -130,7 +130,7 @@ export const AcceptForm = ({
         <label className="block text-sm font-medium text-gray-700 mb-2">
           {"Account Type"}
         </label>
-        <div className="flex gap-6 items-center text-base text-textPrimary">
+        <div className="flex gap-6 items-center text-base text-text-primary">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
@@ -160,13 +160,13 @@ export const AcceptForm = ({
           />
           <label
             htmlFor="termsAccepted"
-            className="text-sm text-text-secondary font-sans"
+            className="text-sm text-text-primary font-sans"
           >
             {authen?.checkboxTermsConditions}{" "}
             <Link
               prefetch={false}
               href="/content/terms"
-              className="text-textSecondary underline"
+              className="text-text-primary underline"
             >
               {authen?.checkboxTermsConditionsRedirect}
             </Link>
@@ -182,13 +182,13 @@ export const AcceptForm = ({
           />
           <label
             htmlFor="privacyAccepted"
-            className="text-sm text-text-secondary font-sans"
+            className="text-sm text-text-primary font-sans"
           >
             {authen?.checkboxTermsConditions}{" "}
             <Link
               prefetch={false}
               href="/content/privacy"
-              className="text-text-secondary underline"
+              className="text-text-primary underline"
             >
               {authen?.checkboxPrivacyPolicyRedirect}
             </Link>
