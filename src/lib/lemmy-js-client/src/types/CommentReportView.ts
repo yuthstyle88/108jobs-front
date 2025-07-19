@@ -18,10 +18,10 @@ export type CommentReportView = {
   community: Community;
   creator: Person;
   commentCreator: Person;
-  comment_actions?: CommentActions;
+  commentActions?: CommentActions;
   resolver?: Person;
-  person_actions?: PersonActions;
-  community_actions?: CommunityActions;
+  personActions?: PersonActions;
+  communityActions?: CommunityActions;
   creatorIsAdmin: boolean;
   creatorIsModerator: boolean;
   creatorBanned: boolean;

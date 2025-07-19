@@ -18,7 +18,7 @@ export type CommunityReport = {
   original_community_banner?: string;
   reason: string;
   resolved: boolean;
-  resolver_id?: PersonId;
+  resolverId?: PersonId;
   publishedAt: string;
-  updated_at?: string;
+  updatedAt?: string;
 };

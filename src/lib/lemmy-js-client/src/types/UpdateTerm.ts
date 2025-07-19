@@ -7,4 +7,3 @@ export type UpdateTerm = {
   role: "Employer" | "Freelancer";
   termsAccepted: boolean;
 };
-

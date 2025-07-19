@@ -7,5 +7,5 @@ import type { CommentId } from "./CommentId";
 export type CreateCommentReport = {
   commentId: CommentId;
   reason: string;
-  violates_instance_rules?: boolean;
+  violatesInstanceRules?: boolean;
 };

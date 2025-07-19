@@ -9,8 +9,8 @@ import type { TagsView } from "./TagsView";
  */
 export type CommunityView = {
   community: Community;
-  community_actions?: CommunityActions;
-  instance_actions?: InstanceActions;
+  communityActions?: CommunityActions;
+  instanceActions?: InstanceActions;
   canMod: boolean;
   postTags: TagsView;
 };

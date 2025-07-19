@@ -18,4 +18,5 @@ export type LoginResponse = {
    * If email verifications are required, this will return true for a signup response.
    */
   verifyEmailSent: boolean;
+  applicationPending: boolean;
 };

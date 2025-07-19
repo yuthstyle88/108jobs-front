@@ -11,8 +11,8 @@ import type { PersonActions } from "./PersonActions";
 export type CommentSlimView = {
   comment: Comment;
   creator: Person;
-  comment_actions?: CommentActions;
-  person_actions?: PersonActions;
+  commentActions?: CommentActions;
+  personActions?: PersonActions;
   instance_actions?: InstanceActions;
   creatorIsAdmin: boolean;
   canMod: boolean;

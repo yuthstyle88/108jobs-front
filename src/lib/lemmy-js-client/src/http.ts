@@ -225,7 +225,7 @@ import { ListPersonLikedResponse } from "./types/ListPersonLikedResponse";
 import { MarkNotificationAsRead } from "./types/MarkNotificationAsRead";
 import { ListNotifications } from "./types/ListNotifications";
 import { ListNotificationsResponse } from "./types/ListNotificationsResponse";
-import {UpdateTerm} from "./types/UpdateTerm";
+import { UpdateTerm } from "./types/UpdateTerm";
 
 enum HttpType {
   Get = "GET",
@@ -402,12 +402,12 @@ export class LemmyHttp extends Controller {
    * @summary List login tokens for your user
    */
   @Security("bearerAuth")
-  @Get("/account/list-logins")
+  @Get("/account/list_logins")
   @Tags("Account")
   async listLogins(@Inject() options?: RequestOptions) {
     return this.#wrapper<object, ListLoginsResponse>(
       HttpType.Get,
-      "/account/list-logins",
+      "/account/list_logins",
       {},
       options,
     );
@@ -417,12 +417,12 @@ export class LemmyHttp extends Controller {
    * @summary Returns an error message if your auth token is invalid
    */
   @Security("bearerAuth")
-  @Get("/account/validate-auth")
+  @Get("/account/validate_auth")
   @Tags("Account")
   async validateAuth(@Inject() options?: RequestOptions) {
     return this.#wrapper<object, SuccessResponse>(
       HttpType.Get,
-      "/account/validate-auth",
+      "/account/validate_auth",
       {},
       options,
     );
@@ -543,7 +543,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Search lemmy. If `search-term` is a url it also attempts to fetch it, just like `resolve-object`.
+   * @summary Search lemmy. If `search_term` is a url it also attempts to fetch it, just like `resolve_object`.
    */
   @Security("bearerAuth")
   @Security({})
@@ -563,7 +563,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Security({})
-  @Get("/resolve-object")
+  @Get("/resolve_object")
   @Tags("Miscellaneous")
   async resolveObject(
     @Queries() form: ResolveObjectI,
@@ -571,7 +571,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<ResolveObject, SearchResponse>(
       HttpType.Get,
-      "/resolve-object",
+      "/resolve_object",
       form,
       options,
     );
@@ -673,7 +673,7 @@ export class LemmyHttp extends Controller {
    * @summary Get a community's pending follows count.
    */
   @Security("bearerAuth")
-  @Get("/community/pending-follows/count")
+  @Get("/community/pending_follows/count")
   @Tags("Community")
   async getCommunityPendingFollowsCount(
     @Queries() form: GetCommunityPendingFollowsCountI,
@@ -682,14 +682,14 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       GetCommunityPendingFollowsCount,
       GetCommunityPendingFollowsCountResponse
-    >(HttpType.Get, "/community/pending-follows/count", form, options);
+    >(HttpType.Get, "/community/pending_follows/count", form, options);
   }
 
   /**
    * @summary Get a community's pending followers.
    */
   @Security("bearerAuth")
-  @Get("/community/pending-follows/list")
+  @Get("/community/pending_follows/list")
   @Tags("Community")
   async listCommunityPendingFollows(
     @Queries() form: ListCommunityPendingFollowsI,
@@ -698,14 +698,14 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       ListCommunityPendingFollows,
       ListCommunityPendingFollowsResponse
-    >(HttpType.Get, "/community/pending-follows/list", form, options);
+    >(HttpType.Get, "/community/pending_follows/list", form, options);
   }
 
   /**
    * @summary Approve a community pending follow request.
    */
   @Security("bearerAuth")
-  @Post("/community/pending-follows/approve")
+  @Post("/community/pending_follows/approve")
   @Tags("Community")
   async approveCommunityPendingFollow(
     @Body() form: ApproveCommunityPendingFollower,
@@ -713,7 +713,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<ApproveCommunityPendingFollower, SuccessResponse>(
       HttpType.Post,
-      "/community/pending-follows/approve",
+      "/community/pending_follows/approve",
       form,
       options,
     );
@@ -813,7 +813,7 @@ export class LemmyHttp extends Controller {
    * @summary Ban a user from a community.
    */
   @Security("bearerAuth")
-  @Post("/community/ban-user")
+  @Post("/community/ban_user")
   @Tags("Community", "Moderator")
   async banFromCommunity(
     @Body() form: BanFromCommunity,
@@ -821,7 +821,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<BanFromCommunity, BanFromCommunityResponse>(
       HttpType.Post,
-      "/community/ban-user",
+      "/community/ban_user",
       form,
       options,
     );
@@ -992,7 +992,7 @@ export class LemmyHttp extends Controller {
    * @summary Mark a post as read.
    */
   @Security("bearerAuth")
-  @Post("/post/mark-as-read")
+  @Post("/post/mark_as_read")
   @Tags("Post")
   async markPostAsRead(
     @Body() form: MarkPostAsRead,
@@ -1000,7 +1000,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<MarkPostAsRead, PostResponse>(
       HttpType.Post,
-      "/post/mark-as-read",
+      "/post/mark_as_read",
       form,
       options,
     );
@@ -1010,7 +1010,7 @@ export class LemmyHttp extends Controller {
    * @summary Mark multiple posts as read.
    */
   @Security("bearerAuth")
-  @Post("/post/mark-as-read/many")
+  @Post("/post/mark_as_read/many")
   @Tags("Post")
   async markManyPostAsRead(
     @Body() form: MarkManyPostsAsRead,
@@ -1018,7 +1018,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<MarkManyPostsAsRead, SuccessResponse>(
       HttpType.Post,
-      "/post/mark-as-read/many",
+      "/post/mark_as_read/many",
       form,
       options,
     );
@@ -1182,7 +1182,7 @@ export class LemmyHttp extends Controller {
    * @summary Fetch metadata for any given site.
    */
   @Security("bearerAuth")
-  @Get("/post/site-metadata")
+  @Get("/post/site_metadata")
   @Tags("Miscellaneous", "Post")
   async getSiteMetadata(
     @Queries() form: GetSiteMetadataI,
@@ -1190,7 +1190,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<GetSiteMetadata, GetSiteMetadataResponse>(
       HttpType.Get,
-      "/post/site-metadata",
+      "/post/site_metadata",
       form,
       options,
     );
@@ -1437,7 +1437,7 @@ export class LemmyHttp extends Controller {
    * @summary Create a private message.
    */
   @Security("bearerAuth")
-  @Post("/private-message")
+  @Post("/private_message")
   @Tags("PrivateMessage")
   async createPrivateMessage(
     @Body() form: CreatePrivateMessage,
@@ -1445,7 +1445,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<CreatePrivateMessage, PrivateMessageResponse>(
       HttpType.Post,
-      "/private-message",
+      "/private_message",
       form,
       options,
     );
@@ -1455,7 +1455,7 @@ export class LemmyHttp extends Controller {
    * @summary Edit a private message.
    */
   @Security("bearerAuth")
-  @Put("/private-message")
+  @Put("/private_message")
   @Tags("PrivateMessage")
   async editPrivateMessage(
     @Body() form: EditPrivateMessage,
@@ -1463,7 +1463,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<EditPrivateMessage, PrivateMessageResponse>(
       HttpType.Put,
-      "/private-message",
+      "/private_message",
       form,
       options,
     );
@@ -1473,7 +1473,7 @@ export class LemmyHttp extends Controller {
    * @summary Delete a private message.
    */
   @Security("bearerAuth")
-  @Post("/private-message/delete")
+  @Post("/private_message/delete")
   @Tags("PrivateMessage")
   async deletePrivateMessage(
     @Body() form: DeletePrivateMessage,
@@ -1481,7 +1481,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<DeletePrivateMessage, PrivateMessageResponse>(
       HttpType.Post,
-      "/private-message/delete",
+      "/private_message/delete",
       form,
       options,
     );
@@ -1491,7 +1491,7 @@ export class LemmyHttp extends Controller {
    * @summary Mark a private message as read.
    */
   @Security("bearerAuth")
-  @Post("/private-message/mark-as-read")
+  @Post("/private_message/mark_as_read")
   @Tags("PrivateMessage")
   async markPrivateMessageAsRead(
     @Body() form: MarkPrivateMessageAsRead,
@@ -1499,7 +1499,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<MarkPrivateMessageAsRead, SuccessResponse>(
       HttpType.Post,
-      "/private-message/mark-as-read",
+      "/private_message/mark_as_read",
       form,
       options,
     );
@@ -1509,7 +1509,7 @@ export class LemmyHttp extends Controller {
    * @summary Create a report for a private message.
    */
   @Security("bearerAuth")
-  @Post("/private-message/report")
+  @Post("/private_message/report")
   @Tags("PrivateMessage")
   async createPrivateMessageReport(
     @Body() form: CreatePrivateMessageReport,
@@ -1518,14 +1518,14 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       CreatePrivateMessageReport,
       PrivateMessageReportResponse
-    >(HttpType.Post, "/private-message/report", form, options);
+    >(HttpType.Post, "/private_message/report", form, options);
   }
 
   /**
    * @summary Resolve a report for a private message.
    */
   @Security("bearerAuth")
-  @Put("/private-message/report/resolve")
+  @Put("/private_message/report/resolve")
   @Tags("PrivateMessage", "Admin")
   async resolvePrivateMessageReport(
     @Body() form: ResolvePrivateMessageReport,
@@ -1534,7 +1534,7 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       ResolvePrivateMessageReport,
       PrivateMessageReportResponse
-    >(HttpType.Put, "/private-message/report/resolve", form, options);
+    >(HttpType.Put, "/private_message/report/resolve", form, options);
   }
 
   /**
@@ -1564,6 +1564,7 @@ export class LemmyHttp extends Controller {
       options,
     );
   }
+
   /**
    * @summary Log into lemmy.
    */
@@ -1686,12 +1687,12 @@ export class LemmyHttp extends Controller {
   /**
    * @summary Fetch a Captcha.
    */
-  @Get("/account/auth/get-captcha")
+  @Get("/account/auth/get_captcha")
   @Tags("Account")
   async getCaptcha(@Inject() options?: RequestOptions) {
     return this.#wrapper<object, GetCaptchaResponse>(
       HttpType.Get,
-      "/account/auth/get-captcha",
+      "/account/auth/get_captcha",
       {},
       options,
     );
@@ -1719,7 +1720,7 @@ export class LemmyHttp extends Controller {
    * @summary Reset your password.
    */
   @Security("bearerAuth")
-  @Post("/account/auth/password-reset")
+  @Post("/account/auth/password_reset")
   @Tags("Account")
   async passwordReset(
     @Body() form: PasswordReset,
@@ -1727,7 +1728,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<PasswordReset, SuccessResponse>(
       HttpType.Post,
-      "/account/auth/password-reset",
+      "/account/auth/password_reset",
       form,
       options,
     );
@@ -1737,7 +1738,7 @@ export class LemmyHttp extends Controller {
    * @summary Change your password from an email / token based reset.
    */
   @Security("bearerAuth")
-  @Post("/account/auth/password-change")
+  @Post("/account/auth/password_change")
   @Tags("Account")
   async passwordChangeAfterReset(
     @Body() form: PasswordChangeAfterReset,
@@ -1745,7 +1746,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<PasswordChangeAfterReset, SuccessResponse>(
       HttpType.Post,
-      "/account/auth/password-change",
+      "/account/auth/password_change",
       form,
       options,
     );
@@ -1755,12 +1756,12 @@ export class LemmyHttp extends Controller {
    * @summary Mark all replies as read.
    */
   @Security("bearerAuth")
-  @Post("/account/mark-as-read/all")
+  @Post("/account/mark_as_read/all")
   @Tags("Account")
   async markAllNotificationsAsRead(@Inject() options?: RequestOptions) {
     return this.#wrapper<object, SuccessResponse>(
       HttpType.Post,
-      "/account/mark-as-read/all",
+      "/account/mark_as_read/all",
       {},
       options,
     );
@@ -1770,7 +1771,7 @@ export class LemmyHttp extends Controller {
    * @summary Mark a comment as read.
    */
   @Security("bearerAuth")
-  @Post("/account/mark-as-read")
+  @Post("/account/mark_as_read")
   @Tags("Account")
   async markNotificationAsRead(
     @Body() form: MarkNotificationAsRead,
@@ -1778,7 +1779,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<MarkNotificationAsRead, SuccessResponse>(
       HttpType.Post,
-      "/account/mark-as-read",
+      "/account/mark_as_read",
       form,
       options,
     );
@@ -1806,7 +1807,7 @@ export class LemmyHttp extends Controller {
    * @summary Change your user password.
    */
   @Security("bearerAuth")
-  @Put("/account/auth/change-password")
+  @Put("/account/auth/change_password")
   @Tags("Account")
   async changePassword(
     @Body() form: ChangePassword,
@@ -1814,7 +1815,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<ChangePassword, LoginResponse>(
       HttpType.Put,
-      "/account/auth/change-password",
+      "/account/auth/change_password",
       form,
       options,
     );
@@ -1824,7 +1825,7 @@ export class LemmyHttp extends Controller {
    * @summary Get counts for your reports.
    */
   @Security("bearerAuth")
-  @Get("/account/report-count")
+  @Get("/account/report_count")
   @Tags("Account")
   async getReportCount(
     @Queries() form: GetReportCountI,
@@ -1832,7 +1833,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<GetReportCount, GetReportCountResponse>(
       HttpType.Get,
-      "/account/report-count",
+      "/account/report_count",
       form,
       options,
     );
@@ -1842,12 +1843,12 @@ export class LemmyHttp extends Controller {
    * @summary Get your unread counts.
    */
   @Security("bearerAuth")
-  @Get("/account/unread-count")
+  @Get("/account/unread_count")
   @Tags("Account")
   async getUnreadCount(@Inject() options?: RequestOptions) {
     return this.#wrapper<object, GetUnreadCountResponse>(
       HttpType.Get,
-      "/account/unread-count",
+      "/account/unread_count",
       {},
       options,
     );
@@ -1874,7 +1875,7 @@ export class LemmyHttp extends Controller {
   /**
    * @summary Verify your email
    */
-  @Post("/account/auth/verify-email")
+  @Post("/account/auth/verify_email")
   @Tags("Account")
   async verifyEmail(
     @Body() form: VerifyEmail,
@@ -1882,7 +1883,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<VerifyEmail, SuccessResponse>(
       HttpType.Post,
-      "/account/auth/verify-email",
+      "/account/auth/verify_email",
       form,
       options,
     );
@@ -1891,7 +1892,7 @@ export class LemmyHttp extends Controller {
   /**
    * @summary Resend a verification email.
    */
-  @Post("/account/auth/resend-verification-email")
+  @Post("/account/auth/resend_verification_email")
   @Tags("Account")
   async resendVerificationEmail(
     @Body() form: ResendVerificationEmail,
@@ -1899,7 +1900,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<ResendVerificationEmail, SuccessResponse>(
       HttpType.Post,
-      "/account/auth/resend-verification-email",
+      "/account/auth/resend_verification_email",
       form,
       options,
     );
@@ -1996,14 +1997,14 @@ export class LemmyHttp extends Controller {
    * @summary Get the unread registration applications count.
    */
   @Security("bearerAuth")
-  @Get("/admin/registration-application/count")
+  @Get("/admin/registration_application/count")
   @Tags("Admin")
   async getUnreadRegistrationApplicationCount(
     @Inject() options?: RequestOptions,
   ) {
     return this.#wrapper<object, GetUnreadRegistrationApplicationCountResponse>(
       HttpType.Get,
-      "/admin/registration-application/count",
+      "/admin/registration_application/count",
       {},
       options,
     );
@@ -2013,7 +2014,7 @@ export class LemmyHttp extends Controller {
    * @summary List the registration applications.
    */
   @Security("bearerAuth")
-  @Get("/admin/registration-application/list")
+  @Get("/admin/registration_application/list")
   @Tags("Admin")
   async listRegistrationApplications(
     @Queries() form: ListRegistrationApplicationsI,
@@ -2022,14 +2023,14 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       ListRegistrationApplications,
       ListRegistrationApplicationsResponse
-    >(HttpType.Get, "/admin/registration-application/list", form, options);
+    >(HttpType.Get, "/admin/registration_application/list", form, options);
   }
 
   /**
    * @summary Approve a registration application
    */
   @Security("bearerAuth")
-  @Put("/admin/registration-application/approve")
+  @Put("/admin/registration_application/approve")
   @Tags("Admin")
   async approveRegistrationApplication(
     @Body() form: ApproveRegistrationApplication,
@@ -2038,14 +2039,14 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       ApproveRegistrationApplication,
       RegistrationApplicationResponse
-    >(HttpType.Put, "/admin/registration-application/approve", form, options);
+    >(HttpType.Put, "/admin/registration_application/approve", form, options);
   }
 
   /**
    * @summary Get the application a user submitted when they first registered their account
    */
   @Security("bearerAuth")
-  @Get("/admin/registration-application")
+  @Get("/admin/registration_application")
   @Tags("Admin")
   async getRegistrationApplication(
     @Queries() form: GetRegistrationApplicationI,
@@ -2054,7 +2055,7 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       GetRegistrationApplication,
       RegistrationApplicationResponse
-    >(HttpType.Get, "/admin/registration-application", form, options);
+    >(HttpType.Get, "/admin/registration_application", form, options);
   }
 
   /**
@@ -2130,7 +2131,7 @@ export class LemmyHttp extends Controller {
    * @summary Create a new custom emoji.
    */
   @Security("bearerAuth")
-  @Post("/custom-emoji")
+  @Post("/custom_emoji")
   @Tags("CustomEmoji")
   async createCustomEmoji(
     @Body() form: CreateCustomEmoji,
@@ -2138,7 +2139,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<CreateCustomEmoji, CustomEmojiResponse>(
       HttpType.Post,
-      "/custom-emoji",
+      "/custom_emoji",
       form,
       options,
     );
@@ -2148,7 +2149,7 @@ export class LemmyHttp extends Controller {
    * @summary Edit an existing custom emoji.
    */
   @Security("bearerAuth")
-  @Put("/custom-emoji")
+  @Put("/custom_emoji")
   @Tags("CustomEmoji")
   async editCustomEmoji(
     @Body() form: EditCustomEmoji,
@@ -2156,7 +2157,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<EditCustomEmoji, CustomEmojiResponse>(
       HttpType.Put,
-      "/custom-emoji",
+      "/custom_emoji",
       form,
       options,
     );
@@ -2166,7 +2167,7 @@ export class LemmyHttp extends Controller {
    * @summary Delete a custom emoji.
    */
   @Security("bearerAuth")
-  @Post("/custom-emoji/delete")
+  @Post("/custom_emoji/delete")
   @Tags("CustomEmoji")
   async deleteCustomEmoji(
     @Body() form: DeleteCustomEmoji,
@@ -2174,7 +2175,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<DeleteCustomEmoji, SuccessResponse>(
       HttpType.Post,
-      "/custom-emoji/delete",
+      "/custom_emoji/delete",
       form,
       options,
     );
@@ -2185,7 +2186,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Security({})
-  @Get("/custom-emoji/list")
+  @Get("/custom_emoji/list")
   @Tags("CustomEmoji")
   async listCustomEmojis(
     @Queries() form: ListCustomEmojisI,
@@ -2193,7 +2194,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<ListCustomEmojis, ListCustomEmojisResponse>(
       HttpType.Get,
-      "/custom-emoji/list",
+      "/custom_emoji/list",
       form,
       options,
     );
@@ -2330,7 +2331,7 @@ export class LemmyHttp extends Controller {
    * @summary Create a new oauth provider method
    */
   @Security("bearerAuth")
-  @Post("/oauth-provider")
+  @Post("/oauth_provider")
   @Tags("Miscellaneous", "OAuth")
   async createOAuthProvider(
     @Body() form: CreateOAuthProvider,
@@ -2338,7 +2339,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<CreateOAuthProvider, OAuthProvider>(
       HttpType.Post,
-      "/oauth-provider",
+      "/oauth_provider",
       form,
       options,
     );
@@ -2348,7 +2349,7 @@ export class LemmyHttp extends Controller {
    * @summary Edit an existing oauth provider method
    */
   @Security("bearerAuth")
-  @Put("/oauth-provider")
+  @Put("/oauth_provider")
   @Tags("Miscellaneous", "OAuth")
   async editOAuthProvider(
     @Body() form: EditOAuthProvider,
@@ -2356,7 +2357,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<EditOAuthProvider, OAuthProvider>(
       HttpType.Put,
-      "/oauth-provider",
+      "/oauth_provider",
       form,
       options,
     );
@@ -2366,7 +2367,7 @@ export class LemmyHttp extends Controller {
    * @summary Delete an oauth provider method
    */
   @Security("bearerAuth")
-  @Post("/oauth-provider/delete")
+  @Post("/oauth_provider/delete")
   @Tags("Miscellaneous", "OAuth")
   async deleteOAuthProvider(
     @Body() form: DeleteOAuthProvider,
@@ -2374,7 +2375,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<DeleteOAuthProvider, SuccessResponse>(
       HttpType.Post,
-      "/oauth-provider/delete",
+      "/oauth_provider/delete",
       form,
       options,
     );
@@ -2401,12 +2402,12 @@ export class LemmyHttp extends Controller {
   /**
    * @summary Fetch federated instances.
    */
-  @Get("/federated-instances")
+  @Get("/federated_instances")
   @Tags("Miscellaneous")
   async getFederatedInstances(@Inject() options?: RequestOptions) {
     return this.#wrapper<object, GetFederatedInstancesResponse>(
       HttpType.Get,
-      "/federated-instances",
+      "/federated_instances",
       {},
       options,
     );
@@ -2697,19 +2698,19 @@ export class LemmyHttp extends Controller {
    * Mark donation dialog as shown, so it isn't displayed anymore.
    */
   @Security("bearerAuth")
-  @Post("/user/donation-dialog-shown")
+  @Post("/user/donation_dialog_shown")
   @Tags("Miscellaneous")
   donationDialogShown(@Inject() options?: RequestOptions) {
     return this.#wrapper<object, SuccessResponse>(
       HttpType.Post,
-      "/user/donation-dialog-shown",
+      "/user/donation_dialog_shown",
       {},
       options,
     );
   }
 
   @Security("bearerAuth")
-  @Post("/multi-community")
+  @Post("/multi_community")
   @Tags("Multicommunity")
   createMultiCommunity(
     @Body() form: CreateMultiCommunity,
@@ -2717,14 +2718,14 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<object, GetMultiCommunityResponse>(
       HttpType.Post,
-      "/multi-community",
+      "/multi_community",
       form,
       options,
     );
   }
 
   @Security("bearerAuth")
-  @Put("/multi-community")
+  @Put("/multi_community")
   @Tags("Multicommunity")
   updateMultiCommunity(
     @Body() form: UpdateMultiCommunity,
@@ -2732,13 +2733,13 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<object, SuccessResponse>(
       HttpType.Put,
-      "/multi-community",
+      "/multi_community",
       form,
       options,
     );
   }
 
-  @Get("/multi-community")
+  @Get("/multi_community")
   @Tags("Multicommunity")
   getMultiCommunity(
     @Queries() form: GetMultiCommunityI,
@@ -2746,14 +2747,14 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<object, GetMultiCommunityResponse>(
       HttpType.Get,
-      "/multi-community",
+      "/multi_community",
       form,
       options,
     );
   }
 
   @Security("bearerAuth")
-  @Post("/multi-community/entry")
+  @Post("/multi_community/entry")
   @Tags("Multicommunity")
   createMultiCommunityEntry(
     @Body() form: CreateOrDeleteMultiCommunityEntry,
@@ -2761,14 +2762,14 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<object, SuccessResponse>(
       HttpType.Post,
-      "/multi-community/entry",
+      "/multi_community/entry",
       form,
       options,
     );
   }
 
   @Security("bearerAuth")
-  @Delete("/multi-community/entry")
+  @Delete("/multi_community/entry")
   @Tags("Multicommunity")
   deleteMultiCommunityEntry(
     @Body() form: CreateOrDeleteMultiCommunityEntry,
@@ -2776,13 +2777,13 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<object, SuccessResponse>(
       HttpType.Delete,
-      "/multi-community/entry",
+      "/multi_community/entry",
       form,
       options,
     );
   }
 
-  @Get("/multi-community/list")
+  @Get("/multi_community/list")
   @Tags("Multicommunity")
   listMultiCommunities(
     @Queries() form: ListMultiCommunitiesI,
@@ -2790,13 +2791,13 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<object, ListMultiCommunitiesResponse>(
       HttpType.Get,
-      "/multi-community/list",
+      "/multi_community/list",
       form,
       options,
     );
   }
 
-  @Post("/multi-community/follow")
+  @Post("/multi_community/follow")
   @Tags("Multicommunity")
   followMultiCommunity(
     @Body() form: FollowMultiCommunity,
@@ -2804,7 +2805,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<object, SuccessResponse>(
       HttpType.Post,
-      "/multi-community/follow",
+      "/multi_community/follow",
       form,
       options,
     );

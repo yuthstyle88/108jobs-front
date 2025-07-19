@@ -17,10 +17,10 @@ export type CommentView = {
   creator: Person;
   post: Post;
   community: Community;
-  community_actions?: CommunityActions;
-  comment_actions?: CommentActions;
-  person_actions?: PersonActions;
-  instance_actions?: InstanceActions;
+  communityActions?: CommunityActions;
+  commentActions?: CommentActions;
+  personActions?: PersonActions;
+  instanceActions?: InstanceActions;
   creatorIsAdmin: boolean;
   postTags: TagsView;
   canMod: boolean;

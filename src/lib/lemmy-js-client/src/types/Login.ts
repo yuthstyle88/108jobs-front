@@ -13,5 +13,5 @@ export type Login = {
   /**
    * May be required, if totp is enabled for their account.
    */
-  totp2faToken?: string;
+  totp_2fa_token?: string;
 };

@@ -13,8 +13,8 @@ export type CreateOAuthProvider = {
   clientId: string;
   clientSecret: string;
   scopes: string;
-  auto_verify_email?: boolean;
-  account_linking_enabled?: boolean;
-  use_pkce?: boolean;
+  auto_verifyEmail?: boolean;
+  accountLinkingEnabled?: boolean;
+  usePkce?: boolean;
   enabled?: boolean;
 };
