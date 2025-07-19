@@ -4,14 +4,14 @@
  * Create an external auth method.
  */
 export type CreateOAuthProvider = {
-  display_name: string;
+  displayName: string;
   issuer: string;
-  authorization_endpoint: string;
-  token_endpoint: string;
-  userinfo_endpoint: string;
-  id_claim: string;
-  client_id: string;
-  client_secret: string;
+  authorizationEndpoint: string;
+  tokenEndpoint: string;
+  userinfoEndpoint: string;
+  idClaim: string;
+  clientId: string;
+  clientSecret: string;
   scopes: string;
   auto_verify_email?: boolean;
   account_linking_enabled?: boolean;

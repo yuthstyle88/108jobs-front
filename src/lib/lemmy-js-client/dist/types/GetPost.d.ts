@@ -1,9 +1,9 @@
 import type { CommentId } from "./CommentId";
 import type { PostId } from "./PostId";
 /**
- * Get a post. Needs either the post id, or commentId.
+ * Get a post. Needs either the post id, or comment_id.
  */
 export type GetPost = {
     id?: PostId;
-    commentId?: CommentId;
+    comment_id?: CommentId;
 };

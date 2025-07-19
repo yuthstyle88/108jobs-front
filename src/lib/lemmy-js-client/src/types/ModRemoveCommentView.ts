@@ -9,9 +9,9 @@ import type { Post } from "./Post";
  * When a moderator removes a comment.
  */
 export type ModRemoveCommentView = {
-  mod_remove_comment: ModRemoveComment;
+  modRemoveComment: ModRemoveComment;
   moderator?: Person;
-  other_person: Person;
+  otherPerson: Person;
   comment: Comment;
   post: Post;
   community: Community;

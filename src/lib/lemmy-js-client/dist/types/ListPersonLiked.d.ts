@@ -5,9 +5,9 @@ import type { PersonContentType } from "./PersonContentType";
  * Gets your liked / disliked posts
  */
 export type ListPersonLiked = {
-    type?: PersonContentType;
-    likeType?: LikeType;
-    pageCursor?: PaginationCursor;
-    pageBack?: boolean;
+    type_?: PersonContentType;
+    like_type?: LikeType;
+    page_cursor?: PaginationCursor;
+    page_back?: boolean;
     limit?: number;
 };

@@ -4,5 +4,4 @@ import type { PostId } from "./PostId";
  */
 export type MarkPostAsRead = {
     postId: PostId;
-    read: boolean;
 };

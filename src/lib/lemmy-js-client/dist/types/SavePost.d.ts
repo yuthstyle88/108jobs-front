@@ -4,5 +4,4 @@ import type { PostId } from "./PostId";
  */
 export type SavePost = {
     postId: PostId;
-    save: boolean;
 };

@@ -13,5 +13,5 @@ export type MultiCommunity = {
     deleted: boolean;
     apId: DbUrl;
     publishedAt: string;
-    updatedAt?: string;
+    updated_at?: string;
 };

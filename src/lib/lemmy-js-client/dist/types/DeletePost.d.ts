@@ -4,5 +4,4 @@ import type { PostId } from "./PostId";
  */
 export type DeletePost = {
     postId: PostId;
-    deleted: boolean;
 };

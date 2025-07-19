@@ -2,5 +2,5 @@
 import type { MultiCommunityView } from "./MultiCommunityView";
 
 export type ListMultiCommunitiesResponse = {
-  multi_communities: Array<MultiCommunityView>;
+  multiCommunities: Array<MultiCommunityView>;
 };

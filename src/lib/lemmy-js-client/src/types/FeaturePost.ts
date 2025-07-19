@@ -6,7 +6,7 @@ import type { PostId } from "./PostId";
  * Feature a post (stickies / pins to the top).
  */
 export type FeaturePost = {
-  post_id: PostId;
+  postId: PostId;
   featured: boolean;
-  feature_type: PostFeatureType;
+  featureType: PostFeatureType;
 };

@@ -7,11 +7,11 @@ import type { PrivateMessageReport } from "./PrivateMessageReport";
  * A private message report view.
  */
 export type PrivateMessageReportView = {
-  private_message_report: PrivateMessageReport;
-  private_message: PrivateMessage;
+  privateMessageReport: PrivateMessageReport;
+  privateMessage: PrivateMessage;
   creator: Person;
-  private_message_creator: Person;
+  privateMessageCreator: Person;
   resolver?: Person;
-  creator_is_admin: boolean;
-  creator_banned: boolean;
+  creatorIsAdmin: boolean;
+  creatorBanned: boolean;
 };

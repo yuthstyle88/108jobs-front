@@ -3,8 +3,8 @@
  */
 export type CaptchaResponse = {
     /**
-     * A Base64 encoded png
-     */
+       * A Base64 encoded png
+       */
     png: string;
     /**
      * A Base64 encoded wav audio

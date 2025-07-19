@@ -6,6 +6,6 @@ import type { LanguageId } from "./LanguageId";
  * A simple community response.
  */
 export type CommunityResponse = {
-  community_view: CommunityView;
-  discussion_languages: Array<LanguageId>;
+  communityView: CommunityView;
+  discussionLanguages: Array<LanguageId>;
 };

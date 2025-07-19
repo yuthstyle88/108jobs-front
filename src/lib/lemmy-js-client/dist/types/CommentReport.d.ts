@@ -11,8 +11,8 @@ export type CommentReport = {
     originalCommentText: string;
     reason: string;
     resolved: boolean;
-    resolverId?: PersonId;
+    resolver_id?: PersonId;
     publishedAt: string;
-    updatedAt?: string;
+    updated_at?: string;
     violatesInstanceRules: boolean;
 };

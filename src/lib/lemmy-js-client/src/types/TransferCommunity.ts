@@ -6,6 +6,6 @@ import type { PersonId } from "./PersonId";
  * Transfer a community to a new owner.
  */
 export type TransferCommunity = {
-  community_id: CommunityId;
-  person_id: PersonId;
+  communityId: CommunityId;
+  personId: PersonId;
 };

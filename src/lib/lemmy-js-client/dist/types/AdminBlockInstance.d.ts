@@ -7,6 +7,6 @@ export type AdminBlockInstance = {
     adminPersonId: PersonId;
     blocked: boolean;
     reason?: string;
-    expiresAt?: string;
+    expires_at?: string;
     publishedAt: string;
 };

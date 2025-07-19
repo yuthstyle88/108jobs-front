@@ -5,6 +5,6 @@ import type { NotificationId } from "./NotificationId";
  * Mark a comment reply as read.
  */
 export type MarkNotificationAsRead = {
-  notification_id: NotificationId;
+  notificationId: NotificationId;
   read: boolean;
 };

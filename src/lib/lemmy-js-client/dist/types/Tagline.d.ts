@@ -6,5 +6,5 @@ export type Tagline = {
     id: TaglineId;
     content: string;
     publishedAt: string;
-    updatedAt?: string;
+    updated_at?: string;
 };

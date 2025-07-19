@@ -5,5 +5,5 @@ import type { CustomEmojiView } from "./CustomEmojiView";
  * A response for custom emojis.
  */
 export type ListCustomEmojisResponse = {
-  custom_emojis: Array<CustomEmojiView>;
+  customEmojis: Array<CustomEmojiView>;
 };

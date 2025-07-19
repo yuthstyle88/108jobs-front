@@ -3,7 +3,7 @@ import type { PaginationCursor } from "./PaginationCursor";
  * Fetches a list of taglines.
  */
 export type ListTaglines = {
-    pageCursor?: PaginationCursor;
-    pageBack?: boolean;
+    page_cursor?: PaginationCursor;
+    page_back?: boolean;
     limit?: number;
 };

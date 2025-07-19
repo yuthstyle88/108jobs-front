@@ -5,6 +5,6 @@ import type { CommunityReportId } from "./CommunityReportId";
  * Resolve a community report.
  */
 export type ResolveCommunityReport = {
-  report_id: CommunityReportId;
+  reportId: CommunityReportId;
   resolved: boolean;
 };

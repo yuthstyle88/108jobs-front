@@ -8,8 +8,8 @@ import type { Site } from "./Site";
  * The community response.
  */
 export type GetCommunityResponse = {
-  community_view: CommunityView;
+  communityView: CommunityView;
   site?: Site;
   moderators: Array<CommunityModeratorView>;
-  discussion_languages: Array<LanguageId>;
+  discussionLanguages: Array<LanguageId>;
 };

@@ -16,46 +16,46 @@ export type LocalUser = {
   /**
    * The person_id for the local user.
    */
-  person_id: PersonId;
+  personId: PersonId;
   email?: SensitiveString;
   /**
    * Whether to show NSFW content.
    */
-  show_nsfw: boolean;
+  showNsfw: boolean;
   theme: string;
-  default_post_sort_type: PostSortType;
-  default_listing_type: ListingType;
-  interface_language: string;
+  defaultPostSortType: PostSortType;
+  defaultListingType: ListingType;
+  interfaceLanguage: string;
   /**
    * Whether to show avatars.
    */
-  show_avatars: boolean;
-  send_notifications_to_email: boolean;
+  showAvatars: boolean;
+  sendNotificationsToEmail: boolean;
   /**
    * Whether to show bot accounts.
    */
-  show_bot_accounts: boolean;
+  showBotAccounts: boolean;
   /**
    * Whether to show read posts.
    */
-  show_read_posts: boolean;
+  showReadPosts: boolean;
   /**
    * Whether their email has been verified.
    */
-  email_verified: boolean;
+  emailVerified: boolean;
   /**
    * Whether their registration application has been accepted.
    */
-  accepted_application: boolean;
+  acceptedApplication: boolean;
   /**
    * Open links in a new tab.
    */
-  open_links_in_new_tab: boolean;
-  blur_nsfw: boolean;
+  openLinksInNewTab: boolean;
+  blurNsfw: boolean;
   /**
    * Whether infinite scroll is enabled.
    */
-  infinite_scroll_enabled: boolean;
+  infiniteScrollEnabled: boolean;
   /**
    * Whether the person is an admin.
    */
@@ -63,46 +63,46 @@ export type LocalUser = {
   /**
    * A post-view mode that changes how multiple post listings look.
    */
-  post_listing_mode: PostListingMode;
-  totp_2fa_enabled: boolean;
+  postListingMode: PostListingMode;
+  totpFaEnabled: boolean;
   /**
    * Whether to allow keyboard navigation (for browsing and interacting with posts and comments).
    */
-  enable_keyboard_navigation: boolean;
+  enableKeyboardNavigation: boolean;
   /**
    * Whether user avatars and inline images in the UI that are gifs should be allowed to play or
    * should be paused
    */
-  enable_animated_images: boolean;
+  enableAnimatedImages: boolean;
   /**
    * Whether a user can send / receive private messages
    */
-  enable_private_messages: boolean;
+  enablePrivateMessages: boolean;
   /**
    * Whether to auto-collapse bot comments.
    */
-  collapse_bot_comments: boolean;
-  default_comment_sort_type: CommentSortType;
+  collapseBotComments: boolean;
+  defaultCommentSortType: CommentSortType;
   /**
    * Whether to automatically mark fetched posts as read.
    */
-  auto_mark_fetched_posts_as_read: boolean;
+  autoMarkFetchedPostsAsRead: boolean;
   /**
    * The last time a donation request was shown to this user. If this is more than a year ago,
    * a new notification request should be shown.
    */
-  last_donation_notification_at: string;
+  lastDonationNotificationAt: string;
   /**
    * Whether to hide posts containing images/videos
    */
-  hide_media: boolean;
+  hideMedia: boolean;
   /**
    * A default time range limit to apply to post sorts, in seconds.
    */
   default_post_time_range_seconds?: number;
-  show_score: boolean;
-  show_upvotes: boolean;
-  show_downvotes: VoteShow;
-  show_upvote_percentage: boolean;
-  show_person_votes: boolean;
+  showScore: boolean;
+  showUpvotes: boolean;
+  showDownvotes: VoteShow;
+  showUpvotePercentage: boolean;
+  showPersonVotes: boolean;
 };

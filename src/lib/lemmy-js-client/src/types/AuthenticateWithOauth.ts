@@ -6,8 +6,8 @@ import type { OAuthProviderId } from "./OAuthProviderId";
  */
 export type AuthenticateWithOauth = {
   code: string;
-  oauth_provider_id: OAuthProviderId;
-  redirect_uri: string;
+  oauthProviderId: OAuthProviderId;
+  redirectUri: string;
   show_nsfw?: boolean;
   /**
    * Username is mandatory at registration time

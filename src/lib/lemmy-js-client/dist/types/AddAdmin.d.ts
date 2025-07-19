@@ -4,5 +4,4 @@ import type { PersonId } from "./PersonId";
  */
 export type AddAdmin = {
     personId: PersonId;
-    added: boolean;
 };

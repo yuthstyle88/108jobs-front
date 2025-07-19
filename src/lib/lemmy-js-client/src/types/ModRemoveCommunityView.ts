@@ -7,7 +7,7 @@ import type { Person } from "./Person";
  * When a moderator removes a community.
  */
 export type ModRemoveCommunityView = {
-  mod_remove_community: ModRemoveCommunity;
+  modRemoveCommunity: ModRemoveCommunity;
   moderator?: Person;
   community: Community;
 };

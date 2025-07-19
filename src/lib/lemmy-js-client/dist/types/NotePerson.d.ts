@@ -6,5 +6,4 @@ import type { PersonId } from "./PersonId";
  */
 export type NotePerson = {
     personId: PersonId;
-    note: string;
 };

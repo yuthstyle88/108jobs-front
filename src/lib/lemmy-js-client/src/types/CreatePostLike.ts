@@ -5,7 +5,7 @@ import type { PostId } from "./PostId";
  * Like a post.
  */
 export type CreatePostLike = {
-  post_id: PostId;
+  postId: PostId;
   /**
    * Score must be -1, 0, or 1.
    */

@@ -9,7 +9,7 @@ import type { PostSortType } from "./PostSortType";
  * Get a list of posts.
  */
 export type GetPosts = {
-  type_?: ListingType;
+type_?: ListingType;
   sort?: PostSortType;
   /**
    * Filter to within a given time range, in seconds.

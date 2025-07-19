@@ -7,7 +7,7 @@ import type { CustomEmojiId } from "./CustomEmojiId";
 export type EditCustomEmoji = {
   id: CustomEmojiId;
   category: string;
-  image_url: string;
-  alt_text: string;
+  imageUrl: string;
+  altText: string;
   keywords: Array<string>;
 };

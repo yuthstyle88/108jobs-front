@@ -3,14 +3,14 @@ import type { InstanceId } from "./InstanceId";
 import type { ReadableFederationState } from "./ReadableFederationState";
 
 export type InstanceWithFederationState = {
-  /**
+/**
    * if federation to this instance is or was active, show state of outgoing federation to this
    * instance
    */
   federation_state?: ReadableFederationState;
   id: InstanceId;
   domain: string;
-  published_at: string;
+  publishedAt: string;
   /**
    * When the instance was updated.
    */

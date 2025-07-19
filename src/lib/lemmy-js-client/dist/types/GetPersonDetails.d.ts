@@ -2,10 +2,10 @@ import type { PersonId } from "./PersonId";
 /**
  * Gets a person's details.
  *
- * Either personId, or username are required.
+ * Either person_id, or username are required.
  */
 export type GetPersonDetails = {
-    personId?: PersonId;
+    person_id?: PersonId;
     /**
      * Example: dessalines , or dessalines@xyz.tld
      */

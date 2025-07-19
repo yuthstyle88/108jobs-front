@@ -5,5 +5,5 @@ import type { PrivateMessageReportView } from "./PrivateMessageReportView";
  * A private message report response.
  */
 export type PrivateMessageReportResponse = {
-  private_message_report_view: PrivateMessageReportView;
+  privateMessageReportView: PrivateMessageReportView;
 };

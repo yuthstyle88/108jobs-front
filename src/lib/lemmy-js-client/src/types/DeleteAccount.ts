@@ -6,5 +6,5 @@ import type { SensitiveString } from "./SensitiveString";
  */
 export type DeleteAccount = {
   password: SensitiveString;
-  delete_content: boolean;
+  deleteContent: boolean;
 };

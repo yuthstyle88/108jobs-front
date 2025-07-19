@@ -4,5 +4,4 @@ import type { PersonView } from "./PersonView";
  */
 export type BanPersonResponse = {
     personView: PersonView;
-    banned: boolean;
 };

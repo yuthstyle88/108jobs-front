@@ -5,7 +5,7 @@ import type { PaginationCursor } from "./PaginationCursor";
  */
 export type ListCommentLikes = {
     commentId: CommentId;
-    pageCursor?: PaginationCursor;
-    pageBack?: boolean;
+    page_cursor?: PaginationCursor;
+    page_back?: boolean;
     limit?: number;
 };

@@ -5,5 +5,4 @@ import type { PostId } from "./PostId";
 export type LockPost = {
     postId: PostId;
     locked: boolean;
-    reason?: string;
 };

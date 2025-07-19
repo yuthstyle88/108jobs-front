@@ -6,7 +6,7 @@ import type { Person } from "./Person";
  * When someone is banned from the site.
  */
 export type ModBanView = {
-  mod_ban: ModBan;
+  modBan: ModBan;
   moderator?: Person;
-  other_person: Person;
+  otherPerson: Person;
 };

@@ -4,4 +4,6 @@ import type { TaglineId } from "./TaglineId";
 /**
  * Update a tagline
  */
-export type UpdateTagline = { id: TaglineId; content: string };
+export type UpdateTagline = {
+  id: TaglineId;
+};

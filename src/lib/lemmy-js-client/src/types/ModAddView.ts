@@ -6,7 +6,7 @@ import type { Person } from "./Person";
  * When someone is added as a site moderator.
  */
 export type ModAddView = {
-  mod_add: ModAdd;
+  modAdd: ModAdd;
   moderator?: Person;
-  other_person: Person;
+  otherPerson: Person;
 };

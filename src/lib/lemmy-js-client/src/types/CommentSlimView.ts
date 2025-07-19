@@ -14,9 +14,9 @@ export type CommentSlimView = {
   comment_actions?: CommentActions;
   person_actions?: PersonActions;
   instance_actions?: InstanceActions;
-  creator_is_admin: boolean;
-  can_mod: boolean;
-  creator_banned: boolean;
-  creator_is_moderator: boolean;
-  creator_banned_from_community: boolean;
+  creatorIsAdmin: boolean;
+  canMod: boolean;
+  creatorBanned: boolean;
+  creatorIsModerator: boolean;
+  creatorBannedFromCommunity: boolean;
 };

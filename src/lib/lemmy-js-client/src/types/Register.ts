@@ -7,7 +7,7 @@ import type { SensitiveString } from "./SensitiveString";
 export type Register = {
   username: string;
   password: SensitiveString;
-  password_verify: SensitiveString;
+  passwordVerify: SensitiveString;
   show_nsfw?: boolean;
   /**
    * email is mandatory if email verification is enabled on the server

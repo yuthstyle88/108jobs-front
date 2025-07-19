@@ -225,6 +225,7 @@ import { ListPersonLikedResponse } from "./types/ListPersonLikedResponse";
 import { MarkNotificationAsRead } from "./types/MarkNotificationAsRead";
 import { ListNotifications } from "./types/ListNotifications";
 import { ListNotificationsResponse } from "./types/ListNotificationsResponse";
+import {UpdateTerm} from "./types/UpdateTerm";
 
 enum HttpType {
   Get = "GET",
@@ -1563,6 +1564,20 @@ export class LemmyHttp extends Controller {
       options,
     );
   }
+  /**
+   * @summary Log into lemmy.
+   */
+  @Post("/account/auth/update-term")
+  @Tags("Account")
+  async updateTerm(@Body() form: UpdateTerm, @Inject() options?: RequestOptions) {
+    return this.#wrapper<UpdateTerm, LoginResponse>(
+      HttpType.Post,
+      "/account/auth/update-term",
+      form,
+      options,
+    );
+  }
+
 
   /**
    * @summary Invalidate the currently used auth token.

@@ -7,7 +7,7 @@ import type { Post } from "./Post";
  * A local image view.
  */
 export type LocalImageView = {
-  local_image: LocalImage;
+  localImage: LocalImage;
   person: Person;
   post?: Post;
 };

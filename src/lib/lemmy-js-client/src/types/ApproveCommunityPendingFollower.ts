@@ -3,7 +3,7 @@ import type { CommunityId } from "./CommunityId";
 import type { PersonId } from "./PersonId";
 
 export type ApproveCommunityPendingFollower = {
-  community_id: CommunityId;
-  follower_id: PersonId;
+  communityId: CommunityId;
+  followerId: PersonId;
   approve: boolean;
 };

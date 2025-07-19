@@ -6,6 +6,6 @@ import type { Person } from "./Person";
  * When an admin purges a community.
  */
 export type AdminPurgeCommunityView = {
-  admin_purge_community: AdminPurgeCommunity;
+  adminPurgeCommunity: AdminPurgeCommunity;
   admin?: Person;
 };

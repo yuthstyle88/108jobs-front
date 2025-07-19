@@ -13,22 +13,22 @@ export type CreatePost = {
      */
     body?: string;
     /**
-     * An optional altText, usable for image posts.
+     * An optional alt_text, usable for image posts.
      */
-    altText?: string;
+    alt_text?: string;
     /**
      * A honeypot to catch bots. Should be None.
      */
     honeypot?: string;
     nsfw?: boolean;
-    languageId?: LanguageId;
+    language_id?: LanguageId;
     /**
      * Instead of fetching a thumbnail, use a custom one.
      */
-    customThumbnail?: string;
+    custom_thumbnail?: string;
     tags?: Array<TagId>;
     /**
      * Time when this post should be scheduled. Null means publish immediately.
      */
-    scheduledPublishTimeAt?: number;
+    scheduled_publish_time_at?: number;
 };

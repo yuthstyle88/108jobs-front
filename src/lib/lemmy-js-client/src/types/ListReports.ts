@@ -8,7 +8,7 @@ import type { ReportType } from "./ReportType";
  * List reports.
  */
 export type ListReports = {
-  /**
+/**
    * Only shows the unresolved reports
    */
   unresolved_only?: boolean;

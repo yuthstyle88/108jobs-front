@@ -19,8 +19,8 @@ export type Post = {
    * An optional post body, in markdown.
    */
   body?: string;
-  creator_id: PersonId;
-  community_id: CommunityId;
+  creatorId: PersonId;
+  communityId: CommunityId;
   /**
    * Whether the post is removed.
    */
@@ -29,7 +29,7 @@ export type Post = {
    * Whether the post is locked.
    */
   locked: boolean;
-  published_at: string;
+  publishedAt: string;
   updated_at?: string;
   /**
    * Whether the post is deleted.
@@ -54,7 +54,7 @@ export type Post = {
   /**
    * The federated activity id / ap_id.
    */
-  ap_id: DbUrl;
+  apId: DbUrl;
   /**
    * Whether the post is local.
    */
@@ -63,15 +63,15 @@ export type Post = {
    * A video url for the link.
    */
   embed_video_url?: DbUrl;
-  language_id: LanguageId;
+  languageId: LanguageId;
   /**
    * Whether the post is featured to its community.
    */
-  featured_community: boolean;
+  featuredCommunity: boolean;
   /**
    * Whether the post is featured to its site.
    */
-  featured_local: boolean;
+  featuredLocal: boolean;
   url_content_type?: string;
   /**
    * An optional alt_text, usable for image posts.
@@ -88,12 +88,12 @@ export type Post = {
   /**
    * The time of the newest comment in the post.
    */
-  newest_comment_time_at: string;
-  report_count: number;
-  unresolved_report_count: number;
+  newestCommentTimeAt: string;
+  reportCount: number;
+  unresolvedReportCount: number;
   /**
    * If a local user posts in a remote community, the comment is hidden until it is confirmed
    * accepted by the community (by receiving it back via federation).
    */
-  federation_pending: boolean;
+  federationPending: boolean;
 };

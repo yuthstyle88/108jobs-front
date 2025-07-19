@@ -7,8 +7,8 @@ import type { RegistrationApplication } from "./RegistrationApplication";
  * A registration application view.
  */
 export type RegistrationApplicationView = {
-  registration_application: RegistrationApplication;
-  creator_local_user: LocalUser;
+  registrationApplication: RegistrationApplication;
+  creatorLocalUser: LocalUser;
   creator: Person;
   admin?: Person;
 };

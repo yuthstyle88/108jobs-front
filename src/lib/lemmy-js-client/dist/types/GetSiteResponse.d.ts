@@ -1,6 +1,6 @@
 import type { Language } from "./Language";
 import type { LanguageId } from "./LanguageId";
-import type { LocalSiteUrlBlocklist } from "@/lib/lemmy-js-client";
+import type { LocalSiteUrlBlocklist } from "./LocalSiteUrlBlocklist";
 import type { OAuthProvider } from "./OAuthProvider";
 import type { PersonView } from "./PersonView";
 import type { PluginMetadata } from "./PluginMetadata";
@@ -14,7 +14,6 @@ export type GetSiteResponse = {
     siteView: SiteView;
     admins: Array<PersonView>;
     version: string;
-    myUser?: MyUserInfo;
     allLanguages: Array<Language>;
     discussionLanguages: Array<LanguageId>;
     /**

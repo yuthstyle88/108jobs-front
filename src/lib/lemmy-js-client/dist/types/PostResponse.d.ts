@@ -1,4 +1,4 @@
 import type { PostView } from "./PostView";
 export type PostResponse = {
-    postView: PostView;
+    post_view: PostView;
 };

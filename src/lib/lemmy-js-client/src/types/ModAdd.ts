@@ -7,8 +7,8 @@ import type { PersonId } from "./PersonId";
  */
 export type ModAdd = {
   id: ModAddId;
-  mod_person_id: PersonId;
-  other_person_id: PersonId;
+  modPersonId: PersonId;
+  otherPersonId: PersonId;
   removed: boolean;
-  published_at: string;
+  publishedAt: string;
 };

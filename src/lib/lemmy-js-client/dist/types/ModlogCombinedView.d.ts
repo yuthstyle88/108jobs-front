@@ -16,37 +16,37 @@ import type { ModRemoveCommunityView } from "./ModRemoveCommunityView";
 import type { ModRemovePostView } from "./ModRemovePostView";
 import type { ModTransferCommunityView } from "./ModTransferCommunityView";
 export type ModlogCombinedView = ({
-    type: "AdminAllowInstance";
+    type_: "AdminAllowInstance";
 } & AdminAllowInstanceView) | ({
-    type: "AdminBlockInstance";
+    type_: "AdminBlockInstance";
 } & AdminBlockInstanceView) | ({
-    type: "AdminPurgeComment";
+    type_: "AdminPurgeComment";
 } & AdminPurgeCommentView) | ({
-    type: "AdminPurgeCommunity";
+    type_: "AdminPurgeCommunity";
 } & AdminPurgeCommunityView) | ({
-    type: "AdminPurgePerson";
+    type_: "AdminPurgePerson";
 } & AdminPurgePersonView) | ({
-    type: "AdminPurgePost";
+    type_: "AdminPurgePost";
 } & AdminPurgePostView) | ({
-    type: "ModAdd";
+    type_: "ModAdd";
 } & ModAddView) | ({
-    type: "ModAddCommunity";
+    type_: "ModAddCommunity";
 } & ModAddCommunityView) | ({
-    type: "ModBan";
+    type_: "ModBan";
 } & ModBanView) | ({
-    type: "ModBanFromCommunity";
+    type_: "ModBanFromCommunity";
 } & ModBanFromCommunityView) | ({
-    type: "ModFeaturePost";
+    type_: "ModFeaturePost";
 } & ModFeaturePostView) | ({
-    type: "ModChangeCommunityVisibility";
+    type_: "ModChangeCommunityVisibility";
 } & ModChangeCommunityVisibilityView) | ({
-    type: "ModLockPost";
+    type_: "ModLockPost";
 } & ModLockPostView) | ({
-    type: "ModRemoveComment";
+    type_: "ModRemoveComment";
 } & ModRemoveCommentView) | ({
-    type: "ModRemoveCommunity";
+    type_: "ModRemoveCommunity";
 } & ModRemoveCommunityView) | ({
-    type: "ModRemovePost";
+    type_: "ModRemovePost";
 } & ModRemovePostView) | ({
-    type: "ModTransferCommunity";
+    type_: "ModTransferCommunity";
 } & ModTransferCommunityView);

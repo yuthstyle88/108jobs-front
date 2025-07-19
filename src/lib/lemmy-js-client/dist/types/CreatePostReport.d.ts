@@ -5,5 +5,5 @@ import type { PostId } from "./PostId";
 export type CreatePostReport = {
     postId: PostId;
     reason: string;
-    violatesInstanceRules?: boolean;
+    violates_instance_rules?: boolean;
 };

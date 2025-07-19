@@ -3,11 +3,11 @@ import type { ActivityId } from "./ActivityId";
 import type { InstanceId } from "./InstanceId";
 
 export type ReadableFederationState = {
-  /**
+/**
    * timestamp of the next retry attempt (null if fail count is 0)
    */
   next_retry?: string;
-  instance_id: InstanceId;
+  instanceId: InstanceId;
   /**
    * the last successfully sent activity id
    */
@@ -16,7 +16,7 @@ export type ReadableFederationState = {
   /**
    * how many failed attempts have been made to send the next activity
    */
-  fail_count: number;
+  failCount: number;
   /**
    * timestamp of the last retry attempt (when the last failing activity was resent)
    */

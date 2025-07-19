@@ -7,5 +7,5 @@ import type { SensitiveString } from "./SensitiveString";
 export type PasswordChangeAfterReset = {
   token: SensitiveString;
   password: SensitiveString;
-  password_verify: SensitiveString;
+  passwordVerify: SensitiveString;
 };

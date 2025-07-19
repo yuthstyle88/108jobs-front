@@ -5,7 +5,7 @@ import type { CommunityId } from "./CommunityId";
  * Hide a community from the main view.
  */
 export type HideCommunity = {
-  community_id: CommunityId;
+  communityId: CommunityId;
   hidden: boolean;
   reason?: string;
 };

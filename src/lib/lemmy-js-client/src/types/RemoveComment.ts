@@ -5,7 +5,7 @@ import type { CommentId } from "./CommentId";
  * Remove a comment (only doable by mods).
  */
 export type RemoveComment = {
-  comment_id: CommentId;
+  commentId: CommentId;
   removed: boolean;
   reason?: string;
 };

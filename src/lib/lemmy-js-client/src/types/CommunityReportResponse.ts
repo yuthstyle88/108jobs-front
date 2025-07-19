@@ -5,5 +5,5 @@ import type { CommunityReportView } from "./CommunityReportView";
  * A community report response.
  */
 export type CommunityReportResponse = {
-  community_report_view: CommunityReportView;
+  communityReportView: CommunityReportView;
 };

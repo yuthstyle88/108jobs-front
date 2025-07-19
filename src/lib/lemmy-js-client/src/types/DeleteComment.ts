@@ -4,4 +4,6 @@ import type { CommentId } from "./CommentId";
 /**
  * Delete your own comment.
  */
-export type DeleteComment = { comment_id: CommentId; deleted: boolean };
+export type DeleteComment = {
+  commentId: CommentId;
+};

@@ -7,7 +7,7 @@ import type { Person } from "./Person";
  * When the visibility of a community is changed
  */
 export type ModChangeCommunityVisibilityView = {
-  mod_change_community_visibility: ModChangeCommunityVisibility;
+  modChangeCommunityVisibility: ModChangeCommunityVisibility;
   moderator?: Person;
   community: Community;
 };

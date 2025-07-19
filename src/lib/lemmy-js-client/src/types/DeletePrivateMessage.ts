@@ -5,6 +5,6 @@ import type { PrivateMessageId } from "./PrivateMessageId";
  * Delete a private message.
  */
 export type DeletePrivateMessage = {
-  private_message_id: PrivateMessageId;
+  privateMessageId: PrivateMessageId;
   deleted: boolean;
 };

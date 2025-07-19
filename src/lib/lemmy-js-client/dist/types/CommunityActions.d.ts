@@ -1,27 +1,29 @@
 import type { CommunityFollowerState } from "./CommunityFollowerState";
+import type { CommunityNotificationsMode } from "./CommunityNotificationsMode";
 export type CommunityActions = {
     /**
-     * When the community was followed.
-     */
-    followedAt?: string;
+       * When the community was followed.
+       */
+    followed_at?: string;
     /**
      * The state of the community follow.
      */
-    followState?: CommunityFollowerState;
+    follow_state?: CommunityFollowerState;
     /**
      * When the community was blocked.
      */
-    blockedAt?: string;
+    blocked_at?: string;
     /**
      * When this user became a moderator.
      */
-    becameModeratorAt?: string;
+    became_moderator_at?: string;
     /**
      * When this user received a ban.
      */
-    receivedBanAt?: string;
+    received_ban_at?: string;
     /**
      * When their ban expires.
      */
-    banExpiresAt?: string;
+    ban_expires_at?: string;
+    notifications?: CommunityNotificationsMode;
 };

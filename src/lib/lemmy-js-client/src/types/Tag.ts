@@ -19,13 +19,13 @@ import type { TagId } from "./TagId";
  */
 export type Tag = {
   id: TagId;
-  ap_id: DbUrl;
-  display_name: string;
+  apId: DbUrl;
+  displayName: string;
   /**
    * the community that owns this tag
    */
-  community_id: CommunityId;
-  published_at: string;
+  communityId: CommunityId;
+  publishedAt: string;
   updated_at?: string;
   deleted: boolean;
 };

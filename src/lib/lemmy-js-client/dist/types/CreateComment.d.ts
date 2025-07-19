@@ -7,6 +7,6 @@ import type { PostId } from "./PostId";
 export type CreateComment = {
     content: string;
     postId: PostId;
-    parentId?: CommentId;
-    languageId?: LanguageId;
+    parent_id?: CommentId;
+    language_id?: LanguageId;
 };

@@ -5,6 +5,6 @@ import type { PrivateMessageReportId } from "./PrivateMessageReportId";
  * Resolve a private message report.
  */
 export type ResolvePrivateMessageReport = {
-  report_id: PrivateMessageReportId;
+  reportId: PrivateMessageReportId;
   resolved: boolean;
 };

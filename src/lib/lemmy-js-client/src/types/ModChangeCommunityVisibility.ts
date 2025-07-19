@@ -6,8 +6,8 @@ import type { PersonId } from "./PersonId";
 
 export type ModChangeCommunityVisibility = {
   id: ModChangeCommunityVisibilityId;
-  community_id: CommunityId;
-  mod_person_id: PersonId;
-  published_at: string;
+  communityId: CommunityId;
+  modPersonId: PersonId;
+  publishedAt: string;
   visibility: CommunityVisibility;
 };

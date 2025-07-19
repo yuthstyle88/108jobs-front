@@ -10,7 +10,7 @@ export type Instance = {
     /**
      * When the instance was updated.
      */
-    updatedAt?: string;
+    updated_at?: string;
     /**
      * The software of the instance.
      */

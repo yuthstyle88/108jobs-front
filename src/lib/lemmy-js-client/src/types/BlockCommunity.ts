@@ -4,4 +4,6 @@ import type { CommunityId } from "./CommunityId";
 /**
  * Block a community.
  */
-export type BlockCommunity = { community_id: CommunityId; block: boolean };
+export type BlockCommunity = {
+  communityId: CommunityId;
+};

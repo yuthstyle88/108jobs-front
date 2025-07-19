@@ -3,11 +3,11 @@ import type { CommunityReportView } from "./CommunityReportView";
 import type { PostReportView } from "./PostReportView";
 import type { PrivateMessageReportView } from "./PrivateMessageReportView";
 export type ReportCombinedView = ({
-    type: "Post";
+    type_: "Post";
 } & PostReportView) | ({
-    type: "Comment";
+    type_: "Comment";
 } & CommentReportView) | ({
-    type: "PrivateMessage";
+    type_: "PrivateMessage";
 } & PrivateMessageReportView) | ({
-    type: "Community";
+    type_: "Community";
 } & CommunityReportView);

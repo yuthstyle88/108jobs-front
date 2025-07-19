@@ -12,7 +12,7 @@ import type { VoteShow } from "./VoteShow";
 export type LocalUser = {
     id: LocalUserId;
     /**
-     * The personId for the local user.
+     * The person_id for the local user.
      */
     personId: PersonId;
     email?: SensitiveString;
@@ -62,7 +62,7 @@ export type LocalUser = {
      * A post-view mode that changes how multiple post listings look.
      */
     postListingMode: PostListingMode;
-    totp2faEnabled: boolean;
+    totpFaEnabled: boolean;
     /**
      * Whether to allow keyboard navigation (for browsing and interacting with posts and comments).
      */
@@ -97,7 +97,7 @@ export type LocalUser = {
     /**
      * A default time range limit to apply to post sorts, in seconds.
      */
-    defaultPostTimeRangeSeconds?: number;
+    default_post_time_range_seconds?: number;
     showScore: boolean;
     showUpvotes: boolean;
     showDownvotes: VoteShow;

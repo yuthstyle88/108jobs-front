@@ -28,7 +28,7 @@ export type Post = {
      */
     locked: boolean;
     publishedAt: string;
-    updatedAt?: string;
+    updated_at?: string;
     /**
      * Whether the post is deleted.
      */
@@ -40,17 +40,17 @@ export type Post = {
     /**
      * A title for the link.
      */
-    embedTitle?: string;
+    embed_title?: string;
     /**
      * A description for the link.
      */
-    embedDescription?: string;
+    embed_description?: string;
     /**
      * A thumbnail picture url.
      */
-    thumbnailUrl?: DbUrl;
+    thumbnail_url?: DbUrl;
     /**
-     * The federated activity id / apId.
+     * The federated activity id / ap_id.
      */
     apId: DbUrl;
     /**
@@ -60,7 +60,7 @@ export type Post = {
     /**
      * A video url for the link.
      */
-    embedVideoUrl?: DbUrl;
+    embed_video_url?: DbUrl;
     languageId: LanguageId;
     /**
      * Whether the post is featured to its community.
@@ -70,15 +70,15 @@ export type Post = {
      * Whether the post is featured to its site.
      */
     featuredLocal: boolean;
-    urlContentType?: string;
+    url_content_type?: string;
     /**
-     * An optional altText, usable for image posts.
+     * An optional alt_text, usable for image posts.
      */
-    altText?: string;
+    alt_text?: string;
     /**
      * Time at which the post will be published. None means publish immediately.
      */
-    scheduledPublishTimeAt?: string;
+    scheduled_publish_time_at?: string;
     comments: number;
     score: number;
     upvotes: number;

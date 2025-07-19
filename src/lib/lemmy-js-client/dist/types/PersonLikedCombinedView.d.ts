@@ -1,7 +1,7 @@
 import type { CommentView } from "./CommentView";
 import type { PostView } from "./PostView";
 export type PersonLikedCombinedView = ({
-    type: "Post";
+    type_: "Post";
 } & PostView) | ({
-    type: "Comment";
+    type_: "Comment";
 } & CommentView);

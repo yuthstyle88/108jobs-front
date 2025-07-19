@@ -6,9 +6,9 @@ import type { OAuthProviderId } from "./OAuthProviderId";
  * An auth account method.
  */
 export type OAuthAccount = {
-  local_user_id: LocalUserId;
-  oauth_provider_id: OAuthProviderId;
-  oauth_user_id: string;
-  published_at: string;
+  localUserId: LocalUserId;
+  oauthProviderId: OAuthProviderId;
+  oauthUserId: string;
+  publishedAt: string;
   updated_at?: string;
 };

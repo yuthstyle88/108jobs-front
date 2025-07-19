@@ -4,7 +4,7 @@ import type { MultiCommunityId } from "./MultiCommunityId";
 import type { PersonId } from "./PersonId";
 
 export type MultiCommunityFollow = {
-  multi_community_id: MultiCommunityId;
-  person_id: PersonId;
-  follow_state: CommunityFollowerState;
+  multiCommunityId: MultiCommunityId;
+  personId: PersonId;
+  followState: CommunityFollowerState;
 };

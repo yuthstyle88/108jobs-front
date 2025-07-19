@@ -6,6 +6,6 @@ import type { Person } from "./Person";
 export type PendingFollow = {
   person: Person;
   community: Community;
-  is_new_instance: boolean;
+  isNewInstance: boolean;
   follow_state?: CommunityFollowerState;
 };

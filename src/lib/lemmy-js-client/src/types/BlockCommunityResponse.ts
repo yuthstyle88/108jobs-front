@@ -5,6 +5,6 @@ import type { CommunityView } from "./CommunityView";
  * The block community response.
  */
 export type BlockCommunityResponse = {
-  community_view: CommunityView;
+  communityView: CommunityView;
   blocked: boolean;
 };

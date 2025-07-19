@@ -5,6 +5,6 @@ export type ImageDetails = {
   link: DbUrl;
   width: number;
   height: number;
-  content_type: string;
+  contentType: string;
   blurhash?: string;
 };

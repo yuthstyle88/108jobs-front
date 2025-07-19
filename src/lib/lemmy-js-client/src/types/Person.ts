@@ -17,12 +17,12 @@ export type Person = {
    * A URL for an avatar.
    */
   avatar?: DbUrl;
-  published_at: string;
+  publishedAt: string;
   updated_at?: string;
   /**
    * The federated ap_id.
    */
-  ap_id: DbUrl;
+  apId: DbUrl;
   /**
    * An optional bio, in markdown.
    */
@@ -46,8 +46,8 @@ export type Person = {
   /**
    * Whether the person is a bot account.
    */
-  bot_account: boolean;
-  instance_id: InstanceId;
-  post_count: number;
-  comment_count: number;
+  botAccount: boolean;
+  instanceId: InstanceId;
+  postCount: number;
+  commentCount: number;
 };

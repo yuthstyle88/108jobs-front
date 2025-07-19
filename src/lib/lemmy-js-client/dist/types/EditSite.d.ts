@@ -22,154 +22,154 @@ export type EditSite = {
     /**
      * Limits community creation to admins only.
      */
-    communityCreationAdminOnly?: boolean;
+    community_creation_admin_only?: boolean;
     /**
      * Whether to require email verification.
      */
-    requireEmailVerification?: boolean;
+    require_email_verification?: boolean;
     /**
      * Your application question form. This is in markdown, and can be many questions.
      */
-    applicationQuestion?: string;
+    application_question?: string;
     /**
      * Whether your instance is public, or private.
      */
-    privateInstance?: boolean;
+    private_instance?: boolean;
     /**
      * The default theme. Usually "browser"
      */
-    defaultTheme?: string;
+    default_theme?: string;
     /**
      * The default post listing type, usually "local"
      */
-    defaultPostListingType?: ListingType;
+    default_post_listing_type?: ListingType;
     /**
      * Default value for listing mode, usually "list"
      */
-    defaultPostListingMode?: PostListingMode;
+    default_post_listing_mode?: PostListingMode;
     /**
      * The default post sort, usually "active"
      */
-    defaultPostSortType?: PostSortType;
+    default_post_sort_type?: PostSortType;
     /**
      * A default time range limit to apply to post sorts, in seconds. 0 means none.
      */
-    defaultPostTimeRangeSeconds?: number;
+    default_post_time_range_seconds?: number;
     /**
      * The default comment sort, usually "hot"
      */
-    defaultCommentSortType?: CommentSortType;
+    default_comment_sort_type?: CommentSortType;
     /**
      * An optional page of legal information
      */
-    legalInformation?: string;
+    legal_information?: string;
     /**
      * Whether to email admins when receiving a new application.
      */
-    applicationEmailAdmins?: boolean;
+    application_email_admins?: boolean;
     /**
      * A list of allowed discussion languages.
      */
-    discussionLanguages?: Array<LanguageId>;
+    discussion_languages?: Array<LanguageId>;
     /**
      * A regex string of items to filter.
      */
-    slurFilterRegex?: string;
+    slur_filter_regex?: string;
     /**
      * The max length of actor names.
      */
-    actorNameMaxLength?: number;
+    actor_name_max_length?: number;
     /**
      * The number of messages allowed in a given time frame.
      */
-    rateLimitMessageMaxRequests?: number;
-    rateLimitMessageIntervalSeconds?: number;
+    rate_limit_message_max_requests?: number;
+    rate_limit_message_interval_seconds?: number;
     /**
      * The number of posts allowed in a given time frame.
      */
-    rateLimitPostMaxRequests?: number;
-    rateLimitPostIntervalSeconds?: number;
+    rate_limit_post_max_requests?: number;
+    rate_limit_post_interval_seconds?: number;
     /**
      * The number of registrations allowed in a given time frame.
      */
-    rateLimitRegisterMaxRequests?: number;
-    rateLimitRegisterIntervalSeconds?: number;
+    rate_limit_register_max_requests?: number;
+    rate_limit_register_interval_seconds?: number;
     /**
      * The number of image uploads allowed in a given time frame.
      */
-    rateLimitImageMaxRequests?: number;
-    rateLimitImageIntervalSeconds?: number;
+    rate_limit_image_max_requests?: number;
+    rate_limit_image_interval_seconds?: number;
     /**
      * The number of comments allowed in a given time frame.
      */
-    rateLimitCommentMaxRequests?: number;
-    rateLimitCommentIntervalSeconds?: number;
+    rate_limit_comment_max_requests?: number;
+    rate_limit_comment_interval_seconds?: number;
     /**
      * The number of searches allowed in a given time frame.
      */
-    rateLimitSearchMaxRequests?: number;
-    rateLimitSearchIntervalSeconds?: number;
+    rate_limit_search_max_requests?: number;
+    rate_limit_search_interval_seconds?: number;
     /**
      * The number of settings imports or exports allowed in a given time frame.
      */
-    rateLimitImportUserSettingsMaxRequests?: number;
-    rateLimitImportUserSettingsIntervalSeconds?: number;
+    rate_limit_import_user_settings_max_requests?: number;
+    rate_limit_import_user_settings_interval_seconds?: number;
     /**
      * Whether to enable federation.
      */
-    federationEnabled?: boolean;
+    federation_enabled?: boolean;
     /**
      * Whether to enable captchas for signups.
      */
-    captchaEnabled?: boolean;
+    captcha_enabled?: boolean;
     /**
      * The captcha difficulty. Can be easy, medium, or hard
      */
-    captchaDifficulty?: string;
+    captcha_difficulty?: string;
     /**
      * A list of blocked URLs
      */
-    blockedUrls?: Array<string>;
-    registrationMode?: RegistrationMode;
+    blocked_urls?: Array<string>;
+    registration_mode?: RegistrationMode;
     /**
      * Whether to email admins for new reports.
      */
-    reportsEmailAdmins?: boolean;
+    reports_email_admins?: boolean;
     /**
      * If present, nsfw content is visible by default. Should be displayed by frontends/clients
      * when the site is first opened by a user.
      */
-    contentWarning?: string;
+    content_warning?: string;
     /**
      * Whether or not external auth methods can auto-register users.
      */
-    oauthRegistration?: boolean;
+    oauth_registration?: boolean;
     /**
      * What kind of post upvotes your site allows.
      */
-    postUpvotes?: FederationMode;
+    post_upvotes?: FederationMode;
     /**
      * What kind of post downvotes your site allows.
      */
-    postDownvotes?: FederationMode;
+    post_downvotes?: FederationMode;
     /**
      * What kind of comment upvotes your site allows.
      */
-    commentUpvotes?: FederationMode;
+    comment_upvotes?: FederationMode;
     /**
      * What kind of comment downvotes your site allows.
      */
-    commentDownvotes?: FederationMode;
+    comment_downvotes?: FederationMode;
     /**
      * Block NSFW content being created
      */
-    disallowNsfwContent?: boolean;
+    disallow_nsfw_content?: boolean;
     /**
      * Dont send email notifications to users for new replies, mentions etc
      */
-    disableEmailNotifications?: boolean;
+    disable_email_notifications?: boolean;
     /**
      * A multicommunity with suggested communities which is shown on the homepage
      */
-    suggestedCommunities?: MultiCommunityId;
+    suggested_communities?: MultiCommunityId;
 };

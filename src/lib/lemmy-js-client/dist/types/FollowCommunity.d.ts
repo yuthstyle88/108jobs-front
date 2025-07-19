@@ -4,5 +4,4 @@ import type { CommunityId } from "./CommunityId";
  */
 export type FollowCommunity = {
     communityId: CommunityId;
-    follow: boolean;
 };

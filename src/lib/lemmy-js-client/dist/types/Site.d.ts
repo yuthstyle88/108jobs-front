@@ -13,7 +13,7 @@ export type Site = {
      */
     sidebar?: string;
     publishedAt: string;
-    updatedAt?: string;
+    updated_at?: string;
     /**
      * An icon URL.
      */
@@ -27,7 +27,7 @@ export type Site = {
      */
     description?: string;
     /**
-     * The federated apId.
+     * The federated ap_id.
      */
     apId: DbUrl;
     /**
@@ -44,5 +44,5 @@ export type Site = {
      * If present, nsfw content is visible by default. Should be displayed by frontends/clients
      * when the site is first opened by a user.
      */
-    contentWarning?: string;
+    content_warning?: string;
 };

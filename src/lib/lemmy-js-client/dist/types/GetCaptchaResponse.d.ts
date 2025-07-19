@@ -4,7 +4,7 @@ import type { CaptchaResponse } from "./CaptchaResponse";
  */
 export type GetCaptchaResponse = {
     /**
-     * Will be None if captchas are disabled.
-     */
+       * Will be None if captchas are disabled.
+       */
     ok?: CaptchaResponse;
 };

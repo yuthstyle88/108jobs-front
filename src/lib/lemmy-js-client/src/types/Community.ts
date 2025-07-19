@@ -22,7 +22,7 @@ export type Community = {
    * Whether the community is removed by a mod.
    */
   removed: boolean;
-  published_at: string;
+  publishedAt: string;
   updated_at?: string;
   /**
    * Whether the community has been deleted by its creator.
@@ -35,7 +35,7 @@ export type Community = {
   /**
    * The federated ap_id.
    */
-  ap_id: DbUrl;
+  apId: DbUrl;
   /**
    * Whether the community is local.
    */
@@ -51,8 +51,8 @@ export type Community = {
   /**
    * Whether posting is restricted to mods only.
    */
-  posting_restricted_to_mods: boolean;
-  instance_id: InstanceId;
+  postingRestrictedToMods: boolean;
+  instanceId: InstanceId;
   visibility: CommunityVisibility;
   /**
    * A shorter, one-line description of the site.
@@ -64,21 +64,21 @@ export type Community = {
   /**
    * The number of users with any activity in the last day.
    */
-  users_active_day: number;
+  usersActiveDay: number;
   /**
    * The number of users with any activity in the last week.
    */
-  users_active_week: number;
+  usersActiveWeek: number;
   /**
    * The number of users with any activity in the last month.
    */
-  users_active_month: number;
+  usersActiveMonth: number;
   /**
    * The number of users with any activity in the last year.
    */
-  users_active_half_year: number;
-  subscribers_local: number;
-  report_count: number;
-  unresolved_report_count: number;
-  local_removed: boolean;
+  usersActiveHalfYear: number;
+  subscribersLocal: number;
+  reportCount: number;
+  unresolvedReportCount: number;
+  localRemoved: boolean;
 };

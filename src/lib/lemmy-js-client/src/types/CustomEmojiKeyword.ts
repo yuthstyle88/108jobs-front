@@ -5,6 +5,6 @@ import type { CustomEmojiId } from "./CustomEmojiId";
  * A custom keyword for an emoji.
  */
 export type CustomEmojiKeyword = {
-  custom_emoji_id: CustomEmojiId;
+  customEmojiId: CustomEmojiId;
   keyword: string;
 };

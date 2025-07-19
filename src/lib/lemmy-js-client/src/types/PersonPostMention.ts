@@ -8,8 +8,8 @@ import type { PostId } from "./PostId";
  */
 export type PersonPostMention = {
   id: PersonPostMentionId;
-  recipient_id: PersonId;
-  post_id: PostId;
+  recipientId: PersonId;
+  postId: PostId;
   read: boolean;
-  published_at: string;
+  publishedAt: string;
 };

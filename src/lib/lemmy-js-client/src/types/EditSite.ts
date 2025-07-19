@@ -12,7 +12,7 @@ import type { RegistrationMode } from "./RegistrationMode";
  * Edits a site.
  */
 export type EditSite = {
-  name?: string;
+name?: string;
   /**
    * A sidebar for the site, in markdown.
    */

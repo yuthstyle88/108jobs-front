@@ -5,7 +5,7 @@ import type { SensitiveString } from "./SensitiveString";
  * Changes your account password.
  */
 export type ChangePassword = {
-  new_password: SensitiveString;
-  new_password_verify: SensitiveString;
-  old_password: SensitiveString;
+  newPassword: SensitiveString;
+  newPasswordVerify: SensitiveString;
+  oldPassword: SensitiveString;
 };

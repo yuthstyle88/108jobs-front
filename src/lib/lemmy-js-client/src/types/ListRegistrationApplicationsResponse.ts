@@ -6,7 +6,7 @@ import type { RegistrationApplicationView } from "./RegistrationApplicationView"
  * The list of registration applications.
  */
 export type ListRegistrationApplicationsResponse = {
-  registration_applications: Array<RegistrationApplicationView>;
+  registrationApplications: Array<RegistrationApplicationView>;
   /**
    * the pagination cursor to use to fetch the next page
    */

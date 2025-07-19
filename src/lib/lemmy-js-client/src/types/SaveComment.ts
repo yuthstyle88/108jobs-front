@@ -4,4 +4,6 @@ import type { CommentId } from "./CommentId";
 /**
  * Save / bookmark a comment.
  */
-export type SaveComment = { comment_id: CommentId; save: boolean };
+export type SaveComment = {
+  commentId: CommentId;
+};

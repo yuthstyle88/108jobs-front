@@ -1,14 +1,14 @@
 export type CommentActions = {
     /**
-     * The like / score for the comment.
-     */
-    likeScore?: number;
+       * The like / score for the comment.
+       */
+    like_score?: number;
     /**
      * When the comment was liked.
      */
-    likedAt?: string;
+    liked_at?: string;
     /**
      * When the comment was saved.
      */
-    savedAt?: string;
+    saved_at?: string;
 };

@@ -4,5 +4,4 @@ import type { CommentId } from "./CommentId";
  */
 export type DeleteComment = {
     commentId: CommentId;
-    deleted: boolean;
 };

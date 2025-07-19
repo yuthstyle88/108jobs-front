@@ -5,5 +5,5 @@ import type { RegistrationApplicationId } from "./RegistrationApplicationId";
 export type ApproveRegistrationApplication = {
     id: RegistrationApplicationId;
     approve: boolean;
-    denyReason?: string;
+    deny_reason?: string;
 };

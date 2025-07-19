@@ -7,8 +7,8 @@ import type { Person } from "./Person";
  * When a moderator transfers a community to a new owner.
  */
 export type ModTransferCommunityView = {
-  mod_transfer_community: ModTransferCommunity;
+  modTransferCommunity: ModTransferCommunity;
   moderator?: Person;
   community: Community;
-  other_person: Person;
+  otherPerson: Person;
 };

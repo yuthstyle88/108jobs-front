@@ -6,10 +6,10 @@ import type { PostView } from "./PostView";
  * The post response.
  */
 export type GetPostResponse = {
-  post_view: PostView;
-  community_view: CommunityView;
+  postView: PostView;
+  communityView: CommunityView;
   /**
    * A list of cross-posts, or other times / communities this link has been posted to.
    */
-  cross_posts: Array<PostView>;
+  crossPosts: Array<PostView>;
 };

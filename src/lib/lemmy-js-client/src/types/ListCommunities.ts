@@ -7,7 +7,7 @@ import type { PaginationCursor } from "./PaginationCursor";
  * Fetches a list of communities.
  */
 export type ListCommunities = {
-  type_?: ListingType;
+type_?: ListingType;
   sort?: CommunitySortType;
   /**
    * Filter to within a given time range, in seconds.

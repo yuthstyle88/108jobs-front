@@ -7,8 +7,8 @@ import type { Person } from "./Person";
  * When someone is banned from a community.
  */
 export type ModBanFromCommunityView = {
-  mod_ban_from_community: ModBanFromCommunity;
+  modBanFromCommunity: ModBanFromCommunity;
   moderator?: Person;
   community: Community;
-  other_person: Person;
+  otherPerson: Person;
 };

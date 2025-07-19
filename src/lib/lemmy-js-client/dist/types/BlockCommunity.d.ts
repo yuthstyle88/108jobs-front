@@ -4,5 +4,4 @@ import type { CommunityId } from "./CommunityId";
  */
 export type BlockCommunity = {
     communityId: CommunityId;
-    block: boolean;
 };

@@ -5,6 +5,6 @@ export type ListMediaResponse = {
     /**
      * the pagination cursor to use to fetch the next page
      */
-    nextPage?: PaginationCursor;
-    prevPage?: PaginationCursor;
+    next_page?: PaginationCursor;
+    prev_page?: PaginationCursor;
 };

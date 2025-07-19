@@ -4,4 +4,6 @@ import type { PersonId } from "./PersonId";
 /**
  * Adds an admin to a site.
  */
-export type AddAdmin = { person_id: PersonId; added: boolean };
+export type AddAdmin = {
+  personId: PersonId;
+};

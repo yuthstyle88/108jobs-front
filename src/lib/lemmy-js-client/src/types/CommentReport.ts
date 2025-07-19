@@ -8,13 +8,13 @@ import type { PersonId } from "./PersonId";
  */
 export type CommentReport = {
   id: CommentReportId;
-  creator_id: PersonId;
-  comment_id: CommentId;
-  original_comment_text: string;
+  creatorId: PersonId;
+  commentId: CommentId;
+  originalCommentText: string;
   reason: string;
   resolved: boolean;
   resolver_id?: PersonId;
-  published_at: string;
+  publishedAt: string;
   updated_at?: string;
-  violates_instance_rules: boolean;
+  violatesInstanceRules: boolean;
 };

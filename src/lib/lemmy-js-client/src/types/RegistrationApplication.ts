@@ -8,9 +8,9 @@ import type { RegistrationApplicationId } from "./RegistrationApplicationId";
  */
 export type RegistrationApplication = {
   id: RegistrationApplicationId;
-  local_user_id: LocalUserId;
+  localUserId: LocalUserId;
   answer: string;
   admin_id?: PersonId;
   deny_reason?: string;
-  published_at: string;
+  publishedAt: string;
 };

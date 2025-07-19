@@ -4,5 +4,4 @@ import type { PersonId } from "./PersonId";
  */
 export type PurgePerson = {
     personId: PersonId;
-    reason?: string;
 };

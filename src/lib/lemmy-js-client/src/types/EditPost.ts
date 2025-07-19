@@ -7,7 +7,7 @@ import type { TagId } from "./TagId";
  * Edit a post.
  */
 export type EditPost = {
-  post_id: PostId;
+  postId: PostId;
   name?: string;
   url?: string;
   /**

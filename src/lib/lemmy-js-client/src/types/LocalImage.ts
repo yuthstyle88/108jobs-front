@@ -3,8 +3,8 @@ import type { PersonId } from "./PersonId";
 import type { PostId } from "./PostId";
 
 export type LocalImage = {
-  pictrs_alias: string;
-  published_at: string;
+  pictrsAlias: string;
+  publishedAt: string;
   person_id?: PersonId;
   /**
    * This means the image is an auto-generated thumbnail, for a post.

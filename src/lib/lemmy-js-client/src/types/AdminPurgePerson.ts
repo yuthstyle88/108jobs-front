@@ -7,7 +7,7 @@ import type { PersonId } from "./PersonId";
  */
 export type AdminPurgePerson = {
   id: AdminPurgePersonId;
-  admin_person_id: PersonId;
+  adminPersonId: PersonId;
   reason?: string;
-  published_at: string;
+  publishedAt: string;
 };

@@ -12,7 +12,7 @@ import type { TagId } from "./TagId";
  * community, to categorize a post.
  *
  * In the future we may add more tag types, depending on the requirements, this will lead to either
- * expansion of this table (communityId optional, addition of tagType enum) or split of this
+ * expansion of this table (community_id optional, addition of tag_type enum) or split of this
  * table / creation of new tables.
  */
 export type Tag = {
@@ -24,6 +24,6 @@ export type Tag = {
      */
     communityId: CommunityId;
     publishedAt: string;
-    updatedAt?: string;
+    updated_at?: string;
     deleted: boolean;
 };

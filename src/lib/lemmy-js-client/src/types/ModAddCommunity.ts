@@ -8,9 +8,9 @@ import type { PersonId } from "./PersonId";
  */
 export type ModAddCommunity = {
   id: ModAddCommunityId;
-  mod_person_id: PersonId;
-  other_person_id: PersonId;
-  community_id: CommunityId;
+  modPersonId: PersonId;
+  otherPersonId: PersonId;
+  communityId: CommunityId;
   removed: boolean;
-  published_at: string;
+  publishedAt: string;
 };

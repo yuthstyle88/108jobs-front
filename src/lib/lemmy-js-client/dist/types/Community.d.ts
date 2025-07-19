@@ -21,7 +21,7 @@ export type Community = {
      */
     removed: boolean;
     publishedAt: string;
-    updatedAt?: string;
+    updated_at?: string;
     /**
      * Whether the community has been deleted by its creator.
      */
@@ -31,7 +31,7 @@ export type Community = {
      */
     nsfw: boolean;
     /**
-     * The federated apId.
+     * The federated ap_id.
      */
     apId: DbUrl;
     /**

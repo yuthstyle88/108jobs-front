@@ -6,5 +6,5 @@ export type OpenGraphData = {
     title?: string;
     description?: string;
     image?: DbUrl;
-    embedVideoUrl?: DbUrl;
+    embed_video_url?: DbUrl;
 };

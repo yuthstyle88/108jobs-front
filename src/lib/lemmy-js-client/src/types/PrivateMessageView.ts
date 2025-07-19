@@ -6,7 +6,7 @@ import type { PrivateMessage } from "./PrivateMessage";
  * A private message view.
  */
 export type PrivateMessageView = {
-  private_message: PrivateMessage;
+  privateMessage: PrivateMessage;
   creator: Person;
   recipient: Person;
 };

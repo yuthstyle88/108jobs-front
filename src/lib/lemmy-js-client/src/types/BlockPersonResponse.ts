@@ -4,4 +4,6 @@ import type { PersonView } from "./PersonView";
 /**
  * The response for a person block.
  */
-export type BlockPersonResponse = { person_view: PersonView; blocked: boolean };
+export type BlockPersonResponse = {
+  personView: PersonView;
+};

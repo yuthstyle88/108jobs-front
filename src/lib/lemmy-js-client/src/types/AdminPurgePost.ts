@@ -8,8 +8,8 @@ import type { PersonId } from "./PersonId";
  */
 export type AdminPurgePost = {
   id: AdminPurgePostId;
-  admin_person_id: PersonId;
-  community_id: CommunityId;
+  adminPersonId: PersonId;
+  communityId: CommunityId;
   reason?: string;
-  published_at: string;
+  publishedAt: string;
 };

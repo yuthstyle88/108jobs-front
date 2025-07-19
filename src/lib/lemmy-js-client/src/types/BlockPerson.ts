@@ -4,4 +4,6 @@ import type { PersonId } from "./PersonId";
 /**
  * Block a person.
  */
-export type BlockPerson = { person_id: PersonId; block: boolean };
+export type BlockPerson = {
+  personId: PersonId;
+};

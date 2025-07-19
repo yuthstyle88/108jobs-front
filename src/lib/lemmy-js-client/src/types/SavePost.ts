@@ -4,4 +4,6 @@ import type { PostId } from "./PostId";
 /**
  * Save / bookmark a post.
  */
-export type SavePost = { post_id: PostId; save: boolean };
+export type SavePost = {
+  postId: PostId;
+};

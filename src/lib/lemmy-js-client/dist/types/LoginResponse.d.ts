@@ -4,9 +4,9 @@ import type { SensitiveString } from "./SensitiveString";
  */
 export type LoginResponse = {
     /**
-     * This is None in response to `Register` if email verification is enabled, or the server
-     * requires registration applications.
-     */
+       * This is None in response to `Register` if email verification is enabled, or the server
+       * requires registration applications.
+       */
     jwt?: SensitiveString;
     /**
      * If registration applications are required, this will return true for a signup response.

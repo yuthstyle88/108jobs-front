@@ -5,6 +5,6 @@ import type { PrivateMessageId } from "./PrivateMessageId";
  * Edit a private message.
  */
 export type EditPrivateMessage = {
-  private_message_id: PrivateMessageId;
+  privateMessageId: PrivateMessageId;
   content: string;
 };

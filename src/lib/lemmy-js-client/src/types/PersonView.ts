@@ -7,7 +7,7 @@ import type { PersonActions } from "./PersonActions";
  */
 export type PersonView = {
   person: Person;
-  is_admin: boolean;
+  isAdmin: boolean;
   person_actions?: PersonActions;
-  creator_banned: boolean;
+  creatorBanned: boolean;
 };

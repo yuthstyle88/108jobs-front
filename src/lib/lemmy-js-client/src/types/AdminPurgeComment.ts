@@ -8,8 +8,8 @@ import type { PostId } from "./PostId";
  */
 export type AdminPurgeComment = {
   id: AdminPurgeCommentId;
-  admin_person_id: PersonId;
-  post_id: PostId;
+  adminPersonId: PersonId;
+  postId: PostId;
   reason?: string;
-  published_at: string;
+  publishedAt: string;
 };

@@ -5,11 +5,11 @@ import type { LocalUserId } from "./LocalUserId";
  * Stores data related to a specific user login session.
  */
 export type LoginToken = {
-  user_id: LocalUserId;
+  userId: LocalUserId;
   /**
    * Time of login
    */
-  published_at: string;
+  publishedAt: string;
   /**
    * IP address where login was made from, allows invalidating logins by IP address.
    * Could be stored in truncated format, or store derived information for better privacy.

@@ -10,5 +10,5 @@ export type CustomEmoji = {
     altText: string;
     category: string;
     publishedAt: string;
-    updatedAt?: string;
+    updated_at?: string;
 };

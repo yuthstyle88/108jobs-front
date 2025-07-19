@@ -3,6 +3,6 @@ import type { CommunityView } from "./CommunityView";
 import type { MultiCommunityView } from "./MultiCommunityView";
 
 export type GetMultiCommunityResponse = {
-  multi_community_view: MultiCommunityView;
+  multiCommunityView: MultiCommunityView;
   communities: Array<CommunityView>;
 };

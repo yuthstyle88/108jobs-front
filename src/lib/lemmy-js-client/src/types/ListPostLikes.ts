@@ -6,7 +6,7 @@ import type { PostId } from "./PostId";
  * List post likes. Admins-only.
  */
 export type ListPostLikes = {
-  post_id: PostId;
+  postId: PostId;
   page_cursor?: PaginationCursor;
   page_back?: boolean;
   limit?: number;

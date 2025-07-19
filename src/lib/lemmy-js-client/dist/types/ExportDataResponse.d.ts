@@ -4,7 +4,7 @@ import type { UserSettingsBackup } from "./UserSettingsBackup";
  * Your exported data.
  */
 export type ExportDataResponse = {
-    inbox: Array<PostOrCommentOrPrivateMessage>;
+    notifications: Array<PostOrCommentOrPrivateMessage>;
     content: Array<PostOrCommentOrPrivateMessage>;
     readPosts: Array<string>;
     liked: Array<string>;

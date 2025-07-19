@@ -1,4 +1,4 @@
 export type ImageGetParams = {
-    fileType?: string;
-    maxSize?: number;
+    file_type?: string;
+    max_size?: number;
 };

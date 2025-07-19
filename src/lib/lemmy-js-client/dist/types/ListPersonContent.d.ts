@@ -4,16 +4,16 @@ import type { PersonId } from "./PersonId";
 /**
  * Gets a person's content (posts and comments)
  *
- * Either personId, or username are required.
+ * Either person_id, or username are required.
  */
 export type ListPersonContent = {
-    type?: PersonContentType;
-    personId?: PersonId;
+    type_?: PersonContentType;
+    person_id?: PersonId;
     /**
      * Example: dessalines , or dessalines@xyz.tld
      */
     username?: string;
-    pageCursor?: PaginationCursor;
-    pageBack?: boolean;
+    page_cursor?: PaginationCursor;
+    page_back?: boolean;
     limit?: number;
 };

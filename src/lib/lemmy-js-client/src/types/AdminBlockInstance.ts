@@ -5,10 +5,10 @@ import type { PersonId } from "./PersonId";
 
 export type AdminBlockInstance = {
   id: AdminBlockInstanceId;
-  instance_id: InstanceId;
-  admin_person_id: PersonId;
+  instanceId: InstanceId;
+  adminPersonId: PersonId;
   blocked: boolean;
   reason?: string;
   expires_at?: string;
-  published_at: string;
+  publishedAt: string;
 };

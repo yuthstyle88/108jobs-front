@@ -7,7 +7,7 @@ import type { Site } from "./Site";
  * A person's details response.
  */
 export type GetPersonDetailsResponse = {
-  person_view: PersonView;
+  personView: PersonView;
   site?: Site;
   moderates: Array<CommunityModeratorView>;
 };

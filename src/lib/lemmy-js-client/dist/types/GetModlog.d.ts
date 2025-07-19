@@ -10,35 +10,35 @@ import type { PostId } from "./PostId";
  */
 export type GetModlog = {
     /**
-     * Filter by the moderator.
-     */
-    modPersonId?: PersonId;
+       * Filter by the moderator.
+       */
+    mod_person_id?: PersonId;
     /**
      * Filter by the community.
      */
-    communityId?: CommunityId;
+    community_id?: CommunityId;
     /**
      * Filter by the modlog action type.
      */
-    type?: ModlogActionType;
+    type_?: ModlogActionType;
     /**
      * Filter by listing type. When not using All, it will remove the non-community modlog entries,
      * such as site bans, instance blocks, adding an admin, etc.
      */
-    listingType?: ListingType;
+    listing_type?: ListingType;
     /**
      * Filter by the other / modded person.
      */
-    otherPersonId?: PersonId;
+    other_person_id?: PersonId;
     /**
      * Filter by post. Will include comments of that post.
      */
-    postId?: PostId;
+    post_id?: PostId;
     /**
      * Filter by comment.
      */
-    commentId?: CommentId;
-    pageCursor?: PaginationCursor;
-    pageBack?: boolean;
+    comment_id?: CommentId;
+    page_cursor?: PaginationCursor;
+    page_back?: boolean;
     limit?: number;
 };

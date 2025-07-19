@@ -8,9 +8,9 @@ import type { PostId } from "./PostId";
  */
 export type ModRemovePost = {
   id: ModRemovePostId;
-  mod_person_id: PersonId;
-  post_id: PostId;
+  modPersonId: PersonId;
+  postId: PostId;
   reason?: string;
   removed: boolean;
-  published_at: string;
+  publishedAt: string;
 };

@@ -7,7 +7,7 @@ import type { PersonId } from "./PersonId";
  * Either person_id, or username are required.
  */
 export type GetPersonDetails = {
-  person_id?: PersonId;
+person_id?: PersonId;
   /**
    * Example: dessalines , or dessalines@xyz.tld
    */

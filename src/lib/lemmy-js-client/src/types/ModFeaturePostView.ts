@@ -8,9 +8,9 @@ import type { Post } from "./Post";
  * When a moderator features a post on a community (pins it to the top).
  */
 export type ModFeaturePostView = {
-  mod_feature_post: ModFeaturePost;
+  modFeaturePost: ModFeaturePost;
   moderator?: Person;
-  other_person: Person;
+  otherPerson: Person;
   post: Post;
   community: Community;
 };

@@ -5,5 +5,4 @@ import type { PostId } from "./PostId";
 export type RemovePost = {
     postId: PostId;
     removed: boolean;
-    reason?: string;
 };

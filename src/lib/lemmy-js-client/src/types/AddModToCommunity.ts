@@ -6,7 +6,7 @@ import type { PersonId } from "./PersonId";
  * Add a moderator to a community.
  */
 export type AddModToCommunity = {
-  community_id: CommunityId;
-  person_id: PersonId;
+  communityId: CommunityId;
+  personId: PersonId;
   added: boolean;
 };

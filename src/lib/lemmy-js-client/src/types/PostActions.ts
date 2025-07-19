@@ -2,7 +2,7 @@
 import type { PostNotificationsMode } from "./PostNotificationsMode";
 
 export type PostActions = {
-  /**
+/**
    * When the post was read.
    */
   read_at?: string;

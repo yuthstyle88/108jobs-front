@@ -4,5 +4,4 @@ import type { PostReportId } from "./PostReportId";
  */
 export type ResolvePostReport = {
     reportId: PostReportId;
-    resolved: boolean;
 };

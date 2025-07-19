@@ -8,7 +8,7 @@ import type { InstanceId } from "./InstanceId";
 export type Instance = {
   id: InstanceId;
   domain: string;
-  published_at: string;
+  publishedAt: string;
   /**
    * When the instance was updated.
    */

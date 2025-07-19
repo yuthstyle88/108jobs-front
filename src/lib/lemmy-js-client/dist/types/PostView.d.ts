@@ -14,11 +14,11 @@ export type PostView = {
     post: Post;
     creator: Person;
     community: Community;
-    imageDetails?: ImageDetails;
-    communityActions?: CommunityActions;
-    personActions?: PersonActions;
-    postActions?: PostActions;
-    instanceActions?: InstanceActions;
+    image_details?: ImageDetails;
+    community_actions?: CommunityActions;
+    person_actions?: PersonActions;
+    post_actions?: PostActions;
+    instance_actions?: InstanceActions;
     creatorIsAdmin: boolean;
     tags: TagsView;
     canMod: boolean;

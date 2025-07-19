@@ -8,9 +8,9 @@ import type { PostId } from "./PostId";
  */
 export type ModLockPost = {
   id: ModLockPostId;
-  mod_person_id: PersonId;
-  post_id: PostId;
+  modPersonId: PersonId;
+  postId: PostId;
   locked: boolean;
-  published_at: string;
+  publishedAt: string;
   reason?: string;
 };

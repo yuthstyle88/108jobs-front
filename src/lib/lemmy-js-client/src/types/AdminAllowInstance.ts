@@ -5,9 +5,9 @@ import type { PersonId } from "./PersonId";
 
 export type AdminAllowInstance = {
   id: AdminAllowInstanceId;
-  instance_id: InstanceId;
-  admin_person_id: PersonId;
+  instanceId: InstanceId;
+  adminPersonId: PersonId;
   allowed: boolean;
   reason?: string;
-  published_at: string;
+  publishedAt: string;
 };

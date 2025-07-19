@@ -7,8 +7,8 @@ import type { Person } from "./Person";
  * When someone is added as a community moderator.
  */
 export type ModAddCommunityView = {
-  mod_add_community: ModAddCommunity;
+  modAddCommunity: ModAddCommunity;
   moderator?: Person;
   community: Community;
-  other_person: Person;
+  otherPerson: Person;
 };

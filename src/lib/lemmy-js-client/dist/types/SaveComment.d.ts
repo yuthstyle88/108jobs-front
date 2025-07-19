@@ -4,5 +4,4 @@ import type { CommentId } from "./CommentId";
  */
 export type SaveComment = {
     commentId: CommentId;
-    save: boolean;
 };

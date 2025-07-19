@@ -2,6 +2,6 @@
 import type { MultiCommunityId } from "./MultiCommunityId";
 
 export type FollowMultiCommunity = {
-  multi_community_id: MultiCommunityId;
+  multiCommunityId: MultiCommunityId;
   follow: boolean;
 };

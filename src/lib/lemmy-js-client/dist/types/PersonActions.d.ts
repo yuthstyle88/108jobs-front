@@ -1,12 +1,12 @@
 export type PersonActions = {
     /**
-     * When the person was blocked.
-     */
-    blockedAt?: string;
+       * When the person was blocked.
+       */
+    blocked_at?: string;
     /**
      * When the person was noted.
      */
-    notedAt?: string;
+    noted_at?: string;
     /**
      * A note about the person.
      */
@@ -14,7 +14,7 @@ export type PersonActions = {
     /**
      * When the person was voted on.
      */
-    votedAt?: string;
+    voted_at?: string;
     /**
      * A total of upvotes given to this person
      */

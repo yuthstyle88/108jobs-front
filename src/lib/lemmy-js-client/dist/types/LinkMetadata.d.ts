@@ -3,9 +3,9 @@ import type { DbUrl } from "./DbUrl";
  * Site metadata, from its opengraph tags.
  */
 export type LinkMetadata = {
-    contentType?: string;
+    content_type?: string;
     title?: string;
     description?: string;
     image?: DbUrl;
-    embedVideoUrl?: DbUrl;
+    embed_video_url?: DbUrl;
 };

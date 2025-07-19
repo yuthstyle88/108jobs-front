@@ -10,9 +10,8 @@ export type PrivateMessage = {
     recipientId: PersonId;
     content: string;
     deleted: boolean;
-    read: boolean;
     publishedAt: string;
-    updatedAt?: string;
+    updated_at?: string;
     apId: DbUrl;
     local: boolean;
     removed: boolean;

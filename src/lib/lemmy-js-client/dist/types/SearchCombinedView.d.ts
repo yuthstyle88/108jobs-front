@@ -4,13 +4,13 @@ import type { MultiCommunityView } from "./MultiCommunityView";
 import type { PersonView } from "./PersonView";
 import type { PostView } from "./PostView";
 export type SearchCombinedView = ({
-    type: "Post";
+    type_: "Post";
 } & PostView) | ({
-    type: "Comment";
+    type_: "Comment";
 } & CommentView) | ({
-    type: "Community";
+    type_: "Community";
 } & CommunityView) | ({
-    type: "Person";
+    type_: "Person";
 } & PersonView) | ({
-    type: "MultiCommunity";
+    type_: "MultiCommunity";
 } & MultiCommunityView);

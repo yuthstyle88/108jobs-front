@@ -5,7 +5,7 @@ import type { PersonId } from "./PersonId";
  * Ban a person from the site.
  */
 export type BanPerson = {
-  person_id: PersonId;
+  personId: PersonId;
   ban: boolean;
   /**
    * Optionally remove or restore all their data. Useful for new troll accounts.

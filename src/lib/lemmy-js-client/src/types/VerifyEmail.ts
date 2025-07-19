@@ -3,4 +3,6 @@
 /**
  * Verify your email.
  */
-export type VerifyEmail = { token: string };
+export type VerifyEmail = {
+token: string
+};

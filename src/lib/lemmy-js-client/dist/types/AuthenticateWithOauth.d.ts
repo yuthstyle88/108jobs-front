@@ -6,14 +6,14 @@ export type AuthenticateWithOauth = {
     code: string;
     oauthProviderId: OAuthProviderId;
     redirectUri: string;
+    show_nsfw?: boolean;
     /**
      * Username is mandatory at registration time
      */
-    name?: string;
-    email?: string;
+    username?: string;
     /**
      * An answer is mandatory if require application is enabled on the server
      */
     answer?: string;
-    pkceCodeVerifier?: string;
+    pkce_code_verifier?: string;
 };

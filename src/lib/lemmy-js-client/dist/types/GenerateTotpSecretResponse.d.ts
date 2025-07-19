@@ -1,4 +1,4 @@
 import type { SensitiveString } from "./SensitiveString";
 export type GenerateTotpSecretResponse = {
-    totpSecretUrl: SensitiveString;
+    totp_secret_url: SensitiveString;
 };

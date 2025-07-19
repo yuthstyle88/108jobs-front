@@ -6,7 +6,7 @@ import type { Person } from "./Person";
  */
 export type VoteView = {
   creator: Person;
-  creator_banned: boolean;
-  creator_banned_from_community: boolean;
+  creatorBanned: boolean;
+  creatorBannedFromCommunity: boolean;
   score: number;
 };

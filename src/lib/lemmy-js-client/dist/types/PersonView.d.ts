@@ -6,6 +6,6 @@ import type { PersonActions } from "./PersonActions";
 export type PersonView = {
     person: Person;
     isAdmin: boolean;
-    personActions?: PersonActions;
+    person_actions?: PersonActions;
     creatorBanned: boolean;
 };

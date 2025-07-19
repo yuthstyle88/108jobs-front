@@ -9,12 +9,12 @@ import type { PostReportId } from "./PostReportId";
  */
 export type PostReport = {
   id: PostReportId;
-  creator_id: PersonId;
-  post_id: PostId;
+  creatorId: PersonId;
+  postId: PostId;
   /**
    * The original post title.
    */
-  original_post_name: string;
+  originalPostName: string;
   /**
    * The original post url.
    */
@@ -26,7 +26,7 @@ export type PostReport = {
   reason: string;
   resolved: boolean;
   resolver_id?: PersonId;
-  published_at: string;
+  publishedAt: string;
   updated_at?: string;
-  violates_instance_rules: boolean;
+  violatesInstanceRules: boolean;
 };

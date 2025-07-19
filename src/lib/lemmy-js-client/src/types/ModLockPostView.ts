@@ -8,9 +8,9 @@ import type { Post } from "./Post";
  * When a moderator locks a post (prevents new comments being made).
  */
 export type ModLockPostView = {
-  mod_lock_post: ModLockPost;
+  modLockPost: ModLockPost;
   moderator?: Person;
-  other_person: Person;
+  otherPerson: Person;
   post: Post;
   community: Community;
 };

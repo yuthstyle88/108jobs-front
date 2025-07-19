@@ -7,12 +7,12 @@ import type { Person } from "./Person";
  * A community report view.
  */
 export type CommunityReportView = {
-  community_report: CommunityReport;
+  communityReport: CommunityReport;
   community: Community;
   creator: Person;
   resolver?: Person;
-  creator_is_admin: boolean;
-  creator_is_moderator: boolean;
-  creator_banned: boolean;
-  creator_banned_from_community: boolean;
+  creatorIsAdmin: boolean;
+  creatorIsModerator: boolean;
+  creatorBanned: boolean;
+  creatorBannedFromCommunity: boolean;
 };

@@ -6,7 +6,7 @@
 export type CreateCustomEmoji = {
   category: string;
   shortcode: string;
-  image_url: string;
-  alt_text: string;
+  imageUrl: string;
+  altText: string;
   keywords: Array<string>;
 };

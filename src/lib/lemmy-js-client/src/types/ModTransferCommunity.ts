@@ -8,8 +8,8 @@ import type { PersonId } from "./PersonId";
  */
 export type ModTransferCommunity = {
   id: ModTransferCommunityId;
-  mod_person_id: PersonId;
-  other_person_id: PersonId;
-  community_id: CommunityId;
-  published_at: string;
+  modPersonId: PersonId;
+  otherPersonId: PersonId;
+  communityId: CommunityId;
+  publishedAt: string;
 };

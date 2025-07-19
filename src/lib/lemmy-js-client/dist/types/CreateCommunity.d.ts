@@ -5,8 +5,8 @@ import type { LanguageId } from "./LanguageId";
  */
 export type CreateCommunity = {
     /**
-     * The unique name.
-     */
+       * The unique name.
+       */
     name: string;
     /**
      * A longer title.
@@ -35,7 +35,7 @@ export type CreateCommunity = {
     /**
      * Whether to restrict posting only to moderators.
      */
-    postingRestrictedToMods?: boolean;
-    discussionLanguages?: Array<LanguageId>;
+    posting_restricted_to_mods?: boolean;
+    discussion_languages?: Array<LanguageId>;
     visibility?: CommunityVisibility;
 };

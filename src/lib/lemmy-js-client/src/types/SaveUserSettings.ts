@@ -11,7 +11,7 @@ import type { VoteShow } from "./VoteShow";
  * Saves settings for your user.
  */
 export type SaveUserSettings = {
-  /**
+/**
    * Show nsfw posts.
    */
   show_nsfw?: boolean;

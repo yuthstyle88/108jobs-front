@@ -4,4 +4,6 @@ import type { PersonId } from "./PersonId";
 /**
  * Create a private message.
  */
-export type CreatePrivateMessage = { content: string; recipient_id: PersonId };
+export type CreatePrivateMessage = {
+  content: string;
+};

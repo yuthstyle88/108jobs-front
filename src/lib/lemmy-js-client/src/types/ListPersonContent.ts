@@ -9,7 +9,7 @@ import type { PersonId } from "./PersonId";
  * Either person_id, or username are required.
  */
 export type ListPersonContent = {
-  type_?: PersonContentType;
+type_?: PersonContentType;
   person_id?: PersonId;
   /**
    * Example: dessalines , or dessalines@xyz.tld

@@ -17,7 +17,7 @@ export type LocalSiteRateLimit = {
     searchMaxRequests: number;
     searchIntervalSeconds: number;
     publishedAt: string;
-    updatedAt?: string;
+    updated_at?: string;
     importUserSettingsMaxRequests: number;
     importUserSettingsIntervalSeconds: number;
 };

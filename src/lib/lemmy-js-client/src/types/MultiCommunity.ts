@@ -6,14 +6,14 @@ import type { PersonId } from "./PersonId";
 
 export type MultiCommunity = {
   id: MultiCommunityId;
-  creator_id: PersonId;
-  instance_id: InstanceId;
+  creatorId: PersonId;
+  instanceId: InstanceId;
   name: string;
   title?: string;
   description?: string;
   local: boolean;
   deleted: boolean;
-  ap_id: DbUrl;
-  published_at: string;
+  apId: DbUrl;
+  publishedAt: string;
   updated_at?: string;
 };

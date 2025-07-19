@@ -5,6 +5,6 @@ import type { CommentReportId } from "./CommentReportId";
  * Resolve a comment report (only doable by mods).
  */
 export type ResolveCommentReport = {
-  report_id: CommentReportId;
+  reportId: CommentReportId;
   resolved: boolean;
 };

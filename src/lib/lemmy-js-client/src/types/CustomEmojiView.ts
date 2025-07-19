@@ -6,6 +6,6 @@ import type { CustomEmojiKeyword } from "./CustomEmojiKeyword";
  * A custom emoji view.
  */
 export type CustomEmojiView = {
-  custom_emoji: CustomEmoji;
+  customEmoji: CustomEmoji;
   keywords: Array<CustomEmojiKeyword>;
 };

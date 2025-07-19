@@ -6,7 +6,7 @@ import type { LanguageId } from "./LanguageId";
  * Edit a comment.
  */
 export type EditComment = {
-  comment_id: CommentId;
+  commentId: CommentId;
   content?: string;
   language_id?: LanguageId;
 };

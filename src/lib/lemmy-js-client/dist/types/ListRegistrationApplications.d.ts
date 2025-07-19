@@ -4,10 +4,10 @@ import type { PaginationCursor } from "./PaginationCursor";
  */
 export type ListRegistrationApplications = {
     /**
-     * Only shows the unread applications (IE those without an admin actor)
-     */
-    unreadOnly?: boolean;
-    pageCursor?: PaginationCursor;
-    pageBack?: boolean;
+       * Only shows the unread applications (IE those without an admin actor)
+       */
+    unread_only?: boolean;
+    page_cursor?: PaginationCursor;
+    page_back?: boolean;
     limit?: number;
 };

@@ -8,9 +8,9 @@ import type { PostId } from "./PostId";
  */
 export type ModFeaturePost = {
   id: ModFeaturePostId;
-  mod_person_id: PersonId;
-  post_id: PostId;
+  modPersonId: PersonId;
+  postId: PostId;
   featured: boolean;
-  published_at: string;
-  is_featured_community: boolean;
+  publishedAt: string;
+  isFeaturedCommunity: boolean;
 };

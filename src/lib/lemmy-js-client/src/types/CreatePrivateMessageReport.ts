@@ -5,6 +5,6 @@ import type { PrivateMessageId } from "./PrivateMessageId";
  * Create a report for a private message.
  */
 export type CreatePrivateMessageReport = {
-  private_message_id: PrivateMessageId;
+  privateMessageId: PrivateMessageId;
   reason: string;
 };

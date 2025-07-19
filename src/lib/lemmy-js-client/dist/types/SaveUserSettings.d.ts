@@ -10,13 +10,13 @@ import type { VoteShow } from "./VoteShow";
  */
 export type SaveUserSettings = {
     /**
-     * Show nsfw posts.
-     */
-    showNsfw?: boolean;
+       * Show nsfw posts.
+       */
+    show_nsfw?: boolean;
     /**
      * Blur nsfw posts.
      */
-    blurNsfw?: boolean;
+    blur_nsfw?: boolean;
     /**
      * Your user's theme.
      */
@@ -24,31 +24,31 @@ export type SaveUserSettings = {
     /**
      * The default post listing type, usually "local"
      */
-    defaultListingType?: ListingType;
+    default_listing_type?: ListingType;
     /**
      * A post-view mode that changes how multiple post listings look.
      */
-    postListingMode?: PostListingMode;
+    post_listing_mode?: PostListingMode;
     /**
      * The default post sort, usually "active"
      */
-    defaultPostSortType?: PostSortType;
+    default_post_sort_type?: PostSortType;
     /**
      * A default time range limit to apply to post sorts, in seconds. 0 means none.
      */
-    defaultPostTimeRangeSeconds?: number;
+    default_post_time_range_seconds?: number;
     /**
      * The default comment sort, usually "hot"
      */
-    defaultCommentSortType?: CommentSortType;
+    default_comment_sort_type?: CommentSortType;
     /**
      * The language of the lemmy interface
      */
-    interfaceLanguage?: string;
+    interface_language?: string;
     /**
      * Your display name, which can contain strange characters, and does not need to be unique.
      */
-    displayName?: string;
+    display_name?: string;
     /**
      * Your email.
      */
@@ -58,76 +58,76 @@ export type SaveUserSettings = {
      */
     bio?: string;
     /**
-     * Your matrix user id. Ex: @myUser:matrix.org
+     * Your matrix user id. Ex: @my_user:matrix.org
      */
-    matrixUserId?: string;
+    matrix_user_id?: string;
     /**
      * Whether to show or hide avatars.
      */
-    showAvatars?: boolean;
+    show_avatars?: boolean;
     /**
      * Sends notifications to your email.
      */
-    sendNotificationsToEmail?: boolean;
+    send_notifications_to_email?: boolean;
     /**
      * Whether this account is a bot account. Users can hide these accounts easily if they wish.
      */
-    botAccount?: boolean;
+    bot_account?: boolean;
     /**
      * Whether to show bot accounts.
      */
-    showBotAccounts?: boolean;
+    show_bot_accounts?: boolean;
     /**
      * Whether to show read posts.
      */
-    showReadPosts?: boolean;
+    show_read_posts?: boolean;
     /**
      * A list of languages you are able to see discussion in.
      */
-    discussionLanguages?: Array<LanguageId>;
-    blockingKeywords?: Array<string>;
+    discussion_languages?: Array<LanguageId>;
+    blocking_keywords?: Array<string>;
     /**
      * Open links in a new tab
      */
-    openLinksInNewTab?: boolean;
+    open_links_in_new_tab?: boolean;
     /**
      * Enable infinite scroll
      */
-    infiniteScrollEnabled?: boolean;
+    infinite_scroll_enabled?: boolean;
     /**
      * Whether to allow keyboard navigation (for browsing and interacting with posts and comments).
      */
-    enableKeyboardNavigation?: boolean;
+    enable_keyboard_navigation?: boolean;
     /**
      * Whether user avatars or inline images in the UI that are gifs should be allowed to play or
      * should be paused
      */
-    enableAnimatedImages?: boolean;
+    enable_animated_images?: boolean;
     /**
      * Whether a user can send / receive private messages
      */
-    enablePrivateMessages?: boolean;
+    enable_private_messages?: boolean;
     /**
      * Whether to auto-collapse bot comments.
      */
-    collapseBotComments?: boolean;
+    collapse_bot_comments?: boolean;
     /**
      * Some vote display mode settings
      */
-    showScores?: boolean;
-    showUpvotes?: boolean;
-    showDownvotes?: VoteShow;
-    showUpvotePercentage?: boolean;
+    show_scores?: boolean;
+    show_upvotes?: boolean;
+    show_downvotes?: VoteShow;
+    show_upvote_percentage?: boolean;
     /**
      * Whether to automatically mark fetched posts as read.
      */
-    autoMarkFetchedPostsAsRead?: boolean;
+    auto_mark_fetched_posts_as_read?: boolean;
     /**
      * Whether to hide posts containing images/videos.
      */
-    hideMedia?: boolean;
+    hide_media?: boolean;
     /**
      * Whether to show vote totals given to others.
      */
-    showPersonVotes?: boolean;
+    show_person_votes?: boolean;
 };

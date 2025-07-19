@@ -8,13 +8,13 @@ import type { PrivateMessageId } from "./PrivateMessageId";
  */
 export type PrivateMessage = {
   id: PrivateMessageId;
-  creator_id: PersonId;
-  recipient_id: PersonId;
+  creatorId: PersonId;
+  recipientId: PersonId;
   content: string;
   deleted: boolean;
-  published_at: string;
+  publishedAt: string;
   updated_at?: string;
-  ap_id: DbUrl;
+  apId: DbUrl;
   local: boolean;
   removed: boolean;
 };

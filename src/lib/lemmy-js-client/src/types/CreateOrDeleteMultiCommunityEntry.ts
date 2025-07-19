@@ -4,5 +4,5 @@ import type { MultiCommunityId } from "./MultiCommunityId";
 
 export type CreateOrDeleteMultiCommunityEntry = {
   id: MultiCommunityId;
-  community_id: CommunityId;
+  communityId: CommunityId;
 };

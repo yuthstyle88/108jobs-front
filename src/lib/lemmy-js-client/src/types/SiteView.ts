@@ -9,7 +9,7 @@ import type { Site } from "./Site";
  */
 export type SiteView = {
   site: Site;
-  local_site: LocalSite;
-  local_site_rate_limit: LocalSiteRateLimit;
+  localSite: LocalSite;
+  localSiteRateLimit: LocalSiteRateLimit;
   instance: Instance;
 };

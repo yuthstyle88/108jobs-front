@@ -29,7 +29,7 @@ export type LocalSite = {
     /**
      * An optional registration application questionnaire in markdown.
      */
-    applicationQuestion?: string;
+    application_question?: string;
     /**
      * Whether the instance is private or public.
      */
@@ -42,7 +42,7 @@ export type LocalSite = {
     /**
      * An optional legal disclaimer page.
      */
-    legalInformation?: string;
+    legal_information?: string;
     /**
      * Whether new applications email admins.
      */
@@ -50,7 +50,7 @@ export type LocalSite = {
     /**
      * An optional regex to filter words.
      */
-    slurFilterRegex?: string;
+    slur_filter_regex?: string;
     /**
      * The max actor name length.
      */
@@ -68,7 +68,7 @@ export type LocalSite = {
      */
     captchaDifficulty: string;
     publishedAt: string;
-    updatedAt?: string;
+    updated_at?: string;
     registrationMode: RegistrationMode;
     /**
      * Whether to email admins on new reports.
@@ -80,15 +80,15 @@ export type LocalSite = {
      */
     federationSignedFetch: boolean;
     /**
-     * Default value for [LocalSite.postListingMode]
+     * Default value for [LocalSite.post_listing_mode]
      */
     defaultPostListingMode: PostListingMode;
     /**
-     * Default value for [LocalUser.postSortType]
+     * Default value for [LocalUser.post_sort_type]
      */
     defaultPostSortType: PostSortType;
     /**
-     * Default value for [LocalUser.commentSortType]
+     * Default value for [LocalUser.comment_sort_type]
      */
     defaultCommentSortType: CommentSortType;
     /**
@@ -114,7 +114,7 @@ export type LocalSite = {
     /**
      * A default time range limit to apply to post sorts, in seconds.
      */
-    defaultPostTimeRangeSeconds?: number;
+    default_post_time_range_seconds?: number;
     /**
      * Block NSFW content being created
      */
@@ -143,6 +143,6 @@ export type LocalSite = {
      * Dont send email notifications to users for new replies, mentions etc
      */
     disableEmailNotifications: boolean;
-    suggestedCommunities?: MultiCommunityId;
+    suggested_communities?: MultiCommunityId;
     multiCommFollower: PersonId;
 };

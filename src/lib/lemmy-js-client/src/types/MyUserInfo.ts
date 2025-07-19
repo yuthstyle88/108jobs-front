@@ -11,12 +11,12 @@ import type { Person } from "./Person";
  * Your user info.
  */
 export type MyUserInfo = {
-  local_user_view: LocalUserView;
+  localUserView: LocalUserView;
   follows: Array<CommunityFollowerView>;
   moderates: Array<CommunityModeratorView>;
-  community_blocks: Array<Community>;
-  instance_blocks: Array<Instance>;
-  person_blocks: Array<Person>;
-  keyword_blocks: Array<string>;
-  discussion_languages: Array<LanguageId>;
+  communityBlocks: Array<Community>;
+  instanceBlocks: Array<Instance>;
+  personBlocks: Array<Person>;
+  keywordBlocks: Array<string>;
+  discussionLanguages: Array<LanguageId>;
 };

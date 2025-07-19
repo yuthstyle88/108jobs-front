@@ -8,10 +8,10 @@ import type { SensitiveString } from "./SensitiveString";
  * their account.
  */
 export type Login = {
-  username_or_email: SensitiveString;
+  usernameOrEmail: SensitiveString;
   password: SensitiveString;
   /**
    * May be required, if totp is enabled for their account.
    */
-  totp_2fa_token?: string;
+  totp2faToken?: string;
 };

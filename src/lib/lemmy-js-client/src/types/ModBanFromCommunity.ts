@@ -8,11 +8,11 @@ import type { PersonId } from "./PersonId";
  */
 export type ModBanFromCommunity = {
   id: ModBanFromCommunityId;
-  mod_person_id: PersonId;
-  other_person_id: PersonId;
-  community_id: CommunityId;
+  modPersonId: PersonId;
+  otherPersonId: PersonId;
+  communityId: CommunityId;
   reason?: string;
   banned: boolean;
   expires_at?: string;
-  published_at: string;
+  publishedAt: string;
 };

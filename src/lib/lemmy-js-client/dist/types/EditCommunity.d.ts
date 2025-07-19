@@ -25,7 +25,7 @@ export type EditCommunity = {
     /**
      * Whether to restrict posting only to moderators.
      */
-    postingRestrictedToMods?: boolean;
-    discussionLanguages?: Array<LanguageId>;
+    posting_restricted_to_mods?: boolean;
+    discussion_languages?: Array<LanguageId>;
     visibility?: CommunityVisibility;
 };

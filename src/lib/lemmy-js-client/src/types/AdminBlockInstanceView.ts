@@ -7,7 +7,7 @@ import type { Person } from "./Person";
  * When an admin purges a post.
  */
 export type AdminBlockInstanceView = {
-  admin_block_instance: AdminBlockInstance;
+  adminBlockInstance: AdminBlockInstance;
   instance: Instance;
   admin?: Person;
 };

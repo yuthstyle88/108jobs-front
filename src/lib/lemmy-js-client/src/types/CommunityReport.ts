@@ -8,10 +8,10 @@ import type { PersonId } from "./PersonId";
  */
 export type CommunityReport = {
   id: CommunityReportId;
-  creator_id: PersonId;
-  community_id: CommunityId;
-  original_community_name: string;
-  original_community_title: string;
+  creatorId: PersonId;
+  communityId: CommunityId;
+  originalCommunityName: string;
+  originalCommunityTitle: string;
   original_community_description?: string;
   original_community_sidebar?: string;
   original_community_icon?: string;
@@ -19,6 +19,6 @@ export type CommunityReport = {
   reason: string;
   resolved: boolean;
   resolver_id?: PersonId;
-  published_at: string;
+  publishedAt: string;
   updated_at?: string;
 };

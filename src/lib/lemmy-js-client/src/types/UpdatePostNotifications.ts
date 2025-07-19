@@ -6,6 +6,6 @@ import type { PostNotificationsMode } from "./PostNotificationsMode";
  * Change notification settings for a post
  */
 export type UpdatePostNotifications = {
-  post_id: PostId;
+  postId: PostId;
   mode: PostNotificationsMode;
 };

@@ -4,4 +4,6 @@ import type { CommunityId } from "./CommunityId";
 /**
  * Follow / subscribe to a community.
  */
-export type FollowCommunity = { community_id: CommunityId; follow: boolean };
+export type FollowCommunity = {
+  communityId: CommunityId;
+};

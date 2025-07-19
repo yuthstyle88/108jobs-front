@@ -3,6 +3,6 @@ import type { ListingType } from "./ListingType";
  * Fetches a random community
  */
 export type GetRandomCommunity = {
-    type?: ListingType;
-    showNsfw?: boolean;
+    type_?: ListingType;
+    show_nsfw?: boolean;
 };

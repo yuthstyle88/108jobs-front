@@ -1,6 +1,6 @@
 import type { OAuthProviderId } from "./OAuthProviderId";
 /**
- * oauth provider with clientSecret - should never be sent to the client
+ * oauth provider with client_secret - should never be sent to the client
  */
 export type OAuthProvider = {
     id: OAuthProviderId;
@@ -33,7 +33,7 @@ export type OAuthProvider = {
      */
     idClaim: string;
     /**
-     * The clientId is provided by the OAuth 2.0 provider and is a unique identifier to this
+     * The client_id is provided by the OAuth 2.0 provider and is a unique identifier to this
      * service
      */
     clientId: string;
@@ -55,7 +55,7 @@ export type OAuthProvider = {
      */
     enabled: boolean;
     publishedAt: string;
-    updatedAt?: string;
+    updated_at?: string;
     /**
      * switch to enable or disable PKCE
      */

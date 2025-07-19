@@ -5,6 +5,6 @@ import type { CommentId } from "./CommentId";
  * Distinguish a comment (IE speak as moderator).
  */
 export type DistinguishComment = {
-  comment_id: CommentId;
+  commentId: CommentId;
   distinguished: boolean;
 };

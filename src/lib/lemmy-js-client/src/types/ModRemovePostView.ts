@@ -8,9 +8,9 @@ import type { Post } from "./Post";
  * When a moderator removes a post.
  */
 export type ModRemovePostView = {
-  mod_remove_post: ModRemovePost;
+  modRemovePost: ModRemovePost;
   moderator?: Person;
-  other_person: Person;
+  otherPerson: Person;
   post: Post;
   community: Community;
 };

@@ -8,7 +8,7 @@ import type { UserSettingsBackup } from "./UserSettingsBackup";
 export type ExportDataResponse = {
   notifications: Array<PostOrCommentOrPrivateMessage>;
   content: Array<PostOrCommentOrPrivateMessage>;
-  read_posts: Array<string>;
+  readPosts: Array<string>;
   liked: Array<string>;
   moderates: Array<string>;
   settings: UserSettingsBackup;

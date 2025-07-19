@@ -4,4 +4,6 @@ import type { PersonView } from "./PersonView";
 /**
  * A response for a banned person.
  */
-export type BanPersonResponse = { person_view: PersonView; banned: boolean };
+export type BanPersonResponse = {
+  personView: PersonView;
+};

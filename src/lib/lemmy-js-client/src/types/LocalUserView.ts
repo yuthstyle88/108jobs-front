@@ -6,7 +6,7 @@ import type { Person } from "./Person";
  * A local user view.
  */
 export type LocalUserView = {
-  local_user: LocalUser;
+  localUser: LocalUser;
   person: Person;
   banned: boolean;
 };

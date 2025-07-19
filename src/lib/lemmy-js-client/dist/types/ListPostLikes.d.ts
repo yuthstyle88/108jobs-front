@@ -5,7 +5,7 @@ import type { PostId } from "./PostId";
  */
 export type ListPostLikes = {
     postId: PostId;
-    pageCursor?: PaginationCursor;
-    pageBack?: boolean;
+    page_cursor?: PaginationCursor;
+    page_back?: boolean;
     limit?: number;
 };

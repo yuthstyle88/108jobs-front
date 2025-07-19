@@ -14,9 +14,12 @@ export type PostReportView = {
     community: Community;
     creator: Person;
     postCreator: Person;
-    communityActions?: CommunityActions;
-    postActions?: PostActions;
-    personActions?: PersonActions;
+    community_actions?: CommunityActions;
+    post_actions?: PostActions;
+    person_actions?: PersonActions;
     resolver?: Person;
     creatorIsAdmin: boolean;
+    creatorIsModerator: boolean;
+    creatorBanned: boolean;
+    creatorBannedFromCommunity: boolean;
 };

@@ -4,5 +4,4 @@ import type { TaglineId } from "./TaglineId";
  */
 export type UpdateTagline = {
     id: TaglineId;
-    content: string;
 };

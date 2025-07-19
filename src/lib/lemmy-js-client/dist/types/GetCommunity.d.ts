@@ -5,7 +5,7 @@ import type { CommunityId } from "./CommunityId";
 export type GetCommunity = {
     id?: CommunityId;
     /**
-     * Example: starTrek , or starTrek@xyz.tld
+     * Example: star_trek , or star_trek@xyz.tld
      */
     name?: string;
 };

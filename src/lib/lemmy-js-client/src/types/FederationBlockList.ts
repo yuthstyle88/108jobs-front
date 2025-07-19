@@ -2,8 +2,8 @@
 import type { InstanceId } from "./InstanceId";
 
 export type FederationBlockList = {
-  instance_id: InstanceId;
-  published_at: string;
+  instanceId: InstanceId;
+  publishedAt: string;
   updated_at?: string;
   expires_at?: string;
 };

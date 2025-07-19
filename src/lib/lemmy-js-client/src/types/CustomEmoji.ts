@@ -8,9 +8,9 @@ import type { DbUrl } from "./DbUrl";
 export type CustomEmoji = {
   id: CustomEmojiId;
   shortcode: string;
-  image_url: DbUrl;
-  alt_text: string;
+  imageUrl: DbUrl;
+  altText: string;
   category: string;
-  published_at: string;
+  publishedAt: string;
   updated_at?: string;
 };

@@ -7,7 +7,7 @@ import type { LanguageId } from "./LanguageId";
  * Edit a community.
  */
 export type EditCommunity = {
-  community_id: CommunityId;
+  communityId: CommunityId;
   /**
    * A longer title.
    */

@@ -6,4 +6,6 @@ import type { PersonId } from "./PersonId";
  *
  * An empty string deletes the note.
  */
-export type NotePerson = { person_id: PersonId; note: string };
+export type NotePerson = {
+  personId: PersonId;
+};

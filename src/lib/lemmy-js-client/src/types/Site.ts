@@ -14,7 +14,7 @@ export type Site = {
    * A sidebar for the site in markdown.
    */
   sidebar?: string;
-  published_at: string;
+  publishedAt: string;
   updated_at?: string;
   /**
    * An icon URL.
@@ -31,17 +31,17 @@ export type Site = {
   /**
    * The federated ap_id.
    */
-  ap_id: DbUrl;
+  apId: DbUrl;
   /**
    * The time the site was last refreshed.
    */
-  last_refreshed_at: string;
+  lastRefreshedAt: string;
   /**
    * The site inbox
    */
-  inbox_url: DbUrl;
-  public_key: string;
-  instance_id: InstanceId;
+  inboxUrl: DbUrl;
+  publicKey: string;
+  instanceId: InstanceId;
   /**
    * If present, nsfw content is visible by default. Should be displayed by frontends/clients
    * when the site is first opened by a user.

@@ -10,7 +10,7 @@ import type { PostId } from "./PostId";
  * Get a list of comments.
  */
 export type GetComments = {
-  type_?: ListingType;
+type_?: ListingType;
   sort?: CommentSortType;
   /**
    * Filter to within a given time range, in seconds.

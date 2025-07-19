@@ -6,8 +6,8 @@ import type { PersonId } from "./PersonId";
  * Ban a user from a community.
  */
 export type BanFromCommunity = {
-  community_id: CommunityId;
-  person_id: PersonId;
+  communityId: CommunityId;
+  personId: PersonId;
   ban: boolean;
   /**
    * Optionally remove or restore all their data. Useful for new troll accounts.

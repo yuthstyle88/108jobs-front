@@ -5,7 +5,7 @@ import type { CommentId } from "./CommentId";
  * Like a comment.
  */
 export type CreateCommentLike = {
-  comment_id: CommentId;
+  commentId: CommentId;
   /**
    * Must be -1, 0, or 1 .
    */

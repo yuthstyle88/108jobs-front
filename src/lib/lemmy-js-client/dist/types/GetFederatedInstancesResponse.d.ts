@@ -4,7 +4,7 @@ import type { FederatedInstances } from "./FederatedInstances";
  */
 export type GetFederatedInstancesResponse = {
     /**
-     * Optional, because federation may be disabled.
-     */
-    federatedInstances?: FederatedInstances;
+       * Optional, because federation may be disabled.
+       */
+    federated_instances?: FederatedInstances;
 };

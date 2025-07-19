@@ -11,17 +11,17 @@ import type { PostReport } from "./PostReport";
  * A post report view.
  */
 export type PostReportView = {
-  post_report: PostReport;
+  postReport: PostReport;
   post: Post;
   community: Community;
   creator: Person;
-  post_creator: Person;
+  postCreator: Person;
   community_actions?: CommunityActions;
   post_actions?: PostActions;
   person_actions?: PersonActions;
   resolver?: Person;
-  creator_is_admin: boolean;
-  creator_is_moderator: boolean;
-  creator_banned: boolean;
-  creator_banned_from_community: boolean;
+  creatorIsAdmin: boolean;
+  creatorIsModerator: boolean;
+  creatorBanned: boolean;
+  creatorBannedFromCommunity: boolean;
 };

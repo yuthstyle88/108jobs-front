@@ -13,5 +13,5 @@ export type LoginToken = {
      * Could be stored in truncated format, or store derived information for better privacy.
      */
     ip?: string;
-    userAgent?: string;
+    user_agent?: string;
 };

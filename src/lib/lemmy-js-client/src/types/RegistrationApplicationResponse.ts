@@ -5,5 +5,5 @@ import type { RegistrationApplicationView } from "./RegistrationApplicationView"
  * The response of an action done to a registration application.
  */
 export type RegistrationApplicationResponse = {
-  registration_application: RegistrationApplicationView;
+  registrationApplication: RegistrationApplicationView;
 };

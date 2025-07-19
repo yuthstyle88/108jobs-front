@@ -6,7 +6,7 @@ import type { PaginationCursor } from "./PaginationCursor";
  * Get your inbox (replies, comment mentions, post mentions, and messages)
  */
 export type ListNotifications = {
-  type_?: NotificationDataType;
+type_?: NotificationDataType;
   unread_only?: boolean;
   page_cursor?: PaginationCursor;
   page_back?: boolean;

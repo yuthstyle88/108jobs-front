@@ -5,5 +5,4 @@ import type { LanguageId } from "./LanguageId";
 export type Language = {
     id: LanguageId;
     code: string;
-    name: string;
 };

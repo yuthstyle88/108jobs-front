@@ -8,7 +8,7 @@ export type RegistrationApplication = {
     id: RegistrationApplicationId;
     localUserId: LocalUserId;
     answer: string;
-    adminId?: PersonId;
-    denyReason?: string;
+    admin_id?: PersonId;
+    deny_reason?: string;
     publishedAt: string;
 };

@@ -16,13 +16,13 @@ export type Comment = {
      */
     removed: boolean;
     publishedAt: string;
-    updatedAt?: string;
+    updated_at?: string;
     /**
      * Whether the comment has been deleted by its creator.
      */
     deleted: boolean;
     /**
-     * The federated activity id / apId.
+     * The federated activity id / ap_id.
      */
     apId: DbUrl;
     /**

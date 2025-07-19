@@ -9,4 +9,8 @@ export type CommunityReportView = {
     community: Community;
     creator: Person;
     resolver?: Person;
+    creatorIsAdmin: boolean;
+    creatorIsModerator: boolean;
+    creatorBanned: boolean;
+    creatorBannedFromCommunity: boolean;
 };

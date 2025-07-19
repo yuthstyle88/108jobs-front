@@ -9,7 +9,7 @@ export type OAuthProvider = {
   /**
    * The OAuth 2.0 provider name displayed to the user on the Login page
    */
-  display_name: string;
+  displayName: string;
   /**
    * The issuer url of the OAUTH provider.
    */
@@ -18,27 +18,27 @@ export type OAuthProvider = {
    * The authorization endpoint is used to interact with the resource owner and obtain an
    * authorization grant. This is usually provided by the OAUTH provider.
    */
-  authorization_endpoint: string;
+  authorizationEndpoint: string;
   /**
    * The token endpoint is used by the client to obtain an access token by presenting its
    * authorization grant or refresh token. This is usually provided by the OAUTH provider.
    */
-  token_endpoint: string;
+  tokenEndpoint: string;
   /**
    * The UserInfo Endpoint is an OAuth 2.0 Protected Resource that returns Claims about the
    * authenticated End-User. This is defined in the OIDC specification.
    */
-  userinfo_endpoint: string;
+  userinfoEndpoint: string;
   /**
    * The OAuth 2.0 claim containing the unique user ID returned by the provider. Usually this
    * should be set to "sub".
    */
-  id_claim: string;
+  idClaim: string;
   /**
    * The client_id is provided by the OAuth 2.0 provider and is a unique identifier to this
    * service
    */
-  client_id: string;
+  clientId: string;
   /**
    * Lists the scopes requested from users. Users will have to grant access to the requested scope
    * at sign up.
@@ -47,19 +47,19 @@ export type OAuthProvider = {
   /**
    * Automatically sets email as verified on registration
    */
-  auto_verify_email: boolean;
+  autoVerifyEmail: boolean;
   /**
    * Allows linking an OAUTH account to an existing user account by matching emails
    */
-  account_linking_enabled: boolean;
+  accountLinkingEnabled: boolean;
   /**
    * switch to enable or disable an oauth provider
    */
   enabled: boolean;
-  published_at: string;
+  publishedAt: string;
   updated_at?: string;
   /**
    * switch to enable or disable PKCE
    */
-  use_pkce: boolean;
+  usePkce: boolean;
 };

@@ -6,7 +6,7 @@ import type { VoteView } from "./VoteView";
  * The comment likes response
  */
 export type ListCommentLikesResponse = {
-  comment_likes: Array<VoteView>;
+  commentLikes: Array<VoteView>;
   /**
    * the pagination cursor to use to fetch the next page
    */

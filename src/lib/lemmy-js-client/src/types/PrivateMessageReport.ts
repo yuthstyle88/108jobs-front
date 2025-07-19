@@ -8,15 +8,15 @@ import type { PrivateMessageReportId } from "./PrivateMessageReportId";
  */
 export type PrivateMessageReport = {
   id: PrivateMessageReportId;
-  creator_id: PersonId;
-  private_message_id: PrivateMessageId;
+  creatorId: PersonId;
+  privateMessageId: PrivateMessageId;
   /**
    * The original text.
    */
-  original_pm_text: string;
+  originalPmText: string;
   reason: string;
   resolved: boolean;
   resolver_id?: PersonId;
-  published_at: string;
+  publishedAt: string;
   updated_at?: string;
 };

@@ -5,21 +5,21 @@ import type { LocalSiteId } from "./LocalSiteId";
  * Rate limits for your site. Given in count / length of time.
  */
 export type LocalSiteRateLimit = {
-  local_site_id: LocalSiteId;
-  message_max_requests: number;
-  message_interval_seconds: number;
-  post_max_requests: number;
-  post_interval_seconds: number;
-  register_max_requests: number;
-  register_interval_seconds: number;
-  image_max_requests: number;
-  image_interval_seconds: number;
-  comment_max_requests: number;
-  comment_interval_seconds: number;
-  search_max_requests: number;
-  search_interval_seconds: number;
-  published_at: string;
+  localSiteId: LocalSiteId;
+  messageMaxRequests: number;
+  messageIntervalSeconds: number;
+  postMaxRequests: number;
+  postIntervalSeconds: number;
+  registerMaxRequests: number;
+  registerIntervalSeconds: number;
+  imageMaxRequests: number;
+  imageIntervalSeconds: number;
+  commentMaxRequests: number;
+  commentIntervalSeconds: number;
+  searchMaxRequests: number;
+  searchIntervalSeconds: number;
+  publishedAt: string;
   updated_at?: string;
-  import_user_settings_max_requests: number;
-  import_user_settings_interval_seconds: number;
+  importUserSettingsMaxRequests: number;
+  importUserSettingsIntervalSeconds: number;
 };

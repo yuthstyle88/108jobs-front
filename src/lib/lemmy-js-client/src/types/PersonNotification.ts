@@ -4,8 +4,8 @@ import type { NotificationTypes } from "./NotificationTypes";
 import type { PersonId } from "./PersonId";
 
 export type PersonNotification = {
-  notification_id: NotificationId;
-  recipient_id: PersonId;
+  notificationId: NotificationId;
+  recipientId: PersonId;
   kind: NotificationTypes;
   read: boolean;
 };

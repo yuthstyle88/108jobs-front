@@ -11,6 +11,6 @@ export type CommunityView = {
   community: Community;
   community_actions?: CommunityActions;
   instance_actions?: InstanceActions;
-  can_mod: boolean;
-  post_tags: TagsView;
+  canMod: boolean;
+  postTags: TagsView;
 };

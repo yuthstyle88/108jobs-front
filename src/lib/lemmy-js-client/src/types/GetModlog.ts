@@ -11,7 +11,7 @@ import type { PostId } from "./PostId";
  * Fetches the modlog.
  */
 export type GetModlog = {
-  /**
+/**
    * Filter by the moderator.
    */
   mod_person_id?: PersonId;

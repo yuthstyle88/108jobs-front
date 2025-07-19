@@ -8,7 +8,7 @@ import type { TagId } from "./TagId";
  */
 export type CreatePost = {
   name: string;
-  community_id: CommunityId;
+  communityId: CommunityId;
   url?: string;
   /**
    * An optional body for the post in markdown.

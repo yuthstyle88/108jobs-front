@@ -6,7 +6,7 @@ import type { PaginationCursor } from "./PaginationCursor";
  * List comment likes. Admins-only.
  */
 export type ListCommentLikes = {
-  comment_id: CommentId;
+  commentId: CommentId;
   page_cursor?: PaginationCursor;
   page_back?: boolean;
   limit?: number;

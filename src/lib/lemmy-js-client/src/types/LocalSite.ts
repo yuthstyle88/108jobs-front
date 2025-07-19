@@ -15,19 +15,19 @@ import type { SiteId } from "./SiteId";
  */
 export type LocalSite = {
   id: LocalSiteId;
-  site_id: SiteId;
+  siteId: SiteId;
   /**
    * True if the site is set up.
    */
-  site_setup: boolean;
+  siteSetup: boolean;
   /**
    * Whether only admins can create communities.
    */
-  community_creation_admin_only: boolean;
+  communityCreationAdminOnly: boolean;
   /**
    * Whether emails are required.
    */
-  require_email_verification: boolean;
+  requireEmailVerification: boolean;
   /**
    * An optional registration application questionnaire in markdown.
    */
@@ -35,12 +35,12 @@ export type LocalSite = {
   /**
    * Whether the instance is private or public.
    */
-  private_instance: boolean;
+  privateInstance: boolean;
   /**
    * The default front-end theme.
    */
-  default_theme: string;
-  default_post_listing_type: ListingType;
+  defaultTheme: string;
+  defaultPostListingType: ListingType;
   /**
    * An optional legal disclaimer page.
    */
@@ -48,7 +48,7 @@ export type LocalSite = {
   /**
    * Whether new applications email admins.
    */
-  application_email_admins: boolean;
+  applicationEmailAdmins: boolean;
   /**
    * An optional regex to filter words.
    */
@@ -56,63 +56,63 @@ export type LocalSite = {
   /**
    * The max actor name length.
    */
-  actor_name_max_length: number;
+  actorNameMaxLength: number;
   /**
    * Whether federation is enabled.
    */
-  federation_enabled: boolean;
+  federationEnabled: boolean;
   /**
    * Whether captcha is enabled.
    */
-  captcha_enabled: boolean;
+  captchaEnabled: boolean;
   /**
    * The captcha difficulty.
    */
-  captcha_difficulty: string;
-  published_at: string;
+  captchaDifficulty: string;
+  publishedAt: string;
   updated_at?: string;
-  registration_mode: RegistrationMode;
+  registrationMode: RegistrationMode;
   /**
    * Whether to email admins on new reports.
    */
-  reports_email_admins: boolean;
+  reportsEmailAdmins: boolean;
   /**
    * Whether to sign outgoing Activitypub fetches with private key of local instance. Some
    * Fediverse instances and platforms require this.
    */
-  federation_signed_fetch: boolean;
+  federationSignedFetch: boolean;
   /**
    * Default value for [LocalSite.post_listing_mode]
    */
-  default_post_listing_mode: PostListingMode;
+  defaultPostListingMode: PostListingMode;
   /**
    * Default value for [LocalUser.post_sort_type]
    */
-  default_post_sort_type: PostSortType;
+  defaultPostSortType: PostSortType;
   /**
    * Default value for [LocalUser.comment_sort_type]
    */
-  default_comment_sort_type: CommentSortType;
+  defaultCommentSortType: CommentSortType;
   /**
    * Whether or not external auth methods can auto-register users.
    */
-  oauth_registration: boolean;
+  oauthRegistration: boolean;
   /**
    * What kind of post upvotes your site allows.
    */
-  post_upvotes: FederationMode;
+  postUpvotes: FederationMode;
   /**
    * What kind of post downvotes your site allows.
    */
-  post_downvotes: FederationMode;
+  postDownvotes: FederationMode;
   /**
    * What kind of comment upvotes your site allows.
    */
-  comment_upvotes: FederationMode;
+  commentUpvotes: FederationMode;
   /**
    * What kind of comment downvotes your site allows.
    */
-  comment_downvotes: FederationMode;
+  commentDownvotes: FederationMode;
   /**
    * A default time range limit to apply to post sorts, in seconds.
    */
@@ -120,7 +120,7 @@ export type LocalSite = {
   /**
    * Block NSFW content being created
    */
-  disallow_nsfw_content: boolean;
+  disallowNsfwContent: boolean;
   users: number;
   posts: number;
   comments: number;
@@ -128,23 +128,23 @@ export type LocalSite = {
   /**
    * The number of users with any activity in the last day.
    */
-  users_active_day: number;
+  usersActiveDay: number;
   /**
    * The number of users with any activity in the last week.
    */
-  users_active_week: number;
+  usersActiveWeek: number;
   /**
    * The number of users with any activity in the last month.
    */
-  users_active_month: number;
+  usersActiveMonth: number;
   /**
    * The number of users with any activity in the last half year.
    */
-  users_active_half_year: number;
+  usersActiveHalfYear: number;
   /**
    * Dont send email notifications to users for new replies, mentions etc
    */
-  disable_email_notifications: boolean;
+  disableEmailNotifications: boolean;
   suggested_communities?: MultiCommunityId;
-  multi_comm_follower: PersonId;
+  multiCommFollower: PersonId;
 };

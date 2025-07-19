@@ -12,18 +12,18 @@ import type { Post } from "./Post";
  * A comment report view.
  */
 export type CommentReportView = {
-  comment_report: CommentReport;
+  commentReport: CommentReport;
   comment: Comment;
   post: Post;
   community: Community;
   creator: Person;
-  comment_creator: Person;
+  commentCreator: Person;
   comment_actions?: CommentActions;
   resolver?: Person;
   person_actions?: PersonActions;
   community_actions?: CommunityActions;
-  creator_is_admin: boolean;
-  creator_is_moderator: boolean;
-  creator_banned: boolean;
-  creator_banned_from_community: boolean;
+  creatorIsAdmin: boolean;
+  creatorIsModerator: boolean;
+  creatorBanned: boolean;
+  creatorBannedFromCommunity: boolean;
 };

@@ -5,6 +5,6 @@ import type { CommunityId } from "./CommunityId";
  * Create a report for a community.
  */
 export type CreateCommunityReport = {
-  community_id: CommunityId;
+  communityId: CommunityId;
   reason: string;
 };

@@ -1,31 +1,33 @@
+import type { PostNotificationsMode } from "./PostNotificationsMode";
 export type PostActions = {
     /**
-     * When the post was read.
-     */
-    readAt?: string;
+       * When the post was read.
+       */
+    read_at?: string;
     /**
      * When was the last time you read the comments.
      */
-    readCommentsAt?: string;
+    read_comments_at?: string;
     /**
      * The number of comments you read last. Subtract this from total comments to get an unread
      * count.
      */
-    readCommentsAmount?: number;
+    read_comments_amount?: number;
     /**
      * When the post was saved.
      */
-    savedAt?: string;
+    saved_at?: string;
     /**
      * When the post was liked.
      */
-    likedAt?: string;
+    liked_at?: string;
     /**
      * The like / score of the post.
      */
-    likeScore?: number;
+    like_score?: number;
     /**
      * When the post was hidden.
      */
-    hiddenAt?: string;
+    hidden_at?: string;
+    notifications?: PostNotificationsMode;
 };
