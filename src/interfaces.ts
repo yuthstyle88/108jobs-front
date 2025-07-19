@@ -12,9 +12,9 @@ import {RequestState} from "@/services/HttpService";
 export interface IsoData<T extends RouteData = any> {
   path: string;
   routeData: T;
-  site_res: GetSiteResponse;
+  siteRes: GetSiteResponse;
   errorPageData?: ErrorPageData;
-  lemmy_external_host: string;
+  lemmyExternalHost: string;
 }
 
 export type IsoDataOptionalSite<T extends RouteData = any> = Partial<
@@ -45,10 +45,10 @@ export interface PostFormParams {
   url?: string;
   body?: string;
   nsfw?: boolean;
-  language_id?: number;
-  community_id?: number;
-  custom_thumbnail?: string;
-  alt_text?: string;
+  languageId?: number;
+  communityId?: number;
+  customThumbnail?: string;
+  altText?: string;
 }
 
 export enum CommentViewType {
@@ -94,11 +94,11 @@ export enum VoteContentType {
 
 export type CommentNodeView = Omit<CommentView, "bannedFromCommunity"> &
   Partial<Pick<CommentView, "creatorBannedFromCommunity">> & {
-  comment_reply?: CommentReply;
+  commentReply?: CommentReply;
 };
 
 export interface CommentNodeI {
-  comment_view: CommentNodeView;
+  commentView: CommentNodeView;
   children: Array<CommentNodeI>;
   depth: number;
 }

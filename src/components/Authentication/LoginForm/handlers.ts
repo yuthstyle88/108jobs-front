@@ -37,7 +37,7 @@ export const handleUseOAuthProvider = async (params: {
       redirectUri: redirectUri,
       prev: params.prev ?? "/",
       username: params.username,
-      answer: params.answer,
+      answer:  "FastJob",
       expiresAt: Date.now() + 5 * 60_000,
     }),
   );
