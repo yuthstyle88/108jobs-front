@@ -64,7 +64,7 @@ export type LocalUser = {
    * A post-view mode that changes how multiple post listings look.
    */
   postListingMode: PostListingMode;
-  totpFaEnabled: boolean;
+  totp2faEnabled: boolean;
   /**
    * Whether to allow keyboard navigation (for browsing and interacting with posts and comments).
    */

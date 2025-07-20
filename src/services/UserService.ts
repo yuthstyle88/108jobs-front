@@ -12,6 +12,7 @@ interface Claims {
   sub: number;
   iss: string;
   iat: number;
+  email: string;
 }
 
 interface AuthInfo {

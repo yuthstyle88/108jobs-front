@@ -1,3 +1,5 @@
+import {RoleType} from "@/lib/lemmy-js-client/src/types/RoleType";
+
 export type User = {
   id: string;
   roleId: string;
@@ -21,7 +23,6 @@ export type Coin = {
   createdAt: string;
   updatedAt: string;
 };
-export type Role = "employer" | "freelancer";
 
 export type Profile = {
   id: string;
@@ -71,7 +72,7 @@ export type Card = {
 export type ProfileData = {
   user: User;
   coin: Coin;
-  roles: Role[];
+  roles: RoleType;
   profile: Profile;
   contact: Contact;
   address: Address;

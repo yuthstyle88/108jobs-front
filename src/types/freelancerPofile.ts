@@ -1,4 +1,5 @@
 import { Service } from "./service";
+import {RoleType} from "@/lib/lemmy-js-client/src/types/RoleType";
 
 export type Month =
   | "January"
@@ -13,8 +14,6 @@ export type Month =
   | "October"
   | "November"
   | "December";
-
-export type RoleType = "employer" | "freelancer";
 
 export interface Skill {
   id: string;
@@ -63,7 +62,7 @@ export interface ProfileShow {
   skill: Skill[];
   language: LanguageSkill[];
   certAndAward: Certificate[];
-  roles: RoleType[];
+  roles: RoleType;
   services: Service[];
   ratings: number;
   userId: string;

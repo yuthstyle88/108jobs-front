@@ -46,6 +46,7 @@ export default function PasswordManagePage() {
   const [dataRegister, setDataRegister] = useState<RegisterDataProps | null>(null);
   const [forgotEmail, setForgotEmail] = useState<RegisterDataProps>();
   const [tokenPassword, setTokenPassword] = useState<RegisterDataProps>();
+  const tokenPasswordStr = tokenPassword?.token as string;
   // Load singUpData from sessionStorage if available, only on client
   console.log("🧭 currentView:", currentView);
   const route = useRouter();
@@ -191,7 +192,7 @@ export default function PasswordManagePage() {
               onBack={() => setCurrentView("verify-forgot-password")}
             >
               <ChangePassword
-                tokenPassword={tokenPassword}
+                tokenPassword={tokenPasswordStr}
                 switchToRegister={() => setCurrentView("manage-password")}
                 switchToForgotPassword={() => setCurrentView("forgot-password")}
               />

@@ -1,3 +1,5 @@
+import {RoleType} from "@/lib/lemmy-js-client/src/types/RoleType";
+
 export type RegisterFormData = {
   email: string;
   username: string;
@@ -8,5 +10,5 @@ export type RegisterFormData = {
   promotionalAccepted?: boolean;
   captchaUuid?: string;
   captchaAnswer: string;
-  role: "Employer" | "Freelancer";
+  role: RoleType;
 };

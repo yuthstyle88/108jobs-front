@@ -1,15 +1,16 @@
 "use client";
 
-import { API_ROUTES } from "@/api/endpoints";
+import {API_ROUTES} from "@/api/endpoints";
 import NotFound from "@/app/not-found";
 import Loading from "@/components/Loading";
-import { usePrivateFetch, usePrivateFetchParams } from "@/hooks/api-hooks";
-import { ProfileShow } from "@/types/freelancerPofile";
-import { ProfileData } from "@/types/userData";
+import {usePrivateFetch, usePrivateFetchParams} from "@/hooks/api-hooks";
+import {ProfileShow} from "@/types/freelancerPofile";
+import {ProfileData} from "@/types/userData";
 import CurrentProfileEmployer from "../components/CurrentProfileEmployer";
 import CurrentProfileFreelance from "../components/CurrentProfileFreelance";
 import EmployerProfile from "../components/EmployerProfile";
 import FreelancerProfile from "../components/FreelanerProfile";
+import {RoleType} from "@/lib/lemmy-js-client/src/types/RoleType";
 
 interface Props {
   username: string;
@@ -28,19 +29,13 @@ export default function CheckRoleProfile({ username }: Props) {
 
   if (isLoading) return <Loading />;
   if (error) return <NotFound />;
-  const roles = userProfile?.roles || [];
+  const isCurrentUser = userProfile?.roles as RoleType;
+  const isEmployer = (isCurrentUser == RoleType.Employer);
+  const isFreelancer = (isCurrentUser == RoleType.Freelancer);
 
-  const isCurrentUser = userProfile?.userId === user?.user.id;
-  const isCurrentEmployer =
-    isCurrentUser &&
-    roles.includes("employer") &&
-    !roles.includes("freelancer");
-  const isCurrentFreelance = isCurrentUser && roles.includes("freelancer");
-  const isEmployer = roles.includes("employer") && !isCurrentUser;
-  const isFreelancer = roles.includes("freelancer") && !isCurrentFreelance;
 
-  if (isCurrentEmployer) return <CurrentProfileEmployer username={username} />;
-  if (isCurrentFreelance)
+  if (isEmployer) return <CurrentProfileEmployer username={username} />;
+  if (isFreelancer)
     return <CurrentProfileFreelance username={username} />;
   if (isEmployer && isFreelancer)
     return <FreelancerProfile username={username} />;

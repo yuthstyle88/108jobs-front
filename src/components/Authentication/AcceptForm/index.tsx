@@ -10,7 +10,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { RegisterOAuthFormData } from "@/types/formTypes/RegisterOAuth";
-import {HttpService, UserService} from "@/services"; // เพิ่ม import นี้
+import {HttpService, UserService} from "@/services";
+import {RoleType} from "@/lib/lemmy-js-client/src/types/RoleType"; // เพิ่ม import นี้
 
 type UpdateFormProps = {
   switchToVerifyEmail: () => void;
@@ -30,7 +31,7 @@ export const AcceptForm = ({
     confirmPassword: z.string(),
     termsAccepted: z.boolean().refine((val) => val === true),
     privacyAccepted: z.boolean().refine((val) => val === true),
-    role: z.enum(["Employer", "Freelancer"]).default("Employer"),
+    role: z.nativeEnum(RoleType).default(RoleType.Employer),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: authen?.notMatchPassword,
@@ -131,7 +132,7 @@ export const AcceptForm = ({
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
-              value="Employer"
+              value="{RoleType.Employer}"
               {...register("role")}
               defaultChecked
             />
@@ -140,7 +141,7 @@ export const AcceptForm = ({
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
-              value="Freelancer"
+              value="{RoleType.Freelancer}"
               {...register("role")}
             />
             {"Freelancer"}

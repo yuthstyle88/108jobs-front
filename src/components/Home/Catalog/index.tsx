@@ -11,7 +11,7 @@ import React from "react";
 type Props = {
   serviceCatalogs: ServiceCatalog[];
   activeCatalog: ServiceCatalog;
-  activeCatalogIndex: Number;
+  activeCatalogIndex: number;
   setActiveCatalogIndex: (index: number) => void;
   homeLanguageData?: Partial<HomeLanguage> | null;
 };

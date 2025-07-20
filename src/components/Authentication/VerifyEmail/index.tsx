@@ -61,100 +61,100 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
       inputRefs.current[index + 1]?.focus();
     }
   };
+  //
+  // const handleVerify = async () => {
+  //   setCodeError(null);
+  //   setApiError(null);
+  //   const enteredCode = code.join("") as string;
+  //
+  //   if (enteredCode.length !== 6) {
+  //     setCodeError(ERROR_CONSTANTS.INVALID_CODE);
+  //     resetCode();
+  //     return;
+  //   }
+  //   const token = enteredCode;
+  //   try {
+  //     setIsSubmitting(true);
+  //     const response = await HttpService.client.verifyEmail({ token });
+  //     // const response = await fetch("/api/auth/verify-email", {
+  //     //   method: "POST",
+  //     //   headers: {
+  //     //     "Content-Type": "application/json",
+  //     //   },
+  //     //   body: JSON.stringify({
+  //     //     token: enteredCode,
+  //     //   }),
+  //     // });
+  //
+  //     // const data = await response.json();
+  //
+  //     if (response.state === "failed") {
+  //         setCodeError(ERROR_CONSTANTS.INVALID_CODE);
+  //       } else {
+  //         setApiError("การยืนยันอีเมลไม่สำเร็จ");
+  //       }
+  //       resetCode();
+  //       return;
+  //     }
+  //     //
+  //     // if (data.jwt) {
+  //     //   const loginResponse = await fetch("/api/auth/token-login", {
+  //     //     method: "POST",
+  //     //     headers: {
+  //     //       "Content-Type": "application/json",
+  //     //     },
+  //     //     body: JSON.stringify({ token: data.jwt }),
+  //     //   });
+  //
+  //       // if (loginResponse.ok) {
+  //       //   window.location.href = "/";
+  //       // } else {
+  //       //   setApiError("Đăng nhập tự động thất bại");
+  //       // }
+  //     // }
+  //     sessionStorage.removeItem("registerData");
+  //   } catch (error) {
+  //     console.error("Verification error:", error);
+  //     setApiError(ERROR_CONSTANTS.SERVER_ERROR);
+  //     resetCode();
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
 
-  const handleVerify = async () => {
-    setCodeError(null);
-    setApiError(null);
-    const enteredCode = code.join("") as string;
-
-    if (enteredCode.length !== 6) {
-      setCodeError(ERROR_CONSTANTS.INVALID_CODE);
-      resetCode();
-      return;
-    }
-    const token = enteredCode;
-    try {
-      setIsSubmitting(true);
-      const response = await HttpService.client.verifyEmail({ token });
-      // const response = await fetch("/api/auth/verify-email", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     token: enteredCode,
-      //   }),
-      // });
-
-      // const data = await response.json();
-
-      if (response.state === "failed") {
-          setCodeError(ERROR_CONSTANTS.INVALID_CODE);
-        } else {
-          setApiError("การยืนยันอีเมลไม่สำเร็จ");
-        }
-        resetCode();
-        return;
-      }
-      //
-      // if (data.jwt) {
-      //   const loginResponse = await fetch("/api/auth/token-login", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({ token: data.jwt }),
-      //   });
-
-        // if (loginResponse.ok) {
-        //   window.location.href = "/";
-        // } else {
-        //   setApiError("Đăng nhập tự động thất bại");
-        // }
-      // }
-      sessionStorage.removeItem("registerData");
-    } catch (error) {
-      console.error("Verification error:", error);
-      setApiError(ERROR_CONSTANTS.SERVER_ERROR);
-      resetCode();
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleResend = async () => {
-    if (isResendDisabled) return;
-
-    try {
-      setIsSendAgain(true);
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: dataRegister?.email,
-          username: dataRegister?.username,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        if (result.error) {
-          setCodeError(ERROR_CONSTANTS.LIMIT_SEND_EMAIL);
-        }
-        return;
-      }
-      setTimeLeft(resendDelay);
-      setIsResendDisabled(true);
-    } catch (error) {
-      console.error("Verification error:", error);
-      setApiError(ERROR_CONSTANTS.SERVER_ERROR);
-    } finally {
-      setIsSendAgain(false);
-    }
-  };
+  // const handleResend = async () => {
+  //   if (isResendDisabled) return;
+  //
+  //   try {
+  //     setIsSendAgain(true);
+  //     const response = await fetch("/api/auth/register", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         email: dataRegister?.email,
+  //         username: dataRegister?.username,
+  //       }),
+  //     });
+  //
+  //     const result = await response.json();
+  //
+  //     if (!response.ok) {
+  //       if (result.error) {
+  //         setCodeError(ERROR_CONSTANTS.LIMIT_SEND_EMAIL);
+  //       }
+  //       return;
+  //     }
+  //     setTimeLeft(resendDelay);
+  //     setIsResendDisabled(true);
+  //   } catch (error) {
+  //     console.error("Verification error:", error);
+  //     setApiError(ERROR_CONSTANTS.SERVER_ERROR);
+  //   } finally {
+  //     setIsSendAgain(false);
+  //   }
+  // };
 
   return (
     <div className="text-center max-w-md mx-auto">
@@ -196,7 +196,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
       )}
 
       <button
-        onClick={handleVerify}
+        // onClick={handleVerify}
         className={`w-full py-3 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 ${
           isSubmitting || code.join("").length !== 6
             ? "opacity-50 cursor-not-allowed"
@@ -214,7 +214,7 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
       )}
 
       <button
-        onClick={handleResend}
+        // onClick={handleResend}
         disabled={isResendDisabled || isSendAgain}
         className={`text-gray-500 text-sm mt-4 hover:text-blue-600 transition-colors ${
           isResendDisabled ? "opacity-50 cursor-not-allowed" : ""

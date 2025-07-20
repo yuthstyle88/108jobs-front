@@ -6,4 +6,5 @@ import type { PersonView } from "./PersonView";
  */
 export type BlockPersonResponse = {
   personView: PersonView;
+  blocked: boolean;
 };
