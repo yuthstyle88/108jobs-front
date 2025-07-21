@@ -1,7 +1,7 @@
 import {
   OAuthProvider,
   PublicOAuthProvider,
-} from "../../../lib/lemmy-js-client";
+} from "@/lib/lemmy-js-client/src";
 
 export const OAuthButtons: React.FC<{
   providers: PublicOAuthProvider[];
