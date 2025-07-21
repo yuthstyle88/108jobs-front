@@ -81,4 +81,5 @@ export type Community = {
   reportCount: number;
   unresolvedReportCount: number;
   localRemoved: boolean;
+  path: string;
 };
