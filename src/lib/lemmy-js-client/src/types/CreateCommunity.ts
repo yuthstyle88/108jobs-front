@@ -40,5 +40,4 @@ export type CreateCommunity = {
   postingRestrictedToMods?: boolean;
   discussionLanguages?: Array<LanguageId>;
   visibility?: CommunityVisibility;
-  path: string;
 };

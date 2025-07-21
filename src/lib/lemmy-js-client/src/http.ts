@@ -4,7 +4,6 @@ import type {
   CommunityIdQueryI,
   GetCommentI,
   GetCommentsI,
-  GetMultiCommunityI,
   GetPersonDetailsI,
   GetPostI,
   GetPostsI,
@@ -15,7 +14,6 @@ import type {
   ListCommentLikesI,
   ListCommunityPendingFollowsI,
   ListCustomEmojisI,
-  ListMultiCommunitiesI,
   ListNotificationsI,
   ListPersonContentI,
   ListPersonHiddenI,
@@ -198,14 +196,8 @@ import type {ListPersonReadResponse} from "./types/ListPersonReadResponse";
 import type {ListPersonHidden} from "./types/ListPersonHidden";
 import type {ListPersonHiddenResponse} from "./types/ListPersonHiddenResponse";
 import type {CommunityIdQuery} from "./types/CommunityIdQuery";
-import type {CreateMultiCommunity} from "./types/CreateMultiCommunity";
-import type {UpdateMultiCommunity} from "./types/UpdateMultiCommunity";
-import type {ListMultiCommunitiesResponse} from "./types/ListMultiCommunitiesResponse";
 import type {AdminListUsers} from "./types/AdminListUsers";
 import type {AdminListUsersResponse} from "./types/AdminListUsersResponse";
-import type {CreateOrDeleteMultiCommunityEntry} from "./types/CreateOrDeleteMultiCommunityEntry";
-import type {GetMultiCommunityResponse} from "./types/GetMultiCommunityResponse";
-import type {FollowMultiCommunity} from "./types/FollowMultiCommunity";
 import type {ListLoginsResponse} from "./types/ListLoginsResponse";
 import type {ListPersonLiked} from "./types/ListPersonLiked";
 import type {ListPersonLikedResponse} from "./types/ListPersonLikedResponse";
