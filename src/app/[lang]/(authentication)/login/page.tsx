@@ -7,15 +7,13 @@ import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import Image from "next/image";
-import {useRouter, useSearchParams} from "next/navigation";
-import {useEffect, useState} from "react";
-import {ForgotPasswordForm} from "@/components/Authentication/ForgotPasswordForm";
-import {RegisterDataProps} from "@/types/register-data";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { ForgotPasswordForm } from "@/components/Authentication/ForgotPasswordForm";
+import { RegisterDataProps } from "@/types/register-data";
+import VerificationForgotPassword from "@/components/Authentication/VerifyForgotPassword";
 
-type ViewState =
-  | "login"
-  | "forgot-password"
-  | "verify-forgot-password";
+type ViewState = "login" | "forgot-password" | "verify-forgot-password";
 
 export default function LoginPage() {
   const {
@@ -40,8 +38,6 @@ export default function LoginPage() {
   // Load singUpData from sessionStorage if available, only on client
   console.log("🧭 currentView:", currentView);
   const route = useRouter();
-
-
 
   if (isLoading) return <Loading />;
   if (error) return <div>Error</div>;
@@ -131,9 +127,7 @@ export default function LoginPage() {
             alt="logo"
           />
           {currentView === "login" && (
-            <AuthFormContainer
-              title="Sign in FastJob"
-            >
+            <AuthFormContainer title="Sign in FastJob">
               <LoginForm
                 switchToRegister={() => route.push("/register")}
                 switchToForgotPassword={() => setCurrentView("forgot-password")}
@@ -151,6 +145,14 @@ export default function LoginPage() {
                   setCurrentView("verify-forgot-password")
                 }
               />
+            </AuthFormContainer>
+          )}
+          {currentView === "verify-forgot-password" && (
+            <AuthFormContainer
+              title="Verify your email"
+              onBack={() => setCurrentView("forgot-password")}
+            >
+              <VerificationForgotPassword forgotEmail={forgotEmail} />
             </AuthFormContainer>
           )}
         </div>

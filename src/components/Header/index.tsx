@@ -1,7 +1,6 @@
 "use client";
 import { AssetIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
-import { ROLE } from "@/constants/role";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,6 +15,7 @@ import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
 import { useScrollHandler } from "./hooks/useScrollHandler";
 import Error from "@/app/error";
+import { RoleType } from "@/lib/lemmy-js-client/dist/types/RoleType";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -33,14 +33,16 @@ interface BgProps {
 
 const Header = ({ type, forceShowSearch = false }: BgProps) => {
   const { data: session } = useSession();
+  console.log("session",session);
+  
   const roles = session?.user.roles;
   const isEmployer = Array.isArray(roles)
-    ? roles.includes(ROLE.EMPLOYER)
-    : roles === ROLE.EMPLOYER;
+    ? roles.includes(RoleType.Employer)
+    : roles === RoleType.Employer;
 
   const isFreelancer = Array.isArray(roles)
-    ? roles.includes(ROLE.FREELANCER)
-    : roles === ROLE.FREELANCER;
+    ? roles.includes(RoleType.Freelancer)
+    : roles === RoleType.Freelancer;
   const { scrollY, showSearch } = useScrollHandler(forceShowSearch);
 
   const {

@@ -9,7 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {HttpService} from "@/services";
+import { HttpService } from "@/services";
+import useNotification from "@/hooks/useNotification";
 
 const changePasswordSchema = z
   .object({
@@ -22,16 +23,12 @@ const changePasswordSchema = z
   });
 
 type ChangePasswordProps = {
-  tokenPassword: string;
-  switchToRegister: () => void;
-  switchToForgotPassword: () => void;
+  token: string;
 };
 
 type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
-export const ChangePassword = ({
-  tokenPassword,
-}: ChangePasswordProps) => {
+export const ChangePassword = ({ token }: ChangePasswordProps) => {
   const {
     register,
     handleSubmit,
@@ -42,7 +39,7 @@ export const ChangePassword = ({
   });
 
   const authen = useTranslateFile(LanguageFile.AUTHEN);
-  
+  const { successMessage } = useNotification();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -50,20 +47,8 @@ export const ChangePassword = ({
   const onSubmit = async (data: ChangePasswordFormData) => {
     try {
       setApiError(null);
-
-      // const response = await fetch("/api/auth/change-password", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     token: tokenPassword,
-      //     password: data.password,
-      //     passwordVerify: data.confirmPassword,
-      //   }),
-      // });
       const response = await HttpService.client.passwordChangeAfterReset({
-        token: tokenPassword,
+        token: token,
         password: data.password,
         passwordVerify: data.confirmPassword,
       });
@@ -71,29 +56,16 @@ export const ChangePassword = ({
       // const result = await response.json();
 
       if (response.state === "failed") {
-          setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);
+        setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);
         return;
       }
 
-      // if (response.state === "success") {
-      //   const loginResponse = await fetch("/api/auth/token-login", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({ token: tokenPassword }),
-      //   });
-      //
-      //   if (loginResponse.ok) {
-      //     window.location.href = "/";
-      //   } else {
-      //     setApiError("Đăng nhập tự động thất bại");
-      //   }
-      // }
+      window.location.href = "/login";
     } catch (error) {
-      console.error("Registration error:", error);
       setApiError(
-        error instanceof Error ? error.message : "มีข้อผิดพลาดในการเปลี่ยนรหัสผ่านของคุณ"
+        error instanceof Error
+          ? error.message
+          : "มีข้อผิดพลาดในการเปลี่ยนรหัสผ่านของคุณ"
       );
     }
   };
