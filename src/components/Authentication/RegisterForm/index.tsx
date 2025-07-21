@@ -20,7 +20,6 @@ import {
     HttpService, LOADING_REQUEST,
     RequestState,
 } from "@/services/HttpService";
-import {IsoData} from "@/interfaces";
 import {toast} from "@/toast";
 import {UserService} from "@/services";
 import {setIsoData} from "@/utils/app";
@@ -176,7 +175,7 @@ const withHooks = (Component: any) => {
 class RegisterFormClass extends Component<
     RegisterFormProps , RegisterFormState> {
     private audio: HTMLAudioElement | undefined;
-    private isoData: IsoData | null = null;
+    private isoData = setIsoData(this.context);
     private hasFetchedSite = false;
     state: RegisterFormState = {
         registerRes: EMPTY_REQUEST,

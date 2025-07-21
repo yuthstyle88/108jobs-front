@@ -363,3 +363,6 @@ export type { UserSettingsBackup } from "./types/UserSettingsBackup";
 export type { VerifyEmail } from "./types/VerifyEmail";
 export type { VoteShow } from "./types/VoteShow";
 export type { VoteView } from "./types/VoteView";
+export type { PersonCommentMentionView } from "./types/PersonCommentMentionView";
+export type { PersonPostMentionView } from "./types/PersonPostMentionView";
+export type { CommentReplyView } from "./types/CommentReplyView";

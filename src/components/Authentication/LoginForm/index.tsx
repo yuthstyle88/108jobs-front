@@ -10,12 +10,11 @@ import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {
     OAuthProvider,
-} from "@/lib/lemmy-js-client/src";
+} from "lemmy-js-client";
 import {
     EMPTY_REQUEST,
     HttpService,
 } from "@/services/HttpService";
-import {IsoData} from "@/interfaces";
 import {setIsoData} from "@/utils/app";
 import TotpModal from "@/components/Common/Modal/TotpModal";
 import {OAuthButtons} from "@/components/Authentication/LoginForm/oauth-provider";
@@ -75,9 +74,8 @@ export class LoginFormClass extends Component<
     setApiError: (value: string | null) => void;
     },
     State> {
-    private isoData: IsoData | null = null;
+    private isoData  = setIsoData(this.context);
     private hasFetchedSite = false;
-
     state: State = {
         loginRes: EMPTY_REQUEST,
         form: {
@@ -99,7 +97,6 @@ export class LoginFormClass extends Component<
     }
 
     async componentDidMount() {
-        this.isoData = setIsoData(this.context);
 
         if (this.isoData?.siteRes) {
             this.setState({

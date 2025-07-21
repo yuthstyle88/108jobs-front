@@ -10,7 +10,7 @@ import type { SearchType } from "./SearchType";
  * Searches the site, given a search term, and some optional filters.
  */
 export type Search = {
-  q: string;
+  searchTerm?: string;
   communityId?: CommunityId;
   communityName?: string;
   creatorId?: PersonId;
@@ -26,10 +26,6 @@ export type Search = {
   postUrlOnly?: boolean;
   likedOnly?: boolean;
   dislikedOnly?: boolean;
-  /**
-   * If true, then show the nsfw posts (even if your user setting is to hide them)
-   */
-  showNsfw?: boolean;
   pageCursor?: PaginationCursor;
   pageBack?: boolean;
   limit?: number;
