@@ -28,6 +28,7 @@ import classNames from "classnames";
 import Link from "next/link";
 import {Spinner} from "@/components/icon";
 import {Play, RefreshCcw} from "lucide-react";
+import { RoleType } from "@/lib/lemmy-js-client/dist/types/RoleType";
 
 
 interface RegisterFormProps {
@@ -67,7 +68,7 @@ interface RegisterFormState {
         captchaUuid?: string;
         captchaAnswer?: string;
         answer?: string;
-        role: "Employer" | "Freelancer";
+        role: RoleType;
     };
     captchaPlaying: boolean;
     siteRes: GetSiteResponse | null;
@@ -181,7 +182,7 @@ class RegisterFormClass extends Component<
         registerRes: EMPTY_REQUEST,
         captchaRes: EMPTY_REQUEST,
         form: {
-            role: "Employer",
+            role: RoleType.Employer,
             privacyAccepted: false,
             termsAccepted: false
         },
@@ -298,7 +299,7 @@ class RegisterFormClass extends Component<
     }
 
     handleSubmit = async (data: any) => {
-        const {email, username ,password, confirmPassword, termsAccepted, privacyAccepted, captchaUuid,captchaAnswer, role} = data;
+        const {email, username ,password, confirmPassword, termsAccepted, privacyAccepted, captchaUuid,captchaAnswer, role,answer} = data;
 
         this.setState(prev => ({
             form: {
@@ -310,7 +311,8 @@ class RegisterFormClass extends Component<
                 termsAccepted,
                 privacyAccepted,
                 captchaAnswer,
-                role
+                role,
+                answer
             }
         }));
 
@@ -324,7 +326,8 @@ class RegisterFormClass extends Component<
             captchaUuid: this.state.form.captchaUuid,
             captchaAnswer: data.captchaAnswer,
             role: data.role,
-            acceptedApplication: data.termsAccepted && data.privacyAccepted
+            acceptedApplication: data.termsAccepted && data.privacyAccepted,
+            answer:"hello yuth"
         });
         switch (registerRes.state) {
             case "failed": {
@@ -334,10 +337,11 @@ class RegisterFormClass extends Component<
                         password: "",
                         confirmPassword: "",
                         username: "",
-                        role: "Employer",
+                        role: RoleType.Employer,
                         privacyAccepted: false,
                         termsAccepted: false,
-                        captchaAnswer: "CAPTCHA"
+                        captchaAnswer: "CAPTCHA",
+                        answer:"hello yuth"
                     },
                     captchaRes: { state: "empty" },
                     errors: {},
