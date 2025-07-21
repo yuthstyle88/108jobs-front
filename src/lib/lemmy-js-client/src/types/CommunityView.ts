@@ -13,5 +13,4 @@ export type CommunityView = {
   instanceActions?: InstanceActions;
   canMod: boolean;
   postTags: TagsView;
-  path: string;
 };

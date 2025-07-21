@@ -4,7 +4,6 @@ import type {
   CommunityIdQueryI,
   GetCommentI,
   GetCommentsI,
-  GetMultiCommunityI,
   GetPersonDetailsI,
   GetPostI,
   GetPostsI,
@@ -15,7 +14,6 @@ import type {
   ListCommentLikesI,
   ListCommunityPendingFollowsI,
   ListCustomEmojisI,
-  ListMultiCommunitiesI,
   ListNotificationsI,
   ListPersonContentI,
   ListPersonHiddenI,
@@ -198,14 +196,8 @@ import type {ListPersonReadResponse} from "./types/ListPersonReadResponse";
 import type {ListPersonHidden} from "./types/ListPersonHidden";
 import type {ListPersonHiddenResponse} from "./types/ListPersonHiddenResponse";
 import type {CommunityIdQuery} from "./types/CommunityIdQuery";
-import type {CreateMultiCommunity} from "./types/CreateMultiCommunity";
-import type {UpdateMultiCommunity} from "./types/UpdateMultiCommunity";
-import type {ListMultiCommunitiesResponse} from "./types/ListMultiCommunitiesResponse";
 import type {AdminListUsers} from "./types/AdminListUsers";
 import type {AdminListUsersResponse} from "./types/AdminListUsersResponse";
-import type {CreateOrDeleteMultiCommunityEntry} from "./types/CreateOrDeleteMultiCommunityEntry";
-import type {GetMultiCommunityResponse} from "./types/GetMultiCommunityResponse";
-import type {FollowMultiCommunity} from "./types/FollowMultiCommunity";
 import type {ListLoginsResponse} from "./types/ListLoginsResponse";
 import type {ListPersonLiked} from "./types/ListPersonLiked";
 import type {ListPersonLikedResponse} from "./types/ListPersonLikedResponse";
@@ -2692,108 +2684,6 @@ export class LemmyHttp extends Controller {
       HttpType.Post,
       "/user/donation-dialog-shown",
       {},
-      options,
-    );
-  }
-
-  @Security("bearerAuth")
-  @Post("/multi-community")
-  @Tags("Multicommunity")
-  createMultiCommunity(
-    @Body() form: CreateMultiCommunity,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<object, GetMultiCommunityResponse>(
-      HttpType.Post,
-      "/multi-community",
-      form,
-      options,
-    );
-  }
-
-  @Security("bearerAuth")
-  @Put("/multi-community")
-  @Tags("Multicommunity")
-  updateMultiCommunity(
-    @Body() form: UpdateMultiCommunity,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<object, SuccessResponse>(
-      HttpType.Put,
-      "/multi-community",
-      form,
-      options,
-    );
-  }
-
-  @Get("/multi-community")
-  @Tags("Multicommunity")
-  getMultiCommunity(
-    @Queries() form: GetMultiCommunityI,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<object, GetMultiCommunityResponse>(
-      HttpType.Get,
-      "/multi-community",
-      form,
-      options,
-    );
-  }
-
-  @Security("bearerAuth")
-  @Post("/multi-community/entry")
-  @Tags("Multicommunity")
-  createMultiCommunityEntry(
-    @Body() form: CreateOrDeleteMultiCommunityEntry,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<object, SuccessResponse>(
-      HttpType.Post,
-      "/multi-community/entry",
-      form,
-      options,
-    );
-  }
-
-  @Security("bearerAuth")
-  @Delete("/multi-community/entry")
-  @Tags("Multicommunity")
-  deleteMultiCommunityEntry(
-    @Body() form: CreateOrDeleteMultiCommunityEntry,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<object, SuccessResponse>(
-      HttpType.Delete,
-      "/multi-community/entry",
-      form,
-      options,
-    );
-  }
-
-  @Get("/multi-community/list")
-  @Tags("Multicommunity")
-  listMultiCommunities(
-    @Queries() form: ListMultiCommunitiesI,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<object, ListMultiCommunitiesResponse>(
-      HttpType.Get,
-      "/multi-community/list",
-      form,
-      options,
-    );
-  }
-
-  @Post("/multi-community/follow")
-  @Tags("Multicommunity")
-  followMultiCommunity(
-    @Body() form: FollowMultiCommunity,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<object, SuccessResponse>(
-      HttpType.Post,
-      "/multi-community/follow",
-      form,
       options,
     );
   }

@@ -8,5 +8,4 @@ export type SearchType =
   | "Comments"
   | "Posts"
   | "Communities"
-  | "Users"
-  | "MultiCommunities";
+  | "Users";
