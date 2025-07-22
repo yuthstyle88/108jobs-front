@@ -1,0 +1,51 @@
+"use client";
+import ErrorPage from "@/app/error";
+import LoadingBlur from "@/components/LoadingBlur";
+import { ERROR_CONSTANTS } from "@/constants/error";
+import useNotification from "@/hooks/useNotification";
+import { HttpService, UserService } from "@/services";
+import { setAuthCookie } from "@/utils/browser";
+import { useEffect, useRef, useState } from "react";
+
+type VerifyEmailRegisterProps = {
+  token: string;
+};
+
+export const VerifyEmailRegister = ({ token }: VerifyEmailRegisterProps) => {
+  const { successMessage } = useNotification();
+  const [apiError, setApiError] = useState<string | null>(null);
+  const hasCalled = useRef(false);
+
+  useEffect(() => {
+    if (hasCalled.current) return;
+
+    hasCalled.current = true;
+
+    const verifyEmail = async () => {
+      try {
+        setApiError(null);
+        const verifyRes = await HttpService.client.verifyEmail({ token });
+        console.log("verifyRes",verifyRes);
+        
+
+        if (verifyRes.state === "failed") {
+          setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);
+          return;
+        }
+        await setAuthCookie(verifyRes?.jwt);
+        successMessage(null, null, "Verify email successfully");
+        window.location.href = "/";
+      } catch (error) {
+        setApiError(
+          error instanceof Error
+            ? error.message
+            : "มีข้อผิดพลาดในการเปลี่ยนรหัสผ่านของคุณ"
+        );
+      }
+    };
+
+    verifyEmail();
+  }, [token]); 
+
+  return apiError ? <ErrorPage /> : <LoadingBlur text="" />;
+};

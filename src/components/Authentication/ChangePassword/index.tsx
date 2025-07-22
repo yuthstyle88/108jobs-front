@@ -15,21 +15,17 @@ type ChangePasswordProps = {
   token: string;
 };
 
-export const ChangePassword = ({
-  token,
-}: ChangePasswordProps) => {
-
-
+export const ChangePassword = ({ token }: ChangePasswordProps) => {
   const authen = useTranslateFile(LanguageFile.AUTHEN);
   const changePasswordSchema = z
-  .object({
-    password: z.string().min(6, authen?.passwordMin6),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: authen?.notMatchPassword,
-    path: ["confirmPassword"],
-  });
+    .object({
+      password: z.string().min(6, authen?.passwordMin6),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: authen?.notMatchPassword,
+      path: ["confirmPassword"],
+    });
   type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
   const {
     register,
@@ -59,7 +55,7 @@ export const ChangePassword = ({
         setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);
         return;
       }
-
+      successMessage(null, null, "Change password successfully");
       window.location.href = "/login";
     } catch (error) {
       setApiError(
