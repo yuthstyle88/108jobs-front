@@ -11,6 +11,7 @@ import Image from "next/image";
 import {useState} from "react";
 import {RegisterForm} from "@/components/Authentication/RegisterForm/index";
 import { useRouter } from "next/navigation";
+import VerifyEmailConfirm from "@/components/Authentication/VerifyEmailConfirm";
 
 type ViewState = "register" | "verify-email";
 
@@ -26,6 +27,7 @@ export default function RegisterPage() {
 
   const [currentView, setCurrentView] = useState<ViewState>("register");
   const [dataDataRegister, setDataDataRegister] = useState<RegisterDataProps | null>(null);
+console.log("currentView",currentView);
 
 
   if (isLoading) return <Loading />;
@@ -125,6 +127,13 @@ export default function RegisterPage() {
                 setDataRegister={setDataDataRegister} history={undefined} setApiError={function (err: string): void {
                 throw new Error("Function not implemented.");
               }}              />
+            </AuthFormContainer>
+          )}
+          {currentView === "verify-email" && (
+            <AuthFormContainer
+              title={`Verify register email`}
+            >
+              <VerifyEmailConfirm/>
             </AuthFormContainer>
           )}
 

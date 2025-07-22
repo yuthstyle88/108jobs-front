@@ -44,7 +44,7 @@ export const ForgotPasswordForm = ({
     try {
       setApiError(null);
       const email = data.email;
-      const response = await HttpService.client.PasswordReset({email});
+      const response = await HttpService.client.passwordReset({email});
 
 
       if (response.state === "failed") {
