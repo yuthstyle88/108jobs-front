@@ -11,6 +11,7 @@ import swrConfig from "@/config/swrConfig";
 import fetchIsoData from "@/lib/api/fetchIsoData";
 import { headers } from "next/headers";
 import { NextRequest } from "next/server";
+import {IncomingHttpHeaders} from "http";
 
 const kanit = Kanit({
   subsets: ["latin", "vietnamese", "thai"],
@@ -30,15 +31,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const headersList = await headers();
-  const req = {
-    headers: Object.fromEntries(headersList.entries()),
-  } as unknown as NextRequest;
+  const hdr = await headers();
+  const headersList: IncomingHttpHeaders = Object.fromEntries(hdr.entries());
 
-  const path = req.headers.get("x-path") || "/";
-  const url = req.headers.get("x-url") || "/";
-
-  const isoDateContext = await fetchIsoData(req, path, url);
+  const path = hdr.get("x-path") || "/";
+  const url  = hdr.get("x-url") || "/";
+  const IncomingHttpHeaders: IncomingHttpHeaders = Object.fromEntries(hdr.entries());
+  const isoDateContext = await fetchIsoData( path, url , IncomingHttpHeaders);
 
   return (
     <html lang="th" suppressHydrationWarning>

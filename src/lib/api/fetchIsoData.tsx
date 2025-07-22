@@ -11,8 +11,9 @@ import {getHttpBaseInternal} from "@/utils/env";
 import {GetSiteResponse, LemmyHttp, MyUserInfo} from "lemmy-js-client";
 import {parsePath} from "history";
 import {testHost} from "@/config";
+import {IncomingHttpHeaders} from "http";
 
-export default async function fetchIsoData(req: NextRequest, path: string, url: string): Promise<IsoData | null> {
+export default async function fetchIsoData(path: string, url: string,incomingHeaders: IncomingHttpHeaders): Promise<IsoData | null> {
   try {
     const cookieStore = cookies();
 
@@ -20,11 +21,6 @@ export default async function fetchIsoData(req: NextRequest, path: string, url: 
     // const userAgent = req.headers.get("user-agent");
     // const acceptLang = req.headers.get("accept-language");
     // Convert Headers to plain object
-
-    const incomingHeaders: Record<string, string> = {};
-    req.headers.forEach((value, key) => {
-      incomingHeaders[key] = value;
-    });
 
     const forwardedHeaders = setForwardedHeaders(incomingHeaders);
     const auth = getJwtCookie(incomingHeaders);
@@ -55,7 +51,7 @@ export default async function fetchIsoData(req: NextRequest, path: string, url: 
     let tryUser = await client.getMyUser();
 
     if (!auth && isAuthPath(path)) {
-      NextResponse.redirect(new URL(`/login?prev=${encodeURIComponent(url)}`, req.url));
+      NextResponse.redirect(new URL(`/login?prev=${encodeURIComponent(url)}`, origin));
       return null;
     }
     if (tryUser.state === "failed" && tryUser.err.message === "not_logged_in") {
