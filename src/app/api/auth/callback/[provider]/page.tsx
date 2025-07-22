@@ -121,10 +121,10 @@ async function handleLoginSuccess(loginData: any, prev?: string) {
     });
 
     // ดึงข้อมูลไซต์หลังจากเข้าสู่ระบบ
-    const site = await HttpService.client.getSite();
+    const user = await HttpService.client.getMyUser();
 
-    if (site.state === "success") {
-      UserService.Instance.myUserInfo = site.data.myUser;
+    if (user.state === "success") {
+      UserService.Instance.myUserInfo = user.data;
 
       // อาจต้องเรียกใช้ฟังก์ชันอัพเดทธีม หรือตั้งค่าอื่นๆ ตามต้องการ
       // refreshTheme();

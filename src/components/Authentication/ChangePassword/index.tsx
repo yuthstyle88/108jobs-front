@@ -24,16 +24,12 @@ const changePasswordSchema = z
 
 type ChangePasswordProps = {
   token: string;
-  switchToRegister?: () => void;
-  switchToForgotPassword?: () => void;
 };
 
 type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
 export const ChangePassword = ({
   token,
-  switchToRegister,
-  switchToForgotPassword,
 }: ChangePasswordProps) => {
   const {
     register,

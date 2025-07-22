@@ -194,8 +194,6 @@ export default function PasswordManagePage() {
             >
               <ChangePassword
                 token={tokenPassword as string}
-                switchToRegister={() => setCurrentView("manage-password")}
-                switchToForgotPassword={() => setCurrentView("forgot-password")}
               />
             </AuthFormContainer>
           )}

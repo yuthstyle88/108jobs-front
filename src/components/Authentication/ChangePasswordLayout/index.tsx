@@ -19,7 +19,6 @@ interface Props {
 }
 
 export default function ChangePasswordLayout({ token }: Props) {
-  const route = useRouter();
   const {
     data: loginLanguageData,
     isLoading,
@@ -27,9 +26,7 @@ export default function ChangePasswordLayout({ token }: Props) {
   } = useGlobalTranslate(LanguageFile.AUTHEN);
 
   const [currentView, setCurrentView] = useState<ViewState>("change-password");
-  const [dataDataRegister, setDataDataRegister] =
-    useState<RegisterDataProps | null>(null);
-    const [tokenPassword, setTokenPassword] = useState<string>();
+
   if (isLoading) return <Loading />;
   if (error) return <div>Error</div>;
 
@@ -120,7 +117,7 @@ export default function ChangePasswordLayout({ token }: Props) {
           {currentView === "change-password" && (
             <AuthFormContainer title="Change Password">
                 <ChangePassword
-                    token={tokenPassword as string}
+                    token={token}
                 />
             </AuthFormContainer>
           )}
