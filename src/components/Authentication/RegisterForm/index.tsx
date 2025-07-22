@@ -50,6 +50,7 @@ interface RegisterFormProps {
   apiError: string | null;
   setApiError: (value: string | null) => void;
   history: any;
+  switchToVerifyEmail?: () => void;
 }
 
 interface RegisterFormState {
@@ -362,9 +363,12 @@ class RegisterFormClass extends Component<
         break;
       }
       case "success": {
+        console.log("success nè");
+        
         const loginData = registerRes.data;
         // Only log them in if a jwt was set
         if (loginData.jwt) {
+          console.log("có jwt nè");
           UserService.Instance.login({
             res: loginData,
           });
@@ -380,6 +384,7 @@ class RegisterFormClass extends Component<
 
           this.props.history.replace("/communities");
         } else {
+          this.props.switchToVerifyEmail?.();
           if (data.verifyEmailSent) {
             toast(("verifyEmailSent"));
           }

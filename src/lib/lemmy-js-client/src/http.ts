@@ -1,3 +1,4 @@
+import { VerifyEmailResponse } from './../dist/types/VerifyEmailResponse.d';
 import {Body, Controller, Delete, Get, Inject, Post, Put, Queries, Route, Security, Tags, UploadedFile,} from "@tsoa/runtime";
 import type {
   AdminListUsersI,
@@ -1860,7 +1861,7 @@ export class LemmyHttp extends Controller {
     @Body() form: VerifyEmail,
     @Inject() options?: RequestOptions,
   ) {
-    return this.#wrapper<VerifyEmail, SuccessResponse>(
+    return this.#wrapper<VerifyEmail, VerifyEmailResponse>(
       HttpType.Post,
       "/account/auth/verify-email",
       form,
