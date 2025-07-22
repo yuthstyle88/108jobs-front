@@ -3,7 +3,7 @@ import {cookies} from "next/headers";
 import {ErrorPageData, InitialFetchRequest, IsoData, RouteData} from "@/utils/types";
 import {Match,} from "@/utils/router";
 import {routes,} from "@/utils/routes";
-import {isAuthPath} from "@/utils/app";
+import {communityToChoice, isAuthPath} from "@/utils/app";
 import {getErrorPageData, getJwtCookie, matchPath, setForwardedHeaders} from "@/utils/helpers";
 import {NextRequest, NextResponse} from "next/server";
 import {FailedRequestState, wrapClient,} from "@/services/HttpService";
@@ -22,21 +22,26 @@ export default async function fetchIsoData(path: string, url: string,incomingHea
     // const acceptLang = req.headers.get("accept-language");
     // Convert Headers to plain object
 
-    const forwardedHeaders = setForwardedHeaders(incomingHeaders);
+    const headers = setForwardedHeaders(incomingHeaders);
     const auth = getJwtCookie(incomingHeaders);
-
+    console.log("headers", headers);
     let match: Match<any> | null | undefined;
+    const host = getHttpBaseInternal();
+    console.log("host", host);
     const client = wrapClient(
-      new LemmyHttp(getHttpBaseInternal(), { headers: forwardedHeaders }),
+      new LemmyHttp(getHttpBaseInternal(), { headers }),
     );
+
     let activeRoute;
     const trySite = await client.getSite();
+    console.log("trySite", trySite.state);
     if (trySite.state === "success") {
       const { search } = parsePath(url);
-
+      console.log("search", search);
       activeRoute = routes.find(route => {
         const queryParams = route.getQueryParams?.(search, trySite.data);
-        return (match = matchPath(path, queryParams?.source));
+        console.log("queryParams", queryParams);
+        match = matchPath(path, queryParams?.source);
       });
     }
 
@@ -54,6 +59,7 @@ export default async function fetchIsoData(path: string, url: string,incomingHea
       NextResponse.redirect(new URL(`/login?prev=${encodeURIComponent(url)}`, origin));
       return null;
     }
+    console.log("myUserInfo", tryUser.state);
     if (tryUser.state === "failed" && tryUser.err.message === "not_logged_in") {
       console.error(
         "Incorrect JWT token, skipping auth so frontend can remove jwt cookie",

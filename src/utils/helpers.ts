@@ -260,9 +260,16 @@ export function getApubName({ name, ap_id }: { name: string; ap_id: string }) {
 /**
  * Next.js-style dynamic route matcher (e.g. `/post/[id]`)
  */
-export function matchPath(pathPattern: string, urlPath: string): Match<any> | null {
+// utils/helpers.ts
+export function matchPath(
+  pathPattern?: string,
+  urlPath?: string
+): Match<any> | null {
+  // ➊ กันไว้ก่อน – ถ้าอาร์กิวเมนต์เป็น undefined/null
+  if (!pathPattern || !urlPath) return null;
+
   const patternParts = pathPattern.split("/").filter(Boolean);
-  const urlParts = urlPath.split("/").filter(Boolean);
+  const urlParts     = urlPath.split("/").filter(Boolean);
 
   if (patternParts.length !== urlParts.length) return null;
 
@@ -270,7 +277,7 @@ export function matchPath(pathPattern: string, urlPath: string): Match<any> | nu
 
   for (let i = 0; i < patternParts.length; i++) {
     const pattern = patternParts[i];
-    const part = urlParts[i];
+    const part    = urlParts[i];
 
     if (pattern.startsWith("[")) {
       const key = pattern.replace(/^\[|\]$/g, "");
@@ -283,8 +290,8 @@ export function matchPath(pathPattern: string, urlPath: string): Match<any> | nu
   return {
     params,
     path: urlPath,
-    url: urlPath,
-    isExact: true, // หรือ false แล้วแต่ logic ของคุณ
+    url:  urlPath,
+    isExact: true,
   } as Match<any>;
 }
 

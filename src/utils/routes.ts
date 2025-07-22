@@ -4,8 +4,9 @@
 // Actual pages should be placed under /app or /pages depending on routing mode
 import { GetSiteResponse, MyUserInfo } from "lemmy-js-client";
 import { InitialFetchRequest, RouteData } from "@/utils/types";
-import {LoginForm, getLoginQueryParams} from "@/components/Authentication/LoginForm";
-import { LoginFetchConfig } from "@/components/Authentication/LoginForm/interface";
+import {LoginForm} from "@/components/Authentication/LoginForm";
+import { LoginFetchConfig, } from "@/components/Authentication/LoginForm/interface";
+import { getLoginQueryParams } from "@/components/Authentication/LoginForm/handlers";
 
 type RouteComponentProps<PathPropsT> = {
   params: PathPropsT;

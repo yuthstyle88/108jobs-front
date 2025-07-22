@@ -7,6 +7,8 @@ import {HttpService, UserService} from "@/services";
 import {setIsoData} from "@/utils/app";
 import {LoginFormClass} from "@/components/Authentication/LoginForm";
 import {toast} from "@/toast";
+import {LoginProps} from "@/components/Authentication/LoginForm/interface";
+import getQueryParams from "@/utils/helpers";
 
 export const handleUseOAuthProvider = async (params: {
   oauthProvider: OAuthProvider;
@@ -146,4 +148,13 @@ export async function handleSubmitTotp(i: LoginFormClass, totp: string) {
   }
 
   return successful;
+}
+
+export function getLoginQueryParams(source?: string): LoginProps {
+  return getQueryParams<LoginProps>(
+    {
+      prev: (param?: string) => param,
+    },
+    source,
+  );
 }

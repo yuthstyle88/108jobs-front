@@ -33,13 +33,13 @@ export default async function RootLayout({
 
   const hdr = await headers();
   const headersList: IncomingHttpHeaders = Object.fromEntries(hdr.entries());
-
+ console.log("headersList: ", headersList);
   const path = hdr.get("x-path") || "/";
   const url  = hdr.get("x-url") || "/";
   console.log("x-path: ", path);
   const IncomingHttpHeaders: IncomingHttpHeaders = Object.fromEntries(hdr.entries());
   const isoDateContext = await fetchIsoData( path, url , IncomingHttpHeaders);
-
+   console.log("isoDateContext: ", isoDateContext);
   return (
     <html lang="th" suppressHydrationWarning>
     <head>
@@ -55,7 +55,7 @@ export default async function RootLayout({
       path: "/",
       routeData: {} as any,
       siteRes: {} as any,
-      lemmyExternalHost: "127.0.0.0:8532"
+      lemmyExternalHost: "localhost:8532"
     }}>
       <Providers>
         <SWRConfig value={swrConfig}>
