@@ -16,7 +16,6 @@ import type { MyUserInfo} from "./MyUserInfo";
 export type GetSiteResponse = {
   siteView: SiteView;
   admins: Array<PersonView>;
-  myUser?: MyUserInfo;
   version: string;
   allLanguages: Array<Language>;
   discussionLanguages: Array<LanguageId>;

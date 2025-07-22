@@ -11,7 +11,7 @@ const Post = () => {
       <span className="text-third font-medium">
         {global?.jobBoardSideTitle}
       </span>
-      <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
+      <p className="mt-3 text-[0.875rem] text-text-secondary font-sans">
         {global?.jobBoardSideDesc}
       </p>
       <Link prefetch={false} href="/job-board" className="mt-6">

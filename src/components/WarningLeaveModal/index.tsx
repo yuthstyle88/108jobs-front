@@ -27,7 +27,7 @@ const WarningLeaveModal: React.FC<WarningLeaveModalProps> = ({
           <h1 className="text-[18px] font-medium text-text-primary text-center">
             You haven&apos;t saved your changes yet.
           </h1>
-          <p className="text-[14px] font-sans text-text_secondary text-center pt-3">
+          <p className="text-[14px] font-sans text-text-secondary text-center pt-3">
             Please save before leaving this page to avoid losing your data.
           </p>
         </article>

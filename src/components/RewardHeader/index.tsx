@@ -3,7 +3,6 @@ import { API_ROUTES } from "@/api/endpoints";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile, LANGUAGES } from "@/constants/language";
-import { ROLE } from "@/constants/role";
 import LanguageBottomSheet from "@/containers/SpBottomTab";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
@@ -21,6 +20,7 @@ import ProfileSection from "../Header/components/ProfileSection";
 import LanguageDropdown from "../LanguageDropDown";
 import Loading from "../Loading";
 import Error from "@/app/error";
+import {RoleType} from "@/lib/lemmy-js-client/src/types/RoleType";
 
 const RewardHeader = () => {
   const { data: session } = useSession();
@@ -85,8 +85,8 @@ const RewardHeader = () => {
             />
           </Link>
           <div className="hidden sm:block">
-            {session?.user.roles?.includes(ROLE.EMPLOYER) &&
-              session?.user.roles?.includes(ROLE.FREELANCER) && (
+            {session?.user.roles?.includes(RoleType.Employer) &&
+              session?.user.roles?.includes(RoleType.Freelancer) && (
                 <div className="relative px-4">
                   <button
                     onClick={() => toggle()}
@@ -116,8 +116,8 @@ const RewardHeader = () => {
                   )}
                 </div>
               )}
-            {session?.user.roles?.includes(ROLE.EMPLOYER) &&
-              !session?.user.roles?.includes(ROLE.FREELANCER) && (
+            {session?.user.roles?.includes(RoleType.Employer) &&
+              !session?.user.roles?.includes(RoleType.Freelancer) && (
                 <div className="relative px-4">
                   <button
                     onClick={() => toggle()}

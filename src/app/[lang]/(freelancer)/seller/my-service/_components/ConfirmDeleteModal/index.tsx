@@ -39,7 +39,7 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
           <h1 className="text-[16px] font-medium text-text-primary">
             {`"${jobName}"`}
           </h1>
-          <p className="text-[14px] font-sans text-text_secondary pt-3">
+          <p className="text-[14px] font-sans text-text-secondary pt-3">
             {language?.confirmDeleteServiceMessage}
           </p>
         </article>
@@ -47,7 +47,7 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
       <div className="flex flex-row gap-2 pt-8 w-full">
         <button
           onClick={onClose}
-          className="px-10 py-3 w-full text-text_secondary font-normal rounded-md shadow-lg hover:bg-gray-100 transition duration-300"
+          className="px-10 py-3 w-full text-text-secondary font-normal rounded-md shadow-lg hover:bg-gray-100 transition duration-300"
         >
           {global?.buttonCancel}
         </button>

@@ -5,7 +5,7 @@ import React from "react";
 
 const JobBoardProposal = () => {
   return (
-    <main className="mt-8 text-center text-[18px] text-text_secondary flex flex-col gap-4">
+    <main className="mt-8 text-center text-[18px] text-text-secondary flex flex-col gap-4">
       No freelancer proposals yet
       <div className="p-4 rounded-[4px] border-1 border-borderSecondary">
         <section className="grid grid-cols-[7fr_3fr] gap-4 ">

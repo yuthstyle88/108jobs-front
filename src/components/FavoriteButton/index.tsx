@@ -135,7 +135,7 @@ const FavoriteButton = ({ label, jobId }: FavoriteButtonProps) => {
       <FontAwesomeIcon
         icon={isFavorited ? fasHeart : farHeart}
         className={`transition-all duration-300 ${
-          isFavorited ? "text-red-500 scale-110" : "text-text_secondary"
+          isFavorited ? "text-red-500 scale-110" : "text-text-secondary"
         }`}
       />
       <p className="ml-2 text-center cursor-pointer">{label}</p>

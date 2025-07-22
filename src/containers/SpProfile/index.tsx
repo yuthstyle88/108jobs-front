@@ -3,7 +3,6 @@ import { API_ROUTES } from "@/api/endpoints";
 import Loading from "@/components/Loading";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
-import { ROLE } from "@/constants/role";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useLogout } from "@/hooks/useLogout";
@@ -21,6 +20,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import {RoleType} from "@/lib/lemmy-js-client/src/types/RoleType";
 
 const SpProfile = () => {
   const { data: user, isLoading } = usePrivateFetch<ProfileData>(
@@ -95,100 +95,100 @@ const SpProfile = () => {
           </div>
         </Link>
       </section>
-      {user?.roles.includes(ROLE.EMPLOYER) &&
-        user?.roles.includes(ROLE.FREELANCER) && (
+      {user?.roles.includes(RoleType.Employer) &&
+        user?.roles.includes(RoleType.Freelancer) && (
           <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
             <Link prefetch={false} href="/seller/my-service">
-              <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text-secondary font-sans">
                 <FontAwesomeIcon
                   icon={faBriefcase}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-text-secondary"
                 />
                 <div>My job</div>
               </div>
             </Link>
             <Link prefetch={false} href="/seller/withdrawal">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text-secondary font-sans">
                 <FontAwesomeIcon
                   icon={faMoneyBillTrendUp}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-text-secondary"
                 />
                 <div>Withdraw</div>
               </div>
             </Link>
             <Link prefetch={false} href="/seller">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text-secondary font-sans">
                 <FontAwesomeIcon
                   icon={faMoneyBill1}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-text-secondary"
                 />
                 <div>Seller center</div>
               </div>
             </Link>
             <Link prefetch={false} href="/reward/earn">
-              <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text-secondary font-sans">
                 <FontAwesomeIcon
                   icon={faGift}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-text-secondary"
                 />
                 <div>Rewards</div>
               </div>
             </Link>
             <Link prefetch={false} href="/promotion">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text-secondary font-sans">
                 <FontAwesomeIcon
                   icon={faTicket}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-text-secondary"
                 />
                 <div>Coupons</div>
               </div>
             </Link>
             <Link prefetch={false} href="/favorites">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text-secondary font-sans">
                 <FontAwesomeIcon
                   icon={faHeart}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-text-secondary"
                 />
                 <div>Favorites</div>
               </div>
             </Link>
           </section>
         )}
-      {user?.roles.includes(ROLE.EMPLOYER) &&
-        !user?.roles.includes(ROLE.FREELANCER) && (
+      {user?.roles.includes(RoleType.Employer) &&
+        !user?.roles.includes(RoleType.Freelancer) && (
           <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
             <Link prefetch={false} href="/reward/earn">
-              <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text-secondary font-sans">
                 <FontAwesomeIcon
                   icon={faGift}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-text-secondary"
                 />
                 <div>Rewards</div>
               </div>
             </Link>
             <Link prefetch={false} href="/promotion">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text-secondary font-sans">
                 <FontAwesomeIcon
                   icon={faTicket}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-text-secondary"
                 />
                 <div>Coupons</div>
               </div>
             </Link>
             <Link prefetch={false} href="/coin">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text-secondary font-sans">
                 <FontAwesomeIcon
                   icon={faCoins}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-text-secondary"
                 />
                 <div>Coins</div>
               </div>
             </Link>
             <Link prefetch={false} href="/favorites">
-              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text_secondary font-sans">
+              <div className="flex flex-col items-center gap-2 text-[0.75rem] text-text-secondary font-sans">
                 <FontAwesomeIcon
                   icon={faHeart}
-                  className="text-[24px] text-text_secondary"
+                  className="text-[24px] text-text-secondary"
                 />
                 <div>Favorites</div>
               </div>
@@ -202,8 +202,8 @@ const SpProfile = () => {
           className="mt-6"
         >
           <ul className="p-0 m-0 list-none">
-            {user?.roles.includes(ROLE.EMPLOYER) &&
-              !user?.roles.includes(ROLE.FREELANCER) && (
+            {user?.roles.includes(RoleType.Employer) &&
+              !user?.roles.includes(RoleType.Freelancer) && (
                 <li>
                   <Link prefetch={false}
                     href="/account-setting/basic-info"
@@ -214,8 +214,8 @@ const SpProfile = () => {
                   </Link>
                 </li>
               )}
-            {user?.roles.includes(ROLE.EMPLOYER) &&
-              user?.roles.includes(ROLE.FREELANCER) && (
+            {user?.roles.includes(RoleType.Employer) &&
+              user?.roles.includes(RoleType.Freelancer) && (
                 <li>
                   <Link prefetch={false}
                     href="/seller-account-setting/freelance-profile"
@@ -226,8 +226,8 @@ const SpProfile = () => {
                   </Link>
                 </li>
               )}
-            {user?.roles.includes(ROLE.EMPLOYER) &&
-              !user?.roles.includes(ROLE.FREELANCER) && (
+            {user?.roles.includes(RoleType.Employer) &&
+              !user?.roles.includes(RoleType.Freelancer) && (
                 <li>
                   <Link prefetch={false}
                     href="/start-selling"

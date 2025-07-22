@@ -39,7 +39,7 @@ const Favorites = () => {
                   <JobCardSkeleton key={index} />
                 ))
               ) : favoriteData && favoriteData.jobs.length === 0 ? (
-                <p className="text-[1.5rem] leading-[1.5] font-medium text-text_secondary">
+                <p className="text-[1.5rem] leading-[1.5] font-medium text-text-secondary">
                   ไม่มีฟรีแลนซ์ที่ถูกใจ
                 </p>
               ) : (

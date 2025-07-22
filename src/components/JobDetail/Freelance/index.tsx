@@ -70,7 +70,7 @@ const Freelance = ({ language, data }: Props) => {
                   {language?.viewProfile}
                 </button>
               </div>
-              <p className="text-gray-600 text-sm mt-1 leading-relaxed font-sans text-text_secondary line-clamp-4">
+              <p className="text-gray-600 text-sm mt-1 leading-relaxed font-sans text-text-secondary line-clamp-4">
                 {data.user.bio}
               </p>
             </div>
@@ -85,7 +85,7 @@ const Freelance = ({ language, data }: Props) => {
             >
               <Image src={item.icon} alt="icon" className="h-6" />
               <div>
-                <div className="text-text_secondary font-sans">
+                <div className="text-text-secondary font-sans">
                   {item.title}
                 </div>
                 <div className="text-blue-600 font-semibold">

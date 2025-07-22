@@ -34,7 +34,7 @@ export default function LocationPage() {
               </label>
               <input
                 type="text"
-                className="border w-full border-gray-300 rounded-lg px-3 py-2 text-text_secondary font-sans"
+                className="border w-full border-gray-300 rounded-lg px-3 py-2 text-text-secondary font-sans"
                 defaultValue="uykpfzno"
                 placeholder={individualLanguageData?.placeholderFirstName}
               />
@@ -45,7 +45,7 @@ export default function LocationPage() {
               </label>
               <input
                 type="text"
-                className="border w-full border-gray-300 rounded-lg px-3 py-2 text-text_secondary font-sans"
+                className="border w-full border-gray-300 rounded-lg px-3 py-2 text-text-secondary font-sans"
                 defaultValue="uykpfzno"
                 placeholder={individualLanguageData?.placeholderLastName}
               />

@@ -32,7 +32,7 @@ const OfferSection = (props: Props) => {
             </div>
             <div className="text-text-primary mt-6">
               <h3 className="font-semibold text-[1.25rem] mb-2">Freelancer</h3>
-              <ul className="text-sm text-left text-text_secondary grid grid-cols-[1fr] gap-1">
+              <ul className="text-sm text-left text-text-secondary grid grid-cols-[1fr] gap-1">
                 <li className="flex flex-row gap-3 items-center">
                   <FontAwesomeIcon
                     icon={faCheck}
@@ -57,7 +57,7 @@ const OfferSection = (props: Props) => {
           <div>
             <hr className="w-full h-[1px] m-0 bg-borderSecondary" />
             <div className="h-[60px] px-6 flex justify-end items-center ">
-              <div className="opacity-70 text-[0.875rem] cursor-pointer text-text_secondary">
+              <div className="opacity-70 text-[0.875rem] cursor-pointer text-text-secondary">
                 {homeLanguageData?.labelSeeMoreTittle}
                 <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
               </div>
@@ -78,7 +78,7 @@ const OfferSection = (props: Props) => {
               <h3 className="font-semibold text-[1.25rem] mb-2">
                 {homeLanguageData?.tittleQualityOfferSpecialistCard}
               </h3>
-              <ul className="text-sm text-left text-text_secondary grid grid-cols-[1fr] gap-1">
+              <ul className="text-sm text-left text-text-secondary grid grid-cols-[1fr] gap-1">
                 <li className="flex flex-row gap-3 items-center">
                   <FontAwesomeIcon
                     icon={faCheck}
@@ -121,7 +121,7 @@ const OfferSection = (props: Props) => {
           <div>
             <hr className="w-full h-[1px] m-0 bg-borderSecondary" />
             <div className="h-[60px] px-6 flex justify-end items-center ">
-              <div className="opacity-70 text-[0.875rem] cursor-pointer text-text_secondary">
+              <div className="opacity-70 text-[0.875rem] cursor-pointer text-text-secondary">
                 {homeLanguageData?.labelSeeMoreTittle}
                 <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
               </div>
@@ -143,7 +143,7 @@ const OfferSection = (props: Props) => {
               <h3 className="font-semibold text-[1.25rem] mb-2">
                 {homeLanguageData?.tittleQualityOfferProfessionalCard}
               </h3>
-              <ul className="text-sm text-left text-text_secondary grid grid-cols-[1fr] gap-1">
+              <ul className="text-sm text-left text-text-secondary grid grid-cols-[1fr] gap-1">
                 <li className="flex flex-row gap-3 items-center">
                   <FontAwesomeIcon
                     icon={faCheck}
@@ -204,7 +204,7 @@ const OfferSection = (props: Props) => {
           <div>
             <hr className="w-full h-[1px] m-0 bg-borderSecondary" />
             <div className="h-[60px] px-6 flex justify-end items-center ">
-              <div className="opacity-70 text-[0.875rem] cursor-pointer text-text_secondary">
+              <div className="opacity-70 text-[0.875rem] cursor-pointer text-text-secondary">
                 {homeLanguageData?.labelSeeMoreTittle}
                 <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
               </div>

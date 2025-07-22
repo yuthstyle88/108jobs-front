@@ -34,7 +34,7 @@ const SuccessCreateJobModal: React.FC<SuccessCreateJobModalProps> = ({
           <h1 className="text-[18px] font-medium text-text-primary text-center">
             {language?.submissionSuccess}
           </h1>
-          <p className="text-[14px] font-sans text-text_secondary text-center pt-3">
+          <p className="text-[14px] font-sans text-text-secondary text-center pt-3">
             {language?.submissionSuccessMessage}{" "}
           </p>
         </article>

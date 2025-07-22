@@ -131,7 +131,7 @@ const Step2Packages = ({
         <p className="text-[20px] text-text-primary">
           {createJobLanguage?.createPackageTitle}
         </p>
-        <p className="text-[14px] text-text_secondary mb-6">
+        <p className="text-[14px] text-text-secondary mb-6">
           {createJobLanguage?.createPackageDescription}
         </p>
       </div>

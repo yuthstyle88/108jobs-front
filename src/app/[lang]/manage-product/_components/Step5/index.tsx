@@ -104,7 +104,7 @@ const Step5Confirm = ({ job, prevStep, handleSubmitSteps }: Props) => {
       <h2 className="text-xl font-medium text-text-primary">
         {createJobLanguage?.confirmationTitle}
       </h2>
-      <p className="mb-6 text-[16px] text-text_secondary font-sans">
+      <p className="mb-6 text-[16px] text-text-secondary font-sans">
         {createJobLanguage?.confirmationWarning}
       </p>
 

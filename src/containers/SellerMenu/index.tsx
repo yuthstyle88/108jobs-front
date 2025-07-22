@@ -164,7 +164,7 @@ const { lang } = useLanguage();
                 className={`flex flex-row items-center gap-2 ${
                   isActive
                     ? "bg-secondary text-third border-l-4 border-primary"
-                    : "bg-white text-text_secondary"
+                    : "bg-white text-text-secondary"
                 } leading-[25px] cursor-pointer`}
               >
                 <Link prefetch={false}
@@ -177,7 +177,7 @@ const { lang } = useLanguage();
                     <FontAwesomeIcon
                       icon={item.icon}
                       className={`text-[18px] ${
-                        isActive ? "text-third" : "text-text_secondary"
+                        isActive ? "text-third" : "text-text-secondary"
                       }`}
                     />
                     <span className="font-sans whitespace-nowrap text-[0.875rem] flex items-center">
@@ -197,7 +197,7 @@ const { lang } = useLanguage();
                 className={`flex flex-row items-center gap-2 ${
                   isActive
                     ? "bg-secondary text-third border-l-4 border-primary"
-                    : "bg-white text-text_secondary"
+                    : "bg-white text-text-secondary"
                 } leading-[25px] cursor-pointer`}
               >
                 <Link prefetch={false}
@@ -209,7 +209,7 @@ const { lang } = useLanguage();
                     <FontAwesomeIcon
                       icon={item.icon}
                       className={`text-[18px] ${
-                        isActive ? "text-third" : "text-text_secondary"
+                        isActive ? "text-third" : "text-text-secondary"
                       }`}
                     />
                     <span className="font-sans whitespace-nowrap text-[0.875rem] flex items-center">
@@ -221,12 +221,12 @@ const { lang } = useLanguage();
             );
           })}
           <hr className="h-[1px] bg-borderSecondary w-full inline-block" />
-          <li className="flex flex-row items-center gap-2 bg-white text-text_secondary">
+          <li className="flex flex-row items-center gap-2 bg-white text-text-secondary">
             <button onClick={logout} className="px-5 py-4 flex-1">
               <div className="flex flex-row items-center gap-4">
                 <FontAwesomeIcon
                   icon={faRightFromBracket}
-                  className="text-[18px] text-text_secondary"
+                  className="text-[18px] text-text-secondary"
                 />
                 <span className="font-sans whitespace-nowrap text-[0.875rem] flex items-center">
                   Sign out

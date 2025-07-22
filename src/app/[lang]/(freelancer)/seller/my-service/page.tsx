@@ -300,14 +300,14 @@ const MyServices = () => {
                 </div>
 
                 <div className="pb-4 border-b-1 border-borderSecondary w-full font-sans">
-                  <div className="text-sm text-text_secondary flex flex-row justify-between items-center pt-4">
+                  <div className="text-sm text-text-secondary flex flex-row justify-between items-center pt-4">
                     <p>{sellerMyServiceLanguage?.columnVisibility}</p>
-                    <Eye className="w-4 h-4 text-text_secondary" />
+                    <Eye className="w-4 h-4 text-text-secondary" />
                   </div>
 
                   <Link prefetch={false}
                     href={`/manage-product/${job.id}`}
-                    className="text-sm text-text_secondary flex flex-row justify-between items-center pt-4"
+                    className="text-sm text-text-secondary flex flex-row justify-between items-center pt-4"
                   >
                     <p>{global?.buttonEdit}</p>
                     <Pencil className="w-4 h-4 text-gray-400" />

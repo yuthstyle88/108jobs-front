@@ -85,10 +85,10 @@ const CurrentProfileEmployer = ({ username }: Props) => {
               </div>
               {userProfile?.bio && (
                 <div className="mt-6 px-6">
-                  <div className="text-text_secondary px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC]">
+                  <div className="text-text-secondary px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
                       ref={bioRef}
-                      className={`text-text_secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
+                      className={`text-text-secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
@@ -111,7 +111,7 @@ const CurrentProfileEmployer = ({ username }: Props) => {
               >
                 <FontAwesomeIcon
                   icon={faEdit}
-                  className="text-[18px] text-text_secondary"
+                  className="text-[18px] text-text-secondary"
                 />
               </Link>
             </div>

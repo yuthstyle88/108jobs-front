@@ -29,14 +29,14 @@ const RejectJobCreateModal: React.FC<RejectJobCreateModalProps> = ({
           <h1 className="text-[14px] font-medium text-text-primary">
             Thông tin dịch vụ
           </h1>
-          <ul className="list-disc pl-4 text-text_secondary">
+          <ul className="list-disc pl-4 text-text-secondary">
             <li>
-              <p className="text-[14px] font-sans text-text_secondary">
+              <p className="text-[14px] font-sans text-text-secondary">
                 Nộp thành công! Vui lòng đợi kết quả phê duyệt từ hệ thống.
               </p>
             </li>
             <li>
-              <p className="text-[14px] font-sans text-text_secondary">
+              <p className="text-[14px] font-sans text-text-secondary">
                 Vui lòng mô tả trực quan công việc của bạn, bao gồm các dịch vụ
                 bạn cung cấp như thiết kế, dịch thuật, in ấn, tư vấn, v.v....
                 Nếu có sẵn mẫu sản phẩm, bạn có thể giải thích và đính kèm hình
@@ -51,9 +51,9 @@ const RejectJobCreateModal: React.FC<RejectJobCreateModalProps> = ({
           <h1 className="text-[14px] font-medium text-text-primary pt-2">
             Tải lên hình ảnh dịch vụ
           </h1>
-          <ul className="list-disc pl-4 text-text_secondary">
+          <ul className="list-disc pl-4 text-text-secondary">
             <li>
-              <p className="text-[14px] font-sans text-text_secondary">
+              <p className="text-[14px] font-sans text-text-secondary">
                 Vui lòng tải lên ít nhất 3 hình ảnh sản phẩm liên quan đến danh
                 mục công việc của bạn, đảm bảo không trùng lặp. Điều này giúp hồ
                 sơ của bạn thể hiện được sự đa dạng.

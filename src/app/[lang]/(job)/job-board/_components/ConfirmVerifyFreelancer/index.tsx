@@ -27,7 +27,7 @@ const ConfirmVerifyFreelancer: React.FC<ConfirmVerifyFreelancerProps> = ({
           <h1 className="text-[18px] font-medium text-text-primary text-center">
             Cannot submit proposal <br/> No approved services yet
           </h1>
-          <p className="text-[14px] font-sans text-text_secondary text-center pt-3">
+          <p className="text-[14px] font-sans text-text-secondary text-center pt-3">
             You need be approve by admin or at least 1 approved service Please
             check your service status
           </p>

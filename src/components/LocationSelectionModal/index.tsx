@@ -192,7 +192,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
 
       <div className="flex flex-row gap-2 justify-between items-end pt-4w-full">
         <button onClick={() => onSkipAddress()} disabled={isSkipMutating}>
-          <p className="text-text_secondary font-semibold text-[18px] font-sans underline">
+          <p className="text-text-secondary font-semibold text-[18px] font-sans underline">
             Later
           </p>
         </button>

@@ -175,7 +175,7 @@ const MyJobEdit = ({ jobId }: Props) => {
                   id="jobTitle"
                   {...register("jobTitle")}
                   placeholder={createJobLanguage?.jobTitlePlaceholder}
-                  className={`w-full text-text-primary placeholder:text-text_secondary placeholder:font-sans p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                  className={`w-full text-text-primary placeholder:text-text-secondary placeholder:font-sans p-3 border rounded-lg focus:outline-none focus:ring-1 ${
                     errors.jobTitle
                       ? "border-red-200 focus:ring-red-500"
                       : "border-gray-300 focus:ring-blue-500"
@@ -268,7 +268,7 @@ const MyJobEdit = ({ jobId }: Props) => {
                   id="description"
                   {...register("description")}
                   placeholder={createJobLanguage?.jobDescriptionDetails}
-                  className={`text-text-primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 min-h-[200px] ${
+                  className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 min-h-[200px] ${
                     errors.description
                       ? "border-red-200 focus:ring-red-500"
                       : "border-gray-300 focus:ring-blue-500"
@@ -319,7 +319,7 @@ const MyJobEdit = ({ jobId }: Props) => {
                     placeholder={
                       createJobLanguage?.serviceCategoryPlaceholderUrl
                     }
-                    className={`text-text-primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                    className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
                       errors.exampleUrl
                         ? "border-red-200 focus:ring-red-500"
                         : "border-gray-300 focus:ring-blue-500"
@@ -347,7 +347,7 @@ const MyJobEdit = ({ jobId }: Props) => {
                   <select
                     id="serviceCatalogId"
                     {...register("serviceCatalogId")}
-                    className={`text-text-primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                    className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
                       errors.serviceCatalogId
                         ? "border-red-200 focus:ring-red-500"
                         : "border-gray-300 focus:ring-blue-500"
@@ -392,7 +392,7 @@ const MyJobEdit = ({ jobId }: Props) => {
                       id="budget"
                       {...register("budget")}
                       placeholder="0"
-                      className={`text-text-primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                      className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
                         errors.budget
                           ? "border-red-200 focus:ring-red-500"
                           : "border-gray-300 focus:ring-blue-500"
@@ -426,7 +426,7 @@ const MyJobEdit = ({ jobId }: Props) => {
                     id="deadline"
                     min={new Date().toISOString().split("T")[0]}
                     {...register("deadline")}
-                    className="text-text-primary placeholder:text-text_secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                 </div>
               </div>

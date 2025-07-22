@@ -185,7 +185,7 @@ const ConsentManagement = () => {
         return (
           <div className="p-6">
             <div className="w-full text-center py-8 px-4 rounded-sm bg-[#F6F7F8] mt-2">
-              <p className="text-[1.5rem] leading-[1.5] font-medium text-text_secondary">
+              <p className="text-[1.5rem] leading-[1.5] font-medium text-text-secondary">
                 ไม่มีฟรีแลนซ์ที่ถูกใจ
               </p>
             </div>

@@ -34,7 +34,7 @@ const ConfirmDeleteOffer: React.FC<ConfirmDeleteOfferProps> = ({
       <div className="flex flex-row gap-2 pt-8 w-full">
         <button
           onClick={onClose}
-          className="px-10 py-3 w-full text-text_secondary font-normal rounded-md shadow-lg hover:bg-gray-100 transition duration-300"
+          className="px-10 py-3 w-full text-text-secondary font-normal rounded-md shadow-lg hover:bg-gray-100 transition duration-300"
         >
           Cancel
         </button>

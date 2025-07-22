@@ -45,8 +45,7 @@ export default function PasswordManagePage() {
 
   const [dataRegister, setDataRegister] = useState<RegisterDataProps | null>(null);
   const [forgotEmail, setForgotEmail] = useState<RegisterDataProps>();
-  const [tokenPassword, setTokenPassword] = useState<RegisterDataProps>();
-  const tokenPasswordStr = tokenPassword?.token as string;
+  const [tokenPassword, setTokenPassword] = useState<string>();
   // Load singUpData from sessionStorage if available, only on client
   console.log("🧭 currentView:", currentView);
   const route = useRouter();
@@ -180,8 +179,10 @@ export default function PasswordManagePage() {
                 onVerifySuccess={() => {
                   route.push("/");
                 }}
-                forgotEmail={forgotEmail}
-                setTokenPassword={setTokenPassword}
+                forgotEmail={forgotEmail?.email as string}
+                setTokenPassword={(token) => {
+                    setTokenPassword(token);
+                }}
                 switchToChangePassword={() => setCurrentView("change-password")}
               />
             </AuthFormContainer>
@@ -192,7 +193,7 @@ export default function PasswordManagePage() {
               onBack={() => setCurrentView("verify-forgot-password")}
             >
               <ChangePassword
-                tokenPassword={tokenPasswordStr}
+                token={tokenPassword as string}
                 switchToRegister={() => setCurrentView("manage-password")}
                 switchToForgotPassword={() => setCurrentView("forgot-password")}
               />

@@ -70,7 +70,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
             <strong className="text-third ">
               {language?.fastworkGuarantee}
             </strong>
-            <p className="mt-1 text-[0.75rem] text-text_secondary font-sans">
+            <p className="mt-1 text-[0.75rem] text-text-secondary font-sans">
               {language?.fastworkGuaranteeDescription}
             </p>
             <Link prefetch={false} href="#" className="text-third text-[0.75rem] font-sans">
@@ -101,7 +101,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
           <h3 className="font-medium text-third">
             {data.packages[selectedPackage].packageName}
           </h3>
-          <p className="line-clamp-2 text-ellipsis overflow-hidden break-words mt-2 text-[0.875rem] text-text_secondary font-sans ">
+          <p className="line-clamp-2 text-ellipsis overflow-hidden break-words mt-2 text-[0.875rem] text-text-secondary font-sans ">
             {data.packages[selectedPackage].description}
           </p>
           <Link prefetch={false}
@@ -140,7 +140,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
                     *This freelancer is currently not accepting new jobs.
                   </small>
                 ) : (
-                  <small className="text-[0.75rem] text-text_secondary">
+                  <small className="text-[0.75rem] text-text-secondary">
                     {language?.noChargesMessage}
                   </small>
                 )}
@@ -162,13 +162,13 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
           </div>
         </Link>
       </div>
-      <div className="grid grid-cols-[1fr_1fr] text-center mt-4 font-medium text-text_secondary ">
+      <div className="grid grid-cols-[1fr_1fr] text-center mt-4 font-medium text-text-secondary ">
         <FavoriteButton jobId={data.id} label={language?.save} />
         <button
           onClick={() => setIsModalOpen(true)}
           className="flex flex-row items-center justify-center min-w-[34px] p-2 cursor-pointer"
         >
-          <FontAwesomeIcon icon={faShareAlt} className="text-text_secondary" />
+          <FontAwesomeIcon icon={faShareAlt} className="text-text-secondary" />
           <p className="ml-2 cursor-pointer text-center">{language?.share}</p>
         </button>
       </div>

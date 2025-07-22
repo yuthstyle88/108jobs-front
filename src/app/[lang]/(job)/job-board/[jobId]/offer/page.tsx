@@ -80,7 +80,7 @@ const JobApplication = () => {
               Increase Your Hiring Chances! With Relevant Experience and
               Portfolio
             </h1>
-            <p className="text-text_secondary mb-6">
+            <p className="text-text-secondary mb-6">
               Most clients choose freelancers based on work history and
               portfolio samples
             </p>

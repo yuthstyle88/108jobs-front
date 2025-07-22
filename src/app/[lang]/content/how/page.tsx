@@ -222,10 +222,10 @@ const HowSellAndBuy = () => {
                         {item.title}
                       </p>
                     </div>
-                    <p className="text-[0.875rem] mt-3 text-text_secondary ">
+                    <p className="text-[0.875rem] mt-3 text-text-secondary ">
                       {item.description}
                     </p>
-                    <ul className="pl-6 mt-2 list-disc gap-2 text-[0.875rem] text-text_secondary grid grid-cols-1">
+                    <ul className="pl-6 mt-2 list-disc gap-2 text-[0.875rem] text-text-secondary grid grid-cols-1">
                       {item.list.map((list, index) => (
                         <li key={index}>{list}</li>
                       ))}

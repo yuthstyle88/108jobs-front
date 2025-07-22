@@ -5,6 +5,7 @@ import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { RegisterDataProps } from "@/types/register-data";
 import { useEffect, useRef, useState } from "react";
 import {HttpService} from "@/services";
+import {sleep} from "@/utils/helpers";
 
 interface VerificationEmailProps {
   dataRegister?: RegisterDataProps;
@@ -36,19 +37,21 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
   useEffect(() => {
     if (!isResendDisabled) return;
 
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timer);
-          setIsResendDisabled(false);
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [isResendDisabled]);
+    const runTimer = async () => {
+      while (true) {
+        await sleep(1000);
+        setTimeLeft(prevTime => {
+          if (prevTime <= 1) {
+            setIsResendDisabled(false);
+            return 0;
+          }
+          return prevTime - 1;
+        });
+        if (timeLeft <= 1) break;
+      }
+    };
+    runTimer();
+  }, [isResendDisabled])
 
   const handleInputChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return;

@@ -36,7 +36,7 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({ items }) => {
 
                 {!isLast && (
                   <span className="text-neutral-400 pr-2 relative top-[2px]">
-                    <ChevronRight className="w-4 text-text_secondary" />
+                    <ChevronRight className="w-4 text-text-secondary" />
                   </span>
                 )}
               </li>

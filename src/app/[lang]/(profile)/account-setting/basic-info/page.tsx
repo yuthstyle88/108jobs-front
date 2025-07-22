@@ -219,7 +219,7 @@ export default function BasicInformation() {
       <div className="border-1 border-borderPrimary rounded-lg bg-white mt-5 p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
         <div className="text-[16px] text-text-primary font-medium">
           {languageData?.sectionPassword}
-          <p className="text-[14px] text-text_secondary font-normal">
+          <p className="text-[14px] text-text-secondary font-normal">
             {languageData?.passwordDescription}
           </p>
         </div>

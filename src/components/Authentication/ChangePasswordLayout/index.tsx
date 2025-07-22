@@ -9,7 +9,7 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { RegisterDataProps } from "@/types/register-data";
 import Image from "next/image";
 import { useState } from "react";
-import { RegisterForm } from "@/components/Authentication/RegisterForm/index";
+
 import { useRouter } from "next/navigation";
 import { ChangePassword } from "@/components/Authentication/ChangePassword";
 
@@ -29,7 +29,7 @@ export default function ChangePasswordLayout({ token }: Props) {
   const [currentView, setCurrentView] = useState<ViewState>("change-password");
   const [dataDataRegister, setDataDataRegister] =
     useState<RegisterDataProps | null>(null);
-
+    const [tokenPassword, setTokenPassword] = useState<string>();
   if (isLoading) return <Loading />;
   if (error) return <div>Error</div>;
 
@@ -119,7 +119,9 @@ export default function ChangePasswordLayout({ token }: Props) {
           />
           {currentView === "change-password" && (
             <AuthFormContainer title="Change Password">
-              <ChangePassword token={token} />
+                <ChangePassword
+                    token={tokenPassword as string}
+                />
             </AuthFormContainer>
           )}
         </div>

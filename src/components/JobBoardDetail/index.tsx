@@ -273,7 +273,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
                   Want to get find freelancer on Fastlance, find for excellent
                   freelancer now!
                 </p>
-                <p className="text-[0.875rem] text-text_secondary">
+                <p className="text-[0.875rem] text-text-secondary">
                   Generate income through job boards and platforms
                 </p>
               </div>
@@ -300,7 +300,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
                   Want to get work through Fastlance, Register as a freelancer
                   now!
                 </p>
-                <p className="text-[0.875rem] text-text_secondary">
+                <p className="text-[0.875rem] text-text-secondary">
                   Generate income through job boards and platforms
                 </p>
               </div>

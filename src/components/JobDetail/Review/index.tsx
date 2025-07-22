@@ -93,7 +93,7 @@ const ReviewCard = ({ language, data }: Props) => {
                 <StarIcon key={star} filled={false} />
               ))}
             </div>
-            <div className="text-[0.875rem] font-sans text-text_secondary text-center">
+            <div className="text-[0.875rem] font-sans text-text-secondary text-center">
               Vui lòng{" "}
               <Link prefetch={false} href="/login" className="text-third underline">
                 đăng nhập

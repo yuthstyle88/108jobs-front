@@ -35,6 +35,7 @@ export default function LoginPage() {
   const [currentView, setCurrentView] = useState<ViewState>("login");
 
   const [forgotEmail, setForgotEmail] = useState<RegisterDataProps>();
+    const [tokenPassword, setTokenPassword] = useState<string>();
   // Load singUpData from sessionStorage if available, only on client
   console.log("🧭 currentView:", currentView);
   const route = useRouter();
@@ -152,7 +153,16 @@ export default function LoginPage() {
               title="Verify your email"
               onBack={() => setCurrentView("forgot-password")}
             >
-              <VerificationForgotPassword forgotEmail={forgotEmail} />
+                <VerificationForgotPassword
+                    onVerifySuccess={() => {
+                        route.push("/");
+                    }}
+                    forgotEmail={forgotEmail?.email as string}
+                    setTokenPassword={(token) => {
+                        setTokenPassword(token);
+                    }}
+                    switchToChangePassword={() => setCurrentView("login")}
+                />
             </AuthFormContainer>
           )}
         </div>

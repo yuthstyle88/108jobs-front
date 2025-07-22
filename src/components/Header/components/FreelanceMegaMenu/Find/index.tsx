@@ -24,7 +24,7 @@ const Find = () => {
       <span className="text-third font-medium">
         {global?.hintLabelMenuOptionFindHire}
       </span>
-      <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
+      <p className="mt-3 text-[0.875rem] text-text-secondary font-sans">
         {global?.freelancerSelectionDescription}
       </p>
       <div className="mt-6">
@@ -36,7 +36,7 @@ const Find = () => {
             <Link prefetch={false}
               href={`/job/${job.slug}`}
               key={index}
-              className="text-[0.875rem] text-text_secondary px-2 py-[4px] flex-1 flex items-center justify-between rounded-sm transition-all duration-150 ease-in-out"
+              className="text-[0.875rem] text-text-secondary px-2 py-[4px] flex-1 flex items-center justify-between rounded-sm transition-all duration-150 ease-in-out"
             >
               {job.name}
               <FontAwesomeIcon

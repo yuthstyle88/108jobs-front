@@ -11,7 +11,7 @@ const Ads = () => {
       <span className="text-third font-medium">
         {global?.hireOpportunityTitle}
       </span>
-      <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
+      <p className="mt-3 text-[0.875rem] text-text-secondary font-sans">
         {global?.adsSectionDescription}
       </p>
       <Link prefetch={false}

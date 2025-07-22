@@ -19,7 +19,7 @@ const CategoryList: React.FC<CategoryListProps> = ({ title, items }) => {
         {items.map((item, index) => (
           <li
             key={index}
-            className="hover:bg-[#e3edfd] text-text_secondary hover:text-third"
+            className="hover:bg-[#e3edfd] text-text-secondary hover:text-third"
           >
             <Link prefetch={false} href={`/job/${item.slug}`} className="block px-2 py-[6px] rounded-[4px] font-sans">
               <span>{item.title}</span>

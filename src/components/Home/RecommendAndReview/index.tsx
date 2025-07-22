@@ -104,7 +104,7 @@ const RecommendAndReview = (props: Props) => {
                         <p className="font-semibold text-text-primary p-0">
                           Line sticker
                         </p>
-                        <p className="text-[14px] text-text_secondary p-0">
+                        <p className="text-[14px] text-text-secondary p-0">
                           by designdee
                         </p>
                       </div>

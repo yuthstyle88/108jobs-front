@@ -67,7 +67,7 @@ const CommentSection = ({ profileId }: Props) => {
                   <StarIcon key={star} filled={false} />
                 ))}
               </div>
-              <p className="text-[0.875rem] font-sans text-text_secondary text-center">
+              <p className="text-[0.875rem] font-sans text-text-secondary text-center">
                 Start hiring this freelancer and rate
               </p>
             </div>

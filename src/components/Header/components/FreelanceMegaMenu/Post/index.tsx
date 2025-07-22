@@ -9,7 +9,7 @@ const Post = () => {
   return (
     <div className="flex flex-col w-[420px] mt-8">
       <span className="text-third font-medium">{global?.jobBoardTitle}</span>
-      <p className="mt-3 text-[0.875rem] text-text_secondary font-sans">
+      <p className="mt-3 text-[0.875rem] text-text-secondary font-sans">
         {global?.jobBoardDescription}
       </p>
       <Link prefetch={false} href="/job-board" className="mt-6">

@@ -254,7 +254,7 @@ const Step3Media = ({
               }
             )}
           </h3>
-          <p className="text-sm text-text_secondary mb-4">
+          <p className="text-sm text-text-secondary mb-4">
             {createJobLanguage?.uploadAtLeast2ImagesNote}
           </p>
 

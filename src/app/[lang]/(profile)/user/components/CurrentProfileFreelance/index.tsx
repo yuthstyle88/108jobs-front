@@ -97,7 +97,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
               )}
               <div className="w-full mt-4 space-y-3 px-4">
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">
+                  <div className="text-text-secondary">
                     {goToProfileLanguage?.memberSince}
                   </div>
                   <div className="text-third font-medium">
@@ -105,7 +105,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">
+                  <div className="text-text-secondary">
                     {goToProfileLanguage?.jobCount}
                   </div>
                   <div className="text-third font-medium">
@@ -113,7 +113,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">
+                  <div className="text-text-secondary">
                     {goToProfileLanguage?.averageResponseTime}
                   </div>
                   <div className="text-third font-medium">
@@ -121,7 +121,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-text_secondary">
+                  <div className="text-text-secondary">
                     {goToProfileLanguage?.successRate}
                   </div>
                   <div className="text-third font-medium">100%</div>
@@ -129,10 +129,10 @@ const CurrentProfileFreelance = ({ username }: Props) => {
               </div>
               {userProfile?.bio && (
                 <div className="mt-6 px-6">
-                  <div className="text-text_secondary px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC]">
+                  <div className="text-text-secondary px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
                       ref={bioRef}
-                      className={`text-text_secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
+                      className={`text-text-secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
@@ -156,7 +156,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
               >
                 <FontAwesomeIcon
                   icon={faEdit}
-                  className="text-[18px] text-text_secondary"
+                  className="text-[18px] text-text-secondary"
                 />
               </Link>
             </div>
@@ -187,7 +187,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                               <p className="text-text-primary break-words line-clamp-2">
                                 {education?.schoolName}
                               </p>
-                              <p className="text-text_secondary break-words line-clamp-2">
+                              <p className="text-text-secondary break-words line-clamp-2">
                                 {education?.major}
                               </p>
                             </div>
@@ -226,10 +226,10 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                                 <p className="text-text-primary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words font-medium">
                                   {experience?.companyName}
                                 </p>
-                                <p className="text-text_secondary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words pt-2">
+                                <p className="text-text-secondary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words pt-2">
                                   {experience?.position}
                                 </p>
-                                <p className="text-text_secondary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words">
+                                <p className="text-text-secondary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words">
                                   {experience?.startMonth}{" "}
                                   {experience?.startYear} -{" "}
                                   {experience?.startMonth}{" "}
@@ -387,7 +387,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                     className={`mr-6 py-2 text-sm font-medium border-b-2 ${
                       activeTab === "reviews"
                         ? "text-third border-third"
-                        : "text-text_secondary border-transparent hover:text-gray-700"
+                        : "text-text-secondary border-transparent hover:text-gray-700"
                     }`}
                     onClick={() => setActiveTab("reviews")}
                   >
@@ -398,7 +398,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                     className={`py-2 text-sm font-medium border-b-2 ${
                       activeTab === "clients"
                         ? "text-third border-third"
-                        : "text-text_secondary border-transparent hover:text-gray-700"
+                        : "text-text-secondary border-transparent hover:text-gray-700"
                     }`}
                     onClick={() => setActiveTab("clients")}
                   >
@@ -427,7 +427,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                             <h4 className="font-medium text-text-primary">
                               {review.reviewerName || "username"}
                             </h4>
-                            <span className="text-sm text-text_secondary">
+                            <span className="text-sm text-text-secondary">
                               {formatDateToLong(review.createdAt)}
                             </span>
                           </div>

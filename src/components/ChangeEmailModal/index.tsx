@@ -188,7 +188,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
           <h1 className="text-base font-bold text-text-primary text-center">
             {language?.emailVerificationTitle}
           </h1>
-          <p className="text-[14px] font-sans text-text_secondary text-center">
+          <p className="text-[14px] font-sans text-text-secondary text-center">
             {language?.emailVerificationDescription}
             <br /> {formEmail}
           </p>

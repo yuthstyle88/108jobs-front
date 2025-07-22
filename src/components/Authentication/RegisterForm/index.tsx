@@ -129,7 +129,7 @@ const withHooks = (Component: any) => {
             termsAccepted: z.boolean().refine((val) => val),
             privacyAccepted: z.boolean().refine((val) => val),
             captchaAnswer: z.string().min(4, authen?.requireCaptcha),
-            role: z.enum(["Employer", "Freelancer"]),
+            role: z.nativeEnum(RoleType),
         })
         .refine((data) => data.password === data.confirmPassword, {
             message: authen?.notMatchPassword,
@@ -141,7 +141,7 @@ const withHooks = (Component: any) => {
             mode: "onChange",
             criteriaMode: "all",
             defaultValues: {
-                role: "Employer",
+                role: RoleType.Employer,
             },
         });
 
@@ -531,7 +531,7 @@ class RegisterFormClass extends Component<
                       {"You want to be a/an:"}
                   </label>
                   <div className="flex gap-4 text-sm font-medium w-full max-w-md">
-                      {["Employer", "Freelancer"].map((option) => (
+                      {[RoleType.Employer, RoleType.Freelancer].map((option) => (
                         <label key={option} className="flex-1 relative">
                             <input
                               type="radio"
@@ -569,13 +569,13 @@ class RegisterFormClass extends Component<
                       />
                       <label
                         htmlFor="termsAccepted"
-                        className="text-sm text-text_secondary font-sans"
+                        className="text-sm text-text-secondary font-sans"
                       >
                           {authen?.checkboxTermsConditions}{" "}
                           <Link
                             prefetch={false}
                             href="/content/terms"
-                            className="text-text_secondary underline"
+                            className="text-text-secondary underline"
                           >
                               {authen?.checkboxTermsConditionsRedirect}
                           </Link>
@@ -592,13 +592,13 @@ class RegisterFormClass extends Component<
                       />
                       <label
                         htmlFor="privacyAccepted"
-                        className="text-sm text-text_secondary font-sans"
+                        className="text-sm text-text-secondary font-sans"
                       >
                           {authen?.checkboxTermsConditions}{" "}
                           <Link
                             prefetch={false}
                             href="/content/privacy"
-                            className="text-text_secondary underline"
+                            className="text-text-secondary underline"
                           >
                               {authen?.checkboxPrivacyPolicyRedirect}
                           </Link>

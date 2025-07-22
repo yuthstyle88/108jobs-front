@@ -61,7 +61,7 @@ export const CustomInput = ({
         >
           <FontAwesomeIcon
             icon={showPassword ? faEyeSlash : faEye}
-            className="text-text_secondary"
+            className="text-text-secondary"
           />
         </button>
       )}
