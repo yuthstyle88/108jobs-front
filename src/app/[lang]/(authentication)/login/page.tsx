@@ -11,9 +11,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ForgotPasswordForm } from "@/components/Authentication/ForgotPasswordForm";
 import { RegisterDataProps } from "@/types/register-data";
-import VerificationForgotPassword from "@/components/Authentication/VerifyForgotPassword";
 
-type ViewState = "login" | "forgot-password" | "verify-forgot-password";
+type ViewState = "login" | "forgot-password";
 
 export default function LoginPage() {
   const {
@@ -143,26 +142,9 @@ export default function LoginPage() {
               <ForgotPasswordForm
                 setForgotEmail={setForgotEmail}
                 switchToVerifyForgotPassword={() =>
-                  setCurrentView("verify-forgot-password")
+                  setCurrentView("forgot-password")
                 }
               />
-            </AuthFormContainer>
-          )}
-          {currentView === "verify-forgot-password" && (
-            <AuthFormContainer
-              title="Verify your email"
-              onBack={() => setCurrentView("forgot-password")}
-            >
-                <VerificationForgotPassword
-                    onVerifySuccess={() => {
-                        route.push("/");
-                    }}
-                    forgotEmail={forgotEmail?.email as string}
-                    setTokenPassword={(token) => {
-                        setTokenPassword(token);
-                    }}
-                    switchToChangePassword={() => setCurrentView("login")}
-                />
             </AuthFormContainer>
           )}
         </div>

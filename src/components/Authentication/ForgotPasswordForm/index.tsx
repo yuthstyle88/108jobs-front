@@ -1,70 +1,61 @@
 "use client";
 import LoadingCircle from "@/components/LoadingCircle";
-import { CustomInput } from "@/components/ui/InputField";
-import { ERROR_CONSTANTS } from "@/constants/error";
-import { LanguageFile } from "@/constants/language";
-import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
-import { RegisterDataProps } from "@/types/register-data";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import {CustomInput} from "@/components/ui/InputField";
+import {ERROR_CONSTANTS} from "@/constants/error";
+import {LanguageFile} from "@/constants/language";
+import {useTranslateFile} from "@/hooks/translation/useTranslateFile";
+import {RegisterDataProps} from "@/types/register-data";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useState} from "react";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
 import {HttpService} from "@/services";
-
-const forgotPasswordSchema = z.object({
-  email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์"),
-});
 
 type VerifyForgotPasswordProps = {
   switchToVerifyForgotPassword: () => void;
   setForgotEmail: (data: RegisterDataProps) => void;
 };
 
-type VerifyForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 export const ForgotPasswordForm = ({
   switchToVerifyForgotPassword,
   setForgotEmail,
 }: VerifyForgotPasswordProps) => {
+
+  const authen = useTranslateFile(LanguageFile.AUTHEN);
+  const forgotPasswordSchema = z.object({
+    email: z.string().min(4,
+      authen?.placeholderEmailPhone),
+  });
+
+  type VerifyForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: {errors, isSubmitting},
   } = useForm({
     resolver: zodResolver(forgotPasswordSchema),
     mode: "onChange",
   });
 
-    const authen = useTranslateFile(LanguageFile.AUTHEN);
-
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const onSubmit = async (data: VerifyForgotPasswordFormData) => {
+  const onSubmit = async(data: VerifyForgotPasswordFormData) => {
     try {
       setApiError(null);
       const email = data.email;
-      const response = await HttpService.client.passwordReset({ email });
+      const response = await HttpService.client.PasswordReset({email});
 
-      // const response = await fetch("/api/auth/forgot-password", {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({
-      //     email: data.email,
-      //   }),
-      // });
-
-      // const result = await response.json();
 
       if (response.state === "failed") {
-          setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
+        setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
         return;
       }
       setForgotEmail(data);
       switchToVerifyForgotPassword();
     } catch (error) {
-      console.error("Registration error:", error);
+      console.error("Registration error:",
+        error);
       setApiError(
         error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลงทะเบียน"
       );
@@ -76,7 +67,6 @@ export const ForgotPasswordForm = ({
       <div className="text-sm text-gray-600 mb-6">
         {authen?.verificationMessage}
       </div>
-
       <CustomInput
         label={authen?.labelContactEmailPhone}
         name="email"
@@ -98,7 +88,7 @@ export const ForgotPasswordForm = ({
           disabled={isSubmitting}
         >
           {isSubmitting ? (
-            <LoadingCircle />
+            <LoadingCircle/>
           ) : (
             authen?.sendCodeButton
           )}

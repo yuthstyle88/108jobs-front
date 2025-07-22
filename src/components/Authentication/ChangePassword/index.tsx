@@ -4,7 +4,6 @@ import { CustomInput } from "@/components/ui/InputField";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
-import { RegisterDataProps } from "@/types/register-data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -12,25 +11,26 @@ import { z } from "zod";
 import { HttpService } from "@/services";
 import useNotification from "@/hooks/useNotification";
 
-const changePasswordSchema = z
-  .object({
-    password: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "รหัสผ่านไม่ตรงกัน",
-    path: ["confirmPassword"],
-  });
-
 type ChangePasswordProps = {
   token: string;
 };
 
-type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
-
 export const ChangePassword = ({
   token,
 }: ChangePasswordProps) => {
+
+
+  const authen = useTranslateFile(LanguageFile.AUTHEN);
+  const changePasswordSchema = z
+  .object({
+    password: z.string().min(6, authen?.passwordMin6),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: authen?.notMatchPassword,
+    path: ["confirmPassword"],
+  });
+  type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
   const {
     register,
     handleSubmit,
@@ -39,8 +39,6 @@ export const ChangePassword = ({
     resolver: zodResolver(changePasswordSchema),
     mode: "onChange",
   });
-
-  const authen = useTranslateFile(LanguageFile.AUTHEN);
   const { successMessage } = useNotification();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
