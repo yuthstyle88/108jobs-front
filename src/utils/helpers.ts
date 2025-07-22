@@ -1,6 +1,10 @@
 import { RequestState } from "@/services/HttpService";
-import { PaginationCursor } from "lemmy-js-client";
-
+import { PaginationCursor, GetSiteResponse } from "lemmy-js-client";
+import {IncomingHttpHeaders} from "http";
+import * as cookie from "cookie";
+import { authCookieName } from "@/utils/config";
+import { Match } from "@/utils/router";
+import { ErrorPageData } from "@/utils/types";
 
 export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -251,4 +255,89 @@ export function dedupByProperty<
 
 export function getApubName({ name, ap_id }: { name: string; ap_id: string }) {
   return `${name}@${hostname(ap_id)}`;
+}
+
+/**
+ * Next.js-style dynamic route matcher (e.g. `/post/[id]`)
+ */
+export function matchPath(pathPattern: string, urlPath: string): Match<any> | null {
+  const patternParts = pathPattern.split("/").filter(Boolean);
+  const urlParts = urlPath.split("/").filter(Boolean);
+
+  if (patternParts.length !== urlParts.length) return null;
+
+  const params: Record<string, string> = {};
+
+  for (let i = 0; i < patternParts.length; i++) {
+    const pattern = patternParts[i];
+    const part = urlParts[i];
+
+    if (pattern.startsWith("[")) {
+      const key = pattern.replace(/^\[|\]$/g, "");
+      params[key] = decodeURIComponent(part);
+    } else if (pattern !== part) {
+      return null;
+    }
+  }
+
+  return {
+    params,
+    path: urlPath,
+    url: urlPath,
+    isExact: true, // หรือ false แล้วแต่ logic ของคุณ
+  } as Match<any>;
+}
+
+export function getJwtCookie(headers: IncomingHttpHeaders): string | undefined {
+  return headers.cookie
+    ? cookie.parse(headers.cookie)[authCookieName] // This can actually be undefined
+    : undefined;
+}
+
+export function setForwardedHeaders(headers: IncomingHttpHeaders): {
+  [key: string]: string;
+} {
+  const out: { [key: string]: string } = {};
+
+  if (headers.host) {
+    out.host = headers.host;
+  }
+
+  const realIp = headers["x-real-ip"];
+
+  if (realIp) {
+    out["x-real-ip"] = realIp as string;
+  }
+
+  const forwardedFor = headers["x-forwarded-for"];
+
+  if (forwardedFor) {
+    out["x-forwarded-for"] = forwardedFor as string;
+  }
+
+  const auth = getJwtCookie(headers);
+
+  if (auth) {
+    out["Authorization"] = `Bearer ${auth}`;
+  }
+
+  return out;
+}
+
+export function getErrorPageData(error: Error, site?: GetSiteResponse) {
+  const errorPageData: ErrorPageData = {};
+
+  if (site) {
+    errorPageData.error = error.message;
+  }
+
+  const adminMatrixIds = site?.admins
+  .map(({ person: { matrixUserId } }) => matrixUserId)
+  .filter(id => id) as string[] | undefined;
+
+  if (adminMatrixIds && adminMatrixIds.length > 0) {
+    errorPageData.adminMatrixIds = adminMatrixIds;
+  }
+
+  return errorPageData;
 }

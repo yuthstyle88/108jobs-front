@@ -16,10 +16,12 @@ import {
     HttpService,
 } from "@/services/HttpService";
 import {setIsoData} from "@/utils/app";
+import  getQueryParams  from "@/utils/helpers";
+
 import TotpModal from "@/components/Common/Modal/TotpModal";
 import {OAuthButtons} from "@/components/Authentication/LoginForm/oauth-provider";
 import {handleLogin, handleSubmitTotp, handleUseOAuthProvider} from "@/components/Authentication/LoginForm/handlers";
-import {LoginFormProps, LoginFormState, State} from "@/components/Authentication/LoginForm/interface";
+import {LoginFormProps, LoginFormState, State, LoginProps} from "@/components/Authentication/LoginForm/interface";
 
 
 const withHooks = (Component: any) => {
@@ -63,6 +65,14 @@ const withHooks = (Component: any) => {
     return WrappedWithHooks;
 };
 
+export function getLoginQueryParams(source?: string): LoginProps {
+    return getQueryParams<LoginProps>(
+      {
+          prev: (param?: string) => param,
+      },
+      source,
+    );
+}
 export class LoginFormClass extends Component<
     LoginFormProps & {
     authen: any;

@@ -5,7 +5,8 @@ import {
     LoginResponse,
     PublicOAuthProvider,
 } from "@/lib/lemmy-js-client/src";
-
+import {RouteData} from "@/utils/types"
+import { IRoutePropsWithFetch } from "@/utils/routes";
 export interface LoginFormProps {
     formState: {
         usernameOrEmail: string;
@@ -45,3 +46,12 @@ export interface LoginFormState {
     oauthProviders: PublicOAuthProvider[];
     hasFetchedSite: boolean;
 }
+export interface LoginProps {
+    prev?: string;
+}
+
+export type LoginFetchConfig = IRoutePropsWithFetch<
+  RouteData,
+  Record<string, never>,
+  LoginProps
+>;

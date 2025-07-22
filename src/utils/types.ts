@@ -19,7 +19,6 @@ export interface IsoData<T extends RouteData = any> {
   siteRes?: GetSiteResponse;
   myUserInfo?: MyUserInfo;
   errorPageData?: ErrorPageData;
-  showAdultConsentModal: boolean;
   lemmyExternalHost: string;
 }
 
