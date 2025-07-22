@@ -1,18 +1,15 @@
 // lib/fetchIsoData.ts
-import { cookies} from "next/headers";
-import {ErrorPageData, IsoData, InitialFetchRequest, RouteData} from "@/utils/types";
+import {cookies} from "next/headers";
+import {ErrorPageData, InitialFetchRequest, IsoData, RouteData} from "@/utils/types";
 import {Match,} from "@/utils/router";
 import {routes,} from "@/utils/routes";
 import {isAuthPath} from "@/utils/app";
-import {matchPath, getJwtCookie, setForwardedHeaders, getErrorPageData} from "@/utils/helpers";
+import {getErrorPageData, getJwtCookie, matchPath, setForwardedHeaders} from "@/utils/helpers";
 import {NextRequest, NextResponse} from "next/server";
-import {
-  FailedRequestState,
-  wrapClient,
-} from "@/services/HttpService";
-import { getHttpBaseInternal } from "@/utils/env";
-import {GetSiteResponse, MyUserInfo, LemmyHttp} from "lemmy-js-client";
-import { parsePath } from "history";
+import {FailedRequestState, wrapClient,} from "@/services/HttpService";
+import {getHttpBaseInternal} from "@/utils/env";
+import {GetSiteResponse, LemmyHttp, MyUserInfo} from "lemmy-js-client";
+import {parsePath} from "history";
 import {testHost} from "@/config";
 
 export default async function fetchIsoData(req: NextRequest, path: string, url: string): Promise<IsoData | null> {
@@ -110,7 +107,7 @@ export default async function fetchIsoData(req: NextRequest, path: string, url: 
       return null;
     }
 
-    const isoData: IsoData = {
+    return {
       path,
       siteRes: siteRes,
       myUserInfo,
@@ -118,8 +115,6 @@ export default async function fetchIsoData(req: NextRequest, path: string, url: 
       errorPageData,
       lemmyExternalHost: process.env.LEMMY_UI_LEMMY_EXTERNAL_HOST ?? testHost,
     };
-
-    return isoData;
   } catch (err) {
     console.error(err);
     return null;
