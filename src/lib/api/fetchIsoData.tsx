@@ -36,8 +36,10 @@ export default async function fetchIsoData(req: NextRequest, path: string, url: 
     let activeRoute;
     const trySite = await client.getSite();
     if (trySite.state === "success") {
+      const { search } = parsePath(url);
+
       activeRoute = routes.find(route => {
-        const queryParams = route.getQueryParams?.(url, trySite.data);
+        const queryParams = route.getQueryParams?.(search, trySite.data);
         return (match = matchPath(path, queryParams?.source));
       });
     }
@@ -75,7 +77,7 @@ export default async function fetchIsoData(req: NextRequest, path: string, url: 
         const { search } = parsePath(url);
         const initialFetchReq: InitialFetchRequest<Record<string, any>> = {
           path,
-          query: activeRoute.getQueryParams?.(search ?? "", siteRes) ?? {},
+          query: activeRoute.getQueryParams?.(search, siteRes) ?? {},
           match,
           site: siteRes,
           headers: forwardedHeaders,

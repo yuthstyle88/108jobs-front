@@ -20,7 +20,7 @@ export interface IRoutePropsWithFetch<
     req: InitialFetchRequest<PathPropsT, QueryPropsT>,
   ): Promise<DataT>;
   getQueryParams?(
-    source: string,
+    source: string | undefined,
     siteRes: GetSiteResponse,
     myUserInfo?: MyUserInfo,
   ): QueryPropsT;
