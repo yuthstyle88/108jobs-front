@@ -13,15 +13,8 @@ import {parsePath} from "history";
 import {testHost} from "@/config";
 import {IncomingHttpHeaders} from "http";
 
-export default async function fetchIsoData(path: string, url: string,incomingHeaders: IncomingHttpHeaders): Promise<IsoData | null> {
+export default async function fetchIsoData(url: string,incomingHeaders: IncomingHttpHeaders): Promise<IsoData | null> {
   try {
-    const cookieStore = cookies();
-
-    // Example: Read incoming headers from the request
-    // const userAgent = req.headers.get("user-agent");
-    // const acceptLang = req.headers.get("accept-language");
-    // Convert Headers to plain object
-
     const headers = setForwardedHeaders(incomingHeaders);
     const auth = getJwtCookie(incomingHeaders);
     console.log("headers", headers);
@@ -31,20 +24,17 @@ export default async function fetchIsoData(path: string, url: string,incomingHea
     const client = wrapClient(
       new LemmyHttp(getHttpBaseInternal(), { headers }),
     );
-
+    const path  = parsePath(url);
     let activeRoute;
     const trySite = await client.getSite();
     console.log("trySite", trySite.state);
     if (trySite.state === "success") {
-      const { search } = parsePath(url);
-      console.log("search", search);
-      activeRoute = routes.find(route => {
-        const queryParams = route.getQueryParams?.(search, trySite.data);
-        console.log("queryParams", queryParams);
-        match = matchPath(path, queryParams?.source);
-      });
-    }
 
+      activeRoute = routes.find(
+        route => (match = matchPath(route.path, url)),
+      );
+    }
+   console.log("activeRoute", activeRoute);
 
     // Get site data first
     // This bypasses errors, so that the client can hit the error on its own,
@@ -55,7 +45,7 @@ export default async function fetchIsoData(path: string, url: string,incomingHea
     let errorPageData: ErrorPageData | undefined = undefined;
     let tryUser = await client.getMyUser();
 
-    if (!auth && isAuthPath(path)) {
+    if (!auth && isAuthPath(url)) {
       NextResponse.redirect(new URL(`/login?prev=${encodeURIComponent(url)}`, origin));
       return null;
     }
@@ -78,11 +68,11 @@ export default async function fetchIsoData(path: string, url: string,incomingHea
       if (siteRes && activeRoute?.fetchInitialData && match) {
         const { search } = parsePath(url);
         const initialFetchReq: InitialFetchRequest<Record<string, any>> = {
-          path,
+          path: url,
           query: activeRoute.getQueryParams?.(search, siteRes) ?? {},
           match,
           site: siteRes,
-          headers: forwardedHeaders,
+          headers: headers,
         };
 
         if (process.env.NODE_ENV === "development") {
@@ -112,7 +102,7 @@ export default async function fetchIsoData(path: string, url: string,incomingHea
     }
 
     return {
-      path,
+      path: url,
       siteRes: siteRes,
       myUserInfo,
       routeData,

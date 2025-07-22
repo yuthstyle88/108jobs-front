@@ -367,7 +367,7 @@ export function insertCommentIntoTree(
 }
 
 export function isAuthPath(pathname: string) {
-  return /^\/(create_.*?|inbox|settings|admin|reports|registration_applications|activitypub.*?)\b/g.test(
+  return /^\/(create_.*?|inbox|settings|admin|reports|registration-applications|activitypub.*?)\b/g.test(
     pathname,
   );
 }

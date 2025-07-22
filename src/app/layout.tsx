@@ -32,14 +32,12 @@ export default async function RootLayout({
 }>) {
 
   const hdr = await headers();
-  const headersList: IncomingHttpHeaders = Object.fromEntries(hdr.entries());
- console.log("headersList: ", headersList);
-  const path = hdr.get("x-path") || "/";
   const url  = hdr.get("x-url") || "/";
-  console.log("x-path: ", path);
-  const IncomingHttpHeaders: IncomingHttpHeaders = Object.fromEntries(hdr.entries());
-  const isoDateContext = await fetchIsoData( path, url , IncomingHttpHeaders);
-   console.log("isoDateContext: ", isoDateContext);
+  console.log("x-url: ", url);
+  const incomingHttpHeaders: IncomingHttpHeaders = Object.fromEntries(hdr.entries());
+  console.log("incomingHttpHeaders: ", incomingHttpHeaders);
+  const isoDateContext = await fetchIsoData(url , incomingHttpHeaders);
+
   return (
     <html lang="th" suppressHydrationWarning>
     <head>

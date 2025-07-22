@@ -3,7 +3,7 @@
 // This list maps the routes to their corresponding Next.js page structure (for reference or generation tools)
 // Actual pages should be placed under /app or /pages depending on routing mode
 import { GetSiteResponse, MyUserInfo } from "lemmy-js-client";
-import { InitialFetchRequest, RouteData } from "@/utils/types";
+import {InitialFetchRequest, IRouteProps, RouteData} from "@/utils/types";
 import {LoginForm} from "@/components/Authentication/LoginForm";
 import { LoginFetchConfig, } from "@/components/Authentication/LoginForm/interface";
 import { getLoginQueryParams } from "@/components/Authentication/LoginForm/handlers";
@@ -16,7 +16,7 @@ export interface IRoutePropsWithFetch<
   DataT extends RouteData,
   PathPropsT extends Record<string, string>,
   QueryPropsT extends Record<string, any>,
->  {
+> extends IRouteProps {
   fetchInitialData?(
     req: InitialFetchRequest<PathPropsT, QueryPropsT>,
   ): Promise<DataT>;
@@ -31,8 +31,14 @@ export interface IRoutePropsWithFetch<
 
 export const routes: IRoutePropsWithFetch<RouteData, any, any>[] = [
   {
-    path: `/login`,
+    path: `/login/:id`,
     component: LoginForm,
     getQueryParams: getLoginQueryParams,
   } as LoginFetchConfig,
+  {
+    path: `/comment/:name`,
+    component: LoginForm,
+    getQueryParams: getLoginQueryParams,
+  } as LoginFetchConfig,
+
 ];

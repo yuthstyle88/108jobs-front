@@ -40,6 +40,14 @@ export interface InitialFetchRequest<
   headers: { [key: string]: string };
 }
 
+export interface IRouteProps {
+  computedMatch?: Match<any> | null;
+  path?: string;
+  exact?: boolean;
+  strict?: boolean;
+  sensitive?: boolean;
+}
+
 export interface PostFormParams {
   name?: string;
   url?: string;

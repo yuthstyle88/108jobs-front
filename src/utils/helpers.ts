@@ -265,13 +265,12 @@ export function matchPath(
   pathPattern?: string,
   urlPath?: string
 ): Match<any> | null {
-  // ➊ กันไว้ก่อน – ถ้าอาร์กิวเมนต์เป็น undefined/null
   if (!pathPattern || !urlPath) return null;
 
   const patternParts = pathPattern.split("/").filter(Boolean);
   const urlParts     = urlPath.split("/").filter(Boolean);
 
-  if (patternParts.length !== urlParts.length) return null;
+  if (urlParts.length > patternParts.length) return null;
 
   const params: Record<string, string> = {};
 
@@ -279,9 +278,20 @@ export function matchPath(
     const pattern = patternParts[i];
     const part    = urlParts[i];
 
-    if (pattern.startsWith("[")) {
-      const key = pattern.replace(/^\[|\]$/g, "");
-      params[key] = decodeURIComponent(part);
+    const isOptional = pattern.endsWith("?") || /\[\w+\?\]/.test(pattern);
+    const isParam    = pattern.startsWith(":") || /^\[\w+\??\]$/.test(pattern);
+
+    if (isParam) {
+      const key = pattern
+        .replace(/^\:/, "")      // :param → param
+        .replace(/^\[|\]$/g, "") // [param] → param
+        .replace(/\?$/, "");     // param? → param
+
+      if (part !== undefined) {
+        params[key] = decodeURIComponent(part);
+      } else if (!isOptional) {
+        return null;
+      }
     } else if (pattern !== part) {
       return null;
     }
@@ -291,7 +301,7 @@ export function matchPath(
     params,
     path: urlPath,
     url:  urlPath,
-    isExact: true,
+    isExact: urlParts.length === patternParts.length,
   } as Match<any>;
 }
 
