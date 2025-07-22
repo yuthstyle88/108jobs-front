@@ -36,6 +36,7 @@ export default async function RootLayout({
 
   const path = hdr.get("x-path") || "/";
   const url  = hdr.get("x-url") || "/";
+  console.log("x-path: ", path);
   const IncomingHttpHeaders: IncomingHttpHeaders = Object.fromEntries(hdr.entries());
   const isoDateContext = await fetchIsoData( path, url , IncomingHttpHeaders);
 
@@ -45,6 +46,11 @@ export default async function RootLayout({
       <FontAwesomeConfig/>
     </head>
     <body suppressHydrationWarning className={`${kanit.className} antialiased bg-white`}>
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `window.isoData = ${JSON.stringify(isoDateContext)};`,
+      }}
+    />
     <IsoDataProvider value={isoDateContext ?? {
       path: "/",
       routeData: {} as any,
