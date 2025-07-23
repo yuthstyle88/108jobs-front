@@ -23,7 +23,7 @@ export const VerifyEmailRegister = ({ token }: VerifyEmailRegisterProps) => {
     const verifyEmail = async () => {
       try {
         setApiError(null);
-        const verifyRes = await HttpService.client.verificationEmail({ token });
+        const verifyRes = await HttpService.client.verifyEmail({ token });
         console.log("verifyRes",verifyRes);
 
         if (verifyRes.state === "failed") {

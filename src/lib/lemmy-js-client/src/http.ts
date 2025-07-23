@@ -1779,7 +1779,7 @@ export class LemmyHttp extends Controller {
    */
   @Post("/account/auth/verify-email")
   @Tags("Account")
-  async verificationEmail(
+  async verifyEmail(
     @Body() form: VerifyEmail,
     @Inject() options?: RequestOptions,
   ) {
