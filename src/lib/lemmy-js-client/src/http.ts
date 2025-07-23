@@ -1,4 +1,3 @@
-import { VerifyEmailResponse } from './../dist/types/VerifyEmailResponse.d';
 import {Body, Controller, Delete, Get, Inject, Post, Put, Queries, Route, Security, Tags, UploadedFile,} from "@tsoa/runtime";
 import type {
   AdminListUsersI,
@@ -66,8 +65,6 @@ import type {CreateOAuthProvider} from "./types/CreateOAuthProvider";
 import type {CreatePost} from "./types/CreatePost";
 import type {CreatePostLike} from "./types/CreatePostLike";
 import type {CreatePostReport} from "./types/CreatePostReport";
-import type {CreatePrivateMessage} from "./types/CreatePrivateMessage";
-import type {CreatePrivateMessageReport} from "./types/CreatePrivateMessageReport";
 import type  {CreateSite} from "./types/CreateSite";
 import type {CustomEmojiResponse} from "./types/CustomEmojiResponse";
 import type {DeleteAccount} from "./types/DeleteAccount";
@@ -77,14 +74,12 @@ import type {DeleteCommunityTag} from "./types/DeleteCommunityTag";
 import type {DeleteCustomEmoji} from "./types/DeleteCustomEmoji";
 import type {DeleteOAuthProvider} from "./types/DeleteOAuthProvider";
 import type {DeletePost} from "./types/DeletePost";
-import type {DeletePrivateMessage} from "./types/DeletePrivateMessage";
 import type {DistinguishComment} from "./types/DistinguishComment";
 import type {EditComment} from "./types/EditComment";
 import type {EditCommunity} from "./types/EditCommunity";
 import type {EditCustomEmoji} from "./types/EditCustomEmoji";
 import type {EditOAuthProvider} from "./types/EditOAuthProvider";
 import type {EditPost} from "./types/EditPost";
-import type {EditPrivateMessage} from "./types/EditPrivateMessage";
 import type {EditSite} from "./types/EditSite";
 import type {OAuthProvider} from "./types/OAuthProvider";
 import type {FeaturePost} from "./types/FeaturePost";
@@ -119,13 +114,10 @@ import type {LockPost} from "./types/LockPost";
 import type {Login} from "./types/Login";
 import type {LoginResponse} from "./types/LoginResponse";
 import type {MarkPostAsRead} from "./types/MarkPostAsRead";
-import type {MarkPrivateMessageAsRead} from "./types/MarkPrivateMessageAsRead";
 import type {PasswordChangeAfterReset} from "./types/PasswordChangeAfterReset";
 import type {PasswordReset} from "./types/PasswordReset";
 import type {PostReportResponse} from "./types/PostReportResponse";
 import type {PostResponse} from "./types/PostResponse";
-import type {PrivateMessageReportResponse} from "./types/PrivateMessageReportResponse";
-import type {PrivateMessageResponse} from "./types/PrivateMessageResponse";
 import type {PurgeComment} from "./types/PurgeComment";
 import type {PurgeCommunity} from "./types/PurgeCommunity";
 import type {PurgePerson} from "./types/PurgePerson";
@@ -139,7 +131,6 @@ import type {ResolveCommentReport} from "./types/ResolveCommentReport";
 import type {ResolveCommunityReport} from "./types/ResolveCommunityReport";
 import type {ResolveObject} from "./types/ResolveObject";
 import type {ResolvePostReport} from "./types/ResolvePostReport";
-import type {ResolvePrivateMessageReport} from "./types/ResolvePrivateMessageReport";
 import type {SaveComment} from "./types/SaveComment";
 import type {SavePost} from "./types/SavePost";
 import type {SaveUserSettings} from "./types/SaveUserSettings";
@@ -1414,110 +1405,6 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Create a private message.
-   */
-  @Security("bearerAuth")
-  @Post("/private-message")
-  @Tags("PrivateMessage")
-  async createPrivateMessage(
-    @Body() form: CreatePrivateMessage,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<CreatePrivateMessage, PrivateMessageResponse>(
-      HttpType.Post,
-      "/private-message",
-      form,
-      options,
-    );
-  }
-
-  /**
-   * @summary Edit a private message.
-   */
-  @Security("bearerAuth")
-  @Put("/private-message")
-  @Tags("PrivateMessage")
-  async editPrivateMessage(
-    @Body() form: EditPrivateMessage,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<EditPrivateMessage, PrivateMessageResponse>(
-      HttpType.Put,
-      "/private-message",
-      form,
-      options,
-    );
-  }
-
-  /**
-   * @summary Delete a private message.
-   */
-  @Security("bearerAuth")
-  @Post("/private-message/delete")
-  @Tags("PrivateMessage")
-  async deletePrivateMessage(
-    @Body() form: DeletePrivateMessage,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<DeletePrivateMessage, PrivateMessageResponse>(
-      HttpType.Post,
-      "/private-message/delete",
-      form,
-      options,
-    );
-  }
-
-  /**
-   * @summary Mark a private message as read.
-   */
-  @Security("bearerAuth")
-  @Post("/private-message/mark-as-read")
-  @Tags("PrivateMessage")
-  async markPrivateMessageAsRead(
-    @Body() form: MarkPrivateMessageAsRead,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<MarkPrivateMessageAsRead, SuccessResponse>(
-      HttpType.Post,
-      "/private-message/mark-as-read",
-      form,
-      options,
-    );
-  }
-
-  /**
-   * @summary Create a report for a private message.
-   */
-  @Security("bearerAuth")
-  @Post("/private-message/report")
-  @Tags("PrivateMessage")
-  async createPrivateMessageReport(
-    @Body() form: CreatePrivateMessageReport,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<
-      CreatePrivateMessageReport,
-      PrivateMessageReportResponse
-    >(HttpType.Post, "/private-message/report", form, options);
-  }
-
-  /**
-   * @summary Resolve a report for a private message.
-   */
-  @Security("bearerAuth")
-  @Put("/private-message/report/resolve")
-  @Tags("PrivateMessage", "Admin")
-  async resolvePrivateMessageReport(
-    @Body() form: ResolvePrivateMessageReport,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<
-      ResolvePrivateMessageReport,
-      PrivateMessageReportResponse
-    >(HttpType.Put, "/private-message/report/resolve", form, options);
-  }
-
-  /**
    * @summary Register a new user.
    */
   @Post("/account/auth/register")
@@ -1852,22 +1739,6 @@ export class LemmyHttp extends Controller {
     );
   }
 
-  /**
-   * @summary Verify your email
-   */
-  @Post("/account/auth/verify-email")
-  @Tags("Account")
-  async verifyEmail(
-    @Body() form: VerifyEmail,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<VerifyEmail, VerifyEmailResponse>(
-      HttpType.Post,
-      "/account/auth/verify-email",
-      form,
-      options,
-    );
-  }
 
   /**
    * @summary Resend a verification email.

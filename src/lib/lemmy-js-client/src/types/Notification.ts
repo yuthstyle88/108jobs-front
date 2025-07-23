@@ -4,7 +4,7 @@ import type { NotificationId } from "./NotificationId";
 import type { NotificationTypes } from "./NotificationTypes";
 import type { PersonId } from "./PersonId";
 import type { PostId } from "./PostId";
-import type { PrivateMessageId } from "./PrivateMessageId";
+
 
 export type Notification = {
   id: NotificationId;
@@ -14,5 +14,5 @@ export type Notification = {
   publishedAt: string;
   kind: NotificationTypes;
   postId?: PostId;
-  privateMessageId?: PrivateMessageId;
+
 };

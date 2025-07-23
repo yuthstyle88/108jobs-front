@@ -3,8 +3,7 @@ import ErrorPage from "@/app/error";
 import LoadingBlur from "@/components/LoadingBlur";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import useNotification from "@/hooks/useNotification";
-import { HttpService, UserService } from "@/services";
-import { setAuthCookie } from "@/utils/browser";
+import { HttpService, } from "@/services";
 import { useEffect, useRef, useState } from "react";
 
 type VerifyEmailRegisterProps = {
@@ -26,15 +25,14 @@ export const VerifyEmailRegister = ({ token }: VerifyEmailRegisterProps) => {
         setApiError(null);
         const verifyRes = await HttpService.client.verifyEmail({ token });
         console.log("verifyRes",verifyRes);
-        
+
 
         if (verifyRes.state === "failed") {
           setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);
           return;
         }
-        await setAuthCookie(verifyRes?.jwt);
         successMessage(null, null, "Verify email successfully");
-        window.location.href = "/";
+        window.location.href = "/login";
       } catch (error) {
         setApiError(
           error instanceof Error
@@ -44,8 +42,8 @@ export const VerifyEmailRegister = ({ token }: VerifyEmailRegisterProps) => {
       }
     };
 
-    verifyEmail();
-  }, [token]); 
+     verifyEmail();
+  }, [token]);
 
   return apiError ? <ErrorPage /> : <LoadingBlur text="" />;
 };
