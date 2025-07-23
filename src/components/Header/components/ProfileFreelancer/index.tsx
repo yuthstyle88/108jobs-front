@@ -31,12 +31,12 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
   const { lang: currentLang } = useLanguage();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">
-      <Link prefetch={false} href={`/${currentLang}/user/${user?.user.username}`}>
+      <Link prefetch={false} href={`/${currentLang}/user/${user?.person?.name}`}>
         <div className="p-4 bg-secondary hover:bg-[#D0E1FB] duration-150 rounded-tl-lg rounded-tr-lg relative">
           <div className="flex items-center space-x-3">
             <div className="bg-gray-200 flex items-center justify-center rounded-full">
               <Image
-                src={user?.user.avatarUrl || ProfileImage.avatar}
+                src={user?.person?.avatar || ProfileImage.avatar}
                 alt="avatar"
                 className="rounded-full w-12 h-12 object-cover border-1 border-borderPrimary"
                 width={500}
@@ -44,7 +44,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
               />
             </div>
             <div>
-              <p className="font-medium text-gray-900">{user?.user.username}</p>
+              <p className="font-medium text-gray-900">{user?.person?.name}</p>
               <p className="text-sm font-sans text-text-secondary underline">
                 {data?.labelViewProfile}
               </p>

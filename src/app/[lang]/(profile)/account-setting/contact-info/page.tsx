@@ -5,7 +5,8 @@ import Loading from "@/components/Loading";
 import LoadingCircle from "@/components/LoadingCircle";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
-import { usePrivateFetch, usePrivatePut } from "@/hooks/api-hooks";
+import { usePrivateFetch } from "@/hooks/api-hooks";
+import { HttpService, RequestState, LOADING_REQUEST } from "@/services";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
@@ -63,7 +64,7 @@ function normalizeAddress(address: RawAddress | undefined): AddressFormData {
 }
 
 export default function ContactPage() {
-  const { profileData, mutate } = useBasicInfoForm();
+  const { profileState, profileData, isLoadingProfile, mutate } = useBasicInfoForm();
   const [isReady, setIsReady] = useState(false);
   const [defaultForeignCountry, setDefaultForeignCountry] =
     useState<string>("");
@@ -95,7 +96,7 @@ export default function ContactPage() {
     resolver: zodResolver(emailSchema),
     mode: "onChange",
     defaultValues: {
-      email: profileData?.contact.email,
+      email: profileState.state === "success" ? profileState.data?.contact.email : "",
     },
   });
 
@@ -114,8 +115,8 @@ export default function ContactPage() {
 
   const { data: global } = useGlobalTranslate(LanguageFile.GLOBAL);
 
-  const { trigger: updateAddressProfile, isMutating: isUpdateMuting } =
-    usePrivatePut<AddressFormData>(API_ROUTES.profile.updateAddressProfile);
+  const [updateAddressState, setUpdateAddressState] = useState<RequestState<AddressFormData>>(LOADING_REQUEST);
+  const isUpdateMuting = updateAddressState.state === "loading";
 
   const { successMessage } = useNotification();
   const LOCATION_OPTIONS = ["Thailand", "Foreign"] as const;
@@ -138,8 +139,8 @@ export default function ContactPage() {
   }, [countriesData]);
 
   useEffect(() => {
-    if (profileData?.address && !isReady) {
-      const normalized = normalizeAddress(profileData.address);
+    if (profileState.state === "success" && profileState.data?.address && !isReady) {
+      const normalized = normalizeAddress(profileState.data.address);
 
       if (normalized.country !== "Thailand") {
         setLocationType("Foreign");
@@ -151,13 +152,13 @@ export default function ContactPage() {
       reset(normalized);
       setIsReady(true);
     }
-  }, [profileData?.address, isReady, reset]);
+  }, [profileState, isReady, reset]);
 
   useEffect(() => {
     if (isConfirmChange) {
-      resetEmail({ email: profileData?.contact.email ?? "" });
+      resetEmail({ email: profileState.state === "success" ? profileState.data?.contact.email ?? "" : "" });
     }
-  }, [isConfirmChange, profileData, resetEmail]);
+  }, [isConfirmChange, profileState, resetEmail]);
 
   const onSubmitEmail = async (data: VerifyEmailFormData) => {
     try {
@@ -184,6 +185,8 @@ export default function ContactPage() {
 
   const onSubmitAddress = async (data: AddressFormData) => {
     try {
+      setUpdateAddressState(LOADING_REQUEST);
+      
       let payload: Partial<AddressFormData>;
 
       if (data.country === "Thailand") {
@@ -192,9 +195,26 @@ export default function ContactPage() {
         payload = { country: data.country };
       }
 
-      await updateAddressProfile(payload);
+      // Make a custom fetch request to update the address profile
+      const response = await fetch(API_ROUTES.profile.updateAddressProfile, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update address profile');
+      }
+      
+      const responseData = await response.json();
+      setUpdateAddressState({ state: "success", data: responseData });
+      
       await mutate();
       successMessage("profile", "update");
+      
       if (data.country !== "Thailand") {
         setDefaultForeignCountry(data.country);
       } else {
@@ -202,10 +222,11 @@ export default function ContactPage() {
       }
     } catch (error) {
       console.error("Update error:", error);
+      setUpdateAddressState({ state: "failed", err: error as Error });
     }
   };
 
-  if (isLoading || !isReady) return <Loading />;
+  if (isLoading || isLoadingProfile || !isReady) return <Loading />;
   if (error) return <ErrorPage />;
 
   return (
@@ -269,7 +290,7 @@ export default function ContactPage() {
                 </label>
                 <input
                   type="email"
-                  value={profileData?.contact.email ?? ""}
+                  value={profileState.state === "success" ? profileState.data?.contact.email ?? "" : ""}
                   disabled
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary disabled:cursor-not-allowed"
                   placeholder="your.email@example.com"

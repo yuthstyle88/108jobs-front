@@ -29,8 +29,9 @@ const logger = {
       console.log(`[fetchIsoData] ${message}`, ...args);
     }
   },
-  error: (message: string, error?: any) => {
-    console.error(`[fetchIsoData] ${message}`, error);
+  error: (message: string, err?: unknown) => {
+    const detail = err instanceof Error ? err.message : String(err);
+    console.error(`[fetchIsoData] ${message}: ${detail}`);
   }
 };
 

@@ -6,7 +6,7 @@ import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { ProfileData } from "@/types/userData";
+import { ProfileData } from "lemmy-js-client";
 import { FileText, Info } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -38,14 +38,14 @@ const AccountStats = () => {
           <div className="bg-white rounded-lg p-6 flex flex-col justify-center items-center">
             <figure className="w-20 h-20 rounded-full">
               <Image
-                src={user?.user.avatarUrl || ProfileImage.avatar}
+                src={user?.person?.avatar || ProfileImage.avatar}
                 alt="avatar"
                 width={80}
                 height={80}
                 className="object-cover w-20 h-20 rounded-full"
               />
             </figure>
-            <h3 className="text-lg font-medium mb-1">{user?.user.username}</h3>
+            <h3 className="text-lg font-medium mb-1">{user?.person?.name}</h3>
           </div>
 
           <div className="bg-white rounded-lg p-6">

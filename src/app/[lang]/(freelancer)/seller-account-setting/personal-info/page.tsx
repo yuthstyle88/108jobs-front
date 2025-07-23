@@ -3,7 +3,6 @@ import { API_ROUTES } from "@/api/endpoints";
 import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
-import { usePrivateImagePost } from "@/hooks/api-hooks";
 import { useDateOptions } from "@/hooks/useDateOptions";
 import { ImageUploadResponse } from "@/types/image";
 import { Trash2 } from "lucide-react";
@@ -16,13 +15,48 @@ import { InputError } from "@/components/ui/InputError";
 import ErrorModal from "@/components/ui/ErrorModal";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { HttpService } from "@/services/HttpService";
 
-const PersonalInfo = () => {
-  const { trigger: uploadImage, isMutating: isUploadMuting } =
-    usePrivateImagePost<ImageUploadResponse, FormData>(API_ROUTES.image.upload);
+const PersonalInfo = async () => {
+  // Function to upload image using HttpService
+  const uploadImageFn = async (formData: FormData): Promise<ImageUploadResponse | null> => {
+    try {
+      const imageFile = formData.get("images[]") as File;
+      if (!imageFile) {
+        throw new Error("No image file found in FormData");
+      }
+      
+      const response = await HttpService.client.uploadImage({ image: imageFile });
+      
+      if (response.state === "success") {
+        // Transform the response to match the expected format
+        return {
+          images: [
+            {
+              imageUrl: response.data.imageUrl,
+              deleteToken: response.data.delete_token || ""
+            }
+          ]
+        };
+      } else if (response.state === "failed") {
+        console.error("Image upload failed:", response.err);
+        throw response.err;
+      }
+      return null;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error;
+    }
+  };
+  
+  // Create an object that matches the structure expected by the component
+  // Note: We can't track loading state in an async component, so we set isMutating to false
+  const { trigger: uploadImage, isMutating: isUploadMuting } = {
+    trigger: uploadImageFn,
+    isMutating: false
+  };
 
-  const { profileData, isLoadingProfile, isErrorProfile, mutate } =
-    useBasicInfoForm();
+  const profileState = await useBasicInfoForm();
 
   const { data: sellerPersonalInfoLanguage } = useGlobalTranslate(
       LanguageFile.SELLER_PERSONAL_INFO
@@ -40,14 +74,14 @@ const PersonalInfo = () => {
     previewUrl: frontPreview,
     handleSelectImage: handleSelectFront,
     setPreviewUrl: setSelectedFront,
-  } = useImagePreviewOnly(profileData?.card.frontCard);
+  } = useImagePreviewOnly(profileState.state === "success" ? profileState.data?.card.frontCard : undefined);
 
   const {
     file: backFile,
     previewUrl: backPreview,
     handleSelectImage: handleSelectBack,
     setPreviewUrl: setSelectedBack,
-  } = useImagePreviewOnly(profileData?.card.backCard);
+  } = useImagePreviewOnly(profileState.state === "success" ? profileState.data?.card.backCard : undefined);
 
   const {
     register,
@@ -57,19 +91,18 @@ const PersonalInfo = () => {
     isUpdateMuting,
     onSubmit,
   } = usePersonalInfoForm(
-    profileData,
+    profileState.state === "success" ? profileState.data : undefined,
     frontFile,
     backFile,
     frontPreview,
     backPreview,
     uploadImage,
-    mutate,
     setSelectedFront,
     setSelectedBack
   );
 
-  if (isLoadingProfile) return <Loading />;
-  if (isErrorProfile) return <Error />;
+  if (profileState.state === "loading") return <Loading />;
+  if (profileState.state === "failed") return <Error />;
 
   return (
     <form

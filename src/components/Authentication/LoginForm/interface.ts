@@ -4,7 +4,7 @@ import {
     GetSiteResponse,
     LoginResponse,
     PublicOAuthProvider,
-} from "@/lib/lemmy-js-client/src";
+} from "lemmy-js-client";
 import {RouteData} from "@/utils/types"
 import { IRoutePropsWithFetch } from "@/utils/routes";
 export interface LoginFormProps {

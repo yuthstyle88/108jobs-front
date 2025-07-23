@@ -5,8 +5,8 @@ import { AssetIcon } from "@/constants/icons";
 import {
   usePrivateFetch,
   usePrivatePost,
-  usePrivatePut,
 } from "@/hooks/api-hooks";
+import { HttpService, RequestState, LOADING_REQUEST } from "@/services";
 import { ProfileData } from "@/types/userData";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -53,8 +53,8 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
     API_ROUTES.profile.skipAddress
   );
 
-  const { trigger: updateNewAddress, isMutating: isUpdateMutating } =
-    usePrivatePut(API_ROUTES.profile.updateNewAddress);
+  const [updateAddressState, setUpdateAddressState] = useState<RequestState<any>>(LOADING_REQUEST);
+  const isUpdateMutating = updateAddressState.state === "loading";
 
   const [provinceConfirmed, setProvinceConfirmed] = useState<{
     en: string;
@@ -77,20 +77,50 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
   };
 
   const handleConfirm = async () => {
-    if (selectedGeo === "thailand" && provinceConfirmed) {
-      await updateNewAddress({
-        country: "Thailand",
-        province: provinceConfirmed.en,
+    try {
+      setUpdateAddressState(LOADING_REQUEST);
+      
+      let payload;
+      let locationName = "";
+      
+      if (selectedGeo === "thailand" && provinceConfirmed) {
+        payload = {
+          country: "Thailand",
+          province: provinceConfirmed.en,
+        };
+        locationName = provinceConfirmed.en;
+      } else if (selectedGeo === "other" && countryConfirmed) {
+        payload = {
+          country: countryConfirmed,
+        };
+        locationName = countryConfirmed;
+      } else {
+        return; // No valid selection
+      }
+      
+      // Make a custom fetch request to update the new address
+      const response = await fetch(API_ROUTES.profile.updateNewAddress, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+        body: JSON.stringify(payload),
       });
-      handleConfirmChange(provinceConfirmed.en);
-    } else if (selectedGeo === "other" && countryConfirmed) {
-      await updateNewAddress({
-        country: countryConfirmed,
-      });
-      handleConfirmChange(countryConfirmed);
+      
+      if (!response.ok) {
+        throw new Error('Failed to update address');
+      }
+      
+      const data = await response.json();
+      setUpdateAddressState({ state: "success", data });
+      
+      handleConfirmChange(locationName);
+      onClose();
+    } catch (error) {
+      console.error("Update error:", error);
+      setUpdateAddressState({ state: "failed", err: error as Error });
     }
-
-    onClose();
   };
 
   const onSkipAddress = async () => {

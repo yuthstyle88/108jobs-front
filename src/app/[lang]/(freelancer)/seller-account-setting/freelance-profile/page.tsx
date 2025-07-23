@@ -8,17 +8,17 @@ import { LanguageFile } from "@/constants/language";
 import { usePrivateImagePost } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { ImageUploadResponse } from "@/types/image";
+import { getAvatarUrl } from "@/utils/userDataUtils";
 import Image from "next/image";
 import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
 import { useImageUpload } from "../hooks/useImageUpload";
 import { useProfileForm } from "../hooks/useProfileForm";
 
-const AccountSettings = () => {
+const AccountSettings = async () => {
   const { trigger: uploadImage, isMutating: isUploadMuting } =
     usePrivateImagePost<ImageUploadResponse, FormData>(API_ROUTES.image.upload);
 
-  const { profileData, isLoadingProfile, isErrorProfile, mutate } =
-    useBasicInfoForm();
+  const profileState = await useBasicInfoForm();
 
   const { data: sellerProfileLanguage } = useGlobalTranslate(
     LanguageFile.SELLER_FREELANCER_PROFILE
@@ -33,7 +33,7 @@ const AccountSettings = () => {
     handleSelectFile,
     handleImageUpload,
     closeImageModal,
-  } = useImageUpload(profileData?.user?.avatarUrl);
+  } = useImageUpload(profileState.state === "success" ? getAvatarUrl(profileState.data) : undefined);
 
   const {
     register,
@@ -44,16 +44,16 @@ const AccountSettings = () => {
     onSubmit,
     watch,
   } = useProfileForm(
-    profileData,
+    profileState.state === "success" ? profileState.data : undefined,
     selectedImage,
     uploadImage,
-    mutate,
+    () => {}, // No mutate function available with the new approach
     setSelectedImage
   );
 
 
-  if (isLoadingProfile) return <Loading />;
-  if (isErrorProfile) return <Error />;
+  if (profileState.state === "loading") return <Loading />;
+  if (profileState.state === "failed") return <Error />;
 
   return (
     <form

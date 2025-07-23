@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useEffect } from "react";
-import { usePrivatePut } from "@/hooks/api-hooks";
+import { useEffect, useState } from "react";
 import useNotification from "@/hooks/useNotification";
 import { API_ROUTES_SELLER } from "@/api/endpoints";
 import { ImageUploadResponse } from "@/types/image";
-import { ProfileData } from "@/types/userData";
+import { ProfileData } from "lemmy-js-client";
+import { HttpService } from "@/services/HttpService";
 
 const cardSchema = z.object({
   title: z.string().min(1, "Vui lòng nhập thông tin"),
@@ -32,7 +32,6 @@ export const usePersonalInfoForm = (
   frontPreview: string | null,
   backPreview: string | null,
   uploadImage: (formData: FormData) => Promise<ImageUploadResponse | null>,
-  mutate: () => void,
   setSelectedFront: (imageUrl: string) => void,
   setSelectedBack: (imageUrl: string) => void
 ) => {
@@ -46,15 +45,28 @@ export const usePersonalInfoForm = (
     resolver: zodResolver(cardSchema),
   });
 
-  const { trigger: updateCardInfo, isMutating: isUpdateMuting } = usePrivatePut(
-    API_ROUTES_SELLER.profile.updatePersonalInfo
-  );
+  const [isUpdateMuting, setIsUpdateMuting] = useState(false);
+  
+  const updateCardInfo = async (data: any) => {
+    try {
+      setIsUpdateMuting(true);
+      const response = await HttpService.client.putRequest(
+        API_ROUTES_SELLER.profile.updatePersonalInfo,
+        data
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsUpdateMuting(false);
+    }
+  };
 
   const { successMessage } = useNotification();
 
   useEffect(() => {
     if (profileData) {
-      const [year, month, day] = profileData.user.birthDate?.split("-") ?? [];
+      const [year, month, day] = profileData.card.birthDate?.split("-") ?? [];
       reset({
         title: profileData.card.title,
         name: profileData.card.name,
@@ -130,7 +142,6 @@ export const usePersonalInfoForm = (
       };
 
       await updateCardInfo(payload);
-      await mutate();
       successMessage("profile", "update");
     } catch (error) {
       console.error("Lỗi cập nhật thẻ:", error);

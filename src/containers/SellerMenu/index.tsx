@@ -81,7 +81,7 @@ const { lang } = useLanguage();
   ];
   const menuSettingItems = [
     {
-      href: `${lang}/user/${user?.user.username}`,
+      href: `${lang}/user/${user?.person?.name}`,
       label: "Freelancer profile",
       icon: faUserPen,
       target: "Blank",
@@ -131,7 +131,7 @@ const { lang } = useLanguage();
           <section className="flex gap-3 items-center flex-col pt-8 px-4 pb-1">
             <figure className="rounded-full overflow-hidden relative">
               <Image
-                src={user?.user.avatarUrl || ProfileImage.avatar}
+                src={user?.person?.avatar || ProfileImage.avatar}
                 alt="avatar"
                 width={80}
                 height={80}
@@ -139,7 +139,7 @@ const { lang } = useLanguage();
               />
             </figure>
             <div className="text-[0.875rem] font-semibold text-text-primary">
-              {user?.user.username}
+              {user?.person?.name}
             </div>
           </section>
           <section className="flex flex-col gap-2 p-4">

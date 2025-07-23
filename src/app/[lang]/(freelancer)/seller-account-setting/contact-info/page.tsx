@@ -6,7 +6,8 @@ import Loading from "@/components/Loading";
 import LoadingCircle from "@/components/LoadingCircle";
 import {ERROR_CONSTANTS} from "@/constants/error";
 import {LanguageFile} from "@/constants/language";
-import {usePrivateFetch, usePrivatePut} from "@/hooks/api-hooks";
+import {usePrivateFetch} from "@/hooks/api-hooks";
+import {RequestState, LOADING_REQUEST} from "@/services/HttpService";
 import {useGlobalTranslate} from "@/hooks/translation/useGlobalTranslate";
 import useNotification from "@/hooks/useNotification";
 import {addressSchema} from "@/utils/validation/addressSchema";
@@ -19,6 +20,7 @@ import ZipcodeSearch from "../components/SearchZipcode";
 import {CountriesResponse} from "@/types/location";
 import ErrorPage from "@/app/error";
 import {HttpService} from "@/services";
+import {Address} from "node:cluster";
 
 
 export interface AddressFormData {
@@ -39,20 +41,21 @@ interface RawAddress {
   addressDetails?: string | null;
 }
 
-function normalizeAddress(address: RawAddress | undefined): AddressFormData {
+function normalizeAddress(address: RawAddress | any | undefined): AddressFormData {
+  // Use type assertion to access properties safely
+  const addressData = address as RawAddress;
   return {
-    country: address?.country ?? "Thailand",
-    province: address?.province ?? "",
-    districtOrSubdistrict: address?.districtOrSubdistrict ?? "",
-    subdistrictOrDistrict: address?.subdistrictOrDistrict ?? "",
-    zipCode: address?.zipCode ?? "",
-    addressDetails: address?.addressDetails ?? "",
+    country: addressData?.country ?? "Thailand",
+    province: addressData?.province ?? "",
+    districtOrSubdistrict: addressData?.districtOrSubdistrict ?? "",
+    subdistrictOrDistrict: addressData?.subdistrictOrDistrict ?? "",
+    zipCode: addressData?.zipCode ?? "",
+    addressDetails: addressData?.addressDetails ?? "",
   };
 }
 
 const ContactInfo = () => {
-  const {profileData, isLoadingProfile, isErrorProfile, mutate} =
-    useBasicInfoForm();
+  const { profileState, profileData, isLoadingProfile, isErrorProfile, mutate } = useBasicInfoForm();
 
   const {data: sellerContactLanguage} = useGlobalTranslate(
     LanguageFile.SELLER_CONTACT_INFO
@@ -102,15 +105,15 @@ const ContactInfo = () => {
     resolver: zodResolver(emailSchema),
     mode: "onChange",
     defaultValues: {
-      email: profileData?.contact.email,
+      email: profileState.state === "success" ? profileState.data?.contact.email : "",
     },
   });
 
   const {data: countriesData} =
     usePrivateFetch<CountriesResponse>("/profile/countries");
 
-  const {trigger: updateAddressProfile, isMutating: isUpdateMuting} =
-    usePrivatePut<AddressFormData>(API_ROUTES.profile.updateAddressProfile);
+  const [updateAddressState, setUpdateAddressState] = useState<RequestState<AddressFormData>>(LOADING_REQUEST);
+  const isUpdateMuting = updateAddressState.state === "loading";
 
   const {successMessage} = useNotification();
   const LOCATION_OPTIONS = ["Thailand", "Foreign"] as const;
@@ -134,8 +137,8 @@ const ContactInfo = () => {
     [countriesData]);
 
   useEffect(() => {
-      if (profileData?.address && !isReady) {
-        const normalized = normalizeAddress(profileData.address);
+      if (profileState.state === "success" && profileState.data?.address && !isReady) {
+        const normalized = normalizeAddress(profileState.data.address);
 
         if (normalized.country !== "Thailand") {
           setLocationType("Foreign");
@@ -148,14 +151,14 @@ const ContactInfo = () => {
         setIsReady(true);
       }
     },
-    [profileData?.address, isReady, reset]);
+    [profileState, isReady, reset]);
 
   useEffect(() => {
       if (isConfirmChange) {
-        resetEmail({email: profileData?.contact.email ?? ""});
+        resetEmail({email: profileState.state === "success" ? profileState.data?.contact.email ?? "" : ""});
       }
     },
-    [isConfirmChange, profileData, resetEmail]);
+    [isConfirmChange, profileState, resetEmail]);
 
   const onSubmitEmail = async(data: VerifyEmailFormData) => {
     try {
@@ -175,6 +178,8 @@ const ContactInfo = () => {
 
   const onSubmitAddress = async(data: AddressFormData) => {
     try {
+      setUpdateAddressState(LOADING_REQUEST);
+      
       let payload: Partial<AddressFormData>;
 
       if (data.country === "Thailand") {
@@ -183,10 +188,26 @@ const ContactInfo = () => {
         payload = {country: data.country};
       }
 
-      await updateAddressProfile(payload);
+      // Make a custom fetch request to update the address profile
+      const response = await fetch(API_ROUTES.profile.updateAddressProfile, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+        body: JSON.stringify(payload),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update address profile');
+      }
+      
+      const responseData = await response.json();
+      setUpdateAddressState({ state: "success", data: responseData });
+      
       await mutate();
-      successMessage("profile",
-        "update");
+      successMessage("profile", "update");
+      
       if (data.country !== "Thailand") {
         setDefaultForeignCountry(data.country);
         reset({
@@ -201,8 +222,8 @@ const ContactInfo = () => {
         setDefaultForeignCountry("");
       }
     } catch (error) {
-      console.error("Update error:",
-        error);
+      console.error("Update error:", error);
+      setUpdateAddressState({ state: "failed", err: error as Error });
     }
   };
 
@@ -269,7 +290,7 @@ const ContactInfo = () => {
               </label>
               <input
                 type="email"
-                value={profileData?.contact.email ?? ""}
+                value={profileState.state === "success" ? profileState.data?.contact.email ?? "" : ""}
                 disabled
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary disabled:cursor-not-allowed"
                 placeholder="your.email@example.com"

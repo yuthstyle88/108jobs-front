@@ -1,8 +1,7 @@
 import {
   OAuthProvider,
   LoginResponse,
-
-} from "@/lib/lemmy-js-client/src";
+} from "lemmy-js-client";
 import {HttpService, UserService} from "@/services";
 import {setIsoData} from "@/utils/app";
 import {LoginFormClass} from "@/components/Authentication/LoginForm";

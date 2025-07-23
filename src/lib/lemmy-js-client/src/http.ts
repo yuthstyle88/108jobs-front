@@ -199,6 +199,7 @@ import type {ListNotificationsResponse} from "./types/ListNotificationsResponse"
 import type {UpdateTerm} from "./types/UpdateTerm";
 import type {ExchangeKey} from "./types/ExchangeKey";
 import type {ExchangeKeyResponse} from "./types/ExchangeKeyResponse";
+import type {ProfileData} from "./types/ProfileData";
 
 enum HttpType {
   Get = "GET",
@@ -333,6 +334,21 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<object, MyUserInfo>(
       HttpType.Get,
       "/account",
+      {},
+      options,
+    );
+  }
+
+  /**
+   * @summary Get data of current user.
+   */
+  @Security("bearerAuth")
+  @Get("/account/profile")
+  @Tags("Account")
+  async getProfile(@Inject() options?: RequestOptions) {
+    return this.#wrapper<object, ProfileData>(
+      HttpType.Get,
+      "/account/profile",
       {},
       options,
     );

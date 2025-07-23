@@ -1,10 +1,11 @@
 import { useForm } from "react-hook-form";
-import { usePrivatePut } from "@/hooks/api-hooks";
-import { ProfileData } from "@/types/userData";
-import { useEffect } from "react";
+import { ProfileData } from "lemmy-js-client";
+import { useEffect, useState } from "react";
 import useNotification from "@/hooks/useNotification";
 import { ImageUploadResponse } from "@/types/image";
 import { API_ROUTES } from "@/api/endpoints";
+import { HttpService, } from "@/services";
+import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
 
 interface FormValues {
   displayName: string;
@@ -28,41 +29,43 @@ export const useProfileForm = (
     reset,
   } = useForm<FormValues>();
 
-  const { trigger: updateProfile, isMutating: isUpdateMuting } =
-    usePrivatePut<ProfileData>(API_ROUTES.profile.updateProfile);
+  const [updateProfileState, setUpdateProfileState] = useState<RequestState<ProfileData>>(LOADING_REQUEST);
+  const isUpdateMuting = updateProfileState.state === "loading";
 
   const { successMessage } = useNotification();
 
   useEffect(() => {
-    if (profileData?.user) {
-      const birthDate = profileData.user.birthDate;
+    if (profileData?.person) {
+      const birthDate = profileData.card.birthDate;
       if (birthDate) {
         const [year, month, day] = birthDate.split("-");
         reset({
-          displayName: profileData.user.displayName,
-          username: profileData.user.username,
+          displayName: profileData.person.displayName || "",
+          username: profileData.person.name,
           birthDay: day || "Day",
           birthMonth: month || "Month",
           birthYear: year || "Year",
         });
       } else {
         reset({
-          displayName: profileData.user.displayName,
-          username: profileData.user.username,
+          displayName: profileData.person.displayName || "",
+          username: profileData.person.name,
           birthDay: "Day",
           birthMonth: "Month",
           birthYear: "Year",
         });
       }
-      setSelectedImage(profileData.user.avatarUrl);
+      setSelectedImage(profileData.person.avatar || "");
     }
   }, [profileData, reset, setSelectedImage]);
 
   const onSubmit = async (formData: FormValues) => {
     try {
-      let avatarUrl = profileData?.user.avatarUrl;
+      setUpdateProfileState(LOADING_REQUEST);
+      
+      let avatarUrl = profileData?.person?.avatar;
 
-      if (selectedImage && selectedImage !== profileData?.user.avatarUrl) {
+      if (selectedImage && selectedImage !== profileData?.person?.avatar) {
         const imageFormData = new FormData();
         const blob = await fetch(selectedImage).then((res) => res.blob());
         imageFormData.append("images[]", blob, "profile.jpg");
@@ -86,11 +89,41 @@ export const useProfileForm = (
         avatarUrl: avatarUrl || null,
       };
 
-      await updateProfile(updateData);
+      // Use HttpService.client for updating the profile
+      // First, update the displayName using saveUserSettings
+      const userSettingsResult = await HttpService.client.saveUserSettings({
+        displayName: formData.displayName,
+      });
+      
+      if (userSettingsResult.state === "failed") {
+        throw new Error('Failed to update user settings');
+      }
+      
+      // Then, make a custom request to update the other profile fields
+      // We need to use the raw HTTP client to make a PUT request to the profile endpoint
+      const response = await fetch(API_ROUTES.profile.updateProfile, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+        body: JSON.stringify(updateData),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+      
+      const data = await response.json();
+      setUpdateProfileState({ state: "success", data });
+      
       successMessage("profile", "update");
+      // Fetch the latest profile data using HttpService
+      await HttpService.client.getProfile();
       await mutate();
     } catch (error) {
       console.error("Update error:", error);
+      setUpdateProfileState({ state: "failed", err: error as Error });
     }
   };
 
@@ -101,5 +134,6 @@ export const useProfileForm = (
     isSubmitting,
     isUpdateMuting,
     onSubmit,
+    updateProfileState,
   };
 };

@@ -16,14 +16,14 @@ import { useProfileForm } from "../hooks/useProfileForm";
 import { ImageUploadResponse } from "@/types/image";
 import { API_ROUTES } from "@/api/endpoints";
 
-export default function BasicInformation() {
+export default async function BasicInformation() {
   const { data: languageData } = useGlobalTranslate(LanguageFile.BASIC_INFO);
   const { days, months, years } = useDateOptions();
   const { trigger: uploadImage, isMutating: isUploadMuting } =
     usePrivateImagePost<ImageUploadResponse, FormData>(API_ROUTES.image.upload);
 
-  const { profileData, isLoadingProfile, isErrorProfile, mutate } =
-    useBasicInfoForm();
+  const { profileState, profileData, mutate } =
+    await useBasicInfoForm();
 
   const {
     selectedImage,
@@ -34,7 +34,7 @@ export default function BasicInformation() {
     handleSelectFile,
     handleImageUpload,
     closeImageModal,
-  } = useImageUpload(profileData?.user?.avatarUrl);
+  } = useImageUpload(profileState.state === "success" ? profileState.data?.person?.avatar : undefined);
 
   const {
     register,
@@ -44,7 +44,7 @@ export default function BasicInformation() {
     isUpdateMuting,
     onSubmit,
   } = useProfileForm(
-    profileData,
+    profileState.state === "success" ? profileState.data : undefined,
     selectedImage,
     uploadImage,
     mutate,
@@ -55,8 +55,8 @@ export default function BasicInformation() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  if (isLoadingProfile) return <Loading />;
-  if (isErrorProfile) return <Error />;
+  if (profileState.state === "loading") return <Loading />;
+  if (profileState.state === "failed") return <Error />;
 
   return (
     <>

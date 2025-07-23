@@ -47,7 +47,7 @@ const SellerHeader = () => {
       <div className="flex items-center justify-between px-8 py-4">
         <h1 className="text-xl text-text-primary">
           {interpolate(globalLanguageData?.greetingUser || "", {
-            username: user?.user.username || "",
+            username: user?.person?.name || "",
           })}
         </h1>
         <div className="flex items-center space-x-4">
@@ -78,7 +78,7 @@ const SellerHeader = () => {
               className="flex justify-center items-center"
             >
               <Image
-                src={user?.user.avatarUrl || ProfileImage.avatar}
+                src={user?.person?.avatar || ProfileImage.avatar}
                 alt="avatar"
                 className="w-8 h-8 rounded-full object-cover"
                 width={500}
@@ -90,7 +90,7 @@ const SellerHeader = () => {
               <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
                 <div className="py-2">
                   <Link prefetch={false}
-                    href={`${lang}/user/${user?.user.username}`}
+                    href={`${lang}/user/${user?.person?.name}`}
                     className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
                     <User className="w-4 h-4 mr-3 text-gray-500" />

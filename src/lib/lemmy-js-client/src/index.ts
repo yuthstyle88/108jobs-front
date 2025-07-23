@@ -342,3 +342,9 @@ export type { PersonCommentMentionView } from "./types/PersonCommentMentionView"
 export type { PersonPostMentionView } from "./types/PersonPostMentionView";
 export type { CommentReplyView } from "./types/CommentReplyView";
 export { RoleType } from "./types/RoleType";
+export type { ProfileData } from "./types/ProfileData";
+export type { Address } from "./types/Address";
+export type { Card } from "./types/Card";
+export type { Coin } from "./types/Coin";
+export type { Contact } from "./types/Contact";
+export type { Profile } from "./types/Profile";

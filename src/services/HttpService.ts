@@ -55,18 +55,27 @@ class WrappedLemmyHttpClient {
     )) {
       if (key !== "constructor") {
         this[key] = async (...args: Parameters<LemmyHttp[keyof LemmyHttp]>) => {
-          try {
-            const res = await (this.rawClient as any)[key](...args);
-            return {
-              data: res,
-              state: !(res === undefined || res === null) ? "success" : "empty",
-            };
-          } catch (error) {
-            return {
-              state: "failed",
-              err: error,
-            };
-          }
+          // Return loading state immediately
+          const loadingPromise = Promise.resolve(LOADING_REQUEST);
+          
+          // Start the actual request in the background
+          const resultPromise = (async () => {
+            try {
+              const res = await (this.rawClient as any)[key](...args);
+              return {
+                data: res,
+                state: !(res === undefined || res === null) ? "success" : "empty",
+              };
+            } catch (error) {
+              return {
+                state: "failed",
+                err: error,
+              };
+            }
+          })();
+          
+          // Return loading state first, then the actual result
+          return loadingPromise.then(() => resultPromise);
         };
       }
     }

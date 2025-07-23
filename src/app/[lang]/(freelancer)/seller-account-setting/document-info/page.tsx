@@ -3,20 +3,38 @@
 import { API_ROUTES } from "@/api/endpoints";
 import * as Switch from "@radix-ui/react-switch";
 import { useState } from "react";
-import { usePrivatePut } from "@/hooks/api-hooks";
 import useNotification from "@/hooks/useNotification";
+import { HttpService } from "@/services";
+import { RequestState, LOADING_REQUEST } from "@/services/HttpService";
 
 const DocumentInfo = () => {
   const [isAvailable, setIsAvailable] = useState(false);
   const { successMessage, errorMessage } = useNotification();
-  const { trigger: updateStatus, isMutating } = usePrivatePut(
-    API_ROUTES.profile.updateAvailable
-  );
+  const [updateState, setUpdateState] = useState<RequestState<any>>(LOADING_REQUEST);
+  const isMutating = updateState.state === "loading";
 
   const handleToggle = async (value: boolean) => {
     setIsAvailable(value);
     try {
-      await updateStatus({ available: value });
+      setUpdateState(LOADING_REQUEST);
+      
+      // Make a custom fetch request to update the availability status
+      const response = await fetch(API_ROUTES.profile.updateAvailable, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+        body: JSON.stringify({ available: value }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update availability');
+      }
+      
+      const data = await response.json();
+      setUpdateState({ state: "success", data });
+      
       successMessage(
         "profile",
         value ? "updateAvailable" : "updateNotAvailable"
@@ -24,6 +42,7 @@ const DocumentInfo = () => {
     } catch (err) {
       console.error("Failed to update availability", err);
       setIsAvailable((prev) => !prev);
+      setUpdateState({ state: "failed", err: err as Error });
       errorMessage("profile", "updateAvailableFail");
     }
   };

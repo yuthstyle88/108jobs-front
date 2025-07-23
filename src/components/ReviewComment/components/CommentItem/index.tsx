@@ -3,7 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { usePrivateDelete, usePrivatePut } from "@/hooks/api-hooks";
+import { usePrivateDelete } from "@/hooks/api-hooks";
+import { HttpService, RequestState, LOADING_REQUEST } from "@/services";
 import useNotification from "@/hooks/useNotification";
 import { Review } from "@/types/review";
 import { formatDistanceToNow, Locale } from "date-fns";
@@ -30,19 +31,41 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
   const { lang: currentLang } = useLanguage();
   const locale = dateFnsLocaleMap[currentLang] || dateFnsLocaleMap["en"];
 
-  const { trigger: updateComment, isMutating: isUpdating } = usePrivatePut(
-    `${API_ROUTES.profile.commentReview}/${comment.id}`
-  );
+  const [updateCommentState, setUpdateCommentState] = useState<RequestState<any>>(LOADING_REQUEST);
+  const isUpdating = updateCommentState.state === "loading";
 
   const { trigger: deleteComment, isMutating: isDeleting } = usePrivateDelete(
     `${API_ROUTES.profile.commentReview}/${comment.id}`
   );
 
   const handleEdit = async (data: { rating: number; content: string }) => {
-    await updateComment(data);
-    await mutate();
-    successMessage("review", "updateComment");
-    setIsEditing(false);
+    try {
+      setUpdateCommentState(LOADING_REQUEST);
+      
+      // Make a custom fetch request to update the comment
+      const response = await fetch(`${API_ROUTES.profile.commentReview}/${comment.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update comment');
+      }
+      
+      const responseData = await response.json();
+      setUpdateCommentState({ state: "success", data: responseData });
+      
+      await mutate();
+      successMessage("review", "updateComment");
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Update error:", error);
+      setUpdateCommentState({ state: "failed", err: error as Error });
+    }
   };
 
   const handleDelete = async () => {
