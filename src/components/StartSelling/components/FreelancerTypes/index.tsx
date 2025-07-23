@@ -1,6 +1,6 @@
 import { StartSellingImage } from "@/constants/images";
 import { ProfileApplyLanguage } from "@/types/language";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 
 type FreelancerType = {
@@ -8,7 +8,7 @@ type FreelancerType = {
     main?: string;
     sub?: string;
   };
-  image: string;
+  image: StaticImageData;
   badgeText?: string;
   badgeClass?: string;
   description?: string;

@@ -10,7 +10,7 @@ import CurrentProfileEmployer from "../components/CurrentProfileEmployer";
 import CurrentProfileFreelance from "../components/CurrentProfileFreelance";
 import EmployerProfile from "../components/EmployerProfile";
 import FreelancerProfile from "../components/FreelanerProfile";
-import {RoleType} from "@/lib/lemmy-js-client/src/types/RoleType";
+import {RoleType} from "lemmy-js-client";
 
 interface Props {
   username: string;
@@ -29,9 +29,8 @@ export default function CheckRoleProfile({ username }: Props) {
 
   if (isLoading) return <Loading />;
   if (error) return <NotFound />;
-  const isCurrentUser = userProfile?.roles as RoleType;
-  const isEmployer = (isCurrentUser == RoleType.Employer);
-  const isFreelancer = (isCurrentUser == RoleType.Freelancer);
+  const isEmployer = userProfile?.roles === RoleType.Employer;
+  const isFreelancer = userProfile?.roles === RoleType.Freelancer;
 
 
   if (isEmployer) return <CurrentProfileEmployer username={username} />;

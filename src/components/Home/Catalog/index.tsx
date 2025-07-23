@@ -4,9 +4,9 @@ import { catalogIcons } from "@/types/catalogIcon";
 import { HomeLanguage } from "@/types/language";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { memo } from "react";
+import LazyImage from "@/components/ui/LazyImage";
 
 type Props = {
   serviceCatalogs: ServiceCatalog[];
@@ -16,7 +16,7 @@ type Props = {
   homeLanguageData?: Partial<HomeLanguage> | null;
 };
 
-const CatalogBanner = (props: Props) => {
+const CatalogBannerComponent = (props: Props) => {
   const {
     serviceCatalogs,
     activeCatalog,
@@ -52,11 +52,14 @@ const CatalogBanner = (props: Props) => {
                           : ""
                       } relative transform before:absolute before:opacity-0 before:bottom-[calc(56px*0.2*-1+8px)] before:left-0 before:right-0 before:mx-auto before:w-[calc(56px*0.8)] before:h-[calc(56px*0.2)] before:bg-secondary before:rounded-[50%] before:transition-all before:ease-in-out before:[backface-visibility:hidden] group-hover:before:opacity-100 group-hover:before:translate-y-[5px]`}
                     >
-                      <Image
-                        src={matchedIcon || CategoriesIcon.industry}
+                      <LazyImage
+                        imagePath={matchedIcon?.src ? matchedIcon.src.replace('/assets/images/', '') : CategoriesIcon.industry.src.replace('/assets/images/', '')}
                         alt={catalog.name}
                         width={56}
                         height={56}
+                        preload={true}
+                        trackPerformance={true}
+                        blurUp={true}
                         className={`group-hover:translate-y-[-4px] duration-150 group-hover:grayscale-0 ${
                           activeCatalogIndex === index
                             ? "grayscale-0 translate-y-[-4px]"
@@ -121,5 +124,8 @@ const CatalogBanner = (props: Props) => {
     </section>
   );
 };
+
+// Memoize the component to prevent unnecessary re-renders
+const CatalogBanner = memo(CatalogBannerComponent);
 
 export default CatalogBanner;

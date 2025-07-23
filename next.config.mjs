@@ -26,9 +26,27 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60,
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   reactStrictMode: true,
   output: "standalone",
+  poweredByHeader: false,
+  compress: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['@fortawesome/fontawesome-svg-core', '@fortawesome/free-solid-svg-icons'],
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
+  },
   allowedDevOrigins: [
     '192.168.1.35',          // ไอพีเครื่องที่เปิดหน้าเว็บ
     '192.168.1.*',           // เผื่อวง LAN ย่อย

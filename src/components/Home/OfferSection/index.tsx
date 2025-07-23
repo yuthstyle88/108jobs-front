@@ -2,8 +2,8 @@ import { CompareImage } from "@/constants/images";
 import { HomeLanguage } from "@/types/language";
 import { faArrowRight, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "next/image";
-import React from "react";
+import React, { memo } from "react";
+import LazyImage from "@/components/ui/LazyImage";
 
 type Props = {
   homeLanguageData?: Partial<HomeLanguage> | null;
@@ -28,7 +28,15 @@ const OfferSection = (props: Props) => {
           <div className="p-6 flex-1 text-center bg-white rounded-lg gap-6">
             <div className="h-[32px]"></div>
             <div className="flex justify-center mt-8 items-center">
-              <Image src={CompareImage.compare1} alt="Freelancer" />
+              <LazyImage 
+                imagePath="compare/compare1.svg" 
+                alt="Freelancer tier illustration" 
+                width={150}
+                height={150}
+                preload={true}
+                trackPerformance={true}
+                blurUp={true}
+              />
             </div>
             <div className="text-text-primary mt-6">
               <h3 className="font-semibold text-[1.25rem] mb-2">Freelancer</h3>
@@ -72,7 +80,15 @@ const OfferSection = (props: Props) => {
               </button>
             </div>
             <div className="flex justify-center mt-8 items-center">
-              <Image src={CompareImage.compare2} alt="Specialist" />
+              <LazyImage 
+                imagePath="compare/compare2.svg" 
+                alt="Specialist tier illustration" 
+                width={150}
+                height={150}
+                preload={true}
+                trackPerformance={true}
+                blurUp={true}
+              />
             </div>
             <div className="text-text-primary mt-6">
               <h3 className="font-semibold text-[1.25rem] mb-2">
@@ -137,7 +153,15 @@ const OfferSection = (props: Props) => {
               </button>
             </div>
             <div className="flex justify-center mt-8 items-center">
-              <Image src={CompareImage.compare3} alt="Professional" />
+              <LazyImage 
+                imagePath="compare/compare3.svg" 
+                alt="Professional tier illustration" 
+                width={150}
+                height={150}
+                preload={true}
+                trackPerformance={true}
+                blurUp={true}
+              />
             </div>
             <div className="text-text-primary mt-6">
               <h3 className="font-semibold text-[1.25rem] mb-2">

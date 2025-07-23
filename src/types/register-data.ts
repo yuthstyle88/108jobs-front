@@ -8,6 +8,7 @@ export type RegisterDataProps = {
   phone?: string | undefined;
   promotionalAccepted?: boolean | undefined;
   token?: string;
+  role?: string;
 };
 
 

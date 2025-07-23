@@ -1,4 +1,4 @@
-import { LemmyHttp } from "@/lib/lemmy-js-client";
+import { LemmyHttp } from "lemmy-js-client";
 import {getHttpBase} from "@/utils/env";
 
 export const EMPTY_REQUEST = {

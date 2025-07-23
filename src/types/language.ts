@@ -258,6 +258,7 @@ export interface LoginLanguage {
   labelOrSignInWith: string;
   termsRequired: string;
   privacyRequired: string;
+  apiErrorState: string;
 }
 
 export interface HomeLanguage {

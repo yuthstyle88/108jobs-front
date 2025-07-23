@@ -341,3 +341,4 @@ export type { VoteView } from "./types/VoteView";
 export type { PersonCommentMentionView } from "./types/PersonCommentMentionView";
 export type { PersonPostMentionView } from "./types/PersonPostMentionView";
 export type { CommentReplyView } from "./types/CommentReplyView";
+export { RoleType } from "./types/RoleType";

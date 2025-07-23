@@ -1,31 +1,51 @@
+import { 
+  LandingImageType, 
+  ProfileImageType, 
+  MessageImageType, 
+  SellerImageType, 
+  BannerImageType, 
+  RewardImageType, 
+  StartSellingImageType, 
+  FreelancerImageType, 
+  CompareImageType, 
+  JobDetailImageType, 
+  CategoriesImageType, 
+  MegaMenuImageType, 
+  AssetsImageType, 
+  CustomerImageType, 
+  BusinessImageType 
+} from "../types/images";
+
+// Compare images - moved up to fix import order
+import compare1 from "../assets/images/compare/compare1.svg";
+import compare2 from "../assets/images/compare/compare2.svg";
+import compare3 from "../assets/images/compare/compare3.svg";
+import banner2 from "../assets/images/compare/banner-02.png";
+import comparebadge1 from "../assets/images/compare/compare-badge1.png";
+import comparebadge2 from "../assets/images/compare/compare-badge2.png";
+import logobusiness from "../assets/images/compare/logo-business.png";
+
+// Profile images
+import avatar from "../assets/images/profile/avatar.jpg";
+import coinBg from "../assets/images/profile/coin-desktop-banner.webp";
+import jobBoard from "../assets/images/profile/banner.webp";
+import decal from "../assets/images/profile/decal.svg";
+import backCard from "../assets/images/profile/back-vn.jpg";
+import frontCard from "../assets/images/profile/front-vn.jpg";
+import bannerApply from "../assets/images/profile/banner__apply-seller.webp";
+import proposal from "../assets/images/profile/offering-form.c7efb8e0.svg";
+
+// Freelancer images
+import leakage1 from "../assets/images/apply-freelancer/leakage-1.jpg";
+import leakage2 from "../assets/images/apply-freelancer/leakage-2.jpg";
+import leakage3 from "../assets/images/apply-freelancer/leakage-3.jpg";
+import leakage4 from "../assets/images/apply-freelancer/leakage-4.jpg";
+import backgroundLeft from "../assets/images/apply-freelancer/background-left.753caf83.svg";
+import backgroundRight from "../assets/images/apply-freelancer/background-right.f8a09c85.svg";
+import landing from "../assets/images/apply-freelancer/landing.webp";
+
+// Categories images
 import seoImage from "../assets/images/categories-image/web-development-02032022.jpg";
-import group from "../assets/images/group-people.svg";
-import paper from "../assets/images/paper.svg";
-import shield from "../assets/images/shield.svg";
-import search from "../assets/images/megamenu/search.svg";
-import business from "../assets/images/megamenu/business.svg";
-import chat from "../assets/images/megamenu/chat-to-hire.svg";
-import company from "../assets/images/megamenu/company.svg";
-import job from "../assets/images/megamenu/job-board.svg";
-import jobBg from "../assets/images/megamenu/search-th.webp";
-import ads from "../assets/images/megamenu/ads.svg";
-import adsBg from "../assets/images/megamenu/seller-ads-vn.webp";
-import b2b from "../assets/images/megamenu/b2b.webp";
-import chatToHire from "../assets/images/megamenu/chat-to-hire-th.webp";
-import buyerJob from "../assets/images/megamenu/buyer-job-board-th.webp";
-import companyTh from "../assets/images/megamenu/company-th.webp";
-import pic1 from "../assets/images/customer/th/1.png";
-import pic2 from "../assets/images/customer/th/2.png";
-import pic3 from "../assets/images/customer/th/3.png";
-import pic4 from "../assets/images/customer/th/4.png";
-import pic5 from "../assets/images/customer/th/5.png";
-import pic6 from "../assets/images/customer/th/6.png";
-import pic7 from "../assets/images/customer/th/7.png";
-import pic8 from "../assets/images/customer/th/8.png";
-import pic9 from "../assets/images/customer/th/9.png";
-import pic10 from "../assets/images/customer/th/10.png";
-import pic11 from "../assets/images/customer/th/11.png";
-import pic12 from "../assets/images/customer/th/12.png";
 import specialist from "../assets/images/categories-image/specialist_v3_th.png";
 import milestone from "../assets/images/categories-image/milestone_v2_th.png";
 import fastReply from "../assets/images/categories-image/fast_reply.png";
@@ -40,13 +60,35 @@ import webDevelopment from "../assets/images/categories-image/web-development-02
 import conceptbanner from "../assets/images/categories-image/concept-banner-th.svg";
 import notFoundSearch from "../assets/images/categories-image/empty-list.webp";
 
+// Assets images
+import group from "../assets/images/group-people.svg";
+import paper from "../assets/images/paper.svg";
+import shield from "../assets/images/shield.svg";
+import startSelling from "../assets/images/hero-image-desktop.jpg";
+
+// Mega menu images
+import search from "../assets/images/megamenu/search.svg";
+import business from "../assets/images/megamenu/business.svg";
+import chat from "../assets/images/megamenu/chat-to-hire.svg";
+import company from "../assets/images/megamenu/company.svg";
+import job from "../assets/images/megamenu/job-board.svg";
+import jobBg from "../assets/images/megamenu/search-th.webp";
+import ads from "../assets/images/megamenu/ads.svg";
+import adsBg from "../assets/images/megamenu/seller-ads-vn.webp";
+import b2b from "../assets/images/megamenu/b2b.webp";
+import chatToHire from "../assets/images/megamenu/chat-to-hire-th.webp";
+import buyerJob from "../assets/images/megamenu/buyer-job-board-th.webp";
+import companyTh from "../assets/images/megamenu/company-th.webp";
+
+// Job detail images
 import jobDetail1 from "../assets/images/job-detail/403f4da4-9c70-422b-b2a3-8982ff7b7322.jpg";
 import jobDetail2 from "../assets/images/job-detail/1639d78d-168b-4342-a77b-e0e133003723.jpg";
 import jobDetail3 from "../assets/images/job-detail/8c9a5e42-2244-44b8-af0d-152b320bddec.jpg";
 import jobDetail4 from "../assets/images/job-detail/f58cd5e0-8587-4e40-b43c-0a544a6fb51b.jpg";
 import jobDetail5 from "../assets/images/job-detail/abc4aeed-d9cb-4e9f-be78-b544574b521e.jpg";
 import freelancerAvt from "../assets/images/job-detail/165733fb-908b-405d-a656-edca5749a4fd.jpg";
-import startSelling from "../assets/images/hero-image-desktop.jpg";
+
+// Start selling images
 import step1 from "../assets/images/start-selling/step1.svg";
 import step2 from "../assets/images/start-selling/step2.svg";
 import step3 from "../assets/images/start-selling/step3.svg";
@@ -54,17 +96,22 @@ import step4 from "../assets/images/start-selling/step4.svg";
 import step5 from "../assets/images/start-selling/step5.svg";
 import step6 from "../assets/images/start-selling/step6.svg";
 import profileSelling from "../assets/images/start-selling/Kittanya.png";
+
+// Banner images
 import left from "../assets/images/left.svg";
 import right from "../assets/images/right.svg";
 import center from "../assets/images/center.svg";
 import point from "../assets/images/point.svg";
 
+// Seller images
 import calculation from "../assets/images/seller/cal@2x.png";
 import response from "../assets/images/seller/response-empty-vn@2x.png";
 
+// Message images
 import chatMessage from "../assets/images/message/chat.svg";
 import chatAvt from "../assets/images/message/avatar.jpg";
 
+// Landing images
 import banner02 from "../assets/images/landing/banner-02.png";
 import construction from "../assets/images/landing/construction.svg";
 import bgError from "../assets/images/landing/bg_error.svg";
@@ -79,7 +126,6 @@ import slider5 from "../assets/images/landing/Milestone_Buyer_banner_home_1600x8
 import slider6 from "../assets/images/landing/Muconomy_Popup_Banner_Full_1638x856_e20733252f.webp";
 import slider7 from "../assets/images/landing/Point_back_revise_Date_Home_Banner_1638x856px_c177c4cf09.webp";
 import awardBg from "../assets/images/landing/Buyer_rewards_home_1638x856_36c29e8dea.webp";
-
 import interest1 from "../assets/images/landing/Point_back_revise_Date_Recommend_banner784x196px_c349d22e8b.webp";
 import interest2 from "../assets/images/landing/Job_board_second_commu_Recommend_784x196_6a89f6e2a5.webp";
 import interest3 from "../assets/images/landing/company_boost_visibility_discount_784x196_037b9903df.webp";
@@ -88,6 +134,21 @@ import interest5 from "../assets/images/landing/Instant_call_re_design_Aug2023_d
 import interest6 from "../assets/images/landing/Milestone_Buyer_banner_discount_784x196_3a80602fe0.webp";
 import topWorks from "../assets/images/landing/Line_sticker_designdee_505bdaa359.webp";
 
+// Customer images
+import pic1 from "../assets/images/customer/th/1.png";
+import pic2 from "../assets/images/customer/th/2.png";
+import pic3 from "../assets/images/customer/th/3.png";
+import pic4 from "../assets/images/customer/th/4.png";
+import pic5 from "../assets/images/customer/th/5.png";
+import pic6 from "../assets/images/customer/th/6.png";
+import pic7 from "../assets/images/customer/th/7.png";
+import pic8 from "../assets/images/customer/th/8.png";
+import pic9 from "../assets/images/customer/th/9.png";
+import pic10 from "../assets/images/customer/th/10.png";
+import pic11 from "../assets/images/customer/th/11.png";
+import pic12 from "../assets/images/customer/th/12.png";
+
+// Business images
 import business1 from "../assets/images/fastwork-business/business1.jpg";
 import business2 from "../assets/images/fastwork-business/business2.jpg";
 import business3 from "../assets/images/fastwork-business/business3.jpg";
@@ -99,7 +160,8 @@ import logoCustomer1 from "../assets/images/fastwork-business/Alipay.png";
 import logoCustomer2 from "../assets/images/fastwork-business/Logo_tangerine-1-120x120.png";
 import logoCustomer3 from "../assets/images/fastwork-business/unnamed-120x120.png";
 
-export const BusinessImage = {
+// Export all image objects
+export const BusinessImage: BusinessImageType = {
   business1,
   business2,
   business3,
@@ -112,7 +174,7 @@ export const BusinessImage = {
   logoCustomer3,
 };
 
-export const LandingImage = {
+export const LandingImage: LandingImageType = {
   banner02,
   construction,
   bgError,
@@ -136,25 +198,27 @@ export const LandingImage = {
   topWorks,
 };
 
-export const MessageImage = {
+export const MessageImage: MessageImageType = {
   chatMessage,
   chatAvt,
 };
 
-export const SellerImage = {
+export const SellerImage: SellerImageType = {
   calculation,
   response,
 };
-export const BannerImage = {
+
+export const BannerImage: BannerImageType = {
   left,
   right,
   center,
 };
 
-export const RewardImage = {
+export const RewardImage: RewardImageType = {
   point,
 };
-export const StartSellingImage = {
+
+export const StartSellingImage: StartSellingImageType = {
   step1,
   step2,
   step3,
@@ -166,32 +230,8 @@ export const StartSellingImage = {
   compare3,
   profileSelling,
 };
-import compare1 from "../assets/images/compare/compare1.svg";
-import compare2 from "../assets/images/compare/compare2.svg";
-import compare3 from "../assets/images/compare/compare3.svg";
-import banner2 from "../assets/images/compare/banner-02.png";
-import comparebadge1 from "../assets/images/compare/compare-badge1.png";
-import comparebadge2 from "../assets/images/compare/compare-badge2.png";
-import logobusiness from "../assets/images/compare/logo-business.png";
 
-import avatar from "../assets/images/profile/avatar.jpg";
-import coinBg from "../assets/images/profile/coin-desktop-banner.webp";
-import jobBoard from "../assets/images/profile/banner.webp";
-import decal from "../assets/images/profile/decal.svg";
-import backCard from "../assets/images/profile/back-vn.jpg";
-import frontCard from "../assets/images/profile/front-vn.jpg";
-import bannerApply from "../assets/images/profile/banner__apply-seller.webp";
-import proposal from "../assets/images/profile/offering-form.c7efb8e0.svg";
-
-import leakage1 from "../assets/images/apply-freelancer/leakage-1.jpg";
-import leakage2 from "../assets/images/apply-freelancer/leakage-2.jpg";
-import leakage3 from "../assets/images/apply-freelancer/leakage-3.jpg";
-import leakage4 from "../assets/images/apply-freelancer/leakage-4.jpg";
-import backgroundLeft from "../assets/images/apply-freelancer/background-left.753caf83.svg";
-import backgroundRight from "../assets/images/apply-freelancer/background-right.f8a09c85.svg";
-import landing from "../assets/images/apply-freelancer/landing.webp";
-
-export const FreelancerImage = {
+export const FreelancerImage: FreelancerImageType = {
   leakage1,
   leakage2,
   leakage3,
@@ -200,7 +240,8 @@ export const FreelancerImage = {
   backgroundRight,
   landing,
 };
-export const ProfileImage = {
+
+export const ProfileImage: ProfileImageType = {
   avatar,
   coinBg,
   jobBoard,
@@ -210,7 +251,8 @@ export const ProfileImage = {
   bannerApply,
   proposal,
 };
-export const CompareImage = {
+
+export const CompareImage: CompareImageType = {
   compare1,
   compare2,
   compare3,
@@ -220,7 +262,7 @@ export const CompareImage = {
   logobusiness,
 };
 
-export const JobDetailImage = {
+export const JobDetailImage: JobDetailImageType = {
   jobDetail1,
   jobDetail2,
   jobDetail3,
@@ -228,7 +270,8 @@ export const JobDetailImage = {
   jobDetail5,
   freelancerAvt,
 };
-export const CategoriesImage = {
+
+export const CategoriesImage: CategoriesImageType = {
   seoImage,
   specialist,
   milestone,
@@ -245,7 +288,7 @@ export const CategoriesImage = {
   notFoundSearch,
 };
 
-export const MegaMenuImage = {
+export const MegaMenuImage: MegaMenuImageType = {
   search,
   business,
   chat,
@@ -260,14 +303,14 @@ export const MegaMenuImage = {
   adsBg,
 };
 
-export const AssetsImage = {
+export const AssetsImage: AssetsImageType = {
   group,
   paper,
   shield,
   startSelling,
 };
 
-export const CustomerImage = {
+export const CustomerImage: CustomerImageType = {
   pic1,
   pic2,
   pic3,
@@ -281,3 +324,5 @@ export const CustomerImage = {
   pic11,
   pic12,
 };
+
+// Exports are now consolidated at the top of the file

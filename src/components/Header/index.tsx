@@ -5,17 +5,17 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
 import LanguageDropdown from "../LanguageDropDown";
-// import Loading from "../Loading";
 import EmployerSection from "./components/EmployerSection";
 import FreelancerSession from "./components/FreelancerSection";
 import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
 import { useScrollHandler } from "./hooks/useScrollHandler";
 import Error from "@/app/error";
-import { RoleType } from "@/lib/lemmy-js-client/dist/types/RoleType";
+import { RoleType } from "lemmy-js-client";
+import LazyImage from "@/components/ui/LazyImage";
+import { memo } from "react";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -31,9 +31,8 @@ interface BgProps {
   forceShowSearch?: boolean;
 }
 
-const Header = ({ type, forceShowSearch = false }: BgProps) => {
+const HeaderComponent = ({ type, forceShowSearch = false }: BgProps) => {
   const { data: session } = useSession();
-  console.log("session",session);
   
   const roles = session?.user.roles;
   const isEmployer = Array.isArray(roles)
@@ -65,13 +64,16 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
       <nav className="mx-[1.5rem] flex flex-wrap items-center justify-center h-auto min-h-[70px] py-4 xl:py-1 xl:justify-between">
         <section className="flex items-center gap-x-4 w-full md:w-auto">
           <Link prefetch={false} href="/" className="shrink-0">
-            <Image
-              src={AssetIcon.logo}
-              alt="logo"
+            <LazyImage
+              imagePath="logo.svg"
+              alt="Fastwork Logo"
               className="w-full h-full"
-              width={500}
-              height={500}
-              priority
+              width={150}
+              height={40}
+              preload={true}
+              trackPerformance={true}
+              blurUp={true}
+              fallback={AssetIcon.logo.src}
             />
           </Link>
 
@@ -129,6 +131,9 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
     </header>
   );
 };
+
+// Memoize the component to prevent unnecessary re-renders
+const Header = memo(HeaderComponent);
 
 export default Header;
 

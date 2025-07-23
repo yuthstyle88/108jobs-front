@@ -34,8 +34,13 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
-, "src/components/ServiceCard", "src/components/ui/SocialLoginButton", "tests/applyFreelancer/apply-step3.spects"  ],
+    ".next/types/**/*.ts",
+    "src/components/ServiceCard/**/*.ts",
+    "src/components/ServiceCard/**/*.tsx",
+    "src/components/ui/SocialLoginButton/**/*.ts",
+    "src/components/ui/SocialLoginButton/**/*.tsx",
+    "tests/applyFreelancer/apply-step3.spects.ts"
+  ],
   "exclude": [
     "node_modules"
   ],

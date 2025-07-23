@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { RegisterOAuthFormData } from "@/types/formTypes/RegisterOAuth";
 import {HttpService, UserService} from "@/services";
-import {RoleType} from "@/lib/lemmy-js-client/src/types/RoleType"; // เพิ่ม import นี้
+import {RoleType} from "lemmy-js-client"; // เพิ่ม import นี้
 
 type UpdateFormProps = {
   switchToVerifyEmail: () => void;
@@ -132,7 +132,7 @@ export const AcceptForm = ({
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
-              value="{RoleType.Employer}"
+              value={RoleType.Employer}
               {...register("role")}
               defaultChecked
             />
@@ -141,7 +141,7 @@ export const AcceptForm = ({
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="radio"
-              value="{RoleType.Freelancer}"
+              value={RoleType.Freelancer}
               {...register("role")}
             />
             {"Freelancer"}

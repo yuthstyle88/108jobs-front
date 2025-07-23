@@ -20,7 +20,7 @@ import ProfileSection from "../Header/components/ProfileSection";
 import LanguageDropdown from "../LanguageDropDown";
 import Loading from "../Loading";
 import Error from "@/app/error";
-import {RoleType} from "@/lib/lemmy-js-client/src/types/RoleType";
+import {RoleType} from "lemmy-js-client";
 
 const RewardHeader = () => {
   const { data: session } = useSession();

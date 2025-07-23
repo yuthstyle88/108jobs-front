@@ -1,4 +1,4 @@
-import {RoleType} from "@/lib/lemmy-js-client/src/types/RoleType";
+import {RoleType} from "lemmy-js-client";
 
 export type RegisterFormData = {
   email: string;

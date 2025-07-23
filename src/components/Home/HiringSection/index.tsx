@@ -3,14 +3,14 @@ import { AssetsImage, LandingImage } from "@/constants/images";
 import { HomeLanguage } from "@/types/language";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "next/image";
-import React from "react";
+import React, { memo } from "react";
+import LazyImage from "@/components/ui/LazyImage";
 
 type Props = {
   homeLanguageData?: Partial<HomeLanguage> | null;
 };
 
-const HiringSection = (props: Props) => {
+const HiringSectionComponent = (props: Props) => {
   const { homeLanguageData } = props;
 
   const freelancerIntro = [
@@ -44,12 +44,15 @@ const HiringSection = (props: Props) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-[1.5rem] gap-y-[1rem] lg:gap-y-0 min-h-0 min-w-0 col-start-2 col-end-3">
           {freelancerIntro.map((freelancer, index) => (
             <div key={index} className="flex flex-col items-center sm:block">
-              <Image
-                src={freelancer.icon}
-                alt="Group of people"
+              <LazyImage
+                imagePath={freelancer.icon.src.replace('/assets/images/', '')}
+                alt={`${freelancer.title} icon`}
                 width={62}
                 height={62}
                 className="max-w-full h-auto align-top self-center"
+                preload={true}
+                trackPerformance={true}
+                blurUp={true}
               />
               <div className="grid grid-cols-[1fr] mt-4 gap-y-1 text-text-primary font-medium">
                 <h5 className="text-base sm:text-[1.25rem] leading-[1.15]">
@@ -76,11 +79,14 @@ const HiringSection = (props: Props) => {
             <div className="grid grid-rows-2 gap-y-6 text-text-primary font-medium">
               <div className="flex gap-x-5">
                 <div className="flex-shrink-0">
-                  <Image
-                    src={GroupIcon.group11651}
+                  <LazyImage
+                    imagePath={GroupIcon.group11651.src.replace('/assets/images/', '')}
                     width={30}
                     height={30}
-                    alt="group1"
+                    alt="Post a job icon"
+                    preload={true}
+                    trackPerformance={true}
+                    blurUp={true}
                   />
                 </div>
                 <div>
@@ -94,11 +100,14 @@ const HiringSection = (props: Props) => {
               </div>
               <div className="flex gap-x-5">
                 <div className="flex-shrink-0">
-                  <Image
-                    src={GroupIcon.group11653}
+                  <LazyImage
+                    imagePath={GroupIcon.group11653.src.replace('/assets/images/', '')}
                     width={30}
                     height={30}
-                    alt="group3"
+                    alt="Hire freelancers icon"
+                    preload={true}
+                    trackPerformance={true}
+                    blurUp={true}
                   />
                 </div>
                 <div>
@@ -116,11 +125,14 @@ const HiringSection = (props: Props) => {
             <div className="grid grid-rows-2 gap-y-6 text-text-primary font-medium">
               <div className="flex gap-x-5">
                 <div className="flex-shrink-0">
-                  <Image
-                    src={GroupIcon.group11652}
+                  <LazyImage
+                    imagePath={GroupIcon.group11652.src.replace('/assets/images/', '')}
                     width={30}
                     height={30}
-                    alt="group2"
+                    alt="Review proposals icon"
+                    preload={true}
+                    trackPerformance={true}
+                    blurUp={true}
                   />
                 </div>
                 <div>
@@ -134,11 +146,14 @@ const HiringSection = (props: Props) => {
               </div>
               <div className="flex gap-x-5">
                 <div className="flex-shrink-0">
-                  <Image
-                    src={GroupIcon.group11654}
+                  <LazyImage
+                    imagePath={GroupIcon.group11654.src.replace('/assets/images/', '')}
                     width={30}
                     height={30}
-                    alt="group4"
+                    alt="Pay securely icon"
+                    preload={true}
+                    trackPerformance={true}
+                    blurUp={true}
                   />
                 </div>
                 <div>
@@ -154,12 +169,15 @@ const HiringSection = (props: Props) => {
 
             {/* Cột 3 */}
             <div className="rounded-lg relative cursor-pointer h-[219px] mt-8 md:mt-0">
-              <Image
-                src={LandingImage.videoBg}
-                alt="video background"
+              <LazyImage
+                imagePath="landing/video_cover-1.jpg"
+                alt="Video tutorial background"
                 className="rounded-lg object-cover w-full h-full"
                 width={500}
                 height={500}
+                preload={false}
+                trackPerformance={true}
+                blurUp={true}
               />
               <div className="bg-black/25 absolute top-0 left-0 w-full h-full rounded-lg">
                 <div className="w-[75px] h-[75px] rounded-full bg-black absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex justify-center items-center">
@@ -176,5 +194,8 @@ const HiringSection = (props: Props) => {
     </>
   );
 };
+
+// Memoize the component to prevent unnecessary re-renders
+const HiringSection = memo(HiringSectionComponent);
 
 export default HiringSection;

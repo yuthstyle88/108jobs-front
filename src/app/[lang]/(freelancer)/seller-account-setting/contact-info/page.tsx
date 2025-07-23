@@ -160,9 +160,9 @@ const ContactInfo = () => {
   const onSubmitEmail = async(data: VerifyEmailFormData) => {
     try {
       setApiError(null);
-      const response = await HttpService.client.resendVerificationEmail({email: data.email});
+      const response = await HttpService.client.resendVerificationEmail({email: data.email ?? ""});
       if (response.state === "failed") {
-        if (result.error) setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
+         setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
         return;
       }
       setIsChangeModal(true);

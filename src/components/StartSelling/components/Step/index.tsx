@@ -1,13 +1,13 @@
 import { StartSellingImage } from "@/constants/images";
 import { ProfileApplyLanguage } from "@/types/language";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import React from "react";
 
 type Step = {
   number: number;
   title?: string;
   description?: React.ReactNode;
-  image: string;
+  image: StaticImageData;
 };
 
 type Props = {

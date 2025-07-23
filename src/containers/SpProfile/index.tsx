@@ -20,7 +20,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import {RoleType} from "@/lib/lemmy-js-client/src/types/RoleType";
+import {RoleType} from "lemmy-js-client";
 
 const SpProfile = () => {
   const { data: user, isLoading } = usePrivateFetch<ProfileData>(

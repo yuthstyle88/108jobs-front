@@ -90,16 +90,12 @@ export const useProfileForm = (
 
       if (selectedImage && selectedImage !== profileData?.user.avatarUrl) {
         const imageFormData = new FormData();
-        const resp = await HttpService.client.uploadImage({image: imageFormData});
-        if (resp.state === "success") {
-          imageFormData.append("images[]",
-            resp.data.imageUrl,
-            "profile.jpg");
-          const result = await uploadImage(imageFormData);
-          const uploadedImageUrl = result?.images?.[0]?.imageUrl;
-          if (!uploadedImageUrl) throw new Error("Image upload failed");
-          avatarUrl = uploadedImageUrl;
-        }
+        const blob = await fetch(selectedImage).then((res) => res.blob());
+        imageFormData.append("images[]", blob, "profile.jpg");
+        const result = await uploadImage(imageFormData);
+        const uploadedImageUrl = result?.images?.[0]?.imageUrl;
+        if (!uploadedImageUrl) throw new Error("Image upload failed");
+        avatarUrl = uploadedImageUrl;
       }
 
       const isIncompleteBirthDate =
