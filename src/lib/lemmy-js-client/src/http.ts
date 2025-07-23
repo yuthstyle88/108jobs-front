@@ -197,6 +197,8 @@ import type {MarkNotificationAsRead} from "./types/MarkNotificationAsRead";
 import type {ListNotifications} from "./types/ListNotifications";
 import type {ListNotificationsResponse} from "./types/ListNotificationsResponse";
 import type {UpdateTerm} from "./types/UpdateTerm";
+import type {ExchangeKey} from "./types/ExchangeKey";
+import type {ExchangeKeyResponse} from "./types/ExchangeKeyResponse";
 
 enum HttpType {
   Get = "GET",
@@ -1427,6 +1429,21 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<Login, LoginResponse>(
       HttpType.Post,
       "/account/auth/login",
+      form,
+      options,
+    );
+  }
+
+  /**
+   * @summary Exchange public key.
+   */
+  @Security("bearerAuth")
+  @Post("/account/auth/exchange-public-key")
+  @Tags("Account")
+  async exchange_public_key(@Body() form: ExchangeKey, @Inject() options?: RequestOptions) {
+    return this.#wrapper<ExchangeKey, ExchangeKeyResponse>(
+      HttpType.Post,
+      "/account/auth/exchange-public-key",
       form,
       options,
     );

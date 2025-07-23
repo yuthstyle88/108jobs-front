@@ -199,6 +199,8 @@ export type { LockPost } from "./types/LockPost";
 export type { Login } from "./types/Login";
 export type { LoginResponse } from "./types/LoginResponse";
 export type { LoginToken } from "./types/LoginToken";
+export type { ExchangeKey } from "./types/ExchangeKey";
+export type { ExchangeKeyResponse } from "./types/ExchangeKeyResponse";
 export type { MarkManyPostsAsRead } from "./types/MarkManyPostsAsRead";
 export type { MarkNotificationAsRead } from "./types/MarkNotificationAsRead";
 export type { MarkPostAsRead } from "./types/MarkPostAsRead";

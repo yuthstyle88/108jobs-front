@@ -33,28 +33,6 @@ export async function exchangePublicKey(publicKey: string, token: string) {
   }
 }
 
-/**
- * Authenticate a returning user via an external OAuth provider and receive
- * our application's token in exchange.
- *
- * @param provider            OAuth provider name (e.g. "google")
- * @param providerAccountId   Provider‑specific user ID
- * @param fullName            User’s full display name
- * @param emailAddress        User’s email
- */
-export async function authenticateWithOAuth(
-  provider: string,
-  providerAccountId: string,
-  fullName: string,
-  emailAddress: string,
-) {
-  return axiosPublicV2.post("/oauth/authenticate", {
-    oauthProvider: provider,
-    providerAccountId,
-    name: fullName,
-    email: emailAddress,
-  });
-}
 export async function checkEmailExists(email: string) {
   return axiosPublicV2.post("/oauth/email-exists", { email });
 }

@@ -13,11 +13,13 @@ interface Claims {
   iss: string;
   iat: number;
   email: string;
+  role: string;
 }
 
 interface AuthInfo {
   claims: Claims;
   auth: string;
+  sharedKey: string;
 }
 
 export class UserService {
@@ -32,16 +34,18 @@ export class UserService {
   public login({
     res,
     showToast = true,
+    sharedKey,
   }: {
     res: LoginResponse;
     showToast?: boolean;
+    sharedKey?: string;
   }) {
     if (isBrowser() && res.jwt) {
       if (showToast) {
         toast("loggedIn");
       }
       setAuthCookie(res.jwt);
-      this.#setAuthInfo();
+      this.#setAuthInfo(sharedKey);
     }
   }
 
@@ -83,13 +87,13 @@ export class UserService {
     }
   }
 
-  #setAuthInfo() {
+  #setAuthInfo(sharedKey?: string) {
     if (isBrowser()) {
       const auth = cookie.parse(document.cookie)[authCookieName];
 
       if (auth) {
         HttpService.client.setHeaders({ Authorization: `Bearer ${auth}` });
-        this.authInfo = { auth, claims: jwtDecode(auth) };
+        this.authInfo = { auth, claims: jwtDecode(auth), sharedKey: sharedKey || "" };
       }
     }
   }

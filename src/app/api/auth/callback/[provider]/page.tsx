@@ -6,6 +6,7 @@ import { toast } from "sonner"; // หรือไลบรารีที่ค
 
 import { HttpService } from "@/services/HttpService";
 import { UserService } from "@/services";
+import {arrayBufferToHex, exportPublicKey, generateEcKeyPair, importEcPublicKeyHex, uint8ArrayToHex} from "@/lib/web-crypto";
 
 // ฟังก์ชันสำหรับดึงค่า query parameters
 function useOAuthCallbackQueryParams() {
@@ -120,14 +121,22 @@ async function handleLoginSuccess(loginData: any, prev?: string) {
       res: loginData,
     });
 
-    // ดึงข้อมูลไซต์หลังจากเข้าสู่ระบบ
-    const user = await HttpService.client.getMyUser();
+    const {privateKey, publicKey} = await generateEcKeyPair();
+    const exportPub = await exportPublicKey(publicKey);
+    const res = await HttpService.client.exchange_public_key({publicKey: exportPub});
+    if (res.state === "success") {
+      const serverPubKey = await importEcPublicKeyHex(res.data.publicKey);
+      const sharedKey = await crypto.subtle.deriveBits(
+        { name: "ECDH", public: serverPubKey },
+        privateKey,
+        256
+      );
+      const sharedKeyHex = arrayBufferToHex(sharedKey);
 
-    if (user.state === "success") {
-      UserService.Instance.myUserInfo = user.data;
-
-      // อาจต้องเรียกใช้ฟังก์ชันอัพเดทธีม หรือตั้งค่าอื่นๆ ตามต้องการ
-      // refreshTheme();
+      UserService.Instance.login({
+        res: loginData,
+        sharedKey: sharedKeyHex
+      });
     }
 
     if (prev) {
