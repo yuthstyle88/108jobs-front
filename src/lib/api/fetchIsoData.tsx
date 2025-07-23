@@ -15,8 +15,11 @@ import {IncomingHttpHeaders} from "http";
 
 export default async function fetchIsoData(url: string,incomingHeaders: IncomingHttpHeaders): Promise<IsoData | null> {
   try {
-    const headers = setForwardedHeaders(incomingHeaders);
-    const auth = getJwtCookie(incomingHeaders);
+      const auth = getJwtCookie(incomingHeaders);
+      const headers = {
+          ...setForwardedHeaders(incomingHeaders),
+          ...(auth ? { Authorization: `Bearer ${auth}` } : {}),
+      };
     console.log("headers", headers);
     let match: Match<any> | null | undefined;
     const host = getHttpBaseInternal();
