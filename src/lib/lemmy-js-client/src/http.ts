@@ -1777,7 +1777,7 @@ export class LemmyHttp extends Controller {
   /**
    * @summary send a verification email.
    */
-  @Post("/account/auth/verification-email")
+  @Post("/account/auth/verify-email")
   @Tags("Account")
   async verificationEmail(
     @Body() form: VerifyEmail,
@@ -1785,7 +1785,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<VerifyEmail, SuccessResponse>(
       HttpType.Post,
-      "/account/auth/verification-email",
+      "/account/auth/verify-email",
       form,
       options,
     );
