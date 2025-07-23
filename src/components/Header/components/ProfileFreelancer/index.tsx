@@ -2,7 +2,6 @@ import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useLogout } from "@/hooks/useLogout";
 import { GlobalLanguage } from "@/types/language";
-import { ProfileData } from "@/types/userData";
 import { interpolateElement } from "@/utils/interpolateElement";
 import { faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -19,11 +18,12 @@ import {
   faTicket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { MyUserInfo } from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
 type ProfileFreelancerProps = {
   data: Partial<GlobalLanguage> | null | undefined;
-  user?: ProfileData;
+  user?: MyUserInfo;
 };
 
 const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
@@ -31,12 +31,12 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
   const { lang: currentLang } = useLanguage();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">
-      <Link prefetch={false} href={`/${currentLang}/user/${user?.person?.name}`}>
+      <Link prefetch={false} href={`/${currentLang}/user/`}>
         <div className="p-4 bg-secondary hover:bg-[#D0E1FB] duration-150 rounded-tl-lg rounded-tr-lg relative">
           <div className="flex items-center space-x-3">
             <div className="bg-gray-200 flex items-center justify-center rounded-full">
               <Image
-                src={user?.person?.avatar || ProfileImage.avatar}
+                src={ProfileImage.avatar}
                 alt="avatar"
                 className="rounded-full w-12 h-12 object-cover border-1 border-borderPrimary"
                 width={500}
@@ -44,7 +44,7 @@ const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
               />
             </div>
             <div>
-              <p className="font-medium text-gray-900">{user?.person?.name}</p>
+              <p className="font-medium text-gray-900">username</p>
               <p className="text-sm font-sans text-text-secondary underline">
                 {data?.labelViewProfile}
               </p>
