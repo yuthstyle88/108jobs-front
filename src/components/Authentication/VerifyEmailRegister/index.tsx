@@ -23,9 +23,8 @@ export const VerifyEmailRegister = ({ token }: VerifyEmailRegisterProps) => {
     const verifyEmail = async () => {
       try {
         setApiError(null);
-        const verifyRes = await HttpService.client.verifyEmail({ token });
+        const verifyRes = await HttpService.client.verificationEmail({ token });
         console.log("verifyRes",verifyRes);
-
 
         if (verifyRes.state === "failed") {
           setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);

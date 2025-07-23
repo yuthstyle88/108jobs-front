@@ -1,23 +1,28 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { usePrivatePut } from "@/hooks/api-hooks";
-import { ProfileData } from "@/types/userData";
-import { useEffect } from "react";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {z} from "zod";
+import {usePrivatePut} from "@/hooks/api-hooks";
+import {ProfileData} from "@/types/userData";
+import {useEffect} from "react";
 import useNotification from "@/hooks/useNotification";
-import { ImageUploadResponse } from "@/types/image";
-import { API_ROUTES_SELLER } from "@/api/endpoints";
+import {ImageUploadResponse} from "@/types/image";
+import {API_ROUTES_SELLER} from "@/api/endpoints";
+import {HttpService} from "@/services";
 
 const profileSchema = z.object({
   displayName: z
-    .string()
-    .min(2, "Tên hiển thị phải có ít nhất 2 ký tự")
-    .max(50, "Tên hiển thị không được quá 50 ký tự"),
+  .string()
+  .min(2,
+    "Tên hiển thị phải có ít nhất 2 ký tự")
+  .max(50,
+    "Tên hiển thị không được quá 50 ký tự"),
   username: z
-    .string()
-    .min(3, "Username phải có ít nhất 3 ký tự")
-    .max(30, "Username không được quá 30 ký tự"),
-    // .regex(/^[a-zA-Z0-9_]+$/, "Username chỉ chứa chữ, số và "),
+  .string()
+  .min(3,
+    "Username phải có ít nhất 3 ký tự")
+  .max(30,
+    "Username không được quá 30 ký tự"),
+  // .regex(/^[a-zA-Z0-9_]+$/, "Username chỉ chứa chữ, số và "),
   birthDay: z.string(),
   birthMonth: z.string(),
   birthYear: z.string(),
@@ -37,59 +42,64 @@ export const useProfileForm = (
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: {errors, isSubmitting},
     reset,
     watch,
   } = useForm<FormValues>({
     resolver: zodResolver(profileSchema),
   });
 
-  const { trigger: updateProfile, isMutating: isUpdateMuting } =
+  const {trigger: updateProfile, isMutating: isUpdateMuting} =
     usePrivatePut<ProfileData>(API_ROUTES_SELLER.profile.updateProfile);
 
-  const { successMessage } = useNotification();
+  const {successMessage} = useNotification();
 
   useEffect(() => {
-    if (profileData?.user) {
-      const birthDate = profileData.user.birthDate;
-      if (birthDate) {
-        const [year, month, day] = birthDate.split("-");
-        reset({
-          displayName: profileData.user.displayName,
-          username: profileData.user.username,
-          birthDay: day || "Day",
-          birthMonth: month || "Month",
-          birthYear: year || "Year",
-          freelancerType: profileData.profile.freelancerType,
-          bio: profileData.profile.bio || "",
-        });
-      } else {
-        reset({
-          displayName: profileData.user.displayName,
-          username: profileData.user.username,
-          birthDay: "Day",
-          birthMonth: "Month",
-          birthYear: "Year",
-          freelancerType: profileData.profile.freelancerType,
-          bio: profileData.profile.bio || "",
-        });
+      if (profileData?.user) {
+        const birthDate = profileData.user.birthDate;
+        if (birthDate) {
+          const [year, month, day] = birthDate.split("-");
+          reset({
+            displayName: profileData.user.displayName,
+            username: profileData.user.username,
+            birthDay: day || "Day",
+            birthMonth: month || "Month",
+            birthYear: year || "Year",
+            freelancerType: profileData.profile.freelancerType,
+            bio: profileData.profile.bio || "",
+          });
+        } else {
+          reset({
+            displayName: profileData.user.displayName,
+            username: profileData.user.username,
+            birthDay: "Day",
+            birthMonth: "Month",
+            birthYear: "Year",
+            freelancerType: profileData.profile.freelancerType,
+            bio: profileData.profile.bio || "",
+          });
+        }
+        setSelectedImage(profileData.user.avatarUrl);
       }
-      setSelectedImage(profileData.user.avatarUrl);
-    }
-  }, [profileData, reset, setSelectedImage]);
+    },
+    [profileData, reset, setSelectedImage]);
 
-  const onSubmit = async (formData: FormValues) => {
+  const onSubmit = async(formData: FormValues) => {
     try {
       let avatarUrl = profileData?.user.avatarUrl;
 
       if (selectedImage && selectedImage !== profileData?.user.avatarUrl) {
         const imageFormData = new FormData();
-        const blob = await fetch(selectedImage).then((res) => res.blob());
-        imageFormData.append("images[]", blob, "profile.jpg");
-        const result = await uploadImage(imageFormData);
-        const uploadedImageUrl = result?.images?.[0]?.imageUrl;
-        if (!uploadedImageUrl) throw new Error("Image upload failed");
-        avatarUrl = uploadedImageUrl;
+        const resp = await HttpService.client.uploadImage({image: imageFormData});
+        if (resp.state === "success") {
+          imageFormData.append("images[]",
+            resp.data.imageUrl,
+            "profile.jpg");
+          const result = await uploadImage(imageFormData);
+          const uploadedImageUrl = result?.images?.[0]?.imageUrl;
+          if (!uploadedImageUrl) throw new Error("Image upload failed");
+          avatarUrl = uploadedImageUrl;
+        }
       }
 
       const isIncompleteBirthDate =
@@ -112,9 +122,11 @@ export const useProfileForm = (
 
       await updateProfile(updateData);
       await mutate();
-      successMessage("profile", "update");
+      successMessage("profile",
+        "update");
     } catch (error) {
-      console.error("Update error:", error);
+      console.error("Update error:",
+        error);
     }
   };
 

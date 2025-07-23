@@ -1,16 +1,16 @@
 "use client";
 import Loading from "@/components/Loading";
-import { AuthFormContainer } from "@/components/Authentication/AuthFormContainer";
+import {AuthFormContainer} from "@/components/Authentication/AuthFormContainer";
 
-import { AuthenticateIcon } from "@/constants/icons";
-import { CategoriesImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { RegisterDataProps } from "@/types/register-data";
+import {AuthenticateIcon} from "@/constants/icons";
+import {CategoriesImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {useGlobalTranslate} from "@/hooks/translation/useGlobalTranslate";
+import {RegisterDataProps} from "@/types/register-data";
 import Image from "next/image";
 import {useState} from "react";
-import {RegisterForm} from "@/components/Authentication/RegisterForm/index";
-import { useRouter } from "next/navigation";
+import {RegisterForm} from "@/components/Authentication/RegisterForm";
+import {useRouter} from "next/navigation";
 import VerifyEmailConfirm from "@/components/Authentication/VerifyEmailConfirm";
 
 type ViewState = "register" | "verify-email";
@@ -23,18 +23,15 @@ export default function RegisterPage() {
     error,
   } = useGlobalTranslate(LanguageFile.AUTHEN);
 
-
-
   const [currentView, setCurrentView] = useState<ViewState>("register");
   const [dataDataRegister, setDataDataRegister] = useState<RegisterDataProps | null>(null);
-console.log("currentView",currentView);
 
-
-  if (isLoading) return <Loading />;
+  if (isLoading) return <Loading/>;
   if (error) return <div>Error</div>;
 
   return (
-    <div className="min-h-screen bg-[#E3EDFD] grid 2xl:grid-cols-[1fr_1240px_1fr] lg:grid-cols-[1fr_984px_1fr] md:grid-cols-[1fr_768px_1fr] grid-cols-[12px_minmax(0,auto)12px]">
+    <div
+      className="min-h-screen bg-[#E3EDFD] grid 2xl:grid-cols-[1fr_1240px_1fr] lg:grid-cols-[1fr_984px_1fr] md:grid-cols-[1fr_768px_1fr] grid-cols-[12px_minmax(0,auto)12px]">
       <div className="flex justify-center items-center lg:flex-row lg:gap-[3rem] lg:justify-between col-start-2 col-end-3">
         <div className="hidden lg:flex m-auto flex-col gap-[4rem]">
           <div className="flex flex-col gap-2">
@@ -42,7 +39,7 @@ console.log("currentView",currentView);
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
                 {loginLanguageData?.titleHireThrough}
               </h2>
-              <Image src={CategoriesImage.logodefault} alt="logo" />
+              <Image src={CategoriesImage.logodefault} alt="logo"/>
             </div>
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
@@ -126,7 +123,7 @@ console.log("currentView",currentView);
                 switchToVerifyEmail={() => setCurrentView("verify-email")}
                 setDataRegister={setDataDataRegister} history={undefined} setApiError={function (err: string): void {
                 throw new Error("Function not implemented.");
-              }}              />
+              }}/>
             </AuthFormContainer>
           )}
           {currentView === "verify-email" && (

@@ -10,8 +10,6 @@ import {
   PersonPostMentionView,
   PostReportView,
   PostView,
-  PrivateMessageReportView,
-  PrivateMessageView,
   RegistrationApplicationView,
   Search,
   Comment,
@@ -216,20 +214,6 @@ export function editPostReport(
   reports: PostReportView[],
 ) {
   return editListImmutable("postReport", data, reports);
-}
-
-export function editPrivateMessage(
-  data: PrivateMessageView,
-  messages: PrivateMessageView[],
-): PrivateMessageView[] {
-  return editListImmutable("privateMessage", data, messages);
-}
-
-export function editPrivateMessageReport(
-  data: PrivateMessageReportView,
-  reports: PrivateMessageReportView[],
-): PrivateMessageReportView[] {
-  return editListImmutable("privateMessageReport", data, reports);
 }
 
 export function editRegistrationApplication(

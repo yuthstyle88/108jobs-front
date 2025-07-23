@@ -1775,6 +1775,23 @@ export class LemmyHttp extends Controller {
   }
 
   /**
+   * @summary send a verification email.
+   */
+  @Post("/account/auth/verification-email")
+  @Tags("Account")
+  async verificationEmail(
+    @Body() form: VerifyEmail,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<VerifyEmail, SuccessResponse>(
+      HttpType.Post,
+      "/account/auth/verification-email",
+      form,
+      options,
+    );
+  }
+
+  /**
    * @summary List your saved content.
    */
   @Security("bearerAuth")

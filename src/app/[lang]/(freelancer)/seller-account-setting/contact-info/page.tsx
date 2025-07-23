@@ -1,29 +1,25 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
+import {API_ROUTES} from "@/api/endpoints";
 import ChangeEmailModal from "@/components/ChangeEmailModal";
 import ConfirmChangeEmailModal from "@/components/ConfirmChangeEmailModal";
 import Loading from "@/components/Loading";
 import LoadingCircle from "@/components/LoadingCircle";
-import { ERROR_CONSTANTS } from "@/constants/error";
-import { LanguageFile } from "@/constants/language";
-import { usePrivateFetch, usePrivatePut } from "@/hooks/api-hooks";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import {ERROR_CONSTANTS} from "@/constants/error";
+import {LanguageFile} from "@/constants/language";
+import {usePrivateFetch, usePrivatePut} from "@/hooks/api-hooks";
+import {useGlobalTranslate} from "@/hooks/translation/useGlobalTranslate";
 import useNotification from "@/hooks/useNotification";
-import { addressSchema } from "@/utils/validation/addressSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
+import {addressSchema} from "@/utils/validation/addressSchema";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useEffect, useMemo, useState} from "react";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {useBasicInfoForm} from "../hooks/useBasicInfoForm";
 import ZipcodeSearch from "../components/SearchZipcode";
-import { CountriesResponse } from "@/types/location";
+import {CountriesResponse} from "@/types/location";
 import ErrorPage from "@/app/error";
+import {HttpService} from "@/services";
 
-const emailSchema = z.object({
-  email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์").optional(),
-});
-
-type VerifyEmailFormData = z.infer<typeof emailSchema>;
 
 export interface AddressFormData {
   country: string;
@@ -55,18 +51,25 @@ function normalizeAddress(address: RawAddress | undefined): AddressFormData {
 }
 
 const ContactInfo = () => {
-  const { profileData, isLoadingProfile, isErrorProfile, mutate } =
+  const {profileData, isLoadingProfile, isErrorProfile, mutate} =
     useBasicInfoForm();
 
-  const { data: sellerContactLanguage } = useGlobalTranslate(
+  const {data: sellerContactLanguage} = useGlobalTranslate(
     LanguageFile.SELLER_CONTACT_INFO
   );
 
-  const { data: contactInfoLanguageData } = useGlobalTranslate(
+  const {data: contactInfoLanguageData} = useGlobalTranslate(
     LanguageFile.CONTACT
   );
 
-  const { data: global } = useGlobalTranslate(LanguageFile.GLOBAL);
+  const {data: global} = useGlobalTranslate(LanguageFile.GLOBAL);
+
+  const emailSchema = z.object({
+    email: z.string().min(6,
+      "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์").optional(),
+  });
+
+  type VerifyEmailFormData = z.infer<typeof emailSchema>;
 
   const [isReady, setIsReady] = useState(false);
   const [defaultForeignCountry, setDefaultForeignCountry] =
@@ -86,14 +89,14 @@ const ContactInfo = () => {
     control,
     watch,
     reset,
-    formState: { errors, isSubmitting },
+    formState: {errors, isSubmitting},
   } = form;
 
   const {
     register: emailRegister,
     handleSubmit: handleEmailSubmit,
     reset: resetEmail,
-    formState: { isSubmitting: isSubmittingEmail },
+    formState: {isSubmitting: isSubmittingEmail},
     getValues: getEmailValues,
   } = useForm({
     resolver: zodResolver(emailSchema),
@@ -103,13 +106,13 @@ const ContactInfo = () => {
     },
   });
 
-  const { data: countriesData } =
+  const {data: countriesData} =
     usePrivateFetch<CountriesResponse>("/profile/countries");
 
-  const { trigger: updateAddressProfile, isMutating: isUpdateMuting } =
+  const {trigger: updateAddressProfile, isMutating: isUpdateMuting} =
     usePrivatePut<AddressFormData>(API_ROUTES.profile.updateAddressProfile);
 
-  const { successMessage } = useNotification();
+  const {successMessage} = useNotification();
   const LOCATION_OPTIONS = ["Thailand", "Foreign"] as const;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmChange, setIsConfirmChange] = useState(false);
@@ -121,51 +124,47 @@ const ContactInfo = () => {
   const country = watch("country");
 
   const countryOptions = useMemo(() => {
-    return (
-      countriesData?.countries.map((c) => ({
-        label: c.name,
-        value: c.name,
-      })) ?? []
-    );
-  }, [countriesData]);
+      return (
+        countriesData?.countries.map((c) => ({
+          label: c.name,
+          value: c.name,
+        })) ?? []
+      );
+    },
+    [countriesData]);
 
   useEffect(() => {
-    if (profileData?.address && !isReady) {
-      const normalized = normalizeAddress(profileData.address);
+      if (profileData?.address && !isReady) {
+        const normalized = normalizeAddress(profileData.address);
 
-      if (normalized.country !== "Thailand") {
-        setLocationType("Foreign");
-        setDefaultForeignCountry(normalized.country);
-      } else {
-        setLocationType("Thailand");
+        if (normalized.country !== "Thailand") {
+          setLocationType("Foreign");
+          setDefaultForeignCountry(normalized.country);
+        } else {
+          setLocationType("Thailand");
+        }
+
+        reset(normalized);
+        setIsReady(true);
       }
-
-      reset(normalized);
-      setIsReady(true);
-    }
-  }, [profileData?.address, isReady, reset]);
+    },
+    [profileData?.address, isReady, reset]);
 
   useEffect(() => {
-    if (isConfirmChange) {
-      resetEmail({ email: profileData?.contact.email ?? "" });
-    }
-  }, [isConfirmChange, profileData, resetEmail]);
+      if (isConfirmChange) {
+        resetEmail({email: profileData?.contact.email ?? ""});
+      }
+    },
+    [isConfirmChange, profileData, resetEmail]);
 
-  const onSubmitEmail = async (data: VerifyEmailFormData) => {
+  const onSubmitEmail = async(data: VerifyEmailFormData) => {
     try {
       setApiError(null);
-      const response = await fetch("/api/auth/resend-change-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: data.email }),
-      });
-
-      const result = await response.json();
-      if (!response.ok) {
+      const response = await HttpService.client.resendVerificationEmail({email: data.email});
+      if (response.state === "failed") {
         if (result.error) setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
         return;
       }
-
       setIsChangeModal(true);
     } catch (error) {
       setApiError(
@@ -174,19 +173,20 @@ const ContactInfo = () => {
     }
   };
 
-  const onSubmitAddress = async (data: AddressFormData) => {
+  const onSubmitAddress = async(data: AddressFormData) => {
     try {
       let payload: Partial<AddressFormData>;
 
       if (data.country === "Thailand") {
         payload = data;
       } else {
-        payload = { country: data.country };
+        payload = {country: data.country};
       }
 
       await updateAddressProfile(payload);
       await mutate();
-      successMessage("profile", "update");
+      successMessage("profile",
+        "update");
       if (data.country !== "Thailand") {
         setDefaultForeignCountry(data.country);
         reset({
@@ -201,12 +201,13 @@ const ContactInfo = () => {
         setDefaultForeignCountry("");
       }
     } catch (error) {
-      console.error("Update error:", error);
+      console.error("Update error:",
+        error);
     }
   };
 
-  if (isLoadingProfile || !isReady) return <Loading />;
-  if (isErrorProfile) return <ErrorPage />;
+  if (isLoadingProfile || !isReady) return <Loading/>;
+  if (isErrorProfile) return <ErrorPage/>;
 
   return (
     <div className="bg-white rounded-md shadow-sm overflow-hidden">
@@ -246,7 +247,7 @@ const ContactInfo = () => {
                     className="px-3 py-[8px] submit-button"
                   >
                     {isSubmittingEmail ? (
-                      <LoadingCircle />
+                      <LoadingCircle/>
                     ) : (
                       global?.buttonChange
                     )}
@@ -315,9 +316,11 @@ const ContactInfo = () => {
                     onChange={() => {
                       setLocationType(option);
                       if (option === "Thailand") {
-                        setValue("country", "Thailand");
+                        setValue("country",
+                          "Thailand");
                       } else {
-                        setValue("country", defaultForeignCountry || "");
+                        setValue("country",
+                          defaultForeignCountry || "");
                       }
                     }}
                     className="text-blue-600 mr-3"
@@ -461,7 +464,7 @@ const ContactInfo = () => {
           formEmail={getEmailValues("email")}
           isOpen={isChangeModal}
           onClose={() => setIsChangeModal(false)}
-          handleConfirmChange={async () => {
+          handleConfirmChange={async() => {
             await mutate();
             setIsConfirmChange(false);
             setIsChangeModal(false);
