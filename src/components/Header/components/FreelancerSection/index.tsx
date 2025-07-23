@@ -1,36 +1,34 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
 import LanguageDropdown from "@/components/LanguageDropDown";
 import NotificationDropdown from "@/components/NotificationDropdown";
 import AvatarSkeleton from "@/components/ui/AvatarSkeleton";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
-import { usePrivateFetch } from "@/hooks/api-hooks";
+import { useFetch } from "@/hooks/useFetchData";
 import { useToggle } from "@/hooks/useToggle";
+import { HttpService } from "@/services";
 import { GlobalLanguage } from "@/types/language";
-import { ProfileData } from "@/types/userData";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Session } from "next-auth";
+import { MyUserInfo } from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
-import ChatBadge from "../ChatBadge";
 import FreelanceMegaMenu from "../FreelanceMegaMenu";
 import FreelanceImproveMenu from "../FreelancerImproveMenu";
 import ProfileFreelancer from "../ProfileFreelancer";
 
 interface FreelancerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
-  session?: Session | null;
 }
 
 const FreelancerSession = ({
   globalLanguageData,
-  session,
 }: FreelancerProps) => {
-  const { data: user, isLoading } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.getProfile
-  );
+  const {
+    data: userProfile,
+    isLoading,
+    error,
+  } = useFetch<MyUserInfo>(() => HttpService.client.getMyUser(), []);
   const { isOpen, toggle, close } = useToggle();
 
   return (
@@ -67,7 +65,7 @@ const FreelancerSession = ({
           <FreelanceMegaMenu />
         </div>
       </div>
-      <ChatBadge />
+      {/* <ChatBadge /> */}
       <NotificationDropdown />
       <Link prefetch={false}
         href="/reward/earn"
@@ -94,9 +92,9 @@ const FreelancerSession = ({
             {isLoading ? (
               <AvatarSkeleton />
             ) : (
-              user && (
+              userProfile && (
                 <Image
-                  src={user?.user.avatarUrl || ProfileImage.avatar}
+                  src={ProfileImage.avatar}
                   alt="avatar"
                   className="w-full h-full object-cover object-center"
                   width={48}
@@ -110,7 +108,7 @@ const FreelancerSession = ({
             className="w-[14px] h-[14px] text-white"
           />
         </button>
-        {isOpen && <ProfileFreelancer user={user} data={globalLanguageData} />}
+        {isOpen && <ProfileFreelancer user={userProfile} data={globalLanguageData} />}
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()} />
         )}

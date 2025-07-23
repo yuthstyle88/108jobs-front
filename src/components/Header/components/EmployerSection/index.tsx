@@ -1,34 +1,33 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
 import LanguageDropdown from "@/components/LanguageDropDown";
 import NotificationDropdown from "@/components/NotificationDropdown";
 import AvatarSkeleton from "@/components/ui/AvatarSkeleton";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
-import { usePrivateFetch } from "@/hooks/api-hooks";
+import { useFetch } from "@/hooks/useFetchData";
 import { useToggle } from "@/hooks/useToggle";
+import { HttpService } from "@/services";
 import { GlobalLanguage } from "@/types/language";
-import { ProfileData } from "@/types/userData";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Session } from "next-auth";
+import { MyUserInfo } from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
-import ChatBadge from "../ChatBadge";
 import MegaMenu from "../MegaMenu";
 import ProfileSection from "../ProfileSection";
 
 interface EmployerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
-  session?: Session | null;
 }
 
 const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
   const { isOpen, toggle, close } = useToggle();
 
-  const { data: user, isLoading } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.getProfile
-  );
+  const {
+    data: userProfile,
+    isLoading,
+    error,
+  } = useFetch<MyUserInfo>(() => HttpService.client.getMyUser(), []);
 
   return (
     <section className="flex items-center gap-4 h-full">
@@ -50,7 +49,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
       >
         {globalLanguageData?.labelApplyToBeFreelancerButton}
       </Link>
-      <ChatBadge />
+      {/* <ChatBadge /> */}
       <NotificationDropdown />
       <Link prefetch={false}
         href="/reward/earn"
@@ -76,9 +75,9 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           {isLoading ? (
             <AvatarSkeleton />
           ) : (
-            user && (
+            userProfile && (
               <Image
-                src={user?.user.avatarUrl || ProfileImage.avatar}
+                src={ProfileImage.avatar}
                 alt="avatar"
                 className="w-12 h-12 rounded-full object-cover"
                 width={500}
@@ -93,7 +92,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           />
         </button>
 
-        {isOpen && <ProfileSection user={user} data={globalLanguageData} />}
+        {isOpen && <ProfileSection user={userProfile} data={globalLanguageData} />}
 
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()} />
