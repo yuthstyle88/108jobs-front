@@ -18,12 +18,12 @@ import {
   faTicket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {MyUserInfo, ProfileData} from "lemmy-js-client";
+import {Person} from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
 type ProfileFreelancerProps = {
   data: Partial<GlobalLanguage> | null | undefined;
-  profile?: ProfileData;
+  profile?: Person;
 };
 
 const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {

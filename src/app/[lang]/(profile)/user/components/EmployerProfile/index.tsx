@@ -5,13 +5,13 @@ import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { ProfileShow } from "@/types/freelancerPofile";
 import { formatDateToLong } from "@/utils/formatDateToLong";
 import { interpolateDouble } from "@/utils/interpolate";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import {ProfileShow} from "@/lib/lemmy-js-client/src/types/ProfileShow";
 
 type Props = {
   username: string;

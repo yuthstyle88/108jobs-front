@@ -6,14 +6,6 @@ import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import {
-  Certificate,
-  Education,
-  LanguageSkill,
-  ProfileShow,
-  Skill,
-  WorkExperience,
-} from "@/types/freelancerPofile";
 import { formatDateToLong } from "@/utils/formatDateToLong";
 import { interpolateDouble } from "@/utils/interpolate";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
@@ -21,6 +13,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ClipboardX } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import {ProfileShow} from "@/lib/lemmy-js-client/src/types/ProfileShow";
+import {WorkExperience} from "@/lib/lemmy-js-client/src/types/WorkExperience";
+import {Education} from "@/lib/lemmy-js-client/src/types/Education";
+import {Skill} from "@/lib/lemmy-js-client/src/types/Skill";
+import {LanguageSkill} from "@/lib/lemmy-js-client/src/types/LanguageSkill";
+import {Certificate} from "@/lib/lemmy-js-client/src/types/Certificate";
+
 type Props = {
   username: string;
 };

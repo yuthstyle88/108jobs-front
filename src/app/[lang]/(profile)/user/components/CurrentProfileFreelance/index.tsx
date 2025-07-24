@@ -4,16 +4,8 @@ import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { usePrivateFetchParams } from "@/hooks/api-hooks";
+import { useProfileData } from "@/hooks/profile-api/useProfileData";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import {
-  Certificate,
-  Education,
-  LanguageSkill,
-  ProfileShow,
-  Skill,
-  WorkExperience,
-} from "@/types/freelancerPofile";
 import { formatDateToLong } from "@/utils/formatDateToLong";
 import { interpolateDouble } from "@/utils/interpolate";
 import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
@@ -22,15 +14,31 @@ import { ClipboardX, SquarePen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import {Service} from "@/types/service";
+import {Review} from "@/types/review";
+import {Education} from "@/lib/lemmy-js-client/src/types/Education";
+import {Skill} from "@/lib/lemmy-js-client/src/types/Skill";
+import {LanguageSkill} from "@/lib/lemmy-js-client/src/types/LanguageSkill";
+import {Certificate} from "@/lib/lemmy-js-client/src/types/Certificate";
+import {WorkExperience} from "@/lib/lemmy-js-client/src/types/WorkExperience";
 
 type Props = {
   username: string;
 };
 
+type ExtraProfileFields = {
+  educations?: (Education | string)[];   // บางเวอร์ชันส่งเป็น string[]
+  workExperience?: WorkExperience[];
+  skill?: Skill[];
+  language?: LanguageSkill[];
+  certAndAward?: Certificate[];
+  services?: Service[];
+  reviews?: Review[];
+};
+
+
 const CurrentProfileFreelance = ({ username }: Props) => {
-  const { data: userProfile, isLoading } = usePrivateFetchParams<ProfileShow>(
-    `/users/${username}`
-  );
+  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
 
   const { data: goToProfileLanguage } = useGlobalTranslate(
     LanguageFile.GO_TO_PROFILE
@@ -45,9 +53,20 @@ const CurrentProfileFreelance = ({ username }: Props) => {
       const el = bioRef.current;
       setIsClamped(el.scrollHeight > el.clientHeight);
     }
-  }, [userProfile?.bio]);
+  }, [profileData?.profile?.bio]);
 
-  if (isLoading) return <Loading />;
+  if (isLoadingProfile) return <Loading />;
+
+  const profile = profileData?.profile as Partial<ExtraProfileFields> | undefined;
+
+  const educations: Education[] = (profile?.educations ?? []) as Education[];
+  const workExperience: WorkExperience[] = profile?.workExperience ?? [];
+  const skill: Skill[] = profile?.skill ?? [];
+  const language: LanguageSkill[] = profile?.language ?? [];
+  const certAndAward: Certificate[] = profile?.certAndAward ?? [];
+  const services: Service[] = profile?.services ?? [];
+  const reviews: Review[] = profile?.reviews ?? [];
+
 
   return (
     <main className="min-h-screen bg-[#FBFBFC]">
@@ -68,7 +87,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
             <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-borderPrimary bg-white rounded-[0.25rem]">
               <div className="flex items-center justify-center">
                 <Image
-                  src={userProfile?.avatarUrl || ProfileImage.avatar}
+                  src={profileData?.person?.avatar || ProfileImage.avatar}
                   alt="Avatar"
                   className="rounded-full w-[175px] h-[175px] object-cover overflow-hidden"
                   width={500}
@@ -76,10 +95,10 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                 />
               </div>
               <p className="text-[28px] font-medium text-text-primary text-center pt-2">
-                {userProfile?.username}
+                {profileData?.person.displayName}
               </p>
               <div className="flex items-center justify-center pt-2">
-                {[...Array(userProfile?.ratings || 0)].map((_, index) => (
+                {[...Array(profileData?.profile?.ratings || 0)].map((_, index) => (
                   <FontAwesomeIcon
                     icon={faStar}
                     key={index}
@@ -87,7 +106,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                   />
                 ))}
               </div>
-              {userProfile?.user.user.available === false && (
+              {profileData?.person.deleted === false && (
                 <div className="flex items-center justify-center w-full">
                   <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-red-500 text-white w-fit">
                     <ClipboardX className="w-4 h-4 mr-1" />
@@ -101,7 +120,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                     {goToProfileLanguage?.memberSince}
                   </div>
                   <div className="text-third font-medium">
-                    {formatDateToLong(userProfile?.memberSince)}
+                    {formatDateToLong(profileData?.profile?.createdAt)}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
@@ -127,7 +146,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                   <div className="text-third font-medium">100%</div>
                 </div>
               </div>
-              {userProfile?.bio && (
+              {profileData?.profile?.bio && (
                 <div className="mt-6 px-6">
                   <div className="text-text-secondary px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
@@ -136,9 +155,9 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
-                      <i>{userProfile?.bio}</i>
+                      <i>{profileData?.profile?.bio}</i>
                     </p>
-                    {userProfile?.bio && isClamped && !showFullBio && (
+                    {profileData?.profile?.bio && isClamped && !showFullBio && (
                       <button
                         onClick={() => setShowFullBio(true)}
                         className="mt-2 text-text-primary font-sans text-sm font-medium underline"
@@ -176,9 +195,9 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                         <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
-                    {userProfile && userProfile?.education.length > 0 ? (
+                    {profileData && educations.length > 0 ? (
                       <div className="flex flex-col gap-4">
-                        {userProfile?.education.map((education: Education) => {
+                        {educations.map((education: Education) => {
                           return (
                             <div
                               key={education.id}
@@ -214,9 +233,9 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                         <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
-                    {userProfile && userProfile?.workExperience.length > 0 ? (
+                    {profileData && workExperience.length > 0 ? (
                       <div className="flex flex-col gap-4">
-                        {userProfile?.workExperience.map(
+                        {workExperience.map(
                           (experience: WorkExperience) => {
                             return (
                               <div
@@ -258,9 +277,9 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                         <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
-                    {userProfile && userProfile?.skill.length > 0 ? (
+                    {profileData && skill.length > 0 ? (
                       <div className="flex flex-col gap-4">
-                        {userProfile?.skill.map((skill: Skill) => {
+                        {skill.map((skill: Skill) => {
                           return (
                             <div
                               key={skill.id}
@@ -297,9 +316,9 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                         <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
-                    {userProfile && userProfile?.language.length > 0 ? (
+                    {profileData && language.length > 0 ? (
                       <div className="flex flex-col gap-4">
-                        {userProfile?.language.map(
+                        {language.map(
                           (language: LanguageSkill) => {
                             return (
                               <div
@@ -338,9 +357,9 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                         <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
-                    {userProfile && userProfile?.certAndAward.length > 0 ? (
+                    {profileData && certAndAward.length > 0 ? (
                       <div className="flex flex-col gap-4">
-                        {userProfile?.certAndAward.map(
+                        {certAndAward.map(
                           (cert: Certificate) => {
                             return (
                               <div
@@ -368,14 +387,14 @@ const CurrentProfileFreelance = ({ username }: Props) => {
           <section className="w-full px-4">
             <h2 className="pt-[3rem] text-[28px] font-medium text-text-primary w-full">
               {interpolateDouble(goToProfileLanguage?.workTitle || "", {
-                username: userProfile?.username,
+                username: profileData?.person.displayName,
               })}
             </h2>
             <section className="mt-4 grid grid-cols-1 md:grid-cols-[repeat(3,minmax(1px,1fr))] gap-5">
-              {userProfile?.services.map((service, index) => (
+              {services.map((service, index) => (
                 <CategoryCard
                   data={service}
-                  username={userProfile.username}
+                  username={profileData?.person.displayName || ""}
                   key={index}
                 />
               ))}
@@ -392,7 +411,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                     onClick={() => setActiveTab("reviews")}
                   >
                     {goToProfileLanguage?.reviewTab} (
-                    {userProfile?.reviews.length})
+                    {reviews.length})
                   </button>
                   <button
                     className={`py-2 text-sm font-medium border-b-2 ${
@@ -408,7 +427,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
               </div>
 
               <div className="space-y-6">
-                {userProfile?.reviews.map((review) => (
+                {reviews.map((review) => (
                   <div
                     key={review.id}
                     className="border-b border-borderPrimary pb-6"

@@ -4,13 +4,10 @@ import NotificationDropdown from "@/components/NotificationDropdown";
 import AvatarSkeleton from "@/components/ui/AvatarSkeleton";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
-import { useFetch } from "@/hooks/useFetchData";
 import { useToggle } from "@/hooks/useToggle";
-import { HttpService } from "@/services";
 import { GlobalLanguage } from "@/types/language";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { MyUserInfo } from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
 import MegaMenu from "../MegaMenu";
@@ -89,7 +86,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           />
         </button>
 
-        {isOpen && <ProfileSection profile={profileData} data={globalLanguageData} />}
+        {isOpen && <ProfileSection profile={profileData?.person} data={globalLanguageData} />}
 
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()} />

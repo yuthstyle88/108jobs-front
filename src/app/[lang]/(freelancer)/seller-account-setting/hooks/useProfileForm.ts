@@ -67,7 +67,6 @@ export const useProfileForm = (
             birthDay: day || "Day",
             birthMonth: month || "Month",
             birthYear: year || "Year",
-            freelancerType: profileData.profile.freelancerType,
             bio: profileData.profile.bio || "",
           });
         } else {
@@ -77,7 +76,6 @@ export const useProfileForm = (
             birthDay: "Day",
             birthMonth: "Month",
             birthYear: "Year",
-            freelancerType: profileData.profile.freelancerType,
             bio: profileData.profile.bio || "",
           });
         }

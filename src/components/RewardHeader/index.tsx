@@ -103,7 +103,7 @@ const RewardHeader = () => {
                   </button>
 
                   {isOpen && (
-                    <ProfileFreelancer profile={profileData} data={globalLanguageData} />
+                    <ProfileFreelancer profile={profileData?.person} data={globalLanguageData} />
                   )}
                   {isOpen && (
                     <div
@@ -133,7 +133,7 @@ const RewardHeader = () => {
 
                   {isOpen && (
                     <ProfileSection
-                      profile={profileData}
+                      profile={profileData?.person}
                       data={globalLanguageData}
                     />
                   )}

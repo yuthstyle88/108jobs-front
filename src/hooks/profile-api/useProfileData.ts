@@ -13,9 +13,7 @@ export const useProfileData = () => {
     isMutating: isLoadingProfile,
   } = useHttpApi("getProfile");
 
-  const profileData: ProfileData | undefined = isSuccess(profileState)
-    ? profileState.data
-    : undefined;
+  const profileData = isSuccess(profileState) ? profileState.data : undefined;
 
   const isErrorProfile =
     profileState.state === REQUEST_STATE.FAILED

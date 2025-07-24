@@ -104,7 +104,7 @@ const FreelancerSession = ({
             className="w-[14px] h-[14px] text-white"
           />
         </button>
-        {isOpen && <ProfileFreelancer profile={profileData} data={globalLanguageData} />}
+        {isOpen && <ProfileFreelancer profile={profileData?.person} data={globalLanguageData} />}
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()} />
         )}

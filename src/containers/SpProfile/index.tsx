@@ -1,12 +1,9 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
 import Loading from "@/components/Loading";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useLogout } from "@/hooks/useLogout";
-import { ProfileData } from "lemmy-js-client";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import {
   faBriefcase,
@@ -20,15 +17,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import {useProfileData} from "@/hooks/profile-api/useProfileData";
 
 const SpProfile = () => {
-  const { data: user, isLoading } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.getProfile
-  );
+  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
   const { lang: currentLang } = useLanguage();
   const { logout } = useLogout();
 
-  if (isLoading) return <Loading />;
+  if (isLoadingProfile) return <Loading />;
 
   return (
     <main className="min-h-screen bg-white relative">
@@ -46,26 +42,26 @@ const SpProfile = () => {
         </svg>
         <div className="grid grid-cols-1 z-10 text-center absolute left-1/2 -translate-x-1/2 top-0 pt-6 justify-center">
           <strong className="text-[1.125rem] text-white">My Profile</strong>
-          <Link prefetch={false} href={`/${currentLang}/user/${user?.person?.name}`}>
+          <Link prefetch={false} href={`/${currentLang}/user/${profileData?.person?.name}`}>
             <Image
-              src={user?.person?.avatar || ProfileImage.avatar}
+              src={profileData?.person?.avatar || ProfileImage.avatar}
               width={80}
               height={80}
               alt="avatar"
               className="inline-flex justify-center items-center w-[80px] min-h-[80px]  rounded-full object-cover object-center mt-4"
             />
           </Link>
-          <Link prefetch={false} href={`/${currentLang}/user/${user?.person?.name}`}>
+          <Link prefetch={false} href={`/${currentLang}/user/${profileData?.person?.name}`}>
             <strong className="text-[1.125rem] text-third">
-              {user?.person?.name}
+              {profileData?.person?.name}
             </strong>
           </Link>
           <Link prefetch={false}
-            href={`/${currentLang}/user/${user?.person?.name}`}
+            href={`/${currentLang}/user/${profileData?.person?.name}`}
             className="inline-block max-w-full whitespace-nowrap"
           >
             <strong className="text-sm font-sans text-text-primary">
-              {user?.contact.email}
+              {profileData?.contact.email}
             </strong>
           </Link>
         </div>
@@ -95,7 +91,7 @@ const SpProfile = () => {
         </Link>
       </section>
       {/* Assume user is an employer and check if freelancerType exists to determine if user is a freelancer */}
-      {user?.profile?.freelancerType && (
+      {profileData?.localUser.role && (
           <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
             <Link prefetch={false} href="/seller/my-service">
               <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text-secondary font-sans">
@@ -154,7 +150,7 @@ const SpProfile = () => {
           </section>
         )}
       {/* Assume user is an employer and check if freelancerType doesn't exist to determine if user is not a freelancer */}
-      {!user?.profile?.freelancerType && (
+      {!profileData?.localUser?.role && (
           <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
             <Link prefetch={false} href="/reward/earn">
               <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text-secondary font-sans">
@@ -202,7 +198,7 @@ const SpProfile = () => {
         >
           <ul className="p-0 m-0 list-none">
             {/* Assume user is an employer and check if freelancerType doesn't exist to determine if user is not a freelancer */}
-            {!user?.profile?.freelancerType && (
+            {!profileData?.localUser?.role && (
                 <li>
                   <Link prefetch={false}
                     href="/account-setting/basic-info"
@@ -214,7 +210,7 @@ const SpProfile = () => {
                 </li>
               )}
             {/* Assume user is an employer and check if freelancerType exists to determine if user is a freelancer */}
-            {user?.profile?.freelancerType && (
+            {profileData?.localUser.role && (
                 <li>
                   <Link prefetch={false}
                     href="/seller-account-setting/freelance-profile"
@@ -226,7 +222,7 @@ const SpProfile = () => {
                 </li>
               )}
             {/* Assume user is an employer and check if freelancerType doesn't exist to determine if user is not a freelancer */}
-            {!user?.profile?.freelancerType && (
+            {!profileData?.localUser.role && (
                 <li>
                   <Link prefetch={false}
                     href="/start-selling"

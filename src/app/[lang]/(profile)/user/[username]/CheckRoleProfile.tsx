@@ -4,13 +4,13 @@ import {API_ROUTES} from "@/api/endpoints";
 import NotFound from "@/app/not-found";
 import Loading from "@/components/Loading";
 import {usePrivateFetch, usePrivateFetchParams} from "@/hooks/api-hooks";
-import {ProfileShow} from "@/types/freelancerPofile";
 import {ProfileData} from "lemmy-js-client";
 import CurrentProfileEmployer from "../components/CurrentProfileEmployer";
 import CurrentProfileFreelance from "../components/CurrentProfileFreelance";
 import EmployerProfile from "../components/EmployerProfile";
 import FreelancerProfile from "../components/FreelanerProfile";
 import {RoleType} from "lemmy-js-client";
+import {ProfileShow} from "@/lib/lemmy-js-client/src/types/ProfileShow";
 
 interface Props {
   username: string;
