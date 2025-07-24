@@ -58,7 +58,7 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
     // Set up headers and authentication
     const headers = setForwardedHeaders(incomingHeaders);
     const auth = getJwtCookie(incomingHeaders);
-    HttpService.client.setHeaders(headers);
+    await HttpService.client.setHeaders(headers);
     
     // Check authentication for protected routes
     if (!auth && isAuthPath(url)) {

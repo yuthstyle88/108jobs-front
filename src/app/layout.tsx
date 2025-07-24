@@ -12,6 +12,7 @@ import type { IncomingHttpHeaders } from "http";
 import { IsoData, RouteData } from "@/utils/types";
 import { GetSiteResponse } from "lemmy-js-client";
 import { testHost } from "@/config";
+import React from "react";
 
 // Optimize font loading with display swap and preload
 const kanit = Kanit({

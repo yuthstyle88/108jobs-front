@@ -6,6 +6,7 @@ import type { Session } from "next-auth";
 import { setCachedToken } from "@/lib/axios";
 import {jwtDecode} from "jwt-decode";
 import {JWT} from "next-auth/jwt";
+import React from "react";
 
 
 export function getSessionFromStorage(): Session | null {
