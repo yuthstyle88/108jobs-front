@@ -1,12 +1,9 @@
 "use client";
 
-import { API_ROUTES } from "@/api/endpoints";
 import * as Switch from "@radix-ui/react-switch";
 import { useState } from "react";
 import useNotification from "@/hooks/useNotification";
-import { RequestState, LOADING_REQUEST } from "@/services/HttpService";
-import {useProfileData} from "@/hooks/profile-api/useProfileData";
-
+import {RequestState, LOADING_REQUEST, HttpService, isSuccess} from "@/services/HttpService";
 
 const DocumentInfo = () => {
   const [isAvailable, setIsAvailable] = useState(false);
@@ -14,12 +11,6 @@ const DocumentInfo = () => {
   const [updateState, setUpdateState] = useState<RequestState<any>>(LOADING_REQUEST);
   const isMutating = updateState.state === "loading";
 
-  const {
-    profileData,
-    isLoadingProfile,
-    isErrorProfile,
-    mutate: refreshProfile,            // ถ้าต้องการปุ่ม refresh ใช้ตัวนี้
-  } = useProfileData();
 
   const handleToggle = async (value: boolean) => {
     setIsAvailable(value);
@@ -27,20 +18,11 @@ const DocumentInfo = () => {
       setUpdateState(LOADING_REQUEST);
       
       // Make a custom fetch request to update the availability status
-      const response = await fetch(API_ROUTES.profile.updateAvailable, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-        },
-        body: JSON.stringify({ available: value }),
-      });
-      
-      if (!response.ok) {
+      const response = await HttpService.client.updateAvailable({ available: value });
+      if (!isSuccess(response)) {
         throw new Error('Failed to update availability');
       }
-      
-      const data = await response.json();
+      const data = response.data;
       setUpdateState({ state: "success", data });
       
       successMessage(

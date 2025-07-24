@@ -12,7 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ZipcodeSearch from "../_components/SearchZipcode";
-import { useProfileData } from "../../../../../hooks/profile-api/useProfileData";
+import { useProfileData } from "@/hooks/profile-api/useProfileData";
 import { addressSchema } from "@/utils/validation/addressSchema";
 import { API_ROUTES } from "@/api/endpoints";
 import useNotification from "@/hooks/useNotification";

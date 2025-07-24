@@ -1,5 +1,5 @@
-import { RequestState } from "@/services/HttpService";
-import { PaginationCursor, GetSiteResponse } from "lemmy-js-client";
+import {isSuccess, RequestState} from "@/services/HttpService";
+import {PaginationCursor, GetSiteResponse, UploadImageResponse} from "lemmy-js-client";
 import {IncomingHttpHeaders} from "http";
 import * as cookie from "cookie";
 import { authCookieName } from "@/utils/config";
@@ -359,9 +359,37 @@ export function getErrorPageData(error: Error, site?: GetSiteResponse) {
   return errorPageData;
 }
 
-export async function toBlob(src: string | File | Blob): Promise<Blob> {
+async function toBlob(src: string | File | Blob): Promise<Blob> {
   if (typeof src === "string") {
     return fetch(src).then((r) => r.blob());
   }
   return src;
+}
+
+export async function uploadSelectedImage(
+  selectedImage: File | string,
+  uploadImage: (payload: { image: File }) => Promise<any>,
+): Promise<string> {
+  let file: File;
+
+  // ถ้าเป็นไฟล์อยู่แล้ว ใช้ได้เลย
+  if (selectedImage instanceof File) {
+    file = selectedImage;
+  } else {
+    // กรณีเป็น base64 / URL แปลงเป็น Blob → File
+    const blob = await toBlob(selectedImage);
+    file = new File([blob], "profile.jpg", {
+      type: blob.type || "image/jpeg",
+    });
+  }
+
+  // อัปโหลด
+  const result = await uploadImage({ image: file });
+
+  if (isSuccess<UploadImageResponse>(result) && result.data.images?.length) {
+    const url = result.data.images[0].imageUrl;
+    if (url) return url;
+  }
+
+  throw new Error("Image upload failed");
 }

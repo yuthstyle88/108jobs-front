@@ -201,6 +201,10 @@ import type {ExchangeKey} from "./types/ExchangeKey";
 import type {ExchangeKeyResponse} from "./types/ExchangeKeyResponse";
 import type {ProfileData} from "./types/ProfileData";
 import type {SaveUserProfile} from "./types/SaveUserProfile";
+import type {UpdateAvailable} from "./types/UpdateAvailable";
+import type {UpsertCard} from "./types/UpsertCard";
+import type {SaveAddress} from "./types/SaveAddress";
+import type {Address} from "./types/Address";
 
 enum HttpType {
   Get = "GET",
@@ -1716,6 +1720,60 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<SaveUserProfile, ProfileData>(
       HttpType.Put,
       "/account/settings/update-profile",
+      form,
+      options,
+    );
+  }
+  /**
+   * @summary Save your user settings.
+   */
+  @Security("bearerAuth")
+  @Put("/account/settings/update-address")
+  @Tags("Account")
+  async updateAddress(
+    @Body() form: SaveAddress,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<SaveAddress, SuccessResponse>(
+      HttpType.Put,
+      "/account/settings/update-address",
+      form,
+      options,
+    );
+  }
+
+  /**
+   * @summary Save your user settings.
+   */
+  @Security("bearerAuth")
+  @Put("/profile/available")
+  @Tags("Account")
+  async updateAvailable(
+    @Body() form: UpdateAvailable,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<UpdateAvailable, SuccessResponse>(
+      HttpType.Put,
+      "/profile/available",
+      form,
+      options,
+    );
+  }
+
+  /**
+   * @summary Save your user settings.
+   */
+  @Security("bearerAuth")
+
+  @Put("/account/upsert-card")
+  @Tags("Account")
+  async upsertCard(
+    @Body() form: UpsertCard,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<UpsertCard, SuccessResponse>(
+      HttpType.Put,
+      "/account/upsert-card",
       form,
       options,
     );

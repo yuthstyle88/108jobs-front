@@ -349,3 +349,4 @@ export type { Coin } from "./types/Coin";
 export type { Contact } from "./types/Contact";
 export type { Profile } from "./types/Profile";
 export type { SaveUserProfile } from "./types/SaveUserProfile";
+export type { UpsertCard } from "./types/UpsertCard";

@@ -3,11 +3,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect, useState } from "react";
 import useNotification from "@/hooks/useNotification";
-import { API_ROUTES_SELLER } from "@/api/endpoints";
 import {ProfileData, UploadImage, UploadImageResponse} from "lemmy-js-client";
 import {HttpService, isSuccess, RequestState} from "@/services/HttpService";
 import {RequestOptions} from "node:http";
-import {toBlob} from "@/utils/helpers";
+import {UpsertCard} from "lemmy-js-client";
+import {uploadSelectedImage} from "@/utils/helpers";
 
 const cardSchema = z.object({
   title: z.string().min(1, "Vui lòng nhập thông tin"),
@@ -28,8 +28,8 @@ type FormValues = z.infer<typeof cardSchema>;
 
 export const usePersonalInfoForm = (
   profileData: ProfileData | undefined,
-  frontFile: string | File | Blob | null,
-  backFile: string | File | Blob | null,
+  frontFile: File | string | null,
+  backFile: File | string | null,
   frontPreview: string | null,
   backPreview: string | null,
   uploadImage: (image: UploadImage, options?: RequestOptions) => Promise<RequestState<UploadImageResponse>>,
@@ -48,14 +48,13 @@ export const usePersonalInfoForm = (
 
   const [isUpdateMuting, setIsUpdateMuting] = useState(false);
   
-  const updateCardInfo = async (data: any) => {
+  const updateCardInfo = async (data: UpsertCard) => {
     try {
       setIsUpdateMuting(true);
-      const response = await HttpService.client.putRequest(
-        API_ROUTES_SELLER.profile.updatePersonalInfo,
-        data
-      );
-      return response.data;
+      const response = await HttpService.client.upsertCard(data);
+      if (isSuccess(response)) {
+        return response.data;
+      }
     } catch (error) {
       throw error;
     } finally {
@@ -101,23 +100,11 @@ export const usePersonalInfoForm = (
       let backUrl = profileData?.card.backCard;
 
       if (frontFile) {
-        const blob = await toBlob(frontFile);
-        const file = new File([blob], "profile.jpg", { type: blob.type || "image/jpeg" });
-        const result = await uploadImage({ image: file });
-        if (isSuccess(result) && result.data.images.length) {
-          frontUrl = result.data.images?.[0]?.imageUrl;
-        }
-        if (!frontUrl) throw new Error("Upload ảnh mặt trước thất bại");
+        frontUrl = await uploadSelectedImage(frontFile, uploadImage);
       }
 
       if (backFile) {
-        const blob = await toBlob(backFile);
-        const file = new File([blob], "profile.jpg", { type: blob.type || "image/jpeg" });
-        const result = await uploadImage({ image: file });
-        if (isSuccess(result) && result.data.images.length) {
-          backUrl = result.data.images?.[0]?.imageUrl;
-        }
-        if (!backUrl) throw new Error("Upload ảnh mặt sau thất bại");
+          backUrl = await uploadSelectedImage(backFile, uploadImage);
       }
 
       if (!frontUrl || !backUrl) {
@@ -129,21 +116,19 @@ export const usePersonalInfoForm = (
         formData.birthMonth === "Month" ||
         formData.birthYear === "Year";
 
-      const payload = {
+      const payload:  UpsertCard ={
         frontCard: frontUrl,
         backCard: backUrl,
         title: formData.title,
         name: formData.name,
         surname: formData.surname,
-        birthDate: isIncompleteBirth
-          ? null
-          : `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`,
+        birthDate: `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`,
         cardNumber: formData.cardNumber,
-        cardAddressDetails: formData.cardAddressDetails,
-        cardZipCode: formData.cardZipCode,
-        cardSubdistrictOrDistrict: formData.cardSubdistrictOrDistrict,
-        cardDistrictOrSubdistrict: formData.cardDistrictOrSubdistrict,
-        cardProvince: formData.cardProvince,
+        addressDetails: formData.cardAddressDetails || "",
+        zipCode: formData.cardZipCode,
+        subdistrictOrDistrict: formData.cardSubdistrictOrDistrict,
+        districtOrSubdistrict: formData.cardDistrictOrSubdistrict,
+        province: formData.cardProvince,
       };
 
       await updateCardInfo(payload);

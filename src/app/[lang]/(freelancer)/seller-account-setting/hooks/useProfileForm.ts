@@ -7,6 +7,7 @@ import useNotification from "@/hooks/useNotification";
 import {HttpService,} from "@/services";
 import {isSuccess, LOADING_REQUEST, RequestState} from "@/services/HttpService";
 import {RequestOptions} from "node:http";
+import {uploadSelectedImage} from "@/utils/helpers";
 
 // Utility function to fetch a blob using the same pattern as HttpService
 
@@ -96,14 +97,7 @@ export const useProfileForm = (
 
       // If a new image was selected, upload it
       if (selectedImage && selectedImage !== avatarUrl) {
-        const blob = await fetch(selectedImage).then((r) => r.blob());
-        const file = new File([blob], "profile.jpg", { type: blob.type || "image/jpeg" });
-        const result = await uploadImage({ image: file });
-        if (isSuccess(result) && result.data.images.length) {
-          const uploadedImageUrl = result.data.images[0].imageUrl;
-          if (!uploadedImageUrl) throw new Error("Image upload failed");
-          avatarUrl = uploadedImageUrl;
-        }
+        avatarUrl = await uploadSelectedImage(selectedImage, uploadImage);
       }
  
       const updateData : SaveUserProfile = {

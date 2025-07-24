@@ -10,9 +10,9 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { useDateOptions } from "@/hooks/useDateOptions";
 import Image from "next/image";
 import { useState } from "react";
-import { useProfileData } from "../../../../../hooks/profile-api/useProfileData";
-import { useImagePicker } from "../hooks/useImagePicker";
+import { useProfileData } from "@/hooks/profile-api/useProfileData";
 import { useProfileForm } from "../hooks/useProfileForm";
+import {useImagePicker} from "@/hooks/useImagePicker";
 
 
 export default async function BasicInformation() {
@@ -22,8 +22,7 @@ export default async function BasicInformation() {
   const { execute: uploadImage, isMutating: isUploadMuting } =
     useHttpApi("uploadImage");
 
-  const { profileState, profileData, mutate } =
-    await useProfileData();
+  const { profileState, profileData, mutate } = useProfileData();
 
   const {
     selectedImage,

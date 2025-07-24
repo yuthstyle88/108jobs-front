@@ -2,10 +2,10 @@ import { useForm } from "react-hook-form";
 import {ProfileData, SaveUserProfile, UploadImage, UploadImageResponse} from "lemmy-js-client";
 import { useEffect, useState } from "react";
 import useNotification from "@/hooks/useNotification";
-import { API_ROUTES } from "@/api/endpoints";
 import { HttpService, } from "@/services";
 import {isSuccess, LOADING_REQUEST, RequestState} from "@/services/HttpService";
 import {RequestOptions} from "node:http";
+import {uploadSelectedImage} from "@/utils/helpers";
 
 interface FormValues {
   displayName: string;
@@ -69,14 +69,7 @@ export const useProfileForm = (
       let avatarUrl = profileData?.person?.avatar;
 
       if (selectedImage && selectedImage !== profileData?.person?.avatar) {
-        const blob = await fetch(selectedImage).then((r) => r.blob());
-        const file = new File([blob], "profile.jpg", { type: blob.type || "image/jpeg" });
-        const result = await uploadImage({ image: file });
-        if (isSuccess(result) && result.data.images.length) {
-          const uploadedImageUrl = result.data.images[0].imageUrl;
-          if (!uploadedImageUrl) throw new Error("Image upload failed");
-          avatarUrl = uploadedImageUrl;
-        }
+          avatarUrl = await uploadSelectedImage(selectedImage, uploadImage);
       }
 
       const updateData : SaveUserProfile = {
