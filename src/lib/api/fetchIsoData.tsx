@@ -30,8 +30,26 @@ const logger = {
     }
   },
   error: (message: string, err?: unknown) => {
-    const detail = err instanceof Error ? err.message : String(err);
-    console.error(`[fetchIsoData] ${message}: ${detail}`);
+    if (process.env.NODE_ENV !== "development") {
+      // ใน production เปลี่ยนเป็น warn หรือปิดทิ้งเลย
+      if (err) {
+        console.warn(`[fetchIsoData] ${message}`, err);
+      }
+      return;                // <-- กันไม่ให้หลุดมา console.error
+    }
+
+    // -------- dev mode เท่านั้น ----------
+    const prefix = `[fetchIsoData] ${message}`;
+    if (!err) {
+      console.warn(prefix);
+      return;
+    }
+    const detail =
+      err instanceof Error ? err.message.trim() : String(err).trim();
+    console.warn(
+      detail ? `${prefix}: ${detail}` : prefix,
+      err,
+    );
   }
 };
 

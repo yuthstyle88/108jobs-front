@@ -6,8 +6,6 @@ import FontAwesomeConfig from "./fontawesome";
 import "./globals.css";
 import { Providers } from "./providers";
 import { generateLocalizedMetadata } from "@/lib/metadata";
-import { SWRConfig } from "swr";
-import swrConfig from "@/config/swrConfig";
 import fetchIsoData from "@/lib/api/fetchIsoData";
 import { headers } from "next/headers";
 import type { IncomingHttpHeaders } from "http";
@@ -79,7 +77,7 @@ export default async function RootLayout({
   const hdr = await headers();
   const url = hdr.get("x-url") || "/";
   const incomingHttpHeaders: IncomingHttpHeaders = Object.fromEntries(hdr.entries());
-  
+
   // Fetch data with proper error handling
   let isoData: IsoData;
   try {
@@ -107,12 +105,10 @@ export default async function RootLayout({
         />
         <IsoDataProvider value={isoData}>
           <Providers>
-            <SWRConfig value={swrConfig}>
               <Toaster richColors closeButton position="top-right" />
               <LanguageProvider initialLang="th">
                 {children}
               </LanguageProvider>
-            </SWRConfig>
           </Providers>
         </IsoDataProvider>
       </body>
