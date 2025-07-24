@@ -16,6 +16,7 @@ import Error from "@/app/error";
 import { RoleType } from "lemmy-js-client";
 import LazyImage from "@/components/ui/LazyImage";
 import { memo } from "react";
+import { UserService } from "@/services";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -32,16 +33,10 @@ interface BgProps {
 }
 
 const HeaderComponent = ({ type, forceShowSearch = false }: BgProps) => {
-  const { data: session } = useSession();
-  
-  const roles = session?.user.roles;
-  const isEmployer = Array.isArray(roles)
-    ? roles.includes(RoleType.Employer)
-    : roles === RoleType.Employer;
+  const role = UserService.Instance.authInfo?.claims?.role;
 
-  const isFreelancer = Array.isArray(roles)
-    ? roles.includes(RoleType.Freelancer)
-    : roles === RoleType.Freelancer;
+  const isEmployer = role === RoleType.Employer;
+  const isFreelancer = role === RoleType.Freelancer;
   const { scrollY, showSearch } = useScrollHandler(forceShowSearch);
 
   const {
@@ -53,13 +48,12 @@ const HeaderComponent = ({ type, forceShowSearch = false }: BgProps) => {
   const { bg } = TYPES[type];
 
   // if (isLoading) return <Loading />;
-  if (error) return <Error/>;
+  if (error) return <Error />;
 
   return (
     <header
-      className={`fixed top-0 z-[999] w-full transition-all duration-300 ${
-        scrollY > 0 ? "bg-primary" : bg
-      }`}
+      className={`fixed top-0 z-[999] w-full transition-all duration-300 ${scrollY > 0 ? "bg-primary" : bg
+        }`}
     >
       <nav className="mx-[1.5rem] flex flex-wrap items-center justify-center h-auto min-h-[70px] py-4 xl:py-1 xl:justify-between">
         <section className="flex items-center gap-x-4 w-full md:w-auto">
@@ -81,7 +75,7 @@ const HeaderComponent = ({ type, forceShowSearch = false }: BgProps) => {
         </section>
 
         <section className="flex items-center gap-4 w-full md:w-auto mt-4 md:mt-0 justify-end">
-          {!session && (
+          {!role && (
             <div className="group">
               <div className="relative">
                 <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
@@ -97,7 +91,7 @@ const HeaderComponent = ({ type, forceShowSearch = false }: BgProps) => {
               </div>
             </div>
           )}
-          {!session && (
+          {!role && (
             <Link prefetch={false}
               href="/apply-freelancer"
               className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
@@ -106,18 +100,16 @@ const HeaderComponent = ({ type, forceShowSearch = false }: BgProps) => {
             </Link>
           )}
           {isFreelancer && (
-              <FreelancerSession
-                globalLanguageData={globalLanguageData}
-                session={session}
-              />
-            )}
+            <FreelancerSession
+              globalLanguageData={globalLanguageData}
+            />
+          )}
           {isEmployer && (
-              <EmployerSection
-                globalLanguageData={globalLanguageData}
-                session={session}
-              />
-            )}
-          {!session && (
+            <EmployerSection
+              globalLanguageData={globalLanguageData}
+            />
+          )}
+          {!role && (
             <Link prefetch={false}
               href="/login"
               className="text-white text-sm hover:bg-blue-800 hover:text-white"
@@ -125,7 +117,7 @@ const HeaderComponent = ({ type, forceShowSearch = false }: BgProps) => {
               {globalLanguageData?.labelSignInButton}
             </Link>
           )}
-          {!session && <LanguageDropdown />}
+          {!role && <LanguageDropdown />}
         </section>
       </nav>
     </header>
