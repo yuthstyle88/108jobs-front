@@ -66,7 +66,7 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
     // Handle authentication errors
     if (tryUser.state === "failed" && tryUser.err.message === "not_logged_in") {
       logger.error("Incorrect JWT token, skipping auth so frontend can remove jwt cookie");
-      HttpService.client.setHeaders({});
+      await HttpService.client.setHeaders({});
       const retryUser = await HttpService.client.getMyUser();
       if (retryUser.state === "success") {
         myUserInfo = retryUser.data;
