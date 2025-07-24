@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useHttpApi } from "@/hooks/useHttpApi";
+import {isSuccess} from "@/services/HttpService";
 
 type VerifyForgotPasswordProps = {
   switchToVerifyForgotPassword: () => void;
@@ -53,7 +54,7 @@ export const ForgotPasswordForm = ({
     try {
       const res = await resetPassword({ email: data.email });
 
-      if (res.state === "failed") {
+      if (isSuccess(res) === false) {
         setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
         return;
       }

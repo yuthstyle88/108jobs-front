@@ -1,5 +1,5 @@
 /**
- * Test script for fetchIsoData function
+ * EditForm script for fetchIsoData function
  * 
  * This script tests the fetchIsoData function with different scenarios to ensure
  * it works correctly and handles errors properly.
@@ -13,30 +13,30 @@ import { IncomingHttpHeaders } from 'http';
 // Mock headers for testing
 const mockHeaders: IncomingHttpHeaders = {
   'host': 'localhost:3000',
-  'user-agent': 'Test Script',
+  'user-agent': 'EditForm Script',
   'accept': 'application/json',
   'cookie': '',  // No auth cookie for testing unauthenticated requests
 };
 
-// Test scenarios
+// EditForm scenarios
 async function runTests() {
-  console.log('=== fetchIsoData Test Suite ===\n');
+  console.log('=== fetchIsoData EditForm Suite ===\n');
   
-  // Test 1: Basic functionality with valid URL
+  // EditForm 1: Basic functionality with valid URL
   await testValidUrl();
   
-  // Test 2: Error handling with invalid URL
+  // EditForm 2: Error handling with invalid URL
   await testInvalidUrl();
   
-  // Test 3: Authentication handling
+  // EditForm 3: Authentication handling
   await testAuthPath();
   
-  console.log('\n=== Test Suite Complete ===');
+  console.log('\n=== EditForm Suite Complete ===');
 }
 
-// Test valid URL scenario
+// EditForm valid URL scenario
 async function testValidUrl() {
-  console.log('Test 1: Basic functionality with valid URL');
+  console.log('EditForm 1: Basic functionality with valid URL');
   try {
     const url = '/';
     console.log(`Fetching data for URL: ${url}`);
@@ -53,14 +53,14 @@ async function testValidUrl() {
       console.log('❌ Failed to fetch data (null result)');
     }
   } catch (error) {
-    console.error('❌ Test failed with error:', error);
+    console.error('❌ EditForm failed with error:', error);
   }
   console.log('-----------------------------------');
 }
 
-// Test invalid URL scenario
+// EditForm invalid URL scenario
 async function testInvalidUrl() {
-  console.log('Test 2: Error handling with invalid URL');
+  console.log('EditForm 2: Error handling with invalid URL');
   try {
     const url = '/non-existent-page-12345';
     console.log(`Fetching data for URL: ${url}`);
@@ -78,14 +78,14 @@ async function testInvalidUrl() {
       console.log('❌ Failed to handle invalid URL (null result)');
     }
   } catch (error) {
-    console.error('❌ Test failed with error:', error);
+    console.error('❌ EditForm failed with error:', error);
   }
   console.log('-----------------------------------');
 }
 
-// Test authentication handling
+// EditForm authentication handling
 async function testAuthPath() {
-  console.log('Test 3: Authentication handling');
+  console.log('EditForm 3: Authentication handling');
   try {
     // Use a path that requires authentication
     const url = '/seller-account-setting';
@@ -100,7 +100,7 @@ async function testAuthPath() {
       console.log('Result:', result);
     }
   } catch (error) {
-    console.error('❌ Test failed with error:', error);
+    console.error('❌ EditForm failed with error:', error);
   }
   console.log('-----------------------------------');
 }

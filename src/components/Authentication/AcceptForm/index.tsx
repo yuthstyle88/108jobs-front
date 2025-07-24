@@ -12,8 +12,9 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { RegisterOAuthFormData } from "@/types/formTypes/RegisterOAuth";
-import {HttpService, UserService} from "@/services";
-import {RoleType} from "lemmy-js-client"; // เพิ่ม import นี้
+import {UserService} from "@/services";
+import {RoleType} from "lemmy-js-client";
+import {isSuccess} from "@/services/HttpService"; // เพิ่ม import นี้
 
 type UpdateFormProps = {
   switchToVerifyEmail: () => void;
@@ -92,7 +93,7 @@ export const AcceptForm = ({
 
     const res = await updateTerm(payload);
 
-    if (res.state === "success") {
+    if (isSuccess(res)) {
       UserService.Instance.login({ res: res.data });
       switchToVerifyEmail();      // หรือ logic อื่นตามต้องการ
     } else if (res.state === "failed") {

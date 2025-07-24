@@ -1255,7 +1255,7 @@
 ## What's Changed in v1.0.17-beta
 
 - v1.0.17-beta by @dessalines
-- Adding index.ts s by @dessalines
+- Adding page.tsx s by @dessalines
 - Adding websocket. by @dessalines
 - Initial commit of API v2 by @dessalines
 - Upgrading deps. by @dessalines

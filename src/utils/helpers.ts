@@ -211,7 +211,7 @@ export function validInstanceTLD(str: string) {
 }
 
 /*
- * Test if the Title is in a valid format:
+ * EditForm if the Title is in a valid format:
  *   (?=.*\S.*) checks if the title consists of only whitespace characters
  *   (?=^[^\r\n]+$) checks if the title contains newlines
  */

@@ -12,8 +12,8 @@ import {
     OAuthProvider,
 } from "lemmy-js-client";
 import {
-    EMPTY_REQUEST,
-    HttpService,
+  EMPTY_REQUEST,
+  HttpService, isSuccess,
 } from "@/services/HttpService";
 import {setIsoData} from "@/utils/app";
 
@@ -112,7 +112,7 @@ export class LoginFormClass extends Component<
         this.hasFetchedSite = true;
 
         const site = await HttpService.client.getSite();
-        if (site.state === "success") {
+        if (isSuccess(site)) {
             this.setState({
                 siteRes: site.data,
                 oauthProviders: site.data.oauthProviders ?? [],

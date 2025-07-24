@@ -31,7 +31,7 @@ async function putTypesInIndex() {
     );
   }
 
-  fs.writeFile(path.resolve("./src/index.ts"), exports.join("\n"), {
+  fs.writeFile(path.resolve("./src/page.tsx"), exports.join("\n"), {
     flag: "w",
   });
 }

@@ -1,5 +1,5 @@
 /**
- * Test script for E2EE (End-to-End Encryption) implementation
+ * EditForm script for E2EE (End-to-End Encryption) implementation
  * 
  * This script tests the key exchange process and encryption/decryption functionality
  * to ensure that the e2ee implementation is working correctly.
@@ -81,7 +81,7 @@ async function testEncryptionDecryption(sharedSecret: ArrayBuffer) {
     ['encrypt', 'decrypt']
   );
   
-  // Test data
+  // EditForm data
   const sessionId = 'test-session-123456789';
   const originalMessage = 'This is a secret message that should be encrypted and decrypted correctly.';
   console.log('Original message:', originalMessage);
@@ -108,17 +108,17 @@ async function testEncryptionDecryption(sharedSecret: ArrayBuffer) {
 
 async function runTests() {
   try {
-    console.log('=== E2EE Test Suite ===\n');
+    console.log('=== E2EE EditForm Suite ===\n');
     
-    // Test key exchange
+    // EditForm key exchange
     const sharedSecret = await testKeyExchange();
     
-    // Test encryption/decryption
+    // EditForm encryption/decryption
     await testEncryptionDecryption(sharedSecret);
     
     console.log('\n=== All tests passed! ===');
   } catch (error) {
-    console.error('\n=== Test failed! ===');
+    console.error('\n=== EditForm failed! ===');
     console.error(error);
   }
 }

@@ -8,6 +8,7 @@ import {LoginFormClass} from "@/components/Authentication/LoginForm";
 import {toast} from "@/toast";
 import {LoginProps} from "@/components/Authentication/LoginForm/interface";
 import getQueryParams from "@/utils/helpers";
+import {isSuccess, REQUEST_STATE} from "@/services/HttpService";
 
 export const handleUseOAuthProvider = async (params: {
   oauthProvider: OAuthProvider;
@@ -64,7 +65,7 @@ export const handleLogin = async (i: LoginFormClass, data: any) => {
     });
 
     switch (loginRes.state) {
-      case "failed": {
+      case REQUEST_STATE.FAILED: {
         const {name, message} = loginRes.err ?? {};
         if (name === "missing_totp_token") {
           // Trigger modal to ask for TOTP token
@@ -78,7 +79,7 @@ export const handleLogin = async (i: LoginFormClass, data: any) => {
         i.setState({loginRes});
         break;
       }
-      case "success": {
+      case REQUEST_STATE.SUCCESS: {
         await handleLoginSuccess(i, loginRes.data);
         break;
       }
@@ -99,7 +100,7 @@ export async function handleLoginSuccess(i: LoginFormClass, loginRes: LoginRespo
 
   const site = await HttpService.client.getSite();
 
-  if (site.state === "success") {
+  if (isSuccess(site)) {
     try {
       const isoData = setIsoData(i.context);
       if (isoData && isoData.siteRes) {
@@ -138,7 +139,7 @@ export async function handleSubmitTotp(i: LoginFormClass, totp: string) {
     totp2faToken: totp,
   });
 
-  const successful = loginRes.state === "success";
+  const successful = isSuccess(loginRes);
   if (successful) {
     i.setState({show2faModal: false});
     await handleLoginSuccess(i, loginRes.data);

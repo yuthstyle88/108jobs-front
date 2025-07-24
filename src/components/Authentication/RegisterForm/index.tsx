@@ -20,7 +20,7 @@ import {
 
 import {
   EMPTY_REQUEST,
-  HttpService, LOADING_REQUEST,
+  HttpService, isSuccess, LOADING_REQUEST, REQUEST_STATE,
   RequestState,
 } from "@/services/HttpService";
 import {toast} from "@/toast";
@@ -116,7 +116,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     setCaptchaRes(LOADING_REQUEST);
     const captchaResponse = await HttpService.client.getCaptcha();
     
-    if (captchaResponse.state === "success") {
+    if (isSuccess(captchaResponse) && (
+      captchaResponse.data.ok?.wav ||
+      captchaResponse.data.ok?.png
+    )) {
       setCaptchaRes(captchaResponse);
       setCaptchaUuid(captchaResponse.data.ok?.uuid);
       setValue("captchaAnswer", "");
@@ -174,12 +177,12 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     });
     
     switch (registerRes.state) {
-      case "failed": {
+      case REQUEST_STATE.FAILED: {
         handleApiError(registerRes.err.name);
         await fetchCaptcha();
         break;
       }
-      case "success": {
+      case REQUEST_STATE.SUCCESS: {
         const loginData = registerRes.data;
         
         // Only log them in if a jwt was set
@@ -190,7 +193,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
           const user = await HttpService.client.getMyUser();
 
-          if (user.state === "success") {
+          if (isSuccess(user) && user.data) {
             UserService.Instance.myUserInfo = user.data;
             await handleRegisterSuccess(loginData, user.data);
           }
@@ -226,7 +229,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
   // Handle captcha play
   const handleCaptchaPlay = useCallback(() => {
-    if (captchaRes.state === "success" && captchaRes.data.ok) {
+    if (isSuccess(captchaRes) && captchaRes.data.ok) {
       const captchaData = captchaRes.data.ok;
       
       if (!audioRef.current) {
@@ -286,7 +289,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       setHasFetchedSite(true);
       const site = await HttpService.client.getSite();
       
-      if (site.state === "success") {
+      if (isSuccess(site) && site.data) {
         setSiteRes(site.data);
         
         if (site.data?.siteView?.localSite?.captchaEnabled && isBrowser()) {
