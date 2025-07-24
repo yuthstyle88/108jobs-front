@@ -1,24 +1,23 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
 import Error from "@/app/error";
 import ImageUploadModal from "@/components/AvatarUploadModal";
 import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { usePrivateImagePost } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { ImageUploadResponse } from "@/types/image";
 import { getAvatarUrl } from "@/utils/userDataUtils";
 import Image from "next/image";
 import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
-import { useImageUpload } from "../hooks/useImageUpload";
 import { useProfileForm } from "../hooks/useProfileForm";
+import { useHttpApi } from "@/hooks/useHttpApi";
+import { useImagePicker } from "@/hooks/useImagePicker";
 
-const AccountSettings = async () => {
-  const { trigger: uploadImage, isMutating: isUploadMuting } =
-    usePrivateImagePost<ImageUploadResponse, FormData>(API_ROUTES.image.upload);
+const AccountSettings = () => {
 
-  const profileState = await useBasicInfoForm();
+  const { execute: uploadImage, isMutating: isUploadMuting } =
+    useHttpApi("uploadImage");
+
+  const { profileState, profileData, mutate } = useBasicInfoForm();
 
   const { data: sellerProfileLanguage } = useGlobalTranslate(
     LanguageFile.SELLER_FREELANCER_PROFILE
@@ -33,7 +32,7 @@ const AccountSettings = async () => {
     handleSelectFile,
     handleImageUpload,
     closeImageModal,
-  } = useImageUpload(profileState.state === "success" ? getAvatarUrl(profileState.data) : undefined);
+  } = useImagePicker(profileData ? getAvatarUrl(profileData) : undefined);
 
   const {
     register,
@@ -44,10 +43,10 @@ const AccountSettings = async () => {
     onSubmit,
     watch,
   } = useProfileForm(
-    profileState.state === "success" ? profileState.data : undefined,
+    profileData,
     selectedImage,
     uploadImage,
-    () => {}, // No mutate function available with the new approach
+    mutate,   // ส่งฟังก์ชันรีเฟรชโปรไฟล์
     setSelectedImage
   );
 

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateDelete } from "@/hooks/api-hooks";
-import { HttpService, RequestState, LOADING_REQUEST } from "@/services";
 import useNotification from "@/hooks/useNotification";
 import { Review } from "@/types/review";
 import { formatDistanceToNow, Locale } from "date-fns";
@@ -13,6 +12,7 @@ import { Edit, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 import CommentForm from "../CommentForm";
 import StarRating from "../StarRatings";
+import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
 
 export const dateFnsLocaleMap: Record<string, Locale> = {
   en: enUS,
@@ -58,8 +58,8 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
       
       const responseData = await response.json();
       setUpdateCommentState({ state: "success", data: responseData });
-      
-      await mutate();
+
+      mutate();
       successMessage("review", "updateComment");
       setIsEditing(false);
     } catch (error) {
@@ -71,7 +71,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
   const handleDelete = async () => {
     if (confirm("Are you sure you want to delete this review?")) {
       await deleteComment({});
-      await mutate();
+      mutate();
       successMessage("review", "deleteComment");
     }
   };

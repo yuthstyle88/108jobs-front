@@ -12,7 +12,7 @@ import {
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import useNotification from "@/hooks/useNotification";
 import { JobListResponse } from "@/types/job";
-import { ProfileData } from "@/types/userData";
+import { ProfileData } from "lemmy-js-client";
 import { interpolateDouble } from "@/utils/interpolate";
 import {
   ClockAlert,

@@ -358,3 +358,10 @@ export function getErrorPageData(error: Error, site?: GetSiteResponse) {
 
   return errorPageData;
 }
+
+export async function toBlob(src: string | File | Blob): Promise<Blob> {
+  if (typeof src === "string") {
+    return fetch(src).then((r) => r.blob());
+  }
+  return src;
+}

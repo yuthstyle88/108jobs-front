@@ -18,7 +18,7 @@ test.describe("Freelancer Apply - Step 3 (Basic Info)", () => {
     await page.getByRole("button", { name: /save and continue/i }).click();
 
     await page.getByPlaceholder(/username/i).fill("freelancer_test");
-    await page.getByPlaceholder(/display name/i).fill("Playwright Test");
+    await page.getByPlaceholder(/display name/i).fill("Playwright EditForm");
     await page.getByLabel(/part time/i).check();
 
     await page.getByRole("button", { name: /save and continue/i }).click();

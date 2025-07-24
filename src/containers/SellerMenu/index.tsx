@@ -4,7 +4,7 @@ import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useLogout } from "@/hooks/useLogout";
-import { ProfileData } from "@/types/userData";
+import { ProfileData } from "lemmy-js-client";
 import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import {
   faCalendar,

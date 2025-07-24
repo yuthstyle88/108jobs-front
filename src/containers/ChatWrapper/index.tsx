@@ -8,7 +8,7 @@ import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { ChatResponse } from "@/types/chat";
-import { ProfileData } from "@/types/userData";
+import { ProfileData } from "lemmy-js-client";
 import { formatMessageTime } from "@/utils/formatMessageTime";
 import Image from "next/image";
 import Link from "next/link";
@@ -88,8 +88,8 @@ const ChatWrapper = () => {
         {chatData?.map((chat) => {
           const chatMessage = chat.lastMessage;
           if (!chatMessage) return null;
-
-          const isUser = userData?.user.id === chatMessage.senderId;
+          const senderId = Number(chatMessage.senderId);
+          const isUser = (userData?.localUser.id ?? -1) === senderId;
           const isActive =
             String(chat.roomId) === activeRoomId ||
             String(chat.job?.id) === activeRoomId;

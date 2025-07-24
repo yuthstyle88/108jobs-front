@@ -5,7 +5,7 @@ import NotFound from "@/app/not-found";
 import Loading from "@/components/Loading";
 import {usePrivateFetch, usePrivateFetchParams} from "@/hooks/api-hooks";
 import {ProfileShow} from "@/types/freelancerPofile";
-import {ProfileData} from "@/types/userData";
+import {ProfileData} from "lemmy-js-client";
 import CurrentProfileEmployer from "../components/CurrentProfileEmployer";
 import CurrentProfileFreelance from "../components/CurrentProfileFreelance";
 import EmployerProfile from "../components/EmployerProfile";

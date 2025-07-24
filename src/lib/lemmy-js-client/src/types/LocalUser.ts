@@ -7,6 +7,7 @@ import type { PostListingMode } from "./PostListingMode";
 import type { PostSortType } from "./PostSortType";
 import type { SensitiveString } from "./SensitiveString";
 import type { VoteShow } from "./VoteShow";
+import {RoleType} from "./RoleType";
 
 /**
  * A local user.
@@ -105,4 +106,5 @@ export type LocalUser = {
   showDownvotes: VoteShow;
   showUpvotePercentage: boolean;
   showPersonVotes: boolean;
+  role?: RoleType;
 };

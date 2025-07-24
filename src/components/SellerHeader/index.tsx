@@ -5,7 +5,7 @@ import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { useLogout } from "@/hooks/useLogout";
-import { ProfileData } from "@/types/userData";
+import { ProfileData } from "lemmy-js-client";
 import { interpolate } from "@/utils/interpolate";
 import { faBell, faComment } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

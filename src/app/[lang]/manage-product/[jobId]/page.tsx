@@ -10,12 +10,7 @@ import { JobType, Onboarding } from "@/types/job";
 import { Check } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import Step1ServiceInfo from "../_components/Step1";
-import Step2Packages from "../_components/Step2";
-import Step3Media from "../_components/Step3";
-import Step4WorkSteps from "../_components/Step4";
-import Step5Confirm from "../_components/Step5";
-import SuccessCreateJobModal from "../_components/SuccessCreateJobModal";
+
 
 const getNextStep = (onboarding: Onboarding | undefined): number => {
   if (!onboarding) return 1;
@@ -128,23 +123,11 @@ const ServiceOnboardingPage = () => {
     setIsFormDirty,
   };
 
-  const stepComponents = useMemo(
-    () => ({
-      1: Step1ServiceInfo,
-      2: Step2Packages,
-      3: Step3Media,
-      4: Step4WorkSteps,
-      5: Step5Confirm,
-    }),
-    []
-  );
 
   useEffect(() => {
     setIsFormDirty(false);
   }, [currentStep]);
 
-  const CurrentComponent =
-    stepComponents[currentStep as keyof typeof stepComponents];
 
   if (isLoading || isCreateJobLoading) return <Loading />;
 
@@ -209,19 +192,8 @@ const ServiceOnboardingPage = () => {
           })}
         </div>
 
-        <div className="max-w-4xl mx-auto px-6 py-6">
-          {CurrentComponent && <CurrentComponent {...stepProps} />}
-        </div>
       </div>
-      <SuccessCreateJobModal
-        isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
-        handleConfirmChange={() => {
-          setShowSuccessModal(false);
-          window.location.href = "/seller/my-service";
-        }}
-        language={createJobLanguage}
-      />
+
 
       <WarningLeaveModal
         isOpen={showWarningModal}

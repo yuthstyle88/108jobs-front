@@ -1,6 +1,6 @@
 import {Coin} from "./Coin";
 import {Contact} from "./Contact";
-import {Address} from "node:cluster";
+import {Address} from "./Address";
 import {Card} from "./Card";
 import {Profile} from "./Profile";
 import {LocalUser} from "./LocalUser";

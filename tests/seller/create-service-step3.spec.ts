@@ -11,7 +11,7 @@ test.describe("Seller - Create Service Step 3", () => {
 
     await page.locator('select[name="category"]').selectOption({ index: 1 });
     await page.locator('select[name="type"]').selectOption({ index: 1 });
-    await page.getByPlaceholder(/service title/i).fill("Job With Media Test");
+    await page.getByPlaceholder(/service title/i).fill("Job With Media EditForm");
     await page.getByPlaceholder(/description/i).fill("Step 3 Media Upload");
 
     await Promise.all([

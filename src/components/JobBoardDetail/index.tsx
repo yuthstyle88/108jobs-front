@@ -7,7 +7,7 @@ import Error from "@/app/error";
 import { LandingImage, ProfileImage } from "@/constants/images";
 import { usePrivateFetch, usePublicFetch } from "@/hooks/api-hooks";
 import { JobPostDetail } from "@/types/jobBoard";
-import { ProfileData } from "@/types/userData";
+import {ProfileData, RoleType} from "lemmy-js-client";
 import { formatDateToLong } from "@/utils/formatDateToLong";
 import { MoveRight } from "lucide-react";
 import Image from "next/image";
@@ -48,10 +48,10 @@ const JobBoardDetail = ({ jobId }: Props) => {
     enabled: shouldFetchProfile,
   });
 
-  const userRole = profileData?.roles;
+  const userRole = profileData?.localUser.role;
   const isVerify = profileData?.profile?.isVerified;
-  const isOnlyEmployer = userRole?.length === 1 && userRole[0] === "employer";
-  const isFreelancer = userRole?.includes("freelancer");
+  const isOnlyEmployer = userRole?.length === 1 && userRole[0] === RoleType.Employer;
+  const isFreelancer = userRole?.includes(RoleType.Freelancer);
   const canShowProposalButton = !isGuest && isFreelancer && !isOnlyEmployer;
 
   const calculateDaysUntil = (dateString: string) => {

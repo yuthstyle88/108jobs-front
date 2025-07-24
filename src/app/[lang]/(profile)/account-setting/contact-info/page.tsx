@@ -6,18 +6,19 @@ import LoadingCircle from "@/components/LoadingCircle";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch } from "@/hooks/api-hooks";
-import { HttpService, RequestState, LOADING_REQUEST } from "@/services";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ZipcodeSearch from "../_components/SearchZipcode";
-import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
+import { useProfileData } from "../../../../../hooks/profile-api/useProfileData";
 import { addressSchema } from "@/utils/validation/addressSchema";
 import { API_ROUTES } from "@/api/endpoints";
 import useNotification from "@/hooks/useNotification";
 import ErrorPage from "@/app/error";
+import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
+import {Address} from "lemmy-js-client";
 
 const emailSchema = z.object({
   email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์").optional(),
@@ -52,7 +53,7 @@ interface RawAddress {
   addressDetails?: string | null;
 }
 
-function normalizeAddress(address: RawAddress | undefined): AddressFormData {
+function normalizeAddress(address: Address): AddressFormData {
   return {
     country: address?.country ?? "Thailand",
     province: address?.province ?? "",
@@ -64,7 +65,7 @@ function normalizeAddress(address: RawAddress | undefined): AddressFormData {
 }
 
 export default function ContactPage() {
-  const { profileState, profileData, isLoadingProfile, mutate } = useBasicInfoForm();
+  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
   const [isReady, setIsReady] = useState(false);
   const [defaultForeignCountry, setDefaultForeignCountry] =
     useState<string>("");

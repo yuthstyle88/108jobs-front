@@ -6,7 +6,7 @@ import { LanguageFile } from "@/constants/language";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { ProfileData } from "@/types/userData";
+import { ProfileData } from "lemmy-js-client";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -79,7 +79,7 @@ export default function StartSellingLayout({
 
               <div className="px-4 py-2 mt-4 border-1 border-borderPrimary rounded-lg">
                 <Link prefetch={false}
-                  href={`/user/${user?.user.username}`}
+                  href={`/user/${user?.person.name}`}
                   className="text-blue-600 flex justify-center items-center gap-2"
                 >
                   <p className="font-medium">

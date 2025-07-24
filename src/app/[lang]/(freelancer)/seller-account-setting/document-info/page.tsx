@@ -4,14 +4,22 @@ import { API_ROUTES } from "@/api/endpoints";
 import * as Switch from "@radix-ui/react-switch";
 import { useState } from "react";
 import useNotification from "@/hooks/useNotification";
-import { HttpService } from "@/services";
 import { RequestState, LOADING_REQUEST } from "@/services/HttpService";
+import {useProfileData} from "@/hooks/profile-api/useProfileData";
+
 
 const DocumentInfo = () => {
   const [isAvailable, setIsAvailable] = useState(false);
   const { successMessage, errorMessage } = useNotification();
   const [updateState, setUpdateState] = useState<RequestState<any>>(LOADING_REQUEST);
   const isMutating = updateState.state === "loading";
+
+  const {
+    profileData,
+    isLoadingProfile,
+    isErrorProfile,
+    mutate: refreshProfile,            // ถ้าต้องการปุ่ม refresh ใช้ตัวนี้
+  } = useProfileData();
 
   const handleToggle = async (value: boolean) => {
     setIsAvailable(value);

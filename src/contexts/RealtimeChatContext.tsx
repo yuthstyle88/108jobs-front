@@ -2,7 +2,7 @@
 
 import { API_ROUTES } from "@/api/endpoints";
 import { usePrivateFetch } from "@/hooks/api-hooks";
-import { ProfileData } from "@/types/userData";
+import { ProfileData } from "lemmy-js-client";
 import { useRouter } from "next/navigation";
 import React, {
   createContext,
@@ -53,7 +53,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   const isManuallyClosingRef = useRef(false);
   const [connectionAttemptKey, setConnectionAttemptKey] = useState(0);
 
-  const wsUrl = `wss://fastwork.ibrowe.com/api/v4/ws/?token=${token}&roomId=${partnerId}&userId=${userData?.user.id}`;
+  const wsUrl = `wss://fastwork.ibrowe.com/api/v4/ws/?token=${token}&roomId=${partnerId}&userId=${userData?.localUser.id}`;
 
   useEffect(() => {
     if (!token || !partnerId || !userData) return;

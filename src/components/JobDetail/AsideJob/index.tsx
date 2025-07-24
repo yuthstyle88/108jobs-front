@@ -7,7 +7,7 @@ import { JobDetailIcon } from "@/constants/icons";
 import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
 import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
-import { ProfileData } from "@/types/userData";
+import { ProfileData } from "lemmy-js-client";
 import { formatThaiBaht } from "@/utils/formatMoney";
 import { scrollToElementById } from "@/utils/scrollSmooth";
 import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
@@ -50,9 +50,9 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
       route.push(`/chat/message/${res.data}`);
     }
   };
-  const isCurrentUser = data?.user.userId === user?.user.id;
+  const isCurrentUser = data?.user.userId === user?.localUser.id as unknown as string;
 
-  const isAvailable = data.user.available === true;
+  const isAvailable = data.user.available;
 
   if (isMutating) return <LoadingBlur text="" />;
   return (

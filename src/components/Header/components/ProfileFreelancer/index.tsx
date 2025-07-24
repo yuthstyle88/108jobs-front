@@ -18,15 +18,15 @@ import {
   faTicket,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { MyUserInfo } from "lemmy-js-client";
+import {MyUserInfo, ProfileData} from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
 type ProfileFreelancerProps = {
   data: Partial<GlobalLanguage> | null | undefined;
-  user?: MyUserInfo;
+  profile?: ProfileData;
 };
 
-const ProfileFreelancer = ({ data, user }: ProfileFreelancerProps) => {
+const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
   const { logout } = useLogout();
   const { lang: currentLang } = useLanguage();
   return (

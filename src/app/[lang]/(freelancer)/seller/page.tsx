@@ -6,7 +6,7 @@ import { LanguageFile } from "@/constants/language";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { ProfileData } from "@/types/userData";
+import { ProfileData } from "lemmy-js-client";
 import { interpolateDouble } from "@/utils/interpolate";
 import {
   faArrowRight,
@@ -192,7 +192,7 @@ const { lang } = useLanguage();
               </div>
             </div>
             <Link prefetch={false}
-              href={`${lang}/user/${user?.user.username}`}
+              href={`${lang}/user/${user?.person.name}`}
               className="flex flex-row items-center gap-2"
             >
               <button className="text-blue-600 hover:underline">

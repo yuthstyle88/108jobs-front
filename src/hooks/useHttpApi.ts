@@ -7,12 +7,11 @@ import {
 import {useCallback, useEffect, useRef, useState} from "react";
 import {callHttp, type WrappedLemmyHttp} from "@/services/HttpService";
 
-/* ---------- overloads (แก้ type ให้ถูกชั้น) ---------------- */
+/* ---------- overloads (เพิ่ม isMutating) ------------- */
 export function useHttpApi<K extends keyof WrappedLemmyHttp>(
   method: K,
 ): {
   state: RequestState<
-    // <--- ดึงชนิดข้อมูลที่ซ่อนอยู่ใน RequestState อีกที
     Awaited<ReturnType<WrappedLemmyHttp[K]>> extends RequestState<infer U>
       ? U
       : never
@@ -26,6 +25,7 @@ export function useHttpApi<K extends keyof WrappedLemmyHttp>(
         : never
     >
   >;
+  isMutating: boolean;                       /* ← เพิ่ม */
 };
 
 export function useHttpApi<K extends keyof WrappedLemmyHttp>(
@@ -46,32 +46,30 @@ export function useHttpApi<K extends keyof WrappedLemmyHttp>(
         : never
     >
   >;
+  isMutating: boolean;                       /* ← เพิ่ม */
 };
 
-/* ---------- implementation --------------------------------- */
+/* ---------- implementation --------------------------- */
 export function useHttpApi<K extends keyof WrappedLemmyHttp>(
   method: K,
   ...initialArgs: Parameters<WrappedLemmyHttp[K]>
 ) {
-  type RawReturn = Awaited<ReturnType<WrappedLemmyHttp[K]>>; // RequestState<T>
+  type RawReturn = Awaited<ReturnType<WrappedLemmyHttp[K]>>;
   type Data = RawReturn extends RequestState<infer U> ? U : never;
   type Resp = RequestState<Data>;
 
   const [state, setState] = useState<Resp>(EMPTY_REQUEST as Resp);
-  const cancelRef = useRef({cancelled: false});
+  const cancelRef = useRef({ cancelled: false });
 
   const execute = useCallback(
-    async(...args: Parameters<WrappedLemmyHttp[K]>): Promise<Resp> => {
+    async (...args: Parameters<WrappedLemmyHttp[K]>): Promise<Resp> => {
       cancelRef.current.cancelled = true;
-      cancelRef.current = {cancelled: false};
+      cancelRef.current = { cancelled: false };
 
       setState(LOADING_REQUEST as Resp);
 
       try {
-        // callHttp คืนค่ามาเป็น RequestState<Data> อยู่แล้ว
-        const result = await callHttp(method,
-          ...args) as Resp;
-
+        const result = (await callHttp(method, ...args)) as Resp;
         if (!cancelRef.current.cancelled) setState(result);
         return result;
       } catch (e) {
@@ -88,13 +86,15 @@ export function useHttpApi<K extends keyof WrappedLemmyHttp>(
 
   /* auto-run เมื่อมี initialArgs */
   useEffect(() => {
-      if (initialArgs.length) execute(...initialArgs);
-      return () => {
-        cancelRef.current.cancelled = true;
-      };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },
-    []);
+    if (initialArgs.length) execute(...initialArgs);
+    return () => {
+      cancelRef.current.cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  return {state, execute};
+  /* ---------- flag กำลังเรียก API ------------------- */
+  const isMutating = state.state === REQUEST_STATE.LOADING;
+
+  return { state, execute, isMutating };
 }

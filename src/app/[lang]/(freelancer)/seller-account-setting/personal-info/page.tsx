@@ -1,10 +1,8 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
 import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
 import { useDateOptions } from "@/hooks/useDateOptions";
-import { ImageUploadResponse } from "@/types/image";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
@@ -15,48 +13,17 @@ import { InputError } from "@/components/ui/InputError";
 import ErrorModal from "@/components/ui/ErrorModal";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { HttpService } from "@/services/HttpService";
+import {useHttpApi} from "@/hooks/useHttpApi";
 
 const PersonalInfo = async () => {
   // Function to upload image using HttpService
-  const uploadImageFn = async (formData: FormData): Promise<ImageUploadResponse | null> => {
-    try {
-      const imageFile = formData.get("images[]") as File;
-      if (!imageFile) {
-        throw new Error("No image file found in FormData");
-      }
-      
-      const response = await HttpService.client.uploadImage({ image: imageFile });
-      
-      if (response.state === "success") {
-        // Transform the response to match the expected format
-        return {
-          images: [
-            {
-              imageUrl: response.data.imageUrl,
-              deleteToken: response.data.delete_token || ""
-            }
-          ]
-        };
-      } else if (response.state === "failed") {
-        console.error("Image upload failed:", response.err);
-        throw response.err;
-      }
-      return null;
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      throw error;
-    }
-  };
-  
+
   // Create an object that matches the structure expected by the component
   // Note: We can't track loading state in an async component, so we set isMutating to false
-  const { trigger: uploadImage, isMutating: isUploadMuting } = {
-    trigger: uploadImageFn,
-    isMutating: false
-  };
+  const { execute: uploadImage, isMutating: isUploadMuting } =
+    useHttpApi("uploadImage");
 
-  const profileState = await useBasicInfoForm();
+  const { profileState, profileData, mutate } = useBasicInfoForm();
 
   const { data: sellerPersonalInfoLanguage } = useGlobalTranslate(
       LanguageFile.SELLER_PERSONAL_INFO

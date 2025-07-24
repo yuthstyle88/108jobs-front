@@ -11,7 +11,7 @@ test.describe("Freelancer Registration Flow", () => {
     await expect(page.getByRole("heading", { name: /apply/i })).toBeVisible();
 
     await page.getByLabel(/username/i).fill("testfreelancer");
-    await page.getByLabel(/display name/i).fill("Test Freelancer");
+    await page.getByLabel(/display name/i).fill("EditForm Freelancer");
     await page.getByLabel(/bio/i).fill("Tôi là freelancer thử nghiệm");
 
     await page.getByRole("button", { name: /next/i }).click();

@@ -200,6 +200,7 @@ import type {UpdateTerm} from "./types/UpdateTerm";
 import type {ExchangeKey} from "./types/ExchangeKey";
 import type {ExchangeKeyResponse} from "./types/ExchangeKeyResponse";
 import type {ProfileData} from "./types/ProfileData";
+import type {SaveUserProfile} from "./types/SaveUserProfile";
 
 enum HttpType {
   Get = "GET",
@@ -1702,6 +1703,24 @@ export class LemmyHttp extends Controller {
       options,
     );
   }
+  /**
+   * @summary Save your user settings.
+   */
+  @Security("bearerAuth")
+  @Put("/account/settings/update-profile")
+  @Tags("Account")
+  async updateProfile(
+    @Body() form: SaveUserProfile,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<SaveUserProfile, ProfileData>(
+      HttpType.Put,
+      "/account/settings/update-profile",
+      form,
+      options,
+    );
+  }
+
 
   /**
    * @summary Change your user password.

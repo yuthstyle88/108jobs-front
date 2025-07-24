@@ -17,7 +17,7 @@ test.describe("Freelancer Apply - Step 4 (Bio)", () => {
     await page.getByRole("button", { name: /save and continue/i }).click();
 
     await page.getByPlaceholder(/username/i).fill("testbio");
-    await page.getByPlaceholder(/display name/i).fill("Test Bio");
+    await page.getByPlaceholder(/display name/i).fill("EditForm Bio");
     await page.getByLabel(/part time/i).check();
     await page.getByRole("button", { name: /save and continue/i }).click();
 

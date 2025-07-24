@@ -5,25 +5,25 @@ import PasswordChangeModal from "@/components/ChangePasswordModal";
 import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { usePrivateImagePost } from "@/hooks/api-hooks";
+import { useHttpApi } from "@/hooks/useHttpApi";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { useDateOptions } from "@/hooks/useDateOptions";
 import Image from "next/image";
 import { useState } from "react";
-import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
-import { useImageUpload } from "../hooks/useImageUpload";
+import { useProfileData } from "../../../../../hooks/profile-api/useProfileData";
+import { useImagePicker } from "../hooks/useImagePicker";
 import { useProfileForm } from "../hooks/useProfileForm";
-import { ImageUploadResponse } from "@/types/image";
-import { API_ROUTES } from "@/api/endpoints";
+
 
 export default async function BasicInformation() {
   const { data: languageData } = useGlobalTranslate(LanguageFile.BASIC_INFO);
   const { days, months, years } = useDateOptions();
-  const { trigger: uploadImage, isMutating: isUploadMuting } =
-    usePrivateImagePost<ImageUploadResponse, FormData>(API_ROUTES.image.upload);
+
+  const { execute: uploadImage, isMutating: isUploadMuting } =
+    useHttpApi("uploadImage");
 
   const { profileState, profileData, mutate } =
-    await useBasicInfoForm();
+    await useProfileData();
 
   const {
     selectedImage,
@@ -34,7 +34,7 @@ export default async function BasicInformation() {
     handleSelectFile,
     handleImageUpload,
     closeImageModal,
-  } = useImageUpload(profileState.state === "success" ? profileState.data?.person?.avatar : undefined);
+  } = useImagePicker(profileState.state === "success" ? profileState.data?.person?.avatar : undefined);
 
   const {
     register,

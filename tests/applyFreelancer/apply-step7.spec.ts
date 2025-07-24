@@ -13,7 +13,7 @@ test.describe("Freelancer Apply - Step 7 (Birthdate)", () => {
     await page.getByRole("button", { name: /save and continue/i }).click();
 
     await page.getByPlaceholder(/username/i).fill("birthtest");
-    await page.getByPlaceholder(/display name/i).fill("Birthdate Test");
+    await page.getByPlaceholder(/display name/i).fill("Birthdate EditForm");
     await page.getByLabel(/part time/i).check();
     await page.getByRole("button", { name: /save and continue/i }).click();
 

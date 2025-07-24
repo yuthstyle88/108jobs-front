@@ -3,7 +3,7 @@ import { API_ROUTES } from "@/api/endpoints";
 import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
-import { ProfileData } from "@/types/userData";
+import { ProfileData } from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -23,7 +23,7 @@ const SpUserAvatar = () => {
       }`}
     >
       <Image
-        src={user?.user.avatarUrl || ProfileImage.avatar}
+        src={user?.person.avatar || ProfileImage.avatar}
         alt="avatar"
         className="rounded-full w-8 h-8 object-cover"
         width={500}

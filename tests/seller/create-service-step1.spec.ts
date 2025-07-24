@@ -17,7 +17,7 @@ test.describe("Seller - Create Service Step 1", () => {
     await expect(subCategorySelect).toBeEnabled();
     await subCategorySelect.selectOption({ index: 1 });
 
-    await page.getByPlaceholder(/service title/i).fill("Test Playwright Job Title");
+    await page.getByPlaceholder(/service title/i).fill("EditForm Playwright Job Title");
 
     await page.getByPlaceholder(/description/i).fill("This is a test job created by Playwright for testing step 1.");
 

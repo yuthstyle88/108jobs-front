@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
-import { ProfileData } from "lemmy-js-client";
+import {ProfileData, SaveUserProfile, UploadImage, UploadImageResponse} from "lemmy-js-client";
 import { useEffect, useState } from "react";
 import useNotification from "@/hooks/useNotification";
-import { ImageUploadResponse } from "@/types/image";
 import { API_ROUTES } from "@/api/endpoints";
 import { HttpService, } from "@/services";
-import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
+import {isSuccess, LOADING_REQUEST, RequestState} from "@/services/HttpService";
+import {RequestOptions} from "node:http";
 
 interface FormValues {
   displayName: string;
@@ -18,7 +18,10 @@ interface FormValues {
 export const useProfileForm = (
   profileData: ProfileData | undefined,
   selectedImage: string | null,
-  uploadImage: (formData: FormData) => Promise<ImageUploadResponse | null>,
+  uploadImage: (
+    image: UploadImage,
+    options?: RequestOptions,
+  ) => Promise<RequestState<UploadImageResponse>>,
   mutate: () => void,
   setSelectedImage: (imageUrl: string) => void
 ) => {
@@ -66,29 +69,32 @@ export const useProfileForm = (
       let avatarUrl = profileData?.person?.avatar;
 
       if (selectedImage && selectedImage !== profileData?.person?.avatar) {
-        const imageFormData = new FormData();
-        const blob = await fetch(selectedImage).then((res) => res.blob());
-        imageFormData.append("images[]", blob, "profile.jpg");
-        const result = await uploadImage(imageFormData);
-        const uploadedImageUrl = result?.images?.[0]?.imageUrl;
-        if (!uploadedImageUrl) throw new Error("Image upload failed");
-        avatarUrl = uploadedImageUrl;
+        const blob = await fetch(selectedImage).then((r) => r.blob());
+        const file = new File([blob], "profile.jpg", { type: blob.type || "image/jpeg" });
+        const result = await uploadImage({ image: file });
+        if (isSuccess(result) && result.data.images.length) {
+          const uploadedImageUrl = result.data.images[0].imageUrl;
+          if (!uploadedImageUrl) throw new Error("Image upload failed");
+          avatarUrl = uploadedImageUrl;
+        }
       }
 
-      const isIncompleteBirthDate =
-        formData.birthDay === "Day" ||
-        formData.birthMonth === "Month" ||
-        formData.birthYear === "Year";
-
-      const updateData = {
-        displayName: formData.displayName,
-        username: formData.username,
-        birthDate: isIncompleteBirthDate
-          ? null
-          : `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`,
-        avatarUrl: avatarUrl || null,
+      const updateData : SaveUserProfile = {
+        updatePerson: {
+          displayName: formData.displayName,
+          name: formData.username,
+          avatar: avatarUrl || "",
+        },
+        card: {
+          birthDate: `${formData.birthYear}-${formData.birthMonth}-${formData.birthDay}`,
+        },
+        // Add localUser update to maintain data consistency
+        updateAddress: {
+          country: "country"
+          // No direct fields to update, but include for API consistency
+          // This ensures the backend knows to update the localUser if needed
+        },
       };
-
       // Use HttpService.client for updating the profile
       // First, update the displayName using saveUserSettings
       const userSettingsResult = await HttpService.client.saveUserSettings({
@@ -101,25 +107,18 @@ export const useProfileForm = (
       
       // Then, make a custom request to update the other profile fields
       // We need to use the raw HTTP client to make a PUT request to the profile endpoint
-      const response = await fetch(API_ROUTES.profile.updateProfile, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-        },
-        body: JSON.stringify(updateData),
-      });
+      const response = await HttpService.client.updateProfile(updateData);
       
-      if (!response.ok) {
+      if (!isSuccess(response)) {
         throw new Error('Failed to update profile');
       }
       
-      const data = await response.json();
+      const data = response.data;
       setUpdateProfileState({ state: "success", data });
       
       successMessage("profile", "update");
       // Fetch the latest profile data using HttpService
-      await HttpService.client.getProfile();
+      // await HttpService.client.getProfile();
       await mutate();
     } catch (error) {
       console.error("Update error:", error);

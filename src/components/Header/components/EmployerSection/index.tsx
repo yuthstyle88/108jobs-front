@@ -15,6 +15,7 @@ import Image from "next/image";
 import Link from "next/link";
 import MegaMenu from "../MegaMenu";
 import ProfileSection from "../ProfileSection";
+import {useProfileData} from "@/hooks/profile-api/useProfileData";
 
 interface EmployerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
@@ -23,11 +24,7 @@ interface EmployerProps {
 const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
   const { isOpen, toggle, close } = useToggle();
 
-  const {
-    data: userProfile,
-    isLoading,
-    error,
-  } = useFetch<MyUserInfo>(() => HttpService.client.getMyUser(), []);
+  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
 
   return (
     <section className="flex items-center gap-4 h-full">
@@ -72,10 +69,10 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           onClick={() => toggle()}
           className="flex items-center justify-center gap-2 "
         >
-          {isLoading ? (
+          {isLoadingProfile ? (
             <AvatarSkeleton />
           ) : (
-            userProfile && (
+            profileData && (
               <Image
                 src={ProfileImage.avatar}
                 alt="avatar"
@@ -92,7 +89,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           />
         </button>
 
-        {isOpen && <ProfileSection user={userProfile} data={globalLanguageData} />}
+        {isOpen && <ProfileSection profile={profileData} data={globalLanguageData} />}
 
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()} />

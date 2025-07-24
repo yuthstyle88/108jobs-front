@@ -1,14 +1,11 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile, LANGUAGES } from "@/constants/language";
 import LanguageBottomSheet from "@/containers/SpBottomTab";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { useToggle } from "@/hooks/useToggle";
-import { ProfileData } from "@/types/userData";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
@@ -21,13 +18,10 @@ import LanguageDropdown from "../LanguageDropDown";
 import Loading from "../Loading";
 import Error from "@/app/error";
 import {RoleType} from "lemmy-js-client";
+import {useProfileData} from "@/hooks/profile-api/useProfileData";
 
 const RewardHeader = () => {
   const { data: session } = useSession();
-  const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.getProfile
-  );
-
   const {
     data: globalLanguageData,
     isLoading,
@@ -39,8 +33,11 @@ const RewardHeader = () => {
   const { isOpen, toggle, close } = useToggle();
   const currentLang = LANGUAGES[lang as keyof typeof LANGUAGES];
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
+  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
+
+
+  if (isLoadingProfile) return <Loading />;
+  if (profileState.state === "failed") return <Error />;
 
   return (
     <header className="sticky top-0 z-[999] w-full transition-all duration-300 bg-transparent">
@@ -77,7 +74,7 @@ const RewardHeader = () => {
             className="flex sm:hidden items-center justify-center p-2 text-white text-[24px] cursor-pointer"
           >
             <Image
-              src={user?.user.avatarUrl || ProfileImage.avatar}
+              src={profileData?.person.avatar || ProfileImage.avatar}
               alt="avatar"
               className="rounded-full w-8 h-8"
               width={500}
@@ -93,7 +90,7 @@ const RewardHeader = () => {
                     className="flex items-center justify-center gap-2 w-12 h-12 rounded-full "
                   >
                     <Image
-                      src={user?.user.avatarUrl || ProfileImage.avatar}
+                      src={profileData?.person.avatar || ProfileImage.avatar}
                       alt="avatar"
                       className="rounded-full"
                       width={500}
@@ -106,7 +103,7 @@ const RewardHeader = () => {
                   </button>
 
                   {isOpen && (
-                    <ProfileFreelancer user={user} data={globalLanguageData} />
+                    <ProfileFreelancer profile={profileData} data={globalLanguageData} />
                   )}
                   {isOpen && (
                     <div
@@ -135,7 +132,10 @@ const RewardHeader = () => {
                   </button>
 
                   {isOpen && (
-                    <ProfileSection user={user} data={globalLanguageData} />
+                    <ProfileSection
+                      profile={profileData}
+                      data={globalLanguageData}
+                    />
                   )}
 
                   {isOpen && (

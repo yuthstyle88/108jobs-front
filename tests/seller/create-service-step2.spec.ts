@@ -14,8 +14,8 @@ test.describe("Seller - Create Service Step 2", () => {
     const subCategorySelect = page.locator('select[name="type"]');
     await subCategorySelect.selectOption({ index: 1 });
 
-    await page.getByPlaceholder(/service title/i).fill("Step 2 Test Job Title");
-    await page.getByPlaceholder(/description/i).fill("Test job for step 2 Playwright test");
+    await page.getByPlaceholder(/service title/i).fill("Step 2 EditForm Job Title");
+    await page.getByPlaceholder(/description/i).fill("EditForm job for step 2 Playwright test");
 
     await Promise.all([
       page.waitForNavigation(),

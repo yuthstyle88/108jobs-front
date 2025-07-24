@@ -6,13 +6,14 @@ import {
   usePrivateFetch,
   usePrivatePost,
 } from "@/hooks/api-hooks";
-import { HttpService, RequestState, LOADING_REQUEST } from "@/services";
-import { ProfileData } from "@/types/userData";
+
+import { ProfileData } from "lemmy-js-client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import CountrySearch from "./components/CountrySearch";
 import ProvinceSearch from "./components/ProvinceSearch";
+import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
 
 export interface LocationForm {
   country: string;

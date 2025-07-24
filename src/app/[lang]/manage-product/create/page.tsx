@@ -1,6 +1,5 @@
 "use client";
 import { useRouter } from "next/navigation";
-import Step1ServiceInfo from "../_components/Step1";
 import { JobType } from "@/types/job";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { LanguageFile } from "@/constants/language";
@@ -60,9 +59,6 @@ const CreateService = () => {
           ))}
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          <Step1ServiceInfo onCreated={handleCreatedStep1} />
-        </div>
       </div>
     </div>
   );

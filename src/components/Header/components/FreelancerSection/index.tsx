@@ -4,18 +4,16 @@ import NotificationDropdown from "@/components/NotificationDropdown";
 import AvatarSkeleton from "@/components/ui/AvatarSkeleton";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
-import { useFetch } from "@/hooks/useFetchData";
 import { useToggle } from "@/hooks/useToggle";
-import { HttpService } from "@/services";
 import { GlobalLanguage } from "@/types/language";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { MyUserInfo } from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
 import FreelanceMegaMenu from "../FreelanceMegaMenu";
 import FreelanceImproveMenu from "../FreelancerImproveMenu";
 import ProfileFreelancer from "../ProfileFreelancer";
+import {useProfileData} from "@/hooks/profile-api/useProfileData";
 
 interface FreelancerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
@@ -24,11 +22,9 @@ interface FreelancerProps {
 const FreelancerSession = ({
   globalLanguageData,
 }: FreelancerProps) => {
-  const {
-    data: userProfile,
-    isLoading,
-    error,
-  } = useFetch<MyUserInfo>(() => HttpService.client.getMyUser(), []);
+
+  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
+
   const { isOpen, toggle, close } = useToggle();
 
   return (
@@ -89,10 +85,10 @@ const FreelancerSession = ({
           className="flex items-center justify-center gap-2 "
         >
           <div className="flex items-center w-12 h-12 rounded-full overflow-hidden bg-white">
-            {isLoading ? (
+            {isLoadingProfile ? (
               <AvatarSkeleton />
             ) : (
-              userProfile && (
+              profileData && (
                 <Image
                   src={ProfileImage.avatar}
                   alt="avatar"
@@ -108,7 +104,7 @@ const FreelancerSession = ({
             className="w-[14px] h-[14px] text-white"
           />
         </button>
-        {isOpen && <ProfileFreelancer user={userProfile} data={globalLanguageData} />}
+        {isOpen && <ProfileFreelancer profile={profileData} data={globalLanguageData} />}
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()} />
         )}

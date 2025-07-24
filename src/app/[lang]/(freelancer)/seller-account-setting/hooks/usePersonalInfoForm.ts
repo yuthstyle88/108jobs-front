@@ -4,9 +4,10 @@ import { z } from "zod";
 import { useEffect, useState } from "react";
 import useNotification from "@/hooks/useNotification";
 import { API_ROUTES_SELLER } from "@/api/endpoints";
-import { ImageUploadResponse } from "@/types/image";
-import { ProfileData } from "lemmy-js-client";
-import { HttpService } from "@/services/HttpService";
+import {ProfileData, UploadImage, UploadImageResponse} from "lemmy-js-client";
+import {HttpService, isSuccess, RequestState} from "@/services/HttpService";
+import {RequestOptions} from "node:http";
+import {toBlob} from "@/utils/helpers";
 
 const cardSchema = z.object({
   title: z.string().min(1, "Vui lòng nhập thông tin"),
@@ -27,11 +28,11 @@ type FormValues = z.infer<typeof cardSchema>;
 
 export const usePersonalInfoForm = (
   profileData: ProfileData | undefined,
-  frontFile: File | null,
-  backFile: File | null,
+  frontFile: string | File | Blob | null,
+  backFile: string | File | Blob | null,
   frontPreview: string | null,
   backPreview: string | null,
-  uploadImage: (formData: FormData) => Promise<ImageUploadResponse | null>,
+  uploadImage: (image: UploadImage, options?: RequestOptions) => Promise<RequestState<UploadImageResponse>>,
   setSelectedFront: (imageUrl: string) => void,
   setSelectedBack: (imageUrl: string) => void
 ) => {
@@ -81,8 +82,8 @@ export const usePersonalInfoForm = (
         cardDistrictOrSubdistrict: profileData.card.districtOrSubdistrict,
         cardProvince: profileData.card.province,
       });
-      setSelectedFront(profileData.card.frontCard);
-      setSelectedBack(profileData.card.backCard);
+      setSelectedFront(profileData.card.frontCard || "");
+      setSelectedBack(profileData.card.backCard || "");
     }
   }, [profileData, reset, setSelectedFront, setSelectedBack]);
 
@@ -100,18 +101,22 @@ export const usePersonalInfoForm = (
       let backUrl = profileData?.card.backCard;
 
       if (frontFile) {
-        const frontForm = new FormData();
-        frontForm.append("images[]", frontFile);
-        const result = await uploadImage(frontForm);
-        frontUrl = result?.images?.[0]?.imageUrl;
+        const blob = await toBlob(frontFile);
+        const file = new File([blob], "profile.jpg", { type: blob.type || "image/jpeg" });
+        const result = await uploadImage({ image: file });
+        if (isSuccess(result) && result.data.images.length) {
+          frontUrl = result.data.images?.[0]?.imageUrl;
+        }
         if (!frontUrl) throw new Error("Upload ảnh mặt trước thất bại");
       }
 
       if (backFile) {
-        const backForm = new FormData();
-        backForm.append("images[]", backFile);
-        const result = await uploadImage(backForm);
-        backUrl = result?.images?.[0]?.imageUrl;
+        const blob = await toBlob(backFile);
+        const file = new File([blob], "profile.jpg", { type: blob.type || "image/jpeg" });
+        const result = await uploadImage({ image: file });
+        if (isSuccess(result) && result.data.images.length) {
+          backUrl = result.data.images?.[0]?.imageUrl;
+        }
         if (!backUrl) throw new Error("Upload ảnh mặt sau thất bại");
       }
 
