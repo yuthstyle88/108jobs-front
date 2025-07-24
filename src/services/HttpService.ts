@@ -104,3 +104,18 @@ export class HttpService {
     return this.#Instance.#client;
   }
 }
+/* ===== Generic helper ================================================== */
+
+/**
+ * เรียกเมธอดใดก็ได้บน HttpService.client แบบ type-safe
+ *
+ * @example
+ *   const res = await callHttp("getCommentsSlim", { page: 1 });
+ */
+export function callHttp<
+  K extends keyof WrappedLemmyHttp,
+>(method: K, ...args: Parameters<WrappedLemmyHttp[K]>)
+  : ReturnType<WrappedLemmyHttp[K]> {
+  return HttpService.client[method](...args) as ReturnType<WrappedLemmyHttp[K]>;
+}
+
