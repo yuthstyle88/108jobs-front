@@ -1,21 +1,17 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
 import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { ProfileData } from "lemmy-js-client";
 import { FileText, Info } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import {useProfileData} from "@/hooks/profile-api/useProfileData";
 
 const AccountStats = () => {
-  const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.getProfile
-  );
 
+  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
   const {
     data: sellerAccStatsLanguage,
     isLoading,
@@ -24,7 +20,7 @@ const AccountStats = () => {
 
   const daysOfWeek = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
-  if (isLoading) return <Loading />;
+  if (isLoadingProfile) return <Loading />;
   if (error) return <Error/>;
 
   return (
@@ -38,14 +34,14 @@ const AccountStats = () => {
           <div className="bg-white rounded-lg p-6 flex flex-col justify-center items-center">
             <figure className="w-20 h-20 rounded-full">
               <Image
-                src={user?.person?.avatar || ProfileImage.avatar}
+                src={profileData?.person?.avatar || ProfileImage.avatar}
                 alt="avatar"
                 width={80}
                 height={80}
                 className="object-cover w-20 h-20 rounded-full"
               />
             </figure>
-            <h3 className="text-lg font-medium mb-1">{user?.person?.name}</h3>
+            <h3 className="text-lg font-medium mb-1">{profileData?.person?.name}</h3>
           </div>
 
           <div className="bg-white rounded-lg p-6">

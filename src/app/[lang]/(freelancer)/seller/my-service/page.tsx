@@ -76,7 +76,7 @@ const MyServices = () => {
     if (selectedJob) {
       await deleteJob();
       setSelectedJob(null);
-      mutate();
+      await mutate();
     }
   };
 
@@ -90,7 +90,7 @@ const MyServices = () => {
         url: `${API_ROUTES_SELLER.job.displayJob}/${jobId}`,
         data: { show: !currentShow },
       });
-      mutate();
+      await mutate();
       successMessage("service", currentShow ? "hideJob" : "showJob");
     } catch (error) {
       console.error("Toggle visibility failed:", error);
