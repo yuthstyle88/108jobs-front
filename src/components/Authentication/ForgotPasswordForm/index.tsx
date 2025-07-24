@@ -1,72 +1,83 @@
 "use client";
 import LoadingCircle from "@/components/LoadingCircle";
-import {CustomInput} from "@/components/ui/InputField";
-import {ERROR_CONSTANTS} from "@/constants/error";
-import {LanguageFile} from "@/constants/language";
-import {useTranslateFile} from "@/hooks/translation/useTranslateFile";
-import {RegisterDataProps} from "@/types/register-data";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useState} from "react";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
-import {HttpService} from "@/services";
+import { CustomInput } from "@/components/ui/InputField";
+import { ERROR_CONSTANTS } from "@/constants/error";
+import { LanguageFile } from "@/constants/language";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { RegisterDataProps } from "@/types/register-data";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useHttpApi } from "@/hooks/useHttpApi";
 
 type VerifyForgotPasswordProps = {
   switchToVerifyForgotPassword: () => void;
   setForgotEmail: (data: RegisterDataProps) => void;
 };
 
-
 export const ForgotPasswordForm = ({
   switchToVerifyForgotPassword,
   setForgotEmail,
 }: VerifyForgotPasswordProps) => {
-
   const authen = useTranslateFile(LanguageFile.AUTHEN);
-  const forgotPasswordSchema = z.object({
-    email: z.string().min(4,
-      authen?.placeholderEmailPhone),
-  });
 
+  /* -------- schema & react-hook-form ---------------------------- */
+  const forgotPasswordSchema = z.object({
+    email: z.string().min(4, authen?.placeholderEmailPhone),
+  });
   type VerifyForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+
   const {
     register,
     handleSubmit,
-    formState: {errors, isSubmitting},
-  } = useForm({
+    formState: { errors, isSubmitting },
+  } = useForm<VerifyForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
     mode: "onChange",
   });
 
+  /* -------- http hook ------------------------------------------ */
+  // ประกาศ hook ไว้ด้านบนของคอมโพเนนต์
+  const {
+    state: resetState,
+    execute: resetPassword,
+  } = useHttpApi("passwordReset");
+
+  /* -------- local state ---------------------------------------- */
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const onSubmit = async(data: VerifyForgotPasswordFormData) => {
+  /* -------- submit --------------------------------------------- */
+  const onSubmit = async (data: VerifyForgotPasswordFormData) => {
+    setApiError(null);
     try {
-      setApiError(null);
-      const email = data.email;
-      const response = await HttpService.client.passwordReset({email});
+      const res = await resetPassword({ email: data.email });
 
-
-      if (response.state === "failed") {
+      if (res.state === "failed") {
         setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
         return;
       }
+
+      // สำเร็จ
       setForgotEmail(data);
       switchToVerifyForgotPassword();
     } catch (error) {
-      console.error("Registration error:",
-        error);
+      console.error("Password reset error:", error);
       setApiError(
-        error instanceof Error ? error.message : "เกิดข้อผิดพลาดในการลงทะเบียน"
+        error instanceof Error
+          ? error.message
+          : "เกิดข้อผิดพลาดในการรีเซ็ตรหัสผ่าน",
       );
     }
   };
 
+  /* -------- render --------------------------------------------- */
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <div className="text-sm text-gray-600 mb-6">
         {authen?.verificationMessage}
       </div>
+
       <CustomInput
         label={authen?.labelContactEmailPhone}
         name="email"
@@ -87,11 +98,7 @@ export const ForgotPasswordForm = ({
           className="submit-button py-3"
           disabled={isSubmitting}
         >
-          {isSubmitting ? (
-            <LoadingCircle/>
-          ) : (
-            authen?.sendCodeButton
-          )}
+          {isSubmitting ? <LoadingCircle /> : authen?.sendCodeButton}
         </button>
       </div>
     </form>

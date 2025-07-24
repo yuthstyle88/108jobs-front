@@ -2,6 +2,8 @@
 import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
 import { LanguageFile } from "@/constants/language";
+/* เพิ่ม hook */
+import { useHttpApi } from "@/hooks/useHttpApi";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { UpdateDataProps } from "@/types/update-term";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,6 +55,13 @@ export const AcceptForm = ({
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  /* —— เรียก useHttpApi ————————————————————————— */
+  const {
+    state: updateState,            // ดูสถานะการยิง API
+    execute: updateTerm,           // ฟังก์ชันยิง API
+  } = useHttpApi("updateTerm");
+
   const [apiError, setApiError] = useState<string | null>(null);
   useEffect(() => {
     const email = UserService.Instance.authInfo?.claims?.email;
@@ -70,25 +79,25 @@ export const AcceptForm = ({
 
 
   const onSubmit = async (data: UpdateFormDataType) => {
+    setApiError(null);
 
-      setApiError(null);
-      sessionStorage.setItem("RegisterUpData", JSON.stringify(data));
+    /* payload ตามที่ backend ต้องการ */
+    const payload = {
+      email: data.email,
+      password: data.password,
+      passwordVerify: data.confirmPassword,
+      role: data.role,
+      termsAccepted: data.termsAccepted,
+    };
 
-      const response = await HttpService.client.updateTerm({
-          email: data.email,
-          password: data.password,
-          passwordVerify: data.confirmPassword,
-          role: data.role,
-          termsAccepted: data.termsAccepted
-      });
+    const res = await updateTerm(payload);
 
-      if (response.state === "success") {
-        console.log("response:", response.data);
-        //set cookie
-        UserService.Instance.login({
-          res: response.data,
-        });
-      }
+    if (res.state === "success") {
+      UserService.Instance.login({ res: res.data });
+      switchToVerifyEmail();      // หรือ logic อื่นตามต้องการ
+    } else if (res.state === "failed") {
+      setApiError(res.err.message);
+    }
   };
 
   return (
@@ -205,12 +214,17 @@ export const AcceptForm = ({
           type="submit"
           className="submit-button py-3"
           disabled={
+            updateState.state === "loading" ||          // กดซ้ำไม่ได้
             !!errors.confirmPassword ||
             !watch("termsAccepted") ||
             !watch("privacyAccepted")
           }
         >
-          {isSubmitting ? <LoadingCircle /> : authen?.linkCreateAccount}
+          {updateState.state === "loading" ? (
+            <LoadingCircle />
+          ) : (
+            authen?.linkCreateAccount
+          )}
         </button>
       </div>
     </form>

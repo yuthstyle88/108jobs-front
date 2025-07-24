@@ -8,70 +8,77 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { HttpService } from "@/services";
+import { useHttpApi } from "@/hooks/useHttpApi";          // ★ เพิ่ม
 import useNotification from "@/hooks/useNotification";
 
-type ChangePasswordProps = {
-  token: string;
-};
+type ChangePasswordProps = { token: string };
 
 export const ChangePassword = ({ token }: ChangePasswordProps) => {
   const authen = useTranslateFile(LanguageFile.AUTHEN);
+
+  /* -------- schema & form -------------------------------------- */
   const changePasswordSchema = z
     .object({
       password: z.string().min(6, authen?.passwordMin6),
       confirmPassword: z.string(),
     })
-    .refine((data) => data.password === data.confirmPassword, {
+    .refine((d) => d.password === d.confirmPassword, {
       message: authen?.notMatchPassword,
       path: ["confirmPassword"],
     });
-  type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
+
+  type FormData = z.infer<typeof changePasswordSchema>;
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm({
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(changePasswordSchema),
     mode: "onChange",
   });
+
+  /* -------- http hook ------------------------------------------ */
+  const {
+    state: changeState,
+    execute: passwordChange,
+  } = useHttpApi("passwordChange");
+
+  /* -------- UI states ------------------------------------------ */
   const { successMessage } = useNotification();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const onSubmit = async (data: ChangePasswordFormData) => {
-    try {
-      setApiError(null);
-      const response = await HttpService.client.passwordChangeAfterReset({
-        token: token,
-        password: data.password,
-        passwordVerify: data.confirmPassword,
-      });
+  /* -------- submit --------------------------------------------- */
+  const onSubmit = async (data: FormData) => {
+    setApiError(null);
 
-      // const result = await response.json();
+    const res = await passwordChange({
+      token,
+      password: data.password,
+      passwordVerify: data.confirmPassword,
+    });
 
-      if (response.state === "failed") {
-        setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);
-        return;
-      }
+    if (res.state === "failed") {
+      setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);
+      return;
+    }
+
+    if (res.state === "success") {
       successMessage(null, null, "Change password successfully");
       window.location.href = "/login";
-    } catch (error) {
-      setApiError(
-        error instanceof Error
-          ? error.message
-          : "มีข้อผิดพลาดในการเปลี่ยนรหัสผ่านของคุณ"
-      );
     }
   };
 
+  /* -------- render --------------------------------------------- */
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <p className="text-text-primary text-sm font-sans">
         Create a new password. Your password must be at least 8 characters long
         and contain a mix of letters and numbers.
       </p>
+
       {errors.root && (
         <p className="text-red-500 text-sm text-center mb-4">
           {errors.root.message}
@@ -109,10 +116,14 @@ export const ChangePassword = ({ token }: ChangePasswordProps) => {
       <div className="text-center">
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={changeState.state === "loading"}
           className="submit-button py-3"
         >
-          {isSubmitting ? <LoadingCircle /> : authen?.confirmButton}
+          {changeState.state === "loading" ? (
+            <LoadingCircle />
+          ) : (
+            authen?.confirmButton
+          )}
         </button>
       </div>
     </form>
