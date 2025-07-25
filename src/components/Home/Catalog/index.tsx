@@ -53,7 +53,7 @@ const CatalogBannerComponent = (props: Props) => {
                       } relative transform before:absolute before:opacity-0 before:bottom-[calc(56px*0.2*-1+8px)] before:left-0 before:right-0 before:mx-auto before:w-[calc(56px*0.8)] before:h-[calc(56px*0.2)] before:bg-secondary before:rounded-[50%] before:transition-all before:ease-in-out before:[backface-visibility:hidden] group-hover:before:opacity-100 group-hover:before:translate-y-[5px]`}
                     >
                       <LazyImage
-                        imagePath={matchedIcon?.src ? matchedIcon.src.replace('/assets/images/', '') : CategoriesIcon.industry.src.replace('/assets/images/', '')}
+                        imagePath={matchedIcon?.src ? matchedIcon.src.replace('/assets/icons/', '') : CategoriesIcon.industry.src.replace('/assets/icons/', '')}
                         alt={catalog.name}
                         width={56}
                         height={56}
