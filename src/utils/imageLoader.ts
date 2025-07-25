@@ -9,6 +9,7 @@ export interface ImageLoadingStatus {
   isLoading: boolean;
   isError: boolean;
   errorMessage?: string;
+  isLoaded: boolean;
 }
 
 /**
@@ -27,7 +28,8 @@ export function useLazyImage(
   const [image, setImage] = useState<StaticImageData>();
   const [status, setStatus] = useState<ImageLoadingStatus>({
     isLoading: true,
-    isError: false
+    isError: false,
+    isLoaded: false
   });
   
   // Use a ref to track if the component is mounted
@@ -37,7 +39,7 @@ export function useLazyImage(
   const loadImage = useCallback(async () => {
     if (!isMountedRef.current) return;
     
-    setStatus({ isLoading: true, isError: false });
+    setStatus({ isLoading: true, isError: false , isLoaded: false});
     
     try {
       // Use performance tracking if enabled
@@ -46,7 +48,7 @@ export function useLazyImage(
           const importedImage = await import(`../assets/images/${imagePath}`);
           if (isMountedRef.current) {
             setImage(importedImage.default);
-            setStatus({ isLoading: false, isError: false });
+            setStatus({ isLoading: false, isError: false , isLoaded: true});
           }
           return importedImage.default;
         } catch (error) {
@@ -56,7 +58,8 @@ export function useLazyImage(
             setStatus({ 
               isLoading: false, 
               isError: true, 
-              errorMessage: errorMessage 
+              errorMessage: errorMessage,
+              isLoaded: false
             });
           }
           throw error;

@@ -1,42 +1,32 @@
-import React, { useState, useEffect, useCallback, useRef, memo } from 'react';
+"use client";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  memo,
+  Profiler,
+} from 'react';
 import Image, { ImageProps } from 'next/image';
-import { 
-  useLazyImage, 
-  getResponsiveImageSize, 
-  generateSizesAttribute, 
+import {
+  useLazyImage,
+  getResponsiveImageSize,
+  generateSizesAttribute,
   debounce,
   generatePlaceholder,
-  preloadImage,
-  ImageLoadingStatus
 } from '@/utils/imageLoader';
 import { measureRenderTime } from '@/utils/performance';
-import { Profiler } from 'react';
+
 
 interface LazyImageProps extends Omit<ImageProps, 'src'> {
-  /**
-   * The path to the image relative to the assets/images directory
-   * e.g. "landing/topWorks.webp" for "../assets/images/landing/topWorks.webp"
-   */
   imagePath: string;
-  
-  /**
-   * Fallback image to show while the main image is loading
-   */
   fallback?: string;
-  
-  /**
-   * Responsive breakpoints for image dimensions
-   */
   breakpoints?: {
     sm?: { width: number; height: number };
     md?: { width: number; height: number };
     lg?: { width: number; height: number };
     xl?: { width: number; height: number };
   };
-  
-  /**
-   * Responsive sizes attribute for different viewport widths
-   */
   responsiveSizes?: {
     default: string;
     sm?: string;
@@ -44,44 +34,20 @@ interface LazyImageProps extends Omit<ImageProps, 'src'> {
     lg?: string;
     xl?: string;
   };
-  
-  /**
-   * Whether to preload the image (for critical images)
-   */
   preload?: boolean;
-  
-  /**
-   * Whether to track performance metrics for this image
-   */
   trackPerformance?: boolean;
-  
-  /**
-   * Whether to use blur-up loading effect
-   */
   blurUp?: boolean;
-  
-  /**
-   * Custom placeholder color for blur-up effect
-   */
   placeholderColor?: string;
-  
-  /**
-   * Custom error component or element to show when image fails to load
-   */
   errorComponent?: React.ReactNode;
 }
 
-/**
- * LazyImage component that dynamically imports images and provides responsive sizing
- * with performance tracking, blur-up loading, and error handling
- */
 const LazyImage: React.FC<LazyImageProps> = ({
   imagePath,
   fallback,
   breakpoints,
   responsiveSizes,
-  width: defaultWidth,
-  height: defaultHeight,
+  width: defaultWidth = 0,
+  height: defaultHeight = 0,
   loading = 'lazy',
   preload = false,
   trackPerformance = false,
@@ -90,186 +56,140 @@ const LazyImage: React.FC<LazyImageProps> = ({
   errorComponent,
   ...props
 }) => {
-  // Dynamically import the image with performance tracking
-  const [image, loadingStatus] = useLazyImage(imagePath, {
+  const [image, ImageLoadingStatus] = useLazyImage(imagePath, {
     trackPerformance,
-    preload
+    preload,
   });
-  
-  // State for responsive dimensions
+
   const [dimensions, setDimensions] = useState({
     width: typeof defaultWidth === 'number' ? defaultWidth : 0,
     height: typeof defaultHeight === 'number' ? defaultHeight : 0,
   });
-  
-  // State for placeholder
-  const [placeholder, setPlaceholder] = useState<string | null>(
-    blurUp ? generatePlaceholder(
-      Math.min(20, typeof defaultWidth === 'number' ? defaultWidth : 20),
-      Math.min(20, typeof defaultHeight === 'number' ? defaultHeight : 20),
+
+  const placeholder = useMemo(() => {
+    if (!blurUp) return null;
+    return generatePlaceholder(
+      Math.min(20, dimensions.width),
+      Math.min(20, dimensions.height),
       placeholderColor
-    ) : null
-  );
-  
-  // Create a debounced resize handler
+    );
+  }, [blurUp, dimensions, placeholderColor]);
+
   const handleResize = useCallback(
     debounce(() => {
       if (!breakpoints) return;
-      
-      const newDimensions = getResponsiveImageSize(
+      const newDims = getResponsiveImageSize(
         {
           width: typeof defaultWidth === 'number' ? defaultWidth : 0,
           height: typeof defaultHeight === 'number' ? defaultHeight : 0,
         },
         breakpoints
       );
-      setDimensions(newDimensions);
+      setDimensions(newDims);
     }, 100),
     [breakpoints, defaultWidth, defaultHeight]
   );
-  
-  // Update dimensions on window resize if breakpoints are provided
+
   useEffect(() => {
     if (!breakpoints) return;
-    
-    // Set initial dimensions
     handleResize();
-    
-    // Add resize listener
     window.addEventListener('resize', handleResize);
-    
-    // Clean up
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    return () => window.removeEventListener('resize', handleResize);
   }, [breakpoints, handleResize]);
-  
-  // Generate sizes attribute if provided
-  const sizes = responsiveSizes ? generateSizesAttribute(responsiveSizes) : undefined;
-  
-  // Extract alt from props to avoid duplication
-  const { alt = '', className = '', style = {}, ...otherProps } = props;
-  
-  // Preload critical images
+
   useEffect(() => {
-    if (preload && typeof window !== 'undefined') {
-      // Use link preload for truly critical images
+    if (!preload || typeof window === 'undefined') return;
+    try {
       const link = document.createElement('link');
       link.rel = 'preload';
       link.as = 'image';
-      link.href = imagePath;
+      link.href = imagePath.startsWith('http')
+        ? imagePath
+        : new URL(imagePath, window.location.origin).toString();
       document.head.appendChild(link);
-      
       return () => {
         document.head.removeChild(link);
       };
+    } catch (e) {
+      console.warn('Preload failed:', e);
     }
   }, [imagePath, preload]);
-  
-  // Handle loading state
-  if (loadingStatus.isLoading) {
-    // Show fallback while image is loading
-    if (fallback) {
-      return (
-        <div className={className} style={{ position: 'relative', ...style }}>
-          <Image
-            src={fallback}
-            alt={alt || 'Loading...'}
-            width={dimensions.width || undefined}
-            height={dimensions.height || undefined}
-            sizes={sizes}
-            loading={loading}
-            className={className}
-            {...otherProps}
-          />
-        </div>
-      );
+
+  const sizes = responsiveSizes ? generateSizesAttribute(responsiveSizes) : undefined;
+  const { alt = '', className = '', style = {}, ...otherProps } = props;
+
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
+  const [isBlur, setIsBlur] = useState(false);
+
+  useEffect(() => {
+    if (ImageLoadingStatus.isLoading) {
+      if (fallback) {
+        setImgSrc(fallback);
+        setIsBlur(false);
+      } else if (blurUp && placeholder) {
+        setImgSrc(placeholder);
+        setIsBlur(true);
+      } else {
+        setImgSrc(null);
+        setIsBlur(false);
+      }
+    } else if (ImageLoadingStatus.isLoaded && image) {
+      const src = typeof image === "string" ? image : image.src; // แปลง StaticImageData
+      setImgSrc(src);
     }
-    
-    // Show placeholder if blur-up is enabled
-    if (blurUp && placeholder) {
-      return (
-        <div 
-          className={className} 
-          style={{ 
-            position: 'relative',
-            backgroundColor: placeholderColor,
-            ...style 
-          }}
-        >
-          <Image
-            src={placeholder}
-            alt={alt || 'Loading...'}
-            width={dimensions.width || undefined}
-            height={dimensions.height || undefined}
-            sizes={sizes}
-            className={`${className} blur-sm`}
-            {...otherProps}
-          />
-        </div>
-      );
-    }
-    
-    // Default loading state
-    return (
-      <div 
-        className={className} 
-        style={{ 
-          backgroundColor: placeholderColor,
+  }, [ImageLoadingStatus, fallback, blurUp, placeholder, image]);
+
+  if (ImageLoadingStatus.isError) {
+    return errorComponent ? (
+      <>{errorComponent}</>
+    ) : (
+      <div
+        className={`${className} flex items-center justify-center bg-gray-100`}
+        style={{
           width: dimensions.width || '100%',
           height: dimensions.height || '100%',
-          ...style 
-        }} 
-      />
-    );
-  }
-  
-  // Handle error state
-  if (loadingStatus.isError) {
-    if (errorComponent) {
-      return <>{errorComponent}</>;
-    }
-    
-    return (
-      <div 
-        className={`${className} flex items-center justify-center bg-gray-100`} 
-        style={{ 
-          width: dimensions.width || '100%',
-          height: dimensions.height || '100%',
-          ...style 
+          ...style,
         }}
       >
         <span className="text-xs text-gray-500">Failed to load image</span>
       </div>
     );
   }
-  
-  // Render the image once loaded
-  const imageComponent = (
+
+  if (!imgSrc) {
+    return (
+      <div
+        className={`${className} bg-gray-100`}
+        style={{
+          width: dimensions.width || '100%',
+          height: dimensions.height || '100%',
+          ...style,
+        }}
+      />
+    );
+  }
+
+  const img = (
     <Image
-      src={image!}
+      src={imgSrc}
       alt={alt}
-      width={dimensions.width || undefined}
-      height={dimensions.height || undefined}
+      width={dimensions.width}
+      height={dimensions.height}
       sizes={sizes}
       loading={loading}
-      className={className}
-      style={style}
+      className={`${className} ${isBlur ? 'blur-sm' : ''}`.trim()}
+      style={{ backgroundColor: placeholderColor, ...style }}
       {...otherProps}
     />
   );
-  
-  // Wrap with Profiler if performance tracking is enabled
-  if (trackPerformance) {
-    return (
-      <Profiler id={`LazyImage-${imagePath}`} onRender={measureRenderTime}>
-        {imageComponent}
-      </Profiler>
-    );
-  }
-  
-  return imageComponent;
+
+  return trackPerformance ? (
+    <Profiler id={`LazyImage-${imagePath}`} onRender={measureRenderTime}>
+      {img}
+    </Profiler>
+  ) : (
+    img
+  );
 };
 
-// Memoize the component to prevent unnecessary re-renders
 export default memo(LazyImage);
