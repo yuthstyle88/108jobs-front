@@ -24,12 +24,12 @@ export type RequestStateKey =
 
 /* ---------- concrete states --------------------------------- */
 export type FailedRequestState = {
-  state: typeof REQUEST_STATE.FAILED;        // <-- ใช้คอนสแตนต์
+  state: typeof REQUEST_STATE.FAILED;        // Using constant
   err: Error;
 };
 
 type SuccessRequestState<T> = {
-  state: typeof REQUEST_STATE.SUCCESS;       // <-- ใช้คอนสแตนต์
+  state: typeof REQUEST_STATE.SUCCESS;       // Using constant
   data: T;
 };
 
@@ -60,13 +60,20 @@ export type WrappedLemmyHttp = WrappedLemmyHttpClient & {
     : LemmyHttp[K];
 };
 
+/**
+ * Wrapped LemmyHttp client that provides consistent request state handling
+ * and implements caching for GET requests to improve performance.
+ */
 class WrappedLemmyHttpClient {
   rawClient: LemmyHttp;
+  cache: Map<string, {data: any, timestamp: number}> = new Map();
+  cacheTTL: number = 60000; // Cache TTL in milliseconds (1 minute)
   [prop: string]: any;
 
   constructor(client: LemmyHttp) {
     this.rawClient = client;
 
+    // Create wrapped methods for all LemmyHttp methods
     for (const key of Object.getOwnPropertyNames(
       Object.getPrototypeOf(this.rawClient),
     )) {
@@ -74,13 +81,38 @@ class WrappedLemmyHttpClient {
         this[key] = async (
           ...args: Parameters<LemmyHttp[keyof LemmyHttp]>
         ) => {
-          /* -- return loading state first --------------------- */
+          // Return loading state first for better UX
           const loadingPromise = Promise.resolve(LOADING_REQUEST);
 
-          /* -- actual request -------------------------------- */
+          // Check if this is a GET request that can be cached
+          const isGetMethod = key.startsWith('get') && args.length <= 1;
+          const cacheKey = isGetMethod ? `${key}:${JSON.stringify(args)}` : '';
+          
+          // Try to get from cache for GET requests
+          if (isGetMethod && process.env.NODE_ENV === 'production') {
+            const cached = this.cache.get(cacheKey);
+            if (cached && (Date.now() - cached.timestamp < this.cacheTTL)) {
+              // Return cached data after loading state
+              return loadingPromise.then(() => ({
+                data: cached.data,
+                state: REQUEST_STATE.SUCCESS
+              }));
+            }
+          }
+
+          // Perform the actual request
           const resultPromise = (async () => {
             try {
               const res = await (this.rawClient as any)[key](...args);
+              
+              // Cache successful GET responses in production
+              if (isGetMethod && res && process.env.NODE_ENV === 'production') {
+                this.cache.set(cacheKey, {
+                  data: res,
+                  timestamp: Date.now()
+                });
+              }
+              
               return {
                 data: res,
                 state:
@@ -101,6 +133,17 @@ class WrappedLemmyHttpClient {
       }
     }
   }
+  
+  // Clear the entire cache
+  clearCache(): void {
+    this.cache.clear();
+  }
+  
+  // Clear a specific cache entry
+  clearCacheEntry(key: string, args: any[]): void {
+    const cacheKey = `${key}:${JSON.stringify(args)}`;
+    this.cache.delete(cacheKey);
+  }
 }
 
 /* ------------------ public helpers -------------------------- */
@@ -108,21 +151,103 @@ export function wrapClient(client: LemmyHttp) {
   return new WrappedLemmyHttpClient(client) as unknown as WrappedLemmyHttp;
 }
 
+/**
+ * HttpService provides a singleton instance of the wrapped LemmyHttp client
+ * with additional functionality for caching and request management.
+ */
 export class HttpService {
   static #_instance: HttpService;
   #client: WrappedLemmyHttp;
+  #requestTimeout: number = 30000; // Default timeout: 30 seconds
 
   private constructor() {
     const lemmyHttp = new LemmyHttp(getHttpBase());
     this.#client = wrapClient(lemmyHttp);
+    
+    // Add request timeout handling to all methods
+    this.#addTimeoutToMethods();
   }
 
+  /**
+   * Adds timeout handling to all client methods
+   */
+  #addTimeoutToMethods(): void {
+    const originalClient = this.#client;
+    const timeout = this.#requestTimeout;
+    
+    // Get all method names
+    const methodNames = Object.keys(originalClient).filter(
+      key => typeof originalClient[key] === 'function' && key !== 'setHeaders'
+    );
+    
+    // Wrap each method with timeout handling
+    for (const methodName of methodNames) {
+      const originalMethod = originalClient[methodName];
+      
+      // Replace the method with a timeout-aware version
+      (this.#client as any)[methodName] = async (...args: any[]) => {
+        // Create a timeout promise
+        const timeoutPromise = new Promise<RequestState<any>>((_, reject) => {
+          setTimeout(() => {
+            reject(new Error(`Request timeout after ${timeout}ms`));
+          }, timeout);
+        });
+        
+        try {
+          // Race between the original request and the timeout
+          return await Promise.race([
+            originalMethod(...args),
+            timeoutPromise
+          ]);
+        } catch (error) {
+          return {
+            state: REQUEST_STATE.FAILED,
+            err: error as Error
+          };
+        }
+      };
+    }
+  }
+
+  /**
+   * Get the singleton instance
+   */
   static get #Instance() {
     return this.#_instance ?? (this.#_instance = new this());
   }
 
+  /**
+   * Get the HTTP client
+   */
   public static get client() {
     return this.#Instance.#client;
+  }
+  
+  /**
+   * Clear the entire request cache
+   */
+  public static clearCache(): void {
+    const client = this.#Instance.#client as any;
+    if (client.clearCache) {
+      client.clearCache();
+    }
+  }
+  
+  /**
+   * Clear a specific cache entry
+   */
+  public static clearCacheEntry(methodName: string, args: any[] = []): void {
+    const client = this.#Instance.#client as any;
+    if (client.clearCacheEntry) {
+      client.clearCacheEntry(methodName, args);
+    }
+  }
+  
+  /**
+   * Set the request timeout in milliseconds
+   */
+  public static setTimeout(timeout: number): void {
+    this.#Instance.#requestTimeout = timeout;
   }
 }
 

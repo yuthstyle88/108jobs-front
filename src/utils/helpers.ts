@@ -259,18 +259,43 @@ export function getApubName({ name, ap_id }: { name: string; ap_id: string }) {
 
 /**
  * Next.js-style dynamic route matcher (e.g. `/post/[id]`)
+ * Optimized with memoization to improve performance for repeated route matching
  */
-// utils/helpers.ts
+// Cache for storing the results of matchPath
+const matchPathCache = new Map<string, Match<any> | null>();
+const CACHE_SIZE_LIMIT = 100;
+
 export function matchPath(
   pathPattern?: string,
   urlPath?: string
 ): Match<any> | null {
+  // Early return for invalid inputs
   if (!pathPattern || !urlPath) return null;
+  
+  // Create a cache key
+  const cacheKey = `${pathPattern}:${urlPath}`;
+  
+  // Check if result is in cache
+  if (matchPathCache.has(cacheKey)) {
+    return matchPathCache.get(cacheKey)!;
+  }
+  
+  // Limit cache size to prevent memory leaks
+  if (matchPathCache.size >= CACHE_SIZE_LIMIT) {
+    // Remove oldest entry (first key in the map)
+    const iterator = matchPathCache.keys().next();
+    if (!iterator.done) {
+      matchPathCache.delete(iterator.value); // iterator.value เป็น string แน่นอน
+    }
+  }
 
   const patternParts = pathPattern.split("/").filter(Boolean);
   const urlParts     = urlPath.split("/").filter(Boolean);
 
-  if (urlParts.length > patternParts.length) return null;
+  if (urlParts.length > patternParts.length) {
+    matchPathCache.set(cacheKey, null);
+    return null;
+  }
 
   const params: Record<string, string> = {};
 
@@ -290,19 +315,26 @@ export function matchPath(
       if (part !== undefined) {
         params[key] = decodeURIComponent(part);
       } else if (!isOptional) {
+        matchPathCache.set(cacheKey, null);
         return null;
       }
     } else if (pattern !== part) {
+      matchPathCache.set(cacheKey, null);
       return null;
     }
   }
 
-  return {
+  const result = {
     params,
     path: urlPath,
     url:  urlPath,
     isExact: urlParts.length === patternParts.length,
   } as Match<any>;
+  
+  // Cache the result
+  matchPathCache.set(cacheKey, result);
+  
+  return result;
 }
 
 export function getJwtCookie(headers: IncomingHttpHeaders): string | undefined {
@@ -341,24 +373,41 @@ export function setForwardedHeaders(headers: IncomingHttpHeaders): {
   return out;
 }
 
-export function getErrorPageData(error: Error, site?: GetSiteResponse) {
+/**
+ * Creates error page data with improved error handling and null safety
+ * 
+ * @param error The error that occurred
+ * @param site Optional site data containing admin information
+ * @returns Structured error page data for rendering
+ */
+export function getErrorPageData(error: Error, site?: GetSiteResponse): ErrorPageData {
   const errorPageData: ErrorPageData = {};
 
-  if (site) {
-    errorPageData.error = error.message;
-  }
+  // Always include error message for better debugging
+  errorPageData.error = error?.message || 'Unknown error';
 
-  const adminMatrixIds = site?.admins
-  .map(({ person: { matrixUserId } }) => matrixUserId)
-  .filter(id => id) as string[] | undefined;
+  // Safely extract admin matrix IDs with null checks
+  if (site?.admins) {
+    const adminMatrixIds = site.admins
+      .filter(admin => admin?.person)
+      .map(({ person }) => person.matrixUserId)
+      .filter(Boolean) as string[] | undefined;
 
-  if (adminMatrixIds && adminMatrixIds.length > 0) {
-    errorPageData.adminMatrixIds = adminMatrixIds;
+    // ใช้ Array.isArray เพื่อยืนยันว่าเป็นอาร์เรย์ก่อนตรวจ length
+    if (Array.isArray(adminMatrixIds) && adminMatrixIds.length > 0) {
+      errorPageData.adminMatrixIds = adminMatrixIds;
+    }
   }
 
   return errorPageData;
 }
 
+/**
+ * Converts a string URL, File, or Blob to a Blob object
+ * 
+ * @param src The source (URL string, File, or Blob)
+ * @returns A Promise resolving to a Blob
+ */
 async function toBlob(src: string | File | Blob): Promise<Blob> {
   if (typeof src === "string") {
     return fetch(src).then((r) => r.blob());
@@ -366,26 +415,35 @@ async function toBlob(src: string | File | Blob): Promise<Blob> {
   return src;
 }
 
+/**
+ * Uploads an image and returns the URL of the uploaded image
+ * 
+ * @param selectedImage The image to upload (File or string URL/base64)
+ * @param uploadImage Function to handle the actual upload
+ * @returns A Promise resolving to the URL of the uploaded image
+ * @throws Error if the upload fails
+ */
 export async function uploadSelectedImage(
   selectedImage: File | string,
   uploadImage: (payload: { image: File }) => Promise<any>,
 ): Promise<string> {
   let file: File;
 
-  // ถ้าเป็นไฟล์อยู่แล้ว ใช้ได้เลย
+  // If it's already a File object, use it directly
   if (selectedImage instanceof File) {
     file = selectedImage;
   } else {
-    // กรณีเป็น base64 / URL แปลงเป็น Blob → File
+    // If it's a base64 string or URL, convert to Blob then File
     const blob = await toBlob(selectedImage);
     file = new File([blob], "profile.jpg", {
       type: blob.type || "image/jpeg",
     });
   }
 
-  // อัปโหลด
+  // Upload the file
   const result = await uploadImage({ image: file });
 
+  // Check for successful upload and return the image URL
   if (isSuccess<UploadImageResponse>(result) && result.data.images?.length) {
     const url = result.data.images[0].imageUrl;
     if (url) return url;

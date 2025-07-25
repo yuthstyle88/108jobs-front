@@ -24,12 +24,16 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
   const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
 
   return (
-    <section className="flex items-center gap-4 h-full">
+    <div className="flex items-center gap-4 h-full">
       <div className="group">
         <div className="relative">
-          <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
-            <p className="">{globalLanguageData?.labelEmploymentButton}</p>
-            <FontAwesomeIcon icon={faChevronDown} />
+          <div className="relative">
+            <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
+              {globalLanguageData?.labelEmploymentButton}
+              <span className="inline-block">
+                <FontAwesomeIcon icon={faChevronDown} />
+              </span>
+            </div>
           </div>
           <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
         </div>
@@ -80,10 +84,12 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
             )
           )}
 
-          <FontAwesomeIcon
-            icon={faChevronDown}
-            className="w-[14px] h-[14px] text-white"
-          />
+          <span className="inline-block">
+            <FontAwesomeIcon
+              icon={faChevronDown}
+              className="w-[14px] h-[14px] text-white"
+            />
+          </span>
         </button>
 
         {isOpen && <ProfileSection profile={profileData?.person} data={globalLanguageData} />}
@@ -92,7 +98,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           <div className="fixed inset-0 z-40" onClick={() => close()} />
         )}
       </div>
-    </section>
+    </div>
   );
 };
 
