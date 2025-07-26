@@ -1,18 +1,10 @@
 "use client";
-import { useClickOutside } from "@/hooks/useClickOutside";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useClickOutside } from "@/hooks/useClickOutside";
 import Image from "next/image";
 import { useState } from "react";
 
-import en from "@/assets/icons/en.svg";
-import th from "@/assets/icons/th.svg";
-import vn from "@/assets/icons/vn.svg";
-
-const LANGUAGES = {
-  th: { code: "th", label: "Thailand", flag: th },
-  en: { code: "en", label: "English", flag: en },
-  vi: { code: "vi", label: "Vietnam", flag: vn },
-};
+import { LANGUAGES } from "@/constants/language";
 
 interface LanguageDropdownProps {
   className?: string;
