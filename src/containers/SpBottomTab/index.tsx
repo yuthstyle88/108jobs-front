@@ -1,17 +1,9 @@
 "use client";
-import Image from "next/image";
-import { X } from "lucide-react";
 import BottomSheet from "@/components/ui/BottomSheet";
+import { LANGUAGES } from "@/constants/language";
 import { useLanguage } from "@/contexts/LanguageContext";
-import en from "@/assets/icons/en.svg";
-import th from "@/assets/icons/th.svg";
-import vn from "@/assets/icons/vn.svg";
-
-const LANGUAGES = {
-  th: { code: "th", label: "Thailand", flag: th },
-  en: { code: "en", label: "English", flag: en },
-  vi: { code: "vi", label: "Vietnam", flag: vn },
-};
+import { X } from "lucide-react";
+import Image from "next/image";
 
 interface Props {
   open: boolean;
