@@ -347,7 +347,6 @@ export type {Address} from "./types/Address";
 export type {Card} from "./types/Card";
 export type {Coin} from "./types/Coin";
 export type {Contact} from "./types/Contact";
-export type {Profile} from "./types/Profile";
 export type {SaveUserProfile} from "./types/SaveUserProfile";
 export type {ProfileShow} from "./types/ProfileShow";
 export type {Education} from "./types/Education";
