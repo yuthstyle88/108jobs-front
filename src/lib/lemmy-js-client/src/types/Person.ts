@@ -2,6 +2,13 @@
 import type { DbUrl } from "./DbUrl";
 import type { InstanceId } from "./InstanceId";
 import type { PersonId } from "./PersonId";
+import type {Education} from "./Education";
+import type {WorkExperience} from "./WorkExperience";
+import type {Skill} from "./Skill";
+import type {LanguageSkill} from "./LanguageSkill";
+import type {Certificate} from "./Certificate";
+import type {Review} from "./Review";
+import type {Service} from "./Service";
 
 /**
  * A person.
@@ -50,4 +57,18 @@ export type Person = {
   instanceId: InstanceId;
   postCount: number;
   commentCount: number;
+  bio: string | null;
+  averageResponseTime: string | null;
+  createdAt: string;
+  updatedAt: string;
+  membershipLevelId: string;
+  isVerified: string;
+  ratings?: number;
+  educations?: Array<Education>;
+  workExperience?: Array<WorkExperience>;
+  skill?: Array<Skill>;
+  language?: Array<LanguageSkill>;
+  certAndAward?: Array<Certificate>;
+  services?: Array<Service>;
+  reviews?: Array<Review>;
 };
