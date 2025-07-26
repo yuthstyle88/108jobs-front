@@ -12,15 +12,16 @@ import {
   useLazyImage,
   getResponsiveImageSize,
   generateSizesAttribute,
-  debounce,
   generatePlaceholder,
 } from '@/utils/imageLoader';
-import { measureRenderTime } from '@/utils/performance';
 
+import { measureRenderTime } from '@/utils/performance';
+import { debounce } from '@/utils/helpers';
 
 interface LazyImageProps extends Omit<ImageProps, 'src'> {
   imagePath: string;
   fallback?: string;
+  assetType?: 'icons' | 'images'; // เพิ่ม assetType เพื่อรองรับประเภท
   breakpoints?: {
     sm?: { width: number; height: number };
     md?: { width: number; height: number };
@@ -44,6 +45,7 @@ interface LazyImageProps extends Omit<ImageProps, 'src'> {
 const LazyImage: React.FC<LazyImageProps> = ({
   imagePath,
   fallback,
+  assetType = 'images', // กำหนด default เป็น 'images'
   breakpoints,
   responsiveSizes,
   width: defaultWidth = 0,
@@ -59,6 +61,7 @@ const LazyImage: React.FC<LazyImageProps> = ({
   const [image, ImageLoadingStatus] = useLazyImage(imagePath, {
     trackPerformance,
     preload,
+    assetType, // ส่ง assetType ไปยัง useLazyImage
   });
 
   const [dimensions, setDimensions] = useState({

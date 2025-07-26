@@ -1,3 +1,4 @@
+'use server'
 import type {IsoData, RouteData} from '@/utils/types';
 import type {GetSiteResponse} from 'lemmy-js-client';
 import fetchIsoData from '@/lib/api/fetchIsoData';

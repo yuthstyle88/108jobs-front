@@ -99,6 +99,7 @@ const HiringSectionComponent = (props: Props) => {
                 <div className="flex-shrink-0">
                   <LazyImage
                     imagePath="group-11653.svg"
+                    assetType="icons"
                     width={30}
                     height={30}
                     alt="Hire freelancers icon"
@@ -124,6 +125,7 @@ const HiringSectionComponent = (props: Props) => {
                 <div className="flex-shrink-0">
                   <LazyImage
                     imagePath="group-11652.svg"
+                    assetType="icons"
                     width={30}
                     height={30}
                     alt="Review proposals icon"
@@ -145,6 +147,7 @@ const HiringSectionComponent = (props: Props) => {
                 <div className="flex-shrink-0">
                   <LazyImage
                     imagePath="group-11654.svg"
+                    assetType="icons"
                     width={30}
                     height={30}
                     alt="Pay securely icon"

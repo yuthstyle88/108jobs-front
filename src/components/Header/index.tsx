@@ -55,6 +55,7 @@ const HeaderComponent = ({ type, forceShowSearch = false }: BgProps) => {
           <Link prefetch={false} href="/" className="shrink-0">
             <LazyImage
               imagePath="logo.svg"
+              assetType="icons"
               alt="Fastwork Logo"
               className="w-full h-full"
               width={150}
