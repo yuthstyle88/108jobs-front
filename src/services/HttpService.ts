@@ -33,6 +33,11 @@ export type SuccessRequestState<T> = {
   data: T;
 };
 
+export type Payload<K extends keyof WrappedLemmyHttp> =
+  Awaited<ReturnType<WrappedLemmyHttp[K]>> extends RequestState<infer D>
+    ? D
+    : never;
+
 /**
  * Shows the state of an API request.
  *

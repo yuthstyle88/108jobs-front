@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 import {
@@ -11,78 +11,70 @@ import {
   callHttp,
 } from "@/services/HttpService";
 
-/* ============================================================
- *  utility – ประเภทข้อมูลผลลัพธ์จริง
- * ========================================================== */
+/* ---------- utility types ---------- */
 type Payload<K extends keyof WrappedLemmyHttp> =
   Awaited<ReturnType<WrappedLemmyHttp[K]>> extends RequestState<infer D>
     ? D
     : never;
 
-/* ============================================================
- *  utility – trigger function type
- * ========================================================== */
-type TriggerFn<K extends keyof WrappedLemmyHttp> = (
-  args: Parameters<WrappedLemmyHttp[K]>
-) => Promise<RequestState<Payload<K>>>;
+/* ---------- main hook ---------- */
+export const useHttpApi = <K extends keyof WrappedLemmyHttp>(method: K) => {
+  /* local state (ยังคงไว้) */
+  const [state, setState] = useState<RequestState<Payload<K>>>(EMPTY_REQUEST);
 
-/* ============================================================
- *  main hook – รับ **เพียง 1** อาร์กิวเมนต์ (method) เท่านั้น
- * ========================================================== */
-export const useHttpApi = <K extends keyof WrappedLemmyHttp>(
-  method: K,
-) => {
-  /* ---------- local state ---------- */
-  const [state, setState] = useState<RequestState<Payload<K>>>(
-    EMPTY_REQUEST as RequestState<Payload<K>>,
+  /* สร้างฟังก์ชันกลางด้วย useCallback เพื่อให้ reference คงที่ */
+  const doCall = useCallback(
+    (...args: Parameters<WrappedLemmyHttp[K]>) => callHttp(method, ...args),
+    [method],
   );
 
-  const isGetMethod = (method as string).startsWith("get");
-  const { data: swrData, ...swrRest } = useSWR<RequestState<Payload<K>>>(
-    isGetMethod ? [method] : null,
-    // 👉 แคสต์ [] ให้ตรงชนิด Tuple ของเมธอดนั้น ๆ
-    () => callHttp(method, ...([] as unknown as Parameters<WrappedLemmyHttp[K]>)),
+  const isGet = (method as string).startsWith("get");
+
+  /* ---------- GET ---------- */
+  const {
+    data: swrState = EMPTY_REQUEST as RequestState<Payload<K>>,
+    ...swrRest
+  } = useSWR<RequestState<Payload<K>>>(isGet ? [method] : null, () =>
+    // ส่งอาร์กิวเมนต์ว่าง ๆ ให้ถูกชนิด
+    doCall(...([] as unknown as Parameters<WrappedLemmyHttp[K]>)),
   );
 
-  /* ---------- SWR-Mutation: เรียก “เสมอ” แต่ปิดด้วย key = null ---------- */
+  /* ---------- MUTATION ---------- */
   const mutRes = useSWRMutation<
     RequestState<Payload<K>>,
     Error,
     readonly [K],
     Parameters<WrappedLemmyHttp[K]>
-  >(
-    [method],                                 // ✅ ส่ง key เสมอ
-    (_key, { arg }) => callHttp(method, ...arg),
-  );
-
-  // map ค่าออกมาให้ API ภายนอกเหมือนเดิม
-  const trigger: TriggerFn<K> | undefined = isGetMethod
-    ? undefined
-    : (mutRes.trigger as TriggerFn<K>);
-  const isMutating = isGetMethod ? false : mutRes.isMutating;
+  >([method], (_key, { arg }) => doCall(...arg));
 
   /* ---------- execute ---------- */
-  const execute: (...args: Parameters<WrappedLemmyHttp[K]>) => Promise<
-    RequestState<Payload<K>>
-  > = (...args) =>
-    isGetMethod
-      ? callHttp(method, ...args)               // ✅ กรณี GET
-      : trigger!(args as Parameters<WrappedLemmyHttp[K]>); // ✅ กรณีอื่น ๆ แน่ใจว่าไม่ undefined
+  const execute = useCallback(
+    async (...args: Parameters<WrappedLemmyHttp[K]>) => {
+      // ✨ GET → เรียกตามปกติ
+      if (isGet) {
+        return doCall(...args);
+      }
 
-  /* ---------- รวมผลลัพธ์ ---------- */
-  const swrState: RequestState<Payload<K>> =
-    swrData ?? (EMPTY_REQUEST as RequestState<Payload<K>>);
+      // ✨ POST / PUT ฯลฯ → แคบประเภทของ trigger ก่อน
+      const triggerWithArgs = mutRes.trigger as unknown as (
+        ...a: Parameters<WrappedLemmyHttp[K]>
+      ) => Promise<RequestState<Payload<K>>>;
 
+      return await triggerWithArgs(...args);
+    },
+    [isGet, doCall, mutRes]
+  );
+
+  /* ---------- pick data ---------- */
   const data =
     (isSuccess(state) ? state.data : undefined) ??
     (isSuccess(swrState) ? swrState.data : undefined);
 
-  /* ---------- คืนค่า ---------- */
   return {
     data,
-    state: isGetMethod ? swrState : state,
+    state: isGet ? swrState : state,
     execute,
-    isMutating,
+    isMutating: isGet ? false : mutRes.isMutating,
     ...swrRest,
   } as const;
 };

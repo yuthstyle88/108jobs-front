@@ -5,7 +5,6 @@ import PasswordChangeModal from "@/components/ChangePasswordModal";
 import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useHttpApi } from "@/hooks/useHttpApi";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { useDateOptions } from "@/hooks/useDateOptions";
 import Image from "next/image";
@@ -13,6 +12,7 @@ import { useState } from "react";
 import { useProfileData } from "@/hooks/profile-api/useProfileData";
 import { useProfileForm } from "../hooks/useProfileForm";
 import {useImagePicker} from "@/hooks/useImagePicker";
+import {useHttpPost} from "@/hooks/useHttpPost";
 
 
 export default function BasicInformation() {
@@ -20,7 +20,7 @@ export default function BasicInformation() {
   const { days, months, years } = useDateOptions();
 
   const { execute: uploadImage, isMutating: isUploadMuting } =
-    useHttpApi("uploadImage");
+    useHttpPost("uploadImage");
 
   const { profileState, profileData, mutate } = useProfileData();
 

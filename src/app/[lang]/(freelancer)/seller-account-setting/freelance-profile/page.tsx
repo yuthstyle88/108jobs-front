@@ -9,13 +9,13 @@ import { getAvatarUrl } from "@/utils/userDataUtils";
 import Image from "next/image";
 import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
 import { useProfileForm } from "../hooks/useProfileForm";
-import { useHttpApi } from "@/hooks/useHttpApi";
 import { useImagePicker } from "@/hooks/useImagePicker";
+import {useHttpPost} from "@/hooks/useHttpPost";
 
 const AccountSettings = () => {
 
   const { execute: uploadImage, isMutating: isUploadMuting } =
-    useHttpApi("uploadImage");
+    useHttpPost("uploadImage");
 
   const { profileState, profileData, mutate } = useBasicInfoForm();
 

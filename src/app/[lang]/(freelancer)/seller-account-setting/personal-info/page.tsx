@@ -13,7 +13,7 @@ import { InputError } from "@/components/ui/InputError";
 import ErrorModal from "@/components/ui/ErrorModal";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import {useHttpApi} from "@/hooks/useHttpApi";
+import {useHttpPost} from "@/hooks/useHttpPost";
 
 const PersonalInfo = () => {
   // Function to upload image using HttpService
@@ -21,7 +21,7 @@ const PersonalInfo = () => {
   // Create an object that matches the structure expected by the component
   // Note: We can't track loading state in an async component, so we set isMutating to false
   const { execute: uploadImage, isMutating: isUploadMuting } =
-    useHttpApi("uploadImage");
+    useHttpPost("uploadImage");
 
   const { profileState, profileData, mutate } = useBasicInfoForm();
 
