@@ -58,7 +58,7 @@ export default function StartSellingLayout({
           <div className="min-h-screen flex pt-12">
             {/* Left sidebar */}
             <div className="w-56">
-              <nav className="py-2 bg-white border-1 border-borderPrimary rounded-lg">
+              <nav className="py-2 bg-white border-1 border-border-primary rounded-lg">
                 <ul>
                   {menuItems.map((item) => (
                     <li key={item.href}>
@@ -77,7 +77,7 @@ export default function StartSellingLayout({
                 </ul>
               </nav>
 
-              <div className="px-4 py-2 mt-4 border-1 border-borderPrimary rounded-lg">
+              <div className="px-4 py-2 mt-4 border-1 border-border-primary rounded-lg">
                 <Link prefetch={false}
                   href={`/user/${user?.person.name}`}
                   className="text-blue-600 flex justify-center items-center gap-2"

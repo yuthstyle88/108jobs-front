@@ -58,7 +58,7 @@ const FastjobCoin = () => {
                   {coinLanguageData?.noteMinMax}
                 </p>
 
-                <div className="flex items-center space-x-2 border-1 border-borderPrimary rounded-lg py-4 px-4 shadow-md">
+                <div className="flex items-center space-x-2 border-1 border-border-primary rounded-lg py-4 px-4 shadow-md">
                   <FontAwesomeIcon
                     icon={faCoins}
                     className="text-[20px] text-[#EAB84B] pr-2"
@@ -115,7 +115,7 @@ const FastjobCoin = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-8 p-4 text-[0.75rem] text-text-secondary border-1 border-borderPrimary rounded-lg bg-[#F6F7F8] ">
+            <div className="mt-8 p-4 text-[0.75rem] text-text-secondary border-1 border-border-primary rounded-lg bg-[#F6F7F8] ">
               <p>note :</p>
               <ul>
                 {coinLanguageData?.noteCoinTerms?.map((term, index) => {

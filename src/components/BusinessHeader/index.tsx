@@ -1,7 +1,7 @@
 import { BusinessImage } from "@/constants/images";
 import Image from "next/image";
 import Link from "next/link";
-const BussinessHeader = () => {
+const BusinessHeader = () => {
   return (
     <header className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm animate-fade-in">
       <div className="container mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
@@ -63,4 +63,4 @@ const BussinessHeader = () => {
   );
 };
 
-export default BussinessHeader;
+export default BusinessHeader;

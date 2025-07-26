@@ -225,6 +225,7 @@ const AccountSettings = () => {
         isOpen={isImageModalOpen}
         onClose={closeImageModal}
         onImageUpload={handleImageUpload}
+        uploadImage={uploadImage}
       />
     </form>
   );

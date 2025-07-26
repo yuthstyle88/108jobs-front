@@ -1,4 +1,6 @@
-export interface Service {
+import {Image} from "./Image";
+
+export type Service = {
   id: string;
   userId: string;
   serviceTypeId: string;
@@ -21,17 +23,5 @@ export interface Service {
   lastApprovedAt: string | null;
   createdAt: string;
   updatedAt: string;
-  images: image[];
+  images: Array<Image>;
 }
-
-export type image = {
-  id: string;
-  jobId: string;
-  imageUrl: string;
-  isCoverPhoto: boolean;
-  sortOrder: number;
-  alt: string;
-  createdAt: string;
-  updatedAt: string;
-};
-

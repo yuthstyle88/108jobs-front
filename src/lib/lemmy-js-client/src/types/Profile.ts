@@ -1,10 +1,10 @@
-import {Service} from "../../../../types/service";
-import {Review} from "../../../../types/review";
 import {Education} from "./Education";
 import {WorkExperience} from "./WorkExperience";
 import {Skill} from "./Skill";
 import {LanguageSkill} from "./LanguageSkill";
 import {Certificate} from "./Certificate";
+import {Review} from "./Review";
+import {Service} from "./Service";
 
 export type Profile = {
   id: string;
@@ -15,11 +15,11 @@ export type Profile = {
   membershipLevelId: string;
   isVerified: string;
   ratings?: number;
-  educations?: Education[];
-  workExperience?: WorkExperience[];
-  skill?: Skill[];
-  language?: LanguageSkill[];
-  certAndAward?: Certificate[];
-  services?: Service[];
-  reviews?: Review[];
+  educations?: Array<Education>;
+  workExperience?: Array<WorkExperience>;
+  skill?: Array<Skill>;
+  language?: Array<LanguageSkill>;
+  certAndAward?: Array<Certificate>;
+  services?: Array<Service>;
+  reviews?: Array<Review>;
 };

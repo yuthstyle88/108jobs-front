@@ -1,35 +1,43 @@
-import {ProfileData} from "@/lib/lemmy-js-client/src";
-import {useHttpApi} from "@/hooks/useHttpApi";           // ← เปลี่ยนมาใช้ hook ใหม่
 import {
-  REQUEST_STATE,
+  FailedRequestState,
+  SuccessRequestState,
+  isFailed,
+  isLoading,
   isSuccess,
 } from "@/services/HttpService";
 
+import {useHttpApi} from "@/hooks/useHttpApi";
 
 export const useProfileData = () => {
   const {
+    data: profileData,
     state: profileState,
     execute: refreshProfile,
-    isMutating: isLoadingProfile,
   } = useHttpApi("getProfile");
 
-  const profileData = isSuccess(profileState) ? profileState.data : undefined;
+  // ตรวจสอบสถานะของ profileState
+  const isErrorProfile = isFailed(profileState)
+    ? (profileState as FailedRequestState).err
+    : null;
 
-  const isErrorProfile =
-    profileState.state === REQUEST_STATE.FAILED
-      ? profileState.err
-      : null;
-
-  /* ---------- helper refresh -------------------------------- */
-  const mutate = async() => {
-    await refreshProfile();
+  // Helper สำหรับทำการ refresh
+  const mutate = async () => {
+    try {
+      await refreshProfile(); // ส่ง array ที่ตรงกับ parameter
+    } catch (error) {
+      console.error("Failed to refresh profile:", error);
+    }
   };
+
 
   return {
     profileState,
-    profileData,
-    isLoadingProfile,
+    profileData: isSuccess(profileState)
+      ? (profileState as SuccessRequestState<typeof profileData>).data
+      : null,
     isErrorProfile,
+    isLoadingProfile: isLoading(profileState),
     mutate,
   };
+
 };

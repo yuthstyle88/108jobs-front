@@ -31,7 +31,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
       </div>
       <Link prefetch={false}
         href="#"
-        className="text-third hover:bg-gray-100 text-[14px] px-4 py-2 rounded-sm border border-borderPrimary"
+        className="text-third hover:bg-gray-100 text-[14px] px-4 py-2 rounded-sm border border-border-primary"
       >
         {guideText}
       </Link>

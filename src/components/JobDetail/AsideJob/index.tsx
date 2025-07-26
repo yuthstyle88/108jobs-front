@@ -111,7 +111,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
           >
             {language?.viewPackageInfo}
           </Link>
-          <hr className="mt-4 bg-borderPrimary block overflow-visible w-full h-[1px] m-0" />
+          <hr className="mt-4 bg-border-primary block overflow-visible w-full h-[1px] m-0" />
           {!isCurrentUser && (
             <>
               {isAvailable ? (

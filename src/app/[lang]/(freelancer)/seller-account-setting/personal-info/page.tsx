@@ -15,7 +15,7 @@ import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import {useHttpApi} from "@/hooks/useHttpApi";
 
-const PersonalInfo = async () => {
+const PersonalInfo = () => {
   // Function to upload image using HttpService
 
   // Create an object that matches the structure expected by the component

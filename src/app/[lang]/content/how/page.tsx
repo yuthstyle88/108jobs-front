@@ -212,7 +212,7 @@ const HowSellAndBuy = () => {
                 {currentSteps.map((item, index) => (
                   <div
                     key={`${item.id}` + `${index}`}
-                    className="shadow-how-shadow border-1 border-borderSecondary rounded-xl bg-white p-6"
+                    className="shadow-how-shadow border-1 border-border-secondary rounded-xl bg-white p-6"
                   >
                     <div className="flex items-center flex-row gap-3">
                       <div className="w-8 flex justify-center items-center h-8 text-[1.25rem] text-white bg-third rounded-full">

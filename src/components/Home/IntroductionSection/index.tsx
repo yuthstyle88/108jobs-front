@@ -1,7 +1,7 @@
 import { CustomerImage } from "@/constants/images";
 import { HomeLanguage } from "@/types/language";
-import React, { memo } from "react";
-import LazyImage from "@/components/ui/LazyImage";
+import Image from "next/image";
+import React from "react";
 
 type Props = {
   homeLanguageData?: Partial<HomeLanguage> | null;
@@ -9,8 +9,8 @@ type Props = {
   setExpanded: (expanded:boolean) => void;
 };
 
-const IntroductionSectionComponent = (props: Props) => {
-  const { homeLanguageData, expanded, setExpanded } = props;
+const IntroductionSection = (props: Props) => {
+  const { homeLanguageData,expanded,setExpanded } = props;
   return (
     <>
       <section
@@ -23,137 +23,89 @@ const IntroductionSectionComponent = (props: Props) => {
               {homeLanguageData?.titleTrustedCompanies}
             </h5>
             <div className="grid grid-cols-6 grid-rows-2 gap-x-8 gap-y-4">
-              <LazyImage
-                imagePath="customer/th/1.png"
-                alt="Trusted company logo 1"
+              <Image
+                src={CustomerImage.pic1}
+                alt="trusted by company"
                 style={{ filter: "grayscale(100%)" }}
                 width={384}
                 height={230}
-                loading="lazy"
-                blurUp={true}
-                trackPerformance={true}
-                className="w-full h-auto"
               />
-              <LazyImage
-                imagePath="customer/th/2.png"
-                alt="Trusted company logo 2"
+              <Image
+                src={CustomerImage.pic2}
+                alt="trusted by company"
                 style={{ filter: "grayscale(100%)" }}
                 width={384}
                 height={230}
-                loading="lazy"
-                blurUp={true}
-                trackPerformance={true}
-                className="w-full h-auto"
               />
-              <LazyImage
-                imagePath="customer/th/3.png"
-                alt="Trusted company logo 3"
+              <Image
+                src={CustomerImage.pic3}
+                alt="trusted by company"
                 style={{ filter: "grayscale(100%)" }}
                 width={384}
                 height={230}
-                loading="lazy"
-                blurUp={true}
-                trackPerformance={true}
-                className="w-full h-auto"
               />
-              <LazyImage
-                imagePath="customer/th/4.png"
-                alt="Trusted company logo 4"
+              <Image
+                src={CustomerImage.pic4}
+                alt="trusted by company"
                 style={{ filter: "grayscale(100%)" }}
                 width={384}
                 height={230}
-                loading="lazy"
-                blurUp={true}
-                trackPerformance={true}
-                className="w-full h-auto"
               />
-              <LazyImage
-                imagePath="customer/th/5.png"
-                alt="Trusted company logo 5"
+              <Image
+                src={CustomerImage.pic5}
+                alt="trusted by company"
                 style={{ filter: "grayscale(100%)" }}
                 width={384}
                 height={230}
-                loading="lazy"
-                blurUp={true}
-                trackPerformance={true}
-                className="w-full h-auto"
               />
-              <LazyImage
-                imagePath="customer/th/6.png"
-                alt="Trusted company logo 6"
+              <Image
+                src={CustomerImage.pic6}
+                alt="trusted by company"
                 style={{ filter: "grayscale(100%)" }}
                 width={384}
                 height={230}
-                loading="lazy"
-                blurUp={true}
-                trackPerformance={true}
-                className="w-full h-auto"
               />
-              <LazyImage
-                imagePath="customer/th/7.png"
-                alt="Trusted company logo 7"
+              <Image
+                src={CustomerImage.pic7}
+                alt="trusted by company"
                 style={{ filter: "grayscale(100%)" }}
                 width={384}
                 height={230}
-                loading="lazy"
-                blurUp={true}
-                trackPerformance={true}
-                className="w-full h-auto"
               />
-              <LazyImage
-                imagePath="customer/th/8.png"
-                alt="Trusted company logo 8"
+              <Image
+                src={CustomerImage.pic8}
+                alt="trusted by company"
                 style={{ filter: "grayscale(100%)" }}
                 width={384}
                 height={230}
-                loading="lazy"
-                blurUp={true}
-                trackPerformance={true}
-                className="w-full h-auto"
               />
-              <LazyImage
-                imagePath="customer/th/9.png"
-                alt="Trusted company logo 9"
+              <Image
+                src={CustomerImage.pic9}
+                alt="trusted by company"
                 style={{ filter: "grayscale(100%)" }}
                 width={384}
                 height={230}
-                loading="lazy"
-                blurUp={true}
-                trackPerformance={true}
-                className="w-full h-auto"
               />
-              <LazyImage
-                imagePath="customer/th/10.png"
-                alt="Trusted company logo 10"
+              <Image
+                src={CustomerImage.pic10}
+                alt="trusted by company"
                 style={{ filter: "grayscale(100%)" }}
                 width={384}
                 height={230}
-                loading="lazy"
-                blurUp={true}
-                trackPerformance={true}
-                className="w-full h-auto"
               />
-              <LazyImage
-                imagePath="customer/th/11.png"
-                alt="Trusted company logo 11"
+              <Image
+                src={CustomerImage.pic11}
+                alt="trusted by company"
                 style={{ filter: "grayscale(100%)" }}
                 width={384}
                 height={230}
-                loading="lazy"
-                blurUp={true}
-                trackPerformance={true}
-                className="w-full h-auto"
               />
-              <LazyImage
-                imagePath="customer/th/12.png"
-                alt="Trusted company logo 12"
+              <Image
+                src={CustomerImage.pic12}
+                alt="trusted by company"
                 style={{ filter: "grayscale(100%)" }}
                 width={384}
                 height={230}
-                loading="lazy"
-                blurUp={true}
-                trackPerformance={true}
-                className="w-full h-auto"
               />
             </div>
           </div>
@@ -190,7 +142,7 @@ const IntroductionSectionComponent = (props: Props) => {
 
       <div className="grid grid-container-desktop-banner">
         <div className="col-start-2 col-end-3 w-full">
-          <hr className="w-full h-[1px] m-0 bg-borderSecondary" />
+          <hr className="w-full h-[1px] m-0 bg-border-secondary" />
         </div>
       </div>
 
@@ -411,8 +363,5 @@ const IntroductionSectionComponent = (props: Props) => {
     </>
   );
 };
-
-// Memoize the component to prevent unnecessary re-renders
-const IntroductionSection = memo(IntroductionSectionComponent);
 
 export default IntroductionSection;

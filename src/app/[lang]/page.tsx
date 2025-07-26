@@ -131,7 +131,7 @@ export default function Home() {
         <section className="block sm:hidden pt-[4.5rem]">
           <SpAdsSlider />
         </section>
-        <section className="block sm:hidden p-[0.75rem] border-b-[0.25rem] border-borderPrimary ">
+        <section className="block sm:hidden p-[0.75rem] border-b-[0.25rem] border-border-primary ">
           <SpCatalog activeCatalog={activeCatalog} />
         </section>
 

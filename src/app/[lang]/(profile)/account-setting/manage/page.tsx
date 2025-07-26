@@ -85,7 +85,7 @@ export default function AccountManagePage() {
                 secretUrl={modalType === "generate" ? secretUrl : undefined}
             />
 
-            <div className="bg-white rounded-2xl shadow-md border border-borderPrimary p-6 space-y-8">
+            <div className="bg-white rounded-2xl shadow-md border border-border-primary p-6 space-y-8">
                 {/* Header */}
                 <div>
                     <h2 className="text-xl font-semibold text-black">Account Management</h2>

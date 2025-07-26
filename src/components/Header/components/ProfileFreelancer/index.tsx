@@ -38,7 +38,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
               <Image
                 src={ProfileImage.avatar}
                 alt="avatar"
-                className="rounded-full w-12 h-12 object-cover border-1 border-borderPrimary"
+                className="rounded-full w-12 h-12 object-cover border-1 border-border-primary"
                 width={500}
                 height={500}
               />

@@ -1,38 +1,43 @@
-
 "use client";
 import { Image, Upload } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import ImageEditor from "../AvatarEditor";
 import Modal from "../ui/Modal";
+import { uploadSelectedImage } from "@/utils/helpers";
+import Loading from "@/components/Loading"; // นำเข้า helper ฟังก์ชัน upload
 
 interface ImageUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onImageUpload: (imageUrl: string) => void;
+  onImageUpload: (imageUrl: string) => void; // Callback เมื่ออัปโหลดสำเร็จ
+  uploadImage: (payload: { image: File }) => Promise<any>; // ฟังก์ชัน API upload
 }
 
 const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   isOpen,
   onClose,
   onImageUpload,
+  uploadImage,
 }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false); // เพิ่ม state สำหรับ loading
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   // Load image from localStorage if available when modal opens
   useEffect(() => {
     if (isOpen) {
-      const tempImageData = localStorage.getItem('tempImageData');
+      const tempImageData = localStorage.getItem("tempImageData");
       if (tempImageData) {
         setSelectedImage(tempImageData);
-        localStorage.removeItem('tempImageData'); // Clear after loading
+        localStorage.removeItem("tempImageData"); // Clear after loading
       }
     } else {
-      // Only reset the selected image when the modal closes
+      // Reset selected image when modal closes
       setSelectedImage(null);
+      setLoading(false); // Reset loading ด้วย
     }
   }, [isOpen]);
-  
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -41,38 +46,45 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
         setSelectedImage(event.target?.result as string);
       };
       reader.readAsDataURL(file);
-      // Reset the input value after reading
+      // Reset input value after reading
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
     }
   };
-  
+
   const handleSelectFile = () => {
     fileInputRef.current?.click();
   };
-  
+
   const handleChangeImage = () => {
-    // Store the intent to change the image in localStorage
-    localStorage.setItem('changingImage', 'true');
-    // Close the current modal
+    localStorage.setItem("changingImage", "true");
     onClose();
-    // Set timeout to allow the modal to close before opening file picker
     setTimeout(() => {
-      // Trigger file picker from the main page
-      const uploadBtn = document.getElementById('uploadProfileImageBtn');
+      const uploadBtn = document.getElementById("uploadProfileImageBtn");
       if (uploadBtn) {
         uploadBtn.click();
       }
     }, 300);
   };
-  
-  const handleSaveImage = (canvas: HTMLCanvasElement) => {
-    const imageUrl = canvas.toDataURL('image/png');
-    onImageUpload(imageUrl);
-    onClose();
+
+  const handleSaveImage = async (canvas: HTMLCanvasElement) => {
+    setLoading(true); // เปิด Loading ระหว่างอัปโหลด
+    try {
+      const imageUrl = await uploadSelectedImage(
+        canvas.toDataURL("image/png"), // ส่งข้อมูลภาพ Base64
+        uploadImage // ฟังก์ชัน API
+      );
+      onImageUpload(imageUrl); // Callback ให้ Component แม่ทราบผลลัพธ์
+      onClose();
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      alert("เกิดข้อผิดพลาดในการอัปโหลดภาพ กรุณาลองใหม่อีกครั้ง");
+    } finally {
+      setLoading(false); // ปิด Loading ไม่ว่าจะแสดงผลสำเร็จหรือ error ก็ตาม
+    }
   };
-  
+
   return (
     <Modal
       isOpen={isOpen}
@@ -96,8 +108,8 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               accept="image/*"
               onChange={handleFileChange}
             />
-            <button 
-              onClick={handleSelectFile} 
+            <button
+              onClick={handleSelectFile}
               className="flex items-center space-x-2 bg-third hover:bg-blue-700"
             >
               <Upload className="h-4 w-4" />
@@ -106,9 +118,9 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
           </div>
         ) : (
           <div>
-            <ImageEditor 
-              imageSrc={selectedImage} 
-              onSave={handleSaveImage}
+            <ImageEditor
+              imageSrc={selectedImage}
+              onSave={handleSaveImage} // เชื่อมกับฟังก์ชันที่ปรับปรุงการอัปโหลด
               onChangeImage={handleChangeImage}
             />
             <input
@@ -121,6 +133,11 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
           </div>
         )}
       </div>
+
+      {/* แสดงสถานะ Loading */}
+      {loading && (
+        <Loading/>
+      )}
     </Modal>
   );
 };

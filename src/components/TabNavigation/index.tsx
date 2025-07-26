@@ -41,7 +41,7 @@ export default function TabNavigation({
   return (
     <div className="">
       <div className="sticky top-[48px] md:top-[70px] z-10 w-full bg-white overflow-y-hidden">
-        <div className="grid grid-cols-[1fr_1fr_1fr_1fr] border-b-[2px] border-b-borderPrimary">
+        <div className="grid grid-cols-[1fr_1fr_1fr_1fr] border-b-[2px] border-b-border-primary">
           {tabLabel.map((value, index) => (
             <div
               key={index}

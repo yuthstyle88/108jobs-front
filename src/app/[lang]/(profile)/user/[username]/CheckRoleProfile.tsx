@@ -1,44 +1,32 @@
 "use client";
-
-import {API_ROUTES} from "@/api/endpoints";
-import NotFound from "@/app/not-found";
 import Loading from "@/components/Loading";
-import {usePrivateFetch, usePrivateFetchParams} from "@/hooks/api-hooks";
-import {ProfileData} from "lemmy-js-client";
 import CurrentProfileEmployer from "../components/CurrentProfileEmployer";
 import CurrentProfileFreelance from "../components/CurrentProfileFreelance";
 import EmployerProfile from "../components/EmployerProfile";
 import FreelancerProfile from "../components/FreelanerProfile";
 import {RoleType} from "lemmy-js-client";
-import {ProfileShow} from "@/lib/lemmy-js-client/src/types/ProfileShow";
+import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import NotFound from "@/app/not-found";
 
 interface Props {
   username: string;
 }
 
 export default function CheckRoleProfile({ username }: Props) {
-  const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.getProfile
-  );
+  const { profileState, profileData: userProfile, isLoadingProfile, mutate } = useProfileData();
 
-  const {
-    data: userProfile,
-    isLoading,
-    error,
-  } = usePrivateFetchParams<ProfileShow>(`/users/${username}`);
+  if (isLoadingProfile) return <Loading />;
 
-  if (isLoading) return <Loading />;
-  if (error) return <NotFound />;
-  const isEmployer = userProfile?.roles === RoleType.Employer;
-  const isFreelancer = userProfile?.roles === RoleType.Freelancer;
+  const isEmployer = userProfile?.localUser?.role === RoleType.Employer;
+  const isFreelancer = userProfile?.localUser?.role === RoleType.Freelancer;
 
 
-  if (isEmployer) return <CurrentProfileEmployer username={username} />;
+  if (isEmployer) return <CurrentProfileEmployer />;
   if (isFreelancer)
-    return <CurrentProfileFreelance username={username} />;
+    return <CurrentProfileFreelance />;
   if (isEmployer && isFreelancer)
-    return <FreelancerProfile username={username} />;
-  if (isEmployer) return <EmployerProfile username={username} />;
+    return <FreelancerProfile />;
+  if (isEmployer) return <EmployerProfile  />;
 
   return <NotFound />;
 }

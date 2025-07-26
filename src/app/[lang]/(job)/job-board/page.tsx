@@ -67,7 +67,7 @@ const JobBoard = () => {
           </p>
         </div>
 
-        <div className="border-1 border-borderPrimary bg-white p-4 rounded-lg">
+        <div className="border-1 border-border-primary bg-white p-4 rounded-lg">
           <div className="border-b mb-6">
             <JobBoardTab />
           </div>
@@ -122,7 +122,7 @@ const JobBoard = () => {
             </div>
           </div>
 
-          <div className="overflow-x-auto border-1 border-borderPrimary rounded-lg">
+          <div className="overflow-x-auto border-1 border-border-primary rounded-lg">
             {isJobsLoading ? (
               <div className="py-12 text-center">
                 <LoadingMultiCircle />

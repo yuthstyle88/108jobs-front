@@ -2,8 +2,8 @@ import { CompareImage } from "@/constants/images";
 import { HomeLanguage } from "@/types/language";
 import { faArrowRight, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { memo } from "react";
-import LazyImage from "@/components/ui/LazyImage";
+import Image from "next/image";
+import React from "react";
 
 type Props = {
   homeLanguageData?: Partial<HomeLanguage> | null;
@@ -24,23 +24,15 @@ const OfferSection = (props: Props) => {
         </h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-[1.5rem] gap-y-[1.5rem] lg:gap-y-0 min-h-0 min-w-0 col-start-2 col-end-3">
-        <div className="flex flex-col shadow-member-ship-shadow rounded-lg bg-white">
+        <div className="flex flex-col shadow-memberShipShadow rounded-lg bg-white">
           <div className="p-6 flex-1 text-center bg-white rounded-lg gap-6">
             <div className="h-[32px]"></div>
             <div className="flex justify-center mt-8 items-center">
-              <LazyImage 
-                imagePath="compare/compare1.svg" 
-                alt="Freelancer tier illustration" 
-                width={150}
-                height={150}
-                preload={true}
-                trackPerformance={true}
-                blurUp={true}
-              />
+              <Image src={CompareImage.compare1} alt="Freelancer" />
             </div>
             <div className="text-text-primary mt-6">
               <h3 className="font-semibold text-[1.25rem] mb-2">Freelancer</h3>
-              <ul className="text-sm text-left text-text-secondary grid grid-cols-[1fr] gap-1">
+              <ul className="text-sm text-left text-text_secondary grid grid-cols-[1fr] gap-1">
                 <li className="flex flex-row gap-3 items-center">
                   <FontAwesomeIcon
                     icon={faCheck}
@@ -63,16 +55,16 @@ const OfferSection = (props: Props) => {
             </div>
           </div>
           <div>
-            <hr className="w-full h-[1px] m-0 bg-borderSecondary" />
+            <hr className="w-full h-[1px] m-0 bg-border-secondary" />
             <div className="h-[60px] px-6 flex justify-end items-center ">
-              <div className="opacity-70 text-[0.875rem] cursor-pointer text-text-secondary">
+              <div className="opacity-70 text-[0.875rem] cursor-pointer text-text_secondary">
                 {homeLanguageData?.labelSeeMoreTittle}
                 <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col shadow-member-ship-shadow rounded-lg bg-white">
+        <div className="flex flex-col shadow-memberShipShadow rounded-lg bg-white">
           <div className="p-6 flex-1 text-center bg-white rounded-lg gap-6">
             <div className="w-full flex justify-end">
               <button className="w-fit pointer-events-none bg-blue-200 text-blue-500 font-semibold py-1 px-4 rounded-full shadow-md hover:bg-blue-400 ">
@@ -80,21 +72,13 @@ const OfferSection = (props: Props) => {
               </button>
             </div>
             <div className="flex justify-center mt-8 items-center">
-              <LazyImage 
-                imagePath="compare/compare2.svg" 
-                alt="Specialist tier illustration" 
-                width={150}
-                height={150}
-                preload={true}
-                trackPerformance={true}
-                blurUp={true}
-              />
+              <Image src={CompareImage.compare2} alt="Specialist" />
             </div>
             <div className="text-text-primary mt-6">
               <h3 className="font-semibold text-[1.25rem] mb-2">
                 {homeLanguageData?.tittleQualityOfferSpecialistCard}
               </h3>
-              <ul className="text-sm text-left text-text-secondary grid grid-cols-[1fr] gap-1">
+              <ul className="text-sm text-left text-text_secondary grid grid-cols-[1fr] gap-1">
                 <li className="flex flex-row gap-3 items-center">
                   <FontAwesomeIcon
                     icon={faCheck}
@@ -135,9 +119,9 @@ const OfferSection = (props: Props) => {
             </div>
           </div>
           <div>
-            <hr className="w-full h-[1px] m-0 bg-borderSecondary" />
+            <hr className="w-full h-[1px] m-0 bg-border-secondary" />
             <div className="h-[60px] px-6 flex justify-end items-center ">
-              <div className="opacity-70 text-[0.875rem] cursor-pointer text-text-secondary">
+              <div className="opacity-70 text-[0.875rem] cursor-pointer text-text_secondary">
                 {homeLanguageData?.labelSeeMoreTittle}
                 <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
               </div>
@@ -145,7 +129,7 @@ const OfferSection = (props: Props) => {
           </div>
         </div>
 
-        <div className="flex flex-col shadow-member-ship-shadow rounded-lg bg-white">
+        <div className="flex flex-col shadow-memberShipShadow rounded-lg bg-white">
           <div className="p-6 flex-1 text-center bg-white rounded-lg gap-6">
             <div className="w-full flex justify-end">
               <button className="w-fit pointer-events-none bg-blue-500 text-white font-semibold py-1 px-4 rounded-full shadow-md hover:bg-blue-400">
@@ -153,21 +137,13 @@ const OfferSection = (props: Props) => {
               </button>
             </div>
             <div className="flex justify-center mt-8 items-center">
-              <LazyImage 
-                imagePath="compare/compare3.svg" 
-                alt="Professional tier illustration" 
-                width={150}
-                height={150}
-                preload={true}
-                trackPerformance={true}
-                blurUp={true}
-              />
+              <Image src={CompareImage.compare3} alt="Professional" />
             </div>
             <div className="text-text-primary mt-6">
               <h3 className="font-semibold text-[1.25rem] mb-2">
                 {homeLanguageData?.tittleQualityOfferProfessionalCard}
               </h3>
-              <ul className="text-sm text-left text-text-secondary grid grid-cols-[1fr] gap-1">
+              <ul className="text-sm text-left text-text_secondary grid grid-cols-[1fr] gap-1">
                 <li className="flex flex-row gap-3 items-center">
                   <FontAwesomeIcon
                     icon={faCheck}
@@ -226,9 +202,9 @@ const OfferSection = (props: Props) => {
             </div>
           </div>
           <div>
-            <hr className="w-full h-[1px] m-0 bg-borderSecondary" />
+            <hr className="w-full h-[1px] m-0 bg-border-secondary" />
             <div className="h-[60px] px-6 flex justify-end items-center ">
-              <div className="opacity-70 text-[0.875rem] cursor-pointer text-text-secondary">
+              <div className="opacity-70 text-[0.875rem] cursor-pointer text-text_secondary">
                 {homeLanguageData?.labelSeeMoreTittle}
                 <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
               </div>

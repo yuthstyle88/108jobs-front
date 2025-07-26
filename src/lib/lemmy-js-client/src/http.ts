@@ -205,6 +205,7 @@ import type {UpdateAvailable} from "./types/UpdateAvailable";
 import type {UpsertCard} from "./types/UpsertCard";
 import type {SaveAddress} from "./types/SaveAddress";
 import type {Address} from "./types/Address";
+import {CountriesResponse} from "./types/CountriesResponse";
 
 enum HttpType {
   Get = "GET",
@@ -354,6 +355,20 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<object, ProfileData>(
       HttpType.Get,
       "/account/profile",
+      {},
+      options,
+    );
+  }
+  /**
+   * @summary Get data of current user.
+   */
+  @Security("bearerAuth")
+  @Get("/account/profile/countries")
+  @Tags("Account")
+  async getCountries(@Inject() options?: RequestOptions) {
+    return this.#wrapper<object, CountriesResponse>(
+      HttpType.Get,
+      "/account/profile/countries",
       {},
       options,
     );

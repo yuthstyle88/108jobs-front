@@ -4,7 +4,6 @@ import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { usePrivateFetchParams } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { formatDateToLong } from "@/utils/formatDateToLong";
 import { interpolateDouble } from "@/utils/interpolate";
@@ -13,20 +12,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ClipboardX } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import {ProfileShow} from "@/lib/lemmy-js-client/src/types/ProfileShow";
-import {WorkExperience} from "@/lib/lemmy-js-client/src/types/WorkExperience";
-import {Education} from "@/lib/lemmy-js-client/src/types/Education";
-import {Skill} from "@/lib/lemmy-js-client/src/types/Skill";
-import {LanguageSkill} from "@/lib/lemmy-js-client/src/types/LanguageSkill";
-import {Certificate} from "@/lib/lemmy-js-client/src/types/Certificate";
+import {WorkExperience, ProfileData, Education, Skill, LanguageSkill, Certificate} from "lemmy-js-client";
+import {getProfileData} from "@/utils/getProfileData";
+import {useProfileData} from "@/hooks/profile-api/useProfileData";
 
-type Props = {
-  username: string;
-};
-const FreelancerProfile = ({ username }: Props) => {
-  const { data: userProfile, isLoading } = usePrivateFetchParams<ProfileShow>(
-    `/users/${username}`
-  );
+const FreelancerProfile =  () => {
+  const { profileState, profileData: userProfile, isLoadingProfile, mutate } = useProfileData();
 
   const { data: goToProfileLanguage } = useGlobalTranslate(
     LanguageFile.GO_TO_PROFILE
@@ -42,9 +33,17 @@ const FreelancerProfile = ({ username }: Props) => {
       const el = bioRef.current;
       setIsClamped(el.scrollHeight > el.clientHeight);
     }
-  }, [userProfile?.bio]);
+  }, [userProfile?.profile?.bio]);
 
-  if (isLoading) return <Loading />;
+  if (isLoadingProfile) return <Loading />;
+ const  { educations,
+   workExperience,
+   skill,
+   language,
+   certAndAward,
+   services,
+   reviews} = getProfileData(userProfile as ProfileData);
+
   return (
     <main className="min-h-screen bg-[#FBFBFC]">
       <div className="relative bg-primary h-[200px]">
@@ -61,10 +60,10 @@ const FreelancerProfile = ({ username }: Props) => {
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_1216px_1fr] w-full pb-16">
         <div className="col-start-2 col-end-3 gap-x-[4rem] flex flex-col sm:flex-row sm:items-start">
           <aside>
-            <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-borderPrimary bg-white rounded-[0.25rem]">
+            <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-border-primary bg-white rounded-[0.25rem]">
               <div className="flex items-center justify-center">
                 <Image
-                  src={userProfile?.avatarUrl || ProfileImage.avatar}
+                  src={userProfile?.person?.avatar || ProfileImage.avatar}
                   alt="Avatar"
                   className="rounded-full w-[175px] h-[175px] object-cover overflow-hidden"
                   width={500}
@@ -72,10 +71,10 @@ const FreelancerProfile = ({ username }: Props) => {
                 />
               </div>
               <p className="text-[28px] font-medium text-text-primary text-center pt-2">
-                {userProfile?.username}
+                {userProfile?.person?.displayName}
               </p>
               <div className="flex items-center justify-center pt-2">
-                {[...Array(userProfile?.ratings || 0)].map((_, index) => (
+                {[...Array(userProfile?.profile?.ratings|| 0)].map((_, index) => (
                   <FontAwesomeIcon
                     icon={faStar}
                     key={index}
@@ -83,7 +82,7 @@ const FreelancerProfile = ({ username }: Props) => {
                   />
                 ))}
               </div>
-              {userProfile?.isVerified && (
+              {userProfile?.profile.isVerified && (
                 <div className="flex items-center justify-center w-full">
                   <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-[#1EB899] text-white w-fit">
                     <svg
@@ -103,7 +102,7 @@ const FreelancerProfile = ({ username }: Props) => {
                   </div>
                 </div>
               )}
-              {userProfile?.user.user.available === false && (
+              {userProfile?.person?.deleted === false && (
                 <div className="flex items-center justify-center w-full">
                   <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-red-500 text-white w-fit">
                     <ClipboardX className="w-4 h-4 mr-1" />
@@ -117,7 +116,7 @@ const FreelancerProfile = ({ username }: Props) => {
                     {goToProfileLanguage?.memberSince}
                   </div>
                   <div className="text-third font-medium">
-                    {formatDateToLong(userProfile?.memberSince)}
+                    {formatDateToLong(userProfile?.profile?.createdAt)}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
@@ -143,18 +142,18 @@ const FreelancerProfile = ({ username }: Props) => {
                   <div className="text-third font-medium">100%</div>
                 </div>
               </div>
-              {userProfile?.bio && (
+              {userProfile?.profile?.bio && (
                 <div className="mt-6 px-6">
-                  <div className="text-text-secondary px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC]">
+                  <div className="text-text-secondary px-4 py-3 border border-border-secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
                       ref={bioRef}
                       className={`text-text-secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
-                      <i>{userProfile?.bio}</i>
+                      <i>{userProfile?.profile.bio}</i>
                     </p>
-                    {userProfile?.bio && isClamped && !showFullBio && (
+                    {userProfile?.profile.bio && isClamped && !showFullBio && (
                       <button
                         onClick={() => setShowFullBio(true)}
                         className="mt-2 text-text-primary font-sans text-sm font-medium underline"
@@ -166,7 +165,7 @@ const FreelancerProfile = ({ username }: Props) => {
                 </div>
               )}
             </div>
-            <div className="w-full sm:w-[320px] mt-4 relative border-[0.0625rem] border-borderPrimary bg-white rounded-[0.25rem]">
+            <div className="w-full sm:w-[320px] mt-4 relative border-[0.0625rem] border-border-primary bg-white rounded-[0.25rem]">
               <div className="max-w-4xl mx-auto">
                 <div className="p-6">
                   {/* Education Section */}
@@ -176,9 +175,9 @@ const FreelancerProfile = ({ username }: Props) => {
                         {goToProfileLanguage?.educationTitle}
                       </h2>
                     </div>
-                    {userProfile && userProfile?.education.length > 0 ? (
+                    {userProfile && educations.length > 0 ? (
                       <div className="flex flex-col gap-4">
-                        {userProfile?.education.map((education: Education) => {
+                        {educations.map((education: Education) => {
                           return (
                             <div
                               key={education.id}
@@ -200,7 +199,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     )}
                   </div>
-                  <hr className="bg-borderSecondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content" />
                   {/* Work Experience Section */}
                   <div className="bg-white rounded-lg py-6">
                     <div className="mb-2">
@@ -208,14 +207,14 @@ const FreelancerProfile = ({ username }: Props) => {
                         {goToProfileLanguage?.experienceTitle}
                       </h2>
                     </div>
-                    {userProfile && userProfile?.workExperience.length > 0 ? (
+                    {userProfile && workExperience.length > 0 ? (
                       <div className="flex flex-col gap-4">
-                        {userProfile?.workExperience.map(
+                        {workExperience.map(
                           (experience: WorkExperience) => {
                             return (
                               <div
                                 key={experience.id}
-                                className="px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC] font-sans"
+                                className="px-4 py-3 border border-border-secondary rounded-[4px] max-w-full bg-[#FBFBFC] font-sans"
                               >
                                 <p className="text-text-primary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words font-medium">
                                   {experience?.companyName}
@@ -240,7 +239,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     )}
                   </div>
-                  <hr className="bg-borderSecondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content" />
 
                   {/* Skills Section */}
                   <div className="bg-white rounded-lg py-6">
@@ -249,9 +248,9 @@ const FreelancerProfile = ({ username }: Props) => {
                         {goToProfileLanguage?.skillTitle}
                       </h2>
                     </div>
-                    {userProfile && userProfile?.skill.length > 0 ? (
+                    {userProfile && skill.length > 0 ? (
                       <div className="flex flex-col gap-4">
-                        {userProfile?.skill.map((skill: Skill) => {
+                        {skill.map((skill: Skill) => {
                           return (
                             <div
                               key={skill.id}
@@ -273,7 +272,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     )}
                   </div>
-                  <hr className="bg-borderSecondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content" />
 
                   {/* Languages Section */}
                   <div className="bg-white rounded-lg py-6">
@@ -282,9 +281,9 @@ const FreelancerProfile = ({ username }: Props) => {
                         {goToProfileLanguage?.languageTitle}
                       </h2>
                     </div>
-                    {userProfile && userProfile?.language.length > 0 ? (
+                    {userProfile && language.length > 0 ? (
                       <div className="flex flex-col gap-4">
-                        {userProfile?.language.map(
+                        {language.map(
                           (language: LanguageSkill) => {
                             return (
                               <div
@@ -308,7 +307,7 @@ const FreelancerProfile = ({ username }: Props) => {
                       </div>
                     )}
                   </div>
-                  <hr className="bg-borderSecondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content" />
 
                   {/* Certifications Section */}
                   <div className="bg-white rounded-lg py-6">
@@ -317,9 +316,9 @@ const FreelancerProfile = ({ username }: Props) => {
                         {goToProfileLanguage?.certificationTitle}
                       </h2>
                     </div>
-                    {userProfile && userProfile?.certAndAward.length > 0 ? (
+                    {userProfile && certAndAward.length > 0 ? (
                       <div className="flex flex-col gap-4">
-                        {userProfile?.certAndAward.map(
+                        {certAndAward.map(
                           (cert: Certificate) => {
                             return (
                               <div
@@ -348,20 +347,20 @@ const FreelancerProfile = ({ username }: Props) => {
           <section className="w-full px-4">
             <h2 className="pt-8 pb-4 text-[28px] font-medium text-text-primary w-full">
               {interpolateDouble(goToProfileLanguage?.workTitle || "", {
-                username: userProfile?.username,
+                username: userProfile?.person?.displayName,
               })}
             </h2>
             <section className="mt-4 grid grid-cols-1 md:grid-cols-[repeat(3,minmax(1px,1fr))] gap-5">
-              {userProfile?.services.map((service, index) => (
+              {services.map((service, index) => (
                 <CategoryCard
                   data={service}
-                  username={userProfile.username}
+                  username={userProfile?.person.displayName || ""}
                   key={index}
                 />
               ))}
             </section>
             <div className="mt-8">
-              <div className="border-b border-borderPrimary mb-6">
+              <div className="border-b border-border-primary mb-6">
                 <div className="flex -mb-px">
                   <button
                     className={`mr-6 py-2 text-sm font-medium border-b-2 ${
@@ -372,7 +371,7 @@ const FreelancerProfile = ({ username }: Props) => {
                     onClick={() => setActiveTab("reviews")}
                   >
                     {goToProfileLanguage?.reviewTab} (
-                    {userProfile?.reviews.length})
+                    {reviews.length})
                   </button>
                   <button
                     className={`py-2 text-sm font-medium border-b-2 ${
@@ -388,10 +387,10 @@ const FreelancerProfile = ({ username }: Props) => {
               </div>
 
               <div className="space-y-6">
-                {userProfile?.reviews.map((review) => (
+                {reviews.map((review) => (
                   <div
                     key={review.id}
-                    className="border-b border-borderPrimary pb-6"
+                    className="border-b border-border-primary pb-6"
                   >
                     <div className="flex items-start mb-3">
                       <Image

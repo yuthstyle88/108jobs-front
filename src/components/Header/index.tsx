@@ -4,18 +4,18 @@ import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 import LanguageDropdown from "../LanguageDropDown";
+// import Loading from "../Loading";
+import EmployerSection from "./components/EmployerSection";
+import FreelancerSession from "./components/FreelancerSection";
 import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
 import { useScrollHandler } from "./hooks/useScrollHandler";
 import Error from "@/app/error";
-import { RoleType } from "lemmy-js-client";
-import LazyImage from "@/components/ui/LazyImage";
-import { memo } from "react";
-import { UserService } from "@/services";
-import ClientOnlyRoleSection from "./components/ClientOnlyRoleSection";
-import ClientOnlyGuestSection from "./components/ClientOnlyGuestSection";
+import { RoleType } from "@/lib/lemmy-js-client/dist/types/RoleType";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -31,7 +31,18 @@ interface BgProps {
   forceShowSearch?: boolean;
 }
 
-const HeaderComponent = ({ type, forceShowSearch = false }: BgProps) => {
+const Header = ({ type, forceShowSearch = false }: BgProps) => {
+  const { data: session } = useSession();
+  console.log("session",session);
+  
+  const roles = session?.user.roles;
+  const isEmployer = Array.isArray(roles)
+    ? roles.includes(RoleType.Employer)
+    : roles === RoleType.Employer;
+
+  const isFreelancer = Array.isArray(roles)
+    ? roles.includes(RoleType.Freelancer)
+    : roles === RoleType.Freelancer;
   const { scrollY, showSearch } = useScrollHandler(forceShowSearch);
 
   const {
@@ -43,27 +54,24 @@ const HeaderComponent = ({ type, forceShowSearch = false }: BgProps) => {
   const { bg } = TYPES[type];
 
   // if (isLoading) return <Loading />;
-  if (error) return <Error />;
+  if (error) return <Error/>;
 
   return (
     <header
-      className={`fixed top-0 z-[999] w-full transition-all duration-300 ${scrollY > 0 ? "bg-primary" : bg
-        }`}
+      className={`fixed top-0 z-[999] w-full transition-all duration-300 ${
+        scrollY > 0 ? "bg-primary" : bg
+      }`}
     >
       <nav className="mx-[1.5rem] flex flex-wrap items-center justify-center h-auto min-h-[70px] py-4 xl:py-1 xl:justify-between">
         <section className="flex items-center gap-x-4 w-full md:w-auto">
           <Link prefetch={false} href="/" className="shrink-0">
-            <LazyImage
-              imagePath="logo.svg"
-              assetType="icons"
-              alt="Fastwork Logo"
+            <Image
+              src={AssetIcon.logo}
+              alt="logo"
               className="w-full h-full"
-              width={150}
-              height={40}
-              preload={true}
-              trackPerformance={true}
-              blurUp={true}
-              fallback={AssetIcon.logo.src}
+              width={500}
+              height={500}
+              priority
             />
           </Link>
 
@@ -71,16 +79,55 @@ const HeaderComponent = ({ type, forceShowSearch = false }: BgProps) => {
         </section>
 
         <section className="flex items-center gap-4 w-full md:w-auto mt-4 md:mt-0 justify-end">
-          <ClientOnlyRoleSection globalLanguageData={globalLanguageData}/>
-          <ClientOnlyGuestSection globalLanguageData={globalLanguageData} />
+          {!session && (
+            <div className="group">
+              <div className="relative">
+                <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
+                  <p className="">
+                    {globalLanguageData?.labelEmploymentButton}
+                  </p>
+                  <FontAwesomeIcon icon={faChevronDown} />
+                </div>
+                <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
+              </div>
+              <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
+                <MegaMenu />
+              </div>
+            </div>
+          )}
+          {!session && (
+            <Link prefetch={false}
+              href="/apply-freelancer"
+              className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
+            >
+              {globalLanguageData?.labelApplyToBeFreelancerButton}
+            </Link>
+          )}
+          {isFreelancer && (
+              <FreelancerSession
+                globalLanguageData={globalLanguageData}
+              />
+            )}
+          {isEmployer && (
+              <EmployerSection
+                globalLanguageData={globalLanguageData}
+
+              />
+            )}
+          {!session && (
+            <Link prefetch={false}
+              href="/login"
+              className="text-white text-sm hover:bg-blue-800 hover:text-white"
+            >
+              {globalLanguageData?.labelSignInButton}
+            </Link>
+          )}
+          {!session && <LanguageDropdown />}
         </section>
       </nav>
     </header>
   );
 };
-
-// Memoize the component to prevent unnecessary re-renders
-const Header = memo(HeaderComponent);
 
 export default Header;
 

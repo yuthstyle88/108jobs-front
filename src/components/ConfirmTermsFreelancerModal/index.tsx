@@ -59,7 +59,7 @@ const ConfirmTermsFreelancerModal: React.FC<
         <p className="text-sm text-text-primary font-semibold">
           {termLanguage?.termsTitle}
         </p>
-        <div className="border-1 border-borderPrimary p-3 rounded-lg text-[12px] list-decimal max-h-[280px] overflow-auto">
+        <div className="border-1 border-border-primary p-3 rounded-lg text-[12px] list-decimal max-h-[280px] overflow-auto">
           <TermsAndCondition language={termLanguage} />
         </div>
         <div className="space-y-2 pt-2">
@@ -109,7 +109,7 @@ const ConfirmTermsFreelancerModal: React.FC<
           </div>
         </div>
       </section>
-      <div className="flex flex-row gap-2 justify-end items-end pt-4 mt-4 w-full border-t-1 border-borderSecondary">
+      <div className="flex flex-row gap-2 justify-end items-end pt-4 mt-4 w-full border-t-1 border-border-secondary">
         <button
           onClick={handleConfirmChange}
           disabled={!watch("termsAccepted") || !watch("privacyAccepted")}

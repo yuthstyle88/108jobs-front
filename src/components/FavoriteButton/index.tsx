@@ -127,7 +127,7 @@ const FavoriteButton = ({ label, jobId }: FavoriteButtonProps) => {
 
   return (
     <div
-      className={`select-none relative flex flex-row items-center justify-center min-w-[34px] border-r-1 border-borderPrimary p-2 cursor-pointer ${
+      className={`select-none relative flex flex-row items-center justify-center min-w-[34px] border-r-1 border-border-primary p-2 cursor-pointer ${
         isMutating ? "opacity-60 cursor-not-allowed" : ""
       }`}
       onClick={handleFavoriteClick}

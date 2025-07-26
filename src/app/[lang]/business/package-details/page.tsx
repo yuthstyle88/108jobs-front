@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import ContactForm from "@/components/ContractForm";
 import { CheckCircle } from "lucide-react";
-import BussinessHeader from "@/components/BussinessHeader";
+import BusinessHeader from "@/components/BusinessHeader";
 import Link from "next/link";
 
 const PackageDetailsPage = () => {
@@ -73,7 +73,7 @@ const PackageDetailsPage = () => {
 
   return (
     <div className="min-h-screen bg-white overflow-hidden">
-      <BussinessHeader />
+      <BusinessHeader />
 
       {/* Hero Section */}
       <section className="pt-24 pb-10 md:pt-32 md:pb-12 bg-blue-50 relative">

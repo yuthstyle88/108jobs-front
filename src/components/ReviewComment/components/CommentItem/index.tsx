@@ -5,7 +5,6 @@ import { Card, CardContent } from "@/components/ui/Card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateDelete } from "@/hooks/api-hooks";
 import useNotification from "@/hooks/useNotification";
-import { Review } from "@/types/review";
 import { formatDistanceToNow, Locale } from "date-fns";
 import { enUS, th, vi } from "date-fns/locale";
 import { Edit, Trash2 } from "lucide-react";
@@ -13,6 +12,7 @@ import React, { useState } from "react";
 import CommentForm from "../CommentForm";
 import StarRating from "../StarRatings";
 import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
+import {Review} from "lemmy-js-client";
 
 export const dateFnsLocaleMap: Record<string, Locale> = {
   en: enUS,

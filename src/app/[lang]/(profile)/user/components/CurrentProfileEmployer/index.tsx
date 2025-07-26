@@ -13,10 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-type Props = {
-  username: string;
-};
-const CurrentProfileEmployer = ({ username }: Props) => {
+const CurrentProfileEmployer = () => {
 
   const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
 
@@ -52,7 +49,7 @@ const CurrentProfileEmployer = ({ username }: Props) => {
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_1216px_1fr] w-full pb-16">
         <div className="col-start-2 col-end-3 gap-x-[4rem] flex flex-col sm:flex-row sm:items-start">
           <aside>
-            <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-borderPrimary bg-white rounded-[0.25rem]">
+            <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-border-primary bg-white rounded-[0.25rem]">
               <div className="flex items-center justify-center">
                 <Image
                   src={profileData?.person?.avatar || ProfileImage.avatar}
@@ -84,7 +81,7 @@ const CurrentProfileEmployer = ({ username }: Props) => {
               </div>
               {profileData?.profile.bio && (
                 <div className="mt-6 px-6">
-                  <div className="text-text-secondary px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC]">
+                  <div className="text-text-secondary px-4 py-3 border border-border-secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
                       ref={bioRef}
                       className={`text-text-secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
@@ -121,8 +118,8 @@ const CurrentProfileEmployer = ({ username }: Props) => {
                 username: profileData?.person.displayName || "",
               })}
             </h2>
-            <div className="grid grid-cols-[1fr_1fr_1fr] border-b-[2px] border-b-borderPrimary">
-              <div className="relative whitespace-nowrap border-b-2 border-borderPrimary hover:text-third duration-150 flex justify-center items-center cursor-pointer px-1 py-3 font-bold text-third  after:absolute after:bottom-[-3px] after:h-[2px] after:w-full after:bg-third">
+            <div className="grid grid-cols-[1fr_1fr_1fr] border-b-[2px] border-b-border-primary">
+              <div className="relative whitespace-nowrap border-b-2 border-border-primary hover:text-third duration-150 flex justify-center items-center cursor-pointer px-1 py-3 font-bold text-third  after:absolute after:bottom-[-3px] after:h-[2px] after:w-full after:bg-third">
                 {goToProfileLanguage?.freelancerReview}
               </div>
             </div>

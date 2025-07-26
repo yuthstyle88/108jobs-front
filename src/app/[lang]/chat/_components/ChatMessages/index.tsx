@@ -33,7 +33,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
           <div key={msg.id || index}>
             {showDate && (
               <div className="w-full flex justify-center my-4">
-                <div className="inline-block rounded-[10px] bg-borderSecondary p-1 min-w-[120px] text-[#728197] text-[12.8px] text-center">
+                <div className="inline-block rounded-[10px] bg-border-secondary p-1 min-w-[120px] text-[#728197] text-[12.8px] text-center">
                   {currentDate}
                 </div>
               </div>

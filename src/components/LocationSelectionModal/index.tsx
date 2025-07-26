@@ -150,7 +150,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
       showCloseButton={false}
     >
       <main className="px-[12px] w-full flex flex-col gap-3 justify-center">
-        <section className="pb-4 border-b-1 border-borderSecondary font-semibold text-[1.125rem] text-text-primary font-sans">
+        <section className="pb-4 border-b-1 border-border-secondary font-semibold text-[1.125rem] text-text-primary font-sans">
           <p className="text-base">Help us improve by sharing your location.</p>
           <p className="text-[1.5rem] text-[#1754b0]">Where are you located?</p>
         </section>
@@ -162,7 +162,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
                 className={`group ${
                   selectedGeo === "thailand"
                     ? "bg-[#f6f9fe] border-fifth grayscale-0"
-                    : "bg-white border-borderSecondary grayscale-[0.8]"
+                    : "bg-white border-border-secondary grayscale-[0.8]"
                 } border-1 cursor-pointer flex items-center flex-col justify-center w-[170px] h-[210px] rounded-xl p-6 hover:bg-fourth`}
               >
                 <Image
@@ -183,7 +183,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
                 className={`group ${
                   selectedGeo === "other"
                     ? "bg-[#f6f9fe] border-fifth grayscale-0"
-                    : "bg-white border-borderSecondary grayscale-[0.8]"
+                    : "bg-white border-border-secondary grayscale-[0.8]"
                 } border-1 cursor-pointer flex items-center flex-col justify-center w-[170px] h-[210px] rounded-xl p-6 hover:bg-fourth`}
               >
                 <Image

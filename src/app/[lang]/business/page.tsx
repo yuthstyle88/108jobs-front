@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import BussinessHeader from "@/components/BussinessHeader";
+import BusinessHeader from "@/components/BusinessHeader";
 import ServiceCard from "@/components/ServiceCard";
 import VideoPromo from "@/components/VideoPromo";
 import ServiceGrid from "@/components/ServiceGrid";
@@ -37,7 +37,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white overflow-hidden">
-      <BussinessHeader />
+      <BusinessHeader />
 
       {/* Hero Section */}
       <section className="pt-24 pb-12 md:pt-32 md:pb-16 bg-gradient-to-br from-fastwork-blue to-fastwork-light-blue overflow-hidden relative">

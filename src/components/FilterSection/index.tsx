@@ -37,7 +37,7 @@ const FilterSection = ({ language, onFilterChange, currentFilters }: Props) => {
     <>
       {activeFilterCount > 0 ? (
         <div
-          className={`${activeFilterCount > 0 ? "bg-secondary text-third border-third hover:bg-[#dae5f7]" : "hover:bg-[#F6F7F8] border-borderPrimary"} filter-button px-4 py-2 rounded-md flex items-center gap-2 text-text-primary cursor-pointer hover:bg-gray-100 transition`}
+          className={`${activeFilterCount > 0 ? "bg-secondary text-third border-third hover:bg-[#dae5f7]" : "hover:bg-[#F6F7F8] border-border-primary"} filter-button px-4 py-2 rounded-md flex items-center gap-2 text-text-primary cursor-pointer hover:bg-gray-100 transition`}
           onClick={() => setIsFilterOpen(true)}
         >
           <span className="bg-third text-white flex items-center justify-center rounded-full w-4 h-4 text-sm font-bold ">
@@ -60,7 +60,7 @@ const FilterSection = ({ language, onFilterChange, currentFilters }: Props) => {
       ) : (
         <div
           onClick={() => setIsFilterOpen(true)}
-          className="filter-button border border-borderPrimary px-4 py-2 rounded-md flex items-center gap-2 text-text-primary cursor-pointer hover:bg-gray-100 transition"
+          className="filter-button border border-border-primary px-4 py-2 rounded-md flex items-center gap-2 text-text-primary cursor-pointer hover:bg-gray-100 transition"
         >
           <FontAwesomeIcon icon={faFilter} className="text-third" />
           {language?.filter}

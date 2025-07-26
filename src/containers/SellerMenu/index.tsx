@@ -144,12 +144,12 @@ const { lang } = useLanguage();
           </section>
           <section className="flex flex-col gap-2 p-4">
             <Link prefetch={false} href="/" className="flex-1">
-              <button className="py-2 w-full cursor-pointer bg-third text-white font-semibold rounded-md border-1 border-borderPrimary">
+              <button className="py-2 w-full cursor-pointer bg-third text-white font-semibold rounded-md border-1 border-border-primary">
                 Find freelancer
               </button>
             </Link>
             <Link prefetch={false} href="/job-board" className="flex-1">
-              <button className="py-2 w-full cursor-pointer bg-white text-third font-semibold rounded-md border-1 border-borderPrimary">
+              <button className="py-2 w-full cursor-pointer bg-white text-third font-semibold rounded-md border-1 border-border-primary">
                 Job board
               </button>
             </Link>
@@ -188,7 +188,7 @@ const { lang } = useLanguage();
               </li>
             );
           })}
-          <hr className="h-[1px] bg-borderSecondary w-full inline-block" />
+          <hr className="h-[1px] bg-border-secondary w-full inline-block" />
           {menuSettingItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -220,7 +220,7 @@ const { lang } = useLanguage();
               </li>
             );
           })}
-          <hr className="h-[1px] bg-borderSecondary w-full inline-block" />
+          <hr className="h-[1px] bg-border-secondary w-full inline-block" />
           <li className="flex flex-row items-center gap-2 bg-white text-text-secondary">
             <button onClick={logout} className="px-5 py-4 flex-1">
               <div className="flex flex-row items-center gap-4">

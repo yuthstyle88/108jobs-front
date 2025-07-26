@@ -210,7 +210,7 @@ const EditLanguages = () => {
                   <button
                     type="button"
                     onClick={() => remove(index)}
-                    className="border-1 border-borderSecondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
+                    className="border-1 border-border-secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                   >
                     <Trash2 className="w-4" />
                     <span className="ml-2 font-medium">

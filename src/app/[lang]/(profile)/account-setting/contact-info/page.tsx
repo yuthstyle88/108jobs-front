@@ -18,7 +18,7 @@ import { API_ROUTES } from "@/api/endpoints";
 import useNotification from "@/hooks/useNotification";
 import ErrorPage from "@/app/error";
 import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
-import {Address} from "lemmy-js-client";
+import {Address, CountriesResponse} from "lemmy-js-client";
 
 const emailSchema = z.object({
   email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์").optional(),
@@ -26,14 +26,6 @@ const emailSchema = z.object({
 
 type VerifyEmailFormData = z.infer<typeof emailSchema>;
 
-interface Country {
-  id: string;
-  name: string;
-}
-
-interface CountriesResponse {
-  countries: Country[];
-}
 
 export interface AddressFormData {
   country: string;
@@ -232,7 +224,7 @@ export default function ContactPage() {
 
   return (
     <div>
-      <div className="bg-white rounded-lg shadow-sm border-1 border-borderPrimary mb-6">
+      <div className="bg-white rounded-lg shadow-sm border-1 border-border-primary mb-6">
         <div className="border-b p-6">
           <h2 className="text-[16px] font-medium mb-2 text-text-primary">
             {contactInfoLanguageData?.sectionContactInfo}
@@ -332,7 +324,7 @@ export default function ContactPage() {
 
       <form
         onSubmit={handleSubmit(onSubmitAddress)}
-        className="bg-white rounded-lg text-sm text-text-primary font-semibold font-sans mb-6 shadow-sm border-1 border-borderPrimary"
+        className="bg-white rounded-lg text-sm text-text-primary font-semibold font-sans mb-6 shadow-sm border-1 border-border-primary"
       >
         <div className="p-6 border-b">
           <h2 className="text-[16px] font-medium mb-2 text-text-primary">

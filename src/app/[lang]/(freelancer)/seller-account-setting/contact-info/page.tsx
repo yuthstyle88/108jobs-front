@@ -6,8 +6,7 @@ import Loading from "@/components/Loading";
 import LoadingCircle from "@/components/LoadingCircle";
 import {ERROR_CONSTANTS} from "@/constants/error";
 import {LanguageFile} from "@/constants/language";
-import {usePrivateFetch} from "@/hooks/api-hooks";
-import {RequestState, LOADING_REQUEST} from "@/services/HttpService";
+import {RequestState, LOADING_REQUEST, REQUEST_STATE} from "@/services/HttpService";
 import {useGlobalTranslate} from "@/hooks/translation/useGlobalTranslate";
 import useNotification from "@/hooks/useNotification";
 import {addressSchema} from "@/utils/validation/addressSchema";
@@ -17,10 +16,10 @@ import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {useBasicInfoForm} from "../hooks/useBasicInfoForm";
 import ZipcodeSearch from "../components/SearchZipcode";
-import {CountriesResponse} from "@/types/location";
 import ErrorPage from "@/app/error";
 import {HttpService} from "@/services";
-import {Address} from "node:cluster";
+import {useHttpApi} from "@/hooks/useHttpApi";
+import { CountriesResponse } from "lemmy-js-client";
 
 
 export interface AddressFormData {
@@ -109,8 +108,6 @@ const ContactInfo = () => {
     },
   });
 
-  const {data: countriesData} =
-    usePrivateFetch<CountriesResponse>("/profile/countries");
 
   const [updateAddressState, setUpdateAddressState] = useState<RequestState<AddressFormData>>(LOADING_REQUEST);
   const isUpdateMuting = updateAddressState.state === "loading";
@@ -126,15 +123,19 @@ const ContactInfo = () => {
 
   const country = watch("country");
 
-  const countryOptions = useMemo(() => {
-      return (
-        countriesData?.countries.map((c) => ({
-          label: c.name,
-          value: c.name,
-        })) ?? []
-      );
-    },
-    [countriesData]);
+  const { data, } = useHttpApi(
+    "getCountries"
+  );
+  
+const countryOptions = useMemo(
+  () =>
+    data?.countries.map(c => ({
+      label: c.name,
+      value: c.name,
+    })) ?? [],
+  [data],
+);
+
 
   useEffect(() => {
       if (profileState.state === "success" && profileState.data?.address && !isReady) {
@@ -165,7 +166,7 @@ const ContactInfo = () => {
       setApiError(null);
       const response = await HttpService.client.resendVerificationEmail({email: data.email ?? ""});
       if (response.state === "failed") {
-         setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
+        setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
         return;
       }
       setIsChangeModal(true);
@@ -179,7 +180,7 @@ const ContactInfo = () => {
   const onSubmitAddress = async(data: AddressFormData) => {
     try {
       setUpdateAddressState(LOADING_REQUEST);
-      
+
       let payload: Partial<AddressFormData>;
 
       if (data.country === "Thailand") {
@@ -189,25 +190,27 @@ const ContactInfo = () => {
       }
 
       // Make a custom fetch request to update the address profile
-      const response = await fetch(API_ROUTES.profile.updateAddressProfile, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-        },
-        body: JSON.stringify(payload),
-      });
-      
+      const response = await fetch(API_ROUTES.profile.updateAddressProfile,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+          },
+          body: JSON.stringify(payload),
+        });
+
       if (!response.ok) {
         throw new Error('Failed to update address profile');
       }
-      
+
       const responseData = await response.json();
-      setUpdateAddressState({ state: "success", data: responseData });
-      
+      setUpdateAddressState({state: "success", data: responseData});
+
       await mutate();
-      successMessage("profile", "update");
-      
+      successMessage("profile",
+        "update");
+
       if (data.country !== "Thailand") {
         setDefaultForeignCountry(data.country);
         reset({
@@ -222,8 +225,9 @@ const ContactInfo = () => {
         setDefaultForeignCountry("");
       }
     } catch (error) {
-      console.error("Update error:", error);
-      setUpdateAddressState({ state: "failed", err: error as Error });
+      console.error("Update error:",
+        error);
+      setUpdateAddressState({state: "failed", err: error as Error});
     }
   };
 

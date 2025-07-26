@@ -19,7 +19,7 @@ const Overview = ({ language, data }: Props) => {
         {data.title}
       </h1>
       <div className="flex flex-wrap mt-3 gap-3">
-        <div className="pr-2 border-r-1 border-r-borderPrimary flex items-center">
+        <div className="pr-2 border-r-1 border-r-border-primary flex items-center">
           <FontAwesomeIcon icon={faStar} className="text-[#E9B10C]" />
           <span className="ml-1 font-sans text-text-primary">
             {Number(data.rating).toFixed(1)}
@@ -50,7 +50,7 @@ const Overview = ({ language, data }: Props) => {
           {language?.employersTrust}
         </div>
       </div>
-      <hr className="mt-4 bg-borderPrimary block overflow-visible w-full h-[1px] m-0" />
+      <hr className="mt-4 bg-border-primary block overflow-visible w-full h-[1px] m-0" />
       <div className="break-words whitespace-pre-wrap m-0 leading-[1.65]  mt-6">
         <div className="text-text-primary font-sans">
           <p className="">{data.description}</p>

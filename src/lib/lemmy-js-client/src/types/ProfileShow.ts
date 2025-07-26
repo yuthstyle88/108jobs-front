@@ -1,28 +1,26 @@
 import {RoleType} from "./RoleType";
-import {Service} from "../../../../types/service";
-import {User} from "../../../../types/freelancerPofile";
 import {Education} from "./Education";
 import {WorkExperience} from "./WorkExperience";
 import {Skill} from "./Skill";
 import {LanguageSkill} from "./LanguageSkill";
 import {Certificate,} from "./Certificate";
 import {Review} from "./Review";
+import {Service} from "./Service";
 
-export interface ProfileShow {
+export type ProfileShow = {
   username: string;
   bio: string;
   avatarUrl: string;
   isVerified: boolean;
   memberSince: string;
-  education: Education[];
-  workExperience: WorkExperience[];
-  skill: Skill[];
-  language: LanguageSkill[];
-  certAndAward: Certificate[];
+  education: Array<Education>;
+  workExperience: Array<WorkExperience>;
+  skill: Array<Skill>;
+  language: Array<LanguageSkill>;
+  certAndAward: Array<Certificate>;
   roles: RoleType;
-  services: Service[];
+  services: Array<Service>;
   ratings: number;
   userId: string;
-  reviews:Review[];
-  user: User;
+  reviews:Array<Review>;
 }

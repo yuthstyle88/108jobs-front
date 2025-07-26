@@ -14,30 +14,10 @@ import { ClipboardX, SquarePen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import {Service} from "@/types/service";
-import {Review} from "@/types/review";
-import {Education} from "@/lib/lemmy-js-client/src/types/Education";
-import {Skill} from "@/lib/lemmy-js-client/src/types/Skill";
-import {LanguageSkill} from "@/lib/lemmy-js-client/src/types/LanguageSkill";
-import {Certificate} from "@/lib/lemmy-js-client/src/types/Certificate";
-import {WorkExperience} from "@/lib/lemmy-js-client/src/types/WorkExperience";
+import {WorkExperience, Skill, LanguageSkill, Education, Certificate, ProfileData} from "lemmy-js-client";
+import {getProfileData} from "@/utils/getProfileData";
 
-type Props = {
-  username: string;
-};
-
-type ExtraProfileFields = {
-  educations?: (Education | string)[];   // บางเวอร์ชันส่งเป็น string[]
-  workExperience?: WorkExperience[];
-  skill?: Skill[];
-  language?: LanguageSkill[];
-  certAndAward?: Certificate[];
-  services?: Service[];
-  reviews?: Review[];
-};
-
-
-const CurrentProfileFreelance = ({ username }: Props) => {
+const CurrentProfileFreelance = () => {
   const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
 
   const { data: goToProfileLanguage } = useGlobalTranslate(
@@ -57,16 +37,14 @@ const CurrentProfileFreelance = ({ username }: Props) => {
 
   if (isLoadingProfile) return <Loading />;
 
-  const profile = profileData?.profile as Partial<ExtraProfileFields> | undefined;
 
-  const educations: Education[] = (profile?.educations ?? []) as Education[];
-  const workExperience: WorkExperience[] = profile?.workExperience ?? [];
-  const skill: Skill[] = profile?.skill ?? [];
-  const language: LanguageSkill[] = profile?.language ?? [];
-  const certAndAward: Certificate[] = profile?.certAndAward ?? [];
-  const services: Service[] = profile?.services ?? [];
-  const reviews: Review[] = profile?.reviews ?? [];
-
+  const  { educations,
+    workExperience,
+    skill,
+    language,
+    certAndAward,
+    services,
+    reviews} = getProfileData(profileData as ProfileData);
 
   return (
     <main className="min-h-screen bg-[#FBFBFC]">
@@ -84,7 +62,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_1216px_1fr] w-full pb-16">
         <div className="col-start-2 col-end-3 gap-x-[4rem] flex flex-col sm:flex-row sm:items-start">
           <aside>
-            <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-borderPrimary bg-white rounded-[0.25rem]">
+            <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-border-primary bg-white rounded-[0.25rem]">
               <div className="flex items-center justify-center">
                 <Image
                   src={profileData?.person?.avatar || ProfileImage.avatar}
@@ -148,7 +126,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
               </div>
               {profileData?.profile?.bio && (
                 <div className="mt-6 px-6">
-                  <div className="text-text-secondary px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC]">
+                  <div className="text-text-secondary px-4 py-3 border border-border-secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
                       ref={bioRef}
                       className={`text-text-secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
@@ -179,7 +157,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                 />
               </Link>
             </div>
-            <div className="w-full sm:w-[320px] mt-4 relative border-[0.0625rem] border-borderPrimary bg-white rounded-[0.25rem]">
+            <div className="w-full sm:w-[320px] mt-4 relative border-[0.0625rem] border-border-primary bg-white rounded-[0.25rem]">
               <div className="max-w-4xl mx-auto">
                 <div className="p-6">
                   {/* Education Section */}
@@ -219,7 +197,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                       </div>
                     )}
                   </div>
-                  <hr className="bg-borderSecondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content" />
                   {/* Work Experience Section */}
                   <div className="bg-white rounded-lg py-6">
                     <div className="flex justify-between items-center mb-4">
@@ -240,7 +218,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                             return (
                               <div
                                 key={experience.id}
-                                className="px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC] font-sans"
+                                className="px-4 py-3 border border-border-secondary rounded-[4px] max-w-full bg-[#FBFBFC] font-sans"
                               >
                                 <p className="text-text-primary text-[0.875rem] leading-[1.65] p-0 line-clamp-5 break-words font-medium">
                                   {experience?.companyName}
@@ -265,7 +243,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                       </div>
                     )}
                   </div>
-                  <hr className="bg-borderSecondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content" />
 
                   {/* Skills Section */}
                   <div className="bg-white rounded-lg py-6">
@@ -301,7 +279,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                       </div>
                     )}
                   </div>
-                  <hr className="bg-borderSecondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content" />
 
                   {/* Languages Section */}
                   <div className="bg-white rounded-lg py-6">
@@ -342,7 +320,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                       </div>
                     )}
                   </div>
-                  <hr className="bg-borderSecondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content" />
 
                   {/* Certifications Section */}
                   <div className="bg-white rounded-lg py-6">
@@ -400,7 +378,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
               ))}
             </section>
             <div className="mt-8">
-              <div className="border-b border-borderPrimary mb-6">
+              <div className="border-b border-border-primary mb-6">
                 <div className="flex -mb-px">
                   <button
                     className={`mr-6 py-2 text-sm font-medium border-b-2 ${
@@ -430,7 +408,7 @@ const CurrentProfileFreelance = ({ username }: Props) => {
                 {reviews.map((review) => (
                   <div
                     key={review.id}
-                    className="border-b border-borderPrimary pb-6"
+                    className="border-b border-border-primary pb-6"
                   >
                     <div className="flex items-start mb-3">
                       <Image

@@ -3,16 +3,15 @@ import { AssetsImage, LandingImage } from "@/constants/images";
 import { HomeLanguage } from "@/types/language";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { memo } from "react";
-import LazyImage from "@/components/ui/LazyImage";
 import Image from "next/image";
+import React from "react";
 
 type Props = {
   homeLanguageData?: Partial<HomeLanguage> | null;
 };
 
-const HiringSectionComponent = (props: Props) => {
-  const {homeLanguageData} = props;
+const HiringSection = (props: Props) => {
+  const { homeLanguageData } = props;
 
   const freelancerIntro = [
     {
@@ -31,7 +30,6 @@ const HiringSectionComponent = (props: Props) => {
       description: homeLanguageData?.contentQualityFreelancers,
     },
   ];
-
   return (
     <>
       <section className="py-6 sm:py-24 grid grid-container-desktop-banner gap-y-4 sm:gap-y-12 ">
@@ -48,7 +46,7 @@ const HiringSectionComponent = (props: Props) => {
             <div key={index} className="flex flex-col items-center sm:block">
               <Image
                 src={freelancer.icon}
-                alt={`${freelancer.title} icon`}
+                alt="Group of people"
                 width={62}
                 height={62}
                 className="max-w-full h-auto align-top self-center"
@@ -79,11 +77,10 @@ const HiringSectionComponent = (props: Props) => {
               <div className="flex gap-x-5">
                 <div className="flex-shrink-0">
                   <Image
-                    src={GroupIcon.group11651.src}
+                    src={GroupIcon.group11651}
                     width={30}
                     height={30}
-                    alt="Post a job icon"
-
+                    alt="group1"
                   />
                 </div>
                 <div>
@@ -97,15 +94,11 @@ const HiringSectionComponent = (props: Props) => {
               </div>
               <div className="flex gap-x-5">
                 <div className="flex-shrink-0">
-                  <LazyImage
-                    imagePath="group-11653.svg"
-                    assetType="icons"
+                  <Image
+                    src={GroupIcon.group11653}
                     width={30}
                     height={30}
-                    alt="Hire freelancers icon"
-                    preload={true}
-                    trackPerformance={true}
-                    blurUp={true}
+                    alt="group3"
                   />
                 </div>
                 <div>
@@ -123,15 +116,11 @@ const HiringSectionComponent = (props: Props) => {
             <div className="grid grid-rows-2 gap-y-6 text-text-primary font-medium">
               <div className="flex gap-x-5">
                 <div className="flex-shrink-0">
-                  <LazyImage
-                    imagePath="group-11652.svg"
-                    assetType="icons"
+                  <Image
+                    src={GroupIcon.group11652}
                     width={30}
                     height={30}
-                    alt="Review proposals icon"
-                    preload={true}
-                    trackPerformance={true}
-                    blurUp={true}
+                    alt="group2"
                   />
                 </div>
                 <div>
@@ -145,15 +134,11 @@ const HiringSectionComponent = (props: Props) => {
               </div>
               <div className="flex gap-x-5">
                 <div className="flex-shrink-0">
-                  <LazyImage
-                    imagePath="group-11654.svg"
-                    assetType="icons"
+                  <Image
+                    src={GroupIcon.group11654}
                     width={30}
                     height={30}
-                    alt="Pay securely icon"
-                    preload={true}
-                    trackPerformance={true}
-                    blurUp={true}
+                    alt="group4"
                   />
                 </div>
                 <div>
@@ -169,19 +154,15 @@ const HiringSectionComponent = (props: Props) => {
 
             {/* Cột 3 */}
             <div className="rounded-lg relative cursor-pointer h-[219px] mt-8 md:mt-0">
-              <LazyImage
-                imagePath="landing/video_cover-1.jpg"
-                alt="Video tutorial background"
+              <Image
+                src={LandingImage.videoBg}
+                alt="video background"
                 className="rounded-lg object-cover w-full h-full"
                 width={500}
                 height={500}
-                preload={false}
-                trackPerformance={true}
-                blurUp={true}
               />
               <div className="bg-black/25 absolute top-0 left-0 w-full h-full rounded-lg">
-                <div
-                  className="w-[75px] h-[75px] rounded-full bg-black absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex justify-center items-center">
+                <div className="w-[75px] h-[75px] rounded-full bg-black absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex justify-center items-center">
                   <FontAwesomeIcon
                     icon={faPlay}
                     className="w-[38px] h-[38px] text-white pl-1"
@@ -195,8 +176,5 @@ const HiringSectionComponent = (props: Props) => {
     </>
   );
 };
-
-// Memoize the component to prevent unnecessary re-renders
-const HiringSection = memo(HiringSectionComponent);
 
 export default HiringSection;

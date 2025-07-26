@@ -1,18 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: [
-            "upload.wikimedia.org",
-            "images.unsplash.com",
-            "azpet.com.vn",
-            "fastwork.ibrowe.com",
-            "cdn.shopify.com",
-            "pottybuddy.co",
-            "storage.googleapis.com",
-            "fw-fileupload-vn-production.s3.ap-southeast-1.amazonaws.com",
-            "fastlance.vn"
-        ],
         remotePatterns: [
+            { protocol: 'http',  hostname: 'images.example.com', pathname: '/**' },
             {
                 protocol: "https",
                 hostname: "fastwork.ibrowe.com",
@@ -46,6 +36,7 @@ const nextConfig = {
         serverActions: {
             bodySizeLimit: '2mb',
         },
+
     },
     allowedDevOrigins: [
         '192.168.1.35',          // ไอพีเครื่องที่เปิดหน้าเว็บ

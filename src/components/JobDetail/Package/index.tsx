@@ -20,7 +20,7 @@ const Package = ({ language, data }: Props) => {
         {data.packages.map((pkg) => (
           <div
             key={pkg.id}
-            className="px-6 pt-6 pb-4 border-[0.0625rem] border-borderPrimary rounded-[0.25rem]"
+            className="px-6 pt-6 pb-4 border-[0.0625rem] border-border-primary rounded-[0.25rem]"
           >
             <div className="flex flex-row justify-between text-third">
               <h3>
@@ -38,7 +38,7 @@ const Package = ({ language, data }: Props) => {
             <div className="pt-4 text-[14px] font-sans text-text-primary break-words whitespace-pre-wrap">
               <p>{pkg.description}</p>
             </div>
-            <hr className="my-4 bg-borderPrimary block overflow-visible w-full h-[1px] m-0" />
+            <hr className="my-4 bg-border-primary block overflow-visible w-full h-[1px] m-0" />
             <div className="flex justify-end items-end">
               <button className="relative inline-flex justify-center items-center overflow-hidden min-h-[2.5rem] px-[1.125rem] border-none rounded-[0.25rem] bg-third text-[0.875rem] font-medium w-fit text-white">
                 <span>{language?.chatWithFreelancers}</span>

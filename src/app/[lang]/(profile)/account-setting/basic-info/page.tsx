@@ -15,7 +15,7 @@ import { useProfileForm } from "../hooks/useProfileForm";
 import {useImagePicker} from "@/hooks/useImagePicker";
 
 
-export default async function BasicInformation() {
+export default function BasicInformation() {
   const { data: languageData } = useGlobalTranslate(LanguageFile.BASIC_INFO);
   const { days, months, years } = useDateOptions();
 
@@ -61,7 +61,7 @@ export default async function BasicInformation() {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="border-1 border-borderPrimary rounded-lg bg-white py-6"
+        className="border-1 border-border-primary rounded-lg bg-white py-6"
       >
         <div className="border-b-1 px-6">
           <h2 className="text-[16px] font-medium mb-2 text-text-primary">
@@ -140,7 +140,7 @@ export default async function BasicInformation() {
                 validate: (value) =>
                   value.trim().length > 0 || "Invalid display name",
               })}
-              className="text-text-primary w-full px-4 py-2 border border-borderPrimary rounded-lg outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+              className="text-text-primary w-full px-4 py-2 border border-border-primary rounded-lg outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
             />
             {errors.displayName && (
               <p className="text-red-500 text-sm mt-1">
@@ -215,7 +215,7 @@ export default async function BasicInformation() {
         </div>
       </form>
 
-      <div className="border-1 border-borderPrimary rounded-lg bg-white mt-5 p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
+      <div className="border-1 border-border-primary rounded-lg bg-white mt-5 p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
         <div className="text-[16px] text-text-primary font-medium">
           {languageData?.sectionPassword}
           <p className="text-[14px] text-text-secondary font-normal">
@@ -237,6 +237,7 @@ export default async function BasicInformation() {
         isOpen={isImageModalOpen}
         onClose={closeImageModal}
         onImageUpload={handleImageUpload}
+        uploadImage={uploadImage}
       />
     </>
   );

@@ -1,100 +1,88 @@
+"use client";
+
+import { useState } from "react";
+import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 import {
   EMPTY_REQUEST,
-  LOADING_REQUEST,
-  REQUEST_STATE,
-  type RequestState,
+  RequestState,
+  isSuccess,
+  WrappedLemmyHttp,
+  callHttp,
 } from "@/services/HttpService";
-import {useCallback, useEffect, useRef, useState} from "react";
-import {callHttp, type WrappedLemmyHttp} from "@/services/HttpService";
 
-/* ---------- overloads (เพิ่ม isMutating) ------------- */
-export function useHttpApi<K extends keyof WrappedLemmyHttp>(
+/* ============================================================
+ *  utility – ประเภทข้อมูลผลลัพธ์จริง
+ * ========================================================== */
+type Payload<K extends keyof WrappedLemmyHttp> =
+  Awaited<ReturnType<WrappedLemmyHttp[K]>> extends RequestState<infer D>
+    ? D
+    : never;
+
+/* ============================================================
+ *  utility – trigger function type
+ * ========================================================== */
+type TriggerFn<K extends keyof WrappedLemmyHttp> = (
+  args: Parameters<WrappedLemmyHttp[K]>
+) => Promise<RequestState<Payload<K>>>;
+
+/* ============================================================
+ *  main hook – รับ **เพียง 1** อาร์กิวเมนต์ (method) เท่านั้น
+ * ========================================================== */
+export const useHttpApi = <K extends keyof WrappedLemmyHttp>(
   method: K,
-): {
-  state: RequestState<
-    Awaited<ReturnType<WrappedLemmyHttp[K]>> extends RequestState<infer U>
-      ? U
-      : never
-  >;
-  execute: (
-    ...args: Parameters<WrappedLemmyHttp[K]>
-  ) => Promise<
-    RequestState<
-      Awaited<ReturnType<WrappedLemmyHttp[K]>> extends RequestState<infer U>
-        ? U
-        : never
-    >
-  >;
-  isMutating: boolean;                       /* ← เพิ่ม */
-};
-
-export function useHttpApi<K extends keyof WrappedLemmyHttp>(
-  method: K,
-  ...initialArgs: Parameters<WrappedLemmyHttp[K]>
-): {
-  state: RequestState<
-    Awaited<ReturnType<WrappedLemmyHttp[K]>> extends RequestState<infer U>
-      ? U
-      : never
-  >;
-  execute: (
-    ...args: Parameters<WrappedLemmyHttp[K]>
-  ) => Promise<
-    RequestState<
-      Awaited<ReturnType<WrappedLemmyHttp[K]>> extends RequestState<infer U>
-        ? U
-        : never
-    >
-  >;
-  isMutating: boolean;                       /* ← เพิ่ม */
-};
-
-/* ---------- implementation --------------------------- */
-export function useHttpApi<K extends keyof WrappedLemmyHttp>(
-  method: K,
-  ...initialArgs: Parameters<WrappedLemmyHttp[K]>
-) {
-  type RawReturn = Awaited<ReturnType<WrappedLemmyHttp[K]>>;
-  type Data = RawReturn extends RequestState<infer U> ? U : never;
-  type Resp = RequestState<Data>;
-
-  const [state, setState] = useState<Resp>(EMPTY_REQUEST as Resp);
-  const cancelRef = useRef({ cancelled: false });
-
-  const execute = useCallback(
-    async (...args: Parameters<WrappedLemmyHttp[K]>): Promise<Resp> => {
-      cancelRef.current.cancelled = true;
-      cancelRef.current = { cancelled: false };
-
-      setState(LOADING_REQUEST as Resp);
-
-      try {
-        const result = (await callHttp(method, ...args)) as Resp;
-        if (!cancelRef.current.cancelled) setState(result);
-        return result;
-      } catch (e) {
-        const failed: Resp = {
-          state: REQUEST_STATE.FAILED,
-          err: e as Error,
-        };
-        if (!cancelRef.current.cancelled) setState(failed);
-        return failed;
-      }
-    },
-    [method],
+) => {
+  /* ---------- local state ---------- */
+  const [state, setState] = useState<RequestState<Payload<K>>>(
+    EMPTY_REQUEST as RequestState<Payload<K>>,
   );
 
-  /* auto-run เมื่อมี initialArgs */
-  useEffect(() => {
-    if (initialArgs.length) execute(...initialArgs);
-    return () => {
-      cancelRef.current.cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const isGetMethod = (method as string).startsWith("get");
+  const { data: swrData, ...swrRest } = useSWR<RequestState<Payload<K>>>(
+    isGetMethod ? [method] : null,
+    // 👉 แคสต์ [] ให้ตรงชนิด Tuple ของเมธอดนั้น ๆ
+    () => callHttp(method, ...([] as unknown as Parameters<WrappedLemmyHttp[K]>)),
+  );
 
-  /* ---------- flag กำลังเรียก API ------------------- */
-  const isMutating = state.state === REQUEST_STATE.LOADING;
+  /* ---------- SWR-Mutation: เรียก “เสมอ” แต่ปิดด้วย key = null ---------- */
+  const mutRes = useSWRMutation<
+    RequestState<Payload<K>>,
+    Error,
+    readonly [K],
+    Parameters<WrappedLemmyHttp[K]>
+  >(
+    [method],                                 // ✅ ส่ง key เสมอ
+    (_key, { arg }) => callHttp(method, ...arg),
+  );
 
-  return { state, execute, isMutating };
-}
+  // map ค่าออกมาให้ API ภายนอกเหมือนเดิม
+  const trigger: TriggerFn<K> | undefined = isGetMethod
+    ? undefined
+    : (mutRes.trigger as TriggerFn<K>);
+  const isMutating = isGetMethod ? false : mutRes.isMutating;
+
+  /* ---------- execute ---------- */
+  const execute: (...args: Parameters<WrappedLemmyHttp[K]>) => Promise<
+    RequestState<Payload<K>>
+  > = (...args) =>
+    isGetMethod
+      ? callHttp(method, ...args)               // ✅ กรณี GET
+      : trigger!(args as Parameters<WrappedLemmyHttp[K]>); // ✅ กรณีอื่น ๆ แน่ใจว่าไม่ undefined
+
+  /* ---------- รวมผลลัพธ์ ---------- */
+  const swrState: RequestState<Payload<K>> =
+    swrData ?? (EMPTY_REQUEST as RequestState<Payload<K>>);
+
+  const data =
+    (isSuccess(state) ? state.data : undefined) ??
+    (isSuccess(swrState) ? swrState.data : undefined);
+
+  /* ---------- คืนค่า ---------- */
+  return {
+    data,
+    state: isGetMethod ? swrState : state,
+    execute,
+    isMutating,
+    ...swrRest,
+  } as const;
+};

@@ -4,10 +4,10 @@ import CommentSection from "@/components/ReviewComment/components";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
 import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
-import { ReviewResponse } from "@/types/review";
 import { Coins, Handshake, MessageCircleReply, ShoppingBag } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import {ReviewResponse} from "lemmy-js-client";
 
 const StarIcon = ({ filled }: { filled: boolean }) => (
   <svg

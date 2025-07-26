@@ -299,7 +299,7 @@ const MyServices = () => {
                   {sellerMyServiceLanguage?.columnFeePercent} 15%
                 </div>
 
-                <div className="pb-4 border-b-1 border-borderSecondary w-full font-sans">
+                <div className="pb-4 border-b-1 border-border-secondary w-full font-sans">
                   <div className="text-sm text-text-secondary flex flex-row justify-between items-center pt-4">
                     <p>{sellerMyServiceLanguage?.columnVisibility}</p>
                     <Eye className="w-4 h-4 text-text-secondary" />

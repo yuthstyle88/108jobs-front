@@ -51,7 +51,7 @@ const Freelance = ({ language, data }: Props) => {
       <h2 className="text-[1.25rem] text-third font-medium">
         {language?.freelancer}
       </h2>
-      <div className="mx-auto bg-white rounded-xl border-borderPrimary border-1 shadow-sm p-6">
+      <div className="mx-auto bg-white rounded-xl border-border-primary border-1 shadow-sm p-6">
         <div className="flex items-start justify-between mb-4">
           <Link prefetch={false} href={`/${currentLang}/user/${data.user.username}`} className="flex items-start space-x-4">
             <Image

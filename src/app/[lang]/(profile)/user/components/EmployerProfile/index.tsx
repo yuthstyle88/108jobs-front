@@ -3,7 +3,6 @@ import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { usePrivateFetchParams } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { formatDateToLong } from "@/utils/formatDateToLong";
 import { interpolateDouble } from "@/utils/interpolate";
@@ -11,15 +10,11 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import {ProfileShow} from "@/lib/lemmy-js-client/src/types/ProfileShow";
 
-type Props = {
-  username: string;
-};
-const UserProfile = ({ username }: Props) => {
-  const { data: userProfile, isLoading } = usePrivateFetchParams<ProfileShow>(
-    `/users/${username}`
-  );
+import {useProfileData} from "@/hooks/profile-api/useProfileData";
+
+const UserProfile = () => {
+  const { profileState, profileData: userProfile, isLoadingProfile, mutate } = useProfileData();
 
   const { data: goToProfileLanguage } = useGlobalTranslate(
     LanguageFile.GO_TO_PROFILE
@@ -34,9 +29,9 @@ const UserProfile = ({ username }: Props) => {
       const el = bioRef.current;
       setIsClamped(el.scrollHeight > el.clientHeight);
     }
-  }, [userProfile?.bio]);
+  }, [userProfile?.person?.bio]);
 
-  if (isLoading) return <Loading />;
+  if (isLoadingProfile) return <Loading />;
   return (
     <main className="min-h-screen">
       <div className="relative bg-primary h-[200px]">
@@ -53,10 +48,10 @@ const UserProfile = ({ username }: Props) => {
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_1216px_1fr] w-full pb-16">
         <div className="col-start-2 col-end-3 gap-x-[4rem] flex flex-col sm:flex-row sm:items-start">
           <aside>
-            <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-borderPrimary bg-white rounded-[0.25rem]">
+            <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-border-primary bg-white rounded-[0.25rem]">
               <div className="flex items-center justify-center">
                 <Image
-                  src={userProfile?.avatarUrl || ProfileImage.avatar}
+                  src={userProfile?.person?.avatar || ProfileImage.avatar}
                   alt="avatar"
                   className="rounded-full w-[175px] object-cover"
                   width={175}
@@ -64,7 +59,7 @@ const UserProfile = ({ username }: Props) => {
                 />
               </div>
               <p className="text-[28px] font-medium text-text-primary text-center pt-2">
-                {userProfile?.username}
+                {userProfile?.person?.displayName}
               </p>
               <div className="flex items-center justify-center pt-2">
                 {[1, 2, 3, 4, 5].map((_, index) => (
@@ -80,21 +75,21 @@ const UserProfile = ({ username }: Props) => {
                   {goToProfileLanguage?.memberSince}
                 </p>
                 <p className="text-[14px] text-third">
-                  {formatDateToLong(userProfile?.memberSince)}
+                  {formatDateToLong(userProfile?.profile.createdAt)}
                 </p>
               </div>
-              {userProfile?.bio && (
+              {userProfile?.person?.bio && (
                 <div className="mt-6 px-6">
-                  <div className="text-text-secondary px-4 py-3 border border-borderSecondary rounded-[4px] max-w-full bg-[#FBFBFC]">
+                  <div className="text-text-secondary px-4 py-3 border border-border-secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
                       ref={bioRef}
                       className={`text-text-secondary text-[0.875rem] leading-[1.65] p-0 break-words ${
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
-                      <i>{userProfile?.bio}</i>
+                      <i>{userProfile?.person.bio}</i>
                     </p>
-                    {userProfile?.bio && isClamped && !showFullBio && (
+                    {userProfile?.person.bio && isClamped && !showFullBio && (
                       <button
                         onClick={() => setShowFullBio(true)}
                         className="mt-2 text-blue-600 text-sm font-medium hover:underline"
@@ -110,11 +105,11 @@ const UserProfile = ({ username }: Props) => {
           <section className="w-full px-4">
             <h2 className="py-[3rem] text-[28px] font-medium text-text-primary w-full">
               {interpolateDouble(goToProfileLanguage?.workTitle || "", {
-                username: userProfile?.username,
+                username: userProfile?.person?.displayName || "",
               })}
             </h2>
-            <div className="grid grid-cols-[1fr_1fr_1fr] border-b-[2px] border-b-borderPrimary">
-              <div className="relative whitespace-nowrap border-b-2 border-borderPrimary hover:text-third duration-150 flex justify-center items-center cursor-pointer px-1 py-3 font-bold text-third  after:absolute after:bottom-[-3px] after:h-[2px] after:w-full after:bg-third">
+            <div className="grid grid-cols-[1fr_1fr_1fr] border-b-[2px] border-b-border-primary">
+              <div className="relative whitespace-nowrap border-b-2 border-border-primary hover:text-third duration-150 flex justify-center items-center cursor-pointer px-1 py-3 font-bold text-third  after:absolute after:bottom-[-3px] after:h-[2px] after:w-full after:bg-third">
                 {goToProfileLanguage?.freelancerReview}
               </div>
             </div>

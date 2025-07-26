@@ -34,7 +34,7 @@ export default function BusinessPage() {
           </ul>
         </div>
       </div>
-      <div className="border-1 border-borderPrimary rounded-lg bg-white py-6">
+      <div className="border-1 border-border-primary rounded-lg bg-white py-6">
         <div className="border-b-1 px-6">
           <h2 className="text-[16px] font-medium mb-2 text-text-primary">
             {companyInfoLanguageData?.sectionCompanyHiring}

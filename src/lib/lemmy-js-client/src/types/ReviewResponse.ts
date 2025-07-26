@@ -1,11 +1,12 @@
-export type Review = {
-  id: string;
+import {Review} from "./Review";
+
+export type ReviewResponse = {
   profileId: string;
   reviewerId: string;
   content: string;
   rating: number;
-  createdAt: string;
   reviewerName: string;
   reviewerAvatar: string;
+  reviews: Array<Review>;
   isOwner:string;
 }

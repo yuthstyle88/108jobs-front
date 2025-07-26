@@ -7,7 +7,7 @@ import {
   usePrivatePost
 } from "@/hooks/api-hooks";
 import useNotification from "@/hooks/useNotification";
-import { ReviewResponse } from "@/types/review";
+import { ReviewResponse } from "lemmy-js-client";
 import CommentForm from "./CommentForm";
 import CommentItem from "./CommentItem";
 
@@ -35,6 +35,7 @@ const CommentSection = ({ profileId }: Props) => {
   } = usePrivateFetchParams<ReviewResponse>(
     `${API_ROUTES.profile.getListReview}?profileId=${profileId}&page=1&limit=5`
   );
+
 
   const { trigger: postComment, isMutating: isPostMutating } = usePrivatePost(
     API_ROUTES.profile.commentReview

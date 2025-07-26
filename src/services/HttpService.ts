@@ -28,16 +28,10 @@ export type FailedRequestState = {
   err: Error;
 };
 
-type SuccessRequestState<T> = {
+export type SuccessRequestState<T> = {
   state: typeof REQUEST_STATE.SUCCESS;       // Using constant
   data: T;
 };
-
-export function isSuccess<T>(
-  r: RequestState<T>,
-): r is Extract<RequestState<T>, { state: typeof REQUEST_STATE.SUCCESS }> {
-  return r.state === REQUEST_STATE.SUCCESS;
-}
 
 /**
  * Shows the state of an API request.
@@ -261,4 +255,24 @@ export function callHttp<
   return HttpService.client[method](...args) as ReturnType<
     WrappedLemmyHttp[K]
   >;
+}
+/**
+ * ตรวจสอบว่าระบบกำลังอยู่ใน "LOADING" State
+ */
+export function isLoading<T>(state: RequestState<T>): state is LoadingRequestState {
+  return state.state === REQUEST_STATE.LOADING;
+}
+
+/**
+ * ตรวจสอบว่าระบบอยู่ใน "FAILED" State
+ */
+export function isFailed<T>(state: RequestState<T>): state is FailedRequestState {
+  return state.state === REQUEST_STATE.FAILED;
+}
+
+/**
+ * ตรวจสอบว่าระบบอยู่ใน "SUCCESS" State พร้อมมีข้อมูล
+ */
+export function isSuccess<T>(state: RequestState<T>): state is SuccessRequestState<T> {
+  return state.state === REQUEST_STATE.SUCCESS;
 }
