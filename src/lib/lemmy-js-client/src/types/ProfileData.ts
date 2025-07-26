@@ -2,7 +2,6 @@ import {Coin} from "./Coin";
 import {Contact} from "./Contact";
 import {Address} from "./Address";
 import {Card} from "./Card";
-import {Profile} from "./Profile";
 import {LocalUser} from "./LocalUser";
 import {Person} from "./Person";
 
@@ -23,7 +22,6 @@ import {Person} from "./Person";
  */
 export type ProfileData = {
   coin: Coin;
-  profile: Profile;
   contact: Contact;
   address: Address;
   card: Card;
