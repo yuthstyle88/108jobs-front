@@ -1,59 +1,59 @@
-import useSWRMutation, {
-  SWRMutationConfiguration,
-  SWRMutationResponse,
-} from "swr/mutation";
-import { callHttp, RequestState, WrappedLemmyHttp } from "@/services/HttpService";
+import { useState, useCallback } from "react";
+import {
+  callHttp,
+  RequestState,
+  WrappedLemmyHttp,
+  Payload,
+  LOADING_REQUEST,
+  EMPTY_REQUEST, REQUEST_STATE,
+} from "@/services/HttpService";
 
-/* ดึง payload ที่อยู่ข้างใน RequestState */
-type Payload<K extends keyof WrappedLemmyHttp> =
-  Awaited<ReturnType<WrappedLemmyHttp[K]>> extends RequestState<infer D>
-    ? D
-    : never;
+/**
+ * Hook สำหรับเรียก API แบบ imperative (POST / PUT / PATCH / DELETE)
+ * ผลลัพธ์มีรูปแบบเหมือน useHttpGet
+ *
+ * @example
+ * const { state, data, execute, isMutating } = useHttpApi("updateAvailable");
+ * await execute({ available: true });
+ */
+export const useHttpPost = <K extends keyof WrappedLemmyHttp>(method: K) => {
+  const [state, setState] = useState<RequestState<Payload<K>>>(EMPTY_REQUEST);
+  const [isMutating, setIsMutating] = useState(false);
 
-/* ---------------- PUT / PATCH / POST ---------------- */
-export const useHttpPost = <K extends keyof WrappedLemmyHttp>(
-  method: K,
-  options?: SWRMutationConfiguration<
-    RequestState<Payload<K>>,
-    Error,
-    readonly [K],
-    Parameters<WrappedLemmyHttp[K]>
-  >
-): SWRMutationResponse<
-  RequestState<Payload<K>>,
-  Error,
-  readonly [K],
-  Parameters<WrappedLemmyHttp[K]>
-> & {
-  execute: (
-    ...args: Parameters<WrappedLemmyHttp[K]>
-  ) => Promise<RequestState<Payload<K>>>;
-} => {
-  /* key เป็น tuple เพื่อไม่ชน hook อื่น */
-  const key = [method] as const;
+  const execute = useCallback(
+    async (...args: Parameters<WrappedLemmyHttp[K]>) => {
+      try {
+        setIsMutating(true);
+        setState(LOADING_REQUEST as RequestState<Payload<K>>);
 
-  /* mutator ต้องรับ key + { arg } */
-  const mutator = async (
-    _key: readonly [K],
-    { arg }: { arg: Parameters<WrappedLemmyHttp[K]> }
-  ): Promise<RequestState<Payload<K>>> =>
-    callHttp(method, ...arg) as Promise<RequestState<Payload<K>>>;
+        const res = (await callHttp(
+          method,
+          ...args,
+        )) as RequestState<Payload<K>>;
 
-  const mutRes = useSWRMutation(key, mutator, options);
+        setState(res);
+        return res;
+      } catch (err) {
+        const failed: RequestState<Payload<K>> = {
+          state: REQUEST_STATE.FAILED,
+          err: err instanceof Error ? err : new Error("Unknown error"),
+        } as any;
+        setState(failed);
+        return failed;
+      } finally {
+        setIsMutating(false);
+      }
+    },
+    [method],
+  );
 
-  /* ยืนยันชนิดของ trigger แล้วห่อเป็น execute */
-  const execute = (
-    ...args: Parameters<WrappedLemmyHttp[K]>
-  ): Promise<RequestState<Payload<K>>> => {
-    /* narrowing ชนิดของ trigger ให้รับ arg ชนิดเดียวที่เราต้องการ */
-    const safeTrigger = mutRes.trigger as unknown as (
-      arg: Parameters<WrappedLemmyHttp[K]>
-    ) => Promise<RequestState<Payload<K>>>;
-    return safeTrigger(args);
-  };
+  const data =
+    state.state === REQUEST_STATE.SUCCESS ? (state.data as Payload<K>) : null;
 
   return {
-    ...mutRes,
-    execute,
+    state,   // เหมือน useHttpGet
+    data,    // data ที่สกัดออกเมื่อ success
+    execute, // เรียกใช้งาน API
+    isMutating,
   };
 };

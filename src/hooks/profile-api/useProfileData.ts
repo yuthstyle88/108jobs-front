@@ -6,14 +6,14 @@ import {
   isSuccess,
 } from "@/services/HttpService";
 
-import {useHttpApi} from "@/hooks/useHttpApi";
+import {useHttpGet} from "@/hooks/useHttpGet";
 
 export const useProfileData = () => {
   const {
     data: profileData,
     state: profileState,
     execute: refreshProfile,
-  } = useHttpApi("getProfile");
+  } = useHttpGet("getProfile");
 
   // ตรวจสอบสถานะของ profileState
   const isErrorProfile = isFailed(profileState)
