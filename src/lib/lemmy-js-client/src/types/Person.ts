@@ -59,8 +59,6 @@ export type Person = {
   commentCount: number;
   bio: string | null;
   averageResponseTime: string | null;
-  createdAt: string;
-  updatedAt: string;
   membershipLevelId: string;
   isVerified: string;
   ratings?: number;
