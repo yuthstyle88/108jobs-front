@@ -22,6 +22,7 @@ export default function OAuthCallbackPage() {
   const { code, state } = useOAuthCallbackQueryParams();
 
   useEffect(() => {
+    console.log("EEEE loginRes:",);
     async function handleOAuth() {
       try {
         // ดึงข้อมูล state จาก localStorage
@@ -41,6 +42,7 @@ export default function OAuthCallbackPage() {
           ) ||
           localOAuthState.expiresAt < Date.now()
         ) {
+
           // OAuth ล้มเหลวหรือหมดอายุ
           toast.error("การตรวจสอบ OAuth ไม่ถูกต้อง");
           router.replace("/login");
@@ -54,7 +56,7 @@ export default function OAuthCallbackPage() {
           redirectUri: localOAuthState.redirectUri,
           answer: localOAuthState.answer,
         });
-
+        console.log("loginRes:", loginRes);
         if (loginRes.state === "success") {
 
           if (loginRes.data.jwt) {
@@ -116,7 +118,7 @@ export default function OAuthCallbackPage() {
 // ฟังก์ชันช่วยจัดการการเข้าสู่ระบบที่สำเร็จ
 async function handleLoginSuccess(loginData: any, prev?: string) {
   try {
-    // บันทึกข้อมูลการเข้าสู่ระบบ
+    console.log("Login success handler called with data:", loginData);
     UserService.Instance.login({
       res: loginData,
     });

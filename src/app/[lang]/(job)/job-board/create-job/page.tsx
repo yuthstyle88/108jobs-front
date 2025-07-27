@@ -1,28 +1,32 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
 import Loading from "@/components/Loading";
 import LoadingCircle from "@/components/LoadingCircle";
 import { LanguageFile } from "@/constants/language";
-import { usePublicFetch, usePrivatePost } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { ServiceCatalogData } from "@/types/catalog";
 import {
   faExclamationCircle,
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateJobPayload } from "@/types/job-board";
 import useNotification from "@/hooks/useNotification";
 import { mutate as globalMutate } from "swr";
+import {useHttpPost} from "@/hooks/useHttpPost";
+import { CreatePost,}  from "lemmy-js-client";
+import { JobType}  from "lemmy-js-client";
+import {useHttpGet} from "@/hooks/useHttpGet";
+import {API_ROUTES} from "@/api/endpoints";
+import {REQUEST_STATE} from "@/services/HttpService";
+
 
 const jobSchema = z.object({
-  serviceCatalogId: z.string().min(1, "Service catalog is required"),
+  communityId: z.coerce.number().int().positive(),
+   serviceCatalogId: z.string().min(1, "Service catalog is required"),
   jobTitle: z.string().min(5, "Job title must be at least 5 characters"),
   description: z
     .string()
@@ -40,19 +44,19 @@ const jobSchema = z.object({
     .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
       message: "Budget must be a positive number",
     }),
-
   deadline: z.string().optional(),
   isAnonymousPost: z.boolean(),
-  workingFrom: z.enum(["Freelance", "Contract", "Parttime", "Fulltime"]),
+  workingFrom: z.nativeEnum(JobType),
   intendedUse: z.enum(["Business", "Personal", "Unknown"]),
 });
 
 const CreateJobPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const communityId = Number(searchParams.get("communityId") ?? 0);
 
-  const { trigger: createJob, isMutating } = usePrivatePost<CreateJobPayload>(
-    API_ROUTES.job.createJobBoard
-  );
+
+  const { execute: createJob, isMutating } = useHttpPost("createPost");
 
   const { successMessage, errorMessage } = useNotification();
 
@@ -61,11 +65,8 @@ const CreateJobPage = () => {
     isLoading: isLanguageLoading,
     error: languageError,
   } = useGlobalTranslate(LanguageFile.JOB_BOARD_CREATE);
-  const {
-    data: catalogData,
-    isLoading: isCatalogLoading,
-    error: catalogError,
-  } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.getAllCatalog);
+
+  const { state, data: catalogData, isMutating: isCatalogLoading } = useHttpGet("listCommunities");
 
   const {
     register,
@@ -76,7 +77,8 @@ const CreateJobPage = () => {
   } = useForm({
     resolver: zodResolver(jobSchema),
     defaultValues: {
-      serviceCatalogId: "",
+      communityId: communityId,
+      serviceCatalogId: "1",
       jobTitle: "",
       description: "",
       isEnglishRequired: false,
@@ -84,21 +86,31 @@ const CreateJobPage = () => {
       budget: "",
       deadline: "",
       isAnonymousPost: false,
-      workingFrom: "Freelance",
+      workingFrom: JobType.Freelance,
       intendedUse: "Personal",
     },
   });
 
-  const onSubmit = async (data: CreateJobPayload) => {
+  const onSubmit = async (data: any) => {
     try {
-      const payload = { ...data };
+      const payload: CreatePost = {
+        name: data.jobTitle,
+        body: data.description,
+        jobType: data.jobType,
+        communityId: data.communityId,
+        deadline: data.deadline,
+        isEnglishRequired: data.isEnglishRequired,
+        url: data.exampleUrl,
+        intendedUse: data.intendedUse,
+        budget: data.budget,
+      };
 
       if (!payload.deadline) {
-        delete payload.deadline;
+        delete (payload as { deadline?: typeof payload.deadline }).deadline;
       }
-
+      console.log(payload);
       await createJob(payload);
-      await router.push("/job-board");
+      // router.push("/job-board");
       await globalMutate(
         (key) =>
           typeof key === "string" &&
@@ -114,7 +126,7 @@ const CreateJobPage = () => {
   };
 
   if (isLanguageLoading || isCatalogLoading) return <Loading />;
-  if (languageError || catalogError) return <div>Error loading data</div>;
+  if (languageError || state.state === REQUEST_STATE.FAILED) return <div>Error loading data</div>;
 
   return (
     <div className="bg-[#F6F9FE] min-h-screen py-8">
@@ -134,7 +146,12 @@ const CreateJobPage = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={onSubmit} method="POST" >
+            <input
+              type="hidden"
+              id="communityId"
+              {...register("communityId")}
+              value={communityId}/>
             {/* Job Title */}
             <div className="mb-6">
               <label
@@ -174,8 +191,8 @@ const CreateJobPage = () => {
                 <div className="flex items-center p-3 border border-gray-300 rounded-lg">
                   <input
                     type="radio"
-                    id="freelance"
-                    value="Freelance"
+                    id="jopType"
+                    value={JobType.Freelance}
                     {...register("workingFrom")}
                     className="h-4 w-4 text-blue-600"
                   />
@@ -187,8 +204,8 @@ const CreateJobPage = () => {
                 <div className="flex items-center p-3 border border-gray-300 rounded-lg">
                   <input
                     type="radio"
-                    id="contract"
-                    value="Contract"
+                    id="jopType"
+                    value={JobType.Contract}
                     {...register("workingFrom")}
                     className="h-4 w-4 text-blue-600"
                   />
@@ -200,8 +217,8 @@ const CreateJobPage = () => {
                 <div className="flex items-center p-3 border border-gray-300 rounded-lg">
                   <input
                     type="radio"
-                    id="parttime"
-                    value="Parttime"
+                    id="jopType"
+                    value={JobType.PartTime}
                     {...register("workingFrom")}
                     className="h-4 w-4 text-blue-600"
                   />
@@ -213,8 +230,8 @@ const CreateJobPage = () => {
                 <div className="flex items-center p-3 border border-gray-300 rounded-lg">
                   <input
                     type="radio"
-                    id="fulltime"
-                    value="Fulltime"
+                    id="jopType"
+                    value={JobType.FullTime}
                     {...register("workingFrom")}
                     className="h-4 w-4 text-blue-600"
                   />
@@ -328,11 +345,11 @@ const CreateJobPage = () => {
                   <option disabled value="">
                     {createJobLanguage?.serviceCategoryPlaceholderSelect}
                   </option>
-                  {catalogData?.serviceCatalogs
+                  {catalogData?.communities
                     ?.filter((catalog) => catalog.slug !== "popular-service")
                     .map((catalog) => (
-                      <option key={catalog.id} value={catalog.id}>
-                        {catalog.name}
+                      <option key={catalog.community.id} value={catalog.community.id}>
+                        {catalog.community.name}
                       </option>
                     ))}
                 </select>

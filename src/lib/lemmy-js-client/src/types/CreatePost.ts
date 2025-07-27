@@ -2,6 +2,7 @@
 import type { CommunityId } from "./CommunityId";
 import type { LanguageId } from "./LanguageId";
 import type { TagId } from "./TagId";
+import {IntendedUse} from "./IntendedUse";
 
 /**
  * Create a post.
@@ -33,4 +34,9 @@ export type CreatePost = {
    * Time when this post should be scheduled. Null means publish immediately.
    */
   scheduledPublishTimeAt?: number;
+  deadline: boolean;
+  jobType: string;
+  isEnglishRequired?: boolean;
+  intendedUse?: IntendedUse;
+  budget: number;
 };

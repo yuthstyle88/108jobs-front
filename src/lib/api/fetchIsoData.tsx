@@ -97,7 +97,6 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
     }
 
     // Fetch site data and user info in parallel for better performance
-    logger.debug(`Fetching data for URL: ${url}`);
     const [trySite, tryUser] = await Promise.all([
       HttpService.client.getSite(),
       HttpService.client.getMyUser()

@@ -14,22 +14,57 @@ import {
  * @example
  * const { data, state, isMutating, execute } = useHttpGet("getSite", [123]);
  */
-export const useHttpGet = <K extends keyof WrappedLemmyHttp>(
+
+/* ---------- overloads ---------- */
+export function useHttpGet<K extends keyof WrappedLemmyHttp>(
   method: K,
-  args?: Parameters<WrappedLemmyHttp[K]>,                                 // ✅ เปลี่ยนจาก default value เป็น optional
   options?: SWRConfiguration<RequestState<Payload<K>>, Error>,
-) => {
+): {
+  state: RequestState<Payload<K>>;
+  data: Payload<K> | null;
+  execute: () => Promise<RequestState<Payload<K>> | undefined>;
+  isMutating: boolean;
+};
+export function useHttpGet<K extends keyof WrappedLemmyHttp>(
+  method: K,
+  args: Parameters<WrappedLemmyHttp[K]>,
+  options?: SWRConfiguration<RequestState<Payload<K>>, Error>,
+): {
+  state: RequestState<Payload<K>>;
+  data: Payload<K> | null;
+  execute: () => Promise<RequestState<Payload<K>> | undefined>;
+  isMutating: boolean;
+};
+
+/* ---------- implementation ---------- */
+export function useHttpGet<K extends keyof WrappedLemmyHttp>(
+  method: K,
+  argsOrOptions?:
+    | Parameters<WrappedLemmyHttp[K]>
+    | SWRConfiguration<RequestState<Payload<K>>, Error>,
+  maybeOptions?: SWRConfiguration<RequestState<Payload<K>>, Error>,
+) {
+  /* ---------- resolve param / options ---------- */
+  const args = Array.isArray(argsOrOptions)
+    ? (argsOrOptions as Parameters<WrappedLemmyHttp[K]>)
+    : undefined;
+
+  const options = Array.isArray(argsOrOptions)
+    ? maybeOptions
+    : (argsOrOptions as SWRConfiguration<
+        RequestState<Payload<K>>,
+        Error
+      > | undefined);
+
   /* ---------- key / fetcher ---------- */
   const key = [method, ...(args ?? [])] as const;
 
   const fetcher = async () => {
     try {
-      // แปลง args ให้เป็น type ที่เมธอดต้องการเสมอ
       const typedArgs = (args ?? []) as Parameters<WrappedLemmyHttp[K]>;
-
       return (await callHttp(
         method,
-        ...typedArgs
+        ...typedArgs,
       )) as RequestState<Payload<K>>;
     } catch (err) {
       return {
@@ -42,6 +77,7 @@ export const useHttpGet = <K extends keyof WrappedLemmyHttp>(
   /* ---------- swr ---------- */
   const swr = useSWR<RequestState<Payload<K>>, Error>(key, fetcher, {
     keepPreviousData: true,
+    revalidateOnFocus: false,
     ...options,
   });
 
@@ -50,17 +86,8 @@ export const useHttpGet = <K extends keyof WrappedLemmyHttp>(
   const data =
     state.state === REQUEST_STATE.SUCCESS ? (state.data as Payload<K>) : null;
 
-  /** ดึงข้อมูลใหม่ (revalidate) */
   const execute = () => swr.mutate();
-
-  /** กำหนดให้ชื่อเดียวกับ useHttpPost */
   const isMutating = swr.isValidating;
 
-  /* ---------- return ---------- */
-  return {
-    state,
-    data,
-    execute,
-    isMutating,
-  };
-};
+  return { state, data, execute, isMutating };
+}

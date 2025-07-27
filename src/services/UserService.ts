@@ -1,7 +1,7 @@
 import { isAuthPath } from "@/utils/app";
 import { clearAuthCookie, isBrowser, setAuthCookie } from "@/utils/browser";
 import * as cookie from "cookie";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode, JwtPayload} from "jwt-decode";
 import { LoginResponse, MyUserInfo } from "lemmy-js-client";
 import { amAdmin } from "@/utils/roles";
 import { HttpService } from "./index";
@@ -17,9 +17,9 @@ interface Claims {
 }
 
 interface AuthInfo {
-  claims: Claims;
+  claims?: Claims;
   auth: string;
-  sharedKey: string;
+  sharedKey?: string;
 }
 
 export class UserService {
@@ -45,7 +45,9 @@ export class UserService {
         toast("loggedIn");
       }
       setAuthCookie(res.jwt);
-      this.#setAuthInfo(sharedKey);
+      this.#setAuthInfo({sharedKey});
+      console.log("",Boolean(this.authInfo?.auth))
+      alert(Boolean(this.authInfo?.auth))
     }
   }
 
@@ -69,6 +71,10 @@ export class UserService {
     }
   }
 
+  get isLoggedIn() {
+    return Boolean(this.authInfo?.auth);
+  }
+
   public auth(throwErr = false): string | undefined {
     const auth = this.authInfo?.auth;
 
@@ -87,15 +93,24 @@ export class UserService {
     }
   }
 
-  #setAuthInfo(sharedKey?: string) {
-    if (isBrowser()) {
-      const auth = cookie.parse(document.cookie)[authCookieName];
+  static fromCookieString(rawCookie = "") {
+    const svc = new UserService();
+    svc.#setAuthInfo({ rawCookie });
+    return svc;
+  }
 
-      if (auth) {
-        HttpService.client.setHeaders({ Authorization: `Bearer ${auth}` });
-        this.authInfo = { auth, claims: jwtDecode(auth), sharedKey: sharedKey || "" };
-      }
+
+  #setAuthInfo(opts: { rawCookie?: string; sharedKey?: string } = {},
+  ) {
+    const { rawCookie = "", sharedKey = "" } = opts;
+    const auth = isBrowser() ? cookie.parse(document.cookie)[authCookieName] : rawCookie;
+    if (!auth) {
+      HttpService.client.removeHeader?.("Authorization");
+      this.authInfo = undefined;
+      return;
     }
+    HttpService.client.setHeaders({ Authorization: `Bearer ${auth}` });
+    this.authInfo = { auth, claims: jwtDecode(auth), sharedKey };
   }
 
   public get moderatesSomething(): boolean {

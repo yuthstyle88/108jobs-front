@@ -1,0 +1,1 @@
+export type IntendedUse = "Personal" | "Business" | "Unknown";
