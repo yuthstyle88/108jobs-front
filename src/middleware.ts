@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { middleware as langMiddleware } from "./middleware-lang";
 import jwt from "jsonwebtoken";
-import {UserService} from "@/services";
 import {authCookieName} from "@/utils/config";
 
 const TOKEN_COOKIE = "fastjob.session";
@@ -79,9 +78,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const rawCookie = req.cookies.get(authCookieName)?.value || "";
-  const userSvc = UserService.fromCookieString(rawCookie);
-  const isLoggedIn = userSvc.isLoggedIn;
+  const rawCookie = req.cookies.get(authCookieName)?.value;
+  const isLoggedIn = Boolean(rawCookie);
 
   if (cleanPathname === "/login") {
     if (!isLoggedIn) return NextResponse.next();

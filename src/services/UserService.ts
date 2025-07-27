@@ -46,8 +46,6 @@ export class UserService {
       }
       setAuthCookie(res.jwt);
       this.#setAuthInfo({sharedKey});
-      console.log("",Boolean(this.authInfo?.auth))
-      alert(Boolean(this.authInfo?.auth))
     }
   }
 
@@ -92,13 +90,6 @@ export class UserService {
       // throw msg;
     }
   }
-
-  static fromCookieString(rawCookie = "") {
-    const svc = new UserService();
-    svc.#setAuthInfo({ rawCookie });
-    return svc;
-  }
-
 
   #setAuthInfo(opts: { rawCookie?: string; sharedKey?: string } = {},
   ) {

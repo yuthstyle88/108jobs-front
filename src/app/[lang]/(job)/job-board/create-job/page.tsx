@@ -346,7 +346,7 @@ const CreateJobPage = () => {
                     {createJobLanguage?.serviceCategoryPlaceholderSelect}
                   </option>
                   {catalogData?.communities
-                    ?.filter((catalog) => catalog.slug !== "popular-service")
+                    ?.filter((catalog) => catalog.community.name !== "popular-service")
                     .map((catalog) => (
                       <option key={catalog.community.id} value={catalog.community.id}>
                         {catalog.community.name}
