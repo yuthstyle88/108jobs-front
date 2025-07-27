@@ -41,7 +41,8 @@ import {
   JobCategoryLanguage,
   JobDetailLanguage,
   TermAndConditionLanguage,
-  CategoryFooterLanguage
+  CategoryFooterLanguage,
+  JobNotification
 } from "@/types/language";
 import { create } from "zustand";
 
@@ -88,7 +89,8 @@ export type LanguageDataType = Partial<
     JobCategoryLanguage &
     JobDetailLanguage &
     TermAndConditionLanguage & 
-    CategoryFooterLanguage
+    CategoryFooterLanguage &
+    JobNotification
 >;
 
 type LanguageStoreData = {

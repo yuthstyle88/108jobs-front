@@ -7,6 +7,8 @@ import { toast } from "sonner"; // หรือไลบรารีที่ค
 import { HttpService } from "@/services/HttpService";
 import { UserService } from "@/services";
 import {arrayBufferToHex, exportPublicKey, generateEcKeyPair, importEcPublicKeyHex, uint8ArrayToHex} from "@/lib/web-crypto";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { LanguageFile } from "@/constants/language";
 
 // ฟังก์ชันสำหรับดึงค่า query parameters
 function useOAuthCallbackQueryParams() {
@@ -20,6 +22,7 @@ function useOAuthCallbackQueryParams() {
 export default function OAuthCallbackPage() {
   const router = useRouter();
   const { code, state } = useOAuthCallbackQueryParams();
+  const { data: authLanguage } = useGlobalTranslate(LanguageFile.NOTIFICATION);
 
   useEffect(() => {
     console.log("EEEE loginRes:",);
@@ -44,7 +47,7 @@ export default function OAuthCallbackPage() {
         ) {
 
           // OAuth ล้มเหลวหรือหมดอายุ
-          toast.error("การตรวจสอบ OAuth ไม่ถูกต้อง");
+          toast.error(authLanguage?.oauthVerificationFailed);
           router.replace("/login");
           return;
         }
@@ -65,10 +68,10 @@ export default function OAuthCallbackPage() {
           } else {
             // ไม่มี JWT แต่มีการตอบกลับอื่นๆ
             if (loginRes.data.verifyEmailSent) {
-              toast.info("อีเมลยืนยันตัวตนถูกส่งแล้ว");
+              toast.info(authLanguage?.verificationEmailSent);
             }
             if (loginRes.data.registrationCreated) {
-              toast.info("ส่งคำขอลงทะเบียนแล้ว");
+              toast.info(authLanguage?.registrationRequestSubmitted);
             }
             router.push("/login");
             return
@@ -84,7 +87,7 @@ export default function OAuthCallbackPage() {
               toast.error(loginRes.err.message);
               break;
             case "registrationApplicationIsPending":
-              toast.error("คำขอลงทะเบียนของคุณอยู่ระหว่างดำเนินการ");
+              toast.error(authLanguage?.registrationRequestProcessing);
               break;
             case "registrationDenied":
             case "oauthAuthorizationInvalid":
@@ -96,7 +99,7 @@ export default function OAuthCallbackPage() {
               toast.error(loginRes.err.message);
               break;
             default:
-              toast.error("การเข้าสู่ระบบไม่ถูกต้อง");
+              toast.error(authLanguage?.invalidLoginOccurred);
               break;
           }
 
@@ -104,7 +107,7 @@ export default function OAuthCallbackPage() {
         }
       } catch (error) {
         console.error("OAuth error:", error);
-        toast.error("เกิดข้อผิดพลาดในการเข้าสู่ระบบ");
+        toast.error(authLanguage?.loginError);
         router.replace("/login");
       }
     }

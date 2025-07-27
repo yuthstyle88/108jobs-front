@@ -13,6 +13,7 @@ type NotificationType = Record<"profile" | "job" | "review" | "service", Notific
 
 function useNotification() {
   const { data: notiLanguage } = useGlobalTranslate(LanguageFile.NOTIFICATIONS);
+  const { data: jobLanguage } = useGlobalTranslate(LanguageFile.NOTIFICATION);
 
   const type: NotificationType = {
     profile: {
@@ -24,38 +25,38 @@ function useNotification() {
         updateSkill: notiLanguage?.updateSkill,
         updateLanguage: notiLanguage?.updateLanguage,
         changePassword: notiLanguage?.changePassword,
-        updateFavorite: "Successfully saved job to favorites",
-        deleteFavorite: "Successfully unsaved job from favorites",
-        updateAvailable: "You are now accepting new jobs.",
-        updateNotAvailable: "You are no longer accepting new jobs."
+        updateFavorite: jobLanguage?.jobUpdateFavoriteSuccess,
+        deleteFavorite: jobLanguage?.jobDeleteFavoriteSuccess,
+        updateAvailable: jobLanguage?.profileUpdateAvailableSuccess,
+        updateNotAvailable: jobLanguage?.profileUpdateNotAvailableSuccess
       },
       fail: {
-        setDefault: "Failed set default address",
-        updateAvailableFail: "Failed to update job availability. Please try again."
+        setDefault: jobLanguage?.profileSetDefaultFail,
+        updateAvailableFail: jobLanguage?.profileUpdateAvailableFail
       },
     },
     job: {
       success: {
-        updateFavorite: "Successfully saved job to favorites",
-        deleteFavorite: "Successfully unsaved job from favorites",
-        createJobBoard: "Successfully create new job board"
+        updateFavorite: jobLanguage?.jobUpdateFavoriteSuccess,
+        deleteFavorite: jobLanguage?.jobDeleteFavoriteSuccess,
+        createJobBoard: jobLanguage?.jobCreateJobBoardSuccess
       },
       fail: {
-        createJobBoard: "Failed create new job board"
+        createJobBoard: jobLanguage?.jobCreateJobBoardFail
       },
     },
     review:{
       success: {
-        postComment: "Successfully leave a comment",
-        updateComment: "Successfully edit comment",
-        deleteComment: "Successfully delete comment",
+        postComment: jobLanguage?.reviewPostCommentSuccess,
+        updateComment: jobLanguage?.reviewUpdateCommentSuccess,
+        deleteComment: jobLanguage?.reviewDeleteCommentSuccess,
       },
       fail: {},
     },
     service:{
       success: {
-        showJob: "Successfully public your job",
-        hideJob: "Successfully hide your job",
+        showJob: jobLanguage?.serviceShowJobSuccess,
+        hideJob: jobLanguage?.serviceHideJobSuccess,
       },
       fail: {},
     }
