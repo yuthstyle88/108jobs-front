@@ -33,7 +33,7 @@ const CurrentProfileFreelance = () => {
       const el = bioRef.current;
       setIsClamped(el.scrollHeight > el.clientHeight);
     }
-  }, [profileData?.profile?.bio]);
+  }, [profileData?.person?.bio]);
 
   if (isLoadingProfile) return <Loading />;
 
@@ -76,7 +76,7 @@ const CurrentProfileFreelance = () => {
                 {profileData?.person.displayName}
               </p>
               <div className="flex items-center justify-center pt-2">
-                {[...Array(profileData?.profile?.ratings || 0)].map((_, index) => (
+                {[...Array(profileData?.person?.ratings || 0)].map((_, index) => (
                   <FontAwesomeIcon
                     icon={faStar}
                     key={index}
@@ -98,7 +98,7 @@ const CurrentProfileFreelance = () => {
                     {goToProfileLanguage?.memberSince}
                   </div>
                   <div className="text-third font-medium">
-                    {formatDateToLong(profileData?.profile?.createdAt)}
+                    {formatDateToLong(profileData?.person?.publishedAt)}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
@@ -124,7 +124,7 @@ const CurrentProfileFreelance = () => {
                   <div className="text-third font-medium">100%</div>
                 </div>
               </div>
-              {profileData?.profile?.bio && (
+              {profileData?.person?.bio && (
                 <div className="mt-6 px-6">
                   <div className="text-text-secondary px-4 py-3 border border-border-secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
@@ -133,9 +133,9 @@ const CurrentProfileFreelance = () => {
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
-                      <i>{profileData?.profile?.bio}</i>
+                      <i>{profileData?.person?.bio}</i>
                     </p>
-                    {profileData?.profile?.bio && isClamped && !showFullBio && (
+                    {profileData?.person?.bio && isClamped && !showFullBio && (
                       <button
                         onClick={() => setShowFullBio(true)}
                         className="mt-2 text-text-primary font-sans text-sm font-medium underline"

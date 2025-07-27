@@ -1,11 +1,7 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
 import { LanguageFile } from "@/constants/language";
-import { usePrivateFetch } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { useClickOutside } from "@/hooks/useClickOutside";
-import { useLogout } from "@/hooks/useLogout";
-import { ProfileData } from "lemmy-js-client";
 import { interpolate } from "@/utils/interpolate";
 import { faBell, faComment } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,17 +14,21 @@ import Image from "next/image";
 import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Error from "@/app/error";
+import {UserService} from "@/services";
+import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {REQUEST_STATE} from "@/services/HttpService";
 
 const SellerHeader = () => {
     const { lang } = useLanguage();
   const { data: globalLanguageData } = useGlobalTranslate(LanguageFile.GLOBAL);
   const {
-    data: user,
-    isLoading,
-    error,
-  } = usePrivateFetch<ProfileData>(API_ROUTES.profile.getProfile);
+    profileData: user,
+    profileState,
+    isLoadingProfile,
+  } = useProfileData();
 
-  const { logout } = useLogout();
+  const logout = () => UserService.Instance.logout();
+
 
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const profileMenuRef = useClickOutside<HTMLDivElement>(() =>
@@ -39,8 +39,8 @@ const SellerHeader = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
+  if (isLoadingProfile) return <Loading />;
+  if (profileState.state === REQUEST_STATE.FAILED) return <Error/>;
 
   return (
     <header className="bg-white border-b border-gray-200">

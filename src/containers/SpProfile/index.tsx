@@ -3,7 +3,6 @@ import Loading from "@/components/Loading";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useLogout } from "@/hooks/useLogout";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import {
   faBriefcase,
@@ -18,12 +17,12 @@ import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {UserService} from "@/services";
 
 const SpProfile = () => {
   const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
   const { lang: currentLang } = useLanguage();
-  const { logout } = useLogout();
-
+  const logout = () => UserService.Instance.logout();
   if (isLoadingProfile) return <Loading />;
 
   return (

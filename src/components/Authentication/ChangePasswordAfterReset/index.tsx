@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useHttpApi } from "@/hooks/useHttpApi";          // ★ เพิ่ม
+import { useHttpPost } from "@/hooks/useHttpPost";          // ★ เพิ่ม
 import useNotification from "@/hooks/useNotification";
 
 type ChangePasswordProps = { token: string };
@@ -42,7 +42,7 @@ export const ChangePasswordAfterReset = ({ token }: ChangePasswordProps) => {
   const {
     state: changeState,
     execute: passwordChangeAfterReset,
-  } = useHttpApi("passwordChangeAfterReset");
+  } = useHttpPost("passwordChangeAfterReset");
 
   /* ---------- UI states ---------------------------------------- */
   const { successMessage } = useNotification();

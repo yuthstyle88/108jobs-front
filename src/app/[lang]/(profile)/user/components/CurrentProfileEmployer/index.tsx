@@ -30,7 +30,7 @@ const CurrentProfileEmployer = () => {
       const el = bioRef.current;
       setIsClamped(el.scrollHeight > el.clientHeight);
     }
-  }, [profileData?.profile?.bio]);
+  }, [profileData?.person?.bio]);
 
   if (isLoadingProfile) return <Loading />;
   return (
@@ -76,10 +76,10 @@ const CurrentProfileEmployer = () => {
                   {goToProfileLanguage?.memberSince}
                 </p>
                 <p className="text-[14px] text-third">
-                  {formatDateToLong(profileData?.profile.createdAt)}
+                  {formatDateToLong(profileData?.person?.publishedAt)}
                 </p>
               </div>
-              {profileData?.profile.bio && (
+              {profileData?.person.bio && (
                 <div className="mt-6 px-6">
                   <div className="text-text-secondary px-4 py-3 border border-border-secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
@@ -88,9 +88,9 @@ const CurrentProfileEmployer = () => {
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
-                      <i>{profileData.profile.bio}</i>
+                      <i>{profileData.person.bio}</i>
                     </p>
-                    {profileData.profile.bio && isClamped && !showFullBio && (
+                    {profileData.person.bio && isClamped && !showFullBio && (
                       <button
                         onClick={() => setShowFullBio(true)}
                         className="mt-2 text-blue-600 text-sm font-medium hover:underline"

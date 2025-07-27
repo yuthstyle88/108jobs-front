@@ -33,7 +33,7 @@ const FreelancerProfile =  () => {
       const el = bioRef.current;
       setIsClamped(el.scrollHeight > el.clientHeight);
     }
-  }, [userProfile?.profile?.bio]);
+  }, [userProfile?.person?.bio]);
 
   if (isLoadingProfile) return <Loading />;
  const  { educations,
@@ -74,7 +74,7 @@ const FreelancerProfile =  () => {
                 {userProfile?.person?.displayName}
               </p>
               <div className="flex items-center justify-center pt-2">
-                {[...Array(userProfile?.profile?.ratings|| 0)].map((_, index) => (
+                {[...Array(userProfile?.person?.ratings|| 0)].map((_, index) => (
                   <FontAwesomeIcon
                     icon={faStar}
                     key={index}
@@ -82,7 +82,7 @@ const FreelancerProfile =  () => {
                   />
                 ))}
               </div>
-              {userProfile?.profile.isVerified && (
+              {userProfile?.person.isVerified && (
                 <div className="flex items-center justify-center w-full">
                   <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-[#1EB899] text-white w-fit">
                     <svg
@@ -116,7 +116,7 @@ const FreelancerProfile =  () => {
                     {goToProfileLanguage?.memberSince}
                   </div>
                   <div className="text-third font-medium">
-                    {formatDateToLong(userProfile?.profile?.createdAt)}
+                    {formatDateToLong(userProfile?.person?.publishedAt)}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
@@ -142,7 +142,7 @@ const FreelancerProfile =  () => {
                   <div className="text-third font-medium">100%</div>
                 </div>
               </div>
-              {userProfile?.profile?.bio && (
+              {userProfile?.person?.bio && (
                 <div className="mt-6 px-6">
                   <div className="text-text-secondary px-4 py-3 border border-border-secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
@@ -151,9 +151,9 @@ const FreelancerProfile =  () => {
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
-                      <i>{userProfile?.profile.bio}</i>
+                      <i>{userProfile?.person.bio}</i>
                     </p>
-                    {userProfile?.profile.bio && isClamped && !showFullBio && (
+                    {userProfile?.person.bio && isClamped && !showFullBio && (
                       <button
                         onClick={() => setShowFullBio(true)}
                         className="mt-2 text-text-primary font-sans text-sm font-medium underline"

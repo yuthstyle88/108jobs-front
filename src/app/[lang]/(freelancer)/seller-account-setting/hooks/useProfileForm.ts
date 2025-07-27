@@ -67,7 +67,7 @@ export const useProfileForm = (
             birthDay: day || "Day",
             birthMonth: month || "Month",
             birthYear: year || "Year",
-            bio: profileData.profile.bio || "",
+            bio: profileData.person.bio || "",
           });
         } else {
           reset({
@@ -76,7 +76,7 @@ export const useProfileForm = (
             birthDay: "Day",
             birthMonth: "Month",
             birthYear: "Year",
-            bio: profileData.profile.bio || "",
+            bio: profileData.person.bio || "",
           });
         }
         // Use the avatar URL from profileData

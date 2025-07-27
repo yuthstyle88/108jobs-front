@@ -3,7 +3,7 @@
 import * as Switch from "@radix-ui/react-switch";
 import { useState } from "react";
 import useNotification from "@/hooks/useNotification";
-import {useHttpApi} from "@/hooks/useHttpApi";
+import {useHttpPost} from "@/hooks/useHttpPost";
 import {REQUEST_STATE} from "@/services/HttpService";
 
 const DocumentInfo = () => {
@@ -11,7 +11,7 @@ const DocumentInfo = () => {
   const { successMessage, errorMessage } = useNotification();
 
   // ใช้ useHttpApi เพื่อเรียก API
-  const { state, execute, isMutating } = useHttpApi("updateAvailable");
+  const { state, execute, isMutating } = useHttpPost("updateAvailable");
 
   const handleToggle = async (value: boolean) => {
     setIsAvailable(value);

@@ -1,6 +1,5 @@
 import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useLogout } from "@/hooks/useLogout";
 import { GlobalLanguage } from "@/types/language";
 import { interpolateElement } from "@/utils/interpolateElement";
 import { faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
@@ -21,13 +20,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {Person} from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
+import {UserService} from "@/services";
 type ProfileFreelancerProps = {
   data: Partial<GlobalLanguage> | null | undefined;
   profile?: Person;
 };
 
 const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
-  const { logout } = useLogout();
+  const logout = () => UserService.Instance.logout();
   const { lang: currentLang } = useLanguage();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">

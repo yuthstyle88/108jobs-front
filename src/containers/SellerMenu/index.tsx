@@ -3,7 +3,6 @@ import { API_ROUTES } from "@/api/endpoints";
 import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
-import { useLogout } from "@/hooks/useLogout";
 import { ProfileData } from "lemmy-js-client";
 import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -22,6 +21,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import {UserService} from "@/services";
 
 interface SellerMenuProps {
   isOpen: boolean;
@@ -94,7 +94,7 @@ const { lang } = useLanguage();
     },
   ];
 
-  const { logout } = useLogout();
+  const logout = () => UserService.Instance.logout();
 
   useEffect(() => {
     const handleEscapeKey = (e: KeyboardEvent) => {

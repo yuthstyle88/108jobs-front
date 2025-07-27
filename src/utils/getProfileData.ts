@@ -11,7 +11,7 @@ type ExtraProfileFields = {
 };
 
 export function getProfileData(profileData: ProfileData) {
-  const profile = profileData?.profile as Partial<ExtraProfileFields> | undefined;
+  const profile = profileData?.person as Partial<ExtraProfileFields> | undefined;
   const educations: Education[] = (profile?.educations ?? []) as Education[];
   const workExperience: WorkExperience[] = profile?.workExperience ?? [];
   const skill: Skill[] = profile?.skill ?? [];

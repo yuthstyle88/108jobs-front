@@ -35,7 +35,7 @@ const MyServices = () => {
   const { data: profileData, isLoading: isLoadingProfile } =
     usePrivateFetch<ProfileData>(API_ROUTES.profile.getProfile);
 
-  const notVerified = profileData?.profile.isVerified === "Pending";
+  const notVerified = profileData?.person.isVerified === "Pending";
   const {
     data: jobsData,
     isLoading,

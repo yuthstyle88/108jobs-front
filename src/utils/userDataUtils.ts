@@ -37,7 +37,7 @@ export function getAvatarUrl(profileData: ProfileData): string | undefined {
  * @returns The bio, preferring person.bio if available
  */
 export function getBio(profileData: ProfileData): string | null | undefined {
-  return profileData.person?.bio || profileData.profile.bio;
+  return profileData.person?.bio || profileData.person.bio;
 }
 
 /**

@@ -3,7 +3,7 @@ import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
 import { LanguageFile } from "@/constants/language";
 /* เพิ่ม hook */
-import { useHttpApi } from "@/hooks/useHttpApi";
+import { useHttpPost } from "@/hooks/useHttpPost";
 import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
 import { UpdateDataProps } from "@/types/update-term";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -61,7 +61,7 @@ export const AcceptForm = ({
   const {
     state: updateState,            // ดูสถานะการยิง API
     execute: updateTerm,           // ฟังก์ชันยิง API
-  } = useHttpApi("updateTerm");
+  } = useHttpPost("updateTerm");
 
   const [apiError, setApiError] = useState<string | null>(null);
   useEffect(() => {

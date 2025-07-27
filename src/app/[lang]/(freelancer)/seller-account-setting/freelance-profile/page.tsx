@@ -7,17 +7,17 @@ import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { getAvatarUrl } from "@/utils/userDataUtils";
 import Image from "next/image";
-import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
 import { useProfileForm } from "../hooks/useProfileForm";
 import { useImagePicker } from "@/hooks/useImagePicker";
 import {useHttpPost} from "@/hooks/useHttpPost";
+import {useProfileData} from "@/hooks/profile-api/useProfileData";
 
 const AccountSettings = () => {
 
   const { execute: uploadImage, isMutating: isUploadMuting } =
     useHttpPost("uploadImage");
 
-  const { profileState, profileData, mutate } = useBasicInfoForm();
+  const { profileState, profileData, mutate } = useProfileData();
 
   const { data: sellerProfileLanguage } = useGlobalTranslate(
     LanguageFile.SELLER_FREELANCER_PROFILE

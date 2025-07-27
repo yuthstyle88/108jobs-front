@@ -6,7 +6,6 @@ import { useDateOptions } from "@/hooks/useDateOptions";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
-import { useBasicInfoForm } from "../hooks/useBasicInfoForm";
 import { useImagePreviewOnly } from "../hooks/useImagePreviewOnly";
 import { usePersonalInfoForm } from "../hooks/usePersonalInfoForm";
 import { InputError } from "@/components/ui/InputError";
@@ -14,6 +13,7 @@ import ErrorModal from "@/components/ui/ErrorModal";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import {useHttpPost} from "@/hooks/useHttpPost";
+import {useProfileData} from "@/hooks/profile-api/useProfileData";
 
 const PersonalInfo = () => {
   // Function to upload image using HttpService
@@ -23,7 +23,7 @@ const PersonalInfo = () => {
   const { execute: uploadImage, isMutating: isUploadMuting } =
     useHttpPost("uploadImage");
 
-  const { profileState, profileData, mutate } = useBasicInfoForm();
+  const { profileState, profileData, mutate } = useProfileData();
 
   const { data: sellerPersonalInfoLanguage } = useGlobalTranslate(
       LanguageFile.SELLER_PERSONAL_INFO

@@ -13,7 +13,7 @@ import { MoveRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import InforMessage from "../InforMessage";
+import InfoMessage from "../InfoMessage";
 import Loading from "../Loading";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
@@ -49,7 +49,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
   });
 
   const userRole = profileData?.localUser.role;
-  const isVerify = profileData?.profile?.isVerified;
+  const isVerify = profileData?.person?.isVerified;
   const isOnlyEmployer = userRole?.length === 1 && userRole[0] === RoleType.Employer;
   const isFreelancer = userRole?.includes(RoleType.Freelancer);
   const canShowProposalButton = !isGuest && isFreelancer && !isOnlyEmployer;
@@ -250,7 +250,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
             Interested Freelancers for mobile game character design (0
             proposals)
           </h4>
-          <InforMessage message="We recommend communicating and paying through Fastjob - guaranteed no scams! We protect your payment until you receive work from the freelancer" />
+          <InfoMessage message="We recommend communicating and paying through Fastjob - guaranteed no scams! We protect your payment until you receive work from the freelancer" />
         </div>
         <JobBoardProposal />
       </section>

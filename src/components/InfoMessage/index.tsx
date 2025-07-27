@@ -5,7 +5,7 @@ type Props = {
   className?: string;
 };
 
-const InforMessage = ({ message, className }: Props) => {
+const InfoMessage = ({ message, className }: Props) => {
   return (
     <div
       className={`bg-secondary border border-third rounded-lg py-3 px-4 flex items-center ${className}`}
@@ -18,4 +18,4 @@ const InforMessage = ({ message, className }: Props) => {
   );
 };
 
-export default InforMessage;
+export default InfoMessage;

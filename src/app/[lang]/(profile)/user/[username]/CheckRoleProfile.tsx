@@ -24,7 +24,7 @@ export default function CheckRoleProfile({ username }: Props) {
   if (isEmployer) return <CurrentProfileEmployer />;
   if (isFreelancer)
     return <CurrentProfileFreelance />;
-  if (isEmployer && isFreelancer)
+  if (isFreelancer)
     return <FreelancerProfile />;
   if (isEmployer) return <EmployerProfile  />;
 

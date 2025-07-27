@@ -14,12 +14,11 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useEffect, useMemo, useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-import {useBasicInfoForm} from "../hooks/useBasicInfoForm";
 import ZipcodeSearch from "../components/SearchZipcode";
 import ErrorPage from "@/app/error";
 import {HttpService} from "@/services";
-import {useHttpApi} from "@/hooks/useHttpApi";
-import { CountriesResponse } from "lemmy-js-client";
+import {useHttpGet} from "@/hooks/useHttpGet";
+import {useProfileData} from "@/hooks/profile-api/useProfileData";
 
 
 export interface AddressFormData {
@@ -54,7 +53,7 @@ function normalizeAddress(address: RawAddress | any | undefined): AddressFormDat
 }
 
 const ContactInfo = () => {
-  const { profileState, profileData, isLoadingProfile, isErrorProfile, mutate } = useBasicInfoForm();
+  const { profileState, profileData, isLoadingProfile, isErrorProfile, mutate } = useProfileData();
 
   const {data: sellerContactLanguage} = useGlobalTranslate(
     LanguageFile.SELLER_CONTACT_INFO
@@ -123,7 +122,7 @@ const ContactInfo = () => {
 
   const country = watch("country");
 
-  const { data, } = useHttpApi(
+  const { data, } = useHttpGet(
     "getCountries"
   );
   

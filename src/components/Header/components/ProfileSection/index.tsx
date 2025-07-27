@@ -1,6 +1,6 @@
 import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useLogout } from "@/hooks/useLogout";
+
 import { GlobalLanguage } from "@/types/language";
 import {
   faBarsProgress,
@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {Person} from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
+import {UserService} from "@/services";
 
 type ProfileSectionProps = {
   data: Partial<GlobalLanguage> | null | undefined;
@@ -25,7 +26,7 @@ type ProfileSectionProps = {
 };
 
 const ProfileSection = ({ data, profile }: ProfileSectionProps) => {
-  const { logout } = useLogout();
+  const logout = () => UserService.Instance.logout();
 const { lang } = useLanguage();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">

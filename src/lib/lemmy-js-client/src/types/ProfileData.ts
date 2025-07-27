@@ -16,7 +16,7 @@ import {Person} from "./Person";
  * - user.username ~ person.name
  * - user.displayName ~ person.displayName
  * - user.avatarUrl ~ person.avatar
- * - profile.bio ~ person.bio
+ * - person.bio ~ person.bio
  * - contact.email ~ localUser.email
  * - user.confirmedStatus ~ localUser.emailVerified
  */

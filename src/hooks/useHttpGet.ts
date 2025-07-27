@@ -1,4 +1,4 @@
-import useSWR, { SWRConfiguration, SWRResponse } from "swr";
+import useSWR, { SWRConfiguration } from "swr";
 import {
   callHttp,
   RequestState,
@@ -9,27 +9,27 @@ import {
 } from "@/services/HttpService";
 
 /**
- * Hook สำหรับยิง GET โดยใช้ SWR
- * อินเตอร์เฟซผลลัพธ์ให้เหมือน useHttpPost
+ * Hook ยิง GET (ใช้ SWR) แล้วจัดรูปแบบผลลัพธ์เหมือน useHttpPost
  *
  * @example
- * const { data, state, isMutating, execute } = useHttpGet("getProfile", [123]);
+ * const { data, state, isMutating, execute } = useHttpGet("getSite", [123]);
  */
 export const useHttpGet = <K extends keyof WrappedLemmyHttp>(
   method: K,
-  args: Parameters<WrappedLemmyHttp[K]> = [] as unknown as Parameters<
-    WrappedLemmyHttp[K]
-  >,
+  args?: Parameters<WrappedLemmyHttp[K]>,                                 // ✅ เปลี่ยนจาก default value เป็น optional
   options?: SWRConfiguration<RequestState<Payload<K>>, Error>,
 ) => {
   /* ---------- key / fetcher ---------- */
-  const key = [method, ...args] as const;
+  const key = [method, ...(args ?? [])] as const;
 
   const fetcher = async () => {
     try {
+      // แปลง args ให้เป็น type ที่เมธอดต้องการเสมอ
+      const typedArgs = (args ?? []) as Parameters<WrappedLemmyHttp[K]>;
+
       return (await callHttp(
         method,
-        ...args,
+        ...typedArgs
       )) as RequestState<Payload<K>>;
     } catch (err) {
       return {
@@ -46,18 +46,21 @@ export const useHttpGet = <K extends keyof WrappedLemmyHttp>(
   });
 
   /* ---------- mapping ---------- */
-  const state: RequestState<Payload<K>> = swr.data ?? EMPTY_REQUEST;
+  const state = swr.data ?? EMPTY_REQUEST;
   const data =
     state.state === REQUEST_STATE.SUCCESS ? (state.data as Payload<K>) : null;
 
+  /** ดึงข้อมูลใหม่ (revalidate) */
   const execute = () => swr.mutate();
-  const isMutating = swr.isValidating; // ⚡️ ให้ผลเหมือน useHttpPost
+
+  /** กำหนดให้ชื่อเดียวกับ useHttpPost */
+  const isMutating = swr.isValidating;
 
   /* ---------- return ---------- */
   return {
-    state,   // เหมือน useHttpGet
-    data,    // data ที่สกัดออกเมื่อ success
-    execute, // เรียกใช้งาน API
+    state,
+    data,
+    execute,
     isMutating,
   };
 };

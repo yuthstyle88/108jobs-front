@@ -57,7 +57,6 @@ export type Person = {
   instanceId: InstanceId;
   postCount: number;
   commentCount: number;
-  bio: string | null;
   averageResponseTime: string | null;
   membershipLevelId: string;
   isVerified: string;

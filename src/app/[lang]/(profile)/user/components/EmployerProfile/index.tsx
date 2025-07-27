@@ -75,7 +75,7 @@ const UserProfile = () => {
                   {goToProfileLanguage?.memberSince}
                 </p>
                 <p className="text-[14px] text-third">
-                  {formatDateToLong(userProfile?.profile.createdAt)}
+                  {formatDateToLong(userProfile?.person?.publishedAt)}
                 </p>
               </div>
               {userProfile?.person?.bio && (

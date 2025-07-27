@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useHttpApi } from "@/hooks/useHttpApi";
+import { useHttpPost } from "@/hooks/useHttpPost";
 import {isSuccess} from "@/services/HttpService";
 
 type VerifyForgotPasswordProps = {
@@ -43,7 +43,7 @@ export const ForgotPasswordForm = ({
   const {
     state: resetState,
     execute: resetPassword,
-  } = useHttpApi("passwordReset");
+  } = useHttpPost("passwordReset");
 
   /* -------- local state ---------------------------------------- */
   const [apiError, setApiError] = useState<string | null>(null);
@@ -54,7 +54,7 @@ export const ForgotPasswordForm = ({
     try {
       const res = await resetPassword({ email: data.email });
 
-      if (isSuccess(res) === false) {
+      if (!isSuccess(res)) {
         setApiError(ERROR_CONSTANTS.EMAIL_NOT_EXIST);
         return;
       }
