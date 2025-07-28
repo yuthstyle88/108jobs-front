@@ -4,7 +4,6 @@ import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import LanguageDropdown from "../LanguageDropDown";
@@ -16,6 +15,7 @@ import Search from "./components/Search";
 import { useScrollHandler } from "./hooks/useScrollHandler";
 import Error from "@/app/error";
 import { RoleType } from "@/lib/lemmy-js-client/dist/types/RoleType";
+import {UserService} from "@/services";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -32,17 +32,13 @@ interface BgProps {
 }
 
 const Header = ({ type, forceShowSearch = false }: BgProps) => {
-  const { data: session } = useSession();
-  console.log("session",session);
-  
-  const roles = session?.user.roles;
-  const isEmployer = Array.isArray(roles)
-    ? roles.includes(RoleType.Employer)
-    : roles === RoleType.Employer;
+  const auth = UserService.Instance;
+  const isLogged = auth.isLoggedIn;
 
-  const isFreelancer = Array.isArray(roles)
-    ? roles.includes(RoleType.Freelancer)
-    : roles === RoleType.Freelancer;
+  const role = auth?.authInfo?.claims?.role;
+  const isEmployer = role === RoleType.Employer;
+  const isFreelancer = role === RoleType.Freelancer;
+
   const { scrollY, showSearch } = useScrollHandler(forceShowSearch);
 
   const {
@@ -79,7 +75,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
         </section>
 
         <section className="flex items-center gap-4 w-full md:w-auto mt-4 md:mt-0 justify-end">
-          {!session && (
+          {!isLogged && (
             <div className="group">
               <div className="relative">
                 <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
@@ -95,7 +91,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
               </div>
             </div>
           )}
-          {!session && (
+          {!isLogged && (
             <Link prefetch={false}
               href="/apply-freelancer"
               className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
@@ -114,7 +110,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
 
               />
             )}
-          {!session && (
+          {!isLogged && (
             <Link prefetch={false}
               href="/login"
               className="text-white text-sm hover:bg-blue-800 hover:text-white"
@@ -122,7 +118,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
               {globalLanguageData?.labelSignInButton}
             </Link>
           )}
-          {!session && <LanguageDropdown />}
+          {!isLogged && <LanguageDropdown />}
         </section>
       </nav>
     </header>
