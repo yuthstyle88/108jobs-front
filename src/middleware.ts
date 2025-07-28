@@ -79,7 +79,10 @@ export async function middleware(req: NextRequest) {
   }
 
   const rawCookie = req.cookies.get(authCookieName)?.value;
-  const isLoggedIn = Boolean(rawCookie);
+  UserService.Instance.login({
+    res: rawCookie,
+    });
+  const isLoggedIn = UserService.isLoggedIn;
 
   if (cleanPathname === "/login") {
     if (!isLoggedIn) return NextResponse.next();
