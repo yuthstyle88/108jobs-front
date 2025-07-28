@@ -3,6 +3,7 @@ import type { CommunityId } from "./CommunityId";
 import type { LanguageId } from "./LanguageId";
 import type { TagId } from "./TagId";
 import {IntendedUse} from "./IntendedUse";
+import {Budget} from "./Budget";
 
 /**
  * Create a post.
@@ -38,5 +39,5 @@ export type CreatePost = {
   jobType: string;
   isEnglishRequired?: boolean;
   intendedUse?: IntendedUse;
-  budget: number;
+  budget: Budget;
 };
