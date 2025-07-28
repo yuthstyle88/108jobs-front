@@ -1,13 +1,11 @@
 import React, {useCallback} from "react";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import useNotification from "@/hooks/useNotification";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {CreatePost, JobType, LoginResponse, MyUserInfo} from "@/lib/lemmy-js-client/src";
-import {UserService} from "@/services";
-import {setIsoData} from "@/utils/app";
+import {CreatePost, JobType,} from "@/lib/lemmy-js-client/src";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExclamationCircle, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
