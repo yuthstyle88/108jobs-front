@@ -45,14 +45,14 @@ export default async function RootLayout({
           __html: `window.isoData = ${JSON.stringify(isoData)};`,
         }}
       />
-      <Providers>
+      {/* <Providers> */}
         <ClientSWRProvider>
           <Toaster richColors closeButton position="top-right"/>
           <LanguageProvider initialLang="th">
             {children}
           </LanguageProvider>
         </ClientSWRProvider>
-      </Providers>
+      {/* </Providers> */}
       </body>
     </html>
   );

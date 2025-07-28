@@ -21,24 +21,24 @@ import { API_ROUTES } from "@/api/endpoints";
 import CategoryCardMock from "@/components/CategoryCardMock";
 import CatalogBanner from "@/components/Home/Catalog";
 import HiringSection from "@/components/Home/HiringSection";
+import IntroductionSection from "@/components/Home/IntroductionSection";
 import OfferSection from "@/components/Home/OfferSection";
 import RecommendAndReview from "@/components/Home/RecommendAndReview";
 import LocationSelectionModal from "@/components/LocationSelectionModal";
 import SearchInput from "@/components/SearchInput";
-import { CustomerImage, LandingImage } from "@/constants/images";
+import { LandingImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import SpAdsSlider from "@/containers/SpAdsSlider";
 import SpCatalog from "@/containers/SpCatalog";
 import SpHeader from "@/containers/SpHeader";
 import { usePublicFetch } from "@/hooks/api-hooks";
+import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import useHandleFetchError from "@/hooks/useHandleFetchError";
 import { ServiceCatalogData } from "@/types/catalog";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import Error from "../error";
-import IntroductionSection from "@/components/Home/IntroductionSection";
 
 const interestImages = [
   LandingImage.interest1,
@@ -70,7 +70,7 @@ const CustomNavigation = () => {
 };
 
 export default function Home() {
-  const { data: session } = useSession();
+  const { isLoggedIn } = useAuthInfo();
   const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
   const [expanded, setExpanded] = useState(false);
   const [isOpenLocationSelection, setIsOpenLocationSelection] = useState(false);
@@ -354,7 +354,7 @@ export default function Home() {
         </div>
       </div>
       <Footer />
-      {session && (
+      {isLoggedIn && (
         <LocationSelectionModal
           isOpen={isOpenLocationSelection}
           onClose={() => setIsOpenLocationSelection(false)}

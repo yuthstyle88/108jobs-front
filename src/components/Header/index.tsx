@@ -8,14 +8,13 @@ import Image from "next/image";
 import Link from "next/link";
 import LanguageDropdown from "../LanguageDropDown";
 // import Loading from "../Loading";
+import Error from "@/app/error";
+import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
 import EmployerSection from "./components/EmployerSection";
 import FreelancerSession from "./components/FreelancerSection";
 import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
 import { useScrollHandler } from "./hooks/useScrollHandler";
-import Error from "@/app/error";
-import { RoleType } from "@/lib/lemmy-js-client/dist/types/RoleType";
-import {UserService} from "@/services";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -32,12 +31,7 @@ interface BgProps {
 }
 
 const Header = ({ type, forceShowSearch = false }: BgProps) => {
-  const auth = UserService.Instance;
-  const isLogged = auth.isLoggedIn;
-
-  const role = auth?.authInfo?.claims?.role;
-  const isEmployer = role === RoleType.Employer;
-  const isFreelancer = role === RoleType.Freelancer;
+  const { isLoggedIn, isEmployer, isFreelancer } = useAuthInfo();
 
   const { scrollY, showSearch } = useScrollHandler(forceShowSearch);
 
@@ -75,7 +69,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
         </section>
 
         <section className="flex items-center gap-4 w-full md:w-auto mt-4 md:mt-0 justify-end">
-          {!isLogged && (
+          {!isLoggedIn && (
             <div className="group">
               <div className="relative">
                 <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
@@ -91,7 +85,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
               </div>
             </div>
           )}
-          {!isLogged && (
+          {!isLoggedIn && (
             <Link prefetch={false}
               href="/apply-freelancer"
               className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
@@ -110,7 +104,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
 
               />
             )}
-          {!isLogged && (
+          {!isLoggedIn && (
             <Link prefetch={false}
               href="/login"
               className="text-white text-sm hover:bg-blue-800 hover:text-white"
@@ -118,7 +112,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
               {globalLanguageData?.labelSignInButton}
             </Link>
           )}
-          {!isLogged && <LanguageDropdown />}
+          {!isLoggedIn && <LanguageDropdown />}
         </section>
       </nav>
     </header>

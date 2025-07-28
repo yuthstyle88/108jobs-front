@@ -3,17 +3,16 @@ import { API_ROUTES } from "@/api/endpoints";
 import Modal from "@/components/ui/Modal";
 import { AssetIcon } from "@/constants/icons";
 import {
-  usePrivateFetch,
-  usePrivatePost,
+  usePrivatePost
 } from "@/hooks/api-hooks";
 
-import { ProfileData } from "lemmy-js-client";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
+import { LOADING_REQUEST, RequestState } from "@/services/HttpService";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import CountrySearch from "./components/CountrySearch";
 import ProvinceSearch from "./components/ProvinceSearch";
-import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
 
 export interface LocationForm {
   country: string;
@@ -46,9 +45,8 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
     "thailand"
   );
 
-  const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.getProfile
-  );
+  const { profileData } = useMyUser();
+  const person = profileData?.localUserView?.person;
 
   const { trigger: skipAddress, isMutating: isSkipMutating } = usePrivatePost(
     API_ROUTES.profile.skipAddress
@@ -80,10 +78,10 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
   const handleConfirm = async () => {
     try {
       setUpdateAddressState(LOADING_REQUEST);
-      
+
       let payload;
       let locationName = "";
-      
+
       if (selectedGeo === "thailand" && provinceConfirmed) {
         payload = {
           country: "Thailand",
@@ -98,7 +96,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
       } else {
         return; // No valid selection
       }
-      
+
       // Make a custom fetch request to update the new address
       const response = await fetch(API_ROUTES.profile.updateNewAddress, {
         method: 'PUT',
@@ -108,14 +106,14 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
         },
         body: JSON.stringify(payload),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to update address');
       }
-      
+
       const data = await response.json();
       setUpdateAddressState({ state: "success", data });
-      
+
       handleConfirmChange(locationName);
       onClose();
     } catch (error) {
@@ -134,11 +132,11 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
     (selectedGeo === "other" && !!countryConfirmed);
 
   useEffect(() => {
-    if (user && user.showCountrySelectionBox) {
+    if (person && person.local) {
       onOpen();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [person]);
 
   return (
     <Modal
@@ -159,11 +157,10 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
           <div className="flex flex-row gap-6">
             <div role="button" onClick={handleThailandClick}>
               <div
-                className={`group ${
-                  selectedGeo === "thailand"
+                className={`group ${selectedGeo === "thailand"
                     ? "bg-[#f6f9fe] border-fifth grayscale-0"
                     : "bg-white border-border-secondary grayscale-[0.8]"
-                } border-1 cursor-pointer flex items-center flex-col justify-center w-[170px] h-[210px] rounded-xl p-6 hover:bg-fourth`}
+                  } border-1 cursor-pointer flex items-center flex-col justify-center w-[170px] h-[210px] rounded-xl p-6 hover:bg-fourth`}
               >
                 <Image
                   src={AssetIcon.thailandGeo}
@@ -180,11 +177,10 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
 
             <div role="button" onClick={handleOtherClick}>
               <div
-                className={`group ${
-                  selectedGeo === "other"
+                className={`group ${selectedGeo === "other"
                     ? "bg-[#f6f9fe] border-fifth grayscale-0"
                     : "bg-white border-border-secondary grayscale-[0.8]"
-                } border-1 cursor-pointer flex items-center flex-col justify-center w-[170px] h-[210px] rounded-xl p-6 hover:bg-fourth`}
+                  } border-1 cursor-pointer flex items-center flex-col justify-center w-[170px] h-[210px] rounded-xl p-6 hover:bg-fourth`}
               >
                 <Image
                   src={AssetIcon.otherGeo}

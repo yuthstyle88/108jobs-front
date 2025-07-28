@@ -3,17 +3,17 @@ import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
+import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { faGift } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tags } from "lucide-react";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
 
 const Promotion = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const { data: session } = useSession();
+  const { isLoggedIn } = useAuthInfo();
   const {
     data: couponLanguageData,
     isLoading,
@@ -60,7 +60,7 @@ const Promotion = () => {
             />
           </div>
         </section>
-        {session && (
+        {isLoggedIn && (
           <section className="py-6 sm:py-24 grid grid-container-desktop-banner gap-y-4 sm:gap-y-12 pt-4 sm:pt-[4rem]">
             <div className="col-start-2 col-end-3">
               <h2 className="text-[20px] sm:text-[1.75rem] text-black">

@@ -1,14 +1,10 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
 import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { usePrivateFetch } from "@/hooks/api-hooks";
-import { ProfileData } from "lemmy-js-client";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const SpUserAvatar = () => {
   const pathname = usePathname();

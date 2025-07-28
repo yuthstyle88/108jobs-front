@@ -1,14 +1,16 @@
 "use client";
+import Error from "@/app/error";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile, LANGUAGES } from "@/constants/language";
 import LanguageBottomSheet from "@/containers/SpBottomTab";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { useToggle } from "@/hooks/useToggle";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -16,24 +18,19 @@ import ProfileFreelancer from "../Header/components/ProfileFreelancer";
 import ProfileSection from "../Header/components/ProfileSection";
 import LanguageDropdown from "../LanguageDropDown";
 import Loading from "../Loading";
-import Error from "@/app/error";
-import {RoleType} from "lemmy-js-client";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const RewardHeader = () => {
-  const { data: session } = useSession();
-  const {
-    data: globalLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.GLOBAL);
+  const { isLoggedIn, isFreelancer } = useAuthInfo();
+
+  const { data: globalLanguageData, isLoading, error } =
+    useGlobalTranslate(LanguageFile.GLOBAL);
 
   const [showLang, setShowLang] = useState(false);
   const { lang } = useLanguage();
   const { isOpen, toggle, close } = useToggle();
   const currentLang = LANGUAGES[lang as keyof typeof LANGUAGES];
 
-  const { isErrorProfile, profileData, isLoadingProfile, mutate } = useMyUser();
+  const { isErrorProfile, profileData, isLoadingProfile } = useMyUser();
   const person = profileData?.localUserView.person;
 
   if (isLoadingProfile) return <Loading />;
@@ -42,6 +39,7 @@ const RewardHeader = () => {
   return (
     <header className="sticky top-0 z-[999] w-full transition-all duration-300 bg-transparent">
       <nav className="mx-3 sm:mx-[1.5rem] flex items-center justify-between h-auto min-h-[70px] py-4 ">
+        {/* Logo */}
         <section className="flex items-center gap-x-4 w-full md:w-auto">
           <Link prefetch={false} href="/" className="shrink-0">
             <Image
@@ -52,7 +50,9 @@ const RewardHeader = () => {
           </Link>
         </section>
 
+        {/* Right side */}
         <section className="flex items-center gap-4 w-full justify-end">
+          {/* Language switch */}
           <div className="hidden sm:block">
             <LanguageDropdown />
           </div>
@@ -69,7 +69,10 @@ const RewardHeader = () => {
               />
             </button>
           </div>
-          <Link prefetch={false}
+
+          {/* Profile (mobile) */}
+          <Link
+            prefetch={false}
             href="/profile"
             className="flex sm:hidden items-center justify-center p-2 text-white text-[24px] cursor-pointer"
           >
@@ -81,75 +84,57 @@ const RewardHeader = () => {
               height={500}
             />
           </Link>
-          <div className="hidden sm:block">
-            {session?.user.roles?.includes(RoleType.Employer) &&
-              session?.user.roles?.includes(RoleType.Freelancer) && (
-                <div className="relative px-4">
-                  <button
-                    onClick={() => toggle()}
-                    className="flex items-center justify-center gap-2 w-12 h-12 rounded-full "
-                  >
-                    <Image
-                      src={person?.avatar || ProfileImage.avatar}
-                      alt="avatar"
-                      className="rounded-full"
-                      width={500}
-                      height={500}
-                    />
-                    <FontAwesomeIcon
-                      icon={faChevronDown}
-                      className="w-[14px] h-[14px] text-white"
-                    />
-                  </button>
 
-                  {isOpen && (
-                    <ProfileFreelancer profile={person} data={globalLanguageData} />
-                  )}
-                  {isOpen && (
+          {/* Profile (desktop) */}
+          {isLoggedIn && (
+            <div className="hidden sm:block">
+              <div className="relative px-4">
+                <button
+                  onClick={toggle}
+                  className="flex items-center justify-center gap-2 w-12 h-12 rounded-full"
+                >
+                  <Image
+                    src={person?.avatar || ProfileImage.avatar}
+                    alt="avatar"
+                    className="rounded-full"
+                    width={500}
+                    height={500}
+                  />
+                  <FontAwesomeIcon
+                    icon={faChevronDown}
+                    className="w-[14px] h-[14px] text-white"
+                  />
+                </button>
+
+                {isOpen && (
+                  <>
+                    {isFreelancer ? (
+                      <ProfileFreelancer
+                        profile={person}
+                        data={globalLanguageData}
+                      />
+                    ) : (
+                      <ProfileSection
+                        profile={person}
+                        data={globalLanguageData}
+                      />
+                    )}
                     <div
                       className="fixed inset-0 z-40"
-                      onClick={() => close()}
+                      onClick={close}
                     />
-                  )}
-                </div>
-              )}
-            {session?.user.roles?.includes(RoleType.Employer) &&
-              !session?.user.roles?.includes(RoleType.Freelancer) && (
-                <div className="relative px-4">
-                  <button
-                    onClick={() => toggle()}
-                    className="flex items-center justify-center gap-2 w-12 h-12 rounded-full "
-                  >
-                    <Image
-                      src={ProfileImage.avatar}
-                      alt="avatar"
-                      className="rounded-full"
-                    />
-                    <FontAwesomeIcon
-                      icon={faChevronDown}
-                      className="w-[14px] h-[14px] text-white"
-                    />
-                  </button>
-
-                  {isOpen && (
-                    <ProfileSection
-                      profile={person}
-                      data={globalLanguageData}
-                    />
-                  )}
-
-                  {isOpen && (
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => close()}
-                    />
-                  )}
-                </div>
-              )}
-          </div>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
         </section>
       </nav>
-      <LanguageBottomSheet open={showLang} onClose={() => setShowLang(false)} />
+
+      <LanguageBottomSheet
+        open={showLang}
+        onClose={() => setShowLang(false)}
+      />
     </header>
   );
 };

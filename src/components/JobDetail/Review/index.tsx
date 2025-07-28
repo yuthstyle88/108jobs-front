@@ -2,12 +2,12 @@
 import { API_ROUTES } from "@/api/endpoints";
 import CommentSection from "@/components/ReviewComment/components";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
+import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
 import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
+import { ReviewResponse } from "lemmy-js-client";
 import { Coins, Handshake, MessageCircleReply, ShoppingBag } from "lucide-react";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
-import {ReviewResponse} from "lemmy-js-client";
 
 const StarIcon = ({ filled }: { filled: boolean }) => (
   <svg
@@ -25,7 +25,7 @@ type Props = {
 };
 
 const ReviewCard = ({ language, data }: Props) => {
-  const { data: session } = useSession();
+  const { isLoggedIn } = useAuthInfo();
   const {
     data: reviewData,
   } = usePrivateFetchParams<ReviewResponse>(
@@ -81,7 +81,7 @@ const ReviewCard = ({ language, data }: Props) => {
           </div>
         </div>
       </div>
-      {session ? (
+      {isLoggedIn ? (
         <div className="px-4 py-8">
           <CommentSection profileId={data.user.profileId} />
         </div>

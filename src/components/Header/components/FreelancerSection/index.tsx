@@ -13,7 +13,7 @@ import Link from "next/link";
 import FreelanceMegaMenu from "../FreelanceMegaMenu";
 import FreelanceImproveMenu from "../FreelancerImproveMenu";
 import ProfileFreelancer from "../ProfileFreelancer";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
 
 interface FreelancerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
@@ -23,8 +23,9 @@ const FreelancerSession = ({
   globalLanguageData,
 }: FreelancerProps) => {
 
-  const {profileData, isLoadingProfile } = useMyUser();
+  const { profileData, isLoadingProfile } = useMyUser();
   const person = profileData?.localUserView?.person;
+
   const { isOpen, toggle, close } = useToggle();
 
   return (
@@ -43,12 +44,12 @@ const FreelancerSession = ({
           <FreelanceImproveMenu />
         </div>
       </div>
-        <Link prefetch={false}
-          href="/seller"
-          className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
-        >
-          {globalLanguageData?.labelSellerCenter}
-        </Link>
+      <Link prefetch={false}
+        href="/seller"
+        className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
+      >
+        {globalLanguageData?.labelSellerCenter}
+      </Link>
       <div className="group hidden md:block">
         <div className="relative">
           <div className="border-r-[1px] border-[#4f8ce8] pr-8 text-[14px] text-white px-3 py-2 font-medium flex flex-row items-center gap-2 cursor-pointer">
