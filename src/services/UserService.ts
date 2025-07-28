@@ -47,7 +47,12 @@ export class UserService {
       setAuthCookie(res.jwt);
       this.#setAuthInfo({sharedKey});
     }else{
-      this.#setAuthInfo({rawCookie: res});
+      const rawCookie =
+        typeof res === "string"
+          ? res
+          : "";
+
+      this.#setAuthInfo({rawCookie});
     }
   }
 
