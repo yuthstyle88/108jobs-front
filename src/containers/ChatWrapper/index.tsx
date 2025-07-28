@@ -14,6 +14,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 function extractRealImageUrl(url: string): string {
   try {
@@ -32,11 +33,8 @@ const ChatWrapper = () => {
   const activeRoomId = params?.senderId;
   const { lang: currentLang } = useLanguage();
 
-  const {
-    data: userData,
-    isLoading: isUserLoading,
-    error: isUserError,
-  } = usePrivateFetch<ProfileData>(API_ROUTES.profile.getProfile);
+  const {profileData, isLoadingProfile ,isErrorProfile} = useMyUser();
+  const localUser = profileData?.localUserView?.localUser;
 
   const {
     data: chatData,
@@ -70,8 +68,8 @@ const ChatWrapper = () => {
     return null;
   }
 
-  if (isUserLoading || isChatLoading) return <Loading />;
-  if (isUserError || chatError) return <Error />;
+  if (isLoadingProfile || isChatLoading) return <Loading />;
+  if (isErrorProfile || chatError) return <Error />;
 
   return (
     <div
@@ -89,7 +87,7 @@ const ChatWrapper = () => {
           const chatMessage = chat.lastMessage;
           if (!chatMessage) return null;
           const senderId = Number(chatMessage.senderId);
-          const isUser = (userData?.localUser.id ?? -1) === senderId;
+          const isUser = (localUser?.id ?? -1) === senderId;
           const isActive =
             String(chat.roomId) === activeRoomId ||
             String(chat.job?.id) === activeRoomId;

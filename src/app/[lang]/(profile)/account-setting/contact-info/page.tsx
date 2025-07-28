@@ -12,7 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ZipcodeSearch from "../_components/SearchZipcode";
-import { useProfileData } from "@/hooks/profile-api/useProfileData";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { addressSchema } from "@/utils/validation/addressSchema";
 import { API_ROUTES } from "@/api/endpoints";
 import useNotification from "@/hooks/useNotification";
@@ -57,7 +57,9 @@ function normalizeAddress(address: Address): AddressFormData {
 }
 
 export default function ContactPage() {
-  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
+  const { profileState, profileData, isLoadingProfile, mutate } = useMyUser();
+  const address = profileData?.profile?.address;
+  const contact = profileData?.profile?.contact;
   const [isReady, setIsReady] = useState(false);
   const [defaultForeignCountry, setDefaultForeignCountry] =
     useState<string>("");
@@ -89,7 +91,7 @@ export default function ContactPage() {
     resolver: zodResolver(emailSchema),
     mode: "onChange",
     defaultValues: {
-      email: profileState.state === "success" ? profileState.data?.contact.email : "",
+      email: contact?.email,
     },
   });
 
@@ -132,8 +134,8 @@ export default function ContactPage() {
   }, [countriesData]);
 
   useEffect(() => {
-    if (profileState.state === "success" && profileState.data?.address && !isReady) {
-      const normalized = normalizeAddress(profileState.data.address);
+    if (profileState === "success" && address && !isReady) {
+      const normalized = normalizeAddress(address);
 
       if (normalized.country !== "Thailand") {
         setLocationType("Foreign");
@@ -149,7 +151,7 @@ export default function ContactPage() {
 
   useEffect(() => {
     if (isConfirmChange) {
-      resetEmail({ email: profileState.state === "success" ? profileState.data?.contact.email ?? "" : "" });
+      resetEmail({ email: contact?.email });
     }
   }, [isConfirmChange, profileState, resetEmail]);
 
@@ -283,7 +285,7 @@ export default function ContactPage() {
                 </label>
                 <input
                   type="email"
-                  value={profileState.state === "success" ? profileState.data?.contact.email ?? "" : ""}
+                  value={contact?.email}
                   disabled
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary disabled:cursor-not-allowed"
                   placeholder="your.email@example.com"

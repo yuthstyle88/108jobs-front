@@ -12,7 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import MegaMenu from "../MegaMenu";
 import ProfileSection from "../ProfileSection";
-import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 interface EmployerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
@@ -21,8 +21,8 @@ interface EmployerProps {
 const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
   const { isOpen, toggle, close } = useToggle();
 
-  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
-
+  const {profileData, isLoadingProfile } = useMyUser();
+  const person = profileData?.localUserView?.person;
   return (
     <div className="flex items-center gap-4 h-full">
       <div className="group">
@@ -92,7 +92,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           </span>
         </button>
 
-        {isOpen && <ProfileSection profile={profileData?.person} data={globalLanguageData} />}
+        {isOpen && <ProfileSection profile={person} data={globalLanguageData} />}
 
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()} />

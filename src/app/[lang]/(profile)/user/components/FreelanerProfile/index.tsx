@@ -12,13 +12,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ClipboardX } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import {WorkExperience, ProfileData, Education, Skill, LanguageSkill, Certificate} from "lemmy-js-client";
+import {WorkExperience, Person, Education, Skill, LanguageSkill, Certificate} from "lemmy-js-client";
 import {getProfileData} from "@/utils/getProfileData";
-import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const FreelancerProfile =  () => {
-  const { profileState, profileData: userProfile, isLoadingProfile, mutate } = useProfileData();
-
+  const { profileState, profileData, isLoadingProfile } = useMyUser();
+  const person = profileData?.localUserView?.person;
   const { data: goToProfileLanguage } = useGlobalTranslate(
     LanguageFile.GO_TO_PROFILE
   );
@@ -33,7 +33,7 @@ const FreelancerProfile =  () => {
       const el = bioRef.current;
       setIsClamped(el.scrollHeight > el.clientHeight);
     }
-  }, [userProfile?.person?.bio]);
+  }, [person?.bio]);
 
   if (isLoadingProfile) return <Loading />;
  const  { educations,
@@ -42,7 +42,7 @@ const FreelancerProfile =  () => {
    language,
    certAndAward,
    services,
-   reviews} = getProfileData(userProfile as ProfileData);
+   reviews} = getProfileData(person as Person);
 
   return (
     <main className="min-h-screen bg-[#FBFBFC]">
@@ -63,7 +63,7 @@ const FreelancerProfile =  () => {
             <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-border-primary bg-white rounded-[0.25rem]">
               <div className="flex items-center justify-center">
                 <Image
-                  src={userProfile?.person?.avatar || ProfileImage.avatar}
+                  src={person?.avatar || ProfileImage.avatar}
                   alt="Avatar"
                   className="rounded-full w-[175px] h-[175px] object-cover overflow-hidden"
                   width={500}
@@ -71,10 +71,10 @@ const FreelancerProfile =  () => {
                 />
               </div>
               <p className="text-[28px] font-medium text-text-primary text-center pt-2">
-                {userProfile?.person?.displayName}
+                {person?.displayName}
               </p>
               <div className="flex items-center justify-center pt-2">
-                {[...Array(userProfile?.person?.ratings|| 0)].map((_, index) => (
+                {[...Array(person?.ratings|| 0)].map((_, index) => (
                   <FontAwesomeIcon
                     icon={faStar}
                     key={index}
@@ -82,7 +82,7 @@ const FreelancerProfile =  () => {
                   />
                 ))}
               </div>
-              {userProfile?.person.isVerified && (
+              {person?.isVerified && (
                 <div className="flex items-center justify-center w-full">
                   <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-[#1EB899] text-white w-fit">
                     <svg
@@ -102,7 +102,7 @@ const FreelancerProfile =  () => {
                   </div>
                 </div>
               )}
-              {userProfile?.person?.deleted === false && (
+              {person?.deleted === false && (
                 <div className="flex items-center justify-center w-full">
                   <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-red-500 text-white w-fit">
                     <ClipboardX className="w-4 h-4 mr-1" />
@@ -116,7 +116,7 @@ const FreelancerProfile =  () => {
                     {goToProfileLanguage?.memberSince}
                   </div>
                   <div className="text-third font-medium">
-                    {formatDateToLong(userProfile?.person?.publishedAt)}
+                    {formatDateToLong(person?.publishedAt)}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
@@ -142,7 +142,7 @@ const FreelancerProfile =  () => {
                   <div className="text-third font-medium">100%</div>
                 </div>
               </div>
-              {userProfile?.person?.bio && (
+              {person?.bio && (
                 <div className="mt-6 px-6">
                   <div className="text-text-secondary px-4 py-3 border border-border-secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
@@ -151,9 +151,9 @@ const FreelancerProfile =  () => {
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
-                      <i>{userProfile?.person.bio}</i>
+                      <i>{person?.bio}</i>
                     </p>
-                    {userProfile?.person.bio && isClamped && !showFullBio && (
+                    {person?.bio && isClamped && !showFullBio && (
                       <button
                         onClick={() => setShowFullBio(true)}
                         className="mt-2 text-text-primary font-sans text-sm font-medium underline"
@@ -175,7 +175,7 @@ const FreelancerProfile =  () => {
                         {goToProfileLanguage?.educationTitle}
                       </h2>
                     </div>
-                    {userProfile && educations.length > 0 ? (
+                    {person && educations.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {educations.map((education: Education) => {
                           return (
@@ -207,7 +207,7 @@ const FreelancerProfile =  () => {
                         {goToProfileLanguage?.experienceTitle}
                       </h2>
                     </div>
-                    {userProfile && workExperience.length > 0 ? (
+                    {person && workExperience.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {workExperience.map(
                           (experience: WorkExperience) => {
@@ -248,7 +248,7 @@ const FreelancerProfile =  () => {
                         {goToProfileLanguage?.skillTitle}
                       </h2>
                     </div>
-                    {userProfile && skill.length > 0 ? (
+                    {person && skill.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {skill.map((skill: Skill) => {
                           return (
@@ -281,7 +281,7 @@ const FreelancerProfile =  () => {
                         {goToProfileLanguage?.languageTitle}
                       </h2>
                     </div>
-                    {userProfile && language.length > 0 ? (
+                    {person && language.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {language.map(
                           (language: LanguageSkill) => {
@@ -316,7 +316,7 @@ const FreelancerProfile =  () => {
                         {goToProfileLanguage?.certificationTitle}
                       </h2>
                     </div>
-                    {userProfile && certAndAward.length > 0 ? (
+                    {person && certAndAward.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {certAndAward.map(
                           (cert: Certificate) => {
@@ -347,14 +347,14 @@ const FreelancerProfile =  () => {
           <section className="w-full px-4">
             <h2 className="pt-8 pb-4 text-[28px] font-medium text-text-primary w-full">
               {interpolateDouble(goToProfileLanguage?.workTitle || "", {
-                username: userProfile?.person?.displayName,
+                username: person?.displayName,
               })}
             </h2>
             <section className="mt-4 grid grid-cols-1 md:grid-cols-[repeat(3,minmax(1px,1fr))] gap-5">
               {services.map((service, index) => (
                 <CategoryCard
                   data={service}
-                  username={userProfile?.person.displayName || ""}
+                  username={person?.displayName || ""}
                   key={index}
                 />
               ))}

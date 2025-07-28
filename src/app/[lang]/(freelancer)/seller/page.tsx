@@ -1,30 +1,16 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
 import Error from "@/app/error";
 import Loading from "@/components/Loading";
-import { LanguageFile } from "@/constants/language";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { usePrivateFetch } from "@/hooks/api-hooks";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { ProfileData } from "lemmy-js-client";
-import { interpolateDouble } from "@/utils/interpolate";
-import {
-  faArrowRight,
-  faEye,
-  faInfoCircle,
-  faLineChart,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {LanguageFile} from "@/constants/language";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {useGlobalTranslate} from "@/hooks/translation/useGlobalTranslate";
+import {interpolateDouble} from "@/utils/interpolate";
+import {faArrowRight, faEye, faInfoCircle, faLineChart,} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import {
-  Line,
-  LineChart as RechartsLineChart,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import {CartesianGrid, Line, LineChart as RechartsLineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from "recharts";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+
 const SellerHome = () => {
   const chartData = [
     { name: "Th02 24", value: 0 },
@@ -41,10 +27,8 @@ const SellerHome = () => {
     { name: "Th01 25", value: 0 },
     { name: "Th02 25", value: 0 },
   ];
-
-  const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.getProfile
-  );
+  const { profileData, isLoadingProfile } = useMyUser();
+  const person = profileData?.localUserView?.person;
 const { lang } = useLanguage();
   const {
     data: sellerOverviewLanguage,
@@ -192,7 +176,7 @@ const { lang } = useLanguage();
               </div>
             </div>
             <Link prefetch={false}
-              href={`${lang}/user/${user?.person.name}`}
+              href={`${lang}/user/${person?.name}`}
               className="flex flex-row items-center gap-2"
             >
               <button className="text-blue-600 hover:underline">

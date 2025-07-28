@@ -7,11 +7,12 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { FileText, Info } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const AccountStats = () => {
 
-  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
+  const { profileState, profileData, isLoadingProfile, mutate } = useMyUser();
+  const person = profileData?.localUserView.person;
   const {
     data: sellerAccStatsLanguage,
     isLoading,
@@ -34,14 +35,14 @@ const AccountStats = () => {
           <div className="bg-white rounded-lg p-6 flex flex-col justify-center items-center">
             <figure className="w-20 h-20 rounded-full">
               <Image
-                src={profileData?.person?.avatar || ProfileImage.avatar}
+                src={person?.avatar || ProfileImage.avatar}
                 alt="avatar"
                 width={80}
                 height={80}
                 className="object-cover w-20 h-20 rounded-full"
               />
             </figure>
-            <h3 className="text-lg font-medium mb-1">{profileData?.person?.name}</h3>
+            <h3 className="text-lg font-medium mb-1">{person?.name}</h3>
           </div>
 
           <div className="bg-white rounded-lg p-6">

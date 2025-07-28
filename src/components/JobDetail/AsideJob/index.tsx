@@ -4,10 +4,8 @@ import FavoriteButton from "@/components/FavoriteButton";
 import LoadingBlur from "@/components/LoadingBlur";
 import ShareJobModal from "@/components/ShareJob";
 import { JobDetailIcon } from "@/constants/icons";
-import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
 import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
-import { ProfileData } from "lemmy-js-client";
 import { formatThaiBaht } from "@/utils/formatMoney";
 import { scrollToElementById } from "@/utils/scrollSmooth";
 import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +14,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {usePrivatePost} from "@/hooks/api-hooks";
 
 interface AsideJobProps {
   language: Partial<JobDetailLanguage> | undefined | null;
@@ -28,9 +28,10 @@ type CreateRoomData = {
 
 const AsideJob = ({ language, data }: AsideJobProps) => {
   const route = useRouter();
-  const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.getProfile
-  );
+
+  const {profileData, isLoadingProfile ,isErrorProfile} = useMyUser();
+  const localUser = profileData?.localUserView?.localUser;
+
 
   const { trigger: createRoom, isMutating } = usePrivatePost<CreateRoomData>(
     API_ROUTES.chat.createRoom
@@ -50,7 +51,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
       route.push(`/chat/message/${res.data}`);
     }
   };
-  const isCurrentUser = data?.user.userId === user?.localUser.id as unknown as string;
+  const isCurrentUser = data?.user.userId === localUser?.id as unknown as string;
 
   const isAvailable = data.user.available;
 

@@ -15,18 +15,18 @@ import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Error from "@/app/error";
 import {UserService} from "@/services";
-import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {REQUEST_STATE} from "@/services/HttpService";
 
 const SellerHeader = () => {
     const { lang } = useLanguage();
   const { data: globalLanguageData } = useGlobalTranslate(LanguageFile.GLOBAL);
   const {
-    profileData: user,
+    profileData,
     profileState,
     isLoadingProfile,
-  } = useProfileData();
-
+  } = useMyUser();
+  const user = profileData?.localUserView;
   const logout = () => UserService.Instance.logout();
 
 
@@ -40,7 +40,7 @@ const SellerHeader = () => {
   };
 
   if (isLoadingProfile) return <Loading />;
-  if (profileState.state === REQUEST_STATE.FAILED) return <Error/>;
+  if (profileState === REQUEST_STATE.FAILED) return <Error/>;
 
   return (
     <header className="bg-white border-b border-gray-200">

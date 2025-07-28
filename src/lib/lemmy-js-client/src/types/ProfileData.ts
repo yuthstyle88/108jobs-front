@@ -2,9 +2,6 @@ import {Coin} from "./Coin";
 import {Contact} from "./Contact";
 import {Address} from "./Address";
 import {Card} from "./Card";
-import {LocalUser} from "./LocalUser";
-import {Person} from "./Person";
-
 
 /**
  * ProfileData represents the user's profile information.
@@ -27,6 +24,4 @@ export type ProfileData = {
   card: Card;
   showCountrySelectionBox: false;
   isNewBuyer: false;
-  localUser: LocalUser;
-  person: Person;
 };

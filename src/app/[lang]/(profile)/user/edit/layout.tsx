@@ -11,6 +11,7 @@ import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 interface StartSellingLayoutProps {
   children: ReactNode;
@@ -27,9 +28,8 @@ export default function StartSellingLayout({
     error,
   } = useGlobalTranslate(LanguageFile.PROFILE_USER_EDIT);
 
-  const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.getProfile
-  );
+  const { profileState, profileData } = useMyUser();
+  const person = profileData?.localUserView?.person;
 
   const menuItems = [
     { href: "/user/edit/education", label: userEditLanguage?.education },
@@ -79,7 +79,7 @@ export default function StartSellingLayout({
 
               <div className="px-4 py-2 mt-4 border-1 border-border-primary rounded-lg">
                 <Link prefetch={false}
-                  href={`/user/${user?.person.name}`}
+                  href={`/user/${person?.name}`}
                   className="text-blue-600 flex justify-center items-center gap-2"
                 >
                   <p className="font-medium">

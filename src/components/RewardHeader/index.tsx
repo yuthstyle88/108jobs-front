@@ -18,7 +18,7 @@ import LanguageDropdown from "../LanguageDropDown";
 import Loading from "../Loading";
 import Error from "@/app/error";
 import {RoleType} from "lemmy-js-client";
-import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const RewardHeader = () => {
   const { data: session } = useSession();
@@ -33,11 +33,11 @@ const RewardHeader = () => {
   const { isOpen, toggle, close } = useToggle();
   const currentLang = LANGUAGES[lang as keyof typeof LANGUAGES];
 
-  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
-
+  const { isErrorProfile, profileData, isLoadingProfile, mutate } = useMyUser();
+  const person = profileData?.localUserView.person;
 
   if (isLoadingProfile) return <Loading />;
-  if (profileState.state === "failed") return <Error />;
+  if (isErrorProfile) return <Error />;
 
   return (
     <header className="sticky top-0 z-[999] w-full transition-all duration-300 bg-transparent">
@@ -74,7 +74,7 @@ const RewardHeader = () => {
             className="flex sm:hidden items-center justify-center p-2 text-white text-[24px] cursor-pointer"
           >
             <Image
-              src={profileData?.person.avatar || ProfileImage.avatar}
+              src={person?.avatar || ProfileImage.avatar}
               alt="avatar"
               className="rounded-full w-8 h-8"
               width={500}
@@ -90,7 +90,7 @@ const RewardHeader = () => {
                     className="flex items-center justify-center gap-2 w-12 h-12 rounded-full "
                   >
                     <Image
-                      src={profileData?.person.avatar || ProfileImage.avatar}
+                      src={person?.avatar || ProfileImage.avatar}
                       alt="avatar"
                       className="rounded-full"
                       width={500}
@@ -103,7 +103,7 @@ const RewardHeader = () => {
                   </button>
 
                   {isOpen && (
-                    <ProfileFreelancer profile={profileData?.person} data={globalLanguageData} />
+                    <ProfileFreelancer profile={person} data={globalLanguageData} />
                   )}
                   {isOpen && (
                     <div
@@ -133,7 +133,7 @@ const RewardHeader = () => {
 
                   {isOpen && (
                     <ProfileSection
-                      profile={profileData?.person}
+                      profile={person}
                       data={globalLanguageData}
                     />
                   )}

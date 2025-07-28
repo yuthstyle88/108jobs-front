@@ -1,8 +1,5 @@
 "use client";
 
-import { API_ROUTES } from "@/api/endpoints";
-import { usePrivateFetch } from "@/hooks/api-hooks";
-import { ProfileData } from "lemmy-js-client";
 import { useRouter } from "next/navigation";
 import React, {
   createContext,
@@ -12,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 interface MessagePayload {
   message: string;
@@ -45,18 +43,17 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [connectionError, setConnectionError] = useState(false);
   const router = useRouter();
-  const { data: userData } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.getProfile
-  );
+  const {profileData, isLoadingProfile ,isErrorProfile} = useMyUser();
+  const localUser = profileData?.localUserView?.localUser;
 
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isManuallyClosingRef = useRef(false);
   const [connectionAttemptKey, setConnectionAttemptKey] = useState(0);
 
-  const wsUrl = `wss://fastwork.ibrowe.com/api/v4/ws/?token=${token}&roomId=${partnerId}&userId=${userData?.localUser.id}`;
+  const wsUrl = `wss://fastwork.ibrowe.com/api/v4/ws/?token=${token}&roomId=${partnerId}&userId=${localUser?.id}`;
 
   useEffect(() => {
-    if (!token || !partnerId || !userData) return;
+    if (!token || !partnerId || !localUser) return;
     const newSocket = new WebSocket(wsUrl);
     setSocket(newSocket);
     isManuallyClosingRef.current = false;

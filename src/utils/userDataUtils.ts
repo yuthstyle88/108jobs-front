@@ -1,4 +1,4 @@
-import { ProfileData } from "lemmy-js-client";
+import {LocalUser, Person} from "lemmy-js-client";
 
 /**
  * Utility functions for working with ProfileData
@@ -6,73 +6,73 @@ import { ProfileData } from "lemmy-js-client";
 
 /**
  * Get the username from ProfileData
- * @param profileData The user's profile data
  * @returns The username, preferring person.name if available
+ * @param person
  */
-export function getUsername(profileData: ProfileData): string {
-  return profileData.person?.name || "";
+export function getUsername(person: Person): string {
+  return person?.name || "";
 }
 
 /**
  * Get the display name from ProfileData
- * @param profileData The user's profile data
  * @returns The display name, preferring person.displayName if available
+ * @param person
  */
-export function getDisplayName(profileData: ProfileData): string | undefined {
-  return profileData.person?.displayName || "";
+export function getDisplayName(person: Person): string | undefined {
+  return person?.displayName || "";
 }
 
 /**
  * Get the avatar URL from ProfileData
- * @param profileData The user's profile data
  * @returns The avatar URL, preferring person.avatar if available
+ * @param person
  */
-export function getAvatarUrl(profileData: ProfileData): string | undefined {
-  return profileData.person?.avatar || "";
+export function getAvatarUrl(person: Person): string | undefined {
+  return person?.avatar || "";
 }
 
 /**
  * Get the bio from ProfileData
- * @param profileData The user's profile data
  * @returns The bio, preferring person.bio if available
+ * @param person
  */
-export function getBio(profileData: ProfileData): string | null | undefined {
-  return profileData.person?.bio || profileData.person.bio;
+export function getBio(person: Person): string | null | undefined {
+  return person?.bio || "";
 }
 
 /**
  * Get the email from ProfileData
- * @param profileData The user's profile data
  * @returns The email, preferring localUser.email if available
+ * @param localUser
  */
-export function getEmail(profileData: ProfileData): string | undefined {
-  return profileData.localUser?.email || profileData.contact.email;
+export function getEmail(localUser: LocalUser): string | undefined {
+  return localUser?.email || "";
 }
 
 /**
  * Check if the user's email is verified
- * @param profileData The user's profile data
  * @returns Whether the email is verified, preferring localUser.emailVerified if available
+ * @param localUser
  */
-export function isEmailVerified(profileData: ProfileData): boolean {
-  return profileData.localUser?.emailVerified ?? false;
+export function isEmailVerified(localUser: LocalUser): boolean {
+  return localUser?.emailVerified ?? false;
 }
 
 /**
  * Check if the user is an admin
- * @param profileData The user's profile data
  * @returns Whether the user is an admin
+ * @param localUser
  */
-export function isAdmin(profileData: ProfileData): boolean {
-  return profileData.localUser?.admin ?? false;
+export function isAdmin(localUser: LocalUser): boolean {
+  return localUser?.admin ?? false;
 }
 
 /**
  * Get the user's role
- * @param profileData The user's profile data
  * @returns The user's role
+ * @param localUser
  */
-export function getRole(profileData: ProfileData): string {
+export function getRole(localUser: LocalUser): string {
   // Return a default role or empty string as roles property is not available in the new structure
-  return "";
+  return localUser?.role ?? "";
 }

@@ -18,7 +18,7 @@ import ZipcodeSearch from "../components/SearchZipcode";
 import ErrorPage from "@/app/error";
 import {HttpService} from "@/services";
 import {useHttpGet} from "@/hooks/useHttpGet";
-import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 
 export interface AddressFormData {
@@ -53,7 +53,10 @@ function normalizeAddress(address: RawAddress | any | undefined): AddressFormDat
 }
 
 const ContactInfo = () => {
-  const { profileState, profileData, isLoadingProfile, isErrorProfile, mutate } = useProfileData();
+  const { profileState, profileData, isLoadingProfile, isErrorProfile, mutate } = useMyUser();
+
+  const contact = profileData?.profile.contact;
+  const address = profileData?.profile?.address;
 
   const {data: sellerContactLanguage} = useGlobalTranslate(
     LanguageFile.SELLER_CONTACT_INFO
@@ -103,7 +106,7 @@ const ContactInfo = () => {
     resolver: zodResolver(emailSchema),
     mode: "onChange",
     defaultValues: {
-      email: profileState.state === "success" ? profileState.data?.contact.email : "",
+      email: profileState === "success" ? contact?.email : "",
     },
   });
 
@@ -137,8 +140,8 @@ const countryOptions = useMemo(
 
 
   useEffect(() => {
-      if (profileState.state === "success" && profileState.data?.address && !isReady) {
-        const normalized = normalizeAddress(profileState.data.address);
+      if (profileState === "success" && address && !isReady) {
+        const normalized = normalizeAddress(address);
 
         if (normalized.country !== "Thailand") {
           setLocationType("Foreign");
@@ -155,7 +158,7 @@ const countryOptions = useMemo(
 
   useEffect(() => {
       if (isConfirmChange) {
-        resetEmail({email: profileState.state === "success" ? profileState.data?.contact.email ?? "" : ""});
+        resetEmail({email: profileState === "success" ? contact?.email ?? "" : ""});
       }
     },
     [isConfirmChange, profileState, resetEmail]);
@@ -293,7 +296,7 @@ const countryOptions = useMemo(
               </label>
               <input
                 type="email"
-                value={profileState.state === "success" ? profileState.data?.contact.email ?? "" : ""}
+                value={profileState === "success" ? contact?.email ?? "" : ""}
                 disabled
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary disabled:cursor-not-allowed"
                 placeholder="your.email@example.com"

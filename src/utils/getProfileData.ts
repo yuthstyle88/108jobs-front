@@ -1,4 +1,5 @@
-import {Education, LanguageSkill, Skill, WorkExperience, Certificate, Service, Review, ProfileData} from "lemmy-js-client";
+import {Education, LanguageSkill, Skill, WorkExperience, Certificate, Service, Review, Person } from "lemmy-js-client";
+
 
 type ExtraProfileFields = {
   educations?: (Education | string)[];   // บางเวอร์ชันส่งเป็น string[]
@@ -10,8 +11,8 @@ type ExtraProfileFields = {
   reviews?: Review[];
 };
 
-export function getProfileData(profileData: ProfileData) {
-  const profile = profileData?.person as Partial<ExtraProfileFields> | undefined;
+export function getProfileData(person: Person) {
+  const profile = person as Partial<ExtraProfileFields> | undefined;
   const educations: Education[] = (profile?.educations ?? []) as Education[];
   const workExperience: WorkExperience[] = profile?.workExperience ?? [];
   const skill: Skill[] = profile?.skill ?? [];

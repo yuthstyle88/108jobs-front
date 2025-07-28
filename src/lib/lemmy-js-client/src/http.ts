@@ -1732,7 +1732,7 @@ export class LemmyHttp extends Controller {
     @Body() form: SaveUserProfile,
     @Inject() options?: RequestOptions,
   ) {
-    return this.#wrapper<SaveUserProfile, ProfileData>(
+    return this.#wrapper<SaveUserProfile, MyUserInfo>(
       HttpType.Put,
       "/account/settings/update-profile",
       form,

@@ -20,6 +20,7 @@ import { Button } from "../ui/Button";
 import JobBoardProposal from "./components/JobBoardProposal";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 type Props = {
   jobId: string;
@@ -40,16 +41,12 @@ const JobBoardDetail = ({ jobId }: Props) => {
     API_ROUTES.job.jobBoardDetail + "/" + jobId
   );
 
-  const {
-    data: profileData,
-    isLoading: isLoadingProfile,
-    error: isErrorProfile,
-  } = usePrivateFetch<ProfileData>(API_ROUTES.profile.getProfile, {
-    enabled: shouldFetchProfile,
-  });
+  const {profileData, isLoadingProfile ,isErrorProfile} = useMyUser();
+  const person = profileData?.localUserView?.person;
+  const localUser = profileData?.localUserView?.localUser;
 
-  const userRole = profileData?.localUser.role;
-  const isVerify = profileData?.person?.isVerified;
+  const userRole = localUser?.role;
+  const isVerify = person?.isVerified;
   const isOnlyEmployer = userRole?.length === 1 && userRole[0] === RoleType.Employer;
   const isFreelancer = userRole?.includes(RoleType.Freelancer);
   const canShowProposalButton = !isGuest && isFreelancer && !isOnlyEmployer;

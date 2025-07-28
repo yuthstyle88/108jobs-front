@@ -10,15 +10,16 @@ import Image from "next/image";
 import { useProfileForm } from "../hooks/useProfileForm";
 import { useImagePicker } from "@/hooks/useImagePicker";
 import {useHttpPost} from "@/hooks/useHttpPost";
-import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const AccountSettings = () => {
 
   const { execute: uploadImage, isMutating: isUploadMuting } =
     useHttpPost("uploadImage");
 
-  const { profileState, profileData, mutate } = useProfileData();
-
+  const { profileState, profileData, mutate } = useMyUser();
+  // const localUser = profileData?.localUserView?.localUser;
+  const person = profileData?.localUserView?.person;
   const { data: sellerProfileLanguage } = useGlobalTranslate(
     LanguageFile.SELLER_FREELANCER_PROFILE
   );
@@ -32,7 +33,7 @@ const AccountSettings = () => {
     handleSelectFile,
     handleImageUpload,
     closeImageModal,
-  } = useImagePicker(profileData ? getAvatarUrl(profileData) : undefined);
+  } = useImagePicker(person ? getAvatarUrl(person) : undefined);
 
   const {
     register,
@@ -51,8 +52,8 @@ const AccountSettings = () => {
   );
 
 
-  if (profileState.state === "loading") return <Loading />;
-  if (profileState.state === "failed") return <Error />;
+  if (profileState === "loading") return <Loading />;
+  if (profileState === "failed") return <Error />;
 
   return (
     <form

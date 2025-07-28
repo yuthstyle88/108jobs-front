@@ -13,7 +13,7 @@ import Link from "next/link";
 import FreelanceMegaMenu from "../FreelanceMegaMenu";
 import FreelanceImproveMenu from "../FreelancerImproveMenu";
 import ProfileFreelancer from "../ProfileFreelancer";
-import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 interface FreelancerProps {
   globalLanguageData: Partial<GlobalLanguage> | null | undefined;
@@ -23,8 +23,8 @@ const FreelancerSession = ({
   globalLanguageData,
 }: FreelancerProps) => {
 
-  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
-
+  const {profileData, isLoadingProfile } = useMyUser();
+  const person = profileData?.localUserView?.person;
   const { isOpen, toggle, close } = useToggle();
 
   return (
@@ -104,7 +104,7 @@ const FreelancerSession = ({
             className="w-[14px] h-[14px] text-white"
           />
         </button>
-        {isOpen && <ProfileFreelancer profile={profileData?.person} data={globalLanguageData} />}
+        {isOpen && <ProfileFreelancer profile={person} data={globalLanguageData} />}
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()} />
         )}

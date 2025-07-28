@@ -5,7 +5,7 @@ import CurrentProfileFreelance from "../components/CurrentProfileFreelance";
 import EmployerProfile from "../components/EmployerProfile";
 import FreelancerProfile from "../components/FreelanerProfile";
 import {RoleType} from "lemmy-js-client";
-import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import NotFound from "@/app/not-found";
 
 interface Props {
@@ -13,12 +13,13 @@ interface Props {
 }
 
 export default function CheckRoleProfile({ username }: Props) {
-  const { profileState, profileData: userProfile, isLoadingProfile, mutate } = useProfileData();
+  const { profileData, isLoadingProfile } = useMyUser();
+  const localUser = profileData?.localUserView.localUser;
 
   if (isLoadingProfile) return <Loading />;
 
-  const isEmployer = userProfile?.localUser?.role === RoleType.Employer;
-  const isFreelancer = userProfile?.localUser?.role === RoleType.Freelancer;
+  const isEmployer = localUser?.role === RoleType.Employer;
+  const isFreelancer = localUser?.role === RoleType.Freelancer;
 
 
   if (isEmployer) return <CurrentProfileEmployer />;

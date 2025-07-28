@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import {ProfileData, SaveUserProfile, UploadImage, UploadImageResponse} from "lemmy-js-client";
+import {MyUserInfo, SaveUserProfile, UploadImage, UploadImageResponse} from "lemmy-js-client";
 import { useEffect, useState } from "react";
 import useNotification from "@/hooks/useNotification";
 import { HttpService, } from "@/services";
@@ -16,7 +16,7 @@ interface FormValues {
 }
 
 export const useProfileForm = (
-  profileData: ProfileData | undefined,
+  myUser: MyUserInfo | undefined,
   selectedImage: string | null,
   uploadImage: (
     image: UploadImage,
@@ -31,44 +31,46 @@ export const useProfileForm = (
     formState: { errors, isSubmitting },
     reset,
   } = useForm<FormValues>();
+  const person = myUser?.localUserView.person;
+  const card = myUser?.profile?.card;
 
-  const [updateProfileState, setUpdateProfileState] = useState<RequestState<ProfileData>>(LOADING_REQUEST);
+  const [updateProfileState, setUpdateProfileState] = useState<RequestState<MyUserInfo>>(LOADING_REQUEST);
   const isUpdateMuting = updateProfileState.state === "loading";
 
   const { successMessage } = useNotification();
 
   useEffect(() => {
-    if (profileData?.person) {
-      const birthDate = profileData.card.birthDate;
+    if (person) {
+      const birthDate = card?.birthDate;
       if (birthDate) {
         const [year, month, day] = birthDate.split("-");
         reset({
-          displayName: profileData.person.displayName || "",
-          username: profileData.person.name,
+          displayName: person.displayName || "",
+          username: person.name,
           birthDay: day || "Day",
           birthMonth: month || "Month",
           birthYear: year || "Year",
         });
       } else {
         reset({
-          displayName: profileData.person.displayName || "",
-          username: profileData.person.name,
+          displayName: person.displayName || "",
+          username: person.name,
           birthDay: "Day",
           birthMonth: "Month",
           birthYear: "Year",
         });
       }
-      setSelectedImage(profileData.person.avatar || "");
+      setSelectedImage(person.avatar || "");
     }
-  }, [profileData, reset, setSelectedImage]);
+  }, [person, reset, setSelectedImage]);
 
   const onSubmit = async (formData: FormValues) => {
     try {
       setUpdateProfileState(LOADING_REQUEST);
       
-      let avatarUrl = profileData?.person?.avatar;
+      let avatarUrl = person?.avatar;
 
-      if (selectedImage && selectedImage !== profileData?.person?.avatar) {
+      if (selectedImage && selectedImage !== person?.avatar) {
           avatarUrl = await uploadSelectedImage(selectedImage, uploadImage);
       }
 

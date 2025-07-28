@@ -1,7 +1,7 @@
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
-import {ProfileData, SaveUserProfile, UploadImage, UploadImageResponse} from "lemmy-js-client";
+import {MyUserInfo, ProfileData, SaveUserProfile, UploadImage, UploadImageResponse} from "lemmy-js-client";
 import {useEffect, useState} from "react";
 import useNotification from "@/hooks/useNotification";
 import {HttpService,} from "@/services";
@@ -35,7 +35,7 @@ const profileSchema = z.object({
 type FormValues = z.infer<typeof profileSchema>;
 
 export const useProfileForm = (
-  profileData: ProfileData | null,
+  profileData: MyUserInfo | null,
   selectedImage: string | null,
   uploadImage: (image: UploadImage, options?: RequestOptions) => Promise<RequestState<UploadImageResponse>>,
   mutate: () => void,
@@ -50,37 +50,40 @@ export const useProfileForm = (
   } = useForm<FormValues>({
     resolver: zodResolver(profileSchema),
   });
-
-  const [updateProfileState, setUpdateProfileState] = useState<RequestState<ProfileData>>(LOADING_REQUEST);
+  const localUser = profileData?.localUserView.localUser;
+  const person = profileData?.localUserView?.person;
+  const card = profileData?.profile?.card;
+  
+  const [updateProfileState, setUpdateProfileState] = useState<RequestState<MyUserInfo>>(LOADING_REQUEST);
   const isUpdateMuting = updateProfileState.state === "loading";
 
   const {successMessage} = useNotification();
 
   useEffect(() => {
-      if (profileData?.localUser) {
-        const birthDate = profileData.card.birthDate;
+      if (localUser) {
+        const birthDate = card?.birthDate || "" ;
         if (birthDate) {
           const [year, month, day] = birthDate.split("-");
           reset({
-            displayName: profileData.person.displayName,
-            username: profileData.person.name,
+            displayName: person?.displayName,
+            username: person?.name,
             birthDay: day || "Day",
             birthMonth: month || "Month",
             birthYear: year || "Year",
-            bio: profileData.person.bio || "",
+            bio: person?.bio || "",
           });
         } else {
           reset({
-            displayName: profileData.person.displayName,
-            username: profileData.person.name,
+            displayName: person?.displayName,
+            username: person?.name,
             birthDay: "Day",
             birthMonth: "Month",
             birthYear: "Year",
-            bio: profileData.person.bio || "",
+            bio: person?.bio || "",
           });
         }
         // Use the avatar URL from profileData
-        const avatarUrl = profileData.person?.avatar;
+        const avatarUrl = person?.avatar;
         setSelectedImage(avatarUrl || "");
       }
     },
@@ -91,7 +94,7 @@ export const useProfileForm = (
       setUpdateProfileState(LOADING_REQUEST);
       
       // Get the current avatar URL, preferring person.avatar if available
-      let avatarUrl = profileData?.person?.avatar;
+      let avatarUrl = person?.avatar;
 
       // If a new image was selected, upload it
       if (selectedImage && selectedImage !== avatarUrl) {

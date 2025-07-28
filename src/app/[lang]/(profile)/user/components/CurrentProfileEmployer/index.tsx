@@ -3,7 +3,7 @@ import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useProfileData } from "@/hooks/profile-api/useProfileData";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { formatDateToLong } from "@/utils/formatDateToLong";
 import { interpolateDouble } from "@/utils/interpolate";
@@ -15,7 +15,8 @@ import { useEffect, useRef, useState } from "react";
 
 const CurrentProfileEmployer = () => {
 
-  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
+  const { profileState, profileData, isLoadingProfile, mutate } = useMyUser();
+  const person = profileData?.localUserView?.person;
 
   const { data: goToProfileLanguage } = useGlobalTranslate(
     LanguageFile.GO_TO_PROFILE
@@ -30,7 +31,7 @@ const CurrentProfileEmployer = () => {
       const el = bioRef.current;
       setIsClamped(el.scrollHeight > el.clientHeight);
     }
-  }, [profileData?.person?.bio]);
+  }, [person?.bio]);
 
   if (isLoadingProfile) return <Loading />;
   return (
@@ -52,7 +53,7 @@ const CurrentProfileEmployer = () => {
             <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-border-primary bg-white rounded-[0.25rem]">
               <div className="flex items-center justify-center">
                 <Image
-                  src={profileData?.person?.avatar || ProfileImage.avatar}
+                  src={person?.avatar || ProfileImage.avatar}
                   alt="avatar"
                   className="rounded-full w-[175px] object-cover"
                   width={175}
@@ -60,7 +61,7 @@ const CurrentProfileEmployer = () => {
                 />
               </div>
               <p className="text-[28px] font-medium text-text-primary text-center pt-2">
-                {profileData?.person.displayName}
+                {person?.displayName}
               </p>
               <div className="flex items-center justify-center pt-2">
                 {[1, 2, 3, 4, 5].map((_, index) => (
@@ -76,10 +77,10 @@ const CurrentProfileEmployer = () => {
                   {goToProfileLanguage?.memberSince}
                 </p>
                 <p className="text-[14px] text-third">
-                  {formatDateToLong(profileData?.person?.publishedAt)}
+                  {formatDateToLong(person?.publishedAt)}
                 </p>
               </div>
-              {profileData?.person.bio && (
+              {person?.bio && (
                 <div className="mt-6 px-6">
                   <div className="text-text-secondary px-4 py-3 border border-border-secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
@@ -88,9 +89,9 @@ const CurrentProfileEmployer = () => {
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
-                      <i>{profileData.person.bio}</i>
+                      <i>{person?.bio}</i>
                     </p>
-                    {profileData.person.bio && isClamped && !showFullBio && (
+                    {person?.bio && isClamped && !showFullBio && (
                       <button
                         onClick={() => setShowFullBio(true)}
                         className="mt-2 text-blue-600 text-sm font-medium hover:underline"
@@ -115,7 +116,7 @@ const CurrentProfileEmployer = () => {
           <section className="w-full px-4">
             <h2 className="py-[3rem] text-[28px] font-medium text-text-primary w-full">
               {interpolateDouble(goToProfileLanguage?.workTitle || "", {
-                username: profileData?.person.displayName || "",
+                username: person?.displayName || "",
               })}
             </h2>
             <div className="grid grid-cols-[1fr_1fr_1fr] border-b-[2px] border-b-border-primary">

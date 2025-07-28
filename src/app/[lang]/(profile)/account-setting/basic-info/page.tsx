@@ -9,7 +9,7 @@ import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { useDateOptions } from "@/hooks/useDateOptions";
 import Image from "next/image";
 import { useState } from "react";
-import { useProfileData } from "@/hooks/profile-api/useProfileData";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { useProfileForm } from "../hooks/useProfileForm";
 import {useImagePicker} from "@/hooks/useImagePicker";
 import {useHttpPost} from "@/hooks/useHttpPost";
@@ -22,8 +22,8 @@ export default function BasicInformation() {
   const { execute: uploadImage, isMutating: isUploadMuting } =
     useHttpPost("uploadImage");
 
-  const { profileState, profileData, mutate } = useProfileData();
-
+  const { profileState, profileData, mutate } = useMyUser();
+  const person = profileData?.localUserView.person;
   const {
     selectedImage,
     setSelectedImage,
@@ -33,7 +33,7 @@ export default function BasicInformation() {
     handleSelectFile,
     handleImageUpload,
     closeImageModal,
-  } = useImagePicker(profileState.state === "success" ? profileState.data?.person?.avatar : undefined);
+  } = useImagePicker(profileState === "success" ? person?.avatar : undefined);
 
   const {
     register,
@@ -43,7 +43,7 @@ export default function BasicInformation() {
     isUpdateMuting,
     onSubmit,
   } = useProfileForm(
-    profileState.state === "success" ? profileState.data : undefined,
+    profileState,
     selectedImage,
     uploadImage,
     mutate,
@@ -54,8 +54,8 @@ export default function BasicInformation() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  if (profileState.state === "loading") return <Loading />;
-  if (profileState.state === "failed") return <Error />;
+  if (profileState === "loading") return <Loading />;
+  if (profileState === "failed") return <Error />;
 
   return (
     <>

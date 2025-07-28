@@ -8,13 +8,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const SpUserAvatar = () => {
   const pathname = usePathname();
   const { lang } = useLanguage();
-  const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.getProfile
-  );
+  const {profileData, isLoadingProfile ,isErrorProfile} = useMyUser();
+  const person = profileData?.localUserView?.person;
+
   return (
     <Link prefetch={false}
       href="/profile"
@@ -23,7 +24,7 @@ const SpUserAvatar = () => {
       }`}
     >
       <Image
-        src={user?.person.avatar || ProfileImage.avatar}
+        src={person?.avatar || ProfileImage.avatar}
         alt="avatar"
         className="rounded-full w-8 h-8 object-cover"
         width={500}

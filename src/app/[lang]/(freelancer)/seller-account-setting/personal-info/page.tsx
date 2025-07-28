@@ -13,7 +13,7 @@ import ErrorModal from "@/components/ui/ErrorModal";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import {useHttpPost} from "@/hooks/useHttpPost";
-import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const PersonalInfo = () => {
   // Function to upload image using HttpService
@@ -23,7 +23,8 @@ const PersonalInfo = () => {
   const { execute: uploadImage, isMutating: isUploadMuting } =
     useHttpPost("uploadImage");
 
-  const { profileState, profileData, mutate } = useProfileData();
+  const { profileState, profileData, mutate } = useMyUser();
+  const card = profileData?.profile.card;
 
   const { data: sellerPersonalInfoLanguage } = useGlobalTranslate(
       LanguageFile.SELLER_PERSONAL_INFO
@@ -41,14 +42,14 @@ const PersonalInfo = () => {
     previewUrl: frontPreview,
     handleSelectImage: handleSelectFront,
     setPreviewUrl: setSelectedFront,
-  } = useImagePreviewOnly(profileState.state === "success" ? profileState.data?.card.frontCard : undefined);
+  } = useImagePreviewOnly(profileState === "success" ? card?.frontCard : undefined);
 
   const {
     file: backFile,
     previewUrl: backPreview,
     handleSelectImage: handleSelectBack,
     setPreviewUrl: setSelectedBack,
-  } = useImagePreviewOnly(profileState.state === "success" ? profileState.data?.card.backCard : undefined);
+  } = useImagePreviewOnly(profileState === "success" ? card?.backCard : undefined);
 
   const {
     register,
@@ -58,7 +59,7 @@ const PersonalInfo = () => {
     isUpdateMuting,
     onSubmit,
   } = usePersonalInfoForm(
-    profileState.state === "success" ? profileState.data : undefined,
+    profileState ,
     frontFile,
     backFile,
     frontPreview,
@@ -68,8 +69,8 @@ const PersonalInfo = () => {
     setSelectedBack
   );
 
-  if (profileState.state === "loading") return <Loading />;
-  if (profileState.state === "failed") return <Error />;
+  if (profileState === "loading") return <Loading />;
+  if (profileState === "failed") return <Error />;
 
   return (
     <form

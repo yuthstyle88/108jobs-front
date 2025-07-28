@@ -12,7 +12,6 @@ import {
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import useNotification from "@/hooks/useNotification";
 import { JobListResponse } from "@/types/job";
-import { ProfileData } from "lemmy-js-client";
 import { interpolateDouble } from "@/utils/interpolate";
 import {
   ClockAlert,
@@ -29,13 +28,15 @@ import { useState } from "react";
 import ConfirmDeleteModal from "./_components/ConfirmDeleteModal";
 import JobCreatedStatus from "./_components/JobCreatedStatus";
 import Error from "@/app/error";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const MyServices = () => {
   const { successMessage } = useNotification();
-  const { data: profileData, isLoading: isLoadingProfile } =
-    usePrivateFetch<ProfileData>(API_ROUTES.profile.getProfile);
 
-  const notVerified = profileData?.person.isVerified === "Pending";
+  const { profileState, profileData, isLoadingProfile, isErrorProfile } = useMyUser();
+  const person = profileData?.localUserView.person;
+  const notVerified = person?.isVerified === "Pending";
+
   const {
     data: jobsData,
     isLoading,

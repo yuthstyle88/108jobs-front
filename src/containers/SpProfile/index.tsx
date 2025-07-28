@@ -16,11 +16,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {UserService} from "@/services";
 
 const SpProfile = () => {
-  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
+  const {profileData, isLoadingProfile ,isErrorProfile} = useMyUser();
+  const person = profileData?.localUserView?.person;
+  const localUser = profileData?.localUserView?.localUser;
+  const contact = profileData?.profile?.contact;
+
   const { lang: currentLang } = useLanguage();
   const logout = () => UserService.Instance.logout();
   if (isLoadingProfile) return <Loading />;
@@ -41,26 +45,26 @@ const SpProfile = () => {
         </svg>
         <div className="grid grid-cols-1 z-10 text-center absolute left-1/2 -translate-x-1/2 top-0 pt-6 justify-center">
           <strong className="text-[1.125rem] text-white">My Profile</strong>
-          <Link prefetch={false} href={`/${currentLang}/user/${profileData?.person?.name}`}>
+          <Link prefetch={false} href={`/${currentLang}/user/${person?.name}`}>
             <Image
-              src={profileData?.person?.avatar || ProfileImage.avatar}
+              src={person?.avatar || ProfileImage.avatar}
               width={80}
               height={80}
               alt="avatar"
               className="inline-flex justify-center items-center w-[80px] min-h-[80px]  rounded-full object-cover object-center mt-4"
             />
           </Link>
-          <Link prefetch={false} href={`/${currentLang}/user/${profileData?.person?.name}`}>
+          <Link prefetch={false} href={`/${currentLang}/user/${person?.name}`}>
             <strong className="text-[1.125rem] text-third">
-              {profileData?.person?.name}
+              {person?.name}
             </strong>
           </Link>
           <Link prefetch={false}
-            href={`/${currentLang}/user/${profileData?.person?.name}`}
+            href={`/${currentLang}/user/${person?.name}`}
             className="inline-block max-w-full whitespace-nowrap"
           >
             <strong className="text-sm font-sans text-text-primary">
-              {profileData?.contact.email}
+              {contact?.email}
             </strong>
           </Link>
         </div>
@@ -90,7 +94,7 @@ const SpProfile = () => {
         </Link>
       </section>
       {/* Assume user is an employer and check if freelancerType exists to determine if user is a freelancer */}
-      {profileData?.localUser.role && (
+      {localUser?.role && (
           <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
             <Link prefetch={false} href="/seller/my-service">
               <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text-secondary font-sans">
@@ -149,7 +153,7 @@ const SpProfile = () => {
           </section>
         )}
       {/* Assume user is an employer and check if freelancerType doesn't exist to determine if user is not a freelancer */}
-      {!profileData?.localUser?.role && (
+      {!localUser?.role && (
           <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
             <Link prefetch={false} href="/reward/earn">
               <div className="flex flex-col items-center text-center gap-2 text-[0.75rem] text-text-secondary font-sans">
@@ -197,7 +201,7 @@ const SpProfile = () => {
         >
           <ul className="p-0 m-0 list-none">
             {/* Assume user is an employer and check if freelancerType doesn't exist to determine if user is not a freelancer */}
-            {!profileData?.localUser?.role && (
+            {!localUser?.role && (
                 <li>
                   <Link prefetch={false}
                     href="/account-setting/basic-info"
@@ -209,7 +213,7 @@ const SpProfile = () => {
                 </li>
               )}
             {/* Assume user is an employer and check if freelancerType exists to determine if user is a freelancer */}
-            {profileData?.localUser.role && (
+            {localUser?.role && (
                 <li>
                   <Link prefetch={false}
                     href="/seller-account-setting/freelance-profile"
@@ -221,7 +225,7 @@ const SpProfile = () => {
                 </li>
               )}
             {/* Assume user is an employer and check if freelancerType doesn't exist to determine if user is not a freelancer */}
-            {!profileData?.localUser.role && (
+            {!localUser?.role && (
                 <li>
                   <Link prefetch={false}
                     href="/start-selling"

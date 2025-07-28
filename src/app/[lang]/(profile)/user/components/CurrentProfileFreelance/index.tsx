@@ -4,7 +4,7 @@ import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useProfileData } from "@/hooks/profile-api/useProfileData";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { formatDateToLong } from "@/utils/formatDateToLong";
 import { interpolateDouble } from "@/utils/interpolate";
@@ -14,12 +14,12 @@ import { ClipboardX, SquarePen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import {WorkExperience, Skill, LanguageSkill, Education, Certificate, ProfileData} from "lemmy-js-client";
+import {WorkExperience, Skill, LanguageSkill, Education, Certificate, Person} from "lemmy-js-client";
 import {getProfileData} from "@/utils/getProfileData";
 
 const CurrentProfileFreelance = () => {
-  const { profileState, profileData, isLoadingProfile, mutate } = useProfileData();
-
+  const { profileState, profileData, isLoadingProfile, mutate } = useMyUser();
+  const person = profileData?.localUserView?.person;
   const { data: goToProfileLanguage } = useGlobalTranslate(
     LanguageFile.GO_TO_PROFILE
   );
@@ -33,7 +33,7 @@ const CurrentProfileFreelance = () => {
       const el = bioRef.current;
       setIsClamped(el.scrollHeight > el.clientHeight);
     }
-  }, [profileData?.person?.bio]);
+  }, [person?.bio]);
 
   if (isLoadingProfile) return <Loading />;
 
@@ -44,7 +44,7 @@ const CurrentProfileFreelance = () => {
     language,
     certAndAward,
     services,
-    reviews} = getProfileData(profileData as ProfileData);
+    reviews} = getProfileData(person as Person);
 
   return (
     <main className="min-h-screen bg-[#FBFBFC]">
@@ -65,7 +65,7 @@ const CurrentProfileFreelance = () => {
             <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-border-primary bg-white rounded-[0.25rem]">
               <div className="flex items-center justify-center">
                 <Image
-                  src={profileData?.person?.avatar || ProfileImage.avatar}
+                  src={person?.avatar || ProfileImage.avatar}
                   alt="Avatar"
                   className="rounded-full w-[175px] h-[175px] object-cover overflow-hidden"
                   width={500}
@@ -73,10 +73,10 @@ const CurrentProfileFreelance = () => {
                 />
               </div>
               <p className="text-[28px] font-medium text-text-primary text-center pt-2">
-                {profileData?.person.displayName}
+                {person?.displayName}
               </p>
               <div className="flex items-center justify-center pt-2">
-                {[...Array(profileData?.person?.ratings || 0)].map((_, index) => (
+                {[...Array(person?.ratings || 0)].map((_, index) => (
                   <FontAwesomeIcon
                     icon={faStar}
                     key={index}
@@ -84,7 +84,7 @@ const CurrentProfileFreelance = () => {
                   />
                 ))}
               </div>
-              {profileData?.person.deleted === false && (
+              {person?.deleted === false && (
                 <div className="flex items-center justify-center w-full">
                   <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-red-500 text-white w-fit">
                     <ClipboardX className="w-4 h-4 mr-1" />
@@ -98,7 +98,7 @@ const CurrentProfileFreelance = () => {
                     {goToProfileLanguage?.memberSince}
                   </div>
                   <div className="text-third font-medium">
-                    {formatDateToLong(profileData?.person?.publishedAt)}
+                    {formatDateToLong(person?.publishedAt)}
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
@@ -124,7 +124,7 @@ const CurrentProfileFreelance = () => {
                   <div className="text-third font-medium">100%</div>
                 </div>
               </div>
-              {profileData?.person?.bio && (
+              {person?.bio && (
                 <div className="mt-6 px-6">
                   <div className="text-text-secondary px-4 py-3 border border-border-secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
@@ -133,9 +133,9 @@ const CurrentProfileFreelance = () => {
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
-                      <i>{profileData?.person?.bio}</i>
+                      <i>{person?.bio}</i>
                     </p>
-                    {profileData?.person?.bio && isClamped && !showFullBio && (
+                    {person?.bio && isClamped && !showFullBio && (
                       <button
                         onClick={() => setShowFullBio(true)}
                         className="mt-2 text-text-primary font-sans text-sm font-medium underline"
@@ -365,14 +365,14 @@ const CurrentProfileFreelance = () => {
           <section className="w-full px-4">
             <h2 className="pt-[3rem] text-[28px] font-medium text-text-primary w-full">
               {interpolateDouble(goToProfileLanguage?.workTitle || "", {
-                username: profileData?.person.displayName,
+                username: person?.displayName,
               })}
             </h2>
             <section className="mt-4 grid grid-cols-1 md:grid-cols-[repeat(3,minmax(1px,1fr))] gap-5">
               {services.map((service, index) => (
                 <CategoryCard
                   data={service}
-                  username={profileData?.person.displayName || ""}
+                  username={person?.displayName || ""}
                   key={index}
                 />
               ))}

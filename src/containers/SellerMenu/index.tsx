@@ -22,6 +22,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import {UserService} from "@/services";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 interface SellerMenuProps {
   isOpen: boolean;
@@ -29,9 +30,9 @@ interface SellerMenuProps {
 }
 
 const SellerMenu = ({ isOpen, onClose }: SellerMenuProps) => {
-  const { data: user } = usePrivateFetch<ProfileData>(
-    API_ROUTES.profile.getProfile
-  );
+  const {profileData} = useMyUser();
+  const person = profileData?.localUserView?.person;
+
 const { lang } = useLanguage();
   const pathname = usePathname();
 
@@ -81,7 +82,7 @@ const { lang } = useLanguage();
   ];
   const menuSettingItems = [
     {
-      href: `${lang}/user/${user?.person?.name}`,
+      href: `${lang}/user/${person?.name}`,
       label: "Freelancer profile",
       icon: faUserPen,
       target: "Blank",
@@ -131,7 +132,7 @@ const { lang } = useLanguage();
           <section className="flex gap-3 items-center flex-col pt-8 px-4 pb-1">
             <figure className="rounded-full overflow-hidden relative">
               <Image
-                src={user?.person?.avatar || ProfileImage.avatar}
+                src={person?.avatar || ProfileImage.avatar}
                 alt="avatar"
                 width={80}
                 height={80}
@@ -139,7 +140,7 @@ const { lang } = useLanguage();
               />
             </figure>
             <div className="text-[0.875rem] font-semibold text-text-primary">
-              {user?.person?.name}
+              {person?.name}
             </div>
           </section>
           <section className="flex flex-col gap-2 p-4">

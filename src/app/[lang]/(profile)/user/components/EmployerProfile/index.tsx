@@ -11,10 +11,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-import {useProfileData} from "@/hooks/profile-api/useProfileData";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const UserProfile = () => {
-  const { profileState, profileData: userProfile, isLoadingProfile, mutate } = useProfileData();
+  const { profileData, isLoadingProfile } = useMyUser();
+  const person = profileData?.localUserView?.person;
 
   const { data: goToProfileLanguage } = useGlobalTranslate(
     LanguageFile.GO_TO_PROFILE
@@ -29,7 +30,7 @@ const UserProfile = () => {
       const el = bioRef.current;
       setIsClamped(el.scrollHeight > el.clientHeight);
     }
-  }, [userProfile?.person?.bio]);
+  }, [person?.bio]);
 
   if (isLoadingProfile) return <Loading />;
   return (
@@ -51,7 +52,7 @@ const UserProfile = () => {
             <div className="w-full sm:w-[320px] mt-[-128px] relative py-8 border-[0.0625rem] border-border-primary bg-white rounded-[0.25rem]">
               <div className="flex items-center justify-center">
                 <Image
-                  src={userProfile?.person?.avatar || ProfileImage.avatar}
+                  src={person?.avatar || ProfileImage.avatar}
                   alt="avatar"
                   className="rounded-full w-[175px] object-cover"
                   width={175}
@@ -59,7 +60,7 @@ const UserProfile = () => {
                 />
               </div>
               <p className="text-[28px] font-medium text-text-primary text-center pt-2">
-                {userProfile?.person?.displayName}
+                {person?.displayName}
               </p>
               <div className="flex items-center justify-center pt-2">
                 {[1, 2, 3, 4, 5].map((_, index) => (
@@ -75,10 +76,10 @@ const UserProfile = () => {
                   {goToProfileLanguage?.memberSince}
                 </p>
                 <p className="text-[14px] text-third">
-                  {formatDateToLong(userProfile?.person?.publishedAt)}
+                  {formatDateToLong(person?.publishedAt)}
                 </p>
               </div>
-              {userProfile?.person?.bio && (
+              {person?.bio && (
                 <div className="mt-6 px-6">
                   <div className="text-text-secondary px-4 py-3 border border-border-secondary rounded-[4px] max-w-full bg-[#FBFBFC]">
                     <p
@@ -87,9 +88,9 @@ const UserProfile = () => {
                         showFullBio ? "" : "line-clamp-5"
                       }`}
                     >
-                      <i>{userProfile?.person.bio}</i>
+                      <i>{person?.bio}</i>
                     </p>
-                    {userProfile?.person.bio && isClamped && !showFullBio && (
+                    {person?.bio && isClamped && !showFullBio && (
                       <button
                         onClick={() => setShowFullBio(true)}
                         className="mt-2 text-blue-600 text-sm font-medium hover:underline"
@@ -105,7 +106,7 @@ const UserProfile = () => {
           <section className="w-full px-4">
             <h2 className="py-[3rem] text-[28px] font-medium text-text-primary w-full">
               {interpolateDouble(goToProfileLanguage?.workTitle || "", {
-                username: userProfile?.person?.displayName || "",
+                username: person?.displayName || "",
               })}
             </h2>
             <div className="grid grid-cols-[1fr_1fr_1fr] border-b-[2px] border-b-border-primary">

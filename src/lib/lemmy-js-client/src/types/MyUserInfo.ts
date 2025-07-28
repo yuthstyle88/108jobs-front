@@ -5,13 +5,15 @@ import type { CommunityModeratorView } from "./CommunityModeratorView";
 import type { Instance } from "./Instance";
 import type { LanguageId } from "./LanguageId";
 import type { LocalUserView } from "./LocalUserView";
-import type { Person } from "./Person";
+import type {ProfileData} from "./ProfileData";
+import {Person} from "./Person";
 
 /**
  * Your user info.
  */
 export type MyUserInfo = {
   localUserView: LocalUserView;
+  profile: ProfileData;
   follows: Array<CommunityFollowerView>;
   moderates: Array<CommunityModeratorView>;
   communityBlocks: Array<Community>;
