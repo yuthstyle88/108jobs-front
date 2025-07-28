@@ -36,16 +36,18 @@ export class UserService {
     showToast = true,
     sharedKey,
   }: {
-    res: LoginResponse;
+    res: LoginResponse | string;
     showToast?: boolean;
     sharedKey?: string;
   }) {
-    if (isBrowser() && res.jwt) {
+    if (isBrowser() && typeof res !== "string" && res.jwt) {
       if (showToast) {
         toast("loggedIn");
       }
       setAuthCookie(res.jwt);
       this.#setAuthInfo({sharedKey});
+    }else{
+      this.#setAuthInfo({rawCookie: res});
     }
   }
 
