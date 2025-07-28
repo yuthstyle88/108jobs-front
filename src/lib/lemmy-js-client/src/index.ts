@@ -1,3 +1,5 @@
+import {Budget} from "./types/Budget";
+
 export * from "./http";
 export type {UploadImage} from "./other_types";
 export type {ActivityId} from "./types/ActivityId";
@@ -363,3 +365,4 @@ export type {CountriesResponse} from "./types/CountriesResponse";
 export type {Service} from "./types/Service";
 export type {Image} from "./types/Image";
 export type {ReviewResponse} from "./types/ReviewResponse";
+export type {Budget} from "./types/Budget";

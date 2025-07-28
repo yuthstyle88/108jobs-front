@@ -11,9 +11,9 @@ import {faExclamationCircle, faInfoCircle} from "@fortawesome/free-solid-svg-ico
 import Link from "next/link";
 import LoadingCircle from "@/components/LoadingCircle";
 import {z} from "zod";
-
-import {LanguageDataType} from "@/store/useLanguageStore";
-
+import {useLanguage} from "@/contexts/LanguageContext";
+import {getNumericCode} from "@/actions/getClientCurrentLanguage";
+import {LanguageDataType} from "@/types/language";
 
 interface PostFormProps {
   redirectUrl?: string,
@@ -33,7 +33,7 @@ const jobSchema = z.object({
 });
 
 
-export const CreatePostForm: React.FC<PostFormProps> = ({
+export const CreatePostForm: React.FC<PostFormProps> =  ({
   redirectUrl: propRedirectUrl,
   history,
   setApiError,
@@ -41,7 +41,9 @@ export const CreatePostForm: React.FC<PostFormProps> = ({
 }) => {
 
   const router = useRouter();
+  const { lang } = useLanguage();
 
+  const languageId = getNumericCode(lang) || 1;
 
   const {execute: createJob, isMutating} = useHttpPost("createPost");
 
@@ -80,22 +82,26 @@ export const CreatePostForm: React.FC<PostFormProps> = ({
   const onSubmit = useCallback(async (data: any) => {
 
     try {
-        console.log("Form submitted: ", data); // Logs รูปแบบข้อมูลที่ส่งจากฟอร์ม
-        alert("Submitted Payload: " + JSON.stringify(data, null, 2)); // ดูข้อมูลสาธิต
-        const payload: CreatePost = {
+      const budgetNumber = Math.floor(Number(data.budget) * 10) / 10;
+      const payload: CreatePost = {
             name: data.jobTitle,
             body: data.description,
             jobType: data.workingFrom,
             communityId: data.communityId,
             deadline: data.deadline,
-            isEnglishRequired: data.isEnglishRequired,
-            url: data.exampleUrl,
+            isEnglishRequired: data.isEnglishRequired || false,
+            url: data.exampleUrl || "",
             intendedUse: data.intendedUse,
-            budget: data.budget,
+            budget: budgetNumber,
+            languageId: languageId,
         };
 
       if (!payload.deadline) {
         delete (payload as { deadline?: typeof payload.deadline }).deadline;
+      }
+
+      if (!payload.url) {
+        delete (payload as { url?: typeof payload.url }).url;
       }
 
       await createJob(payload); // ฟังก์ชัน createJob ต้องตรวจสอบว่าส่งค่าได้ถูกต้อง
@@ -124,6 +130,7 @@ export const CreatePostForm: React.FC<PostFormProps> = ({
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} method="POST" >
+            <input type="hidden" name="languageId" value={languageId} defaultValue={1} />
             {/* Job Title */}
             <div className="mb-6">
               <label

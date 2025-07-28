@@ -3,15 +3,10 @@
 import { cookies } from "next/headers";
 
 export async function getCurrentLanguage(): Promise<"th" | "vi" | "en" | null> {
-  const cookieStore = await cookies();
-
-  const lang = cookieStore.get("current-language")?.value;
-
+  // ฝั่ง Server
+  const cookieStore = cookies(); // API ของ Next.js สำหรับ Server-side
+  const cookieData = await cookieStore;
+  const lang = cookieData.get("current-language")?.value;
   const validLangs = ["th", "vi", "en"];
-
-  if (lang && validLangs.includes(lang)) {
-    return lang as "th" | "vi" | "en";
-  }
-
-  return null;
+  return lang && validLangs.includes(lang) ? (lang as "th" | "vi" | "en") : null;
 }

@@ -48,7 +48,7 @@ export enum LanguageFile {
 }
 
 export const LANGUAGES = {
-  th: { code: "th", label: "Thailand", flag: th },
-  en: { code: "en", label: "English", flag: en },
-  vi: { code: "vi", label: "Vietnam", flag: vn },
+  th: { code: "th", label: "Thailand", flag: th, numericCode: 66 },
+  en: { code: "en", label: "English", flag: en, numericCode: 1 },
+  vi: { code: "vi", label: "Vietnam", flag: vn, numericCode: 84 },
 };
