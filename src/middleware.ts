@@ -1,28 +1,41 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { middleware as langMiddleware } from "./middleware-lang";
 import jwt from "jsonwebtoken";
-import {authCookieName} from "@/utils/config";
+import { authCookieName } from "@/utils/config";
+import { RoleType } from "./lib/lemmy-js-client/dist";
 
-const TOKEN_COOKIE = "fastjob.session";
-const JWT_SECRET  = process.env.JWT_SECRET!;
+const TOKEN_COOKIE = "jwt";
+const JWT_SECRET = process.env.JWT_SECRET!;
 const VALID_LANGS = ["vi", "en", "th"];
 
-function getUserRoles(req: NextRequest): string[] {
-  const token = req.cookies.get(TOKEN_COOKIE)?.value;
-  if (!token) return [];
-
+function decodePayload(token: string) {
   try {
-    // payload ควรมี { sub, roles, exp, ... }
-    const payload = jwt.verify(token, JWT_SECRET) as { roles?: string[] };
-    return payload.roles ?? [];
-  } catch (e) {
-    // token หมดอายุ / ปลอม
-    return [];
+    const payloadBase64 = token.split(".")[1];
+    const payloadJson = atob(
+      payloadBase64.replace(/-/g, "+").replace(/_/g, "/")
+    );
+    return JSON.parse(payloadJson);
+  } catch {
+    return null;
   }
 }
 
-const roleBasedRoutes: Record<"employer" | "freelancer", string[]> = {
-  employer: [
+function getUserRole(req: NextRequest): RoleType | null {
+  const token = req.cookies.get(TOKEN_COOKIE)?.value;
+  if (!token) return null;
+
+  const payload = decodePayload(token);
+  if (
+    payload?.role === RoleType.Employer ||
+    payload?.role === RoleType.Freelancer
+  ) {
+    return payload.role;
+  }
+  return null;
+}
+
+const roleBasedRoutes: Record<RoleType, string[]> = {
+  [RoleType.Employer]: [
     "/account-setting",
     "/employer/applicants",
     "/apply-freelance",
@@ -31,14 +44,14 @@ const roleBasedRoutes: Record<"employer" | "freelancer", string[]> = {
     "/job-board/create-job",
     "/chat",
   ],
-  freelancer: [
+  [RoleType.Freelancer]: [
     "/seller",
     "/seller-account-setting",
     "/manage-product",
     "/favorites",
     "/reward",
     "/job-board/create-job",
-    "/chat"
+    "/chat",
   ],
 };
 
@@ -51,15 +64,14 @@ const publicRoutes = [
 
 const protectedRoutes = Object.values(roleBasedRoutes).flat();
 
-function getRolesAllowedForPath(pathname: string): ("employer" | "freelancer")[] {
-  return (["employer", "freelancer"] as const).filter((role) =>
+function getRolesAllowedForPath(pathname: string): RoleType[] {
+  return [RoleType.Employer, RoleType.Freelancer].filter((role) =>
     roleBasedRoutes[role].some((route) => pathname.startsWith(route))
   );
 }
 
 export async function middleware(req: NextRequest) {
   const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
-  console.log(secret);
   req.headers.set("x-path", req.nextUrl.pathname);
   req.headers.set("x-url", req.nextUrl.href);
 
@@ -70,9 +82,10 @@ export async function middleware(req: NextRequest) {
 
   const pathSegments = pathname.split("/");
   const firstSegment = pathSegments[1];
-  const langPrefix = VALID_LANGS.includes(firstSegment) ? `/${firstSegment}` : "";
+  const langPrefix = VALID_LANGS.includes(firstSegment)
+    ? `/${firstSegment}`
+    : "";
   const cleanPathname = pathname.replace(langPrefix, "") || "/";
-
 
   if (publicRoutes.includes(cleanPathname)) {
     return NextResponse.next();
@@ -96,12 +109,9 @@ export async function middleware(req: NextRequest) {
       new URL(`${langPrefix}/login?redirect=${callbackUrl}`, origin)
     );
   }
-  const userRoles = getUserRoles(req);
+  const userRole = getUserRole(req);
 
-  if (
-    cleanPathname.startsWith("/seller") &&
-    !userRoles.includes("freelancer")
-  ) {
+  if (cleanPathname.startsWith("/seller") && userRole !== RoleType.Freelancer) {
     return NextResponse.redirect(
       new URL(`${langPrefix}/start-selling`, origin)
     );
@@ -109,11 +119,7 @@ export async function middleware(req: NextRequest) {
 
   const allowedRoles = getRolesAllowedForPath(cleanPathname);
 
-  if (
-    allowedRoles.length === 1 &&
-    allowedRoles[0] === "employer" &&
-    userRoles.includes("freelancer")
-  ) {
+  if (allowedRoles.length === 1 && allowedRoles[0] !== userRole) {
     return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
   }
   //
@@ -126,7 +132,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
