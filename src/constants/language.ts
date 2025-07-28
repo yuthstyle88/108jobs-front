@@ -39,6 +39,7 @@ export enum LanguageFile {
   JOB_BOARD_CREATE = "create_job",
   APPLY_TO_BE_FREELANCER = "employee_register",
   NOTIFICATIONS = "notifications",
+  NOTIFICATION = "notification",
   JOB_CARD = "job_card",
   JOB_CATEGORY = "job_category",
   JOB_DETAIL = "job_detail",

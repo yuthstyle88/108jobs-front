@@ -40,7 +40,8 @@ export type LanguageDataType = Partial<
     JobCategoryLanguage &
     JobDetailLanguage &
     TermAndConditionLanguage &
-    CategoryFooterLanguage
+    CategoryFooterLanguage &
+    JobNotification
 >;
 export interface GlobalLanguage {
   labelEmploymentButton: string;
@@ -1675,5 +1676,28 @@ export type CategoryFooterLanguage = {
   howToHireSteps3: string;
 };
 
-
-
+export type JobNotification = {
+  verificationEmailSent: string;
+  registrationRequestProcessing: string;
+  profileUpdateNotAvailableSuccess: string;
+  registrationRequestSubmitted: string;
+  reviewPostCommentSuccess: string;
+  loginError: string;
+  reviewDeleteCommentSuccess: string;
+  serviceShowJobSuccess: string;
+  invalidLoginOccurred: string;
+  invalidTotpCode: string;
+  reviewUpdateCommentSuccess: string;
+  profileSetDefaultFail: string;
+  jobUpdateFavoriteSuccess: string;
+  profileUpdateAvailableSuccess: string;
+  profileDeleteFavoriteSuccess: string;
+  jobCreateJobBoardSuccess: string;
+  profileUpdateAvailableFail: string;
+  serviceHideJobSuccess: string;
+  oauthVerificationFailed: string;
+  profileUpdateFavoriteSuccess: string;
+  invalidCode: string;
+  jobDeleteFavoriteSuccess: string;
+  jobCreateJobBoardFail: string;
+};

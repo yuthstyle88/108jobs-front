@@ -36,16 +36,18 @@ export class UserService {
     showToast = true,
     sharedKey,
   }: {
-    res: LoginResponse;
+    res: LoginResponse | string;
     showToast?: boolean;
     sharedKey?: string;
   }) {
-    if (isBrowser() && res.jwt) {
+    if (isBrowser() && typeof res !== "string" && res.jwt) {
       if (showToast) {
         toast("loggedIn");
       }
       setAuthCookie(res.jwt);
       this.#setAuthInfo({sharedKey});
+    }else{
+      this.#setAuthInfo({rawCookie: res});
     }
   }
 
@@ -60,7 +62,9 @@ export class UserService {
     HttpService.client.logout();
 
     // TODO: Remove this in a few releases when this cache has been deleted from most users' browsers
-    window.caches.delete("instance-cache");
+    if (isBrowser()) {
+       window.caches?.delete?.("instance-cache");
+    }
 
     if (isAuthPath(location.pathname)) {
       location.replace("/");
@@ -101,8 +105,8 @@ export class UserService {
       return;
     }
     HttpService.client.setHeaders({ Authorization: `Bearer ${auth}` });
-    this.authInfo = { auth, claims: jwtDecode(auth), sharedKey };
-  }
+    this.authInfo = { auth, claims: jwtDecode<Claims>(auth), sharedKey }; 
+ }
 
   public get moderatesSomething(): boolean {
     return amAdmin() || (this.myUserInfo?.moderates?.length ?? 0) > 0;

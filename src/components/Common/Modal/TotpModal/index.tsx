@@ -5,6 +5,8 @@ import Modal from "@/components/ui/Modal";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QRCodeCanvas } from "qrcode.react";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 interface TotpModalProps {
     show: boolean;
@@ -17,15 +19,16 @@ interface TotpModalProps {
 const TOTP_LENGTH = 6;
 
 export default function TotpModal({
-                                      show,
-                                      onClose,
-                                      onSubmit,
-                                      type,
-                                      secretUrl,
-                                  }: TotpModalProps) {
+    show,
+    onClose,
+    onSubmit,
+    type,
+    secretUrl,
+}: TotpModalProps) {
     const [totp, setTotp] = useState("");
     const [pending, setPending] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
+    const { data: authLanguage } = useGlobalTranslate(LanguageFile.NOTIFICATION);
 
     useEffect(() => {
         if (show) {
@@ -44,7 +47,7 @@ export default function TotpModal({
         setPending(false);
 
         if (!ok) {
-            toast.error("Invalid code");
+            toast.error(authLanguage?.invalidCode);
             setTotp("");
             inputRef.current?.focus();
         }
@@ -63,7 +66,7 @@ export default function TotpModal({
         const text = e.clipboardData.getData("text").trim();
 
         if (!/^\d+$/.test(text) || text.length > TOTP_LENGTH) {
-            toast.error("Invalid TOTP code");
+            toast.error(authLanguage?.invalidTotpCode);
             clearTotp();
         } else {
             setTotp(text);
@@ -134,11 +137,10 @@ export default function TotpModal({
                         type="submit"
                         onClick={async () => await handleSubmit(totp)}
                         disabled={totp.length !== TOTP_LENGTH || pending}
-                        className={`px-4 py-2 rounded-md text-white text-sm font-medium transition-colors ${
-                            totp.length === TOTP_LENGTH && !pending
+                        className={`px-4 py-2 rounded-md text-white text-sm font-medium transition-colors ${totp.length === TOTP_LENGTH && !pending
                                 ? "bg-green-600 hover:bg-green-700"
                                 : "bg-gray-400 cursor-not-allowed"
-                        }`}
+                            }`}
                     >
                         {pending ? "Verifying..." : "Submit"}
                     </button>
