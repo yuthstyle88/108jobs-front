@@ -1,12 +1,13 @@
 "use client";
 import { createContext, useContext } from "react";
+import {VALID_LANGUAGES} from "@/constants/language";
 
 interface LanguageContextType {
   lang: string;
   setLang: (lang: string) => void;
 }
 
-const VALID_LANGUAGES = ["th", "vi", "en"];
+
 const LanguageContext = createContext<LanguageContextType | undefined>(
   undefined
 );

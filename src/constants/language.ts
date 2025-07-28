@@ -52,3 +52,5 @@ export const LANGUAGES = {
   en: { code: "en", label: "English", flag: en, numericCode: 1 },
   vi: { code: "vi", label: "Vietnam", flag: vn, numericCode: 84 },
 };
+
+export const VALID_LANGUAGES = ["th", "vi", "en"];

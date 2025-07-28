@@ -1,12 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { middleware as langMiddleware } from "./middleware-lang";
-import jwt from "jsonwebtoken";
-import { authCookieName } from "@/utils/config";
-import { RoleType } from "./lib/lemmy-js-client/dist";
-
-const TOKEN_COOKIE = "jwt";
-const JWT_SECRET = process.env.JWT_SECRET!;
-const VALID_LANGS = ["vi", "en", "th"];
+import {authCookieName} from "@/utils/config";
+import {VALID_LANGUAGES} from "@/constants/language";
+// can't import from a type
+export enum RoleType {
+  Employer = "Employer",
+  Freelancer = "Freelancer",
+}
 
 function decodePayload(token: string) {
   try {
@@ -21,7 +21,7 @@ function decodePayload(token: string) {
 }
 
 function getUserRole(req: NextRequest): RoleType | null {
-  const token = req.cookies.get(TOKEN_COOKIE)?.value;
+  const token = req.cookies.get(authCookieName)?.value;
   if (!token) return null;
 
   const payload = decodePayload(token);
@@ -82,10 +82,11 @@ export async function middleware(req: NextRequest) {
 
   const pathSegments = pathname.split("/");
   const firstSegment = pathSegments[1];
-  const langPrefix = VALID_LANGS.includes(firstSegment)
+  const langPrefix = VALID_LANGUAGES.includes(firstSegment)
     ? `/${firstSegment}`
     : "";
   const cleanPathname = pathname.replace(langPrefix, "") || "/";
+
 
   if (publicRoutes.includes(cleanPathname)) {
     return NextResponse.next();

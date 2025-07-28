@@ -1,7 +1,8 @@
 'use client'
-import {LANGUAGES} from "@/constants/language";
+import {LANGUAGES, VALID_LANGUAGES} from "@/constants/language";
+import {SupportedLang} from "@/lib/metadata";
 
-export async function getClientCurrentLanguage(): Promise<"th" | "vi" | "en" | null> {
+export async function getClientCurrentLanguage(): Promise<SupportedLang | null> {
   if (typeof window !== "undefined") {
     // ฝั่ง Client
     const cookieString = document.cookie; // อ่านคุกกี้ทั้งหมดในฝั่งลูกข่าย
@@ -12,8 +13,7 @@ export async function getClientCurrentLanguage(): Promise<"th" | "vi" | "en" | n
       })
     );
     const lang = cookieObj["current-language"]; // ดึงค่าคุกกี้ 'current-language'
-    const validLangs = ["th", "vi", "en"];
-    return lang && validLangs.includes(lang) ? (lang as "th" | "vi" | "en") : null;
+    return lang && VALID_LANGUAGES.includes(lang) ? (lang as SupportedLang) : null;
   }
   return null;
 }

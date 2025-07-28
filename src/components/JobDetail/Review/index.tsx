@@ -2,12 +2,12 @@
 import { API_ROUTES } from "@/api/endpoints";
 import CommentSection from "@/components/ReviewComment/components";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
-import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
 import { JobDetailResponse } from "@/types/jobDetail";
 import { JobDetailLanguage } from "@/types/language";
-import { ReviewResponse } from "lemmy-js-client";
 import { Coins, Handshake, MessageCircleReply, ShoppingBag } from "lucide-react";
 import Link from "next/link";
+import {ReviewResponse} from "@/lib/lemmy-js-client/src";
+import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 
 const StarIcon = ({ filled }: { filled: boolean }) => (
   <svg

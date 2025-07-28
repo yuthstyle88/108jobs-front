@@ -21,7 +21,6 @@ import { API_ROUTES } from "@/api/endpoints";
 import CategoryCardMock from "@/components/CategoryCardMock";
 import CatalogBanner from "@/components/Home/Catalog";
 import HiringSection from "@/components/Home/HiringSection";
-import IntroductionSection from "@/components/Home/IntroductionSection";
 import OfferSection from "@/components/Home/OfferSection";
 import RecommendAndReview from "@/components/Home/RecommendAndReview";
 import LocationSelectionModal from "@/components/LocationSelectionModal";
@@ -32,13 +31,14 @@ import SpAdsSlider from "@/containers/SpAdsSlider";
 import SpCatalog from "@/containers/SpCatalog";
 import SpHeader from "@/containers/SpHeader";
 import { usePublicFetch } from "@/hooks/api-hooks";
-import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import useHandleFetchError from "@/hooks/useHandleFetchError";
 import { ServiceCatalogData } from "@/types/catalog";
 import Link from "next/link";
 import { useState } from "react";
 import Error from "../error";
+import IntroductionSection from "@/components/Home/IntroductionSection";
+import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 
 const interestImages = [
   LandingImage.interest1,

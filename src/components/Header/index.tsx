@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import LanguageDropdown from "../LanguageDropDown";
-// import Loading from "../Loading";
+import Loading from "../Loading";
 import Error from "@/app/error";
 import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
 import EmployerSection from "./components/EmployerSection";
@@ -43,9 +43,8 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
 
   const { bg } = TYPES[type];
 
-  // if (isLoading) return <Loading />;
+  if (isLoading) return <Loading />;
   if (error) return <Error/>;
-
   return (
     <header
       className={`fixed top-0 z-[999] w-full transition-all duration-300 ${

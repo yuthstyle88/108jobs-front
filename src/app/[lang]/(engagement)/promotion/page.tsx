@@ -3,13 +3,14 @@ import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
-import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { faGift } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tags } from "lucide-react";
+
 import Image from "next/image";
 import { useState } from "react";
+import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 
 const Promotion = () => {
   const [selectedTab, setSelectedTab] = useState(0);

@@ -19,17 +19,17 @@ import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import JobBoardProposal from "./components/JobBoardProposal";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {UserService} from "@/services";
 
 type Props = {
   jobId: string;
 };
 
 const JobBoardDetail = ({ jobId }: Props) => {
-  const { data: session } = useSession();
-  const isGuest = !session;
-  const shouldFetchProfile = !!session;
+  const isLoggedIn = UserService.Instance.isLoggedIn;
+  const isGuest = !isLoggedIn;
+  const shouldFetchProfile = isLoggedIn;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const route = useRouter();

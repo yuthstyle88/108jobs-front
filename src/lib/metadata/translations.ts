@@ -1,3 +1,5 @@
+import {VALID_LANGUAGES} from "@/constants/language";
+
 export type SupportedLang = "th" | "en" | "vi";
 
 type SEOPageContent = {
@@ -265,5 +267,5 @@ export const seoTranslations: Record<SupportedLang, LangSeoData> = {
 };
 
 export function isSupportedLang(lang: unknown): lang is SupportedLang {
-  return typeof lang === "string" && ["th", "en", "vi"].includes(lang);
+  return typeof lang === "string" && VALID_LANGUAGES.includes(lang);
 }

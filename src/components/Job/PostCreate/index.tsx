@@ -130,7 +130,7 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} method="POST" >
-            <input type="hidden" name="languageId" value={languageId} defaultValue={1} />
+            <input type="hidden" name="languageId" value={languageId} />
             {/* Job Title */}
             <div className="mb-6">
               <label

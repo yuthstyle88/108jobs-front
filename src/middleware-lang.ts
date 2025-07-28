@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import {VALID_LANGUAGES} from "@/constants/language";
 
-const VALID_LANGS = ["vi", "en", "th"];
 const PUBLIC_FILE = /\.(.*)$/;
 
 export function middleware(request: NextRequest) {
@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
   }
 
   const firstSegment = pathname.split("/")[1];
-  if (VALID_LANGS.includes(firstSegment)) {
+  if (VALID_LANGUAGES.includes(firstSegment)) {
     return;
   }
 

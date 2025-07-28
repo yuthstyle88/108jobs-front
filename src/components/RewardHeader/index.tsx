@@ -5,8 +5,6 @@ import { ProfileImage } from "@/constants/images";
 import { LanguageFile, LANGUAGES } from "@/constants/language";
 import LanguageBottomSheet from "@/containers/SpBottomTab";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { useToggle } from "@/hooks/useToggle";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
@@ -18,12 +16,16 @@ import ProfileFreelancer from "../Header/components/ProfileFreelancer";
 import ProfileSection from "../Header/components/ProfileSection";
 import LanguageDropdown from "../LanguageDropDown";
 import Loading from "../Loading";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 
 const RewardHeader = () => {
-  const { isLoggedIn, isFreelancer } = useAuthInfo();
-
-  const { data: globalLanguageData, isLoading, error } =
-    useGlobalTranslate(LanguageFile.GLOBAL);
+  const { isLoggedIn,  isFreelancer } = useAuthInfo();
+  const {
+    data: globalLanguageData,
+    isLoading,
+    error,
+  } = useGlobalTranslate(LanguageFile.GLOBAL);
 
   const [showLang, setShowLang] = useState(false);
   const { lang } = useLanguage();

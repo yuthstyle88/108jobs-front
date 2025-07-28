@@ -3,8 +3,8 @@ import { generateLocalizedMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import "../globals.css";
+import {VALID_LANGUAGES} from "@/constants/language";
 
-const VALID_LANGS = ["th", "en", "vi"];
 
 export async function generateMetadata({
   params,
@@ -24,7 +24,7 @@ export default async function LangLayout({
 }) {
   const { lang } = await params;
 
-  if (!VALID_LANGS.includes(lang)) {
+  if (!VALID_LANGUAGES.includes(lang)) {
     notFound();
   }
 

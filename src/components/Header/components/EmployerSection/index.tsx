@@ -23,6 +23,9 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
 
   const {profileData, isLoadingProfile } = useMyUser();
   const person = profileData?.localUserView?.person;
+  if (!globalLanguageData || isLoadingProfile || !profileData) {
+    return <AvatarSkeleton />; // หรือ null หรือ loading UI
+  }
   return (
     <div className="flex items-center gap-4 h-full">
       <div className="group">

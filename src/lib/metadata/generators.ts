@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { getCurrentLanguage } from "@/actions/getCurrentLanguage";
-import {
-  seoTranslations,
-  isSupportedLang,
-  SupportedLang,
-} from "./translations";
+import { seoTranslations, isSupportedLang, SupportedLang } from "./translations";
 
 type PageContent = { title: string; description: string };
 type PageKey = {
@@ -27,15 +23,22 @@ export async function generateLocalizedMetadata(
       ? t[pageKeyOrContent]
       : pageKeyOrContent;
 
+  if (!page) {
+    throw new Error(`Page content missing or invalid for key: ${pageKeyOrContent}`);
+  }
+
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://fastwork.co";
+
   return {
-    metadataBase: new URL("https://fastwork.co"),
+    metadataBase: new URL(BASE_URL),
     applicationName: "Fastjob.co",
     title: page.title,
     description: page.description,
     openGraph: {
+      ...overrides?.openGraph,
       title: page.title,
       description: page.description,
-      url: overrides?.openGraph?.url ?? "https://fastwork.co",
+      url: overrides?.openGraph?.url ?? BASE_URL,
       siteName: "Fastjob.co",
       images: [
         {
@@ -47,14 +50,13 @@ export async function generateLocalizedMetadata(
       ],
       type: "website",
       locale: t.locale,
-      ...overrides?.openGraph,
     },
     alternates: {
-      canonical: overrides?.alternates?.canonical ?? "https://fastwork.co",
+      canonical: overrides?.alternates?.canonical ?? BASE_URL,
       languages: {
-        th: `https://fastwork.co/th`,
-        en: `https://fastwork.co/en`,
-        vi: `https://fastwork.co/vi`,
+        th: `${BASE_URL}/th`,
+        en: `${BASE_URL}/en`,
+        vi: `${BASE_URL}/vi`,
       },
     },
     referrer: "strict-origin-when-cross-origin",

@@ -1,31 +1,36 @@
 "use client";
 import { LANGUAGES } from "@/constants/language";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { UserService } from "@/services";
 import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CircleUserRound, Grip, House, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import LanguageBottomSheet from "../SpBottomTab";
 import SPSearch from "./components/SPSearch";
 import SpUserAvatar from "./components/SpUserProfile";
-import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
+import {UserService} from "@/services";
 
 type SpHeaderProps = {
   showSearch?: boolean;
 };
 
 const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
-  const { isLoggedIn } = useAuthInfo();
+  const [isMounted, setIsMounted] = useState(false);
+  const isLoggedIn = UserService.Instance.isLoggedIn;
   const pathname = usePathname();
 
   const [showLang, setShowLang] = useState(false);
   const { lang } = useLanguage();
   const currentLang = LANGUAGES[lang as keyof typeof LANGUAGES];
-
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  if (!isMounted) return null;
+  if (!isLoggedIn) return null;
+  if (isLoggedIn && pathname === `/${lang}/login`) {}
   return (
     <header
       style={{ backgroundColor: "#1754b0" }}
@@ -35,29 +40,33 @@ const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
         <div className="flex items-center w-full md:w-auto">
           <Link prefetch={false}
             href="/"
-            className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${pathname === `/${lang}` ? "bg-primary" : ""
-              }`}
+            className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${
+              pathname === `/${lang}` ? "bg-primary" : ""
+            }`}
           >
             <House className="w-[27px] h-full mx-2 py-1" />
           </Link>
           <Link prefetch={false}
             href="/categories/popular-service"
-            className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${pathname === `/${lang}/categories/popular-service` ? "bg-primary" : ""
-              }`}
+            className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${
+              pathname === `/${lang}/categories/popular-service` ? "bg-primary" : ""
+            }`}
           >
             <Grip className="w-[27px] h-full mx-2 py-1" />
           </Link>
           <Link prefetch={false}
             href="/job/search"
-            className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${pathname === `/${lang}/job/search` ? "bg-primary" : ""
-              }`}
+            className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${
+              pathname === `/${lang}/job/search` ? "bg-primary" : ""
+            }`}
           >
             <Search className="w-[27px] h-full mx-2 py-1" />
           </Link>
           <Link prefetch={false}
             href="/job-board"
-            className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${pathname === `/${lang}/job-board` ? "bg-primary" : ""
-              }`}
+            className={`flex-1 flex items-center justify-center p-2 text-white cursor-pointer ${
+              pathname === `/${lang}/job-board` ? "bg-primary" : ""
+            }`}
           >
             <FontAwesomeIcon
               icon={faBullhorn}
@@ -89,7 +98,7 @@ const SpHeader = ({ showSearch = true }: SpHeaderProps) => {
           )}
         </div>
         {showSearch && (
-          <SPSearch />
+          <SPSearch/>
         )}
       </nav>
       <LanguageBottomSheet open={showLang} onClose={() => setShowLang(false)} />

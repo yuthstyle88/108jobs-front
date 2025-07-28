@@ -3,7 +3,6 @@ import { Kanit } from "next/font/google";
 import { Toaster } from "sonner";
 import FontAwesomeConfig from "./fontawesome";
 import "./globals.css";
-import { Providers } from "./providers";
 import { generateLocalizedMetadata } from "@/lib/metadata";
 import React from "react";
 import isoDataInitializer from "@/utils/iso-data-Initializer";
