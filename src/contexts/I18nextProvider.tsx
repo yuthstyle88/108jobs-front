@@ -2,13 +2,13 @@
 
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@/utils/i18n';
-import { useLanguageStore } from "@/store/useLanguageStore";
 import { I18NextService } from "@/services/I18NextService";
 import { useEffect } from "react";
+import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  const { languageData } = useLanguageStore();
-  const currentLang = languageData?.authen?.lang || "en";
+  const { lang } = useAuthInfo()
+  const currentLang = lang || "en";
 
   useEffect(() => {
     if (I18NextService.i18n.language !== currentLang) {

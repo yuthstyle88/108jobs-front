@@ -14,6 +14,7 @@ interface Claims {
   iat: number;
   email: string;
   role: string;
+  lang: string;
 }
 
 interface AuthInfo {
@@ -26,9 +27,14 @@ export class UserService {
   static #instance: UserService;
   public myUserInfo?: MyUserInfo;
   public authInfo?: AuthInfo;
+  public currentLanguage: string = "en";
 
   private constructor() {
     this.#setAuthInfo();
+  }
+
+  get getLanguage(): string {
+    return this.authInfo?.claims?.lang || this.currentLanguage;
   }
 
   public login({
@@ -107,11 +113,15 @@ export class UserService {
     if (!auth) {
       HttpService.client.removeHeader?.("Authorization");
       this.authInfo = undefined;
+      this.currentLanguage = "en";
+
       return;
     }
     HttpService.client.setHeaders({ Authorization: `Bearer ${auth}` });
-    this.authInfo = { auth, claims: jwtDecode<Claims>(auth), sharedKey }; 
- }
+    const claims = jwtDecode<Claims>(auth);
+    this.authInfo = { auth, claims, sharedKey };
+    this.currentLanguage = claims?.lang || "en";
+  }
 
   public get moderatesSomething(): boolean {
     return amAdmin() || (this.myUserInfo?.moderates?.length ?? 0) > 0;

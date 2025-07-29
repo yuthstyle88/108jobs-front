@@ -9,5 +9,6 @@ export function useAuthInfo() {
     role: auth.authInfo?.claims?.role as RoleType | undefined,
     isEmployer: auth.authInfo?.claims?.role === RoleType.Employer,
     isFreelancer: auth.authInfo?.claims?.role === RoleType.Freelancer,
+    lang: auth.getLanguage,
   };
 }
