@@ -38,8 +38,9 @@ import Link from "next/link";
 import { useState } from "react";
 import Error from "../error";
 import IntroductionSection from "@/components/Home/IntroductionSection";
-import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
+import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
 import Loading from "@/components/Loading";
+import { useTranslation } from "react-i18next";
 
 const interestImages = [
   LandingImage.interest1,
@@ -72,6 +73,9 @@ const CustomNavigation = () => {
 
 export default function Home() {
   const { isLoggedIn } = useAuthInfo();
+  const { t } = useTranslation(LanguageFile.HOME);
+  console.log("translate", t("button_login_google"));
+
   const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
   const [expanded, setExpanded] = useState(false);
   const [isOpenLocationSelection, setIsOpenLocationSelection] = useState(false);
@@ -112,11 +116,11 @@ export default function Home() {
         <section className="hidden sm:block h-auto header-gradient pt-[6.5rem] md:pt-[4.5rem]">
           <div className="pt-[3rem] pb-[8rem] flex justify-center flex-col gap-4 text-center">
             <h1 className="text-[24px] font-medium text-white">
-              {homeLanguageData?.titleBannerHomePage1}
+              {t("title_banner_home_page_1")}
             </h1>
             <TypingText />
             <p className="text-[18px] font-medium">
-              {homeLanguageData?.titleBannerHomePage2}
+              {t("title_banner_home_page_2")}
             </p>
             <SearchInput language={globalLanguageData} />
           </div>
@@ -145,7 +149,7 @@ export default function Home() {
         <section className="grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3">
             <h2 className="home-title-head text-[18px] sm:text-[2.25rem] pb-4">
-              {homeLanguageData?.labelRecommendSection}
+              {t("label_recommend_section")}
             </h2>
           </div>
         </section>
@@ -184,7 +188,7 @@ export default function Home() {
 
         <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-            {homeLanguageData?.titlePopularFreelancers}
+            {t("title_popular_freelancers")}
           </div>
         </section>
 
@@ -218,7 +222,7 @@ export default function Home() {
 
         <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-            {homeLanguageData?.titleAstrologyFreelancers}
+            {t("title_astrology_freelancers")}
           </div>
         </section>
 
@@ -252,7 +256,7 @@ export default function Home() {
 
         <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-            {homeLanguageData?.titleLogoDesignFreelancers}
+            {t("title_logo_design_freelancers")}
           </div>
         </section>
 
@@ -307,10 +311,10 @@ export default function Home() {
             <div className="flex items-center pl-[2rem]">
               <div>
                 <h4 className="text-black text-[1.125rem] font-[500] leading-[20.7px] flex items-center font-[Kanit, -apple-system, system-ui, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', sans-serif]">
-                  {homeLanguageData?.buttonDownloadApp}
+                  {t("button_download_app")}
                 </h4>
                 <p className="mt-[0.5rem] text-[1rem] text-black font-[Kanit, -apple-system, system-ui, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', sans-serif] leading-[1.65] m-0 p-0 block mb-[1em] mt-[1em] mx-0">
-                  {homeLanguageData?.subtitleDownloadApp}
+                   {t("subtitle_download_app")}
                 </p>
                 <div className="mt-[1.5rem] flex">
                   <div className="grid grid-cols-1 min-w-0 min-h-0 gap-4">

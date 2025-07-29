@@ -1,42 +1,43 @@
 "use client";
 import LoadingCircle from "@/components/LoadingCircle";
-import {CustomInput} from "@/components/ui/InputField";
-import {LanguageFile} from "@/constants/language";
-import {useTranslateFile} from "@/hooks/translation/useTranslateFile";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useRouter, useSearchParams} from "next/navigation";
-import React, {Component, useState} from "react";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
+import { CustomInput } from "@/components/ui/InputField";
+import { LanguageFile } from "@/constants/language";
+import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { Component, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import {
     OAuthProvider,
 } from "lemmy-js-client";
 import {
-  EMPTY_REQUEST,
-  HttpService, isSuccess,
+    EMPTY_REQUEST,
+    HttpService, isSuccess,
 } from "@/services/HttpService";
-import {setIsoData} from "@/utils/app";
+import { setIsoData } from "@/utils/app";
 
 import TotpModal from "@/components/Common/Modal/TotpModal";
-import {OAuthButtons} from "@/components/Authentication/LoginForm/oauth-provider";
-import {handleLogin, handleSubmitTotp, handleUseOAuthProvider} from "@/components/Authentication/LoginForm/handlers";
-import {LoginFormProps, LoginFormState, State, LoginProps} from "@/components/Authentication/LoginForm/interface";
-import {I18NextService} from "@/services/I18NextService";
-import {useTranslation} from "@/hooks/translation/useTranslation";
+import { OAuthButtons } from "@/components/Authentication/LoginForm/oauth-provider";
+import { handleLogin, handleSubmitTotp, handleUseOAuthProvider } from "@/components/Authentication/LoginForm/handlers";
+import { LoginFormProps, LoginFormState, State, LoginProps } from "@/components/Authentication/LoginForm/interface";
+import { I18NextService } from "@/services/I18NextService";
+import { useTranslation } from "react-i18next";
 
 
 const withHooks = (Component: any) => {
     const WrappedWithHooks = (props: any) => {
         const authen = useTranslateFile(LanguageFile.AUTHEN);
+        const { t } = useTranslation(LanguageFile.AUTHEN);
         const router = useRouter();
         const searchParams = useSearchParams();
         const redirectUrl = searchParams.get("redirect") || "/";
-      const loginSchema = z.object({
+        const loginSchema = z.object({
             usernameOrEmail: z
                 .string()
-                .min(6, I18NextService.i18n.t(`email_or_username`))
-                .max(32, I18NextService.i18n.t(`email_or_username`)),
-            password: z.string().min(6, I18NextService.i18n.t(`email_or_username`)),
+                .min(6, I18NextService.i18n.t(`username_min_6`))
+                .max(32, I18NextService.i18n.t(`username_max_32`)),
+            password: z.string().min(6, I18NextService.i18n.t(`password_min_6`)),
         });
 
         const formMethods = useForm<z.infer<typeof loginSchema>>({
@@ -67,16 +68,16 @@ const withHooks = (Component: any) => {
 
 export class LoginFormClass extends Component<
     LoginFormProps & {
-    authen: any;
-    router: any;
-    redirectUrl: string;
-    formMethods: any;
-    loginSchema: any;
-    apiError: string | null;
-    setApiError: (value: string | null) => void;
+        authen: any;
+        router: any;
+        redirectUrl: string;
+        formMethods: any;
+        loginSchema: any;
+        apiError: string | null;
+        setApiError: (value: string | null) => void;
     },
     State> {
-    private isoData  = setIsoData(this.context);
+    private isoData = setIsoData(this.context);
     private hasFetchedSite = false;
     state: State = {
         loginRes: EMPTY_REQUEST,
@@ -142,9 +143,9 @@ export class LoginFormClass extends Component<
     };
 
     render() {
-        const {switchToRegister, switchToForgotPassword, authen, formMethods} = this.props;
-        const {showPassword, oauthProviders} = this.state;
-        const {register, handleSubmit, formState: {errors, isSubmitting}} = formMethods;
+        const { switchToRegister, switchToForgotPassword, authen, formMethods } = this.props;
+        const { showPassword, oauthProviders } = this.state;
+        const { register, handleSubmit, formState: { errors, isSubmitting } } = formMethods;
 
         return (
             <div>
@@ -193,7 +194,7 @@ export class LoginFormClass extends Component<
                             disabled={isSubmitting}
                             className="submit-button py-2"
                         >
-                            {isSubmitting ? <LoadingCircle/> : authen?.buttonProceed}
+                            {isSubmitting ? <LoadingCircle /> : authen?.buttonProceed}
                         </button>
 
                         <div className="flex justify-between text-sm text-blue-600 mt-4">
@@ -213,7 +214,7 @@ export class LoginFormClass extends Component<
                             </button>
                         </div>
                     </div>
-                    <OAuthButtons providers={oauthProviders} onLogin={this.handleLoginWithProvider} label={authen?.labelOrSignInWith ?? "หรือเข้าสู่ระบบด้วย"}/>
+                    <OAuthButtons providers={oauthProviders} onLogin={this.handleLoginWithProvider} label={authen?.labelOrSignInWith ?? "หรือเข้าสู่ระบบด้วย"} />
                 </form>
             </div>
         );

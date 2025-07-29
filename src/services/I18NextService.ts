@@ -16,38 +16,35 @@ export const languages: TranslationDesc[] = [
   { resource: "en", code: "en", name: "English", bundled: true },
   { resource: "th", code: "th", name: "ไทย" },
   { resource: "vi", code: "vi", name: "Tiếng Việt" },
-
 ];
 
-const languageByCode = languages.reduce<Record<string, TranslationDesc>>((acc, l) => {
-  acc[l.code] = l;
-  return acc;
-}, {});
-
+const languageByCode = languages.reduce<Record<string, TranslationDesc>>(
+  (acc, l) => {
+    acc[l.code] = l;
+    return acc;
+  },
+  {}
+);
 
 // Use pt-BR for users with removed interface language pt_BR.
 languageByCode["en_US"] = languageByCode["en-US"];
 
 async function load(translation: TranslationDesc): Promise<Resource> {
-  const { resource } = translation;
-  return import(
-    /* webpackChunkName: `translation-[request]`  */
-    `../translations/${resource}`
-  ).then(x => x[resource]);
+  return import(`@/i18n/website/en/${translation.resource}.json`);
 }
 
 export async function verifyTranslationImports(): Promise<ImportReport> {
   const report = new ImportReport();
-  const promises = languages.map(lang =>
+  const promises = languages.map((lang) =>
     load(lang)
-      .then(x => {
+      .then((x) => {
         if (x && x["translation"]) {
           report.success.push(lang.code);
         } else {
           throw "unexpected format";
         }
       })
-      .catch(err => report.error.push({ id: lang.code, error: err })),
+      .catch((err) => report.error.push({ id: lang.code, error: err }))
   );
   await Promise.all(promises);
   return report;
@@ -68,7 +65,7 @@ export function pickTranslations(lang: string): TranslationDesc[] | undefined {
 }
 
 export function findTranslationChunkNames(
-  languages: readonly string[],
+  languages: readonly string[]
 ): string[] {
   for (const lang of languages) {
     const translations = pickTranslations(lang);
@@ -76,14 +73,14 @@ export function findTranslationChunkNames(
       continue;
     }
     return translations
-      .filter(x => !x.bundled)
-      .map(x => `translation-${x.resource}`);
+      .filter((x) => !x.bundled)
+      .map((x) => `translation-${x.resource}`);
   }
   return [];
 }
 
 export async function loadUserLanguage() {
-  await new Promise(r => I18NextService.i18n.changeLanguage(undefined, r));
+  await new Promise((r) => I18NextService.i18n.changeLanguage(undefined, r));
   await setupDateFns();
 }
 
@@ -131,19 +128,10 @@ class LazyLoader implements Omit<BackendModule, "type"> {
   init() {}
 
   read(language: string, namespace: string, cb: ReadCallback): void {
-    const translation: TranslationDesc = languageByCode[language];
-    if (!translation) {
-      cb(new Error(`No translation found: ${language} ${namespace}`), false);
-      return;
-    }
-    load(translation)
-      .then(data => {
-        const resKeys = data && data[namespace];
-        if (!resKeys) throw Error(`Failed loading: ${language} ${namespace}`);
-        cb(null, resKeys);
-      })
-      .catch(err => cb(err, false));
-  }
+  import(`@/i18n/website/${language}/${namespace}.json`)
+    .then((data) => cb(null, data))
+    .catch((err) => cb(err, false));
+}
 }
 
 export class I18NextService {
@@ -158,11 +146,16 @@ export class I18NextService {
       .init({
         debug: false,
         compatibilityJSON: "v4",
-        supportedLngs: languages.map(l => l.code),
+        supportedLngs: languages.map((l) => l.code),
         nonExplicitSupportedLngs: true,
         load: "all",
         // initImmediate: false,
         fallbackLng: "en",
+        ns: [
+          "authen",
+          "error",
+          "home",
+        ],
         resources: { en } as Resource,
         interpolation: { format },
         partialBundledLanguages: true,

@@ -23,7 +23,7 @@ const FreelancerSession = ({
   globalLanguageData,
 }: FreelancerProps) => {
 
-  const { person} = useMyUser();
+  const { person } = useMyUser();
 
   const { isOpen, toggle, close } = useToggle();
 
@@ -85,16 +85,16 @@ const FreelancerSession = ({
           className="flex items-center justify-center gap-2 "
         >
           <div className="flex items-center w-12 h-12 rounded-full overflow-hidden bg-white">
-          ( person && (
-                <Image
-                  src={ProfileImage.avatar}
-                  alt="avatar"
-                  className="w-full h-full object-cover object-center"
-                  width={48}
-                  height={48}
-                />
-              )
+            {person && (
+              <Image
+                src={ProfileImage.avatar}
+                alt="avatar"
+                className="w-full h-full object-cover object-center"
+                width={48}
+                height={48}
+              />
             )
+            }
           </div>
           <FontAwesomeIcon
             icon={faChevronDown}
