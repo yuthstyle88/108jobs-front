@@ -49,7 +49,7 @@ const withHooks = (Component: any) => {
         return (
             <Component
                 {...props}
-                authen={authen}
+                t={t}
                 router={router}
                 redirectUrl={redirectUrl}
                 formMethods={formMethods}
@@ -68,7 +68,7 @@ const withHooks = (Component: any) => {
 
 export class LoginFormClass extends Component<
     LoginFormProps & {
-        authen: any;
+        t: (key: string) => string;
         router: any;
         redirectUrl: string;
         formMethods: any;
@@ -143,7 +143,7 @@ export class LoginFormClass extends Component<
     };
 
     render() {
-        const { switchToRegister, switchToForgotPassword, authen, formMethods } = this.props;
+        const { switchToRegister, switchToForgotPassword, t, formMethods } = this.props;
         const { showPassword, oauthProviders } = this.state;
         const { register, handleSubmit, formState: { errors, isSubmitting } } = formMethods;
 
@@ -170,20 +170,20 @@ export class LoginFormClass extends Component<
                     )}
 
                     <CustomInput
-                        label={authen?.labelUsernameOrEmail}
+                        label={t("label_username_or_email")}
                         name="usernameOrEmail"
                         register={register("usernameOrEmail")}
                         error={errors.usernameOrEmail?.message}
-                        placeholder={authen?.placeholderUsernameOrEmail}
+                        placeholder={t("placeholder_username_or_email")}
                     />
 
                     <CustomInput
-                        label={authen?.labelPassword}
+                        label={t("label_password")}
                         name="password"
                         type="password"
                         register={register("password")}
                         error={errors.password?.message}
-                        placeholder={authen?.placeholderPassword}
+                        placeholder={t("placeholder_password")}
                         showPassword={showPassword}
                         toggleShowPassword={this.toggleShowPassword}
                     />
@@ -194,7 +194,7 @@ export class LoginFormClass extends Component<
                             disabled={isSubmitting}
                             className="submit-button py-2"
                         >
-                            {isSubmitting ? <LoadingCircle /> : authen?.buttonProceed}
+                            {isSubmitting ? <LoadingCircle /> : t("button_proceed")}
                         </button>
 
                         <div className="flex justify-between text-sm text-blue-600 mt-4">
@@ -203,18 +203,18 @@ export class LoginFormClass extends Component<
                                 onClick={switchToRegister}
                                 className="hover:underline"
                             >
-                                {authen?.linkCreateAccount}
+                                {t("link_create_account")}
                             </button>
                             <button
                                 type="button"
                                 onClick={switchToForgotPassword}
                                 className="hover:underline"
                             >
-                                {authen?.linkForgotPassword}
+                                {t("link_forgot_password")}
                             </button>
                         </div>
                     </div>
-                    <OAuthButtons providers={oauthProviders} onLogin={this.handleLoginWithProvider} label={authen?.labelOrSignInWith ?? "หรือเข้าสู่ระบบด้วย"} />
+                    <OAuthButtons providers={oauthProviders} onLogin={this.handleLoginWithProvider} label={t("label_or_sign_in_with")} />
                 </form>
             </div>
         );

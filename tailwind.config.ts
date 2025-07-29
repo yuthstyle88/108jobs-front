@@ -53,16 +53,16 @@ const config: Config = {
       },
       boxShadow: {
         "panel": "0 0 1.5rem 0 rgba(25,72,142,.15)",
-        "mega-menu": "0 1px 1px hsl(333deg 0% 50% / 15%), 0 2px 2px hsl(333deg 0% 50% / 15%), ...",
+        "mega-menu": "0 1px 1px hsl(333deg 0% 50% / 15%), 0 2px 2px hsl(333deg 0% 50% / 15%), 0 4px 4px hsl(333deg 0% 50% / 15%), 0 8px 8px hsl(333deg 0% 50% / 15%), 0 16px 16px hsl(333deg 0% 50% / 15%), 0 32px 32px hsl(333deg 0% 50% / 15%), 0 64px 64px hsl(333deg 0% 50% / 15%)",
         "category-menu": "0 4px 12px 0 rgba(43, 43, 43, .1)",
         "sub-menu": "0 0 1.5rem 0 rgba(25, 72, 142, .15)",
         "toggle": "0 0 7px rgba(0, 0, 0, .5)",
-        "job-card": "0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),...",
+        "job-card": "0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),0 4px 4px hsl(333deg 0% 50% /7.5%),0 8px 8px hsl(333deg 0% 50% /7.5%),0 16px 16px hsl(333deg 0% 50% /7.5%)",
         "filter-section": "0 4px 12px 0 rgba(43, 43, 43, .1)",
         "input": "0 0 0 .175em hsl(5 85% 94%)",
         "input-shadow": "0 0 0 .175em hsl(5 85% 94%)", // คงชื่อเดิมในรูปแบบใหม่
-        "recipe": "0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),...",
-        "recipe-shadow": "0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),...", // คงชื่อเดิมในรูปแบบใหม่
+        "recipe": "0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),0 4px 4px hsl(333deg 0% 50% /7.5%),0 8px 8px hsl(333deg 0% 50% /7.5%),0 16px 16px hsl(333deg 0% 50% /7.5%)",
+        "recipe-shadow": "0 1px 1px hsl(333deg 0% 50% /7.5%),0 2px 2px hsl(333deg 0% 50% /7.5%),0 4px 4px hsl(333deg 0% 50% /7.5%),0 8px 8px hsl(333deg 0% 50% /7.5%),0 16px 16px hsl(333deg 0% 50% /7.5%)", // คงชื่อเดิมในรูปแบบใหม่
         "member-ship": "0 10px 40px -4px rgba(19, 55, 109, 0.08), 0 8px 22px -6px rgba(19, 55, 109, 0.1);",
         "member-ship-shadow": "0 10px 40px -4px rgba(19, 55, 109, 0.08), 0 8px 22px -6px rgba(19, 55, 109, 0.1);", // คงชื่อเดิมในรูปแบบใหม่
         "top-work": "0 0 1.5rem 0 rgba(24, 85, 184, .25);",
@@ -71,8 +71,8 @@ const config: Config = {
         "review-shadow": "0 0 1.5rem 0 rgba(24, 85, 184, .1);", // คงชื่อเดิมในรูปแบบใหม่
         "how": "0 8px 24px -4px #13376d0a,0 7px 12px -6px #13376d0f",
         "how-shadow": "0 8px 24px -4px #13376d0a,0 7px 12px -6px #13376d0f", // คงชื่อเดิมในรูปแบบใหม่
-        "job-board": "0 1px 1px hsl(333deg 0% 50% /5%),0 2px 2px hsl(333deg 0% 50% /5%),...",
-        "job-board-shadow": "0 1px 1px hsl(333deg 0% 50% /5%),0 2px 2px hsl(333deg 0% 50% /5%),...", // คงชื่อเดิมในรูปแบบใหม่
+        "job-board": "0 1px 1px hsl(333deg 0% 50% /5%),0 2px 2px hsl(333deg 0% 50% /5%),0 4px 4px hsl(333deg 0% 50% /5%),0 8px 8px hsl(333deg 0% 50% /5%)",
+        "job-board-shadow": "0 1px 1px hsl(333deg 0% 50% /5%),0 2px 2px hsl(333deg 0% 50% /5%),0 4px 4px hsl(333deg 0% 50% /5%),0 8px 8px hsl(333deg 0% 50% /5%)", // คงชื่อเดิมในรูปแบบใหม่
       } as Record<string, string>,
       borderWidth: {
         1: "1px",
