@@ -32,11 +32,10 @@ const RewardHeader = () => {
   const { isOpen, toggle, close } = useToggle();
   const currentLang = LANGUAGES[lang as keyof typeof LANGUAGES];
 
-  const { isErrorProfile, profileData, isLoadingProfile } = useMyUser();
-  const person = profileData?.localUserView.person;
+  const { person } = useMyUser();
 
-  if (isLoadingProfile) return <Loading />;
-  if (isErrorProfile) return <Error />;
+  if (isLoading) return <Loading />;
+  if (error) return <Error />;
 
   return (
     <header className="sticky top-0 z-[999] w-full transition-all duration-300 bg-transparent">

@@ -7,6 +7,7 @@ import { generateLocalizedMetadata } from "@/lib/metadata";
 import React from "react";
 import isoDataInitializer from "@/utils/iso-data-Initializer";
 import {ClientSWRProvider} from "@/components/ClientSWRProvider";
+import {GlobalLoaderProvider} from "@/contexts/GlobalLoaderContext";
 
 // Optimize font loading with display swap and preload
 const kanit = Kanit({
@@ -44,14 +45,14 @@ export default async function RootLayout({
           __html: `window.isoData = ${JSON.stringify(isoData)};`,
         }}
       />
-      {/* <Providers> */}
-        <ClientSWRProvider>
+      <GlobalLoaderProvider>
+      <ClientSWRProvider>
           <Toaster richColors closeButton position="top-right"/>
           <LanguageProvider initialLang="th">
             {children}
           </LanguageProvider>
         </ClientSWRProvider>
-      {/* </Providers> */}
+      </GlobalLoaderProvider>
       </body>
     </html>
   );

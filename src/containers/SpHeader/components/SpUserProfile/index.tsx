@@ -9,8 +9,7 @@ import { usePathname } from "next/navigation";
 const SpUserAvatar = () => {
   const pathname = usePathname();
   const { lang } = useLanguage();
-  const {profileData, isLoadingProfile ,isErrorProfile} = useMyUser();
-  const person = profileData?.localUserView?.person;
+  const {person} = useMyUser();
 
   return (
     <Link prefetch={false}

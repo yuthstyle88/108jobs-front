@@ -33,8 +33,8 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 const MyServices = () => {
   const { successMessage } = useNotification();
 
-  const { profileState, profileData, isLoadingProfile, isErrorProfile } = useMyUser();
-  const person = profileData?.localUserView.person;
+  const { profileState, person } = useMyUser();
+
   const notVerified = person?.isVerified === "Pending";
 
   const {
@@ -100,7 +100,7 @@ const MyServices = () => {
     }
   };
 
-  if (isLoading || languageLoading || isLoadingProfile) return <Loading />;
+  if (isLoading || languageLoading ) return <Loading />;
   if (error) return <Error/>;
 
   return (

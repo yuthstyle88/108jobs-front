@@ -39,6 +39,7 @@ import { useState } from "react";
 import Error from "../error";
 import IntroductionSection from "@/components/Home/IntroductionSection";
 import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
+import Loading from "@/components/Loading";
 
 const interestImages = [
   LandingImage.interest1,
@@ -94,7 +95,7 @@ export default function Home() {
   const activeCatalog = serviceCatalogs[activeCatalogIndex];
 
   const errorMsg = useHandleFetchError(error || homeError);
-  // if (isLoading || homeLoading || isCatalogLoading) return <Loading />;
+  if (isLoading || homeLoading || isCatalogLoading) return <Loading />;
 
   if (errorMsg) return <Error message={errorMsg} />;
 

@@ -18,8 +18,8 @@ import {WorkExperience, Skill, LanguageSkill, Education, Certificate, Person} fr
 import {getProfileData} from "@/utils/getProfileData";
 
 const CurrentProfileFreelance = () => {
-  const { profileState, profileData, isLoadingProfile, mutate } = useMyUser();
-  const person = profileData?.localUserView?.person;
+  const { profileState, person} = useMyUser();
+
   const { data: goToProfileLanguage } = useGlobalTranslate(
     LanguageFile.GO_TO_PROFILE
   );
@@ -34,9 +34,6 @@ const CurrentProfileFreelance = () => {
       setIsClamped(el.scrollHeight > el.clientHeight);
     }
   }, [person?.bio]);
-
-  if (isLoadingProfile) return <Loading />;
-
 
   const  { educations,
     workExperience,
@@ -173,7 +170,7 @@ const CurrentProfileFreelance = () => {
                         <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
-                    {profileData && educations.length > 0 ? (
+                    {educations.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {educations.map((education: Education) => {
                           return (
@@ -211,7 +208,7 @@ const CurrentProfileFreelance = () => {
                         <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
-                    {profileData && workExperience.length > 0 ? (
+                    {workExperience.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {workExperience.map(
                           (experience: WorkExperience) => {
@@ -255,7 +252,7 @@ const CurrentProfileFreelance = () => {
                         <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
-                    {profileData && skill.length > 0 ? (
+                    {skill.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {skill.map((skill: Skill) => {
                           return (
@@ -294,7 +291,7 @@ const CurrentProfileFreelance = () => {
                         <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
-                    {profileData && language.length > 0 ? (
+                    {language.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {language.map(
                           (language: LanguageSkill) => {
@@ -335,7 +332,7 @@ const CurrentProfileFreelance = () => {
                         <SquarePen className="w-[16px] text-gray-500" />
                       </Link>
                     </div>
-                    {profileData && certAndAward.length > 0 ? (
+                    {certAndAward.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {certAndAward.map(
                           (cert: Certificate) => {

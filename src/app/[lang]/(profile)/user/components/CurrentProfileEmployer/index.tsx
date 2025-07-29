@@ -1,5 +1,4 @@
 "use client";
-import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
@@ -15,8 +14,7 @@ import { useEffect, useRef, useState } from "react";
 
 const CurrentProfileEmployer = () => {
 
-  const { profileState, profileData, isLoadingProfile, mutate } = useMyUser();
-  const person = profileData?.localUserView?.person;
+  const { profileState, person } = useMyUser();
 
   const { data: goToProfileLanguage } = useGlobalTranslate(
     LanguageFile.GO_TO_PROFILE
@@ -33,7 +31,6 @@ const CurrentProfileEmployer = () => {
     }
   }, [person?.bio]);
 
-  if (isLoadingProfile) return <Loading />;
   return (
     <main className="min-h-screen">
       <div className="relative bg-primary h-[200px]">

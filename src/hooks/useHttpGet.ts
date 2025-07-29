@@ -1,40 +1,13 @@
+import { useGlobalLoader } from "@/contexts/GlobalLoaderContext";
 import useSWR, { SWRConfiguration } from "swr";
 import {
-  callHttp,
   RequestState,
   WrappedLemmyHttp,
   Payload,
   EMPTY_REQUEST,
   REQUEST_STATE,
+  callHttp,
 } from "@/services/HttpService";
-
-/**
- * Hook ยิง GET (ใช้ SWR) แล้วจัดรูปแบบผลลัพธ์เหมือน useHttpPost
- *
- * @example
- * const { data, state, isMutating, execute } = useHttpGet("getSite", [123]);
- */
-
-/* ---------- overloads ---------- */
-export function useHttpGet<K extends keyof WrappedLemmyHttp>(
-  method: K,
-  options?: SWRConfiguration<RequestState<Payload<K>>, Error>,
-): {
-  state: RequestState<Payload<K>>;
-  data: Payload<K> | null;
-  execute: () => Promise<RequestState<Payload<K>> | undefined>;
-  isMutating: boolean;
-};
-export function useHttpGet<K extends keyof WrappedLemmyHttp>(
-  method: K,
-  args: Parameters<WrappedLemmyHttp[K]>,
-  options?: SWRConfiguration<RequestState<Payload<K>>, Error>,
-): {
-  state: RequestState<Payload<K>>;
-  data: Payload<K> | null;
-  execute: () => Promise<RequestState<Payload<K>> | undefined>;
-  isMutating: boolean;
-};
 
 /* ---------- implementation ---------- */
 export function useHttpGet<K extends keyof WrappedLemmyHttp>(
@@ -44,6 +17,8 @@ export function useHttpGet<K extends keyof WrappedLemmyHttp>(
     | SWRConfiguration<RequestState<Payload<K>>, Error>,
   maybeOptions?: SWRConfiguration<RequestState<Payload<K>>, Error>,
 ) {
+  const { setLoading } = useGlobalLoader(); // ใช้ Loader
+
   /* ---------- resolve param / options ---------- */
   const args = Array.isArray(argsOrOptions)
     ? (argsOrOptions as Parameters<WrappedLemmyHttp[K]>)
@@ -52,14 +27,15 @@ export function useHttpGet<K extends keyof WrappedLemmyHttp>(
   const options = Array.isArray(argsOrOptions)
     ? maybeOptions
     : (argsOrOptions as SWRConfiguration<
-        RequestState<Payload<K>>,
-        Error
-      > | undefined);
+      RequestState<Payload<K>>,
+      Error
+    > | undefined);
 
   /* ---------- key / fetcher ---------- */
   const key = [method, ...(args ?? [])] as const;
 
   const fetcher = async () => {
+    setLoading(true); // แสดง Loader
     try {
       const typedArgs = (args ?? []) as Parameters<WrappedLemmyHttp[K]>;
       return (await callHttp(
@@ -71,6 +47,8 @@ export function useHttpGet<K extends keyof WrappedLemmyHttp>(
         state: REQUEST_STATE.FAILED,
         err: err instanceof Error ? err : new Error("Unknown error"),
       } as RequestState<Payload<K>>;
+    } finally {
+      setLoading(false); // ปิด Loader
     }
   };
 

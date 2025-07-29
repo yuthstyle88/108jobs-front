@@ -1,6 +1,7 @@
 import { LemmyHttp } from "lemmy-js-client";
 import { getHttpBase } from "@/utils/env";
 import {UserService} from "@/services/UserService";
+import {useGlobalLoader} from "@/contexts/GlobalLoaderContext";
 
 /* ---------- static states ----------------------------------- */
 export const EMPTY_REQUEST = {

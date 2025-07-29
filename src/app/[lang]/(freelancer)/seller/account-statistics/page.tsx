@@ -11,8 +11,8 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const AccountStats = () => {
 
-  const { profileState, profileData, isLoadingProfile, mutate } = useMyUser();
-  const person = profileData?.localUserView.person;
+  const { profileState, person } = useMyUser();
+
   const {
     data: sellerAccStatsLanguage,
     isLoading,
@@ -21,7 +21,7 @@ const AccountStats = () => {
 
   const daysOfWeek = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
-  if (isLoadingProfile) return <Loading />;
+  if (isLoading) return <Loading />;
   if (error) return <Error/>;
 
   return (

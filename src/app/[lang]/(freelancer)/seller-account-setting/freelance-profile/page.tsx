@@ -1,7 +1,5 @@
 "use client";
-import Error from "@/app/error";
 import ImageUploadModal from "@/components/AvatarUploadModal";
-import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
@@ -17,9 +15,8 @@ const AccountSettings = () => {
   const { execute: uploadImage, isMutating: isUploadMuting } =
     useHttpPost("uploadImage");
 
-  const { profileState, profileData, mutate } = useMyUser();
-  // const localUser = profileData?.localUserView?.localUser;
-  const person = profileData?.localUserView?.person;
+  const { profileState, person , card, localUser} = useMyUser();
+
   const { data: sellerProfileLanguage } = useGlobalTranslate(
     LanguageFile.SELLER_FREELANCER_PROFILE
   );
@@ -44,16 +41,13 @@ const AccountSettings = () => {
     onSubmit,
     watch,
   } = useProfileForm(
-    profileData,
+    person,
+    localUser,
+    card,
     selectedImage,
     uploadImage,
-    mutate,   // ส่งฟังก์ชันรีเฟรชโปรไฟล์
     setSelectedImage
   );
-
-
-  if (profileState === "loading") return <Loading />;
-  if (profileState === "failed") return <Error />;
 
   return (
     <form

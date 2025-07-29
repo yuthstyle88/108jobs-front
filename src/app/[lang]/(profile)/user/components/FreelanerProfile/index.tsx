@@ -17,8 +17,7 @@ import {getProfileData} from "@/utils/getProfileData";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const FreelancerProfile =  () => {
-  const { profileState, profileData, isLoadingProfile } = useMyUser();
-  const person = profileData?.localUserView?.person;
+  const { profileState, person } = useMyUser();
   const { data: goToProfileLanguage } = useGlobalTranslate(
     LanguageFile.GO_TO_PROFILE
   );
@@ -35,7 +34,6 @@ const FreelancerProfile =  () => {
     }
   }, [person?.bio]);
 
-  if (isLoadingProfile) return <Loading />;
  const  { educations,
    workExperience,
    skill,

@@ -23,7 +23,7 @@ import Link from "next/link";
 import {UserService} from "@/services";
 type ProfileFreelancerProps = {
   data: Partial<GlobalLanguage> | null | undefined;
-  profile?: Person;
+  profile: Person | null;
 };
 
 const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {

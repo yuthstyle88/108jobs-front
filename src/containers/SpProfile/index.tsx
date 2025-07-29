@@ -20,14 +20,10 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {UserService} from "@/services";
 
 const SpProfile = () => {
-  const {profileData, isLoadingProfile ,isErrorProfile} = useMyUser();
-  const person = profileData?.localUserView?.person;
-  const localUser = profileData?.localUserView?.localUser;
-  const contact = profileData?.profile?.contact;
+  const {person, localUser, contact} = useMyUser();
 
   const { lang: currentLang } = useLanguage();
   const logout = () => UserService.Instance.logout();
-  if (isLoadingProfile) return <Loading />;
 
   return (
     <main className="min-h-screen bg-white relative">

@@ -23,8 +23,7 @@ const PersonalInfo = () => {
   const { execute: uploadImage, isMutating: isUploadMuting } =
     useHttpPost("uploadImage");
 
-  const { profileState, profileData, mutate } = useMyUser();
-  const card = profileData?.profile.card;
+  const { profileState, card } = useMyUser();
 
   const { data: sellerPersonalInfoLanguage } = useGlobalTranslate(
       LanguageFile.SELLER_PERSONAL_INFO
@@ -59,7 +58,7 @@ const PersonalInfo = () => {
     isUpdateMuting,
     onSubmit,
   } = usePersonalInfoForm(
-    profileState ,
+    card,
     frontFile,
     backFile,
     frontPreview,
@@ -68,9 +67,6 @@ const PersonalInfo = () => {
     setSelectedFront,
     setSelectedBack
   );
-
-  if (profileState === "loading") return <Loading />;
-  if (profileState === "failed") return <Error />;
 
   return (
     <form

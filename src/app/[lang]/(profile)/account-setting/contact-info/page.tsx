@@ -57,9 +57,8 @@ function normalizeAddress(address: Address): AddressFormData {
 }
 
 export default function ContactPage() {
-  const { profileState, profileData, isLoadingProfile, mutate } = useMyUser();
-  const address = profileData?.profile?.address;
-  const contact = profileData?.profile?.contact;
+  const { profileState, address, contact} = useMyUser();
+
   const [isReady, setIsReady] = useState(false);
   const [defaultForeignCountry, setDefaultForeignCountry] =
     useState<string>("");
@@ -206,8 +205,7 @@ export default function ContactPage() {
       
       const responseData = await response.json();
       setUpdateAddressState({ state: "success", data: responseData });
-      
-      await mutate();
+
       successMessage("profile", "update");
       
       if (data.country !== "Thailand") {
@@ -221,7 +219,7 @@ export default function ContactPage() {
     }
   };
 
-  if (isLoading || isLoadingProfile || !isReady) return <Loading />;
+  if (isLoading || !isReady) return <Loading />;
   if (error) return <ErrorPage />;
 
   return (
@@ -503,7 +501,6 @@ export default function ContactPage() {
         isOpen={isChangeModal}
         onClose={() => setIsChangeModal(false)}
         handleConfirmChange={async () => {
-          await mutate();
           setIsConfirmChange(false);
           setIsChangeModal(false);
         }}

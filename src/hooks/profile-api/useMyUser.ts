@@ -1,11 +1,11 @@
-import { useCallback, useMemo } from "react";
 import { IsoData } from "@/utils/types";
 import { isBrowser } from "@/utils/browser";
 import { MyUserInfo } from "lemmy-js-client";
+import {REQUEST_STATE} from "@/services/HttpService";
 
 /**
- * ดึง IsoData จาก window (ฝั่งเบราว์เซอร์)  
- * หากรันบน SSR ให้คืน null เพราะ React-Server จะได้รับข้อมูลผ่าน props อยู่แล้ว
+ * ดึง IsoData จาก window (เฉพาะฝั่งเบราว์เซอร์เท่านั้น)
+ * หากรันบน SSR ให้คืนค่า null
  */
 function getIsoData(): IsoData | null {
   if (isBrowser() && (window as any).isoData) {
@@ -14,34 +14,20 @@ function getIsoData(): IsoData | null {
   return null;
 }
 
+/**
+ * Custom Hook สำหรับดึง MyUserInfo จาก isoData
+ */
 export const useMyUser = () => {
-  /* ------------------------------------------------------------------ */
-  /* 1) อ่านค่า myUserInfo ที่เซิร์ฟเวอร์ส่งมาพร้อม HTML (IsoData)    */
-  /* ------------------------------------------------------------------ */
-  const isoData = useMemo(getIsoData, []);
-  const myUserInfo: MyUserInfo | null = isoData?.myUserInfo ?? null;
-
-  /* ------------------------------------------------------------------ */
-  /* 2) เนื่องจากข้อมูลถูกอินไลน์มาพร้อม SSR แล้ว จึงไม่มีการโหลดเพิ่ม */
-  /* ------------------------------------------------------------------ */
-  const isLoadingProfile = false;
-  const isErrorProfile = null;
-
-  /* ------------------------------------------------------------------ */
-  /* 3) สำหรับกรณีต้องการรีเฟรช สามารถยิง API ตามต้องการในภายหลัง    */
-  /*    (เวอร์ชันนี้แค่ทำ no-op เพื่อให้ interface เดิมยังทำงานได้)   */
-  /* ------------------------------------------------------------------ */
-  const mutate = useCallback(async () => {
-    /* TODO: ถ้าต้องการรีเฟรชจริง สามารถเรียก HttpService.client.getMyUser() ที่นี่ */
-    console.debug("[useMyUser] mutate() ถูกเรียก แต่เวอร์ชันอ่านจาก IsoData ยังไม่รีเฟรชจาก API");
-  }, []);
-
+  const isoData = getIsoData();
+  const user: MyUserInfo | null = isoData?.myUserInfo ?? null;
+  const profileState = REQUEST_STATE.SUCCESS;
   return {
-    /* state ถูกตัดออก เพราะไม่มี Request รอบใหม่เกิดขึ้น */
-    profileState: undefined,
-    profileData: myUserInfo,
-    isErrorProfile,
-    isLoadingProfile,
-    mutate,
+    profileState,
+    person: user?.localUserView?.person || null,
+    localUser: user?.localUserView?.localUser || null,
+    contact: user?.profile?.contact || null,
+    address: user?.profile?.address || null,
+    card: user?.profile?.card || null,
+    coin: user?.profile?.coin || null,
   };
 };

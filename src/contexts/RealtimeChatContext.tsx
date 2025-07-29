@@ -43,8 +43,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [connectionError, setConnectionError] = useState(false);
   const router = useRouter();
-  const {profileData, isLoadingProfile ,isErrorProfile} = useMyUser();
-  const localUser = profileData?.localUserView?.localUser;
+  const {localUser} = useMyUser();
 
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isManuallyClosingRef = useRef(false);

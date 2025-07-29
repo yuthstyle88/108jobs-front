@@ -1,7 +1,7 @@
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
-import {MyUserInfo, ProfileData, SaveUserProfile, UploadImage, UploadImageResponse} from "lemmy-js-client";
+import {Card, LocalUser, MyUserInfo, Person, SaveUserProfile, UploadImage, UploadImageResponse} from "lemmy-js-client";
 import {useEffect, useState} from "react";
 import useNotification from "@/hooks/useNotification";
 import {HttpService,} from "@/services";
@@ -35,10 +35,11 @@ const profileSchema = z.object({
 type FormValues = z.infer<typeof profileSchema>;
 
 export const useProfileForm = (
-  profileData: MyUserInfo | null,
+  person: Person | null,
+  localUser: LocalUser | null,
+  card: Card | null,
   selectedImage: string | null,
   uploadImage: (image: UploadImage, options?: RequestOptions) => Promise<RequestState<UploadImageResponse>>,
-  mutate: () => void,
   setSelectedImage: (imageUrl: string) => void
 ) => {
   const {
@@ -50,9 +51,6 @@ export const useProfileForm = (
   } = useForm<FormValues>({
     resolver: zodResolver(profileSchema),
   });
-  const localUser = profileData?.localUserView.localUser;
-  const person = profileData?.localUserView?.person;
-  const card = profileData?.profile?.card;
   
   const [updateProfileState, setUpdateProfileState] = useState<RequestState<MyUserInfo>>(LOADING_REQUEST);
   const isUpdateMuting = updateProfileState.state === "loading";
@@ -87,7 +85,7 @@ export const useProfileForm = (
         setSelectedImage(avatarUrl || "");
       }
     },
-    [profileData, reset, setSelectedImage]);
+    [person, reset, setSelectedImage]);
 
   const onSubmit = async(formData: FormValues) => {
     try {
@@ -126,7 +124,6 @@ export const useProfileForm = (
         throw new Error('Failed to update profile');
       }
       setUpdateProfileState({ state: "success", data: response.data });
-      mutate();
       successMessage("profile", "update");
     } catch (error) {
       console.error("Update error:", error);

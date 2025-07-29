@@ -14,8 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const UserProfile = () => {
-  const { profileData, isLoadingProfile } = useMyUser();
-  const person = profileData?.localUserView?.person;
+  const { person } = useMyUser();
 
   const { data: goToProfileLanguage } = useGlobalTranslate(
     LanguageFile.GO_TO_PROFILE
@@ -32,7 +31,6 @@ const UserProfile = () => {
     }
   }, [person?.bio]);
 
-  if (isLoadingProfile) return <Loading />;
   return (
     <main className="min-h-screen">
       <div className="relative bg-primary h-[200px]">

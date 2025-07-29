@@ -1,6 +1,9 @@
 import React from "react";
+import { useGlobalLoader } from "@/contexts/GlobalLoaderContext";
+const GlobalLoader = () => {
+  const { isLoading } = useGlobalLoader();
 
-const Loading = () => {
+  if (!isLoading) return null;
   return (
     <div className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-secondary z-[9999]">
       <svg
@@ -29,4 +32,4 @@ const Loading = () => {
   );
 };
 
-export default Loading;
+export default GlobalLoader;

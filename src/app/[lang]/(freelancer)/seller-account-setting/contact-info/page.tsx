@@ -53,10 +53,7 @@ function normalizeAddress(address: RawAddress | any | undefined): AddressFormDat
 }
 
 const ContactInfo = () => {
-  const { profileState, profileData, isLoadingProfile, isErrorProfile, mutate } = useMyUser();
-
-  const contact = profileData?.profile.contact;
-  const address = profileData?.profile?.address;
+  const { profileState, contact, address } = useMyUser();
 
   const {data: sellerContactLanguage} = useGlobalTranslate(
     LanguageFile.SELLER_CONTACT_INFO
@@ -209,7 +206,6 @@ const countryOptions = useMemo(
       const responseData = await response.json();
       setUpdateAddressState({state: "success", data: responseData});
 
-      await mutate();
       successMessage("profile",
         "update");
 
@@ -232,9 +228,6 @@ const countryOptions = useMemo(
       setUpdateAddressState({state: "failed", err: error as Error});
     }
   };
-
-  if (isLoadingProfile || !isReady) return <Loading/>;
-  if (isErrorProfile) return <ErrorPage/>;
 
   return (
     <div className="bg-white rounded-md shadow-sm overflow-hidden">
@@ -492,7 +485,6 @@ const countryOptions = useMemo(
           isOpen={isChangeModal}
           onClose={() => setIsChangeModal(false)}
           handleConfirmChange={async() => {
-            await mutate();
             setIsConfirmChange(false);
             setIsChangeModal(false);
           }}

@@ -29,9 +29,7 @@ type CreateRoomData = {
 const AsideJob = ({ language, data }: AsideJobProps) => {
   const route = useRouter();
 
-  const {profileData, isLoadingProfile ,isErrorProfile} = useMyUser();
-  const localUser = profileData?.localUserView?.localUser;
-
+  const {localUser} = useMyUser();
 
   const { trigger: createRoom, isMutating } = usePrivatePost<CreateRoomData>(
     API_ROUTES.chat.createRoom

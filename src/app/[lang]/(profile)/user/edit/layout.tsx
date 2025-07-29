@@ -28,9 +28,7 @@ export default function StartSellingLayout({
     error,
   } = useGlobalTranslate(LanguageFile.PROFILE_USER_EDIT);
 
-  const { profileState, profileData } = useMyUser();
-  const person = profileData?.localUserView?.person;
-
+  const { profileState, person } = useMyUser();
   const menuItems = [
     { href: "/user/edit/education", label: userEditLanguage?.education },
     { href: "/user/edit/experience", label: userEditLanguage?.workExperience },

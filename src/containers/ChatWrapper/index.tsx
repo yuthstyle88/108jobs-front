@@ -33,8 +33,7 @@ const ChatWrapper = () => {
   const activeRoomId = params?.senderId;
   const { lang: currentLang } = useLanguage();
 
-  const {profileData, isLoadingProfile ,isErrorProfile} = useMyUser();
-  const localUser = profileData?.localUserView?.localUser;
+  const {localUser} = useMyUser();
 
   const {
     data: chatData,
@@ -68,8 +67,8 @@ const ChatWrapper = () => {
     return null;
   }
 
-  if (isLoadingProfile || isChatLoading) return <Loading />;
-  if (isErrorProfile || chatError) return <Error />;
+  if (isChatLoading) return <Loading />;
+  if (chatError) return <Error />;
 
   return (
     <div

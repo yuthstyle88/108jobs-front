@@ -1,49 +1,54 @@
 import { useMemo } from "react";
 import useSWRMutation from "swr/mutation";
 import {
-  callHttp,
   EMPTY_REQUEST,
   REQUEST_STATE,
   RequestState,
   WrappedLemmyHttp,
   Payload,
+  callHttp,
 } from "@/services/HttpService";
+import { useGlobalLoader } from "@/contexts/GlobalLoaderContext";
 
 /**
  * Hook สำหรับเรียก API แบบ imperative (POST / PUT / PATCH / DELETE)
- *   • ย้ายมาใช้ useSWRMutation เพื่อลดโค้ดจัดการ state เอง  
- *   • interface การใช้งาน (execute / isMutating / data) ยังคงเหมือนเดิม
+ * พร้อมการผนวก Global Loading
  *
  * @example
  * const { execute, data, isMutating } = useHttpPost("uploadImage");
  * await execute({ file });
  */
 export const useHttpPost = <K extends keyof WrappedLemmyHttp>(method: K) => {
+  /** ใช้ GlobalLoaderContext */
+  const { setLoading } = useGlobalLoader();
+
   /** SWR Mutation */
   const {
-    trigger,                    // ฟังก์ชันยิง request
-    data: state = EMPTY_REQUEST, // state (RequestState) ที่ SWR เก็บให้
-    isMutating,                 // กำลัง request หรือไม่
+    trigger, // ฟังก์ชันที่ใช้ยิง API
+    data: state = EMPTY_REQUEST, // State ที่ SWR เก็บให้
+    isMutating, // กำลัง execute request หรือไม่
   } = useSWRMutation<
-    RequestState<Payload<K>>,           // data ที่ SWR เก็บ
-    Error,                              // error (เรา wrap ลงใน RequestState อยู่แล้ว)
-    string,                             // key ชนิด string
-    Parameters<WrappedLemmyHttp[K]>     // arg (tuple ของพารามิเตอร์)
+    RequestState<Payload<K>>, // ค่า State ที่ SWR เก็บ
+    Error, // ประเภท Error
+    string, // Key ที่เป็น string
+    Parameters<WrappedLemmyHttp[K]> // Argument (Tuple) ที่จะส่งไป
   >(
-    // ใช้ method เป็น key เพื่อไม่ชน cache ของ method อื่น
-    `${String(method)}-http-post`,
+    `${String(method)}-http-post`, // ใช้ชื่อเมธอดเป็น Key เพื่อไม่ชน Cache ของตัวอื่น
     async (_key, { arg }) => {
+      setLoading(true); // เริ่มแสดง Global Loader
       try {
-        // callHttp จะคืนค่าเป็น RequestState<Payload<K>>
+        // เรียก API ผ่าน callHttp
         return await (callHttp(method, ...arg) as Promise<
           RequestState<Payload<K>>
         >);
       } catch (e) {
-        // แปลง error ให้อยู่ในรูป FAILED state
+        // ดักจับและแปลงข้อผิดพลาดให้อยู่ในรูป RequestState
         return {
           state: REQUEST_STATE.FAILED,
           err: e instanceof Error ? e : new Error("Unknown error"),
         } as RequestState<Payload<K>>;
+      } finally {
+        setLoading(false); // ซ่อน Global Loader
       }
     },
     {
@@ -51,7 +56,7 @@ export const useHttpPost = <K extends keyof WrappedLemmyHttp>(method: K) => {
     },
   );
 
-  /** data ที่สกัดจาก SUCCESS state */
+  /** data ที่สกัดจาก SUCCESS State */
   const data = useMemo(
     () =>
       state.state === REQUEST_STATE.SUCCESS
@@ -60,16 +65,14 @@ export const useHttpPost = <K extends keyof WrappedLemmyHttp>(method: K) => {
     [state],
   );
 
-  /** execute: adapter เพื่อคง signature เดิม (return RequestState) */
+  /** Execute Function (Trigger API) */
   const execute = (...args: Parameters<WrappedLemmyHttp[K]>) => {
     if (args.length === 0) {
-      /*  ❱ กรณีเมธอดไม่มีอาร์กิวเมนต์ (tuple = []) */
+      /* ❱ ใช้ trigger แบบไม่มี Argument */
       return (trigger as () => Promise<RequestState<Payload<K>>> )();
     }
 
-    /*  ❱ กรณีเมธอดมีอาร์กิวเมนต์  
-        – สร้าง alias ให้ trigger เป็นฟังก์ชันที่รับ tuple เดียวอย่างชัดเจน
-        – ป้องกัน TS2349 caused by ambiguous overload union            */
+    /* ❱ ใช้ trigger แบบมี Argument */
     type TriggerWithArgs = (
       arg: Parameters<WrappedLemmyHttp[K]>,
       options?: unknown
@@ -79,9 +82,9 @@ export const useHttpPost = <K extends keyof WrappedLemmyHttp>(method: K) => {
   };
 
   return {
-    state,    // RequestState (empty / loading / failed / success)
-    data,     // data ที่แปะออกเมื่อ success
-    execute,  // ฟังก์ชันยิง request
-    isMutating,
+    state, // เก็บ State ทั้งหมด (empty / loading / failed / success)
+    data, // Data ที่แปะออกเมื่อ Success
+    execute, // ฟังก์ชันที่ใช้ยิง Request
+    isMutating, // กำลังยิง Request อยู่หรือไม่
   };
 };

@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import {MyUserInfo, SaveUserProfile, UploadImage, UploadImageResponse} from "lemmy-js-client";
+import {Card, MyUserInfo, Person, SaveUserProfile, UploadImage, UploadImageResponse} from "lemmy-js-client";
 import { useEffect, useState } from "react";
 import useNotification from "@/hooks/useNotification";
 import { HttpService, } from "@/services";
@@ -16,13 +16,13 @@ interface FormValues {
 }
 
 export const useProfileForm = (
-  myUser: MyUserInfo | undefined,
+  person: Person | null,
+  card: Card | null,
   selectedImage: string | null,
   uploadImage: (
     image: UploadImage,
     options?: RequestOptions,
   ) => Promise<RequestState<UploadImageResponse>>,
-  mutate: () => void,
   setSelectedImage: (imageUrl: string) => void
 ) => {
   const {
@@ -31,8 +31,6 @@ export const useProfileForm = (
     formState: { errors, isSubmitting },
     reset,
   } = useForm<FormValues>();
-  const person = myUser?.localUserView.person;
-  const card = myUser?.profile?.card;
 
   const [updateProfileState, setUpdateProfileState] = useState<RequestState<MyUserInfo>>(LOADING_REQUEST);
   const isUpdateMuting = updateProfileState.state === "loading";
@@ -114,7 +112,6 @@ export const useProfileForm = (
       successMessage("profile", "update");
       // Fetch the latest profile data using HttpService
       // await HttpService.client.getProfile();
-      await mutate();
     } catch (error) {
       console.error("Update error:", error);
       setUpdateProfileState({ state: "failed", err: error as Error });

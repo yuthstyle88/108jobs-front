@@ -27,8 +27,8 @@ const SellerHome = () => {
     { name: "Th01 25", value: 0 },
     { name: "Th02 25", value: 0 },
   ];
-  const { profileData, isLoadingProfile } = useMyUser();
-  const person = profileData?.localUserView?.person;
+  const { person } = useMyUser();
+
 const { lang } = useLanguage();
   const {
     data: sellerOverviewLanguage,

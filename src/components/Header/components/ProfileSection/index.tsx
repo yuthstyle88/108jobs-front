@@ -22,7 +22,7 @@ import {UserService} from "@/services";
 
 type ProfileSectionProps = {
   data: Partial<GlobalLanguage> | null | undefined;
-  profile?: Person;
+  profile: Person | null;
 };
 
 const ProfileSection = ({ data, profile }: ProfileSectionProps) => {

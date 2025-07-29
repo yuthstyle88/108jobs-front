@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect, useState } from "react";
 import useNotification from "@/hooks/useNotification";
-import {ProfileData, UploadImage, UploadImageResponse} from "lemmy-js-client";
+import {Card, ProfileData, UploadImage, UploadImageResponse} from "lemmy-js-client";
 import {HttpService, isSuccess, RequestState} from "@/services/HttpService";
 import {RequestOptions} from "node:http";
 import {UpsertCard} from "lemmy-js-client";
@@ -27,7 +27,7 @@ const cardSchema = z.object({
 type FormValues = z.infer<typeof cardSchema>;
 
 export const usePersonalInfoForm = (
-  profileData: ProfileData | undefined,
+  card: Card | null,
   frontFile: File | string | null,
   backFile: File | string | null,
   frontPreview: string | null,
@@ -65,26 +65,26 @@ export const usePersonalInfoForm = (
   const { successMessage } = useNotification();
 
   useEffect(() => {
-    if (profileData) {
-      const [year, month, day] = profileData.card.birthDate?.split("-") ?? [];
+    if (card) {
+      const [year, month, day] = card.birthDate?.split("-") ?? [];
       reset({
-        title: profileData.card.title,
-        name: profileData.card.name,
-        surname: profileData.card.surname,
+        title: card.title,
+        name: card.name,
+        surname: card.surname,
         birthDay: day || "Day",
         birthMonth: month || "Month",
         birthYear: year || "Year",
-        cardNumber: profileData.card.cardNumber,
-        cardAddressDetails: profileData.card.addressDetails,
-        cardZipCode: profileData.card.zipCode,
-        cardSubdistrictOrDistrict: profileData.card.subdistrictOrDistrict,
-        cardDistrictOrSubdistrict: profileData.card.districtOrSubdistrict,
-        cardProvince: profileData.card.province,
+        cardNumber: card.cardNumber,
+        cardAddressDetails: card.addressDetails,
+        cardZipCode: card.zipCode,
+        cardSubdistrictOrDistrict: card.subdistrictOrDistrict,
+        cardDistrictOrSubdistrict: card.districtOrSubdistrict,
+        cardProvince: card.province,
       });
-      setSelectedFront(profileData.card.frontCard || "");
-      setSelectedBack(profileData.card.backCard || "");
+      setSelectedFront(card.frontCard || "");
+      setSelectedBack(card.backCard || "");
     }
-  }, [profileData, reset, setSelectedFront, setSelectedBack]);
+  }, [card, reset, setSelectedFront, setSelectedBack]);
 
   const onSubmit = async (formData: FormValues) => {
     try {
@@ -96,8 +96,8 @@ export const usePersonalInfoForm = (
         return;
       }
 
-      let frontUrl = profileData?.card.frontCard;
-      let backUrl = profileData?.card.backCard;
+      let frontUrl = card?.frontCard;
+      let backUrl = card?.backCard;
 
       if (frontFile) {
         frontUrl = await uploadSelectedImage(frontFile, uploadImage);

@@ -1,9 +1,6 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
 import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { usePrivateFetch } from "@/hooks/api-hooks";
-import { ProfileData } from "lemmy-js-client";
 import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import {
   faCalendar,
@@ -30,8 +27,7 @@ interface SellerMenuProps {
 }
 
 const SellerMenu = ({ isOpen, onClose }: SellerMenuProps) => {
-  const {profileData} = useMyUser();
-  const person = profileData?.localUserView?.person;
+  const {person} = useMyUser();
 
 const { lang } = useLanguage();
   const pathname = usePathname();

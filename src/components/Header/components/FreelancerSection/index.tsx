@@ -23,8 +23,7 @@ const FreelancerSession = ({
   globalLanguageData,
 }: FreelancerProps) => {
 
-  const { profileData, isLoadingProfile } = useMyUser();
-  const person = profileData?.localUserView?.person;
+  const { person} = useMyUser();
 
   const { isOpen, toggle, close } = useToggle();
 
@@ -86,10 +85,7 @@ const FreelancerSession = ({
           className="flex items-center justify-center gap-2 "
         >
           <div className="flex items-center w-12 h-12 rounded-full overflow-hidden bg-white">
-            {isLoadingProfile ? (
-              <AvatarSkeleton />
-            ) : (
-              profileData && (
+          ( person && (
                 <Image
                   src={ProfileImage.avatar}
                   alt="avatar"
@@ -98,7 +94,7 @@ const FreelancerSession = ({
                   height={48}
                 />
               )
-            )}
+            )
           </div>
           <FontAwesomeIcon
             icon={faChevronDown}

@@ -45,8 +45,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
     "thailand"
   );
 
-  const { profileData } = useMyUser();
-  const person = profileData?.localUserView?.person;
+  const { person } = useMyUser();
 
   const { trigger: skipAddress, isMutating: isSkipMutating } = usePrivatePost(
     API_ROUTES.profile.skipAddress

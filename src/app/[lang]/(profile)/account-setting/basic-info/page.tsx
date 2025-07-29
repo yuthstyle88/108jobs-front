@@ -22,8 +22,8 @@ export default function BasicInformation() {
   const { execute: uploadImage, isMutating: isUploadMuting } =
     useHttpPost("uploadImage");
 
-  const { profileState, profileData, mutate } = useMyUser();
-  const person = profileData?.localUserView.person;
+  const {profileState, person, card } = useMyUser();
+
   const {
     selectedImage,
     setSelectedImage,
@@ -43,19 +43,16 @@ export default function BasicInformation() {
     isUpdateMuting,
     onSubmit,
   } = useProfileForm(
-    profileState,
+    person,
+    card,
     selectedImage,
     uploadImage,
-    mutate,
     setSelectedImage
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-
-  if (profileState === "loading") return <Loading />;
-  if (profileState === "failed") return <Error />;
 
   return (
     <>

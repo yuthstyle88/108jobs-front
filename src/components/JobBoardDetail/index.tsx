@@ -1,24 +1,24 @@
 "use client";
 
-import { API_ROUTES } from "@/api/endpoints";
+import {API_ROUTES} from "@/api/endpoints";
 import ConfirmVerifyFreelancer from "@/app/[lang]/(job)/job-board/_components/ConfirmVerifyFreelancer";
 import JobBoardTab from "@/app/[lang]/(job)/job-board/_components/JobBoardTab";
 import Error from "@/app/error";
-import { LandingImage, ProfileImage } from "@/constants/images";
-import { usePrivateFetch, usePublicFetch } from "@/hooks/api-hooks";
-import { JobPostDetail } from "@/types/jobBoard";
-import {ProfileData, RoleType} from "lemmy-js-client";
-import { formatDateToLong } from "@/utils/formatDateToLong";
-import { MoveRight } from "lucide-react";
+import {LandingImage, ProfileImage} from "@/constants/images";
+import {usePublicFetch} from "@/hooks/api-hooks";
+import {JobPostDetail} from "@/types/jobBoard";
+import {RoleType} from "lemmy-js-client";
+import {formatDateToLong} from "@/utils/formatDateToLong";
+import {MoveRight} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import {useState} from "react";
 import InfoMessage from "../InfoMessage";
 import Loading from "../Loading";
-import { Badge } from "../ui/Badge";
-import { Button } from "../ui/Button";
+import {Badge} from "../ui/Badge";
+import {Button} from "../ui/Button";
 import JobBoardProposal from "./components/JobBoardProposal";
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {UserService} from "@/services";
 
@@ -41,9 +41,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
     API_ROUTES.job.jobBoardDetail + "/" + jobId
   );
 
-  const {profileData, isLoadingProfile ,isErrorProfile} = useMyUser();
-  const person = profileData?.localUserView?.person;
-  const localUser = profileData?.localUserView?.localUser;
+  const {localUser, person} = useMyUser();
 
   const userRole = localUser?.role;
   const isVerify = person?.isVerified;
@@ -74,8 +72,8 @@ const JobBoardDetail = ({ jobId }: Props) => {
     route.push(`${jobId}/offer`);
   };
 
-  if (isLoading || (shouldFetchProfile && isLoadingProfile)) return <Loading />;
-  if (error || (shouldFetchProfile && isErrorProfile)) return <Error />;
+  if (isLoading || (shouldFetchProfile )) return <Loading />;
+  if (error || (shouldFetchProfile)) return <Error />;
   return (
     <>
       <section className="max-w-7xl mx-auto px-4 py-6 bg-white rounded-lg pb-24">

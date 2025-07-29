@@ -21,9 +21,9 @@ interface EmployerProps {
 const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
   const { isOpen, toggle, close } = useToggle();
 
-  const {profileData, isLoadingProfile } = useMyUser();
-  const person = profileData?.localUserView?.person;
-  if (!globalLanguageData || isLoadingProfile || !profileData) {
+  const {person } = useMyUser();
+
+  if (!globalLanguageData) {
     return <AvatarSkeleton />; // หรือ null หรือ loading UI
   }
   return (
@@ -73,10 +73,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           onClick={() => toggle()}
           className="flex items-center justify-center gap-2 "
         >
-          {isLoadingProfile ? (
-            <AvatarSkeleton />
-          ) : (
-            profileData && (
+        ( person && (
               <Image
                 src={ProfileImage.avatar}
                 alt="avatar"
@@ -85,7 +82,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
                 height={500}
               />
             )
-          )}
+          )
 
           <span className="inline-block">
             <FontAwesomeIcon
