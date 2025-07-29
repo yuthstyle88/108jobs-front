@@ -9,10 +9,11 @@ import {
   callHttp,
 } from "@/services/HttpService";
 import { useGlobalLoader } from "@/contexts/GlobalLoaderContext";
+import { useGlobalError } from "@/contexts/GlobalErrorContext"; // Import GlobalErrorContext
 
 /**
  * Hook สำหรับเรียก API แบบ imperative (POST / PUT / PATCH / DELETE)
- * พร้อมการผนวก Global Loading
+ * พร้อมการผนวก Global Loading และ Global Error
  *
  * @example
  * const { execute, data, isMutating } = useHttpPost("uploadImage");
@@ -21,6 +22,9 @@ import { useGlobalLoader } from "@/contexts/GlobalLoaderContext";
 export const useHttpPost = <K extends keyof WrappedLemmyHttp>(method: K) => {
   /** ใช้ GlobalLoaderContext */
   const { setLoading } = useGlobalLoader();
+
+  /** ใช้ GlobalErrorContext */
+  const { setError } = useGlobalError();
 
   /** SWR Mutation */
   const {
@@ -36,13 +40,16 @@ export const useHttpPost = <K extends keyof WrappedLemmyHttp>(method: K) => {
     `${String(method)}-http-post`, // ใช้ชื่อเมธอดเป็น Key เพื่อไม่ชน Cache ของตัวอื่น
     async (_key, { arg }) => {
       setLoading(true); // เริ่มแสดง Global Loader
+      setError(null); // ล้างข้อผิดพลาดเก่าก่อนเริ่มคำขอใหม่
       try {
         // เรียก API ผ่าน callHttp
         return await (callHttp(method, ...arg) as Promise<
           RequestState<Payload<K>>
         >);
       } catch (e) {
-        // ดักจับและแปลงข้อผิดพลาดให้อยู่ในรูป RequestState
+        // ดักจับและแสดงข้อผิดพลาดไปยัง Global Error
+        const errorMessage = e instanceof Error ? e.message : "Unknown error occurred.";
+        setError(errorMessage); // ส่งข้อผิดพลาดไปยัง GlobalErrorContext
         return {
           state: REQUEST_STATE.FAILED,
           err: e instanceof Error ? e : new Error("Unknown error"),

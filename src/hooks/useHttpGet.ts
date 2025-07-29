@@ -1,4 +1,5 @@
 import { useGlobalLoader } from "@/contexts/GlobalLoaderContext";
+import { useGlobalError } from "@/contexts/GlobalErrorContext"; // Import GlobalError Context
 import useSWR, { SWRConfiguration } from "swr";
 import {
   RequestState,
@@ -17,7 +18,8 @@ export function useHttpGet<K extends keyof WrappedLemmyHttp>(
     | SWRConfiguration<RequestState<Payload<K>>, Error>,
   maybeOptions?: SWRConfiguration<RequestState<Payload<K>>, Error>,
 ) {
-  const { setLoading } = useGlobalLoader(); // ใช้ Loader
+  const { setLoading } = useGlobalLoader(); // ใช้สำหรับ Global Loader
+  const { setError } = useGlobalError(); // ใช้สำหรับ Global Error
 
   /* ---------- resolve param / options ---------- */
   const args = Array.isArray(argsOrOptions)
@@ -36,19 +38,25 @@ export function useHttpGet<K extends keyof WrappedLemmyHttp>(
 
   const fetcher = async () => {
     setLoading(true); // แสดง Loader
+    setError(null); // ล้างข้อผิดพลาดเก่าก่อนเริ่มการดึงข้อมูลใหม่
     try {
       const typedArgs = (args ?? []) as Parameters<WrappedLemmyHttp[K]>;
+
+      // เรียกใช้ HTTP Service
       return (await callHttp(
         method,
         ...typedArgs,
       )) as RequestState<Payload<K>>;
     } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Error occurred";
+      setError(errorMessage); // ตั้งค่าข้อผิดพลาดใน GlobalError Context
       return {
         state: REQUEST_STATE.FAILED,
-        err: err instanceof Error ? err : new Error("Unknown error"),
+        err: err instanceof Error ? err : new Error(errorMessage),
       } as RequestState<Payload<K>>;
     } finally {
-      setLoading(false); // ปิด Loader
+      setLoading(false); // ปิด Loader เสมอ
     }
   };
 
