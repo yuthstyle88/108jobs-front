@@ -1,45 +1,19 @@
-import { useState, useEffect } from "react";
+import { useTranslation as useI18NextTranslation } from "react-i18next";
+import { useEffect } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-type ErrorMessages = Record<string, string>;
-
-const translationCache: Record<string, ErrorMessages> = {}; // Cache ข้อความแปล
-
 export const useTranslation = () => {
-  const { lang } = useLanguage(); // ดึงภาษาปัจจุบัน
-  const [translations, setTranslations] = useState<ErrorMessages>({}); // เก็บข้อความแปล
-  const [isLoading, setIsLoading] = useState(true);
+  const { t, i18n } = useI18NextTranslation(); // ใช้ Hook ของ i18next
+  const { lang } = useLanguage(); // ดึงภาษาจาก Context ของแอปพลิเคชัน
+  console.log("i18n object:", i18n);
 
+  // ซิงค์ภาษาใน i18next กับ Context
   useEffect(() => {
-    const loadTranslations = async () => {
-      setIsLoading(true);
+    if (i18n && typeof i18n.changeLanguage === "function" && i18n.language !== lang) {
+      i18n.changeLanguage(lang); // เปลี่ยนภาษาของ i18next ให้ตรงกับ Context
+    }
+  }, [lang, i18n]);
 
-      if (translationCache[lang]) {
-        // ใช้ Cache หากมีอยู่แล้ว
-        setTranslations(translationCache[lang]);
-        setIsLoading(false);
-        return;
-      }
 
-      try {
-        // โหลดข้อความแปลตามภาษา
-        const importedTranslations: ErrorMessages = await import(
-          `../locales/errorConstants.${lang}.json`
-        );
-        translationCache[lang] = importedTranslations; // เก็บข้อความแปลลง Cache
-        setTranslations(importedTranslations);
-      } catch (error) {
-        console.error(`Error loading translations for lang: ${lang}`, error);
-        setTranslations({});
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadTranslations();
-  }, [lang]);
-
-  const t = (key: string) => translations[key] || key; // คืนค่าข้อความ หรือใช้ key หากไม่พบ
-
-  return { t, isLoading };
+  return { t, i18n }; // คืนค่า `t` และอินสแตนซ์ของ i18next
 };

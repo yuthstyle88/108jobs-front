@@ -21,6 +21,8 @@ import TotpModal from "@/components/Common/Modal/TotpModal";
 import {OAuthButtons} from "@/components/Authentication/LoginForm/oauth-provider";
 import {handleLogin, handleSubmitTotp, handleUseOAuthProvider} from "@/components/Authentication/LoginForm/handlers";
 import {LoginFormProps, LoginFormState, State, LoginProps} from "@/components/Authentication/LoginForm/interface";
+import {I18NextService} from "@/services/I18NextService";
+import {useTranslation} from "@/hooks/translation/useTranslation";
 
 
 const withHooks = (Component: any) => {
@@ -29,13 +31,13 @@ const withHooks = (Component: any) => {
         const router = useRouter();
         const searchParams = useSearchParams();
         const redirectUrl = searchParams.get("redirect") || "/";
-
-        const loginSchema = z.object({
+        const {t} = useTranslation();
+      const loginSchema = z.object({
             usernameOrEmail: z
                 .string()
-                .min(6, authen?.pleaseEnterEmailOrUsernameMin6)
-                .max(32, authen?.usernameMax32),
-            password: z.string().min(6, authen?.passwordMin6),
+                .min(6, t(`email_or_username`))
+                .max(32, t(`email_or_username`)),
+            password: z.string().min(6, I18NextService.i18n.t(`email_or_username`)),
         });
 
         const formMethods = useForm<z.infer<typeof loginSchema>>({

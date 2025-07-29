@@ -9,7 +9,8 @@ import isoDataInitializer from "@/utils/iso-data-Initializer";
 import {ClientSWRProvider} from "@/components/ClientSWRProvider";
 import {GlobalLoaderProvider} from "@/contexts/GlobalLoaderContext";
 import {GlobalErrorProvider} from "@/contexts/GlobalErrorContext";
-
+import AppProvider from "@/contexts/I18nextProvider";
+import i18n from '@/utils/i18n';
 
 // Optimize font loading with display swap and preload
 const kanit = Kanit({
@@ -48,16 +49,18 @@ export default async function RootLayout({
         __html: `window.isoData = ${JSON.stringify(isoData)};`,
       }}
     />
+    <AppProvider>
+    <LanguageProvider initialLang="th">
     <GlobalErrorProvider>
       <GlobalLoaderProvider>
         <ClientSWRProvider>
           <Toaster richColors closeButton position="top-right"/>
-          <LanguageProvider initialLang="th">
             {children}
-          </LanguageProvider>
         </ClientSWRProvider>
       </GlobalLoaderProvider>
     </GlobalErrorProvider>
+    </LanguageProvider>
+    </AppProvider>
     </body>
     </html>
   );
