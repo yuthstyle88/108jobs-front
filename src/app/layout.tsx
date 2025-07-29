@@ -10,7 +10,6 @@ import {ClientSWRProvider} from "@/components/ClientSWRProvider";
 import {GlobalLoaderProvider} from "@/contexts/GlobalLoaderContext";
 import {GlobalErrorProvider} from "@/contexts/GlobalErrorContext";
 import AppProvider from "@/contexts/I18nextProvider";
-import i18n from '@/utils/i18n';
 
 // Optimize font loading with display swap and preload
 const kanit = Kanit({

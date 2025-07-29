@@ -31,12 +31,11 @@ const withHooks = (Component: any) => {
         const router = useRouter();
         const searchParams = useSearchParams();
         const redirectUrl = searchParams.get("redirect") || "/";
-        const {t} = useTranslation();
       const loginSchema = z.object({
             usernameOrEmail: z
                 .string()
-                .min(6, t(`email_or_username`))
-                .max(32, t(`email_or_username`)),
+                .min(6, I18NextService.i18n.t(`email_or_username`))
+                .max(32, I18NextService.i18n.t(`email_or_username`)),
             password: z.string().min(6, I18NextService.i18n.t(`email_or_username`)),
         });
 
