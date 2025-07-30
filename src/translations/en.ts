@@ -1,6 +1,6 @@
 export const en = {
   translation: {
-    all_categories: {
+    allCategories: {
       allJobCategories: "All Job Categories",
       selectServiceType: "Choose the service type that suits your needs",
       design: "Graphic Design",
@@ -291,7 +291,7 @@ export const en = {
       idCardInformationBreadcrumb: "Id Card Information",
       sellerCenterBreadcrumb: "Freelancer Center"
     },
-    category_footer: {
+    categoryFooter: {
       seoTitle: "SEO Services",
       seoDescription1: "White-hat SEO services",
       seoLinksBacklink: "Backlink Service",
@@ -434,7 +434,7 @@ export const en = {
       translationFeeLabel: "Translation fee",
       additionalFeeLabel: "Additional fee (if any)"
     },
-    create_job: {
+    createJob: {
       catalogValidate: "Service catalog is required",
       titleValidate: "Job title must be at least 5 characters",
       descriptionValidate: "Job description must be at least 20 characters",
@@ -473,7 +473,7 @@ export const en = {
       previewButton: "Preview",
       submitButton: "Submit"
     },
-    employee_register: {
+    employeeRegister: {
       howDidYouHearAboutUs: "Before we start, please tell us how you heard about us?",
       multipleOptions: "You can select multiple options.",
       skip: "Skip",
@@ -596,7 +596,7 @@ export const en = {
       usernameMax32: "Username must not exceed 32 characters",
       passwordMin6: "Password must be at least 6 characters"
     },
-    freelancer_registration: {
+    freelancerRegistration: {
       registerToBecomeASuccessfulFreelancer: "Register to become a successful freelancer",
       youCanStartPostingYourJobRightAwayJustClickStartPostingJob: "You can start posting your job right away, just click Start Posting Job.",
       startPostingJob: "Start posting job",
@@ -925,7 +925,7 @@ export const en = {
       sellerStep5List1: "Withdraw earnings via supported methods",
       sellerStep5List2: "Encourage client to leave a review"
     },
-    job_board_create: {
+    jobBoardCreate: {
       whyValidate: "Minimum 100 characters required",
       portfolioUrlValidate: "Please enter a valid URL",
       priceValidate: "Price is required",
@@ -949,7 +949,7 @@ export const en = {
       cancel: "Cancel",
       submit: "Submit"
     },
-    job_board_detail: {
+    jobBoardDetail: {
       open: "Open",
       englishRequire: "English Required",
       anonymous: "Anonymous",
@@ -986,7 +986,7 @@ export const en = {
       timeLine: "Timeline",
       day: "days"
     },
-    job_card: {
+    jobCard: {
       expert: "Expert",
       popular: "Frequently hired",
       rating: "Rating",
@@ -994,7 +994,7 @@ export const en = {
       sold: "Sold",
       startingPrice: "Starting at"
     },
-    job_category: {
+    jobCategory: {
       allJobTypes: "All job types",
       categoriesRelatedToJobType: "Categories related to {{job_type}}",
       recommended: "Recommended",
@@ -1032,7 +1032,7 @@ export const en = {
       scope: "All job categories",
       instruction: "Choose the service type that suits your needs"
     },
-    job_detail: {
+    jobDetail: {
       allJobTypes: "All job types",
       marketingAdvertising: "Marketing & Advertising",
       doSeo: "Do SEO",
@@ -1080,7 +1080,7 @@ export const en = {
       duration: "Execution time {{execution_time}} days",
       callToAction: "Start hiring this freelancer and rate"
     },
-    manage_product_create: {
+    manageProductCreate: {
       notSave: "You haven't saved your changes yet.",
       plsSave: "Please save before leaving this page to avoid losing your data.",
       continue: "Continue Editing",
@@ -1150,7 +1150,7 @@ export const en = {
       workflowDescriptionPlaceholder: "Describe the step in detail...",
       workflowTitle: "Define Your Work Steps"
     },
-    not_found: {
+    notFound: {
       backButton: "Back to Home",
       errorDescription: "The page you are looking for is not available. You may have accessed an old link or the content has been moved. You can go to the job category page through the recommended section below.",
       errorTitle: "Page Not Found",
@@ -1212,7 +1212,7 @@ export const en = {
       reviewTab: "Reviews from freelancers",
       workTitle: "{{username}}'s Services"
     },
-    profile_apply: {
+    profileApply: {
       advantagesTitle: "What are the advantages of being a Fastwork freelancer?",
       applyButton: "Apply to be a freelancer",
       careerGrowth: "Grow your career with Specialist",
@@ -1300,7 +1300,7 @@ export const en = {
       whyChooseTitle: "Why do freelancers choose Fastwork?",
       whyTitle: "Why freelancers choose Fastwork"
     },
-    profile_chat: {
+    profileChat: {
       chatHistory: "Chat History",
       you: "You",
       download: "Download",
@@ -1322,7 +1322,7 @@ export const en = {
       typeMessageHere: "Type your message here",
       unselectWarning: "You have unselected the item previously sent based on freelancer browsing. Let's look at what the freelancer is offering."
     },
-    profile_coins: {
+    profileCoins: {
       buttonProceedPayment: "Proceed to payment",
       buttonTopUp: "Top up",
       buttonTopUp10000: "Top up 10,000 baht",
@@ -1346,7 +1346,7 @@ export const en = {
       tableTotalCoins: "Total coins received",
       titleFastworkCoin: "Fastwork Coin"
     },
-    profile_company: {
+    profileCompany: {
       buttonSearchCompany: "Search Company Information",
       labelTaxId: "Company Taxpayer Identification Number",
       noteRequirements: "• Employers must request an official ID card from the freelancer directly.• Employers must issue a tax withholding document (Form 50) in the freelancer's name. (See sample document)",
@@ -1366,7 +1366,7 @@ export const en = {
       stepWaitApprovalSub: "Within 2 hours",
       subtitleCompanyHiring: "For issuing documents related to company hiring"
     },
-    profile_contact: {
+    profileContact: {
       cancelButton: "Cancel",
       confirmButton: "Change Email",
       emailChangeDescription: "Your current email has been verified in the system. If you want to change it, the new email will need to be verified again.",
@@ -1389,7 +1389,7 @@ export const en = {
       subtitleContactInfo: "To ensure we can contact you",
       verifyButton: "Verify"
     },
-    profile_coupon: {
+    profileCoupon: {
       descriptionSpecialOffers: "Exclusive offers and promotions from partners, along with discount coupons",
       descriptionYourCoupons: "You can select a discount coupon while hiring and making payments",
       labelYourCoupons: "Your Coupons",
@@ -1401,7 +1401,7 @@ export const en = {
       tabForFreelancers: "For Freelancers",
       tabForHiring: "For Hiring"
     },
-    profile_data: {
+    profileData: {
       concent: "Consent to receive news and special promotions through all channels from Fastwork.",
       privacy: "Privacy Policy",
       cookieUse: "Fastwork uses cookies to help improve and enhance your user experience when you visit our website. You can choose to consent to each type of cookie (except for essential cookies).",
@@ -1428,7 +1428,7 @@ export const en = {
       toggleAnalyticsCookies: "Enable or Disable Analytics Cookies",
       toggleMarketingCookies: "Enable or Disable Marketing Cookies"
     },
-    profile_individual: {
+    profileIndividual: {
       labelFirstName: "First Name",
       labelLastName: "Last Name",
       placeholderFirstName: "Enter first name",
@@ -1437,7 +1437,7 @@ export const en = {
       sectionIndividualHiring: "Hiring Information for Individuals",
       subtitleIndividualHiring: "For issuing documents related to personal hiring"
     },
-    profile_info: {
+    profileInfo: {
       buttonSetPassword: "Set a password",
       confirmPasswordLabel: "Confirm Password",
       confirmPasswordPlaceholder: "Confirm password",
@@ -1459,7 +1459,7 @@ export const en = {
       submitButton: "Confirm",
       subtitleAccountInfo: "Set up your basic account information"
     },
-    profile_job: {
+    profileJob: {
       noJob: "No job posts found",
       allPostJobs: "All Job Posts",
       proposalJobs: "Jobs you have proposed",
@@ -1488,7 +1488,7 @@ export const en = {
       tableHeaderTitle: "Title",
       wantToGetJobBoard: "Want to receive jobs from the job board?"
     },
-    profile_navbar: {
+    profileNavbar: {
       accountInfo: "Account Information",
       companyHiringInfo: "Hiring as a Company",
       contactInfo: "Contact Information",
@@ -1496,7 +1496,7 @@ export const en = {
       sectionAccount: "Your Account",
       sectionHiring: "Hiring Information"
     },
-    profile_point: {
+    profilePoint: {
       award1000BahtCoupon: "1000 baht discount coupon",
       award100BahtCoupon: "100 baht discount coupon",
       award3000BahtCoupon: "3000 baht discount coupon",
@@ -1589,7 +1589,7 @@ export const en = {
       step3Title: "Introduce yourself",
       upgradeMembership: "Upgrade membership"
     },
-    seller_account_statistics: {
+    sellerAccountStatistics: {
       accountStatisticsTitle: "Account Statistics",
       averageResponseTime: "Average response time",
       findJobsButton: "Find Jobs",
@@ -1600,7 +1600,7 @@ export const en = {
       serviceStatisticsTitle: "Service Statistics",
       startSellingButton: "Start Selling"
     },
-    seller_bank_account: {
+    sellerBankAccount: {
       bankAccountNumberLabel: "Bank Account Number",
       bankAccountNumberPlaceholder: "Enter account number",
       bankInfoDescription: "To receive payments when hired",
@@ -1611,7 +1611,7 @@ export const en = {
       bankQrUploadTitle: "Your bank QR code image (Account name must match ID card)",
       uploadButton: "Upload Image"
     },
-    seller_commitment_letter: {
+    sellerCommitmentLetter: {
       incomeTaxDescription: "To receive payments via the Fastwork system, freelancers must verify and agree to provide their income information for tax authorities to review compliance with legal requirements.",
       step1Note: "Once verified, this information cannot be changed (please contact support)",
       step1Placeholder: "Please enter information",
@@ -1626,7 +1626,7 @@ export const en = {
       taxInfoTitle: "Tax Declaration Information",
       uploadButton: "Upload Document"
     },
-    seller_contact_info: {
+    sellerContactInfo: {
       addressDetail: "Address Details",
       addressInfoDescription: "So we can send packages and documents to you",
       addressInfoTitle: "Address Information",
@@ -1644,7 +1644,7 @@ export const en = {
       zipcode: "Zip Code",
       zipcodePlaceholder: "Enter Zipcode"
     },
-    seller_document_info: {
+    sellerDocumentInfo: {
       firstnameLabel: "First and Middle Name",
       firstnamePlaceholder: "Enter first and middle name",
       lastnameLabel: "Last Name",
@@ -1652,7 +1652,7 @@ export const en = {
       subtitle: "For individuals",
       title: "Client Information (Individual)"
     },
-    seller_my_service: {
+    sellerMyService: {
       addNewService: "Add new service",
       approvalNote: "For services under review status, we will process them within 2 business days (after the user's account is approved).",
       columnFeePercent: "Service Fee (%)",
@@ -1672,7 +1672,7 @@ export const en = {
       statusPending: "Pending approval",
       statusRejected: "Rejected"
     },
-    seller_personal_info: {
+    sellerPersonalInfo: {
       addressDetail: "Detailed address",
       addressInfoNote: "Please enter the address exactly as it appears on your ID",
       addressInfoTitle: "Address on ID",
@@ -1691,7 +1691,7 @@ export const en = {
       province: "Province",
       subDistrict: "Sub-district"
     },
-    seller_profile: {
+    sellerProfile: {
       aboutFreelancerLabel: "About Freelancer",
       displayNameLabel: "Display Name",
       displayNameMinLengthError: "Display name must be at least 2 characters",
@@ -1707,7 +1707,7 @@ export const en = {
       usernameMinLengthError: "Username must be at least 3 characters",
       usernameNote: "This username appears in the URL. Changing it may affect Google search results"
     },
-    seller_project_management: {
+    sellerProjectManagement: {
       projectColumnAmount: "Amount (Baht)",
       projectColumnChat: "Start Chat",
       projectColumnCode: "Project Code",
@@ -1720,7 +1720,7 @@ export const en = {
       projectPendingTab: "Pending Approval ({{n}})",
       projectPendingTitle: "Projects pending approval"
     },
-    seller_withdrawal: {
+    sellerWithdrawal: {
       accumulatedBalance: "Accumulated Balance (Baht)",
       addData: "Add data",
       checkYourInfo: "Check your information",
@@ -1742,7 +1742,7 @@ export const en = {
       verificationInfoTitle: "Information required for verification once balance is accumulated",
       verificationTax: "Tax declaration info: Add info"
     },
-    sp_privacy: {
+    spPrivacy: {
       myProfile: "My Profile",
       points: "Points",
       myJob: "My Job",
@@ -1760,7 +1760,7 @@ export const en = {
       dataManagement: "Data Management",
       logout: "Logout"
     },
-    support_center: {
+    supportCenter: {
       faqTitle: "Frequently Asked Questions",
       faqSubtitle: "Get answers to common questions",
       faqHeader: "Frequently Asked Questions",
@@ -2050,7 +2050,7 @@ export const en = {
       marketingOptIn: "I am interested in receiving information, offers, and promotions from Fastwork",
       freelancerSignup: "Register as a freelancer"
     },
-    terms_employer: {
+    termsEmployer: {
       pageTitle: "Terms & Conditions",
       heading: "Platform Terms & Conditions for Employers of Fastwork Technologies Co., Ltd.",
       definitionTitle: "Definitions",
@@ -2215,7 +2215,7 @@ export const en = {
       contactInfoPhone: "Phone Number: 02-114-7008",
       contactInfoWebsiteLinkText: "https://static.fastwork.co/contents/support-center"
     },
-    user_edit: {
+    userEdit: {
       addInfo: "Add information",
       addMoreButton: "Add more info",
       awardPlaceholder: "Enter award name",

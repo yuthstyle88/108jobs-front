@@ -1,6 +1,6 @@
 export const th = {
   translation: {
-    all_categories: {
+    allCategories: {
       allJobCategories: "หมวดหมู่งานทั้งหมด",
       selectServiceType: "เลือกประเภทบริการที่ตรงกับความต้องการของคุณ",
       design: "กราฟิกดีไซน์",
@@ -291,7 +291,7 @@ export const th = {
       idCardInformationBreadcrumb: "ข้อมูลบัตรประชาชน",
       sellerCenterBreadcrumb: "ศูนย์ฟรีแลนซ์"
     },
-    category_footer: {
+    categoryFooter: {
       seoTitle: "ทำ SEO",
       seoDescription1: "บริการรับทำ SEO สายขาว",
       seoLinksBacklink: "รับทำ Backlink",
@@ -434,7 +434,7 @@ export const th = {
       translationFeeLabel: "ค่าธรรมเนียมการแปล",
       additionalFeeLabel: "ค่าธรรมเนียมเพิ่มเติม (ถ้ามี)"
     },
-    create_job: {
+    createJob: {
       catalogValidate: "จำเป็นต้องระบุหมวดหมู่บริการ",
       titleValidate: "ชื่อตำแหน่งงานต้องมีอย่างน้อย 5 ตัวอักษร",
       descriptionValidate: "คำอธิบายงานต้องมีอย่างน้อย 20 ตัวอักษร",
@@ -473,7 +473,7 @@ export const th = {
       previewButton: "ดูตัวอย่าง",
       submitButton: "ส่ง"
     },
-    employee_register: {
+    employeeRegister: {
       howDidYouHearAboutUs: "ก่อนที่เราจะเริ่ม โปรดบอกเราว่าคุณรู้จักเราผ่านช่องทางใด?",
       multipleOptions: "คุณสามารถเลือกได้หลายตัวเลือก",
       skip: "ข้าม",
@@ -596,7 +596,7 @@ export const th = {
       usernameMax32: "ชื่อผู้ใช้ต้องไม่เกิน 32 ตัวอักษร",
       passwordMin6: "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
     },
-    freelancer_registration: {
+    freelancerRegistration: {
       registerToBecomeASuccessfulFreelancer: "ลงทะเบียนเพื่อเป็นฟรีแลนซ์ที่ประสบความสำเร็จ",
       youCanStartPostingYourJobRightAwayJustClickStartPostingJob: "คุณสามารถเริ่มโพสต์งานของคุณได้ทันที เพียงคลิกเริ่มโพสต์งาน",
       startPostingJob: "เริ่มโพสต์งาน",
@@ -927,7 +927,7 @@ export const th = {
       sellerStep5List1: "ถอนเงินที่ได้รับผ่านวิธีการที่รองรับ",
       sellerStep5List2: "กระตุ้นให้ลูกค้าแสดงความคิดเห็น"
     },
-    job_board_create: {
+    jobBoardCreate: {
       whyValidate: "ต้องมีอย่างน้อย 100 ตัวอักษร",
       portfolioUrlValidate: "กรุณาใส่ URL ที่ถูกต้อง",
       priceValidate: "จำเป็นต้องระบุราคา",
@@ -951,7 +951,7 @@ export const th = {
       cancel: "ยกเลิก",
       submit: "ส่ง"
     },
-    job_board_detail: {
+    jobBoardDetail: {
       open: "กำลังเปิดรับ",
       englishRequire: "ต้องใช้ภาษาอังกฤษ",
       anonymous: "ไม่ระบุชื่อ",
@@ -988,7 +988,7 @@ export const th = {
       timeLine: "ระยะเวลาดำเนินการ",
       day: "วัน"
     },
-    job_card: {
+    jobCard: {
       sold: "ขายแล้ว",
       rating: "การให้คะแนน",
       expert: "ผู้เชี่ยวชาญ",
@@ -996,7 +996,7 @@ export const th = {
       responseTime: "ตอบกลับภายใน {{n}} นาที",
       startingPrice: "เริ่มต้นที่"
     },
-    job_category: {
+    jobCategory: {
       "4": "4",
       allJobTypes: "ทุกประเภทงาน",
       categoriesRelatedToJobType: "หมวดหมู่ที่เกี่ยวข้องกับ {{job_type}}",
@@ -1039,7 +1039,7 @@ export const th = {
       scope: "ทุกหมวดหมู่งาน",
       instruction: "เลือกประเภทบริการที่เหมาะกับความต้องการของคุณ"
     },
-    job_detail: {
+    jobDetail: {
       allJobTypes: "ทุกประเภทงาน",
       marketingAdvertising: "การตลาดและโฆษณา",
       doSeo: "ทำ SEO",
@@ -1087,7 +1087,7 @@ export const th = {
       duration: "ระยะเวลาดำเนินการ {{execution_time}} วัน",
       callToAction: "เริ่มจ้างฟรีแลนซ์นี้และให้คะแนน"
     },
-    manage_product_create: {
+    manageProductCreate: {
       notSave: "คุณยังไม่ได้บันทึกการเปลี่ยนแปลงของคุณ",
       plsSave: "โปรดบันทึกก่อนออกจากหน้านี้เพื่อหลีกเลี่ยงการสูญหายของข้อมูล",
       continue: "แก้ไขต่อ",
@@ -1157,7 +1157,7 @@ export const th = {
       workflowDescriptionPlaceholder: "กรอกรายละเอียดขั้นตอน...",
       workflowTitle: "กำหนดขั้นตอนการทำงานของคุณ"
     },
-    not_found: {
+    notFound: {
       backButton: "กลับหน้าหลัก",
       errorDescription: "หน้าที่คุณต้องการไม่พร้อมใช้งาน คุณอาจเข้าลิงค์เก่าหรือข้อมูลได้ถูกย้ายไปแล้ว คุณสามารถไปยังหน้าหมวดหมู่งานได้ที่หมวดหมู่งานแนะนำด้านล่าง",
       errorTitle: "ไม่พบหน้าที่คุณต้องการ",
@@ -1219,7 +1219,7 @@ export const th = {
       times: "ครั้ง",
       workTitle: "ผลงานของ {{username}}"
     },
-    profile_apply: {
+    profileApply: {
       advantagesTitle: "เป็นฟรีแลนซ์ Fastwork ดียังไง?",
       applyButton: "สมัครเป็นฟรีแลนซ์",
       careerGrowth: "เติบโตสายงานด้วย Specialist",
@@ -1307,7 +1307,7 @@ export const th = {
       whyChooseTitle: "ทำไมฟรีแลนซ์ถึงเลือก Fastwork",
       whyTitle: "Why freelancers choose Fastwork"
     },
-    profile_chat: {
+    profileChat: {
       chatHistory: "ประวัติการแชท",
       you: "คุณ",
       download: "ดาวน์โหลด",
@@ -1329,7 +1329,7 @@ export const th = {
       typeMessageHere: "พิมพ์ข้อความที่นี่",
       unselectWarning: "คุณเลือก 'หยิบรายการที่เลือกส่งไปยังเซทตามการเบราว์ซ์ของฟรีแลนซ์มา' จากโอเพนแชทของลูกค้ามาที่แชทนี้แล้ว ลุพามาดูว่าฟรีแลนซ์กำลังขายอะไรอยู่"
     },
-    profile_coins: {
+    profileCoins: {
       buttonProceedPayment: "ดำเนินการชำระเงิน",
       buttonTopUp: "เติมเงิน",
       buttonTopUp10000: "เติมเงิน 10,000 บาท",
@@ -1353,7 +1353,7 @@ export const th = {
       tableTotalCoins: "เหรียญทั้งหมดที่ได้รับ",
       titleFastworkCoin: "Fastwork Coin"
     },
-    profile_company: {
+    profileCompany: {
       buttonSearchCompany: "ค้นหาข้อมูลบริษัท",
       labelTaxId: "เลขประจำตัวผู้เสียภาษี (บริษัท)",
       noteRequirements: "• ผู้ว่าจ้างกรุณาขอสำเนาบัตรประชาชนจาก “ฟรีแลนซ์” โดยตรง• ผู้ว่าจ้างต้องออกหนังสือรับรองการหักภาษี ณ ที่จ่าย (ทวิ 50) เป็น “ชื่อของฟรีแลนซ์” (ดูตัวอย่างเอกสาร)",
@@ -1373,7 +1373,7 @@ export const th = {
       stepWaitApprovalSub: "ภายใน 2 ชั่วโมง",
       subtitleCompanyHiring: "สำหรับออกเอกสาร การจ้างแบบบริษัท"
     },
-    profile_contact: {
+    profileContact: {
       cancelButton: "ปิด",
       confirmButton: "เปลี่ยนอีเมล",
       emailChangeDescription: "อีเมลปัจจุบันของคุณได้รับการยืนยันในระบบแล้ว หากคุณต้องการเปลี่ยนอีเมลจะต้องยืนยันอีกครั้ง",
@@ -1396,7 +1396,7 @@ export const th = {
       subtitleContactInfo: "เพื่อให้เราสามารถติดต่อคุณได้",
       verifyButton: "ยืนยัน"
     },
-    profile_coupon: {
+    profileCoupon: {
       descriptionSpecialOffers: "สิทธิพิเศษและส่วนลดจากพาร์ทเนอร์ พร้อมให้คุณเก็บคูปองส่วนลดแล้ว",
       descriptionYourCoupons: "คุณสามารถเลือกใช้คูปองส่วนลดได้ เมื่อต้องการจ้างงานและชำระเงิน",
       labelYourCoupons: "คูปองส่วนลดของคุณ",
@@ -1408,7 +1408,7 @@ export const th = {
       tabForFreelancers: "สำหรับฟรีแลนซ์",
       tabForHiring: "สำหรับการจ้างงาน"
     },
-    profile_data: {
+    profileData: {
       concent: "ยินยอมรับข่าวสารและโปรโมชั่นพิเศษผ่านทุกช่องทางจาก Fastwork",
       privacy: "นโยบายความเป็นส่วนตัว",
       cookieUse: "Fastwork ใช้คุกกี้เพื่อช่วยปรับปรุงและเพิ่มประสบการณ์การใช้งานของคุณเมื่อคุณเข้าชมเว็บไซต์ของเรา คุณสามารถเลือกยินยอมคุกกี้แต่ละประเภทได้ (ยกเว้นคุกกี้ที่จำเป็น)",
@@ -1435,7 +1435,7 @@ export const th = {
       toggleAnalyticsCookies: "เปิดหรือปิดคุกกี้วิเคราะห์",
       toggleMarketingCookies: "เปิดหรือปิดคุกกี้การตลาด"
     },
-    profile_individual: {
+    profileIndividual: {
       labelFirstName: "ชื่อ",
       labelLastName: "นามสกุล",
       placeholderFirstName: "กรอกชื่อ",
@@ -1444,7 +1444,7 @@ export const th = {
       sectionIndividualHiring: "ข้อมูลเพื่อจ้างในนามบุคคล",
       subtitleIndividualHiring: "สำหรับออกเอกสาร การจ้างแบบบุคคลธรรมดา"
     },
-    profile_info: {
+    profileInfo: {
       buttonSetPassword: "ตั้งค่ารหัสผ่าน",
       confirmPasswordLabel: "ยืนยันรหัสผ่าน",
       confirmPasswordPlaceholder: "ยืนยันรหัสผ่าน",
@@ -1466,7 +1466,7 @@ export const th = {
       submitButton: "ยืนยัน",
       subtitleAccountInfo: "กำหนดข้อมูลเบื้องต้นของคุณ"
     },
-    profile_job: {
+    profileJob: {
       noJob: "ไม่พบประกาศงาน",
       allPostJobs: "งานที่ประกาศทั้งหมด",
       proposalJobs: "ข้อเสนองานของคุณ",
@@ -1495,7 +1495,7 @@ export const th = {
       tableHeaderTitle: "ชื่องาน",
       wantToGetJobBoard: "อยากรับงานบนบอร์ดประกาศงาน ?"
     },
-    profile_navbar: {
+    profileNavbar: {
       accountInfo: "ข้อมูลบัญชี",
       companyHiringInfo: "ข้อมูลเพื่อจ้างในนามบริษัท",
       contactInfo: "ข้อมูลติดต่อ",
@@ -1503,7 +1503,7 @@ export const th = {
       sectionAccount: "บัญชีของคุณ",
       sectionHiring: "ข้อมูลการจ้างงาน"
     },
-    profile_point: {
+    profilePoint: {
       award1000BahtCoupon: "คูปองส่วนลด 1000 บาท",
       award100BahtCoupon: "คูปองส่วนลด 100 บาท",
       award3000BahtCoupon: "คูปองส่วนลด 3000 บาท",
@@ -1596,7 +1596,7 @@ export const th = {
       step3Title: "แนะนำตัวเอง",
       upgradeMembership: "อัปเกรดระดับสมาชิก"
     },
-    seller_account_statistics: {
+    sellerAccountStatistics: {
       accountStatisticsTitle: "สถิติบัญชี",
       averageResponseTime: "เวลาตอบกลับโดยเฉลี่ย",
       findJobsButton: "หางาน",
@@ -1607,7 +1607,7 @@ export const th = {
       serviceStatisticsTitle: "สถิติบริการ",
       startSellingButton: "เริ่มขาย"
     },
-    seller_bank_account: {
+    sellerBankAccount: {
       bankAccountNumberLabel: "หมายเลขบัญชีธนาคาร",
       bankAccountNumberPlaceholder: "กรอกหมายเลขบัญชี",
       bankInfoDescription: "สำหรับรับเงินเมื่อได้รับการจ้างงาน",
@@ -1618,7 +1618,7 @@ export const th = {
       bankQrUploadTitle: "อัปโหลดรูป QR Code ธนาคารของคุณ (ชื่อบัญชีต้องตรงกับบัตรประชาชน)",
       uploadButton: "อัปโหลดรูปภาพ"
     },
-    seller_commitment_letter: {
+    sellerCommitmentLetter: {
       incomeTaxDescription: "เพื่อรับชำระเงินผ่านระบบของ Fastwork ฟรีแลนซ์จะต้องยืนยันและยอมรับในการให้ข้อมูลรายได้ของตนเองเพื่อให้หน่วยงานภาษีตรวจสอบการปฏิบัติตามข้อกำหนดทางกฎหมาย",
       step1Note: "เมื่อได้รับการยืนยันแล้ว ข้อมูลนี้จะไม่สามารถแก้ไขได้ (กรุณาติดต่อทีมสนับสนุน)",
       step1Placeholder: "กรุณากรอกข้อมูล",
@@ -1633,7 +1633,7 @@ export const th = {
       taxInfoTitle: "ข้อมูลการยื่นภาษี",
       uploadButton: "อัปโหลดเอกสาร"
     },
-    seller_contact_info: {
+    sellerContactInfo: {
       addressDetail: "รายละเอียดที่อยู่",
       addressInfoDescription: "เพื่อให้เราสามารถจัดส่งสินค้าและเอกสารให้คุณได้",
       addressInfoTitle: "ข้อมูลที่อยู่",
@@ -1651,7 +1651,7 @@ export const th = {
       zipcode: "รหัสไปรษณีย์",
       zipcodePlaceholder: "Enter Zipcode"
     },
-    seller_document_info: {
+    sellerDocumentInfo: {
       firstnameLabel: "ชื่อจริงและชื่อกลาง",
       firstnamePlaceholder: "กรอกชื่อจริงและชื่อกลาง",
       lastnameLabel: "นามสกุล",
@@ -1659,7 +1659,7 @@ export const th = {
       subtitle: "สำหรับบุคคลทั่วไป",
       title: "ข้อมูลเอกสารของผู้ว่าจ้าง (บุคคลธรรมดา)"
     },
-    seller_my_service: {
+    sellerMyService: {
       modalTitle: "รายละเอียดงานที่ยังไม่ได้รับการอนุมัติ",
       serviceInformation: "ข้อมูลบริการ",
       submissionSuccessful: "ส่งสำเร็จ! โปรดรอผลการอนุมัติจากระบบ",
@@ -1686,7 +1686,7 @@ export const th = {
       statusPending: "รอการอนุมัติ",
       statusRejected: "ไม่อนุมัติ"
     },
-    seller_personal_info: {
+    sellerPersonalInfo: {
       addressDetail: "ที่อยู่โดยละเอียด",
       addressInfoNote: "กรุณากรอกให้ตรงกับข้อมูลในบัตรประชาชน ของคุณ",
       addressInfoTitle: "ที่อยู่ตามบัตรประชาชน",
@@ -1705,7 +1705,7 @@ export const th = {
       province: "จังหวัด",
       subDistrict: "ตำบล/แขวง"
     },
-    seller_profile: {
+    sellerProfile: {
       aboutFreelancerLabel: "เกี่ยวกับฟรีแลนซ์",
       displayNameLabel: "ชื่อที่แสดงในระบบ",
       displayNameMinLengthError: "ชื่อที่แสดงต้องมีอย่างน้อย 2 ตัวอักษร",
@@ -1721,7 +1721,7 @@ export const th = {
       usernameMinLengthError: "ชื่อผู้ใช้งานต้องมีอย่างน้อย 3 ตัวอักษร",
       usernameNote: "ชื่อผู้ใช้งานจะแสดงใน URL การเปลี่ยนอาจมีผลกับผลลัพธ์การค้นหาบน Google"
     },
-    seller_project_management: {
+    sellerProjectManagement: {
       projectColumnAmount: "จำนวนเงิน (Baht)",
       projectColumnChat: "เริ่มแชท",
       projectColumnCode: "รหัสโครงการ",
@@ -1734,7 +1734,7 @@ export const th = {
       projectPendingTab: "รออนุมัติ ({{n}})",
       projectPendingTitle: "โครงการที่รอการอนุมัติ"
     },
-    seller_withdrawal: {
+    sellerWithdrawal: {
       accumulatedBalance: "ยอดสะสม (บาท)",
       addData: "เพิ่มข้อมูล",
       checkYourInfo: "ตรวจสอบข้อมูลของคุณ",
@@ -1756,7 +1756,7 @@ export const th = {
       verificationInfoTitle: "ข้อมูลที่ต้องยืนยันเมื่อมียอดสะสม",
       verificationTax: "ข้อมูลการยื่นภาษี: เพิ่มข้อมูล"
     },
-    sp_privacy: {
+    spPrivacy: {
       myProfile: "โปรไฟล์ของฉัน",
       points: "คะแนน",
       myJob: "งานของฉัน",
@@ -1774,7 +1774,7 @@ export const th = {
       dataManagement: "การจัดการข้อมูล",
       logout: "ออกจากระบบ"
     },
-    support_center: {
+    supportCenter: {
       faqTitle: "คำถามที่พบบ่อย",
       faqSubtitle: "รับคำตอบสำหรับคำถามทั่วไป",
       faqHeader: "คำถามที่พบบ่อย",
@@ -2064,7 +2064,7 @@ export const th = {
       marketingOptIn: "ฉันสนใจรับข้อมูล ข้อเสนอ และโปรโมชั่นจาก Fastwork",
       freelancerSignup: "ลงทะเบียนเป็นฟรีแลนซ์"
     },
-    terms_employer: {
+    termsEmployer: {
       pageTitle: "Terms & Conditions",
       heading: "เงื่อนไขและข้อตกลงการใช้บริการแพลตฟอร์มสำหรับผู้ว่าจ้าง (Platform Terms & Conditions for Employer) ของ บริษัท ฟาสต์เวิร์ค เทคโนโลยีส์ จำกัด",
       definitionTitle: "นิยาม",
@@ -2229,7 +2229,7 @@ export const th = {
       contactInfoPhone: "เบอร์โทรศัพท์ 02-114-7008",
       contactInfoWebsiteLinkText: "https://static.fastwork.co/contents/support-center"
     },
-    user_edit: {
+    userEdit: {
       addInfo: "เพิ่มข้อมูล",
       addMoreButton: "เพิ่มข้อมูล",
       awardPlaceholder: "กรอกชื่อรางวัล",

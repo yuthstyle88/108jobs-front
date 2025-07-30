@@ -1,6 +1,6 @@
 export const vi = {
   translation: {
-    all_categories: {
+    allCategories: {
       allJobCategories: "Tất cả danh mục công việc",
       selectServiceType: "Chọn loại dịch vụ phù hợp với nhu cầu của bạn",
       design: "Thiết kế đồ họa",
@@ -290,7 +290,7 @@ export const vi = {
       idCardInformationBreadcrumb: "Thông tin CMND/CCCD",
       sellerCenterBreadcrumb: "Trung tâm freelancer"
     },
-    category_footer: {
+    categoryFooter: {
       seoTitle: "Dịch vụ SEO",
       seoDescription1: "Dịch vụ SEO mũ trắng",
       seoLinksBacklink: "Dịch vụ xây dựng Backlink",
@@ -433,7 +433,7 @@ export const vi = {
       translationFeeLabel: "Phí dịch vụ",
       additionalFeeLabel: "Số tiền nhận được từ nền tảng"
     },
-    create_job: {
+    createJob: {
       catalogValidate: "Danh mục dịch vụ là bắt buộc",
       titleValidate: "Tiêu đề công việc phải có ít nhất 5 ký tự",
       descriptionValidate: "Mô tả công việc phải có ít nhất 20 ký tự",
@@ -472,7 +472,7 @@ export const vi = {
       previewButton: "Xem trước",
       submitButton: "Gửi"
     },
-    employee_register: {
+    employeeRegister: {
       howDidYouHearAboutUs: "Trước khi bắt đầu, hãy cho tôi biết bạn biết đến chúng tôi qua đâu?",
       multipleOptions: "Bạn có thể chọn nhiều tùy chọn.",
       skip: "Bỏ qua",
@@ -595,7 +595,7 @@ export const vi = {
       usernameMax32: "Tên người dùng không được vượt quá 32 ký tự",
       passwordMin6: "Mật khẩu phải có ít nhất 6 ký tự"
     },
-    freelancer_registration: {
+    freelancerRegistration: {
       registerToBecomeASuccessfulFreelancer: "Đăng ký để trở thành một freelancer thành công",
       youCanStartPostingYourJobRightAwayJustClickStartPostingJob: "Bạn có thể bắt đầu đăng công việc ngay lập tức, chỉ cần nhấp vào Bắt đầu đăng công việc.",
       startPostingJob: "Bắt đầu đăng công việc",
@@ -926,7 +926,7 @@ export const vi = {
       sellerStep5List1: "Rút tiền kiếm được qua các phương thức được hỗ trợ",
       sellerStep5List2: "Khuyến khích khách hàng để lại đánh giá"
     },
-    job_board_create: {
+    jobBoardCreate: {
       whyValidate: "Yêu cầu tối thiểu 100 ký tự",
       portfolioUrlValidate: "Vui lòng nhập URL hợp lệ",
       priceValidate: "Giá là bắt buộc",
@@ -950,7 +950,7 @@ export const vi = {
       cancel: "Hủy",
       submit: "Gửi"
     },
-    job_board_detail: {
+    jobBoardDetail: {
       open: "Đang mở",
       englishRequire: "Yêu cầu tiếng Anh",
       anonymous: "Ẩn danh",
@@ -987,7 +987,7 @@ export const vi = {
       timeLine: "Thời gian thực hiện",
       day: "ngày"
     },
-    job_card: {
+    jobCard: {
       expert: "Chuyên gia",
       popular: "Thuê nhiều",
       rating: "Đánh giá",
@@ -995,7 +995,7 @@ export const vi = {
       sold: "Đã bán",
       startingPrice: "Bắt đầu từ"
     },
-    job_category: {
+    jobCategory: {
       "4": "4",
       allJobTypes: "Tất cả loại công việc",
       categoriesRelatedToJobType: "Danh mục liên quan đến {{job_type}}",
@@ -1038,7 +1038,7 @@ export const vi = {
       scope: "Tất cả danh mục công việc",
       instruction: "Chọn loại dịch vụ phù hợp với nhu cầu của bạn"
     },
-    job_detail: {
+    jobDetail: {
       allJobTypes: "Tất cả loại công việc",
       fastworkGuarantee: "Bảo đảm Fastwork",
       fastworkGuaranteeDescription: "Chăm sóc suốt quá trình làm việc, an toàn, không bị lừa, trung gian bảo vệ tiền cho đến khi công việc được phê duyệt. Đọc thêm điều khoản và quyền bảo vệ.",
@@ -1081,7 +1081,7 @@ export const vi = {
       duration: "Thời gian thực hiện {{execution_time}} ngày",
       callToAction: "Bắt đầu thuê freelancer này và đánh giá"
     },
-    manage_product_create: {
+    manageProductCreate: {
       notSave: "Bạn chưa lưu các thay đổi của mình.",
       plsSave: "Vui lòng lưu trước khi rời khỏi trang này để tránh mất dữ liệu.",
       continue: "Tiếp tục chỉnh sửa",
@@ -1151,7 +1151,7 @@ export const vi = {
       workflowDescriptionPlaceholder: "Mô tả chi tiết bước thực hiện...",
       workflowTitle: "Xác định các bước làm việc của bạn"
     },
-    not_found: {
+    notFound: {
       backButton: "Quay lại trang chủ",
       errorDescription: "Trang bạn yêu cầu hiện không khả dụng. Có thể bạn đã truy cập một liên kết cũ hoặc nội dung đã bị di chuyển. Bạn có thể truy cập trang danh mục công việc qua phần gợi ý bên dưới.",
       errorTitle: "Không tìm thấy trang bạn cần",
@@ -1213,7 +1213,7 @@ export const vi = {
       times: "Lần",
       workTitle: "Công việc của {{username}}"
     },
-    profile_apply: {
+    profileApply: {
       advantagesTitle: "Lợi ích khi trở thành freelancer trên Fastwork?",
       applyButton: "Đăng ký làm freelancer",
       careerGrowth: "Phát triển sự nghiệp với Specialist",
@@ -1301,7 +1301,7 @@ export const vi = {
       whyChooseTitle: "Tại sao freelancer chọn Fastwork?",
       whyTitle: "Tại sao freelancer chọn Fastwork"
     },
-    profile_chat: {
+    profileChat: {
       chatHistory: "Lịch sử trò chuyện",
       you: "Bạn",
       download: "Tải xuống",
@@ -1323,7 +1323,7 @@ export const vi = {
       typeMessageHere: "Nhập tin nhắn tại đây",
       unselectWarning: "Bạn đã bỏ chọn mục trước đó được gửi theo lượt duyệt của freelancer. Hãy xem freelancer đang chào bán gì."
     },
-    profile_coins: {
+    profileCoins: {
       buttonProceedPayment: "Tiến hành thanh toán",
       buttonTopUp: "Nạp tiền",
       buttonTopUp10000: "Nạp 10.000 baht",
@@ -1347,7 +1347,7 @@ export const vi = {
       tableTotalCoins: "Tổng số coins nhận được",
       titleFastworkCoin: "Fastwork Coin"
     },
-    profile_company: {
+    profileCompany: {
       buttonSearchCompany: "Tìm kiếm thông tin công ty",
       labelTaxId: "Mã số thuế doanh nghiệp",
       noteRequirements: "• Người tuyển dụng phải yêu cầu bản sao CCCD từ freelancer trực tiếp.• Người tuyển dụng phải cấp chứng từ khấu trừ thuế (Mẫu 50) dưới tên của freelancer. (Xem mẫu tài liệu)",
@@ -1367,7 +1367,7 @@ export const vi = {
       stepWaitApprovalSub: "Trong vòng 2 giờ",
       subtitleCompanyHiring: "Dùng để phát hành tài liệu tuyển dụng công ty"
     },
-    profile_contact: {
+    profileContact: {
       cancelButton: "Đóng",
       confirmButton: "Thay đổi email",
       emailChangeDescription: "Email hiện tại của bạn đã được xác minh trong hệ thống. Nếu bạn muốn thay đổi, email mới sẽ cần được xác minh lại.",
@@ -1390,7 +1390,7 @@ export const vi = {
       subtitleContactInfo: "Để đảm bảo chúng tôi có thể liên hệ với bạn",
       verifyButton: "Xác minh"
     },
-    profile_coupon: {
+    profileCoupon: {
       descriptionSpecialOffers: "Ưu đãi độc quyền và khuyến mãi từ đối tác, cùng với phiếu giảm giá",
       descriptionYourCoupons: "Bạn có thể chọn phiếu giảm giá khi thuê và thanh toán",
       labelYourCoupons: "Phiếu giảm giá của bạn",
@@ -1402,7 +1402,7 @@ export const vi = {
       tabForFreelancers: "Dành cho Freelancer",
       tabForHiring: "Dành cho tuyển dụng"
     },
-    profile_data: {
+    profileData: {
       concent: "Đồng ý nhận tin tức và các chương trình khuyến mãi đặc biệt qua tất cả các kênh từ Fastwork.",
       privacy: "Chính sách quyền riêng tư",
       cookieUse: "Fastwork sử dụng cookie để giúp cải thiện và nâng cao trải nghiệm người dùng của bạn khi bạn truy cập trang web của chúng tôi. Bạn có thể chọn đồng ý với từng loại cookie (ngoại trừ cookie thiết yếu).",
@@ -1429,7 +1429,7 @@ export const vi = {
       toggleAnalyticsCookies: "Bật hoặc tắt Cookie phân tích",
       toggleMarketingCookies: "Bật hoặc tắt Cookie tiếp thị"
     },
-    profile_individual: {
+    profileIndividual: {
       labelFirstName: "Tên",
       labelLastName: "Họ",
       placeholderFirstName: "Nhập tên",
@@ -1438,7 +1438,7 @@ export const vi = {
       sectionIndividualHiring: "Thông tin tuyển dụng cá nhân",
       subtitleIndividualHiring: "Dùng để phát hành tài liệu tuyển dụng cá nhân"
     },
-    profile_info: {
+    profileInfo: {
       buttonSetPassword: "Đặt mật khẩu",
       confirmPasswordLabel: "Xác nhận mật khẩu",
       confirmPasswordPlaceholder: "Xác nhận mật khẩu",
@@ -1460,7 +1460,7 @@ export const vi = {
       submitButton: "Xác nhận",
       subtitleAccountInfo: "Thiết lập thông tin tài khoản cơ bản của bạn"
     },
-    profile_job: {
+    profileJob: {
       noJob: "Không tìm thấy bài đăng công việc nào",
       allPostJobs: "Tất cả công việc đã đăng",
       proposalJobs: "Các đề xuất công việc của bạn",
@@ -1489,7 +1489,7 @@ export const vi = {
       tableHeaderTitle: "Tiêu đề",
       wantToGetJobBoard: "Nhận công việc từ bảng thông báo việc làm?"
     },
-    profile_navbar: {
+    profileNavbar: {
       accountInfo: "Thông tin tài khoản",
       companyHiringInfo: "Tuyển dụng với tư cách công ty",
       contactInfo: "Thông tin liên hệ",
@@ -1497,7 +1497,7 @@ export const vi = {
       sectionAccount: "Tài khoản của bạn",
       sectionHiring: "Thông tin tuyển dụng"
     },
-    profile_point: {
+    profilePoint: {
       award1000BahtCoupon: "Phiếu giảm giá 1000 baht",
       award100BahtCoupon: "Phiếu giảm giá 100 baht",
       award3000BahtCoupon: "Phiếu giảm giá 3000 baht",
@@ -1590,7 +1590,7 @@ export const vi = {
       step3Title: "Giới thiệu bản thân",
       upgradeMembership: "Để nâng hạng thành viên"
     },
-    seller_account_statistics: {
+    sellerAccountStatistics: {
       accountStatisticsTitle: "Thống kê tài khoản",
       averageResponseTime: "Thời gian phản hồi trung bình",
       findJobsButton: "Tìm công việc",
@@ -1601,7 +1601,7 @@ export const vi = {
       serviceStatisticsTitle: "Thống Kê Dịch Vụ",
       startSellingButton: "Bắt Đầu Bán"
     },
-    seller_bank_account: {
+    sellerBankAccount: {
       bankAccountNumberLabel: "Số tài khoản ngân hàng",
       bankAccountNumberPlaceholder: "Nhập số tài khoản",
       bankInfoDescription: "Để nhận tiền khi có việc được thuê",
@@ -1612,7 +1612,7 @@ export const vi = {
       bankQrUploadTitle: "Ảnh mã QR ngân hàng của bạn (Tên tài khoản phải trùng với CMND/CCCD)",
       uploadButton: "Tải ảnh lên"
     },
-    seller_commitment_letter: {
+    sellerCommitmentLetter: {
       incomeTaxDescription: "Để nhận thanh toán thông qua hệ thống Fastwork, freelancer phải xác nhận và đồng ý tự cung cấp thông tin thu nhập của mình để cơ quan thuế xem xét tuân thủ các yêu cầu pháp lý.",
       step1Note: "Sau khi được xác minh, thông tin này không thể thay đổi (vui lòng liên hệ đội ngũ hỗ trợ)",
       step1Placeholder: "Vui lòng nhập thông tin",
@@ -1627,7 +1627,7 @@ export const vi = {
       taxInfoTitle: "Thông tin khai báo thuế",
       uploadButton: "Tải lên tài liệu"
     },
-    seller_contact_info: {
+    sellerContactInfo: {
       addressDetail: "Chi tiết địa chỉ",
       addressInfoDescription: "Để chúng tôi có thể gửi hàng và tài liệu cho bạn",
       addressInfoTitle: "Thông tin địa chỉ",
@@ -1645,7 +1645,7 @@ export const vi = {
       zipcode: "Mã bưu điện",
       zipcodePlaceholder: "Nhập mã bưu điện"
     },
-    seller_document_info: {
+    sellerDocumentInfo: {
       firstnameLabel: "Tên đệm và tên",
       firstnamePlaceholder: "Nhập tên đệm và tên",
       lastnameLabel: "Họ",
@@ -1653,7 +1653,7 @@ export const vi = {
       subtitle: "Dành cho cá nhân",
       title: "Thông tin tài liệu của người thuê (cá nhân)"
     },
-    seller_my_service: {
+    sellerMyService: {
       modalTitle: "Chi tiết công việc chưa được duyệt",
       serviceInformation: "Thông tin dịch vụ",
       submissionSuccessful: "Gửi thành công! Vui lòng chờ kết quả duyệt từ hệ thống.",
@@ -1680,7 +1680,7 @@ export const vi = {
       statusPending: "Đang chờ duyệt",
       statusRejected: "Từ chối"
     },
-    seller_personal_info: {
+    sellerPersonalInfo: {
       addressDetail: "Chi tiết địa chỉ",
       addressInfoNote: "Vui lòng nhập thông tin trùng với CMND/CCCD của bạn",
       addressInfoTitle: "Địa chỉ theo CMND/CCCD",
@@ -1699,7 +1699,7 @@ export const vi = {
       province: "Tỉnh/Thành phố",
       subDistrict: "Xã/Phường"
     },
-    seller_profile: {
+    sellerProfile: {
       aboutFreelancerLabel: "Về freelancer",
       displayNameLabel: "Tên hiển thị trên hệ thống",
       displayNameMinLengthError: "Tên hiển thị phải có ít nhất 2 ký tự",
@@ -1715,7 +1715,7 @@ export const vi = {
       usernameMinLengthError: "Username phải có ít nhất 3 ký tự",
       usernameNote: "Username sẽ hiển thị trong URL, chỉnh sửa username có thể ảnh hưởng đến kết quả tìm kiếm trên Google"
     },
-    seller_project_management: {
+    sellerProjectManagement: {
       projectColumnAmount: "Số tiền (Baht)",
       projectColumnChat: "Bắt đầu trò chuyện",
       projectColumnCode: "Mã dự án",
@@ -1728,7 +1728,7 @@ export const vi = {
       projectPendingTab: "Chờ phê duyệt ({{n}})",
       projectPendingTitle: "Dự án đang chờ phê duyệt"
     },
-    seller_withdrawal: {
+    sellerWithdrawal: {
       accumulatedBalance: "Số dư tích lũy (Baht)",
       addData: "Thêm dữ liệu",
       checkYourInfo: "Kiểm tra thông tin của bạn",
@@ -1750,7 +1750,7 @@ export const vi = {
       verificationInfoTitle: "Thông tin cần được xác minh khi có số dư tích lũy",
       verificationTax: "Thông tin khai báo thuế: Thêm dữ liệu"
     },
-    sp_privacy: {
+    spPrivacy: {
       myProfile: "Hồ sơ của tôi",
       points: "Điểm",
       myJob: "Công việc của tôi",
@@ -1768,7 +1768,7 @@ export const vi = {
       dataManagement: "Quản lý dữ liệu",
       logout: "Đăng xuất"
     },
-    support_center: {
+    supportCenter: {
       faqTitle: "Các câu hỏi thường gặp",
       faqSubtitle: "Nhận câu trả lời cho các câu hỏi phổ biến",
       faqHeader: "Các câu hỏi thường gặp",
@@ -2058,7 +2058,7 @@ export const vi = {
       marketingOptIn: "Tôi quan tâm đến việc nhận thông tin, ưu đãi, và khuyến mãi từ fastwork",
       freelancerSignup: "Đăng ký làm freelancer"
     },
-    terms_employer: {
+    termsEmployer: {
       pageTitle: "Điều khoản & Điều kiện",
       heading: "Điều khoản & Điều kiện sử dụng nền tảng dành cho nhà tuyển dụng của Công ty Fastwork Technologies Co., Ltd.",
       definitionTitle: "Định nghĩa",
@@ -2223,7 +2223,7 @@ export const vi = {
       contactInfoPhone: "Số điện thoại: 02-114-7008",
       contactInfoWebsiteLinkText: "https://static.fastwork.co/contents/support-center"
     },
-    user_edit: {
+    userEdit: {
       addInfo: "Thêm thông tin",
       addMoreButton: "Thêm thông tin",
       awardPlaceholder: "Nhập tên giải thưởng",
