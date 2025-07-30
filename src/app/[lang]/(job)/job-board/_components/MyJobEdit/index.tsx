@@ -14,8 +14,8 @@ import React, {useCallback, useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {useGlobalTranslate} from "@/hooks/translation/useGlobalTranslate";
-import {useHttpPut} from "@/hooks/useHttpPut";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
+import {useHttpPost} from "@/hooks/useHttpPost";
 
 const jobSchema = z.object({
     communityId: z.string().min(1, "Service catalog is required"),
@@ -58,7 +58,7 @@ const MyJobEdit = ({jobId}: Props) => {
         isMutating: isCatalogLoading,
     } = useHttpGet("listCommunities");
 
-    const {execute: editJob, isMutating} = useHttpPut("editPost");
+    const {execute: editJob, isMutating} = useHttpPost("editPost");
 
     const {successMessage, errorMessage} = useNotification();
     const [isModalOpen, setIsModalOpen] = useState(false);
