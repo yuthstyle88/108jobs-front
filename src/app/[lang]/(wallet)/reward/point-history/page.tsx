@@ -92,10 +92,10 @@ const PointHistoryPage = () => {
               </div>
             </div>
             <div className="text-[14px] font-[400] leading-[16.1px] text-[rgba(43,50,59,0.6)]">
-              ≈ 0.00 บาท
+              {historyLanguageData?.approximate_symbol} 0.00 {historyLanguageData?.currency_baht}
             </div>
             <div className="text-[14px] font-[400] leading-[16.1px] text-[rgba(43,50,59,0.6)]">
-              0.00 {historyLanguageData?.labelTotalPoints} 28/02/2025
+              0.00 {historyLanguageData?.labelTotalPoints} {historyLanguageData?.expiration_date || "28/02/2025"}
             </div>
           </div>
         </div>
@@ -174,7 +174,7 @@ const PointHistoryPage = () => {
                   <div>{history.date}</div>
                   <div>{history.details}</div>
                   <div className="text-right font-medium">
-                    {history.points > 0 ? "+" : ""}
+                    {history.points > 0 ? historyLanguageData?.plus_symbol || "+" : ""}
                     {history.points}
                   </div>
                 </div>

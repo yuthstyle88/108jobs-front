@@ -7,15 +7,16 @@ import { Mailbox } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useTranslation } from "react-i18next";
 
-const changePasswordSchema = z
+const changePasswordSchema = (t: (key: string, options?: any) => string) => z
   .object({
-    oldPassword: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
-    newPassword: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
+    oldPassword: z.string().min(6, t("authen.passwordMin6")),
+    newPassword: z.string().min(6, t("authen.passwordMin6")),
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "รหัสผ่านไม่ตรงกัน",
+    message: t("authen.passwordsDoNotMatch"),
     path: ["confirmPassword"],
   });
 
@@ -38,8 +39,9 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
   formEmail,
   language,
 }) => {
+  const { t } = useTranslation();
   const { reset } = useForm({
-    resolver: zodResolver(changePasswordSchema),
+    resolver: zodResolver(changePasswordSchema(t)),
     mode: "onChange",
   });
 
@@ -125,7 +127,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
         } else if (data.error) {
           setApiError(data.error);
         } else {
-          setApiError("การยืนยันอีเมลไม่สำเร็จ");
+          setApiError(t("contact.invalidOrExpiredCode"));
         }
         resetCode();
         return;
@@ -185,10 +187,10 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
         <Mailbox className="w-[60px] h-[60px] text-third" />
         <article>
           <h1 className="text-base font-bold text-text-primary text-center">
-            {language?.emailVerificationTitle}
+            {language?.emailVerificationTitle || t("contact.emailVerificationTitle")}
           </h1>
           <p className="text-[14px] font-sans text-text-secondary text-center">
-            {language?.emailVerificationDescription}
+            {language?.emailVerificationDescription || t("contact.emailVerificationDescription")}
             <br /> {formEmail}
           </p>
         </article>
@@ -231,7 +233,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
             isResendDisabled ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          {isSendAgain ? `${language?.resendCode}...` : language?.resendCode}
+          {isSendAgain ? `${language?.resendCode || t("contact.resendCode")}...` : (language?.resendCode || t("contact.resendCode"))}
           {isResendDisabled ? `(${timeLeft})` : ""}
         </button>
         <button
@@ -243,7 +245,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
           }`}
           disabled={code.join("").length !== 6 || isSubmitting}
         >
-          {isSubmitting ? <LoadingCircle /> : language?.verifyButton}
+          {isSubmitting ? <LoadingCircle /> : (language?.verifyButton || t("contact.verifyButton"))}
         </button>
       </div>
       {apiError && (

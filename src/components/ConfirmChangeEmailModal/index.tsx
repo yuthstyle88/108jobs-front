@@ -5,15 +5,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useTranslation } from "react-i18next";
 
-const changePasswordSchema = z
+const changePasswordSchema = (t: (key: string, options?: any) => string) => z
   .object({
-    oldPassword: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
-    newPassword: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
+    oldPassword: z.string().min(6, t("authen.passwordMin6")),
+    newPassword: z.string().min(6, t("authen.passwordMin6")),
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "รหัสผ่านไม่ตรงกัน",
+    message: t("authen.passwordsDoNotMatch"),
     path: ["confirmPassword"],
   });
 
@@ -31,11 +32,12 @@ const ConfirmChangeEmailModal: React.FC<ConfirmChangeEmailModalProps> = ({
   handleConfirmChange,
   language
 }) => {
+  const { t } = useTranslation();
   const {
     reset,
     formState: {  isSubmitting },
   } = useForm({
-    resolver: zodResolver(changePasswordSchema),
+    resolver: zodResolver(changePasswordSchema(t)),
     mode: "onChange",
   });
 
@@ -56,10 +58,10 @@ const ConfirmChangeEmailModal: React.FC<ConfirmChangeEmailModalProps> = ({
         <Mail className="w-[60px] h-[60px] text-third" />
         <article>
           <h1 className="text-base font-bold text-text-primary text-center">
-            {language?.emailChangeTitle}
+            {language?.emailChangeTitle || t("contact.emailChangeTitle")}
           </h1>
           <p className="text-[14px] font-sans text-text-secondary text-center">
-            {language?.emailChangeDescription}
+            {t("contact.emailChangeDescription")}
           </p>
         </article>
       </section>
@@ -69,14 +71,14 @@ const ConfirmChangeEmailModal: React.FC<ConfirmChangeEmailModalProps> = ({
           disabled={isSubmitting}
           className="px-3 py-2 cursor-pointer w-fit text-text-secondary rounded-md font-semibold hover:bg-gray-200 transition duration-300 "
         >
-          {isSubmitting ? <LoadingCircle /> : language?.cancelButton}
+          {isSubmitting ? <LoadingCircle /> : (language?.cancelButton || t("global.buttonCancel"))}
         </button>
         <button
           onClick={handleConfirmChange}
           disabled={isSubmitting}
           className="px-3 py-2 cursor-pointer w-fit bg-blue-600 text-white font-normal rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? <LoadingCircle /> : language?.confirmButton}
+          {isSubmitting ? <LoadingCircle /> : (language?.confirmButton || t("global.buttonConfirm"))}
         </button>
       </div>
     </Modal>

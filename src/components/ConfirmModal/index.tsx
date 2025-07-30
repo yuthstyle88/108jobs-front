@@ -4,33 +4,39 @@ import useNotification from "@/hooks/useNotification";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import LoadingCircle from "../LoadingCircle";
 import { CustomInput } from "../ui/InputField";
 import Modal from "../ui/Modal";
+import { useTranslation } from "react-i18next";
+import { z } from "zod";
+
+const { t } = useTranslation();
 
 const changePasswordSchema = z
   .object({
-    oldPassword: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
-    newPassword: z.string().min(6, "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
+    oldPassword: z.string().min(6, t("authen.passwordMin6")),
+    newPassword: z.string().min(6, t("authen.passwordMin6")),
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "รหัสผ่านไม่ตรงกัน",
+    message: t("authen.passwordsDoNotMatch"),
     path: ["confirmPassword"],
   });
+
+type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
 interface ConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
+
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
   isOpen,
   onClose,
 }) => {
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -89,7 +95,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
       setApiError(
         error instanceof Error
           ? error.message
-          : "มีข้อผิดพลาดในการเปลี่ยนรหัสผ่านของคุณ"
+          : ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED
       );
     }
   };
@@ -98,39 +104,39 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={handleCloseModal}
-      title="รหัสผ่าน"
+      title={t("profileInfo.sectionPassword")}
       className="max-w-md w-full"
       closeOnOutsideClick={false}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <CustomInput
-          label="รหัสผ่าน"
+          label={t("profileInfo.oldPassword")}
           name="oldPassword"
           type="password"
           register={register("oldPassword")}
           error={errors.oldPassword?.message}
-          placeholder="ระบุรหัสผ่าน"
+          placeholder={t("profileInfo.passwordPlaceholder")}
           showPassword={showOldPassword}
           toggleShowPassword={() => setShowOldPassword(!showOldPassword)}
         />
         <CustomInput
-          label="รหัสผ่าน"
+          label={t("profileInfo.newPassword")}
           name="newPassword"
           type="password"
           register={register("newPassword")}
           error={errors.newPassword?.message}
-          placeholder="ระบุรหัสผ่าน"
+          placeholder={t("profileInfo.passwordPlaceholder")}
           showPassword={showNewPassword}
           toggleShowPassword={() => setShowNewPassword(!showNewPassword)}
         />
 
         <CustomInput
-          label="ยืนยันรหัสผ่าน"
+          label={t("profileInfo.confirmPasswordLabel")}
           name="confirmPassword"
           type="password"
           register={register("confirmPassword")}
           error={errors.confirmPassword?.message}
-          placeholder="ยืนยันรหัสผ่าน"
+          placeholder={t("profileInfo.confirmPasswordPlaceholder")}
           showPassword={showConfirmPassword}
           toggleShowPassword={() =>
             setShowConfirmPassword(!showConfirmPassword)
@@ -148,7 +154,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           disabled={isSubmitting}
           className="submit-button py-2"
         >
-          {isSubmitting ? <LoadingCircle /> : "ยืนยัน"}
+          {isSubmitting ? <LoadingCircle /> : t("profileInfo.submitButton")}
         </button>
       </form>
     </Modal>
