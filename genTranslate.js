@@ -9,7 +9,7 @@ const outputDir = "src/translations/";
 fs.mkdirSync(outputDir, { recursive: true });
 
 function fixLineBreaks(text) {
-    return text.replace(/\n/g, ""); // แปลง '\\n' ใน JSON ให้เป็น newline จริง
+    return text.replace(/\n/g, ""); // replace new line
 }
 // 🐫 ฟังก์ชันแปลงสไตล์ key เป็น camelCase
 function toCamelCase(str) {
@@ -57,8 +57,8 @@ function generateLocalizedTranslations() {
 
     const files = fs.readdirSync(langDir);
     files.forEach((filename) => {
-      const namespace = path.parse(filename).name;
-      const filePath = path.join(langDir, filename);
+        const namespace = toCamelCase(path.parse(filename).name);
+        const filePath = path.join(langDir, filename);
 
       if (fs.statSync(filePath).isFile() && path.extname(filename) === ".json") {
         const rawContent = fs.readFileSync(filePath, "utf8");
