@@ -11,12 +11,12 @@ import FreelancerSession from "./components/FreelancerSection";
 import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
 import { useScrollHandler } from "./hooks/useScrollHandler";
-import {I18NextService,} from "@/services/I18NextService";
+import { I18NextService, } from "@/services/I18NextService";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import {useLanguage} from "@/contexts/LanguageContext";
-import {getNamespace} from "@/utils/i18nHelper";
-import {LanguageFile} from "@/constants/language";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { getNamespace } from "@/utils/i18nHelper";
+import { LanguageFile } from "@/constants/language";
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
     bg: "#transparent",
@@ -43,16 +43,12 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
 
   const { t } = useTranslation();
   const { scrollY, showSearch } = useScrollHandler(forceShowSearch);
-
-  const globalLanguageData = getNamespace(LanguageFile.GLOBAL);
-
   const { bg } = TYPES[type];
 
   return (
     <header
-      className={`fixed top-0 z-[999] w-full transition-all duration-300 ${
-        scrollY > 0 ? "bg-primary" : bg
-      }`}
+      className={`fixed top-0 z-[999] w-full transition-all duration-300 ${scrollY > 0 ? "bg-primary" : bg
+        }`}
     >
       <nav className="mx-[1.5rem] flex flex-wrap items-center justify-center h-auto min-h-[70px] py-4 xl:py-1 xl:justify-between">
         <section className="flex items-center gap-x-4 w-full md:w-auto">
@@ -67,7 +63,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
             />
           </Link>
 
-          <Search language={globalLanguageData} showSearch={showSearch} />
+          <Search showSearch={showSearch} />
         </section>
 
         <section className="flex items-center gap-4 w-full md:w-auto mt-4 md:mt-0 justify-end">
@@ -96,16 +92,11 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
             </Link>
           )}
           {isFreelancer && (
-              <FreelancerSession
-                globalLanguageData={globalLanguageData}
-              />
-            )}
+            <FreelancerSession />
+          )}
           {isEmployer && (
-              <EmployerSection
-                globalLanguageData={globalLanguageData}
-
-              />
-            )}
+            <EmployerSection />
+          )}
           {!isLoggedIn && (
             <Link prefetch={false}
               href="/login"

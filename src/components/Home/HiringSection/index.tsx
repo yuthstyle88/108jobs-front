@@ -4,29 +4,25 @@ import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
-type Props = {
-  homeLanguageData?: Record<string,string>;
-};
-
-const HiringSection = (props: Props) => {
-  const { homeLanguageData } = props;
-
+const HiringSection = () => {
+const { t } = useTranslation();
   const freelancerIntro = [
     {
       icon: AssetsImage.group,
-      title: homeLanguageData?.tittleFirstSlogan,
-      description: homeLanguageData?.contentFreelancerVerification,
+      title: t("home.tittleFirstSlogan"),
+      description: t("home.contentFreelancerVerification"),
     },
     {
       icon: AssetsImage.shield,
-      title: homeLanguageData?.tittleSecondSlogan,
-      description: homeLanguageData?.contentPaymentProtection,
+      title: t("home.tittleSecondSlogan"),
+      description: t("home.contentPaymentProtection"),
     },
     {
       icon: AssetsImage.paper,
-      title: homeLanguageData?.tittleThirdSlogan,
-      description: homeLanguageData?.contentQualityFreelancers,
+      title: t("home.tittleThirdSlogan"),
+      description: t("home.contentQualityFreelancers"),
     },
   ];
   return (
@@ -34,10 +30,10 @@ const HiringSection = (props: Props) => {
       <section className="py-6 sm:py-24 grid grid-container-desktop-banner gap-y-4 sm:gap-y-12 ">
         <div className="col-start-2 col-end-3">
           <h4 className="text-[16px] sm:text-[1.5rem] text-[#38404c] font-medium leading-[1.15]">
-            {homeLanguageData?.tittlePrimaryWhySection}
+            {t("home.tittlePrimaryWhySection")}
           </h4>
           <h2 className="home-title-head text-[18px] sm:text-[2.25rem]">
-            {homeLanguageData?.tittleSecondaryWhySection}
+            {t("home.tittleSecondaryWhySection")}
           </h2>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-[1.5rem] gap-y-[1rem] lg:gap-y-0 min-h-0 min-w-0 col-start-2 col-end-3">
@@ -67,7 +63,7 @@ const HiringSection = (props: Props) => {
         <div className="grid grid-container-desktop-banner gap-y-4 sm:gap-y-12">
           <div className="col-start-2 col-end-3">
             <h2 className="home-title-head text-[18px] sm:text-[2.25rem]">
-              {homeLanguageData?.titleStartHiringSection}
+          {t("home.titleStartHiringSection")}
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
@@ -84,10 +80,10 @@ const HiringSection = (props: Props) => {
                 </div>
                 <div>
                   <h1 className="text-[1.25rem] leading-[1.15]">
-                    {homeLanguageData?.labelStartHiringSection1}
+                    {t("home.labelStartHiringSection1")}
                   </h1>
                   <p className="m-0 text-base font-sans leading-[1.65]">
-                    {homeLanguageData?.contentStartHiringSection1}
+                     {t("home.contentStartHiringSection1")}
                   </p>
                 </div>
               </div>
@@ -102,10 +98,10 @@ const HiringSection = (props: Props) => {
                 </div>
                 <div>
                   <h1 className="text-[1.25rem] leading-[1.15]">
-                    {homeLanguageData?.labelStartHiringSection3}
+                     {t("home.labelStartHiringSection3")}
                   </h1>
                   <p className="m-0 text-base font-sans leading-[1.65]">
-                    {homeLanguageData?.contentStartHiringSection3}
+                      {t("home.contentStartHiringSection3")}
                   </p>
                 </div>
               </div>
@@ -124,10 +120,10 @@ const HiringSection = (props: Props) => {
                 </div>
                 <div>
                   <h1 className="text-[1.25rem] leading-[1.15]">
-                    {homeLanguageData?.labelStartHiringSection2}
+                    {t("home.labelStartHiringSection2")}
                   </h1>
                   <p className="m-0 text-base font-sans leading-[1.65]">
-                    {homeLanguageData?.contentStartHiringSection2}
+                     {t("home.contentStartHiringSection2")}
                   </p>
                 </div>
               </div>
@@ -142,10 +138,10 @@ const HiringSection = (props: Props) => {
                 </div>
                 <div>
                   <h1 className="text-[1.25rem] leading-[1.15]">
-                    {homeLanguageData?.labelStartHiringSection4}
+                   {t("home.labelStartHiringSection4")}
                   </h1>
                   <p className="m-0 text-base font-sans leading-[1.65]">
-                    {homeLanguageData?.contentStartHiringSection4}
+                     {t("home.contentStartHiringSection4")}
                   </p>
                 </div>
               </div>

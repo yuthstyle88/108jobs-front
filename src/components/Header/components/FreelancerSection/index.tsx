@@ -14,14 +14,7 @@ import ProfileFreelancer from "../ProfileFreelancer";
 import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import {useTranslation} from "react-i18next";
 
-interface FreelancerProps {
-  globalLanguageData?: Record<string, string>;
-}
-
-const FreelancerSession = ({
-  globalLanguageData,
-}: FreelancerProps) => {
-
+const FreelancerSession = () => {
   const { person } = useMyUser();
 
   const { isOpen, toggle, close } = useToggle();

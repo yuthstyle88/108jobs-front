@@ -21,24 +21,22 @@ import { API_ROUTES } from "@/api/endpoints";
 import CategoryCardMock from "@/components/CategoryCardMock";
 import CatalogBanner from "@/components/Home/Catalog";
 import HiringSection from "@/components/Home/HiringSection";
+import IntroductionSection from "@/components/Home/IntroductionSection";
 import OfferSection from "@/components/Home/OfferSection";
 import RecommendAndReview from "@/components/Home/RecommendAndReview";
+import Loading from "@/components/Loading";
 import LocationSelectionModal from "@/components/LocationSelectionModal";
 import SearchInput from "@/components/SearchInput";
 import { LandingImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
 import SpAdsSlider from "@/containers/SpAdsSlider";
 import SpCatalog from "@/containers/SpCatalog";
 import SpHeader from "@/containers/SpHeader";
 import { usePublicFetch } from "@/hooks/api-hooks";
+import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
 import { ServiceCatalogData } from "@/types/catalog";
 import Link from "next/link";
 import { useState } from "react";
-import IntroductionSection from "@/components/Home/IntroductionSection";
-import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
-import Loading from "@/components/Loading";
 import { useTranslation } from "react-i18next";
-import {getNamespace} from "@/utils/i18nHelper";
 
 const interestImages = [
   LandingImage.interest1,
@@ -77,9 +75,6 @@ export default function Home() {
   const [expanded, setExpanded] = useState(false);
   const [isOpenLocationSelection, setIsOpenLocationSelection] = useState(false);
 
-  const global = getNamespace(LanguageFile.GLOBAL);
-  const home = getNamespace(LanguageFile.HOME);
-
   const { data: catalogData, isLoading: isCatalogLoading } =
     usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.getAllCatalog);
 
@@ -107,7 +102,7 @@ export default function Home() {
             <p className="text-[18px] font-medium">
               {t("home.titleBannerHomePage2")}
             </p>
-            <SearchInput language={global} />
+            <SearchInput />
           </div>
         </section>
         <CatalogBanner
@@ -115,7 +110,6 @@ export default function Home() {
           activeCatalog={activeCatalog}
           activeCatalogIndex={activeCatalogIndex}
           setActiveCatalogIndex={setActiveCatalogIndex}
-          homeLanguageData={home}
         />
 
         <section className="block sm:hidden pt-[4.5rem]">
@@ -125,7 +119,7 @@ export default function Home() {
           <SpCatalog activeCatalog={activeCatalog} />
         </section>
 
-        <HiringSection homeLanguageData={home} />
+        <HiringSection />
 
         <section className="hidden sm:block">
           <SpAdsSlider />
@@ -169,7 +163,7 @@ export default function Home() {
           </Swiper>
         </div>
 
-        <OfferSection homeLanguageData={home} />
+        <OfferSection />
 
         <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
@@ -273,10 +267,9 @@ export default function Home() {
           </Swiper>
         </div>
 
-        <RecommendAndReview homeLanguageData={home} />
+        <RecommendAndReview />
 
         <IntroductionSection
-          homeLanguageData={home}
           expanded={expanded}
           setExpanded={setExpanded}
         />

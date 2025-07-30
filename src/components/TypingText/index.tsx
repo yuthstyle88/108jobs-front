@@ -1,29 +1,27 @@
 "use client";
 
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
+import { useTranslation } from "react-i18next";
 import { TypeAnimation } from "react-type-animation";
 
 const TypingText = () => {
-    const global = getNamespace(LanguageFile.GLOBAL);
-
+  const { t,i18n } = useTranslation();
   return (
     <TypeAnimation
-      key={JSON.stringify(global)}
+      key={i18n.language}
       sequence={[
-        global?.labelNavBarItem2 || "",
+        t("global.labelNavBarItem2"),
         1200,
-        global?.labelNavBarItem3 || "",
+        t("global.labelNavBarItem3"),
         1200,
-        global?.labelNavBarItem4 || "",
+        t("global.labelNavBarItem4"),
         1200,
-        global?.labelNavBarItem5 || "",
+        t("global.labelNavBarItem5"),
         1200,
-        global?.labelNavBarItem6 || "",
+        t("global.labelNavBarItem6"),
         1200,
-        global?.labelNavBarItem7 || "",
+        t("global.labelNavBarItem7"),
         1200,
-        global?.labelNavBarItem8 || "",
+        t("global.labelNavBarItem8"),
         1200,
       ]}
       omitDeletionAnimation

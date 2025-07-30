@@ -98,7 +98,7 @@ class LanguageDetector {
   static readonly type = "languageDetector";
 
   detect() {
-    return LanguageService.userLanguages;
+    return LanguageService.userLanguages();
   }
 }
 
@@ -165,7 +165,7 @@ export class I18NextService {
         nonExplicitSupportedLngs: true,
         load: "all",
         // initImmediate: false,
-        fallbackLng: "en",
+        fallbackLng: ["en"],
         // Use all namespaces available in en.ts
         ns: Object.keys(en),
         resources: { en } as Resource,

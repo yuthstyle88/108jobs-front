@@ -2,17 +2,16 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
-type Props = {
-  language: Record<string, string>;
-};
 
 type SearchForm = {
   query: string;
 };
 
-const SearchInput = ({ language }: Props) => {
+const SearchInput = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const { register, handleSubmit } = useForm<SearchForm>({
     defaultValues: {
       query: "",
@@ -34,7 +33,7 @@ const SearchInput = ({ language }: Props) => {
       <div className="flex text-black h-[40px] relative w-[624px]">
         <input
           type="text"
-          placeholder={`${language?.hintTextHeaderSearch}...`}
+          placeholder={t("global.hintTextHeaderSearch")}
           className="focus:outline-none rounded-[20px] border-2-white px-5 text-sm font-mono w-full"
           {...register("query")}
         />

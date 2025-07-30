@@ -27,6 +27,8 @@ type ProfileFreelancerProps = {
 
 const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
   const logout = () => UserService.Instance.logout();
+  console.log("profile",profile);
+  
   const { lang: currentLang } = useLanguage();
   const { t } = useTranslation();
   return (

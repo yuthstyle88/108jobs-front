@@ -13,13 +13,9 @@ import ProfileSection from "../ProfileSection";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {useTranslation} from "react-i18next";
 
-interface EmployerProps {
-  globalLanguageData?: Record<string, string>;
-}
 
-const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
+const EmployerSection = () => {
   const { isOpen, toggle, close } = useToggle();
-
   const {person } = useMyUser();
   const { t } = useTranslation();
 

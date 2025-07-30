@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import {useTranslation} from "react-i18next";
 
 type Props = {
-  language: Record<string, string>;
   showSearch: boolean;
 };
 
@@ -16,7 +15,7 @@ type SearchForm = {
   query: string;
 };
 
-const Search = ({ language, showSearch }: Props) => {
+const Search = ({ showSearch }: Props) => {
   const router = useRouter();
   const {t} = useTranslation();
   const searchParams = useSearchParams();

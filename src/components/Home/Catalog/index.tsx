@@ -6,13 +6,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   serviceCatalogs: ServiceCatalog[];
   activeCatalog: ServiceCatalog;
   activeCatalogIndex: number;
   setActiveCatalogIndex: (index: number) => void;
-  homeLanguageData?: Record<string, string>;
 };
 
 const CatalogBanner = (props: Props) => {
@@ -21,8 +21,8 @@ const CatalogBanner = (props: Props) => {
     activeCatalog,
     activeCatalogIndex,
     setActiveCatalogIndex,
-    homeLanguageData
   } = props;
+  const { t } = useTranslation();
   return (
     <section className="hidden sm:block">
       <div className="grid-container-desktop-banner w-full ">
@@ -110,7 +110,7 @@ const CatalogBanner = (props: Props) => {
                 href="/categories/popular-service"
                 className="text-primary py-[0.75rem] relative no-underline cursor-pointer outline-none ease-in-out duration-150 transition-all"
               >
-                {homeLanguageData?.labelSeeMoreTittle}
+                {t("home.labelSeeMoreTittle")}
                 <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
               </Link>
             </div>
