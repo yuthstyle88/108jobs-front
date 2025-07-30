@@ -1,20 +1,11 @@
 "use client";
-
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { getNamespace } from "@/utils/i18nHelper";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 export default function LocationPage() {
-  const {
-    data: individualLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.INDIVIDUAL);
+  const individualLanguageData = getNamespace(LanguageFile.INDIVIDUAL);
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error />;
 
   return (
     <div>

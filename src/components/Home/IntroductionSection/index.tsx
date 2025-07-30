@@ -1,10 +1,9 @@
 import { CustomerImage } from "@/constants/images";
-import { HomeLanguage } from "@/types/language";
 import Image from "next/image";
 import React from "react";
 
 type Props = {
-  homeLanguageData?: Partial<HomeLanguage> | null;
+  homeLanguageData?: Record<string, string>;
   expanded: boolean;
   setExpanded: (expanded:boolean) => void;
 };

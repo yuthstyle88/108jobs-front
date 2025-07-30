@@ -1,13 +1,12 @@
 import { JobDetailIcon } from "@/constants/icons";
 import { JobDetailResponse } from "@/types/jobDetail";
-import { JobDetailLanguage } from "@/types/language";
 import { formatThaiBaht } from "@/utils/formatMoney";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 
 type Props = {
-  language: Partial<JobDetailLanguage> | undefined | null;
+  language: Record<string, string>;
   data: JobDetailResponse;
 };
 const Package = ({ language, data }: Props) => {

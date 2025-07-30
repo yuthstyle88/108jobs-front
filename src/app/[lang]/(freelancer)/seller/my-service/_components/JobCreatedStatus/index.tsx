@@ -1,17 +1,17 @@
 "use client";
-import { SellerMyService } from "@/types/language";
 import { Info } from "lucide-react";
 import { useState } from "react";
 import RejectJobCreateModal from "../RejectJobCreateModal";
 
 type Props = {
   status: number;
-  languageMap: Partial<SellerMyService> | null | undefined;
+  languageMap: Record<string, string>; // อัปเดตชนิดของ languageMap
 };
+
 
 const statusType: Record<
   number,
-  { bgColor: string; textColor: string; key: keyof SellerMyService }
+  { bgColor: string; textColor: string; key: string }
 > = {
   0: {
     bgColor: "bg-[#e8eaee]",
@@ -39,7 +39,7 @@ const JobCreatedStatus = ({ status, languageMap }: Props) => {
   const statusInfo = statusType[status] || {
     bgColor: "bg-gray-200",
     textColor: "text-gray-500",
-    key: "statusDraft" as keyof SellerMyService,
+    key: "statusDraft",
   };
 
   const text = languageMap?.[statusInfo.key] ?? "Unknown status";

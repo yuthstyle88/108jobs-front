@@ -9,8 +9,6 @@ import {
   useWatch,
 } from "react-hook-form";
 import { AddressFormData } from "../../contact-info/page";
-import { SellerContactInfo } from "@/types/language";
-
 type Geography = {
   provinceNameTh: string;
   districtNameTh: string;
@@ -23,7 +21,7 @@ interface ZipcodeSearchProps {
   control: Control<AddressFormData>;
   setValue: UseFormSetValue<AddressFormData>;
   error?: FieldError;
-  language: Partial<SellerContactInfo> | null | undefined;
+  language: Record<string, string>;
 }
 
 export default function ZipcodeSearch({

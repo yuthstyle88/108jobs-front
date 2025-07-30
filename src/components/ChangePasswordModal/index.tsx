@@ -1,7 +1,6 @@
 "use client";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import useNotification from "@/hooks/useNotification";
-import { ProfileBasicInfoLanguage } from "@/types/language";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -13,7 +12,7 @@ import Modal from "../ui/Modal";
 interface PasswordChangeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  languageData: Partial<ProfileBasicInfoLanguage> | undefined | null;
+  languageData: Record<string, string>;
 }
 
 const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({

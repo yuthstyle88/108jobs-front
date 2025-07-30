@@ -1,6 +1,5 @@
 "use client";
 
-import { ProfileChatLanguage } from "@/types/language";
 import { Paperclip, Send, Smile } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -20,7 +19,7 @@ interface ChatInputProps {
   } | null;
   setSelectedFile: (file: null) => void;
   isUploading: boolean;
-  chatLanguageData?: Partial<ProfileChatLanguage> | null | undefined;
+  chatLanguageData?: Record<string, string>;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({

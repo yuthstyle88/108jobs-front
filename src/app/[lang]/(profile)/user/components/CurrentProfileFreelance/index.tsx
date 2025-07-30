@@ -1,6 +1,5 @@
 "use client";
 import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
-import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
@@ -16,12 +15,11 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {WorkExperience, Skill, LanguageSkill, Education, Certificate, Person} from "lemmy-js-client";
 import {getProfileData} from "@/utils/getProfileData";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const CurrentProfileFreelance = () => {
   const { profileState, person} = useMyUser();
 
-  const { data: goToProfileLanguage } = useGlobalTranslate(
+  const goToProfileLanguage = getNamespace(
     LanguageFile.GO_TO_PROFILE
   );
   const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");

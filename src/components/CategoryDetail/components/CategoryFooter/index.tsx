@@ -2,10 +2,10 @@ import { LanguageFile } from "@/constants/language";
 import { getNamespace } from "@/utils/i18nHelper";
 import Link from "next/link";
 import React from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const CategoryFooter = () => {
-  const { data: categoryFooterLanguage } = useGlobalTranslate(
+  const { data: categoryFooterLanguage } = getNamespace(
     LanguageFile.CATEGORY_FOOTER
   );
   return (

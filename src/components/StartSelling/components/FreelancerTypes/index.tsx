@@ -1,5 +1,4 @@
 import { StartSellingImage } from "@/constants/images";
-import { ProfileApplyLanguage } from "@/types/language";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 
@@ -16,7 +15,7 @@ type FreelancerType = {
 };
 
 type Props = {
-  data: Partial<ProfileApplyLanguage> | null | undefined;
+  data: Record<string, string>;
 };
 
 const FreelancerTypes = ({ data }: Props) => {

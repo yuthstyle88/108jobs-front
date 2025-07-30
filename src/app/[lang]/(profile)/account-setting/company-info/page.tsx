@@ -1,21 +1,13 @@
 "use client";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
 import { ProfileIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
+
 import Image from "next/image";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import {getNamespace} from "@/utils/i18nHelper";
 
 export default function BusinessPage() {
-  const {
-    data: companyInfoLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.COMPANY);
 
-  if (isLoading) return <Loading/>;
-  if (error) return <Error />;
+  const companyInfoLanguageData = getNamespace(LanguageFile.COMPANY);
 
   return (
     <div>
@@ -27,11 +19,11 @@ export default function BusinessPage() {
         />
         <div className="px-3 py-2 bg-[#E3EDFD] rounded-br-lg rounded-bl-lg">
           <ul className="font-sans">
-            {companyInfoLanguageData?.noteRequirements?.map((note, index) => (
-              <li key={index}>
-                <p className="text-[0.75rem] text-third">• {note}</p>
-              </li>
-            ))}
+            {/*{companyInfoLanguageData?.noteRequirements?.map((note, index) => (*/}
+            {/*  <li key={index}>*/}
+            {/*    <p className="text-[0.75rem] text-third">• {note}</p>*/}
+            {/*  </li>*/}
+            {/*))}*/}
           </ul>
         </div>
       </div>

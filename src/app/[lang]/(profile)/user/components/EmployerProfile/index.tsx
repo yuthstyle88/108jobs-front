@@ -1,5 +1,4 @@
 "use client";
-import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
@@ -12,12 +11,12 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const UserProfile = () => {
   const { person } = useMyUser();
 
-  const { data: goToProfileLanguage } = useGlobalTranslate(
+  const { data: goToProfileLanguage } = getNamespace(
     LanguageFile.GO_TO_PROFILE
   );
 

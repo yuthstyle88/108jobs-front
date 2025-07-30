@@ -7,7 +7,6 @@ import { LanguageFile } from "@/constants/language";
 import { interpolateDouble } from "@/utils/interpolate";
 import Loading from "@/components/Loading";
 import Error from "@/app/error";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 // Define the interface for a single transaction
 interface Transaction {
@@ -25,7 +24,7 @@ const Withdrawal = () => {
   const [selectedMonth, setSelectedMonth] = useState("March");
   const [selectedYear, setSelectedYear] = useState("2025");
 
-  const { data: sellerWithdrawalLanguage,isLoading,error } = useGlobalTranslate(
+  const { data: sellerWithdrawalLanguage,isLoading,error } = getNamespace(
     LanguageFile.SELLER_WITHDRAWAL
   );
 

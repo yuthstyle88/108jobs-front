@@ -1,4 +1,3 @@
-import { ProfileRewardLanguage } from "@/types/language";
 import { motion } from "framer-motion";
 import { Clock } from "lucide-react";
 import { useState } from "react";
@@ -8,7 +7,7 @@ interface CouponCardProps {
   points: number;
   isHotDeal?: boolean;
   delay?: number;
-  data: Partial<ProfileRewardLanguage> | undefined | null;
+  data: Record<string, string>;
 }
 const CouponCard = ({
   value,

@@ -1,11 +1,9 @@
 "use client";
 import LanguageDropdown from "@/components/LanguageDropDown";
 import NotificationDropdown from "@/components/NotificationDropdown";
-import AvatarSkeleton from "@/components/ui/AvatarSkeleton";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { useToggle } from "@/hooks/useToggle";
-import { GlobalLanguage } from "@/types/language";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -13,26 +11,25 @@ import Link from "next/link";
 import MegaMenu from "../MegaMenu";
 import ProfileSection from "../ProfileSection";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {useTranslation} from "react-i18next";
 
 interface EmployerProps {
-  globalLanguageData: Partial<GlobalLanguage> | null | undefined;
+  globalLanguageData?: Record<string, string>;
 }
 
 const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
   const { isOpen, toggle, close } = useToggle();
 
   const {person } = useMyUser();
+  const { t } = useTranslation();
 
-  if (!globalLanguageData) {
-    return <AvatarSkeleton />; // หรือ null หรือ loading UI
-  }
   return (
     <div className="flex items-center gap-4 h-full">
       <div className="group">
         <div className="relative">
           <div className="relative">
             <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
-              {globalLanguageData?.labelEmploymentButton}
+              {t("global.labelEmploymentButton")}
               <span className="inline-block">
                 <FontAwesomeIcon icon={faChevronDown} />
               </span>
@@ -48,7 +45,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
         href="/start-selling"
         className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
       >
-        {globalLanguageData?.labelApplyToBeFreelancerButton}
+        {t("global.labelApplyToBeFreelancerButton")}
       </Link>
       {/* <ChatBadge /> */}
       <NotificationDropdown />
@@ -92,7 +89,7 @@ const EmployerSection = ({ globalLanguageData }: EmployerProps) => {
           </span>
         </button>
 
-        {isOpen && <ProfileSection profile={person} data={globalLanguageData} />}
+        {isOpen && <ProfileSection profile={person} />}
 
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()} />

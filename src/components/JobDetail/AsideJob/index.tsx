@@ -5,7 +5,6 @@ import LoadingBlur from "@/components/LoadingBlur";
 import ShareJobModal from "@/components/ShareJob";
 import { JobDetailIcon } from "@/constants/icons";
 import { JobDetailResponse } from "@/types/jobDetail";
-import { JobDetailLanguage } from "@/types/language";
 import { formatThaiBaht } from "@/utils/formatMoney";
 import { scrollToElementById } from "@/utils/scrollSmooth";
 import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
@@ -18,7 +17,7 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {usePrivatePost} from "@/hooks/api-hooks";
 
 interface AsideJobProps {
-  language: Partial<JobDetailLanguage> | undefined | null;
+  language: Record<string, string>;
   data: JobDetailResponse;
 }
 

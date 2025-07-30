@@ -1,6 +1,5 @@
 "use client";
 import { StartSellingImage } from "@/constants/images";
-import { ProfileApplyLanguage } from "@/types/language";
 import Image from "next/image";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -64,7 +63,7 @@ const createTestimonialsFromTranslations = () => {
   ];
 };
 type Props = {
-  data: Partial<ProfileApplyLanguage> | null | undefined;
+  data: Record<string, string>;
 };
 
 const ProfileSelling = ({ data }: Props) => {

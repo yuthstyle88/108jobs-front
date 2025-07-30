@@ -1,6 +1,5 @@
 import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { GlobalLanguage } from "@/types/language";
 import { interpolateElement } from "@/utils/interpolateElement";
 import { faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -21,14 +20,15 @@ import {Person} from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
 import {UserService} from "@/services";
+import { useTranslation } from "react-i18next";
 type ProfileFreelancerProps = {
-  data: Partial<GlobalLanguage> | null | undefined;
   profile: Person | null;
 };
 
-const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
+const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
   const logout = () => UserService.Instance.logout();
   const { lang: currentLang } = useLanguage();
+  const { t } = useTranslation();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">
       <Link prefetch={false} href={`/${currentLang}/user/`}>
@@ -46,7 +46,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
             <div>
               <p className="font-medium text-gray-900">username</p>
               <p className="text-sm font-sans text-text-secondary underline">
-                {data?.labelViewProfile}
+                {t("global.labelViewProfile")}
               </p>
             </div>
           </div>
@@ -62,7 +62,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
       <Link prefetch={false} href="/seller">
         <div className="relative">
           <div className="text-[13px] font-light text-white relative hover:bg-black/20 transition-all duration-150 ease-in-out z-10 px-6 py-3">
-            {interpolateElement(data?.labelFreelancerLevel || "", {
+            {interpolateElement(t("global.labelFreelancerLevel"), {
               level: (
                 <span className="font-semibold text-[0.875rem] ml-1">
                   Member
@@ -86,7 +86,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
             icon={faGear}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuAccountSettings}</span>
+          <span className="text-gray-700">{t("global.menuAccountSettings")}</span>
         </Link>
         <Link prefetch={false}
           href="/chat"
@@ -96,7 +96,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
             icon={faMessage}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuMessagesOrders}</span>
+          <span className="text-gray-700">{t("global.menuMessagesOrders")}</span>
         </Link>
         <Link prefetch={false}
           href="/promotion"
@@ -106,7 +106,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
             icon={faTicket}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuCoupons}</span>
+          <span className="text-gray-700">{t("global.menuCoupons")}</span>
         </Link>
         <Link prefetch={false}
           href="/favorites"
@@ -116,7 +116,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
             icon={faHeart}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuFavoriteJobs}</span>
+          <span className="text-gray-700">{t("global.menuFavoriteJobs")}</span>
         </Link>
         <Link prefetch={false}
           href="/seller"
@@ -126,7 +126,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
             icon={faMoneyBill1}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuSellerCenter}</span>
+          <span className="text-gray-700">{t("global.menuSellerCenter")}</span>
         </Link>
         <Link prefetch={false}
           href="/job-board"
@@ -136,7 +136,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
             icon={faBullhorn}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuJobBoard}</span>
+          <span className="text-gray-700">{t("global.menuJobBoard")}</span>
         </Link>
         <Link prefetch={false}
           href="/reward/earn"
@@ -146,7 +146,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
             icon={faGift}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuRewards}</span>
+          <span className="text-gray-700">{t("global.menuRewards")}</span>
           <span className="ml-[-6px] px-3 py-1 text-xs text-white bg-third rounded">
             New
           </span>
@@ -159,7 +159,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
             icon={faBriefcase}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuMyJob}</span>
+          <span className="text-gray-700">{t("global.menuMyJob")}</span>
         </Link>
         <Link prefetch={false}
           href="/seller/withdrawal"
@@ -169,7 +169,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
             icon={faMoneyBillTrendUp}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuAccumulate}</span>
+          <span className="text-gray-700">{t("global.menuAccumulate")}</span>
         </Link>
         <Link prefetch={false}
           href="/consent-management"
@@ -179,7 +179,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
             icon={faBarsProgress}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuDataManagement}</span>
+          <span className="text-gray-700">{t("global.menuDataManagement")}</span>
         </Link>
         <button
           onClick={logout}
@@ -189,7 +189,7 @@ const ProfileFreelancer = ({ data, profile }: ProfileFreelancerProps) => {
             icon={faSignOut}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuLogout}</span>
+          <span className="text-gray-700">{t("global.menuLogout")}</span>
         </button>
       </div>
     </div>

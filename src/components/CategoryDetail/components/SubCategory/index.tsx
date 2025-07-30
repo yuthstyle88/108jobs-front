@@ -3,13 +3,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { Tag } from "@/types/jobSearch";
-import { JobCategoryLanguage } from "@/types/language";
 
 interface SubCategoryProps {
   selectedTag: string;
   onSelectTag: (tag: string) => void;
   tagList: Tag[];
-  language: Partial<JobCategoryLanguage> | undefined | null;
+  language: Record<string, string>;
 }
 
 const SubCategory = ({

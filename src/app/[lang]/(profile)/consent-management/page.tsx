@@ -1,11 +1,9 @@
 "use client";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
+
 import { LanguageFile } from "@/constants/language";
 import { getNamespace } from "@/utils/i18nHelper";
 import Link from "next/link";
 import { useState } from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 type Tab = "fastwork" | "all" | "thirdParty";
 const ConsentManagement = () => {
@@ -15,11 +13,7 @@ const ConsentManagement = () => {
     analytics: true,
   });
 
-  const {
-    data: concentLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.CONSENT);
+  const concentLanguageData = getNamespace(LanguageFile.CONSENT);
   
   const handleToggle = (key: keyof typeof preferences) => {
     setPreferences((prev) => ({
@@ -27,9 +21,6 @@ const ConsentManagement = () => {
       [key]: !prev[key],
     }));
   };
-  
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
 
   const renderTabContent = () => {
     switch (activeTab) {

@@ -5,8 +5,6 @@ import { CategoriesIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
-import { getNamespace } from "@/utils/i18nHelper";
 import { JobDetailResponse } from "@/types/jobDetail";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +20,7 @@ import Overview from "./Overview";
 import Package from "./Package";
 import Review from "./Review";
 import SliderJob from "./SliderJob";
+import {getNamespace} from "@/utils/i18nHelper";
 
 const categoryRelated = [
   {
@@ -48,17 +47,9 @@ type Props = {
 };
 
 const JobDetail = ({ username, slug }: Props) => {
-  const {
-    data: jobDetailLanguage,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.JOB_DETAIL);
+  const jobDetailLanguage = getNamespace(LanguageFile.JOB_DETAIL);
 
-  const {
-    data: jobCategoryLanguage,
-    isLoading: isLoadingCategory,
-    error: errorCategory,
-  } = useGlobalTranslate(LanguageFile.JOB_CATEGORY);
+  const jobCategoryLanguage = getNamespace(LanguageFile.JOB_CATEGORY);
 
   const {
     data: jobDetailData,
@@ -90,10 +81,6 @@ const JobDetail = ({ username, slug }: Props) => {
         ]
       : []),
   ];
-
-  if (isLoading || isLoadingCategory || isJobDetailLoading) return <Loading />;
-  if (error || errorCategory || errorJobDetail)
-    return notFound();
   return (
     <>
       <section className="grid-container-job-detail mb-4 px-4 py-2 h-16 md:h-12 md:p-0 md:my-0 bg-[#E3EDFD]">

@@ -1,11 +1,10 @@
 "use client";
-import Error from "@/app/error";
+
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile, LANGUAGES } from "@/constants/language";
 import LanguageBottomSheet from "@/containers/SpBottomTab";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { getNamespace } from "@/utils/i18nHelper";
 import { useToggle } from "@/hooks/useToggle";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,18 +14,15 @@ import { useState } from "react";
 import ProfileFreelancer from "../Header/components/ProfileFreelancer";
 import ProfileSection from "../Header/components/ProfileSection";
 import LanguageDropdown from "../LanguageDropDown";
-import Loading from "../Loading";
+
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import {getNamespace} from "@/utils/i18nHelper";
+
 
 const RewardHeader = () => {
   const { isLoggedIn,  isFreelancer } = useAuthInfo();
-  const {
-    data: globalLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.GLOBAL);
+  const globalLanguageData = getNamespace(LanguageFile.GLOBAL);
 
   const [showLang, setShowLang] = useState(false);
   const { lang } = useLanguage();
@@ -35,8 +31,6 @@ const RewardHeader = () => {
 
   const { person } = useMyUser();
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error />;
 
   return (
     <header className="sticky top-0 z-[999] w-full transition-all duration-300 bg-transparent">
@@ -113,12 +107,10 @@ const RewardHeader = () => {
                     {isFreelancer ? (
                       <ProfileFreelancer
                         profile={person}
-                        data={globalLanguageData}
                       />
                     ) : (
                       <ProfileSection
                         profile={person}
-                        data={globalLanguageData}
                       />
                     )}
                     <div

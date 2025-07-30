@@ -1,15 +1,14 @@
 "use client";
-import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getNamespace } from "@/utils/i18nHelper";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const BreadCrumbAccountSetting = () => {
-  const { data: breadcrumbLanguage, isLoading } = useGlobalTranslate(
+  const breadcrumbLanguage = getNamespace(
     LanguageFile.BREAD_CRUMB
   );
 
@@ -43,7 +42,6 @@ const BreadCrumbAccountSetting = () => {
     (item) => `/${lang}${item.href}` === pathname
   );
 
-  if (isLoading) return <Loading />;
   return (
     <div className="flex items-center text-blue-600 text-[13px]">
       <Link prefetch={false} href="/seller" className="text-blue-600 font-medium">

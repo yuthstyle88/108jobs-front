@@ -10,25 +10,18 @@ import { RegisterDataProps } from "@/types/register-data";
 import Image from "next/image";
 import {useState} from "react";
 import {AcceptForm} from "@/components/Authentication/AcceptForm";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 type ViewState = "update-term" | "verify-password";
 
 export default function RegisterTermPage() {
-  const {
-    data: loginLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.AUTHEN);
+  const loginLanguageData = getNamespace(LanguageFile.AUTHEN);
 
 
 
   const [currentView, setCurrentView] = useState<ViewState>("update-term");
   const [dataDataUpdate, setDataUpdate] = useState<RegisterDataProps | null>(null);
 
-
-  if (isLoading) return <Loading />;
-  if (error) return <div>Error</div>;
 
   return (
     <div className="min-h-screen bg-[#E3EDFD] grid 2xl:grid-cols-[1fr_1240px_1fr] lg:grid-cols-[1fr_984px_1fr] md:grid-cols-[1fr_768px_1fr] grid-cols-[12px_minmax(0,auto)12px]">

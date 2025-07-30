@@ -2,12 +2,10 @@
 import {API_ROUTES} from "@/api/endpoints";
 import ChangeEmailModal from "@/components/ChangeEmailModal";
 import ConfirmChangeEmailModal from "@/components/ConfirmChangeEmailModal";
-import Loading from "@/components/Loading";
 import LoadingCircle from "@/components/LoadingCircle";
 import {ERROR_CONSTANTS} from "@/constants/error";
 import {LanguageFile} from "@/constants/language";
 import {RequestState, LOADING_REQUEST, REQUEST_STATE} from "@/services/HttpService";
-import {useGlobalTranslate} from "@/hooks/translation/useGlobalTranslate";
 import useNotification from "@/hooks/useNotification";
 import {addressSchema} from "@/utils/validation/addressSchema";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -15,10 +13,11 @@ import {useEffect, useMemo, useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import ZipcodeSearch from "../components/SearchZipcode";
-import ErrorPage from "@/app/error";
 import {HttpService} from "@/services";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {useTranslation} from "react-i18next";
+import {getNamespace} from "@/utils/i18nHelper";
 
 
 export interface AddressFormData {
@@ -54,16 +53,14 @@ function normalizeAddress(address: RawAddress | any | undefined): AddressFormDat
 
 const ContactInfo = () => {
   const { profileState, contact, address } = useMyUser();
+  const { t } = useTranslation();
+  const sellerContactLanguage = getNamespace(LanguageFile.SELLER_CONTACT_INFO);
 
-  const {data: sellerContactLanguage} = useGlobalTranslate(
-    LanguageFile.SELLER_CONTACT_INFO
-  );
-
-  const {data: contactInfoLanguageData} = useGlobalTranslate(
+  const  contactInfoLanguageData = getNamespace(
     LanguageFile.CONTACT
   );
 
-  const {data: global} = useGlobalTranslate(LanguageFile.GLOBAL);
+  const {data: global} = getNamespace(LanguageFile.GLOBAL);
 
   const emailSchema = z.object({
     email: z.string().min(6,
@@ -269,7 +266,7 @@ const countryOptions = useMemo(
                     {isSubmittingEmail ? (
                       <LoadingCircle/>
                     ) : (
-                      global?.buttonChange
+                      t("global.buttonChange")
                     )}
                   </button>
                 </div>
@@ -285,7 +282,7 @@ const countryOptions = useMemo(
           <div className="mb-6 flex gap-2 items-end w-full">
             <div className="flex-1">
               <label className="block text-sm text-text-primary font-semibold mb-2">
-                {sellerContactLanguage?.emailContact}
+                {t("sellerContact.emailContact")}
               </label>
               <input
                 type="email"
@@ -300,7 +297,7 @@ const countryOptions = useMemo(
                 onClick={() => setIsModalOpen(true)}
                 className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
               >
-                {global?.buttonEdit}
+                {global.buttonEdit}
               </button>
             </div>
           </div>
@@ -312,15 +309,15 @@ const countryOptions = useMemo(
         >
           <div className="pb-4 pt-4 border-b">
             <h2 className="text-[16px] font-medium mb-2 text-text-primary">
-              {sellerContactLanguage?.addressInfoTitle}
+              {t("sellerContact.addressInfoTitle")}
             </h2>
             <p className="text-gray-600 text-[14px] font-sans font-normal">
-              {sellerContactLanguage?.addressInfoDescription}
+              {t("sellerContact.addressInfoDescription")}
             </p>
           </div>
           <div className="pt-6 flex flex-col">
             <h3 className="text-base font-medium mb-3">
-              {sellerContactLanguage?.currentAddress}
+              {t("sellerContact.currentAddress")}
             </h3>
             <div className="grid grid-cols-2 gap-4 mb-4">
               {LOCATION_OPTIONS.map((option) => (
@@ -346,8 +343,8 @@ const countryOptions = useMemo(
                     className="text-blue-600 mr-3"
                   />
                   {option === "Thailand"
-                    ? sellerContactLanguage?.thailand
-                    : sellerContactLanguage?.international}
+                    ? t("sellerContact.thailand")
+                    : t("sellerContact.international")}
                 </label>
               ))}
             </div>
@@ -355,7 +352,7 @@ const countryOptions = useMemo(
             {locationType === "Foreign" ? (
               <>
                 <label className="block text-sm mb-1">
-                  {sellerContactLanguage?.selectCountry}
+                  {t("sellerContact.selectCountry")}
                 </label>
                 <select
                   {...register("country")}
@@ -381,12 +378,12 @@ const countryOptions = useMemo(
               <>
                 <div className="mb-4">
                   <label className="block text-sm text-text-primary font-semibold mb-2">
-                    {sellerContactLanguage?.addressDetail}
+                    {t("sellerContact.addressDetail")}
                   </label>
                   <input
                     {...register("addressDetails")}
                     className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
-                    placeholder={sellerContactLanguage?.addressPlaceholder}
+                    placeholder={t("sellerContact.addressPlaceholder")}
                   />
                   {errors.addressDetails && (
                     <p className="text-red-500 text-[12px] font-normal font-sans mt-1">

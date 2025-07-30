@@ -1,7 +1,6 @@
 "use client";
 
 import { toast } from "sonner";
-import { useGlobalTranslate } from "./translation/useGlobalTranslate";
 import { LanguageFile } from "@/constants/language";
 import {getNamespace} from "@/utils/i18nHelper";
 
@@ -14,7 +13,7 @@ type NotificationType = Record<"profile" | "job" | "review" | "service", Notific
 
 function useNotification() {
   const notiLanguage = getNamespace(LanguageFile.NOTIFICATIONS);
-  const { data: jobLanguage } = useGlobalTranslate(LanguageFile.NOTIFICATION);
+  const jobLanguage = getNamespace(LanguageFile.NOTIFICATION);
 
   const type: NotificationType = {
     profile: {

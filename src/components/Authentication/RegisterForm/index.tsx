@@ -1,8 +1,6 @@
 "use client";
 import LoadingCircle from "@/components/LoadingCircle";
 import {CustomInput} from "@/components/ui/InputField";
-import {LanguageFile} from "@/constants/language";
-import {getNamespace} from "@/utils/i18nHelper";
 import {RegisterDataProps} from "@/types/register-data";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useRouter, useSearchParams} from "next/navigation";
@@ -31,21 +29,22 @@ import classNames from "classnames";
 import Link from "next/link";
 import {Spinner} from "@/components/icon";
 import {Play, RefreshCcw} from "lucide-react";
+import {useTranslation} from "react-i18next";
 
 // Form schema definition
-const createRegisterSchema = (authen: any) => z
+const createRegisterSchema = (t: any) => z
   .object({
-    email: z.string().email(authen?.invalidEmail),
-    username: z.string().min(6, authen?.usernameMin6),
-    password: z.string().min(6, authen?.passwordMin6),
+    email: z.string().email(t("authen.invalidEmail")),
+    username: z.string().min(6, t("authen.usernameMin6")),
+    password: z.string().min(6, t("authen.passwordMin6")),
     confirmPassword: z.string(),
     termsAccepted: z.boolean().refine((val) => val),
     privacyAccepted: z.boolean().refine((val) => val),
-    captchaAnswer: z.string().min(4, authen?.requireCaptcha),
+    captchaAnswer: z.string().min(4, t("authen.requireCaptcha")),
     role: z.nativeEnum(RoleType),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: authen?.notMatchPassword,
+    message: t("authen.notMatchPassword"),
     path: ["confirmPassword"],
   });
 
@@ -65,14 +64,14 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   setApiError
 }) => {
   // Hooks
-  const authen = getNamespace(LanguageFile.AUTHEN);
+  const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = propRedirectUrl || searchParams.get("redirect") || "/";
-  
+
   // State
   const [apiErrorState, setApiErrorState] = useState<string | null>(null);
-  
+
   // Use the provided setApiError function if available, otherwise use the local state setter
   const handleApiError = useCallback((err: string) => {
     if (setApiError) {
@@ -88,13 +87,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const [captchaPlaying, setCaptchaPlaying] = useState(false);
   const [siteRes, setSiteRes] = useState<GetSiteResponse | null>(null);
   const [hasFetchedSite, setHasFetchedSite] = useState(false);
-  
+
   // Refs
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isoDataRef = useRef(setIsoData(null));
-  
+
   // Form setup
-  const registerSchema = createRegisterSchema(authen);
+  const registerSchema = createRegisterSchema(t);
   const formMethods = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     mode: "onChange",
@@ -103,7 +102,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       role: RoleType.Employer,
     },
   });
-  
+
   const {
     register,
     handleSubmit,
@@ -115,7 +114,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const fetchCaptcha = useCallback(async () => {
     setCaptchaRes(LOADING_REQUEST);
     const captchaResponse = await HttpService.client.getCaptcha();
-    
+
     if (isSuccess(captchaResponse) && (
       captchaResponse.data.ok?.wav ||
       captchaResponse.data.ok?.png
@@ -154,7 +153,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const onSubmit = useCallback(async (data: any) => {
     // Store data in session storage
     sessionStorage.setItem("RegisterUpData", JSON.stringify(data));
-    
+
     // If setDataRegister prop is provided, update the parent component's state
     if (setDataRegister) {
       setDataRegister({
@@ -175,7 +174,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       acceptedApplication: data.termsAccepted && data.privacyAccepted,
       answer: "hello yuth"
     });
-    
+
     switch (registerRes.state) {
       case REQUEST_STATE.FAILED: {
         handleApiError(registerRes.err.name);
@@ -184,7 +183,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       }
       case REQUEST_STATE.SUCCESS: {
         const loginData = registerRes.data;
-        
+
         // Only log them in if a jwt was set
         if (loginData.jwt) {
           UserService.Instance.login({
@@ -207,15 +206,15 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           if (switchToVerifyEmail) {
             switchToVerifyEmail();
           }
-          
+
           if (data.verifyEmailSent) {
             toast(("verifyEmailSent"));
           }
-          
+
           if (data.registrationCreated) {
             toast("registrationApplicationSent");
           }
-          
+
           if (history) {
             history.push("/");
           } else {
@@ -231,13 +230,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const handleCaptchaPlay = useCallback(() => {
     if (isSuccess(captchaRes) && captchaRes.data.ok) {
       const captchaData = captchaRes.data.ok;
-      
+
       if (!audioRef.current) {
         const base64 = `data:audio/wav;base64,${captchaData.wav}`;
         audioRef.current = new Audio(base64);
         audioRef.current.play();
         setCaptchaPlaying(true);
-        
+
         audioRef.current.addEventListener("ended", () => {
           if (audioRef.current) {
             audioRef.current.currentTime = 0;
@@ -263,18 +262,18 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   // Initial data loading
   useEffect(() => {
     const storedData = sessionStorage.getItem("RegisterData");
-    
+
     if (storedData) {
       const parsedData = JSON.parse(storedData);
-      
+
       if (parsedData.email) {
         setValue("email", parsedData.email);
       }
-      
+
       if (parsedData.termsAccepted) {
         setValue("termsAccepted", parsedData.termsAccepted);
       }
-      
+
       if (parsedData.privacyAccepted) {
         setValue("privacyAccepted", parsedData.privacyAccepted);
       }
@@ -285,21 +284,21 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   useEffect(() => {
     const getSiteData = async () => {
       if (hasFetchedSite) return;
-      
+
       setHasFetchedSite(true);
       const site = await HttpService.client.getSite();
-      
+
       if (isSuccess(site) && site.data) {
         setSiteRes(site.data);
-        
+
         if (site.data?.siteView?.localSite?.captchaEnabled && isBrowser()) {
           await fetchCaptcha();
         }
       } else {
-        handleApiError(authen?.errorFetchingSiteData);
+        handleApiError(t("authen.errorFetchingSiteData"));
       }
     };
-    
+
     getSiteData();
   }, [fetchCaptcha, hasFetchedSite]);
 
@@ -333,7 +332,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           htmlFor="register-captcha"
           className="block text-sm font-semibold text-gray-700"
         >
-          {authen?.enterCodeBelow}
+          {t("authen.enterCodeBelow")}
         </label>
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
@@ -352,7 +351,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
               className="inline-flex items-center px-2.5 py-1.5 border text-xs rounded-md text-gray-700 bg-white hover:bg-gray-100"
             >
               <RefreshCcw className="w-4 h-4 mr-1"/>
-              {authen?.refresh}
+              {t("authen.refresh")}
             </button>
 
             {captcha.wav && (
@@ -365,7 +364,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                 disabled={captchaPlaying}
               >
                 <Play className="w-4 h-4 mr-1"/>
-                {captchaPlaying ? authen?.playing : authen?.audio}
+                {captchaPlaying ? t("authen.playing") : t("authen.audio")}
               </button>
             )}
           </div>
@@ -373,10 +372,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
         {/* CAPTCHA Input */}
         <CustomInput
-          label={authen?.captchaLabel}
+          label={t("authen.captchaLabel")}
           name="captchaAnswer"
           type="text"
-          placeholder={authen?.captchaPlaceholder}
+          placeholder={t("authen.captchaPlaceholder")}
           error={errors.captchaAnswer?.message}
           register={register("captchaAnswer")}
         />
@@ -388,61 +387,61 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
       {apiErrorState && (
         <p className="text-red-500 text-sm text-center mb-4">
-          {authen?.apiErrorState}
+          {t("authen.apiErrorState")}
         </p>
       )}
-      
+
       {errors.root && (
         <p className="text-red-500 text-sm text-center mb-4">
           {errors.root.message}
         </p>
       )}
-      
+
       <CustomInput
-        label={authen?.labelUsername}
+        label={t("authen.labelUsername")}
         name="username"
         error={errors.username?.message}
-        placeholder={authen?.placeholderUsername}
+        placeholder={t("authen.placeholderUsername")}
         type="text"
         register={register("username")}
       />
-      
+
       <CustomInput
-        label={authen?.labelEmail}
+        label={t("authen.labelEmail")}
         type="email"
         name={"email"}
-        placeholder={authen?.placeholderEmail}
+        placeholder={t("authen.placeholderEmail")}
         register={register("email")}
         error={errors.email?.message}
       />
-      
+
       <CustomInput
-        label={authen?.labelPassword}
+        label={t("authen.labelPassword")}
         name="password"
         type="password"
         error={errors.password?.message}
-        placeholder={authen?.placeholderPassword}
+        placeholder={t("authen.placeholderPassword")}
         showPassword={showPassword}
         toggleShowPassword={() => setShowPassword(!showPassword)}
         register={register("password")}
       />
-      
+
       <CustomInput
-        label={authen?.labelConfirmPassword}
+        label={t("authen.labelConfirmPassword")}
         name="confirmPassword"
         type="password"
-        placeholder={authen?.placeholderConfirmPassword}
+        placeholder={t("authen.placeholderConfirmPassword")}
         showPassword={showConfirmPassword}
         toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
         error={errors.confirmPassword?.message}
         register={register("confirmPassword")}
       />
-      
+
       <div className="space-y-2 w-full">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          {authen?.roleSelectionLabel}
+          {t("authen.roleSelectionLabel")}
         </label>
-        
+
         <div className="flex gap-4 text-sm font-medium w-full max-w-md">
           {[RoleType.Employer, RoleType.Freelancer].map((option) => (
             <label key={option} className="flex-1 relative">
@@ -468,9 +467,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           ))}
         </div>
       </div>
-      
+
       {renderCaptcha()}
-      
+
       <div className="space-y-4 text-gray-700">
         <div className="flex items-center gap-3">
           <input
@@ -483,13 +482,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             htmlFor="termsAccepted"
             className="text-sm text-text-secondary font-sans"
           >
-            {authen?.checkboxTermsConditions}{" "}
+            {t("authen.checkboxTermsConditions")}{" "}
             <Link
               prefetch={false}
               href="/content/terms"
               className="text-text-secondary underline"
             >
-              {authen?.checkboxTermsConditionsRedirect}
+              {t("authen.checkboxTermsConditionsRedirect")}
             </Link>
           </label>
         </div>
@@ -505,13 +504,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
             htmlFor="privacyAccepted"
             className="text-sm text-text-secondary font-sans"
           >
-            {authen?.checkboxTermsConditions}{" "}
+            {t("authen.checkboxTermsConditions")}{" "}
             <Link
               prefetch={false}
               href="/content/privacy"
               className="text-text-secondary underline"
             >
-              {authen?.checkboxPrivacyPolicyRedirect}
+              {t("authen.checkboxPrivacyPolicyRedirect")}
             </Link>
           </label>
         </div>
@@ -529,13 +528,13 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           className="submit-button py-3"
           disabled={!isValid || isSubmitting}
         >
-          {isSubmitting ? <LoadingCircle/> : authen?.linkCreateAccount}
+          {isSubmitting ? <LoadingCircle/> : t("authen.linkCreateAccount")}
         </button>
       </div>
-      
+
       <div className="flex flex-col gap-3 mt-6">
         <div className="text-center text-sm text-gray-500">
-          {authen?.signUpWithSocial}
+          {t("authen.signUpWithSocial")}
         </div>
       </div>
     </form>

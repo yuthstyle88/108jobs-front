@@ -7,10 +7,7 @@ import TermsAndCondition from "./components/TermsAndCondition";
 import LoadingCircle from "../LoadingCircle";
 import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
-import Loading from "../Loading";
-import Error from "@/app/error";
 import { useEffect } from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 interface ConfirmTermsFreelancerModalProps {
   isOpen: boolean;
@@ -28,11 +25,7 @@ const signUpSchema = z.object({
 const ConfirmTermsFreelancerModal: React.FC<
   ConfirmTermsFreelancerModalProps
 > = ({ isOpen, onClose, handleConfirmChange, isLoading }) => {
-  const {
-    data: termLanguage,
-    isLoading: isTermLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.TERMS_AND_CONDITIONS);
+  const termLanguage= getNamespace(LanguageFile.TERMS_AND_CONDITIONS);
 
   const { watch, register, reset } = useForm({
     resolver: zodResolver(signUpSchema),
@@ -45,8 +38,6 @@ const ConfirmTermsFreelancerModal: React.FC<
   }
 }, [isOpen, reset]);
 
-  if (isTermLoading) return <Loading />;
-  if (error) return <Error />;
 
   return (
     <Modal

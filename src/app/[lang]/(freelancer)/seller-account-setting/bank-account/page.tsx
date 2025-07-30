@@ -4,7 +4,7 @@ import { getNamespace } from "@/utils/i18nHelper";
 import { Upload } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const BankAccount = () => {
   const [qrImage, setQrImage] = useState<string>(
@@ -12,11 +12,11 @@ const BankAccount = () => {
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { data: sellerBankAccountLanguage } = useGlobalTranslate(
+  const sellerBankAccountLanguage = getNamespace(
     LanguageFile.SELLER_BANK_ACCOUNT
   );
 
-  const { data: global } = useGlobalTranslate(
+  const global = getNamespace(
     LanguageFile.GLOBAL
   );
 

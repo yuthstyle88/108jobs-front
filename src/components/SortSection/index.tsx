@@ -1,6 +1,5 @@
 "use client";
 import { useClickOutside } from "@/hooks/useClickOutside";
-import { JobCategoryLanguage } from "@/types/language";
 import { faUpDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { X } from "lucide-react";
@@ -9,7 +8,7 @@ import ReactDOM from "react-dom";
 
 interface SortSectionProps {
   className?: string;
-  language: Partial<JobCategoryLanguage> | undefined | null;
+  language: Record<string, string>;
   onSortChange?: (value: string) => void;
   currentSort?: string;
 }

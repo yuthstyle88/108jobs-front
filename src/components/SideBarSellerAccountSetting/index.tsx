@@ -5,19 +5,13 @@ import { CreditCard, FileText, Mail, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import Loading from "../Loading";
-import Error from "@/app/error";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const SideBarSellerAccountSetting = () => {
   const pathname = usePathname();
 const { lang } = useLanguage();
-  const {
-    data: sellerSidebarLanguage,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.GLOBAL);
+  const sellerSidebarLanguage = getNamespace(LanguageFile.GLOBAL);
 
   const menuItems = [
     {
@@ -47,8 +41,6 @@ const { lang } = useLanguage();
     },
   ];
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
 
   return (
     <div className="md:col-span-1">

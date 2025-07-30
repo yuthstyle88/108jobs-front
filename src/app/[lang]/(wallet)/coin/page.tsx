@@ -1,28 +1,18 @@
 "use client";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
 import TopUpHistory from "@/components/TopUpHistory";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import {getNamespace} from "@/utils/i18nHelper";
 
 const FastjobCoin = () => {
   const [amount, setAmount] = useState("");
 
-  const {
-    data: coinLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.COINS);
+  const coinLanguageData = getNamespace(LanguageFile.COINS);
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
 
   return (
     <div className="w-full">
@@ -119,31 +109,31 @@ const FastjobCoin = () => {
             <div className="mt-8 p-4 text-[0.75rem] text-text-secondary border-1 border-border-primary rounded-lg bg-[#F6F7F8] ">
               <p>note :</p>
               <ul>
-                {coinLanguageData?.noteCoinTerms?.map((term, index) => {
-                  const keywords = [
-                    "the Support Center",
-                    "Trung tâm hỗ trợ",
-                    "ศูนย์ช่วยเหลือ",
-                  ];
+                {/*{coinLanguageData?.noteCoinTerms?.map((term, index) => {*/}
+                {/*  const keywords = [*/}
+                {/*    "the Support Center",*/}
+                {/*    "Trung tâm hỗ trợ",*/}
+                {/*    "ศูนย์ช่วยเหลือ",*/}
+                {/*  ];*/}
 
-                  const keyword = keywords.find((kw) => term.includes(kw));
+                {/*  const keyword = keywords.find((kw) => term.includes(kw));*/}
 
-                  if (keyword) {
-                    const parts = term.split(keyword);
+                {/*  if (keyword) {*/}
+                {/*    const parts = term.split(keyword);*/}
 
-                    return (
-                      <li key={index}>
-                        {parts[0]}
-                        <Link prefetch={false} href="" className="text-third underline">
-                          <span>{keyword}</span>
-                        </Link>
-                        {parts[1]}
-                      </li>
-                    );
-                  }
+                {/*    return (*/}
+                {/*      <li key={index}>*/}
+                {/*        {parts[0]}*/}
+                {/*        <Link prefetch={false} href="" className="text-third underline">*/}
+                {/*          <span>{keyword}</span>*/}
+                {/*        </Link>*/}
+                {/*        {parts[1]}*/}
+                {/*      </li>*/}
+                {/*    );*/}
+                {/*  }*/}
 
-                  return <li key={index}>{term}</li>;
-                })}
+                {/*  return <li key={index}>{term}</li>;*/}
+                {/*})}*/}
               </ul>
             </div>
           </div>

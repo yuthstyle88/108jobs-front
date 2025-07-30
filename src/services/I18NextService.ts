@@ -2,6 +2,8 @@ import { isBrowser } from "@/utils/browser";
 import i18next, { BackendModule, ReadCallback, Resource } from "i18next";
 import { ImportReport } from "@/utils/dynamic-imports";
 import { en } from "@/translations/en";
+import { th } from "@/translations/th";
+import { vi } from "@/translations/vi";
 import { setupDateFns } from "@/utils/date";
 import { MyUserInfo } from "lemmy-js-client";
 
@@ -30,8 +32,11 @@ const languageByCode = languages.reduce<Record<string, TranslationDesc>>(
 languageByCode["en_US"] = languageByCode["en-US"];
 
 async function load(translation: TranslationDesc): Promise<Resource> {
-  // Use translations from en.ts instead of loading from external files
-  return { translation: en };
+  const { resource } = translation;
+  return import(
+    /* webpackChunkName: `translation-[request]`  */
+    `../translations/${resource}`
+    ).then(x => x[resource]);
 }
 
 export async function verifyTranslationImports(): Promise<ImportReport> {
@@ -129,13 +134,18 @@ class LazyLoader implements Omit<BackendModule, "type"> {
   init() {}
 
   read(language: string, namespace: string, cb: ReadCallback): void {
-    // Use translations from en.ts instead of loading from external files
-    if (language === 'en') {
-      cb(null, { translation: en });
-    } else {
-      // For other languages, still use en.ts as the main source
-      cb(null, { translation: en });
+    const translation: TranslationDesc = languageByCode[language];
+    if (!translation) {
+      cb(new Error(`No translation found: ${language} ${namespace}`), false);
+      return;
     }
+    load(translation)
+    .then(data => {
+      const resKeys = data && data[namespace];
+      if (!resKeys) throw Error(`Failed loading: ${language} ${namespace}`);
+      cb(null, resKeys);
+    })
+    .catch(err => cb(err, false));
   }
 }
 

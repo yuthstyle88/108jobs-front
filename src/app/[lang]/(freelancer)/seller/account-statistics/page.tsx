@@ -8,23 +8,15 @@ import { FileText, Info } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const AccountStats = () => {
 
   const { profileState, person } = useMyUser();
 
-  const {
-    data: sellerAccStatsLanguage,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.SELLER_ACCOUNT_STATISTICS);
+  const sellerAccStatsLanguage = getNamespace(LanguageFile.SELLER_ACCOUNT_STATISTICS);
 
   const daysOfWeek = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
-
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
-
   return (
     <div className="flex-1">
       <div className="p-8">

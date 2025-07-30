@@ -8,7 +8,7 @@ import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const { lang } = useAuthInfo()
-  const currentLang = lang || "en";
+  const currentLang = lang || "th";
 
   useEffect(() => {
     if (I18NextService.i18n.language !== currentLang) {

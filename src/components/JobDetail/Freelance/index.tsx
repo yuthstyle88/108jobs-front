@@ -3,12 +3,11 @@ import { JobDetailIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { JobDetailResponse } from "@/types/jobDetail";
-import { JobDetailLanguage } from "@/types/language";
 import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
-  language: Partial<JobDetailLanguage> | undefined | null;
+  language: Record<string, string>;
   data: JobDetailResponse;
 };
 

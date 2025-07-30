@@ -1,13 +1,12 @@
 import { GroupIcon } from "@/constants/icons";
 import { AssetsImage, LandingImage } from "@/constants/images";
-import { HomeLanguage } from "@/types/language";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import React from "react";
 
 type Props = {
-  homeLanguageData?: Partial<HomeLanguage> | null;
+  homeLanguageData?: Record<string,string>;
 };
 
 const HiringSection = (props: Props) => {

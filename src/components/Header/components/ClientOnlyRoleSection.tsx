@@ -4,10 +4,9 @@ import { UserService } from "@/services";
 import { RoleType } from "lemmy-js-client";
 import EmployerSection from './EmployerSection';
 import FreelancerSession from './FreelancerSection';
-import {GlobalLanguage} from "@/types/language";
 
 interface ClientOnlyRoleSectionProps {
-  globalLanguageData?: Partial<GlobalLanguage> | null | undefined;
+  globalLanguageData?: Record<string, string>;
 }
 
 const ClientOnlyRoleSection = ({ globalLanguageData }: ClientOnlyRoleSectionProps) => {

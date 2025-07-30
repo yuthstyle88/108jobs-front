@@ -1,14 +1,10 @@
 "use client";
 import { createContext, useContext } from "react";
-import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
-import { ProfileChatLanguage } from "@/types/language";
-import Loading from "@/components/Loading";
-import ErrorPage from "@/app/error";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import {getNamespace} from "@/utils/i18nHelper";
 
 type LanguageContextType = {
-  languageData: Partial<ProfileChatLanguage> | null | undefined;
+  languageData: Record<string, string>;
   isLoading: boolean;
   error: unknown;
 };
@@ -22,14 +18,10 @@ export const ChatLanguageProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const {
-    data: languageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.CHAT);
+  const languageData = getNamespace(LanguageFile.CHAT);
 
-  if (isLoading) return <Loading/>;
-  if (error) return <ErrorPage/>;
+  const isLoading = false;
+  const error = false;
 
   return (
     <LanguageContext.Provider value={{ languageData, isLoading, error }}>

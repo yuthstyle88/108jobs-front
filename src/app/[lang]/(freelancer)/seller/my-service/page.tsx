@@ -1,5 +1,4 @@
 "use client";
-import { API_ROUTES, API_ROUTES_SELLER } from "@/api/endpoints";
 import Loading from "@/components/Loading";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import { SellerImage } from "@/constants/images";
@@ -29,7 +28,7 @@ import ConfirmDeleteModal from "./_components/ConfirmDeleteModal";
 import JobCreatedStatus from "./_components/JobCreatedStatus";
 import Error from "@/app/error";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import {API_ROUTES_SELLER} from "@/api/endpoints";
 
 const MyServices = () => {
   const { successMessage } = useNotification();
@@ -44,11 +43,7 @@ const MyServices = () => {
     mutate,
   } = usePrivateFetch<JobListResponse>(API_ROUTES_SELLER.job.getJob);
 
-  const {
-    data: sellerMyServiceLanguage,
-    isLoading: languageLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.SELLER_MY_SERVICE);
+  const sellerMyServiceLanguage = getNamespace(LanguageFile.SELLER_MY_SERVICE);
 
   const global = getNamespace(LanguageFile.GLOBAL);
 
@@ -100,9 +95,6 @@ const MyServices = () => {
       setMutatingJobId(null);
     }
   };
-
-  if (isLoading || languageLoading ) return <Loading />;
-  if (error) return <Error/>;
 
   return (
     <div className="p-4 md:p-0">
@@ -341,8 +333,6 @@ const MyServices = () => {
         jobName={selectedJob?.name || ""}
         onClose={handleCloseModal}
         handleConfirmChange={handleConfirmDelete}
-        language={sellerMyServiceLanguage}
-        global={global}
       />
     </div>
   );

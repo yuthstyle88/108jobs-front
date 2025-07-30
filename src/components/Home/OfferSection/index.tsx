@@ -1,12 +1,11 @@
 import { CompareImage } from "@/constants/images";
-import { HomeLanguage } from "@/types/language";
 import { faArrowRight, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import React from "react";
 
 type Props = {
-  homeLanguageData?: Partial<HomeLanguage> | null;
+  homeLanguageData?: Record<string, string>;
 };
 
 const OfferSection = (props: Props) => {

@@ -1,18 +1,13 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { usePrivateFetch } from "@/hooks/api-hooks";
-import { getNamespace } from "@/utils/i18nHelper";
-import { ProfileData } from "lemmy-js-client";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import {getNamespace} from "@/utils/i18nHelper";
+
 
 interface StartSellingLayoutProps {
   children: ReactNode;
@@ -23,11 +18,7 @@ export default function StartSellingLayout({
 }: StartSellingLayoutProps) {
   const pathname = usePathname();
   const { lang } = useLanguage();
-  const {
-    data: userEditLanguage,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.PROFILE_USER_EDIT);
+  const userEditLanguage = getNamespace(LanguageFile.PROFILE_USER_EDIT);
 
   const { profileState, person } = useMyUser();
   const menuItems = [
@@ -40,9 +31,6 @@ export default function StartSellingLayout({
       label: userEditLanguage?.certificatesAwards,
     },
   ];
-
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
 
   return (
     <>

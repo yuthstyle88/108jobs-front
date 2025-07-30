@@ -13,7 +13,7 @@ import { useState } from "react";
 import JobBoardTab from "./_components/JobBoardTab";
 import { useCategories } from "./hooks/useCategories";
 import { useJobPosts } from "./hooks/useJobPosts";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const JobBoard = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -32,14 +32,7 @@ const JobBoard = () => {
     page: currentPage,
   });
 
-  const {
-    data: jobBoardLanguageData,
-    isLoading: isLanguageLoading,
-    error: languageError,
-  } = useGlobalTranslate(LanguageFile.JOB_BOARD);
-
-  if (isLanguageLoading) return <Loading />;
-  if (languageError) return <Error />;
+  const jobBoardLanguageData = getNamespace(LanguageFile.JOB_BOARD);
 
   const formatDate = (dateString: string) => {
     if (!dateString || dateString === "-") return "-";

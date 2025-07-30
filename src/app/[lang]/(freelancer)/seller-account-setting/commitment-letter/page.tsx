@@ -1,18 +1,12 @@
 "use client";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { getNamespace } from "@/utils/i18nHelper";
 import { Upload } from "lucide-react";
 import Link from "next/link";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const CommitmentLetter = () => {
-  const {
-    data: sellerCommitmentLanguage,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.SELLER_COMMITMENT_LETTER);
+  const sellerCommitmentLanguage = getNamespace(LanguageFile.SELLER_COMMITMENT_LETTER);
 
   const global = getNamespace(LanguageFile.GLOBAL);
 
@@ -20,10 +14,6 @@ const CommitmentLetter = () => {
     console.log("Saving account settings");
     // Logic to save data would go here
   };
-
-  if (isLoading) return <Loading />;
-  if (error) return <Error />;
-
   return (
     <div className="bg-white rounded-md shadow-sm overflow-hidden">
       <div className="border-b border-gray-200 p-5">

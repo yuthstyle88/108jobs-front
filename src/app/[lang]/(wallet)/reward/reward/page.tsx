@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 interface CouponData {
   id: number;
@@ -29,17 +29,11 @@ const coupons: CouponData[] = [
 ];
 
 const RewardPage = () => {
-  const {
-    data: rewardLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.REWARD);
+  const rewardLanguageData = getNamespace(LanguageFile.REWARD);
 
   const route = useRouter();
   const [activeButton, setActiveButton] = useState(0);
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
   return (
     <>
       <section className="relative">

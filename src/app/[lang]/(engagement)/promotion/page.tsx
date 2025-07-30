@@ -1,6 +1,4 @@
 "use client";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
 import { getNamespace } from "@/utils/i18nHelper";
@@ -11,16 +9,12 @@ import { Tags } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const Promotion = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const { isLoggedIn } = useAuthInfo();
-  const {
-    data: couponLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.COUPON);
+  const couponLanguageData = getNamespace(LanguageFile.COUPON);
 
   const tabs = [
     {
@@ -33,8 +27,6 @@ const Promotion = () => {
     },
   ];
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
   return (
     <>
       {/* <CategoryDetail /> */}

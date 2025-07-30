@@ -2,14 +2,14 @@
 import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import {LanguageFile} from "@/constants/language";
-import {useLanguage} from "@/contexts/LanguageContext";
-import {useGlobalTranslate} from "@/hooks/translation/useGlobalTranslate";
+import {useLanguage} from "@/contexts/LanguageContext";;
 import {interpolateDouble} from "@/utils/interpolate";
 import {faArrowRight, faEye, faInfoCircle, faLineChart,} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import {CartesianGrid, Line, LineChart as RechartsLineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from "recharts";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {getNamespace} from "@/utils/i18nHelper";
 
 const SellerHome = () => {
   const chartData = [
@@ -34,7 +34,7 @@ const { lang } = useLanguage();
     data: sellerOverviewLanguage,
     isLoading,
     error,
-  } = useGlobalTranslate(LanguageFile.SELLER_OVERVIEW);
+  } = getNamespace(LanguageFile.SELLER_OVERVIEW);
 
   if (isLoading) return <Loading />;
   if (error) return <Error/>;

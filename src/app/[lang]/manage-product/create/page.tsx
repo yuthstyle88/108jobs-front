@@ -3,25 +3,16 @@ import { useRouter } from "next/navigation";
 import { JobType } from "@/types/job";
 import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
-import Loading from "@/components/Loading";
-import Error from "@/app/error";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const CreateService = () => {
   const router = useRouter();
 
-  const {
-    data: createJobLanguage,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.SELLER_CREATE_JOBS);
+  const createJobLanguage = getNamespace(LanguageFile.SELLER_CREATE_JOBS);
 
   const handleCreatedStep1 = (job: JobType) => {
     router.push(`/manage-product/${job.id}`);
   };
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
 
   return (
     <div className="min-h-screen pt-[4.5rem] bg-[#F8F9FB]">

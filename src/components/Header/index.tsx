@@ -1,7 +1,5 @@
 "use client";
 import { AssetIcon } from "@/constants/icons";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -13,7 +11,12 @@ import FreelancerSession from "./components/FreelancerSection";
 import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
 import { useScrollHandler } from "./hooks/useScrollHandler";
-
+import {I18NextService,} from "@/services/I18NextService";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {getNamespace} from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
     bg: "#transparent",
@@ -30,7 +33,15 @@ interface BgProps {
 
 const Header = ({ type, forceShowSearch = false }: BgProps) => {
   const { isLoggedIn, isEmployer, isFreelancer } = useAuthInfo();
+  const { lang } = useLanguage(); // <--- เอาจาก context
+  // change language
+  useEffect(() => {
+    (async () => {
+      await I18NextService.i18n.changeLanguage(lang);
+    })();
+  }, [lang]);
 
+  const { t } = useTranslation();
   const { scrollY, showSearch } = useScrollHandler(forceShowSearch);
 
   const globalLanguageData = getNamespace(LanguageFile.GLOBAL);
@@ -65,7 +76,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
               <div className="relative">
                 <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
                   <p className="">
-                    {globalLanguageData?.labelEmploymentButton}
+                    {t("global.labelEmploymentButton")}
                   </p>
                   <FontAwesomeIcon icon={faChevronDown} />
                 </div>
@@ -81,7 +92,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
               href="/apply-freelancer"
               className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
             >
-              {globalLanguageData?.labelApplyToBeFreelancerButton}
+              {t("global.labelApplyToBeFreelancerButton")}
             </Link>
           )}
           {isFreelancer && (
@@ -100,7 +111,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
               href="/login"
               className="text-white text-sm hover:bg-blue-800 hover:text-white"
             >
-              {globalLanguageData?.labelSignInButton}
+              {t("global.labelSignInButton")}
             </Link>
           )}
           {!isLoggedIn && <LanguageDropdown />}

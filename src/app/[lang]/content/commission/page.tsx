@@ -1,20 +1,14 @@
 "use client";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { getNamespace } from "@/utils/i18nHelper";
 import { scrollToElementById } from "@/utils/scrollSmooth";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const MyServices = () => {
-  const {
-    data: commissionLanguage,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.COMMISSION);
+  const commissionLanguage = getNamespace(LanguageFile.COMMISSION);
 
   const MEMBER_TIERS = [
     {
@@ -100,9 +94,6 @@ const MyServices = () => {
     setMemberTier(tier);
     setDropdownOpen(false);
   };
-
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
 
   return (
     <div className="relative p-4 md:p-10 xl:p-20">

@@ -1,4 +1,3 @@
-import { ProfileApplyLanguage } from "@/types/language";
 import React, { JSX } from "react";
 
 type Benefit = {
@@ -8,7 +7,7 @@ type Benefit = {
 };
 
 type Props = {
-  data: Partial<ProfileApplyLanguage> | null | undefined;
+  data: Record<string, string>;
 };
 
 const Benefit = ({ data }: Props) => {

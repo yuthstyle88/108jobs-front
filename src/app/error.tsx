@@ -1,23 +1,16 @@
 "use client";
 
-import Loading from "@/components/Loading";
 import { LandingImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { getNamespace } from "@/utils/i18nHelper";
 import Image from "next/image";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 interface ErrorProps {
   message?: string;
 }
 
 export default function Error({ message }: ErrorProps) {
-  const {
-    data: errorLanguageData,
-    isLoading,
-    error: isError,
-  } = useGlobalTranslate(LanguageFile.ERROR);
-
-  if (isLoading) return <Loading />;
+  const errorLanguageData = getNamespace(LanguageFile.ERROR);
+ const isError = message ? true : false;
   // if (isError) return <div>Error loading language data</div>;
 
   return (

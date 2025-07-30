@@ -1,5 +1,4 @@
 import { StartSellingImage } from "@/constants/images";
-import { ProfileApplyLanguage } from "@/types/language";
 import Image, { StaticImageData } from "next/image";
 import React from "react";
 
@@ -11,7 +10,7 @@ type Step = {
 };
 
 type Props = {
-  data: Partial<ProfileApplyLanguage> | null | undefined;
+  data: Record<string, string>;
 };
 
 const Step = ({ data }: Props) => {

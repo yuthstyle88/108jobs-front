@@ -10,7 +10,7 @@ import { LanguageFile } from "@/constants/language";
 import { getNamespace } from "@/utils/i18nHelper";
 import Loading from "../Loading";
 import Error from "@/app/error";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 const categoryImages = [
   {
     image: CategoriesImage.seoImage,
@@ -47,14 +47,8 @@ const categoryImages = [
 ];
 
 const StartSelling = () => {
-  const {
-    data: applyFreelancerData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.APPLY_FREELANCER);
+  const applyFreelancerData = getNamespace(LanguageFile.APPLY_FREELANCER);
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error />;
 
   return (
     <main>

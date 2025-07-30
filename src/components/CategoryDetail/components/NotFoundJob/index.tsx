@@ -1,11 +1,11 @@
 import { CategoriesImage } from "@/constants/images";
-import { JobCategoryLanguage } from "@/types/language";
+
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 type Props = {
-  language: Partial<JobCategoryLanguage> | undefined | null;
+  language: Record<string, string>;
 };
 const NotFoundJob = ({ language }: Props) => {
   return (

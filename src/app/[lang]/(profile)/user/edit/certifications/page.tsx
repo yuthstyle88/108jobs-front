@@ -9,8 +9,7 @@ import { API_ROUTES_SELLER } from "@/api/endpoints";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
-import { getNamespace } from "@/utils/i18nHelper";
-import { LanguageFile } from "@/constants/language";
+import {useTranslation} from "react-i18next";
 
 type CertificationFromServer = {
   id: string;
@@ -19,13 +18,12 @@ type CertificationFromServer = {
 };
 
 const EditCertifications = () => {
-  const userEditLanguage = getNamespace(LanguageFile.PROFILE_USER_EDIT);
-
+  const { t } = useTranslation();
   const certificationSchema = z.object({
     certificationItems: z.array(
       z.object({
         id: z.string().optional(),
-        name: z.string().min(1, userEditLanguage.certificatesPlaceholder),
+        name: z.string().min(1, t("userEdit.certificatesPlaceholder")),
       })
     ),
   });
@@ -97,7 +95,7 @@ const EditCertifications = () => {
     <div className="flex-1">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-semibold text-blue-600 mb-8">
-          {userEditLanguage.certificatesAwards}
+          {t("userEdit.certificatesAwards")}
         </h1>
 
         {isFetching ? (
@@ -107,14 +105,14 @@ const EditCertifications = () => {
         ) : fields.length === 0 ? (
           <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
             <p className="text-gray-500 mb-4">
-              {userEditLanguage.noCertificatesInfo}
+              {t("userEdit.noCertificatesInfo")}
             </p>
             <button
               type="button"
               onClick={() => append({ id: undefined, name: "" })}
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage.addMoreButton}
+              <Plus className="w-5 h-5 mr-2" /> {t("userEdit.addMoreButton")}
             </button>
 
             <div className="flex justify-end">
@@ -124,7 +122,7 @@ const EditCertifications = () => {
                 disabled={isMutating}
                 className="w-[128px] py-2 submit-button-custom"
               >
-                {isMutating ? <LoadingCircle /> : userEditLanguage.saveButton}
+                {isMutating ? <LoadingCircle /> : t("userEdit.saveButton")}
               </button>
             </div>
           </div>
@@ -137,12 +135,12 @@ const EditCertifications = () => {
               >
                 <div>
                   <label className="block text-gray-700 mb-2">
-                    {userEditLanguage.certificatesName}
+                    {t("userEdit.certificatesName")}
                   </label>
                   <input
                     type="text"
                     className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder={userEditLanguage.awardPlaceholder}
+                    placeholder={t("userEdit.awardPlaceholder")}
                     {...register(`certificationItems.${index}.name`)}
                   />
                   {errors.certificationItems?.[index]?.name && (
@@ -159,7 +157,7 @@ const EditCertifications = () => {
                     className="border-1 border-border-secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                   >
                     <Trash2 className="w-4" />
-                    <span className="ml-2 font-medium">{userEditLanguage.deleteInfo}</span>
+                    <span className="ml-2 font-medium">{t("userEdit.deleteInfo")}</span>
                   </button>
                 </div>
               </div>
@@ -170,7 +168,7 @@ const EditCertifications = () => {
               onClick={() => append({ id: undefined, name: "" })}
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage.addInfo}
+              <Plus className="w-5 h-5 mr-2" /> {t("userEdit.addInfo")}
             </button>
 
             <div className="flex justify-end">
@@ -179,7 +177,7 @@ const EditCertifications = () => {
                 disabled={isMutating}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                {isMutating ? <LoadingCircle /> : userEditLanguage.saveInfo}
+                {isMutating ? <LoadingCircle /> : t("userEdit.saveInfo")}
               </button>
             </div>
           </form>

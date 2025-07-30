@@ -1,6 +1,5 @@
 "use client";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
+
 import { ProfileImage } from "@/constants/images";
 import { useDateOptions } from "@/hooks/useDateOptions";
 import { Trash2 } from "lucide-react";
@@ -14,7 +13,6 @@ import { LanguageFile } from "@/constants/language";
 import { getNamespace } from "@/utils/i18nHelper";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const PersonalInfo = () => {
   // Function to upload image using HttpService
@@ -26,11 +24,11 @@ const PersonalInfo = () => {
 
   const { profileState, card } = useMyUser();
 
-  const { data: sellerPersonalInfoLanguage } = useGlobalTranslate(
+  const sellerPersonalInfoLanguage = getNamespace(
       LanguageFile.SELLER_PERSONAL_INFO
     );
 
-    const { data: global } = useGlobalTranslate(
+    const global = getNamespace(
         LanguageFile.GLOBAL
       );
 

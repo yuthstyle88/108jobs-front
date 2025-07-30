@@ -1,5 +1,4 @@
 "use client";
-import Loading from "@/components/Loading";
 import { AuthFormContainer } from "@/components/Authentication/AuthFormContainer";
 import { ChangePassword } from "@/components/Authentication/ChangePassword";
 import { ForgotPasswordForm } from "@/components/Authentication/ForgotPasswordForm";
@@ -11,7 +10,7 @@ import { RegisterDataProps } from "@/types/register-data";
 import Image from "next/image";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 type ViewState =
   | "manage-password"
@@ -19,11 +18,7 @@ type ViewState =
   | "change-password";
 
 export default function PasswordManagePage() {
-  const {
-    data: loginLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.AUTHEN);
+  const loginLanguageData = getNamespace(LanguageFile.AUTHEN);
 
   const params = useSearchParams();
   const viewParam = params.get("view") as ViewState | null;
@@ -45,11 +40,6 @@ export default function PasswordManagePage() {
   // Load singUpData from sessionStorage if available, only on client
   console.log("🧭 currentView:", currentView);
   const route = useRouter();
-
-
-
-  if (isLoading) return <Loading />;
-  if (error) return <div>Error</div>;
 
   return (
     <div className="min-h-screen bg-[#E3EDFD] grid 2xl:grid-cols-[1fr_1240px_1fr] lg:grid-cols-[1fr_984px_1fr] md:grid-cols-[1fr_768px_1fr] grid-cols-[12px_minmax(0,auto)12px]">

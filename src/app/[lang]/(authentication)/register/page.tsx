@@ -1,33 +1,25 @@
 "use client";
-import Loading from "@/components/Loading";
 import {AuthFormContainer} from "@/components/Authentication/AuthFormContainer";
 
 import {AuthenticateIcon} from "@/constants/icons";
 import {CategoriesImage} from "@/constants/images";
 import {LanguageFile} from "@/constants/language";
-import {useGlobalTranslate} from "@/hooks/translation/useGlobalTranslate";
 import {RegisterDataProps} from "@/types/register-data";
 import Image from "next/image";
 import {useState} from "react";
 import {RegisterForm} from "@/components/Authentication/RegisterForm";
 import {useRouter} from "next/navigation";
 import VerifyEmailConfirm from "@/components/Authentication/VerifyEmailConfirm";
+import {getNamespace} from "@/utils/i18nHelper";
 
 type ViewState = "register" | "verify-email";
 
 export default function RegisterPage() {
   const route = useRouter();
-  const {
-    data: loginLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.AUTHEN);
+  const loginLanguageData = getNamespace(LanguageFile.AUTHEN);
 
   const [currentView, setCurrentView] = useState<ViewState>("register");
   const [dataDataRegister, setDataDataRegister] = useState<RegisterDataProps | null>(null);
-
-  if (isLoading) return <Loading/>;
-  if (error) return <div>Error</div>;
 
   return (
     <div

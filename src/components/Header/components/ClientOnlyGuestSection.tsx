@@ -3,14 +3,13 @@ import { useState, useEffect } from 'react';
 import { UserService } from "@/services";
 import Link from "next/link";
 import LanguageDropdown from "@/components/LanguageDropDown";
-import { GlobalLanguage } from "@/types/language";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MegaMenu from "@/components/Header/components/MegaMenu";
 
 
 interface ClientOnlyGuestSectionProps {
-  globalLanguageData?: Partial<GlobalLanguage> | null | undefined;
+  globalLanguageData?: Record<string, string>;
 }
 
 const ClientOnlyGuestSection = ({ globalLanguageData }: ClientOnlyGuestSectionProps) => {

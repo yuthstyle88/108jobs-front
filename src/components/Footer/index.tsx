@@ -3,7 +3,6 @@ import en from "@/assets/icons/en.svg";
 import th from "@/assets/icons/th.svg";
 import vn from "@/assets/icons/vn.svg";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import {
   faFacebook,
   faInstagram,
@@ -12,13 +11,13 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
+import {getNamespace} from "@/utils/i18nHelper";
 
 const Footer = () => {
-  const { data: global, isLoading, error } = useGlobalTranslate(LanguageFile.GLOBAL);
+  const global = getNamespace(LanguageFile.GLOBAL);
 
   // Handle loading and error states
-  if (isLoading) return <div className="bg-blue-900 text-white p-4 text-center">Loading...</div>;
-  if (error) return <div className="bg-blue-900 text-white p-4 text-center">Error loading translations</div>;
+
   if (!global) return <div className="bg-blue-900 text-white p-4 text-center">No translation data available</div>;
 
   return (

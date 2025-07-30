@@ -8,7 +8,7 @@ import { Home } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Error from "./error";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const categoryImages = [
   {
@@ -46,14 +46,9 @@ const categoryImages = [
 ];
 
 export default function NotFound() {
-  const {
-    data: notFoundLanguageData,
-    isLoading,
-    error: isError,
-  } = useGlobalTranslate(LanguageFile.NOT_FOUND);
+  const notFoundLanguageData = getNamespace(LanguageFile.NOT_FOUND);
 
-  if (isLoading) return <Loading />;
-  if (isError) return <Error/>;
+
   return (
     <div className="min-h-screen flex flex-col ">
       {/* Header */}

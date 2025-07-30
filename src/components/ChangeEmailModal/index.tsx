@@ -2,7 +2,6 @@
 import LoadingCircle from "@/components/LoadingCircle";
 import Modal from "@/components/ui/Modal";
 import { ERROR_CONSTANTS } from "@/constants/error";
-import { ProfileContactInfoLanguage } from "@/types/language";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mailbox } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -28,7 +27,7 @@ interface ChangeEmailModalProps {
   onBack?: () => void;
   onVerifySuccess?: () => void;
   formEmail?: string;
-  language: Partial<ProfileContactInfoLanguage> | undefined | null;
+  language: Record<string, string>;
 }
 
 const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({

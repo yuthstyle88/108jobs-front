@@ -8,21 +8,15 @@ import { getNamespace } from "@/utils/i18nHelper";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const EarnPage = () => {
-  const {
-    data: pointLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.REWARD);
+  const pointLanguageData = getNamespace(LanguageFile.REWARD);
 
   const [activeButton, setActiveButton] = useState(0);
 
   const route = useRouter();
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
 
   return (
     <>

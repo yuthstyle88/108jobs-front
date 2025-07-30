@@ -8,7 +8,7 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const EMPLOYERS = [
   {
@@ -130,11 +130,7 @@ const SELLERS = [
 const HowSellAndBuy = () => {
   const [selectedTab, setSelectedTab] = useState(0);
 
-  const {
-    data: couponLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.COUPON);
+  const couponLanguageData = getNamespace(LanguageFile.COUPON);
 
   const tabs = [
     {
@@ -149,8 +145,6 @@ const HowSellAndBuy = () => {
 
   const currentSteps = selectedTab === 0 ? EMPLOYERS : SELLERS;
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
   return (
     <>
       <main>

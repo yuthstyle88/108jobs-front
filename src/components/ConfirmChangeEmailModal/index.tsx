@@ -1,7 +1,6 @@
 "use client";
 import LoadingCircle from "@/components/LoadingCircle";
 import Modal from "@/components/ui/Modal";
-import { ProfileContactInfoLanguage } from "@/types/language";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -22,7 +21,7 @@ interface ConfirmChangeEmailModalProps {
   isOpen: boolean;
   onClose: () => void;
   handleConfirmChange: () => void;
-  language: Partial<ProfileContactInfoLanguage> | undefined | null;
+  language: Record<string, string>;
 }
 
 

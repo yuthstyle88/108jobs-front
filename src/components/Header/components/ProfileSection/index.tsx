@@ -1,7 +1,6 @@
 import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-import { GlobalLanguage } from "@/types/language";
 import {
   faBarsProgress,
   faBullhorn,
@@ -19,15 +18,16 @@ import {Person} from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
 import {UserService} from "@/services";
+import {useTranslation} from "react-i18next";
 
 type ProfileSectionProps = {
-  data: Partial<GlobalLanguage> | null | undefined;
   profile: Person | null;
 };
 
-const ProfileSection = ({ data, profile }: ProfileSectionProps) => {
+const ProfileSection = ({ profile }: ProfileSectionProps) => {
   const logout = () => UserService.Instance.logout();
 const { lang } = useLanguage();
+const { t } = useTranslation();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">
       <Link prefetch={false} href={`${lang}/user`}>
@@ -45,7 +45,7 @@ const { lang } = useLanguage();
             <div>
               <p className="font-medium text-gray-900">username</p>
               <p className="text-sm font-sans text-text-secondary underline">
-                {data?.labelViewProfile}
+                {t("global.labelViewProfile")}
               </p>
             </div>
           </div>
@@ -78,7 +78,7 @@ const { lang } = useLanguage();
             icon={faGear}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuAccountSettings}</span>
+          <span className="text-gray-700">{t("global.menuAccountSettings")}</span>
         </Link>
         <Link prefetch={false}
           href="/chat"
@@ -88,7 +88,7 @@ const { lang } = useLanguage();
             icon={faMessage}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuMessagesOrders}</span>
+          <span className="text-gray-700">{t("global.menuMessagesOrders")}</span>
         </Link>
         <Link prefetch={false}
           href="/promotion"
@@ -98,7 +98,7 @@ const { lang } = useLanguage();
             icon={faTicket}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuCoupons}</span>
+          <span className="text-gray-700">{t("global.menuCoupons")}</span>
         </Link>
         <Link prefetch={false}
           href="/favorites"
@@ -108,7 +108,7 @@ const { lang } = useLanguage();
             icon={faHeart}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuFavoriteJobs}</span>
+          <span className="text-gray-700">{t("global.menuFavoriteJobs")}</span>
         </Link>
         <Link prefetch={false}
           href="/job-board"
@@ -118,7 +118,7 @@ const { lang } = useLanguage();
             icon={faBullhorn}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuJobBoard}</span>
+          <span className="text-gray-700">{t("global.menuJobBoard")}</span>
         </Link>
         <Link prefetch={false}
           href="/reward/earn"
@@ -141,7 +141,7 @@ const { lang } = useLanguage();
             icon={faCodePullRequest}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuBecomeFreelancer}</span>
+          <span className="text-gray-700">{t("global.menuBecomeFreelancer")}</span>
         </Link>
         <Link prefetch={false}
           href="/consent-management"
@@ -151,7 +151,7 @@ const { lang } = useLanguage();
             icon={faBarsProgress}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuDataManagement}</span>
+          <span className="text-gray-700">{t("global.menuDataManagement")}</span>
         </Link>
         <button
           onClick={logout}
@@ -161,7 +161,7 @@ const { lang } = useLanguage();
             icon={faSignOut}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">{data?.menuLogout}</span>
+          <span className="text-gray-700">{t("global.menuLogout")}</span>
         </button>
       </div>
     </div>

@@ -1,30 +1,20 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
-import Error from "@/app/error";
 import JobCard from "@/components/JobCard";
 import JobCardSkeleton from "@/components/ui/JobCardSkeleton";
-import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch } from "@/hooks/api-hooks";
 import { getNamespace } from "@/utils/i18nHelper";
 import { FavoriteJob } from "@/types/favorite";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const Favorites = () => {
-  const {
-    data: global,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.GLOBAL);
+  const  global = getNamespace(LanguageFile.GLOBAL);
 
   const {
     data: favoriteData,
     isLoading: isLoadingFavorite,
     error: isErrorFavorite,
   } = usePrivateFetch<FavoriteJob>(API_ROUTES.job.getFavoriteJob);
-
-  if (isLoading) return <Loading />;
-  if (error || isErrorFavorite) return <Error/>;
 
   return (
     <div className="w-full min-h-screen">

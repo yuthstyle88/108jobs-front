@@ -19,7 +19,6 @@ import {
     ProfileImage
 } from "@/constants/images";
 import Link from "next/link";
-import { HomeLanguage } from "@/types/language";
 
 const CustomNavigation = () => {
   const swiper = useSwiper();
@@ -42,7 +41,7 @@ const CustomNavigation = () => {
 };
 
 type Props = {
-  homeLanguageData?: Partial<HomeLanguage> | null;
+  homeLanguageData?: Record<string, string>;
 };
 
 const RecommendAndReview = (props: Props) => {

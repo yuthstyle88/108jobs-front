@@ -1,7 +1,6 @@
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { Job } from "@/types/jobSearch";
 import { formatThaiBaht } from "@/utils/formatMoney";
 import { interpolateDouble } from "@/utils/interpolate";

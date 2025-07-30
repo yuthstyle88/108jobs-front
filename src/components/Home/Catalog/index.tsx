@@ -1,7 +1,6 @@
 import { CategoriesIcon } from "@/constants/icons";
 import { ServiceCatalog } from "@/types/catalog";
 import { catalogIcons } from "@/types/catalogIcon";
-import { HomeLanguage } from "@/types/language";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -13,7 +12,7 @@ type Props = {
   activeCatalog: ServiceCatalog;
   activeCatalogIndex: number;
   setActiveCatalogIndex: (index: number) => void;
-  homeLanguageData?: Partial<HomeLanguage> | null;
+  homeLanguageData?: Record<string, string>;
 };
 
 const CatalogBanner = (props: Props) => {

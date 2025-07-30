@@ -6,13 +6,11 @@ import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { getNamespace } from "@/utils/i18nHelper";
-import { RegisterDataProps } from "@/types/register-data";
 import Image from "next/image";
 import { useState } from "react";
 
-import { useRouter } from "next/navigation";
 import { ChangePassword } from "@/components/Authentication/ChangePassword";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 type ViewState = "change-password";
 interface Props {
@@ -20,16 +18,10 @@ interface Props {
 }
 
 export default function ChangePasswordLayout({ token }: Props) {
-  const {
-    data: loginLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.AUTHEN);
+  const loginLanguageData = getNamespace(LanguageFile.AUTHEN);
 
   const [currentView, setCurrentView] = useState<ViewState>("change-password");
 
-  if (isLoading) return <Loading />;
-  if (error) return <div>Error</div>;
 
   return (
     <div className="min-h-screen bg-[#E3EDFD] grid 2xl:grid-cols-[1fr_1240px_1fr] lg:grid-cols-[1fr_984px_1fr] md:grid-cols-[1fr_768px_1fr] grid-cols-[12px_minmax(0,auto)12px]">

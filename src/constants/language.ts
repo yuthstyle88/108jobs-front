@@ -9,7 +9,7 @@ export enum LanguageFile {
   BASIC_INFO = "profile_info",
   CONTACT = "profile_contact",
   INDIVIDUAL = "profile_individual",
-  COMPANY = "profile_company",
+  COMPANY = "profileCompany",
   CHAT = "profile_chat",
   APPLY_FREELANCER = "profile_apply",
   COUPON = "profile_coupon",

@@ -1,11 +1,10 @@
-import { GlobalLanguage } from "@/types/language";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 type Props = {
-  language: Partial<GlobalLanguage> | undefined | null;
+  language: Record<string, string>;
 };
 
 type SearchForm = {

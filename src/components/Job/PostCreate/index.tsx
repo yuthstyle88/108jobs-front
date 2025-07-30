@@ -13,13 +13,12 @@ import LoadingCircle from "@/components/LoadingCircle";
 import {z} from "zod";
 import {useLanguage} from "@/contexts/LanguageContext";
 import {getNumericCode} from "@/actions/getClientCurrentLanguage";
-import {LanguageDataType} from "@/types/language";
 
 interface PostFormProps {
   redirectUrl?: string,
   history?: any,
   setApiError?: (err: string) => void,
-  createJobLanguage?: LanguageDataType
+  createJobLanguage?: Record<string, string>
 }
 const jobSchema = z.object({
   communityId: z.coerce.number().int().positive("Community ID ต้องเป็นเลขบวก"),

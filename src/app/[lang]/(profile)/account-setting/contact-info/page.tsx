@@ -1,14 +1,14 @@
 "use client";
 import ChangeEmailModal from "@/components/ChangeEmailModal";
 import ConfirmChangeEmailModal from "@/components/ConfirmChangeEmailModal";
-import Loading from "@/components/Loading";
 import LoadingCircle from "@/components/LoadingCircle";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch } from "@/hooks/api-hooks";
-import { getNamespace } from "@/utils/i18nHelper";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ZipcodeSearch from "../_components/SearchZipcode";
@@ -16,10 +16,9 @@ import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { addressSchema } from "@/utils/validation/addressSchema";
 import { API_ROUTES } from "@/api/endpoints";
 import useNotification from "@/hooks/useNotification";
-import ErrorPage from "@/app/error";
 import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
 import {Address, CountriesResponse} from "lemmy-js-client";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import {getNamespace} from "@/utils/i18nHelper";
 
 const emailSchema = z.object({
   email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์").optional(),
@@ -59,7 +58,7 @@ function normalizeAddress(address: Address): AddressFormData {
 
 export default function ContactPage() {
   const { profileState, address, contact} = useMyUser();
-
+  const { t } = useTranslation();
   const [isReady, setIsReady] = useState(false);
   const [defaultForeignCountry, setDefaultForeignCountry] =
     useState<string>("");
@@ -98,17 +97,12 @@ export default function ContactPage() {
   const { data: countriesData } =
     usePrivateFetch<CountriesResponse>("/profile/countries");
 
-  const {
-    data: contactInfoLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.CONTACT);
+  const contactInfoLanguageData = getNamespace(LanguageFile.CONTACT);
 
-  const { data: sellerContactLanguage } = useGlobalTranslate(
+  const sellerContactLanguage = getNamespace(
     LanguageFile.SELLER_CONTACT_INFO
   );
 
-  const global = getNamespace(LanguageFile.GLOBAL);
 
   const [updateAddressState, setUpdateAddressState] = useState<RequestState<AddressFormData>>(LOADING_REQUEST);
   const isUpdateMuting = updateAddressState.state === "loading";
@@ -220,8 +214,6 @@ export default function ContactPage() {
     }
   };
 
-  if (isLoading || !isReady) return <Loading />;
-  if (error) return <ErrorPage />;
 
   return (
     <div>
@@ -264,7 +256,7 @@ export default function ContactPage() {
                       {isSubmittingEmail ? (
                         <LoadingCircle />
                       ) : (
-                        global.buttonChange
+                        t("global.buttonChange")
                       )}
                     </button>
                   </div>
@@ -295,7 +287,7 @@ export default function ContactPage() {
                   onClick={() => setIsModalOpen(true)}
                   className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
                 >
-                  {global.buttonEdit}
+                  {t("global.buttonEdit")}
                 </button>
               </div>
             </div>
@@ -316,7 +308,7 @@ export default function ContactPage() {
                 defaultValue="0981893238"
               />
               <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                {global.buttonEdit}
+                {t("global.buttonEdit")}
               </button>
             </div>
           </div>
@@ -329,15 +321,15 @@ export default function ContactPage() {
       >
         <div className="p-6 border-b">
           <h2 className="text-[16px] font-medium mb-2 text-text-primary">
-            {contactInfoLanguageData?.sectionAddressInfo}
+            {t("profileContact.sectionAddressInfo")}
           </h2>
           <p className="text-gray-600 text-[14px] font-sans font-normal">
-            {contactInfoLanguageData?.subtitleAddressInfo}
+            {t("profileContact.subtitleAddressInfo")}
           </p>
         </div>
         <div className="p-6 flex flex-col border-b">
           <h3 className="text-base font-medium mb-3">
-            {contactInfoLanguageData?.labelCurrentLocation}
+            {t("profileContact.labelCurrentLocation")}
           </h3>
           <div className="grid grid-cols-2 gap-4 mb-4">
             {LOCATION_OPTIONS.map((option) => (
@@ -361,8 +353,8 @@ export default function ContactPage() {
                   className="text-blue-600 mr-3"
                 />
                 {option === "Thailand"
-                  ? contactInfoLanguageData?.optionThailand
-                  : contactInfoLanguageData?.optionForeignCountry}
+                  ? t("profileContact.optionThailand")
+                  : t("profileContact.optionForeignCountry")}
               </label>
             ))}
           </div>
@@ -370,7 +362,7 @@ export default function ContactPage() {
           {locationType === "Foreign" ? (
             <>
               <label className="block text-sm mb-1">
-                {contactInfoLanguageData?.placeholderSelectCountry}
+                {t("contact.placeholderSelectCountry")}
               </label>
               <select
                 {...register("country")}
@@ -380,7 +372,7 @@ export default function ContactPage() {
                 }`}
               >
                 <option value="">
-                  -- {contactInfoLanguageData?.placeholderSelectCountry} --
+                  -- {t("contact.placeholderSelectCountry")} --
                 </option>
                 {countryOptions.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -398,12 +390,12 @@ export default function ContactPage() {
             <>
               <div className="mb-4">
                 <label className="block text-sm text-text-primary font-semibold mb-2">
-                  {sellerContactLanguage?.addressDetail}
+                  {t("contact.addressDetail")}
                 </label>
                 <input
                   {...register("addressDetails")}
                   className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
-                  placeholder={sellerContactLanguage?.addressPlaceholder}
+                  placeholder={t("contact.addressPlaceholder")}
                 />
                 {errors.addressDetails && (
                   <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -421,10 +413,10 @@ export default function ContactPage() {
                 />
                 <div>
                   <label className="block font-semibold mb-1">
-                    {sellerContactLanguage?.subDistrict}
+                    {t("contact.subDistrict")}
                   </label>
                   <input
-                    placeholder={sellerContactLanguage?.subDistrict}
+                    placeholder={t("contact.subDistrict")}
                     {...register("subdistrictOrDistrict")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
                   />
@@ -439,10 +431,10 @@ export default function ContactPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block font-semibold mb-1">
-                    {sellerContactLanguage?.district}
+                    {t("contact.district")}
                   </label>
                   <input
-                    placeholder={sellerContactLanguage?.district}
+                    placeholder={t("contact.district")}
                     {...register("districtOrSubdistrict")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
                   />
@@ -454,10 +446,10 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <label className="block font-semibold mb-1">
-                    {sellerContactLanguage?.province}
+                    {t("contact.province")}
                   </label>
                   <input
-                    placeholder={sellerContactLanguage?.province}
+                    placeholder={t("contact.province")}
                     {...register("province")}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
                   />
@@ -480,7 +472,7 @@ export default function ContactPage() {
               {isSubmitting || isUpdateMuting ? (
                 <LoadingCircle />
               ) : (
-                global.buttonSave
+                t("global.buttonSave")
               )}
             </button>
           </div>

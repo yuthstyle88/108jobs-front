@@ -11,13 +11,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const CurrentProfileEmployer = () => {
 
   const { profileState, person } = useMyUser();
 
-  const { data: goToProfileLanguage } = useGlobalTranslate(
+  const goToProfileLanguage = getNamespace(
     LanguageFile.GO_TO_PROFILE
   );
 

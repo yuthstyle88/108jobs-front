@@ -3,7 +3,6 @@ import { API_ROUTES } from "@/api/endpoints";
 import CommentSection from "@/components/ReviewComment/components";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
 import { JobDetailResponse } from "@/types/jobDetail";
-import { JobDetailLanguage } from "@/types/language";
 import { Coins, Handshake, MessageCircleReply, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import {ReviewResponse} from "@/lib/lemmy-js-client/src";
@@ -20,7 +19,7 @@ const StarIcon = ({ filled }: { filled: boolean }) => (
 );
 
 type Props = {
-  language: Partial<JobDetailLanguage> | undefined | null;
+  language: Record<string, string>;
   data: JobDetailResponse;
 };
 

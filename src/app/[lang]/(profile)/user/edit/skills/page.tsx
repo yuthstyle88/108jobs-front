@@ -11,7 +11,6 @@ import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
 import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 type SkillLevel = {
   id: string;
@@ -25,7 +24,7 @@ type SkillFromServer = {
 };
 
 const EditSkills = () => {
-  const { data: userEditLanguage, isLoading: isLoading } = useGlobalTranslate(
+  const { data: userEditLanguage, isLoading: isLoading } = getNamespace(
     LanguageFile.PROFILE_USER_EDIT
   );
 

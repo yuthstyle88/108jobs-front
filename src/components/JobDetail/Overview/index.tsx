@@ -1,14 +1,13 @@
 import { JobDetailIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { JobDetailResponse } from "@/types/jobDetail";
-import { JobDetailLanguage } from "@/types/language";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
-  language: Partial<JobDetailLanguage> | undefined | null;
+  language: Record<string, string>;
   data: JobDetailResponse;
 };
 

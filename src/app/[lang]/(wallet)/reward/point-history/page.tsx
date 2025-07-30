@@ -7,7 +7,7 @@ import { getNamespace } from "@/utils/i18nHelper";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 // import CouponCard from "@/components/CouponCard/CouponCard";
 
 interface PointHistory {
@@ -18,11 +18,7 @@ interface PointHistory {
 }
 
 const PointHistoryPage = () => {
-  const {
-    data: historyLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.REWARD);
+  const historyLanguageData = getNamespace(LanguageFile.REWARD);
 
   const route = useRouter();
   const [activeTab1, setActiveTab1] = useState<"received" | "exchange">(
@@ -31,8 +27,6 @@ const PointHistoryPage = () => {
   const [histories, setHistories] = useState<PointHistory[]>([]);
   const hasData = false;
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
   return (
     <>
       <section className="relative">

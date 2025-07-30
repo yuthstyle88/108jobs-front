@@ -6,14 +6,10 @@ import { useState } from "react";
 import { FaChevronUp } from "react-icons/fa";
 import Loading from "../Loading";
 import Error from "@/app/error";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const FaqReward = () => {
-  const {
-    data: footerLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.REWARD);
+  const footerLanguageData = getNamespace(LanguageFile.REWARD);
 
   const [openIndexes, setOpenIndexes] = useState(new Set<number>());
 
@@ -28,8 +24,7 @@ const FaqReward = () => {
       return newIndexes;
     });
   };
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
+
   const faqs = [
     {
       question: footerLanguageData?.faqJoinRewards,

@@ -1,4 +1,3 @@
-import { ProfileCoinLanguage } from "@/types/language";
 import {
   faChevronLeft,
   faChevronRight,
@@ -9,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 
 interface Props {
-  data: Partial<ProfileCoinLanguage> | null | undefined;
+  data: Record<string, string>;
 }
 const TopUpHistory = ({ data }: Props) => {
   return (

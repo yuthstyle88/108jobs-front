@@ -3,11 +3,10 @@ import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import FilterSidebar from "./FilterSidebar";
-import { JobCategoryLanguage } from "@/types/language";
 import { X } from "lucide-react";
 
 type Props = {
-  language: Partial<JobCategoryLanguage> | undefined | null;
+  language: Record<string, string>;
   onFilterChange: (filters: {
     minPrice?: number;
     maxPrice?: number;

@@ -9,7 +9,8 @@ import {
   useWatch,
 } from "react-hook-form";
 import { AddressFormData } from "../../contact-info/page";
-import { SellerContactInfo } from "@/types/language";
+import {useTranslation} from "react-i18next";
+
 
 type Geography = {
   provinceNameTh: string;
@@ -23,7 +24,7 @@ interface ZipcodeSearchProps {
   control: Control<AddressFormData>;
   setValue: UseFormSetValue<AddressFormData>;
   error?: FieldError;
-  language: Partial<SellerContactInfo> | null | undefined;
+  language?: string;
 }
 
 export default function ZipcodeSearch({
@@ -34,7 +35,7 @@ export default function ZipcodeSearch({
 }: ZipcodeSearchProps) {
   const [searchUrl, setSearchUrl] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
-
+  const { t } = useTranslation();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -95,7 +96,7 @@ export default function ZipcodeSearch({
   return (
     <div className="relative" ref={dropdownRef}>
       <label className="block text-sm text-text-primary font-semibold mb-2">
-        {language?.zipcode}
+        {t("sellerContactInfo.zipcode")}
       </label>
       <input
         ref={inputRef}
@@ -109,7 +110,7 @@ export default function ZipcodeSearch({
           if ((zipCode ?? "").length >= 2) debouncedSearch(zipCode ?? "");
           setShowDropdown(true);
         }}
-        placeholder={language?.zipcodePlaceholder}
+        placeholder={t("sellerContactInfo.zipcodePlaceholder")}
         autoComplete="off"
         className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary transition-all"
       />

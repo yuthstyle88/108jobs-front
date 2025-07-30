@@ -9,7 +9,6 @@ import { useProfileForm } from "../hooks/useProfileForm";
 import { useImagePicker } from "@/hooks/useImagePicker";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const AccountSettings = () => {
 
@@ -18,7 +17,7 @@ const AccountSettings = () => {
 
   const { profileState, person , card, localUser} = useMyUser();
 
-  const { data: sellerProfileLanguage } = useGlobalTranslate(
+  const sellerProfileLanguage = getNamespace(
     LanguageFile.SELLER_FREELANCER_PROFILE
   );
 

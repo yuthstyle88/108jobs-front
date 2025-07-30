@@ -20,12 +20,12 @@ import TotpModal from "@/components/Common/Modal/TotpModal";
 import { OAuthButtons } from "@/components/Authentication/LoginForm/oauth-provider";
 import { handleLogin, handleSubmitTotp, handleUseOAuthProvider } from "@/components/Authentication/LoginForm/handlers";
 import { LoginFormProps, LoginFormState, State } from "@/components/Authentication/LoginForm/interface";
-import {getNamespace} from "@/utils/i18nHelper";
+import { useTranslation } from "react-i18next";
 
 
 const withHooks = (Component: any) => {
     const WrappedWithHooks = (props: any) => {
-        const authen = getNamespace(LanguageFile.AUTHEN);
+        const { t } = useTranslation();
         const router = useRouter();
         const searchParams = useSearchParams();
         const redirectUrl = searchParams.get("redirect") || "/";
@@ -34,9 +34,9 @@ const withHooks = (Component: any) => {
         const loginSchema = z.object({
             usernameOrEmail: z
                 .string()
-                .min(6, authen?.usernameMin6)
-                .max(32, authen?.usernameMax32),
-            password: z.string().min(6, authen?.passwordMin6),
+                .min(6, t("authen.usernameMin6"))
+                .max(32, t("authen.usernameMax32")),
+            password: z.string().min(6, t("authen.passwordMin6")),
         });
 
         const formMethods = useForm<z.infer<typeof loginSchema>>({
@@ -48,7 +48,7 @@ const withHooks = (Component: any) => {
         return (
             <Component
                 {...props}
-                authen={authen}
+                t={t}
                 router={router}
                 redirectUrl={redirectUrl}
                 formMethods={formMethods}
@@ -67,8 +67,7 @@ const withHooks = (Component: any) => {
 
 export class LoginFormClass extends Component<
     LoginFormProps & {
-        t: (key: string) => string;
-        authen: Record<string, string>;
+        t: (key: string, options?: any) => string;
         router: any;
         redirectUrl: string;
         formMethods: any;
@@ -143,7 +142,7 @@ export class LoginFormClass extends Component<
     };
 
     render() {
-        const { switchToRegister, switchToForgotPassword, authen, formMethods } = this.props;
+        const { switchToRegister, switchToForgotPassword, t, formMethods } = this.props;
         const { showPassword, oauthProviders } = this.state;
         const { register, handleSubmit, formState: { errors, isSubmitting } } = formMethods;
 
@@ -170,20 +169,20 @@ export class LoginFormClass extends Component<
                     )}
 
                     <CustomInput
-                        label={authen.labelUsernameOrEmail}
+                        label={t("authen.labelUsernameOrEmail")}
                         name="usernameOrEmail"
                         register={register("usernameOrEmail")}
                         error={errors.usernameOrEmail?.message}
-                        placeholder={authen.placeholderUsernameOrEmail}
+                        placeholder={t("authen.placeholderUsernameOrEmail")}
                     />
 
                     <CustomInput
-                        label={authen.labelPassword}
+                        label={t("authen.labelPassword")}
                         name="password"
                         type="password"
                         register={register("password")}
                         error={errors.password?.message}
-                        placeholder={authen.placeholderPassword}
+                        placeholder={t("authen.placeholderPassword")}
                         showPassword={showPassword}
                         toggleShowPassword={this.toggleShowPassword}
                     />
@@ -194,7 +193,7 @@ export class LoginFormClass extends Component<
                             disabled={isSubmitting}
                             className="submit-button py-2"
                         >
-                            {isSubmitting ? <LoadingCircle /> : authen.buttonProceed}
+                            {isSubmitting ? <LoadingCircle /> : t("authen.buttonProceed")}
                         </button>
 
                         <div className="flex justify-between text-sm text-blue-600 mt-4">
@@ -203,18 +202,18 @@ export class LoginFormClass extends Component<
                                 onClick={switchToRegister}
                                 className="hover:underline"
                             >
-                                {authen.linkCreateAccount}
+                                {t("authen.linkCreateAccount")}
                             </button>
                             <button
                                 type="button"
                                 onClick={switchToForgotPassword}
                                 className="hover:underline"
                             >
-                                {authen.linkForgotPassword}
+                                {t("authen.linkForgotPassword")}
                             </button>
                         </div>
                     </div>
-                    <OAuthButtons providers={oauthProviders} onLogin={this.handleLoginWithProvider} label={authen.labelOrSignInWith} />
+                    <OAuthButtons providers={oauthProviders} onLogin={this.handleLoginWithProvider} label={t("authen.labelOrSignInWith")} />
                 </form>
             </div>
         );

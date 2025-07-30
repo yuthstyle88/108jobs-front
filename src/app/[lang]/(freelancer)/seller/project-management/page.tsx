@@ -6,12 +6,11 @@ import { getNamespace } from "@/utils/i18nHelper";
 import { interpolateDouble } from "@/utils/interpolate";
 import { Info } from "lucide-react";
 import { useState } from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const ProjectManagement = () => {
   const [activeTab, setActiveTab] = useState("inProgress");
 
-  const { data: sellerPrjManagementLanguage,isLoading,error } = useGlobalTranslate(
+  const { data: sellerPrjManagementLanguage,isLoading,error } = getNamespace(
     LanguageFile.SELLER_PROJECT_MANAGEMENT
   );
 

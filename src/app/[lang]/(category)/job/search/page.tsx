@@ -1,6 +1,5 @@
 "use client";
 import { API_ROUTES } from "@/api/endpoints";
-import Error from "@/app/error";
 import CategoryFilter from "@/components/CategoryDetail/components/CategoryFilter";
 import CategoryFooter from "@/components/CategoryDetail/components/CategoryFooter";
 import CategoryRelated from "@/components/CategoryDetail/components/CategoryRelated";
@@ -8,7 +7,6 @@ import NotFoundJob from "@/components/CategoryDetail/components/NotFoundJob";
 import SubCategory from "@/components/CategoryDetail/components/SubCategory";
 import FilterSection from "@/components/FilterSection";
 import JobCard from "@/components/JobCard";
-import Loading from "@/components/Loading";
 import { Pagination } from "@/components/Pagination";
 import SortSection from "@/components/SortSection";
 import JobCardSkeleton from "@/components/ui/JobCardSkeleton";
@@ -24,7 +22,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const categoryRelated = [
   {
@@ -64,11 +62,7 @@ const CategoryDetail = () => {
     titleSearch: encodedTitleSearch,
   });
 
-  const {
-    data: jobCategoryLanguage,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.JOB_CATEGORY);
+  const jobCategoryLanguage = getNamespace(LanguageFile.JOB_CATEGORY);
 
   const {
     data: searchResults,
@@ -141,9 +135,6 @@ const CategoryDetail = () => {
     router.push(`?${newParams.toString()}`);
   };
 
-  if (isLoading || !jobCategoryLanguage || !searchResults) return <Loading />;
-
-  if (error || errorJobList) return <Error/>;
 
   return (
     <>
@@ -221,13 +212,13 @@ const CategoryDetail = () => {
           <div className="flex justify-between col-start-2 col-end-auto mb-3 text-[0.875rem] text-text-primary font-sans">
             <div>
               {interpolateDouble(jobCategoryLanguage?.foundJobs || "", {
-                jobNumber: searchResults.jobs.length,
+                jobNumber: searchResults?.jobs.length,
               })}
             </div>
             <div>
               {interpolateDouble(jobCategoryLanguage?.pageInfo || "", {
-                currentPage: searchResults.page,
-                totalPages: searchResults.totalPages,
+                currentPage: searchResults?.page,
+                totalPages: searchResults?.totalPages,
               })}
             </div>
           </div>
@@ -238,11 +229,11 @@ const CategoryDetail = () => {
                   <JobCardSkeleton key={index} />
                 ))}
               </section>
-            ) : searchResults.jobs.length === 0 ? (
+            ) : searchResults?.jobs.length === 0 ? (
               <NotFoundJob language={jobCategoryLanguage} />
             ) : (
               <section className="col-start-2 col-end-auto grid grid-cols-1 sm:grid-cols-[repeat(2,minmax(1px,1fr))] md:grid-cols-[repeat(3,minmax(1px,1fr))] lg:grid-cols-[repeat(4,minmax(1px,1fr))] 2xl:grid-cols-[repeat(5,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
-                {searchResults.jobs.map((job, index) => (
+                {searchResults?.jobs.map((job, index) => (
                   <JobCard data={job} key={index} />
                 ))}
               </section>
@@ -250,10 +241,10 @@ const CategoryDetail = () => {
           </div>
 
           <section className="flex justify-center col-start-2 col-end-auto mt-12">
-            {searchResults.totalPages > 1 && (
+            {searchResults?.totalPages || 0 > 1 && (
               <Pagination
-                totalPages={searchResults.totalPages}
-                currentPage={searchResults.page}
+                totalPages={searchResults?.totalPages || 0}
+                currentPage={searchResults?.page || 0}
                 onPageChange={handlePageChange}
               />
             )}

@@ -1,11 +1,9 @@
 "use client";
 import LanguageDropdown from "@/components/LanguageDropDown";
 import NotificationDropdown from "@/components/NotificationDropdown";
-import AvatarSkeleton from "@/components/ui/AvatarSkeleton";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { useToggle } from "@/hooks/useToggle";
-import { GlobalLanguage } from "@/types/language";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -14,9 +12,10 @@ import FreelanceMegaMenu from "../FreelanceMegaMenu";
 import FreelanceImproveMenu from "../FreelancerImproveMenu";
 import ProfileFreelancer from "../ProfileFreelancer";
 import { useMyUser } from "@/hooks/profile-api/useMyUser";
+import {useTranslation} from "react-i18next";
 
 interface FreelancerProps {
-  globalLanguageData: Partial<GlobalLanguage> | null | undefined;
+  globalLanguageData?: Record<string, string>;
 }
 
 const FreelancerSession = ({
@@ -26,14 +25,14 @@ const FreelancerSession = ({
   const { person } = useMyUser();
 
   const { isOpen, toggle, close } = useToggle();
-
+  const { t } = useTranslation();
   return (
     <section className="flex items-center gap-4 h-full">
       <div className="group hidden lg:block">
         <div className="relative">
           <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
             <p className="">
-              {globalLanguageData?.increaseHiringOpportunity}
+              {t("global.increaseHiringOpportunity")}
             </p>
             <FontAwesomeIcon icon={faChevronDown} />
           </div>
@@ -47,12 +46,12 @@ const FreelancerSession = ({
         href="/seller"
         className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
       >
-        {globalLanguageData?.labelSellerCenter}
+        {t("global.labelSellerCenter")}
       </Link>
       <div className="group hidden md:block">
         <div className="relative">
           <div className="border-r-[1px] border-[#4f8ce8] pr-8 text-[14px] text-white px-3 py-2 font-medium flex flex-row items-center gap-2 cursor-pointer">
-            <p className="">{globalLanguageData?.recruitment}</p>
+            <p className="">{t("global.recruitment")}</p>
             <FontAwesomeIcon icon={faChevronDown} />
           </div>
           <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
@@ -101,7 +100,7 @@ const FreelancerSession = ({
             className="w-[14px] h-[14px] text-white"
           />
         </button>
-        {isOpen && <ProfileFreelancer profile={person} data={globalLanguageData} />}
+        {isOpen && <ProfileFreelancer profile={person} />}
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()} />
         )}

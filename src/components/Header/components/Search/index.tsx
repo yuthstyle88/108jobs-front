@@ -2,13 +2,13 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { GlobalLanguage } from "@/types/language";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect } from "react";
+import {useTranslation} from "react-i18next";
 
 type Props = {
-  language: Partial<GlobalLanguage> | undefined | null;
+  language: Record<string, string>;
   showSearch: boolean;
 };
 
@@ -18,6 +18,7 @@ type SearchForm = {
 
 const Search = ({ language, showSearch }: Props) => {
   const router = useRouter();
+  const {t} = useTranslation();
   const searchParams = useSearchParams();
   const titleSearch = searchParams.get("titleSearch") || "";
 
@@ -51,7 +52,7 @@ const Search = ({ language, showSearch }: Props) => {
       <input
         type="text"
         placeholder={
-          titleSearch || language?.hintTextHeaderSearch || "Search..."
+          titleSearch || t("global.hintTextHeaderSearch") || "Search..."
         }
         className="focus:outline-none rounded-[20px] border-2-white pl-5 pr-10 text-sm font-mono w-full"
         {...register("query")}

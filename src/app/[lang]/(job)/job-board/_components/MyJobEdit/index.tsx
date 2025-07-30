@@ -18,7 +18,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const jobSchema = z.object({
   serviceCatalogId: z.string().min(1, "Service catalog is required"),
@@ -61,11 +60,7 @@ const MyJobEdit = ({ jobId }: Props) => {
   const { successMessage, errorMessage } = useNotification();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const {
-    data: createJobLanguage,
-    isLoading: isLanguageLoading,
-    error: languageError,
-  } = useGlobalTranslate(LanguageFile.JOB_BOARD_CREATE);
+  const createJobLanguage = getNamespace(LanguageFile.JOB_BOARD_CREATE);
   const {
     data: catalogData,
     isLoading: isCatalogLoading,
@@ -147,9 +142,6 @@ const MyJobEdit = ({ jobId }: Props) => {
       console.error("Error creating job:", error);
     }
   };
-
-  if (isLanguageLoading || isCatalogLoading) return <Loading />;
-  if (languageError || catalogError || error) return <Error />;
 
   return (
     <div className="bg-[#F6F9FE] min-h-screen py-8">

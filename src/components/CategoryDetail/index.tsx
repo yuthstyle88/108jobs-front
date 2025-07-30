@@ -15,7 +15,6 @@ import FilterSection from "../FilterSection";
 import SortSection from "../SortSection";
 import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
-import Loading from "../Loading";
 import { interpolateDouble } from "@/utils/interpolate";
 import { API_ROUTES } from "@/api/endpoints";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
@@ -26,8 +25,7 @@ import buildQueryParams from "@/utils/buildJobQueryParams";
 import { ServiceCatalogData } from "@/types/catalog";
 import { Category } from "@/types/category";
 import JobCardSkeleton from "../ui/JobCardSkeleton";
-import Error from "@/app/error";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const categoryRelated = [
   {
@@ -57,11 +55,7 @@ const CategoryDetail = ({ slug }: Props) => {
   const rating = searchParams.get("rating") || "";
   const sort = searchParams.get("sortBy") || "";
 
-  const {
-    data: jobCategoryLanguage,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.JOB_CATEGORY);
+  const jobCategoryLanguage = getNamespace(LanguageFile.JOB_CATEGORY);
 
   const {
     data: categoryData,
@@ -176,10 +170,6 @@ const CategoryDetail = ({ slug }: Props) => {
     ...(selectedTag ? [{ label: selectedTag }] : []),
   ];
 
-  if (isLoading || !jobCategoryLanguage || !jobList) return <Loading />;
-
-  if (error || errorJobList || errorCategory || errorCatalog)
-    return <Error/>;
 
   return (
     <>
@@ -255,13 +245,13 @@ const CategoryDetail = ({ slug }: Props) => {
           <div className="flex justify-between col-start-2 col-end-auto mb-3 text-[0.875rem] text-text-primary font-sans">
             <div>
               {interpolateDouble(jobCategoryLanguage?.foundJobs || "", {
-                jobNumber: jobList.jobs.length,
+                jobNumber: jobList?.jobs.length,
               })}
             </div>
             <div>
               {interpolateDouble(jobCategoryLanguage?.pageInfo || "", {
-                currentPage: jobList.page,
-                totalPages: jobList.totalPages,
+                currentPage: jobList?.page,
+                totalPages: jobList?.totalPages,
               })}
             </div>
           </div>
@@ -272,11 +262,11 @@ const CategoryDetail = ({ slug }: Props) => {
                   <JobCardSkeleton key={index} />
                 ))}
               </section>
-            ) : jobList.jobs.length === 0 ? (
+            ) : jobList?.jobs.length === 0 ? (
               <NotFoundJob language={jobCategoryLanguage}/>
             ) : (
               <section className="col-start-2 col-end-auto grid grid-cols-1 sm:grid-cols-[repeat(2,minmax(1px,1fr))] md:grid-cols-[repeat(3,minmax(1px,1fr))] lg:grid-cols-[repeat(4,minmax(1px,1fr))] 2xl:grid-cols-[repeat(5,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
-                {jobList.jobs.map((job, index) => (
+                {jobList?.jobs.map((job, index) => (
                   <JobCard data={job} key={index} />
                 ))}
               </section>
@@ -284,10 +274,10 @@ const CategoryDetail = ({ slug }: Props) => {
           </div>
 
           <section className="flex justify-center col-start-2 col-end-auto mt-12">
-            {jobList.totalPages > 1 && (
+            {jobList?.totalPages || 0 > 1 && (
               <Pagination
-                totalPages={jobList.totalPages}
-                currentPage={jobList.page}
+                totalPages={jobList?.totalPages || 0}
+                currentPage={jobList?.page || 0}
                 onPageChange={handlePageChange}
               />
             )}

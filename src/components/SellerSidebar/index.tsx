@@ -17,17 +17,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import Loading from "../Loading";
 import { useLanguage } from "@/contexts/LanguageContext";
-import Error from "@/app/error";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+
 
 const SellerSidebar = () => {
-  const {
-    data: globalLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.GLOBAL);
+  const globalLanguageData = getNamespace(LanguageFile.GLOBAL);
   const [isClose, setIsClose] = useState(false);
   const pathname = usePathname();
   const { lang } = useLanguage();
@@ -36,8 +30,6 @@ const SellerSidebar = () => {
 
   const sidebarWidth = isClose ? "w-16" : "w-64";
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
 
   return (
     <>
