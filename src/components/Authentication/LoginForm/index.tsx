@@ -2,7 +2,6 @@
 import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { Component, useState } from "react";
@@ -20,16 +19,13 @@ import { setIsoData } from "@/utils/app";
 import TotpModal from "@/components/Common/Modal/TotpModal";
 import { OAuthButtons } from "@/components/Authentication/LoginForm/oauth-provider";
 import { handleLogin, handleSubmitTotp, handleUseOAuthProvider } from "@/components/Authentication/LoginForm/handlers";
-import { LoginFormProps, LoginFormState, State, LoginProps } from "@/components/Authentication/LoginForm/interface";
-import { I18NextService } from "@/services/I18NextService";
-import { useTranslation } from "react-i18next";
+import { LoginFormProps, LoginFormState, State } from "@/components/Authentication/LoginForm/interface";
 import {getNamespace} from "@/utils/i18nHelper";
 
 
 const withHooks = (Component: any) => {
     const WrappedWithHooks = (props: any) => {
         const authen = getNamespace(LanguageFile.AUTHEN);
-        const { t } = useTranslation(LanguageFile.AUTHEN);
         const router = useRouter();
         const searchParams = useSearchParams();
         const redirectUrl = searchParams.get("redirect") || "/";
@@ -52,7 +48,6 @@ const withHooks = (Component: any) => {
         return (
             <Component
                 {...props}
-                t={t}
                 authen={authen}
                 router={router}
                 redirectUrl={redirectUrl}
@@ -148,7 +143,7 @@ export class LoginFormClass extends Component<
     };
 
     render() {
-        const { switchToRegister, switchToForgotPassword, t, authen, formMethods } = this.props;
+        const { switchToRegister, switchToForgotPassword, authen, formMethods } = this.props;
         const { showPassword, oauthProviders } = this.state;
         const { register, handleSubmit, formState: { errors, isSubmitting } } = formMethods;
 

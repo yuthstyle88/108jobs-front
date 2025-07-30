@@ -7,15 +7,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import LanguageDropdown from "../LanguageDropDown";
-import Loading from "../Loading";
-import Error from "@/app/error";
 import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
 import EmployerSection from "./components/EmployerSection";
 import FreelancerSession from "./components/FreelancerSection";
 import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
 import { useScrollHandler } from "./hooks/useScrollHandler";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {
@@ -36,16 +33,10 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
 
   const { scrollY, showSearch } = useScrollHandler(forceShowSearch);
 
-  const {
-    data: globalLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.GLOBAL);
+  const globalLanguageData = getNamespace(LanguageFile.GLOBAL);
 
   const { bg } = TYPES[type];
 
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
   return (
     <header
       className={`fixed top-0 z-[999] w-full transition-all duration-300 ${
