@@ -6,13 +6,12 @@ import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
 import { JobDetailResponse } from "@/types/jobDetail";
+import { getNamespace } from "@/utils/i18nHelper";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import "swiper/css";
 import "swiper/css/navigation";
 import CategoryRelated from "../CategoryDetail/components/CategoryRelated";
-import Loading from "../Loading";
 import TabNavigation from "../TabNavigation";
 import AsideJob from "./AsideJob";
 import Freelance from "./Freelance";
@@ -20,7 +19,6 @@ import Overview from "./Overview";
 import Package from "./Package";
 import Review from "./Review";
 import SliderJob from "./SliderJob";
-import {getNamespace} from "@/utils/i18nHelper";
 
 const categoryRelated = [
   {

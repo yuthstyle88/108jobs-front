@@ -1,15 +1,13 @@
 "use client";
 import { AssetsImage, CategoriesImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
+import { getNamespace } from "@/utils/i18nHelper";
 import Image from "next/image";
 import Link from "next/link";
 import Benefit from "./components/Benefit";
 import FreelancerTypes from "./components/FreelancerTypes";
 import Step from "./components/Step";
 import ProfileSelling from "./Profile";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import Loading from "../Loading";
-import Error from "@/app/error";
 
 const categoryImages = [
   {

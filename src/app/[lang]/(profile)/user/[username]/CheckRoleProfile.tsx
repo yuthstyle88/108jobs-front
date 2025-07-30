@@ -6,11 +6,8 @@ import FreelancerProfile from "../components/FreelanerProfile";
 import NotFound from "@/app/not-found";
 import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 
-interface Props {
-  username: string;
-}
 
-export default function CheckRoleProfile({ username }: Props) {
+export default function CheckRoleProfile() {
   const { isEmployer, isFreelancer } = useAuthInfo();
 
   if (isEmployer) return <CurrentProfileEmployer />;

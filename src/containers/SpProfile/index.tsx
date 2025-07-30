@@ -1,8 +1,9 @@
 "use client";
-import Loading from "@/components/Loading";
 import { ProfileIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
+import { UserService } from "@/services";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import {
   faBriefcase,
@@ -16,8 +17,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {UserService} from "@/services";
 
 const SpProfile = () => {
   const {person, localUser, contact} = useMyUser();

@@ -1,6 +1,4 @@
 "use client";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import { Pagination } from "@/components/Pagination";
 import { ProfileImage } from "@/constants/images";

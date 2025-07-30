@@ -10,19 +10,17 @@
  * @param incomingHeaders HTTP headers from the incoming request
  * @returns An IsoData object containing all necessary data for rendering, or null if an error occurred
  */
-import {ErrorPageData, InitialFetchRequest, IsoData, RouteData} from "@/utils/types";
-import {Match} from "@/utils/router";
-import {routes} from "@/utils/routes";
-import {isAuthPath} from "@/utils/app";
-import {getErrorPageData, getJwtCookie, matchPath, setForwardedHeaders} from "@/utils/helpers";
-import {NextResponse} from "next/server";
-import {FailedRequestState, HttpService, RequestState} from "@/services/HttpService";
-import {GetSiteResponse, MyUserInfo} from "lemmy-js-client";
-import {parsePath} from "history";
-import {testHost} from "@/config";
-import {IncomingHttpHeaders} from "http";
-import {isBrowser} from "@/utils/browser";
-
+import { testHost } from "@/config";
+import { FailedRequestState, HttpService, RequestState } from "@/services/HttpService";
+import { isAuthPath } from "@/utils/app";
+import { getErrorPageData, getJwtCookie, matchPath, setForwardedHeaders } from "@/utils/helpers";
+import { Match } from "@/utils/router";
+import { routes } from "@/utils/routes";
+import { ErrorPageData, InitialFetchRequest, IsoData, RouteData } from "@/utils/types";
+import { parsePath } from "history";
+import { IncomingHttpHeaders } from "http";
+import { GetSiteResponse, MyUserInfo } from "lemmy-js-client";
+import { NextResponse } from "next/server";
 /**
  * Optimized logger that conditionally logs based on environment
  * - In development: Provides detailed logs for debugging

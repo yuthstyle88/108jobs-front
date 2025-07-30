@@ -22,7 +22,6 @@ import {getNamespace} from "@/utils/i18nHelper";
 
 const RewardHeader = () => {
   const { isLoggedIn,  isFreelancer } = useAuthInfo();
-  const globalLanguageData = getNamespace(LanguageFile.GLOBAL);
 
   const [showLang, setShowLang] = useState(false);
   const { lang } = useLanguage();

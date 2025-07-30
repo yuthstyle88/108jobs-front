@@ -5,11 +5,11 @@ import Loading from "@/components/Loading";
 import WarningLeaveModal from "@/components/WarningLeaveModal";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
-import { getNamespace } from "@/utils/i18nHelper";
 import { JobType, Onboarding } from "@/types/job";
+import { getNamespace } from "@/utils/i18nHelper";
 import { Check } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 
 const getNextStep = (onboarding: Onboarding | undefined): number => {

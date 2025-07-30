@@ -1,6 +1,4 @@
 "use client";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
 import { AssetIcon, ContentIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
 import { getNamespace } from "@/utils/i18nHelper";

@@ -1,18 +1,16 @@
 "use client";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { getNamespace } from "@/utils/i18nHelper";
 import { FileText, Info } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 
 const AccountStats = () => {
 
-  const { profileState, person } = useMyUser();
+  const {  person } = useMyUser();
 
   const sellerAccStatsLanguage = getNamespace(LanguageFile.SELLER_ACCOUNT_STATISTICS);
 

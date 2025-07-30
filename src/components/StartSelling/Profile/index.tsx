@@ -1,12 +1,12 @@
 "use client";
 import { StartSellingImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
+import { getNamespace } from "@/utils/i18nHelper";
 import Image from "next/image";
 import "swiper/css";
 import "swiper/css/navigation";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { getNamespace } from "@/utils/i18nHelper";
-import { LanguageFile } from "@/constants/language";
 
 type Testimonial = {
   name: string;

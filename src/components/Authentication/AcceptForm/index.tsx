@@ -4,26 +4,24 @@ import { CustomInput } from "@/components/ui/InputField";
 import { LanguageFile } from "@/constants/language";
 /* เพิ่ม hook */
 import { useHttpPost } from "@/hooks/useHttpPost";
-import { getNamespace } from "@/utils/i18nHelper";
+import { UserService } from "@/services";
+import { isSuccess } from "@/services/HttpService"; // เพิ่ม import นี้
+import { RegisterOAuthFormData } from "@/types/formTypes/RegisterOAuth";
 import { UpdateDataProps } from "@/types/update-term";
+import { getNamespace } from "@/utils/i18nHelper";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { RoleType } from "lemmy-js-client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { RegisterOAuthFormData } from "@/types/formTypes/RegisterOAuth";
-import {UserService} from "@/services";
-import {RoleType} from "lemmy-js-client";
-import {isSuccess} from "@/services/HttpService"; // เพิ่ม import นี้
 
 type UpdateFormProps = {
   switchToVerifyEmail: () => void;
-  setDataUpdate: (data: UpdateDataProps) => void;
 };
 
 export const AcceptForm = ({
   switchToVerifyEmail,
-  setDataUpdate,
 }: UpdateFormProps) => {
   const authen = getNamespace(LanguageFile.AUTHEN);
 
@@ -46,7 +44,7 @@ export const AcceptForm = ({
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     setValue,
     watch,
   } = useForm<RegisterOAuthFormData>({

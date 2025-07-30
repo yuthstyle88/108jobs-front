@@ -11,7 +11,7 @@ const DocumentInfo = () => {
   const { successMessage, errorMessage } = useNotification();
 
   // ใช้ useHttpApi เพื่อเรียก API
-  const { state, execute, isMutating } = useHttpPost("updateAvailable");
+  const {  execute, isMutating } = useHttpPost("updateAvailable");
 
   const handleToggle = async (value: boolean) => {
     setIsAvailable(value);

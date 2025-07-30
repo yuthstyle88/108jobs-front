@@ -14,9 +14,9 @@ import { CategoriesIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
-import { getNamespace } from "@/utils/i18nHelper";
 import { JobList, Tags } from "@/types/jobSearch";
 import buildQueryParams from "@/utils/buildJobQueryParams";
+import { getNamespace } from "@/utils/i18nHelper";
 import { interpolateDouble } from "@/utils/interpolate";
 import Image from "next/image";
 import Link from "next/link";
@@ -67,7 +67,6 @@ const CategoryDetail = () => {
   const {
     data: searchResults,
     isLoading: isJobListLoading,
-    error: errorJobList,
   } = usePrivateFetchParams<JobList>(
     `${API_ROUTES.job.getJobById}?${queryParams}`
   );

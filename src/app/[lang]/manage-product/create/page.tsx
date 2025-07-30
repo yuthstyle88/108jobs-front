@@ -1,18 +1,13 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { LanguageFile } from "@/constants/language";
 import { JobType } from "@/types/job";
 import { getNamespace } from "@/utils/i18nHelper";
-import { LanguageFile } from "@/constants/language";
+import { useRouter } from "next/navigation";
 
 const CreateService = () => {
   const router = useRouter();
 
   const createJobLanguage = getNamespace(LanguageFile.SELLER_CREATE_JOBS);
-
-  const handleCreatedStep1 = (job: JobType) => {
-    router.push(`/manage-product/${job.id}`);
-  };
-
 
   return (
     <div className="min-h-screen pt-[4.5rem] bg-[#F8F9FB]">

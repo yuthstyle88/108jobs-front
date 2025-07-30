@@ -1,4 +1,3 @@
-import ChangePasswordLayout from "@/components/Authentication/ChangePasswordLayout";
 import { VerifyEmailRegister } from "@/components/Authentication/VerifyEmailRegister";
 
 export default async function Page({

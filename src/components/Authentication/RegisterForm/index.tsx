@@ -1,35 +1,35 @@
 "use client";
 import LoadingCircle from "@/components/LoadingCircle";
-import {CustomInput} from "@/components/ui/InputField";
-import {RegisterDataProps} from "@/types/register-data";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useRouter, useSearchParams} from "next/navigation";
-import React, {useCallback, useEffect, useRef, useState} from "react";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
+import { CustomInput } from "@/components/ui/InputField";
+import { RegisterDataProps } from "@/types/register-data";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CaptchaResponse,
   GetCaptchaResponse,
   GetSiteResponse,
-  LoginResponse, 
+  LoginResponse,
   MyUserInfo,
   RoleType
 } from "lemmy-js-client";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
+import { Spinner } from "@/components/icon";
+import { UserService } from "@/services";
 import {
   EMPTY_REQUEST,
   HttpService, isSuccess, LOADING_REQUEST, REQUEST_STATE,
   RequestState,
 } from "@/services/HttpService";
-import {toast} from "@/toast";
-import {UserService} from "@/services";
-import {setIsoData} from "@/utils/app";
-import {isBrowser} from "@/utils/browser";
+import { toast } from "@/toast";
+import { setIsoData } from "@/utils/app";
+import { isBrowser } from "@/utils/browser";
 import classNames from "classnames";
+import { Play, RefreshCcw } from "lucide-react";
 import Link from "next/link";
-import {Spinner} from "@/components/icon";
-import {Play, RefreshCcw} from "lucide-react";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 // Form schema definition
 const createRegisterSchema = (t: any) => z

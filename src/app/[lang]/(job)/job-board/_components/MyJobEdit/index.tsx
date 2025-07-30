@@ -1,21 +1,21 @@
 "use client";
 import Error from "@/app/error";
 import Loading from "@/components/Loading";
-import WarningLeaveModal from "@/components/WarningLeaveModal";
-import {LanguageFile} from "@/constants/language";
-import useNotification from "@/hooks/useNotification";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {useHttpGet} from "@/hooks/useHttpGet";
-import {EditPost, JobType} from "@/lib/lemmy-js-client/dist";
-import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useRouter} from "next/navigation";
-import React, {useCallback, useEffect, useState} from "react";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
-import {useGlobalTranslate} from "@/hooks/translation/useGlobalTranslate";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
-import {useHttpPost} from "@/hooks/useHttpPost";
+import WarningLeaveModal from "@/components/WarningLeaveModal";
+import { LanguageFile } from "@/constants/language";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { useHttpGet } from "@/hooks/useHttpGet";
+import { useHttpPost } from "@/hooks/useHttpPost";
+import useNotification from "@/hooks/useNotification";
+import { EditPost, JobType } from "@/lib/lemmy-js-client/dist";
+import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const jobSchema = z.object({
     communityId: z.string().min(1, "Service catalog is required"),

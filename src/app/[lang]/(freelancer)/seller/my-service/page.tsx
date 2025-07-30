@@ -1,5 +1,5 @@
 "use client";
-import Loading from "@/components/Loading";
+import { API_ROUTES_SELLER } from "@/api/endpoints";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import { SellerImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
@@ -8,9 +8,10 @@ import {
   usePrivateDelete,
   usePrivateFetch,
 } from "@/hooks/api-hooks";
-import { getNamespace } from "@/utils/i18nHelper";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import useNotification from "@/hooks/useNotification";
 import { JobListResponse } from "@/types/job";
+import { getNamespace } from "@/utils/i18nHelper";
 import { interpolateDouble } from "@/utils/interpolate";
 import {
   ClockAlert,
@@ -26,9 +27,6 @@ import Link from "next/link";
 import { useState } from "react";
 import ConfirmDeleteModal from "./_components/ConfirmDeleteModal";
 import JobCreatedStatus from "./_components/JobCreatedStatus";
-import Error from "@/app/error";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {API_ROUTES_SELLER} from "@/api/endpoints";
 
 const MyServices = () => {
   const { successMessage } = useNotification();

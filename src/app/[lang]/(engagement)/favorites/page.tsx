@@ -4,8 +4,8 @@ import JobCard from "@/components/JobCard";
 import JobCardSkeleton from "@/components/ui/JobCardSkeleton";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch } from "@/hooks/api-hooks";
-import { getNamespace } from "@/utils/i18nHelper";
 import { FavoriteJob } from "@/types/favorite";
+import { getNamespace } from "@/utils/i18nHelper";
 
 const Favorites = () => {
   const  global = getNamespace(LanguageFile.GLOBAL);
@@ -13,7 +13,6 @@ const Favorites = () => {
   const {
     data: favoriteData,
     isLoading: isLoadingFavorite,
-    error: isErrorFavorite,
   } = usePrivateFetch<FavoriteJob>(API_ROUTES.job.getFavoriteJob);
 
   return (

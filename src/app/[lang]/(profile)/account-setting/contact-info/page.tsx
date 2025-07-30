@@ -36,15 +36,6 @@ export interface AddressFormData {
   addressDetails?: string;
 }
 
-interface RawAddress {
-  country?: string | null;
-  province?: string | null;
-  districtOrSubdistrict?: string | null;
-  subdistrictOrDistrict?: string | null;
-  zipCode?: string | null;
-  addressDetails?: string | null;
-}
-
 function normalizeAddress(address: Address): AddressFormData {
   return {
     country: address?.country ?? "Thailand",

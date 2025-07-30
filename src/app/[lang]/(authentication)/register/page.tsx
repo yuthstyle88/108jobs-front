@@ -1,16 +1,16 @@
 "use client";
-import {AuthFormContainer} from "@/components/Authentication/AuthFormContainer";
+import { AuthFormContainer } from "@/components/Authentication/AuthFormContainer";
 
-import {AuthenticateIcon} from "@/constants/icons";
-import {CategoriesImage} from "@/constants/images";
-import {LanguageFile} from "@/constants/language";
-import {RegisterDataProps} from "@/types/register-data";
-import Image from "next/image";
-import {useState} from "react";
-import {RegisterForm} from "@/components/Authentication/RegisterForm";
-import {useRouter} from "next/navigation";
+import { RegisterForm } from "@/components/Authentication/RegisterForm";
 import VerifyEmailConfirm from "@/components/Authentication/VerifyEmailConfirm";
-import {getNamespace} from "@/utils/i18nHelper";
+import { AuthenticateIcon } from "@/constants/icons";
+import { CategoriesImage } from "@/constants/images";
+import { LanguageFile } from "@/constants/language";
+import { RegisterDataProps } from "@/types/register-data";
+import { getNamespace } from "@/utils/i18nHelper";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type ViewState = "register" | "verify-email";
 

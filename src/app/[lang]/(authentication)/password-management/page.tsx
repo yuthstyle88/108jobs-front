@@ -34,12 +34,9 @@ export default function PasswordManagePage() {
     viewParam ?? "forgot-password"
   );
 
-  const [dataRegister, setDataRegister] = useState<RegisterDataProps | null>(null);
   const [forgotEmail, setForgotEmail] = useState<RegisterDataProps>();
 
   // Load singUpData from sessionStorage if available, only on client
-  console.log("🧭 currentView:", currentView);
-  const route = useRouter();
 
   return (
     <div className="min-h-screen bg-[#E3EDFD] grid 2xl:grid-cols-[1fr_1240px_1fr] lg:grid-cols-[1fr_984px_1fr] md:grid-cols-[1fr_768px_1fr] grid-cols-[12px_minmax(0,auto)12px]">

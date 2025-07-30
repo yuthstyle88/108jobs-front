@@ -1,5 +1,5 @@
-import axios, {AxiosError} from "axios";
-import {jwtDecode, JwtPayload} from "jwt-decode";
+import axios, { AxiosError } from "axios";
+import { jwtDecode } from "jwt-decode";
 
 let cachedAccessToken: string | null = null;
 

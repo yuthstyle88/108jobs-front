@@ -20,7 +20,7 @@ interface Props {
 export default function ChangePasswordLayout({ token }: Props) {
   const loginLanguageData = getNamespace(LanguageFile.AUTHEN);
 
-  const [currentView, setCurrentView] = useState<ViewState>("change-password");
+  const currentView = "change-password";
 
 
   return (

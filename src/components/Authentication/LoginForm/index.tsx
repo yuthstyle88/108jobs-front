@@ -1,25 +1,24 @@
 "use client";
 import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
-import { LanguageFile } from "@/constants/language";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { Component, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import {
-    OAuthProvider,
-} from "lemmy-js-client";
 import {
     EMPTY_REQUEST,
     HttpService, isSuccess,
 } from "@/services/HttpService";
 import { setIsoData } from "@/utils/app";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+    OAuthProvider,
+} from "lemmy-js-client";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Component, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import TotpModal from "@/components/Common/Modal/TotpModal";
-import { OAuthButtons } from "@/components/Authentication/LoginForm/oauth-provider";
 import { handleLogin, handleSubmitTotp, handleUseOAuthProvider } from "@/components/Authentication/LoginForm/handlers";
 import { LoginFormProps, LoginFormState, State } from "@/components/Authentication/LoginForm/interface";
+import { OAuthButtons } from "@/components/Authentication/LoginForm/oauth-provider";
+import TotpModal from "@/components/Common/Modal/TotpModal";
 import { useTranslation } from "react-i18next";
 
 

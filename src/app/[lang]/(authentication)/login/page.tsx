@@ -1,17 +1,16 @@
 "use client";
-import Loading from "@/components/Loading";
 import { AuthFormContainer } from "@/components/Authentication/AuthFormContainer";
+import { ForgotPasswordForm } from "@/components/Authentication/ForgotPasswordForm";
 import { LoginForm } from "@/components/Authentication/LoginForm";
+import VerificationForgotPassword from "@/components/Authentication/VerifyForgotPassword";
 import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
+import { RegisterDataProps } from "@/types/register-data";
 import { getNamespace } from "@/utils/i18nHelper";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ForgotPasswordForm } from "@/components/Authentication/ForgotPasswordForm";
-import { RegisterDataProps } from "@/types/register-data";
-import VerificationForgotPassword from "@/components/Authentication/VerifyForgotPassword";
 
 type ViewState = "login" | "forgot-password" | "verify-forgot-password";
 

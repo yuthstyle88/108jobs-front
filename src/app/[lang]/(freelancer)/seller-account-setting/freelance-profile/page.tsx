@@ -15,7 +15,7 @@ const AccountSettings = () => {
   const { execute: uploadImage, isMutating: isUploadMuting } =
     useHttpPost("uploadImage");
 
-  const { profileState, person , card, localUser} = useMyUser();
+  const { person , card, localUser} = useMyUser();
 
   const sellerProfileLanguage = getNamespace(
     LanguageFile.SELLER_FREELANCER_PROFILE

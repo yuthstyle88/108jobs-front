@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { API_ROUTES } from "@/api/endpoints";
 import BreadCrumb from "@/components/BreadCrumb";
 import CategoryFilter from "@/components/CategoryDetail/components/CategoryFilter";
 import CategoryFooter from "@/components/CategoryDetail/components/CategoryFooter";
@@ -9,22 +8,23 @@ import SubCategory from "@/components/CategoryDetail/components/SubCategory";
 import { Pagination } from "@/components/Pagination";
 import { CategoriesIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
-import Image from "next/image";
-import Link from "next/link";
-import FilterSection from "../FilterSection";
-import SortSection from "../SortSection";
-import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
-import { interpolateDouble } from "@/utils/interpolate";
-import { API_ROUTES } from "@/api/endpoints";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
-import { JobList, Tags } from "@/types/jobSearch";
-import JobCard from "../JobCard";
-import NotFoundJob from "./components/NotFoundJob";
-import buildQueryParams from "@/utils/buildJobQueryParams";
 import { ServiceCatalogData } from "@/types/catalog";
 import { Category } from "@/types/category";
+import { JobList, Tags } from "@/types/jobSearch";
+import buildQueryParams from "@/utils/buildJobQueryParams";
+import { getNamespace } from "@/utils/i18nHelper";
+import { interpolateDouble } from "@/utils/interpolate";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import FilterSection from "../FilterSection";
+import JobCard from "../JobCard";
+import SortSection from "../SortSection";
 import JobCardSkeleton from "../ui/JobCardSkeleton";
+import NotFoundJob from "./components/NotFoundJob";
 
 
 const categoryRelated = [

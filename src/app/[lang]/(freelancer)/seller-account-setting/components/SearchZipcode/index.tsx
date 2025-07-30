@@ -24,14 +24,12 @@ interface ZipcodeSearchProps {
   control: Control<AddressFormData>;
   setValue: UseFormSetValue<AddressFormData>;
   error?: FieldError;
-  language?: string;
 }
 
 export default function ZipcodeSearch({
   control,
   setValue,
   error,
-  language,
 }: ZipcodeSearchProps) {
   const [searchUrl, setSearchUrl] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
