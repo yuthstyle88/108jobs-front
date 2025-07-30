@@ -6,6 +6,8 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Check, ChevronDown } from "lucide-react";
 import React, { forwardRef, useState } from "react";
+import { getNamespace } from "@/utils/i18nHelper";
+import { LanguageFile } from "@/constants/language";
 
 // Button Component
 const buttonVariants = cva(
@@ -214,6 +216,8 @@ SelectItem.displayName = SelectPrimitive.Item.displayName;
 
 // Contact Form Component
 const ContactForm = () => {
+  const contract = getNamespace(LanguageFile.CONTRACT_FORM);
+  
   const [attachments, setAttachments] = useState<File[]>([]);
   const [formData, setFormData] = useState({
     details: "",
@@ -254,10 +258,10 @@ const ContactForm = () => {
   };
 
   const availableTimes = [
-    { value: "morning", label: "เช้า (9:00 - 12:00)" },
-    { value: "afternoon", label: "บ่าย (13:00 - 17:00)" },
-    { value: "evening", label: "เย็น (17:00 - 20:00)" },
-    { value: "anytime", label: "ได้ทุกเวลา" },
+    { value: "morning", label: contract?.morning },
+    { value: "afternoon", label: contract?.afternoon },
+    { value: "evening", label: contract?.evening },
+    { value: "anytime", label: contract?.anytime },
   ];
 
   return (
@@ -265,30 +269,30 @@ const ContactForm = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl font-bold mb-8 text-black">
-            เรื่องที่อยากให้เราช่วย
+            {contract?.title}
           </h2>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <Label htmlFor="details" className="block mb-2">
-                รายละเอียดของงานที่ต้องการ*
+                {contract?.workDetails}
               </Label>
               <Textarea
                 id="details"
                 name="details"
                 value={formData.details}
                 onChange={handleChange}
-                placeholder="รายละเอียด..."
+                placeholder={contract?.workDetailsPlaceholder}
                 className="text-text-primary min-h-[150px] border border-black bg-white"
               />
             </div>
 
             <div>
               <Label htmlFor="fileUpload" className="block mb-2">
-                แนบไฟล์อ้างอิงงาน
+                {contract?.attachFiles}
               </Label>
               <div className="border-2 border-dashed border-black rounded-md p-6 text-center bg-white">
-                <p className="text-gray-500 mb-2">Drag & Drop Files Here</p>
+                <p className="text-gray-500 mb-2">{contract?.dragDropFiles}</p>
                 <Input
                   id="fileUpload"
                   type="file"
@@ -303,29 +307,29 @@ const ContactForm = () => {
                   onClick={() => document.getElementById("fileUpload")?.click()}
                   type="button"
                 >
-                  Browse Files
+                  {contract?.browseFiles}
                 </Button>
-                <p className="text-gray-400 mt-2">{attachments.length} of 10</p>
+                <p className="text-gray-400 mt-2">{contract?.filesCount.replace('{{count}}', attachments.length.toString())}</p>
               </div>
             </div>
 
             <div>
               <Label htmlFor="budget" className="block mb-2">
-                งบประมาณที่ตั้งไว้*
+                {contract?.budget}
               </Label>
               <Input
                 id="budget"
                 name="budget"
                 value={formData.budget}
                 onChange={handleChange}
-                placeholder="ระบุงบประมาณ(บาท)"
+                placeholder={contract?.budgetPlaceholder}
                 className="text-text-primary border border-black bg-white"
               />
             </div>
 
             <div>
               <Label htmlFor="email" className="block mb-2">
-                อีเมล*
+                {contract?.email}
               </Label>
               <Input
                 id="email"
@@ -333,7 +337,7 @@ const ContactForm = () => {
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="ระบุอีเมล"
+                placeholder={contract?.emailPlaceholder}
                 className="text-text-primary border border-black bg-white"
               />
             </div>
@@ -341,27 +345,27 @@ const ContactForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="phone" className="block mb-2">
-                  เบอร์โทรศัพท์มือถือ*
+                  {contract?.phone}
                 </Label>
                 <Input
                   id="phone"
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="ระบุเบอร์โทรศัพท์มือถือ"
+                  placeholder={contract?.phonePlaceholder}
                   className="text-text-primary border border-black bg-white"
                 />
               </div>
               <div>
                 <Label htmlFor="lineId" className="block mb-2">
-                  Line ID
+                  {contract?.lineId}
                 </Label>
                 <Input
                   id="lineId"
                   name="lineId"
                   value={formData.lineId}
                   onChange={handleChange}
-                  placeholder="ระบุไลน์ไอดี / หรือ ไม่ระบุ"
+                  placeholder={contract?.lineIdPlaceholder}
                   className="text-text-primary border border-black bg-white"
                 />
               </div>
@@ -369,14 +373,14 @@ const ContactForm = () => {
 
             <div>
               <Label htmlFor="timePreference" className="block mb-2">
-                ช่วงเวลาที่สะดวก
+                {contract?.timePreference}
               </Label>
               <Select
                 value={formData.timePreference}
                 onValueChange={handleSelectChange}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="ที่ต้องเลือกทั้งหมด" />
+                  <SelectValue placeholder={contract?.timePreferencePlaceholder} />
                 </SelectTrigger>
                 <SelectContent>
                   {availableTimes.map((time) => (
@@ -395,7 +399,7 @@ const ContactForm = () => {
                 onCheckedChange={handleCheckboxChange}
               />
               <Label htmlFor="terms" className="text-sm">
-                ยินยอมรับ ข้อกำหนดและเงื่อนไขการใช้งานและ นโยบายความเป็นส่วนตัว
+                {contract?.agreeToTerms}
               </Label>
             </div>
 
@@ -403,7 +407,7 @@ const ContactForm = () => {
               type="submit"
               className="w-full bg-black text-white hover:bg-gray-800"
             >
-              ส่งข้อมูล
+              {contract?.submit}
             </Button>
           </form>
         </div>

@@ -3,7 +3,7 @@ import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { formatDateToLong } from "@/utils/formatDateToLong";
 import { interpolateDouble } from "@/utils/interpolate";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const UserProfile = () => {
   const { person } = useMyUser();

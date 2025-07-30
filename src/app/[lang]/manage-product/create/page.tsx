@@ -1,10 +1,11 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { JobType } from "@/types/job";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
 import Loading from "@/components/Loading";
 import Error from "@/app/error";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const CreateService = () => {
   const router = useRouter();

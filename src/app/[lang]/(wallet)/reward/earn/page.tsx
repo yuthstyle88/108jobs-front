@@ -4,10 +4,11 @@ import Loading from "@/components/Loading";
 import PointCard from "@/components/PointIcon/PointCard";
 import { BannerImage, RewardImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const EarnPage = () => {
   const {

@@ -3,7 +3,7 @@ import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
-import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { getNamespace, t } from "@/utils/i18nHelper";
 import { RegisterDataProps } from "@/types/register-data";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -21,7 +21,7 @@ export const ForgotPasswordForm = ({
   switchToVerifyForgotPassword,
   setForgotEmail,
 }: VerifyForgotPasswordProps) => {
-  const authen = useTranslateFile(LanguageFile.AUTHEN);
+  const authen = getNamespace(LanguageFile.AUTHEN);
 
   /* -------- schema & react-hook-form ---------------------------- */
   const forgotPasswordSchema = z.object({
@@ -67,7 +67,7 @@ export const ForgotPasswordForm = ({
       setApiError(
         error instanceof Error
           ? error.message
-          : "เกิดข้อผิดพลาดในการรีเซ็ตรหัสผ่าน",
+          : t(LanguageFile.ERROR, "passwordResetFailed"),
       );
     }
   };

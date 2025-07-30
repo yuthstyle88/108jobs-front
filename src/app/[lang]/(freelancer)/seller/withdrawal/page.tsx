@@ -2,11 +2,12 @@
 import { useState } from "react";
 import { Info, MessageSquare } from "lucide-react";
 import Link from "next/link";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
 import { interpolateDouble } from "@/utils/interpolate";
 import Loading from "@/components/Loading";
 import Error from "@/app/error";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 // Define the interface for a single transaction
 interface Transaction {

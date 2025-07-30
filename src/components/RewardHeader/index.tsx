@@ -5,7 +5,7 @@ import { ProfileImage } from "@/constants/images";
 import { LanguageFile, LANGUAGES } from "@/constants/language";
 import LanguageBottomSheet from "@/containers/SpBottomTab";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { useToggle } from "@/hooks/useToggle";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,6 +18,7 @@ import LanguageDropdown from "../LanguageDropDown";
 import Loading from "../Loading";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const RewardHeader = () => {
   const { isLoggedIn,  isFreelancer } = useAuthInfo();

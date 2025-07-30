@@ -11,9 +11,10 @@ import { usePersonalInfoForm } from "../hooks/usePersonalInfoForm";
 import { InputError } from "@/components/ui/InputError";
 import ErrorModal from "@/components/ui/ErrorModal";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const PersonalInfo = () => {
   // Function to upload image using HttpService

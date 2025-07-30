@@ -9,7 +9,7 @@ import {
   usePrivateDelete,
   usePrivateFetch,
 } from "@/hooks/api-hooks";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import useNotification from "@/hooks/useNotification";
 import { JobListResponse } from "@/types/job";
 import { interpolateDouble } from "@/utils/interpolate";
@@ -29,6 +29,7 @@ import ConfirmDeleteModal from "./_components/ConfirmDeleteModal";
 import JobCreatedStatus from "./_components/JobCreatedStatus";
 import Error from "@/app/error";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const MyServices = () => {
   const { successMessage } = useNotification();
@@ -49,7 +50,7 @@ const MyServices = () => {
     error,
   } = useGlobalTranslate(LanguageFile.SELLER_MY_SERVICE);
 
-  const { data: global } = useGlobalTranslate(LanguageFile.GLOBAL);
+  const global = getNamespace(LanguageFile.GLOBAL);
 
   const lengthOfJobs = jobsData?.jobs.length || 0;
 
@@ -310,7 +311,7 @@ const MyServices = () => {
                     href={`/manage-product/${job.id}`}
                     className="text-sm text-text-secondary flex flex-row justify-between items-center pt-4"
                   >
-                    <p>{global?.buttonEdit}</p>
+                    <p>{global.buttonEdit}</p>
                     <Pencil className="w-4 h-4 text-gray-400" />
                   </Link>
                 </div>
@@ -321,7 +322,7 @@ const MyServices = () => {
                     className="font-sans text-red-500 text-sm font-medium flex items-center gap-1 hover:underline"
                   >
                     <Trash2 className="w-4 h-4" />
-                    {global?.buttonDelete}
+                    {global.buttonDelete}
                   </button>
                 </div>
               </div>

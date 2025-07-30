@@ -77,7 +77,7 @@ const ContactInfo = () => {
     useState<string>("");
 
   const form = useForm<AddressFormData>({
-    resolver: zodResolver(addressSchema),
+    resolver: zodResolver(addressSchema(LanguageFile.SELLER_CONTACT_INFO)),
     defaultValues: {
       country: "Thailand",
     },

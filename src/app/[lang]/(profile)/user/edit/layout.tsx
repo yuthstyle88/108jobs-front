@@ -5,13 +5,14 @@ import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePrivateFetch } from "@/hooks/api-hooks";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { ProfileData } from "lemmy-js-client";
 import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 interface StartSellingLayoutProps {
   children: ReactNode;

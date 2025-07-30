@@ -2,7 +2,7 @@
 import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
 import { LanguageFile } from "@/constants/language";
-import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { Component, useState } from "react";
@@ -23,21 +23,24 @@ import { handleLogin, handleSubmitTotp, handleUseOAuthProvider } from "@/compone
 import { LoginFormProps, LoginFormState, State, LoginProps } from "@/components/Authentication/LoginForm/interface";
 import { I18NextService } from "@/services/I18NextService";
 import { useTranslation } from "react-i18next";
+import {getNamespace} from "@/utils/i18nHelper";
 
 
 const withHooks = (Component: any) => {
     const WrappedWithHooks = (props: any) => {
-        const authen = useTranslateFile(LanguageFile.AUTHEN);
+        const authen = getNamespace(LanguageFile.AUTHEN);
         const { t } = useTranslation(LanguageFile.AUTHEN);
         const router = useRouter();
         const searchParams = useSearchParams();
         const redirectUrl = searchParams.get("redirect") || "/";
+        
+        // Handle loading and error states
         const loginSchema = z.object({
             usernameOrEmail: z
                 .string()
-                .min(6, I18NextService.i18n.t(`username_min_6`))
-                .max(32, I18NextService.i18n.t(`username_max_32`)),
-            password: z.string().min(6, I18NextService.i18n.t(`password_min_6`)),
+                .min(6, authen?.usernameMin6)
+                .max(32, authen?.usernameMax32),
+            password: z.string().min(6, authen?.passwordMin6),
         });
 
         const formMethods = useForm<z.infer<typeof loginSchema>>({
@@ -50,6 +53,7 @@ const withHooks = (Component: any) => {
             <Component
                 {...props}
                 t={t}
+                authen={authen}
                 router={router}
                 redirectUrl={redirectUrl}
                 formMethods={formMethods}
@@ -69,6 +73,7 @@ const withHooks = (Component: any) => {
 export class LoginFormClass extends Component<
     LoginFormProps & {
         t: (key: string) => string;
+        authen: Record<string, string>;
         router: any;
         redirectUrl: string;
         formMethods: any;
@@ -143,7 +148,7 @@ export class LoginFormClass extends Component<
     };
 
     render() {
-        const { switchToRegister, switchToForgotPassword, t, formMethods } = this.props;
+        const { switchToRegister, switchToForgotPassword, t, authen, formMethods } = this.props;
         const { showPassword, oauthProviders } = this.state;
         const { register, handleSubmit, formState: { errors, isSubmitting } } = formMethods;
 
@@ -170,20 +175,20 @@ export class LoginFormClass extends Component<
                     )}
 
                     <CustomInput
-                        label={t("label_username_or_email")}
+                        label={authen.labelUsernameOrEmail}
                         name="usernameOrEmail"
                         register={register("usernameOrEmail")}
                         error={errors.usernameOrEmail?.message}
-                        placeholder={t("placeholder_username_or_email")}
+                        placeholder={authen.placeholderUsernameOrEmail}
                     />
 
                     <CustomInput
-                        label={t("label_password")}
+                        label={authen.labelPassword}
                         name="password"
                         type="password"
                         register={register("password")}
                         error={errors.password?.message}
-                        placeholder={t("placeholder_password")}
+                        placeholder={authen.placeholderPassword}
                         showPassword={showPassword}
                         toggleShowPassword={this.toggleShowPassword}
                     />
@@ -194,7 +199,7 @@ export class LoginFormClass extends Component<
                             disabled={isSubmitting}
                             className="submit-button py-2"
                         >
-                            {isSubmitting ? <LoadingCircle /> : t("button_proceed")}
+                            {isSubmitting ? <LoadingCircle /> : authen.buttonProceed}
                         </button>
 
                         <div className="flex justify-between text-sm text-blue-600 mt-4">
@@ -203,18 +208,18 @@ export class LoginFormClass extends Component<
                                 onClick={switchToRegister}
                                 className="hover:underline"
                             >
-                                {t("link_create_account")}
+                                {authen.linkCreateAccount}
                             </button>
                             <button
                                 type="button"
                                 onClick={switchToForgotPassword}
                                 className="hover:underline"
                             >
-                                {t("link_forgot_password")}
+                                {authen.linkForgotPassword}
                             </button>
                         </div>
                     </div>
-                    <OAuthButtons providers={oauthProviders} onLogin={this.handleLoginWithProvider} label={t("label_or_sign_in_with")} />
+                    <OAuthButtons providers={oauthProviders} onLogin={this.handleLoginWithProvider} label={authen.labelOrSignInWith} />
                 </form>
             </div>
         );

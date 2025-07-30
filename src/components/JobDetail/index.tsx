@@ -6,6 +6,7 @@ import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { JobDetailResponse } from "@/types/jobDetail";
 import Image from "next/image";
 import Link from "next/link";

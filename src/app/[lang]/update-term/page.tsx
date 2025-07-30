@@ -5,11 +5,12 @@ import { AuthFormContainer } from "@/components/Authentication/AuthFormContainer
 import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { RegisterDataProps } from "@/types/register-data";
 import Image from "next/image";
 import {useState} from "react";
 import {AcceptForm} from "@/components/Authentication/AcceptForm";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 type ViewState = "update-term" | "verify-password";
 

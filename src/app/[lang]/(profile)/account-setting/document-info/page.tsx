@@ -3,6 +3,7 @@
 import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
+import { getNamespace } from "@/utils/i18nHelper";
 import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 export default function LocationPage() {

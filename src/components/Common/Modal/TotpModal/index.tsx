@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { QRCodeCanvas } from "qrcode.react";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 
 interface TotpModalProps {
     show: boolean;
@@ -28,7 +28,7 @@ export default function TotpModal({
     const [totp, setTotp] = useState("");
     const [pending, setPending] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
-    const { data: authLanguage } = useGlobalTranslate(LanguageFile.NOTIFICATION);
+    const authLanguage = getNamespace(LanguageFile.NOTIFICATION);
 
     useEffect(() => {
         if (show) {
@@ -47,7 +47,7 @@ export default function TotpModal({
         setPending(false);
 
         if (!ok) {
-            toast.error(authLanguage?.invalidCode);
+            toast.error(authLanguage.invalidCode);
             setTotp("");
             inputRef.current?.focus();
         }
@@ -66,7 +66,7 @@ export default function TotpModal({
         const text = e.clipboardData.getData("text").trim();
 
         if (!/^\d+$/.test(text) || text.length > TOTP_LENGTH) {
-            toast.error(authLanguage?.invalidTotpCode);
+            toast.error(authLanguage.invalidTotpCode);
             clearTotp();
         } else {
             setTotp(text);

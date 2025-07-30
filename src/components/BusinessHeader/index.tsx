@@ -1,7 +1,16 @@
 import { BusinessImage } from "@/constants/images";
 import Image from "next/image";
 import Link from "next/link";
+import { LanguageFile } from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
 const BusinessHeader = () => {
+  const { data: global, isLoading, error } = getNamespace(LanguageFile.GLOBAL);
+
+  // Handle loading and error states
+  if (isLoading) return <header className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm animate-fade-in"><div className="container mx-auto px-4 md:px-6 py-4 text-center">Loading...</div></header>;
+  if (error) return <header className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm animate-fade-in"><div className="container mx-auto px-4 md:px-6 py-4 text-center text-red-500">Error loading translations</div></header>;
+  if (!global) return <header className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm animate-fade-in"><div className="container mx-auto px-4 md:px-6 py-4 text-center">No translation data available</div></header>;
+
   return (
     <header className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm animate-fade-in">
       <div className="container mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
@@ -20,25 +29,25 @@ const BusinessHeader = () => {
             href="/services"
             className="text-gray-700 hover:text-fastwork-blue transition-colors duration-300"
           >
-            บริการ
+            {global.nav_services}
           </Link>
           <Link prefetch={false}
             href="/work"
             className="text-gray-700 hover:text-fastwork-blue transition-colors duration-300"
           >
-            ผลงาน
+            {global.nav_portfolio}
           </Link>
           <Link prefetch={false}
             href="/about"
             className="text-gray-700 hover:text-fastwork-blue transition-colors duration-300"
           >
-            เกี่ยวกับเรา
+            {global.nav_about}
           </Link>
           <Link prefetch={false}
             href="/contact"
             className="bg-fastwork-blue text-white px-4 py-2 rounded-md hover:bg-fastwork-deep-blue transition-colors duration-300"
           >
-            ติดต่อเรา
+            {global.nav_contact}
           </Link>
         </nav>
 

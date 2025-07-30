@@ -3,7 +3,7 @@ import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
-import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { getNamespace } from "@/utils/i18nHelper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -14,7 +14,7 @@ import useNotification from "@/hooks/useNotification";
 type ChangePasswordProps = { token: string };
 
 export const ChangePasswordAfterReset = ({ token }: ChangePasswordProps) => {
-  const authen = useTranslateFile(LanguageFile.AUTHEN);
+  const authen = getNamespace(LanguageFile.AUTHEN);
 
   /* ---------- schema & form ------------------------------------ */
   const schema = z

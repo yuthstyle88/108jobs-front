@@ -7,9 +7,10 @@ import FreelancerTypes from "./components/FreelancerTypes";
 import Step from "./components/Step";
 import ProfileSelling from "./Profile";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import Loading from "../Loading";
 import Error from "@/app/error";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 const categoryImages = [
   {
     image: CategoriesImage.seoImage,

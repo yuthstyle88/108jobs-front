@@ -9,15 +9,35 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
+import {getNamespace} from "@/utils/i18nHelper";
 
 type Props = {
   data: Job;
 };  
 
 const JobCard = ({ data }: Props) => {
-  const { data: jobCardLanguage } = useGlobalTranslate(LanguageFile.JOB_CARD);
+  const { data: jobCardLanguage, isLoading, error } = getNamespace(LanguageFile.JOB_CARD);
   const coverImage = data.images?.find((image) => image.isCoverPhoto);
   const { lang: currentLang } = useLanguage();
+  
+  // Handle loading and error states
+  if (isLoading) {
+    return (
+      <div className="border border-border-primary w-full flex flex-col overflow-hidden rounded-md bg-white p-4">
+        <div className="animate-pulse bg-gray-200 h-32 w-full"></div>
+        <div className="animate-pulse bg-gray-200 h-4 w-3/4 mt-2"></div>
+        <div className="animate-pulse bg-gray-200 h-4 w-1/2 mt-2"></div>
+      </div>
+    );
+  }
+  
+  if (error || !jobCardLanguage) {
+    return (
+      <div className="border border-border-primary w-full flex flex-col overflow-hidden rounded-md bg-white p-4">
+        <div className="text-red-500 text-center">{error ? "Error loading translations" : "No translation data available"}</div>
+      </div>
+    );
+  }
   return (
     <Link prefetch={false} href={`/${currentLang}/user/${data.user.username}/${data.slug}`} className="flex cursor-pointer w-full">
       <div className="hover:shadow-job-card border border-border-primary w-full flex flex-col overflow-hidden rounded-md bg-white transition-all ease-in-out duration-150">
@@ -61,13 +81,13 @@ const JobCard = ({ data }: Props) => {
         </section>
         <div className="mt-0 md:mt-2 flex gap-1 items-end md:min-h-10 pt-2 md:pt-1 px-2 pb-2 md:pb-3 bg-white font-sans">
           <div className="text-text-secondary text-[0.75rem] overflow-hidden text-ellipsis whitespace-nowrap">
-            {interpolateDouble(jobCardLanguage?.responseTime || "", {
+            {interpolateDouble(jobCardLanguage.responseTime, {
               n: 2,
             })}
           </div>
           <div className="flex flex-row gap-2 md:gap-0 md:flex-col items-end min-w-fit ml-auto text-text-secondary overflow-hidden text-ellipsis whitespace-nowrap">
             <span className="text-[0.75rem]">
-              {jobCardLanguage?.startingPrice}
+              {jobCardLanguage.startingPrice}
             </span>
             <span className="text-[0.75rem] text-third text-right break-words">
               {formatThaiBaht(data.basePrice)}

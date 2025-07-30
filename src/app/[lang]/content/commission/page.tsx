@@ -2,11 +2,12 @@
 import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { scrollToElementById } from "@/utils/scrollSmooth";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const MyServices = () => {
   const {

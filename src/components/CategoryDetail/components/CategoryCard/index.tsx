@@ -1,7 +1,7 @@
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { formatThaiBaht } from "@/utils/formatMoney";
 import { interpolateDouble } from "@/utils/interpolate";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
@@ -16,7 +16,7 @@ type Props = {
 };
 
 const CategoryCard = ({ data, username }: Props) => {
-  const { data: jobCardLanguage } = useGlobalTranslate(LanguageFile.JOB_CARD);
+  const jobCardLanguage = getNamespace(LanguageFile.JOB_CARD);
   const coverImage = data?.images?.find((image) => image.isCoverPhoto);
   const { lang: currentLang } = useLanguage();
   return (
@@ -65,13 +65,13 @@ const CategoryCard = ({ data, username }: Props) => {
         </section>
         <div className="mt-0 md:mt-2 flex gap-1 items-end md:min-h-10 pt-2 md:pt-1 px-2 pb-2 md:pb-3 bg-white font-sans">
           <div className="text-text-secondary text-[0.75rem] overflow-hidden text-ellipsis whitespace-nowrap">
-            {interpolateDouble(jobCardLanguage?.responseTime || "", {
+            {interpolateDouble(jobCardLanguage.responseTime, {
               n: 2,
             })}
           </div>
           <div className="flex flex-row gap-2 md:gap-0 md:flex-col items-end min-w-fit ml-auto text-text-secondary overflow-hidden text-ellipsis whitespace-nowrap">
             <span className="text-[0.75rem]">
-              {jobCardLanguage?.startingPrice}
+              {jobCardLanguage.startingPrice}
             </span>
             <span className="text-[0.75rem] text-third text-right break-words">
               {formatThaiBaht(data?.basePrice || 0)}

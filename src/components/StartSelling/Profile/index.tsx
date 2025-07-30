@@ -6,6 +6,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { getNamespace } from "@/utils/i18nHelper";
+import { LanguageFile } from "@/constants/language";
 
 type Testimonial = {
   name: string;
@@ -13,61 +15,62 @@ type Testimonial = {
   description: string;
 };
 
-const testimonials: Testimonial[] = [
-  {
-    name: "Wanwiset",
-    title: "การตลาดและโฆษณา / เสื้อกางเกงวิ่ง",
-    description:
-      "หากใครยังไม่ได้ทำงานประจำ หรือกำลังหางานอยู่ ลองเอาโอเคซิ เอาความรู้ความสามารถที่มี มาหาราย ได้กับ Fastjob ครับ...",
-  },
-  {
-    name: "Supakorn",
-    title: "Web & Programming Ecommerce",
-    description:
-      "หากใครยังไม่ได้ทำงานประจำ หรือกำลังหางานอยู่ ลองเอาโอเคซิ เอาความรู้ความสามารถที่มี มาหาราย ได้กับ Fastjob ครับ",
-  },
-  {
-    name: "Pakkawan",
-    title: "เขียนแบบสถาปัตย์ฯ / เขียนแบบแปลนบ้าน",
-    description:
-      "ทุกคนมีโอกาสทำสิ่งที่ชอบได้เข้า กล้าลงมือ ลองมาใช้ให้เกิด ประโยชน์สิค่ะ เอาพื้นที่ที่ให้ได้แสดงความสามารถเต็มที่สุดแล้ว และยังได้เครื่องมือการใช้ได้ด้วย...",
-  },
-  {
-    name: "Nicha",
-    title: "การตลาดและโฆษณา / โฆษณาสินค้า",
-    description:
-      "มีงานให้ทำเเละ สามารถเเบ่งเวลางานได้ เเละดูดีในทุกๆงาน ได้เเสดงศักดิ์ศรีว่าร่าง หลายคน มากรางานง่าย เป็นการเปิดโอกาส ให้ตัวออกมา เเละได้สิ่งที่ ไม่ต้อง...",
-  },
-  {
-    name: "parinya",
-    title: "บริหารและแปลฯ / จดทะเบียนการค้าบริษัท",
-    description:
-      "ไม่ต้องกังวลว่าไม่พร้อมที่จะออก ใบเสนอราคา หากใส่ทุกทริค จะ จะมั่น จะดี จะสุขุม มากขึ้นทุกๆ จริงๆ ค่ะ ที่สำคัญมีการระบุเงินใน ระบบเป็นของให้ที่ Happy มากค่ะ",
-  },
-  {
-    name: "parinya",
-    title: "บริหารและแปลฯ / จดทะเบียนการค้าบริษัท",
-    description:
-      "ไม่ต้องกังวลว่าไม่พร้อมที่จะออก ใบเสนอราคา หากใส่ทุกทริค จะ จะมั่น จะดี จะสุขุม มากขึ้นทุกๆ จริงๆ ค่ะ ที่สำคัญมีการระบุเงินใน ระบบเป็นของให้ที่ Happy มากค่ะ",
-  },
-  {
-    name: "parinya",
-    title: "บริหารและแปลฯ / จดทะเบียนการค้าบริษัท",
-    description:
-      "ไม่ต้องกังวลว่าไม่พร้อมที่จะออก ใบเสนอราคา หากใส่ทุกทริค จะ จะมั่น จะดี จะสุขุม มากขึ้นทุกๆ จริงๆ ค่ะ ที่สำคัญมีการระบุเงินใน ระบบเป็นของให้ที่ Happy มากค่ะ",
-  },
-  {
-    name: "parinya",
-    title: "บริหารและแปลฯ / จดทะเบียนการค้าบริษัท",
-    description:
-      "ไม่ต้องกังวลว่าไม่พร้อมที่จะออก ใบเสนอราคา หากใส่ทุกทริค จะ จะมั่น จะดี จะสุขุม มากขึ้นทุกๆ จริงๆ ค่ะ ที่สำคัญมีการระบุเงินใน ระบบเป็นของให้ที่ Happy มากค่ะ",
-  },
-];
+// Create testimonials array from translations
+const createTestimonialsFromTranslations = () => {
+  const seller = getNamespace(LanguageFile.SELLER_OVERVIEW);
+  
+  return [
+    {
+      name: seller.seller_testimonial_1_name,
+      title: seller.seller_testimonial_1_title,
+      description: seller.seller_testimonial_1_description,
+    },
+    {
+      name: seller.seller_testimonial_2_name,
+      title: seller.seller_testimonial_2_title,
+      description: seller.seller_testimonial_2_description,
+    },
+    {
+      name: seller.seller_testimonial_3_name,
+      title: seller.seller_testimonial_3_title,
+      description: seller.seller_testimonial_3_description,
+    },
+    {
+      name: seller.seller_testimonial_4_name,
+      title: seller.seller_testimonial_4_title,
+      description: seller.seller_testimonial_4_description,
+    },
+    {
+      name: seller.seller_testimonial_5_name,
+      title: seller.seller_testimonial_5_title,
+      description: seller.seller_testimonial_5_description,
+    },
+    // Repeat the last testimonial to maintain the same number of items
+    {
+      name: seller.seller_testimonial_5_name,
+      title: seller.seller_testimonial_5_title,
+      description: seller.seller_testimonial_5_description,
+    },
+    {
+      name: seller.seller_testimonial_5_name,
+      title: seller.seller_testimonial_5_title,
+      description: seller.seller_testimonial_5_description,
+    },
+    {
+      name: seller.seller_testimonial_5_name,
+      title: seller.seller_testimonial_5_title,
+      description: seller.seller_testimonial_5_description,
+    },
+  ];
+};
 type Props = {
   data: Partial<ProfileApplyLanguage> | null | undefined;
 };
 
 const ProfileSelling = ({ data }: Props) => {
+  // Get testimonials from translations
+  const testimonials = createTestimonialsFromTranslations();
+  
   return (
     <div className="mt-12">
       <div className="header-gradient h-[300px] px-4 sm:px-6 lg:px-8">

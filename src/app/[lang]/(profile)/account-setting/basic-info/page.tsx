@@ -5,7 +5,7 @@ import PasswordChangeModal from "@/components/ChangePasswordModal";
 import Loading from "@/components/Loading";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { useDateOptions } from "@/hooks/useDateOptions";
 import Image from "next/image";
 import { useState } from "react";
@@ -16,7 +16,7 @@ import {useHttpPost} from "@/hooks/useHttpPost";
 
 
 export default function BasicInformation() {
-  const { data: languageData } = useGlobalTranslate(LanguageFile.BASIC_INFO);
+  const languageData = getNamespace(LanguageFile.BASIC_INFO);
   const { days, months, years } = useDateOptions();
 
   const { execute: uploadImage, isMutating: isUploadMuting } =
@@ -62,10 +62,10 @@ export default function BasicInformation() {
       >
         <div className="border-b-1 px-6">
           <h2 className="text-[16px] font-medium mb-2 text-text-primary">
-            {languageData?.sectionAccountInfo}
+            {languageData.sectionAccountInfo}
           </h2>
           <p className="text-gray-600 mb-6 text-[14px] font-sans">
-            {languageData?.subtitleAccountInfo}
+            {languageData.subtitleAccountInfo}
           </p>
         </div>
 
@@ -113,7 +113,7 @@ export default function BasicInformation() {
         <div className="flex flex-col gap-6 px-6 font-sans">
           <div>
             <label className="block text-sm text-text-primary font-semibold mb-2">
-              {languageData?.labelUsername}
+              {languageData.labelUsername}
             </label>
             <div className="flex items-center">
               <span className="text-gray-500 mr-2">fastwork.co/user/</span>
@@ -126,14 +126,14 @@ export default function BasicInformation() {
 
           <div>
             <label className="block text-sm text-text-primary font-semibold text-gray-600 mb-2">
-              {languageData?.labelDisplayName}
+              {languageData.labelDisplayName}
             </label>
             <p className="text-[12px] text-gray-500 mb-2">
-              {languageData?.nameTrustNote}
+              {languageData.nameTrustNote}
             </p>
             <input
               {...register("displayName", {
-                required: languageData?.accountInfo,
+                required: languageData.accountInfo,
                 validate: (value) =>
                   value.trim().length > 0 || "Invalid display name",
               })}
@@ -148,7 +148,7 @@ export default function BasicInformation() {
 
           <div className="col-span-2">
             <label className="block text-sm text-text-primary font-semibold text-gray-600 mb-2">
-              {languageData?.labelBirthdate}
+              {languageData.labelBirthdate}
             </label>
             <div className="grid grid-cols-3 gap-4">
               <select
@@ -203,9 +203,9 @@ export default function BasicInformation() {
               className="submit-button px-4 py-2"
             >
               {isSubmitting || isUpdateMuting || isUploadMuting ? (
-                <span>{languageData?.save}...</span>
+                <span>{languageData.save}...</span>
               ) : (
-                languageData?.save
+                languageData.save
               )}
             </button>
           </div>
@@ -214,9 +214,9 @@ export default function BasicInformation() {
 
       <div className="border-1 border-border-primary rounded-lg bg-white mt-5 p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
         <div className="text-[16px] text-text-primary font-medium">
-          {languageData?.sectionPassword}
+          {languageData.sectionPassword}
           <p className="text-[14px] text-text-secondary font-normal">
-            {languageData?.passwordDescription}
+            {languageData.passwordDescription}
           </p>
         </div>
         <div className="self-end w-full sm:w-fit">
@@ -224,7 +224,7 @@ export default function BasicInformation() {
             onClick={openModal}
             className="w-full bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            {languageData?.buttonSetPassword}
+            {languageData.buttonSetPassword}
           </button>
         </div>
       </div>

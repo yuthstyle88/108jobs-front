@@ -1,6 +1,6 @@
 "use client";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { CreditCard, FileText, Mail, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,6 +8,7 @@ import React from "react";
 import Loading from "../Loading";
 import Error from "@/app/error";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const SideBarSellerAccountSetting = () => {
   const pathname = usePathname();

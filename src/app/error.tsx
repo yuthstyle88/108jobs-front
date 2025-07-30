@@ -3,8 +3,9 @@
 import Loading from "@/components/Loading";
 import { LandingImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import Image from "next/image";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 interface ErrorProps {
   message?: string;
 }

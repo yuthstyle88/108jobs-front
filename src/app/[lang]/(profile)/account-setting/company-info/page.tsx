@@ -3,8 +3,9 @@ import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { ProfileIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import Image from "next/image";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 export default function BusinessPage() {
   const {

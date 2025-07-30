@@ -1,6 +1,6 @@
 "use client";
 import { LanguageFile } from "@/constants/language";
-import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { getNamespace } from "@/utils/i18nHelper";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,7 +17,7 @@ const NotificationDropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
-  const global = useTranslateFile(LanguageFile.GLOBAL);
+  const global = getNamespace(LanguageFile.GLOBAL);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);

@@ -6,7 +6,7 @@ import LoadingCircle from "@/components/LoadingCircle";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch } from "@/hooks/api-hooks";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -19,6 +19,7 @@ import useNotification from "@/hooks/useNotification";
 import ErrorPage from "@/app/error";
 import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
 import {Address, CountriesResponse} from "lemmy-js-client";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const emailSchema = z.object({
   email: z.string().min(1, "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์").optional(),
@@ -64,7 +65,7 @@ export default function ContactPage() {
     useState<string>("");
 
   const form = useForm<AddressFormData>({
-    resolver: zodResolver(addressSchema),
+    resolver: zodResolver(addressSchema(LanguageFile.CONTACT)),
     defaultValues: {
       country: "Thailand",
     },
@@ -107,7 +108,7 @@ export default function ContactPage() {
     LanguageFile.SELLER_CONTACT_INFO
   );
 
-  const { data: global } = useGlobalTranslate(LanguageFile.GLOBAL);
+  const global = getNamespace(LanguageFile.GLOBAL);
 
   const [updateAddressState, setUpdateAddressState] = useState<RequestState<AddressFormData>>(LOADING_REQUEST);
   const isUpdateMuting = updateAddressState.state === "loading";
@@ -263,7 +264,7 @@ export default function ContactPage() {
                       {isSubmittingEmail ? (
                         <LoadingCircle />
                       ) : (
-                        global?.buttonChange
+                        global.buttonChange
                       )}
                     </button>
                   </div>
@@ -294,7 +295,7 @@ export default function ContactPage() {
                   onClick={() => setIsModalOpen(true)}
                   className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
                 >
-                  {global?.buttonEdit}
+                  {global.buttonEdit}
                 </button>
               </div>
             </div>
@@ -315,7 +316,7 @@ export default function ContactPage() {
                 defaultValue="0981893238"
               />
               <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
-                {global?.buttonEdit}
+                {global.buttonEdit}
               </button>
             </div>
           </div>
@@ -479,7 +480,7 @@ export default function ContactPage() {
               {isSubmitting || isUpdateMuting ? (
                 <LoadingCircle />
               ) : (
-                global?.buttonSave
+                global.buttonSave
               )}
             </button>
           </div>

@@ -1,10 +1,11 @@
 "use client";
 import { createContext, useContext } from "react";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
 import { ProfileChatLanguage } from "@/types/language";
 import Loading from "@/components/Loading";
 import ErrorPage from "@/app/error";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 type LanguageContextType = {
   languageData: Partial<ProfileChatLanguage> | null | undefined;

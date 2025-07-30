@@ -1,11 +1,11 @@
 "use client";
 
 import { LanguageFile } from "@/constants/language";
-import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { getNamespace } from "@/utils/i18nHelper";
 import { TypeAnimation } from "react-type-animation";
 
 const TypingText = () => {
-    const global = useTranslateFile(LanguageFile.GLOBAL);
+    const global = getNamespace(LanguageFile.GLOBAL);
 
   return (
     <TypeAnimation

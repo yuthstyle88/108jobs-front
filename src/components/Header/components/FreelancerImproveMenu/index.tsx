@@ -1,7 +1,7 @@
 "use client";
 import { MegaMenuImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { getNamespace } from "@/utils/i18nHelper";
 import {
   faChevronRight,
   faStarAndCrescent,
@@ -21,7 +21,7 @@ interface FreelanceImproveMenuItem {
 }
 
 const FreelanceImproveMenu = () => {
-  const global = useTranslateFile(LanguageFile.GLOBAL);
+  const global = getNamespace(LanguageFile.GLOBAL);
 
   const DESCRIPTION: Record<
     string,

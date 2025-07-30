@@ -1,7 +1,8 @@
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import Link from "next/link";
 import React from "react";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const CategoryFooter = () => {
   const { data: categoryFooterLanguage } = useGlobalTranslate(

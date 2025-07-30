@@ -31,7 +31,7 @@ import SpAdsSlider from "@/containers/SpAdsSlider";
 import SpCatalog from "@/containers/SpCatalog";
 import SpHeader from "@/containers/SpHeader";
 import { usePublicFetch } from "@/hooks/api-hooks";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import useHandleFetchError from "@/hooks/useHandleFetchError";
 import { ServiceCatalogData } from "@/types/catalog";
 import Link from "next/link";
@@ -80,17 +80,8 @@ export default function Home() {
   const [expanded, setExpanded] = useState(false);
   const [isOpenLocationSelection, setIsOpenLocationSelection] = useState(false);
 
-  const {
-    data: globalLanguageData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.GLOBAL);
-
-  const {
-    data: homeLanguageData,
-    isLoading: homeLoading,
-    error: homeError,
-  } = useGlobalTranslate(LanguageFile.HOME);
+  const global = getNamespace(LanguageFile.GLOBAL);
+  const home = getNamespace(LanguageFile.HOME);
 
   const { data: catalogData, isLoading: isCatalogLoading } =
     usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.getAllCatalog);
@@ -98,10 +89,7 @@ export default function Home() {
   const serviceCatalogs = catalogData?.serviceCatalogs || [];
   const activeCatalog = serviceCatalogs[activeCatalogIndex];
 
-  const errorMsg = useHandleFetchError(error || homeError);
-  if (isLoading || homeLoading || isCatalogLoading) return <Loading />;
-
-  if (errorMsg) return <Error message={errorMsg} />;
+  if (isCatalogLoading) return <Loading />;
 
   return (
     <div className="min-h-[100vh] bg-white">
@@ -122,7 +110,7 @@ export default function Home() {
             <p className="text-[18px] font-medium">
               {t("title_banner_home_page_2")}
             </p>
-            <SearchInput language={globalLanguageData} />
+            <SearchInput language={global} />
           </div>
         </section>
         <CatalogBanner
@@ -130,7 +118,7 @@ export default function Home() {
           activeCatalog={activeCatalog}
           activeCatalogIndex={activeCatalogIndex}
           setActiveCatalogIndex={setActiveCatalogIndex}
-          homeLanguageData={homeLanguageData}
+          homeLanguageData={home}
         />
 
         <section className="block sm:hidden pt-[4.5rem]">
@@ -140,7 +128,7 @@ export default function Home() {
           <SpCatalog activeCatalog={activeCatalog} />
         </section>
 
-        <HiringSection homeLanguageData={homeLanguageData} />
+        <HiringSection homeLanguageData={home} />
 
         <section className="hidden sm:block">
           <SpAdsSlider />
@@ -184,7 +172,7 @@ export default function Home() {
           </Swiper>
         </div>
 
-        <OfferSection homeLanguageData={homeLanguageData} />
+        <OfferSection homeLanguageData={home} />
 
         <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
           <div className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
@@ -288,10 +276,10 @@ export default function Home() {
           </Swiper>
         </div>
 
-        <RecommendAndReview homeLanguageData={homeLanguageData} />
+        <RecommendAndReview homeLanguageData={home} />
 
         <IntroductionSection
-          homeLanguageData={homeLanguageData}
+          homeLanguageData={home}
           expanded={expanded}
           setExpanded={setExpanded}
         />

@@ -5,7 +5,7 @@ import { AssetIcon } from "@/constants/icons";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { formatDateToLong } from "@/utils/formatDateToLong";
 import { interpolateDouble } from "@/utils/interpolate";
 import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {WorkExperience, Skill, LanguageSkill, Education, Certificate, Person} from "lemmy-js-client";
 import {getProfileData} from "@/utils/getProfileData";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const CurrentProfileFreelance = () => {
   const { profileState, person} = useMyUser();

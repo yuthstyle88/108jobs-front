@@ -1,14 +1,14 @@
 import { API_ROUTES } from "@/api/endpoints";
 import { LanguageFile } from "@/constants/language";
 import { usePublicFetch } from "@/hooks/api-hooks";
-import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { getNamespace } from "@/utils/i18nHelper";
 import { ServiceCatalogData } from "@/types/catalog";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 
 const Find = () => {
-  const global = useTranslateFile(LanguageFile.GLOBAL);
+  const global = getNamespace(LanguageFile.GLOBAL);
 
   const {
     data: catalogData,

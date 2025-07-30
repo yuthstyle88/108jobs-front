@@ -2,10 +2,11 @@
 import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { interpolateDouble } from "@/utils/interpolate";
 import { Info } from "lucide-react";
 import { useState } from "react";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const ProjectManagement = () => {
   const [activeTab, setActiveTab] = useState("inProgress");

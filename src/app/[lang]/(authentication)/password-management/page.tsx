@@ -6,11 +6,12 @@ import { ForgotPasswordForm } from "@/components/Authentication/ForgotPasswordFo
 import { AuthenticateIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { RegisterDataProps } from "@/types/register-data";
 import Image from "next/image";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 type ViewState =
   | "manage-password"

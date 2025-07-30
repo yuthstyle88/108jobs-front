@@ -9,7 +9,7 @@ import { API_ROUTES_SELLER } from "@/api/endpoints";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
 
 type LanguageFromServer = {
@@ -25,14 +25,13 @@ type LevelItem = {
 };
 
 const EditLanguages = () => {
-  const { data: userEditLanguage, isLoading: isLanguageLoading } =
-    useGlobalTranslate(LanguageFile.PROFILE_USER_EDIT);
+  const userEditLanguage = getNamespace(LanguageFile.PROFILE_USER_EDIT);
 
   const languageSchema = z.object({
     languageItems: z.array(
       z.object({
         id: z.string().optional(),
-        language: z.string().min(1, userEditLanguage?.languagesRequire),
+        language: z.string().min(1, userEditLanguage.languagesRequire),
         level: z.string().min(1, "Vui lòng chọn cấp độ"),
       })
     ),
@@ -41,8 +40,8 @@ const EditLanguages = () => {
   type LanguageFormData = z.infer<typeof languageSchema>;
 
   const levelMap: Record<string, string> = {
-    Medium: userEditLanguage?.mediumLevel || "",
-    High: userEditLanguage?.highLevel || "",
+    Medium: userEditLanguage.mediumLevel,
+    High: userEditLanguage.highLevel,
   };
 
   const {
@@ -120,13 +119,13 @@ const EditLanguages = () => {
   const levelOptions = levelData?.levels || [];
 
   const isFetching =
-    isLangLoading || isLevelLoading || !isFormReady || isLanguageLoading;
+    isLangLoading || isLevelLoading || !isFormReady;
 
   return (
     <div className="flex-1">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-semibold text-blue-600 mb-8">
-          {userEditLanguage?.languages}
+          {userEditLanguage.languages}
         </h1>
 
         {isFetching ? (
@@ -135,7 +134,7 @@ const EditLanguages = () => {
           </div>
         ) : fields.length === 0 ? (
           <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
-            <p className="text-gray-500 mb-4">{userEditLanguage?.noLanguagesInfo}.</p>
+            <p className="text-gray-500 mb-4">{userEditLanguage.noLanguagesInfo}.</p>
             <button
               type="button"
               onClick={() =>
@@ -148,7 +147,7 @@ const EditLanguages = () => {
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
               <Plus className="w-5 h-5 mr-2" />{" "}
-              {userEditLanguage?.addMoreButton}
+              {userEditLanguage.addMoreButton}
             </button>
 
             <div className="flex justify-end">
@@ -158,7 +157,7 @@ const EditLanguages = () => {
                 disabled={isMutating}
                 className="w-[128px] py-2 submit-button-custom"
               >
-                {isMutating ? <LoadingCircle /> : userEditLanguage?.saveButton}
+                {isMutating ? <LoadingCircle /> : userEditLanguage.saveButton}
               </button>
             </div>
           </div>
@@ -172,12 +171,12 @@ const EditLanguages = () => {
                 <div className="grid grid-cols-2 gap-6">
                   <div>
                     <label className="block text-gray-700 mb-2">
-                      {userEditLanguage?.languages}
+                      {userEditLanguage.languages}
                     </label>
                     <input
                       type="text"
                       className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder={userEditLanguage?.languagePlaceholder}
+                      placeholder={userEditLanguage.languagePlaceholder}
                       {...register(`languageItems.${index}.language`)}
                     />
                     {errors.languageItems?.[index]?.language && (
@@ -187,7 +186,7 @@ const EditLanguages = () => {
                     )}
                   </div>
                   <div>
-                    <label className="block text-gray-700 mb-2">{userEditLanguage?.level}</label>
+                    <label className="block text-gray-700 mb-2">{userEditLanguage.level}</label>
                     <select
                       className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       {...register(`languageItems.${index}.level`)}
@@ -214,7 +213,7 @@ const EditLanguages = () => {
                   >
                     <Trash2 className="w-4" />
                     <span className="ml-2 font-medium">
-                      {userEditLanguage?.deleteInfo}
+                      {userEditLanguage.deleteInfo}
                     </span>
                   </button>
                 </div>
@@ -232,7 +231,7 @@ const EditLanguages = () => {
               }
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.addInfo}
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage.addInfo}
             </button>
 
             <div className="flex justify-end">
@@ -241,7 +240,7 @@ const EditLanguages = () => {
                 disabled={isMutating}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                {isMutating ? <LoadingCircle /> : userEditLanguage?.saveInfo}
+                {isMutating ? <LoadingCircle /> : userEditLanguage.saveInfo}
               </button>
             </div>
           </form>

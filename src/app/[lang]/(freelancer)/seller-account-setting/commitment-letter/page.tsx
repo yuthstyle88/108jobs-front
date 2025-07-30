@@ -2,9 +2,10 @@
 import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { Upload } from "lucide-react";
 import Link from "next/link";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const CommitmentLetter = () => {
   const {
@@ -13,7 +14,7 @@ const CommitmentLetter = () => {
     error,
   } = useGlobalTranslate(LanguageFile.SELLER_COMMITMENT_LETTER);
 
-  const { data: global } = useGlobalTranslate(LanguageFile.GLOBAL);
+  const global = getNamespace(LanguageFile.GLOBAL);
 
   const handleSave = () => {
     console.log("Saving account settings");
@@ -114,7 +115,7 @@ const CommitmentLetter = () => {
             onClick={handleSave}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            {global?.buttonSave}
+            {global.buttonSave}
           </button>
         </div>
       </div>

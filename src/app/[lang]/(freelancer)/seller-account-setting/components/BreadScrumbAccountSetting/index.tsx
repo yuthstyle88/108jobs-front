@@ -2,10 +2,11 @@
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const BreadCrumbAccountSetting = () => {
   const { data: breadcrumbLanguage, isLoading } = useGlobalTranslate(

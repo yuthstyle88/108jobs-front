@@ -1,7 +1,7 @@
 "use client";
 import { AssetIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
@@ -15,6 +15,7 @@ import FreelancerSession from "./components/FreelancerSection";
 import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
 import { useScrollHandler } from "./hooks/useScrollHandler";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {

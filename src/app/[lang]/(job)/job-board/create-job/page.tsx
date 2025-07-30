@@ -1,9 +1,10 @@
 "use client";
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import React from "react";
 import {CreatePostForm} from "@/components/Job/PostCreate";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const CreateJobPage = () => {
   const {

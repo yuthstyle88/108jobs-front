@@ -13,7 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import FilterSection from "../FilterSection";
 import SortSection from "../SortSection";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
 import Loading from "../Loading";
 import { interpolateDouble } from "@/utils/interpolate";
@@ -27,6 +27,7 @@ import { ServiceCatalogData } from "@/types/catalog";
 import { Category } from "@/types/category";
 import JobCardSkeleton from "../ui/JobCardSkeleton";
 import Error from "@/app/error";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const categoryRelated = [
   {

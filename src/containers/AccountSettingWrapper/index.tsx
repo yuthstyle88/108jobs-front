@@ -1,9 +1,7 @@
 "use client";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -12,19 +10,12 @@ export default function AccountSettingWrapper() {
   const { lang } = useLanguage();
   const isActive = (path: string) => pathname === `/${lang}${path}`;
 
-  const {
-    data: navbarAccountData,
-    isLoading,
-    error,
-  } = useGlobalTranslate(LanguageFile.ACCOUNT_NAVBAR);
-
-  if (isLoading) return <Loading/>
-  if (error) return <Error/>;
+  const navbarAccount = getNamespace(LanguageFile.ACCOUNT_NAVBAR);
 
   return (
     <div>
       <p className="font-medium text-[16px] text-text-primary pb-[16px]">
-        {navbarAccountData?.sectionAccount}
+        {navbarAccount.sectionAccount}
       </p>
       <div className="flex flex-col mt-4">
         <Link prefetch={false}
@@ -47,7 +38,7 @@ export default function AccountSettingWrapper() {
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
           </svg>
-          <span>{navbarAccountData?.accountInfo}</span>
+          <span>{navbarAccount.accountInfo}</span>
         </Link>
 
         <Link prefetch={false}
@@ -70,11 +61,11 @@ export default function AccountSettingWrapper() {
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
             <polyline points="22,6 12,13 2,6" />
           </svg>
-          <span>{navbarAccountData?.contactInfo}</span>
+          <span>{navbarAccount.contactInfo}</span>
         </Link>
 
         <p className="font-medium text-[16px] text-text-primary py-4">
-          {navbarAccountData?.sectionHiring}
+          {navbarAccount.sectionHiring}
         </p>
 
         <Link prefetch={false}
@@ -97,7 +88,7 @@ export default function AccountSettingWrapper() {
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
             <circle cx="12" cy="10" r="3" />
           </svg>
-          <span>{navbarAccountData?.personalHiringInfo}</span>
+          <span>{navbarAccount.personalHiringInfo}</span>
         </Link>
 
         <Link prefetch={false}
@@ -121,7 +112,7 @@ export default function AccountSettingWrapper() {
             <path d="M3 9h18" />
             <path d="M9 21V9" />
           </svg>
-          <span>{navbarAccountData?.companyHiringInfo}</span>
+          <span>{navbarAccount.companyHiringInfo}</span>
         </Link>
       </div>
     </div>

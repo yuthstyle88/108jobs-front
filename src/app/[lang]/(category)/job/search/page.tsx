@@ -16,7 +16,7 @@ import { CategoriesIcon } from "@/constants/icons";
 import { CategoriesImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { JobList, Tags } from "@/types/jobSearch";
 import buildQueryParams from "@/utils/buildJobQueryParams";
 import { interpolateDouble } from "@/utils/interpolate";
@@ -24,6 +24,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const categoryRelated = [
   {

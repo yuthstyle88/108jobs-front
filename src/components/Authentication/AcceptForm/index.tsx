@@ -4,7 +4,7 @@ import { CustomInput } from "@/components/ui/InputField";
 import { LanguageFile } from "@/constants/language";
 /* เพิ่ม hook */
 import { useHttpPost } from "@/hooks/useHttpPost";
-import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { getNamespace } from "@/utils/i18nHelper";
 import { UpdateDataProps } from "@/types/update-term";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -25,7 +25,7 @@ export const AcceptForm = ({
   switchToVerifyEmail,
   setDataUpdate,
 }: UpdateFormProps) => {
-  const authen = useTranslateFile(LanguageFile.AUTHEN);
+  const authen = getNamespace(LanguageFile.AUTHEN);
 
   const UpdateSchema = z
   .object({

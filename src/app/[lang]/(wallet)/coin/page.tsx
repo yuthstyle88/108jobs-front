@@ -4,12 +4,13 @@ import Loading from "@/components/Loading";
 import TopUpHistory from "@/components/TopUpHistory";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const FastjobCoin = () => {
   const [amount, setAmount] = useState("");

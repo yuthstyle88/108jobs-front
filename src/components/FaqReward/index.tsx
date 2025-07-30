@@ -1,11 +1,12 @@
 "use client";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { FaChevronUp } from "react-icons/fa";
 import Loading from "../Loading";
 import Error from "@/app/error";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const FaqReward = () => {
   const {

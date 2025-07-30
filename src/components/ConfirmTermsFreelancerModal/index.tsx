@@ -5,11 +5,12 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import TermsAndCondition from "./components/TermsAndCondition";
 import LoadingCircle from "../LoadingCircle";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
 import Loading from "../Loading";
 import Error from "@/app/error";
 import { useEffect } from "react";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 interface ConfirmTermsFreelancerModalProps {
   isOpen: boolean;

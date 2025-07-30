@@ -3,6 +3,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image, { StaticImageData } from "next/image"; // Import Image from next/image
 import { BusinessImage } from "@/constants/images";
+import { getNamespace } from "@/utils/i18nHelper";
+import { LanguageFile } from "@/constants/language";
 
 type TestimonialType = {
   id: number;
@@ -13,37 +15,45 @@ type TestimonialType = {
   position: string;
 };
 
-const testimonials: TestimonialType[] = [
-  {
-    id: 1,
-    logoSrc: BusinessImage.logoCustomer1,
-    logoAlt: "tangerine",
-    testimonial:
-      "การทำงานกับ fastwork เป็นไปได้อย่างเสมอต้นเสมอปลาย ตั้งแต่เริ่มต้น จนถึงขั้นตอนการส่งงาน คือยอดเยี่ยมความสามารถหลังจากมีการส่งรูปโน๊ะ ไม่รำเนิน ต้องคอยตามงาน หรือถูกจักกับงาน ทำให้มีความ คล่องตัวมากขึ้นในการทำงาน และมีการส่งงานที่ตรง ตามที่กำหนดเวลา ไม่เคยสาย รวมถึงการช่วยแก้ ปัญหาต่างได้เร็วมาก ๆ",
-    author: "Nattida Pintongpan",
-    position: "Marketing Content & Public Relations (Marketing Executive)",
-  },
-  {
-    id: 2,
-    logoSrc: BusinessImage.logoCustomer2,
-    logoAlt: "Google",
-    testimonial:
-      "Fastjob has been an absolute pleasure to work with. My team has been using Fastjob for several years to create beautiful graphics to explain our products. Over this time, Fastjob has been a driving force in our graphic production, and has always delivered the utmost quality in a reasonable time frame.",
-    author: "Ben Hershey",
-    position: "Operations Lead",
-  },
-  {
-    id: 3,
-    logoSrc: BusinessImage.logoCustomer3,
-    logoAlt: "Alipay",
-    testimonial:
-      "Fastjob help us understand and ship localized products in an international manner.",
-    author: "Songyan Hou",
-    position: "Senior Product Designer",
-  },
-];
+// Create testimonials array from translations
+const createTestimonialsFromTranslations = () => {
+  const home = getNamespace(LanguageFile.HOME);
+  
+  return [
+    {
+      id: 1,
+      logoSrc: BusinessImage.logoCustomer1,
+      logoAlt: home.home_testimonial_1_logo_alt,
+      testimonial: home.home_testimonial_1_text,
+      author: home.home_testimonial_1_author,
+      position: home.home_testimonial_1_position,
+    },
+    {
+      id: 2,
+      logoSrc: BusinessImage.logoCustomer2,
+      logoAlt: home.home_testimonial_2_logo_alt,
+      testimonial: home.home_testimonial_2_text,
+      author: home.home_testimonial_2_author,
+      position: home.home_testimonial_2_position,
+    },
+    {
+      id: 3,
+      logoSrc: BusinessImage.logoCustomer3,
+      logoAlt: home.home_testimonial_3_logo_alt,
+      testimonial: home.home_testimonial_3_text,
+      author: home.home_testimonial_3_author,
+      position: home.home_testimonial_3_position,
+    },
+  ];
+};
 
 const ClientTestimonials = () => {
+  // Get translations
+  const home = getNamespace(LanguageFile.HOME);
+  
+  // Get testimonials from translations
+  const testimonials = createTestimonialsFromTranslations();
+  
   const [activeIndex, setActiveIndex] = useState(1);
 
   const nextSlide = () => {
@@ -66,7 +76,7 @@ const ClientTestimonials = () => {
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4 max-w-6xl">
         <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-16">
-          words from our clients
+          {home.home_testimonials_title}
         </h2>
 
         <div className="relative">

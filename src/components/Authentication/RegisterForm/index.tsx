@@ -2,7 +2,7 @@
 import LoadingCircle from "@/components/LoadingCircle";
 import {CustomInput} from "@/components/ui/InputField";
 import {LanguageFile} from "@/constants/language";
-import {useTranslateFile} from "@/hooks/translation/useTranslateFile";
+import {getNamespace} from "@/utils/i18nHelper";
 import {RegisterDataProps} from "@/types/register-data";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useRouter, useSearchParams} from "next/navigation";
@@ -65,7 +65,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   setApiError
 }) => {
   // Hooks
-  const authen = useTranslateFile(LanguageFile.AUTHEN);
+  const authen = getNamespace(LanguageFile.AUTHEN);
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectUrl = propRedirectUrl || searchParams.get("redirect") || "/";
@@ -296,7 +296,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           await fetchCaptcha();
         }
       } else {
-        handleApiError("เกิดข้อผิดพลาดในการดึงข้อมูลเว็บไซต์");
+        handleApiError(authen?.errorFetchingSiteData);
       }
     };
     
@@ -333,7 +333,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           htmlFor="register-captcha"
           className="block text-sm font-semibold text-gray-700"
         >
-          {"Enter the code below"}
+          {authen?.enterCodeBelow}
         </label>
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
@@ -352,7 +352,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
               className="inline-flex items-center px-2.5 py-1.5 border text-xs rounded-md text-gray-700 bg-white hover:bg-gray-100"
             >
               <RefreshCcw className="w-4 h-4 mr-1"/>
-              {"Refresh"}
+              {authen?.refresh}
             </button>
 
             {captcha.wav && (
@@ -365,7 +365,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
                 disabled={captchaPlaying}
               >
                 <Play className="w-4 h-4 mr-1"/>
-                {captchaPlaying ? "Playing..." : "Audio"}
+                {captchaPlaying ? authen?.playing : authen?.audio}
               </button>
             )}
           </div>
@@ -373,10 +373,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
         {/* CAPTCHA Input */}
         <CustomInput
-          label={"Captcha"}
+          label={authen?.captchaLabel}
           name="captchaAnswer"
           type="text"
-          placeholder={"Enter CAPTCHA"}
+          placeholder={authen?.captchaPlaceholder}
           error={errors.captchaAnswer?.message}
           register={register("captchaAnswer")}
         />
@@ -440,7 +440,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       
       <div className="space-y-2 w-full">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          {"You want to be a/an:"}
+          {authen?.roleSelectionLabel}
         </label>
         
         <div className="flex gap-4 text-sm font-medium w-full max-w-md">
@@ -535,7 +535,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       
       <div className="flex flex-col gap-3 mt-6">
         <div className="text-center text-sm text-gray-500">
-          หรือสมัครด้วยบัญชีโซเชียล
+          {authen?.signUpWithSocial}
         </div>
       </div>
     </form>

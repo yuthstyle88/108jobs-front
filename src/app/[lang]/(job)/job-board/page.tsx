@@ -5,7 +5,7 @@ import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import { Pagination } from "@/components/Pagination";
 import { ProfileImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,6 +13,7 @@ import { useState } from "react";
 import JobBoardTab from "./_components/JobBoardTab";
 import { useCategories } from "./hooks/useCategories";
 import { useJobPosts } from "./hooks/useJobPosts";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const JobBoard = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");

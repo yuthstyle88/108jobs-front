@@ -2,7 +2,7 @@
 
 import { AssetIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import {
   faArrowRightToBracket,
   faCalendar,
@@ -20,6 +20,7 @@ import { useState } from "react";
 import Loading from "../Loading";
 import { useLanguage } from "@/contexts/LanguageContext";
 import Error from "@/app/error";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const SellerSidebar = () => {
   const {

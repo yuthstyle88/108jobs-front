@@ -14,7 +14,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 const Footer = () => {
-  const { data: global } = useGlobalTranslate(LanguageFile.GLOBAL);
+  const { data: global, isLoading, error } = useGlobalTranslate(LanguageFile.GLOBAL);
+
+  // Handle loading and error states
+  if (isLoading) return <div className="bg-blue-900 text-white p-4 text-center">Loading...</div>;
+  if (error) return <div className="bg-blue-900 text-white p-4 text-center">Error loading translations</div>;
+  if (!global) return <div className="bg-blue-900 text-white p-4 text-center">No translation data available</div>;
 
   return (
     <footer className="bg-blue-900 text-white">
@@ -22,68 +27,68 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-5 gap-6">
         {/* Categories */}
         <div>
-          <h3 className="font-bold mb-3">{global?.tittleFooter1}</h3>
+          <h3 className="font-bold mb-3">{global.tittleFooter1}</h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link prefetch={false} href="#">{global?.labelNavBarItem2}</Link>
+              <Link prefetch={false} href="#">{global.labelNavBarItem2}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.labelNavBarItem3}</Link>
+              <Link prefetch={false} href="#">{global.labelNavBarItem3}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.labelNavBarItem4}</Link>
+              <Link prefetch={false} href="#">{global.labelNavBarItem4}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.labelNavBarItem5}</Link>
+              <Link prefetch={false} href="#">{global.labelNavBarItem5}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.labelNavBarItem6}</Link>
+              <Link prefetch={false} href="#">{global.labelNavBarItem6}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.labelNavBarItem7}</Link>
+              <Link prefetch={false} href="#">{global.labelNavBarItem7}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.labelNavBarItem8}</Link>
+              <Link prefetch={false} href="#">{global.labelNavBarItem8}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="#">{global?.labelNavBarItem9}</Link>
+              <Link prefetch={false} href="#">{global.labelNavBarItem9}</Link>
             </li>
           </ul>
         </div>
 
         {/* How to Use */}
         <div>
-          <h3 className="font-bold mb-3">{global?.tittleFooter2}</h3>
+          <h3 className="font-bold mb-3">{global.tittleFooter2}</h3>
           <ul className="space-y-2 text-sm">
             <li>
               <Link prefetch={false} href="/start-selling">
-                {global?.menuBecomeFreelancer}
+                {global.menuBecomeFreelancer}
               </Link>
             </li>
             <li>
               <Link prefetch={false} href="/content/how">
-                {global?.labelStartSellingWork}
+                {global.labelStartSellingWork}
               </Link>
             </li>
             {/* <li>
-              <Link prefetch={false} href="/">{global?.labelPaymentWages}</Link>
+              <Link prefetch={false} href="/">{global.labelPaymentWages}</Link>
             </li> */}
             <li>
               <Link prefetch={false} href="/content/guarantee">
-                {global?.labelEmploymentGuarantee}
+                {global.labelEmploymentGuarantee}
               </Link>
             </li>
             {/* <li>
-              <Link prefetch={false} href="#">{global?.labelKnowledgeBlog}</Link>
+              <Link prefetch={false} href="#">{global.labelKnowledgeBlog}</Link>
             </li> */}
             <li>
               <Link prefetch={false} href="/content/support-center">
-                {global?.labelFaq}
+                {global.labelFaq}
               </Link>
             </li>
             <li>
               <Link prefetch={false} href="/consent-management">
-                {global?.labelManageDataUsage}
+                {global.labelManageDataUsage}
               </Link>
             </li>
           </ul>
@@ -91,7 +96,7 @@ const Footer = () => {
 
         {/* Products */}
         <div>
-          <h3 className="font-bold mb-3">{global?.tittleFooter3}</h3>
+          <h3 className="font-bold mb-3">{global.tittleFooter3}</h3>
           <ul className="space-y-2 text-sm">
             <li>
               <Link prefetch={false} href="/">Fastjob</Link>
@@ -104,26 +109,26 @@ const Footer = () => {
 
         {/* About Fastjob */}
         <div>
-          <h3 className="font-bold mb-3">{global?.tittleFooter4}</h3>
+          <h3 className="font-bold mb-3">{global.tittleFooter4}</h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link prefetch={false} href="https://form.jotform.com/251484529705059">{global?.labelFeedbackUs}</Link>
+              <Link prefetch={false} href="https://form.jotform.com/251484529705059">{global.labelFeedbackUs}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="/">{global?.labelWorkWithFastwork}</Link>
+              <Link prefetch={false} href="/">{global.labelWorkWithFastwork}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="/content/terms">{global?.labelTermsOfService}</Link>
+              <Link prefetch={false} href="/content/terms">{global.labelTermsOfService}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="/content/privacy">{global?.labelPrivacyPolicy}</Link>
+              <Link prefetch={false} href="/content/privacy">{global.labelPrivacyPolicy}</Link>
             </li>
           </ul>
         </div>
 
         {/* Contact */}
         <div>
-          <h3 className="font-bold mb-3">{global?.tittleFooter5}</h3>
+          <h3 className="font-bold mb-3">{global.tittleFooter5}</h3>
           <ul className="space-y-2 text-sm">
             <li>
               Email:{" "}
@@ -134,8 +139,8 @@ const Footer = () => {
             </li>
           </ul>
           <p className="mt-3 text-xs">
-            {global?.labelWorkingHoursWeekdays} <br />
-            {global?.labelWorkingHoursWeekends}
+            {global.labelWorkingHoursWeekdays} <br />
+            {global.labelWorkingHoursWeekends}
           </p>
         </div>
       </div>

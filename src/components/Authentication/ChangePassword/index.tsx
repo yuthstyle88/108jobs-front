@@ -3,7 +3,7 @@ import LoadingCircle from "@/components/LoadingCircle";
 import { CustomInput } from "@/components/ui/InputField";
 import { ERROR_CONSTANTS } from "@/constants/error";
 import { LanguageFile } from "@/constants/language";
-import { useTranslateFile } from "@/hooks/translation/useTranslateFile";
+import { getNamespace } from "@/utils/i18nHelper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -14,7 +14,7 @@ import {useHttpPost} from "@/hooks/useHttpPost";
 type ChangePasswordProps = { token: string };
 
 export const ChangePassword = ({ token }: ChangePasswordProps) => {
-  const authen = useTranslateFile(LanguageFile.AUTHEN);
+  const authen = getNamespace(LanguageFile.AUTHEN);
 
   /* -------- schema & form -------------------------------------- */
   const changePasswordSchema = z
@@ -66,7 +66,7 @@ export const ChangePassword = ({ token }: ChangePasswordProps) => {
     }
 
     if (res.state === "success") {
-      successMessage(null, null, "Change password successfully");
+      successMessage(null, null, authen?.changePasswordSuccess);
       window.location.href = "/login";
     }
   };
@@ -75,8 +75,7 @@ export const ChangePassword = ({ token }: ChangePasswordProps) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <p className="text-text-primary text-sm font-sans">
-        Create a new password. Your password must be at least 8 characters long
-        and contain a mix of letters and numbers.
+        {authen?.newPasswordRequirements}
       </p>
 
       {errors.root && (

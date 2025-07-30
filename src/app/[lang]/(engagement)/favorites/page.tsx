@@ -6,8 +6,9 @@ import JobCardSkeleton from "@/components/ui/JobCardSkeleton";
 import Loading from "@/components/Loading";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch } from "@/hooks/api-hooks";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { FavoriteJob } from "@/types/favorite";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const Favorites = () => {
   const {

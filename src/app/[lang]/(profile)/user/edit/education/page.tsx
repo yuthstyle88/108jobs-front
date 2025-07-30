@@ -4,7 +4,7 @@ import LoadingCircle from "@/components/LoadingCircle";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import useNotification from "@/hooks/useNotification";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
@@ -19,15 +19,14 @@ type EducationFromServer = {
 };
 
 const EditEducation = () => {
-  const { data: userEditLanguage, isLoading: isEducationLoading } =
-    useGlobalTranslate(LanguageFile.PROFILE_USER_EDIT);
+  const userEditLanguage = getNamespace(LanguageFile.PROFILE_USER_EDIT);
 
   const educationSchema = z.object({
     educationItems: z.array(
       z.object({
         id: z.string().optional(),
-        school: z.string().min(1, userEditLanguage?.schoolNameRequire),
-        major: z.string().min(1, userEditLanguage?.majorRequire),
+        school: z.string().min(1, userEditLanguage.schoolNameRequire),
+        major: z.string().min(1, userEditLanguage.majorRequire),
       })
     ),
   });
@@ -95,13 +94,13 @@ const EditEducation = () => {
   };
 
   const isFetchingInitialData =
-    isLoading || !hasInitializedForm || isEducationLoading;
+    isLoading || !hasInitializedForm;
 
   return (
     <div className="flex-1">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-semibold text-blue-600 mb-8">
-          {userEditLanguage?.education}
+          {userEditLanguage.education}
         </h1>
 
         {isFetchingInitialData ? (
@@ -111,7 +110,7 @@ const EditEducation = () => {
         ) : fields.length === 0 ? (
           <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
             <p className="text-gray-500 mb-4">
-              {userEditLanguage?.noEducationInfo}
+              {userEditLanguage.noEducationInfo}
             </p>
             <button
               type="button"
@@ -119,7 +118,7 @@ const EditEducation = () => {
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
               <Plus className="w-5 h-5 mr-2" />{" "}
-              {userEditLanguage?.addMoreButton}
+              {userEditLanguage.addMoreButton}
             </button>
             <div className="flex justify-end">
               <button
@@ -131,7 +130,7 @@ const EditEducation = () => {
                 {isUpdateMuting ? (
                   <LoadingCircle />
                 ) : (
-                  userEditLanguage?.saveButton
+                  userEditLanguage.saveButton
                 )}
               </button>
             </div>
@@ -146,12 +145,12 @@ const EditEducation = () => {
                 <div className="grid grid-cols-2 gap-6">
                   <div>
                     <label className="block text-gray-700 mb-2">
-                      {userEditLanguage?.schoolName}
+                      {userEditLanguage.schoolName}
                     </label>
                     <input
                       type="text"
                       className="text-text-primary w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder={userEditLanguage?.schoolNamePlaceholder}
+                      placeholder={userEditLanguage.schoolNamePlaceholder}
                       {...register(`educationItems.${index}.school`)}
                     />
                     {errors.educationItems?.[index]?.school && (
@@ -162,12 +161,12 @@ const EditEducation = () => {
                   </div>
                   <div>
                     <label className="block text-gray-700 mb-2">
-                      {userEditLanguage?.major}
+                      {userEditLanguage.major}
                     </label>
                     <input
                       type="text"
                       className="text-text-primary w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder={userEditLanguage?.majorPlaceholder}
+                      placeholder={userEditLanguage.majorPlaceholder}
                       {...register(`educationItems.${index}.major`)}
                     />
                     {errors.educationItems?.[index]?.major && (
@@ -186,7 +185,7 @@ const EditEducation = () => {
                   >
                     <Trash2 className="w-4" />
                     <span className="ml-2 font-medium">
-                      {userEditLanguage?.deleteInfo}
+                      {userEditLanguage.deleteInfo}
                     </span>
                   </button>
                 </div>
@@ -198,7 +197,7 @@ const EditEducation = () => {
               onClick={() => append({ id: undefined, school: "", major: "" })}
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.addInfo}
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage.addInfo}
             </button>
 
             <div className="flex justify-end">
@@ -210,7 +209,7 @@ const EditEducation = () => {
                 {isUpdateMuting ? (
                   <LoadingCircle />
                 ) : (
-                  userEditLanguage?.saveInfo
+                  userEditLanguage.saveInfo
                 )}
               </button>
             </div>

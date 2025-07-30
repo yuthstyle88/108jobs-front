@@ -1,9 +1,10 @@
 "use client";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { Upload } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const BankAccount = () => {
   const [qrImage, setQrImage] = useState<string>(

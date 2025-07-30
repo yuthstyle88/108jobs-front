@@ -3,11 +3,12 @@ import Loading from "@/components/Loading";
 import { AssetIcon } from "@/constants/icons";
 import { CategoriesImage, LandingImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { Home } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Error from "./error";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const categoryImages = [
   {

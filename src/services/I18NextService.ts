@@ -30,7 +30,8 @@ const languageByCode = languages.reduce<Record<string, TranslationDesc>>(
 languageByCode["en_US"] = languageByCode["en-US"];
 
 async function load(translation: TranslationDesc): Promise<Resource> {
-  return import(`@/i18n/website/en/${translation.resource}.json`);
+  // Use translations from en.ts instead of loading from external files
+  return { translation: en };
 }
 
 export async function verifyTranslationImports(): Promise<ImportReport> {
@@ -128,10 +129,14 @@ class LazyLoader implements Omit<BackendModule, "type"> {
   init() {}
 
   read(language: string, namespace: string, cb: ReadCallback): void {
-  import(`@/i18n/website/${language}/${namespace}.json`)
-    .then((data) => cb(null, data))
-    .catch((err) => cb(err, false));
-}
+    // Use translations from en.ts instead of loading from external files
+    if (language === 'en') {
+      cb(null, { translation: en });
+    } else {
+      // For other languages, still use en.ts as the main source
+      cb(null, { translation: en });
+    }
+  }
 }
 
 export class I18NextService {
@@ -151,11 +156,8 @@ export class I18NextService {
         load: "all",
         // initImmediate: false,
         fallbackLng: "en",
-        ns: [
-          "authen",
-          "error",
-          "home",
-        ],
+        // Use all namespaces available in en.ts
+        ns: Object.keys(en),
         resources: { en } as Resource,
         interpolation: { format },
         partialBundledLanguages: true,

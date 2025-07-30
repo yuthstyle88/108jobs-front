@@ -3,11 +3,12 @@ import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { AssetIcon, ContentIcon } from "@/constants/icons";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const EMPLOYERS = [
   {

@@ -5,7 +5,7 @@ import Loading from "@/components/Loading";
 import WarningLeaveModal from "@/components/WarningLeaveModal";
 import { LanguageFile } from "@/constants/language";
 import { usePrivateFetchParams } from "@/hooks/api-hooks";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { JobType, Onboarding } from "@/types/job";
 import { Check } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -32,8 +32,7 @@ const ServiceOnboardingPage = () => {
     API_ROUTES_SELLER.job.getJob + "/" + jobId
   );
 
-  const { data: createJobLanguage, isLoading: isCreateJobLoading } =
-    useGlobalTranslate(LanguageFile.SELLER_CREATE_JOBS);
+  const createJobLanguage = getNamespace(LanguageFile.SELLER_CREATE_JOBS);
 
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [job, setJob] = useState<JobType>();
@@ -129,7 +128,7 @@ const ServiceOnboardingPage = () => {
   }, [currentStep]);
 
 
-  if (isLoading || isCreateJobLoading) return <Loading />;
+  if (isLoading) return <Loading />;
 
   if (!job) {
     return <NotFound />;
@@ -181,11 +180,11 @@ const ServiceOnboardingPage = () => {
         ${isPending && !isActive ? "text-gray-500" : ""}
       `}
                 >
-                  {step === 1 && createJobLanguage?.step1}
-                  {step === 2 && createJobLanguage?.step2}
-                  {step === 3 && createJobLanguage?.step3}
-                  {step === 4 && createJobLanguage?.step4}
-                  {step === 5 && createJobLanguage?.step5}
+                  {step === 1 && createJobLanguage.step1}
+                  {step === 2 && createJobLanguage.step2}
+                  {step === 3 && createJobLanguage.step3}
+                  {step === 4 && createJobLanguage.step4}
+                  {step === 5 && createJobLanguage.step5}
                 </span>
               </div>
             );

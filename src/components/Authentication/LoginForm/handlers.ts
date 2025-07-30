@@ -73,7 +73,7 @@ export const handleLogin = async (i: LoginFormClass, data: any) => {
         } else {
           i.props.formMethods.setError("password", {
             type: "manual",
-            message: i.props.authen?.invalidPassword ?? "รหัสผ่านไม่ถูกต้อง",
+            message: i.props.t("invalidPassword"),
           });
         }
         i.setState({loginRes});
@@ -88,7 +88,7 @@ export const handleLogin = async (i: LoginFormClass, data: any) => {
     console.error(error);
     i.props.formMethods.setError("root", {
       type: "manual",
-      message: i.props.authen?.systemError ?? "เกิดข้อผิดพลาดของระบบ กรุณาลองใหม่อีกครั้ง",
+      message: i.props.t("systemError"),
     });
   }
 };

@@ -9,7 +9,7 @@ import { API_ROUTES_SELLER } from "@/api/endpoints";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
 
 type ExperienceFromServer = {
@@ -47,15 +47,14 @@ const years = Array.from({ length: 40 }, (_, i) =>
 );
 
 const EditExperience = () => {
-  const { data: userEditLanguage, isLoading: isExperienceLoading } =
-    useGlobalTranslate(LanguageFile.PROFILE_USER_EDIT);
+  const userEditLanguage = getNamespace(LanguageFile.PROFILE_USER_EDIT);
 
   const experienceSchema = z.object({
     experienceItems: z.array(
       z.object({
         id: z.string().optional(),
-        company: z.string().min(1, userEditLanguage?.companyNameRequired),
-        position: z.string().min(1, userEditLanguage?.jobTitleRequired),
+        company: z.string().min(1, userEditLanguage.companyNameRequired),
+        position: z.string().min(1, userEditLanguage.jobTitleRequired),
         startMonth: z.string(),
         startYear: z.string(),
         endMonth: z.string().nullable(),
@@ -152,13 +151,13 @@ const EditExperience = () => {
     }
   };
 
-  const isFetching = isLoading || !isFormReady || isExperienceLoading;
+  const isFetching = isLoading || !isFormReady;
 
   return (
     <div className="flex-1">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-semibold text-blue-600 mb-8">
-          {userEditLanguage?.workExperience}
+          {userEditLanguage.workExperience}
         </h1>
 
         {isFetching ? (
@@ -168,7 +167,7 @@ const EditExperience = () => {
         ) : fields.length === 0 ? (
           <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
             <p className="text-gray-500 mb-4">
-              {userEditLanguage?.noWorkExperienceInfo}
+              {userEditLanguage.noWorkExperienceInfo}
             </p>
             <button
               type="button"
@@ -188,7 +187,7 @@ const EditExperience = () => {
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
               <Plus className="w-5 h-5 mr-2" />{" "}
-              {userEditLanguage?.addMoreButton}
+              {userEditLanguage.addMoreButton}
             </button>
             <div className="flex justify-end">
               <button
@@ -197,7 +196,7 @@ const EditExperience = () => {
                 disabled={isMutating}
                 className="min-w-[128px] px-2 py-2 submit-button-custom"
               >
-                {isMutating ? <LoadingCircle /> : userEditLanguage?.saveButton}
+                {isMutating ? <LoadingCircle /> : userEditLanguage.saveButton}
               </button>
             </div>
           </div>
@@ -213,12 +212,12 @@ const EditExperience = () => {
                   <div className="grid grid-cols-2 gap-6 mb-6">
                     <div>
                       <label className="block text-gray-700 mb-2">
-                        {userEditLanguage?.companyName}
+                        {userEditLanguage.companyName}
                       </label>
                       <input
                         type="text"
                         className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder={userEditLanguage?.companyNamePlaceholder}
+                        placeholder={userEditLanguage.companyNamePlaceholder}
                         {...register(`experienceItems.${index}.company`)}
                       />
                       {errors.experienceItems?.[index]?.company && (
@@ -229,12 +228,12 @@ const EditExperience = () => {
                     </div>
                     <div>
                       <label className="block text-gray-700 mb-2">
-                        {userEditLanguage?.jobTitle}
+                        {userEditLanguage.jobTitle}
                       </label>
                       <input
                         type="text"
                         className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder={userEditLanguage?.jobTitlePlaceholder}
+                        placeholder={userEditLanguage.jobTitlePlaceholder}
                         {...register(`experienceItems.${index}.position`)}
                       />
                       {errors.experienceItems?.[index]?.position && (
@@ -248,7 +247,7 @@ const EditExperience = () => {
                   <div className="grid grid-cols-2 gap-6 mb-4">
                     <div>
                       <label className="block text-gray-700 mb-2">
-                        {userEditLanguage?.startMonth}
+                        {userEditLanguage.startMonth}
                       </label>
                       <select
                         className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -263,7 +262,7 @@ const EditExperience = () => {
                     </div>
                     <div>
                       <label className="block text-gray-700 mb-2">
-                        {userEditLanguage?.startYear}
+                        {userEditLanguage.startYear}
                       </label>
                       <select
                         className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -286,7 +285,7 @@ const EditExperience = () => {
                         {...register(`experienceItems.${index}.isCurrent`)}
                       />
                       <span className="ml-2 text-gray-700">
-                        {userEditLanguage?.currentWorkplace}
+                        {userEditLanguage.currentWorkplace}
                       </span>
                     </label>
                   </div>
@@ -295,7 +294,7 @@ const EditExperience = () => {
                     <div className="grid grid-cols-2 gap-6 mb-4">
                       <div>
                         <label className="block text-gray-700 mb-2">
-                          {userEditLanguage?.endMonth}
+                          {userEditLanguage.endMonth}
                         </label>
                         <select
                           className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -310,7 +309,7 @@ const EditExperience = () => {
                       </div>
                       <div>
                         <label className="block text-gray-700 mb-2">
-                          {userEditLanguage?.endYear}
+                          {userEditLanguage.endYear}
                         </label>
                         <select
                           className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md"
@@ -334,7 +333,7 @@ const EditExperience = () => {
                     >
                       <Trash2 className="w-4" />
                       <span className="ml-2 font-medium">
-                        {userEditLanguage?.deleteInfo}
+                        {userEditLanguage.deleteInfo}
                       </span>
                     </button>
                   </div>
@@ -358,7 +357,7 @@ const EditExperience = () => {
               }
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage?.addInfo}
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage.addInfo}
             </button>
 
             <div className="flex justify-end">
@@ -367,7 +366,7 @@ const EditExperience = () => {
                 disabled={isMutating}
                 className="min-w-[128px] px-2 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
-                {isMutating ? <LoadingCircle /> : userEditLanguage?.saveInfo}
+                {isMutating ? <LoadingCircle /> : userEditLanguage.saveInfo}
               </button>
             </div>
           </form>

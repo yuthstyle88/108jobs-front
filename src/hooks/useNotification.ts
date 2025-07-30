@@ -3,6 +3,7 @@
 import { toast } from "sonner";
 import { useGlobalTranslate } from "./translation/useGlobalTranslate";
 import { LanguageFile } from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
 
 type NotificationGroup = {
   success?: Record<string, string | undefined>;
@@ -12,19 +13,19 @@ type NotificationGroup = {
 type NotificationType = Record<"profile" | "job" | "review" | "service", NotificationGroup>;
 
 function useNotification() {
-  const { data: notiLanguage } = useGlobalTranslate(LanguageFile.NOTIFICATIONS);
+  const notiLanguage = getNamespace(LanguageFile.NOTIFICATIONS);
   const { data: jobLanguage } = useGlobalTranslate(LanguageFile.NOTIFICATION);
 
   const type: NotificationType = {
     profile: {
       success: {
-        update: notiLanguage?.update,
-        updateEducation: notiLanguage?.updateEducation,
-        updateWorkExperience: notiLanguage?.updateWorkExperience,
-        updateCertification: notiLanguage?.updateCertification,
-        updateSkill: notiLanguage?.updateSkill,
-        updateLanguage: notiLanguage?.updateLanguage,
-        changePassword: notiLanguage?.changePassword,
+        update: notiLanguage.update,
+        updateEducation: notiLanguage.updateEducation,
+        updateWorkExperience: notiLanguage.updateWorkExperience,
+        updateCertification: notiLanguage.updateCertification,
+        updateSkill: notiLanguage.updateSkill,
+        updateLanguage: notiLanguage.updateLanguage,
+        changePassword: notiLanguage.changePassword,
         updateFavorite: jobLanguage?.jobUpdateFavoriteSuccess,
         deleteFavorite: jobLanguage?.jobDeleteFavoriteSuccess,
         updateAvailable: jobLanguage?.profileUpdateAvailableSuccess,

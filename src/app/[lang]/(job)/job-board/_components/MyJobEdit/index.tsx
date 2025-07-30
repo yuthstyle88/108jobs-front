@@ -6,7 +6,7 @@ import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import WarningLeaveModal from "@/components/WarningLeaveModal";
 import { LanguageFile } from "@/constants/language";
 import { usePublicFetch } from "@/hooks/api-hooks";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import useNotification from "@/hooks/useNotification";
 import { ServiceCatalogData } from "@/types/catalog";
 import { CreateJobPayload } from "@/types/job-board";
@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 
 const jobSchema = z.object({
   serviceCatalogId: z.string().min(1, "Service catalog is required"),

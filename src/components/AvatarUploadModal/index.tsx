@@ -5,6 +5,8 @@ import ImageEditor from "../AvatarEditor";
 import Modal from "../ui/Modal";
 import { uploadSelectedImage } from "@/utils/helpers";
 import Loading from "@/components/Loading"; // นำเข้า helper ฟังก์ชัน upload
+import { getNamespace } from "@/utils/i18nHelper";
+import { LanguageFile } from "@/constants/language";
 
 interface ImageUploadModalProps {
   isOpen: boolean;
@@ -19,6 +21,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
   onImageUpload,
   uploadImage,
 }) => {
+  const avatar = getNamespace(LanguageFile.AVATAR_UPLOAD);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false); // เพิ่ม state สำหรับ loading
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -79,7 +82,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
       onClose();
     } catch (error) {
       console.error("Image upload failed:", error);
-      alert("เกิดข้อผิดพลาดในการอัปโหลดภาพ กรุณาลองใหม่อีกครั้ง");
+      alert(avatar?.uploadError);
     } finally {
       setLoading(false); // ปิด Loading ไม่ว่าจะแสดงผลสำเร็จหรือ error ก็ตาม
     }
@@ -89,7 +92,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="ภาพโปรไฟล์"
+      title={avatar?.title}
       className="max-w-md w-full"
     >
       <div className="space-y-4">
@@ -99,7 +102,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               <Image className="h-12 w-12 text-gray-400" aria-label="User profile icon"/>
             </div>
             <p className="text-gray-600 text-center">
-              อัปโหลดรูปโปรไฟล์ของคุณ
+              {avatar?.uploadInstruction}
             </p>
             <input
               type="file"
@@ -113,7 +116,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
               className="flex items-center space-x-2 bg-third hover:bg-blue-700"
             >
               <Upload className="h-4 w-4" />
-              <span>เลือกรูปภาพ</span>
+              <span>{avatar?.selectImage}</span>
             </button>
           </div>
         ) : (

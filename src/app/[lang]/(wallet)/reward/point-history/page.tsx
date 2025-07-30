@@ -3,10 +3,11 @@ import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import { BannerImage, RewardImage } from "@/constants/images";
 import { LanguageFile } from "@/constants/language";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import { getNamespace } from "@/utils/i18nHelper";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
 // import CouponCard from "@/components/CouponCard/CouponCard";
 
 interface PointHistory {
