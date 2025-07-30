@@ -2,12 +2,16 @@
 import type { LanguageId } from "./LanguageId";
 import type { PostId } from "./PostId";
 import type { TagId } from "./TagId";
+import {IntendedUse} from "./IntendedUse";
+import {JobType} from "./JobType";
+import {CommunityId} from "./CommunityId";
 
 /**
  * Edit a post.
  */
 export type EditPost = {
   postId: PostId;
+  communityId?: CommunityId;
   name?: string;
   url?: string;
   /**
@@ -29,4 +33,9 @@ export type EditPost = {
    */
   scheduledPublishTimeAt?: number;
   tags?: Array<TagId>;
+  intendedUse?: IntendedUse;
+  jobType?: JobType;
+  budget?: number;
+  deadline?: string;
+  isEnglishRequired?: boolean;
 };
