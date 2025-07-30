@@ -2,20 +2,19 @@
 import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import WarningLeaveModal from "@/components/WarningLeaveModal";
-import { LanguageFile } from "@/constants/language";
+import {LanguageFile} from "@/constants/language";
 import useNotification from "@/hooks/useNotification";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {EditPost, JobType} from "@/lib/lemmy-js-client/dist";
-import { faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useRouter} from "next/navigation";
 import {useCallback, useEffect, useState} from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { useGlobalTranslate } from "@/hooks/translation/useGlobalTranslate";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {useGlobalTranslate} from "@/hooks/translation/useGlobalTranslate";
 import {useHttpPut} from "@/hooks/useHttpPut";
-import {router} from "next/client";
 
 const jobSchema = z.object({
     serviceCatalogId: z.string().min(1, "Service catalog is required"),
@@ -60,7 +59,7 @@ const MyJobEdit = ({jobId}: Props) => {
         isMutating: isCatalogLoading,
     } = useHttpGet("listCommunities");
 
-    const { execute: editJob, isMutating } = useHttpPut("editPost");
+    const {execute: editJob, isMutating} = useHttpPut("editPost");
 
     const {successMessage, errorMessage} = useNotification();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -97,7 +96,7 @@ const MyJobEdit = ({jobId}: Props) => {
     useEffect(() => {
         const postView = postData?.postView;
         const post = postView?.post;
-        if (postView && post && post.jobType ) {
+        if (postView && post && post.jobType) {
             reset({
                 serviceCatalogId: postView.community?.id?.toString() ?? "",
                 jobTitle: post.name ?? "",
@@ -125,10 +124,6 @@ const MyJobEdit = ({jobId}: Props) => {
         setIsModalOpen(false);
         route.back();
     };
-
-    const handleEditSuccess = useCallback(() => {
-        router.replace("/job-board");
-    }, [router]);
 
     const onSubmit = useCallback(async (data: any) => {
         try {
@@ -164,12 +159,11 @@ const MyJobEdit = ({jobId}: Props) => {
 
             await editJob(payload);
             successMessage(null, null, "Edit successful!");
-            handleEditSuccess();
         } catch (error) {
-            console.error("Error editing job: ", error);
+            console.log("Error editing job: ", error);
             errorMessage(null, null, "Edit failed!");
         }
-    }, [editJob, jobId, handleEditSuccess, successMessage, errorMessage]);
+    }, [editJob, jobId, successMessage, errorMessage]);
 
     if (isLanguageLoading || isCatalogLoading) return <Loading/>;
     if (languageError) return <Error/>;
