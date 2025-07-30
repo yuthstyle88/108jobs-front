@@ -4,6 +4,8 @@ import type { DbUrl } from "./DbUrl";
 import type { LanguageId } from "./LanguageId";
 import type { PersonId } from "./PersonId";
 import type { PostId } from "./PostId";
+import {IntendedUse} from "./IntendedUse";
+import {JobType} from "./JobType";
 
 /**
  * A post.
@@ -96,4 +98,9 @@ export type Post = {
    * accepted by the community (by receiving it back via federation).
    */
   federationPending: boolean;
+  intendedUse: IntendedUse;
+  jobType: JobType;
+  budget: number;
+  deadline?: string;
+  isEnglishRequired: boolean;
 };
