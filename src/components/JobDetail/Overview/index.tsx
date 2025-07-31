@@ -1,8 +1,8 @@
-import { JobDetailIcon } from "@/constants/icons";
-import { CategoriesImage } from "@/constants/images";
-import { JobDetailResponse } from "@/types/jobDetail";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {JobDetailIcon} from "@/constants/icons";
+import {CategoriesImage} from "@/constants/images";
+import {JobDetailResponse} from "@/types/jobDetail";
+import {faStar} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -11,7 +11,7 @@ type Props = {
   data: JobDetailResponse;
 };
 
-const Overview = ({ language, data }: Props) => {
+const Overview = ({language, data}: Props) => {
   return (
     <section>
       <h1 className="text-[1.5rem] text-third font-medium leading-[1.15]">
@@ -19,7 +19,7 @@ const Overview = ({ language, data }: Props) => {
       </h1>
       <div className="flex flex-wrap mt-3 gap-3">
         <div className="pr-2 border-r-1 border-r-border-primary flex items-center">
-          <FontAwesomeIcon icon={faStar} className="text-[#E9B10C]" />
+          <FontAwesomeIcon icon={faStar} className="text-[#E9B10C]"/>
           <span className="ml-1 font-sans text-text-primary">
             {Number(data.rating).toFixed(1)}
           </span>
@@ -49,12 +49,12 @@ const Overview = ({ language, data }: Props) => {
           {language?.employersTrust}
         </div>
       </div>
-      <hr className="mt-4 bg-border-primary block overflow-visible w-full h-[1px] m-0" />
+      <hr className="mt-4 bg-border-primary block overflow-visible w-full h-[1px] m-0"/>
       <div className="break-words whitespace-pre-wrap m-0 leading-[1.65]  mt-6">
         <div className="text-text-primary font-sans">
           <p className="">{data.description}</p>
 
-          <hr className="my-4" />
+          <hr className="my-4"/>
 
           <p className="text-base font-semibold text-text-primary">
             Working step for

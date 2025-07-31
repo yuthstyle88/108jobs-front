@@ -1,16 +1,17 @@
 "use client";
 
-import { LandingImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
+import {LandingImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
 import Image from "next/image";
+
 interface ErrorProps {
   message?: string;
 }
 
-export default function Error({ message }: ErrorProps) {
+export default function Error({message}: ErrorProps) {
   const errorLanguageData = getNamespace(LanguageFile.ERROR);
- const isError = message ? true : false;
+  const isError = message ? true : false;
   // if (isError) return <div>Error loading language data</div>;
 
   return (
@@ -33,16 +34,16 @@ export default function Error({ message }: ErrorProps) {
           alt="error"
           className="w-[80%] h-[280px] sm:w-full"
         />
-        {isError ? 
-        <p className="text-center text-[20px] md:text-[32px] text-text-primary font-sans">
-          {message || "Something not work. Please try latter"}
-        </p>
-        :
-        <p className="text-center text-[20px] md:text-[32px] text-text-primary font-sans">
-          {errorLanguageData?.title}
-        </p>
+        {isError ?
+          <p className="text-center text-[20px] md:text-[32px] text-text-primary font-sans">
+            {message || "Something not work. Please try latter"}
+          </p>
+          :
+          <p className="text-center text-[20px] md:text-[32px] text-text-primary font-sans">
+            {errorLanguageData?.title}
+          </p>
         }
-       
+
       </div>
     </div>
   );

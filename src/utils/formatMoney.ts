@@ -3,10 +3,11 @@ export function formatThaiBaht(amount: string | number): string {
 
   if (isNaN(num)) return '฿0';
 
-  return new Intl.NumberFormat('th-TH', {
-    style: 'currency',
-    currency: 'THB',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(num);
+  return new Intl.NumberFormat('th-TH',
+    {
+      style: 'currency',
+      currency: 'THB',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(num);
 }

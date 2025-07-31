@@ -1,27 +1,29 @@
 "use client";
 
 import * as Switch from "@radix-ui/react-switch";
-import { useState } from "react";
+import {useState} from "react";
 import useNotification from "@/hooks/useNotification";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {REQUEST_STATE} from "@/services/HttpService";
 
 const DocumentInfo = () => {
   const [isAvailable, setIsAvailable] = useState(false);
-  const { successMessage, errorMessage } = useNotification();
+  const {successMessage, errorMessage} = useNotification();
 
   // ใช้ useHttpApi เพื่อเรียก API
-  const {  execute, isMutating } = useHttpPost("updateAvailable");
+  const {execute, isMutating} = useHttpPost("updateAvailable");
 
-  const handleToggle = async (value: boolean) => {
+  const handleToggle = async(value: boolean) => {
     setIsAvailable(value);
-    const response = await execute({ available: value });
+    const response = await execute({available: value});
 
     if (response.state === REQUEST_STATE.SUCCESS) {
-      successMessage("profile", value ? "updateAvailable" : "updateNotAvailable");
+      successMessage("profile",
+        value ? "updateAvailable" : "updateNotAvailable");
     } else {
       setIsAvailable((prev) => !prev);
-      errorMessage("profile", "updateAvailableFail");
+      errorMessage("profile",
+        "updateAvailableFail");
     }
   };
 

@@ -1,15 +1,8 @@
-import { useMemo } from "react";
+import {useMemo} from "react";
 import useSWRMutation from "swr/mutation";
-import {
-  EMPTY_REQUEST,
-  REQUEST_STATE,
-  RequestState,
-  WrappedLemmyHttp,
-  Payload,
-  callHttp,
-} from "@/services/HttpService";
-import { useGlobalLoader } from "@/contexts/GlobalLoaderContext";
-import { useGlobalError } from "@/contexts/GlobalErrorContext"; // Import GlobalErrorContext
+import {callHttp, EMPTY_REQUEST, Payload, REQUEST_STATE, RequestState, WrappedLemmyHttp,} from "@/services/HttpService";
+import {useGlobalLoader} from "@/contexts/GlobalLoaderContext";
+import {useGlobalError} from "@/contexts/GlobalErrorContext"; // Import GlobalErrorContext
 
 /**
  * Hook สำหรับเรียก API แบบ imperative (POST / PUT / PATCH / DELETE)
@@ -21,10 +14,10 @@ import { useGlobalError } from "@/contexts/GlobalErrorContext"; // Import Global
  */
 export const useHttpPost = <K extends keyof WrappedLemmyHttp>(method: K) => {
   /** ใช้ GlobalLoaderContext */
-  const { setLoading } = useGlobalLoader();
+  const {setLoading} = useGlobalLoader();
 
   /** ใช้ GlobalErrorContext */
-  const { setError } = useGlobalError();
+  const {setError} = useGlobalError();
 
   /** SWR Mutation */
   const {
@@ -38,12 +31,13 @@ export const useHttpPost = <K extends keyof WrappedLemmyHttp>(method: K) => {
     Parameters<WrappedLemmyHttp[K]> // Argument (Tuple) ที่จะส่งไป
   >(
     `${String(method)}-http-post`, // ใช้ชื่อเมธอดเป็น Key เพื่อไม่ชน Cache ของตัวอื่น
-    async (_key, { arg }) => {
+    async(_key, {arg}) => {
       setLoading(true); // เริ่มแสดง Global Loader
       setError(null); // ล้างข้อผิดพลาดเก่าก่อนเริ่มคำขอใหม่
       try {
         // เรียก API ผ่าน callHttp
-        return await (callHttp(method, ...arg) as Promise<
+        return await (callHttp(method,
+          ...arg) as Promise<
           RequestState<Payload<K>>
         >);
       } catch (e) {
@@ -76,7 +70,7 @@ export const useHttpPost = <K extends keyof WrappedLemmyHttp>(method: K) => {
   const execute = (...args: Parameters<WrappedLemmyHttp[K]>) => {
     if (args.length === 0) {
       /* ❱ ใช้ trigger แบบไม่มี Argument */
-      return (trigger as () => Promise<RequestState<Payload<K>>> )();
+      return (trigger as () => Promise<RequestState<Payload<K>>>)();
     }
 
     /* ❱ ใช้ trigger แบบมี Argument */

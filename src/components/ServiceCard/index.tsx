@@ -1,12 +1,14 @@
 import React from "react";
-import { cn } from "@/lib/utils";
-import Image, { StaticImageData } from "next/image";
+import {cn} from "@/lib/utils";
+import Image, {StaticImageData} from "next/image";
+
 interface ServiceCardProps {
   title: string;
   image: StaticImageData;
   className?: string;
   delay?: number;
 }
+
 const ServiceCard: React.FC<ServiceCardProps> = ({
   title,
   image,
@@ -19,7 +21,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         "service-card bg-white rounded-xl overflow-hidden shadow-lg animate-scale-up relative",
         className
       )}
-      style={{ animationDelay: `${delay}ms` }}
+      style={{animationDelay: `${delay}ms`}}
     >
       <div className="relative h-40 overflow-hidden">
         <Image

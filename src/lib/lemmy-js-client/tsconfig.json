@@ -4,7 +4,12 @@
     "declarationDir": "./dist",
     "module": "CommonJS",
     "noImplicitAny": true,
-    "lib": ["es2017", "es7", "es6", "dom"],
+    "lib": [
+      "es2017",
+      "es7",
+      "es6",
+      "dom"
+    ],
     "outDir": "./dist",
     "target": "ES2020",
     "experimentalDecorators": true,
@@ -12,6 +17,11 @@
     "moduleResolution": "Node",
     "esModuleInterop": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

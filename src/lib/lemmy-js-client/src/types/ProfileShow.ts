@@ -22,5 +22,5 @@ export type ProfileShow = {
   services: Array<Service>;
   ratings: number;
   userId: string;
-  reviews:Array<Review>;
+  reviews: Array<Review>;
 }

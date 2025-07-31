@@ -1,15 +1,10 @@
-import { BusinessImage } from "@/constants/images";
+import {BusinessImage} from "@/constants/images";
 import Image from "next/image";
 import Link from "next/link";
-import { LanguageFile } from "@/constants/language";
-import {getNamespace} from "@/utils/i18nHelper";
-const BusinessHeader = () => {
-  const { data: global, isLoading, error } = getNamespace(LanguageFile.GLOBAL);
+import {LanguageFile} from "@/constants/language";
+import {t} from "@/utils/i18nHelper";
 
-  // Handle loading and error states
-  if (isLoading) return <header className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm animate-fade-in"><div className="container mx-auto px-4 md:px-6 py-4 text-center">Loading...</div></header>;
-  if (error) return <header className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm animate-fade-in"><div className="container mx-auto px-4 md:px-6 py-4 text-center text-red-500">Error loading translations</div></header>;
-  if (!global) return <header className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm animate-fade-in"><div className="container mx-auto px-4 md:px-6 py-4 text-center">No translation data available</div></header>;
+const BusinessHeader = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white z-50 shadow-sm animate-fade-in">
@@ -26,28 +21,28 @@ const BusinessHeader = () => {
 
         <nav className="hidden md:flex items-center space-x-6">
           <Link prefetch={false}
-            href="/services"
-            className="text-gray-700 hover:text-fastwork-blue transition-colors duration-300"
+                href="/services"
+                className="text-gray-700 hover:text-fastwork-blue transition-colors duration-300"
           >
-            {global.nav_services}
+            {t(LanguageFile.GLOBAL, "nav_services")}
           </Link>
           <Link prefetch={false}
-            href="/work"
-            className="text-gray-700 hover:text-fastwork-blue transition-colors duration-300"
+                href="/work"
+                className="text-gray-700 hover:text-fastwork-blue transition-colors duration-300"
           >
-            {global.nav_portfolio}
+            {t(LanguageFile.GLOBAL, "nav_portfolio")}
           </Link>
           <Link prefetch={false}
-            href="/about"
-            className="text-gray-700 hover:text-fastwork-blue transition-colors duration-300"
+                href="/about"
+                className="text-gray-700 hover:text-fastwork-blue transition-colors duration-300"
           >
-            {global.nav_about}
+            {t(LanguageFile.GLOBAL, "nav_about")}
           </Link>
           <Link prefetch={false}
-            href="/contact"
-            className="bg-fastwork-blue text-white px-4 py-2 rounded-md hover:bg-fastwork-deep-blue transition-colors duration-300"
+                href="/contact"
+                className="bg-fastwork-blue text-white px-4 py-2 rounded-md hover:bg-fastwork-deep-blue transition-colors duration-300"
           >
-            {global.nav_contact}
+            {t(LanguageFile.GLOBAL, "nav_contact")}
           </Link>
         </nav>
 

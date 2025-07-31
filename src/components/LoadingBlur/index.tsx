@@ -3,7 +3,7 @@ import React from "react";
 type Props = {
   text: string;
 };
-const LoadingBlur = ({ text }: Props) => {
+const LoadingBlur = ({text}: Props) => {
   return (
     <div className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-white/70 z-[9999]">
       <div className="flex flex-col items-center gap-1">

@@ -1,28 +1,26 @@
 "use client";
-import Error from "@/app/error";
 import ImageUploadModal from "@/components/AvatarUploadModal";
 import PasswordChangeModal from "@/components/ChangePasswordModal";
-import Loading from "@/components/Loading";
-import { ProfileImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import { useDateOptions } from "@/hooks/useDateOptions";
+import {ProfileImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {useDateOptions} from "@/hooks/useDateOptions";
 import Image from "next/image";
-import { useState } from "react";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { useProfileForm } from "../hooks/useProfileForm";
+import {useState} from "react";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {useProfileForm} from "../hooks/useProfileForm";
 import {useImagePicker} from "@/hooks/useImagePicker";
 import {useHttpPost} from "@/hooks/useHttpPost";
 
 
 export default function BasicInformation() {
   const languageData = getNamespace(LanguageFile.BASIC_INFO);
-  const { days, months, years } = useDateOptions();
+  const {days, months, years} = useDateOptions();
 
-  const { execute: uploadImage, isMutating: isUploadMuting } =
+  const {execute: uploadImage, isMutating: isUploadMuting} =
     useHttpPost("uploadImage");
 
-  const {profileState, person, card } = useMyUser();
+  const {profileState, person, card} = useMyUser();
 
   const {
     selectedImage,
@@ -104,7 +102,7 @@ export default function BasicInformation() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
               </svg>
             </button>
           </div>
@@ -132,11 +130,12 @@ export default function BasicInformation() {
               {languageData.nameTrustNote}
             </p>
             <input
-              {...register("displayName", {
-                required: languageData.accountInfo,
-                validate: (value) =>
-                  value.trim().length > 0 || "Invalid display name",
-              })}
+              {...register("displayName",
+                {
+                  required: languageData.accountInfo,
+                  validate: (value) =>
+                    value.trim().length > 0 || "Invalid display name",
+                })}
               className="text-text-primary w-full px-4 py-2 border border-border-primary rounded-lg outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
             />
             {errors.displayName && (

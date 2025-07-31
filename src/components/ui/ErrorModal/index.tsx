@@ -1,5 +1,4 @@
-
-const ErrorModal = ({ message }: { message?: string }) => {
+const ErrorModal = ({message}: {message?: string}) => {
   return (
     <div className="bg-red-50 border-l-4 border-red-500 p-4">
       <div className="flex">

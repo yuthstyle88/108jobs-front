@@ -1,30 +1,22 @@
 "use client";
 
-import { AssetIcon } from "@/constants/icons";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import {
-  faArrowRightToBracket,
-  faCalendar,
-  faFileContract,
-  faGift,
-  faIdCard,
-  faListCheck,
-  faMoneyBill1Wave,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {AssetIcon} from "@/constants/icons";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {faArrowRightToBracket, faCalendar, faFileContract, faGift, faIdCard, faListCheck, faMoneyBill1Wave,} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import {usePathname} from "next/navigation";
+import {useState} from "react";
+import {useLanguage} from "@/contexts/LanguageContext";
 
 
 const SellerSidebar = () => {
   const globalLanguageData = getNamespace(LanguageFile.GLOBAL);
   const [isClose, setIsClose] = useState(false);
   const pathname = usePathname();
-  const { lang } = useLanguage();
+  const {lang} = useLanguage();
 
   const isActive = (path: string) => pathname === `/${lang}${path}`;
 
@@ -33,7 +25,7 @@ const SellerSidebar = () => {
 
   return (
     <>
-      <div className={`hidden md:block ${sidebarWidth}`} aria-hidden="true" />
+      <div className={`hidden md:block ${sidebarWidth}`} aria-hidden="true"/>
       <div>
         <div
           className={`fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-40 transition-all duration-200 hidden md:flex flex-col ${sidebarWidth}`}
@@ -101,14 +93,14 @@ const SellerSidebar = () => {
               },
             ].map((item) => (
               <Link prefetch={false}
-                key={item.href}
-                href={item.href}
-                target={item.target}
-                className={`group flex items-center gap-3 px-3 py-4 text-base ${
-                  isActive(item.href)
-                    ? "text-third border-primary bg-secondary"
-                    : "text-text-secondary bg-white hover:border-primary hover:bg-secondary hover:text-third"
-                } border-l-4 `}
+                    key={item.href}
+                    href={item.href}
+                    target={item.target}
+                    className={`group flex items-center gap-3 px-3 py-4 text-base ${
+                      isActive(item.href)
+                        ? "text-third border-primary bg-secondary"
+                        : "text-text-secondary bg-white hover:border-primary hover:bg-secondary hover:text-third"
+                    } border-l-4 `}
               >
                 <FontAwesomeIcon
                   icon={item.icon}
@@ -132,14 +124,14 @@ const SellerSidebar = () => {
           <div className="p-4 border-t border-gray-200">
             <div className={`${isClose ? "hidden" : "block"}`}>
               <Link prefetch={false}
-                href="#"
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
+                    href="#"
+                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
               >
                 {globalLanguageData?.sidebarFeedback}
               </Link>
               <Link prefetch={false}
-                href="#"
-                className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
+                    href="#"
+                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-lg"
               >
                 {globalLanguageData?.sidebarSupportCenter}
               </Link>

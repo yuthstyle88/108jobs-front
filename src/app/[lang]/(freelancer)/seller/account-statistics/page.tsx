@@ -1,16 +1,16 @@
 "use client";
-import { ProfileImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { getNamespace } from "@/utils/i18nHelper";
-import { FileText, Info } from "lucide-react";
+import {ProfileImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {getNamespace} from "@/utils/i18nHelper";
+import {FileText, Info} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 
 const AccountStats = () => {
 
-  const {  person } = useMyUser();
+  const {person} = useMyUser();
 
   const sellerAccStatsLanguage = getNamespace(LanguageFile.SELLER_ACCOUNT_STATISTICS);
 
@@ -41,7 +41,7 @@ const AccountStats = () => {
               <h3 className="text-base font-medium flex-grow text-black">
                 {sellerAccStatsLanguage?.onlineActivityTitle}
               </h3>
-              <Info className="w-4 h-4 text-gray-400" />
+              <Info className="w-4 h-4 text-gray-400"/>
             </div>
 
             <div className="flex items-center justify-between mb-2">
@@ -65,8 +65,8 @@ const AccountStats = () => {
 
             <div className="mt-6 flex justify-center">
               <Link prefetch={false}
-                className="bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-md"
-                href="/job-board"
+                    className="bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-md"
+                    href="/job-board"
               >
                 {sellerAccStatsLanguage?.findJobsButton}
               </Link>
@@ -79,7 +79,7 @@ const AccountStats = () => {
             <h3 className="text-text-primary text-base font-medium flex-grow">
               {sellerAccStatsLanguage?.averageResponseTime}
             </h3>
-            <Info className="w-4 h-4 text-black" />
+            <Info className="w-4 h-4 text-black"/>
           </div>
           <div className="text-sm text-black">
             {sellerAccStatsLanguage?.noDataAvailable}
@@ -95,7 +95,7 @@ const AccountStats = () => {
           </div>
 
           <div className="mt-6 bg-white rounded-lg p-6 flex flex-col items-center justify-center text-center">
-            <FileText className="w-12 h-12 text-gray-300 mb-4" />
+            <FileText className="w-12 h-12 text-gray-300 mb-4"/>
             <div className="text-black">
               {sellerAccStatsLanguage?.noDataAvailable}
             </div>

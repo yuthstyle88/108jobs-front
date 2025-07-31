@@ -8,5 +8,5 @@ export type ReviewResponse = {
   reviewerName: string;
   reviewerAvatar: string;
   reviews: Array<Review>;
-  isOwner:string;
+  isOwner: string;
 }

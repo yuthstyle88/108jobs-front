@@ -1,14 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import {useRouter} from "next/navigation";
+import React, {createContext, useCallback, useContext, useEffect, useRef, useState,} from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 interface MessagePayload {
@@ -52,74 +45,82 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   const wsUrl = `wss://fastwork.ibrowe.com/api/v4/ws/?token=${token}&roomId=${partnerId}&userId=${localUser?.id}`;
 
   useEffect(() => {
-    if (!token || !partnerId || !localUser) return;
-    const newSocket = new WebSocket(wsUrl);
-    setSocket(newSocket);
-    isManuallyClosingRef.current = false;
-
-    newSocket.onopen = () => {
-      setIsConnected(true);
-      setConnectionError(false);
+      if (!token || !partnerId || !localUser) return;
+      const newSocket = new WebSocket(wsUrl);
+      setSocket(newSocket);
       isManuallyClosingRef.current = false;
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
-        reconnectTimeoutRef.current = null;
-      }
-      console.log("✅ WebSocket connected to", partnerId);
-    };
 
-    newSocket.onmessage = (event) => {
-      for (const fn of listeners.values()) {
-        fn(event);
-      }
-    };
+      newSocket.onopen = () => {
+        setIsConnected(true);
+        setConnectionError(false);
+        isManuallyClosingRef.current = false;
+        if (reconnectTimeoutRef.current) {
+          clearTimeout(reconnectTimeoutRef.current);
+          reconnectTimeoutRef.current = null;
+        }
+        console.log("✅ WebSocket connected to",
+          partnerId);
+      };
 
-    newSocket.onclose = (event) => {
-      setIsConnected(false);
-      console.warn("❌ WebSocket closed. Code:", event.code);
+      newSocket.onmessage = (event) => {
+        for (const fn of listeners.values()) {
+          fn(event);
+        }
+      };
 
-      if (isManuallyClosingRef.current) {
-        console.log("🟡 WebSocket closed manually. Skipping error handling.");
-        return;
-      }
+      newSocket.onclose = (event) => {
+        setIsConnected(false);
+        console.warn("❌ WebSocket closed. Code:",
+          event.code);
 
-      if ([1008, 4000, 4400].includes(event.code)) {
-        setConnectionError(true);
-        return;
-      }
+        if (isManuallyClosingRef.current) {
+          console.log("🟡 WebSocket closed manually. Skipping error handling.");
+          return;
+        }
 
-      reconnectTimeoutRef.current = setTimeout(() => {
-        setSocket(null);
-        setConnectionAttemptKey((prev) => prev + 1);
-      }, 3000);
-    };
+        if ([1008, 4000, 4400].includes(event.code)) {
+          setConnectionError(true);
+          return;
+        }
 
-    newSocket.onerror = (err) => {
-      if (isManuallyClosingRef.current) {
-        console.log("🟡 WebSocket error ignored due to manual close.");
-        return;
-      }
-      console.error("🚨 WebSocket encountered error", err);
-    };
+        reconnectTimeoutRef.current = setTimeout(() => {
+            setSocket(null);
+            setConnectionAttemptKey((prev) => prev + 1);
+          },
+          3000);
+      };
 
-    return () => {
-      isManuallyClosingRef.current = true;
-      newSocket.close();
-      // setSocket(null);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wsUrl, connectionAttemptKey]);
+      newSocket.onerror = (err) => {
+        if (isManuallyClosingRef.current) {
+          console.log("🟡 WebSocket error ignored due to manual close.");
+          return;
+        }
+        console.error("🚨 WebSocket encountered error",
+          err);
+      };
+
+      return () => {
+        isManuallyClosingRef.current = true;
+        newSocket.close();
+        // setSocket(null);
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [wsUrl, connectionAttemptKey]);
 
   useEffect(() => {
-    if (connectionError) {
-      router.replace("/not-found");
-    }
-  }, [connectionError, router]);
+      if (connectionError) {
+        router.replace("/not-found");
+      }
+    },
+    [connectionError, router]);
 
   useEffect(() => {
-    if (!socket) return;
-    console.log("📡 Socket state:", socket.readyState);
-  }, [socket]);
+      if (!socket) return;
+      console.log("📡 Socket state:",
+        socket.readyState);
+    },
+    [socket]);
 
   const sendMessage = useCallback(
     (data: MessagePayload) => {
@@ -133,7 +134,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   );
 
   return (
-    <WebSocketContext.Provider value={{ sendMessage, isConnected, partnerId }}>
+    <WebSocketContext.Provider value={{sendMessage, isConnected, partnerId}}>
       {children}
     </WebSocketContext.Provider>
   );
@@ -151,11 +152,13 @@ export const useWebSocket = (
   }
 
   useEffect(() => {
-    listeners.set(key, onMessage);
-    return () => {
-      listeners.delete(key);
-    };
-  }, [key, onMessage]);
+      listeners.set(key,
+        onMessage);
+      return () => {
+        listeners.delete(key);
+      };
+    },
+    [key, onMessage]);
 
   return context;
 };

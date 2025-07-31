@@ -1,7 +1,7 @@
 "use client";
-import { useState, useEffect } from 'react';
-import { UserService } from "@/services";
-import { RoleType } from "lemmy-js-client";
+import {useEffect, useState} from 'react';
+import {UserService} from "@/services";
+import {RoleType} from "lemmy-js-client";
 import EmployerSection from './EmployerSection';
 import FreelancerSession from './FreelancerSection';
 
@@ -9,12 +9,13 @@ interface ClientOnlyRoleSectionProps {
   globalLanguageData?: Record<string, string>;
 }
 
-const ClientOnlyRoleSection = ({ globalLanguageData }: ClientOnlyRoleSectionProps) => {
+const ClientOnlyRoleSection = ({globalLanguageData}: ClientOnlyRoleSectionProps) => {
   const [isClient, setIsClient] = useState(false);
-  
+
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+      setIsClient(true);
+    },
+    []);
 
   if (!isClient) {
     // Return empty div during server-side rendering
@@ -27,8 +28,8 @@ const ClientOnlyRoleSection = ({ globalLanguageData }: ClientOnlyRoleSectionProp
 
   return (
     <>
-      {isFreelancer && <FreelancerSession globalLanguageData={globalLanguageData} />}
-      {isEmployer && <EmployerSection globalLanguageData={globalLanguageData} />}
+      {isFreelancer && <FreelancerSession />}
+      {isEmployer && <EmployerSection />}
     </>
   );
 };

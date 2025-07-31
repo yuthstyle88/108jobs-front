@@ -1,14 +1,14 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
+import {API_ROUTES} from "@/api/endpoints";
 import JobCard from "@/components/JobCard";
 import JobCardSkeleton from "@/components/ui/JobCardSkeleton";
-import { LanguageFile } from "@/constants/language";
-import { usePrivateFetch } from "@/hooks/api-hooks";
-import { FavoriteJob } from "@/types/favorite";
-import { getNamespace } from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
+import {usePrivateFetch} from "@/hooks/api-hooks";
+import {FavoriteJob} from "@/types/favorite";
+import {getNamespace} from "@/utils/i18nHelper";
 
 const Favorites = () => {
-  const  global = getNamespace(LanguageFile.GLOBAL);
+  const global = getNamespace(LanguageFile.GLOBAL);
 
   const {
     data: favoriteData,
@@ -25,8 +25,8 @@ const Favorites = () => {
           <div className="w-full py-8 px-4 rounded-sm bg-[#F6F7F8] mt-4 sm:mt-8">
             <section className="grid grid-cols-1 md:grid-cols-[repeat(4,minmax(1px,1fr))] gap-5">
               {isLoadingFavorite ? (
-                Array.from({ length: 10 }).map((_, index) => (
-                  <JobCardSkeleton key={index} />
+                Array.from({length: 10}).map((_, index) => (
+                  <JobCardSkeleton key={index}/>
                 ))
               ) : favoriteData && favoriteData.jobs.length === 0 ? (
                 <p className="text-[1.5rem] leading-[1.5] font-medium text-text-secondary">
@@ -34,7 +34,7 @@ const Favorites = () => {
                 </p>
               ) : (
                 favoriteData && favoriteData.jobs.map((job, index) => (
-                  <JobCard data={job} key={index} />
+                  <JobCard data={job} key={index}/>
                 ))
               )}
             </section>

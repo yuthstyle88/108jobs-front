@@ -1,4 +1,4 @@
-import { getStaticDir } from "@/utils/env";
+import {getStaticDir} from "@/utils/env";
 
 export const favIconUrl = `${getStaticDir()}/assets/icons/favicon.svg`;
 export const favIconPngUrl = `${getStaticDir()}/assets/icons/apple-touch-icon.png`;

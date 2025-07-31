@@ -1,34 +1,33 @@
 "use client";
 
-import { AssetIcon } from "@/constants/icons";
-import { ProfileImage } from "@/constants/images";
-import { LanguageFile, LANGUAGES } from "@/constants/language";
+import {AssetIcon} from "@/constants/icons";
+import {ProfileImage} from "@/constants/images";
+import {LANGUAGES} from "@/constants/language";
 import LanguageBottomSheet from "@/containers/SpBottomTab";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useToggle } from "@/hooks/useToggle";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {useToggle} from "@/hooks/useToggle";
+import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import {useState} from "react";
 import ProfileFreelancer from "../Header/components/ProfileFreelancer";
 import ProfileSection from "../Header/components/ProfileSection";
 import LanguageDropdown from "../LanguageDropDown";
 
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
-import {getNamespace} from "@/utils/i18nHelper";
 
 
 const RewardHeader = () => {
-  const { isLoggedIn,  isFreelancer } = useAuthInfo();
+  const {isLoggedIn, isFreelancer} = useAuthInfo();
 
   const [showLang, setShowLang] = useState(false);
-  const { lang } = useLanguage();
-  const { isOpen, toggle, close } = useToggle();
+  const {lang} = useLanguage();
+  const {isOpen, toggle, close} = useToggle();
   const currentLang = LANGUAGES[lang as keyof typeof LANGUAGES];
 
-  const { person } = useMyUser();
+  const {person} = useMyUser();
 
 
   return (
@@ -49,7 +48,7 @@ const RewardHeader = () => {
         <section className="flex items-center gap-4 w-full justify-end">
           {/* Language switch */}
           <div className="hidden sm:block">
-            <LanguageDropdown />
+            <LanguageDropdown/>
           </div>
           <div className="block sm:hidden">
             <button

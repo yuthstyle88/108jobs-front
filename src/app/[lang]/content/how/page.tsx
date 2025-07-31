@@ -1,11 +1,11 @@
 "use client";
-import { AssetIcon, ContentIcon } from "@/constants/icons";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import { ArrowRight } from "lucide-react";
+import {AssetIcon, ContentIcon} from "@/constants/icons";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {ArrowRight} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import {useState} from "react";
 
 
 const EMPLOYERS = [
@@ -148,7 +148,7 @@ const HowSellAndBuy = () => {
       <main>
         <section
           className="flex items-center justify-center w-full h-[200px] relative overflow-hidden"
-          style={{ background: "linear-gradient(282deg, #27c8f8, #1850c2)" }}
+          style={{background: "linear-gradient(282deg, #27c8f8, #1850c2)"}}
         >
           <div className="px-[1.5rem] relative">
             <div className="text-center text-white">
@@ -233,14 +233,14 @@ const HowSellAndBuy = () => {
               <Link prefetch={false} href="/" className="">
                 <button className="submit-button-custom py-2 px-4 w-full md:w-fit flex flex-row justify-center md:justify-start gap-2">
                   <p>Choose a service that you want.</p>
-                  <ArrowRight className="w-5" />
+                  <ArrowRight className="w-5"/>
                 </button>
               </Link>
             ) : (
               <Link prefetch={false} href="/start-selling" className="">
                 <button className="submit-button-custom py-2 px-4 w-full md:w-fit flex flex-row justify-center md:justify-start gap-2">
                   <p>Register to be a Freelancer.</p>
-                  <ArrowRight className="w-5" />
+                  <ArrowRight className="w-5"/>
                 </button>
               </Link>
             )}

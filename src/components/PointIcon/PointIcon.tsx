@@ -1,8 +1,10 @@
-import { cn } from "@/lib/utils";
+import {cn} from "@/lib/utils";
+
 interface PointIconProps {
   className?: string;
 }
-const PointIcon = ({ className }: PointIconProps) => {
+
+const PointIcon = ({className}: PointIconProps) => {
   return (
     <div
       className={cn(

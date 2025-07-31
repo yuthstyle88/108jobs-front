@@ -1,4 +1,4 @@
-import { CategoriesIcon } from "@/constants/icons";
+import {CategoriesIcon} from "@/constants/icons";
 
 export const catalogIcons = [
   {

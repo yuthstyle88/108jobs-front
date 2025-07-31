@@ -1,15 +1,12 @@
 "use client";
-import { MegaMenuImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import {
-  faChevronRight,
-  faStarAndCrescent,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image, { StaticImageData } from "next/image";
+import {MegaMenuImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {faChevronRight, faStarAndCrescent,} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import Image, {StaticImageData} from "next/image";
 import Link from "next/link";
-import { JSX, useState } from "react";
+import {JSX, useState} from "react";
 import Find from "./Find";
 import Post from "./Post";
 
@@ -25,14 +22,14 @@ const FreelanceMegaMenu = () => {
 
   const DESCRIPTION: Record<
     string,
-    { component: JSX.Element; image: StaticImageData }
+    {component: JSX.Element; image: StaticImageData}
   > = {
     find: {
-      component: <Find />,
+      component: <Find/>,
       image: MegaMenuImage.jobBg,
     },
     post: {
-      component: <Post />,
+      component: <Post/>,
       image: MegaMenuImage.buyerJob,
     },
   };
@@ -80,8 +77,8 @@ const FreelanceMegaMenu = () => {
                 }`}
               >
                 <Link prefetch={false}
-                  href="#"
-                  className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4"
+                      href="#"
+                      className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4"
                 >
                   <Image
                     src={freelancer.icon}
@@ -114,7 +111,7 @@ const FreelanceMegaMenu = () => {
           </div>
         </div>
         <div>
-          <hr className="w-[0.0625rem] mx-8 h-full inline-block bg-[#e8eeea] m-0" />
+          <hr className="w-[0.0625rem] mx-8 h-full inline-block bg-[#e8eeea] m-0"/>
         </div>
         {hoveredItem && DESCRIPTION[hoveredItem]?.component}
         <div className="flex flex-col mt-8 ml-8">

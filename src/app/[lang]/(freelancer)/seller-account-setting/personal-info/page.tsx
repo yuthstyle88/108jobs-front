@@ -1,16 +1,16 @@
 "use client";
 
-import { ProfileImage } from "@/constants/images";
-import { useDateOptions } from "@/hooks/useDateOptions";
-import { Trash2 } from "lucide-react";
+import {ProfileImage} from "@/constants/images";
+import {useDateOptions} from "@/hooks/useDateOptions";
+import {Trash2} from "lucide-react";
 import Image from "next/image";
-import { useRef } from "react";
-import { useImagePreviewOnly } from "../hooks/useImagePreviewOnly";
-import { usePersonalInfoForm } from "../hooks/usePersonalInfoForm";
-import { InputError } from "@/components/ui/InputError";
+import {useRef} from "react";
+import {useImagePreviewOnly} from "../hooks/useImagePreviewOnly";
+import {usePersonalInfoForm} from "../hooks/usePersonalInfoForm";
+import {InputError} from "@/components/ui/InputError";
 import ErrorModal from "@/components/ui/ErrorModal";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
@@ -19,20 +19,20 @@ const PersonalInfo = () => {
 
   // Create an object that matches the structure expected by the component
   // Note: We can't track loading state in an async component, so we set isMutating to false
-  const { execute: uploadImage, isMutating: isUploadMuting } =
+  const {execute: uploadImage, isMutating: isUploadMuting} =
     useHttpPost("uploadImage");
 
-  const { profileState, card } = useMyUser();
+  const {profileState, card} = useMyUser();
 
   const sellerPersonalInfoLanguage = getNamespace(
-      LanguageFile.SELLER_PERSONAL_INFO
-    );
+    LanguageFile.SELLER_PERSONAL_INFO
+  );
 
-    const global = getNamespace(
-        LanguageFile.GLOBAL
-      );
+  const global = getNamespace(
+    LanguageFile.GLOBAL
+  );
 
-  const { days, months, years } = useDateOptions();
+  const {days, months, years} = useDateOptions();
   const frontInputRef = useRef<HTMLInputElement>(null);
   const backInputRef = useRef<HTMLInputElement>(null);
   const {
@@ -81,7 +81,7 @@ const PersonalInfo = () => {
 
       <div className="p-6">
         <div className="pb-2">
-          {errors.root && <ErrorModal message={errors.root.message} />}
+          {errors.root && <ErrorModal message={errors.root.message}/>}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* ID front */}
@@ -104,7 +104,7 @@ const PersonalInfo = () => {
                     onClick={() => setSelectedFront("")}
                     className="absolute top-2 right-2 bg-gray-800 bg-opacity-70 rounded-full p-1 text-white hover:bg-opacity-90"
                   >
-                    <Trash2 className="h-5 w-5" />
+                    <Trash2 className="h-5 w-5"/>
                   </button>
                 </>
               ) : (
@@ -132,7 +132,7 @@ const PersonalInfo = () => {
               onClick={() => frontInputRef.current?.click()}
               className="w-full py-2 text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              {frontPreview ?  sellerPersonalInfoLanguage?.changeImage : sellerPersonalInfoLanguage?.changeImage}
+              {frontPreview ? sellerPersonalInfoLanguage?.changeImage : sellerPersonalInfoLanguage?.changeImage}
             </button>
           </div>
 
@@ -156,7 +156,7 @@ const PersonalInfo = () => {
                     onClick={() => setSelectedBack("")}
                     className="absolute top-2 right-2 bg-gray-800 bg-opacity-70 rounded-full p-1 text-white hover:bg-opacity-90"
                   >
-                    <Trash2 className="h-5 w-5" />
+                    <Trash2 className="h-5 w-5"/>
                   </button>
                 </>
               ) : (
@@ -200,7 +200,7 @@ const PersonalInfo = () => {
               {...register("name")}
               className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
-            <InputError message={errors.name?.message} />
+            <InputError message={errors.name?.message}/>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -210,7 +210,7 @@ const PersonalInfo = () => {
               {...register("surname")}
               className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
-            <InputError message={errors.surname?.message} />
+            <InputError message={errors.surname?.message}/>
           </div>
         </div>
 
@@ -222,7 +222,7 @@ const PersonalInfo = () => {
             {...register("cardNumber")}
             className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
           />
-          <InputError message={errors.cardNumber?.message} />
+          <InputError message={errors.cardNumber?.message}/>
         </div>
 
         <div className="mb-6">
@@ -295,19 +295,19 @@ const PersonalInfo = () => {
               {...register("cardAddressDetails")}
               className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
-            <InputError message={errors.cardAddressDetails?.message} />
+            <InputError message={errors.cardAddressDetails?.message}/>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-               {sellerPersonalInfoLanguage?.postalCode}
+                {sellerPersonalInfoLanguage?.postalCode}
               </label>
               <input
                 {...register("cardZipCode")}
                 className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
-              <InputError message={errors.cardZipCode?.message} />
+              <InputError message={errors.cardZipCode?.message}/>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -344,7 +344,7 @@ const PersonalInfo = () => {
                 {...register("cardProvince")}
                 className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
-              <InputError message={errors.cardProvince?.message} />
+              <InputError message={errors.cardProvince?.message}/>
             </div>
           </div>
         </div>

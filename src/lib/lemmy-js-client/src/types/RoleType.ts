@@ -1,4 +1,4 @@
 export enum RoleType {
-  Employer   = "Employer",
+  Employer = "Employer",
   Freelancer = "Freelancer",
 }

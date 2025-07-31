@@ -1,13 +1,13 @@
-import { GroupIcon } from "@/constants/icons";
-import { AssetsImage, LandingImage } from "@/constants/images";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {GroupIcon} from "@/constants/icons";
+import {AssetsImage, LandingImage} from "@/constants/images";
+import {faPlay} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import React from "react";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 const HiringSection = () => {
-const { t } = useTranslation();
+  const {t} = useTranslation();
   const freelancerIntro = [
     {
       icon: AssetsImage.group,
@@ -63,7 +63,7 @@ const { t } = useTranslation();
         <div className="grid grid-container-desktop-banner gap-y-4 sm:gap-y-12">
           <div className="col-start-2 col-end-3">
             <h2 className="home-title-head text-[18px] sm:text-[2.25rem]">
-          {t("home.titleStartHiringSection")}
+              {t("home.titleStartHiringSection")}
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-[1.5rem] min-h-0 min-w-0 col-start-2 col-end-3">
@@ -83,7 +83,7 @@ const { t } = useTranslation();
                     {t("home.labelStartHiringSection1")}
                   </h1>
                   <p className="m-0 text-base font-sans leading-[1.65]">
-                     {t("home.contentStartHiringSection1")}
+                    {t("home.contentStartHiringSection1")}
                   </p>
                 </div>
               </div>
@@ -98,10 +98,10 @@ const { t } = useTranslation();
                 </div>
                 <div>
                   <h1 className="text-[1.25rem] leading-[1.15]">
-                     {t("home.labelStartHiringSection3")}
+                    {t("home.labelStartHiringSection3")}
                   </h1>
                   <p className="m-0 text-base font-sans leading-[1.65]">
-                      {t("home.contentStartHiringSection3")}
+                    {t("home.contentStartHiringSection3")}
                   </p>
                 </div>
               </div>
@@ -123,7 +123,7 @@ const { t } = useTranslation();
                     {t("home.labelStartHiringSection2")}
                   </h1>
                   <p className="m-0 text-base font-sans leading-[1.65]">
-                     {t("home.contentStartHiringSection2")}
+                    {t("home.contentStartHiringSection2")}
                   </p>
                 </div>
               </div>
@@ -138,10 +138,10 @@ const { t } = useTranslation();
                 </div>
                 <div>
                   <h1 className="text-[1.25rem] leading-[1.15]">
-                   {t("home.labelStartHiringSection4")}
+                    {t("home.labelStartHiringSection4")}
                   </h1>
                   <p className="m-0 text-base font-sans leading-[1.65]">
-                     {t("home.contentStartHiringSection4")}
+                    {t("home.contentStartHiringSection4")}
                   </p>
                 </div>
               </div>
@@ -157,7 +157,8 @@ const { t } = useTranslation();
                 height={500}
               />
               <div className="bg-black/25 absolute top-0 left-0 w-full h-full rounded-lg">
-                <div className="w-[75px] h-[75px] rounded-full bg-black absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex justify-center items-center">
+                <div
+                  className="w-[75px] h-[75px] rounded-full bg-black absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex justify-center items-center">
                   <FontAwesomeIcon
                     icon={faPlay}
                     className="w-[38px] h-[38px] text-white pl-1"

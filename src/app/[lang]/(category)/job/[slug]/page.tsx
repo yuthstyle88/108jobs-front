@@ -1,18 +1,17 @@
 import CategoryDetail from "@/components/CategoryDetail";
-import { generateLocalizedMetadata } from "@/lib/metadata";
-import { getCurrentLanguage } from "@/actions/getCurrentLanguage";
-import { isSupportedLang } from "@/lib/metadata";
-import type { Metadata } from "next";
-import { API_ROUTES } from "@/api/endpoints";
+import {generateLocalizedMetadata, isSupportedLang} from "@/lib/metadata";
+import {getCurrentLanguage} from "@/actions/getCurrentLanguage";
+import type {Metadata} from "next";
+import {API_ROUTES} from "@/api/endpoints";
 import {axiosPrivate} from "@/lib/axios";
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{slug: string}>;
 }): Promise<Metadata> {
   const lang = await getCurrentLanguage();
-  const { slug } = await params;
+  const {slug} = await params;
   const locale = isSupportedLang(lang) ? lang : "th";
 
   const defaultDescriptions: Record<string, string> = {
@@ -22,7 +21,7 @@ export async function generateMetadata({
   };
 
   try {
-    const res = await  axiosPrivate.get(
+    const res = await axiosPrivate.get(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}${API_ROUTES.job.getCategoryBySlug}/${slug}`
     );
 
@@ -49,13 +48,13 @@ export async function generateMetadata({
 export default async function SpecificCategory({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{slug: string}>;
 }) {
-  const { slug } = await params;
+  const {slug} = await params;
 
   return (
     <main className="min-h-screen pt-10 sm:pt-0">
-      <CategoryDetail slug={slug} />
+      <CategoryDetail slug={slug}/>
     </main>
   );
 }

@@ -1,5 +1,5 @@
 import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
+import {initReactI18next} from 'react-i18next';
 
 // การโหลด resources (สมมุติว่าคุณมีไฟล์ JSON ในภาษาต่าง ๆ)
 const resources = {

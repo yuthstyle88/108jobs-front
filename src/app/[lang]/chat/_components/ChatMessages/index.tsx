@@ -1,8 +1,8 @@
 "use client";
 
-import { ChatMessage } from "@/types/chat";
+import {ChatMessage} from "@/types/chat";
 import ChatMessageItem from "../ChatMessageItem";
-import { StaticImageData } from "next/image";
+import {StaticImageData} from "next/image";
 
 interface ChatMessagesProps {
   messages: ChatMessage[];
@@ -12,7 +12,8 @@ interface ChatMessagesProps {
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
   const day = date.getDate();
-  const month = date.toLocaleString("th-TH", { month: "long" });
+  const month = date.toLocaleString("th-TH",
+    {month: "long"});
   const year = date.getFullYear();
   return `${day} ${month} ${year}`;
 };
@@ -38,7 +39,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 </div>
               </div>
             )}
-            <ChatMessageItem message={msg} partnerAvatar={partnerAvatar} />
+            <ChatMessageItem message={msg} partnerAvatar={partnerAvatar}/>
           </div>
         );
       })}

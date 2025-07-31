@@ -1,13 +1,13 @@
 "use client";
 import Modal from "@/components/ui/Modal";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
 import TermsAndCondition from "./components/TermsAndCondition";
 import LoadingCircle from "../LoadingCircle";
-import { getNamespace } from "@/utils/i18nHelper";
-import { LanguageFile } from "@/constants/language";
-import { useEffect } from "react";
+import {getNamespace} from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
+import {useEffect} from "react";
 
 interface ConfirmTermsFreelancerModalProps {
   isOpen: boolean;
@@ -24,19 +24,20 @@ const signUpSchema = z.object({
 
 const ConfirmTermsFreelancerModal: React.FC<
   ConfirmTermsFreelancerModalProps
-> = ({ isOpen, onClose, handleConfirmChange, isLoading }) => {
-  const termLanguage= getNamespace(LanguageFile.TERMS_AND_CONDITIONS);
+> = ({isOpen, onClose, handleConfirmChange, isLoading}) => {
+  const termLanguage = getNamespace(LanguageFile.TERMS_AND_CONDITIONS);
 
-  const { watch, register, reset } = useForm({
+  const {watch, register, reset} = useForm({
     resolver: zodResolver(signUpSchema),
     mode: "onChange",
   });
 
   useEffect(() => {
-  if (!isOpen) {
-    reset(); 
-  }
-}, [isOpen, reset]);
+      if (!isOpen) {
+        reset();
+      }
+    },
+    [isOpen, reset]);
 
 
   return (
@@ -52,7 +53,7 @@ const ConfirmTermsFreelancerModal: React.FC<
           {termLanguage?.termsTitle}
         </p>
         <div className="border-1 border-border-primary p-3 rounded-lg text-[12px] list-decimal max-h-[280px] overflow-auto">
-          <TermsAndCondition language={termLanguage} />
+          <TermsAndCondition/>
         </div>
         <div className="space-y-2 pt-2">
           <div className="flex items-center gap-3">
@@ -107,7 +108,7 @@ const ConfirmTermsFreelancerModal: React.FC<
           disabled={!watch("termsAccepted") || !watch("privacyAccepted")}
           className="px-3 py-2 cursor-pointer w-full bg-blue-600 text-white font-normal rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
         >
-          {isLoading ? <LoadingCircle /> : termLanguage?.freelancerSignup}
+          {isLoading ? <LoadingCircle/> : termLanguage?.freelancerSignup}
         </button>
       </div>
     </Modal>

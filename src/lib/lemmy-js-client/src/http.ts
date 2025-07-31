@@ -2,8 +2,12 @@ import {Body, Controller, Delete, Get, Inject, Post, Put, Queries, Route, Securi
 import type {
   AdminListUsersI,
   CommunityIdQueryI,
+  DeleteImageParamsI,
   GetCommentI,
   GetCommentsI,
+  GetCommunityI,
+  GetCommunityPendingFollowsCountI,
+  GetModlogI,
   GetPersonDetailsI,
   GetPostI,
   GetPostsI,
@@ -12,8 +16,10 @@ import type {
   GetReportCountI,
   GetSiteMetadataI,
   ListCommentLikesI,
+  ListCommunitiesI,
   ListCommunityPendingFollowsI,
   ListCustomEmojisI,
+  ListMediaI,
   ListNotificationsI,
   ListPersonContentI,
   ListPersonHiddenI,
@@ -23,18 +29,12 @@ import type {
   ListPostLikesI,
   ListRegistrationApplicationsI,
   ListReportsI,
-  ListTaglinesI
+  ListTaglinesI,
+  ResolveObjectI,
+  SearchI,
+  UploadImage
 } from "./other_types";
 import {VERSION} from "./other_types";
-import type { UploadImage } from "./other_types";
-import type { GetCommunityPendingFollowsCountI } from "./other_types";
-import type { ListCommunitiesI } from "./other_types";
-import type { GetCommunityI } from "./other_types";
-import type { ResolveObjectI } from "./other_types";
-import type { SearchI } from "./other_types";
-import type { GetModlogI } from "./other_types";
-import type { DeleteImageParamsI } from "./other_types";
-import type { ListMediaI } from "./other_types";
 import type {AddAdmin} from "./types/AddAdmin";
 import type {AddAdminResponse} from "./types/AddAdminResponse";
 import type {AddModToCommunity} from "./types/AddModToCommunity";
@@ -65,7 +65,7 @@ import type {CreateOAuthProvider} from "./types/CreateOAuthProvider";
 import type {CreatePost} from "./types/CreatePost";
 import type {CreatePostLike} from "./types/CreatePostLike";
 import type {CreatePostReport} from "./types/CreatePostReport";
-import type  {CreateSite} from "./types/CreateSite";
+import type {CreateSite} from "./types/CreateSite";
 import type {CustomEmojiResponse} from "./types/CustomEmojiResponse";
 import type {DeleteAccount} from "./types/DeleteAccount";
 import type {DeleteComment} from "./types/DeleteComment";
@@ -204,7 +204,6 @@ import type {SaveUserProfile} from "./types/SaveUserProfile";
 import type {UpdateAvailable} from "./types/UpdateAvailable";
 import type {UpsertCard} from "./types/UpsertCard";
 import type {SaveAddress} from "./types/SaveAddress";
-import type {Address} from "./types/Address";
 import {CountriesResponse} from "./types/CountriesResponse";
 
 enum HttpType {
@@ -222,7 +221,7 @@ type RequestOptions = Pick<RequestInit, "signal">;
 @Route("api/v4")
 export class LemmyHttp extends Controller {
   #apiUrl: string;
-  #headers: { [key: string]: string } = {};
+  #headers: {[key: string]: string} = {};
   #fetchFunction: typeof fetch = fetch.bind(globalThis);
 
   /**
@@ -234,11 +233,12 @@ export class LemmyHttp extends Controller {
     baseUrl: string,
     options?: {
       fetchFunction?: typeof fetch;
-      headers?: { [key: string]: string };
+      headers?: {[key: string]: string};
     },
   ) {
     super();
-    this.#apiUrl = `${baseUrl.replace(/\/+$/, "")}/api/${VERSION}`;
+    this.#apiUrl = `${baseUrl.replace(/\/+$/,
+      "")}/api/${VERSION}`;
 
     if (options?.headers) {
       this.#headers = options.headers;
@@ -359,6 +359,7 @@ export class LemmyHttp extends Controller {
       options,
     );
   }
+
   /**
    * @summary Get data of current user.
    */
@@ -442,7 +443,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Get("/account/media/list")
-  @Tags("Account", "Media")
+  @Tags("Account",
+    "Media")
   async listMedia(
     @Queries() form: ListMediaI = {},
     @Inject() options?: RequestOptions,
@@ -460,7 +462,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/account/media")
-  @Tags("Account", "Media")
+  @Tags("Account",
+    "Media")
   async deleteMedia(
     @Queries() form: DeleteImageParamsI,
     @Inject() options?: RequestOptions,
@@ -478,7 +481,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/image")
-  @Tags("Admin", "Media")
+  @Tags("Admin",
+    "Media")
   async deleteMediaAdmin(
     @Queries() form: DeleteImageParamsI,
     @Inject() options?: RequestOptions,
@@ -496,7 +500,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Get("/image/list")
-  @Tags("Admin", "Media")
+  @Tags("Admin",
+    "Media")
   async listMediaAdmin(
     @Queries() form: ListMediaI = {},
     @Inject() options?: RequestOptions,
@@ -691,7 +696,10 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       GetCommunityPendingFollowsCount,
       GetCommunityPendingFollowsCountResponse
-    >(HttpType.Get, "/community/pending-follows/count", form, options);
+    >(HttpType.Get,
+      "/community/pending-follows/count",
+      form,
+      options);
   }
 
   /**
@@ -707,7 +715,10 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       ListCommunityPendingFollows,
       ListCommunityPendingFollowsResponse
-    >(HttpType.Get, "/community/pending-follows/list", form, options);
+    >(HttpType.Get,
+      "/community/pending-follows/list",
+      form,
+      options);
   }
 
   /**
@@ -733,7 +744,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/account/block/community")
-  @Tags("Account", "Community")
+  @Tags("Account",
+    "Community")
   async blockCommunity(
     @Body() form: BlockCommunity,
     @Inject() options?: RequestOptions,
@@ -769,7 +781,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Put("/community/hide")
-  @Tags("Community", "Admin")
+  @Tags("Community",
+    "Admin")
   async hideCommunity(
     @Body() form: HideCommunity,
     @Inject() options?: RequestOptions,
@@ -787,7 +800,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/community/remove")
-  @Tags("Community", "Moderator")
+  @Tags("Community",
+    "Moderator")
   async removeCommunity(
     @Body() form: RemoveCommunity,
     @Inject() options?: RequestOptions,
@@ -805,7 +819,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/community/transfer")
-  @Tags("Community", "Moderator")
+  @Tags("Community",
+    "Moderator")
   async transferCommunity(
     @Body() form: TransferCommunity,
     @Inject() options?: RequestOptions,
@@ -823,7 +838,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/community/ban-user")
-  @Tags("Community", "Moderator")
+  @Tags("Community",
+    "Moderator")
   async banFromCommunity(
     @Body() form: BanFromCommunity,
     @Inject() options?: RequestOptions,
@@ -841,7 +857,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/community/mod")
-  @Tags("Community", "Moderator")
+  @Tags("Community",
+    "Moderator")
   async addModToCommunity(
     @Body() form: AddModToCommunity,
     @Inject() options?: RequestOptions,
@@ -896,7 +913,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Put("/community/report/resolve")
-  @Tags("Community", "Admin")
+  @Tags("Community",
+    "Admin")
   async resolveCommunityReport(
     @Body() form: ResolveCommunityReport,
     @Inject() options?: RequestOptions,
@@ -984,7 +1002,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/post/remove")
-  @Tags("Post", "Moderator")
+  @Tags("Post",
+    "Moderator")
   async removePost(
     @Body() form: RemovePost,
     @Inject() options?: RequestOptions,
@@ -1068,7 +1087,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/post/feature")
-  @Tags("Post", "Moderator")
+  @Tags("Post",
+    "Moderator")
   async featurePost(
     @Body() form: FeaturePost,
     @Inject() options?: RequestOptions,
@@ -1123,7 +1143,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Get("/post/like/list")
-  @Tags("Post", "Admin")
+  @Tags("Post",
+    "Admin")
   async listPostLikes(
     @Queries() form: ListPostLikesI,
     @Inject() options?: RequestOptions,
@@ -1174,7 +1195,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Put("/post/report/resolve")
-  @Tags("Post", "Moderator")
+  @Tags("Post",
+    "Moderator")
   async resolvePostReport(
     @Body() form: ResolvePostReport,
     @Inject() options?: RequestOptions,
@@ -1192,7 +1214,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Get("/post/site-metadata")
-  @Tags("Miscellaneous", "Post")
+  @Tags("Miscellaneous",
+    "Post")
   async getSiteMetadata(
     @Queries() form: GetSiteMetadataI,
     @Inject() options?: RequestOptions,
@@ -1264,7 +1287,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/comment/remove")
-  @Tags("Comment", "Moderator")
+  @Tags("Comment",
+    "Moderator")
   async removeComment(
     @Body() form: RemoveComment,
     @Inject() options?: RequestOptions,
@@ -1300,7 +1324,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Get("/comment/like/list")
-  @Tags("Comment", "Admin")
+  @Tags("Comment",
+    "Admin")
   async listCommentLikes(
     @Queries() form: ListCommentLikesI,
     @Inject() options?: RequestOptions,
@@ -1336,7 +1361,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/comment/distinguish")
-  @Tags("Comment", "Moderator")
+  @Tags("Comment",
+    "Moderator")
   async distinguishComment(
     @Body() form: DistinguishComment,
     @Inject() options?: RequestOptions,
@@ -1429,7 +1455,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Put("/comment/report/resolve")
-  @Tags("Comment", "Moderator")
+  @Tags("Comment",
+    "Moderator")
   async resolveCommentReport(
     @Body() form: ResolveCommentReport,
     @Inject() options?: RequestOptions,
@@ -1573,7 +1600,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Get("/admin/users")
-  @Tags("Admin", "Miscellaneous")
+  @Tags("Admin",
+    "Miscellaneous")
   async listUsers(
     @Queries() form: AdminListUsersI = {},
     @Inject() options?: RequestOptions,
@@ -1722,6 +1750,7 @@ export class LemmyHttp extends Controller {
       options,
     );
   }
+
   /**
    * @summary Save your user settings.
    */
@@ -1739,6 +1768,7 @@ export class LemmyHttp extends Controller {
       options,
     );
   }
+
   /**
    * @summary Save your user settings.
    */
@@ -2016,7 +2046,10 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       ListRegistrationApplications,
       ListRegistrationApplicationsResponse
-    >(HttpType.Get, "/admin/registration-application/list", form, options);
+    >(HttpType.Get,
+      "/admin/registration-application/list",
+      form,
+      options);
   }
 
   /**
@@ -2032,7 +2065,10 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       ApproveRegistrationApplication,
       RegistrationApplicationResponse
-    >(HttpType.Put, "/admin/registration-application/approve", form, options);
+    >(HttpType.Put,
+      "/admin/registration-application/approve",
+      form,
+      options);
   }
 
   /**
@@ -2048,7 +2084,10 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       GetRegistrationApplication,
       RegistrationApplicationResponse
-    >(HttpType.Get, "/admin/registration-application", form, options);
+    >(HttpType.Get,
+      "/admin/registration-application",
+      form,
+      options);
   }
 
   /**
@@ -2198,7 +2237,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/admin/tagline")
-  @Tags("Admin", "Tagline")
+  @Tags("Admin",
+    "Tagline")
   async createTagline(
     @Body() form: CreateTagline,
     @Inject() options?: RequestOptions,
@@ -2216,7 +2256,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Put("/admin/tagline")
-  @Tags("Admin", "Tagline")
+  @Tags("Admin",
+    "Tagline")
   async editTagline(
     @Body() form: UpdateTagline,
     @Inject() options?: RequestOptions,
@@ -2234,7 +2275,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/admin/tagline/delete")
-  @Tags("Admin", "Tagline")
+  @Tags("Admin",
+    "Tagline")
   async deleteTagline(
     @Body() form: DeleteTagline,
     @Inject() options?: RequestOptions,
@@ -2253,7 +2295,8 @@ export class LemmyHttp extends Controller {
   @Security("bearerAuth")
   @Security({})
   @Get("/admin/tagline/list")
-  @Tags("Admin", "Tagline")
+  @Tags("Admin",
+    "Tagline")
   async listTaglines(
     @Queries() form: ListTaglinesI,
     @Inject() options?: RequestOptions,
@@ -2325,7 +2368,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/oauth-provider")
-  @Tags("Miscellaneous", "OAuth")
+  @Tags("Miscellaneous",
+    "OAuth")
   async createOAuthProvider(
     @Body() form: CreateOAuthProvider,
     @Inject() options?: RequestOptions,
@@ -2343,7 +2387,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Put("/oauth-provider")
-  @Tags("Miscellaneous", "OAuth")
+  @Tags("Miscellaneous",
+    "OAuth")
   async editOAuthProvider(
     @Body() form: EditOAuthProvider,
     @Inject() options?: RequestOptions,
@@ -2361,7 +2406,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/oauth-provider/delete")
-  @Tags("Miscellaneous", "OAuth")
+  @Tags("Miscellaneous",
+    "OAuth")
   async deleteOAuthProvider(
     @Body() form: DeleteOAuthProvider,
     @Inject() options?: RequestOptions,
@@ -2379,7 +2425,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/oauth/authenticate")
-  @Tags("Miscellaneous", "OAuth")
+  @Tags("Miscellaneous",
+    "OAuth")
   async authenticateWithOAuth(
     @Body() form: AuthenticateWithOauth,
     @Inject() options?: RequestOptions,
@@ -2483,12 +2530,15 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/account/avatar")
-  @Tags("Account", "Media")
+  @Tags("Account",
+    "Media")
   async uploadUserAvatar(
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#upload("/account/avatar", image, options);
+    return this.#upload("/account/avatar",
+      image,
+      options);
   }
 
   /**
@@ -2496,7 +2546,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/account/avatar")
-  @Tags("Account", "Media")
+  @Tags("Account",
+    "Media")
   async deleteUserAvatar(
     @Inject() options?: RequestOptions,
   ): Promise<SuccessResponse> {
@@ -2513,12 +2564,15 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/account/banner")
-  @Tags("Account", "Media")
+  @Tags("Account",
+    "Media")
   async uploadUserBanner(
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#upload("/account/banner", image, options);
+    return this.#upload("/account/banner",
+      image,
+      options);
   }
 
   /**
@@ -2526,7 +2580,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/account/banner")
-  @Tags("Account", "Media")
+  @Tags("Account",
+    "Media")
   async deleteUserBanner(@Inject() options?: RequestOptions) {
     return this.#wrapper<object, SuccessResponse>(
       HttpType.Delete,
@@ -2541,13 +2596,17 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/community/icon")
-  @Tags("Community", "Media")
+  @Tags("Community",
+    "Media")
   async uploadCommunityIcon(
     @Queries() query: CommunityIdQueryI,
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#uploadWithQuery("/community/icon", query, image, options);
+    return this.#uploadWithQuery("/community/icon",
+      query,
+      image,
+      options);
   }
 
   /**
@@ -2555,7 +2614,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/community/icon")
-  @Tags("Community", "Media")
+  @Tags("Community",
+    "Media")
   async deleteCommunityIcon(
     @Body() form: CommunityIdQuery,
     @Inject() options?: RequestOptions,
@@ -2573,13 +2633,17 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/community/banner")
-  @Tags("Community", "Media")
+  @Tags("Community",
+    "Media")
   async uploadCommunityBanner(
     @Queries() query: CommunityIdQueryI,
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#uploadWithQuery("/community/banner", query, image, options);
+    return this.#uploadWithQuery("/community/banner",
+      query,
+      image,
+      options);
   }
 
   /**
@@ -2587,7 +2651,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/community/banner")
-  @Tags("Community", "Media")
+  @Tags("Community",
+    "Media")
   async deleteCommunityBanner(
     @Body() form: CommunityIdQuery,
     @Inject() options?: RequestOptions,
@@ -2605,12 +2670,15 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/site/icon")
-  @Tags("Site", "Media")
+  @Tags("Site",
+    "Media")
   async uploadSiteIcon(
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#upload("/site/icon", image, options);
+    return this.#upload("/site/icon",
+      image,
+      options);
   }
 
   /**
@@ -2618,7 +2686,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/site/icon")
-  @Tags("Site", "Media")
+  @Tags("Site",
+    "Media")
   async deleteSiteIcon(
     @Inject() options?: RequestOptions,
   ): Promise<SuccessResponse> {
@@ -2635,12 +2704,15 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/site/banner")
-  @Tags("Site", "Media")
+  @Tags("Site",
+    "Media")
   async uploadSiteBanner(
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#upload("/site/banner", image, options);
+    return this.#upload("/site/banner",
+      image,
+      options);
   }
 
   /**
@@ -2648,7 +2720,8 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/site/banner")
-  @Tags("Site", "Media")
+  @Tags("Site",
+    "Media")
   async deleteSiteBanner(
     @Inject() options?: RequestOptions,
   ): Promise<SuccessResponse> {
@@ -2670,7 +2743,9 @@ export class LemmyHttp extends Controller {
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#upload("/image", image, options);
+    return this.#upload("/image",
+      image,
+      options);
   }
 
   /**
@@ -2702,35 +2777,43 @@ export class LemmyHttp extends Controller {
     );
   }
 
+  /**
+   * Set the headers (can be used to set the auth header)
+   */
+  setHeaders(headers: {[key: string]: string}) {
+    this.#headers = headers;
+  }
+
   #buildFullUrl(endpoint: string) {
     return `${this.#apiUrl}${endpoint}`;
   }
 
   async #upload<ResponseType>(
     path: string,
-    { image }: UploadImage,
+    {image}: UploadImage,
     options?: RequestOptions,
   ): Promise<ResponseType> {
     const formData = createFormData(image);
 
-    const response = await this.#fetchFunction(this.#buildFullUrl(path), {
-      ...options,
-      method: HttpType.Post,
-      body: formData as unknown as BodyInit,
-      headers: this.#headers,
-    });
+    const response = await this.#fetchFunction(this.#buildFullUrl(path),
+      {
+        ...options,
+        method: HttpType.Post,
+        body: formData as unknown as BodyInit,
+        headers: this.#headers,
+      });
     return response.json();
   }
 
   async #uploadWithQuery<QueryType extends object, ResponseType>(
     path: string,
     query: QueryType,
-    { image }: UploadImage,
+    {image}: UploadImage,
     options?: RequestOptions,
   ): Promise<ResponseType> {
     return this.#upload<ResponseType>(
       `${path}?${encodeGetParams(query)}`,
-      { image },
+      {image},
       options,
     );
   }
@@ -2744,21 +2827,23 @@ export class LemmyHttp extends Controller {
     let response: Response;
     if (type_ === HttpType.Get) {
       const getUrl = `${this.#buildFullUrl(endpoint)}?${encodeGetParams(form)}`;
-      response = await this.#fetchFunction(getUrl, {
-        ...options,
-        method: HttpType.Get,
-        headers: this.#headers,
-      });
+      response = await this.#fetchFunction(getUrl,
+        {
+          ...options,
+          method: HttpType.Get,
+          headers: this.#headers,
+        });
     } else {
-      response = await this.#fetchFunction(this.#buildFullUrl(endpoint), {
-        ...options,
-        method: type_,
-        headers: {
-          "Content-Type": "application/json",
-          ...this.#headers,
-        },
-        body: JSON.stringify(form),
-      });
+      response = await this.#fetchFunction(this.#buildFullUrl(endpoint),
+        {
+          ...options,
+          method: type_,
+          headers: {
+            "Content-Type": "application/json",
+            ...this.#headers,
+          },
+          body: JSON.stringify(form),
+        });
     }
 
     let json: any | undefined = undefined;
@@ -2776,32 +2861,27 @@ export class LemmyHttp extends Controller {
       return json;
     }
   }
-
-  /**
-   * Set the headers (can be used to set the auth header)
-   */
-  setHeaders(headers: { [key: string]: string }) {
-    this.#headers = headers;
-  }
 }
 
 function encodeGetParams<BodyType extends object>(p: BodyType): string {
   return Object.entries(p)
-    .filter(kv => kv[1] !== undefined && kv[1] !== null)
-    .map(kv => kv.map(encodeURIComponent).join("="))
-    .join("&");
+  .filter(kv => kv[1] !== undefined && kv[1] !== null)
+  .map(kv => kv.map(encodeURIComponent).join("="))
+  .join("&");
 }
 
 function createFormData(image: File | Buffer): FormData {
   const formData = new FormData();
 
   if (image instanceof File) {
-    formData.append("images[]", image);
+    formData.append("images[]",
+      image);
   } else {
     // The filename doesn't affect the file type or file name that ends up in pictrs
     formData.append(
       "images[]",
-      new Blob([image], { type: "image/jpeg" }),
+      new Blob([image],
+        {type: "image/jpeg"}),
       "image.jpg",
     );
   }
@@ -2821,6 +2901,7 @@ export class LemmyError extends Error {
     this.name = name;
 
     // Set the prototype explicitly.
-    Object.setPrototypeOf(this, LemmyError.prototype);
+    Object.setPrototypeOf(this,
+      LemmyError.prototype);
   }
 }

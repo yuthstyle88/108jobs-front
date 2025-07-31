@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Star } from 'lucide-react';
+import React, {useState} from 'react';
+import {Star} from 'lucide-react';
 
 interface StarRatingProps {
   rating: number;
@@ -8,11 +8,11 @@ interface StarRatingProps {
   size?: number;
 }
 
-const StarRating: React.FC<StarRatingProps> = ({ 
-  rating, 
-  onRatingChange, 
-  readonly = false, 
-  size = 20 
+const StarRating: React.FC<StarRatingProps> = ({
+  rating,
+  onRatingChange,
+  readonly = false,
+  size = 20
 }) => {
   const [hoverRating, setHoverRating] = useState(0);
 

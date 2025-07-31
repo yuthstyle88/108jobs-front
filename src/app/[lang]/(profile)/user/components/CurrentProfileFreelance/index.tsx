@@ -1,23 +1,23 @@
 "use client";
 import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
-import { AssetIcon } from "@/constants/icons";
-import { ProfileImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { getNamespace } from "@/utils/i18nHelper";
-import { formatDateToLong } from "@/utils/formatDateToLong";
-import { interpolateDouble } from "@/utils/interpolate";
-import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ClipboardX, SquarePen } from "lucide-react";
+import {AssetIcon} from "@/constants/icons";
+import {ProfileImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {getNamespace} from "@/utils/i18nHelper";
+import {formatDateToLong} from "@/utils/formatDateToLong";
+import {interpolateDouble} from "@/utils/interpolate";
+import {faEdit, faStar} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {ClipboardX, SquarePen} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import {WorkExperience, Skill, LanguageSkill, Education, Certificate, Person} from "lemmy-js-client";
+import {useEffect, useRef, useState} from "react";
+import {Certificate, Education, LanguageSkill, Person, Skill, WorkExperience} from "lemmy-js-client";
 import {getProfileData} from "@/utils/getProfileData";
 
 const CurrentProfileFreelance = () => {
-  const { profileState, person} = useMyUser();
+  const {profileState, person} = useMyUser();
 
   const goToProfileLanguage = getNamespace(
     LanguageFile.GO_TO_PROFILE
@@ -28,19 +28,22 @@ const CurrentProfileFreelance = () => {
   const bioRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    if (bioRef.current) {
-      const el = bioRef.current;
-      setIsClamped(el.scrollHeight > el.clientHeight);
-    }
-  }, [person?.bio]);
+      if (bioRef.current) {
+        const el = bioRef.current;
+        setIsClamped(el.scrollHeight > el.clientHeight);
+      }
+    },
+    [person?.bio]);
 
-  const  { educations,
+  const {
+    educations,
     workExperience,
     skill,
     language,
     certAndAward,
     services,
-    reviews} = getProfileData(person as Person);
+    reviews
+  } = getProfileData(person as Person);
 
   return (
     <main className="min-h-screen bg-[#FBFBFC]">
@@ -83,7 +86,7 @@ const CurrentProfileFreelance = () => {
               {person?.deleted === false && (
                 <div className="flex items-center justify-center w-full">
                   <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-red-500 text-white w-fit">
-                    <ClipboardX className="w-4 h-4 mr-1" />
+                    <ClipboardX className="w-4 h-4 mr-1"/>
                     <span className="text-sm font-medium">Not receive job</span>
                   </div>
                 </div>
@@ -144,8 +147,8 @@ const CurrentProfileFreelance = () => {
               )}
 
               <Link prefetch={false}
-                href="/seller-account-setting/freelance-profile"
-                className="absolute top-4 right-4"
+                    href="/seller-account-setting/freelance-profile"
+                    className="absolute top-4 right-4"
               >
                 <FontAwesomeIcon
                   icon={faEdit}
@@ -163,10 +166,10 @@ const CurrentProfileFreelance = () => {
                         {goToProfileLanguage?.educationTitle}
                       </h2>
                       <Link prefetch={false}
-                        href="/user/edit/education"
-                        className="text-gray-500"
+                            href="/user/edit/education"
+                            className="text-gray-500"
                       >
-                        <SquarePen className="w-[16px] text-gray-500" />
+                        <SquarePen className="w-[16px] text-gray-500"/>
                       </Link>
                     </div>
                     {educations.length > 0 ? (
@@ -193,7 +196,7 @@ const CurrentProfileFreelance = () => {
                       </div>
                     )}
                   </div>
-                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content"/>
                   {/* Work Experience Section */}
                   <div className="bg-white rounded-lg py-6">
                     <div className="flex justify-between items-center mb-4">
@@ -201,10 +204,10 @@ const CurrentProfileFreelance = () => {
                         {goToProfileLanguage?.experienceTitle}
                       </h2>
                       <Link prefetch={false}
-                        href="/user/edit/experience"
-                        className="text-gray-500"
+                            href="/user/edit/experience"
+                            className="text-gray-500"
                       >
-                        <SquarePen className="w-[16px] text-gray-500" />
+                        <SquarePen className="w-[16px] text-gray-500"/>
                       </Link>
                     </div>
                     {workExperience.length > 0 ? (
@@ -239,7 +242,7 @@ const CurrentProfileFreelance = () => {
                       </div>
                     )}
                   </div>
-                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content"/>
 
                   {/* Skills Section */}
                   <div className="bg-white rounded-lg py-6">
@@ -248,7 +251,7 @@ const CurrentProfileFreelance = () => {
                         {goToProfileLanguage?.skillTitle}
                       </h2>
                       <Link prefetch={false} href="/user/edit/skills" className="text-gray-500">
-                        <SquarePen className="w-[16px] text-gray-500" />
+                        <SquarePen className="w-[16px] text-gray-500"/>
                       </Link>
                     </div>
                     {skill.length > 0 ? (
@@ -262,7 +265,8 @@ const CurrentProfileFreelance = () => {
                               <p className="text-text-primary break-words line-clamp-2 font-sans leading-[16.1px] p-0 font-medium">
                                 {skill?.skillName}
                               </p>
-                              <p className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
+                              <p
+                                className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
                                 {skill?.levelName}
                               </p>
                             </div>
@@ -275,7 +279,7 @@ const CurrentProfileFreelance = () => {
                       </div>
                     )}
                   </div>
-                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content"/>
 
                   {/* Languages Section */}
                   <div className="bg-white rounded-lg py-6">
@@ -284,10 +288,10 @@ const CurrentProfileFreelance = () => {
                         {goToProfileLanguage?.languageTitle}
                       </h2>
                       <Link prefetch={false}
-                        href="/user/edit/languages"
-                        className="text-gray-500"
+                            href="/user/edit/languages"
+                            className="text-gray-500"
                       >
-                        <SquarePen className="w-[16px] text-gray-500" />
+                        <SquarePen className="w-[16px] text-gray-500"/>
                       </Link>
                     </div>
                     {language.length > 0 ? (
@@ -302,7 +306,8 @@ const CurrentProfileFreelance = () => {
                                 <p className="text-text-primary break-words line-clamp-2 font-sans leading-[16.1px] p-0 font-medium">
                                   {language?.lang}
                                 </p>
-                                <p className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
+                                <p
+                                  className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
                                   {language?.levelName}
                                 </p>
                               </div>
@@ -316,7 +321,7 @@ const CurrentProfileFreelance = () => {
                       </div>
                     )}
                   </div>
-                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content" />
+                  <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content"/>
 
                   {/* Certifications Section */}
                   <div className="bg-white rounded-lg py-6">
@@ -325,10 +330,10 @@ const CurrentProfileFreelance = () => {
                         {goToProfileLanguage?.certificationTitle}
                       </h2>
                       <Link prefetch={false}
-                        href="/user/edit/certifications"
-                        className="text-gray-500"
+                            href="/user/edit/certifications"
+                            className="text-gray-500"
                       >
-                        <SquarePen className="w-[16px] text-gray-500" />
+                        <SquarePen className="w-[16px] text-gray-500"/>
                       </Link>
                     </div>
                     {certAndAward.length > 0 ? (
@@ -360,9 +365,10 @@ const CurrentProfileFreelance = () => {
           </aside>
           <section className="w-full px-4">
             <h2 className="pt-[3rem] text-[28px] font-medium text-text-primary w-full">
-              {interpolateDouble(goToProfileLanguage?.workTitle || "", {
-                username: person?.displayName,
-              })}
+              {interpolateDouble(goToProfileLanguage?.workTitle || "",
+                {
+                  username: person?.displayName,
+                })}
             </h2>
             <section className="mt-4 grid grid-cols-1 md:grid-cols-[repeat(3,minmax(1px,1fr))] gap-5">
               {services.map((service, index) => (
@@ -430,7 +436,8 @@ const CurrentProfileFreelance = () => {
                               viewBox="0 0 20 20"
                               fill="currentColor"
                             >
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.799-2.034c-.784-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.799-2.034c-.784-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                             </svg>
                             <span className="ml-1 font-medium text-text-primary">
                               {review.rating}

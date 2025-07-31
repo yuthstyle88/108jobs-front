@@ -8,14 +8,16 @@ export function formatMessageTime(dateString: string, locale: string): string {
     date.getFullYear() === now.getFullYear();
 
   if (isSameDay) {
-    return new Intl.DateTimeFormat(locale, {
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
+    return new Intl.DateTimeFormat(locale,
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(date);
   }
 
-  return new Intl.DateTimeFormat(locale, {
-    day: "2-digit",
-    month: "short",
-  }).format(date);
+  return new Intl.DateTimeFormat(locale,
+    {
+      day: "2-digit",
+      month: "short",
+    }).format(date);
 }

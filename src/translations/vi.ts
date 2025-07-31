@@ -1,5 +1,12 @@
 export const vi = {
   translation: {
+    validation: {
+      communityIdPositive: "ID cộng đồng phải là số dương",
+      jobTitleMinLength: "Tiêu đề công việc phải có ít nhất 5 ký tự",
+      descriptionMinLength: "Mô tả công việc phải có ít nhất 20 ký tự",
+      budgetPositive: "Ngân sách phải là số dương",
+      budgetRequired: "Cần phải có ngân sách"
+    },
     allCategories: {
       allJobCategories: "Tất cả danh mục công việc",
       selectServiceType: "Chọn loại dịch vụ phù hợp với nhu cầu của bạn",
@@ -1188,8 +1195,15 @@ export const vi = {
       reviewDeleteCommentSuccess: "Đã xóa bình luận thành công",
       serviceShowJobSuccess: "Đã công khai công việc của bạn thành công",
       serviceHideJobSuccess: "Đã ẩn công việc của bạn thành công",
+      verifyEmailSuccess: "Xác minh email thành công",
+      changePasswordSuccess: "Thay đổi mật khẩu thành công",
+      editSuccess: "Chỉnh sửa thành công!",
+      copySuccess: "Sao chép thành công",
       invalidCode: "Mã không hợp lệ",
-      invalidTotpCode: "Mã TOTP không hợp lệ"
+      invalidTotpCode: "Mã TOTP không hợp lệ",
+      verifyEmailLinkSent: "Liên kết xác minh email đã được gửi đến email của bạn",
+      checkInboxForEmail: "Vui lòng kiểm tra hộp thư đến của bạn (Nếu bạn không thấy, hãy kiểm tra thư mục Spam và Junk) để tiếp tục.",
+      passwordResetLinkSent: "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn"
     },
     notifications: {
       changePassword: "Đổi mật khẩu thành công",

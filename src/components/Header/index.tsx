@@ -1,23 +1,22 @@
 "use client";
-import { AssetIcon } from "@/constants/icons";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {AssetIcon} from "@/constants/icons";
+import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import LanguageDropdown from "../LanguageDropDown";
-import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
+import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 import EmployerSection from "./components/EmployerSection";
 import FreelancerSession from "./components/FreelancerSection";
 import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
-import { useScrollHandler } from "./hooks/useScrollHandler";
-import { I18NextService, } from "@/services/I18NextService";
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { getNamespace } from "@/utils/i18nHelper";
-import { LanguageFile } from "@/constants/language";
-const TYPES: Record<string, { bg: string }> = {
+import {useScrollHandler} from "./hooks/useScrollHandler";
+import {I18NextService,} from "@/services/I18NextService";
+import {useEffect} from "react";
+import {useTranslation} from "react-i18next";
+import {useLanguage} from "@/contexts/LanguageContext";
+
+const TYPES: Record<string, {bg: string}> = {
   transparent: {
     bg: "#transparent",
   },
@@ -31,24 +30,25 @@ interface BgProps {
   forceShowSearch?: boolean;
 }
 
-const Header = ({ type, forceShowSearch = false }: BgProps) => {
-  const { isLoggedIn, isEmployer, isFreelancer } = useAuthInfo();
-  const { lang } = useLanguage(); // <--- เอาจาก context
+const Header = ({type, forceShowSearch = false}: BgProps) => {
+  const {isLoggedIn, isEmployer, isFreelancer} = useAuthInfo();
+  const {lang} = useLanguage(); // <--- เอาจาก context
   // change language
   useEffect(() => {
-    (async () => {
-      await I18NextService.i18n.changeLanguage(lang);
-    })();
-  }, [lang]);
+      (async() => {
+        await I18NextService.i18n.changeLanguage(lang);
+      })();
+    },
+    [lang]);
 
-  const { t } = useTranslation();
-  const { scrollY, showSearch } = useScrollHandler(forceShowSearch);
-  const { bg } = TYPES[type];
+  const {t} = useTranslation();
+  const {scrollY, showSearch} = useScrollHandler(forceShowSearch);
+  const {bg} = TYPES[type];
 
   return (
     <header
       className={`fixed top-0 z-[999] w-full transition-all duration-300 ${scrollY > 0 ? "bg-primary" : bg
-        }`}
+      }`}
     >
       <nav className="mx-[1.5rem] flex flex-wrap items-center justify-center h-auto min-h-[70px] py-4 xl:py-1 xl:justify-between">
         <section className="flex items-center gap-x-4 w-full md:w-auto">
@@ -63,7 +63,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
             />
           </Link>
 
-          <Search showSearch={showSearch} />
+          <Search showSearch={showSearch}/>
         </section>
 
         <section className="flex items-center gap-4 w-full md:w-auto mt-4 md:mt-0 justify-end">
@@ -74,38 +74,39 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
                   <p className="">
                     {t("global.labelEmploymentButton")}
                   </p>
-                  <FontAwesomeIcon icon={faChevronDown} />
+                  <FontAwesomeIcon icon={faChevronDown}/>
                 </div>
                 <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
               </div>
-              <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
-                <MegaMenu />
+              <div
+                className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
+                <MegaMenu/>
               </div>
             </div>
           )}
           {!isLoggedIn && (
             <Link prefetch={false}
-              href="/apply-freelancer"
-              className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
+                  href="/apply-freelancer"
+                  className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
             >
               {t("global.labelApplyToBeFreelancerButton")}
             </Link>
           )}
           {isFreelancer && (
-            <FreelancerSession />
+            <FreelancerSession/>
           )}
           {isEmployer && (
-            <EmployerSection />
+            <EmployerSection/>
           )}
           {!isLoggedIn && (
             <Link prefetch={false}
-              href="/login"
-              className="text-white text-sm hover:bg-blue-800 hover:text-white"
+                  href="/login"
+                  className="text-white text-sm hover:bg-blue-800 hover:text-white"
             >
               {t("global.labelSignInButton")}
             </Link>
           )}
-          {!isLoggedIn && <LanguageDropdown />}
+          {!isLoggedIn && <LanguageDropdown/>}
         </section>
       </nav>
     </header>

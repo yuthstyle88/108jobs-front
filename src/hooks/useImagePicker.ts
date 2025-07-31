@@ -1,5 +1,5 @@
 // hooks/useImagePicker.ts
-import { useState, useRef } from "react";
+import {useRef, useState} from "react";
 
 export const useImagePicker = (initialImage?: string | null) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(
@@ -15,7 +15,8 @@ export const useImagePicker = (initialImage?: string | null) => {
       reader.onload = (event) => {
         const imageData = event.target?.result as string;
         if (imageData) {
-          localStorage.setItem("tempImageData", imageData);
+          localStorage.setItem("tempImageData",
+            imageData);
           setIsImageModalOpen(true);
         }
       };

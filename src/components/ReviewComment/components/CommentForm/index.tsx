@@ -1,9 +1,9 @@
 import LoadingCircle from "@/components/LoadingCircle";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Textarea } from "@/components/ui/Textarea";
+import {Button} from "@/components/ui/Button";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/Card";
+import {Textarea} from "@/components/ui/Textarea";
 import React from "react";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
 import StarRating from "../StarRatings";
 
 interface CommentFormData {
@@ -33,7 +33,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
     setValue,
     reset,
     setError,
-    formState: { errors, isSubmitting },
+    formState: {errors, isSubmitting},
   } = useForm<CommentFormData>({
     defaultValues: {
       rating: initialData?.rating || 0,
@@ -43,7 +43,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
 
   const currentRating = watch("rating");
 
-  const handleFormSubmit = async (data: CommentFormData) => {
+  const handleFormSubmit = async(data: CommentFormData) => {
     try {
       await onSubmit(data);
       if (!isEditing) reset();
@@ -51,12 +51,14 @@ const CommentForm: React.FC<CommentFormProps> = ({
     } catch (err: any) {
       const message =
         err?.response?.data?.message || err?.message || "An error occurred.";
-      setError("content", { type: "manual", message });
+      setError("content",
+        {type: "manual", message});
     }
   };
 
   const handleRatingChange = (rating: number) => {
-    setValue("rating", rating);
+    setValue("rating",
+      rating);
   };
 
   return (
@@ -79,10 +81,11 @@ const CommentForm: React.FC<CommentFormProps> = ({
             />
             <input
               type="hidden"
-              {...register("rating", {
-                required: "Please select star rating",
-                min: { value: 0.5, message: "Minimum rating is 1 star " },
-              })}
+              {...register("rating",
+                {
+                  required: "Please select star rating",
+                  min: {value: 0.5, message: "Minimum rating is 1 star "},
+                })}
             />
             {errors.rating && (
               <p className="text-sm text-red-600 mt-1">
@@ -94,13 +97,14 @@ const CommentForm: React.FC<CommentFormProps> = ({
           <div>
             <label className="block text-sm font-medium mb-2">Comment</label>
             <Textarea
-              {...register("content", {
-                required: "Please enter a comment",
-                minLength: {
-                  value: 10,
-                  message: "Comments must be at least 10 characters long",
-                },
-              })}
+              {...register("content",
+                {
+                  required: "Please enter a comment",
+                  minLength: {
+                    value: 10,
+                    message: "Comments must be at least 10 characters long",
+                  },
+                })}
               placeholder="Share your experience with this freelancer..."
               rows={4}
               className="resize-none"
@@ -129,7 +133,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
               className="flex-1"
             >
               {isSubmitting || isPostMutating ? (
-                <LoadingCircle />
+                <LoadingCircle/>
               ) : isEditing ? (
                 "Update"
               ) : (

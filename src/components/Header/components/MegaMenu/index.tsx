@@ -1,16 +1,12 @@
 "use client";
-import { MegaMenuImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import {
-  faBuilding,
-  faChevronRight,
-  faStarAndCrescent,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image, { StaticImageData } from "next/image";
+import {MegaMenuImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {faBuilding, faChevronRight, faStarAndCrescent,} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import Image, {StaticImageData} from "next/image";
 import Link from "next/link";
-import { JSX, useState } from "react";
+import {JSX, useState} from "react";
 import Business from "./Business";
 import Chat from "./Chat";
 import Find from "./Find";
@@ -29,26 +25,26 @@ const MegaMenu = () => {
 
   const DESCRIPTION: Record<
     string,
-    { component: JSX.Element; image: StaticImageData }
+    {component: JSX.Element; image: StaticImageData}
   > = {
     find: {
-      component: <Find />,
+      component: <Find/>,
       image: MegaMenuImage.jobBg,
     },
     post: {
-      component: <Post />,
+      component: <Post/>,
       image: MegaMenuImage.buyerJob,
     },
     chat: {
-      component: <Chat />,
+      component: <Chat/>,
       image: MegaMenuImage.chatToHire,
     },
     hire: {
-      component: <Hiring />,
+      component: <Hiring/>,
       image: MegaMenuImage.companyTh,
     },
     business: {
-      component: <Business />,
+      component: <Business/>,
       image: MegaMenuImage.b2b,
     },
   };
@@ -117,10 +113,10 @@ const MegaMenu = () => {
                 }`}
               >
                 <Link prefetch={false}
-                  href="#"
-                  className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4"
+                      href="#"
+                      className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4"
                 >
-                  <Image src={freelancer.icon} alt="search" className="w-9" />
+                  <Image src={freelancer.icon} alt="search" className="w-9"/>
                   <div className="gap-x-1 flex flex-col flex-1 ">
                     <span
                       className={`text-[0.875rem] font-medium text-text-primary ${
@@ -163,10 +159,10 @@ const MegaMenu = () => {
                 }`}
               >
                 <Link prefetch={false}
-                  href="#"
-                  className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4"
+                      href="#"
+                      className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4"
                 >
-                  <Image src={freelancer.icon} alt="search" className="w-9" />
+                  <Image src={freelancer.icon} alt="search" className="w-9"/>
                   <div className="gap-x-1 flex flex-col flex-1">
                     <span
                       className={`text-[0.875rem] font-medium text-text-primary ${
@@ -191,7 +187,7 @@ const MegaMenu = () => {
           </div>
         </div>
         <div>
-          <hr className="w-[0.0625rem] mx-8 h-full inline-block bg-[#e8eeea] m-0" />
+          <hr className="w-[0.0625rem] mx-8 h-full inline-block bg-[#e8eeea] m-0"/>
         </div>
         {hoveredItem && DESCRIPTION[hoveredItem]?.component}
         <div className="flex flex-col mt-8 ml-8">

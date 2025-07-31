@@ -1,12 +1,12 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
+import {API_ROUTES} from "@/api/endpoints";
 import BreadCrumb from "@/components/BreadCrumb";
-import { CategoriesIcon } from "@/constants/icons";
-import { CategoriesImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { usePrivateFetchParams } from "@/hooks/api-hooks";
-import { JobDetailResponse } from "@/types/jobDetail";
-import { getNamespace } from "@/utils/i18nHelper";
+import {CategoriesIcon} from "@/constants/icons";
+import {CategoriesImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {usePrivateFetchParams} from "@/hooks/api-hooks";
+import {JobDetailResponse} from "@/types/jobDetail";
+import {getNamespace} from "@/utils/i18nHelper";
 import Image from "next/image";
 import Link from "next/link";
 import "swiper/css";
@@ -44,7 +44,7 @@ type Props = {
   username: string;
 };
 
-const JobDetail = ({ username, slug }: Props) => {
+const JobDetail = ({username, slug}: Props) => {
   const jobDetailLanguage = getNamespace(LanguageFile.JOB_DETAIL);
 
   const jobCategoryLanguage = getNamespace(LanguageFile.JOB_CATEGORY);
@@ -65,28 +65,28 @@ const JobDetail = ({ username, slug }: Props) => {
   const categorySlug = jobDetailData?.serviceType.slug || "";
 
   const breadcrumbItems = [
-    { label: jobCategoryLanguage?.allJobTypes || "", href: "/categories" },
+    {label: jobCategoryLanguage?.allJobTypes || "", href: "/categories"},
     ...(catalogTitle
-      ? [{ label: catalogTitle, href: `/categories/${catalogSlug}` }]
+      ? [{label: catalogTitle, href: `/categories/${catalogSlug}`}]
       : []),
     ...(categoryTitle
       ? [
-          {
-            label: categoryTitle,
-            href: `/job/${categorySlug}`,
-            forceLink: true,
-          },
-        ]
+        {
+          label: categoryTitle,
+          href: `/job/${categorySlug}`,
+          forceLink: true,
+        },
+      ]
       : []),
   ];
   return (
     <>
       <section className="grid-container-job-detail mb-4 px-4 py-2 h-16 md:h-12 md:p-0 md:my-0 bg-[#E3EDFD]">
         <Link prefetch={false}
-          href="#"
-          className="col-start-2 col-end-auto flex justify-center items-center gap-3"
+              href="#"
+              className="col-start-2 col-end-auto flex justify-center items-center gap-3"
         >
-          <Image src={CategoriesIcon.guaranteed} alt="guaranteed" width={22} />
+          <Image src={CategoriesIcon.guaranteed} alt="guaranteed" width={22}/>
           <p className="text-base font-medium text-center ">
             <span className="text-third">
               {jobCategoryLanguage?.safeNoScam}{" "}
@@ -98,15 +98,15 @@ const JobDetail = ({ username, slug }: Props) => {
         </Link>
       </section>
       <section className="grid-container-job-detail">
-        <BreadCrumb items={breadcrumbItems} />
+        <BreadCrumb items={breadcrumbItems}/>
       </section>
       <section className="grid-container-job-detail pb-4 pt-4 sm:pt-10 min-h-[200vh]">
         <div className="col-start-2 col-end-auto grid grid-cols-1 xl:grid-cols-[1fr_20rem] gap-x-10 gap-y-6">
           <div className="max-w-[850px] h-full relative">
-            {jobImages.length > 0 && <SliderJob images={jobImages} />}
+            {jobImages.length > 0 && <SliderJob images={jobImages}/>}
             <div className="block pt-4 xl:pt-0 xl:hidden">
               {jobDetailData && (
-                <AsideJob data={jobDetailData} language={jobDetailLanguage} />
+                <AsideJob data={jobDetailData} language={jobDetailLanguage}/>
               )}
             </div>
             <div className="pt-4 md:pt-12 relative h-full">
@@ -151,7 +151,7 @@ const JobDetail = ({ username, slug }: Props) => {
           </div>
           <div className="hidden xl:block">
             {jobDetailData && (
-              <AsideJob data={jobDetailData} language={jobDetailLanguage} />
+              <AsideJob data={jobDetailData} language={jobDetailLanguage}/>
             )}
           </div>
         </div>
@@ -177,7 +177,7 @@ const JobDetail = ({ username, slug }: Props) => {
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-[repeat(4,minmax(1px,1fr))] gap-[1.25rem] my-3">
                 {categoryRelated.map((category, index) => (
-                  <CategoryRelated items={category} key={index} />
+                  <CategoryRelated items={category} key={index}/>
                 ))}
               </div>
             </div>

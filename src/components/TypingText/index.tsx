@@ -1,10 +1,10 @@
 "use client";
 
-import { useTranslation } from "react-i18next";
-import { TypeAnimation } from "react-type-animation";
+import {useTranslation} from "react-i18next";
+import {TypeAnimation} from "react-type-animation";
 
 const TypingText = () => {
-  const { t,i18n } = useTranslation();
+  const {t, i18n} = useTranslation();
   return (
     <TypeAnimation
       key={i18n.language}

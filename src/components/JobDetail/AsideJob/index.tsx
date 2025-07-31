@@ -1,18 +1,18 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
+import {API_ROUTES} from "@/api/endpoints";
 import FavoriteButton from "@/components/FavoriteButton";
 import LoadingBlur from "@/components/LoadingBlur";
 import ShareJobModal from "@/components/ShareJob";
-import { JobDetailIcon } from "@/constants/icons";
-import { JobDetailResponse } from "@/types/jobDetail";
-import { formatThaiBaht } from "@/utils/formatMoney";
-import { scrollToElementById } from "@/utils/scrollSmooth";
-import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {JobDetailIcon} from "@/constants/icons";
+import {JobDetailResponse} from "@/types/jobDetail";
+import {formatThaiBaht} from "@/utils/formatMoney";
+import {scrollToElementById} from "@/utils/scrollSmooth";
+import {faShareAlt} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {usePrivatePost} from "@/hooks/api-hooks";
 
@@ -25,12 +25,12 @@ type CreateRoomData = {
   data: string;
 };
 
-const AsideJob = ({ language, data }: AsideJobProps) => {
+const AsideJob = ({language, data}: AsideJobProps) => {
   const route = useRouter();
 
   const {localUser} = useMyUser();
 
-  const { trigger: createRoom, isMutating } = usePrivatePost<CreateRoomData>(
+  const {trigger: createRoom, isMutating} = usePrivatePost<CreateRoomData>(
     API_ROUTES.chat.createRoom
   );
 
@@ -42,8 +42,8 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
     scrollToElementById("package");
   };
 
-  const handleCreateRoom = async () => {
-    const res = await createRoom({ jobId: data.id });
+  const handleCreateRoom = async() => {
+    const res = await createRoom({jobId: data.id});
     if (res) {
       route.push(`/chat/message/${res.data}`);
     }
@@ -52,7 +52,7 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
 
   const isAvailable = data.user.available;
 
-  if (isMutating) return <LoadingBlur text="" />;
+  if (isMutating) return <LoadingBlur text=""/>;
   return (
     <aside className="text-black sticky top-40 self-start">
       <div className="bg-[#F6F9FE] rounded-md shadow-job-card p-4">
@@ -103,13 +103,13 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
             {data.packages[selectedPackage].description}
           </p>
           <Link prefetch={false}
-            href="#package"
-            onClick={(e) => handleClick(e)}
-            className="text-third mt-2 font-semibold text-[0.875rem] cursor-pointer font-sans"
+                href="#package"
+                onClick={(e) => handleClick(e)}
+                className="text-third mt-2 font-semibold text-[0.875rem] cursor-pointer font-sans"
           >
             {language?.viewPackageInfo}
           </Link>
-          <hr className="mt-4 bg-border-primary block overflow-visible w-full h-[1px] m-0" />
+          <hr className="mt-4 bg-border-primary block overflow-visible w-full h-[1px] m-0"/>
           {!isCurrentUser && (
             <>
               {isAvailable ? (
@@ -161,12 +161,12 @@ const AsideJob = ({ language, data }: AsideJobProps) => {
         </Link>
       </div>
       <div className="grid grid-cols-[1fr_1fr] text-center mt-4 font-medium text-text-secondary ">
-        <FavoriteButton jobId={data.id} label={language?.save} />
+        <FavoriteButton jobId={data.id} label={language?.save}/>
         <button
           onClick={() => setIsModalOpen(true)}
           className="flex flex-row items-center justify-center min-w-[34px] p-2 cursor-pointer"
         >
-          <FontAwesomeIcon icon={faShareAlt} className="text-text-secondary" />
+          <FontAwesomeIcon icon={faShareAlt} className="text-text-secondary"/>
           <p className="ml-2 cursor-pointer text-center">{language?.share}</p>
         </button>
       </div>

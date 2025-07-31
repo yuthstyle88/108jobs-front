@@ -1,14 +1,7 @@
-import { useGlobalLoader } from "@/contexts/GlobalLoaderContext";
-import { useGlobalError } from "@/contexts/GlobalErrorContext"; // Import GlobalError Context
-import useSWR, { SWRConfiguration } from "swr";
-import {
-  RequestState,
-  WrappedLemmyHttp,
-  Payload,
-  EMPTY_REQUEST,
-  REQUEST_STATE,
-  callHttp,
-} from "@/services/HttpService";
+import {useGlobalLoader} from "@/contexts/GlobalLoaderContext";
+import {useGlobalError} from "@/contexts/GlobalErrorContext"; // Import GlobalError Context
+import useSWR, {SWRConfiguration} from "swr";
+import {callHttp, EMPTY_REQUEST, Payload, REQUEST_STATE, RequestState, WrappedLemmyHttp,} from "@/services/HttpService";
 
 /* ---------- implementation ---------- */
 export function useHttpGet<K extends keyof WrappedLemmyHttp>(
@@ -18,8 +11,8 @@ export function useHttpGet<K extends keyof WrappedLemmyHttp>(
     | SWRConfiguration<RequestState<Payload<K>>, Error>,
   maybeOptions?: SWRConfiguration<RequestState<Payload<K>>, Error>,
 ) {
-  const { setLoading } = useGlobalLoader(); // ใช้สำหรับ Global Loader
-  const { setError } = useGlobalError(); // ใช้สำหรับ Global Error
+  const {setLoading} = useGlobalLoader(); // ใช้สำหรับ Global Loader
+  const {setError} = useGlobalError(); // ใช้สำหรับ Global Error
 
   /* ---------- resolve param / options ---------- */
   const args = Array.isArray(argsOrOptions)
@@ -36,7 +29,7 @@ export function useHttpGet<K extends keyof WrappedLemmyHttp>(
   /* ---------- key / fetcher ---------- */
   const key = [method, ...(args ?? [])] as const;
 
-  const fetcher = async () => {
+  const fetcher = async() => {
     setLoading(true); // แสดง Loader
     setError(null); // ล้างข้อผิดพลาดเก่าก่อนเริ่มการดึงข้อมูลใหม่
     try {
@@ -61,11 +54,13 @@ export function useHttpGet<K extends keyof WrappedLemmyHttp>(
   };
 
   /* ---------- swr ---------- */
-  const swr = useSWR<RequestState<Payload<K>>, Error>(key, fetcher, {
-    keepPreviousData: true,
-    revalidateOnFocus: false,
-    ...options,
-  });
+  const swr = useSWR<RequestState<Payload<K>>, Error>(key,
+    fetcher,
+    {
+      keepPreviousData: true,
+      revalidateOnFocus: false,
+      ...options,
+    });
 
   /* ---------- mapping ---------- */
   const state = swr.data ?? EMPTY_REQUEST;
@@ -75,5 +70,5 @@ export function useHttpGet<K extends keyof WrappedLemmyHttp>(
   const execute = () => swr.mutate();
   const isMutating = swr.isValidating;
 
-  return { state, data, execute, isMutating };
+  return {state, data, execute, isMutating};
 }

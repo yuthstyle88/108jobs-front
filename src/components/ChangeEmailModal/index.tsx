@@ -1,21 +1,24 @@
 "use client";
 import LoadingCircle from "@/components/LoadingCircle";
 import Modal from "@/components/ui/Modal";
-import { ERROR_CONSTANTS } from "@/constants/error";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Mailbox } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { useTranslation } from "react-i18next";
+import {ERROR_CONSTANTS} from "@/constants/error";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Mailbox} from "lucide-react";
+import {useEffect, useRef, useState} from "react";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {useTranslation} from "react-i18next";
 
 const changePasswordSchema = (t: (key: string, options?: any) => string) => z
-  .object({
-    oldPassword: z.string().min(6, t("authen.passwordMin6")),
-    newPassword: z.string().min(6, t("authen.passwordMin6")),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
+.object({
+  oldPassword: z.string().min(6,
+    t("authen.passwordMin6")),
+  newPassword: z.string().min(6,
+    t("authen.passwordMin6")),
+  confirmPassword: z.string(),
+})
+.refine((data) => data.newPassword === data.confirmPassword,
+  {
     message: t("authen.passwordsDoNotMatch"),
     path: ["confirmPassword"],
   });
@@ -28,7 +31,6 @@ interface ChangeEmailModalProps {
   onBack?: () => void;
   onVerifySuccess?: () => void;
   formEmail?: string;
-  language: Record<string, string>;
 }
 
 const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
@@ -37,10 +39,9 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
   handleConfirmChange,
   resendDelay = 60,
   formEmail,
-  language,
 }) => {
-  const { t } = useTranslation();
-  const { reset } = useForm({
+  const {t} = useTranslation();
+  const {reset} = useForm({
     resolver: zodResolver(changePasswordSchema(t)),
     mode: "onChange",
   });
@@ -65,30 +66,33 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
   };
 
   useEffect(() => {
-    if (!isOpen) return;
+      if (!isOpen) return;
 
-    setTimeLeft(resendDelay);
-    setIsResendDisabled(true);
+      setTimeLeft(resendDelay);
+      setIsResendDisabled(true);
 
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timer);
-          setIsResendDisabled(false);
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
+      const timer = setInterval(() => {
+          setTimeLeft((prevTime) => {
+            if (prevTime <= 1) {
+              clearInterval(timer);
+              setIsResendDisabled(false);
+              return 0;
+            }
+            return prevTime - 1;
+          });
+        },
+        1000);
 
-    return () => clearInterval(timer);
-  }, [isOpen, resendDelay]);
+      return () => clearInterval(timer);
+    },
+    [isOpen, resendDelay]);
 
   const handleInputChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return;
 
     const newCode = [...code];
-    newCode[index] = value.slice(0, 1);
+    newCode[index] = value.slice(0,
+      1);
     setCode(newCode);
 
     if (value && index < 5) {
@@ -96,7 +100,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
     }
   };
 
-  const handleVerify = async () => {
+  const handleVerify = async() => {
     setCodeError(null);
     setApiError(null);
     const enteredCode = code.join("");
@@ -109,15 +113,16 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
 
     try {
       setIsSubmitting(true);
-      const response = await fetch("/api/auth/verify-change-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          code: enteredCode,
-        }),
-      });
+      const response = await fetch("/api/auth/verify-change-email",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            code: enteredCode,
+          }),
+        });
 
       const data = await response.json();
 
@@ -135,7 +140,8 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
       resetCode();
       handleConfirmChange();
     } catch (error) {
-      console.error("Verification error:", error);
+      console.error("Verification error:",
+        error);
       setApiError(ERROR_CONSTANTS.SERVER_ERROR);
       resetCode();
     } finally {
@@ -143,20 +149,21 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
     }
   };
 
-  const handleResend = async () => {
+  const handleResend = async() => {
     if (isResendDisabled) return;
 
     try {
       setIsSendAgain(true);
-      const response = await fetch("/api/auth/resend-change-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formEmail,
-        }),
-      });
+      const response = await fetch("/api/auth/resend-change-email",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formEmail,
+          }),
+        });
 
       const result = await response.json();
 
@@ -169,7 +176,8 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
       setTimeLeft(resendDelay);
       setIsResendDisabled(true);
     } catch (error) {
-      console.error("Verification error:", error);
+      console.error("Verification error:",
+        error);
       setApiError(ERROR_CONSTANTS.SERVER_ERROR);
     } finally {
       setIsSendAgain(false);
@@ -184,14 +192,14 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
       closeOnOutsideClick={false}
     >
       <section className="px-[12px] w-full flex flex-col gap-8 justify-center items-center">
-        <Mailbox className="w-[60px] h-[60px] text-third" />
+        <Mailbox className="w-[60px] h-[60px] text-third"/>
         <article>
           <h1 className="text-base font-bold text-text-primary text-center">
-            {language?.emailVerificationTitle || t("contact.emailVerificationTitle")}
+            {t("contact.emailVerificationTitle")}
           </h1>
           <p className="text-[14px] font-sans text-text-secondary text-center">
-            {language?.emailVerificationDescription || t("contact.emailVerificationDescription")}
-            <br /> {formEmail}
+            {t("contact.emailVerificationDescription")}
+            <br/> {formEmail}
           </p>
         </article>
       </section>
@@ -205,7 +213,8 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
               }}
               type="text"
               value={code[index]}
-              onChange={(e) => handleInputChange(index, e.target.value)}
+              onChange={(e) => handleInputChange(index,
+                e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Backspace" && !code[index] && index > 0) {
                   inputRefs.current[index - 1]?.focus();
@@ -233,7 +242,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
             isResendDisabled ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          {isSendAgain ? `${language?.resendCode || t("contact.resendCode")}...` : (language?.resendCode || t("contact.resendCode"))}
+          {isSendAgain ? `${t("contact.resendCode")}...` : t("contact.resendCode")}
           {isResendDisabled ? `(${timeLeft})` : ""}
         </button>
         <button
@@ -245,7 +254,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
           }`}
           disabled={code.join("").length !== 6 || isSubmitting}
         >
-          {isSubmitting ? <LoadingCircle /> : (language?.verifyButton || t("contact.verifyButton"))}
+          {isSubmitting ? <LoadingCircle/> : t("contact.verifyButton")}
         </button>
       </div>
       {apiError && (

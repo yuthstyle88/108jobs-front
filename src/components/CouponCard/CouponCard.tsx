@@ -1,6 +1,7 @@
-import { motion } from "framer-motion";
-import { Clock } from "lucide-react";
-import { useState } from "react";
+import {motion} from "framer-motion";
+import {Clock} from "lucide-react";
+import {useState} from "react";
+
 interface CouponCardProps {
   id: number;
   value: number;
@@ -9,6 +10,7 @@ interface CouponCardProps {
   delay?: number;
   data: Record<string, string>;
 }
+
 const CouponCard = ({
   value,
   points,
@@ -21,9 +23,9 @@ const CouponCard = ({
   return (
     <motion.div
       className="relative"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay }}
+      initial={{opacity: 0, y: 20}}
+      animate={{opacity: 1, y: 0}}
+      transition={{duration: 0.4, delay}}
       whileHover={{
         y: -8,
         boxShadow:
@@ -35,8 +37,8 @@ const CouponCard = ({
       {/* Ticket Top Part */}
       <motion.div
         className="absolute -right-1 -top-1 z-10 transform rotate-12 origin-bottom-left"
-        animate={{ rotate: isHovered ? 15 : 12 }}
-        transition={{ duration: 0.2 }}
+        animate={{rotate: isHovered ? 15 : 12}}
+        transition={{duration: 0.2}}
       >
         <div className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-sm shadow">
           {data?.labelDiscount}
@@ -71,14 +73,14 @@ const CouponCard = ({
           {isHotDeal && (
             <motion.div
               className="flex items-center mb-3 text-orange-500 font-medium"
-              initial={{ opacity: 0.9 }}
-              animate={{ opacity: isHovered ? 1 : 0.9 }}
-              transition={{ duration: 0.3 }}
+              initial={{opacity: 0.9}}
+              animate={{opacity: isHovered ? 1 : 0.9}}
+              transition={{duration: 0.3}}
             >
               <motion.span
                 className="mr-1"
-                animate={{ rotate: isHovered ? [0, -10, 10, -10, 10, 0] : 0 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
+                animate={{rotate: isHovered ? [0, -10, 10, -10, 10, 0] : 0}}
+                transition={{duration: 0.5, ease: "easeInOut"}}
               >
                 🔥
               </motion.span>
@@ -88,25 +90,25 @@ const CouponCard = ({
           {/* Coupon Value */}
           <motion.h2
             className="text-xl font-bold text-gray-900 mb-3"
-            animate={{ scale: isHovered ? 1.03 : 1 }}
-            transition={{ duration: 0.2 }}
+            animate={{scale: isHovered ? 1.03 : 1}}
+            transition={{duration: 0.2}}
           >
             คูปองส่วนลด {value} บาท
           </motion.h2>
           {/* Usage Info */}
           <div className="flex items-center text-xs text-gray-500 mb-6">
-            <Clock size={14} className="mr-1" />
+            <Clock size={14} className="mr-1"/>
             <span>เคยขึ้นแคชแล้ว 0 / 1000000 ครั้ง</span>
           </div>
           {/* Points Button */}
           <motion.button
             className="w-full py-3 rounded-md text-white font-medium text-center coupon-button"
-            whileTap={{ scale: 0.98 }}
+            whileTap={{scale: 0.98}}
             animate={{
               backgroundColor: isHovered ? "#2563eb" : "#60a5fa",
               y: isHovered ? 0 : 2,
             }}
-            transition={{ duration: 0.2 }}
+            transition={{duration: 0.2}}
           >
             {points} {data?.labelPoints}
           </motion.button>

@@ -1,5 +1,5 @@
-import axios, { AxiosError } from "axios";
-import { jwtDecode } from "jwt-decode";
+import axios, {AxiosError} from "axios";
+import {jwtDecode} from "jwt-decode";
 
 let cachedAccessToken: string | null = null;
 
@@ -8,7 +8,7 @@ export const setCachedToken = (token: string | null) => {
 };
 
 export function isTokenExpired(token: string): boolean {
-  const payload = jwtDecode<{ exp: number }>(token);
+  const payload = jwtDecode<{exp: number}>(token);
   return Date.now() >= payload.exp * 1000;
 }
 
@@ -16,11 +16,11 @@ function createPublic(baseURL: string) {
   return axios.create({
     baseURL,
     timeout: 10_000,
-    headers: { "Content-Type": "application/json" },
+    headers: {"Content-Type": "application/json"},
   });
 }
 
-export const axiosPublic   = createPublic(`${process.env.NEXT_PUBLIC_API_BASE_URL}`);
+export const axiosPublic = createPublic(`${process.env.NEXT_PUBLIC_API_BASE_URL}`);
 export const axiosPublicV2 = createPublic(`${process.env.NEXT_PUBLIC_API_BASE_URL_V2}`);
 
 
@@ -34,7 +34,8 @@ export const axiosPrivate = axios.create({
 
 export const attachToken = (config: any) => {
   const token = sessionStorage.getItem("jwt");
-  console.log("expired", token)
+  console.log("expired",
+    token)
   if (token && !isTokenExpired(token)) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -43,15 +44,15 @@ export const attachToken = (config: any) => {
 
 axiosPrivate.interceptors.request.use(attachToken);
 axiosPrivate.interceptors.response.use(
-    (res) => res,
-    async (error: AxiosError) => {
-      // if (error.response?.status === 401) {
-      //   cachedAccessToken = null;
-      //   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL_V2}/account/auth/login`;
-      //   await signOut({ callbackUrl: url});
-      // }
-      return Promise.reject(error);
-    },
+  (res) => res,
+  async(error: AxiosError) => {
+    // if (error.response?.status === 401) {
+    //   cachedAccessToken = null;
+    //   const url = `${process.env.NEXT_PUBLIC_API_BASE_URL_V2}/account/auth/login`;
+    //   await signOut({ callbackUrl: url});
+    // }
+    return Promise.reject(error);
+  },
 );
 
 export const axiosFileUpload = axios.create({

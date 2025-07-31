@@ -1,9 +1,10 @@
-import { defaultMetadata } from "@/config/metadata";
+import {defaultMetadata} from "@/config/metadata";
 import SpProfile from "@/containers/SpProfile";
+
 const Profile = () => {
   return (
     <>
-      <SpProfile />
+      <SpProfile/>
     </>
   );
 };

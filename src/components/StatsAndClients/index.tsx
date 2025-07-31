@@ -1,8 +1,8 @@
-import { BusinessImage } from "@/constants/images";
-import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
-import Image, { StaticImageData } from "next/image";
-import React, { useState } from "react";
+import {BusinessImage} from "@/constants/images";
+import {cn} from "@/lib/utils";
+import {ChevronLeft, ChevronRight, Star} from "lucide-react";
+import Image, {StaticImageData} from "next/image";
+import React, {useState} from "react";
 
 const StatsSection = () => {
   return (
@@ -11,7 +11,7 @@ const StatsSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div
             className="animate-on-scroll"
-            style={{ animationDelay: "100ms" }}
+            style={{animationDelay: "100ms"}}
           >
             <h3 className="text-4xl md:text-5xl font-bold text-fastwork-blue mb-4">
               90+
@@ -21,7 +21,7 @@ const StatsSection = () => {
 
           <div
             className="animate-on-scroll"
-            style={{ animationDelay: "300ms" }}
+            style={{animationDelay: "300ms"}}
           >
             <h3 className="text-4xl md:text-5xl font-bold text-fastwork-blue mb-4">
               25,000+
@@ -31,7 +31,7 @@ const StatsSection = () => {
 
           <div
             className="animate-on-scroll"
-            style={{ animationDelay: "500ms" }}
+            style={{animationDelay: "500ms"}}
           >
             <div className="flex justify-center mb-4">
               {[...Array(5)].map((_, index) => (
@@ -48,11 +48,13 @@ const StatsSection = () => {
     </div>
   );
 };
+
 interface ClientLogoProps {
   src: StaticImageData;
   alt: string;
 }
-const ClientLogo: React.FC<ClientLogoProps> = ({ src, alt }) => {
+
+const ClientLogo: React.FC<ClientLogoProps> = ({src, alt}) => {
   return (
     <div className="flex items-center justify-center px-6 py-4">
       <Image
@@ -171,7 +173,7 @@ const ClientsCarousel = () => {
             className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-all"
             aria-label="Previous slide"
           >
-            <ChevronLeft className="w-6 h-6 text-gray-600" />
+            <ChevronLeft className="w-6 h-6 text-gray-600"/>
           </button>
 
           <button
@@ -179,14 +181,14 @@ const ClientsCarousel = () => {
             className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition-all"
             aria-label="Next slide"
           >
-            <ChevronRight className="w-6 h-6 text-gray-600" />
+            <ChevronRight className="w-6 h-6 text-gray-600"/>
           </button>
 
           {/* Carousel */}
           <div className="overflow-hidden">
             <div
               className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              style={{transform: `translateX(-${currentSlide * 100}%)`}}
             >
               {clientsData.map((slideClients, slideIndex) => (
                 <div key={slideIndex} className="min-w-full">
@@ -228,8 +230,8 @@ const ClientsCarousel = () => {
 const StatsAndClients: React.FC = () => {
   return (
     <>
-      <StatsSection />
-      <ClientsCarousel />
+      <StatsSection/>
+      <ClientsCarousel/>
     </>
   );
 };

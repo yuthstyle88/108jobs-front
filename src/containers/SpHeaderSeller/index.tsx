@@ -1,16 +1,13 @@
 "use client";
-import { AssetIcon } from "@/constants/icons";
-import { LANGUAGES } from "@/constants/language";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { faBell } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  AlignJustify,
-  X
-} from "lucide-react";
+import {AssetIcon} from "@/constants/icons";
+import {LANGUAGES} from "@/constants/language";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {faBell} from "@fortawesome/free-regular-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {AlignJustify, X} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import {useState} from "react";
 import SellerMenu from "../SellerMenu";
 import LanguageBottomSheet from "../SpBottomTab";
 
@@ -18,7 +15,7 @@ const SpSellerHeader = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [showLang, setShowLang] = useState(false);
-  const { lang } = useLanguage();
+  const {lang} = useLanguage();
   const currentLang = LANGUAGES[lang as keyof typeof LANGUAGES];
 
   return (
@@ -27,17 +24,17 @@ const SpSellerHeader = () => {
         <div className="px-[1.125rem]">
           {isFilterOpen ? (
             <div onClick={() => setIsFilterOpen(false)}>
-              <X className="text-gray-500 w-[20px] h-[22px]" />
+              <X className="text-gray-500 w-[20px] h-[22px]"/>
             </div>
           ) : (
             <div onClick={() => setIsFilterOpen(true)}>
-              <AlignJustify className="text-gray-500 w-[20px] h-[22px]" />
+              <AlignJustify className="text-gray-500 w-[20px] h-[22px]"/>
             </div>
           )}
         </div>
         <Link prefetch={false}
-          href="/seller"
-          className="overflow-hidden relative whitespace-nowrap flex self-center"
+              href="/seller"
+              className="overflow-hidden relative whitespace-nowrap flex self-center"
         >
           <Image
             src={AssetIcon.logoFreelancer}
@@ -69,7 +66,7 @@ const SpSellerHeader = () => {
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
       />
-      <LanguageBottomSheet open={showLang} onClose={() => setShowLang(false)} />
+      <LanguageBottomSheet open={showLang} onClose={() => setShowLang(false)}/>
     </header>
   );
 };

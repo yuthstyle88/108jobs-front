@@ -26,7 +26,7 @@ type Props = {
   jobId: string;
 };
 
-const JobBoardDetail = ({ jobId }: Props) => {
+const JobBoardDetail = ({jobId}: Props) => {
   const isLoggedIn = UserService.Instance.isLoggedIn;
   const isGuest = !isLoggedIn;
   const shouldFetchProfile = isLoggedIn;
@@ -52,8 +52,14 @@ const JobBoardDetail = ({ jobId }: Props) => {
   const calculateDaysUntil = (dateString: string) => {
     const targetDate = new Date(dateString);
     const today = new Date();
-    targetDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
+    targetDate.setHours(0,
+      0,
+      0,
+      0);
+    today.setHours(0,
+      0,
+      0,
+      0);
     const diffTime = targetDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
@@ -72,13 +78,13 @@ const JobBoardDetail = ({ jobId }: Props) => {
     route.push(`${jobId}/offer`);
   };
 
-  if (isLoading || (shouldFetchProfile )) return <Loading />;
-  if (error || (shouldFetchProfile)) return <Error />;
+  if (isLoading || (shouldFetchProfile)) return <Loading/>;
+  if (error || (shouldFetchProfile)) return <Error/>;
   return (
     <>
       <section className="max-w-7xl mx-auto px-4 py-6 bg-white rounded-lg pb-24">
         <div className="border-b mb-6">
-          <JobBoardTab />
+          <JobBoardTab/>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -131,11 +137,11 @@ const JobBoardDetail = ({ jobId }: Props) => {
                 </span>
                 {jobDetailData?.jobPost.updatedAt !==
                   jobDetailData?.jobPost.createdAt && (
-                  <span className="ml-4">
+                    <span className="ml-4">
                     Updated:{" "}
-                    {formatDateToLong(jobDetailData?.jobPost.updatedAt)}
+                      {formatDateToLong(jobDetailData?.jobPost.updatedAt)}
                   </span>
-                )}
+                  )}
               </div>
             </div>
 
@@ -245,14 +251,16 @@ const JobBoardDetail = ({ jobId }: Props) => {
             Interested Freelancers for mobile game character design (0
             proposals)
           </h4>
-          <InfoMessage message="We recommend communicating and paying through Fastjob - guaranteed no scams! We protect your payment until you receive work from the freelancer" />
+          <InfoMessage
+            message="We recommend communicating and paying through Fastjob - guaranteed no scams! We protect your payment until you receive work from the freelancer"/>
         </div>
-        <JobBoardProposal />
+        <JobBoardProposal/>
       </section>
 
       <section className="grid-cols-1 grid md:grid-cols-2 gap-8 w-full lg:max-w-7xl mx-auto py-6 rounded-lg pb-24">
         <Link prefetch={false} href={"/job-board"}>
-          <section className="w-full  job-board-gradient-left rounded-lg shadow-job-board-shadow h-[100px] md:h-[130px] xl:h-[100px] cursor-pointer inline-block">
+          <section
+            className="w-full  job-board-gradient-left rounded-lg shadow-job-board-shadow h-[100px] md:h-[130px] xl:h-[100px] cursor-pointer inline-block">
             <div className="grid grid-cols-[100px_1fr_32px] gap-2">
               <div className="w-[100px] h-[100px] relative">
                 <Image
@@ -273,13 +281,14 @@ const JobBoardDetail = ({ jobId }: Props) => {
                 </p>
               </div>
               <div className="h-full flex justify-center items-center mr-4">
-                <MoveRight className="text-third w-[20px] h-[22px]" />
+                <MoveRight className="text-third w-[20px] h-[22px]"/>
               </div>
             </div>
           </section>
         </Link>
         <Link prefetch={false} href={"/start-selling"}>
-          <section className="w-full  job-board-gradient rounded-lg shadow-job-board-shadow h-[100px] md:h-[130px] xl:h-[100px] cursor-pointer inline-block">
+          <section
+            className="w-full  job-board-gradient rounded-lg shadow-job-board-shadow h-[100px] md:h-[130px] xl:h-[100px] cursor-pointer inline-block">
             <div className="grid grid-cols-[100px_1fr_32px] gap-2">
               <div className="w-[100px] h-[100px] relative">
                 <Image
@@ -300,7 +309,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
                 </p>
               </div>
               <div className="h-full flex justify-center items-center mr-4">
-                <MoveRight className="text-third w-[20px] h-[22px]" />
+                <MoveRight className="text-third w-[20px] h-[22px]"/>
               </div>
             </div>
           </section>

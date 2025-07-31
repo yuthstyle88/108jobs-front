@@ -1,8 +1,8 @@
 "use client";
 
-import Image, { StaticImageData } from "next/image";
-import { ChatMessage } from "@/types/chat";
-import { MessageImage } from "@/constants/images";
+import Image, {StaticImageData} from "next/image";
+import {ChatMessage} from "@/types/chat";
+import {MessageImage} from "@/constants/images";
 import FilePreview from "../FilePreview";
 
 interface ChatMessageItemProps {
@@ -15,10 +15,11 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   partnerAvatar,
 }) => {
   const isIncoming = !message.isOwner;
-  const time = new Date(message.createdAt).toLocaleTimeString("th-TH", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const time = new Date(message.createdAt).toLocaleTimeString("th-TH",
+    {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
   return (
     <div

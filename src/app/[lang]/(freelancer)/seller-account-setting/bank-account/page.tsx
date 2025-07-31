@@ -1,9 +1,9 @@
 "use client";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import { Upload } from "lucide-react";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {Upload} from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import {useRef, useState} from "react";
 
 
 const BankAccount = () => {
@@ -74,7 +74,7 @@ const BankAccount = () => {
             onClick={handleUploadClick}
             className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mx-auto"
           >
-            <Upload className="w-5 h-5 mr-2" />
+            <Upload className="w-5 h-5 mr-2"/>
             {sellerBankAccountLanguage?.uploadButton}
           </button>
           <input
@@ -90,7 +90,8 @@ const BankAccount = () => {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {sellerBankAccountLanguage?.bankNameLabel}
           </label>
-          <select className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+          <select
+            className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
             <option selected disabled>
               {sellerBankAccountLanguage?.bankNamePlaceholder}
             </option>

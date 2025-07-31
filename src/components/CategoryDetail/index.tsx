@@ -1,25 +1,25 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
+import {API_ROUTES} from "@/api/endpoints";
 import BreadCrumb from "@/components/BreadCrumb";
 import CategoryFilter from "@/components/CategoryDetail/components/CategoryFilter";
 import CategoryFooter from "@/components/CategoryDetail/components/CategoryFooter";
 import CategoryRelated from "@/components/CategoryDetail/components/CategoryRelated";
 import SubCategory from "@/components/CategoryDetail/components/SubCategory";
-import { Pagination } from "@/components/Pagination";
-import { CategoriesIcon } from "@/constants/icons";
-import { CategoriesImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { usePrivateFetchParams } from "@/hooks/api-hooks";
-import { ServiceCatalogData } from "@/types/catalog";
-import { Category } from "@/types/category";
-import { JobList, Tags } from "@/types/jobSearch";
+import {Pagination} from "@/components/Pagination";
+import {CategoriesIcon} from "@/constants/icons";
+import {CategoriesImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {usePrivateFetchParams} from "@/hooks/api-hooks";
+import {ServiceCatalogData} from "@/types/catalog";
+import {Category} from "@/types/category";
+import {JobList, Tags} from "@/types/jobSearch";
 import buildQueryParams from "@/utils/buildJobQueryParams";
-import { getNamespace } from "@/utils/i18nHelper";
-import { interpolateDouble } from "@/utils/interpolate";
+import {getNamespace} from "@/utils/i18nHelper";
+import {interpolateDouble} from "@/utils/interpolate";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import {useRouter, useSearchParams} from "next/navigation";
+import {useEffect, useState} from "react";
 import FilterSection from "../FilterSection";
 import JobCard from "../JobCard";
 import SortSection from "../SortSection";
@@ -32,23 +32,24 @@ const categoryRelated = [
     image: CategoriesImage.wordpress,
     title: "ทำเว็บไซต์ Wordpress เว็บสำเร็จรูป",
   },
-  { image: CategoriesImage.google, title: "ทำโฆษณา Google Ads" },
+  {image: CategoriesImage.google, title: "ทำโฆษณา Google Ads"},
   {
     image: CategoriesImage.promote,
     title: "โปรโมทเพจ Facebook / IG / Youtube",
   },
-  { image: CategoriesImage.marketing, title: "เป็นที่ปรึกษาการตลาด" },
+  {image: CategoriesImage.marketing, title: "เป็นที่ปรึกษาการตลาด"},
 ];
 
 type Props = {
   slug: string;
 };
 
-const CategoryDetail = ({ slug }: Props) => {
+const CategoryDetail = ({slug}: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const currentPage = parseInt(searchParams.get("page") || "1",
+    10);
   const selectedTag = searchParams.get("q") || "";
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
@@ -81,7 +82,7 @@ const CategoryDetail = ({ slug }: Props) => {
   const catalogTitle = catalogData?.serviceCatalogs?.[0]?.name || "";
   const catalogSlug = catalogData?.serviceCatalogs?.[0]?.slug || "";
 
-  const { data: tagsData, isLoading: isTagLoading } =
+  const {data: tagsData, isLoading: isTagLoading} =
     usePrivateFetchParams<Tags>(
       serviceCategoryId
         ? `${API_ROUTES.job.getTagsById}/${serviceCategoryId}`
@@ -109,14 +110,18 @@ const CategoryDetail = ({ slug }: Props) => {
 
   const [isSticky, setIsSticky] = useState(false);
   useEffect(() => {
-    const handleScroll = () => setIsSticky(window.scrollY > 320);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+      const handleScroll = () => setIsSticky(window.scrollY > 320);
+      window.addEventListener("scroll",
+        handleScroll);
+      return () => window.removeEventListener("scroll",
+        handleScroll);
+    },
+    []);
 
   const handlePageChange = (page: number) => {
     const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set("page", page.toString());
+    newParams.set("page",
+      page.toString());
     router.push(`?${newParams.toString()}`);
   };
 
@@ -126,10 +131,12 @@ const CategoryDetail = ({ slug }: Props) => {
     if (!tag) {
       newParams.delete("q");
     } else {
-      newParams.set("q", tag);
+      newParams.set("q",
+        tag);
     }
 
-    newParams.set("page", "1");
+    newParams.set("page",
+      "1");
     router.push(`?${newParams.toString()}`);
   };
 
@@ -141,33 +148,39 @@ const CategoryDetail = ({ slug }: Props) => {
     const newParams = new URLSearchParams(searchParams.toString());
 
     if (filter.minPrice === undefined) newParams.delete("minPrice");
-    else newParams.set("minPrice", filter.minPrice.toString());
+    else newParams.set("minPrice",
+      filter.minPrice.toString());
 
     if (filter.maxPrice === undefined) newParams.delete("maxPrice");
-    else newParams.set("maxPrice", filter.maxPrice.toString());
+    else newParams.set("maxPrice",
+      filter.maxPrice.toString());
 
     if (!filter.rating) newParams.delete("rating");
-    else newParams.set("rating", filter.rating);
+    else newParams.set("rating",
+      filter.rating);
 
-    newParams.set("page", "1");
+    newParams.set("page",
+      "1");
     router.push(`?${newParams.toString()}`);
   };
 
   const handleSortChange = (sort: string) => {
     const newParams = new URLSearchParams(searchParams.toString());
     if (!sort) newParams.delete("sortBy");
-    else newParams.set("sortBy", sort);
-    newParams.set("page", "1");
+    else newParams.set("sortBy",
+      sort);
+    newParams.set("page",
+      "1");
     router.push(`?${newParams.toString()}`);
   };
 
   const breadcrumbItems = [
-    { label: jobCategoryLanguage?.allJobTypes || "", href: "/categories" },
+    {label: jobCategoryLanguage?.allJobTypes || "", href: "/categories"},
     ...(catalogTitle
-      ? [{ label: catalogTitle, href: `/categories/${catalogSlug}` }]
+      ? [{label: catalogTitle, href: `/categories/${catalogSlug}`}]
       : []),
-    ...(categoryTitle ? [{ label: categoryTitle, href: `/job/${slug}` }] : []),
-    ...(selectedTag ? [{ label: selectedTag }] : []),
+    ...(categoryTitle ? [{label: categoryTitle, href: `/job/${slug}`}] : []),
+    ...(selectedTag ? [{label: selectedTag}] : []),
   ];
 
 
@@ -175,10 +188,10 @@ const CategoryDetail = ({ slug }: Props) => {
     <>
       <section className="grid-container-job h-12 bg-[#E3EDFD]">
         <Link prefetch={false}
-          href="#"
-          className="col-start-2 col-end-auto flex justify-center items-center gap-3"
+              href="#"
+              className="col-start-2 col-end-auto flex justify-center items-center gap-3"
         >
-          <Image src={CategoriesIcon.guaranteed} alt="guaranteed" width={22} />
+          <Image src={CategoriesIcon.guaranteed} alt="guaranteed" width={22}/>
           <p className="text-base font-medium">
             <span className="text-third">
               {jobCategoryLanguage?.safeNoScam}{" "}
@@ -192,7 +205,7 @@ const CategoryDetail = ({ slug }: Props) => {
 
       <section className="grid-container-job pt-2 sm:pt-0">
         {(!isCategoryLoading || !isCatalogLoading) && (
-          <BreadCrumb items={breadcrumbItems} />
+          <BreadCrumb items={breadcrumbItems}/>
         )}
         <div className="col-start-2 col-end-auto">
           <h1 className="mb-2 sm:mb-6 mt-4 text-[20px] md:text-[32px] text-text-primary font-semibold">
@@ -204,7 +217,6 @@ const CategoryDetail = ({ slug }: Props) => {
       {!isTagLoading && tagsData?.tags && tagsData.tags.length > 0 && (
         <section className="grid-container-job overflow-x-auto pb-4">
           <SubCategory
-            language={jobCategoryLanguage}
             tagList={tagsData.tags}
             selectedTag={selectedTag}
             onSelectTag={handleTagChange}
@@ -221,7 +233,6 @@ const CategoryDetail = ({ slug }: Props) => {
           <div className="flex justify-between items-center pt-3 pb-3">
             <div className="inline-grid grid-flow-col justify-start gap-x-2">
               <FilterSection
-                language={jobCategoryLanguage}
                 onFilterChange={handleFilterChange}
                 currentFilters={{
                   minPrice: minPrice ? parseFloat(minPrice) : undefined,
@@ -230,12 +241,11 @@ const CategoryDetail = ({ slug }: Props) => {
                 }}
               />
               <SortSection
-                language={jobCategoryLanguage}
                 currentSort={sort}
                 onSortChange={handleSortChange}
               />
             </div>
-            <CategoryFilter />
+            <CategoryFilter/>
           </div>
         </div>
       </section>
@@ -244,30 +254,34 @@ const CategoryDetail = ({ slug }: Props) => {
         <div className="grid-container-job">
           <div className="flex justify-between col-start-2 col-end-auto mb-3 text-[0.875rem] text-text-primary font-sans">
             <div>
-              {interpolateDouble(jobCategoryLanguage?.foundJobs || "", {
-                jobNumber: jobList?.jobs.length,
-              })}
+              {interpolateDouble(jobCategoryLanguage?.foundJobs || "",
+                {
+                  jobNumber: jobList?.jobs.length,
+                })}
             </div>
             <div>
-              {interpolateDouble(jobCategoryLanguage?.pageInfo || "", {
-                currentPage: jobList?.page,
-                totalPages: jobList?.totalPages,
-              })}
+              {interpolateDouble(jobCategoryLanguage?.pageInfo || "",
+                {
+                  currentPage: jobList?.page,
+                  totalPages: jobList?.totalPages,
+                })}
             </div>
           </div>
           <div className="col-start-2 col-end-auto text-[0.875rem] text-text-primary font-sans">
             {isJobListLoading ? (
-              <section className="col-start-2 col-end-auto grid grid-cols-1 sm:grid-cols-[repeat(2,minmax(1px,1fr))] md:grid-cols-[repeat(3,minmax(1px,1fr))] lg:grid-cols-[repeat(4,minmax(1px,1fr))] 2xl:grid-cols-[repeat(5,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
-                {Array.from({ length: 20 }).map((_, index) => (
-                  <JobCardSkeleton key={index} />
+              <section
+                className="col-start-2 col-end-auto grid grid-cols-1 sm:grid-cols-[repeat(2,minmax(1px,1fr))] md:grid-cols-[repeat(3,minmax(1px,1fr))] lg:grid-cols-[repeat(4,minmax(1px,1fr))] 2xl:grid-cols-[repeat(5,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
+                {Array.from({length: 20}).map((_, index) => (
+                  <JobCardSkeleton key={index}/>
                 ))}
               </section>
             ) : jobList?.jobs.length === 0 ? (
-              <NotFoundJob language={jobCategoryLanguage}/>
+              <NotFoundJob/>
             ) : (
-              <section className="col-start-2 col-end-auto grid grid-cols-1 sm:grid-cols-[repeat(2,minmax(1px,1fr))] md:grid-cols-[repeat(3,minmax(1px,1fr))] lg:grid-cols-[repeat(4,minmax(1px,1fr))] 2xl:grid-cols-[repeat(5,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
+              <section
+                className="col-start-2 col-end-auto grid grid-cols-1 sm:grid-cols-[repeat(2,minmax(1px,1fr))] md:grid-cols-[repeat(3,minmax(1px,1fr))] lg:grid-cols-[repeat(4,minmax(1px,1fr))] 2xl:grid-cols-[repeat(5,minmax(1px,1fr))] gap-[0.75rem] md:gap-5">
                 {jobList?.jobs.map((job, index) => (
-                  <JobCard data={job} key={index} />
+                  <JobCard data={job} key={index}/>
                 ))}
               </section>
             )}
@@ -286,12 +300,12 @@ const CategoryDetail = ({ slug }: Props) => {
             <h2 className="mb-6 text-text-primary font-medium text-[1.5rem] leading-[1.15]">
               {interpolateDouble(
                 jobCategoryLanguage?.categoriesRelatedToJobType || "",
-                { jobType: "SEO" }
+                {jobType: "SEO"}
               )}
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-[repeat(4,minmax(1px,1fr))] gap-[1.25rem] my-3">
               {categoryRelated.map((category, index) => (
-                <CategoryRelated items={category} key={index} />
+                <CategoryRelated items={category} key={index}/>
               ))}
             </div>
           </section>
@@ -299,7 +313,7 @@ const CategoryDetail = ({ slug }: Props) => {
       </section>
 
       <section className="grid-container-job pt-3 pb-12 bg-[#f6f7f8]">
-        <CategoryFooter />
+        <CategoryFooter/>
       </section>
     </>
   );

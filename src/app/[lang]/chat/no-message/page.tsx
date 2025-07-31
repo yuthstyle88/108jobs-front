@@ -1,11 +1,11 @@
 "use client";
-import { MessageImage } from "@/constants/images";
-import { useChatLanguage } from "@/contexts/ChatLanguage";
+import {MessageImage} from "@/constants/images";
+import {useChatLanguage} from "@/contexts/ChatLanguage";
 import Image from "next/image";
 
 const Chat = () => {
-  
-  const {languageData:chatLanguageData}= useChatLanguage();
+
+  const {languageData: chatLanguageData} = useChatLanguage();
 
   return (
     <div className="flex-1 bg-gray-100 flex justify-center items-center p-4">

@@ -1,11 +1,11 @@
-import { VerifyEmailRegister } from "@/components/Authentication/VerifyEmailRegister";
+import {VerifyEmailRegister} from "@/components/Authentication/VerifyEmailRegister";
 
 export default async function Page({
   params,
 }: {
-  params: Promise<{ token: string }>;
+  params: Promise<{token: string}>;
 }) {
   const resolvedParams = await params;
 
-  return <VerifyEmailRegister token={resolvedParams.token} />;
+  return <VerifyEmailRegister token={resolvedParams.token}/>;
 }

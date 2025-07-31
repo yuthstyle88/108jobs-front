@@ -1,11 +1,11 @@
 "use client";
-import { Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
-import { API_ROUTES_SELLER } from "@/api/endpoints";
+import {Plus, Trash2} from "lucide-react";
+import {useEffect, useState} from "react";
+import {useFieldArray, useForm} from "react-hook-form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {usePrivateFetch, usePrivatePost} from "@/hooks/api-hooks";
+import {API_ROUTES_SELLER} from "@/api/endpoints";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
@@ -18,12 +18,13 @@ type CertificationFromServer = {
 };
 
 const EditCertifications = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const certificationSchema = z.object({
     certificationItems: z.array(
       z.object({
         id: z.string().optional(),
-        name: z.string().min(1, t("userEdit.certificatesPlaceholder")),
+        name: z.string().min(1,
+          t("userEdit.certificatesPlaceholder")),
       })
     ),
   });
@@ -35,7 +36,7 @@ const EditCertifications = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: {errors},
   } = useForm<CertificationFormData>({
     resolver: zodResolver(certificationSchema),
     defaultValues: {
@@ -43,49 +44,52 @@ const EditCertifications = () => {
     },
   });
 
-  const { successMessage } = useNotification();
-  const { fields, append, remove, replace } = useFieldArray({
+  const {successMessage} = useNotification();
+  const {fields, append, remove, replace} = useFieldArray({
     control,
     name: "certificationItems",
   });
 
   const [isFormReady, setIsFormReady] = useState(false);
 
-  const { data, isLoading } = usePrivateFetch<{
+  const {data, isLoading} = usePrivateFetch<{
     certOrAwards: CertificationFromServer[];
   }>(API_ROUTES_SELLER.profile.certificate);
 
-  const { trigger: sendCertificates, isMutating } = usePrivatePost(
+  const {trigger: sendCertificates, isMutating} = usePrivatePost(
     API_ROUTES_SELLER.profile.certificate
   );
 
   useEffect(() => {
-    if (data?.certOrAwards) {
-      const mapped = data.certOrAwards.map((item) => ({
-        id: item.id,
-        name: item.name,
-      }));
-      reset({ certificationItems: mapped });
-      replace(mapped);
-      setIsFormReady(true);
-    } else if (!isLoading) {
-      setIsFormReady(true);
-    }
-  }, [data, reset, replace, isLoading]);
+      if (data?.certOrAwards) {
+        const mapped = data.certOrAwards.map((item) => ({
+          id: item.id,
+          name: item.name,
+        }));
+        reset({certificationItems: mapped});
+        replace(mapped);
+        setIsFormReady(true);
+      } else if (!isLoading) {
+        setIsFormReady(true);
+      }
+    },
+    [data, reset, replace, isLoading]);
 
-  const onSubmit = async (formData: CertificationFormData) => {
+  const onSubmit = async(formData: CertificationFormData) => {
     const body = {
       certOrAwards: formData.certificationItems.map((item) => ({
-        ...(item.id ? { id: item.id } : {}),
+        ...(item.id ? {id: item.id} : {}),
         name: item.name,
       })),
     };
 
     try {
       await sendCertificates(body);
-      successMessage("profile", "updateCertification");
+      successMessage("profile",
+        "updateCertification");
     } catch (error) {
-      console.error("Lỗi khi lưu chứng chỉ:", error);
+      console.error("Lỗi khi lưu chứng chỉ:",
+        error);
     }
   };
 
@@ -100,7 +104,7 @@ const EditCertifications = () => {
 
         {isFetching ? (
           <div className="bg-white w-full h-40 flex justify-center items-center">
-            <LoadingMultiCircle />
+            <LoadingMultiCircle/>
           </div>
         ) : fields.length === 0 ? (
           <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
@@ -109,10 +113,10 @@ const EditCertifications = () => {
             </p>
             <button
               type="button"
-              onClick={() => append({ id: undefined, name: "" })}
+              onClick={() => append({id: undefined, name: ""})}
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> {t("userEdit.addMoreButton")}
+              <Plus className="w-5 h-5 mr-2"/> {t("userEdit.addMoreButton")}
             </button>
 
             <div className="flex justify-end">
@@ -122,7 +126,7 @@ const EditCertifications = () => {
                 disabled={isMutating}
                 className="w-[128px] py-2 submit-button-custom"
               >
-                {isMutating ? <LoadingCircle /> : t("userEdit.saveButton")}
+                {isMutating ? <LoadingCircle/> : t("userEdit.saveButton")}
               </button>
             </div>
           </div>
@@ -156,7 +160,7 @@ const EditCertifications = () => {
                     onClick={() => remove(index)}
                     className="border-1 border-border-secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                   >
-                    <Trash2 className="w-4" />
+                    <Trash2 className="w-4"/>
                     <span className="ml-2 font-medium">{t("userEdit.deleteInfo")}</span>
                   </button>
                 </div>
@@ -165,10 +169,10 @@ const EditCertifications = () => {
 
             <button
               type="button"
-              onClick={() => append({ id: undefined, name: "" })}
+              onClick={() => append({id: undefined, name: ""})}
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> {t("userEdit.addInfo")}
+              <Plus className="w-5 h-5 mr-2"/> {t("userEdit.addInfo")}
             </button>
 
             <div className="flex justify-end">
@@ -177,7 +181,7 @@ const EditCertifications = () => {
                 disabled={isMutating}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                {isMutating ? <LoadingCircle /> : t("userEdit.saveInfo")}
+                {isMutating ? <LoadingCircle/> : t("userEdit.saveInfo")}
               </button>
             </div>
           </form>

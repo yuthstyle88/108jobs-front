@@ -1,4 +1,4 @@
-import Image, { StaticImageData } from "next/image";
+import Image, {StaticImageData} from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -11,7 +11,7 @@ type CategoryRelatedProps = {
   items: CategoryItem;
 };
 
-const CategoryRelated: React.FC<CategoryRelatedProps> = ({ items }) => {
+const CategoryRelated: React.FC<CategoryRelatedProps> = ({items}) => {
   return (
     <Link prefetch={false} href="#" className="relative cursor-pointer h-full">
       <div className="relative border-1 border-border-primary rounded-xl overflow-hidden w-full bg-white h-full flex flex-col">

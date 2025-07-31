@@ -1,5 +1,12 @@
 export const en = {
   translation: {
+    validation: {
+      communityIdPositive: "Community ID must be a positive number",
+      jobTitleMinLength: "Job title must be at least 5 characters",
+      descriptionMinLength: "Job description must be at least 20 characters",
+      budgetPositive: "Budget must be a positive number",
+      budgetRequired: "Budget is required"
+    },
     allCategories: {
       allJobCategories: "All Job Categories",
       selectServiceType: "Choose the service type that suits your needs",
@@ -1187,8 +1194,15 @@ export const en = {
       reviewDeleteCommentSuccess: "Successfully deleted comment",
       serviceShowJobSuccess: "Successfully published your job",
       serviceHideJobSuccess: "Successfully hid your job",
+      verifyEmailSuccess: "Verify email successfully",
+      changePasswordSuccess: "Change password successfully",
+      editSuccess: "Edit successfully!",
+      copySuccess: "Copy successfully",
       invalidCode: "Invalid code",
-      invalidTotpCode: "Invalid TOTP code"
+      invalidTotpCode: "Invalid TOTP code",
+      verifyEmailLinkSent: "The verify email link has been sent to your email",
+      checkInboxForEmail: "Please check your inbox (If you don't see it, check your Spam and Junk folders) to continue.",
+      passwordResetLinkSent: "The password reset link has been sent to your email"
     },
     notifications: {
       changePassword: "Password Changed Successfully",

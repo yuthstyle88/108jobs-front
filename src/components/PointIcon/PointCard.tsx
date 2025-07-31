@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import {ArrowRight} from "lucide-react";
 import PointIcon from "./PointIcon";
 
 interface PointCardProps {
@@ -18,7 +18,8 @@ const PointCard = ({
   buttonLabel,
   viewLabel,
 }: PointCardProps) => {
-  const formattedPoints = points?.toFixed(2).replace(/\.00$/, "");
+  const formattedPoints = points?.toFixed(2).replace(/\.00$/,
+    "");
   const displayPoints = points && points > 0 ? `+${formattedPoints}` : formattedPoints;
 
   return (
@@ -40,11 +41,11 @@ const PointCard = ({
         </button>
       </div>
       <div className="w-32 bg-gray-50 flex flex-col items-center justify-center p-3">
-        <PointIcon />
+        <PointIcon/>
         <p className="text-blue-600 font-bold text-2xl mt-2">{displayPoints}</p>
         <div className="flex items-center text-sm text-gray-500 mt-2 hover:text-blue-600 cursor-pointer transition-colors">
           <span>{viewLabel}</span>
-          <ArrowRight className="w-4 h-4 ml-1" />
+          <ArrowRight className="w-4 h-4 ml-1"/>
         </div>
       </div>
     </div>

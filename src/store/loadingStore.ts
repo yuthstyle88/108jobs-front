@@ -8,6 +8,6 @@ interface LoadingState {
 
 export const loadingStore = create<LoadingState>((set) => ({
   loading: false,
-  start: () => set({ loading: true }),
-  stop: () => set({ loading: false }),
+  start: () => set({loading: true}),
+  stop: () => set({loading: false}),
 }));

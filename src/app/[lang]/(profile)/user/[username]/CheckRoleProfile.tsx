@@ -8,14 +8,14 @@ import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 
 
 export default function CheckRoleProfile() {
-  const { isEmployer, isFreelancer } = useAuthInfo();
+  const {isEmployer, isFreelancer} = useAuthInfo();
 
-  if (isEmployer) return <CurrentProfileEmployer />;
+  if (isEmployer) return <CurrentProfileEmployer/>;
   if (isFreelancer)
-    return <CurrentProfileFreelance />;
+    return <CurrentProfileFreelance/>;
   if (isFreelancer)
-    return <FreelancerProfile />;
-  if (isEmployer) return <EmployerProfile  />;
+    return <FreelancerProfile/>;
+  if (isEmployer) return <EmployerProfile/>;
 
-  return <NotFound />;
+  return <NotFound/>;
 }

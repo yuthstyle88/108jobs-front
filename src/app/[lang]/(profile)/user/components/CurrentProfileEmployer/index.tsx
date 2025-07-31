@@ -1,21 +1,21 @@
 "use client";
-import { AssetIcon } from "@/constants/icons";
-import { ProfileImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { getNamespace } from "@/utils/i18nHelper";
-import { formatDateToLong } from "@/utils/formatDateToLong";
-import { interpolateDouble } from "@/utils/interpolate";
-import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {AssetIcon} from "@/constants/icons";
+import {ProfileImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {getNamespace} from "@/utils/i18nHelper";
+import {formatDateToLong} from "@/utils/formatDateToLong";
+import {interpolateDouble} from "@/utils/interpolate";
+import {faEdit, faStar} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 
 
 const CurrentProfileEmployer = () => {
 
-  const { profileState, person } = useMyUser();
+  const {profileState, person} = useMyUser();
 
   const goToProfileLanguage = getNamespace(
     LanguageFile.GO_TO_PROFILE
@@ -26,11 +26,12 @@ const CurrentProfileEmployer = () => {
   const bioRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    if (bioRef.current) {
-      const el = bioRef.current;
-      setIsClamped(el.scrollHeight > el.clientHeight);
-    }
-  }, [person?.bio]);
+      if (bioRef.current) {
+        const el = bioRef.current;
+        setIsClamped(el.scrollHeight > el.clientHeight);
+      }
+    },
+    [person?.bio]);
 
   return (
     <main className="min-h-screen">
@@ -101,8 +102,8 @@ const CurrentProfileEmployer = () => {
                 </div>
               )}
               <Link prefetch={false}
-                href="/account-setting/basic-info"
-                className="absolute top-4 right-4"
+                    href="/account-setting/basic-info"
+                    className="absolute top-4 right-4"
               >
                 <FontAwesomeIcon
                   icon={faEdit}
@@ -113,12 +114,14 @@ const CurrentProfileEmployer = () => {
           </aside>
           <section className="w-full px-4">
             <h2 className="py-[3rem] text-[28px] font-medium text-text-primary w-full">
-              {interpolateDouble(goToProfileLanguage?.workTitle || "", {
-                username: person?.displayName || "",
-              })}
+              {interpolateDouble(goToProfileLanguage?.workTitle || "",
+                {
+                  username: person?.displayName || "",
+                })}
             </h2>
             <div className="grid grid-cols-[1fr_1fr_1fr] border-b-[2px] border-b-border-primary">
-              <div className="relative whitespace-nowrap border-b-2 border-border-primary hover:text-third duration-150 flex justify-center items-center cursor-pointer px-1 py-3 font-bold text-third  after:absolute after:bottom-[-3px] after:h-[2px] after:w-full after:bg-third">
+              <div
+                className="relative whitespace-nowrap border-b-2 border-border-primary hover:text-third duration-150 flex justify-center items-center cursor-pointer px-1 py-3 font-bold text-third  after:absolute after:bottom-[-3px] after:h-[2px] after:w-full after:bg-third">
                 {goToProfileLanguage?.freelancerReview}
               </div>
             </div>

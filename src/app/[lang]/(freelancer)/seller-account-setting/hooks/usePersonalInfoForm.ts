@@ -1,26 +1,35 @@
 import useNotification from "@/hooks/useNotification";
-import { HttpService, isSuccess, RequestState } from "@/services/HttpService";
-import { uploadSelectedImage } from "@/utils/helpers";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, UploadImage, UploadImageResponse, UpsertCard } from "lemmy-js-client";
-import { RequestOptions } from "node:http";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import {HttpService, isSuccess, RequestState} from "@/services/HttpService";
+import {uploadSelectedImage} from "@/utils/helpers";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Card, UploadImage, UploadImageResponse, UpsertCard} from "lemmy-js-client";
+import {RequestOptions} from "node:http";
+import {useEffect, useState} from "react";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
 
 const cardSchema = z.object({
-  title: z.string().min(1, "Vui lòng nhập thông tin"),
-  name: z.string().min(1, "Vui lòng nhập thông tin"),
-  surname: z.string().min(1, "Vui lòng nhập thông tin"),
+  title: z.string().min(1,
+    "Vui lòng nhập thông tin"),
+  name: z.string().min(1,
+    "Vui lòng nhập thông tin"),
+  surname: z.string().min(1,
+    "Vui lòng nhập thông tin"),
   birthDay: z.string(),
   birthMonth: z.string(),
   birthYear: z.string(),
-  cardNumber: z.string().regex(/^\d{13}$/, "Vui lòng nhập số CMND/CCCD 12 số"),
-  cardAddressDetails: z.string().min(1, "Vui lòng nhập thông tin"),
-  cardZipCode: z.string().min(1, "Vui lòng nhập thông tin"),
-  cardSubdistrictOrDistrict: z.string().min(1, "Vui lòng nhập thông tin"),
-  cardDistrictOrSubdistrict: z.string().min(1, "Vui lòng nhập thông tin"),
-  cardProvince: z.string().min(1, "Vui lòng nhập thông tin"),
+  cardNumber: z.string().regex(/^\d{13}$/,
+    "Vui lòng nhập số CMND/CCCD 12 số"),
+  cardAddressDetails: z.string().min(1,
+    "Vui lòng nhập thông tin"),
+  cardZipCode: z.string().min(1,
+    "Vui lòng nhập thông tin"),
+  cardSubdistrictOrDistrict: z.string().min(1,
+    "Vui lòng nhập thông tin"),
+  cardDistrictOrSubdistrict: z.string().min(1,
+    "Vui lòng nhập thông tin"),
+  cardProvince: z.string().min(1,
+    "Vui lòng nhập thông tin"),
 });
 
 type FormValues = z.infer<typeof cardSchema>;
@@ -38,7 +47,7 @@ export const usePersonalInfoForm = (
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: {errors, isSubmitting},
     reset,
     setError,
   } = useForm<FormValues>({
@@ -46,8 +55,8 @@ export const usePersonalInfoForm = (
   });
 
   const [isUpdateMuting, setIsUpdateMuting] = useState(false);
-  
-  const updateCardInfo = async (data: UpsertCard) => {
+
+  const updateCardInfo = async(data: UpsertCard) => {
     try {
       setIsUpdateMuting(true);
       const response = await HttpService.client.upsertCard(data);
@@ -61,37 +70,39 @@ export const usePersonalInfoForm = (
     }
   };
 
-  const { successMessage } = useNotification();
+  const {successMessage} = useNotification();
 
   useEffect(() => {
-    if (card) {
-      const [year, month, day] = card.birthDate?.split("-") ?? [];
-      reset({
-        title: card.title,
-        name: card.name,
-        surname: card.surname,
-        birthDay: day || "Day",
-        birthMonth: month || "Month",
-        birthYear: year || "Year",
-        cardNumber: card.cardNumber,
-        cardAddressDetails: card.addressDetails,
-        cardZipCode: card.zipCode,
-        cardSubdistrictOrDistrict: card.subdistrictOrDistrict,
-        cardDistrictOrSubdistrict: card.districtOrSubdistrict,
-        cardProvince: card.province,
-      });
-      setSelectedFront(card.frontCard || "");
-      setSelectedBack(card.backCard || "");
-    }
-  }, [card, reset, setSelectedFront, setSelectedBack]);
+      if (card) {
+        const [year, month, day] = card.birthDate?.split("-") ?? [];
+        reset({
+          title: card.title,
+          name: card.name,
+          surname: card.surname,
+          birthDay: day || "Day",
+          birthMonth: month || "Month",
+          birthYear: year || "Year",
+          cardNumber: card.cardNumber,
+          cardAddressDetails: card.addressDetails,
+          cardZipCode: card.zipCode,
+          cardSubdistrictOrDistrict: card.subdistrictOrDistrict,
+          cardDistrictOrSubdistrict: card.districtOrSubdistrict,
+          cardProvince: card.province,
+        });
+        setSelectedFront(card.frontCard || "");
+        setSelectedBack(card.backCard || "");
+      }
+    },
+    [card, reset, setSelectedFront, setSelectedBack]);
 
-  const onSubmit = async (formData: FormValues) => {
+  const onSubmit = async(formData: FormValues) => {
     try {
       if (!frontPreview || !backPreview) {
-        setError("root", {
-          type: "manual",
-          message: "Vui lòng tải lên cả ảnh mặt trước và mặt sau",
-        });
+        setError("root",
+          {
+            type: "manual",
+            message: "Vui lòng tải lên cả ảnh mặt trước và mặt sau",
+          });
         return;
       }
 
@@ -99,11 +110,13 @@ export const usePersonalInfoForm = (
       let backUrl = card?.backCard;
 
       if (frontFile) {
-        frontUrl = await uploadSelectedImage(frontFile, uploadImage);
+        frontUrl = await uploadSelectedImage(frontFile,
+          uploadImage);
       }
 
       if (backFile) {
-          backUrl = await uploadSelectedImage(backFile, uploadImage);
+        backUrl = await uploadSelectedImage(backFile,
+          uploadImage);
       }
 
       if (!frontUrl || !backUrl) {
@@ -115,7 +128,7 @@ export const usePersonalInfoForm = (
         formData.birthMonth === "Month" ||
         formData.birthYear === "Year";
 
-      const payload:  UpsertCard ={
+      const payload: UpsertCard = {
         frontCard: frontUrl,
         backCard: backUrl,
         title: formData.title,
@@ -131,13 +144,16 @@ export const usePersonalInfoForm = (
       };
 
       await updateCardInfo(payload);
-      successMessage("profile", "update");
+      successMessage("profile",
+        "update");
     } catch (error) {
-      console.error("Lỗi cập nhật thẻ:", error);
-      setError("root", {
-        type: "manual",
-        message: error instanceof Error ? error.message : "Có lỗi xảy ra",
-      });
+      console.error("Lỗi cập nhật thẻ:",
+        error);
+      setError("root",
+        {
+          type: "manual",
+          message: error instanceof Error ? error.message : "Có lỗi xảy ra",
+        });
     }
   };
 

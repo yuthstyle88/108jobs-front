@@ -1,6 +1,6 @@
 "use client";
-import { Info } from "lucide-react";
-import { useState } from "react";
+import {Info} from "lucide-react";
+import {useState} from "react";
 import RejectJobCreateModal from "../RejectJobCreateModal";
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 
 const statusType: Record<
   number,
-  { bgColor: string; textColor: string; key: string }
+  {bgColor: string; textColor: string; key: string}
 > = {
   0: {
     bgColor: "bg-[#e8eaee]",
@@ -35,7 +35,7 @@ const statusType: Record<
   },
 };
 
-const JobCreatedStatus = ({ status, languageMap }: Props) => {
+const JobCreatedStatus = ({status, languageMap}: Props) => {
   const statusInfo = statusType[status] || {
     bgColor: "bg-gray-200",
     textColor: "text-gray-500",
@@ -61,7 +61,7 @@ const JobCreatedStatus = ({ status, languageMap }: Props) => {
           onClick={showReasonReject}
           className="w-8 h-full flex justify-center cursor-pointer"
         >
-          <Info className="w-[13px] text-third" />
+          <Info className="w-[13px] text-third"/>
         </div>
       )}
       <RejectJobCreateModal

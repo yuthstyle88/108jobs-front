@@ -1,29 +1,26 @@
-import { setDefaultOptions, Locale } from "date-fns";
-import {
-  I18NextService,
-  LanguageService,
-  pickTranslations,
-} from "@/services/I18NextService";
-import { enUS } from "date-fns/locale/en-US";
+import {Locale, setDefaultOptions} from "date-fns";
+import {I18NextService, LanguageService, pickTranslations,} from "@/services/I18NextService";
+import {enUS} from "date-fns/locale/en-US";
 import {th} from 'date-fns/locale/th'; // Thai
 import {vi} from 'date-fns/locale/vi';
 
-import { ImportReport } from "@/utils/dynamic-imports";
-import { MyUserInfo } from "lemmy-js-client";
+import {ImportReport} from "@/utils/dynamic-imports";
+import {MyUserInfo} from "lemmy-js-client";
 
-type DateFnsDesc = { resource: Locale; code: string; bundled?: boolean };
+type DateFnsDesc = {resource: Locale; code: string; bundled?: boolean};
 
 
 const locales: DateFnsDesc[] = [
-  { resource: enUS, code: "en-US", bundled: true },
-  { resource: th, code: "th" }, // ตัวอย่าง: แทน th ด้วย Locale ที่เหมาะสม
-  { resource: vi, code: "vi" }, // ตัวอย่าง: แทน vi ด้วย Locale ที่เหมาะสม
+  {resource: enUS, code: "en-US", bundled: true},
+  {resource: th, code: "th"}, // ตัวอย่าง: แทน th ด้วย Locale ที่เหมาะสม
+  {resource: vi, code: "vi"}, // ตัวอย่าง: แทน vi ด้วย Locale ที่เหมาะสม
 ];
 
 const localeByCode = locales.reduce<Record<string, DateFnsDesc>>((acc, l) => {
-  acc[l.code] = l;
-  return acc;
-}, {});
+    acc[l.code] = l;
+    return acc;
+  },
+  {});
 
 
 // Use pt-BR for users with removed interface language pt_BR.
@@ -61,19 +58,18 @@ async function load(locale: DateFnsDesc): Promise<Locale> {
 }
 
 
-
 export async function verifyDateFnsImports(): Promise<ImportReport> {
   const report = new ImportReport();
   const promises = locales.map(locale =>
     load(locale)
-      .then(x => {
-        if (x && x.code === locale.code) {
-          report.success.push(locale.code);
-        } else {
-          throw "unexpected format";
-        }
-      })
-      .catch(err => report.error.push({ id: locale.code, error: err })),
+    .then(x => {
+      if (x && x.code === locale.code) {
+        report.success.push(locale.code);
+      } else {
+        throw "unexpected format";
+      }
+    })
+    .catch(err => report.error.push({id: locale.code, error: err})),
   );
   await Promise.all(promises);
   return report;
@@ -102,7 +98,8 @@ export function findDateFnsChunkNames(languages: readonly string[]): string[] {
       break;
     }
   }
-  const locale = bestDateFns(languages, i18n_full_lang);
+  const locale = bestDateFns(languages,
+    i18n_full_lang);
   if (locale.bundled) {
     return [];
   }
@@ -118,14 +115,14 @@ export async function setupDateFns(myUserInfo?: MyUserInfo) {
   try {
     const locale = await load(localeDesc);
     if (locale) {
-      setDefaultOptions({ locale });
+      setDefaultOptions({locale});
       return;
     }
   } catch {
     console.error(`Loading ${localeDesc.code} date-fns failed.`);
   }
 
-  setDefaultOptions({ locale: enUS });
+  setDefaultOptions({locale: enUS});
 }
 
 /**
@@ -134,6 +131,7 @@ export async function setupDateFns(myUserInfo?: MyUserInfo) {
 export function getUnixTimeLemmy(text?: string): number | undefined {
   return text ? new Date(text).getTime() / 1000 : undefined;
 }
+
 /**
  * Converts timestamp string to unix timestamp in millis, as used by Javascript
  */
@@ -148,7 +146,8 @@ export function getUnixTime(text?: string): number | undefined {
  */
 export function unixTimeToLocalDateStr(unixTime?: number): string | undefined {
   return unixTime
-    ? convertUTCDateToLocalDate(new Date(unixTime)).toISOString().slice(0, -8)
+    ? convertUTCDateToLocalDate(new Date(unixTime)).toISOString().slice(0,
+      -8)
     : undefined;
 }
 

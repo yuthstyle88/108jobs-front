@@ -1,33 +1,34 @@
 "use client";
 
 import Modal from "@/components/ui/Modal";
-import { BASE_URL } from "@/config/env";
+import {BASE_URL} from "@/config/env";
 import useNotification from "@/hooks/useNotification";
-import {
-  faFacebook,
-  faLinkedin,
-  faTwitter,
-} from "@fortawesome/free-brands-svg-icons";
-import { faLink } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { usePathname } from "next/navigation";
+import {faFacebook, faLinkedin, faTwitter,} from "@fortawesome/free-brands-svg-icons";
+import {faLink} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {usePathname} from "next/navigation";
+import {useTranslation} from "react-i18next";
 
 interface ShareJobModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const ShareJobModal: React.FC<ShareJobModalProps> = ({ isOpen, onClose }) => {
-  const { successMessage } = useNotification();
+const ShareJobModal: React.FC<ShareJobModalProps> = ({isOpen, onClose}) => {
+  const {successMessage} = useNotification();
   const pathname = usePathname();
   const shareUrl = `${BASE_URL}${pathname}`;
+  const {t} = useTranslation();
 
-  const handleCopy = async () => {
+  const handleCopy = async() => {
     try {
       await navigator.clipboard.writeText(shareUrl);
-      successMessage(null, null, "Copy successfully");
+      successMessage(null,
+        null,
+        t("notification.copySuccess"));
     } catch (error) {
-      console.error("Failed to copy link:", error);
+      console.error("Failed to copy link:",
+        error);
     }
   };
 
@@ -66,7 +67,7 @@ const ShareJobModal: React.FC<ShareJobModalProps> = ({ isOpen, onClose }) => {
           onClick={handleCopy}
         >
           <div className="w-[50px] h-[50px] bg-[#9ba6b5] rounded-full flex items-center justify-center">
-            <FontAwesomeIcon icon={faLink} className="text-[22px] text-white" />
+            <FontAwesomeIcon icon={faLink} className="text-[22px] text-white"/>
           </div>
           <p className="text-[14px] font-sans text-text-primary">Copy Link</p>
         </div>

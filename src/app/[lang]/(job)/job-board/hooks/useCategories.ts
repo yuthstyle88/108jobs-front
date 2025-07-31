@@ -1,5 +1,5 @@
-import { API_ROUTES } from "@/api/endpoints";
-import { usePublicFetch } from "@/hooks/api-hooks";
+import {API_ROUTES} from "@/api/endpoints";
+import {usePublicFetch} from "@/hooks/api-hooks";
 
 export interface Category {
   id: string;
@@ -7,7 +7,7 @@ export interface Category {
 }
 
 interface CategoriesResponse {
-  serviceCatalogs: { id: string; name: string; slug: string }[]; // Thêm slug nếu cần filter
+  serviceCatalogs: {id: string; name: string; slug: string}[]; // Thêm slug nếu cần filter
 }
 
 export const useCategories = () => {
@@ -19,12 +19,12 @@ export const useCategories = () => {
 
   const categories = data?.serviceCatalogs
     ? data.serviceCatalogs
-        .filter((catalog) => catalog.slug !== "popular-service") 
-        .map((catalog) => ({
-          id: catalog.id,
-          name: catalog.name,
-        }))
+    .filter((catalog) => catalog.slug !== "popular-service")
+    .map((catalog) => ({
+      id: catalog.id,
+      name: catalog.name,
+    }))
     : [];
 
-  return { categories, isLoading, error };
+  return {categories, isLoading, error};
 };

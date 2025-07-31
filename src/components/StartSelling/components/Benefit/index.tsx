@@ -1,4 +1,4 @@
-import React, { JSX } from "react";
+import React, {JSX} from "react";
 
 type Benefit = {
   icon: JSX.Element;
@@ -10,7 +10,7 @@ type Props = {
   data: Record<string, string>;
 };
 
-const Benefit = ({ data }: Props) => {
+const Benefit = ({data}: Props) => {
   const benefits: Benefit[] = [
     {
       icon: (

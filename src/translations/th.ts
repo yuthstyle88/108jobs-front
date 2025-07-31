@@ -1,5 +1,12 @@
 export const th = {
   translation: {
+    validation: {
+      communityIdPositive: "Community ID ต้องเป็นเลขบวก",
+      jobTitleMinLength: "Job title ต้องมีอย่างน้อย 5 ตัวอักษร",
+      descriptionMinLength: "รายละเอียดงานต้องมีอย่างน้อย 20 ตัวอักษร",
+      budgetPositive: "Budget ต้องเป็นตัวเลขบวก",
+      budgetRequired: "จำเป็นต้องระบุงบประมาณ"
+    },
     allCategories: {
       allJobCategories: "หมวดหมู่งานทั้งหมด",
       selectServiceType: "เลือกประเภทบริการที่ตรงกับความต้องการของคุณ",
@@ -1194,8 +1201,15 @@ export const th = {
       reviewDeleteCommentSuccess: "ลบความคิดเห็นสำเร็จ",
       serviceShowJobSuccess: "เผยแพร่งานของคุณสำเร็จ",
       serviceHideJobSuccess: "ซ่อนงานของคุณสำเร็จ",
+      verifyEmailSuccess: "ยืนยันอีเมลสำเร็จ",
+      changePasswordSuccess: "เปลี่ยนรหัสผ่านสำเร็จ",
+      editSuccess: "แก้ไขสำเร็จ!",
+      copySuccess: "คัดลอกสำเร็จ",
       invalidCode: "รหัสไม่ถูกต้อง",
-      invalidTotpCode: "รหัส TOTP ไม่ถูกต้อง"
+      invalidTotpCode: "รหัส TOTP ไม่ถูกต้อง",
+      verifyEmailLinkSent: "ลิงก์ยืนยันอีเมลได้ถูกส่งไปยังอีเมลของคุณแล้ว",
+      checkInboxForEmail: "กรุณาตรวจสอบกล่องจดหมายของคุณ (หากคุณไม่พบ ให้ตรวจสอบในโฟลเดอร์สแปมและจดหมายขยะ) เพื่อดำเนินการต่อ",
+      passwordResetLinkSent: "ลิงก์รีเซ็ตรหัสผ่านได้ถูกส่งไปยังอีเมลของคุณแล้ว"
     },
     notifications: {
       changePassword: "เปลี่ยนรหัสผ่านสำเร็จแล้ว",

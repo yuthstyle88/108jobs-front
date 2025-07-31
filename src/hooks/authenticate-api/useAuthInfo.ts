@@ -1,5 +1,5 @@
-import { RoleType } from "@/lib/lemmy-js-client/dist/types/RoleType";
-import { UserService } from "@/services";
+import {RoleType} from "@/lib/lemmy-js-client/dist/types/RoleType";
+import {UserService} from "@/services";
 
 export function useAuthInfo() {
   const auth = UserService.Instance;

@@ -1,12 +1,7 @@
 "use client";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/Accordion";
-import { Button } from "@/components/ui/Button";
-import { AssetIcon, ContentIcon } from "@/constants/icons";
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger,} from "@/components/ui/Accordion";
+import {Button} from "@/components/ui/Button";
+import {AssetIcon, ContentIcon} from "@/constants/icons";
 import Image from "next/image";
 
 const SupportCenter = () => {
@@ -43,7 +38,7 @@ const SupportCenter = () => {
       <main>
         <section
           className="flex items-center justify-center w-full h-[200px] relative overflow-hidden"
-          style={{ background: "linear-gradient(282deg, #27c8f8, #1850c2)" }}
+          style={{background: "linear-gradient(282deg, #27c8f8, #1850c2)"}}
         >
           <div className="px-[1.5rem] relative">
             <div className="text-center text-white">

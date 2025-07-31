@@ -34,21 +34,23 @@ export async function exchangePublicKey(publicKey: string, token: string) {
 }
 
 export async function checkEmailExists(email: string) {
-  return axiosPublicV2.post("/oauth/email-exists", { email });
+  return axiosPublicV2.post("/oauth/email-exists",
+    {email});
 }
 
 export async function exchange(accessToken: string) {
   // รับทั้ง privateKey และ publicKey
-  const { privateKey, publicKey } = await generateEcKeyPair();
+  const {privateKey, publicKey} = await generateEcKeyPair();
 
   // ส่งออกคีย์สาธารณะโดยใช้ publicKey (ไม่ใช่ privateKey)
   const pub = await exportPublicKey(publicKey);
-  const publicKeyHex = await exchangePublicKey(pub, accessToken);
+  const publicKeyHex = await exchangePublicKey(pub,
+    accessToken);
 
   const serverPubKey = await importEcPublicKeyHex(publicKeyHex);
 
   const sharedKey = await crypto.subtle.deriveBits(
-    { name: "ECDH", public: serverPubKey },
+    {name: "ECDH", public: serverPubKey},
     privateKey,
     256
   );

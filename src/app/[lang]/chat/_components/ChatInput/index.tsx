@@ -1,8 +1,8 @@
 "use client";
 
-import { Paperclip, Send, Smile } from "lucide-react";
-import { useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
+import {Paperclip, Send, Smile} from "lucide-react";
+import {useEffect, useRef} from "react";
+import {useForm} from "react-hook-form";
 import FilePreview from "../FilePreview";
 
 type MessageForm = {
@@ -29,10 +29,10 @@ const ChatInput: React.FC<ChatInputProps> = ({
   isUploading,
   chatLanguageData,
 }) => {
-  const { register, handleSubmit, reset, watch } = useForm<MessageForm>();
+  const {register, handleSubmit, reset, watch} = useForm<MessageForm>();
   const messageRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const { ref, ...rest } = register("message");
+  const {ref, ...rest} = register("message");
 
   const resizeTextarea = () => {
     const textarea = messageRef.current;
@@ -43,14 +43,16 @@ const ChatInput: React.FC<ChatInputProps> = ({
   };
 
   useEffect(() => {
-    resizeTextarea();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watch("message")]);
+      resizeTextarea();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [watch("message")]);
 
   const internalSubmit = (data: MessageForm) => {
     onSubmit(data);
     reset();
-    setTimeout(() => resizeTextarea(), 0);
+    setTimeout(() => resizeTextarea(),
+      0);
   };
 
   return (
@@ -72,7 +74,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           {isUploading ? (
             <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
           ) : (
-            <Paperclip size={20} />
+            <Paperclip size={20}/>
           )}
         </label>
 
@@ -100,7 +102,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
             type="button"
             className="bg-white px-3 text-gray-400 hover:text-gray-600"
           >
-            <Smile size={20} />
+            <Smile size={20}/>
           </button>
         </div>
 
@@ -108,7 +110,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
           type="submit"
           className="ml-3 text-blue-500 hover:text-blue-600"
         >
-          <Send size={20} />
+          <Send size={20}/>
         </button>
       </div>
 

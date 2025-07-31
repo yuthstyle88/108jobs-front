@@ -1,16 +1,16 @@
 "use client";
-import { Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
-import { API_ROUTES_SELLER } from "@/api/endpoints";
+import {Plus, Trash2} from "lucide-react";
+import {useEffect, useState} from "react";
+import {useFieldArray, useForm} from "react-hook-form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {usePrivateFetch, usePrivatePost} from "@/hooks/api-hooks";
+import {API_ROUTES_SELLER} from "@/api/endpoints";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
-import { getNamespace } from "@/utils/i18nHelper";
-import { LanguageFile } from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
 
 type LanguageFromServer = {
   id: string;
@@ -31,8 +31,10 @@ const EditLanguages = () => {
     languageItems: z.array(
       z.object({
         id: z.string().optional(),
-        language: z.string().min(1, userEditLanguage.languagesRequire),
-        level: z.string().min(1, "Vui lòng chọn cấp độ"),
+        language: z.string().min(1,
+          userEditLanguage.languagesRequire),
+        level: z.string().min(1,
+          "Vui lòng chọn cấp độ"),
       })
     ),
   });
@@ -49,7 +51,7 @@ const EditLanguages = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: {errors},
   } = useForm<LanguageFormData>({
     resolver: zodResolver(languageSchema),
     defaultValues: {
@@ -57,42 +59,43 @@ const EditLanguages = () => {
     },
   });
 
-  const { successMessage } = useNotification();
-  const { fields, append, remove, replace } = useFieldArray({
+  const {successMessage} = useNotification();
+  const {fields, append, remove, replace} = useFieldArray({
     control,
     name: "languageItems",
   });
 
   const [isFormReady, setIsFormReady] = useState(false);
 
-  const { data: levelData, isLoading: isLevelLoading } = usePrivateFetch<{
+  const {data: levelData, isLoading: isLevelLoading} = usePrivateFetch<{
     levels: LevelItem[];
   }>(API_ROUTES_SELLER.profile.skillLevel);
 
-  const { data: languageData, isLoading: isLangLoading } = usePrivateFetch<{
+  const {data: languageData, isLoading: isLangLoading} = usePrivateFetch<{
     languageProfiles: LanguageFromServer[];
   }>(API_ROUTES_SELLER.profile.languages);
 
-  const { trigger: sendLanguages, isMutating } = usePrivatePost(
+  const {trigger: sendLanguages, isMutating} = usePrivatePost(
     API_ROUTES_SELLER.profile.languages
   );
 
   useEffect(() => {
-    if (!isLangLoading && !isLevelLoading) {
-      const mapped =
-        languageData?.languageProfiles.map((item) => ({
-          id: item.id,
-          language: item.lang,
-          level: item.levelName,
-        })) || [];
+      if (!isLangLoading && !isLevelLoading) {
+        const mapped =
+          languageData?.languageProfiles.map((item) => ({
+            id: item.id,
+            language: item.lang,
+            level: item.levelName,
+          })) || [];
 
-      reset({ languageItems: mapped });
-      replace(mapped);
-      setIsFormReady(true);
-    }
-  }, [languageData, levelData, isLangLoading, isLevelLoading, reset, replace]);
+        reset({languageItems: mapped});
+        replace(mapped);
+        setIsFormReady(true);
+      }
+    },
+    [languageData, levelData, isLangLoading, isLevelLoading, reset, replace]);
 
-  const onSubmit = async (data: LanguageFormData) => {
+  const onSubmit = async(data: LanguageFormData) => {
     if (!levelData) return;
 
     const body = {
@@ -101,7 +104,7 @@ const EditLanguages = () => {
           (lvl) => lvl.title === item.level
         );
         return {
-          ...(item.id ? { id: item.id } : {}),
+          ...(item.id ? {id: item.id} : {}),
           lang: item.language,
           levelId: levelObj?.id || "",
         };
@@ -110,9 +113,11 @@ const EditLanguages = () => {
 
     try {
       await sendLanguages(body);
-      successMessage("profile", "updateLanguage");
+      successMessage("profile",
+        "updateLanguage");
     } catch (error) {
-      console.error("Lỗi khi lưu ngôn ngữ:", error);
+      console.error("Lỗi khi lưu ngôn ngữ:",
+        error);
     }
   };
 
@@ -130,7 +135,7 @@ const EditLanguages = () => {
 
         {isFetching ? (
           <div className="bg-white w-full h-40 flex justify-center items-center">
-            <LoadingMultiCircle />
+            <LoadingMultiCircle/>
           </div>
         ) : fields.length === 0 ? (
           <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
@@ -146,7 +151,7 @@ const EditLanguages = () => {
               }
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" />{" "}
+              <Plus className="w-5 h-5 mr-2"/>{" "}
               {userEditLanguage.addMoreButton}
             </button>
 
@@ -157,7 +162,7 @@ const EditLanguages = () => {
                 disabled={isMutating}
                 className="w-[128px] py-2 submit-button-custom"
               >
-                {isMutating ? <LoadingCircle /> : userEditLanguage.saveButton}
+                {isMutating ? <LoadingCircle/> : userEditLanguage.saveButton}
               </button>
             </div>
           </div>
@@ -211,7 +216,7 @@ const EditLanguages = () => {
                     onClick={() => remove(index)}
                     className="border-1 border-border-secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                   >
-                    <Trash2 className="w-4" />
+                    <Trash2 className="w-4"/>
                     <span className="ml-2 font-medium">
                       {userEditLanguage.deleteInfo}
                     </span>
@@ -231,7 +236,7 @@ const EditLanguages = () => {
               }
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage.addInfo}
+              <Plus className="w-5 h-5 mr-2"/> {userEditLanguage.addInfo}
             </button>
 
             <div className="flex justify-end">
@@ -240,7 +245,7 @@ const EditLanguages = () => {
                 disabled={isMutating}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
-                {isMutating ? <LoadingCircle /> : userEditLanguage.saveInfo}
+                {isMutating ? <LoadingCircle/> : userEditLanguage.saveInfo}
               </button>
             </div>
           </form>

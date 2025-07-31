@@ -1,25 +1,29 @@
 "use client";
-import { Button } from "@/components/ui/Button";
-import { ProfileImage } from "@/constants/images";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle, ArrowLeft, Info, Paperclip } from "lucide-react";
+import {Button} from "@/components/ui/Button";
+import {ProfileImage} from "@/constants/images";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {AlertTriangle, ArrowLeft, Info, Paperclip} from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
+import {useForm} from "react-hook-form";
 import * as z from "zod";
 
 const jobApplicationSchema = z.object({
-  whyHireYou: z.string().min(100, "Minimum 100 characters required"),
+  whyHireYou: z.string().min(100,
+    "Minimum 100 characters required"),
   portfolioUrl: z
-    .string()
-    .url("Please enter a valid URL")
-    .optional()
-    .or(z.literal("")),
+  .string()
+  .url("Please enter a valid URL")
+  .optional()
+  .or(z.literal("")),
   portfolioFiles: z.any().optional(),
-  price: z.coerce.number().min(1, "Price is required"),
-  timeline: z.coerce.number().min(1, "Timeline is required"),
-  service: z.string().min(1, "Please select a service"),
+  price: z.coerce.number().min(1,
+    "Price is required"),
+  timeline: z.coerce.number().min(1,
+    "Timeline is required"),
+  service: z.string().min(1,
+    "Please select a service"),
 });
 
 type JobApplicationFormData = z.infer<typeof jobApplicationSchema>;
@@ -33,7 +37,7 @@ const JobApplication = () => {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: {errors},
   } = useForm<JobApplicationFormData>({
     resolver: zodResolver(jobApplicationSchema),
   });
@@ -45,23 +49,31 @@ const JobApplication = () => {
   };
 
   const onSubmit = (data: JobApplicationFormData) => {
-    console.log("Form submitted:", data);
+    console.log("Form submitted:",
+      data);
 
     const formData = new FormData();
-    formData.append("whyHireYou", data.whyHireYou);
-    formData.append("portfolioUrl", data.portfolioUrl || "");
-    formData.append("price", data.price.toString());
-    formData.append("timeline", data.timeline.toString());
-    formData.append("service", data.service);
+    formData.append("whyHireYou",
+      data.whyHireYou);
+    formData.append("portfolioUrl",
+      data.portfolioUrl || "");
+    formData.append("price",
+      data.price.toString());
+    formData.append("timeline",
+      data.timeline.toString());
+    formData.append("service",
+      data.service);
 
     if (selectedFiles.length > 0) {
       selectedFiles.forEach((file) => {
-        formData.append("portfolioFiles", file);
+        formData.append("portfolioFiles",
+          file);
       });
     }
 
     // TODO: Gửi formData qua API
-    console.log("FormData ready to submit:", formData);
+    console.log("FormData ready to submit:",
+      formData);
     route.back();
   };
 
@@ -70,7 +82,7 @@ const JobApplication = () => {
       <div className="max-w-[1280px] w-[88vw] mx-auto px-4 py-6">
         <div className="flex items-center gap-4 mb-6">
           <button onClick={() => route.back()}>
-            <ArrowLeft className="w-[26px] h-[26px] text-text-primary" />
+            <ArrowLeft className="w-[26px] h-[26px] text-text-primary"/>
           </button>
         </div>
 
@@ -96,7 +108,7 @@ const JobApplication = () => {
 
           <div>
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+              <AlertTriangle className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0"/>
               <p className="text-sm text-yellow-800">
                 Warning: Inviting clients to make payments outside the Fastjob
                 system is against the terms of use and will result in account
@@ -105,7 +117,7 @@ const JobApplication = () => {
             </div>
             <div className="bg-white">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 flex items-start gap-2">
-                <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                <Info className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0"/>
                 <p className="text-sm text-blue-800">
                   All information will be publicly visible (except &apos;Proposed
                   Price&apos;)
@@ -170,7 +182,7 @@ const JobApplication = () => {
                   />
                   <label htmlFor="portfolio-files">
                     <Button variant="outline" type="button" className="w-full text-text-primary">
-                      <Paperclip className="w-4 h-4 mr-2 text-text-primary" />
+                      <Paperclip className="w-4 h-4 mr-2 text-text-primary"/>
                       Select Portfolio Files
                     </Button>
                   </label>
@@ -191,7 +203,8 @@ const JobApplication = () => {
                     <div className="relative">
                       <input
                         type="number"
-                        {...register("price", { valueAsNumber: true })}
+                        {...register("price",
+                          {valueAsNumber: true})}
                         placeholder="0"
                         className="text-text-primary w-full px-3 py-2 pr-12 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
@@ -213,7 +226,8 @@ const JobApplication = () => {
                     <div className="relative">
                       <input
                         type="number"
-                        {...register("timeline", { valueAsNumber: true })}
+                        {...register("timeline",
+                          {valueAsNumber: true})}
                         placeholder="0"
                         className="text-text-primary w-full px-3 py-2 pr-12 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />

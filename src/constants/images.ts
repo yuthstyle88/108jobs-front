@@ -1,19 +1,19 @@
-import { 
-  LandingImageType, 
-  ProfileImageType, 
-  MessageImageType, 
-  SellerImageType, 
-  BannerImageType, 
-  RewardImageType, 
-  StartSellingImageType, 
-  FreelancerImageType, 
-  CompareImageType, 
-  JobDetailImageType, 
-  CategoriesImageType, 
-  MegaMenuImageType, 
-  AssetsImageType, 
-  CustomerImageType, 
-  BusinessImageType 
+import {
+  AssetsImageType,
+  BannerImageType,
+  BusinessImageType,
+  CategoriesImageType,
+  CompareImageType,
+  CustomerImageType,
+  FreelancerImageType,
+  JobDetailImageType,
+  LandingImageType,
+  MegaMenuImageType,
+  MessageImageType,
+  ProfileImageType,
+  RewardImageType,
+  SellerImageType,
+  StartSellingImageType
 } from "../types/images";
 
 // Compare images - moved up to fix import order
@@ -46,6 +46,7 @@ import landing from "../assets/images/apply-freelancer/landing.webp";
 
 // Categories images
 import seoImage from "../assets/images/categories-image/web-development-02032022.jpg";
+import webDevelopment from "../assets/images/categories-image/web-development-02032022.jpg";
 import specialist from "../assets/images/categories-image/specialist_v3_th.png";
 import milestone from "../assets/images/categories-image/milestone_v2_th.png";
 import fastReply from "../assets/images/categories-image/fast_reply.png";
@@ -56,7 +57,6 @@ import marketing from "../assets/images/categories-image/marketing.webp";
 import promote from "../assets/images/categories-image/promote-page.webp";
 import wordpress from "../assets/images/categories-image/wordpress.webp";
 import logodefault from "../assets/images/categories-image/logo-default.svg";
-import webDevelopment from "../assets/images/categories-image/web-development-02032022.jpg";
 import conceptbanner from "../assets/images/categories-image/concept-banner-th.svg";
 import notFoundSearch from "../assets/images/categories-image/empty-list.webp";
 

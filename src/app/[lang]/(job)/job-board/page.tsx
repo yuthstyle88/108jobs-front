@@ -1,16 +1,16 @@
 "use client";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
-import { Pagination } from "@/components/Pagination";
-import { ProfileImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
+import {Pagination} from "@/components/Pagination";
+import {ProfileImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
 import JobBoardTab from "./_components/JobBoardTab";
-import { useCategories } from "./hooks/useCategories";
-import { useJobPosts } from "./hooks/useJobPosts";
+import {useCategories} from "./hooks/useCategories";
+import {useJobPosts} from "./hooks/useJobPosts";
 
 
 const JobBoard = () => {
@@ -19,7 +19,7 @@ const JobBoard = () => {
 
   const route = useRouter();
 
-  const { categories } = useCategories();
+  const {categories} = useCategories();
 
   const {
     jobPosts,
@@ -35,11 +35,12 @@ const JobBoard = () => {
   const formatDate = (dateString: string) => {
     if (!dateString || dateString === "-") return "-";
     const date = new Date(dateString);
-    return date.toLocaleDateString("th-TH-u-ca-gregory", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    return date.toLocaleDateString("th-TH-u-ca-gregory",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
   };
 
   const handlePageChange = (page: number) => {
@@ -61,7 +62,7 @@ const JobBoard = () => {
 
         <div className="border-1 border-border-primary bg-white p-4 rounded-lg">
           <div className="border-b mb-6">
-            <JobBoardTab />
+            <JobBoardTab/>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -106,8 +107,8 @@ const JobBoard = () => {
 
             <div className="flex items-center gap-4 w-full md:w-auto">
               <Link prefetch={false}
-                href="/job-board/create-job"
-                className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                    href="/job-board/create-job"
+                    className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
               >
                 {jobBoardLanguageData?.buttonPostJob || "Post a Job"} (0/3)
               </Link>
@@ -117,99 +118,99 @@ const JobBoard = () => {
           <div className="overflow-x-auto border-1 border-border-primary rounded-lg">
             {isJobsLoading ? (
               <div className="py-12 text-center">
-                <LoadingMultiCircle />
+                <LoadingMultiCircle/>
               </div>
             ) : (
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      {jobBoardLanguageData?.tableHeaderTitle}
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      {jobBoardLanguageData?.tableHeaderCategory}
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      {jobBoardLanguageData?.tableHeaderJobType}
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                      {jobBoardLanguageData?.tableHeaderBudget}
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[120px] visible">
-                      {jobBoardLanguageData?.tableHeaderPostDate ||
-                        "Posted Date"}
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[120px] visible">
-                      {jobBoardLanguageData?.tableHeaderDeadline ||
-                        "Deadline"}
-                    </th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[120px] visible">
-                     
-                    </th>
-                  </tr>
+                <tr>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    {jobBoardLanguageData?.tableHeaderTitle}
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    {jobBoardLanguageData?.tableHeaderCategory}
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    {jobBoardLanguageData?.tableHeaderJobType}
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                    {jobBoardLanguageData?.tableHeaderBudget}
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[120px] visible">
+                    {jobBoardLanguageData?.tableHeaderPostDate ||
+                      "Posted Date"}
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[120px] visible">
+                    {jobBoardLanguageData?.tableHeaderDeadline ||
+                      "Deadline"}
+                  </th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[120px] visible">
+
+                  </th>
+                </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {jobPosts.length > 0 ? (
-                    jobPosts.map((job) => (
-                      <tr
-                        key={job.id}
-                        onClick={() => route.push(`/job-board/${job.id}`)}
-                        className="hover:bg-gray-50 cursor-pointer"
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-start">
-                            <div className="mr-2 mt-1">
-                              <svg
-                                className="h-5 w-5 text-gray-400"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                              >
-                                <path
-                                  d="M9 12h6m-3-3v6M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                            </div>
-                            <div>
-                              <Link prefetch={false}
-                                href={`/job-board/${job.id}`}
-                                className="hover:text-blue-600 font-medium text-base text-text-primary font-sans max-w-[300px] line-clamp-1 truncate"
-                              >
-                                {job.jobTitle}
-                              </Link>
-                            </div>
+                {jobPosts.length > 0 ? (
+                  jobPosts.map((job) => (
+                    <tr
+                      key={job.id}
+                      onClick={() => route.push(`/job-board/${job.id}`)}
+                      className="hover:bg-gray-50 cursor-pointer"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-start">
+                          <div className="mr-2 mt-1">
+                            <svg
+                              className="h-5 w-5 text-gray-400"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                            >
+                              <path
+                                d="M9 12h6m-3-3v6M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
                           </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
-                          {job.category}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
-                          {job.workingFrom}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-gray-900 font-medium">
-                          {parseFloat(job.budget).toLocaleString()}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
-                          {formatDate(job.createdAt)}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
-                          {formatDate(job.deadline) || "-"}
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td
-                        colSpan={6}
-                        className="px-6 py-8 text-center text-gray-500"
-                      >
-                        No job posts found
+                          <div>
+                            <Link prefetch={false}
+                                  href={`/job-board/${job.id}`}
+                                  className="hover:text-blue-600 font-medium text-base text-text-primary font-sans max-w-[300px] line-clamp-1 truncate"
+                            >
+                              {job.jobTitle}
+                            </Link>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
+                        {job.category}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
+                        {job.workingFrom}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-base text-gray-900 font-medium">
+                        {parseFloat(job.budget).toLocaleString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
+                        {formatDate(job.createdAt)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
+                        {formatDate(job.deadline) || "-"}
                       </td>
                     </tr>
-                  )}
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="px-6 py-8 text-center text-gray-500"
+                    >
+                      No job posts found
+                    </td>
+                  </tr>
+                )}
                 </tbody>
               </table>
             )}

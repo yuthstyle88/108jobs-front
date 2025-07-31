@@ -1,8 +1,8 @@
 "use client";
-import { JobDetailIcon } from "@/constants/icons";
-import { ProfileImage } from "@/constants/images";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { JobDetailResponse } from "@/types/jobDetail";
+import {JobDetailIcon} from "@/constants/icons";
+import {ProfileImage} from "@/constants/images";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {JobDetailResponse} from "@/types/jobDetail";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -11,8 +11,8 @@ type Props = {
   data: JobDetailResponse;
 };
 
-const Freelance = ({ language, data }: Props) => {
-  const { lang: currentLang } = useLanguage();
+const Freelance = ({language, data}: Props) => {
+  const {lang: currentLang} = useLanguage();
   const freelancer = [
     {
       title: language?.workCompleted,
@@ -82,7 +82,7 @@ const Freelance = ({ language, data }: Props) => {
               key={index}
               className="flex flex-col md:flex-row items-center space-x-2"
             >
-              <Image src={item.icon} alt="icon" className="h-6" />
+              <Image src={item.icon} alt="icon" className="h-6"/>
               <div>
                 <div className="text-text-secondary font-sans">
                   {item.title}

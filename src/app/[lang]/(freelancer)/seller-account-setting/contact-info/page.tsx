@@ -5,7 +5,7 @@ import ConfirmChangeEmailModal from "@/components/ConfirmChangeEmailModal";
 import LoadingCircle from "@/components/LoadingCircle";
 import {ERROR_CONSTANTS} from "@/constants/error";
 import {LanguageFile} from "@/constants/language";
-import {RequestState, LOADING_REQUEST, REQUEST_STATE} from "@/services/HttpService";
+import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
 import useNotification from "@/hooks/useNotification";
 import {addressSchema} from "@/utils/validation/addressSchema";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -52,11 +52,11 @@ function normalizeAddress(address: RawAddress | any | undefined): AddressFormDat
 }
 
 const ContactInfo = () => {
-  const { profileState, contact, address } = useMyUser();
-  const { t } = useTranslation();
+  const {profileState, contact, address} = useMyUser();
+  const {t} = useTranslation();
   const sellerContactLanguage = getNamespace(LanguageFile.SELLER_CONTACT_INFO);
 
-  const  contactInfoLanguageData = getNamespace(
+  const contactInfoLanguageData = getNamespace(
     LanguageFile.CONTACT
   );
 
@@ -119,18 +119,18 @@ const ContactInfo = () => {
 
   const country = watch("country");
 
-  const { data, } = useHttpGet(
+  const {data,} = useHttpGet(
     "getCountries"
   );
-  
-const countryOptions = useMemo(
-  () =>
-    data?.countries.map(c => ({
-      label: c.name,
-      value: c.name,
-    })) ?? [],
-  [data],
-);
+
+  const countryOptions = useMemo(
+    () =>
+      data?.countries.map(c => ({
+        label: c.name,
+        value: c.name,
+      })) ?? [],
+    [data],
+  );
 
 
   useEffect(() => {
@@ -230,10 +230,10 @@ const countryOptions = useMemo(
     <div className="bg-white rounded-md shadow-sm overflow-hidden">
       <div className="border-b border-gray-200 p-5">
         <h2 className="text-lg font-medium text-gray-800">
-          {sellerContactLanguage?.contactInfoTitle}
+          {t("sellerContactInfo.contactInfoTitle")}
         </h2>
         <p className="text-sm text-gray-500">
-          {sellerContactLanguage?.contactInfoDescription}
+          {t("sellerContactInfo.contactInfoDescription")}
         </p>
       </div>
 
@@ -244,7 +244,7 @@ const countryOptions = useMemo(
               <div className="flex gap-2 items-end w-full">
                 <div className="flex-1">
                   <label className="block text-sm text-text-primary font-semibold mb-2">
-                    {sellerContactLanguage?.emailContact}
+                    {t("sellerContactInfo.emailContact")}
                   </label>
                   <input
                     type="email"
@@ -297,7 +297,7 @@ const countryOptions = useMemo(
                 onClick={() => setIsModalOpen(true)}
                 className="px-3 py-[8px] rounded-md text-third border-gray-200 border-1"
               >
-                {global.buttonEdit}
+                {t("global.buttonEdit")}
               </button>
             </div>
           </div>
@@ -397,14 +397,13 @@ const countryOptions = useMemo(
                     error={errors.zipCode}
                     control={control}
                     setValue={setValue}
-                    language={sellerContactLanguage}
                   />
                   <div>
                     <label className="block font-semibold mb-1">
-                      {sellerContactLanguage?.subDistrict}
+                      {t("sellerContact.subDistrict")}
                     </label>
                     <input
-                      placeholder={sellerContactLanguage?.subDistrict}
+                      placeholder={t("sellerContact.subDistrict")}
                       {...register("subdistrictOrDistrict")}
                       className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
                     />
@@ -419,10 +418,10 @@ const countryOptions = useMemo(
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block font-semibold mb-1">
-                      {sellerContactLanguage?.district}
+                      {t("sellerContact.district")}
                     </label>
                     <input
-                      placeholder={sellerContactLanguage?.district}
+                      placeholder={t("sellerContact.district")}
                       {...register("districtOrSubdistrict")}
                       className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
                     />
@@ -434,10 +433,10 @@ const countryOptions = useMemo(
                   </div>
                   <div>
                     <label className="block font-semibold mb-1">
-                      {sellerContactLanguage?.province}
+                      {t("sellerContact.province")}
                     </label>
                     <input
-                      placeholder={sellerContactLanguage?.province}
+                      placeholder={t("sellerContact.province")}
                       {...register("province")}
                       className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
                     />
@@ -458,9 +457,9 @@ const countryOptions = useMemo(
                 className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
               >
                 {isSubmitting || isUpdateMuting ? (
-                  <span>{global?.buttonSave}...</span>
+                  <span>{t("global.buttonSave")}...</span>
                 ) : (
-                  global?.buttonSave
+                  t("global.buttonSave")
                 )}
               </button>
             </div>
@@ -474,7 +473,6 @@ const countryOptions = useMemo(
             setIsConfirmChange(true);
             setIsModalOpen(false);
           }}
-          language={contactInfoLanguageData}
         />
 
         <ChangeEmailModal
@@ -485,7 +483,6 @@ const countryOptions = useMemo(
             setIsConfirmChange(false);
             setIsChangeModal(false);
           }}
-          language={contactInfoLanguageData}
         />
       </div>
     </div>

@@ -1,5 +1,5 @@
-import { StartSellingImage } from "@/constants/images";
-import Image, { StaticImageData } from "next/image";
+import {StartSellingImage} from "@/constants/images";
+import Image, {StaticImageData} from "next/image";
 import React from "react";
 
 type Step = {
@@ -13,7 +13,7 @@ type Props = {
   data: Record<string, string>;
 };
 
-const Step = ({ data }: Props) => {
+const Step = ({data}: Props) => {
   const steps: Step[] = [
     {
       number: 1,

@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, ReactNode } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useClickOutside } from "@/hooks/useClickOutside";
+import {ReactNode, useEffect} from "react";
+import {AnimatePresence, motion} from "framer-motion";
+import {useClickOutside} from "@/hooks/useClickOutside";
 
 interface BottomSheetProps {
   open: boolean;
@@ -19,11 +19,12 @@ export default function BottomSheet({
   const ref = useClickOutside<HTMLDivElement>(() => onClose());
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "auto";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [open]);
+      document.body.style.overflow = open ? "hidden" : "auto";
+      return () => {
+        document.body.style.overflow = "auto";
+      };
+    },
+    [open]);
 
   return (
     <AnimatePresence>
@@ -31,9 +32,9 @@ export default function BottomSheet({
         <div className="fixed inset-0 z-50 bg-black/50 flex justify-center items-end">
           <motion.div
             ref={ref}
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
+            initial={{y: "100%"}}
+            animate={{y: 0}}
+            exit={{y: "100%"}}
             transition={{
               type: "spring",
               stiffness: 280,

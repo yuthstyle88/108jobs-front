@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useEffect, useState } from "react";
+import {ReactNode, useEffect, useState} from "react";
 
 interface TabNavigationProps {
   children: ReactNode[];
@@ -18,25 +18,28 @@ export default function TabNavigation({
       const offset = 200;
       const sectionPosition =
         section.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top: sectionPosition - offset, behavior: "smooth" });
+      window.scrollTo({top: sectionPosition - offset, behavior: "smooth"});
     }
   };
 
   useEffect(() => {
-    const handleScroll = () => {
-      const sections = document.querySelectorAll("div.section");
+      const handleScroll = () => {
+        const sections = document.querySelectorAll("div.section");
 
-      sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top >= 0 && rect.top < window.innerHeight / 2) {
-          setCurrentTab(Number(section.id));
-        }
-      });
-    };
+        sections.forEach((section) => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top >= 0 && rect.top < window.innerHeight / 2) {
+            setCurrentTab(Number(section.id));
+          }
+        });
+      };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+      window.addEventListener("scroll",
+        handleScroll);
+      return () => window.removeEventListener("scroll",
+        handleScroll);
+    },
+    []);
 
   return (
     <div className="">

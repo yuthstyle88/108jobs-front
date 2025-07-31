@@ -1,10 +1,10 @@
 "use client";
-import { LanguageFile } from "@/constants/language";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { ExternalLink } from "lucide-react";
+import {LanguageFile} from "@/constants/language";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {ExternalLink} from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ReactNode } from "react";
+import {usePathname} from "next/navigation";
+import {ReactNode} from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {getNamespace} from "@/utils/i18nHelper";
 
@@ -17,15 +17,15 @@ export default function StartSellingLayout({
   children,
 }: StartSellingLayoutProps) {
   const pathname = usePathname();
-  const { lang } = useLanguage();
+  const {lang} = useLanguage();
   const userEditLanguage = getNamespace(LanguageFile.PROFILE_USER_EDIT);
 
-  const { profileState, person } = useMyUser();
+  const {profileState, person} = useMyUser();
   const menuItems = [
-    { href: "/user/edit/education", label: userEditLanguage?.education },
-    { href: "/user/edit/experience", label: userEditLanguage?.workExperience },
-    { href: "/user/edit/skills", label: userEditLanguage?.skills },
-    { href: "/user/edit/languages", label: userEditLanguage?.languages },
+    {href: "/user/edit/education", label: userEditLanguage?.education},
+    {href: "/user/edit/experience", label: userEditLanguage?.workExperience},
+    {href: "/user/edit/skills", label: userEditLanguage?.skills},
+    {href: "/user/edit/languages", label: userEditLanguage?.languages},
     {
       href: "/user/edit/certifications",
       label: userEditLanguage?.certificatesAwards,
@@ -50,12 +50,12 @@ export default function StartSellingLayout({
                   {menuItems.map((item) => (
                     <li key={item.href}>
                       <Link prefetch={false}
-                        href={item.href}
-                        className={`flex items-center px-4 py-2 ${
-                          pathname === `/${lang}${item.href}`
-                            ? "text-blue-600 bg-blue-50 border-l-4 border-blue-500"
-                            : "text-gray-700 hover:bg-gray-50"
-                        }`}
+                            href={item.href}
+                            className={`flex items-center px-4 py-2 ${
+                              pathname === `/${lang}${item.href}`
+                                ? "text-blue-600 bg-blue-50 border-l-4 border-blue-500"
+                                : "text-gray-700 hover:bg-gray-50"
+                            }`}
                       >
                         {item.label}
                       </Link>
@@ -66,13 +66,13 @@ export default function StartSellingLayout({
 
               <div className="px-4 py-2 mt-4 border-1 border-border-primary rounded-lg">
                 <Link prefetch={false}
-                  href={`/user/${person?.name}`}
-                  className="text-blue-600 flex justify-center items-center gap-2"
+                      href={`/user/${person?.name}`}
+                      className="text-blue-600 flex justify-center items-center gap-2"
                 >
                   <p className="font-medium">
                     {userEditLanguage?.viewProfile}
                   </p>
-                  <ExternalLink className="w-4 h-4 mr-2" />
+                  <ExternalLink className="w-4 h-4 mr-2"/>
                 </Link>
               </div>
             </div>

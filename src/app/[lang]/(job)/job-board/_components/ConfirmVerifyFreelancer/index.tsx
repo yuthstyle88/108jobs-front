@@ -1,7 +1,7 @@
 "use client";
 
 import Modal from "@/components/ui/Modal";
-import { CircleAlert } from "lucide-react";
+import {CircleAlert} from "lucide-react";
 
 interface ConfirmVerifyFreelancerProps {
   isOpen: boolean;
@@ -22,7 +22,7 @@ const ConfirmVerifyFreelancer: React.FC<ConfirmVerifyFreelancerProps> = ({
       closeOnOutsideClick={false}
     >
       <section className="px-[12px] w-full flex flex-col gap-8 justify-center items-center">
-        <CircleAlert className="w-[65px] h-[65px] text-blue-500" />
+        <CircleAlert className="w-[65px] h-[65px] text-blue-500"/>
         <article>
           <h1 className="text-[18px] font-medium text-text-primary text-center">
             Cannot submit proposal <br/> No approved services yet

@@ -7,5 +7,5 @@ export type Review = {
   createdAt: string;
   reviewerName: string;
   reviewerAvatar: string;
-  isOwner:string;
+  isOwner: string;
 }

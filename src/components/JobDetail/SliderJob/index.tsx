@@ -1,11 +1,11 @@
 "use client";
-import { Swiper, SwiperClass, SwiperSlide, useSwiper } from "swiper/react";
+import {Swiper, SwiperClass, SwiperSlide, useSwiper} from "swiper/react";
 import Image from "next/image";
-import { useState } from "react";
+import {useState} from "react";
 import "swiper/css";
 import "swiper/css/navigation";
-import { FreeMode, Navigation, Thumbs } from "swiper/modules";
-import { JobImage } from "@/types/jobDetail";
+import {FreeMode, Navigation, Thumbs} from "swiper/modules";
+import {JobImage} from "@/types/jobDetail";
 
 const CustomNavigation = ({
   showPrev,
@@ -71,7 +71,7 @@ type Props = {
   images: JobImage[];
 };
 
-const SliderJob = ({ images }: Props) => {
+const SliderJob = ({images}: Props) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
@@ -81,7 +81,7 @@ const SliderJob = ({ images }: Props) => {
     <>
       <Swiper
         spaceBetween={10}
-        thumbs={{ swiper: thumbsSwiper }}
+        thumbs={{swiper: thumbsSwiper}}
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper2"
         onSlideChange={(swiper) => {
@@ -89,7 +89,7 @@ const SliderJob = ({ images }: Props) => {
           setIsEnd(swiper.isEnd);
         }}
       >
-        <CustomNavigation showPrev={!isBeginning} showNext={!isEnd} />
+        <CustomNavigation showPrev={!isBeginning} showNext={!isEnd}/>
         {images.map((image, index) => (
           <SwiperSlide key={index}>
             <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden">
@@ -123,10 +123,10 @@ const SliderJob = ({ images }: Props) => {
           spaceBetween={10}
           slidesPerView={5}
           breakpoints={{
-            320: { slidesPerView: 3 },
-            640: { slidesPerView: 3 },
-            768: { slidesPerView: 4 },
-            1024: { slidesPerView: 5 },
+            320: {slidesPerView: 3},
+            640: {slidesPerView: 3},
+            768: {slidesPerView: 4},
+            1024: {slidesPerView: 5},
           }}
           freeMode={true}
           watchSlidesProgress={true}

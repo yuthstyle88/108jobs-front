@@ -1,7 +1,7 @@
 "use client";
 
-import { usePrivateBlob } from "@/hooks/api-hooks/usePrivateBlob";
-import { FileText, Music2 } from "lucide-react";
+import {usePrivateBlob} from "@/hooks/api-hooks/usePrivateBlob";
+import {FileText, Music2} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -18,7 +18,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({
   fileName,
   showDownloadLink = true,
 }) => {
-  const { blobUrl, isLoading, error } = usePrivateBlob(fileUrl);
+  const {blobUrl, isLoading, error} = usePrivateBlob(fileUrl);
 
   const isImage = fileType.startsWith("image");
   const isAudio = fileType.startsWith("audio");
@@ -27,9 +27,9 @@ const FilePreview: React.FC<FilePreviewProps> = ({
     <div className="flex items-center bg-white border border-[#cfd4d8] p-4 rounded-[4px] cursor-pointer">
       <div className="w-10 h-10 flex items-center justify-center bg-gray-100 border rounded overflow-hidden">
         {isLoading ? (
-          <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"/>
         ) : error ? (
-          <FileText className="text-red-500 w-5 h-6" />
+          <FileText className="text-red-500 w-5 h-6"/>
         ) : isImage && blobUrl ? (
           <Image
             src={blobUrl}
@@ -39,9 +39,9 @@ const FilePreview: React.FC<FilePreviewProps> = ({
             className="object-cover w-10 h-10"
           />
         ) : isAudio ? (
-          <Music2 className="text-gray-500 w-5 h-6" />
+          <Music2 className="text-gray-500 w-5 h-6"/>
         ) : (
-          <FileText className="text-gray-500 w-5 h-6" />
+          <FileText className="text-gray-500 w-5 h-6"/>
         )}
       </div>
 
@@ -52,10 +52,10 @@ const FilePreview: React.FC<FilePreviewProps> = ({
 
         {showDownloadLink && blobUrl && (
           <Link prefetch={false}
-            href={blobUrl}
-            rel="noopener noreferrer"
-            className="text-blue-600 underline"
-            download={fileName}
+                href={blobUrl}
+                rel="noopener noreferrer"
+                className="text-blue-600 underline"
+                download={fileName}
           >
             <small>Download</small>
           </Link>

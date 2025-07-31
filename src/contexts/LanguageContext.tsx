@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext } from "react";
+import {createContext, useContext} from "react";
 import {VALID_LANGUAGES} from "@/constants/language";
 
 interface LanguageContextType {
@@ -24,10 +24,12 @@ export function LanguageProvider({
   const setLang = (newLang: string) => {
     if (!VALID_LANGUAGES.includes(newLang)) return;
 
-    localStorage.setItem("lang", newLang);
+    localStorage.setItem("lang",
+      newLang);
     document.cookie = `current-language=${newLang}; path=/`;
 
-    const cleanPath = window.location.pathname.replace(/^\/(vi|en|th)/, "");
+    const cleanPath = window.location.pathname.replace(/^\/(vi|en|th)/,
+      "");
     const isLocalhost = window.location.hostname === "localhost";
 
     if (isLocalhost) {
@@ -39,7 +41,7 @@ export function LanguageProvider({
   };
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang }}>
+    <LanguageContext.Provider value={{lang, setLang}}>
       {children}
     </LanguageContext.Provider>
   );

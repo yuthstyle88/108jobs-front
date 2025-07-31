@@ -1,12 +1,8 @@
 "use client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/Collapsible";
-import { CategoriesIcon } from "@/constants/icons";
-import { ChevronDown } from "lucide-react";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/Card";
+import {Collapsible, CollapsibleContent, CollapsibleTrigger,} from "@/components/ui/Collapsible";
+import {CategoriesIcon} from "@/constants/icons";
+import {ChevronDown} from "lucide-react";
 import Image from "next/image";
 
 const Services = () => {
@@ -552,7 +548,7 @@ const Services = () => {
                         <span className="font-medium text-sm text-text-primary">
                           {subcategory.title}
                         </span>
-                        <ChevronDown className="h-4 w-4" />
+                        <ChevronDown className="h-4 w-4"/>
                       </CollapsibleTrigger>
                       <CollapsibleContent className="mt-2">
                         <div className="pl-4 space-y-1">

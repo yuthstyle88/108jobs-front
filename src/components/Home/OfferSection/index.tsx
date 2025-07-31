@@ -1,12 +1,12 @@
-import { CompareImage } from "@/constants/images";
-import { faArrowRight, faCheck } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {CompareImage} from "@/constants/images";
+import {faArrowRight, faCheck} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import React from "react";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 const OfferSection = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
 
   const cardData = [
     {
@@ -48,7 +48,7 @@ const OfferSection = () => {
   return (
     <section
       className="bg-gradient-to-t py-12 grid grid-container-desktop-banner gap-y-4 sm:gap-y-12 gap-x-4"
-      style={{ background: "linear-gradient(to top, hsl(216 85% 94%), #fff)" }}
+      style={{background: "linear-gradient(to top, hsl(216 85% 94%), #fff)"}}
     >
       <div className="col-start-2 col-end-3">
         <h2 className="home-title-head text-[18px] sm:text-[2.25rem] text-center">
@@ -75,7 +75,7 @@ const OfferSection = () => {
                 </div>
               )}
               <div className="flex justify-center mt-8 items-center">
-                <Image src={card.image} alt={card.title} />
+                <Image src={card.image} alt={card.title}/>
               </div>
               <div className="text-text-primary mt-6">
                 <h3 className="font-semibold text-[1.25rem] mb-2">
@@ -98,11 +98,11 @@ const OfferSection = () => {
             </div>
 
             <div>
-              <hr className="w-full h-[1px] m-0 bg-border-secondary" />
+              <hr className="w-full h-[1px] m-0 bg-border-secondary"/>
               <div className="h-[60px] px-6 flex justify-end items-center ">
                 <div className="opacity-70 text-[0.875rem] cursor-pointer text-text_secondary">
                   {t("home.labelSeeMoreTittle")}
-                  <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
+                  <FontAwesomeIcon icon={faArrowRight} className="pl-1"/>
                 </div>
               </div>
             </div>

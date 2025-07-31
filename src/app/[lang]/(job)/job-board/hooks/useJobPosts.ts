@@ -1,7 +1,7 @@
-import { API_ROUTES } from "@/api/endpoints";
-import { usePublicFetch } from "@/hooks/api-hooks";
-import { JobPostsResponse } from "@/types/job-board";
-import { useMemo } from "react";
+import {API_ROUTES} from "@/api/endpoints";
+import {usePublicFetch} from "@/hooks/api-hooks";
+import {JobPostsResponse} from "@/types/job-board";
+import {useMemo} from "react";
 
 interface UseJobPostsProps {
   categoryId?: string;
@@ -9,25 +9,30 @@ interface UseJobPostsProps {
   page?: number;
 }
 
-export const useJobPosts = ({ categoryId, jobType, page = 1 }: UseJobPostsProps = {}) => {
+export const useJobPosts = ({categoryId, jobType, page = 1}: UseJobPostsProps = {}) => {
   const queryParams = useMemo(() => {
-    const params = new URLSearchParams();
+      const params = new URLSearchParams();
 
-    if (categoryId) {
-      params.append('serviceCatalogId', categoryId);
-    }
+      if (categoryId) {
+        params.append('serviceCatalogId',
+          categoryId);
+      }
 
-    if (jobType) {
-      params.append('jobType', jobType);
-    }
+      if (jobType) {
+        params.append('jobType',
+          jobType);
+      }
 
-    params.append('page', page.toString());
-    params.append('pageSize', '13');
+      params.append('page',
+        page.toString());
+      params.append('pageSize',
+        '13');
 
-    return `?${params.toString()}`;
-  }, [categoryId, jobType, page]);
+      return `?${params.toString()}`;
+    },
+    [categoryId, jobType, page]);
 
-  const { data, isLoading, error, mutate } = usePublicFetch<JobPostsResponse>(
+  const {data, isLoading, error, mutate} = usePublicFetch<JobPostsResponse>(
     `${API_ROUTES.job.getJobBoard}${queryParams}`
   );
 

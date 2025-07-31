@@ -1,6 +1,6 @@
 "use client";
-import { ProfileIcon } from "@/constants/icons";
-import { LanguageFile } from "@/constants/language";
+import {ProfileIcon} from "@/constants/icons";
+import {LanguageFile} from "@/constants/language";
 
 import Image from "next/image";
 import {getNamespace} from "@/utils/i18nHelper";
@@ -37,22 +37,22 @@ export default function BusinessPage() {
           </p>
         </div>
         <div className="p-6">
-  <label className="block text-sm text-text-primary font-semibold text-gray-600 mb-2">
-    {companyInfoLanguageData?.labelTaxId}
-  </label>
-  
-  <div className="flex flex-col sm:flex-row gap-4">
-    <input
-      type="text"
-      className="sm:flex-1 border border-gray-300 rounded-lg px-3 py-2"
-      placeholder={companyInfoLanguageData?.placeholderTaxId}
-      defaultValue=""
-    />
-    <button className="sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 whitespace-nowrap">
-      {companyInfoLanguageData?.buttonSearchCompany}
-    </button>
-  </div>
-</div>
+          <label className="block text-sm text-text-primary font-semibold text-gray-600 mb-2">
+            {companyInfoLanguageData?.labelTaxId}
+          </label>
+
+          <div className="flex flex-col sm:flex-row gap-4">
+            <input
+              type="text"
+              className="sm:flex-1 border border-gray-300 rounded-lg px-3 py-2"
+              placeholder={companyInfoLanguageData?.placeholderTaxId}
+              defaultValue=""
+            />
+            <button className="sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 whitespace-nowrap">
+              {companyInfoLanguageData?.buttonSearchCompany}
+            </button>
+          </div>
+        </div>
 
       </div>
     </div>

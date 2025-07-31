@@ -1,5 +1,5 @@
 "use client";
-import { ArrowLeftIcon } from "lucide-react";
+import {ArrowLeftIcon} from "lucide-react";
 
 export const AuthFormContainer = ({
   children,
@@ -17,7 +17,7 @@ export const AuthFormContainer = ({
           onClick={onBack}
           className="text-gray-600 hover:text-gray-800 transition-colors p-2 -ml-2 absolute top-4 left-6"
         >
-          <ArrowLeftIcon className="h-6 w-6" />
+          <ArrowLeftIcon className="h-6 w-6"/>
         </button>
       )}
     </div>

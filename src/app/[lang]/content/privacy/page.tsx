@@ -1,5 +1,5 @@
 "use client";
-import { AssetIcon } from "@/constants/icons";
+import {AssetIcon} from "@/constants/icons";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,7 +9,7 @@ const PrivacyPolicy = () => {
       <main>
         <section
           className="flex items-center justify-center w-full h-[200px] relative overflow-hidden"
-          style={{ background: "linear-gradient(282deg, #27c8f8, #1850c2)" }}
+          style={{background: "linear-gradient(282deg, #27c8f8, #1850c2)"}}
         >
           <div className="px-[1.5rem] relative">
             <div className="text-center text-white">
@@ -30,7 +30,7 @@ const PrivacyPolicy = () => {
             <div className="text-center w-full">
               <h1 className="font-sans text-[1.5rem] text-text-primary font-semibold mb-12">
                 นโยบายความเป็นส่วนตัว (Privacy Policy)
-                <br /> ของ <br /> บริษัท ฟาสต์เวิร์ค เทคโนโลยีส์ จำกัด
+                <br/> ของ <br/> บริษัท ฟาสต์เวิร์ค เทคโนโลยีส์ จำกัด
               </h1>
               <p className="text-text-primary my-6 text-left">
                 โดยที่พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562
@@ -131,7 +131,7 @@ const PrivacyPolicy = () => {
               <p className="mb-6 m-0 leading-[1.5]">
                 บริษัทฯ
                 จะเก็บรวบรวมข้อมูลส่วนบุคคลของท่านตามวัตถุประสงค์และตามอำนาจแห่งกฎหมายเท่านั้น
-                <br />
+                <br/>
                 บริษัทฯ อาจเก็บรวบรวมข้อมูลส่วนบุคคลของท่านผ่านการสมัครสมาชิก
                 Fastjob ของท่านโดยตรงหรือจากช่องทางอื่นดังต่อไปนี้
               </p>
@@ -148,10 +148,10 @@ const PrivacyPolicy = () => {
                 ท่านรับรองว่าการเปิดเผยหรือส่งข้อมูลส่วนบุคคลของบุคคลอื่นใน
                 Fastjob นั้นเป็นไปโดยชอบด้วยกฎหมาย ซึ่งรวมถึงแต่ไม่จำกัดเพียง
                 การได้รับความยินยอมจากเจ้าของข้อมูลส่วนบุคคลโดยชอบแล้ว
-                <br />
+                <br/>
                 ในกรณีที่มีการเก็บรวบรวมข้อมูลส่วนบุคคลของท่านจากแหล่งอื่น
                 เราจะดำเนินการดังต่อไปนี้ภายใน
-                <br />
+                <br/>
                 30 วัน นับแต่วันที่มีการเก็บรวบรวมข้อมูลส่วนบุคคลของท่าน
               </p>
               <ul className="list-disc pl-[48px] grid gap-2">
@@ -293,7 +293,7 @@ const PrivacyPolicy = () => {
               <p className="mb-6 m-0 leading-[1.5]">
                 ในกรณีที่ไม่เข้าเงื่อนไขที่บริษัทฯ
                 สามารถเก็บรวบรวมข้อมูลส่วนบุคคลโดยไม่ต้องขอความยินยอม
-                <br />
+                <br/>
                 ซึ่งรวมถึงแต่ไม่จำกัดเพียง
                 การเก็บรวบรวมข้อมูลส่วนบุคคลเพื่อวัตถุประสงค์ของการตลาดและการส่งเสริมการขาย
                 การปรับปรุงสินค้า บริการ หรือประสบการณ์การใช้งาน ฯลฯ บริษัทฯ
@@ -303,7 +303,7 @@ const PrivacyPolicy = () => {
                   https://fastwork.co/consent-management
                 </Link>{" "}
                 หรือช่องทางอื่นใดตามแต่ที่ได้ตกลงกัน
-                <br />
+                <br/>
                 บริษัทฯ
                 จะดำเนินการแจ้งให้ท่านทราบถึงวัตถุประสงค์ของการเก็บรวบรวม ใช้
                 หรือเปิดเผยข้อมูลส่วนบุคคลเมื่อมีความจำเป็นต้องขอข้อมูลส่วนบุคคล
@@ -311,7 +311,7 @@ const PrivacyPolicy = () => {
                 บริษัทฯ จะไม่เก็บรวบรวม ใช้
                 หรือเปิดเผยข้อมูลส่วนบุคคลที่ไม่มีความจำเป็นหรือเกี่ยวข้องสำหรับการเข้าใช้บริการ
                 Fastjob
-                <br />
+                <br/>
                 บริษัทฯ จะไม่เก็บรวบรวม ใช้
                 หรือเปิดเผยข้อมูลส่วนของผู้เยาว์ซึ่งยังไม่บรรลุนิติภาวะโดยการสมรส
                 หรือไม่มีฐานะเสมือนดังบุคคลซึ่งบรรลุนิติภาวะแล้ว อย่างไรก็ดี
@@ -344,15 +344,15 @@ const PrivacyPolicy = () => {
                 ซึ่งรวมถึงแต่ไม่จำกัดเพียง การวิเคราะห์
                 การปรับปรุงสินค้าหรือบริการ และทำการตลาดผ่าน Google, Facebook,
                 Line, One Signal, Mailchimp, Pixel Tracking Code หรือช่องทางอื่น
-                ๆ<br />
+                ๆ<br/>
                 ทั้งนี้ บริษัทฯ จะไม่ใช้ระบบปฏิบัติงานโดยอัตโนมัติ (Automated
                 Decision-Making) โดยปราศจากการบุคคลกำกับดูแล
                 รวมถึงการทำโปรไฟล์ลิ่ง (Profiling)
                 ในลักษณะที่ก่อให้เกิดผลกระทบแก่ท่านอย่างมีนัยสำคัญ
-                <br />
+                <br/>
                 ในกรณีที่ท่านไม่ต้องการรับข่าวสารการโฆษณา และ/หรือ
                 ข้อมูลทางการตลาดจากบริษัทฯ
-                <br />
+                <br/>
                 (communication@fastwork.co) ท่านสามารถคลิ๊ก “Unsubscribe”
                 ผ่านช่องทางจดหมายอิเล็กทรอนิกส์ที่บริษัทฯ
                 จัดส่งไปยังท่านหรือใช้สิทธิเพิกถอนความยินยอมตามรายละเอียดดังจะกล่าวต่อไป
@@ -370,7 +370,7 @@ const PrivacyPolicy = () => {
                 ซึ่งรวมถึงแต่ไม่จำกัดเพียง การควบคุมไม่ให้มีการใช้ Fastjob
                 ที่ฝ่าฝืนข้อตกลงและเงื่อนไข (Terms and Conditions) ของ Fastjob
                 ผ่านการใช้งาน
-                <br />
+                <br/>
                 แอปพลิเคชันของคู่ค้าด้วยวิธีการตรวจสอบช่องทางสนทนาระหว่างผู้ว่าจ้างและผู้รับจ้าง
                 โดยท่านรับทราบและยอมรับว่าข้อกำหนดดังกล่าวเป็นสาระสำคัญของการใช้บริการ
                 Fastjob ในกรณีที่ท่านใช้สิทธิคัดค้านการประมวลผลข้อมูลส่วนบุคคล
@@ -386,7 +386,7 @@ const PrivacyPolicy = () => {
               <p className="mb-6 m-0 leading-[1.5]">
                 บริษัทฯ
                 จะแจ้งให้ท่านทราบก่อนหรือในขณะเก็บรวบรวมข้อมูลส่วนบุคคลถึงรายละเอียดดังต่อไปนี้
-                <br />
+                <br/>
                 เว้นแต่ท่านได้ทราบถึงรายละเอียดนั้นอยู่แล้ว
               </p>
               <ul className="list-disc pl-[48px] grid gap-2">
@@ -423,7 +423,7 @@ const PrivacyPolicy = () => {
               <p className="mb-6 m-0 leading-[1.5]">
                 บริษัทฯ
                 จะเปิดเผยข้อมูลส่วนบุคคลท่านตามวัตถุประสงค์ที่เก็บรวบรวมข้อมูลส่วนบุคคลหรือตามอำนาจแห่งกฎหมายเท่านั้น
-                <br />
+                <br/>
                 บริษัทฯ
                 อาจเปิดเผยหรือส่งต่อข้อมูลส่วนบุคคลของท่านให้แก่คณะกรรมการ
                 ผู้ถือหุ้น พนักงาน ลูกจ้าง หรือบุคลากรภายในบริษัทฯ
@@ -431,7 +431,7 @@ const PrivacyPolicy = () => {
                 นอกจากนี้ บริษัทฯ
                 อาจเปิดเผยหรือส่งต่อข้อมูลส่วนบุคคลของท่านให้แก่บริษัทในเครือ
                 บริษัทลูก หรือบริษัทที่จัดตั้งขึ้นใหม่ซึ่งบริษัทฯ เข้าถือหุ้นได้
-                <br />
+                <br/>
                 บริษัทฯ
                 อาจเปิดเผยหรือส่งต่อข้อมูลส่วนบุคคลของท่านให้แก่บุคคลภายนอก
                 <strong>(“ผู้ประมวลผลข้อมูลส่วนบุคคล”)</strong>
@@ -440,11 +440,11 @@ const PrivacyPolicy = () => {
                 เพื่อวัตถุประสงค์ที่จำเป็นตามเงื่อนไขที่ให้ไว้ในการเก็บรวบรวมข้อมูลส่วนบุคคลหรือตามอำนาจแห่งกฎหมาย
                 โดยที่การประมวลผลข้อมูลส่วนบุคคลดังกล่าวนี้ได้ผ่านการประเมินความปลอดภัยในการประมวลผลข้อมูลส่วนบุคคลตามมาตรฐานของกฎหมายฯ
                 แล้ว
-                <br />
+                <br/>
                 บริษัทฯ
                 จะกำกับดูแลและควบคุมให้ผู้ประมวลผลข้อมูลส่วนบุคคลมีมาตรฐานการคุ้มครองข้อมูลส่วนบุคคลตามกฎหมายด้วยวิธีจัดทำสัญญา
                 และ/หรือ ข้อตกลงการประมวลผลข้อมูลส่วนบุคคล
-                <br />
+                <br/>
                 ในกรณีที่มีการเปิดเผยหรือส่งต่อข้อมูลส่วนบุคคลของท่านให้แก่ประเทศปลายทางหรือองค์การระหว่างประเทศที่รับข้อมูลส่วนบุคคลมีมาตรฐานการคุ้มครองข้อมูลส่วนบุคคลไม่ต่ำกว่ากฎหมาย
                 ด้วยวิธีจัดทำสัญญา และ/หรือ ข้อตกลงการประมวลผลข้อมูลส่วนบุคคล
                 เว้นแต่
@@ -498,21 +498,21 @@ const PrivacyPolicy = () => {
               <p className="mb-6 m-0 leading-[1.5]">
                 บริษัทฯ
                 จะเก็บรักษาข้อมูลส่วนบุคคลของท่านไว้ตามระยะเวลาที่จำเป็นในระหว่างที่ท่านใช้บริการ
-                <br />
+                <br/>
                 Fastjob
                 หรือตลอดระยะเวลาที่จำเป็นเพื่อให้บรรลุวัตถุประสงค์ที่กำหนดไว้ในนโยบายฯ
                 หรือตามอำนาจแห่งกฎหมาย
-                <br />
+                <br/>
                 ในกรณีที่ท่านยกเลิกบัญชีผู้ใช้งานของ Fastjob บริษัทฯ
                 จะเก็บรักษาข้อมูลส่วนบุคคลของท่านเท่าที่จำเป็นเพื่อให้บรรลุวัตถุประสงค์ที่กำหนดไว้ในนโยบายฯ
                 หรือตามอำนาจแห่งกฎหมาย โดยท่านสามารถทำรายการผ่าน Fastjob (
                 <Link prefetch={false}
-                  className="text-third underline"
-                  href="/content/support-center"
+                      className="text-third underline"
+                      href="/content/support-center"
                 >
                   https://static.fastwork.co/contents/support-center
                 </Link>
-                )<br />
+                )<br/>
                 <strong>สิทธิของเจ้าของข้อมูลส่วนบุคคล</strong>
               </p>
               <p className="mb-6 m-0 leading-[1.5]">
@@ -523,7 +523,7 @@ const PrivacyPolicy = () => {
                 <li>
                   <p className="mb-6 m-0 leading-[1.5]">
                     <strong>สิทธิเพิกถอนความยินยอม</strong>
-                    <br />
+                    <br/>
                     ท่านมีสิทธิเพิกถอนความยินยอมในการประมวลผลข้อมูลส่วนบุคคลที่ท่านให้ไว้ต่อบริษัทฯ
                     ได้ อย่างไรก็ตาม
                     การเพิกถอนความยินยอมไม่ส่งผลกระทบต่อการเก็บรวบรวม ใช้
@@ -542,26 +542,26 @@ const PrivacyPolicy = () => {
                 <li>
                   <p className="mb-6 m-0 leading-[1.5]">
                     <strong>สิทธิขอเข้าถึงและขอรับสำเนาข้อมูลส่วนบุคคล</strong>
-                    <br />
+                    <br/>
                     ท่านมีสิทธิขอเข้าถึงและขอรับสำเนาข้อมูลส่วนบุคคลที่เกี่ยวข้องกับตน
                     หากว่าข้อมูลส่วนบุคคลนั้นอยู่ในรูปแบบที่สามารถอ่านหรือใช้งานโดยทั่วไปและสามารถใช้หรือเปิดเผยข้อมูลส่วนบุคคลได้ด้วยวิธีการอัตโนมัติ
                   </p>
                 </li>
                 <li>
                   <strong>สิทธิขอให้ส่งหรือโอนข้อมูลส่วนบุคคล</strong>
-                  <br />
+                  <br/>
                   ท่านมีสิทธิขอให้บริษัทฯ
                   ส่งหรือโอนข้อมูลส่วนบุคคลที่อยู่ในรูปแบบที่สามารถอ่านหรือใช้งานโดยทั่วไปและสามารถใช้หรือเปิดเผยข้อมูลส่วนบุคคลได้ด้วยวิธีการอัตโนมัติไปยังผู้ควบคุมข้อมูลส่วนบุคคลอื่น
                 </li>
                 <li>
                   <strong>สิทธิขอแก้ไขข้อมูลส่วนบุคคล</strong>
-                  <br />
+                  <br/>
                   ท่านมีสิทธิขอให้บริษัทฯ แก้ไขข้อมูลส่วนบุคคลนั้นถูกต้อง
                   เป็นปัจจุบัน สมบูรณ์ และไม่ก่อให้เกิดความเข้าใจผิด
                 </li>
                 <li>
                   <strong>สิทธิคัดค้านการประมวลผลข้อมูลส่วนบุคคล</strong>
-                  <br />
+                  <br/>
                   ท่านมีสิทธิคัดค้านการเก็บรวบรวม ใช้
                   หรือเปิดเผยข้อมูลส่วนบุคคลของท่านในกรณีที่บริษัทฯ
                   ประมวลผลข้อมูลส่วนบุคคลเพื่อวัตถุประสงค์ดังต่อไปนี้
@@ -577,7 +577,7 @@ const PrivacyPolicy = () => {
                 </li>
                 <li>
                   <strong>สิทธิขอให้ลบหรือทำลายข้อมูลส่วนบุคคล</strong>
-                  <br />
+                  <br/>
                   ท่านมีสิทธิขอให้ลบ ทำลาย
                   หรือทำให้ข้อมูลส่วนบุคคลเป็นข้อมูลที่ไม่สามารถระบุตัวบุคคลที่เป็นเจ้าของข้อมูลส่วนบุคคลได้
                   ในกรณีดังต่อไปนี้
@@ -601,7 +601,7 @@ const PrivacyPolicy = () => {
                 </li>
                 <li>
                   <strong>สิทธิระงับการใช้ข้อมูลส่วนบุคคล</strong>
-                  <br />
+                  <br/>
                   ท่านมีสิทธิขอให้ระงับการใช้ข้อมูลส่วนบุคคล ในกรณีดังต่อไปนี้
                   <ul className="list-disc pl-[48px] grid gap-2">
                     <li>
@@ -627,19 +627,19 @@ const PrivacyPolicy = () => {
                 <li>
                   <p className="mb-6 m-0 leading-[1.5]">
                     <strong>สิทธิร้องเรียน</strong>
-                    <br />
+                    <br/>
                     ในกรณีที่ท่านเห็นว่ามีการประมวลผลข้อมูลส่วนบุคคลของท่านที่ไม่เป็นไปตามวัตถุประสงค์ที่เก็บรวบรวมข้อมูลส่วนบุคคลหรือตามอำนาจแห่งกฎหมาย
                     ท่านมีสิทธิร้องเรียนการประมวลผลข้อมูลส่วนบุคคลของบริษัทฯ ได้
                   </p>
                   <p className="mb-6 m-0 leading-[1.5]">
                     ท่านสามารถใช้สิทธิได้โดยการเข้าใช้งานบัญชีผ่านของ Fastjob (
                     <Link prefetch={false}
-                      className="text-third underline"
-                      href="/content/support-center"
+                          className="text-third underline"
+                          href="/content/support-center"
                     >
                       https://static.fastwork.co/contents/support-center
                     </Link>
-                    <br />) หรือแบบคำขอใช้สิทธิ ทั้งนี้ เมื่อบริษัทฯ ได้รับคำขอ
+                    <br/>) หรือแบบคำขอใช้สิทธิ ทั้งนี้ เมื่อบริษัทฯ ได้รับคำขอ
                     บริษัทฯ
                     จะดำเนินการตามคำขอของท่านตามรายละเอียดดังจะกล่าวต่อไป
                     นอกจากนี้ ในกรณีที่ท่านประสงค์สอบถามหรือมีข้อเสนอแนะใด ๆ
@@ -651,110 +651,110 @@ const PrivacyPolicy = () => {
               </ol>
               <table className="border-collapse border-spacing-[2px] border-gray-400 ">
                 <thead>
-                  <tr>
-                    <th className="border-1 border-black">
-                      สิทธิของเจ้าของ ข้อมูลส่วนบุคคล
-                    </th>
-                    <th colSpan={2} className="border-1 border-black">
-                      ช่องทางการติดต่อ
-                    </th>
-                    <th className="border-1 border-black">
-                      ระยะเวลาดำเนินการ (วัน)
-                    </th>
-                  </tr>
+                <tr>
+                  <th className="border-1 border-black">
+                    สิทธิของเจ้าของ ข้อมูลส่วนบุคคล
+                  </th>
+                  <th colSpan={2} className="border-1 border-black">
+                    ช่องทางการติดต่อ
+                  </th>
+                  <th className="border-1 border-black">
+                    ระยะเวลาดำเนินการ (วัน)
+                  </th>
+                </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="border-1 border-black text-center"></td>
-                    <td className="border-1 border-black text-center">
-                      ดำเนินการด้วยตนเองบนเว็บไซต์ Fastjob
-                    </td>
-                    <td className="border-1 border-black text-center">
-                      กรอกแบบคำขอใช้สิทธิ
-                    </td>
-                    <td className="border-1 border-black text-center"></td>
-                  </tr>
-                  <tr>
-                    <td className="border-1 border-black ">
-                      สิทธิเพิกถอนความยินยอม
-                    </td>
-                    <td className="border-1 border-black text-center">X</td>
-                    <td className="border-1 border-black text-center"></td>
-                    <td className="border-1 border-black text-center">7</td>
-                  </tr>
-                  <tr>
-                    <td className="border-1 border-black ">
-                      สิทธิขอเข้าถึงและขอรับสำเนาข้อมูลส่วนบุคคล
-                    </td>
-                    <td className="border-1 border-black text-center">X</td>
-                    <td className="border-1 border-black text-center"></td>
-                    <td className="border-1 border-black text-center">ทันที</td>
-                  </tr>
-                  <tr>
-                    <td className="border-1 border-black ">
-                      สิทธิขอให้ส่งหรือโอนข้อมูลส่วนบุคคล
-                    </td>
-                    <td className="border-1 border-black text-center"></td>
-                    <td className="border-1 border-black text-center">X</td>
-                    <td className="border-1 border-black text-center">30</td>
-                  </tr>
-                  <tr>
-                    <td className="border-1 border-black ">
-                      สิทธิขอแก้ไขข้อมูลส่วนบุคคล
-                    </td>
-                    <td className="border-1 border-black text-center">X</td>
-                    <td className="border-1 border-black text-center"></td>
-                    <td className="border-1 border-black text-center">ทันที</td>
-                  </tr>
-                  <tr>
-                    <td className="border-1 border-black ">
-                      สิทธิคัดค้านการประมวลผลข้อมูลส่วนบุคคล
-                    </td>
-                    <td className="border-1 border-black text-center"></td>
-                    <td className="border-1 border-black text-center">X</td>
-                    <td className="border-1 border-black text-center">30</td>
-                  </tr>
-                  <tr>
-                    <td className="border-1 border-black ">
-                      สิทธิขอให้ลบหรือทำลายข้อมูลส่วนบุคคล
-                    </td>
-                    <td className="border-1 border-black text-center"></td>
-                    <td className="border-1 border-black text-center">X</td>
-                    <td className="border-1 border-black text-center">30</td>
-                  </tr>
-                  <tr>
-                    <td className="border-1 border-black ">
-                      สิทธิระงับการใช้ข้อมูลส่วนบุคคล
-                    </td>
-                    <td className="border-1 border-black text-center"></td>
-                    <td className="border-1 border-black text-center">X</td>
-                    <td className="border-1 border-black text-center">30</td>
-                  </tr>
-                  <tr>
-                    <td className="border-1 border-black ">สิทธิร้องเรียน</td>
-                    <td className="border-1 border-black text-center">X</td>
-                    <td className="border-1 border-black text-center"></td>
-                    <td className="border-1 border-black text-center">ทันที</td>
-                  </tr>
-                  <tr>
-                    <td colSpan={4} className="border-1 border-black text-left">
-                      <em>
-                        หมายเหตุ
-                        ระยะเวลาในการดำเนินการจะคำนวณนับแต่วันที่บริษัทฯ
-                        ได้รับเอกสารครบถ้วน
-                      </em>
-                    </td>
-                  </tr>
+                <tr>
+                  <td className="border-1 border-black text-center"></td>
+                  <td className="border-1 border-black text-center">
+                    ดำเนินการด้วยตนเองบนเว็บไซต์ Fastjob
+                  </td>
+                  <td className="border-1 border-black text-center">
+                    กรอกแบบคำขอใช้สิทธิ
+                  </td>
+                  <td className="border-1 border-black text-center"></td>
+                </tr>
+                <tr>
+                  <td className="border-1 border-black ">
+                    สิทธิเพิกถอนความยินยอม
+                  </td>
+                  <td className="border-1 border-black text-center">X</td>
+                  <td className="border-1 border-black text-center"></td>
+                  <td className="border-1 border-black text-center">7</td>
+                </tr>
+                <tr>
+                  <td className="border-1 border-black ">
+                    สิทธิขอเข้าถึงและขอรับสำเนาข้อมูลส่วนบุคคล
+                  </td>
+                  <td className="border-1 border-black text-center">X</td>
+                  <td className="border-1 border-black text-center"></td>
+                  <td className="border-1 border-black text-center">ทันที</td>
+                </tr>
+                <tr>
+                  <td className="border-1 border-black ">
+                    สิทธิขอให้ส่งหรือโอนข้อมูลส่วนบุคคล
+                  </td>
+                  <td className="border-1 border-black text-center"></td>
+                  <td className="border-1 border-black text-center">X</td>
+                  <td className="border-1 border-black text-center">30</td>
+                </tr>
+                <tr>
+                  <td className="border-1 border-black ">
+                    สิทธิขอแก้ไขข้อมูลส่วนบุคคล
+                  </td>
+                  <td className="border-1 border-black text-center">X</td>
+                  <td className="border-1 border-black text-center"></td>
+                  <td className="border-1 border-black text-center">ทันที</td>
+                </tr>
+                <tr>
+                  <td className="border-1 border-black ">
+                    สิทธิคัดค้านการประมวลผลข้อมูลส่วนบุคคล
+                  </td>
+                  <td className="border-1 border-black text-center"></td>
+                  <td className="border-1 border-black text-center">X</td>
+                  <td className="border-1 border-black text-center">30</td>
+                </tr>
+                <tr>
+                  <td className="border-1 border-black ">
+                    สิทธิขอให้ลบหรือทำลายข้อมูลส่วนบุคคล
+                  </td>
+                  <td className="border-1 border-black text-center"></td>
+                  <td className="border-1 border-black text-center">X</td>
+                  <td className="border-1 border-black text-center">30</td>
+                </tr>
+                <tr>
+                  <td className="border-1 border-black ">
+                    สิทธิระงับการใช้ข้อมูลส่วนบุคคล
+                  </td>
+                  <td className="border-1 border-black text-center"></td>
+                  <td className="border-1 border-black text-center">X</td>
+                  <td className="border-1 border-black text-center">30</td>
+                </tr>
+                <tr>
+                  <td className="border-1 border-black ">สิทธิร้องเรียน</td>
+                  <td className="border-1 border-black text-center">X</td>
+                  <td className="border-1 border-black text-center"></td>
+                  <td className="border-1 border-black text-center">ทันที</td>
+                </tr>
+                <tr>
+                  <td colSpan={4} className="border-1 border-black text-left">
+                    <em>
+                      หมายเหตุ
+                      ระยะเวลาในการดำเนินการจะคำนวณนับแต่วันที่บริษัทฯ
+                      ได้รับเอกสารครบถ้วน
+                    </em>
+                  </td>
+                </tr>
                 </tbody>
               </table>
               <p className="mb-6 m-0 leading-[1.5]">
                 บริษัทฯ
                 มีสิทธิปฏิเสธไม่ปฏิบัติตามคำขอของท่านได้หากปรากฏว่าคำขอของท่านไม่ชอบหรือบริษัทฯ
-                <br />
+                <br/>
                 มีอำนาจประมวลผลข้อมูลส่วนบุคคลของท่านได้ต่อไปตามกฎหมาย
                 ในกรณีที่บริษัทฯ ไม่สามารถปฏิบัติตามคำขอของท่าน บริษัทฯ
                 จะบันทึกคำร้องขอของเจ้าของข้อมูลส่วนบุคคลพร้อมด้วยเหตุผลไว้ในทะเบียนการประมวลผลข้อมูลส่วนบุคคล
-                <br />
+                <br/>
                 อนึ่ง หากท่านอยู่ในเขตเศรษฐกิจยุโรป (EEA)
                 นอกจากสิทธิของเจ้าของข้อมูลส่วนบุคคลดังกล่าวข้างต้นแล้ว
                 ท่านยังมีสิทธิที่จะยื่นเรื่องร้องเรียนกับสำนักงานคุ้มครองข้อมูลส่วนบุคคลในประเทศของท่านได้
@@ -774,7 +774,7 @@ const PrivacyPolicy = () => {
                 <Link prefetch={false} className="text-third underline" href="/consent-management">
                   https://fastwork.co/consent-management
                 </Link>
-                <br /> ทั้งนี้
+                <br/> ทั้งนี้
                 ท่านสามารถติดตามเงื่อนไขการจัดการการใช้ข้อมูลเพิ่มเติมได้ที่
                 <a
                   className="text-third underline"
@@ -805,12 +805,12 @@ const PrivacyPolicy = () => {
                 ท่านสามารถรายงานเหตุการณ์ที่อาจกระทบความมั่นคงปลอดภัยของบริษัทฯ
                 ได้ที่ (
                 <Link prefetch={false}
-                  className="text-third underline"
-                  href="/content/support-center"
+                      className="text-third underline"
+                      href="/content/support-center"
                 >
                   https://static.fastwork.co/contents/support-center
                 </Link>
-                )<br />
+                )<br/>
                 บริษัทฯ
                 ได้จัดให้มีระบบการตรวจสอบเพื่อดำเนินการลบหรือทำลายข้อมูลส่วนบุคคลเมื่อเข้าหลักเกณฑ์ดังต่อไปนี้
               </p>
@@ -854,13 +854,13 @@ const PrivacyPolicy = () => {
                 บริษัทฯ อาจแก้ไขเปลี่ยนแปลงนโยบายฯ ได้เป็นครั้งคราว
                 โดยท่านสามารถศึกษาข้อกำหนดและเงื่อนไขนโยบายที่มีการแก้ไขเปลี่ยนแปลงนี้ได้ผ่านทางเว็บไซต์ของบริษัทฯ
                 ปรากฏรายละเอียดดังนี้
-                <br />
+                <br/>
                 นโยบายความเป็นส่วนตัว (Privacy Policy) ครั้งที่ 1 ลงวันที่ 1
                 กันยายน 2565
-                <br />
+                <br/>
                 นโยบายความเป็นส่วนตัว (Privacy Policy) ครั้งที่ 2 ลงวันที่ 15
                 สิงหาคม 2567
-                <br />
+                <br/>
                 นโยบายฯ นี้แก้ไขล่าสุดและมีผลใช้บังคับตั้งแต่วันที่ 15 สิงหาคม
                 2567 เป็นต้นไป
               </p>
@@ -899,8 +899,8 @@ const PrivacyPolicy = () => {
                     <li>
                       ติดต่อศูนย์ช่วยเหลือ
                       <Link prefetch={false}
-                        className="text-third underline"
-                        href="/content/support-center"
+                            className="text-third underline"
+                            href="/content/support-center"
                       >
                         https://static.fastwork.co/contents/support-center
                       </Link>

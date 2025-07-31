@@ -1,43 +1,32 @@
 "use client";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
-import {LanguageFile} from "@/constants/language";
-import {useLanguage} from "@/contexts/LanguageContext";;
+import {useLanguage} from "@/contexts/LanguageContext";
 import {interpolateDouble} from "@/utils/interpolate";
 import {faArrowRight, faEye, faInfoCircle, faLineChart,} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import {CartesianGrid, Line, LineChart as RechartsLineChart, ResponsiveContainer, Tooltip, XAxis, YAxis,} from "recharts";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {getNamespace} from "@/utils/i18nHelper";
+import {useTranslation} from "react-i18next";
 
 const SellerHome = () => {
   const chartData = [
-    { name: "Th02 24", value: 0 },
-    { name: "Th03 24", value: 0 },
-    { name: "Th04 24", value: 0 },
-    { name: "Th05 24", value: 0 },
-    { name: "Th06 24", value: 0 },
-    { name: "Th07 24", value: 0 },
-    { name: "Th08 24", value: 0 },
-    { name: "Th09 24", value: 0 },
-    { name: "Th10 24", value: 0 },
-    { name: "Th11 24", value: 0 },
-    { name: "Th12 24", value: 0 },
-    { name: "Th01 25", value: 0 },
-    { name: "Th02 25", value: 0 },
+    {name: "Th02 24", value: 0},
+    {name: "Th03 24", value: 0},
+    {name: "Th04 24", value: 0},
+    {name: "Th05 24", value: 0},
+    {name: "Th06 24", value: 0},
+    {name: "Th07 24", value: 0},
+    {name: "Th08 24", value: 0},
+    {name: "Th09 24", value: 0},
+    {name: "Th10 24", value: 0},
+    {name: "Th11 24", value: 0},
+    {name: "Th12 24", value: 0},
+    {name: "Th01 25", value: 0},
+    {name: "Th02 25", value: 0},
   ];
-  const { person } = useMyUser();
-
-const { lang } = useLanguage();
-  const {
-    data: sellerOverviewLanguage,
-    isLoading,
-    error,
-  } = getNamespace(LanguageFile.SELLER_OVERVIEW);
-
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
+  const {t} = useTranslation();
+  const {person} = useMyUser();
+  const {lang} = useLanguage();
 
   return (
     <main className="min-h-screen">
@@ -46,9 +35,9 @@ const { lang } = useLanguage();
           <div className="flex flex-row md:flex-col gap-6 md:gap-0">
             <div className="bg-blue-600 text-white px-4 py-2 rounded-lg inline-block mb-2">
               <h3 className="font-medium">
-                {sellerOverviewLanguage?.memberLabel}
+                {t("sellerOverview.memberLabel")}
               </h3>
-              <p className="text-sm">{sellerOverviewLanguage?.serviceFee}</p>
+              <p className="text-sm">{t("sellerOverview.serviceFee")}</p>
             </div>
             <div>
               <div className="flex items-baseline gap-1 mt-2">
@@ -58,8 +47,8 @@ const { lang } = useLanguage();
               <div className="flex items-center mt-2">
                 <span className="text-sm text-gray-500">
                   {interpolateDouble(
-                    sellerOverviewLanguage?.accumulatedIncome || "",
-                    { n: 3 }
+                    t("sellerOverview.accumulatedIncome") || "",
+                    {n: 3}
                   )}
                 </span>
               </div>
@@ -68,12 +57,12 @@ const { lang } = useLanguage();
           <div className="flex gap-4">
             <button className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm">
               {interpolateDouble(
-                sellerOverviewLanguage?.accumulateMore || "",
-                { n: "đ1.800.000,00" }
+                t("sellerOverview.accumulateMore") || "",
+                {n: "đ1.800.000,00"}
               )}
             </button>
             <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">
-              {sellerOverviewLanguage?.upgradeMembership}
+              {t("sellerOverview.upgradeMembership")}
             </button>
           </div>
         </div>
@@ -97,10 +86,10 @@ const { lang } = useLanguage();
             </svg>
           </div>
           <h2 className="text-lg text-text-primary font-medium">
-            {sellerOverviewLanguage?.freelancerSetupTitle}
+            {t("sellerOverview.freelancerSetupTitle")}
           </h2>
           <span className="text-sm text-gray-500">
-            {sellerOverviewLanguage?.freelancerSetupSteps}
+            {t("sellerOverview.freelancerSetupSteps")}
           </span>
         </div>
 
@@ -124,12 +113,12 @@ const { lang } = useLanguage();
               </div>
               <div>
                 <p className="font-medium text-text-primary">
-                  {sellerOverviewLanguage?.step1Title}
+                  {t("sellerOverview.step1Title")}
                 </p>
               </div>
             </div>
             <span className="text-green-500">
-              {sellerOverviewLanguage?.step1Status}
+              {t("sellerOverview.step1Status")}
             </span>
           </div>
 
@@ -140,19 +129,19 @@ const { lang } = useLanguage();
               </div>
               <div>
                 <p className="font-medium text-text-primary">
-                  {sellerOverviewLanguage?.step2Title}
+                  {t("sellerOverview.step2Title")}
                 </p>
                 <p className="text-sm text-gray-500">
-                  {sellerOverviewLanguage?.step2Desc}
+                  {t("sellerOverview.step2Desc")}
                 </p>
               </div>
             </div>
             <Link prefetch={false}
-              href="/seller/my-service"
-              className="flex flex-row items-center gap-2"
+                  href="/seller/my-service"
+                  className="flex flex-row items-center gap-2"
             >
               <button className="text-blue-600 hover:underline">
-                {sellerOverviewLanguage?.step2Action}
+                {t("sellerOverview.step2Action")}
               </button>
               <FontAwesomeIcon
                 icon={faArrowRight}
@@ -168,19 +157,19 @@ const { lang } = useLanguage();
               </div>
               <div>
                 <p className="font-medium text-text-primary">
-                  {sellerOverviewLanguage?.step3Title}
+                  {t("sellerOverview.step3Title")}
                 </p>
                 <p className="text-sm text-gray-500">
-                  {sellerOverviewLanguage?.step3Desc}
+                  {t("sellerOverview.step3Desc")}
                 </p>
               </div>
             </div>
             <Link prefetch={false}
-              href={`${lang}/user/${person?.name}`}
-              className="flex flex-row items-center gap-2"
+                  href={`${lang}/user/${person?.name}`}
+                  className="flex flex-row items-center gap-2"
             >
               <button className="text-blue-600 hover:underline">
-                {sellerOverviewLanguage?.step3Action}
+                {t("sellerOverview.step3Action")}
               </button>
               <FontAwesomeIcon
                 icon={faArrowRight}
@@ -210,19 +199,19 @@ const { lang } = useLanguage();
             </div>
             <div>
               <h2 className="font-medium text-text-primary">
-                {sellerOverviewLanguage?.ongoingProjectsTitle}
+                {t("sellerOverview.ongoingProjectsTitle")}
               </h2>
               <p className="text-sm text-gray-500">
-                0 {sellerOverviewLanguage?.ongoingProjectsCount}
+                0 {t("sellerOverview.ongoingProjectsCount")}
               </p>
             </div>
           </div>
           <Link prefetch={false}
-            href="/seller/project-management"
-            className="text-blue-600 hover:underline flex items-center text-sm"
+                href="/seller/project-management"
+                className="text-blue-600 hover:underline flex items-center text-sm"
           >
-            {sellerOverviewLanguage?.seeMore}
-            <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4 ml-1" />
+            {t("sellerOverview.seeMore")}
+            <FontAwesomeIcon icon={faArrowRight} className="w-4 h-4 ml-1"/>
           </Link>
         </div>
 
@@ -230,7 +219,7 @@ const { lang } = useLanguage();
           <div className="grid grid-cols-4 gap-4 bg-gray-50 p-4 border-b border-gray-200">
             <div className="flex items-center">
               <span className="font-medium text-sm text-gray-700">
-                {sellerOverviewLanguage?.projectColumnName}
+                {t("sellerOverview.projectColumnName")}
               </span>
               <FontAwesomeIcon
                 icon={faInfoCircle}
@@ -238,16 +227,16 @@ const { lang } = useLanguage();
               />
             </div>
             <div className="font-medium text-sm text-gray-700">
-              {sellerOverviewLanguage?.projectColumnCode}
+              {t("sellerOverview.projectColumnCode")}
             </div>
             <div className="flex items-center">
               <span className="font-medium text-sm text-gray-700">
-                {sellerOverviewLanguage?.projectColumnAmount}
+              {t("sellerOverview.projectColumnAmount")}
               </span>
             </div>
             <div className="flex items-center">
               <span className="font-medium text-sm text-gray-700">
-                {sellerOverviewLanguage?.projectColumnDeadline}
+              {t("sellerOverview.projectColumnDeadline")}
               </span>
               <FontAwesomeIcon
                 icon={faInfoCircle}
@@ -269,14 +258,14 @@ const { lang } = useLanguage();
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            <p className="text-sm">{sellerOverviewLanguage?.noProjects}</p>
+            <p className="text-sm">{t("sellerOverview.noProjects")}</p>
           </div>
         </div>
       </section>
 
       {/* Detailed Statistics Section */}
       <h2 className="text-xl font-semibold mb-4 text-gray-800 px-4">
-        {sellerOverviewLanguage?.detailsTitle}
+        {t("sellerOverview.detailsTitle")}
       </h2>
 
       {/* Overview Chart */}
@@ -290,10 +279,10 @@ const { lang } = useLanguage();
           </div>
           <div>
             <h3 className="font-medium text-text-primary">
-              {sellerOverviewLanguage?.hiringOverviewTitle}
+              {t("sellerOverview.hiringOverviewTitle")}
             </h3>
             <p className="text-sm text-gray-500">
-              {sellerOverviewLanguage?.hiringNote}
+              {t("sellerOverview.hiringNote")}
             </p>
           </div>
         </div>
@@ -302,13 +291,13 @@ const { lang } = useLanguage();
           <div className="flex items-center gap-2">
             <span className="w-4 h-4 bg-blue-300 rounded-full"></span>
             <span className="text-sm text-gray-600">
-              {sellerOverviewLanguage?.legendIncome}
+              {t("sellerOverview.legendIncome")}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <span className="w-4 h-4 bg-gray-800 rounded-full"></span>
             <span className="text-sm text-gray-600">
-              {sellerOverviewLanguage?.legendCompletedProjects}
+              {t("sellerOverview.legendCompletedProjects")}
             </span>
           </div>
         </div>
@@ -317,37 +306,37 @@ const { lang } = useLanguage();
           <ResponsiveContainer width="100%" height="100%">
             <RechartsLineChart
               data={chartData}
-              margin={{ top: 10, right: 30, left: 0, bottom: 30 }}
+              margin={{top: 10, right: 30, left: 0, bottom: 30}}
             >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false}/>
               <XAxis
                 dataKey="name"
                 tickSize={0}
                 axisLine={false}
-                tick={{ fontSize: 12 }}
+                tick={{fontSize: 12}}
               />
               <YAxis
                 yAxisId="left"
                 orientation="left"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 12 }}
+                tick={{fontSize: 12}}
               />
               <YAxis
                 yAxisId="right"
                 orientation="right"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fontSize: 12 }}
+                tick={{fontSize: 12}}
               />
-              <Tooltip />
+              <Tooltip/>
               <Line
                 yAxisId="left"
                 type="monotone"
                 dataKey="value"
                 stroke="#82ca9d"
-                dot={{ fill: "#82ca9d" }}
-                activeDot={{ r: 8 }}
+                dot={{fill: "#82ca9d"}}
+                activeDot={{r: 8}}
               />
             </RechartsLineChart>
           </ResponsiveContainer>
@@ -358,14 +347,14 @@ const { lang } = useLanguage();
       <section className="bg-white rounded-lg p-6 mb-6">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 bg-blue-100 rounded">
-            <FontAwesomeIcon icon={faEye} className="w-5 h-5 text-blue-500" />
+            <FontAwesomeIcon icon={faEye} className="w-5 h-5 text-blue-500"/>
           </div>
           <div>
             <h3 className="font-medium text-text-primary">
-              {sellerOverviewLanguage?.accessHireRateTitle}
+              {t("sellerOverview.accessHireRateTitle")}
             </h3>
             <p className="text-sm text-gray-500">
-              {sellerOverviewLanguage?.accessHireNote}
+              {t("sellerOverview.accessHireNote")}
             </p>
           </div>
         </div>
@@ -384,7 +373,7 @@ const { lang } = useLanguage();
               d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          <p className="text-sm">{sellerOverviewLanguage?.noData}</p>
+          <p className="text-sm">{t("sellerOverview.noData")}</p>
         </div>
       </section>
     </main>

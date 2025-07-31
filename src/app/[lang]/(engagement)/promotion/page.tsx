@@ -1,19 +1,19 @@
 "use client";
-import { AssetIcon } from "@/constants/icons";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import { faGift } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Tags } from "lucide-react";
+import {AssetIcon} from "@/constants/icons";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {faGift} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {Tags} from "lucide-react";
 
 import Image from "next/image";
-import { useState } from "react";
+import {useState} from "react";
 import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 
 
 const Promotion = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const { isLoggedIn } = useAuthInfo();
+  const {isLoggedIn} = useAuthInfo();
   const couponLanguageData = getNamespace(LanguageFile.COUPON);
 
   const tabs = [
@@ -33,7 +33,7 @@ const Promotion = () => {
       <main>
         <section
           className="flex items-center justify-center w-full h-[200px] relative overflow-hidden"
-          style={{ background: "linear-gradient(282deg, #27c8f8, #1850c2)" }}
+          style={{background: "linear-gradient(282deg, #27c8f8, #1850c2)"}}
         >
           <div className="px-[1.5rem] relative">
             <div className="text-center text-white">
@@ -67,7 +67,7 @@ const Promotion = () => {
             <div className=" flex col-start-2 col-end-3 py-[8rem] justify-center items-center">
               <div className="grid-cols-1 items-center justify-center text-center">
                 <div className="flex justify-center items-center">
-                  <Tags className="text-text-secondary w-9 h-9" />
+                  <Tags className="text-text-secondary w-9 h-9"/>
                 </div>
                 <div className="text-text-secondary mt-2">
                   {" "}

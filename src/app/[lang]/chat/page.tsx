@@ -2,7 +2,7 @@
 import LoadingBlur from "@/components/LoadingBlur";
 
 const Chat = () => {
-  
+
   return (
     <LoadingBlur text=""/>
   );

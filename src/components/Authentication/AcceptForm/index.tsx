@@ -1,54 +1,58 @@
 "use client";
 import LoadingCircle from "@/components/LoadingCircle";
-import { CustomInput } from "@/components/ui/InputField";
-import { LanguageFile } from "@/constants/language";
+import {CustomInput} from "@/components/ui/InputField";
+import {LanguageFile} from "@/constants/language";
 /* เพิ่ม hook */
-import { useHttpPost } from "@/hooks/useHttpPost";
-import { UserService } from "@/services";
-import { isSuccess } from "@/services/HttpService"; // เพิ่ม import นี้
-import { RegisterOAuthFormData } from "@/types/formTypes/RegisterOAuth";
-import { UpdateDataProps } from "@/types/update-term";
-import { getNamespace } from "@/utils/i18nHelper";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { RoleType } from "lemmy-js-client";
+import {useHttpPost} from "@/hooks/useHttpPost";
+import {UserService} from "@/services";
+import {isSuccess} from "@/services/HttpService"; // เพิ่ม import นี้
+import {RegisterOAuthFormData} from "@/types/formTypes/RegisterOAuth";
+import {getNamespace} from "@/utils/i18nHelper";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {RoleType} from "lemmy-js-client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {RegisterDataProps} from "@/types/register-data";
 
 type UpdateFormProps = {
-  switchToVerifyEmail: () => void;
+  switchToVerifyEmail: () => void,
+  setDataUpdate?: Dispatch<SetStateAction<RegisterDataProps | null>>
 };
 
 export const AcceptForm = ({
   switchToVerifyEmail,
+  setDataUpdate
 }: UpdateFormProps) => {
   const authen = getNamespace(LanguageFile.AUTHEN);
 
   const UpdateSchema = z
   .object({
     email: z.string().email(authen?.invalidEmail),
-    password: z.string().min(6, authen?.passwordMin6),
+    password: z.string().min(6,
+      authen?.passwordMin6),
     confirmPassword: z.string(),
     termsAccepted: z.boolean().refine((val) => val === true),
     privacyAccepted: z.boolean().refine((val) => val === true),
     role: z.nativeEnum(RoleType).default(RoleType.Employer),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: authen?.notMatchPassword,
-    path: ["confirmPassword"],
-  });
+  .refine((data) => data.password === data.confirmPassword,
+    {
+      message: authen?.notMatchPassword,
+      path: ["confirmPassword"],
+    });
 
   type UpdateFormDataType = z.infer<typeof UpdateSchema>;
   const resolver = zodResolver(UpdateSchema);
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
     setValue,
     watch,
   } = useForm<RegisterOAuthFormData>({
-     resolver,
+    resolver,
     mode: "onChange",
   });
 
@@ -63,21 +67,24 @@ export const AcceptForm = ({
 
   const [apiError, setApiError] = useState<string | null>(null);
   useEffect(() => {
-    const email = UserService.Instance.authInfo?.claims?.email;
-    if (email) {
-      try {
+      const email = UserService.Instance.authInfo?.claims?.email;
+      if (email) {
+        try {
 
-        if (email) {
-          setValue("email", email);
+          if (email) {
+            setValue("email",
+              email);
+          }
+        } catch (error) {
+          console.error("Error decoding JWT:",
+            error);
         }
-      } catch (error) {
-        console.error("Error decoding JWT:", error);
       }
-    }
-  }, [setValue]);
+    },
+    [setValue]);
 
 
-  const onSubmit = async (data: UpdateFormDataType) => {
+  const onSubmit = async(data: UpdateFormDataType) => {
     setApiError(null);
 
     /* payload ตามที่ backend ต้องการ */
@@ -92,7 +99,7 @@ export const AcceptForm = ({
     const res = await updateTerm(payload);
 
     if (isSuccess(res)) {
-      UserService.Instance.login({ res: res.data });
+      UserService.Instance.login({res: res.data});
       switchToVerifyEmail();      // หรือ logic อื่นตามต้องการ
     } else if (res.state === "failed") {
       setApiError(res.err.message);
@@ -220,7 +227,7 @@ export const AcceptForm = ({
           }
         >
           {updateState.state === "loading" ? (
-            <LoadingCircle />
+            <LoadingCircle/>
           ) : (
             authen?.linkCreateAccount
           )}

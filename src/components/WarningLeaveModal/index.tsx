@@ -1,7 +1,7 @@
 "use client";
 
 import Modal from "@/components/ui/Modal";
-import { CircleAlert } from "lucide-react";
+import {CircleAlert} from "lucide-react";
 
 interface WarningLeaveModalProps {
   isOpen: boolean;
@@ -22,7 +22,7 @@ const WarningLeaveModal: React.FC<WarningLeaveModalProps> = ({
       closeOnOutsideClick={false}
     >
       <section className="px-[12px] w-full flex flex-col gap-8 justify-center items-center">
-        <CircleAlert className="w-[65px] h-[65px] text-red-500" />
+        <CircleAlert className="w-[65px] h-[65px] text-red-500"/>
         <article>
           <h1 className="text-[18px] font-medium text-text-primary text-center">
             You haven&apos;t saved your changes yet.

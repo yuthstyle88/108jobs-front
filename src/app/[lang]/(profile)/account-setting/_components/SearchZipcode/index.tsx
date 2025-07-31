@@ -1,14 +1,11 @@
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
-import { usePrivateFetchParams } from "@/hooks/api-hooks";
+import {usePrivateFetchParams} from "@/hooks/api-hooks";
 import debounce from "lodash.debounce";
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Control,
-  FieldError,
-  UseFormSetValue,
-  useWatch,
-} from "react-hook-form";
-import { AddressFormData } from "../../contact-info/page";
+import {useEffect, useMemo, useRef, useState} from "react";
+import {useTranslation} from "@/hooks/translation/useTranslation";
+import {Control, FieldError, UseFormSetValue, useWatch,} from "react-hook-form";
+import {AddressFormData} from "../../contact-info/page";
+
 type Geography = {
   provinceNameTh: string;
   districtNameTh: string;
@@ -21,15 +18,14 @@ interface ZipcodeSearchProps {
   control: Control<AddressFormData>;
   setValue: UseFormSetValue<AddressFormData>;
   error?: FieldError;
-  language: Record<string, string>;
 }
 
 export default function ZipcodeSearch({
   control,
   setValue,
   error,
-  language,
 }: ZipcodeSearchProps) {
+  const {t} = useTranslation();
   const [searchUrl, setSearchUrl] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -40,52 +36,65 @@ export default function ZipcodeSearch({
     data: searchResults,
     error: searchError,
     isLoading,
-  } = usePrivateFetchParams<{ geographies: Geography[] }>(searchUrl);
+  } = usePrivateFetchParams<{geographies: Geography[]}>(searchUrl);
 
-  const zipCode = useWatch({ control, name: "zipCode" });
+  const zipCode = useWatch({control, name: "zipCode"});
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        setShowDropdown(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+      const handleClickOutside = (e: MouseEvent) => {
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(e.target as Node)
+        ) {
+          setShowDropdown(false);
+        }
+      };
+      document.addEventListener("mousedown",
+        handleClickOutside);
+      return () => document.removeEventListener("mousedown",
+        handleClickOutside);
+    },
+    []);
 
   const debouncedSearch = useMemo(
     () =>
       debounce((postal: string) => {
-        if (postal.length >= 2) {
-          setSearchUrl(`/profile/thai/geographies/search?postal=${postal}`);
-          setShowDropdown(true);
-        } else {
-          setSearchUrl(null);
-          setShowDropdown(false);
-        }
-      }, 500),
+          if (postal.length >= 2) {
+            setSearchUrl(`/profile/thai/geographies/search?postal=${postal}`);
+            setShowDropdown(true);
+          } else {
+            setSearchUrl(null);
+            setShowDropdown(false);
+          }
+        },
+        500),
     []
   );
 
   useEffect(() => {
-    return () => {
-      debouncedSearch.cancel();
-    };
-  }, [debouncedSearch]);
+      return () => {
+        debouncedSearch.cancel();
+      };
+    },
+    [debouncedSearch]);
 
   const handleSelect = (geo: Geography) => {
-    setValue("province", geo.provinceNameTh, { shouldValidate: true });
-    setValue("districtOrSubdistrict", geo.districtNameTh, {
-      shouldValidate: true,
-    });
-    setValue("subdistrictOrDistrict", geo.subdistrictNameTh, {
-      shouldValidate: true,
-    });
-    setValue("zipCode", geo.postalCode.toString(), { shouldValidate: true });
+    setValue("province",
+      geo.provinceNameTh,
+      {shouldValidate: true});
+    setValue("districtOrSubdistrict",
+      geo.districtNameTh,
+      {
+        shouldValidate: true,
+      });
+    setValue("subdistrictOrDistrict",
+      geo.subdistrictNameTh,
+      {
+        shouldValidate: true,
+      });
+    setValue("zipCode",
+      geo.postalCode.toString(),
+      {shouldValidate: true});
     setShowDropdown(false);
     inputRef.current?.blur();
   };
@@ -93,21 +102,23 @@ export default function ZipcodeSearch({
   return (
     <div className="relative" ref={dropdownRef}>
       <label className="block text-sm text-text-primary font-semibold mb-2">
-        {language?.zipcode}
+        {t("profile.zipcode")}
       </label>
       <input
         ref={inputRef}
         value={zipCode ?? ""}
         onChange={(e) => {
           const value = e.target.value;
-          setValue("zipCode", value, { shouldValidate: true });
+          setValue("zipCode",
+            value,
+            {shouldValidate: true});
           debouncedSearch(value);
         }}
         onFocus={() => {
           if ((zipCode ?? "").length >= 2) debouncedSearch(zipCode ?? "");
           setShowDropdown(true);
         }}
-        placeholder={language?.zipcodePlaceholder}
+        placeholder={t("profile.zipcodePlaceholder")}
         autoComplete="off"
         className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary transition-all"
       />
@@ -126,7 +137,7 @@ export default function ZipcodeSearch({
           <div className="border rounded-lg bg-white shadow-lg max-h-52 overflow-y-auto">
             {isLoading ? (
               <div className="flex justify-center items-center p-3">
-                <LoadingMultiCircle />
+                <LoadingMultiCircle/>
               </div>
             ) : (zipCode?.length ?? 0) < 2 ? (
               <div className="flex justify-center items-center px-3 py-3 text-[12px] font-sans text-black">

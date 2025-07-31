@@ -1,9 +1,9 @@
 "use client";
 
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
 import Link from "next/link";
-import { useState } from "react";
+import {useState} from "react";
 
 type Tab = "fastwork" | "all" | "thirdParty";
 const ConsentManagement = () => {
@@ -14,7 +14,7 @@ const ConsentManagement = () => {
   });
 
   const concentLanguageData = getNamespace(LanguageFile.CONSENT);
-  
+
   const handleToggle = (key: keyof typeof preferences) => {
     setPreferences((prev) => ({
       ...prev,
@@ -107,7 +107,7 @@ const ConsentManagement = () => {
                         {concentLanguageData?.marketingCookies}
                       </h4>
                       <p className="text-gray-600 text-sm font-sans">
-                      {concentLanguageData?.marketingCookiesDescription}
+                        {concentLanguageData?.marketingCookiesDescription}
                       </p>
                     </div>
                     <div className="flex items-center gap-4 ml-0 md:ml-6">
@@ -142,7 +142,7 @@ const ConsentManagement = () => {
                         {concentLanguageData?.analyticsCookies}
                       </h4>
                       <p className="text-gray-600 text-sm font-sans">
-                      {concentLanguageData?.analyticsCookiesDescription}
+                        {concentLanguageData?.analyticsCookiesDescription}
                       </p>
                     </div>
                     <div className="flex items-center gap-4 ml-0 md:ml-6">

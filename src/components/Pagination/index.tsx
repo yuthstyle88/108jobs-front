@@ -1,8 +1,5 @@
-import {
-  faChevronLeft,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faChevronLeft, faChevronRight,} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import React from "react";
 
 interface PaginationProps {
@@ -31,8 +28,10 @@ export const Pagination = ({
       }
 
       for (
-        let i = Math.max(2, currentPage - 1);
-        i <= Math.min(currentPage + 1, totalPages - 1);
+        let i = Math.max(2,
+          currentPage - 1);
+        i <= Math.min(currentPage + 1,
+          totalPages - 1);
         i++
       ) {
         pages.push(i);
@@ -84,7 +83,7 @@ export const Pagination = ({
             : "text-gray-600 hover:bg-gray-100"
         }`}
       >
-        <FontAwesomeIcon icon={faChevronLeft} className="w-4 h-4" />
+        <FontAwesomeIcon icon={faChevronLeft} className="w-4 h-4"/>
       </button>
 
       {renderPageNumbers()}
@@ -98,7 +97,7 @@ export const Pagination = ({
             : "text-gray-600 hover:bg-gray-100"
         }`}
       >
-        <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
+        <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4"/>
       </button>
     </div>
   );

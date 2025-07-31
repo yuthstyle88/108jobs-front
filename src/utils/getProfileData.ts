@@ -1,4 +1,4 @@
-import {Education, LanguageSkill, Skill, WorkExperience, Certificate, Service, Review, Person } from "lemmy-js-client";
+import {Certificate, Education, LanguageSkill, Person, Review, Service, Skill, WorkExperience} from "lemmy-js-client";
 
 
 type ExtraProfileFields = {

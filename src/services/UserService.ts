@@ -1,10 +1,10 @@
-import { isAuthPath } from "@/utils/app";
-import { clearAuthCookie, isBrowser, setAuthCookie } from "@/utils/browser";
+import {isAuthPath} from "@/utils/app";
+import {clearAuthCookie, isBrowser, setAuthCookie} from "@/utils/browser";
 import * as cookie from "cookie";
-import {jwtDecode, JwtPayload} from "jwt-decode";
-import { LoginResponse, MyUserInfo } from "lemmy-js-client";
-import { amAdmin } from "@/utils/roles";
-import { HttpService } from "./index";
+import {jwtDecode} from "jwt-decode";
+import {LoginResponse, MyUserInfo} from "lemmy-js-client";
+import {amAdmin} from "@/utils/roles";
+import {HttpService} from "./index";
 import {authCookieName} from "@/config";
 import {toast} from "sonner";
 
@@ -33,8 +33,20 @@ export class UserService {
     this.#setAuthInfo();
   }
 
+  public static get Instance() {
+    return this.#instance || (this.#instance = new this());
+  }
+
   get getLanguage(): string {
     return this.authInfo?.claims?.lang || this.currentLanguage;
+  }
+
+  get isLoggedIn() {
+    return Boolean(this.authInfo?.auth);
+  }
+
+  public get moderatesSomething(): boolean {
+    return amAdmin() || (this.myUserInfo?.moderates?.length ?? 0) > 0;
   }
 
   public login({
@@ -52,7 +64,7 @@ export class UserService {
       }
       setAuthCookie(res.jwt);
       this.#setAuthInfo({sharedKey});
-    }else{
+    } else {
       const rawCookie =
         typeof res === "string"
           ? res
@@ -74,7 +86,7 @@ export class UserService {
 
     // TODO: Remove this in a few releases when this cache has been deleted from most users' browsers
     if (isBrowser()) {
-       window.caches?.delete?.("instance-cache");
+      window.caches?.delete?.("instance-cache");
     }
 
     if (isAuthPath(location.pathname)) {
@@ -82,10 +94,6 @@ export class UserService {
     } else {
       location.reload();
     }
-  }
-
-  get isLoggedIn() {
-    return Boolean(this.authInfo?.auth);
   }
 
   public auth(throwErr = false): string | undefined {
@@ -106,9 +114,9 @@ export class UserService {
     }
   }
 
-  #setAuthInfo(opts: { rawCookie?: string; sharedKey?: string } = {},
+  #setAuthInfo(opts: {rawCookie?: string; sharedKey?: string} = {},
   ) {
-    const { rawCookie = "", sharedKey = "" } = opts;
+    const {rawCookie = "", sharedKey = ""} = opts;
     const auth = isBrowser() ? cookie.parse(document.cookie)[authCookieName] : rawCookie;
     if (!auth) {
       HttpService.client.removeHeader?.("Authorization");
@@ -117,17 +125,9 @@ export class UserService {
 
       return;
     }
-    HttpService.client.setHeaders({ Authorization: `Bearer ${auth}` });
+    HttpService.client.setHeaders({Authorization: `Bearer ${auth}`});
     const claims = jwtDecode<Claims>(auth);
-    this.authInfo = { auth, claims, sharedKey };
+    this.authInfo = {auth, claims, sharedKey};
     this.currentLanguage = claims?.lang || "en";
-  }
-
-  public get moderatesSomething(): boolean {
-    return amAdmin() || (this.myUserInfo?.moderates?.length ?? 0) > 0;
-  }
-
-  public static get Instance() {
-    return this.#instance || (this.#instance = new this());
   }
 }

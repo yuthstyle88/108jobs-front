@@ -1,5 +1,5 @@
-import { CategoriesImage } from "@/constants/images";
-import { ChatResponse } from "@/types/chat";
+import {CategoriesImage} from "@/constants/images";
+import {ChatResponse} from "@/types/chat";
 import Image from "next/image";
 import React from "react";
 
@@ -7,7 +7,7 @@ type Props = {
   currentRoom?: ChatResponse;
 };
 
-const ChatJob = ({ currentRoom }: Props) => {
+const ChatJob = ({currentRoom}: Props) => {
   return (
     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 my-4 max-w-md ml-auto">
       <div className="bg-white shadow-sm rounded-lg p-4">

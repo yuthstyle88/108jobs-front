@@ -1,9 +1,9 @@
-import { LANGUAGES } from "@/constants/language";
-import { useLanguage } from "@/contexts/LanguageContext";
+import {LANGUAGES} from "@/constants/language";
+import {useLanguage} from "@/contexts/LanguageContext";
 import Image from "next/image";
 
 const LanguageSwitcher = () => {
-  const { setLang } = useLanguage();
+  const {setLang} = useLanguage();
 
   return (
     <>

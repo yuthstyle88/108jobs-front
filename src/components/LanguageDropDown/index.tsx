@@ -1,26 +1,26 @@
 "use client";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useClickOutside } from "@/hooks/useClickOutside";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {useClickOutside} from "@/hooks/useClickOutside";
 import Image from "next/image";
-import { useState } from "react";
+import {useState} from "react";
 
-import { LANGUAGES } from "@/constants/language";
+import {LANGUAGES} from "@/constants/language";
 
 interface LanguageDropdownProps {
   className?: string;
 }
 
-const LanguageDropdown = ({ className = "" }: LanguageDropdownProps) => {
+const LanguageDropdown = ({className = ""}: LanguageDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
-  const { setLang, lang: currentLang } = useLanguage();
+  const {setLang, lang: currentLang} = useLanguage();
 
   const handleSelectLang = (lang: string) => {
-  if (lang !== currentLang) {
-    setLang(lang);
-  }
-  setIsOpen(false);
-};
+    if (lang !== currentLang) {
+      setLang(lang);
+    }
+    setIsOpen(false);
+  };
 
 
   const currentLangData = LANGUAGES[currentLang as keyof typeof LANGUAGES];
@@ -37,7 +37,7 @@ const LanguageDropdown = ({ className = "" }: LanguageDropdownProps) => {
             alt={currentLangData.label}
             width={30}
             height={30}
-            style={{ height: "auto" }}
+            style={{height: "auto"}}
           />
         )}
       </div>
@@ -62,7 +62,7 @@ const LanguageDropdown = ({ className = "" }: LanguageDropdownProps) => {
                   isSelected ? "ring-2 ring-blue-800" : ""
                 }`}
               >
-                <Image src={lang.flag} alt={lang.label} width={26} height={26} style={{ height: "auto" }}/>
+                <Image src={lang.flag} alt={lang.label} width={26} height={26} style={{height: "auto"}}/>
               </div>
               <span className="text-text-primary text-sm">{lang.label}</span>
             </div>

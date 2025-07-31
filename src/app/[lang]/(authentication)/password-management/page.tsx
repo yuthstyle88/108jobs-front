@@ -1,14 +1,14 @@
 "use client";
-import { AuthFormContainer } from "@/components/Authentication/AuthFormContainer";
-import { ChangePassword } from "@/components/Authentication/ChangePassword";
-import { ForgotPasswordForm } from "@/components/Authentication/ForgotPasswordForm";
-import { AuthenticateIcon } from "@/constants/icons";
-import { CategoriesImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import { RegisterDataProps } from "@/types/register-data";
+import {AuthFormContainer} from "@/components/Authentication/AuthFormContainer";
+import {ChangePassword} from "@/components/Authentication/ChangePassword";
+import {ForgotPasswordForm} from "@/components/Authentication/ForgotPasswordForm";
+import {AuthenticateIcon} from "@/constants/icons";
+import {CategoriesImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {RegisterDataProps} from "@/types/register-data";
 import Image from "next/image";
-import {useRouter, useSearchParams} from "next/navigation";
+import {useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
 
 
@@ -25,10 +25,11 @@ export default function PasswordManagePage() {
   const tokenPassword = params.get("token");
   // Set currentView from viewParam only once on mount
   useEffect(() => {
-    if (viewParam) {
-      setCurrentView(viewParam);
-    }
-  }, []);
+      if (viewParam) {
+        setCurrentView(viewParam);
+      }
+    },
+    []);
 
   const [currentView, setCurrentView] = useState<ViewState>(
     viewParam ?? "forgot-password"
@@ -39,7 +40,8 @@ export default function PasswordManagePage() {
   // Load singUpData from sessionStorage if available, only on client
 
   return (
-    <div className="min-h-screen bg-[#E3EDFD] grid 2xl:grid-cols-[1fr_1240px_1fr] lg:grid-cols-[1fr_984px_1fr] md:grid-cols-[1fr_768px_1fr] grid-cols-[12px_minmax(0,auto)12px]">
+    <div
+      className="min-h-screen bg-[#E3EDFD] grid 2xl:grid-cols-[1fr_1240px_1fr] lg:grid-cols-[1fr_984px_1fr] md:grid-cols-[1fr_768px_1fr] grid-cols-[12px_minmax(0,auto)12px]">
       <div className="flex justify-center items-center lg:flex-row lg:gap-[3rem] lg:justify-between col-start-2 col-end-3">
         <div className="hidden lg:flex m-auto flex-col gap-[4rem]">
           <div className="flex flex-col gap-2">
@@ -47,7 +49,7 @@ export default function PasswordManagePage() {
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
                 {loginLanguageData?.titleHireThrough}
               </h2>
-              <Image src={CategoriesImage.logodefault} alt="logo" />
+              <Image src={CategoriesImage.logodefault} alt="logo"/>
             </div>
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">

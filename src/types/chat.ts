@@ -9,7 +9,7 @@ export type ChatMessage = {
   createdAt: string;
   updatedAt: string;
   roomId: string;
-  isOwner:boolean;
+  isOwner: boolean;
 };
 
 export type Job = {
@@ -46,5 +46,5 @@ export type ChatResponse = {
   partnerDisplayName: string;
   lastMessage: ChatMessage;
   job: Job;
-  jobCoverImage:string;
+  jobCoverImage: string;
 };

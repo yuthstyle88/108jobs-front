@@ -11,7 +11,8 @@
 
 ## What's Changed in 0.20.0-alpha.8
 
-- Adding git cliff to auto-generate changelogs by @dessalines in [#350](https://github.com/LemmyNet/lemmy-js-client/pull/350)
+- Adding git cliff to auto-generate changelogs by @dessalines
+  in [#350](https://github.com/LemmyNet/lemmy-js-client/pull/350)
 - Updating types from main. by @dessalines in [#349](https://github.com/LemmyNet/lemmy-js-client/pull/349)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.20.0-alpha.7...0.20.0-alpha.8
@@ -29,7 +30,8 @@
 - 0.19.6-beta.1 by @SleeplessOne1917
 - 0.19.6 update by @SleeplessOne1917 in [#326](https://github.com/LemmyNet/lemmy-js-client/pull/326)
 - Adding renovate schedule. by @dessalines in [#325](https://github.com/LemmyNet/lemmy-js-client/pull/325)
-- Update typescript-eslint monorepo to v8 (major) by @dessalines in [#323](https://github.com/LemmyNet/lemmy-js-client/pull/323)
+- Update typescript-eslint monorepo to v8 (major) by @dessalines
+  in [#323](https://github.com/LemmyNet/lemmy-js-client/pull/323)
 - Fixing error lint. by @dessalines in [#324](https://github.com/LemmyNet/lemmy-js-client/pull/324)
 - Remove renovate schedule. by @dessalines in [#277](https://github.com/LemmyNet/lemmy-js-client/pull/277)
 
@@ -38,9 +40,11 @@
 ## What's Changed in v0.19.4
 
 - 0.19.4 by @dessalines
-- Updating changes from main before a 0.19.4 release. by @dessalines in [#275](https://github.com/LemmyNet/lemmy-js-client/pull/275)
+- Updating changes from main before a 0.19.4 release. by @dessalines
+  in [#275](https://github.com/LemmyNet/lemmy-js-client/pull/275)
 - Better readme example. by @dessalines in [#261](https://github.com/LemmyNet/lemmy-js-client/pull/261)
-- Remove pointless integer annotations. #190 by @dessalines in [#260](https://github.com/LemmyNet/lemmy-js-client/pull/260)
+- Remove pointless integer annotations. #190 by @dessalines
+  in [#260](https://github.com/LemmyNet/lemmy-js-client/pull/260)
 - Adding LocalImageView. by @dessalines in [#258](https://github.com/LemmyNet/lemmy-js-client/pull/258)
 - Allow falsey get parameter values by @matc-pub in [#257](https://github.com/LemmyNet/lemmy-js-client/pull/257)
 - Add missing docs for logout endpoint by @Nothing4You in [#256](https://github.com/LemmyNet/lemmy-js-client/pull/256)
@@ -64,20 +68,25 @@
 - 0.19.4-alpha.15 by @dessalines
 - Fixing woodpecker. by @dessalines in [#255](https://github.com/LemmyNet/lemmy-js-client/pull/255)
 - Add list media by @dessalines in [#247](https://github.com/LemmyNet/lemmy-js-client/pull/247)
-- Replace yalc recommendation for instructions to do the same thing with pnpm by @SleeplessOne1917 in [#254](https://github.com/LemmyNet/lemmy-js-client/pull/254)
+- Replace yalc recommendation for instructions to do the same thing with pnpm by @SleeplessOne1917
+  in [#254](https://github.com/LemmyNet/lemmy-js-client/pull/254)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.19.4-alpha.14...v0.19.4-alpha.15
 
 ## What's Changed in v0.19.4-alpha.14
 
 - 0.19.4-alpha.14 by @dessalines
-- Add pacakge manager to package.json by @SleeplessOne1917 in [#253](https://github.com/LemmyNet/lemmy-js-client/pull/253)
-- Add changes for PostView and CommentView by @SleeplessOne1917 in [#252](https://github.com/LemmyNet/lemmy-js-client/pull/252)
+- Add pacakge manager to package.json by @SleeplessOne1917
+  in [#253](https://github.com/LemmyNet/lemmy-js-client/pull/253)
+- Add changes for PostView and CommentView by @SleeplessOne1917
+  in [#252](https://github.com/LemmyNet/lemmy-js-client/pull/252)
 - Remove dependencies by @aeharding in [#251](https://github.com/LemmyNet/lemmy-js-client/pull/251)
-- Reapply "Add URL blocklist (#245)" (#248) by @dessalines in [#249](https://github.com/LemmyNet/lemmy-js-client/pull/249)
+- Reapply "Add URL blocklist (#245)" (#248) by @dessalines
+  in [#249](https://github.com/LemmyNet/lemmy-js-client/pull/249)
 - Revert "Add URL blocklist" by @dessalines in [#248](https://github.com/LemmyNet/lemmy-js-client/pull/248)
 - Add URL blocklist by @flamingo-cant-draw in [#245](https://github.com/LemmyNet/lemmy-js-client/pull/245)
-- Adding vote display modes and other additions from main. by @dessalines in [#246](https://github.com/LemmyNet/lemmy-js-client/pull/246)
+- Adding vote display modes and other additions from main. by @dessalines
+  in [#246](https://github.com/LemmyNet/lemmy-js-client/pull/246)
 - Add list media by @dessalines in [#244](https://github.com/LemmyNet/lemmy-js-client/pull/244)
 - Adding hide post. by @dessalines in [#243](https://github.com/LemmyNet/lemmy-js-client/pull/243)
 - Add alt text by @dessalines in [#242](https://github.com/LemmyNet/lemmy-js-client/pull/242)
@@ -94,14 +103,17 @@
 
 - 0.19.4-alpha.3 by @dessalines
 - [Chore] Update deps by @SleeplessOne1917 in [#240](https://github.com/LemmyNet/lemmy-js-client/pull/240)
-- Bring in `banned_from_community` and other type changes by @SleeplessOne1917 in [#239](https://github.com/LemmyNet/lemmy-js-client/pull/239)
+- Bring in `banned_from_community` and other type changes by @SleeplessOne1917
+  in [#239](https://github.com/LemmyNet/lemmy-js-client/pull/239)
 - Migrate from yarn to pnpm. by @dessalines in [#236](https://github.com/LemmyNet/lemmy-js-client/pull/236)
 - Use steps instead of pipeline for CI. by @dessalines in [#235](https://github.com/LemmyNet/lemmy-js-client/pull/235)
 - Updating types from lemmy main branch. by @dessalines in [#234](https://github.com/LemmyNet/lemmy-js-client/pull/234)
 - Integrate changes from lemmynsfw fork by @Nutomic in [#232](https://github.com/LemmyNet/lemmy-js-client/pull/232)
 - Fix jsdoc comment for listCommentLikes by @MV-GH in [#231](https://github.com/LemmyNet/lemmy-js-client/pull/231)
-- Adding back newest_comment_time to PostAggregates by @dessalines in [#227](https://github.com/LemmyNet/lemmy-js-client/pull/227)
-- Use string type instead of any for exportSettings. Fixes #229 by @dessalines in [#230](https://github.com/LemmyNet/lemmy-js-client/pull/230)
+- Adding back newest_comment_time to PostAggregates by @dessalines
+  in [#227](https://github.com/LemmyNet/lemmy-js-client/pull/227)
+- Use string type instead of any for exportSettings. Fixes #229 by @dessalines
+  in [#230](https://github.com/LemmyNet/lemmy-js-client/pull/230)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.19.2-alpha.3...v0.19.4-alpha.3
 
@@ -116,9 +128,12 @@
 
 - v0.19.2-alpha.2 by @dessalines
 - Adding admin view votes. by @dessalines in [#225](https://github.com/LemmyNet/lemmy-js-client/pull/225)
-- Add subscribers_local to community aggregates by @ismailkarsli in [#226](https://github.com/LemmyNet/lemmy-js-client/pull/226)
-- Revert "Add local_subscribers field to CommunityAggregates" by @dessalines in [#223](https://github.com/LemmyNet/lemmy-js-client/pull/223)
-- Add local_subscribers field to CommunityAggregates by @ismailkarsli in [#221](https://github.com/LemmyNet/lemmy-js-client/pull/221)
+- Add subscribers_local to community aggregates by @ismailkarsli
+  in [#226](https://github.com/LemmyNet/lemmy-js-client/pull/226)
+- Revert "Add local_subscribers field to CommunityAggregates" by @dessalines
+  in [#223](https://github.com/LemmyNet/lemmy-js-client/pull/223)
+- Add local_subscribers field to CommunityAggregates by @ismailkarsli
+  in [#221](https://github.com/LemmyNet/lemmy-js-client/pull/221)
 
 ## New Contributors
 
@@ -149,7 +164,8 @@
 ## What's Changed in v0.19.0-rc.17
 
 - v0.19.0-rc.17 by @dessalines
-- Revert "Upgrading deps, removing cross_fetch." by @dessalines in [#217](https://github.com/LemmyNet/lemmy-js-client/pull/217)
+- Revert "Upgrading deps, removing cross_fetch." by @dessalines
+  in [#217](https://github.com/LemmyNet/lemmy-js-client/pull/217)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.19.0-rc.16...v0.19.0-rc.17
 
@@ -163,22 +179,26 @@
 ## What's Changed in v0.19.0-rc.15
 
 - v0.19.0-rc.15 by @dessalines
-- Adding `creator_is_admin` to various views. by @dessalines in [#215](https://github.com/LemmyNet/lemmy-js-client/pull/215)
+- Adding `creator_is_admin` to various views. by @dessalines
+  in [#215](https://github.com/LemmyNet/lemmy-js-client/pull/215)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.19.0-alpha.18...v0.19.0-rc.15
 
 ## What's Changed in v0.19.0-alpha.18
 
 - v0.19.0-alpha.18 by @dessalines
-- Properly handle pictrs delete image response by @Nutomic in [#214](https://github.com/LemmyNet/lemmy-js-client/pull/214)
+- Properly handle pictrs delete image response by @Nutomic
+  in [#214](https://github.com/LemmyNet/lemmy-js-client/pull/214)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.19.0-alpha.17...v0.19.0-alpha.18
 
 ## What's Changed in v0.19.0-alpha.17
 
 - v0.19.0-alpha.17 by @dessalines
-- Remove separate auth params for image endpoints by @Nutomic in [#212](https://github.com/LemmyNet/lemmy-js-client/pull/212)
-- Adding changes from lemmy, mainly removing aggregate ids. by @dessalines in [#211](https://github.com/LemmyNet/lemmy-js-client/pull/211)
+- Remove separate auth params for image endpoints by @Nutomic
+  in [#212](https://github.com/LemmyNet/lemmy-js-client/pull/212)
+- Adding changes from lemmy, mainly removing aggregate ids. by @dessalines
+  in [#211](https://github.com/LemmyNet/lemmy-js-client/pull/211)
 - Adding creator is moderator by @dessalines in [#210](https://github.com/LemmyNet/lemmy-js-client/pull/210)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.19.0-alpha.15...v0.19.0-alpha.17
@@ -213,7 +233,8 @@
 
 - v0.19.0-rc.14 by @dessalines
 - v0.19.0-rc.3 by @dessalines
-- Adding mark multiple posts as read, and other API changes. by @dessalines in [#201](https://github.com/LemmyNet/lemmy-js-client/pull/201)
+- Adding mark multiple posts as read, and other API changes. by @dessalines
+  in [#201](https://github.com/LemmyNet/lemmy-js-client/pull/201)
 - Regenerating types from main. by @dessalines in [#197](https://github.com/LemmyNet/lemmy-js-client/pull/197)
 - Adding deleteImage endpoint. Fixes #193 by @dessalines in [#196](https://github.com/LemmyNet/lemmy-js-client/pull/196)
 
@@ -225,7 +246,8 @@
 - v0.19.0-rc.10 by @dessalines
 - Fixing deploy perms. by @dessalines
 - Add totp token by @dessalines in [#192](https://github.com/LemmyNet/lemmy-js-client/pull/192)
-- Add original int type info for number by @SleeplessOne1917 in [#188](https://github.com/LemmyNet/lemmy-js-client/pull/188)
+- Add original int type info for number by @SleeplessOne1917
+  in [#188](https://github.com/LemmyNet/lemmy-js-client/pull/188)
 - Fix conflict issues by @MV-GH
 - Merge branch 'main' into add_int_visibility by @MV-GH
 - Removing auth and useless interfaces. by @dessalines in [#181](https://github.com/LemmyNet/lemmy-js-client/pull/181)
@@ -243,7 +265,8 @@
 - v0.19.0-rc.9 by @dessalines
 - Adding a set header function. by @dessalines
 - Adding hide community. Fixes #183 by @dessalines
-- Fixing addadmin local_user_id -> person by @SleeplessOne1917 in [#180](https://github.com/LemmyNet/lemmy-js-client/pull/180)
+- Fixing addadmin local_user_id -> person by @SleeplessOne1917
+  in [#180](https://github.com/LemmyNet/lemmy-js-client/pull/180)
 - Merge branch 'main' into fix_add_admin by @SleeplessOne1917
 - Adding block instance. by @dessalines in [#178](https://github.com/LemmyNet/lemmy-js-client/pull/178)
 
@@ -268,7 +291,8 @@
 
 - v0.19.0-rc.3 by @dessalines
 - Updating moderator_view. by @dessalines
-- change moderator view to be a listing type by @SleeplessOne1917 in [#172](https://github.com/LemmyNet/lemmy-js-client/pull/172)
+- change moderator view to be a listing type by @SleeplessOne1917
+  in [#172](https://github.com/LemmyNet/lemmy-js-client/pull/172)
 - change moderator view to be a listing type by @biosfood
 
 ## New Contributors
@@ -343,7 +367,8 @@
 
 - v0.18.1-rc.1 by @dessalines
 - Adding additional post sorts. by @dessalines in [#153](https://github.com/LemmyNet/lemmy-js-client/pull/153)
-- Add default value to client functions that have optional form data or query params by @SleeplessOne1917 in [#147](https://github.com/LemmyNet/lemmy-js-client/pull/147)
+- Add default value to client functions that have optional form data or query params by @SleeplessOne1917
+  in [#147](https://github.com/LemmyNet/lemmy-js-client/pull/147)
 - Add default object to client functions where the form data or query is optional by @cavanaugh-richards
 - Run prettier by @cavanaugh-richards
 - Add default value to encodeGetParams body type param. by @cavanaugh-richards
@@ -367,7 +392,8 @@
 - Add Hour Sort types by @SleeplessOne1917 in [#143](https://github.com/LemmyNet/lemmy-js-client/pull/143)
 - add ending empty line by @L3v3L
 - Merge branch 'main' into hour-sort-types by @L3v3L
-- add support for a custom fetch function (closing #132) by @SleeplessOne1917 in [#134](https://github.com/LemmyNet/lemmy-js-client/pull/134)
+- add support for a custom fetch function (closing #132) by @SleeplessOne1917
+  in [#134](https://github.com/LemmyNet/lemmy-js-client/pull/134)
 - Merge branch 'main' into custom-fetchinator by @SleeplessOne1917
 - Merge branch 'main' into custom-fetchinator by @SleeplessOne1917
 - DERP, forgot to actually set #fetchFunction by @ExperiBass
@@ -384,7 +410,8 @@
 
 - v0.18.0-rc.1 by @dessalines
 - Adding some 0.18.0 changes. by @dessalines in [#138](https://github.com/LemmyNet/lemmy-js-client/pull/138)
-- remove trailing slashes from instance url by @SleeplessOne1917 in [#135](https://github.com/LemmyNet/lemmy-js-client/pull/135)
+- remove trailing slashes from instance url by @SleeplessOne1917
+  in [#135](https://github.com/LemmyNet/lemmy-js-client/pull/135)
 - remove trailing slashes from instance url by @ExperiBass
 - Add taglines to site res by @SleeplessOne1917 in [#130](https://github.com/LemmyNet/lemmy-js-client/pull/130)
 
@@ -402,7 +429,8 @@
 ## What's Changed in 0.17.2-rc.23
 
 - Adjust version by @SleeplessOne1917 in [#129](https://github.com/LemmyNet/lemmy-js-client/pull/129)
-- Make private class properties actually private by @SleeplessOne1917 in [#128](https://github.com/LemmyNet/lemmy-js-client/pull/128)
+- Make private class properties actually private by @SleeplessOne1917
+  in [#128](https://github.com/LemmyNet/lemmy-js-client/pull/128)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/0.17.2-rc.21...0.17.2-rc.23
 
@@ -429,9 +457,12 @@
 ## What's Changed in v0.17.2-rc.18
 
 - v0.17.2-rc.18 by @dessalines
-- MarkCommentReplyAsRead response was wrong. by @dessalines in [#125](https://github.com/LemmyNet/lemmy-js-client/pull/125)
-- Add missing response types in http client. by @dessalines in [#124](https://github.com/LemmyNet/lemmy-js-client/pull/124)
-- Making the http `{"error": "..."}` json into a string exception. by @SleeplessOne1917 in [#122](https://github.com/LemmyNet/lemmy-js-client/pull/122)
+- MarkCommentReplyAsRead response was wrong. by @dessalines
+  in [#125](https://github.com/LemmyNet/lemmy-js-client/pull/125)
+- Add missing response types in http client. by @dessalines
+  in [#124](https://github.com/LemmyNet/lemmy-js-client/pull/124)
+- Making the http `{"error": "..."}` json into a string exception. by @SleeplessOne1917
+  in [#122](https://github.com/LemmyNet/lemmy-js-client/pull/122)
 - Merge branch 'main' into add_error_message_as_exception by @dessalines
 - Adding new distinguish comment. by @SleeplessOne1917 in [#123](https://github.com/LemmyNet/lemmy-js-client/pull/123)
 - Adding new distinguish comment. by @dessalines
@@ -458,14 +489,16 @@
 ## What's Changed in v0.17.2-rc.15
 
 - v0.17.2-rc.15 by @dessalines
-- Fix body not serializing because of bigint by @SleeplessOne1917 in [#119](https://github.com/LemmyNet/lemmy-js-client/pull/119)
+- Fix body not serializing because of bigint by @SleeplessOne1917
+  in [#119](https://github.com/LemmyNet/lemmy-js-client/pull/119)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.17.2-rc.14...v0.17.2-rc.15
 
 ## What's Changed in v0.17.2-rc.14
 
 - v0.17.2-rc.14 by @dessalines
-- Make script for adding types to index by @SleeplessOne1917 in [#118](https://github.com/LemmyNet/lemmy-js-client/pull/118)
+- Make script for adding types to index by @SleeplessOne1917
+  in [#118](https://github.com/LemmyNet/lemmy-js-client/pull/118)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.17.2-rc.13...v0.17.2-rc.14
 
@@ -473,9 +506,11 @@
 
 - v0.17.2-rc.13 by @dessalines
 - Upgrading deps by @dessalines in [#117](https://github.com/LemmyNet/lemmy-js-client/pull/117)
-- Adding support for federated instances. Fixes #115 by @dessalines in [#116](https://github.com/LemmyNet/lemmy-js-client/pull/116)
+- Adding support for federated instances. Fixes #115 by @dessalines
+  in [#116](https://github.com/LemmyNet/lemmy-js-client/pull/116)
 - Adding bindings from rust. Fixes #113 by @dessalines in [#114](https://github.com/LemmyNet/lemmy-js-client/pull/114)
-- Adding diesel SortType and ListingType enums. by @dessalines in [#112](https://github.com/LemmyNet/lemmy-js-client/pull/112)
+- Adding diesel SortType and ListingType enums. by @dessalines
+  in [#112](https://github.com/LemmyNet/lemmy-js-client/pull/112)
 - Add getComment to client by @SleeplessOne1917 in [#111](https://github.com/LemmyNet/lemmy-js-client/pull/111)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.17.2-rc.5...v0.17.2-rc.13
@@ -492,8 +527,10 @@
 - Fixes for monads by @makotech222
 - Add custom emojis by @makotech222
 - Add woodpecker by @dessalines in [#110](https://github.com/LemmyNet/lemmy-js-client/pull/110)
-- feat: add image upload method to http client by @SleeplessOne1917 in [#108](https://github.com/LemmyNet/lemmy-js-client/pull/108)
-- docs: Fix incorrect code sample in README by @SleeplessOne1917 in [#109](https://github.com/LemmyNet/lemmy-js-client/pull/109)
+- feat: add image upload method to http client by @SleeplessOne1917
+  in [#108](https://github.com/LemmyNet/lemmy-js-client/pull/108)
+- docs: Fix incorrect code sample in README by @SleeplessOne1917
+  in [#109](https://github.com/LemmyNet/lemmy-js-client/pull/109)
 - Totp by @dessalines in [#106](https://github.com/LemmyNet/lemmy-js-client/pull/106)
 - Adding email admins for new reports. by @dessalines in [#105](https://github.com/LemmyNet/lemmy-js-client/pull/105)
 
@@ -503,7 +540,8 @@
 
 - v0.17.0-rc.62 by @dessalines
 - Fixing requireapplication string. by @dessalines in [#104](https://github.com/LemmyNet/lemmy-js-client/pull/104)
-- Adding development instructions. Fixes #101 by @dessalines in [#102](https://github.com/LemmyNet/lemmy-js-client/pull/102)
+- Adding development instructions. Fixes #101 by @dessalines
+  in [#102](https://github.com/LemmyNet/lemmy-js-client/pull/102)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.17.0-rc.61...v0.17.0-rc.62
 
@@ -517,7 +555,8 @@
 ## What's Changed in v0.17.0-rc.59
 
 - v0.17.0-rc.59 by @dessalines
-- Udate CreateSite/EditSite structs for registration mode by @Nutomic in [#100](https://github.com/LemmyNet/lemmy-js-client/pull/100)
+- Udate CreateSite/EditSite structs for registration mode by @Nutomic
+  in [#100](https://github.com/LemmyNet/lemmy-js-client/pull/100)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.17.0-rc.58...v0.17.0-rc.59
 
@@ -535,7 +574,8 @@
 - v0.17.0-rc.56 by @dessalines
 - Add class instantiation in readme. by @dessalines in [#95](https://github.com/LemmyNet/lemmy-js-client/pull/95)
 - Add FeaturePost support by @makotech222 in [#88](https://github.com/LemmyNet/lemmy-js-client/pull/88)
-- fix: Move required dependencies to prod dependencies instead of devependencies by @SleeplessOne1917 in [#91](https://github.com/LemmyNet/lemmy-js-client/pull/91)
+- fix: Move required dependencies to prod dependencies instead of devependencies by @SleeplessOne1917
+  in [#91](https://github.com/LemmyNet/lemmy-js-client/pull/91)
 - Fixed links to Documentation by @hbroer in [#84](https://github.com/LemmyNet/lemmy-js-client/pull/84)
 
 ## New Contributors
@@ -547,7 +587,8 @@
 ## What's Changed in v0.17.0-rc.54
 
 - v0.17.0-rc.54 by @dessalines
-- Remove federation strict_allowlist and retry_count. Fixes #82 by @dessalines in [#83](https://github.com/LemmyNet/lemmy-js-client/pull/83)
+- Remove federation strict_allowlist and retry_count. Fixes #82 by @dessalines
+  in [#83](https://github.com/LemmyNet/lemmy-js-client/pull/83)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.17.0-rc.53...v0.17.0-rc.54
 
@@ -570,10 +611,12 @@
 ## What's Changed in v0.17.0-rc.45
 
 - v0.17.0-rc.45 by @dessalines
-- Add email_admins for new applications API setting. by @dessalines in [#72](https://github.com/LemmyNet/lemmy-js-client/pull/72)
+- Add email_admins for new applications API setting. by @dessalines
+  in [#72](https://github.com/LemmyNet/lemmy-js-client/pull/72)
 - Person post unread comments by @dessalines in [#74](https://github.com/LemmyNet/lemmy-js-client/pull/74)
 - Add language by @dessalines in [#77](https://github.com/LemmyNet/lemmy-js-client/pull/77)
-- Rename post.embed_html field to embed_video_url by @Nutomic in [#75](https://github.com/LemmyNet/lemmy-js-client/pull/75)
+- Rename post.embed_html field to embed_video_url by @Nutomic
+  in [#75](https://github.com/LemmyNet/lemmy-js-client/pull/75)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.17.0-rc.43...v0.17.0-rc.45
 
@@ -598,7 +641,8 @@
 ## What's Changed in v0.17.0-rc.31
 
 - v0.17.0-rc.31 by @dessalines
-- Removing CommunityFollowerResponse, using SubscribedType. by @dessalines in [#62](https://github.com/LemmyNet/lemmy-js-client/pull/62)
+- Removing CommunityFollowerResponse, using SubscribedType. by @dessalines
+  in [#62](https://github.com/LemmyNet/lemmy-js-client/pull/62)
 - Add option types by @dessalines in [#67](https://github.com/LemmyNet/lemmy-js-client/pull/67)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.16.4-rc.3...v0.17.0-rc.31
@@ -661,7 +705,8 @@
 ## What's Changed in v0.15.4-rc.2
 
 - v0.15.4-rc.2 by @dessalines
-- Add field Site.default_theme in missing places by @Nutomic in [#46](https://github.com/LemmyNet/lemmy-js-client/pull/46)
+- Add field Site.default_theme in missing places by @Nutomic
+  in [#46](https://github.com/LemmyNet/lemmy-js-client/pull/46)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.15.4-rc.1...v0.15.4-rc.2
 
@@ -862,7 +907,8 @@
 
 - v0.15.0-rc.8 by @dessalines
 - Adding bannedpersons endpoint. by @dessalines in [#41](https://github.com/LemmyNet/lemmy-js-client/pull/41)
-- Adding private instance related endpoints. by @dessalines in [#38](https://github.com/LemmyNet/lemmy-js-client/pull/38)
+- Adding private instance related endpoints. by @dessalines
+  in [#38](https://github.com/LemmyNet/lemmy-js-client/pull/38)
 - Upgrade deps 2 by @dessalines in [#39](https://github.com/LemmyNet/lemmy-js-client/pull/39)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.14.0-rc.1...v0.15.0-rc.8
@@ -911,8 +957,10 @@
 - Resolve endpoint by @dessalines in [#28](https://github.com/LemmyNet/lemmy-js-client/pull/28)
 - Fix link to websocketresponse. by @dessalines
 - Remove support / donate section. by @dessalines
-- Adding typedoc, and code comments. Fixes #29 by @dessalines in [#30](https://github.com/LemmyNet/lemmy-js-client/pull/30)
-- Adding block person and block community actions by @dessalines in [#22](https://github.com/LemmyNet/lemmy-js-client/pull/22)
+- Adding typedoc, and code comments. Fixes #29 by @dessalines
+  in [#30](https://github.com/LemmyNet/lemmy-js-client/pull/30)
+- Adding block person and block community actions by @dessalines
+  in [#22](https://github.com/LemmyNet/lemmy-js-client/pull/22)
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.11.4-rc.12...v0.11.4-rc.16
 
@@ -987,7 +1035,8 @@
 ## What's Changed in v0.11.0-rc.5
 
 - v0.11.0-rc.5 by @dessalines
-- Adding show scores to LocalUserSettings and SaveUserSettings by @dessalines in [#16](https://github.com/LemmyNet/lemmy-js-client/pull/16)
+- Adding show scores to LocalUserSettings and SaveUserSettings by @dessalines
+  in [#16](https://github.com/LemmyNet/lemmy-js-client/pull/16)
 - Adding show scores to LocalUserSettings and SaveUserSettings by @dessalines
 
 **Full Changelog**: https://github.com/LemmyNet/lemmy-js-client/compare/v0.11.0-rc.4...v0.11.0-rc.5

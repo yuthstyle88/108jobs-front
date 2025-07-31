@@ -1,7 +1,7 @@
 "use client";
 
-import { ProfileImage } from "@/constants/images";
-import Image, { StaticImageData } from "next/image";
+import {ProfileImage} from "@/constants/images";
+import Image, {StaticImageData} from "next/image";
 import Link from "next/link";
 
 interface ChatHeaderProps {
@@ -30,8 +30,8 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
         </span>
       </div>
       <Link prefetch={false}
-        href="#"
-        className="text-third hover:bg-gray-100 text-[14px] px-4 py-2 rounded-sm border border-border-primary"
+            href="#"
+            className="text-third hover:bg-gray-100 text-[14px] px-4 py-2 rounded-sm border border-border-primary"
       >
         {guideText}
       </Link>

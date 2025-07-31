@@ -1,4 +1,3 @@
-
 export type DateFormatOption = 'date' | 'datetime' | 'datetimeWithSeconds'
 
 export const formatDateTime = (dateString: string, option: DateFormatOption = 'date') => {
@@ -21,5 +20,6 @@ export const formatDateTime = (dateString: string, option: DateFormatOption = 'd
     baseOptions.second = '2-digit';
   }
 
-  return date.toLocaleString('th-TH-u-ca-gregory', baseOptions);
+  return date.toLocaleString('th-TH-u-ca-gregory',
+    baseOptions);
 };

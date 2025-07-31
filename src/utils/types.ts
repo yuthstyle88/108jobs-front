@@ -5,12 +5,12 @@ import {
   CommunityView,
   CreateOAuthProvider,
   GetSiteResponse,
+  MyUserInfo,
   PersonCommentMention,
   PersonView,
-  MyUserInfo,
 } from "lemmy-js-client";
-import { RequestState } from "@/services/HttpService";
-import { Match } from "@/utils/router"
+import {RequestState} from "@/services/HttpService";
+import {Match} from "@/utils/router"
 
 
 export interface IsoData<T extends RouteData = any> {
@@ -37,7 +37,7 @@ export interface InitialFetchRequest<
   query: T;
   match: Match<P>;
   site: GetSiteResponse;
-  headers: { [key: string]: string };
+  headers: {[key: string]: string};
 }
 
 export interface IRouteProps {

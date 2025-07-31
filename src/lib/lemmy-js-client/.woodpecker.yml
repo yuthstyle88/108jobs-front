@@ -47,7 +47,7 @@ steps:
       - "curl -H'Title: ✔️ ${CI_REPO_NAME}/${CI_COMMIT_SOURCE_BRANCH}' -d'${CI_PIPELINE_URL}' ntfy.sh/lemmy_drone_ci"
     when:
       - event: pull_request
-        status: [success]
+        status: [ success ]
 
   notify_failure:
     image: alpine:3
@@ -56,7 +56,7 @@ steps:
       - "curl -H'Title: ❌ ${CI_REPO_NAME}/${CI_COMMIT_SOURCE_BRANCH}' -d'${CI_PIPELINE_URL}' ntfy.sh/lemmy_drone_ci"
     when:
       - event: pull_request
-        status: [failure]
+        status: [ failure ]
 
   notify_on_tag_deploy:
     image: alpine:3

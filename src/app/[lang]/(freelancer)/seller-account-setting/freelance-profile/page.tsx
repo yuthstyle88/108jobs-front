@@ -1,21 +1,21 @@
 "use client";
 import ImageUploadModal from "@/components/AvatarUploadModal";
-import { ProfileImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import { getAvatarUrl } from "@/utils/userDataUtils";
+import {ProfileImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {getAvatarUrl} from "@/utils/userDataUtils";
 import Image from "next/image";
-import { useProfileForm } from "../hooks/useProfileForm";
-import { useImagePicker } from "@/hooks/useImagePicker";
+import {useProfileForm} from "../hooks/useProfileForm";
+import {useImagePicker} from "@/hooks/useImagePicker";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 const AccountSettings = () => {
 
-  const { execute: uploadImage, isMutating: isUploadMuting } =
+  const {execute: uploadImage, isMutating: isUploadMuting} =
     useHttpPost("uploadImage");
 
-  const { person , card, localUser} = useMyUser();
+  const {person, card, localUser} = useMyUser();
 
   const sellerProfileLanguage = getNamespace(
     LanguageFile.SELLER_FREELANCER_PROFILE
@@ -183,7 +183,7 @@ const AccountSettings = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
                 </svg>
               </button>
             </div>

@@ -1,5 +1,5 @@
-import { ProfileImage } from "@/constants/images";
-import { useLanguage } from "@/contexts/LanguageContext";
+import {ProfileImage} from "@/constants/images";
+import {useLanguage} from "@/contexts/LanguageContext";
 
 import {
   faBarsProgress,
@@ -13,7 +13,7 @@ import {
   faSignOut,
   faTicket,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Person} from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,10 +24,10 @@ type ProfileSectionProps = {
   profile: Person | null;
 };
 
-const ProfileSection = ({ profile }: ProfileSectionProps) => {
+const ProfileSection = ({profile}: ProfileSectionProps) => {
   const logout = () => UserService.Instance.logout();
-const { lang } = useLanguage();
-const { t } = useTranslation();
+  const {lang} = useLanguage();
+  const {t} = useTranslation();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">
       <Link prefetch={false} href={`${lang}/user`}>
@@ -61,8 +61,8 @@ const { t } = useTranslation();
 
       <div className="py-2">
         <Link prefetch={false}
-          href="/coin"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/coin"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faCoins}
@@ -71,8 +71,8 @@ const { t } = useTranslation();
           <span className="text-gray-700">Coins 0.00</span>
         </Link>
         <Link prefetch={false}
-          href="/account-setting/basic-info"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/account-setting/basic-info"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faGear}
@@ -81,8 +81,8 @@ const { t } = useTranslation();
           <span className="text-gray-700">{t("global.menuAccountSettings")}</span>
         </Link>
         <Link prefetch={false}
-          href="/chat"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/chat"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faMessage}
@@ -91,8 +91,8 @@ const { t } = useTranslation();
           <span className="text-gray-700">{t("global.menuMessagesOrders")}</span>
         </Link>
         <Link prefetch={false}
-          href="/promotion"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/promotion"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faTicket}
@@ -101,8 +101,8 @@ const { t } = useTranslation();
           <span className="text-gray-700">{t("global.menuCoupons")}</span>
         </Link>
         <Link prefetch={false}
-          href="/favorites"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/favorites"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faHeart}
@@ -111,8 +111,8 @@ const { t } = useTranslation();
           <span className="text-gray-700">{t("global.menuFavoriteJobs")}</span>
         </Link>
         <Link prefetch={false}
-          href="/job-board"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
+              href="/job-board"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
         >
           <FontAwesomeIcon
             icon={faBullhorn}
@@ -121,8 +121,8 @@ const { t } = useTranslation();
           <span className="text-gray-700">{t("global.menuJobBoard")}</span>
         </Link>
         <Link prefetch={false}
-          href="/reward/earn"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/reward/earn"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faGift}
@@ -134,8 +134,8 @@ const { t } = useTranslation();
           </span>
         </Link>
         <Link prefetch={false}
-          href="/start-selling"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/start-selling"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faCodePullRequest}
@@ -144,8 +144,8 @@ const { t } = useTranslation();
           <span className="text-gray-700">{t("global.menuBecomeFreelancer")}</span>
         </Link>
         <Link prefetch={false}
-          href="/consent-management"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t w-full"
+              href="/consent-management"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t w-full"
         >
           <FontAwesomeIcon
             icon={faBarsProgress}

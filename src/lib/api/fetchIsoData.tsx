@@ -1,26 +1,27 @@
 /**
  * Server-side data fetching function for Next.js
- * 
+ *
  * This function fetches initial data for server-side rendering, including:
  * - Site configuration
  * - User information (if authenticated)
  * - Route-specific data based on the current URL
- * 
+ *
  * @param url The current URL being rendered
  * @param incomingHeaders HTTP headers from the incoming request
  * @returns An IsoData object containing all necessary data for rendering, or null if an error occurred
  */
-import { testHost } from "@/config";
-import { FailedRequestState, HttpService, RequestState } from "@/services/HttpService";
-import { isAuthPath } from "@/utils/app";
-import { getErrorPageData, getJwtCookie, matchPath, setForwardedHeaders } from "@/utils/helpers";
-import { Match } from "@/utils/router";
-import { routes } from "@/utils/routes";
-import { ErrorPageData, InitialFetchRequest, IsoData, RouteData } from "@/utils/types";
-import { parsePath } from "history";
-import { IncomingHttpHeaders } from "http";
-import { GetSiteResponse, MyUserInfo } from "lemmy-js-client";
-import { NextResponse } from "next/server";
+import {testHost} from "@/config";
+import {FailedRequestState, HttpService, RequestState} from "@/services/HttpService";
+import {isAuthPath} from "@/utils/app";
+import {getErrorPageData, getJwtCookie, matchPath, setForwardedHeaders} from "@/utils/helpers";
+import {Match} from "@/utils/router";
+import {routes} from "@/utils/routes";
+import {ErrorPageData, InitialFetchRequest, IsoData, RouteData} from "@/utils/types";
+import {parsePath} from "history";
+import {IncomingHttpHeaders} from "http";
+import {GetSiteResponse, MyUserInfo} from "lemmy-js-client";
+import {NextResponse} from "next/server";
+
 /**
  * Optimized logger that conditionally logs based on environment
  * - In development: Provides detailed logs for debugging
@@ -32,10 +33,11 @@ const logger = {
    */
   debug: (message: string, ...args: any[]) => {
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[fetchIsoData] ${message}`, ...args);
+      console.log(`[fetchIsoData] ${message}`,
+        ...args);
     }
   },
-  
+
   /**
    * Log error messages with different behavior based on environment
    * - In production: Use console.warn with minimal details
@@ -43,11 +45,12 @@ const logger = {
    */
   error: (message: string, err?: unknown) => {
     const prefix = `[fetchIsoData] ${message}`;
-    
+
     if (process.env.NODE_ENV !== "development") {
       // In production, use warn instead of error and minimize logging
       if (err) {
-        console.warn(prefix, err instanceof Error ? err.message : String(err));
+        console.warn(prefix,
+          err instanceof Error ? err.message : String(err));
       }
       return; // Prevent console.error in production
     }
@@ -57,7 +60,7 @@ const logger = {
       console.warn(prefix);
       return;
     }
-    
+
     const detail = err instanceof Error ? err.message.trim() : String(err).trim();
     console.warn(
       detail ? `${prefix}: ${detail}` : prefix,
@@ -69,7 +72,7 @@ const logger = {
 /**
  * Fetches initial data for server-side rendering with optimized performance
  * and improved error handling.
- * 
+ *
  * @param url The current URL being rendered
  * @param incomingHeaders HTTP headers from the incoming request
  * @returns An IsoData object containing all necessary data for rendering
@@ -87,11 +90,12 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
     const headers = setForwardedHeaders(incomingHeaders);
     const auth = getJwtCookie(incomingHeaders);
     await HttpService.client.setHeaders(headers);
-    
+
     // Check authentication for protected routes
     if (!auth && isAuthPath(url)) {
       logger.debug(`Redirecting unauthenticated user from protected route: ${url}`);
-      return NextResponse.redirect(new URL(`/login?prev=${encodeURIComponent(url)}`, origin)) as any;
+      return NextResponse.redirect(new URL(`/login?prev=${encodeURIComponent(url)}`,
+        origin)) as any;
     }
 
     // Fetch site data and user info in parallel for better performance
@@ -102,27 +106,47 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
 
     // Process user data with improved error handling
     await processUserData(tryUser);
-    
+
     // Process site data and fetch route-specific data
-    if (!await processSiteData(trySite, url, headers)) {
+    if (!await processSiteData(trySite,
+      url,
+      headers)) {
       // If site data processing failed, return early with error data
-      return createIsoDataResponse(url, siteRes, myUserInfo, routeData, errorPageData);
+      return createIsoDataResponse(url,
+        siteRes,
+        myUserInfo,
+        routeData,
+        errorPageData);
     }
-    
+
     // Check for errors in route data
     if (hasRouteDataErrors()) {
-      return createIsoDataResponse(url, siteRes, myUserInfo, {}, errorPageData);
+      return createIsoDataResponse(url,
+        siteRes,
+        myUserInfo,
+        {},
+        errorPageData);
     }
 
     // Return the complete data
-    return createIsoDataResponse(url, siteRes, myUserInfo, routeData, errorPageData);
+    return createIsoDataResponse(url,
+      siteRes,
+      myUserInfo,
+      routeData,
+      errorPageData);
   } catch (err) {
     // Log the error and return a structured error response
-    logger.error("Unhandled error in fetchIsoData", err);
-    errorPageData = getErrorPageData(err as Error, undefined);
-    return createIsoDataResponse(url, undefined, undefined, {}, errorPageData);
+    logger.error("Unhandled error in fetchIsoData",
+      err);
+    errorPageData = getErrorPageData(err as Error,
+      undefined);
+    return createIsoDataResponse(url,
+      undefined,
+      undefined,
+      {},
+      errorPageData);
   }
-  
+
   /**
    * Process user data and handle authentication errors
    */
@@ -138,30 +162,32 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
       myUserInfo = tryUser.data;
     }
   }
-  
+
   /**
    * Process site data and fetch route-specific data
    * @returns true if processing was successful, false if there was an error
    */
   async function processSiteData(
-    trySite: RequestState<GetSiteResponse>, 
-    url: string, 
+    trySite: RequestState<GetSiteResponse>,
+    url: string,
     headers: Record<string, string>
   ): Promise<boolean> {
     if (trySite.state === "success") {
       siteRes = trySite.data;
-      
+
       // Find the active route for the current URL
       activeRoute = routes.find(
-        route => (match = matchPath(route.path, url)),
+        route => (match = matchPath(route.path,
+          url)),
       );
-      
+
       // Fetch route-specific data if available
       if (siteRes && activeRoute?.fetchInitialData && match) {
-        const { search } = parsePath(url);
+        const {search} = parsePath(url);
         const initialFetchReq: InitialFetchRequest<Record<string, any>> = {
           path: url,
-          query: activeRoute.getQueryParams?.(search, siteRes) ?? {},
+          query: activeRoute.getQueryParams?.(search,
+            siteRes) ?? {},
           match,
           site: siteRes,
           headers: headers,
@@ -175,13 +201,14 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
             myUserInfo = undefined;
           });
         }
-        
+
         try {
           routeData = await activeRoute.fetchInitialData(initialFetchReq);
         } catch (routeError) {
-          logger.error(`Error fetching route data for ${url}`, routeError);
+          logger.error(`Error fetching route data for ${url}`,
+            routeError);
           errorPageData = getErrorPageData(
-            new Error(`Failed to fetch route data: ${(routeError as Error).message}`), 
+            new Error(`Failed to fetch route data: ${(routeError as Error).message}`),
             siteRes
           );
           return false;
@@ -190,12 +217,13 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
       return true;
     } else if (trySite.state === "failed") {
       logger.error(`Failed to fetch site data: ${trySite.err.message}`);
-      errorPageData = getErrorPageData(new Error(trySite.err.message), undefined);
+      errorPageData = getErrorPageData(new Error(trySite.err.message),
+        undefined);
       return false;
     }
     return true;
   }
-  
+
   /**
    * Check if there are any errors in the route data
    * @returns true if there are errors, false otherwise
@@ -206,13 +234,15 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
     ) as FailedRequestState | undefined;
 
     if (error) {
-      logger.error(`Error in route data: ${error.err.message}`, error.err);
-      errorPageData = getErrorPageData(new Error(error.err.message), siteRes);
+      logger.error(`Error in route data: ${error.err.message}`,
+        error.err);
+      errorPageData = getErrorPageData(new Error(error.err.message),
+        siteRes);
       return true;
     }
     return false;
   }
-  
+
   /**
    * Create a standardized IsoData response object
    */

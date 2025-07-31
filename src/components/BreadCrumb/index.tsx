@@ -1,18 +1,18 @@
-import { ChevronRight } from "lucide-react";
+import {ChevronRight} from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
 type Crumb = {
   label: string;
   href?: string;
-  forceLink?: boolean; 
+  forceLink?: boolean;
 };
 
 interface BreadCrumbProps {
   items: Crumb[];
 }
 
-const BreadCrumb: React.FC<BreadCrumbProps> = ({ items }) => {
+const BreadCrumb: React.FC<BreadCrumbProps> = ({items}) => {
   return (
     <section className="col-start-2 col-end-auto h-5 mt-2 sm:mt-10">
       <div className="flex justify-between items-center">
@@ -25,8 +25,8 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({ items }) => {
               <li key={index} className="flex flex-row items-center gap-2">
                 {shouldLink ? (
                   <Link prefetch={false}
-                    href={item.href!}
-                    className="text-third hover:text-primary transition-all duration-300"
+                        href={item.href!}
+                        className="text-third hover:text-primary transition-all duration-300"
                   >
                     {item.label}
                   </Link>
@@ -36,7 +36,7 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({ items }) => {
 
                 {!isLast && (
                   <span className="text-neutral-400 pr-2 relative top-[2px]">
-                    <ChevronRight className="w-4 text-text-secondary" />
+                    <ChevronRight className="w-4 text-text-secondary"/>
                   </span>
                 )}
               </li>

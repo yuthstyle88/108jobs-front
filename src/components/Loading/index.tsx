@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
-import { useGlobalLoader } from "@/contexts/GlobalLoaderContext";
+import {useGlobalLoader} from "@/contexts/GlobalLoaderContext";
+
 const GlobalLoader = () => {
-  const { isLoading } = useGlobalLoader();
+  const {isLoading} = useGlobalLoader();
 
   if (!isLoading) return null;
   return (

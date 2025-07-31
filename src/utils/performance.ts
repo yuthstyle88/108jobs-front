@@ -16,9 +16,9 @@ export function measureExecutionTime<T>(fn: () => T, label: string): T {
   const startTime = performance.now();
   const result = fn();
   const endTime = performance.now();
-  
+
   console.log(`[Performance] ${label}: ${endTime - startTime}ms`);
-  
+
   return result;
 }
 
@@ -39,9 +39,9 @@ export async function measureAsyncExecutionTime<T>(
   const startTime = performance.now();
   const result = await fn();
   const endTime = performance.now();
-  
+
   console.log(`[Performance] ${label}: ${endTime - startTime}ms`);
-  
+
   return result;
 }
 
@@ -60,19 +60,19 @@ export function measureImageLoadTime(src: string, label: string): Promise<void> 
 
     const img = new Image();
     const startTime = performance.now();
-    
+
     img.onload = () => {
       const endTime = performance.now();
       console.log(`[Performance] Image load ${label}: ${endTime - startTime}ms`);
       resolve();
     };
-    
+
     img.onerror = () => {
       const endTime = performance.now();
       console.error(`[Performance] Image load error ${label}: ${endTime - startTime}ms`);
       resolve();
     };
-    
+
     img.src = src;
   });
 }
@@ -86,19 +86,21 @@ export function trackMetric(metricName: string, value: number): void {
   if (typeof window === 'undefined' || !window.performance || !window.performance.mark) {
     return;
   }
-  
+
   // Create a performance mark
   window.performance.mark(`${metricName}-${value}`);
-  
+
   // Log the metric
   console.log(`[Metric] ${metricName}: ${value}`);
-  
+
   // If available, send to analytics
   if (typeof (window as any).gtag !== 'undefined') {
-    (window as any).gtag('event', 'performance_metric', {
-      'metric_name': metricName,
-      'metric_value': value
-    });
+    (window as any).gtag('event',
+      'performance_metric',
+      {
+        'metric_name': metricName,
+        'metric_value': value
+      });
   }
 }
 
@@ -118,9 +120,10 @@ export function measureRenderTime(
   commitTime: number
 ): void {
   console.log(`[Render] ${id} took ${actualDuration.toFixed(2)}ms (Base: ${baseDuration.toFixed(2)}ms)`);
-  
+
   // Track the metric
-  trackMetric(`render_${id}`, actualDuration);
+  trackMetric(`render_${id}`,
+    actualDuration);
 }
 
 /**
@@ -136,13 +139,13 @@ export function createPerformanceObserver(
   if (typeof PerformanceObserver === 'undefined') {
     return () => {};
   }
-  
+
   const observer = new PerformanceObserver((list) => {
     callback(list);
   });
-  
-  observer.observe({ entryTypes });
-  
+
+  observer.observe({entryTypes});
+
   return () => {
     observer.disconnect();
   };
@@ -154,13 +157,14 @@ export function createPerformanceObserver(
  * @returns A function to disconnect the observer
  */
 export function monitorFCP(callback: (value: number) => void): () => void {
-  return createPerformanceObserver(['paint'], (list) => {
-    for (const entry of list.getEntries()) {
-      if (entry.name === 'first-contentful-paint') {
-        callback(entry.startTime);
+  return createPerformanceObserver(['paint'],
+    (list) => {
+      for (const entry of list.getEntries()) {
+        if (entry.name === 'first-contentful-paint') {
+          callback(entry.startTime);
+        }
       }
-    }
-  });
+    });
 }
 
 /**
@@ -169,11 +173,12 @@ export function monitorFCP(callback: (value: number) => void): () => void {
  * @returns A function to disconnect the observer
  */
 export function monitorLCP(callback: (value: number) => void): () => void {
-  return createPerformanceObserver(['largest-contentful-paint'], (list) => {
-    const entries = list.getEntries();
-    const lastEntry = entries[entries.length - 1];
-    callback(lastEntry.startTime);
-  });
+  return createPerformanceObserver(['largest-contentful-paint'],
+    (list) => {
+      const entries = list.getEntries();
+      const lastEntry = entries[entries.length - 1];
+      callback(lastEntry.startTime);
+    });
 }
 
 /**
@@ -184,17 +189,18 @@ export function monitorLCP(callback: (value: number) => void): () => void {
 export function monitorCLS(callback: (value: number) => void): () => void {
   let clsValue = 0;
   const clsEntries: PerformanceEntry[] = [];
-  
-  return createPerformanceObserver(['layout-shift'], (list) => {
-    for (const entry of list.getEntries()) {
-      // Only count layout shifts without recent user input
-      if (!(entry as any).hadRecentInput) {
-        clsValue += (entry as any).value;
-        clsEntries.push(entry);
-        callback(clsValue);
+
+  return createPerformanceObserver(['layout-shift'],
+    (list) => {
+      for (const entry of list.getEntries()) {
+        // Only count layout shifts without recent user input
+        if (!(entry as any).hadRecentInput) {
+          clsValue += (entry as any).value;
+          clsEntries.push(entry);
+          callback(clsValue);
+        }
       }
-    }
-  });
+    });
 }
 
 /**
@@ -203,12 +209,13 @@ export function monitorCLS(callback: (value: number) => void): () => void {
  * @returns A function to disconnect the observer
  */
 export function monitorFID(callback: (value: number) => void): () => void {
-  return createPerformanceObserver(['first-input'], (list) => {
-    for (const entry of list.getEntries()) {
-      const delay = (entry as any).processingStart - entry.startTime;
-      callback(delay);
-    }
-  });
+  return createPerformanceObserver(['first-input'],
+    (list) => {
+      for (const entry of list.getEntries()) {
+        const delay = (entry as any).processingStart - entry.startTime;
+        callback(delay);
+      }
+    });
 }
 
 /**
@@ -223,24 +230,28 @@ export function initPerformanceMonitoring(): {
 } {
   const disconnectFCP = monitorFCP((value) => {
     console.log(`[Core Web Vital] FCP: ${value}ms`);
-    trackMetric('FCP', value);
+    trackMetric('FCP',
+      value);
   });
-  
+
   const disconnectLCP = monitorLCP((value) => {
     console.log(`[Core Web Vital] LCP: ${value}ms`);
-    trackMetric('LCP', value);
+    trackMetric('LCP',
+      value);
   });
-  
+
   const disconnectCLS = monitorCLS((value) => {
     console.log(`[Core Web Vital] CLS: ${value}`);
-    trackMetric('CLS', value);
+    trackMetric('CLS',
+      value);
   });
-  
+
   const disconnectFID = monitorFID((value) => {
     console.log(`[Core Web Vital] FID: ${value}ms`);
-    trackMetric('FID', value);
+    trackMetric('FID',
+      value);
   });
-  
+
   return {
     disconnectFCP,
     disconnectLCP,

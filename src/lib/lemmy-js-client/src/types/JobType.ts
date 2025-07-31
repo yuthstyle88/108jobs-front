@@ -1,6 +1,6 @@
 export enum JobType {
   Freelance = "Freelance",
-  Contract  = "Contract",
-  PartTime  = "PartTime",
-  FullTime  = "FullTime",
+  Contract = "Contract",
+  PartTime = "PartTime",
+  FullTime = "FullTime",
 }

@@ -1,9 +1,9 @@
 "use client";
-import { LanguageFile } from "@/constants/language";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { getNamespace } from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {getNamespace} from "@/utils/i18nHelper";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import {usePathname} from "next/navigation";
 import React from "react";
 
 
@@ -13,7 +13,7 @@ const BreadCrumbAccountSetting = () => {
   );
 
   const pathname = usePathname();
-  const { lang } = useLanguage();
+  const {lang} = useLanguage();
 
   const menuItems = [
     {

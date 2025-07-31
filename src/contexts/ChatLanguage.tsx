@@ -1,6 +1,6 @@
 "use client";
-import { createContext, useContext } from "react";
-import { LanguageFile } from "@/constants/language";
+import {createContext, useContext} from "react";
+import {LanguageFile} from "@/constants/language";
 import {getNamespace} from "@/utils/i18nHelper";
 
 type LanguageContextType = {
@@ -24,7 +24,7 @@ export const ChatLanguageProvider = ({
   const error = false;
 
   return (
-    <LanguageContext.Provider value={{ languageData, isLoading, error }}>
+    <LanguageContext.Provider value={{languageData, isLoading, error}}>
       {children}
     </LanguageContext.Provider>
   );

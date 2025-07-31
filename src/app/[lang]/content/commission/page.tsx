@@ -1,10 +1,10 @@
 "use client";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import { scrollToElementById } from "@/utils/scrollSmooth";
-import { ChevronDown } from "lucide-react";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {scrollToElementById} from "@/utils/scrollSmooth";
+import {ChevronDown} from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import {useState} from "react";
 
 
 const MyServices = () => {
@@ -87,7 +87,8 @@ const MyServices = () => {
   };
 
   const calculateNetAmount = (price: number, feePercent: number) => {
-    return price - calculateFee(price, feePercent);
+    return price - calculateFee(price,
+      feePercent);
   };
 
   const handleTierSelect = (tier: (typeof MEMBER_TIERS)[0]) => {
@@ -147,8 +148,8 @@ const MyServices = () => {
                 </div>
                 <div className="mt-2">
                   <Link prefetch={false}
-                    href="#"
-                    className="text-blue-600 hover:underline text-xs"
+                        href="#"
+                        className="text-blue-600 hover:underline text-xs"
                   >
                     {commissionLanguage?.translatorTypeAdditionalInfo}
                   </Link>
@@ -166,7 +167,8 @@ const MyServices = () => {
                     placeholder="0"
                     value={projectPrice}
                     onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, "");
+                      const value = e.target.value.replace(/\D/g,
+                        "");
                       setProjectPrice(value);
                     }}
                   />
@@ -184,11 +186,11 @@ const MyServices = () => {
                   <span className="text-blue-600 font-medium">
                     {projectPrice
                       ? formatNumber(
-                          calculateFee(
-                            parseInt(projectPrice) || 0,
-                            memberTier.feePercent
-                          )
+                        calculateFee(
+                          parseInt(projectPrice) || 0,
+                          memberTier.feePercent
                         )
+                      )
                       : "0"}{" "}
                     VND
                   </span>
@@ -203,11 +205,11 @@ const MyServices = () => {
                   <div className="text-blue-600 font-bold">
                     {projectPrice
                       ? formatNumber(
-                          calculateNetAmount(
-                            parseInt(projectPrice) || 0,
-                            memberTier.feePercent
-                          )
+                        calculateNetAmount(
+                          parseInt(projectPrice) || 0,
+                          memberTier.feePercent
                         )
+                      )
                       : "0"}{" "}
                     VND
                   </div>
@@ -268,8 +270,9 @@ const MyServices = () => {
                     <li className="flex items-start">
                       <span className="text-blue-500 mr-2">•</span>
                       <Link prefetch={false}
-                        href="/content/commission#section1"
-                        onClick={(e) => handleClick(e, 1)}
+                            href="/content/commission#section1"
+                            onClick={(e) => handleClick(e,
+                              1)}
                       >
                         <span className="cursor-pointer hover:underline">
                           {
@@ -281,8 +284,9 @@ const MyServices = () => {
                     <li className="flex items-start">
                       <span className="text-blue-500 mr-2">•</span>
                       <Link prefetch={false}
-                        href="/content/commission#section2"
-                        onClick={(e) => handleClick(e, 2)}
+                            href="/content/commission#section2"
+                            onClick={(e) => handleClick(e,
+                              2)}
                       >
                         <span>
                           {
@@ -295,8 +299,9 @@ const MyServices = () => {
                         <li className="flex items-start">
                           <span className="text-blue-500 mr-2">•</span>
                           <Link prefetch={false}
-                            href="/content/commission#section3"
-                            onClick={(e) => handleClick(e, 3)}
+                                href="/content/commission#section3"
+                                onClick={(e) => handleClick(e,
+                                  3)}
                           >
                             <span>
                               {commissionLanguage?.allContentExample1Title}
@@ -306,8 +311,9 @@ const MyServices = () => {
                         <li className="flex items-start">
                           <span className="text-blue-500 mr-2">•</span>
                           <Link prefetch={false}
-                            href="/content/commission#section4"
-                            onClick={(e) => handleClick(e, 4)}
+                                href="/content/commission#section4"
+                                onClick={(e) => handleClick(e,
+                                  4)}
                           >
                             <span>
                               {commissionLanguage?.allContentExample2Title}
@@ -317,8 +323,9 @@ const MyServices = () => {
                         <li className="flex items-start">
                           <span className="text-blue-500 mr-2">•</span>
                           <Link prefetch={false}
-                            href="/content/commission#section5"
-                            onClick={(e) => handleClick(e, 5)}
+                                href="/content/commission#section5"
+                                onClick={(e) => handleClick(e,
+                                  5)}
                           >
                             <span>
                               {commissionLanguage?.allContentExample3Title}
@@ -330,8 +337,9 @@ const MyServices = () => {
                     <li className="flex items-start">
                       <span className="text-blue-500 mr-2">•</span>
                       <Link prefetch={false}
-                        href="/content/commission#section6"
-                        onClick={(e) => handleClick(e, 6)}
+                            href="/content/commission#section6"
+                            onClick={(e) => handleClick(e,
+                              6)}
                       >
                         <span>
                           {commissionLanguage?.allContentWhatIsFeeUsedFor}
@@ -355,8 +363,8 @@ const MyServices = () => {
 
             <div className="mt-4 mb-6">
               <Link prefetch={false}
-                href="/seller"
-                className="text-blue-600 underline text-sm"
+                    href="/seller"
+                    className="text-blue-600 underline text-sm"
               >
                 {commissionLanguage?.checkYourTier}
               </Link>
@@ -405,11 +413,11 @@ const MyServices = () => {
                   >
                     {tier.maxIncome < Infinity
                       ? `${formatNumber(tier.minIncome)} - ${formatNumber(
-                          tier.maxIncome
-                        )}`
+                        tier.maxIncome
+                      )}`
                       : `${formatNumber(tier.minIncome)} ${
-                          commissionLanguage?.tierTableRows5IncomeRangeUpper
-                        }`}
+                        commissionLanguage?.tierTableRows5IncomeRangeUpper
+                      }`}
                   </div>
                   <div
                     className={`p-4 font-medium ${
@@ -462,68 +470,68 @@ const MyServices = () => {
             <div className="overflow-hidden border border-gray-200 rounded-lg mb-6 text-text-primary">
               <table className="w-full">
                 <thead>
-                  <tr className="bg-gray-50">
-                    <th className="p-4 text-left font-medium text-sm text-gray-700">
-                      {
-                        commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsTitle
-                      }
-                    </th>
-                    <th className="p-4 text-left font-medium text-sm text-gray-700">
-                      {
-                        commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsTitleMethod
-                      }
-                    </th>
-                  </tr>
+                <tr className="bg-gray-50">
+                  <th className="p-4 text-left font-medium text-sm text-gray-700">
+                    {
+                      commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsTitle
+                    }
+                  </th>
+                  <th className="p-4 text-left font-medium text-sm text-gray-700">
+                    {
+                      commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsTitleMethod
+                    }
+                  </th>
+                </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-t border-gray-200">
-                    <td className="p-4">
-                      <div className="flex items-center">
+                <tr className="border-t border-gray-200">
+                  <td className="p-4">
+                    <div className="flex items-center">
                         <span className="font-medium mr-2">
                           {
                             commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep1Title
                           }
                         </span>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      {
-                        commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep1Description
-                      }
-                    </td>
-                  </tr>
-                  <tr className="border-t border-gray-200">
-                    <td className="p-4">
-                      <div className="flex items-center">
+                    </div>
+                  </td>
+                  <td className="p-4">
+                    {
+                      commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep1Description
+                    }
+                  </td>
+                </tr>
+                <tr className="border-t border-gray-200">
+                  <td className="p-4">
+                    <div className="flex items-center">
                         <span className="font-medium mr-2">
                           {
                             commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep2Title
                           }
                         </span>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      {
-                        commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep2Description
-                      }
-                    </td>
-                  </tr>
-                  <tr className="border-t border-gray-200">
-                    <td className="p-4">
-                      <div className="flex items-center">
+                    </div>
+                  </td>
+                  <td className="p-4">
+                    {
+                      commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep2Description
+                    }
+                  </td>
+                </tr>
+                <tr className="border-t border-gray-200">
+                  <td className="p-4">
+                    <div className="flex items-center">
                         <span className="font-medium mr-2">
                           {
                             commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep3Title
                           }
                         </span>
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      {
-                        commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep3Description
-                      }
-                    </td>
-                  </tr>
+                    </div>
+                  </td>
+                  <td className="p-4">
+                    {
+                      commissionLanguage?.howIsFeeCalculatedSectionCalculationStepsStep3Description
+                    }
+                  </td>
+                </tr>
                 </tbody>
               </table>
             </div>
@@ -894,8 +902,8 @@ const MyServices = () => {
                 </div>
                 <div className="mt-2">
                   <Link prefetch={false}
-                    href="#"
-                    className="text-blue-600 hover:underline text-xs"
+                        href="#"
+                        className="text-blue-600 hover:underline text-xs"
                   >
                     {commissionLanguage?.translatorTypeAdditionalInfo}
                   </Link>
@@ -914,7 +922,8 @@ const MyServices = () => {
                     value={projectPrice}
                     onChange={(e) => {
                       // Allow only numbers and format with commas
-                      const value = e.target.value.replace(/\D/g, "");
+                      const value = e.target.value.replace(/\D/g,
+                        "");
                       setProjectPrice(value);
                     }}
                   />
@@ -932,11 +941,11 @@ const MyServices = () => {
                   <span className="text-blue-600 font-medium">
                     {projectPrice
                       ? formatNumber(
-                          calculateFee(
-                            parseInt(projectPrice) || 0,
-                            memberTier.feePercent
-                          )
+                        calculateFee(
+                          parseInt(projectPrice) || 0,
+                          memberTier.feePercent
                         )
+                      )
                       : "0"}{" "}
                     VND
                   </span>
@@ -951,11 +960,11 @@ const MyServices = () => {
                   <div className="text-blue-600 font-bold">
                     {projectPrice
                       ? formatNumber(
-                          calculateNetAmount(
-                            parseInt(projectPrice) || 0,
-                            memberTier.feePercent
-                          )
+                        calculateNetAmount(
+                          parseInt(projectPrice) || 0,
+                          memberTier.feePercent
                         )
+                      )
                       : "0"}{" "}
                     VND
                   </div>

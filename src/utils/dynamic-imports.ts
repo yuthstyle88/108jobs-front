@@ -1,8 +1,8 @@
-import { verifyTranslationImports } from "@/services/I18NextService";
-import { verifyDateFnsImports } from "@/utils/date";
+import {verifyTranslationImports} from "@/services/I18NextService";
+import {verifyDateFnsImports} from "@/utils/date";
 
 export class ImportReport {
-  error: Array<{ id: string; error: Error | string | undefined }> = [];
+  error: Array<{id: string; error: Error | string | undefined}> = [];
   success: string[] = [];
   message?: string;
 }
@@ -21,7 +21,7 @@ function collect(
 ) {
   collection[kind] = report;
   if (verbose) {
-    for (const { id, error } of report.error) {
+    for (const {id, error} of report.error) {
       console.warn(`${kind} "${id}" failed: ${error}`);
     }
     const message = report.message ? ` (${report.message})` : "";
@@ -45,10 +45,16 @@ export async function verifyDynamicImports(
 ): Promise<ImportReportCollection> {
   const collection: ImportReportCollection = {};
   await verifyTranslationImports().then(report =>
-    collect(verbose, "translation", collection, report),
+    collect(verbose,
+      "translation",
+      collection,
+      report),
   );
   await verifyDateFnsImports().then(report =>
-    collect(verbose, "date-fns", collection, report),
+    collect(verbose,
+      "date-fns",
+      collection,
+      report),
   );
   return collection;
 }

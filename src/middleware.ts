@@ -1,7 +1,8 @@
-import { NextResponse, type NextRequest } from "next/server";
-import { middleware as langMiddleware } from "./middleware-lang";
+import {type NextRequest, NextResponse} from "next/server";
+import {middleware as langMiddleware} from "./middleware-lang";
 import {authCookieName} from "@/utils/config";
 import {VALID_LANGUAGES} from "@/constants/language";
+
 // can't import from a type
 export enum RoleType {
   Employer = "Employer",
@@ -12,7 +13,9 @@ function decodePayload(token: string) {
   try {
     const payloadBase64 = token.split(".")[1];
     const payloadJson = atob(
-      payloadBase64.replace(/-/g, "+").replace(/_/g, "/")
+      payloadBase64.replace(/-/g,
+        "+").replace(/_/g,
+        "/")
     );
     return JSON.parse(payloadJson);
   } catch {
@@ -26,7 +29,8 @@ function getUserRole(req: NextRequest): RoleType | null {
   const pathname = url.pathname; // ดึง path (เช่น /vi หรือ /th)
   const langFromURL = pathname.split("/")[1];
 
-  console.log("langFromURL", langFromURL)
+  console.log("langFromURL",
+    langFromURL)
   if (!token) return null;
 
   const payload = decodePayload(token);
@@ -77,10 +81,12 @@ function getRolesAllowedForPath(pathname: string): RoleType[] {
 
 export async function middleware(req: NextRequest) {
   const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
-  req.headers.set("x-path", req.nextUrl.pathname);
-  req.headers.set("x-url", req.nextUrl.href);
+  req.headers.set("x-path",
+    req.nextUrl.pathname);
+  req.headers.set("x-url",
+    req.nextUrl.href);
 
-  const { pathname, origin } = req.nextUrl;
+  const {pathname, origin} = req.nextUrl;
 
   const langRedirect = langMiddleware(req);
   if (langRedirect) return langRedirect;
@@ -90,7 +96,8 @@ export async function middleware(req: NextRequest) {
   const langPrefix = VALID_LANGUAGES.includes(firstSegment)
     ? `/${firstSegment}`
     : "";
-  const cleanPathname = pathname.replace(langPrefix, "") || "/";
+  const cleanPathname = pathname.replace(langPrefix,
+    "") || "/";
 
 
   if (publicRoutes.includes(cleanPathname)) {
@@ -102,7 +109,8 @@ export async function middleware(req: NextRequest) {
 
   if (cleanPathname === "/login") {
     if (!isLoggedIn) return NextResponse.next();
-    return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
+    return NextResponse.redirect(new URL(`${langPrefix}/`,
+      origin));
   }
 
   if (!protectedRoutes.some((route) => cleanPathname.startsWith(route))) {
@@ -112,21 +120,24 @@ export async function middleware(req: NextRequest) {
   if (!isLoggedIn) {
     const callbackUrl = encodeURIComponent(cleanPathname);
     return NextResponse.redirect(
-      new URL(`${langPrefix}/login?redirect=${callbackUrl}`, origin)
+      new URL(`${langPrefix}/login?redirect=${callbackUrl}`,
+        origin)
     );
   }
   const userRole = getUserRole(req);
 
   if (cleanPathname.startsWith("/seller") && userRole !== RoleType.Freelancer) {
     return NextResponse.redirect(
-      new URL(`${langPrefix}/start-selling`, origin)
+      new URL(`${langPrefix}/start-selling`,
+        origin)
     );
   }
 
   const allowedRoles = getRolesAllowedForPath(cleanPathname);
 
   if (allowedRoles.length === 1 && allowedRoles[0] !== userRole) {
-    return NextResponse.redirect(new URL(`${langPrefix}/`, origin));
+    return NextResponse.redirect(new URL(`${langPrefix}/`,
+      origin));
   }
   //
   // const isAuthorized = allowedRoles.some((role) => userRoles.includes(role));

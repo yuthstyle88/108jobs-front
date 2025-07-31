@@ -1,14 +1,15 @@
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter } from "next/navigation";
+import {faSearch} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useRouter} from "next/navigation";
 import React from "react";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
+
 type SearchForm = {
   query: string;
 };
 const SPSearch = () => {
   const router = useRouter();
-  const { register, handleSubmit } = useForm<SearchForm>({
+  const {register, handleSubmit} = useForm<SearchForm>({
     defaultValues: {
       query: "",
     },

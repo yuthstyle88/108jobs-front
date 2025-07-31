@@ -1,36 +1,36 @@
 "use client";
-import { useClickOutside } from "@/hooks/useClickOutside";
-import { faUpDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { X } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import {useClickOutside} from "@/hooks/useClickOutside";
+import {faUpDown} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {X} from "lucide-react";
+import {useEffect, useRef, useState} from "react";
 import ReactDOM from "react-dom";
+import {useTranslation} from "@/hooks/translation/useTranslation";
 
 interface SortSectionProps {
   className?: string;
-  language: Record<string, string>;
   onSortChange?: (value: string) => void;
   currentSort?: string;
 }
 
 const SortSection = ({
   className = "",
-  language,
   onSortChange,
   currentSort = "",
 }: SortSectionProps) => {
+  const {t} = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(currentSort);
-  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [dropdownPosition, setDropdownPosition] = useState({top: 0, left: 0});
 
   const toggleRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false));
 
   const sortOptions = [
-    { value: "rating", label: language?.highReviewScore },
-    { value: "priceAsc", label: language?.priceLowToHigh },
-    { value: "priceDesc", label: language?.priceHighToLow },
-    { value: "purchaseCount", label: language?.sellALot },
+    {value: "rating", label: t("sort.highReviewScore")},
+    {value: "priceAsc", label: t("sort.priceLowToHigh")},
+    {value: "priceDesc", label: t("sort.priceHighToLow")},
+    {value: "purchaseCount", label: t("sort.sellALot")},
   ];
 
   const updatePosition = () => {
@@ -49,12 +49,17 @@ const SortSection = ({
   };
 
   useEffect(() => {
-    if (isOpen) {
-      const handleScroll = () => updatePosition();
-      window.addEventListener("scroll", handleScroll, true);
-      return () => window.removeEventListener("scroll", handleScroll, true);
-    }
-  }, [isOpen]);
+      if (isOpen) {
+        const handleScroll = () => updatePosition();
+        window.addEventListener("scroll",
+          handleScroll,
+          true);
+        return () => window.removeEventListener("scroll",
+          handleScroll,
+          true);
+      }
+    },
+    [isOpen]);
 
   const handleOptionSelect = (value: string) => {
     setSelectedOption(value);
@@ -71,10 +76,10 @@ const SortSection = ({
         }`}
         ref={toggleRef}
       >
-        <FontAwesomeIcon icon={faUpDown} className="text-third" />
+        <FontAwesomeIcon icon={faUpDown} className="text-third"/>
         {selectedOption
           ? sortOptions.find((opt) => opt.value === selectedOption)?.label
-          : language?.sortBy}
+          : t("sort.sortBy")}
         {selectedOption && (
           <X
             onClick={(e) => {

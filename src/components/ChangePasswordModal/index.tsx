@@ -1,12 +1,12 @@
 "use client";
-import { ERROR_CONSTANTS } from "@/constants/error";
+import {ERROR_CONSTANTS} from "@/constants/error";
 import useNotification from "@/hooks/useNotification";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useMemo, useState} from "react";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
 import LoadingCircle from "../LoadingCircle";
-import { CustomInput } from "../ui/InputField";
+import {CustomInput} from "../ui/InputField";
 import Modal from "../ui/Modal";
 
 interface PasswordChangeModalProps {
@@ -21,29 +21,31 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
   languageData,
 }) => {
   const schema = useMemo(() => {
-    return z
+      return z
       .object({
         oldPassword: z
-          .string()
-          .min(
-            6,
-            languageData?.passwordMinLengthError ||
-              "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
-          ),
+        .string()
+        .min(
+          6,
+          languageData?.passwordMinLengthError ||
+          "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
+        ),
         newPassword: z
-          .string()
-          .min(
-            6,
-            languageData?.passwordMinLengthError ||
-              "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
-          ),
+        .string()
+        .min(
+          6,
+          languageData?.passwordMinLengthError ||
+          "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
+        ),
         confirmPassword: z.string(),
       })
-      .refine((data) => data.newPassword === data.confirmPassword, {
-        message: languageData?.passwordMinLengthError || "รหัสผ่านไม่ตรงกัน",
-        path: ["confirmPassword"],
-      });
-  }, [languageData]);
+      .refine((data) => data.newPassword === data.confirmPassword,
+        {
+          message: languageData?.passwordMinLengthError || "รหัสผ่านไม่ตรงกัน",
+          path: ["confirmPassword"],
+        });
+    },
+    [languageData]);
 
   type ChangePasswordFormData = z.infer<typeof schema>;
 
@@ -52,13 +54,13 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
     handleSubmit,
     setError,
     reset,
-    formState: { errors, isSubmitting },
+    formState: {errors, isSubmitting},
   } = useForm({
     resolver: zodResolver(schema),
     mode: "onChange",
   });
 
-  const { successMessage } = useNotification();
+  const {successMessage} = useNotification();
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -69,29 +71,31 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
     onClose();
   };
 
-  const onSubmit = async (data: ChangePasswordFormData) => {
+  const onSubmit = async(data: ChangePasswordFormData) => {
     try {
       setApiError(null);
 
-      const response = await fetch("/api/auth/update-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          oldPassword: data.oldPassword,
-          newPassword: data.newPassword,
-        }),
-      });
+      const response = await fetch("/api/auth/update-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            oldPassword: data.oldPassword,
+            newPassword: data.newPassword,
+          }),
+        });
 
       const result = await response.json();
 
       if (!response.ok) {
         if (result.fieldErrors?.oldPassword) {
-          setError("oldPassword", {
-            type: "manual",
-            message: result.fieldErrors.oldPassword,
-          });
+          setError("oldPassword",
+            {
+              type: "manual",
+              message: result.fieldErrors.oldPassword,
+            });
         }
         if (result.error && !result.fieldErrors?.oldPassword) {
           setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);
@@ -100,7 +104,8 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
       }
       reset();
       onClose();
-      successMessage("profile", "changePassword");
+      successMessage("profile",
+        "changePassword");
     } catch (error) {
       setApiError(
         error instanceof Error
@@ -164,7 +169,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
           disabled={isSubmitting}
           className="submit-button py-2"
         >
-          {isSubmitting ? <LoadingCircle /> : languageData?.submitButton}
+          {isSubmitting ? <LoadingCircle/> : languageData?.submitButton}
         </button>
       </form>
     </Modal>

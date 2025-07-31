@@ -5,7 +5,7 @@ export type RegisterFormData = {
   username: string;
   password: string;
   confirmPassword: string;
-  termsAccepted: boolean; 
+  termsAccepted: boolean;
   privacyAccepted: boolean;
   promotionalAccepted?: boolean;
   captchaUuid?: string;

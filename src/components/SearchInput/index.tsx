@@ -1,8 +1,8 @@
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
+import {faSearch} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useRouter} from "next/navigation";
+import {useForm} from "react-hook-form";
+import {useTranslation} from "react-i18next";
 
 
 type SearchForm = {
@@ -11,8 +11,8 @@ type SearchForm = {
 
 const SearchInput = () => {
   const router = useRouter();
-  const { t } = useTranslation();
-  const { register, handleSubmit } = useForm<SearchForm>({
+  const {t} = useTranslation();
+  const {register, handleSubmit} = useForm<SearchForm>({
     defaultValues: {
       query: "",
     },

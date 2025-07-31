@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect, forwardRef } from "react";
+import React, {forwardRef, useEffect, useState} from "react";
 import ContactForm from "@/components/ContractForm";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-import { cn } from "@/lib/utils";
+import {cn} from "@/lib/utils";
 import BusinessHeader from "@/components/BusinessHeader";
 import Link from "next/link";
 
@@ -12,7 +12,7 @@ const Tabs = TabsPrimitive.Root;
 const TabsList = forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <TabsPrimitive.List
     ref={ref}
     className={cn(
@@ -27,7 +27,7 @@ TabsList.displayName = TabsPrimitive.List.displayName;
 const TabsTrigger = forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
@@ -42,7 +42,7 @@ TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 const TabsContent = forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
@@ -58,14 +58,15 @@ const PriceListPage = () => {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+      setIsMounted(true);
+    },
+    []);
 
   if (!isMounted) return null;
 
   return (
     <div className="min-h-screen bg-white overflow-hidden">
-      <BusinessHeader />
+      <BusinessHeader/>
 
       {/* Hero Section */}
       <section className="pt-24 pb-10 md:pt-32 md:pb-12 bg-blue-50 relative">
@@ -76,16 +77,16 @@ const PriceListPage = () => {
           <div className="flex justify-center gap-2 mt-8">
             <div className="bg-white rounded-lg shadow-md w-60 md:w-72 p-1">
               <Link prefetch={false}
-                href="#"
-                className="block w-full py-2 px-4 rounded-lg bg-fastwork-blue text-white"
+                    href="#"
+                    className="block w-full py-2 px-4 rounded-lg bg-fastwork-blue text-white"
               >
                 Graphic Design Price List
               </Link>
             </div>
             <div className="bg-white rounded-lg shadow-md w-60 md:w-72 p-1">
               <Link prefetch={false}
-                href="/bussiness/package-details"
-                className="block w-full py-2 px-4 rounded-lg bg-white text-gray-700"
+                    href="/bussiness/package-details"
+                    className="block w-full py-2 px-4 rounded-lg bg-white text-gray-700"
               >
                 Social Content Credit Package
               </Link>
@@ -126,41 +127,41 @@ const PriceListPage = () => {
             >
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
-                  <tr>
-                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
-                      Type of content / Material
-                    </th>
-                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      รายละเอียด
-                    </th>
-                    <th className="px-6 py-3 bg-blue-100 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
-                      New design
-                      <div className="text-xxs font-normal mt-1">
-                        ราคา / ชิ้น
-                      </div>
-                    </th>
-                    <th className="px-6 py-3 bg-blue-50 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
-                      ตามรูปแบบอ้างอิง
-                      <div className="text-xxs font-normal mt-1">
-                        ราคา / ชิ้น
-                      </div>
-                    </th>
-                    <th className="px-6 py-3 bg-gray-100 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
-                      แก้ไข/ปรับปรุง 1 ครั้ง
-                      <div className="text-xxs font-normal mt-1">
-                        ราคา / ชิ้น
-                      </div>
-                    </th>
-                    <th className="px-6 py-3 bg-gray-100 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
-                      แก้ไข/ปรับปรุง รายใหญ่
-                      <div className="text-xxs font-normal mt-1">
-                        ราคา / ชิ้น
-                      </div>
-                    </th>
-                  </tr>
+                <tr>
+                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
+                    Type of content / Material
+                  </th>
+                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    รายละเอียด
+                  </th>
+                  <th className="px-6 py-3 bg-blue-100 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
+                    New design
+                    <div className="text-xxs font-normal mt-1">
+                      ราคา / ชิ้น
+                    </div>
+                  </th>
+                  <th className="px-6 py-3 bg-blue-50 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
+                    ตามรูปแบบอ้างอิง
+                    <div className="text-xxs font-normal mt-1">
+                      ราคา / ชิ้น
+                    </div>
+                  </th>
+                  <th className="px-6 py-3 bg-gray-100 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    แก้ไข/ปรับปรุง 1 ครั้ง
+                    <div className="text-xxs font-normal mt-1">
+                      ราคา / ชิ้น
+                    </div>
+                  </th>
+                  <th className="px-6 py-3 bg-gray-100 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    แก้ไข/ปรับปรุง รายใหญ่
+                    <div className="text-xxs font-normal mt-1">
+                      ราคา / ชิ้น
+                    </div>
+                  </th>
+                </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {/* Add table rows data here */}
+                {/* Add table rows data here */}
                 </tbody>
               </table>
             </TabsContent>
@@ -172,41 +173,41 @@ const PriceListPage = () => {
             >
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
-                  <tr>
-                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
-                      Type of content / Material
-                    </th>
-                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      รายละเอียด
-                    </th>
-                    <th className="px-6 py-3 bg-blue-100 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
-                      New design
-                      <div className="text-xxs font-normal mt-1">
-                        ราคา / ชิ้น
-                      </div>
-                    </th>
-                    <th className="px-6 py-3 bg-blue-50 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
-                      ตามรูปแบบอ้างอิง
-                      <div className="text-xxs font-normal mt-1">
-                        ราคา / ชิ้น
-                      </div>
-                    </th>
-                    <th className="px-6 py-3 bg-gray-100 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
-                      แก้ไข/ปรับปรุง 1 ครั้ง
-                      <div className="text-xxs font-normal mt-1">
-                        ราคา / ชิ้น
-                      </div>
-                    </th>
-                    <th className="px-6 py-3 bg-gray-100 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
-                      แก้ไข/ปรับปรุง รายใหญ่
-                      <div className="text-xxs font-normal mt-1">
-                        ราคา / ชิ้น
-                      </div>
-                    </th>
-                  </tr>
+                <tr>
+                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
+                    Type of content / Material
+                  </th>
+                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    รายละเอียด
+                  </th>
+                  <th className="px-6 py-3 bg-blue-100 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
+                    New design
+                    <div className="text-xxs font-normal mt-1">
+                      ราคา / ชิ้น
+                    </div>
+                  </th>
+                  <th className="px-6 py-3 bg-blue-50 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
+                    ตามรูปแบบอ้างอิง
+                    <div className="text-xxs font-normal mt-1">
+                      ราคา / ชิ้น
+                    </div>
+                  </th>
+                  <th className="px-6 py-3 bg-gray-100 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    แก้ไข/ปรับปรุง 1 ครั้ง
+                    <div className="text-xxs font-normal mt-1">
+                      ราคา / ชิ้น
+                    </div>
+                  </th>
+                  <th className="px-6 py-3 bg-gray-100 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
+                    แก้ไข/ปรับปรุง รายใหญ่
+                    <div className="text-xxs font-normal mt-1">
+                      ราคา / ชิ้น
+                    </div>
+                  </th>
+                </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {/* Add table rows data here */}
+                {/* Add table rows data here */}
                 </tbody>
               </table>
             </TabsContent>
@@ -218,29 +219,29 @@ const PriceListPage = () => {
             >
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
-                  <tr>
-                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
-                      Type of content / Material
-                    </th>
-                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      รายละเอียด
-                    </th>
-                    <th className="px-6 py-3 bg-blue-100 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
-                      New design
-                      <div className="text-xxs font-normal mt-1">
-                        ราคา / ชิ้น
-                      </div>
-                    </th>
-                    <th className="px-6 py-3 bg-blue-50 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
-                      ตามรูปแบบอ้างอิง
-                      <div className="text-xxs font-normal mt-1">
-                        ราคา / ชิ้น
-                      </div>
-                    </th>
-                  </tr>
+                <tr>
+                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
+                    Type of content / Material
+                  </th>
+                  <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    รายละเอียด
+                  </th>
+                  <th className="px-6 py-3 bg-blue-100 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
+                    New design
+                    <div className="text-xxs font-normal mt-1">
+                      ราคา / ชิ้น
+                    </div>
+                  </th>
+                  <th className="px-6 py-3 bg-blue-50 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
+                    ตามรูปแบบอ้างอิง
+                    <div className="text-xxs font-normal mt-1">
+                      ราคา / ชิ้น
+                    </div>
+                  </th>
+                </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {/* Add table rows data here */}
+                {/* Add table rows data here */}
                 </tbody>
               </table>
             </TabsContent>
@@ -264,7 +265,7 @@ const PriceListPage = () => {
           <h2 className="text-2xl font-bold mb-12 text-center text-black">
             เรื่องที่อยากให้เราช่วย
           </h2>
-          <ContactForm />
+          <ContactForm/>
         </div>
       </section>
 

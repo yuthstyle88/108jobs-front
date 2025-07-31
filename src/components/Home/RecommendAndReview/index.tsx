@@ -1,17 +1,17 @@
 "use client";
 
-import { faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faQuoteLeft} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import {Swiper, SwiperSlide, useSwiper} from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "../../../app/styles.css";
-import { Navigation } from "swiper/modules";
-import { LandingImage, ProfileImage } from "@/constants/images";
-import { useTranslation } from "react-i18next";
+import {Navigation} from "swiper/modules";
+import {LandingImage, ProfileImage} from "@/constants/images";
+import {useTranslation} from "react-i18next";
 
 const CustomNavigation = () => {
   const swiper = useSwiper();
@@ -34,23 +34,25 @@ const CustomNavigation = () => {
 };
 
 const RecommendAndReview = () => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
 
-  const featuredWorks = Array.from({ length: 6 }, (_, index) => ({
-    id: index,
-    title: "Line sticker",
-    author: "designdee",
-    image: LandingImage.topWorks,
-  }));
+  const featuredWorks = Array.from({length: 6},
+    (_, index) => ({
+      id: index,
+      title: "Line sticker",
+      author: "designdee",
+      image: LandingImage.topWorks,
+    }));
 
-  const reviews = Array.from({ length: 6 }, (_, index) => ({
-    id: index,
-    quote:
-      "Fastjob ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ",
-    company: "บริษัท อีสานพลาสแพ็ค 1999 จำกัด",
-    description: "โรงงานอุตสาหกรรมพลาสติก",
-    avatar: ProfileImage.avatar,
-  }));
+  const reviews = Array.from({length: 6},
+    (_, index) => ({
+      id: index,
+      quote:
+        "Fastjob ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ",
+      company: "บริษัท อีสานพลาสแพ็ค 1999 จำกัด",
+      description: "โรงงานอุตสาหกรรมพลาสติก",
+      avatar: ProfileImage.avatar,
+    }));
 
   return (
     <>
@@ -65,13 +67,13 @@ const RecommendAndReview = () => {
         <Swiper
           modules={[Navigation]}
           breakpoints={{
-            0: { slidesPerView: 1, spaceBetween: 20 },
-            640: { slidesPerView: 2, spaceBetween: 20 },
-            1024: { slidesPerView: 3, spaceBetween: 30 },
+            0: {slidesPerView: 1, spaceBetween: 20},
+            640: {slidesPerView: 2, spaceBetween: 20},
+            1024: {slidesPerView: 3, spaceBetween: 30},
           }}
           className="mySwiper"
         >
-          <CustomNavigation />
+          <CustomNavigation/>
           {featuredWorks.map((work) => (
             <SwiperSlide key={work.id}>
               <div className="bg-white p-4 sm:p-6 pb-8">
@@ -122,13 +124,13 @@ const RecommendAndReview = () => {
         <Swiper
           modules={[Navigation]}
           breakpoints={{
-            0: { slidesPerView: 1, spaceBetween: 20 },
-            640: { slidesPerView: 2, spaceBetween: 20 },
-            1024: { slidesPerView: 3, spaceBetween: 30 },
+            0: {slidesPerView: 1, spaceBetween: 20},
+            640: {slidesPerView: 2, spaceBetween: 20},
+            1024: {slidesPerView: 3, spaceBetween: 30},
           }}
           className="mySwiper"
         >
-          <CustomNavigation />
+          <CustomNavigation/>
           {reviews.map((review) => (
             <SwiperSlide key={review.id}>
               <div className="w-full max-w-[350px] m-auto bg-white px-4 py-6">

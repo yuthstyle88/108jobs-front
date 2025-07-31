@@ -1,5 +1,5 @@
 "use client";
-import Image, { StaticImageData } from "next/image";
+import Image, {StaticImageData} from "next/image";
 
 export const SocialLoginButton = ({
   icon,

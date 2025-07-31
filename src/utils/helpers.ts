@@ -1,10 +1,10 @@
 import {isSuccess, RequestState} from "@/services/HttpService";
-import {PaginationCursor, GetSiteResponse, UploadImageResponse} from "lemmy-js-client";
+import {GetSiteResponse, PaginationCursor, UploadImageResponse} from "lemmy-js-client";
 import {IncomingHttpHeaders} from "http";
 import * as cookie from "cookie";
-import { authCookieName } from "@/utils/config";
-import { Match } from "@/utils/router";
-import { ErrorPageData } from "@/utils/types";
+import {authCookieName} from "@/utils/config";
+import {Match} from "@/utils/router";
+import {ErrorPageData} from "@/utils/types";
 
 export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -23,14 +23,17 @@ export function debounce<T extends (...args: any[]) => any>(
     if (timeout) clearTimeout(timeout);
 
     timeout = setTimeout(() => {
-      timeout = null;
-      if (!immediate) {
-        func.apply(this, args); // ✅ ใช้ this โดยตรงใน arrow function
-      }
-    }, wait);
+        timeout = null;
+        if (!immediate) {
+          func.apply(this,
+            args); // ✅ ใช้ this โดยตรงใน arrow function
+        }
+      },
+      wait);
 
     if (callNow) {
-      func.apply(this, args); // ✅ ใช้ this โดยตรง
+      func.apply(this,
+        args); // ✅ ใช้ this โดยตรง
     }
   };
 }
@@ -49,7 +52,7 @@ type ImmutableListKey =
   | "registrationApplication";
 
 export function editListImmutable<
-  T extends { [key in F]: { id: number } },
+  T extends { [key in F]: {id: number} },
   F extends ImmutableListKey,
 >(fieldName: F, data: T, list: T[]): T[] {
   return [
@@ -99,7 +102,8 @@ export default function getQueryParams<
     const fallback = (fallbacks?.[key] ?? undefined) as PropsT[typeof key];
 
     // processor return type ต้องตรงกับ PropsT[key]
-    ret[key] = processor(raw, fallback);
+    ret[key] = processor(raw,
+      fallback);
   }
 
   return ret;
@@ -110,8 +114,9 @@ export function getQueryString<T extends Record<string, string | undefined>>(
 ) {
   const searchParams = new URLSearchParams();
   Object.entries(obj)
-    .filter(([, val]) => val !== undefined && val !== null)
-    .forEach(([key, val]) => searchParams.set(key, val ?? ""));
+  .filter(([, val]) => val !== undefined && val !== null)
+  .forEach(([key, val]) => searchParams.set(key,
+    val ?? ""));
   const params = searchParams.toString();
   if (params) {
     return "?" + params;
@@ -135,10 +140,12 @@ export function groupBy<T>(
 ) {
   return array.reduce(
     (acc, value, index, array) => {
-      (acc[predicate(value, index, array)] ||= []).push(value);
+      (acc[predicate(value,
+        index,
+        array)] ||= []).push(value);
       return acc;
     },
-    {} as { [key: string]: T[] },
+    {} as {[key: string]: T[]},
   );
 }
 
@@ -151,18 +158,20 @@ export function hsl(num: number) {
   return `hsla(${num}, 35%, 50%, 0.5)`;
 }
 
-const SHORTNUM_SI_FORMAT = new Intl.NumberFormat("en-US", {
-  maximumSignificantDigits: 3,
-  notation: "compact",
-  compactDisplay: "short",
-});
+const SHORTNUM_SI_FORMAT = new Intl.NumberFormat("en-US",
+  {
+    maximumSignificantDigits: 3,
+    notation: "compact",
+    compactDisplay: "short",
+  });
 
 export function numToSI(value: number): string {
   return SHORTNUM_SI_FORMAT.format(value);
 }
 
 export function sleep(millis: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, millis));
+  return new Promise(resolve => setTimeout(resolve,
+    millis));
 }
 
 /**
@@ -173,7 +182,8 @@ export async function poll(promiseFn: any, millis: number) {
     await promiseFn();
   }
   await sleep(millis);
-  return poll(promiseFn, millis);
+  return poll(promiseFn,
+    millis);
 }
 
 const DEFAULT_ALPHABET =
@@ -187,11 +197,11 @@ export function randomStr(
    * Create n-long array and map it to random chars from given alphabet.
    * Then join individual chars as string
    */
-  return Array.from({ length: idDesiredLength })
-    .map(() => {
-      return getRandomCharFromAlphabet(alphabet);
-    })
-    .join("");
+  return Array.from({length: idDesiredLength})
+  .map(() => {
+    return getRandomCharFromAlphabet(alphabet);
+  })
+  .join("");
 }
 
 export function resourcesSettled(resources: RequestState<any>[]) {
@@ -215,7 +225,9 @@ export function validInstanceTLD(str: string) {
  *   (?=.*\S.*) checks if the title consists of only whitespace characters
  *   (?=^[^\r\n]+$) checks if the title contains newlines
  */
-const validTitleRegex = new RegExp(/(?=(.*\S.*))(?=^[^\r\n]+$)/, "g");
+const validTitleRegex = new RegExp(/(?=(.*\S.*))(?=^[^\r\n]+$)/,
+  "g");
+
 export function validTitle(title?: string): boolean {
   // Initial title is null, minimum length is taken care of by textarea's minLength={3}
   if (!title || title.length < 3) return true;
@@ -253,7 +265,7 @@ export function dedupByProperty<
   ).output;
 }
 
-export function getApubName({ name, ap_id }: { name: string; ap_id: string }) {
+export function getApubName({name, ap_id}: {name: string; ap_id: string}) {
   return `${name}@${hostname(ap_id)}`;
 }
 
@@ -271,15 +283,15 @@ export function matchPath(
 ): Match<any> | null {
   // Early return for invalid inputs
   if (!pathPattern || !urlPath) return null;
-  
+
   // Create a cache key
   const cacheKey = `${pathPattern}:${urlPath}`;
-  
+
   // Check if result is in cache
   if (matchPathCache.has(cacheKey)) {
     return matchPathCache.get(cacheKey)!;
   }
-  
+
   // Limit cache size to prevent memory leaks
   if (matchPathCache.size >= CACHE_SIZE_LIMIT) {
     // Remove oldest entry (first key in the map)
@@ -290,10 +302,11 @@ export function matchPath(
   }
 
   const patternParts = pathPattern.split("/").filter(Boolean);
-  const urlParts     = urlPath.split("/").filter(Boolean);
+  const urlParts = urlPath.split("/").filter(Boolean);
 
   if (urlParts.length > patternParts.length) {
-    matchPathCache.set(cacheKey, null);
+    matchPathCache.set(cacheKey,
+      null);
     return null;
   }
 
@@ -301,25 +314,30 @@ export function matchPath(
 
   for (let i = 0; i < patternParts.length; i++) {
     const pattern = patternParts[i];
-    const part    = urlParts[i];
+    const part = urlParts[i];
 
     const isOptional = pattern.endsWith("?") || /\[\w+\?\]/.test(pattern);
-    const isParam    = pattern.startsWith(":") || /^\[\w+\??\]$/.test(pattern);
+    const isParam = pattern.startsWith(":") || /^\[\w+\??\]$/.test(pattern);
 
     if (isParam) {
       const key = pattern
-        .replace(/^\:/, "")      // :param → param
-        .replace(/^\[|\]$/g, "") // [param] → param
-        .replace(/\?$/, "");     // param? → param
+      .replace(/^\:/,
+        "")      // :param → param
+      .replace(/^\[|\]$/g,
+        "") // [param] → param
+      .replace(/\?$/,
+        "");     // param? → param
 
       if (part !== undefined) {
         params[key] = decodeURIComponent(part);
       } else if (!isOptional) {
-        matchPathCache.set(cacheKey, null);
+        matchPathCache.set(cacheKey,
+          null);
         return null;
       }
     } else if (pattern !== part) {
-      matchPathCache.set(cacheKey, null);
+      matchPathCache.set(cacheKey,
+        null);
       return null;
     }
   }
@@ -327,13 +345,14 @@ export function matchPath(
   const result = {
     params,
     path: urlPath,
-    url:  urlPath,
+    url: urlPath,
     isExact: urlParts.length === patternParts.length,
   } as Match<any>;
-  
+
   // Cache the result
-  matchPathCache.set(cacheKey, result);
-  
+  matchPathCache.set(cacheKey,
+    result);
+
   return result;
 }
 
@@ -346,7 +365,7 @@ export function getJwtCookie(headers: IncomingHttpHeaders): string | undefined {
 export function setForwardedHeaders(headers: IncomingHttpHeaders): {
   [key: string]: string;
 } {
-  const out: { [key: string]: string } = {};
+  const out: {[key: string]: string} = {};
 
   if (headers.host) {
     out.host = headers.host;
@@ -375,7 +394,7 @@ export function setForwardedHeaders(headers: IncomingHttpHeaders): {
 
 /**
  * Creates error page data with improved error handling and null safety
- * 
+ *
  * @param error The error that occurred
  * @param site Optional site data containing admin information
  * @returns Structured error page data for rendering
@@ -389,9 +408,9 @@ export function getErrorPageData(error: Error, site?: GetSiteResponse): ErrorPag
   // Safely extract admin matrix IDs with null checks
   if (site?.admins) {
     const adminMatrixIds = site.admins
-      .filter(admin => admin?.person)
-      .map(({ person }) => person.matrixUserId)
-      .filter(Boolean) as string[] | undefined;
+    .filter(admin => admin?.person)
+    .map(({person}) => person.matrixUserId)
+    .filter(Boolean) as string[] | undefined;
 
     // ใช้ Array.isArray เพื่อยืนยันว่าเป็นอาร์เรย์ก่อนตรวจ length
     if (Array.isArray(adminMatrixIds) && adminMatrixIds.length > 0) {
@@ -404,7 +423,7 @@ export function getErrorPageData(error: Error, site?: GetSiteResponse): ErrorPag
 
 /**
  * Converts a string URL, File, or Blob to a Blob object
- * 
+ *
  * @param src The source (URL string, File, or Blob)
  * @returns A Promise resolving to a Blob
  */
@@ -417,7 +436,7 @@ async function toBlob(src: string | File | Blob): Promise<Blob> {
 
 /**
  * Uploads an image and returns the URL of the uploaded image
- * 
+ *
  * @param selectedImage The image to upload (File or string URL/base64)
  * @param uploadImage Function to handle the actual upload
  * @returns A Promise resolving to the URL of the uploaded image
@@ -425,7 +444,7 @@ async function toBlob(src: string | File | Blob): Promise<Blob> {
  */
 export async function uploadSelectedImage(
   selectedImage: File | string,
-  uploadImage: (payload: { image: File }) => Promise<any>,
+  uploadImage: (payload: {image: File}) => Promise<any>,
 ): Promise<string> {
   let file: File;
 
@@ -435,13 +454,15 @@ export async function uploadSelectedImage(
   } else {
     // If it's a base64 string or URL, convert to Blob then File
     const blob = await toBlob(selectedImage);
-    file = new File([blob], "profile.jpg", {
-      type: blob.type || "image/jpeg",
-    });
+    file = new File([blob],
+      "profile.jpg",
+      {
+        type: blob.type || "image/jpeg",
+      });
   }
 
   // Upload the file
-  const result = await uploadImage({ image: file });
+  const result = await uploadImage({image: file});
 
   // Check for successful upload and return the image URL
   if (isSuccess<UploadImageResponse>(result) && result.data.images?.length) {

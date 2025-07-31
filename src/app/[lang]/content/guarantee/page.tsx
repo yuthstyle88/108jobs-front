@@ -1,16 +1,7 @@
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { CategoriesIcon, ContentIcon, JobDetailIcon } from "@/constants/icons";
-import {
-  CheckCircle,
-  DollarSign,
-  Facebook,
-  HeadphonesIcon,
-  Mail,
-  Shield,
-  Users,
-  XCircle,
-} from "lucide-react";
+import {Button} from "@/components/ui/Button";
+import {Card} from "@/components/ui/Card";
+import {CategoriesIcon, ContentIcon, JobDetailIcon} from "@/constants/icons";
+import {CheckCircle, DollarSign, Facebook, HeadphonesIcon, Mail, Shield, Users, XCircle,} from "lucide-react";
 import Image from "next/image";
 
 const Guarantee = () => {
@@ -30,7 +21,7 @@ const Guarantee = () => {
           </div>
           <div className=" flex justify-center">
             <div className="w-32 h-32 md:w-80 md:h-80 relative">
-              <Shield className="w-full h-full text-white opacity-20" />
+              <Shield className="w-full h-full text-white opacity-20"/>
 
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center">
@@ -57,7 +48,7 @@ const Guarantee = () => {
           <div className="grid md:grid-cols-3 gap-8 text-text-primary">
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-blue-600" />
+                <Users className="w-8 h-8 text-blue-600"/>
               </div>
               <h3 className="text-xl font-semibold mb-4 text-text-primary">
                 Verified freelancers
@@ -70,7 +61,7 @@ const Guarantee = () => {
 
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <DollarSign className="w-8 h-8 text-blue-600" />
+                <DollarSign className="w-8 h-8 text-blue-600"/>
               </div>
               <h3 className="text-xl font-semibold mb-4 text-text-primary">
                 Guarantee money back in case no delivery
@@ -84,7 +75,7 @@ const Guarantee = () => {
 
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <HeadphonesIcon className="w-8 h-8 text-blue-600" />
+                <HeadphonesIcon className="w-8 h-8 text-blue-600"/>
               </div>
               <h3 className="text-xl font-semibold mb-4 text-text-primary">
                 Support team ready to serve customer and freelancer
@@ -112,27 +103,27 @@ const Guarantee = () => {
               </h3>
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0"/>
                   <p className="text-gray-700">
                     Freelancer doesn&apos;t comply with contract described in
                     quotation
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0"/>
                   <p className="text-gray-700">
                     The final work doesn&apos;t qualify as freelancer advertised in
                     the product or by agreement
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0"/>
                   <p className="text-gray-700">
                     Freelancer disappear or cannot be contact
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0"/>
                   <p className="text-gray-700">
                     Final has not been manually approved or auto approved in the
                     Fastjob Platform
@@ -147,20 +138,20 @@ const Guarantee = () => {
               </h3>
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
-                  <XCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
+                  <XCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"/>
                   <p className="text-gray-700">
                     Customer violate hiring contract described in quotation
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <XCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
+                  <XCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"/>
                   <p className="text-gray-700">
                     Customer didn&apos;t hire and payment through the Fastjob
                     Platform
                   </p>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <XCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
+                  <XCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0"/>
                   <p className="text-gray-700">
                     Final has been manually approved or auto approved in the
                     Fastjob Platform
@@ -227,10 +218,10 @@ const Guarantee = () => {
                     step === 1
                       ? ContentIcon.step1
                       : step === 2
-                      ? ContentIcon.step2
-                      : step === 3
-                      ? ContentIcon.step3
-                      : ContentIcon.step4
+                        ? ContentIcon.step2
+                        : step === 3
+                          ? ContentIcon.step3
+                          : ContentIcon.step4
                   }
                   alt={`Step ${step}`}
                   width={320}
@@ -277,7 +268,7 @@ const Guarantee = () => {
           <div className="flex justify-center space-x-8 mb-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Facebook className="w-8 h-8 text-blue-600" />
+                <Facebook className="w-8 h-8 text-blue-600"/>
               </div>
               <div className="text-sm font-medium text-text-primary">
                 Facebook
@@ -288,7 +279,7 @@ const Guarantee = () => {
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Mail className="w-8 h-8 text-blue-600" />
+                <Mail className="w-8 h-8 text-blue-600"/>
               </div>
               <div className="text-sm font-medium text-text-primary">
                 support@fastwork.co

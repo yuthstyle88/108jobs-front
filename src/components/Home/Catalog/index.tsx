@@ -1,12 +1,12 @@
-import { CategoriesIcon } from "@/constants/icons";
-import { ServiceCatalog } from "@/types/catalog";
-import { catalogIcons } from "@/types/catalogIcon";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {CategoriesIcon} from "@/constants/icons";
+import {ServiceCatalog} from "@/types/catalog";
+import {catalogIcons} from "@/types/catalogIcon";
+import {faArrowRight} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 type Props = {
   serviceCatalogs: ServiceCatalog[];
@@ -22,7 +22,7 @@ const CatalogBanner = (props: Props) => {
     activeCatalogIndex,
     setActiveCatalogIndex,
   } = props;
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   return (
     <section className="hidden sm:block">
       <div className="grid-container-desktop-banner w-full ">
@@ -74,35 +74,36 @@ const CatalogBanner = (props: Props) => {
           <div className="mt-4 ">
             <div className="grid min-h-0 min-w-0 grid-cols-[1fr_1fr_1fr_1fr] gap-[0.75rem] ">
               {activeCatalog?.sections
-                ?.flatMap((section) => section.categories)
-                .slice(0, 8)
-                .map((category) => {
-                  const backgroundImage = category.image
-                    ? `url(${category.image})`
-                    : `url("/categories-image/web-development-02032022.jpg")`;
+              ?.flatMap((section) => section.categories)
+              .slice(0,
+                8)
+              .map((category) => {
+                const backgroundImage = category.image
+                  ? `url(${category.image})`
+                  : `url("/categories-image/web-development-02032022.jpg")`;
 
-                  return (
-                    <Link
-                      prefetch={false}
-                      key={category.id}
-                      href={`/job/${category.slug}`}
-                      className="group"
+                return (
+                  <Link
+                    prefetch={false}
+                    key={category.id}
+                    href={`/job/${category.slug}`}
+                    className="group"
+                  >
+                    <div
+                      style={{
+                        backgroundImage,
+                      }}
+                      className="relative rounded-md overflow-hidden bg-cover bg-center transition-all ease-[120ms] cursor-pointer"
                     >
-                      <div
-                        style={{
-                          backgroundImage,
-                        }}
-                        className="relative rounded-md overflow-hidden bg-cover bg-center transition-all ease-[120ms] cursor-pointer"
-                      >
-                        <div className="relative flex items-end h-20 px-4 py-3 text-white bg-[rgba(0,0,0,.5)] font-semibold">
+                      <div className="relative flex items-end h-20 px-4 py-3 text-white bg-[rgba(0,0,0,.5)] font-semibold">
                           <span className="group-hover:translate-y-[-4px] duration-150">
                             {category.name}
                           </span>
-                        </div>
                       </div>
-                    </Link>
-                  );
-                })}
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
             <div className="my-4 flex justify-end">
               <Link
@@ -111,7 +112,7 @@ const CatalogBanner = (props: Props) => {
                 className="text-primary py-[0.75rem] relative no-underline cursor-pointer outline-none ease-in-out duration-150 transition-all"
               >
                 {t("home.labelSeeMoreTittle")}
-                <FontAwesomeIcon icon={faArrowRight} className="pl-1" />
+                <FontAwesomeIcon icon={faArrowRight} className="pl-1"/>
               </Link>
             </div>
           </div>

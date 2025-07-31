@@ -17,6 +17,7 @@ export async function getClientCurrentLanguage(): Promise<SupportedLang | null> 
   }
   return null;
 }
+
 export function getNumericCode(langCode: string): number | null {
   const language = LANGUAGES[langCode as keyof typeof LANGUAGES];
   return language && "numericCode" in language ? language.numericCode : null;

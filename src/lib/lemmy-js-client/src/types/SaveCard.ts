@@ -4,5 +4,5 @@
  * Saves settings for your user.
  */
 export type SaveCard = {
-  birthDate?:string
+  birthDate?: string
 };

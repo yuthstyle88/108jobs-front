@@ -1,6 +1,7 @@
 import en from "@/assets/icons/en.svg";
 import th from "@/assets/icons/th.svg";
 import vn from "@/assets/icons/vn.svg";
+
 export enum LanguageFile {
   GLOBAL = "global",
   AUTHEN = "authen",
@@ -51,9 +52,9 @@ export enum LanguageFile {
 
 
 export const LANGUAGES = {
-  th: { code: "th", label: "Thailand", flag: th, numericCode: 66 },
-  en: { code: "en", label: "English", flag: en, numericCode: 1 },
-  vi: { code: "vi", label: "Vietnam", flag: vn, numericCode: 84 },
+  th: {code: "th", label: "Thailand", flag: th, numericCode: 66},
+  en: {code: "en", label: "English", flag: en, numericCode: 1},
+  vi: {code: "vi", label: "Vietnam", flag: vn, numericCode: 84},
 };
 
 export const VALID_LANGUAGES = ["th", "vi", "en"];

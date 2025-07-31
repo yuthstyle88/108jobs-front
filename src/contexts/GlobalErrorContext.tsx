@@ -1,6 +1,6 @@
 "use client";
-import React, { createContext, useContext, useState } from "react";
-import { useTranslation } from "@/hooks/translation/useTranslation";
+import React, {createContext, useContext, useState} from "react";
+import {useTranslation} from "@/hooks/translation/useTranslation";
 
 type GlobalErrorContextType = {
   error: string | null;
@@ -12,8 +12,8 @@ const GlobalErrorContext = createContext<GlobalErrorContextType | undefined>(
   undefined,
 );
 
-export const GlobalErrorProvider = ({ children }: { children: React.ReactNode }) => {
-  const { t } = useTranslation(); // ใช้ Hook การแปลข้อความ
+export const GlobalErrorProvider = ({children}: {children: React.ReactNode}) => {
+  const {t} = useTranslation(); // ใช้ Hook การแปลข้อความ
   const [error, setRawError] = useState<string | null>(null);
 
   const setError = (message: string | null) => {
@@ -23,7 +23,7 @@ export const GlobalErrorProvider = ({ children }: { children: React.ReactNode })
   const clearError = () => setRawError(null);
 
   return (
-    <GlobalErrorContext.Provider value={{ error, setError, clearError }}>
+    <GlobalErrorContext.Provider value={{error, setError, clearError}}>
       {children}
     </GlobalErrorContext.Provider>
   );

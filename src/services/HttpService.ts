@@ -1,7 +1,6 @@
-import { LemmyHttp } from "lemmy-js-client";
-import { getHttpBase } from "@/utils/env";
+import {LemmyHttp} from "lemmy-js-client";
+import {getHttpBase} from "@/utils/env";
 import {UserService} from "@/services/UserService";
-import {useGlobalLoader} from "@/contexts/GlobalLoaderContext";
 
 /* ---------- static states ----------------------------------- */
 export const EMPTY_REQUEST = {
@@ -79,7 +78,7 @@ class WrappedLemmyHttpClient {
       Object.getPrototypeOf(this.rawClient),
     )) {
       if (key !== "constructor") {
-        this[key] = async (
+        this[key] = async(
           ...args: Parameters<LemmyHttp[keyof LemmyHttp]>
         ) => {
           // Return loading state first for better UX
@@ -102,16 +101,17 @@ class WrappedLemmyHttpClient {
           }
 
           // Perform the actual request
-          const resultPromise = (async () => {
+          const resultPromise = (async() => {
             try {
               const res = await (this.rawClient as any)[key](...args);
 
               // Cache successful GET responses in production
               if (isGetMethod && res && process.env.NODE_ENV === 'production') {
-                this.cache.set(cacheKey, {
-                  data: res,
-                  timestamp: Date.now()
-                });
+                this.cache.set(cacheKey,
+                  {
+                    data: res,
+                    timestamp: Date.now()
+                  });
               }
 
               return {
@@ -170,44 +170,10 @@ export class HttpService {
   }
 
   /**
-   * Adds timeout handling to all client methods
+   * Get the HTTP client
    */
-  #addTimeoutToMethods(): void {
-    const originalClient = this.#client;
-    const timeout = this.#requestTimeout;
-
-    // Get all method names
-    const methodNames = Object.keys(originalClient).filter(
-      key => typeof originalClient[key] === 'function' && key !== 'setHeaders'
-    );
-
-    // Wrap each method with timeout handling
-    for (const methodName of methodNames) {
-      const originalMethod = originalClient[methodName];
-
-      // Replace the method with a timeout-aware version
-      (this.#client as any)[methodName] = async (...args: any[]) => {
-        // Create a timeout promise
-        const timeoutPromise = new Promise<RequestState<any>>((_, reject) => {
-          setTimeout(() => {
-            reject(new Error(`Request timeout after ${timeout}ms`));
-          }, timeout);
-        });
-
-        try {
-          // Race between the original request and the timeout
-          return await Promise.race([
-            originalMethod(...args),
-            timeoutPromise
-          ]);
-        } catch (error) {
-          return {
-            state: REQUEST_STATE.FAILED,
-            err: error as Error
-          };
-        }
-      };
-    }
+  public static get client() {
+    return this.#Instance.#client;
   }
 
   /**
@@ -215,13 +181,6 @@ export class HttpService {
    */
   static get #Instance() {
     return this.#_instance ?? (this.#_instance = new this());
-  }
-
-  /**
-   * Get the HTTP client
-   */
-  public static get client() {
-    return this.#Instance.#client;
   }
 
   /**
@@ -240,7 +199,8 @@ export class HttpService {
   public static clearCacheEntry(methodName: string, args: any[] = []): void {
     const client = this.#Instance.#client as any;
     if (client.clearCacheEntry) {
-      client.clearCacheEntry(methodName, args);
+      client.clearCacheEntry(methodName,
+        args);
     }
   }
 
@@ -250,6 +210,48 @@ export class HttpService {
   public static setTimeout(timeout: number): void {
     this.#Instance.#requestTimeout = timeout;
   }
+
+  /**
+   * Adds timeout handling to all client methods
+   */
+  #addTimeoutToMethods(): void {
+    const originalClient = this.#client;
+    const timeout = this.#requestTimeout;
+
+    // Get all method names
+    const methodNames = Object.keys(originalClient).filter(
+      key => typeof originalClient[key] === 'function' && key !== 'setHeaders'
+    );
+
+    // Wrap each method with timeout handling
+    for (const methodName of methodNames) {
+      const originalMethod = originalClient[methodName];
+
+      // Replace the method with a timeout-aware version
+      (this.#client as any)[methodName] = async(...args: any[]) => {
+        // Create a timeout promise
+        const timeoutPromise = new Promise<RequestState<any>>((_, reject) => {
+          setTimeout(() => {
+              reject(new Error(`Request timeout after ${timeout}ms`));
+            },
+            timeout);
+        });
+
+        try {
+          // Race between the original request and the timeout
+          return await Promise.race([
+            originalMethod(...args),
+            timeoutPromise
+          ]);
+        } catch (error) {
+          return {
+            state: REQUEST_STATE.FAILED,
+            err: error as Error
+          };
+        }
+      };
+    }
+  }
 }
 
 let cachedJwt: string | undefined;
@@ -258,7 +260,7 @@ function ensureAuthHeader() {
   const jwt = UserService.Instance?.authInfo?.auth;
   if (jwt && jwt !== cachedJwt) {
     cachedJwt = jwt;
-    HttpService.client.setHeaders({ Authorization: `Bearer ${jwt}` });
+    HttpService.client.setHeaders({Authorization: `Bearer ${jwt}`});
   }
 }
 
@@ -274,6 +276,7 @@ export function callHttp<
     WrappedLemmyHttp[K]
   >;
 }
+
 /**
  * ตรวจสอบว่าระบบกำลังอยู่ใน "LOADING" State
  */

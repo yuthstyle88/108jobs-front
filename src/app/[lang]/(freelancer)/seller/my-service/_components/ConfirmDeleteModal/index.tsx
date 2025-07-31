@@ -1,7 +1,7 @@
 "use client";
 import LoadingCircle from "@/components/LoadingCircle";
 import Modal from "@/components/ui/Modal";
-import { Trash2 } from "lucide-react";
+import {Trash2} from "lucide-react";
 import {useTranslation} from "react-i18next";
 
 interface ConfirmDeleteModalProps {
@@ -19,7 +19,7 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
   onClose,
   handleConfirmChange,
 }) => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   return (
     <Modal
       isOpen={isOpen}
@@ -28,7 +28,7 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
       closeOnOutsideClick={false}
     >
       <section className="px-[12px] w-full flex flex-col gap-8 justify-center items-center">
-        <Trash2 className="w-[65px] h-[65px] text-[#EA6357]" />
+        <Trash2 className="w-[65px] h-[65px] text-[#EA6357]"/>
         <article className="text-center">
           <h1 className="text-[18px] font-medium text-text-primary">
             {t("sellerMyService.confirmDeleteServiceTitle")}

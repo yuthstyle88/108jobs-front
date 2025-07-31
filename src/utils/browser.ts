@@ -1,18 +1,20 @@
 import * as cookie from "cookie";
-import { authCookieName } from "@/utils/config";
-import { GetSiteResponse, MyUserInfo } from "lemmy-js-client";
-import { isHttps } from "@/utils/env";
+import {authCookieName} from "@/utils/config";
+import {GetSiteResponse, MyUserInfo} from "lemmy-js-client";
+import {isHttps} from "@/utils/env";
 
 export function canShare() {
   return isBrowser() && !!navigator.canShare;
 }
 
 export function clearAuthCookie() {
-  document.cookie = cookie.serialize(authCookieName, "", {
-    maxAge: -1,
-    sameSite: "lax",
-    path: "/",
-  });
+  document.cookie = cookie.serialize(authCookieName,
+    "",
+    {
+      maxAge: -1,
+      sameSite: "lax",
+      path: "/",
+    });
 }
 
 export function dataBsTheme(
@@ -53,9 +55,11 @@ export function nextUserAction(cb: (e: Event) => Continue) {
   let cleanup: (() => void) | undefined = () => {
     cleanup = undefined;
     eventTypes.forEach(ev => {
-      eventTarget.removeEventListener(ev, listener);
+      eventTarget.removeEventListener(ev,
+        listener);
     });
-    window.removeEventListener("scroll", scrollListener);
+    window.removeEventListener("scroll",
+      scrollListener);
   };
 
   const listener = (e: Event) => {
@@ -64,7 +68,8 @@ export function nextUserAction(cb: (e: Event) => Continue) {
     }
   };
   eventTypes.forEach(ev => {
-    eventTarget.addEventListener(ev, listener);
+    eventTarget.addEventListener(ev,
+      listener);
   });
 
   let remaining = scrollThreshold;
@@ -81,7 +86,8 @@ export function nextUserAction(cb: (e: Event) => Continue) {
       }
     }
   };
-  window.addEventListener("scroll", scrollListener);
+  window.addEventListener("scroll",
+    scrollListener);
 
   return () => {
     cleanup?.();
@@ -96,7 +102,7 @@ const isWin = getPlatformPredicate("win");
 const isMac = getPlatformPredicate("mac");
 const isLinux = getPlatformPredicate("linux");
 
-export const platform = { isWin, isMac, isLinux };
+export const platform = {isWin, isMac, isLinux};
 
 export function refreshTheme() {
   if (isBrowser()) {
@@ -105,12 +111,14 @@ export function refreshTheme() {
 }
 
 export function setAuthCookie(jwt: string) {
-  document.cookie = cookie.serialize(authCookieName, jwt, {
-    maxAge: 365 * 24 * 60 * 60 * 1000,
-    secure: isHttps(),
-    sameSite: "lax",
-    path: "/",
-  });
+  document.cookie = cookie.serialize(authCookieName,
+    jwt,
+    {
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+      secure: isHttps(),
+      sameSite: "lax",
+      path: "/",
+    });
 }
 
 export async function setThemeOverride(theme?: string) {
@@ -118,7 +126,8 @@ export async function setThemeOverride(theme?: string) {
     return;
   }
   window.dispatchEvent(
-    new CustomEvent("set-theme-override", { detail: { theme } }),
+    new CustomEvent("set-theme-override",
+      {detail: {theme}}),
   );
 }
 
@@ -129,5 +138,5 @@ export function share(shareData: ShareData) {
 }
 
 export function snapToTop() {
-  window.scrollTo({ left: 0, top: 0, behavior: "instant" });
+  window.scrollTo({left: 0, top: 0, behavior: "instant"});
 }

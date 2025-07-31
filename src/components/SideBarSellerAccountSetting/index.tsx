@@ -1,16 +1,16 @@
 "use client";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import { CreditCard, FileText, Mail, User } from "lucide-react";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {CreditCard, FileText, Mail, User} from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import {usePathname} from "next/navigation";
 import React from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import {useLanguage} from "@/contexts/LanguageContext";
 
 
 const SideBarSellerAccountSetting = () => {
   const pathname = usePathname();
-const { lang } = useLanguage();
+  const {lang} = useLanguage();
   const sellerSidebarLanguage = getNamespace(LanguageFile.GLOBAL);
 
   const menuItems = [
@@ -52,19 +52,19 @@ const { lang } = useLanguage();
         </div>
         <nav>
           <ul>
-            {menuItems.map(({ href, label, icon: Icon }) => {
+            {menuItems.map(({href, label, icon: Icon}) => {
               const isActive = pathname === `/${lang}${href}`;
               return (
                 <li key={href}>
                   <Link prefetch={false}
-                    href={href}
-                    className={`flex items-center w-full px-4 py-3 text-left ${
-                      isActive
-                        ? "bg-blue-50 border-l-4 border-blue-500 text-blue-600"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
+                        href={href}
+                        className={`flex items-center w-full px-4 py-3 text-left ${
+                          isActive
+                            ? "bg-blue-50 border-l-4 border-blue-500 text-blue-600"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }`}
                   >
-                    <Icon className={`w-5 h-5 mr-3 ${isActive ? "text-blue-600":"text-gray-500"}`} />
+                    <Icon className={`w-5 h-5 mr-3 ${isActive ? "text-blue-600" : "text-gray-500"}`}/>
                     {label}
                   </Link>
                 </li>
@@ -80,14 +80,14 @@ const { lang } = useLanguage();
           <ul>
             <li>
               <Link prefetch={false}
-                href="/seller-account-setting/document-info"
-                className={`flex items-center gap-3 w-full text-left ${
-                  pathname === "/seller-account-setting/document-info"
-                    ? "bg-blue-50 border-l-4 border-blue-500 text-blue-600"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
+                    href="/seller-account-setting/document-info"
+                    className={`flex items-center gap-3 w-full text-left ${
+                      pathname === "/seller-account-setting/document-info"
+                        ? "bg-blue-50 border-l-4 border-blue-500 text-blue-600"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
               >
-                <FileText className="min-w-5 w-5 h-5 text-gray-500" />
+                <FileText className="min-w-5 w-5 h-5 text-gray-500"/>
                 Availability Settings
               </Link>
             </li>

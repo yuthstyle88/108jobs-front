@@ -1,8 +1,7 @@
 "use client";
 
-import { toast } from "sonner";
-import { LanguageFile } from "@/constants/language";
-import {getNamespace} from "@/utils/i18nHelper";
+import {toast} from "sonner";
+import {useTranslation} from "react-i18next";
 
 type NotificationGroup = {
   success?: Record<string, string | undefined>;
@@ -12,51 +11,50 @@ type NotificationGroup = {
 type NotificationType = Record<"profile" | "job" | "review" | "service", NotificationGroup>;
 
 function useNotification() {
-  const notiLanguage = getNamespace(LanguageFile.NOTIFICATIONS);
-  const jobLanguage = getNamespace(LanguageFile.NOTIFICATION);
+  const {t} = useTranslation();
 
   const type: NotificationType = {
     profile: {
       success: {
-        update: notiLanguage.update,
-        updateEducation: notiLanguage.updateEducation,
-        updateWorkExperience: notiLanguage.updateWorkExperience,
-        updateCertification: notiLanguage.updateCertification,
-        updateSkill: notiLanguage.updateSkill,
-        updateLanguage: notiLanguage.updateLanguage,
-        changePassword: notiLanguage.changePassword,
-        updateFavorite: jobLanguage?.jobUpdateFavoriteSuccess,
-        deleteFavorite: jobLanguage?.jobDeleteFavoriteSuccess,
-        updateAvailable: jobLanguage?.profileUpdateAvailableSuccess,
-        updateNotAvailable: jobLanguage?.profileUpdateNotAvailableSuccess
+        update: t("notifications.update"),
+        updateEducation: t("notifications.updateEducation"),
+        updateWorkExperience: t("notifications.updateWorkExperience"),
+        updateCertification: t("notifications.updateCertification"),
+        updateSkill: t("notifications.updateSkill"),
+        updateLanguage: t("notifications.updateLanguage"),
+        changePassword: t("notifications.changePassword"),
+        updateFavorite: t("notification.jobUpdateFavoriteSuccess"),
+        deleteFavorite: t("notification.jobDeleteFavoriteSuccess"),
+        updateAvailable: t("notification.profileUpdateAvailableSuccess"),
+        updateNotAvailable: t("notification.profileUpdateNotAvailableSuccess")
       },
       fail: {
-        setDefault: jobLanguage?.profileSetDefaultFail,
-        updateAvailableFail: jobLanguage?.profileUpdateAvailableFail
+        setDefault: t("notification.profileSetDefaultFail"),
+        updateAvailableFail: t("notification.profileUpdateAvailableFail")
       },
     },
     job: {
       success: {
-        updateFavorite: jobLanguage?.jobUpdateFavoriteSuccess,
-        deleteFavorite: jobLanguage?.jobDeleteFavoriteSuccess,
-        createJobBoard: jobLanguage?.jobCreateJobBoardSuccess
+        updateFavorite: t("notification.jobUpdateFavoriteSuccess"),
+        deleteFavorite: t("notification.jobDeleteFavoriteSuccess"),
+        createJobBoard: t("notification.jobCreateJobBoardSuccess")
       },
       fail: {
-        createJobBoard: jobLanguage?.jobCreateJobBoardFail
+        createJobBoard: t("notification.jobCreateJobBoardFail")
       },
     },
-    review:{
+    review: {
       success: {
-        postComment: jobLanguage?.reviewPostCommentSuccess,
-        updateComment: jobLanguage?.reviewUpdateCommentSuccess,
-        deleteComment: jobLanguage?.reviewDeleteCommentSuccess,
+        postComment: t("notification.reviewPostCommentSuccess"),
+        updateComment: t("notification.reviewUpdateCommentSuccess"),
+        deleteComment: t("notification.reviewDeleteCommentSuccess"),
       },
       fail: {},
     },
-    service:{
+    service: {
       success: {
-        showJob: jobLanguage?.serviceShowJobSuccess,
-        hideJob: jobLanguage?.serviceHideJobSuccess,
+        showJob: t("notification.serviceShowJobSuccess"),
+        hideJob: t("notification.serviceHideJobSuccess"),
       },
       fail: {},
     }

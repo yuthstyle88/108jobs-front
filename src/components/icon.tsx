@@ -1,4 +1,4 @@
-import { getStaticDir } from "@/utils/env";
+import {getStaticDir} from "@/utils/env";
 import classNames from "classnames";
 import {Component} from "react";
 
@@ -11,7 +11,8 @@ interface IconProps {
 
 export class Icon extends Component<IconProps, any> {
   constructor(props: any, context: any) {
-    super(props, context);
+    super(props,
+      context);
   }
 
   render() {
@@ -25,12 +26,14 @@ export class Icon extends Component<IconProps, any> {
 
     return (
       <svg
-        className={classNames("icon", this.props.classes, {
-          "icon-inline": this.props.inline,
-          small: this.props.small,
-        })}
+        className={classNames("icon",
+          this.props.classes,
+          {
+            "icon-inline": this.props.inline,
+            small: this.props.small,
+          })}
         {...(iconAltText
-          ? { role: "img", "aria-describedby": `${this.props.icon}-alt` }
+          ? {role: "img", "aria-describedby": `${this.props.icon}-alt`}
           : {})}
       >
         {iconAltText && (
@@ -53,16 +56,19 @@ interface SpinnerProps {
 
 export class Spinner extends Component<SpinnerProps, any> {
   constructor(props: any, context: any) {
-    super(props, context);
+    super(props,
+      context);
   }
 
   render() {
     return (
       <Icon
         icon="spinner"
-        classes={classNames("spin", this.props.className, {
-          "spinner-large": this.props.large,
-        })}
+        classes={classNames("spin",
+          this.props.className,
+          {
+            "spinner-large": this.props.large,
+          })}
       />
     );
   }
@@ -70,13 +76,14 @@ export class Spinner extends Component<SpinnerProps, any> {
 
 export class PurgeWarning extends Component<any, any> {
   constructor(props: any, context: any) {
-    super(props, context);
+    super(props,
+      context);
   }
 
   render() {
     return (
       <div className="purge-warning mt-2 alert alert-danger" role="alert">
-        <Icon icon="alert-triangle" classes="icon-inline me-2" />
+        <Icon icon="alert-triangle" classes="icon-inline me-2"/>
         {"purge_warning"}
       </div>
     );

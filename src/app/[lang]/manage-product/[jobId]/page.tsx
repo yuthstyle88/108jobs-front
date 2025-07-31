@@ -1,15 +1,15 @@
 "use client";
-import { API_ROUTES_SELLER } from "@/api/endpoints";
+import {API_ROUTES_SELLER} from "@/api/endpoints";
 import NotFound from "@/app/not-found";
 import Loading from "@/components/Loading";
 import WarningLeaveModal from "@/components/WarningLeaveModal";
-import { LanguageFile } from "@/constants/language";
-import { usePrivateFetchParams } from "@/hooks/api-hooks";
-import { JobType, Onboarding } from "@/types/job";
-import { getNamespace } from "@/utils/i18nHelper";
-import { Check } from "lucide-react";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import {LanguageFile} from "@/constants/language";
+import {usePrivateFetchParams} from "@/hooks/api-hooks";
+import {JobType, Onboarding} from "@/types/job";
+import {getNamespace} from "@/utils/i18nHelper";
+import {Check} from "lucide-react";
+import {useParams} from "next/navigation";
+import {useEffect, useState} from "react";
 
 
 const getNextStep = (onboarding: Onboarding | undefined): number => {
@@ -23,7 +23,7 @@ const getNextStep = (onboarding: Onboarding | undefined): number => {
 };
 
 const ServiceOnboardingPage = () => {
-  const { jobId } = useParams();
+  const {jobId} = useParams();
   const {
     data: jobData,
     isLoading,
@@ -43,16 +43,17 @@ const ServiceOnboardingPage = () => {
   const [showWarningModal, setShowWarningModal] = useState(false);
 
   useEffect(() => {
-    if (jobData) {
-      setJob(jobData);
-      const step = getNextStep(jobData.onboarding);
-      setCurrentStep(step);
-      const completed = [1, 2, 3, 4, 5].filter(
-        (s) => jobData.onboarding?.[`step${s}` as keyof Onboarding]
-      );
-      setCompletedSteps(completed);
-    }
-  }, [jobData]);
+      if (jobData) {
+        setJob(jobData);
+        const step = getNextStep(jobData.onboarding);
+        setCurrentStep(step);
+        const completed = [1, 2, 3, 4, 5].filter(
+          (s) => jobData.onboarding?.[`step${s}` as keyof Onboarding]
+        );
+        setCompletedSteps(completed);
+      }
+    },
+    [jobData]);
 
   const nextStep = () => {
     if (currentStep < 5) {
@@ -61,7 +62,8 @@ const ServiceOnboardingPage = () => {
       }
       setCurrentStep(currentStep + 1);
       setIsFormDirty(false);
-      window.scrollTo(0, 0);
+      window.scrollTo(0,
+        0);
     }
   };
 
@@ -72,7 +74,8 @@ const ServiceOnboardingPage = () => {
     } else if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
       setIsFormDirty(false);
-      window.scrollTo(0, 0);
+      window.scrollTo(0,
+        0);
     }
   };
 
@@ -89,7 +92,8 @@ const ServiceOnboardingPage = () => {
     ) {
       setCurrentStep(step);
       setIsFormDirty(false);
-      window.scrollTo(0, 0);
+      window.scrollTo(0,
+        0);
     }
   };
 
@@ -108,7 +112,8 @@ const ServiceOnboardingPage = () => {
       setPendingStep(null);
       setIsFormDirty(false);
       setShowWarningModal(false);
-      window.scrollTo(0, 0);
+      window.scrollTo(0,
+        0);
     }
   };
 
@@ -124,14 +129,15 @@ const ServiceOnboardingPage = () => {
 
 
   useEffect(() => {
-    setIsFormDirty(false);
-  }, [currentStep]);
+      setIsFormDirty(false);
+    },
+    [currentStep]);
 
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <Loading/>;
 
   if (!job) {
-    return <NotFound />;
+    return <NotFound/>;
   }
 
   return (
@@ -141,7 +147,7 @@ const ServiceOnboardingPage = () => {
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
           <div
             className="absolute top-1/2 left-0 h-1 bg-blue-600 -translate-y-1/2 z-0"
-            style={{ width: `${(currentStep - 1) * 25}%` }}
+            style={{width: `${(currentStep - 1) * 25}%`}}
           ></div>
           {[1, 2, 3, 4, 5].map((step) => {
             const onboardingStatus =
@@ -161,14 +167,14 @@ const ServiceOnboardingPage = () => {
         ${isCompleted && !isActive ? "bg-green-500 text-white" : ""}
         ${isActive ? "bg-blue-600 text-white" : ""}
         ${
-          isPending && !isActive
-            ? "bg-white border-2 border-gray-300 text-gray-400"
-            : ""
-        }
+                    isPending && !isActive
+                      ? "bg-white border-2 border-gray-300 text-gray-400"
+                      : ""
+                  }
       `}
                 >
                   {isCompleted && !isActive ? (
-                    <Check className="w-5 h-5" />
+                    <Check className="w-5 h-5"/>
                   ) : (
                     step
                   )}

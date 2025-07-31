@@ -1,15 +1,15 @@
-import { CustomerImage } from "@/constants/images";
+import {CustomerImage} from "@/constants/images";
 import Image from "next/image";
 import React from "react";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 type Props = {
   expanded: boolean;
   setExpanded: (expanded: boolean) => void;
 };
 
-const IntroductionSection = ({ expanded, setExpanded }: Props) => {
-  const { t } = useTranslation();
+const IntroductionSection = ({expanded, setExpanded}: Props) => {
+  const {t} = useTranslation();
 
   const customerLogos = [
     CustomerImage.pic1,
@@ -27,23 +27,23 @@ const IntroductionSection = ({ expanded, setExpanded }: Props) => {
   ];
 
   const jobCategories = [
-    { title: t("home.graphicDesign"), desc: t("home.graphicDesignServices") },
+    {title: t("home.graphicDesign"), desc: t("home.graphicDesignServices")},
     {
       title: t("home.architectureEngineering"),
       desc: t("home.architectureEngineeringServices"),
     },
-    { title: t("home.websiteProgramming"), desc: t("home.websiteProgrammingServices") },
-    { title: t("home.marketingAdvertising"), desc: t("home.marketingAdvertisingServices") },
-    { title: t("home.writingTranslation"), desc: t("home.writingTranslationServices") },
-    { title: t("home.mediaAudio"), desc: t("home.mediaAudioServices") },
-    { title: t("home.businessConsulting"), desc: t("home.businessConsultingServices") },
-    { title: t("home.lifestyle"), desc: t("home.lifestyleServices") },
+    {title: t("home.websiteProgramming"), desc: t("home.websiteProgrammingServices")},
+    {title: t("home.marketingAdvertising"), desc: t("home.marketingAdvertisingServices")},
+    {title: t("home.writingTranslation"), desc: t("home.writingTranslationServices")},
+    {title: t("home.mediaAudio"), desc: t("home.mediaAudioServices")},
+    {title: t("home.businessConsulting"), desc: t("home.businessConsultingServices")},
+    {title: t("home.lifestyle"), desc: t("home.lifestyleServices")},
   ];
 
   return (
     <>
       {/* Trusted Companies */}
-      <section className="hidden md:block" style={{ backgroundColor: "hsl(216, 15%, 97%)" }}>
+      <section className="hidden md:block" style={{backgroundColor: "hsl(216, 15%, 97%)"}}>
         <div className="py-8 grid grid-container-desktop gap-y-[1.5rem]">
           <div className="col-start-2 col-end-3 text-center">
             <h5 className="text-[1.25rem] text-[#2B323BF2] font-medium mb-[1.5rem]">
@@ -55,7 +55,7 @@ const IntroductionSection = ({ expanded, setExpanded }: Props) => {
                   key={index}
                   src={logo}
                   alt="trusted company"
-                  style={{ filter: "grayscale(100%)" }}
+                  style={{filter: "grayscale(100%)"}}
                   width={384}
                   height={230}
                 />
@@ -78,9 +78,9 @@ const IntroductionSection = ({ expanded, setExpanded }: Props) => {
               }`}
             >
               <p>{t("home.contentFastwork1")}</p>
-              <br />
+              <br/>
               <p>{t("home.contentFastwork2")}</p>
-              <br />
+              <br/>
               <p>{t("home.contentFastwork3")}</p>
             </div>
             {!expanded && (
@@ -97,7 +97,7 @@ const IntroductionSection = ({ expanded, setExpanded }: Props) => {
 
       <div className="grid grid-container-desktop-banner">
         <div className="col-start-2 col-end-3">
-          <hr className="w-full h-[1px] m-0 bg-border-secondary" />
+          <hr className="w-full h-[1px] m-0 bg-border-secondary"/>
         </div>
       </div>
 

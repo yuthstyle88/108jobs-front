@@ -1,6 +1,6 @@
-import { IsoData } from "@/utils/types";
-import { isBrowser } from "@/utils/browser";
-import { MyUserInfo } from "lemmy-js-client";
+import {IsoData} from "@/utils/types";
+import {isBrowser} from "@/utils/browser";
+import {MyUserInfo} from "lemmy-js-client";
 import {REQUEST_STATE} from "@/services/HttpService";
 
 /**

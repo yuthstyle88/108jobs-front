@@ -1,5 +1,6 @@
-import { LanguageFile } from "@/constants/language";
-import { create } from "zustand";
+import {LanguageFile} from "@/constants/language";
+import {create} from "zustand";
+
 type LanguageStoreData = {
   lang: string;
 };
@@ -22,6 +23,6 @@ export const useLanguageStore = create<LanguageStore>((set) => ({
       languageData:
         typeof data === "function"
           ? data(state.languageData || {})
-          : { ...state.languageData, ...data },
+          : {...state.languageData, ...data},
     })),
 }));

@@ -1,29 +1,15 @@
 "use client";
-import { ERROR_CONSTANTS } from "@/constants/error";
+import {ERROR_CONSTANTS} from "@/constants/error";
 import useNotification from "@/hooks/useNotification";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useState} from "react";
+import {useForm} from "react-hook-form";
 import LoadingCircle from "../LoadingCircle";
-import { CustomInput } from "../ui/InputField";
+import {CustomInput} from "../ui/InputField";
 import Modal from "../ui/Modal";
-import { useTranslation } from "react-i18next";
-import { z } from "zod";
+import {useTranslation} from "react-i18next";
+import {z} from "zod";
 
-const { t } = useTranslation();
-
-const changePasswordSchema = z
-  .object({
-    oldPassword: z.string().min(6, t("authen.passwordMin6")),
-    newPassword: z.string().min(6, t("authen.passwordMin6")),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: t("authen.passwordsDoNotMatch"),
-    path: ["confirmPassword"],
-  });
-
-type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
 interface ConfirmModalProps {
   isOpen: boolean;
@@ -31,57 +17,74 @@ interface ConfirmModalProps {
 }
 
 
-
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
+
+  const changePasswordSchema = z
+  .object({
+    oldPassword: z.string().min(6,
+      t("authen.passwordMin6")),
+    newPassword: z.string().min(6,
+      t("authen.passwordMin6")),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword,
+    {
+      message: t("authen.passwordsDoNotMatch"),
+      path: ["confirmPassword"],
+    });
+  type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
+
   const {
     register,
     handleSubmit,
     setError,
     reset,
-    formState: { errors, isSubmitting },
+    formState: {errors, isSubmitting},
   } = useForm({
     resolver: zodResolver(changePasswordSchema),
     mode: "onChange",
   });
 
-  const { successMessage } = useNotification();
+  const {successMessage} = useNotification();
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const handleCloseModal = ()=>{
+  const handleCloseModal = () => {
     reset();
     onClose();
   }
 
-  const onSubmit = async (data: ChangePasswordFormData) => {
+  const onSubmit = async(data: ChangePasswordFormData) => {
     try {
       setApiError(null);
 
-      const response = await fetch("/api/auth/update-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          oldPassword: data.oldPassword,
-          newPassword: data.newPassword,
-        }),
-      });
+      const response = await fetch("/api/auth/update-password",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            oldPassword: data.oldPassword,
+            newPassword: data.newPassword,
+          }),
+        });
 
       const result = await response.json();
 
       if (!response.ok) {
         if (result.fieldErrors?.oldPassword) {
-          setError("oldPassword", {
-            type: "manual",
-            message: result.fieldErrors.oldPassword,
-          });
+          setError("oldPassword",
+            {
+              type: "manual",
+              message: result.fieldErrors.oldPassword,
+            });
         }
         if (result.error && !result.fieldErrors?.oldPassword) {
           setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);
@@ -90,7 +93,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
       }
       reset();
       onClose();
-      successMessage("profile", "changePassword");
+      successMessage("profile",
+        "changePassword");
     } catch (error) {
       setApiError(
         error instanceof Error
@@ -154,7 +158,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           disabled={isSubmitting}
           className="submit-button py-2"
         >
-          {isSubmitting ? <LoadingCircle /> : t("profileInfo.submitButton")}
+          {isSubmitting ? <LoadingCircle/> : t("profileInfo.submitButton")}
         </button>
       </form>
     </Modal>

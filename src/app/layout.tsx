@@ -51,18 +51,18 @@ export default async function RootLayout({
       }}
     />
     <AppProvider>
-    <LanguageProvider initialLang="th">
-    <GlobalErrorProvider>
-      <GlobalLoaderProvider>
-        <ClientSWRProvider>
-          <Toaster richColors closeButton position="top-right"/>
-          <GlobalError />
-          <GlobalLoader />
-          {children}
-        </ClientSWRProvider>
-      </GlobalLoaderProvider>
-    </GlobalErrorProvider>
-    </LanguageProvider>
+      <LanguageProvider initialLang="th">
+        <GlobalErrorProvider>
+          <GlobalLoaderProvider>
+            <ClientSWRProvider>
+              <Toaster richColors closeButton position="top-right"/>
+              <GlobalError/>
+              <GlobalLoader/>
+              {children}
+            </ClientSWRProvider>
+          </GlobalLoaderProvider>
+        </GlobalErrorProvider>
+      </LanguageProvider>
     </AppProvider>
     </body>
     </html>

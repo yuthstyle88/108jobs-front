@@ -1,14 +1,14 @@
-import { API_ROUTES } from "@/api/endpoints";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/Card";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { usePrivateDelete } from "@/hooks/api-hooks";
+import {API_ROUTES} from "@/api/endpoints";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/Avatar";
+import {Button} from "@/components/ui/Button";
+import {Card, CardContent} from "@/components/ui/Card";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {usePrivateDelete} from "@/hooks/api-hooks";
 import useNotification from "@/hooks/useNotification";
-import { formatDistanceToNow, Locale } from "date-fns";
-import { enUS, th, vi } from "date-fns/locale";
-import { Edit, Trash2 } from "lucide-react";
-import React, { useState } from "react";
+import {formatDistanceToNow, Locale} from "date-fns";
+import {enUS, th, vi} from "date-fns/locale";
+import {Edit, Trash2} from "lucide-react";
+import React, {useState} from "react";
 import CommentForm from "../CommentForm";
 import StarRating from "../StarRatings";
 import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
@@ -25,54 +25,58 @@ interface CommentItemProps {
   mutate: () => void;
 }
 
-const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
+const CommentItem: React.FC<CommentItemProps> = ({comment, mutate}) => {
   const [isEditing, setIsEditing] = useState(false);
-  const { successMessage } = useNotification();
-  const { lang: currentLang } = useLanguage();
+  const {successMessage} = useNotification();
+  const {lang: currentLang} = useLanguage();
   const locale = dateFnsLocaleMap[currentLang] || dateFnsLocaleMap["en"];
 
   const [updateCommentState, setUpdateCommentState] = useState<RequestState<any>>(LOADING_REQUEST);
   const isUpdating = updateCommentState.state === "loading";
 
-  const { trigger: deleteComment, isMutating: isDeleting } = usePrivateDelete(
+  const {trigger: deleteComment, isMutating: isDeleting} = usePrivateDelete(
     `${API_ROUTES.profile.commentReview}/${comment.id}`
   );
 
-  const handleEdit = async (data: { rating: number; content: string }) => {
+  const handleEdit = async(data: {rating: number; content: string}) => {
     try {
       setUpdateCommentState(LOADING_REQUEST);
-      
+
       // Make a custom fetch request to update the comment
-      const response = await fetch(`${API_ROUTES.profile.commentReview}/${comment.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-        },
-        body: JSON.stringify(data),
-      });
-      
+      const response = await fetch(`${API_ROUTES.profile.commentReview}/${comment.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+          },
+          body: JSON.stringify(data),
+        });
+
       if (!response.ok) {
         throw new Error('Failed to update comment');
       }
-      
+
       const responseData = await response.json();
-      setUpdateCommentState({ state: "success", data: responseData });
+      setUpdateCommentState({state: "success", data: responseData});
 
       mutate();
-      successMessage("review", "updateComment");
+      successMessage("review",
+        "updateComment");
       setIsEditing(false);
     } catch (error) {
-      console.error("Update error:", error);
-      setUpdateCommentState({ state: "failed", err: error as Error });
+      console.error("Update error:",
+        error);
+      setUpdateCommentState({state: "failed", err: error as Error});
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async() => {
     if (confirm("Are you sure you want to delete this review?")) {
       await deleteComment({});
       mutate();
-      successMessage("review", "deleteComment");
+      successMessage("review",
+        "deleteComment");
     }
   };
 
@@ -81,7 +85,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
       <CommentForm
         onSubmit={handleEdit}
         onCancel={() => setIsEditing(false)}
-        initialData={{ rating: comment.rating, content: comment.content }}
+        initialData={{rating: comment.rating, content: comment.content}}
         isEditing={true}
         isPostMutating={isUpdating}
       />
@@ -109,10 +113,11 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
                   {comment.reviewerName}
                 </h4>
                 <p className="text-xs text-muted-foreground">
-                  {formatDistanceToNow(new Date(comment.createdAt), {
-                    addSuffix: true,
-                    locale: locale,
-                  })}
+                  {formatDistanceToNow(new Date(comment.createdAt),
+                    {
+                      addSuffix: true,
+                      locale: locale,
+                    })}
                 </p>
               </div>
               {comment.isOwner && (
@@ -123,7 +128,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
                     onClick={() => setIsEditing(true)}
                     className="h-8 w-8 p-0"
                   >
-                    <Edit size={14} />
+                    <Edit size={14}/>
                   </Button>
                   <Button
                     variant="ghost"
@@ -132,14 +137,14 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, mutate }) => {
                     disabled={isDeleting}
                     className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
                   >
-                    <Trash2 size={14} />
+                    <Trash2 size={14}/>
                   </Button>
                 </div>
               )}
             </div>
 
             <div className="mb-3">
-              <StarRating rating={comment.rating} readonly size={16} />
+              <StarRating rating={comment.rating} readonly size={16}/>
             </div>
 
             <p className="text-sm text-text-primary leading-relaxed">

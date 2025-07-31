@@ -1,7 +1,7 @@
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {faArrowRight} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 
 const Hiring = () => {
@@ -12,15 +12,15 @@ const Hiring = () => {
         {global?.companyRegistrationTitle}
       </span>
       <p className="mt-3 text-[0.875rem] text-text-secondary font-sans">
-        {global?.loginStepsIntro} <br />
-        1. {global?.companyRegistrationStep1} <br />
-        2. {global?.companyRegistrationStep2} <br />
+        {global?.loginStepsIntro} <br/>
+        1. {global?.companyRegistrationStep1} <br/>
+        2. {global?.companyRegistrationStep2} <br/>
         3. {global?.companyRegistrationStep3}
       </p>
       <Link prefetch={false} href="#" className="mt-6">
         <span className="text-[0.875rem] font-medium text-third">
           {global?.chatToHireButton}
-          <FontAwesomeIcon icon={faArrowRight} className="pl-2 text-third" />
+          <FontAwesomeIcon icon={faArrowRight} className="pl-2 text-third"/>
         </span>
       </Link>
     </div>

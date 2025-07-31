@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import { createPortal } from "react-dom";
-import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React, {useCallback, useEffect, useRef, useState} from "react";
+import {createPortal} from "react-dom";
+import {X} from "lucide-react";
+import {cn} from "@/lib/utils";
 
 interface ModalProps {
   isOpen: boolean;
@@ -32,30 +32,33 @@ const Modal: React.FC<ModalProps> = ({
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleClose = useCallback(() => {
-    if (!isVisible) return;
+      if (!isVisible) return;
 
-    setIsLeaving(true);
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-      setIsLeaving(false);
-      onClose();
-    }, 200);
+      setIsLeaving(true);
+      const timer = setTimeout(() => {
+          setIsVisible(false);
+          setIsLeaving(false);
+          onClose();
+        },
+        200);
 
-    return () => clearTimeout(timer);
-  }, [isVisible, onClose]);
+      return () => clearTimeout(timer);
+    },
+    [isVisible, onClose]);
 
   useEffect(() => {
-  if (isOpen) {
-    document.body.style.overflow = "hidden";
-    setIsVisible(true);
-  } else {
-    handleClose();
-  }
+      if (isOpen) {
+        document.body.style.overflow = "hidden";
+        setIsVisible(true);
+      } else {
+        handleClose();
+      }
 
-  return () => {
-    document.body.style.overflow = "";
-  };
-}, [isOpen, handleClose]);
+      return () => {
+        document.body.style.overflow = "";
+      };
+    },
+    [isOpen, handleClose]);
 
 
   const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -65,20 +68,23 @@ const Modal: React.FC<ModalProps> = ({
   };
 
   useEffect(() => {
-    const handleEscKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isVisible) {
-        handleClose();
+      const handleEscKey = (e: KeyboardEvent) => {
+        if (e.key === "Escape" && isVisible) {
+          handleClose();
+        }
+      };
+
+      if (isVisible) {
+        document.addEventListener("keydown",
+          handleEscKey);
       }
-    };
 
-    if (isVisible) {
-      document.addEventListener("keydown", handleEscKey);
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleEscKey);
-    };
-  }, [isVisible, handleClose]);
+      return () => {
+        document.removeEventListener("keydown",
+          handleEscKey);
+      };
+    },
+    [isVisible, handleClose]);
 
   if (!isVisible) return null;
 
@@ -115,12 +121,13 @@ const Modal: React.FC<ModalProps> = ({
                 className="p-1 rounded-full hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-200"
                 aria-label="Close"
               >
-                <X className="h-5 w-5 text-gray-500" />
+                <X className="h-5 w-5 text-gray-500"/>
               </button>
             )}
           </div>
         )}
-        <div className={cn("p-4", contentClassName)}>
+        <div className={cn("p-4",
+          contentClassName)}>
           {children}
         </div>
       </div>

@@ -11,7 +11,7 @@ type CategoryListProps = {
   items: CategoryItem[];
 };
 
-const CategoryList: React.FC<CategoryListProps> = ({ title, items }) => {
+const CategoryList: React.FC<CategoryListProps> = ({title, items}) => {
   return (
     <div className="min-w-[12rem] max-w-[12rem]">
       <div className="px-2 font-semibold m-0 p-0">{title}</div>

@@ -1,19 +1,18 @@
 "use client";
 
-import { API_ROUTES } from "@/api/endpoints";
+import {API_ROUTES} from "@/api/endpoints";
 import Error from "@/app/error";
 import Loading from "@/components/Loading";
 import LoadingBlur from "@/components/LoadingBlur";
-import { ProfileImage } from "@/constants/images";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { usePrivateFetch } from "@/hooks/api-hooks";
-import { ChatResponse } from "@/types/chat";
-import { ProfileData } from "lemmy-js-client";
-import { formatMessageTime } from "@/utils/formatMessageTime";
+import {ProfileImage} from "@/constants/images";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {usePrivateFetch} from "@/hooks/api-hooks";
+import {ChatResponse} from "@/types/chat";
+import {formatMessageTime} from "@/utils/formatMessageTime";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import {useParams, useRouter} from "next/navigation";
+import {useEffect} from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 function extractRealImageUrl(url: string): string {
@@ -22,7 +21,8 @@ function extractRealImageUrl(url: string): string {
     const realUrl = u.searchParams.get("url");
     return realUrl ? decodeURIComponent(realUrl) : url;
   } catch (err) {
-    console.log("err", err);
+    console.log("err",
+      err);
     return url;
   }
 }
@@ -31,7 +31,7 @@ const ChatWrapper = () => {
   const params = useParams();
   const router = useRouter();
   const activeRoomId = params?.senderId;
-  const { lang: currentLang } = useLanguage();
+  const {lang: currentLang} = useLanguage();
 
   const {localUser} = useMyUser();
 
@@ -39,40 +39,43 @@ const ChatWrapper = () => {
     data: chatData,
     isLoading: isChatLoading,
     error: chatError,
-  } = usePrivateFetch<ChatResponse[]>(API_ROUTES.chat.getChatHistory, {
-    revalidateOnFocus: true,
-    dedupingInterval: 10000,
-  });
+  } = usePrivateFetch<ChatResponse[]>(API_ROUTES.chat.getChatHistory,
+    {
+      revalidateOnFocus: true,
+      dedupingInterval: 10000,
+    });
 
   useEffect(() => {
-    if (!isChatLoading && !activeRoomId && chatData && chatData.length > 0) {
-      const firstSenderId = chatData[0]?.roomId;
-      if (firstSenderId) {
-        router.replace(`/chat/message/${firstSenderId}`);
+      if (!isChatLoading && !activeRoomId && chatData && chatData.length > 0) {
+        const firstSenderId = chatData[0]?.roomId;
+        if (firstSenderId) {
+          router.replace(`/chat/message/${firstSenderId}`);
+        }
       }
-    }
-  }, [isChatLoading, chatData, activeRoomId, router]);
+    },
+    [isChatLoading, chatData, activeRoomId, router]);
 
   useEffect(() => {
-    if (!isChatLoading && chatData && chatData.length === 0) {
-      router.push("/chat/no-message");
-    }
-  }, [isChatLoading, chatData, router]);
+      if (!isChatLoading && chatData && chatData.length === 0) {
+        router.push("/chat/no-message");
+      }
+    },
+    [isChatLoading, chatData, router]);
 
   if (!activeRoomId && (!chatData || isChatLoading)) {
-    return <LoadingBlur text="" />;
+    return <LoadingBlur text=""/>;
   }
 
   if (!activeRoomId && chatData && chatData.length > 0) {
     return null;
   }
 
-  if (isChatLoading) return <Loading />;
-  if (chatError) return <Error />;
+  if (isChatLoading) return <Loading/>;
+  if (chatError) return <Error/>;
 
   return (
     <div
-      style={{ maxWidth: "340px" }}
+      style={{maxWidth: "340px"}}
       className="max-w-[340px] flex flex-col border-r bg-white h-full"
     >
       <div className="p-4 border-b">
@@ -93,9 +96,9 @@ const ChatWrapper = () => {
 
           return (
             <Link prefetch={false}
-              key={chat.roomId}
-              href={`/chat/message/${chat.roomId}`}
-              className="block"
+                  key={chat.roomId}
+                  href={`/chat/message/${chat.roomId}`}
+                  className="block"
             >
               <div
                 className={`p-4 flex items-start transition-colors cursor-pointer border-b ${

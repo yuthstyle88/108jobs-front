@@ -1,19 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { mutate } from "swr";
+import {useEffect, useRef, useState} from "react";
+import {mutate} from "swr";
 
-import { API_ROUTES } from "@/api/endpoints";
+import {API_ROUTES} from "@/api/endpoints";
 import LoadingBlur from "@/components/LoadingBlur";
 
-import { useChatLanguage } from "@/contexts/ChatLanguage";
-import { useWebSocket } from "@/contexts/RealtimeChatContext";
-import { usePrivateFetch, usePrivateImagePost } from "@/hooks/api-hooks";
+import {useChatLanguage} from "@/contexts/ChatLanguage";
+import {useWebSocket} from "@/contexts/RealtimeChatContext";
+import {usePrivateFetch, usePrivateImagePost} from "@/hooks/api-hooks";
 
-import { JobDetailIcon } from "@/constants/icons";
-import { CategoriesImage, ProfileImage } from "@/constants/images";
-import { ChatMessage, ChatResponse } from "@/types/chat";
+import {JobDetailIcon} from "@/constants/icons";
+import {CategoriesImage, ProfileImage} from "@/constants/images";
+import {ChatMessage, ChatResponse} from "@/types/chat";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatJob from "../ChatJob";
@@ -29,12 +29,12 @@ type UploadedFile = {
   fileName: string;
 };
 const ChatSection = () => {
-  const { languageData: chatLanguageData } = useChatLanguage();
+  const {languageData: chatLanguageData} = useChatLanguage();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
-  const { sendMessage, partnerId } = useWebSocket(
+  const {sendMessage, partnerId} = useWebSocket(
     "chat-message",
     (event: MessageEvent) => {
       const data = JSON.parse(event.data);
@@ -45,11 +45,11 @@ const ChatSection = () => {
     }
   );
 
-  const { data: chatData, isLoading: isChatLoading } = usePrivateFetch<
+  const {data: chatData, isLoading: isChatLoading} = usePrivateFetch<
     ChatResponse[]
   >(API_ROUTES.chat.getChatHistory);
 
-  const { trigger: uploadFile, isMutating: isUploading } = usePrivateImagePost(
+  const {trigger: uploadFile, isMutating: isUploading} = usePrivateImagePost(
     API_ROUTES.chat.uploadFile + `?roomId=${partnerId}`
   );
 
@@ -73,27 +73,30 @@ const ChatSection = () => {
     mutate(API_ROUTES.chat.getChatHistory);
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async(e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file",
+      file);
 
     try {
       const result = (await uploadFile(formData)) as UploadedFile;
       setSelectedFile(result);
       e.target.value = "";
     } catch (err) {
-      console.error("Upload file failed", err);
+      console.error("Upload file failed",
+        err);
     }
   };
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+      endRef.current?.scrollIntoView({behavior: "smooth"});
+    },
+    [messages]);
 
-  if (isChatLoading) return <LoadingBlur text="" />;
+  if (isChatLoading) return <LoadingBlur text=""/>;
 
   return (
     <>
@@ -111,7 +114,7 @@ const ChatSection = () => {
           data-testid="chat-list"
           className="flex-1 overflow-y-auto p-4 bg-gray-50"
         >
-          <ChatJob currentRoom={currentRoom} />
+          <ChatJob currentRoom={currentRoom}/>
 
           <div className="flex items-center justify-center my-4">
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mx-auto max-w-lg">
@@ -143,7 +146,7 @@ const ChatSection = () => {
             partnerAvatar={currentRoom?.partnerAvatar || ProfileImage.avatar}
           />
 
-          <div ref={endRef} />
+          <div ref={endRef}/>
         </div>
 
         {/* Message input */}

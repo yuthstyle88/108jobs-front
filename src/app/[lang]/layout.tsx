@@ -1,7 +1,7 @@
-import { LanguageProvider } from "@/contexts/LanguageContext";
-import { generateLocalizedMetadata } from "@/lib/metadata";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import {LanguageProvider} from "@/contexts/LanguageContext";
+import {generateLocalizedMetadata} from "@/lib/metadata";
+import type {Metadata} from "next";
+import {notFound} from "next/navigation";
 import "../globals.css";
 import {VALID_LANGUAGES} from "@/constants/language";
 
@@ -9,10 +9,11 @@ import {VALID_LANGUAGES} from "@/constants/language";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: string }>;
+  params: Promise<{lang: string}>;
 }): Promise<Metadata> {
-  const { lang } = await params;
-  return generateLocalizedMetadata("home", { lang });
+  const {lang} = await params;
+  return generateLocalizedMetadata("home",
+    {lang});
 }
 
 export default async function LangLayout({
@@ -20,9 +21,9 @@ export default async function LangLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ lang: string }>;
+  params: Promise<{lang: string}>;
 }) {
-  const { lang } = await params;
+  const {lang} = await params;
 
   if (!VALID_LANGUAGES.includes(lang)) {
     notFound();

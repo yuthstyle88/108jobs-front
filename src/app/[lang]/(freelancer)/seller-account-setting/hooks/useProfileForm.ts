@@ -51,7 +51,7 @@ export const useProfileForm = (
   } = useForm<FormValues>({
     resolver: zodResolver(profileSchema),
   });
-  
+
   const [updateProfileState, setUpdateProfileState] = useState<RequestState<MyUserInfo>>(LOADING_REQUEST);
   const isUpdateMuting = updateProfileState.state === "loading";
 
@@ -59,7 +59,7 @@ export const useProfileForm = (
 
   useEffect(() => {
       if (localUser) {
-        const birthDate = card?.birthDate || "" ;
+        const birthDate = card?.birthDate || "";
         if (birthDate) {
           const [year, month, day] = birthDate.split("-");
           reset({
@@ -90,16 +90,17 @@ export const useProfileForm = (
   const onSubmit = async(formData: FormValues) => {
     try {
       setUpdateProfileState(LOADING_REQUEST);
-      
+
       // Get the current avatar URL, preferring person.avatar if available
       let avatarUrl = person?.avatar;
 
       // If a new image was selected, upload it
       if (selectedImage && selectedImage !== avatarUrl) {
-        avatarUrl = await uploadSelectedImage(selectedImage, uploadImage);
+        avatarUrl = await uploadSelectedImage(selectedImage,
+          uploadImage);
       }
- 
-      const updateData : SaveUserProfile = {
+
+      const updateData: SaveUserProfile = {
         updatePerson: {
           displayName: formData.displayName,
           name: formData.username,
@@ -119,15 +120,17 @@ export const useProfileForm = (
 
       // Then, make a custom request to update the other profile fields
       const response = await HttpService.client.updateProfile(updateData);
-      
+
       if (!isSuccess(response)) {
         throw new Error('Failed to update profile');
       }
-      setUpdateProfileState({ state: "success", data: response.data });
-      successMessage("profile", "update");
+      setUpdateProfileState({state: "success", data: response.data});
+      successMessage("profile",
+        "update");
     } catch (error) {
-      console.error("Update error:", error);
-      setUpdateProfileState({ state: "failed", err: error as Error });
+      console.error("Update error:",
+        error);
+      setUpdateProfileState({state: "failed", err: error as Error});
     }
   };
 

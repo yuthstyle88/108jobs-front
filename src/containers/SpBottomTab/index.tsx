@@ -1,8 +1,8 @@
 "use client";
 import BottomSheet from "@/components/ui/BottomSheet";
-import { LANGUAGES } from "@/constants/language";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { X } from "lucide-react";
+import {LANGUAGES} from "@/constants/language";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {X} from "lucide-react";
 import Image from "next/image";
 
 interface Props {
@@ -10,13 +10,14 @@ interface Props {
   onClose: () => void;
 }
 
-export default function LanguageBottomSheet({ open, onClose }: Props) {
-  const { lang: currentLang, setLang } = useLanguage();
+export default function LanguageBottomSheet({open, onClose}: Props) {
+  const {lang: currentLang, setLang} = useLanguage();
 
   const handleSelectLang = (langCode: string) => {
     if (langCode !== currentLang) {
       setLang(langCode);
-      localStorage.setItem("lang", langCode);
+      localStorage.setItem("lang",
+        langCode);
     }
     onClose();
   };
@@ -26,7 +27,7 @@ export default function LanguageBottomSheet({ open, onClose }: Props) {
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-semibold text-gray-800">Language</h2>
         <button onClick={onClose}>
-          <X className="w-5 h-5 text-gray-500 hover:text-gray-700" />
+          <X className="w-5 h-5 text-gray-500 hover:text-gray-700"/>
         </button>
       </div>
 

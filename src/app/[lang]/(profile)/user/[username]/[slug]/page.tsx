@@ -1,18 +1,17 @@
 import JobDetail from "@/components/JobDetail";
-import { generateLocalizedMetadata } from "@/lib/metadata";
-import { getCurrentLanguage } from "@/actions/getCurrentLanguage";
-import { isSupportedLang } from "@/lib/metadata";
-import { Metadata } from "next";
+import {generateLocalizedMetadata, isSupportedLang} from "@/lib/metadata";
+import {getCurrentLanguage} from "@/actions/getCurrentLanguage";
+import {Metadata} from "next";
 // import { auth } from "@/auth";
-import { API_ROUTES } from "@/api/endpoints";
+import {API_ROUTES} from "@/api/endpoints";
 import {axiosPrivate} from "@/lib/axios";
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string; username: string }>;
+  params: Promise<{slug: string; username: string}>;
 }): Promise<Metadata> {
-  const { username, slug } = await params;
+  const {username, slug} = await params;
   const lang = await getCurrentLanguage();
   const locale = isSupportedLang(lang) ? lang : "th";
 
@@ -50,13 +49,13 @@ export async function generateMetadata({
 export default async function JobDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string; username: string }>;
+  params: Promise<{slug: string; username: string}>;
 }) {
-  const { username, slug } = await params;
+  const {username, slug} = await params;
 
   return (
     <main className="sm:pt-0">
-      <JobDetail username={username} slug={slug} />
+      <JobDetail username={username} slug={slug}/>
     </main>
   );
 }

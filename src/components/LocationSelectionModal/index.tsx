@@ -1,16 +1,14 @@
 "use client";
-import { API_ROUTES } from "@/api/endpoints";
+import {API_ROUTES} from "@/api/endpoints";
 import Modal from "@/components/ui/Modal";
-import { AssetIcon } from "@/constants/icons";
-import {
-  usePrivatePost
-} from "@/hooks/api-hooks";
+import {AssetIcon} from "@/constants/icons";
+import {usePrivatePost} from "@/hooks/api-hooks";
 
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { LOADING_REQUEST, RequestState } from "@/services/HttpService";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import {useEffect, useState} from "react";
+import {useForm} from "react-hook-form";
 import CountrySearch from "./components/CountrySearch";
 import ProvinceSearch from "./components/ProvinceSearch";
 
@@ -33,7 +31,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
   onOpen,
   handleConfirmChange,
 }) => {
-  const { control, setValue } = useForm<LocationForm>({
+  const {control, setValue} = useForm<LocationForm>({
     mode: "onChange",
     defaultValues: {
       country: "Thailand",
@@ -45,9 +43,9 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
     "thailand"
   );
 
-  const { person } = useMyUser();
+  const {person} = useMyUser();
 
-  const { trigger: skipAddress, isMutating: isSkipMutating } = usePrivatePost(
+  const {trigger: skipAddress, isMutating: isSkipMutating} = usePrivatePost(
     API_ROUTES.profile.skipAddress
   );
 
@@ -62,19 +60,23 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
 
   const handleThailandClick = () => {
     setSelectedGeo("thailand");
-    setValue("country", "Thailand");
-    setValue("province", "");
+    setValue("country",
+      "Thailand");
+    setValue("province",
+      "");
     setCountryConfirmed(null);
   };
 
   const handleOtherClick = () => {
     setSelectedGeo("other");
-    setValue("country", "");
-    setValue("province", "");
+    setValue("country",
+      "");
+    setValue("province",
+      "");
     setProvinceConfirmed(null);
   };
 
-  const handleConfirm = async () => {
+  const handleConfirm = async() => {
     try {
       setUpdateAddressState(LOADING_REQUEST);
 
@@ -97,32 +99,34 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
       }
 
       // Make a custom fetch request to update the new address
-      const response = await fetch(API_ROUTES.profile.updateNewAddress, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(API_ROUTES.profile.updateNewAddress,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+          },
+          body: JSON.stringify(payload),
+        });
 
       if (!response.ok) {
         throw new Error('Failed to update address');
       }
 
       const data = await response.json();
-      setUpdateAddressState({ state: "success", data });
+      setUpdateAddressState({state: "success", data});
 
       handleConfirmChange(locationName);
       onClose();
     } catch (error) {
-      console.error("Update error:", error);
-      setUpdateAddressState({ state: "failed", err: error as Error });
+      console.error("Update error:",
+        error);
+      setUpdateAddressState({state: "failed", err: error as Error});
     }
   };
 
-  const onSkipAddress = async () => {
-    await skipAddress({ skipDays: 1 });
+  const onSkipAddress = async() => {
+    await skipAddress({skipDays: 1});
     onClose();
   };
 
@@ -131,11 +135,12 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
     (selectedGeo === "other" && !!countryConfirmed);
 
   useEffect(() => {
-    if (person && person.local) {
-      onOpen();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [person]);
+      if (person && person.local) {
+        onOpen();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [person]);
 
   return (
     <Modal
@@ -157,9 +162,9 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
             <div role="button" onClick={handleThailandClick}>
               <div
                 className={`group ${selectedGeo === "thailand"
-                    ? "bg-[#f6f9fe] border-fifth grayscale-0"
-                    : "bg-white border-border-secondary grayscale-[0.8]"
-                  } border-1 cursor-pointer flex items-center flex-col justify-center w-[170px] h-[210px] rounded-xl p-6 hover:bg-fourth`}
+                  ? "bg-[#f6f9fe] border-fifth grayscale-0"
+                  : "bg-white border-border-secondary grayscale-[0.8]"
+                } border-1 cursor-pointer flex items-center flex-col justify-center w-[170px] h-[210px] rounded-xl p-6 hover:bg-fourth`}
               >
                 <Image
                   src={AssetIcon.thailandGeo}
@@ -177,9 +182,9 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
             <div role="button" onClick={handleOtherClick}>
               <div
                 className={`group ${selectedGeo === "other"
-                    ? "bg-[#f6f9fe] border-fifth grayscale-0"
-                    : "bg-white border-border-secondary grayscale-[0.8]"
-                  } border-1 cursor-pointer flex items-center flex-col justify-center w-[170px] h-[210px] rounded-xl p-6 hover:bg-fourth`}
+                  ? "bg-[#f6f9fe] border-fifth grayscale-0"
+                  : "bg-white border-border-secondary grayscale-[0.8]"
+                } border-1 cursor-pointer flex items-center flex-col justify-center w-[170px] h-[210px] rounded-xl p-6 hover:bg-fourth`}
               >
                 <Image
                   src={AssetIcon.otherGeo}
@@ -202,7 +207,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
                 control={control}
                 setValue={setValue}
                 fieldName="province"
-                onSelect={(en, th) => setProvinceConfirmed({ en, th })}
+                onSelect={(en, th) => setProvinceConfirmed({en, th})}
               />
             ) : (
               <CountrySearch

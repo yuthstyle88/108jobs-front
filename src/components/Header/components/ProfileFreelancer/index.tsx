@@ -1,7 +1,7 @@
-import { ProfileImage } from "@/constants/images";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { interpolateElement } from "@/utils/interpolateElement";
-import { faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
+import {ProfileImage} from "@/constants/images";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {interpolateElement} from "@/utils/interpolateElement";
+import {faMoneyBill1} from "@fortawesome/free-regular-svg-icons";
 import {
   faBarsProgress,
   faBriefcase,
@@ -15,22 +15,24 @@ import {
   faSignOut,
   faTicket,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Person} from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
 import {UserService} from "@/services";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
+
 type ProfileFreelancerProps = {
   profile: Person | null;
 };
 
-const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
+const ProfileFreelancer = ({profile}: ProfileFreelancerProps) => {
   const logout = () => UserService.Instance.logout();
-  console.log("profile",profile);
-  
-  const { lang: currentLang } = useLanguage();
-  const { t } = useTranslation();
+  console.log("profile",
+    profile);
+
+  const {lang: currentLang} = useLanguage();
+  const {t} = useTranslation();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">
       <Link prefetch={false} href={`/${currentLang}/user/`}>
@@ -64,13 +66,14 @@ const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
       <Link prefetch={false} href="/seller">
         <div className="relative">
           <div className="text-[13px] font-light text-white relative hover:bg-black/20 transition-all duration-150 ease-in-out z-10 px-6 py-3">
-            {interpolateElement(t("global.labelFreelancerLevel"), {
-              level: (
-                <span className="font-semibold text-[0.875rem] ml-1">
+            {interpolateElement(t("global.labelFreelancerLevel"),
+              {
+                level: (
+                  <span className="font-semibold text-[0.875rem] ml-1">
                   Member
                 </span>
-              ),
-            })}
+                ),
+              })}
             <FontAwesomeIcon
               icon={faChevronRight}
               className="text-[14px] ml-1"
@@ -81,8 +84,8 @@ const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
       </Link>
       <div className="py-2">
         <Link prefetch={false}
-          href="/seller-account-setting/freelance-profile"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/seller-account-setting/freelance-profile"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faGear}
@@ -91,8 +94,8 @@ const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
           <span className="text-gray-700">{t("global.menuAccountSettings")}</span>
         </Link>
         <Link prefetch={false}
-          href="/chat"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/chat"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faMessage}
@@ -101,8 +104,8 @@ const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
           <span className="text-gray-700">{t("global.menuMessagesOrders")}</span>
         </Link>
         <Link prefetch={false}
-          href="/promotion"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/promotion"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faTicket}
@@ -111,8 +114,8 @@ const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
           <span className="text-gray-700">{t("global.menuCoupons")}</span>
         </Link>
         <Link prefetch={false}
-          href="/favorites"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/favorites"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faHeart}
@@ -121,8 +124,8 @@ const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
           <span className="text-gray-700">{t("global.menuFavoriteJobs")}</span>
         </Link>
         <Link prefetch={false}
-          href="/seller"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
+              href="/seller"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
         >
           <FontAwesomeIcon
             icon={faMoneyBill1}
@@ -131,8 +134,8 @@ const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
           <span className="text-gray-700">{t("global.menuSellerCenter")}</span>
         </Link>
         <Link prefetch={false}
-          href="/job-board"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/job-board"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faBullhorn}
@@ -141,8 +144,8 @@ const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
           <span className="text-gray-700">{t("global.menuJobBoard")}</span>
         </Link>
         <Link prefetch={false}
-          href="/reward/earn"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/reward/earn"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faGift}
@@ -154,8 +157,8 @@ const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
           </span>
         </Link>
         <Link prefetch={false}
-          href="/seller/my-service"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/seller/my-service"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faBriefcase}
@@ -164,8 +167,8 @@ const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
           <span className="text-gray-700">{t("global.menuMyJob")}</span>
         </Link>
         <Link prefetch={false}
-          href="/seller/withdrawal"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+              href="/seller/withdrawal"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faMoneyBillTrendUp}
@@ -174,8 +177,8 @@ const ProfileFreelancer = ({ profile }: ProfileFreelancerProps) => {
           <span className="text-gray-700">{t("global.menuAccumulate")}</span>
         </Link>
         <Link prefetch={false}
-          href="/consent-management"
-          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
+              href="/consent-management"
+              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
         >
           <FontAwesomeIcon
             icon={faBarsProgress}

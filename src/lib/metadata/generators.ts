@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
-import { getCurrentLanguage } from "@/actions/getCurrentLanguage";
-import { seoTranslations, isSupportedLang, SupportedLang } from "./translations";
+import type {Metadata} from "next";
+import {getCurrentLanguage} from "@/actions/getCurrentLanguage";
+import {isSupportedLang, seoTranslations, SupportedLang} from "./translations";
 
-type PageContent = { title: string; description: string };
+type PageContent = {title: string; description: string};
 type PageKey = {
   [K in keyof (typeof seoTranslations)["th"]]: (typeof seoTranslations)["th"][K] extends PageContent
     ? K
@@ -11,7 +11,7 @@ type PageKey = {
 
 export async function generateLocalizedMetadata(
   pageKeyOrContent: PageKey | PageContent,
-  options?: { lang?: string },
+  options?: {lang?: string},
   overrides?: Partial<Metadata>
 ): Promise<Metadata> {
   const lang = options?.lang || (await getCurrentLanguage());

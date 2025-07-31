@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import {cookies} from "next/headers";
 import {VALID_LANGUAGES} from "@/constants/language";
 import {SupportedLang} from "@/lib/metadata";
 

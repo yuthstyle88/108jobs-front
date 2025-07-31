@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/Button";
-import { Slider } from "@/components/ui/Slider";
-import { RotateCw, ZoomIn, ZoomOut } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import {Button} from "@/components/ui/Button";
+import {Slider} from "@/components/ui/Slider";
+import {RotateCw, ZoomIn, ZoomOut} from "lucide-react";
+import React, {useEffect, useRef, useState} from "react";
 
 interface ImageEditorProps {
   imageSrc: string;
@@ -18,63 +18,68 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [scale, setScale] = useState(1);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({x: 0, y: 0});
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [dragStart, setDragStart] = useState({x: 0, y: 0});
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const MIN_SCALE = 0.5;
   const MAX_SCALE = 3;
 
   useEffect(() => {
-    const img = new Image();
-    img.onload = () => {
-      if (imageRef.current) {
-        imageRef.current.width = img.width;
-        imageRef.current.height = img.height;
+      const img = new Image();
+      img.onload = () => {
+        if (imageRef.current) {
+          imageRef.current.width = img.width;
+          imageRef.current.height = img.height;
 
-        if (canvasRef.current && containerRef.current) {
-          const canvas = canvasRef.current;
-          const container = containerRef.current;
+          if (canvasRef.current && containerRef.current) {
+            const canvas = canvasRef.current;
+            const container = containerRef.current;
 
-          canvas.width = container.clientWidth;
-          canvas.height = container.clientHeight;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
 
-          const circleSize = Math.min(canvas.width, canvas.height);
-          const imgAspect = img.width / img.height;
+            const circleSize = Math.min(canvas.width,
+              canvas.height);
+            const imgAspect = img.width / img.height;
 
-          let initialScale;
-          if (imgAspect >= 1) {
-            initialScale = Math.max(
-              circleSize / img.height,
-              circleSize / img.width
-            );
-          } else {
-            initialScale = Math.max(
-              circleSize / img.width,
-              circleSize / img.height
-            );
+            let initialScale;
+            if (imgAspect >= 1) {
+              initialScale = Math.max(
+                circleSize / img.height,
+                circleSize / img.width
+              );
+            } else {
+              initialScale = Math.max(
+                circleSize / img.width,
+                circleSize / img.height
+              );
+            }
+
+            initialScale = Math.max(initialScale,
+              MIN_SCALE);
+
+            setScale(initialScale);
+
+            centerImage(img,
+              initialScale);
+            setImageLoaded(true);
           }
-
-          initialScale = Math.max(initialScale, MIN_SCALE);
-
-          setScale(initialScale);
-
-          centerImage(img, initialScale);
-          setImageLoaded(true);
         }
-      }
-    };
-    img.src = imageSrc;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageSrc]);
+      };
+      img.src = imageSrc;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [imageSrc]);
 
   useEffect(() => {
-    if (imageLoaded) {
-      drawImage();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scale, position, imageLoaded]);
+      if (imageLoaded) {
+        drawImage();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [scale, position, imageLoaded]);
 
   const centerImage = (img: HTMLImageElement, scaleValue = scale) => {
     if (!canvasRef.current) return;
@@ -91,18 +96,22 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
 
   const drawImage = () => {
     if (!canvasRef.current || !imageRef.current) return;
-  
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     const img = imageRef.current;
-  
+
     if (ctx) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
+      ctx.clearRect(0,
+        0,
+        canvas.width,
+        canvas.height);
+
       const centerX = canvas.width / 2;
       const centerY = canvas.height / 2;
-      const radius = Math.min(canvas.width, canvas.height) / 2;
-  
+      const radius = Math.min(canvas.width,
+        canvas.height) / 2;
+
       // Draw the image first
       ctx.drawImage(
         img,
@@ -111,36 +120,50 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
         img.width * scale,
         img.height * scale
       );
-  
+
       ctx.globalCompositeOperation = "destination-in";
       ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, false);
+      ctx.arc(centerX,
+        centerY,
+        radius,
+        0,
+        Math.PI * 2,
+        false);
       ctx.fill();
-  
+
       ctx.globalCompositeOperation = "source-over";
-  
+
       ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2, false);
+      ctx.arc(centerX,
+        centerY,
+        radius,
+        0,
+        Math.PI * 2,
+        false);
       ctx.stroke();
-  
+
       ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
       ctx.lineWidth = 1;
-  
+
       ctx.beginPath();
-      ctx.moveTo(centerX - radius, centerY);
-      ctx.lineTo(centerX + radius, centerY);
+      ctx.moveTo(centerX - radius,
+        centerY);
+      ctx.lineTo(centerX + radius,
+        centerY);
       ctx.stroke();
-  
+
       ctx.beginPath();
-      ctx.moveTo(centerX, centerY - radius);
-      ctx.lineTo(centerX, centerY + radius);
+      ctx.moveTo(centerX,
+        centerY - radius);
+      ctx.lineTo(centerX,
+        centerY + radius);
       ctx.stroke();
     }
   };
 
-  const enforceImageBounds = (newPosition: { x: number; y: number }) => {
+  const enforceImageBounds = (newPosition: {x: number; y: number}) => {
     if (!canvasRef.current || !imageRef.current) return newPosition;
 
     const canvas = canvasRef.current;
@@ -148,20 +171,29 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
 
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
-    const radius = Math.min(canvas.width, canvas.height) / 2;
+    const radius = Math.min(canvas.width,
+      canvas.height) / 2;
 
     const scaledWidth = img.width * scale;
     const scaledHeight = img.height * scale;
 
-    const minX = Math.min(centerX + radius - scaledWidth, centerX - radius);
-    const maxX = Math.max(centerX - radius, centerX + radius - scaledWidth);
+    const minX = Math.min(centerX + radius - scaledWidth,
+      centerX - radius);
+    const maxX = Math.max(centerX - radius,
+      centerX + radius - scaledWidth);
 
-    const minY = Math.min(centerY + radius - scaledHeight, centerY - radius);
-    const maxY = Math.max(centerY - radius, centerY + radius - scaledHeight);
+    const minY = Math.min(centerY + radius - scaledHeight,
+      centerY - radius);
+    const maxY = Math.max(centerY - radius,
+      centerY + radius - scaledHeight);
 
     return {
-      x: Math.min(Math.max(newPosition.x, minX), maxX),
-      y: Math.min(Math.max(newPosition.y, minY), maxY),
+      x: Math.min(Math.max(newPosition.x,
+          minX),
+        maxX),
+      y: Math.min(Math.max(newPosition.y,
+          minY),
+        maxY),
     };
   };
 
@@ -194,7 +226,8 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
 
   const handleZoomIn = () => {
     setScale((prev) => {
-      const newScale = Math.min(prev + 0.1, MAX_SCALE);
+      const newScale = Math.min(prev + 0.1,
+        MAX_SCALE);
 
       if (canvasRef.current && imageRef.current) {
         const canvas = canvasRef.current;
@@ -229,7 +262,8 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
 
   const handleZoomOut = () => {
     setScale((prev) => {
-      const newScale = Math.max(prev - 0.1, MIN_SCALE);
+      const newScale = Math.max(prev - 0.1,
+        MIN_SCALE);
 
       if (canvasRef.current && imageRef.current) {
         const canvas = canvasRef.current;
@@ -295,7 +329,8 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
     if (imageRef.current) {
       if (canvasRef.current) {
         const canvas = canvasRef.current;
-        const circleSize = Math.min(canvas.width, canvas.height);
+        const circleSize = Math.min(canvas.width,
+          canvas.height);
         const imgAspect = imageRef.current.width / imageRef.current.height;
 
         let initialScale;
@@ -311,10 +346,12 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
           );
         }
 
-        initialScale = Math.max(initialScale, MIN_SCALE);
+        initialScale = Math.max(initialScale,
+          MIN_SCALE);
 
         setScale(initialScale);
-        centerImage(imageRef.current, initialScale);
+        centerImage(imageRef.current,
+          initialScale);
       }
     }
   };
@@ -322,18 +359,23 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
   const handleSave = () => {
     if (canvasRef.current && imageRef.current) {
       const finalCanvas = document.createElement("canvas");
-      const ctx = finalCanvas.getContext("2d", { alpha: true });
+      const ctx = finalCanvas.getContext("2d",
+        {alpha: true});
 
       if (ctx) {
         const sourceCanvas = canvasRef.current;
         const centerX = sourceCanvas.width / 2;
         const centerY = sourceCanvas.height / 2;
-        const radius = Math.min(sourceCanvas.width, sourceCanvas.height) / 2;
+        const radius = Math.min(sourceCanvas.width,
+          sourceCanvas.height) / 2;
 
         finalCanvas.width = radius * 2;
         finalCanvas.height = radius * 2;
 
-        ctx.clearRect(0, 0, finalCanvas.width, finalCanvas.height);
+        ctx.clearRect(0,
+          0,
+          finalCanvas.width,
+          finalCanvas.height);
 
         ctx.drawImage(
           imageRef.current,
@@ -345,7 +387,11 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
 
         ctx.globalCompositeOperation = "destination-in";
         ctx.beginPath();
-        ctx.arc(radius, radius, radius, 0, Math.PI * 2);
+        ctx.arc(radius,
+          radius,
+          radius,
+          0,
+          Math.PI * 2);
         ctx.fill();
 
         onSave(finalCanvas);
@@ -392,8 +438,8 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
         onTouchMove={handleTouchMove}
         onTouchEnd={() => setIsDragging(false)}
       >
-        <canvas ref={canvasRef} className="absolute inset-0 cursor-move" />
-       {/* eslint-disable-next-line @next/next/no-img-element */}
+        <canvas ref={canvasRef} className="absolute inset-0 cursor-move"/>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           ref={imageRef}
           src={imageSrc}
@@ -410,7 +456,7 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
           onClick={handleZoomOut}
           disabled={scale <= MIN_SCALE}
         >
-          <ZoomOut className="h-4 w-4" />
+          <ZoomOut className="h-4 w-4"/>
         </Button>
 
         <div className="flex-1">
@@ -430,14 +476,14 @@ const ImageEditor: React.FC<ImageEditorProps> = ({
           onClick={handleZoomIn}
           disabled={scale >= MAX_SCALE}
         >
-          <ZoomIn className="h-4 w-4" />
+          <ZoomIn className="h-4 w-4"/>
         </Button>
       </div>
 
       <div className="flex justify-between pt-2">
         <div className="flex space-x-2">
           <Button type="button" variant="default" onClick={handleReset}>
-            <RotateCw className="h-4 w-4 mr-2" />
+            <RotateCw className="h-4 w-4 mr-2"/>
             รีเซ็ต
           </Button>
         </div>

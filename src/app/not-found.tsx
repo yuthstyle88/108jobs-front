@@ -1,9 +1,9 @@
 "use client";
-import { AssetIcon } from "@/constants/icons";
-import { CategoriesImage, LandingImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import { Home } from "lucide-react";
+import {AssetIcon} from "@/constants/icons";
+import {CategoriesImage, LandingImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {Home} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -77,10 +77,10 @@ export default function NotFound() {
                   {notFoundLanguageData?.errorDescription}
                 </p>
                 <Link prefetch={false}
-                  href="/"
-                  className="inline-flex items-center gap-2 bg-third text-white px-6 py-3 rounded-md font-medium transition-all hover:bg-fastwork-dark-blue"
+                      href="/"
+                      className="inline-flex items-center gap-2 bg-third text-white px-6 py-3 rounded-md font-medium transition-all hover:bg-fastwork-dark-blue"
                 >
-                  <Home className="w-5 h-5" />
+                  <Home className="w-5 h-5"/>
                   {notFoundLanguageData?.backButton}
                 </Link>
               </div>

@@ -1,7 +1,7 @@
 "use client";
-import { ProfileImage } from "@/constants/images";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { faMessage } from "@fortawesome/free-regular-svg-icons";
+import {ProfileImage} from "@/constants/images";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {faMessage} from "@fortawesome/free-regular-svg-icons";
 import {
   faCalendar,
   faFileContract,
@@ -13,11 +13,11 @@ import {
   faRightFromBracket,
   faUserPen,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import {usePathname} from "next/navigation";
+import {useEffect} from "react";
 import {UserService} from "@/services";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
@@ -26,10 +26,10 @@ interface SellerMenuProps {
   onClose: () => void;
 }
 
-const SellerMenu = ({ isOpen, onClose }: SellerMenuProps) => {
+const SellerMenu = ({isOpen, onClose}: SellerMenuProps) => {
   const {person} = useMyUser();
 
-const { lang } = useLanguage();
+  const {lang} = useLanguage();
   const pathname = usePathname();
 
   const menuItems = [
@@ -94,28 +94,32 @@ const { lang } = useLanguage();
   const logout = () => UserService.Instance.logout();
 
   useEffect(() => {
-    const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        onClose();
-      }
-    };
+      const handleEscapeKey = (e: KeyboardEvent) => {
+        if (e.key === "Escape" && isOpen) {
+          onClose();
+        }
+      };
 
-    document.addEventListener("keydown", handleEscapeKey);
-    return () => {
-      document.removeEventListener("keydown", handleEscapeKey);
-    };
-  }, [isOpen, onClose]);
+      document.addEventListener("keydown",
+        handleEscapeKey);
+      return () => {
+        document.removeEventListener("keydown",
+          handleEscapeKey);
+      };
+    },
+    [isOpen, onClose]);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen]);
+      if (isOpen) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "auto";
+      }
+      return () => {
+        document.body.style.overflow = "auto";
+      };
+    },
+    [isOpen]);
 
   return (
     <main className={`fixed z-50 ${isOpen ? "visible" : "invisible"}`}>
@@ -165,10 +169,10 @@ const { lang } = useLanguage();
                 } leading-[25px] cursor-pointer`}
               >
                 <Link prefetch={false}
-                  onClick={onClose}
-                  target={item.target}
-                  href={item.href}
-                  className="px-5 py-4 flex-1"
+                      onClick={onClose}
+                      target={item.target}
+                      href={item.href}
+                      className="px-5 py-4 flex-1"
                 >
                   <div className="flex flex-row items-center gap-4">
                     <FontAwesomeIcon
@@ -185,7 +189,7 @@ const { lang } = useLanguage();
               </li>
             );
           })}
-          <hr className="h-[1px] bg-border-secondary w-full inline-block" />
+          <hr className="h-[1px] bg-border-secondary w-full inline-block"/>
           {menuSettingItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -198,9 +202,9 @@ const { lang } = useLanguage();
                 } leading-[25px] cursor-pointer`}
               >
                 <Link prefetch={false}
-                  target={item.target}
-                  href={item.href}
-                  className="px-5 py-4 flex-1"
+                      target={item.target}
+                      href={item.href}
+                      className="px-5 py-4 flex-1"
                 >
                   <div className="flex flex-row items-center gap-4">
                     <FontAwesomeIcon
@@ -217,7 +221,7 @@ const { lang } = useLanguage();
               </li>
             );
           })}
-          <hr className="h-[1px] bg-border-secondary w-full inline-block" />
+          <hr className="h-[1px] bg-border-secondary w-full inline-block"/>
           <li className="flex flex-row items-center gap-2 bg-white text-text-secondary">
             <button onClick={logout} className="px-5 py-4 flex-1">
               <div className="flex flex-row items-center gap-4">

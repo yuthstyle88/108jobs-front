@@ -1,22 +1,22 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { ChevronRight, ChevronLeft } from "lucide-react";
-import { Tag } from "@/types/jobSearch";
+import React, {useEffect, useRef, useState} from "react";
+import {ChevronLeft, ChevronRight} from "lucide-react";
+import {Tag} from "@/types/jobSearch";
+import {useTranslation} from "@/hooks/translation/useTranslation";
 
 interface SubCategoryProps {
   selectedTag: string;
   onSelectTag: (tag: string) => void;
   tagList: Tag[];
-  language: Record<string, string>;
 }
 
 const SubCategory = ({
   selectedTag,
   onSelectTag,
   tagList,
-  language,
 }: SubCategoryProps) => {
+  const {t} = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -32,18 +32,23 @@ const SubCategory = ({
   };
 
   useEffect(() => {
-    const container = scrollRef.current;
-    if (!container) return;
+      const container = scrollRef.current;
+      if (!container) return;
 
-    updateScrollButtons();
-    container.addEventListener("scroll", updateScrollButtons);
-    window.addEventListener("resize", updateScrollButtons);
+      updateScrollButtons();
+      container.addEventListener("scroll",
+        updateScrollButtons);
+      window.addEventListener("resize",
+        updateScrollButtons);
 
-    return () => {
-      container.removeEventListener("scroll", updateScrollButtons);
-      window.removeEventListener("resize", updateScrollButtons);
-    };
-  }, []);
+      return () => {
+        container.removeEventListener("scroll",
+          updateScrollButtons);
+        window.removeEventListener("resize",
+          updateScrollButtons);
+      };
+    },
+    []);
 
   const scroll = (direction: "left" | "right") => {
     const container = scrollRef.current;
@@ -63,7 +68,7 @@ const SubCategory = ({
           onClick={() => scroll("left")}
           className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white  border-1 border-border-secondary shadow-md p-1 rounded-full hidden md:block"
         >
-          <ChevronLeft className="text-text-secondary" size={20} />
+          <ChevronLeft className="text-text-secondary" size={20}/>
         </button>
       )}
 
@@ -77,7 +82,7 @@ const SubCategory = ({
                 : "hover:bg-[#F6F7F8] text-text-secondary border-border-primary"
             } text-[14px] sm:text-base font-medium leading-[1.5] px-2 py-[5px] sm:px-4 sm:py-[7px] border-[1px] rounded-[4px] cursor-pointer select-none flex justify-center items-center`}
           >
-            <span>{language?.allCategories}</span>
+            <span>{t("category.allCategories")}</span>
           </div>
 
           {tagList.map((item, index) => {
@@ -105,7 +110,7 @@ const SubCategory = ({
           onClick={() => scroll("right")}
           className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white border-1 border-border-secondary shadow-md p-1 rounded-full hidden md:block"
         >
-          <ChevronRight className="text-text-secondary" size={20} />
+          <ChevronRight className="text-text-secondary" size={20}/>
         </button>
       )}
     </div>

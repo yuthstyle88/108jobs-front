@@ -1,5 +1,5 @@
-import { StartSellingImage } from "@/constants/images";
-import Image, { StaticImageData } from "next/image";
+import {StartSellingImage} from "@/constants/images";
+import Image, {StaticImageData} from "next/image";
 import Link from "next/link";
 
 type FreelancerType = {
@@ -18,7 +18,7 @@ type Props = {
   data: Record<string, string>;
 };
 
-const FreelancerTypes = ({ data }: Props) => {
+const FreelancerTypes = ({data}: Props) => {
   const freelancerTypes: FreelancerType[] = [
     {
       title: {
@@ -91,7 +91,7 @@ const FreelancerTypes = ({ data }: Props) => {
             <div className="aspect-video pb-6 flex items-center justify-center">
               <Image
                 src={type.image}
-                alt={type?.title?.main || "no image"} 
+                alt={type?.title?.main || "no image"}
                 className="w-[193px] h-full object-cover"
               />
             </div>
@@ -128,7 +128,7 @@ const FreelancerTypes = ({ data }: Props) => {
           </h2>
           <Link prefetch={false} href="/apply-freelance">
             <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
-            {data?.ctaButton}
+              {data?.ctaButton}
             </button>
           </Link>
         </div>

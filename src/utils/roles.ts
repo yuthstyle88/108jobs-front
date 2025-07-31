@@ -1,10 +1,4 @@
-import {
-  CommunityId,
-  CommunityModeratorView,
-  GetSiteResponse,
-  MyUserInfo,
-  PersonView,
-} from "lemmy-js-client";
+import {CommunityId, CommunityModeratorView, GetSiteResponse, MyUserInfo, PersonView,} from "lemmy-js-client";
 
 export function amAdmin(myUserInfo?: MyUserInfo): boolean {
   return myUserInfo?.localUserView.localUser.admin ?? false;
@@ -51,7 +45,11 @@ export function canAdmin(
   myUserInfo?: MyUserInfo,
   onSelf = false,
 ): boolean {
-  return canMod(creatorId, undefined, admins, myUserInfo, onSelf);
+  return canMod(creatorId,
+    undefined,
+    admins,
+    myUserInfo,
+    onSelf);
 }
 
 export function moderatesSomething(myUserInfo?: MyUserInfo): boolean {
@@ -78,8 +76,8 @@ export function canMod(
   // You can do moderator actions only on the mods added after you.
   let adminsThenMods =
     admins
-      ?.map(a => a.person.id)
-      .concat(mods?.map(m => m.moderator.id) ?? []) ?? [];
+    ?.map(a => a.person.id)
+    .concat(mods?.map(m => m.moderator.id) ?? []) ?? [];
 
   if (myUserInfo) {
     const myIndex = adminsThenMods.findIndex(
@@ -89,7 +87,8 @@ export function canMod(
       return false;
     } else {
       // onSelf +1 on mod actions not for yourself, IE ban, remove, etc
-      adminsThenMods = adminsThenMods.slice(0, myIndex + (onSelf ? 0 : 1));
+      adminsThenMods = adminsThenMods.slice(0,
+        myIndex + (onSelf ? 0 : 1));
       return !adminsThenMods.includes(creator_id);
     }
   } else {

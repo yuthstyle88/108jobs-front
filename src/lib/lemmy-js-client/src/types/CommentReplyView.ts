@@ -1,13 +1,14 @@
-import type { Comment } from "./Comment";
-import type { CommentActions } from "./CommentActions";
-import type { CommentReply } from "./CommentReply";
-import type { Community } from "./Community";
-import type { CommunityActions } from "./CommunityActions";
-import type { InstanceActions } from "./InstanceActions";
-import type { Person } from "./Person";
-import type { PersonActions } from "./PersonActions";
-import type { Post } from "./Post";
-import type { TagsView } from "./TagsView";
+import type {Comment} from "./Comment";
+import type {CommentActions} from "./CommentActions";
+import type {CommentReply} from "./CommentReply";
+import type {Community} from "./Community";
+import type {CommunityActions} from "./CommunityActions";
+import type {InstanceActions} from "./InstanceActions";
+import type {Person} from "./Person";
+import type {PersonActions} from "./PersonActions";
+import type {Post} from "./Post";
+import type {TagsView} from "./TagsView";
+
 /**
  * A comment reply view.
  */

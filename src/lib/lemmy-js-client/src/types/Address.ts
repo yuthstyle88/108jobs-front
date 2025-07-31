@@ -1,4 +1,3 @@
-
 export type Address = {
   id: string;
   country: string;

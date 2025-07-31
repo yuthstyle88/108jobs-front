@@ -17,7 +17,8 @@ const TS_GLOB = /\.ts$/;
 
 /** แปลง snake_case → camelCase  */
 function snakeToCamel(str: string): string {
-  return str.replace(/_([a-z])/g, (_match, char: string) => char.toUpperCase());
+  return str.replace(/_([a-z])/g,
+    (_match, char: string) => char.toUpperCase());
 }
 
 /**
@@ -27,27 +28,34 @@ function snakeToCamel(str: string): string {
 function transformContent(src: string): string {
   const propNameRegex = /\b([a-zA-Z]\w*)(?=\s*[?:])/g;
 
-  return src.replace(propNameRegex, (match) => {
-    // ข้ามถ้าไม่มี underscore
-    return match.includes('_') ? snakeToCamel(match) : match;
-  });
+  return src.replace(propNameRegex,
+    (match) => {
+      // ข้ามถ้าไม่มี underscore
+      return match.includes('_') ? snakeToCamel(match) : match;
+    });
 }
 
 /** ประมวลผลไฟล์เดียว */
 function processFile(filePath: string) {
-  const original = fs.readFileSync(filePath, 'utf8');
+  const original = fs.readFileSync(filePath,
+    'utf8');
   const transformed = transformContent(original);
 
   if (original !== transformed) {
-    fs.writeFileSync(filePath, transformed, 'utf8');
-    console.log(`✔ แปลงแล้ว: ${path.relative(process.cwd(), filePath)}`);
+    fs.writeFileSync(filePath,
+      transformed,
+      'utf8');
+    console.log(`✔ แปลงแล้ว: ${path.relative(process.cwd(),
+      filePath)}`);
   }
 }
 
 /** เดินทุกแฟ้มในไดเรกทอรี (recursive) */
 function walkDir(dir: string) {
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const full = path.join(dir, entry.name);
+  for (const entry of fs.readdirSync(dir,
+    {withFileTypes: true})) {
+    const full = path.join(dir,
+      entry.name);
     if (entry.isDirectory()) {
       walkDir(full);
     } else if (entry.isFile() && TS_GLOB.test(entry.name)) {
@@ -57,7 +65,8 @@ function walkDir(dir: string) {
 }
 
 // --------- main ---------
-const TYPES_DIR = path.join(process.cwd(), './src/types'); // เปลี่ยนตามโครงสร้างโปรเจกต์
+const TYPES_DIR = path.join(process.cwd(),
+  './src/types'); // เปลี่ยนตามโครงสร้างโปรเจกต์
 if (!fs.existsSync(TYPES_DIR)) {
   console.error('ไม่พบโฟลเดอร์ types/');
   process.exit(1);

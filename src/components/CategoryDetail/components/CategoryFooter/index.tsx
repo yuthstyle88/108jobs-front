@@ -1,11 +1,11 @@
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
 import Link from "next/link";
 import React from "react";
 
 
 const CategoryFooter = () => {
-  const { data: categoryFooterLanguage } = getNamespace(
+  const categoryFooterLanguage = getNamespace(
     LanguageFile.CATEGORY_FOOTER
   );
   return (

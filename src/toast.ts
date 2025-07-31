@@ -1,5 +1,5 @@
-import { isBrowser } from "@/utils/browser";
-import { ThemeColor } from "@/utils/types";
+import {isBrowser} from "@/utils/browser";
+import {ThemeColor} from "@/utils/types";
 import Toastify from "toastify-js";
 
 

@@ -1,4 +1,4 @@
-import { StaticImageData } from "next/image";
+import {StaticImageData} from "next/image";
 
 export interface LandingImageType {
   banner02: StaticImageData;

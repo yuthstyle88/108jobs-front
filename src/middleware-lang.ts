@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import {NextRequest, NextResponse} from "next/server";
 import {VALID_LANGUAGES} from "@/constants/language";
 
 const PUBLIC_FILE = /\.(.*)$/;
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const {pathname} = request.nextUrl;
 
   if (
     pathname.startsWith("/_next") ||

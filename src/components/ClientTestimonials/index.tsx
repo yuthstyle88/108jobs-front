@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import Image, { StaticImageData } from "next/image"; // Import Image from next/image
-import { BusinessImage } from "@/constants/images";
-import { getNamespace } from "@/utils/i18nHelper";
-import { LanguageFile } from "@/constants/language";
+import React, {useState} from "react";
+import {ChevronLeft, ChevronRight} from "lucide-react";
+import {cn} from "@/lib/utils";
+import Image, {StaticImageData} from "next/image"; // Import Image from next/image
+import {BusinessImage} from "@/constants/images";
+import {t} from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
 
 type TestimonialType = {
   id: number;
@@ -17,43 +17,38 @@ type TestimonialType = {
 
 // Create testimonials array from translations
 const createTestimonialsFromTranslations = () => {
-  const home = getNamespace(LanguageFile.HOME);
-  
   return [
     {
       id: 1,
       logoSrc: BusinessImage.logoCustomer1,
-      logoAlt: home.home_testimonial_1_logo_alt,
-      testimonial: home.home_testimonial_1_text,
-      author: home.home_testimonial_1_author,
-      position: home.home_testimonial_1_position,
+      logoAlt: t(LanguageFile.HOME, "home_testimonial_1_logo_alt"),
+      testimonial: t(LanguageFile.HOME, "home_testimonial_1_text"),
+      author: t(LanguageFile.HOME, "home_testimonial_1_author"),
+      position: t(LanguageFile.HOME, "home_testimonial_1_position"),
     },
     {
       id: 2,
       logoSrc: BusinessImage.logoCustomer2,
-      logoAlt: home.home_testimonial_2_logo_alt,
-      testimonial: home.home_testimonial_2_text,
-      author: home.home_testimonial_2_author,
-      position: home.home_testimonial_2_position,
+      logoAlt: t(LanguageFile.HOME, "home_testimonial_2_logo_alt"),
+      testimonial: t(LanguageFile.HOME, "home_testimonial_2_text"),
+      author: t(LanguageFile.HOME, "home_testimonial_2_author"),
+      position: t(LanguageFile.HOME, "home_testimonial_2_position"),
     },
     {
       id: 3,
       logoSrc: BusinessImage.logoCustomer3,
-      logoAlt: home.home_testimonial_3_logo_alt,
-      testimonial: home.home_testimonial_3_text,
-      author: home.home_testimonial_3_author,
-      position: home.home_testimonial_3_position,
+      logoAlt: t(LanguageFile.HOME, "home_testimonial_3_logo_alt"),
+      testimonial: t(LanguageFile.HOME, "home_testimonial_3_text"),
+      author: t(LanguageFile.HOME, "home_testimonial_3_author"),
+      position: t(LanguageFile.HOME, "home_testimonial_3_position"),
     },
   ];
 };
 
 const ClientTestimonials = () => {
-  // Get translations
-  const home = getNamespace(LanguageFile.HOME);
-  
   // Get testimonials from translations
   const testimonials = createTestimonialsFromTranslations();
-  
+
   const [activeIndex, setActiveIndex] = useState(1);
 
   const nextSlide = () => {
@@ -76,7 +71,7 @@ const ClientTestimonials = () => {
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4 max-w-6xl">
         <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-16">
-          {home.home_testimonials_title}
+          {t(LanguageFile.HOME, "home_testimonials_title")}
         </h2>
 
         <div className="relative">
@@ -125,7 +120,7 @@ const ClientTestimonials = () => {
             className="absolute left-0 top-1/2 -translate-y-1/2 -ml-4 w-10 h-10 flex items-center justify-center border border-gray-300 bg-white rounded-full shadow-sm text-gray-600 hover:bg-gray-50 transition-colors z-10"
             aria-label="Previous testimonial"
           >
-            <ChevronLeft size={20} />
+            <ChevronLeft size={20}/>
           </button>
 
           <button
@@ -133,7 +128,7 @@ const ClientTestimonials = () => {
             className="absolute right-0 top-1/2 -translate-y-1/2 -mr-4 w-10 h-10 flex items-center justify-center border border-gray-300 bg-white rounded-full shadow-sm text-gray-600 hover:bg-gray-50 transition-colors z-10"
             aria-label="Next testimonial"
           >
-            <ChevronRight size={20} />
+            <ChevronRight size={20}/>
           </button>
         </div>
 

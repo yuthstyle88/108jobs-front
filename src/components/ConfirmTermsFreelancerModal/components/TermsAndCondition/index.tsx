@@ -1,11 +1,7 @@
 import {useTranslation} from "react-i18next";
 
-type Props = {
-  language: Record<string, string>;
-};
-
-const TermsAndCondition = ({ language }: Props) => {
-  const { t } = useTranslation();
+const TermsAndCondition = () => {
+  const {t} = useTranslation();
   return (
     <div className="mb-0 text-text-primary font-sans leading-[1.5]">
       <p className="text-[24px] text-center mb-[1.5rem] leading-[1.5] ">
@@ -352,7 +348,7 @@ const TermsAndCondition = ({ language }: Props) => {
             <strong>{t("terms.section18Title")}</strong>
           </p>
           <p className="mb-6">
-           {t("terms.privacyPolicy1")}
+            {t("terms.privacyPolicy1")}
           </p>
           <p className="mb-6">
             {t("terms.privacyPolicy2")}

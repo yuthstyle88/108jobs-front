@@ -1,8 +1,8 @@
 // components/ui/CustomInput.tsx
 "use client";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { UseFormRegisterReturn } from "react-hook-form";
+import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {UseFormRegisterReturn} from "react-hook-form";
 
 type InputProps = {
   type?: string;

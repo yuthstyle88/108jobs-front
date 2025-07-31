@@ -1,13 +1,13 @@
-import { cn } from "@/lib/utils";
+import {cn} from "@/lib/utils";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
-import { Check, ChevronDown } from "lucide-react";
-import React, { forwardRef, useState } from "react";
-import { getNamespace } from "@/utils/i18nHelper";
-import { LanguageFile } from "@/constants/language";
+import {Slot} from "@radix-ui/react-slot";
+import {cva, type VariantProps} from "class-variance-authority";
+import {Check, ChevronDown} from "lucide-react";
+import React, {forwardRef, useState} from "react";
+import {getNamespace} from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
 
 // Button Component
 const buttonVariants = cva(
@@ -47,11 +47,11 @@ interface ButtonProps
 
 // Button Component
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({className, variant, size, asChild = false, ...props}, ref) => {
     const Comp = asChild ? Slot : "button";
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({variant, size, className}))}
         ref={ref}
         {...props}
       />
@@ -62,7 +62,7 @@ Button.displayName = "Button";
 
 // Input Component
 const Input = forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
-  ({ className, type, ...props }, ref) => {
+  ({className, type, ...props}, ref) => {
     return (
       <input
         type={type}
@@ -83,7 +83,7 @@ Input.displayName = "Input";
 const Textarea = forwardRef<
   HTMLTextAreaElement,
   React.TextareaHTMLAttributes<HTMLTextAreaElement>
->(({ className, ...props }, ref) => {
+>(({className, ...props}, ref) => {
   return (
     <textarea
       className={cn(
@@ -105,11 +105,12 @@ const labelVariants = cva(
 const Label = forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> &
-    VariantProps<typeof labelVariants>
->(({ className, ...props }, ref) => (
+  VariantProps<typeof labelVariants>
+>(({className, ...props}, ref) => (
   <LabelPrimitive.Root
     ref={ref}
-    className={cn(labelVariants(), className)}
+    className={cn(labelVariants(),
+      className)}
     {...props}
   />
 ));
@@ -119,7 +120,7 @@ Label.displayName = LabelPrimitive.Root.displayName;
 const Checkbox = forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
@@ -131,7 +132,7 @@ const Checkbox = forwardRef<
     <CheckboxPrimitive.Indicator
       className={cn("flex items-center justify-center text-text-primary")}
     >
-      <Check className="h-4 w-4" />
+      <Check className="h-4 w-4"/>
     </CheckboxPrimitive.Indicator>
   </CheckboxPrimitive.Root>
 ));
@@ -144,7 +145,7 @@ const SelectValue = SelectPrimitive.Value;
 const SelectTrigger = forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+>(({className, children, ...props}, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
@@ -155,7 +156,7 @@ const SelectTrigger = forwardRef<
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-4 w-4 opacity-50" />
+      <ChevronDown className="h-4 w-4 opacity-50"/>
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
@@ -164,14 +165,14 @@ SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 const SelectContent = forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
->(({ className, children, position = "popper", ...props }, ref) => (
+>(({className, children, position = "popper", ...props}, ref) => (
   <SelectPrimitive.Portal>
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
         "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-white text-text-primary shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
         position === "popper" &&
-          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+        "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className
       )}
       position={position}
@@ -181,7 +182,7 @@ const SelectContent = forwardRef<
         className={cn(
           "p-1",
           position === "popper" &&
-            "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+          "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
         )}
       >
         {children}
@@ -194,7 +195,7 @@ SelectContent.displayName = SelectPrimitive.Content.displayName;
 const SelectItem = forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, ref) => (
+>(({className, children, ...props}, ref) => (
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
@@ -205,7 +206,7 @@ const SelectItem = forwardRef<
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
-        <Check className="h-4 w-4" />
+        <Check className="h-4 w-4"/>
       </SelectPrimitive.ItemIndicator>
     </span>
 
@@ -217,7 +218,7 @@ SelectItem.displayName = SelectPrimitive.Item.displayName;
 // Contact Form Component
 const ContactForm = () => {
   const contract = getNamespace(LanguageFile.CONTRACT_FORM);
-  
+
   const [attachments, setAttachments] = useState<File[]>([]);
   const [formData, setFormData] = useState({
     details: "",
@@ -233,22 +234,23 @@ const ContactForm = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const {name, value} = e.target;
+    setFormData((prev) => ({...prev, [name]: value}));
   };
 
   const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prev) => ({ ...prev, agreeToTerms: checked }));
+    setFormData((prev) => ({...prev, agreeToTerms: checked}));
   };
 
   const handleSelectChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, timePreference: value }));
+    setFormData((prev) => ({...prev, timePreference: value}));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
-      setAttachments((prev) => [...prev, ...newFiles].slice(0, 10));
+      setAttachments((prev) => [...prev, ...newFiles].slice(0,
+        10));
     }
   };
 
@@ -258,10 +260,10 @@ const ContactForm = () => {
   };
 
   const availableTimes = [
-    { value: "morning", label: contract?.morning },
-    { value: "afternoon", label: contract?.afternoon },
-    { value: "evening", label: contract?.evening },
-    { value: "anytime", label: contract?.anytime },
+    {value: "morning", label: contract?.morning},
+    {value: "afternoon", label: contract?.afternoon},
+    {value: "evening", label: contract?.evening},
+    {value: "anytime", label: contract?.anytime},
   ];
 
   return (
@@ -309,7 +311,8 @@ const ContactForm = () => {
                 >
                   {contract?.browseFiles}
                 </Button>
-                <p className="text-gray-400 mt-2">{contract?.filesCount.replace('{{count}}', attachments.length.toString())}</p>
+                <p className="text-gray-400 mt-2">{contract?.filesCount.replace('{{count}}',
+                  attachments.length.toString())}</p>
               </div>
             </div>
 
@@ -380,7 +383,7 @@ const ContactForm = () => {
                 onValueChange={handleSelectChange}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder={contract?.timePreferencePlaceholder} />
+                  <SelectValue placeholder={contract?.timePreferencePlaceholder}/>
                 </SelectTrigger>
                 <SelectContent>
                   {availableTimes.map((time) => (

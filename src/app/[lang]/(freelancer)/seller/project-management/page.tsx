@@ -1,22 +1,14 @@
 "use client";
-import Error from "@/app/error";
-import Loading from "@/components/Loading";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import { interpolateDouble } from "@/utils/interpolate";
-import { Info } from "lucide-react";
-import { useState } from "react";
+import {interpolateDouble} from "@/utils/interpolate";
+import {Info} from "lucide-react";
+import {useState} from "react";
+import {useTranslation} from "react-i18next";
 
 const ProjectManagement = () => {
   const [activeTab, setActiveTab] = useState("inProgress");
 
-  const { data: sellerPrjManagementLanguage,isLoading,error } = getNamespace(
-    LanguageFile.SELLER_PROJECT_MANAGEMENT
-  );
+  const {t} = useTranslation();
 
-  
-  if (isLoading) return <Loading />;
-  if (error) return <Error/>;
   return (
     <div className="flex-1">
       {/* Main Content */}
@@ -33,8 +25,8 @@ const ProjectManagement = () => {
               onClick={() => setActiveTab("inProgress")}
             >
               {interpolateDouble(
-                sellerPrjManagementLanguage?.projectInProgressTab || "",
-                { n: 3 }
+                t("sellerProjectManagement.projectInProgressTab") || "",
+                {n: 3}
               )}
             </button>
             <button
@@ -46,8 +38,8 @@ const ProjectManagement = () => {
               onClick={() => setActiveTab("pending")}
             >
               {interpolateDouble(
-                sellerPrjManagementLanguage?.projectPendingTab || "",
-                { n: 3 }
+                t("sellerProjectManagement.projectPendingTab") || "",
+                {n: 3}
               )}
             </button>
           </div>
@@ -74,13 +66,13 @@ const ProjectManagement = () => {
               </div>
               <div>
                 <div className="font-medium text-black">
-                  {sellerPrjManagementLanguage?.projectInProgressTitle}
+                  {t("sellerProjectManagement.projectInProgressTitle")}
                 </div>
                 <div className="text-sm text-black">
                   {interpolateDouble(
-                    sellerPrjManagementLanguage?.projectInProgressCount ||
-                      "",
-                    { n: 3 }
+                    t("sellerProjectManagement.projectInProgressCount") ||
+                    "",
+                    {n: 3}
                   )}
                 </div>
               </div>
@@ -90,26 +82,26 @@ const ProjectManagement = () => {
               <div className="grid grid-cols-5 p-4 border-b border-gray-200 bg-gray-50 text-black">
                 <div className="flex items-center">
                   <span className="font-medium text-sm">
-                    {sellerPrjManagementLanguage?.projectColumnTitle}
+                    {t("sellerProjectManagement.projectColumnTitle")}
                   </span>
-                  <Info className="w-4 h-4 ml-1 text-gray-400" />
+                  <Info className="w-4 h-4 ml-1 text-gray-400"/>
                 </div>
                 <div className="font-medium text-sm">
-                  {sellerPrjManagementLanguage?.projectColumnCode}
+                  {t("sellerProjectManagement.projectColumnCode")}
                 </div>
                 <div className="font-medium text-sm flex items-center">
                   <span>
-                    {sellerPrjManagementLanguage?.projectColumnAmount}
+                    {t("sellerProjectManagement.projectColumnAmount")}
                   </span>
                 </div>
                 <div className="font-medium text-sm flex items-center">
                   <span>
-                    {sellerPrjManagementLanguage?.projectColumnDeadline}
+                    {t("sellerProjectManagement.projectColumnDeadline")}
                   </span>
-                  <Info className="w-4 h-4 ml-1 text-gray-400" />
+                  <Info className="w-4 h-4 ml-1 text-gray-400"/>
                 </div>
                 <div className="font-medium text-sm">
-                  {sellerPrjManagementLanguage?.projectColumnChat}
+                  {t("sellerProjectManagement.projectColumnChat")}
                 </div>
               </div>
               <div className="p-12 flex flex-col items-center justify-center">
@@ -127,7 +119,7 @@ const ProjectManagement = () => {
                   />
                 </svg>
                 <div className="text-gray-500 text-center">
-                  {sellerPrjManagementLanguage?.projectEmptyText}
+                  {t("sellerProjectManagement.projectEmptyText")}
                 </div>
               </div>
             </div>
@@ -156,15 +148,15 @@ const ProjectManagement = () => {
               <div>
                 <div className="font-medium text-black">
                   {interpolateDouble(
-                    sellerPrjManagementLanguage?.projectPendingTitle || "",
-                    { n: 3 }
+                    t("sellerProjectManagement.projectPendingTitle") || "",
+                    {n: 3}
                   )}
                 </div>
                 <div className="text-sm text-black">
                   {interpolateDouble(
-                    sellerPrjManagementLanguage?.projectInProgressCount ||
-                      "",
-                    { n: 3 }
+                    t("sellerProjectManagement.projectInProgressCount") ||
+                    "",
+                    {n: 3}
                   )}
                 </div>
               </div>
@@ -174,20 +166,20 @@ const ProjectManagement = () => {
               <div className="grid grid-cols-5 p-4 border-b border-gray-200 bg-gray-50 text-black">
                 <div className="flex items-center">
                   <span className="font-medium text-sm">
-                    {sellerPrjManagementLanguage?.projectColumnTitle}
+                    {t("sellerProjectManagement.projectColumnTitle")}
                   </span>
-                  <Info className="w-4 h-4 ml-1 text-gray-400" />
+                  <Info className="w-4 h-4 ml-1 text-gray-400"/>
                 </div>
                 <div className="font-medium text-sm">
-                  {sellerPrjManagementLanguage?.projectColumnCode}
+                  {t("sellerProjectManagement.projectColumnCode")}
                 </div>
                 <div className="font-medium text-sm flex items-center">
                   <span>
-                    {sellerPrjManagementLanguage?.projectColumnAmount}
+                    {t("sellerProjectManagement.projectColumnAmount")}
                   </span>
                 </div>
                 <div className="font-medium text-sm">
-                  {sellerPrjManagementLanguage?.projectColumnChat}
+                  {t("sellerProjectManagement.projectColumnChat")}
                 </div>
               </div>
               <div className="p-12 flex flex-col items-center justify-center">
@@ -205,7 +197,7 @@ const ProjectManagement = () => {
                   />
                 </svg>
                 <div className="text-gray-500 text-center">
-                  {sellerPrjManagementLanguage?.projectEmptyText}
+                  {t("sellerProjectManagement.projectEmptyText")}
                 </div>
               </div>
             </div>

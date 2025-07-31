@@ -13,9 +13,9 @@ const SubMenu = () => {
     <div className="shadow-category-menu relative md:pt-12 lg:pt-0">
       <nav className="flex justify-center px-2 h-[3.5rem] text-text-primary bg-white">
         <div className="grid grid-flow-col gap-x-3 cursor-pointer">
-          <PopularType />
-          <GraphicDesign />
-          <Website />
+          <PopularType/>
+          <GraphicDesign/>
+          <Website/>
           <Marketing/>
           <Write/>
           <ImageAndSound/>

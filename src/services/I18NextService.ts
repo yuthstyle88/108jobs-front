@@ -1,11 +1,10 @@
-import { isBrowser } from "@/utils/browser";
-import i18next, { BackendModule, ReadCallback, Resource } from "i18next";
-import { ImportReport } from "@/utils/dynamic-imports";
-import { en } from "@/translations/en";
-import { th } from "@/translations/th";
-import { vi } from "@/translations/vi";
-import { setupDateFns } from "@/utils/date";
-import { MyUserInfo } from "lemmy-js-client";
+import {isBrowser} from "@/utils/browser";
+import i18next, {BackendModule, ReadCallback, Resource} from "i18next";
+import {ImportReport} from "@/utils/dynamic-imports";
+import {en} from "@/translations/en";
+import {vi} from "@/translations/vi";
+import {setupDateFns} from "@/utils/date";
+import {MyUserInfo} from "lemmy-js-client";
 
 export type TranslationDesc = {
   resource: string;
@@ -15,9 +14,9 @@ export type TranslationDesc = {
 };
 
 export const languages: TranslationDesc[] = [
-  { resource: "en", code: "en", name: "English", bundled: true },
-  { resource: "th", code: "th", name: "ไทย" },
-  { resource: "vi", code: "vi", name: "Tiếng Việt" },
+  {resource: "en", code: "en", name: "English", bundled: true},
+  {resource: "th", code: "th", name: "ไทย"},
+  {resource: "vi", code: "vi", name: "Tiếng Việt"},
 ];
 
 const languageByCode = languages.reduce<Record<string, TranslationDesc>>(
@@ -32,7 +31,7 @@ const languageByCode = languages.reduce<Record<string, TranslationDesc>>(
 languageByCode["en_US"] = languageByCode["en-US"];
 
 async function load(translation: TranslationDesc): Promise<Resource> {
-  const { resource } = translation;
+  const {resource} = translation;
   return import(
     /* webpackChunkName: `translation-[request]`  */
     `../translations/${resource}`
@@ -43,14 +42,14 @@ export async function verifyTranslationImports(): Promise<ImportReport> {
   const report = new ImportReport();
   const promises = languages.map((lang) =>
     load(lang)
-      .then((x) => {
-        if (x && x["translation"]) {
-          report.success.push(lang.code);
-        } else {
-          throw "unexpected format";
-        }
-      })
-      .catch((err) => report.error.push({ id: lang.code, error: err }))
+    .then((x) => {
+      if (x && x["translation"]) {
+        report.success.push(lang.code);
+      } else {
+        throw "unexpected format";
+      }
+    })
+    .catch((err) => report.error.push({id: lang.code, error: err}))
   );
   await Promise.all(promises);
   return report;
@@ -79,14 +78,15 @@ export function findTranslationChunkNames(
       continue;
     }
     return translations
-      .filter((x) => !x.bundled)
-      .map((x) => `translation-${x.resource}`);
+    .filter((x) => !x.bundled)
+    .map((x) => `translation-${x.resource}`);
   }
   return [];
 }
 
 export async function loadUserLanguage() {
-  await new Promise((r) => I18NextService.i18n.changeLanguage(undefined, r));
+  await new Promise((r) => I18NextService.i18n.changeLanguage(undefined,
+    r));
   await setupDateFns();
 }
 
@@ -104,6 +104,7 @@ class LanguageDetector {
 
 export class LanguageService {
   private static _serverLanguages: readonly string[] = [];
+
   private static get languages(): readonly string[] {
     if (isBrowser()) {
       return navigator.languages;
@@ -136,49 +137,52 @@ class LazyLoader implements Omit<BackendModule, "type"> {
   read(language: string, namespace: string, cb: ReadCallback): void {
     const translation: TranslationDesc = languageByCode[language];
     if (!translation) {
-      cb(new Error(`No translation found: ${language} ${namespace}`), false);
+      cb(new Error(`No translation found: ${language} ${namespace}`),
+        false);
       return;
     }
     load(translation)
     .then(data => {
       const resKeys = data && data[namespace];
       if (!resKeys) throw Error(`Failed loading: ${language} ${namespace}`);
-      cb(null, resKeys);
+      cb(null,
+        resKeys);
     })
-    .catch(err => cb(err, false));
+    .catch(err => cb(err,
+      false));
   }
 }
 
 export class I18NextService {
-  #i18n: typeof i18next;
   static #instance: I18NextService;
+  #i18n: typeof i18next;
 
   private constructor() {
     this.#i18n = i18next;
     this.#i18n
-      .use(LanguageDetector)
-      .use(LazyLoader)
-      .init({
-        debug: false,
-        compatibilityJSON: "v4",
-        supportedLngs: languages.map((l) => l.code),
-        nonExplicitSupportedLngs: true,
-        load: "all",
-        // initImmediate: false,
-        fallbackLng: ["en"],
-        // Use all namespaces available in en.ts
-        ns: Object.keys(en),
-        resources: { en } as Resource,
-        interpolation: { format },
-        partialBundledLanguages: true,
-      });
-  }
-
-  static get #Instance() {
-    return this.#instance ?? (this.#instance = new this());
+    .use(LanguageDetector)
+    .use(LazyLoader)
+    .init({
+      debug: false,
+      compatibilityJSON: "v4",
+      supportedLngs: languages.map((l) => l.code),
+      nonExplicitSupportedLngs: true,
+      load: "all",
+      // initImmediate: false,
+      fallbackLng: ["en"],
+      // Use all namespaces available in en.ts
+      ns: Object.keys(en),
+      resources: {en} as Resource,
+      interpolation: {format},
+      partialBundledLanguages: true,
+    });
   }
 
   public static get i18n() {
     return this.#Instance.#i18n;
+  }
+
+  static get #Instance() {
+    return this.#instance ?? (this.#instance = new this());
   }
 }

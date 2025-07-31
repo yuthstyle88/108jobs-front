@@ -1,7 +1,4 @@
-import {
-  OAuthProvider,
-  LoginResponse,
-} from "lemmy-js-client";
+import {LoginResponse, OAuthProvider,} from "lemmy-js-client";
 import {HttpService, UserService} from "@/services";
 import {setIsoData} from "@/utils/app";
 import {LoginFormClass} from "@/components/Authentication/LoginForm";
@@ -10,7 +7,7 @@ import {LoginProps} from "@/components/Authentication/LoginForm/interface";
 import getQueryParams from "@/utils/helpers";
 import {isSuccess, REQUEST_STATE} from "@/services/HttpService";
 
-export const handleUseOAuthProvider = async (params: {
+export const handleUseOAuthProvider = async(params: {
   oauthProvider: OAuthProvider;
   username?: string;
   prev?: string;
@@ -39,7 +36,7 @@ export const handleUseOAuthProvider = async (params: {
       redirectUri: redirectUri,
       prev: params.prev ?? "/",
       username: params.username,
-      answer:  "FastJob",
+      answer: "FastJob",
       expiresAt: Date.now() + 5 * 60_000,
     }),
   );
@@ -47,7 +44,7 @@ export const handleUseOAuthProvider = async (params: {
   window.location.assign(requestUri);
 };
 
-export const handleLogin = async (i: LoginFormClass, data: any) => {
+export const handleLogin = async(i: LoginFormClass, data: any) => {
   const {usernameOrEmail, password} = data;
   i.setState(prev => ({
     form: {
@@ -71,25 +68,28 @@ export const handleLogin = async (i: LoginFormClass, data: any) => {
           // Trigger modal to ask for TOTP token
           i.setState({show2faModal: true});
         } else {
-          i.props.formMethods.setError("password", {
-            type: "manual",
-            message: i.props.t("invalidPassword"),
-          });
+          i.props.formMethods.setError("password",
+            {
+              type: "manual",
+              message: i.props.t("invalidPassword"),
+            });
         }
         i.setState({loginRes});
         break;
       }
       case REQUEST_STATE.SUCCESS: {
-        await handleLoginSuccess(i, loginRes.data);
+        await handleLoginSuccess(i,
+          loginRes.data);
         break;
       }
     }
   } catch (error) {
     console.error(error);
-    i.props.formMethods.setError("root", {
-      type: "manual",
-      message: i.props.t("systemError"),
-    });
+    i.props.formMethods.setError("root",
+      {
+        type: "manual",
+        message: i.props.t("systemError"),
+      });
   }
 };
 
@@ -108,7 +108,8 @@ export async function handleLoginSuccess(i: LoginFormClass, loginRes: LoginRespo
         isoData.siteRes.adminOauthProviders = site.data.adminOauthProviders;
       }
     } catch (error) {
-      console.error("Error updating isoData:", error);
+      console.error("Error updating isoData:",
+        error);
     }
   }
 
@@ -142,7 +143,8 @@ export async function handleSubmitTotp(i: LoginFormClass, totp: string) {
   const successful = isSuccess(loginRes);
   if (successful) {
     i.setState({show2faModal: false});
-    await handleLoginSuccess(i, loginRes.data);
+    await handleLoginSuccess(i,
+      loginRes.data);
   } else {
     toast("incorrectTotpCode");
   }

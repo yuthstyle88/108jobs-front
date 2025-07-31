@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import ContactForm from "@/components/ContractForm";
-import { CheckCircle } from "lucide-react";
+import {CheckCircle} from "lucide-react";
 import BusinessHeader from "@/components/BusinessHeader";
 import Link from "next/link";
 
@@ -53,9 +53,9 @@ const PackageDetailsPage = () => {
       {
         title: "การแบ่งเครดิต",
         items: [
-          { text: "การผลิต (Production 5 mins)", credits: 1 },
-          { text: "อินโฟกราฟิค", credits: 2 },
-          { text: "GIF animation", credits: 2 },
+          {text: "การผลิต (Production 5 mins)", credits: 1},
+          {text: "อินโฟกราฟิค", credits: 2},
+          {text: "GIF animation", credits: 2},
         ],
       },
     ],
@@ -65,15 +65,16 @@ const PackageDetailsPage = () => {
 
   // Set state to true after the component has mounted
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+      setIsMounted(true);
+    },
+    []);
 
   // Render nothing on the server, to avoid hydration errors
   if (!isMounted) return null;
 
   return (
     <div className="min-h-screen bg-white overflow-hidden">
-      <BusinessHeader />
+      <BusinessHeader/>
 
       {/* Hero Section */}
       <section className="pt-24 pb-10 md:pt-32 md:pb-12 bg-blue-50 relative">
@@ -84,16 +85,16 @@ const PackageDetailsPage = () => {
           <div className="flex justify-center gap-2 mt-8">
             <div className="bg-white rounded-lg shadow-md w-60 md:w-72 p-1">
               <Link prefetch={false}
-                href="/bussiness/price-list"
-                className="block w-full py-2 px-4 rounded-lg bg-white text-gray-700"
+                    href="/bussiness/price-list"
+                    className="block w-full py-2 px-4 rounded-lg bg-white text-gray-700"
               >
                 Graphic Design Price List
               </Link>
             </div>
             <div className="bg-white rounded-lg shadow-md w-60 md:w-72 p-1">
               <Link prefetch={false}
-                href="#"
-                className="block w-full py-2 px-4 rounded-lg bg-fastwork-blue text-white"
+                    href="#"
+                    className="block w-full py-2 px-4 rounded-lg bg-fastwork-blue text-white"
               >
                 Social Content Credit Package
               </Link>
@@ -138,7 +139,7 @@ const PackageDetailsPage = () => {
                   <ul className="space-y-2">
                     {section.items.map((item, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <CheckCircle className="h-5 w-5 text-fastwork-blue flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="h-5 w-5 text-fastwork-blue flex-shrink-0 mt-0.5"/>
                         <span>{item}</span>
                       </li>
                     ))}
@@ -187,7 +188,7 @@ const PackageDetailsPage = () => {
           <h2 className="text-2xl font-bold mb-12 text-center text-black">
             เรื่องที่อยากให้เราช่วย
           </h2>
-          <ContactForm />
+          <ContactForm/>
         </div>
       </section>
 

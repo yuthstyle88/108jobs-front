@@ -1,10 +1,10 @@
 "use client";
-import { BannerImage, RewardImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
+import {BannerImage, RewardImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
 
 // import CouponCard from "@/components/CouponCard/CouponCard";
 
@@ -99,7 +99,8 @@ const PointHistoryPage = () => {
         </div>
       </section>
       <section className="pt-[200px]">
-        <div className="flex justify-center items-center h-[135px] px-8 sm:px-4 pt-4 sm:pt-0 pb-0 bg-[hsl(216,85%,94%)] rounded-reward-sp sm:rounded-reward-pc">
+        <div
+          className="flex justify-center items-center h-[135px] px-8 sm:px-4 pt-4 sm:pt-0 pb-0 bg-[hsl(216,85%,94%)] rounded-reward-sp sm:rounded-reward-pc">
           <div className="flex space-x-8 pl-8 text-base sm:text-[20px] font-normal">
             <div
               className="text-center cursor-pointer text-gray-400"
@@ -125,7 +126,7 @@ const PointHistoryPage = () => {
       <section className="bg-[hsl(216,85%,94%)] py-24 grid grid-container-desktop-banner gap-y-12 pt-0 sm:pt-[4rem]">
         <div className="col-start-2 col-end-3">
           <div className="flex pb-4">
-            <div className="h-[40px] w-[5px] bg-blue-600 mr-2 " />
+            <div className="h-[40px] w-[5px] bg-blue-600 mr-2 "/>
             <div className="text-[31px] font-semibold text-black">
               {historyLanguageData?.tabEarnedPoints}
             </div>

@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
-import { useGlobalError } from "@/contexts/GlobalErrorContext";
+import {useGlobalError} from "@/contexts/GlobalErrorContext";
 
 const GlobalError = () => {
-  const { error, clearError } = useGlobalError();
+  const {error, clearError} = useGlobalError();
 
   if (!error) return null;
 

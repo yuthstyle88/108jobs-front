@@ -1,10 +1,10 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect } from "react";
+import {useRouter, useSearchParams} from "next/navigation";
+import {useForm} from "react-hook-form";
+import {faSearch} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useEffect} from "react";
 import {useTranslation} from "react-i18next";
 
 type Props = {
@@ -15,23 +15,25 @@ type SearchForm = {
   query: string;
 };
 
-const Search = ({ showSearch }: Props) => {
+const Search = ({showSearch}: Props) => {
   const router = useRouter();
   const {t} = useTranslation();
   const searchParams = useSearchParams();
   const titleSearch = searchParams.get("titleSearch") || "";
 
-  const { register, handleSubmit, setValue } = useForm<SearchForm>({
+  const {register, handleSubmit, setValue} = useForm<SearchForm>({
     defaultValues: {
       query: "",
     },
   });
 
   useEffect(() => {
-    if (titleSearch) {
-      setValue("query", decodeURIComponent(titleSearch));
-    }
-  }, [titleSearch, setValue]);
+      if (titleSearch) {
+        setValue("query",
+          decodeURIComponent(titleSearch));
+      }
+    },
+    [titleSearch, setValue]);
 
   const onSubmit = (data: SearchForm) => {
     const trimmed = data.query.trim();

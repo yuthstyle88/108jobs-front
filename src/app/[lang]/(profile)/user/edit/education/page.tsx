@@ -1,16 +1,16 @@
 "use client";
-import { API_ROUTES_SELLER } from "@/api/endpoints";
+import {API_ROUTES_SELLER} from "@/api/endpoints";
 import LoadingCircle from "@/components/LoadingCircle";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
-import { LanguageFile } from "@/constants/language";
-import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
-import { getNamespace } from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
+import {usePrivateFetch, usePrivatePost} from "@/hooks/api-hooks";
+import {getNamespace} from "@/utils/i18nHelper";
 import useNotification from "@/hooks/useNotification";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Plus, Trash2} from "lucide-react";
+import {useEffect, useState} from "react";
+import {useFieldArray, useForm} from "react-hook-form";
+import {z} from "zod";
 
 type EducationFromServer = {
   id: string;
@@ -25,8 +25,10 @@ const EditEducation = () => {
     educationItems: z.array(
       z.object({
         id: z.string().optional(),
-        school: z.string().min(1, userEditLanguage.schoolNameRequire),
-        major: z.string().min(1, userEditLanguage.majorRequire),
+        school: z.string().min(1,
+          userEditLanguage.schoolNameRequire),
+        major: z.string().min(1,
+          userEditLanguage.majorRequire),
       })
     ),
   });
@@ -38,7 +40,7 @@ const EditEducation = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: {errors},
   } = useForm<EducationFormData>({
     resolver: zodResolver(educationSchema),
     defaultValues: {
@@ -46,40 +48,41 @@ const EditEducation = () => {
     },
   });
 
-  const { successMessage } = useNotification();
-  const { fields, append, remove, replace } = useFieldArray({
+  const {successMessage} = useNotification();
+  const {fields, append, remove, replace} = useFieldArray({
     control,
     name: "educationItems",
   });
 
-  const { data: educationData, isLoading } = usePrivateFetch<{
+  const {data: educationData, isLoading} = usePrivateFetch<{
     educations: EducationFromServer[];
   }>(API_ROUTES_SELLER.profile.education);
 
-  const { trigger: sendEducation, isMutating: isUpdateMuting } = usePrivatePost(
+  const {trigger: sendEducation, isMutating: isUpdateMuting} = usePrivatePost(
     API_ROUTES_SELLER.profile.education
   );
 
   const [hasInitializedForm, setHasInitializedForm] = useState(false);
 
   useEffect(() => {
-    if (educationData?.educations) {
-      const mapped = educationData.educations.map((edu) => ({
-        id: edu.id,
-        school: edu.schoolName,
-        major: edu.major,
-      }));
+      if (educationData?.educations) {
+        const mapped = educationData.educations.map((edu) => ({
+          id: edu.id,
+          school: edu.schoolName,
+          major: edu.major,
+        }));
 
-      reset({ educationItems: mapped });
-      replace(mapped);
-      setHasInitializedForm(true);
-    }
-  }, [educationData, reset, replace]);
+        reset({educationItems: mapped});
+        replace(mapped);
+        setHasInitializedForm(true);
+      }
+    },
+    [educationData, reset, replace]);
 
-  const onSubmit = async (data: EducationFormData) => {
+  const onSubmit = async(data: EducationFormData) => {
     const body = {
       educations: data.educationItems.map((item) => ({
-        ...(item.id ? { id: item.id } : {}),
+        ...(item.id ? {id: item.id} : {}),
         schoolName: item.school,
         major: item.major,
       })),
@@ -87,9 +90,11 @@ const EditEducation = () => {
 
     try {
       await sendEducation(body);
-      successMessage("profile", "updateEducation");
+      successMessage("profile",
+        "updateEducation");
     } catch (error) {
-      console.error("Lỗi khi lưu thông tin học vấn:", error);
+      console.error("Lỗi khi lưu thông tin học vấn:",
+        error);
     }
   };
 
@@ -105,7 +110,7 @@ const EditEducation = () => {
 
         {isFetchingInitialData ? (
           <div className="bg-white w-full h-40 flex justify-center items-center">
-            <LoadingMultiCircle />
+            <LoadingMultiCircle/>
           </div>
         ) : fields.length === 0 ? (
           <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
@@ -114,10 +119,10 @@ const EditEducation = () => {
             </p>
             <button
               type="button"
-              onClick={() => append({ id: undefined, school: "", major: "" })}
+              onClick={() => append({id: undefined, school: "", major: ""})}
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" />{" "}
+              <Plus className="w-5 h-5 mr-2"/>{" "}
               {userEditLanguage.addMoreButton}
             </button>
             <div className="flex justify-end">
@@ -128,7 +133,7 @@ const EditEducation = () => {
                 className="min-w-[128px] px-2 py-2 submit-button-custom"
               >
                 {isUpdateMuting ? (
-                  <LoadingCircle />
+                  <LoadingCircle/>
                 ) : (
                   userEditLanguage.saveButton
                 )}
@@ -183,7 +188,7 @@ const EditEducation = () => {
                     onClick={() => remove(index)}
                     className="border-1 border-border-secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                   >
-                    <Trash2 className="w-4" />
+                    <Trash2 className="w-4"/>
                     <span className="ml-2 font-medium">
                       {userEditLanguage.deleteInfo}
                     </span>
@@ -194,10 +199,10 @@ const EditEducation = () => {
 
             <button
               type="button"
-              onClick={() => append({ id: undefined, school: "", major: "" })}
+              onClick={() => append({id: undefined, school: "", major: ""})}
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage.addInfo}
+              <Plus className="w-5 h-5 mr-2"/> {userEditLanguage.addInfo}
             </button>
 
             <div className="flex justify-end">
@@ -207,7 +212,7 @@ const EditEducation = () => {
                 className="min-w-[128px] py-2 px-2 submit-button-custom whitespace-nowrap"
               >
                 {isUpdateMuting ? (
-                  <LoadingCircle />
+                  <LoadingCircle/>
                 ) : (
                   userEditLanguage.saveInfo
                 )}

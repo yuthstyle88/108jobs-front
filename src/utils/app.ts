@@ -1,44 +1,43 @@
 import {
+  BlockCommunityResponse,
+  BlockPersonResponse,
+  Comment,
   CommentReplyView,
   CommentReportView,
+  CommentSortType,
   CommentView,
   CommunityView,
   FederationMode,
   GetSiteResponse,
+  Instance,
+  Language,
   MyUserInfo,
   PersonCommentMentionView,
   PersonPostMentionView,
+  PersonView,
   PostReportView,
+  PostSortType,
   PostView,
   RegistrationApplicationView,
   Search,
-  Comment,
   SearchType,
-  PersonView,
-  Language,
-  BlockCommunityResponse,
-  BlockPersonResponse,
-  Instance,
 } from "lemmy-js-client";
 import {
+  Choice,
   CommentNodeI,
   CommentNodeView,
+  CommunityTribute,
   DataType,
   IsoData,
-  RouteData,
-  VoteType,
-} from "@/utils/types";
-import { CommentSortType, PostSortType } from "lemmy-js-client";
-import { editListImmutable, getQueryString, hostname } from "@/utils/helpers";
-import {
-  Choice,
-  CommunityTribute,
   PersonTribute,
+  RouteData,
   ThemeColor,
+  VoteType,
   WithComment,
 } from "@/utils/types";
-import { HttpService, UserService } from "@/services/index";
-import { isBrowser } from "@/utils/browser";
+import {editListImmutable, getQueryString, hostname} from "@/utils/helpers";
+import {HttpService, UserService} from "@/services/index";
+import {isBrowser} from "@/utils/browser";
 import Toastify from "toastify-js";
 
 export function buildCommentsTree(
@@ -58,7 +57,8 @@ export function buildCommentsTree(
       children: [],
       depth,
     };
-    map.set(commentView.comment.id, { ...node });
+    map.set(commentView.comment.id,
+      {...node});
   }
 
   const tree: CommentNodeI[] = [];
@@ -129,14 +129,14 @@ export function commentsToFlatNodes(
 ): CommentNodeI[] {
   const nodes: CommentNodeI[] = [];
   for (const comment of comments) {
-    nodes.push({ commentView: comment, children: [], depth: 0 });
+    nodes.push({commentView: comment, children: [], depth: 0});
   }
   return nodes;
 }
 
 export function communityRSSUrl(actorId: string, sort: string): string {
   const url = new URL(actorId);
-  return `${url.origin}/feeds${url.pathname}.xml${getQueryString({ sort })}`;
+  return `${url.origin}/feeds${url.pathname}.xml${getQueryString({sort})}`;
 }
 
 export async function communitySearch(
@@ -167,60 +167,78 @@ export function editComment(
   data: CommentView,
   comments: CommentView[],
 ): CommentView[] {
-  return editListImmutable("comment", data, comments);
+  return editListImmutable("comment",
+    data,
+    comments);
 }
 
 export function editCommentReply(
   data: CommentReplyView,
   replies: CommentReplyView[],
 ): CommentReplyView[] {
-  return editListImmutable("commentReply", data, replies);
+  return editListImmutable("commentReply",
+    data,
+    replies);
 }
 
 export function editCommentReport(
   data: CommentReportView,
   reports: CommentReportView[],
 ): CommentReportView[] {
-  return editListImmutable("commentReport", data, reports);
+  return editListImmutable("commentReport",
+    data,
+    reports);
 }
 
 export function editCommunity(
   data: CommunityView,
   communities: CommunityView[],
 ): CommunityView[] {
-  return editListImmutable("community", data, communities);
+  return editListImmutable("community",
+    data,
+    communities);
 }
 
 export function editPersonPostMention(
   data: PersonPostMentionView,
   posts: PersonPostMentionView[],
 ): PersonPostMentionView[] {
-  return editListImmutable("personPostMention", data, posts);
+  return editListImmutable("personPostMention",
+    data,
+    posts);
 }
 
 export function editPersonCommentMention(
   data: PersonCommentMentionView,
   comments: PersonCommentMentionView[],
 ): PersonCommentMentionView[] {
-  return editListImmutable("personCommentMention", data, comments);
+  return editListImmutable("personCommentMention",
+    data,
+    comments);
 }
 
 export function editPost(data: PostView, posts: PostView[]): PostView[] {
-  return editListImmutable("post", data, posts);
+  return editListImmutable("post",
+    data,
+    posts);
 }
 
 export function editPostReport(
   data: PostReportView,
   reports: PostReportView[],
 ) {
-  return editListImmutable("postReport", data, reports);
+  return editListImmutable("postReport",
+    data,
+    reports);
 }
 
 export function editRegistrationApplication(
   data: RegistrationApplicationView,
   apps: RegistrationApplicationView[],
 ): RegistrationApplicationView[] {
-  return editListImmutable("registrationApplication", data, apps);
+  return editListImmutable("registrationApplication",
+    data,
+    apps);
 }
 
 export function editWith<D extends WithComment, L extends WithComment>(
@@ -239,15 +257,15 @@ export function editWith<D extends WithComment, L extends WithComment>(
     ...list.map(c =>
       c.comment.id === comment.id
         ? {
-            ...c,
-            comment,
-            saved,
-            myVote,
-            creatorBannedFromCommunity,
-            creatorBlocked,
-            creatorIsAdmin,
-            creatorIsModerator,
-          }
+          ...c,
+          comment,
+          saved,
+          myVote,
+          creatorBannedFromCommunity,
+          creatorBlocked,
+          creatorIsAdmin,
+          creatorIsModerator,
+        }
         : c,
     ),
   ];
@@ -274,7 +292,8 @@ export function enableNsfw(siteRes?: GetSiteResponse): boolean {
 }
 
 export async function fetchCommunities(q: string) {
-  const res = await fetchSearchResults(q, "Communities");
+  const res = await fetchSearchResults(q,
+    "Communities");
 
   return res.state === "success"
     ? res.data.results.filter(r => r.type_ === "Community")
@@ -297,7 +316,8 @@ export async function fetchThemeList(): Promise<string[]> {
 }
 
 export async function fetchUsers(q: string) {
-  const res = await fetchSearchResults(q, "Users");
+  const res = await fetchSearchResults(q,
+    "Users");
 
   return res.state === "success"
     ? res.data.results.filter(r => r.type_ === "Person")
@@ -325,7 +345,6 @@ export function getDepthFromComment(comment?: Comment): number | undefined {
 }
 
 
-
 export function insertCommentIntoTree(
   tree: CommentNodeI[],
   cv: CommentView,
@@ -340,7 +359,8 @@ export function insertCommentIntoTree(
 
   const parentId = getCommentParentId(cv.comment);
   if (parentId) {
-    const parentComment = searchCommentTree(tree, parentId);
+    const parentComment = searchCommentTree(tree,
+      parentId);
     if (parentComment) {
       node.depth = parentComment.depth + 1;
       parentComment.children.unshift(node);
@@ -395,7 +415,7 @@ export async function personSearch(text: string): Promise<PersonTribute[]> {
 }
 
 export function personSelectName({
-  person: { displayName, name, local, apId },
+  person: {displayName, name, local, apId},
 }: PersonView): string {
   const pName = displayName ?? name;
   return local ? pName : `${hostname(apId)}/${pName}`;
@@ -443,7 +463,8 @@ export function searchCommentTree(
     }
 
     for (const child of node.children) {
-      const res = searchCommentTree([child], id);
+      const res = searchCommentTree([child],
+        id);
 
       if (res) {
         return res;
@@ -481,8 +502,8 @@ export function selectableLanguages(
       return allLangs.filter(x => siteLangs?.includes(x.id));
     } else {
       return allLangs
-        .filter((x: { id: number }) => siteLangs?.includes(x.id))
-        .filter((x: { id: number }) => myLangs?.includes(x.id));
+      .filter((x: {id: number}) => siteLangs?.includes(x.id))
+      .filter((x: {id: number}) => myLangs?.includes(x.id));
     }
   }
 }
@@ -542,9 +563,9 @@ export async function pictrsDeleteToast(filename: string) {
       gravity: "top",
       position: "right",
       duration: 10000,
-      onClick: async () => {
+      onClick: async() => {
         if (toast) {
-          const res = await HttpService.client.deleteImage({ filename });
+          const res = await HttpService.client.deleteImage({filename});
           if (res.state === "success") {
             alert(deletePictureText);
           } else {
@@ -572,7 +593,7 @@ export function updateCommunityBlock(
         }`,
       );
     } else {
-      myUserInfo.communityBlocks= myUserInfo.communityBlocks.filter(
+      myUserInfo.communityBlocks = myUserInfo.communityBlocks.filter(
         c => c.id !== data.communityView.community.id,
       );
       toast(
@@ -626,7 +647,7 @@ export function updateInstanceBlock(
   }
 }
 
-export function instanceToChoice({ id, domain }: Instance): Choice {
+export function instanceToChoice({id, domain}: Instance): Choice {
   return {
     value: id.toString(),
     label: domain,

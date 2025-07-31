@@ -1,11 +1,11 @@
 "use client";
 import TopUpHistory from "@/components/TopUpHistory";
-import { ProfileImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { faCoins } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {ProfileImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {faCoins} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useState } from "react";
+import {useState} from "react";
 import {getNamespace} from "@/utils/i18nHelper";
 
 const FastjobCoin = () => {
@@ -141,7 +141,7 @@ const FastjobCoin = () => {
       </div>
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white rounded-lg">
         <div className="col-start-2 col-end-3 bg-white">
-          <TopUpHistory data={coinLanguageData} />
+          <TopUpHistory data={coinLanguageData}/>
         </div>
       </div>
     </div>

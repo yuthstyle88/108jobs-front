@@ -69,7 +69,7 @@ export const ContentIcon = {
   step2,
   step3,
   step4,
-qr
+  qr
 };
 export const ApplyFreelancerIcon = {
   ck,

@@ -1,12 +1,12 @@
 "use client";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import {faFilter} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useState} from "react";
 import FilterSidebar from "./FilterSidebar";
-import { X } from "lucide-react";
+import {X} from "lucide-react";
+import {useTranslation} from "react-i18next";
 
 type Props = {
-  language: Record<string, string>;
   onFilterChange: (filters: {
     minPrice?: number;
     maxPrice?: number;
@@ -19,9 +19,9 @@ type Props = {
   };
 };
 
-const FilterSection = ({ language, onFilterChange, currentFilters }: Props) => {
+const FilterSection = ({onFilterChange, currentFilters}: Props) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-
+  const {t} = useTranslation();
   const countActiveFilters = () => {
     let count = 0;
     if (currentFilters.rating) count += 1;
@@ -42,7 +42,7 @@ const FilterSection = ({ language, onFilterChange, currentFilters }: Props) => {
           <span className="bg-third text-white flex items-center justify-center rounded-full w-4 h-4 text-sm font-bold ">
             {activeFilterCount}
           </span>
-          {language?.filter}
+          {t("language.filter")}
           <X
             onClick={(e) => {
               e.stopPropagation();
@@ -54,22 +54,21 @@ const FilterSection = ({ language, onFilterChange, currentFilters }: Props) => {
             }}
             className="w-4 h-4 text-gray-500 hover:text-third cursor-pointer"
           />
-         
+
         </div>
       ) : (
         <div
           onClick={() => setIsFilterOpen(true)}
           className="filter-button border border-border-primary px-4 py-2 rounded-md flex items-center gap-2 text-text-primary cursor-pointer hover:bg-gray-100 transition"
         >
-          <FontAwesomeIcon icon={faFilter} className="text-third" />
-          {language?.filter}
+          <FontAwesomeIcon icon={faFilter} className="text-third"/>
+          {t("language.filter")}
         </div>
       )}
 
       <FilterSidebar
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
-        language={language}
         onApply={onFilterChange}
         currentFilters={currentFilters}
       />

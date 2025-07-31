@@ -10,14 +10,14 @@ export type FederationError =
   | "OnlyLocalAdminCanRemoveCommunity"
   | "OnlyLocalAdminCanRestoreCommunity"
   | "PostIsLocked"
-  | { PersonIsBannedFromSite: string }
+  | {PersonIsBannedFromSite: string}
   | "InvalidVoteValue"
   | "PageDoesNotSpecifyCreator"
   | "CouldntGetComments"
   | "CouldntGetPosts"
   | "FederationDisabled"
-  | { DomainBlocked: string }
-  | { DomainNotInAllowList: string }
+  | {DomainBlocked: string}
+  | {DomainNotInAllowList: string}
   | "FederationDisabledByStrictAllowList"
   | "ContradictingFilters"
   | "UrlWithoutDomain"

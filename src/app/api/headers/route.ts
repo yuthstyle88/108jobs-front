@@ -1,4 +1,4 @@
-import { headers } from "next/headers";
+import {headers} from "next/headers";
 
 export async function GET() {
   const incomingHeaders = await headers(); // อ่าน headers
@@ -10,9 +10,9 @@ export async function GET() {
   const fullUrl = `${protocol}://${host}`; // ตัวอย่าง: http://localhost:3000
 
   return new Response(
-    JSON.stringify({ headers: headersObj, fullUrl }),
+    JSON.stringify({headers: headersObj, fullUrl}),
     {
-      headers: { "Content-Type": "application/json" },
+      headers: {"Content-Type": "application/json"},
     }
   );
 }

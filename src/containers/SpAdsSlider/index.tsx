@@ -1,22 +1,16 @@
 "use client";
 import Image from "next/image";
 
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import {Swiper, SwiperSlide, useSwiper} from "swiper/react";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "../../app/styles.css";
 
-import {
-  Keyboard,
-  Mousewheel,
-  Navigation,
-  Pagination,
-  Autoplay,
-} from "swiper/modules";
+import {Autoplay, Keyboard, Mousewheel, Navigation, Pagination,} from "swiper/modules";
 
-import { LandingImage } from "@/constants/images";
+import {LandingImage} from "@/constants/images";
 
 const slides = [
   LandingImage.slider2,
@@ -71,7 +65,7 @@ const SpAdsSlider = () => {
               pauseOnMouseEnter: true,
             }}
           >
-            <CustomNavigation />
+            <CustomNavigation/>
             {slides.map((img, i) => (
               <SwiperSlide key={i}>
                 <Image
@@ -81,7 +75,7 @@ const SpAdsSlider = () => {
                   width={800}
                   height={400}
                   priority
-                  style={{ width: "100%", height: "auto" }}
+                  style={{width: "100%", height: "auto"}}
                 />
               </SwiperSlide>
             ))}

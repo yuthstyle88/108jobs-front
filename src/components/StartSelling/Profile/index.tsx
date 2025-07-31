@@ -1,12 +1,12 @@
 "use client";
-import { StartSellingImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
+import {StartSellingImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
 import Image from "next/image";
 import "swiper/css";
 import "swiper/css/navigation";
-import { FreeMode, Navigation, Thumbs } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
+import {FreeMode, Navigation, Thumbs} from "swiper/modules";
+import {Swiper, SwiperSlide} from "swiper/react";
 
 type Testimonial = {
   name: string;
@@ -17,7 +17,7 @@ type Testimonial = {
 // Create testimonials array from translations
 const createTestimonialsFromTranslations = () => {
   const seller = getNamespace(LanguageFile.SELLER_OVERVIEW);
-  
+
   return [
     {
       name: seller.seller_testimonial_1_name,
@@ -66,10 +66,10 @@ type Props = {
   data: Record<string, string>;
 };
 
-const ProfileSelling = ({ data }: Props) => {
+const ProfileSelling = ({data}: Props) => {
   // Get testimonials from translations
   const testimonials = createTestimonialsFromTranslations();
-  
+
   return (
     <div className="mt-12">
       <div className="header-gradient h-[300px] px-4 sm:px-6 lg:px-8">
@@ -85,10 +85,10 @@ const ProfileSelling = ({ data }: Props) => {
             freeMode={true}
             watchSlidesProgress={true}
             breakpoints={{
-              0: { slidesPerView: 1 },
-              640: { slidesPerView: 2, spaceBetween: 20 },
-              768: { slidesPerView: 3, spaceBetween: 10 },
-              1024: { slidesPerView: 5, spaceBetween: 20 },
+              0: {slidesPerView: 1},
+              640: {slidesPerView: 2, spaceBetween: 20},
+              768: {slidesPerView: 3, spaceBetween: 10},
+              1024: {slidesPerView: 5, spaceBetween: 20},
             }}
             modules={[FreeMode, Navigation, Thumbs]}
             className="mySwiper pt-4"

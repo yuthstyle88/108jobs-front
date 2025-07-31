@@ -1,8 +1,8 @@
 import SubMenu from "@/components/SubMenu";
 import SpHeader from "@/containers/SpHeader";
-import { LayoutProps } from "@/types/layout";
+import {LayoutProps} from "@/types/layout";
 
-export default function CategoryLayout({ children }: LayoutProps) {
+export default function CategoryLayout({children}: LayoutProps) {
   return (
     <>
       <div className="block sm:hidden">
@@ -11,7 +11,7 @@ export default function CategoryLayout({ children }: LayoutProps) {
 
       <section className="bg-white">
         <div className="hidden lg:block">
-          <SubMenu />
+          <SubMenu/>
         </div>
         {children}
       </section>

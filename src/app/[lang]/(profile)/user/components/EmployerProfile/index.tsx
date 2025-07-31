@@ -1,35 +1,31 @@
 "use client";
-import { AssetIcon } from "@/constants/icons";
-import { ProfileImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import { formatDateToLong } from "@/utils/formatDateToLong";
-import { interpolateDouble } from "@/utils/interpolate";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {AssetIcon} from "@/constants/icons";
+import {ProfileImage} from "@/constants/images";
+import {formatDateToLong} from "@/utils/formatDateToLong";
+import {interpolateDouble} from "@/utils/interpolate";
+import {faStar} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {useTranslation} from "react-i18next";
 
 
 const UserProfile = () => {
-  const { person } = useMyUser();
-
-  const { data: goToProfileLanguage } = getNamespace(
-    LanguageFile.GO_TO_PROFILE
-  );
+  const {person} = useMyUser();
 
   const [showFullBio, setShowFullBio] = useState(false);
   const [isClamped, setIsClamped] = useState(false);
   const bioRef = useRef<HTMLParagraphElement>(null);
-
+  const {t} = useTranslation();
   useEffect(() => {
-    if (bioRef.current) {
-      const el = bioRef.current;
-      setIsClamped(el.scrollHeight > el.clientHeight);
-    }
-  }, [person?.bio]);
+      if (bioRef.current) {
+        const el = bioRef.current;
+        setIsClamped(el.scrollHeight > el.clientHeight);
+      }
+    },
+    [person?.bio]);
 
   return (
     <main className="min-h-screen">
@@ -71,7 +67,7 @@ const UserProfile = () => {
               </div>
               <div className="flex flex-row justify-between pt-10 gap-4 px-6">
                 <p className="text-[14px] text-text-primary">
-                  {goToProfileLanguage?.memberSince}
+                  {t("profile.memberSince")}
                 </p>
                 <p className="text-[14px] text-third">
                   {formatDateToLong(person?.publishedAt)}
@@ -93,7 +89,7 @@ const UserProfile = () => {
                         onClick={() => setShowFullBio(true)}
                         className="mt-2 text-blue-600 text-sm font-medium hover:underline"
                       >
-                        {goToProfileLanguage?.seeMore}
+                        {t("profile.seeMore")}
                       </button>
                     )}
                   </div>
@@ -103,13 +99,15 @@ const UserProfile = () => {
           </aside>
           <section className="w-full px-4">
             <h2 className="py-[3rem] text-[28px] font-medium text-text-primary w-full">
-              {interpolateDouble(goToProfileLanguage?.workTitle || "", {
-                username: person?.displayName || "",
-              })}
+              {interpolateDouble(t("profile.workTitle") || "",
+                {
+                  username: person?.displayName || "",
+                })}
             </h2>
             <div className="grid grid-cols-[1fr_1fr_1fr] border-b-[2px] border-b-border-primary">
-              <div className="relative whitespace-nowrap border-b-2 border-border-primary hover:text-third duration-150 flex justify-center items-center cursor-pointer px-1 py-3 font-bold text-third  after:absolute after:bottom-[-3px] after:h-[2px] after:w-full after:bg-third">
-                {goToProfileLanguage?.freelancerReview}
+              <div
+                className="relative whitespace-nowrap border-b-2 border-border-primary hover:text-third duration-150 flex justify-center items-center cursor-pointer px-1 py-3 font-bold text-third  after:absolute after:bottom-[-3px] after:h-[2px] after:w-full after:bg-third">
+                {t("rofile.freelancerReview")}
               </div>
             </div>
           </section>

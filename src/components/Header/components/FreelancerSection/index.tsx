@@ -1,24 +1,24 @@
 "use client";
 import LanguageDropdown from "@/components/LanguageDropDown";
 import NotificationDropdown from "@/components/NotificationDropdown";
-import { ProfileIcon } from "@/constants/icons";
-import { ProfileImage } from "@/constants/images";
-import { useToggle } from "@/hooks/useToggle";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {ProfileIcon} from "@/constants/icons";
+import {ProfileImage} from "@/constants/images";
+import {useToggle} from "@/hooks/useToggle";
+import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import FreelanceMegaMenu from "../FreelanceMegaMenu";
 import FreelanceImproveMenu from "../FreelancerImproveMenu";
 import ProfileFreelancer from "../ProfileFreelancer";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {useTranslation} from "react-i18next";
 
 const FreelancerSession = () => {
-  const { person } = useMyUser();
+  const {person} = useMyUser();
 
-  const { isOpen, toggle, close } = useToggle();
-  const { t } = useTranslation();
+  const {isOpen, toggle, close} = useToggle();
+  const {t} = useTranslation();
   return (
     <section className="flex items-center gap-4 h-full">
       <div className="group hidden lg:block">
@@ -27,37 +27,40 @@ const FreelancerSession = () => {
             <p className="">
               {t("global.increaseHiringOpportunity")}
             </p>
-            <FontAwesomeIcon icon={faChevronDown} />
+            <FontAwesomeIcon icon={faChevronDown}/>
           </div>
           <div className="absolute left-0 right-0 w-[230px] bg-transparent h-4"></div>
         </div>
-        <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
-          <FreelanceImproveMenu />
+        <div
+          className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
+          <FreelanceImproveMenu/>
         </div>
       </div>
       <Link prefetch={false}
-        href="/seller"
-        className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
+            href="/seller"
+            className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
       >
         {t("global.labelSellerCenter")}
       </Link>
       <div className="group hidden md:block">
         <div className="relative">
-          <div className="border-r-[1px] border-[#4f8ce8] pr-8 text-[14px] text-white px-3 py-2 font-medium flex flex-row items-center gap-2 cursor-pointer">
+          <div
+            className="border-r-[1px] border-[#4f8ce8] pr-8 text-[14px] text-white px-3 py-2 font-medium flex flex-row items-center gap-2 cursor-pointer">
             <p className="">{t("global.recruitment")}</p>
-            <FontAwesomeIcon icon={faChevronDown} />
+            <FontAwesomeIcon icon={faChevronDown}/>
           </div>
           <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
         </div>
-        <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
-          <FreelanceMegaMenu />
+        <div
+          className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
+          <FreelanceMegaMenu/>
         </div>
       </div>
       {/* <ChatBadge /> */}
-      <NotificationDropdown />
+      <NotificationDropdown/>
       <Link prefetch={false}
-        href="/reward/earn"
-        className="text-white text-sm hover:bg-blue-800 hover:text-white"
+            href="/reward/earn"
+            className="text-white text-sm hover:bg-blue-800 hover:text-white"
       >
         <div className="flex items-center gap-2 bg-white rounded-full h-[2rem]">
           <p className="text-third text-[12px] pl-2">0.00</p>
@@ -69,7 +72,7 @@ const FreelancerSession = () => {
         </div>
       </Link>
       <div className="px-1">
-        <LanguageDropdown />
+        <LanguageDropdown/>
       </div>
       <div className="relative px-4">
         <button
@@ -93,9 +96,9 @@ const FreelancerSession = () => {
             className="w-[14px] h-[14px] text-white"
           />
         </button>
-        {isOpen && <ProfileFreelancer profile={person} />}
+        {isOpen && <ProfileFreelancer profile={person}/>}
         {isOpen && (
-          <div className="fixed inset-0 z-40" onClick={() => close()} />
+          <div className="fixed inset-0 z-40" onClick={() => close()}/>
         )}
       </div>
     </section>

@@ -1,5 +1,5 @@
-import { isBrowser } from "@/utils/browser";
-import { testHost } from "@/utils/config";
+import {isBrowser} from "@/utils/browser";
+import {testHost} from "@/utils/config";
 
 export function getBaseLocal(s = "") {
   return `http${s}://${getHost()}`;

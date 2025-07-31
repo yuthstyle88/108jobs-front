@@ -1,13 +1,13 @@
 "use client";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import {faStar} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {X} from "lucide-react";
+import {useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
 
 interface FilterSidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  language: Record<string, string>;
   onApply: (filters: {
     minPrice?: number;
     maxPrice?: number;
@@ -23,37 +23,41 @@ interface FilterSidebarProps {
 const FilterSidebar = ({
   isOpen,
   onClose,
-  language,
   onApply,
   currentFilters,
 }: FilterSidebarProps) => {
   const [min, setMin] = useState<number | undefined>(currentFilters.minPrice);
   const [max, setMax] = useState<number | undefined>(currentFilters.maxPrice);
   const [rating, setRating] = useState(currentFilters.rating || "");
+  const {t} = useTranslation();
+  useEffect(() => {
+      if (isOpen) {
+        setMin(currentFilters.minPrice);
+        setMax(currentFilters.maxPrice);
+        setRating(currentFilters.rating);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [isOpen]);
 
   useEffect(() => {
-    if (isOpen) {
-      setMin(currentFilters.minPrice);
-      setMax(currentFilters.maxPrice);
-      setRating(currentFilters.rating);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+      const handleEscapeKey = (e: KeyboardEvent) => {
+        if (e.key === "Escape" && isOpen) onClose();
+      };
+      document.addEventListener("keydown",
+        handleEscapeKey);
+      return () => document.removeEventListener("keydown",
+        handleEscapeKey);
+    },
+    [isOpen, onClose]);
 
   useEffect(() => {
-    const handleEscapeKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) onClose();
-    };
-    document.addEventListener("keydown", handleEscapeKey);
-    return () => document.removeEventListener("keydown", handleEscapeKey);
-  }, [isOpen, onClose]);
-
-  useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "auto";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen]);
+      document.body.style.overflow = isOpen ? "hidden" : "auto";
+      return () => {
+        document.body.style.overflow = "auto";
+      };
+    },
+    [isOpen]);
 
   const handleApply = () => {
     onApply({
@@ -89,7 +93,7 @@ const FilterSidebar = ({
               onClick={onClose}
               className="p-2 rounded-full bg-gray-100 hover:bg-gray-100 hover:scale-110 duration-150"
             >
-              <X className="h-5 w-5 text-black" />
+              <X className="h-5 w-5 text-black"/>
             </button>
           </div>
 
@@ -97,7 +101,7 @@ const FilterSidebar = ({
             {/* Price Filter */}
             <div className="mb-8">
               <h3 className="text-lg font-medium mb-4 text-text-primary">
-                {language?.priceRange}
+                {t("filter.priceRange")}
               </h3>
               <div className="flex items-center space-x-2">
                 <input
@@ -112,7 +116,7 @@ const FilterSidebar = ({
                 <span>-</span>
                 <input
                   type="number"
-                  placeholder={language?.highestPrice}
+                  placeholder={t("filter.highestPrice")}
                   value={max ?? ""}
                   onChange={(e) =>
                     setMax(e.target.value ? Number(e.target.value) : undefined)
@@ -125,7 +129,7 @@ const FilterSidebar = ({
             {/* Rating Filter */}
             <div className="mb-8">
               <h3 className="text-lg font-medium mb-4 text-text-primary">
-                {language?.pointsReceived}
+                {t("filter.pointsReceived")}
               </h3>
               <div className="grid grid-cols-2 gap-2 text-text-primary">
                 {[5, 4, 3, 2, 1].map((n) => {
@@ -160,13 +164,13 @@ const FilterSidebar = ({
               className="px-4 py-2 text-blue-600 font-medium hover:bg-blue-50 rounded-md"
               onClick={handleClear}
             >
-              {language?.cleanTheFilters}
+              {t("filter.cleanTheFilters")}
             </button>
             <button
               className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700"
               onClick={handleApply}
             >
-              {language?.confirm}
+              {t("filter.confirm")}
             </button>
           </div>
         </div>

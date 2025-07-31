@@ -2,13 +2,9 @@
 import en from "@/assets/icons/en.svg";
 import th from "@/assets/icons/th.svg";
 import vn from "@/assets/icons/vn.svg";
-import { LanguageFile } from "@/constants/language";
-import {
-  faFacebook,
-  faInstagram,
-  faTiktok,
-} from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {LanguageFile} from "@/constants/language";
+import {faFacebook, faInstagram, faTiktok,} from "@fortawesome/free-brands-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import {getNamespace} from "@/utils/i18nHelper";
@@ -138,7 +134,7 @@ const Footer = () => {
             </li>
           </ul>
           <p className="mt-3 text-xs">
-            {global.labelWorkingHoursWeekdays} <br />
+            {global.labelWorkingHoursWeekdays} <br/>
             {global.labelWorkingHoursWeekends}
           </p>
         </div>
@@ -149,27 +145,27 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-2 md:grid-cols-5 gap-6 items-center">
           <div className="flex flex-col items-center md:flex-row justify-between">
             <div className="flex space-x-4 text-lg text-white items-center">
-              <FontAwesomeIcon icon={faInstagram} />
-              <FontAwesomeIcon icon={faFacebook} />
-              <FontAwesomeIcon icon={faTiktok} />
+              <FontAwesomeIcon icon={faInstagram}/>
+              <FontAwesomeIcon icon={faFacebook}/>
+              <FontAwesomeIcon icon={faTiktok}/>
               <span>| Sitemaps |</span>
               <Image
                 src={th}
                 alt="TH"
                 height={23}
-                style={{ height: "23px", width: "auto" }}
+                style={{height: "23px", width: "auto"}}
               />
               <Image
                 src={en}
                 alt="EN"
                 height={23}
-                style={{ height: "23px", width: "auto" }}
+                style={{height: "23px", width: "auto"}}
               />
               <Image
                 src={vn}
                 alt="VN"
                 height={23}
-                style={{ height: "23px", width: "auto" }}
+                style={{height: "23px", width: "auto"}}
               />
             </div>
 

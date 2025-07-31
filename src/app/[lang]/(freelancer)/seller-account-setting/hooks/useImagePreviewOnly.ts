@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
+import {useEffect, useState} from "react";
 
 export const useImagePreviewOnly = (initialImageUrl?: string | null) => {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (initialImageUrl) {
-      setPreviewUrl(initialImageUrl);
-    }
-  }, [initialImageUrl]);
+      if (initialImageUrl) {
+        setPreviewUrl(initialImageUrl);
+      }
+    },
+    [initialImageUrl]);
 
   const handleSelectImage = (file: File) => {
     setFile(file);

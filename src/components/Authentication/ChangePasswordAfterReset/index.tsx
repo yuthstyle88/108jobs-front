@@ -1,28 +1,30 @@
 "use client";
 import LoadingCircle from "@/components/LoadingCircle";
-import { CustomInput } from "@/components/ui/InputField";
-import { ERROR_CONSTANTS } from "@/constants/error";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { useHttpPost } from "@/hooks/useHttpPost";          // ★ เพิ่ม
+import {CustomInput} from "@/components/ui/InputField";
+import {ERROR_CONSTANTS} from "@/constants/error";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useState} from "react";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {useHttpPost} from "@/hooks/useHttpPost"; // ★ เพิ่ม
 import useNotification from "@/hooks/useNotification";
 
-type ChangePasswordProps = { token: string };
+type ChangePasswordProps = {token: string};
 
-export const ChangePasswordAfterReset = ({ token }: ChangePasswordProps) => {
+export const ChangePasswordAfterReset = ({token}: ChangePasswordProps) => {
   const authen = getNamespace(LanguageFile.AUTHEN);
 
   /* ---------- schema & form ------------------------------------ */
   const schema = z
-    .object({
-      password: z.string().min(6, authen?.passwordMin6),
-      confirmPassword: z.string(),
-    })
-    .refine((d) => d.password === d.confirmPassword, {
+  .object({
+    password: z.string().min(6,
+      authen?.passwordMin6),
+    confirmPassword: z.string(),
+  })
+  .refine((d) => d.password === d.confirmPassword,
+    {
       message: authen?.notMatchPassword,
       path: ["confirmPassword"],
     });
@@ -32,7 +34,7 @@ export const ChangePasswordAfterReset = ({ token }: ChangePasswordProps) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onChange",
@@ -45,13 +47,14 @@ export const ChangePasswordAfterReset = ({ token }: ChangePasswordProps) => {
   } = useHttpPost("passwordChangeAfterReset");
 
   /* ---------- UI states ---------------------------------------- */
-  const { successMessage } = useNotification();
+  const {successMessage} = useNotification();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
+  const notificationLanguage = getNamespace(LanguageFile.NOTIFICATION);
 
   /* ---------- submit ------------------------------------------- */
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async(data: FormData) => {
     setApiError(null);
 
     const res = await passwordChangeAfterReset({
@@ -66,7 +69,9 @@ export const ChangePasswordAfterReset = ({ token }: ChangePasswordProps) => {
     }
 
     if (res.state === "success") {
-      successMessage(null, null, "Change password successfully");
+      successMessage(null,
+        null,
+        notificationLanguage?.changePasswordSuccess);
       window.location.href = "/login";
     }
   };
@@ -120,7 +125,7 @@ export const ChangePasswordAfterReset = ({ token }: ChangePasswordProps) => {
           className="submit-button py-3"
         >
           {changeState.state === "loading" ? (
-            <LoadingCircle />
+            <LoadingCircle/>
           ) : (
             authen?.confirmButton
           )}

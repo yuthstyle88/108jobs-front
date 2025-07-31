@@ -1,8 +1,8 @@
-import { BusinessImage } from "@/constants/images";
-import { ArrowRight } from "lucide-react";
+import {BusinessImage} from "@/constants/images";
+import {ArrowRight} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import {useEffect, useRef} from "react";
 
 const portfolioItems = [
   {
@@ -59,46 +59,47 @@ const OurWorks = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const items = entry.target.querySelectorAll(".portfolio-item");
-            items.forEach((item) => {
-              item.classList.add("animate-fade-in");
-            });
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const items = entry.target.querySelectorAll(".portfolio-item");
+              items.forEach((item) => {
+                item.classList.add("animate-fade-in");
+              });
 
-            const animatedElements =
-              entry.target.querySelectorAll(".animate-on-scroll");
-            animatedElements.forEach((el) => {
-              el.classList.add("animate-fade-in");
-              el.classList.remove("opacity-0");
-            });
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+              const animatedElements =
+                entry.target.querySelectorAll(".animate-on-scroll");
+              animatedElements.forEach((el) => {
+                el.classList.add("animate-fade-in");
+                el.classList.remove("opacity-0");
+              });
+            }
+          });
+        },
+        {threshold: 0.1}
+      );
 
-    const currentSection = sectionRef.current; // Store the reference here
+      const currentSection = sectionRef.current; // Store the reference here
 
-    if (currentSection) {
-      observer.observe(currentSection);
-
-      const titleElements =
-        currentSection.querySelectorAll(".animate-on-scroll");
-      titleElements.forEach((el) => {
-        el.classList.add("animate-fade-in");
-        el.classList.remove("opacity-0");
-      });
-    }
-
-    return () => {
       if (currentSection) {
-        observer.unobserve(currentSection);
+        observer.observe(currentSection);
+
+        const titleElements =
+          currentSection.querySelectorAll(".animate-on-scroll");
+        titleElements.forEach((el) => {
+          el.classList.add("animate-fade-in");
+          el.classList.remove("opacity-0");
+        });
       }
-    };
-  }, []);
+
+      return () => {
+        if (currentSection) {
+          observer.unobserve(currentSection);
+        }
+      };
+    },
+    []);
 
   return (
     <section
@@ -119,11 +120,11 @@ const OurWorks = () => {
           </div>
 
           <Link prefetch={false}
-            href="/works"
-            className="flex items-center gap-2 text-fastwork-blue font-medium group transition-all duration-300 animate-on-scroll animate-fade-in self-start md:self-auto"
+                href="/works"
+                className="flex items-center gap-2 text-fastwork-blue font-medium group transition-all duration-300 animate-on-scroll animate-fade-in self-start md:self-auto"
           >
             View All Projects
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1"/>
           </Link>
         </div>
 
@@ -152,7 +153,8 @@ const OurWorks = () => {
                   </h3>
                   <div className="flex justify-between items-center mt-3">
                     <span className="text-sm text-gray-500">View Project</span>
-                    <ArrowRight className="h-4 w-4 text-fastwork-blue opacity-0 transform translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                    <ArrowRight
+                      className="h-4 w-4 text-fastwork-blue opacity-0 transform translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"/>
                   </div>
                 </div>
               </Link>
@@ -162,8 +164,8 @@ const OurWorks = () => {
 
         <div className="flex justify-center mt-12">
           <Link prefetch={false}
-            href="/works"
-            className="bg-white border-2 border-fastwork-blue text-fastwork-blue hover:bg-fastwork-blue hover:text-white py-3 px-8 rounded-md font-medium transition-all duration-300 animate-fade-in"
+                href="/works"
+                className="bg-white border-2 border-fastwork-blue text-fastwork-blue hover:bg-fastwork-blue hover:text-white py-3 px-8 rounded-md font-medium transition-all duration-300 animate-fade-in"
           >
             ดูผลงานทั้งหมด
           </Link>

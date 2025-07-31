@@ -1,7 +1,7 @@
 "use client";
-import { AssetsImage, CategoriesImage } from "@/constants/images";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
+import {AssetsImage, CategoriesImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
 import Image from "next/image";
 import Link from "next/link";
 import Benefit from "./components/Benefit";
@@ -57,7 +57,7 @@ const StartSelling = () => {
             alt="Freelance Work"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0" />
+          <div className="absolute inset-0"/>
         </div>
 
         <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center text-white">
@@ -74,10 +74,10 @@ const StartSelling = () => {
           </Link>
         </div>
       </div>
-      <Benefit data={applyFreelancerData} />
-      <Step data={applyFreelancerData} />
-      <FreelancerTypes data={applyFreelancerData} />
-      <ProfileSelling data={applyFreelancerData} />
+      <Benefit data={applyFreelancerData}/>
+      <Step data={applyFreelancerData}/>
+      <FreelancerTypes data={applyFreelancerData}/>
+      <ProfileSelling data={applyFreelancerData}/>
       <div className="grid-container-desktop-banner w-full py-16 px-4 sm:px-6 lg:px-8">
         <div className="col-start-2 col-end-3">
           <h2 className="text-3xl font-bold text-center text-primary mb-12">

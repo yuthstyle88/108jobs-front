@@ -4,7 +4,7 @@ export type UpsertCard = {
   title?: string;
   name?: string;
   surname?: string;
-  birthDate?:string
+  birthDate?: string
   addressDetails?: string;
   zipCode?: string;
   subdistrictOrDistrict?: string;
