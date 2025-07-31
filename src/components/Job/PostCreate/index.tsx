@@ -5,7 +5,7 @@ import useNotification from "@/hooks/useNotification";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {CreatePost, JobType,} from "@/lib/lemmy-js-client/src";
+import {CreatePost, IntendedUse, JobType} from "lemmy-js-client";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExclamationCircle, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
@@ -13,34 +13,40 @@ import LoadingCircle from "@/components/LoadingCircle";
 import {z} from "zod";
 import {useLanguage} from "@/contexts/LanguageContext";
 import {getNumericCode} from "@/actions/getClientCurrentLanguage";
+import {useTranslation} from "@/hooks/translation/useTranslation";
 
 interface PostFormProps {
   redirectUrl?: string,
   history?: any,
-  setApiError?: (err: string) => void,
-  createJobLanguage?: Record<string, string>
+  setApiError?: (err: string) => void
 }
-const jobSchema = z.object({
-  communityId: z.coerce.number().int().positive("Community ID ต้องเป็นเลขบวก"),
-  jobTitle: z.string().min(5, "Job title ต้องมีอย่างน้อย 5 ตัวอักษร"),
-  description: z.string().min(20, "รายละเอียดงานต้องมีอย่างน้อย 20 ตัวอักษร"),
-  budget: z.string().min(1, "Budget is required").refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-    message: "Budget ต้องเป็นตัวเลขบวก",
-  }),
-  workingFrom: z.enum(["Freelance", "Contract", "PartTime", "FullTime"]),
-  intendedUse: z.enum(["Business", "Personal", "Unknown"]),
+
+// Define schema with translation function
+const createJobSchema = (t: (key: string) => string) => z.object({
+  communityId: z.coerce.number().int().positive(t("validation.communityIdPositive")),
+  jobTitle: z.string().min(5,
+    t("validation.jobTitleMinLength")),
+  description: z.string().min(20,
+    t("validation.descriptionMinLength")),
+  budget: z.string().min(1,
+    t("validation.budgetRequired")).refine((val) => !isNaN(Number(val)) && Number(val) > 0,
+    {
+      message: t("validation.budgetPositive"),
+    }),
+  workingFrom: z.nativeEnum(JobType),
+  intendedUse: z.nativeEnum(IntendedUse),
 });
 
 
-export const CreatePostForm: React.FC<PostFormProps> =  ({
+export const CreatePostForm: React.FC<PostFormProps> = ({
   redirectUrl: propRedirectUrl,
   history,
-  setApiError,
-  createJobLanguage
+  setApiError
 }) => {
 
   const router = useRouter();
-  const { lang } = useLanguage();
+  const {lang} = useLanguage();
+  const {t} = useTranslation();
 
   const languageId = getNumericCode(lang) || 1;
 
@@ -50,17 +56,20 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
 
   const {state, data: catalogData, isMutating: isCatalogLoading} = useHttpGet("listCommunities");
 
+  // Create schema with translations
+  const jobSchema = createJobSchema(t);
+
   const formMethods = useForm<z.infer<typeof jobSchema>>({
-    resolver: zodResolver(jobSchema), // Validation โดย schema
+    resolver: zodResolver(jobSchema), // Validation with schema
     mode: "onChange",
     criteriaMode: "all",
     defaultValues: {
-      communityId: 0,  // ตรวจสอบว่าค่าไม่ใช่ undefined
+      communityId: 0,  // Check that value is not undefined
       jobTitle: "",
       description: "",
       budget: "",
       workingFrom: JobType.Freelance,
-      intendedUse: "Personal",
+      intendedUse: IntendedUse.Personal,
     },
   });
 
@@ -73,49 +82,55 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
     formState: {isValid, errors, isSubmitting}
   } = formMethods;
 
-  const handleCreateSuccess = useCallback( async() => {
+  const handleCreateSuccess = useCallback(async() => {
       router.replace("/job-board");
     },
-    [ router]);
+    [router]);
 
-  const onSubmit = useCallback(async (data: any) => {
+  const onSubmit = useCallback(async(data: any) => {
 
-    try {
-      const budgetNumber = Math.floor(Number(data.budget) * 10) / 10;
-      const payload: CreatePost = {
-            name: data.jobTitle,
-            body: data.description,
-            jobType: data.workingFrom,
-            communityId: data.communityId,
-            deadline: data.deadline,
-            isEnglishRequired: data.isEnglishRequired || false,
-            url: data.exampleUrl || "",
-            intendedUse: data.intendedUse,
-            budget: budgetNumber,
-            languageId: languageId,
+      try {
+        const budgetNumber = Math.floor(Number(data.budget) * 10) / 10;
+        const payload: CreatePost = {
+          name: data.jobTitle,
+          body: data.description,
+          jobType: data.workingFrom,
+          communityId: data.communityId,
+          deadline: data.deadline,
+          isEnglishRequired: data.isEnglishRequired || false,
+          url: data.exampleUrl || "",
+          intendedUse: data.intendedUse,
+          budget: budgetNumber,
+          languageId: languageId,
         };
 
-      if (!payload.deadline) {
-        delete (payload as { deadline?: typeof payload.deadline }).deadline;
-      }
+        if (!payload.deadline) {
+          delete (payload as {deadline?: typeof payload.deadline}).deadline;
+        }
 
-      if (!payload.url) {
-        delete (payload as { url?: typeof payload.url }).url;
-      }
+        if (!payload.url) {
+          delete (payload as {url?: typeof payload.url}).url;
+        }
 
-      await createJob(payload); // ฟังก์ชัน createJob ต้องตรวจสอบว่าส่งค่าได้ถูกต้อง
-        successMessage(null,null,"Success!");
-    } catch (error) {
-        console.error("Error creating job: ", error);
-        errorMessage(null,null,"Submission failed!");
-    }
-}, [createJob,handleCreateSuccess, successMessage, errorMessage]);
+        await createJob(payload); // ฟังก์ชัน createJob ต้องตรวจสอบว่าส่งค่าได้ถูกต้อง
+        successMessage(null,
+          null,
+          "Success!");
+      } catch (error) {
+        console.error("Error creating job: ",
+          error);
+        errorMessage(null,
+          null,
+          "Submission failed!");
+      }
+    },
+    [createJob, handleCreateSuccess, successMessage, errorMessage]);
   return (
     <div className="bg-[#F6F9FE] min-h-screen py-8">
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
-            {createJobLanguage?.pageTitle}
+            {t("createJob.pageTitle")}
           </h1>
 
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start">
@@ -124,24 +139,24 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
               className="text-blue-600 mt-1 mr-3"
             />
             <p className="text-blue-800">
-              {createJobLanguage?.jobPostingNotice}
+              {t("createJob.jobPostingNotice")}
             </p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} method="POST" >
-            <input type="hidden" name="languageId" value={languageId} />
+          <form onSubmit={handleSubmit(onSubmit)} method="POST">
+            <input type="hidden" name="languageId" value={languageId}/>
             {/* Job Title */}
             <div className="mb-6">
               <label
                 htmlFor="jobTitle"
                 className="block text-gray-700 font-medium mb-2"
               >
-                {createJobLanguage?.jobTitleLabel}
+                {t("createJob.jobTitleLabel")}
               </label>
               <input
                 id="jobTitle"
                 {...register("jobTitle")}
-                placeholder={createJobLanguage?.jobTitlePlaceholder}
+                placeholder={t("createJob.jobTitlePlaceholder")}
                 className={`w-full text-text-primary placeholder:text-text-secondary placeholder:font-sans p-3 border rounded-lg focus:outline-none focus:ring-1 ${
                   errors.jobTitle
                     ? "border-red-200 focus:ring-red-500"
@@ -163,58 +178,58 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
             {/* Working From */}
             <div className="mb-6">
               <label className="block text-gray-700 font-medium mb-2">
-                {createJobLanguage?.employmentTypeLabel}
+                {t("createJob.employmentTypeLabel")}
               </label>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="flex items-center p-3 border border-gray-300 rounded-lg">
                   <input
                     type="radio"
-                    id="jopType"
+                    id="freelance"
                     value={JobType.Freelance}
                     {...register("workingFrom")}
                     className="h-4 w-4 text-blue-600"
                   />
                   <label htmlFor="freelance" className="ml-2 text-gray-700">
-                    {createJobLanguage?.employmentTypeFreelance}
+                    {t("createJob.employmentTypeFreelance")}
                   </label>
                 </div>
 
                 <div className="flex items-center p-3 border border-gray-300 rounded-lg">
                   <input
                     type="radio"
-                    id="jopType"
+                    id="contract"
                     value={JobType.Contract}
                     {...register("workingFrom")}
                     className="h-4 w-4 text-blue-600"
                   />
                   <label htmlFor="contract" className="ml-2 text-gray-700">
-                    {createJobLanguage?.employmentTypeContract}
+                    {t("createJob.employmentTypeContract")}
                   </label>
                 </div>
 
                 <div className="flex items-center p-3 border border-gray-300 rounded-lg">
                   <input
                     type="radio"
-                    id="jopType"
+                    id="parttime"
                     value={JobType.PartTime}
                     {...register("workingFrom")}
                     className="h-4 w-4 text-blue-600"
                   />
                   <label htmlFor="parttime" className="ml-2 text-gray-700">
-                    {createJobLanguage?.employmentTypePartTime}
+                    {t("createJob.employmentTypePartTime")}
                   </label>
                 </div>
 
                 <div className="flex items-center p-3 border border-gray-300 rounded-lg">
                   <input
                     type="radio"
-                    id="jopType"
+                    id="fulltime"
                     value={JobType.FullTime}
                     {...register("workingFrom")}
                     className="h-4 w-4 text-blue-600"
                   />
                   <label htmlFor="fulltime" className="ml-2 text-gray-700">
-                    {createJobLanguage?.employmentTypeFullTime}
+                    {t("createJob.employmentTypeFullTime")}
                   </label>
                 </div>
               </div>
@@ -226,15 +241,15 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                 htmlFor="description"
                 className="block text-gray-700 font-medium mb-2"
               >
-                {createJobLanguage?.jobDescriptionLabel}
+                {t("createJob.jobDescriptionLabel")}
               </label>
               <p className="text-gray-500 text-sm mb-2">
-                {createJobLanguage?.jobDescriptionNotice}
+                {t("createJob.jobDescriptionNotice")}
               </p>
               <textarea
                 id="description"
                 {...register("description")}
-                placeholder={createJobLanguage?.jobDescriptionDetails}
+                placeholder={t("createJob.jobDescriptionDetails")}
                 className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 min-h-[200px] ${
                   errors.description
                     ? "border-red-200 focus:ring-red-500"
@@ -265,7 +280,7 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                   htmlFor="isEnglishRequired"
                   className="ml-2 text-gray-700"
                 >
-                  {createJobLanguage?.englishSpeakerLabel}
+                  {t("createJob.englishSpeakerLabel")}
                 </label>
               </div>
             </div>
@@ -277,13 +292,11 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                   htmlFor="exampleUrl"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  {createJobLanguage?.exampleUrl}
+                  {t("createJob.exampleUrl")}
                 </label>
                 <input
                   id="exampleUrl"
-                  placeholder={
-                    createJobLanguage?.serviceCategoryPlaceholderUrl
-                  }
+                  placeholder={t("createJob.serviceCategoryPlaceholderUrl")}
                   className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1`}
                 />
 
@@ -294,7 +307,7 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                   htmlFor="communityId"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  {createJobLanguage?.serviceCategoryLabel}
+                  {t("createJob.serviceCategoryLabel")}
                 </label>
                 <select
                   id="communityId"
@@ -306,7 +319,7 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                   }`}
                 >
                   <option disabled value="">
-                    {createJobLanguage?.serviceCategoryPlaceholderSelect}
+                    {t("createJob.serviceCategoryPlaceholderSelect")}
                   </option>
                   {catalogData?.communities
                   ?.filter((catalog) => catalog.community.name !== "popular-service")
@@ -336,7 +349,7 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                   htmlFor="budget"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  {createJobLanguage?.budgetLabel}
+                  {t("createJob.budgetLabel")}
                 </label>
                 <div className="relative">
                   <input
@@ -352,7 +365,7 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                   />
 
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                    THB
+                    {t("createJob.budgetPlaceholder")}
                   </div>
                 </div>
                 {errors.budget && (
@@ -371,7 +384,7 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                   htmlFor="deadline"
                   className="block text-gray-700 font-medium mb-2"
                 >
-                  {createJobLanguage?.deadlineLabel}
+                  {t("createJob.deadlineLabel")}
                 </label>
                 <input
                   type="date"
@@ -385,10 +398,10 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
             {/* Intended Use */}
             <div className="mb-6">
               <label className="block text-gray-700 font-medium mb-2">
-                {createJobLanguage?.intendedUseLabel}
+                {t("createJob.intendedUseLabel")}
               </label>
               <p className="text-gray-500 text-sm mb-2">
-                {createJobLanguage?.intendedUseNotice}
+                {t("createJob.intendedUseNotice")}
               </p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
                 <div
@@ -397,7 +410,8 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                       ? "bg-blue-100 border border-blue-300"
                       : "bg-white border border-gray-200"
                   }`}
-                  onClick={() => setValue("intendedUse", "Business")}
+                  onClick={() => setValue("intendedUse",
+                    IntendedUse.Business)}
                 >
                   <div className="text-blue-600 mb-2">
                     <svg
@@ -416,7 +430,7 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                     </svg>
                   </div>
                   <span className="text-gray-700">
-                    {createJobLanguage?.intendedUseBusiness}
+                    {t("createJob.intendedUseBusiness")}
                   </span>
                 </div>
 
@@ -426,7 +440,8 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                       ? "bg-blue-100 border border-blue-300"
                       : "bg-white border border-gray-200"
                   }`}
-                  onClick={() => setValue("intendedUse", "Personal")}
+                  onClick={() => setValue("intendedUse",
+                    IntendedUse.Personal)}
                 >
                   <div className="text-blue-600 mb-2">
                     <svg
@@ -445,7 +460,7 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                     </svg>
                   </div>
                   <span className="text-gray-700">
-                    {createJobLanguage?.intendedUsePersonal}
+                    {t("createJob.intendedUsePersonal")}
                   </span>
                 </div>
 
@@ -455,7 +470,8 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                       ? "bg-blue-100 border border-blue-300"
                       : "bg-white border border-gray-200"
                   }`}
-                  onClick={() => setValue("intendedUse", "Unknown")}
+                  onClick={() => setValue("intendedUse",
+                    IntendedUse.Unknown)}
                 >
                   <div className="text-blue-600 mb-2">
                     <svg
@@ -474,7 +490,7 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                     </svg>
                   </div>
                   <span className="text-gray-700">
-                    {createJobLanguage?.intendedUseUnknown}
+                    {t("createJob.intendedUseUnknown")}
                   </span>
                 </div>
               </div>
@@ -487,9 +503,10 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                   type="checkbox"
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                <div
+                  className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                 <span className="ml-3 text-gray-700">
-                  {createJobLanguage?.anonymousPostLabel}
+                  {t("createJob.anonymousPostLabel")}
                 </span>
               </label>
             </div>
@@ -500,7 +517,7 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                     href="/job-board"
                     className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50"
               >
-                {createJobLanguage?.previewButton}
+                {t("createJob.previewButton")}
               </Link>
               <button
                 type="submit"
@@ -508,9 +525,9 @@ export const CreatePostForm: React.FC<PostFormProps> =  ({
                 disabled={isMutating}
               >
                 {isMutating ? (
-                  <LoadingCircle />
+                  <LoadingCircle/>
                 ) : (
-                  createJobLanguage?.submitButton
+                  t("createJob.submitButton")
                 )}
               </button>
             </div>
