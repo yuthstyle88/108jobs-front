@@ -34,40 +34,32 @@ export const t = (namespace: LanguageFile, key: string, options?: any): string =
  * This function checks if the namespace exists in the translations and logs a warning if it doesn't.
  * It also handles errors gracefully and returns a fallback string if a translation is missing.
  */
-export const getNamespace = (namespace: LanguageFile, options?: any): Record<string, string> => {
+export const getNamespace = (
+  namespace: LanguageFile,
+  options?: any
+): Record<string, string> => {
   if (!namespace) {
-    console.error('getNamespace called with undefined or null namespace');
-    return {}; // Return empty object to prevent errors
+    console.error("getNamespace called with undefined or null namespace");
+    return {};
   }
 
-  // Check if the namespace exists in the translations
-  try {
-    // Try to access a test key in the namespace to see if it returns a valid result
-    // or falls back to the key itself (which would indicate the namespace doesn't exist)
-    const testKey = `${namespace}.__namespace_test__`;
-    const testResult = I18NextService.i18n.t(testKey, { defaultValue: testKey });
-    
-    if (testResult === testKey) {
-      console.warn(`Namespace '${namespace}' may not exist in translations or is empty`);
-    }
-  } catch (error) {
-    console.error(`Error checking namespace '${namespace}':`, error);
-  }
-  
-  return new Proxy({},
+  return new Proxy(
+    {},
     {
-      get: (target, prop) => {
+      get: (_target, prop) => {
+        if (typeof prop !== "string") return undefined;
+        const key = `${namespace}.${prop}`;
         try {
-          if (typeof prop === 'string') {
-            const key = `${namespace}.${prop}`;
-            const result = I18NextService.i18n.t(key, options);
-            return typeof result === 'string' ? result : String(result);
+          const result = I18NextService.i18n.t(key, { defaultValue: key, ...options });
+          if (result === key) {
+            console.warn(`Missing translation for key '${key}'`);
           }
+          return typeof result === "string" ? result : String(result);
         } catch (error) {
-          console.error(`Translation error for ${namespace}.${String(prop)}:`, error);
-          return `[${String(prop)}]`; // Return a fallback indicating missing translation
+          console.error(`Translation error for key '${key}':`, error);
+          return `[${prop}]`;
         }
-        return undefined;
-      }
-    });
+      },
+    }
+  );
 };
