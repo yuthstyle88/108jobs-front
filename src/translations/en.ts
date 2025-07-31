@@ -1516,6 +1516,7 @@ export const en = {
       accountInfo: "Account Information",
       companyHiringInfo: "Hiring as a Company",
       contactInfo: "Contact Information",
+      consentManage: "Consent management",
       personalHiringInfo: "Hiring as an Individual",
       sectionAccount: "Your Account",
       sectionHiring: "Hiring Information"

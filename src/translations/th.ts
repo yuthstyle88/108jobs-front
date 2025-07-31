@@ -1523,6 +1523,7 @@ export const th = {
       accountInfo: "ข้อมูลบัญชี",
       companyHiringInfo: "ข้อมูลเพื่อจ้างในนามบริษัท",
       contactInfo: "ข้อมูลติดต่อ",
+      consentManage: "การจัดการความยินยอม",
       personalHiringInfo: "ข้อมูลเพื่อจ้างในนามบุคคล",
       sectionAccount: "บัญชีของคุณ",
       sectionHiring: "ข้อมูลการจ้างงาน"
