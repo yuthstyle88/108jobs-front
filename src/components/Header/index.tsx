@@ -32,15 +32,6 @@ interface BgProps {
 
 const Header = ({type, forceShowSearch = false}: BgProps) => {
   const {isLoggedIn, isEmployer, isFreelancer} = useAuthInfo();
-  const {lang} = useLanguage(); // <--- เอาจาก context
-  // change language
-  useEffect(() => {
-      (async() => {
-        await I18NextService.i18n.changeLanguage(lang);
-      })();
-    },
-    [lang]);
-
   const {t} = useTranslation();
   const {scrollY, showSearch} = useScrollHandler(forceShowSearch);
   const {bg} = TYPES[type];

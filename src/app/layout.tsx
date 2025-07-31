@@ -11,7 +11,6 @@ import {GlobalLoaderProvider} from "@/contexts/GlobalLoaderContext";
 import {GlobalErrorProvider} from "@/contexts/GlobalErrorContext";
 import GlobalError from "@/components/GlobalError";
 import GlobalLoader from "@/components/Loading";
-import AppProvider from "@/contexts/I18nextProvider";
 
 // Optimize font loading with display swap and preload
 const kanit = Kanit({
@@ -32,12 +31,14 @@ export async function generateMetadata() {
 
 export default async function RootLayout({
   children,
+  params
 }: Readonly<{
   children: React.ReactNode;
+  params: { lang: string };
 }>) {
   const isoData = await isoDataInitializer();
   return (
-    <html lang="th" suppressHydrationWarning>
+    <html lang={params.lang} suppressHydrationWarning>
     <head>
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
       <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -50,8 +51,7 @@ export default async function RootLayout({
         __html: `window.isoData = ${JSON.stringify(isoData)};`,
       }}
     />
-    <AppProvider>
-      <LanguageProvider initialLang="th">
+      <LanguageProvider initialLang={params.lang}>
         <GlobalErrorProvider>
           <GlobalLoaderProvider>
             <ClientSWRProvider>
@@ -63,7 +63,6 @@ export default async function RootLayout({
           </GlobalLoaderProvider>
         </GlobalErrorProvider>
       </LanguageProvider>
-    </AppProvider>
     </body>
     </html>
   );

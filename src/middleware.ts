@@ -80,11 +80,6 @@ function getRolesAllowedForPath(pathname: string): RoleType[] {
 }
 
 export async function middleware(req: NextRequest) {
-  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
-  req.headers.set("x-path",
-    req.nextUrl.pathname);
-  req.headers.set("x-url",
-    req.nextUrl.href);
 
   const {pathname, origin} = req.nextUrl;
 

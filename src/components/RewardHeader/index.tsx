@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
+
 import {AssetIcon} from "@/constants/icons";
 import {ProfileImage} from "@/constants/images";
 import {LANGUAGES} from "@/constants/language";
@@ -20,6 +22,7 @@ import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 
 
 const RewardHeader = () => {
+  const { t } = useTranslation();
   const {isLoggedIn, isFreelancer} = useAuthInfo();
 
   const [showLang, setShowLang] = useState(false);

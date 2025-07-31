@@ -1,4 +1,5 @@
 "use client";
+
 import apple from "@/assets/icons/apple.svg";
 import google from "@/assets/icons/google-play.svg";
 import fastwork from "@/assets/images/fastwork-app-qr.webp";

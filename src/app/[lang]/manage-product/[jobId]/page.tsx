@@ -1,6 +1,6 @@
 "use client";
 import {API_ROUTES_SELLER} from "@/api/endpoints";
-import NotFound from "@/app/not-found";
+import NotFound from "@/app/[lang]/not-found";
 import Loading from "@/components/Loading";
 import WarningLeaveModal from "@/components/WarningLeaveModal";
 import {LanguageFile} from "@/constants/language";

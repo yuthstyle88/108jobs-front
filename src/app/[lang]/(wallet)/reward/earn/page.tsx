@@ -1,16 +1,13 @@
 "use client";
 import PointCard from "@/components/PointIcon/PointCard";
 import {BannerImage, RewardImage} from "@/constants/images";
-import {LanguageFile} from "@/constants/language";
-import {getNamespace} from "@/utils/i18nHelper";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
-
+import {useTranslation} from "react-i18next";
 
 const EarnPage = () => {
-  const pointLanguageData = getNamespace(LanguageFile.REWARD);
-
+  const { t } = useTranslation();
   const [activeButton, setActiveButton] = useState(0);
 
   const route = useRouter();
@@ -68,7 +65,7 @@ const EarnPage = () => {
         <div className="absolute top-0 left-0 right-0 flex justify-center items-center h-[200px] text-black">
           <div className="flex flex-col justify-center items-center text-center">
             <div className="text-[20px] font-[500] leading-[23px]">
-              {pointLanguageData?.sectionRewardsPoints}
+              {t("profilePoint.sectionRewardsPoints")}
             </div>
             <div className="flex items-center">
               <Image
@@ -84,7 +81,7 @@ const EarnPage = () => {
               ≈ 0.00 บาท
             </div>
             <div className="text-[14px] font-[400] leading-[16.1px] text-[rgba(43,50,59,0.6)]">
-              0.00 {pointLanguageData?.labelTotalPoints} 28/02/2025
+              0.00 {t("profilePoint.labelTotalPoints")} 28/02/2025
             </div>
           </div>
         </div>
@@ -97,19 +94,19 @@ const EarnPage = () => {
               className="text-center cursor-pointer text-third border-b-2 border-third"
               onClick={() => route.push("/reward/earn")}
             >
-              {pointLanguageData?.tabCollectPoints}
+              {t("profilePoint.tabCollectPoints")}
             </div>
             <div
               className="text-center cursor-pointer text-gray-400"
               onClick={() => route.push("/reward/reward")}
             >
-              {pointLanguageData?.tabRedeemRewards}
+              {t("profilePoint.tabRedeemRewards")}
             </div>
             <div
               className="text-center cursor-pointer text-gray-400"
               onClick={() => route.push("/reward/point-history")}
             >
-              {pointLanguageData?.tabUsageHistory}
+              {t("profilePoint.tabUsageHistory")}
             </div>
           </div>
         </div>
@@ -119,7 +116,7 @@ const EarnPage = () => {
           <div className="flex">
             <div className="h-[40px] w-[5px] bg-blue-600 mr-2 "/>
             <div className="text-[31px] font-semibold text-black">
-              {pointLanguageData?.sectionFreePointsMission}
+              {t("profilePoint.sectionFreePointsMission")}
             </div>
           </div>
           <div className="flex justify-left space-x-4 py-8">
@@ -131,7 +128,7 @@ const EarnPage = () => {
               }`}
               onClick={() => setActiveButton(0)}
             >
-              {pointLanguageData?.filterAll}
+              {t("profilePoint.filterAll")}
             </button>
             <button
               className={`py-1 px-3 sm:py-2 sm:px-6 rounded-full ${
@@ -141,7 +138,7 @@ const EarnPage = () => {
               }`}
               onClick={() => setActiveButton(1)}
             >
-              {pointLanguageData?.filterGeneral}
+              {t("profilePoint.filterGeneral")}
             </button>
             <button
               className={`py-1 px-3 sm:py-2 sm:px-6 rounded-full ${
@@ -151,53 +148,53 @@ const EarnPage = () => {
               }`}
               onClick={() => setActiveButton(2)}
             >
-              {pointLanguageData?.filterEmployment}
+              {t("profilePoint.filterEmployment")}
             </button>
           </div>
           <div className="text-[24px] font-[500] leading-[27.6px] text-[rgb(29,108,226)] pt-8">
-            {pointLanguageData?.labelGeneralMission}
+            {t("profilePoint.labelGeneralMission")}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 pt-[2rem]">
             <PointCard
-              title={pointLanguageData?.taskDailyPoints}
+              title={t("profilePoint.taskDailyPoints")}
               subtitle="เหลือเวลาอีก 8 ชั่วโมง"
               points={1.0}
               onCheckPoints={() => {}}
-              buttonLabel={pointLanguageData?.buttonCheckGetPoints}
-              viewLabel={pointLanguageData?.labelViewOtherRewards}
+              buttonLabel={t("profilePoint.buttonCheckGetPoints")}
+              viewLabel={t("profilePoint.labelViewOtherRewards")}
             />
           </div>
           <div className="text-[24px] font-[500] leading-[27.6px] text-[rgb(29,108,226)] pt-8">
-            {pointLanguageData?.labelEmploymentMission}{" "}
+            {t("profilePoint.labelEmploymentMission")}{" "}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             <PointCard
-              title={pointLanguageData?.taskFirstPayment}
+              title={t("profilePoint.taskFirstPayment")}
               points={50.0}
               onCheckPoints={() => {}}
-              buttonLabel={pointLanguageData?.buttonCheckGetPoints}
-              viewLabel={pointLanguageData?.labelViewOtherRewards}
+              buttonLabel={t("profilePoint.buttonCheckGetPoints")}
+              viewLabel={t("profilePoint.labelViewOtherRewards")}
             />
             <PointCard
-              title={pointLanguageData?.taskSuccessfulHire}
+              title={t("profilePoint.taskSuccessfulHire")}
               points={100.0}
               onCheckPoints={() => {}}
-              buttonLabel={pointLanguageData?.buttonCheckGetPoints}
-              viewLabel={pointLanguageData?.labelViewOtherRewards}
+              buttonLabel={t("profilePoint.buttonCheckGetPoints")}
+              viewLabel={t("profilePoint.labelViewOtherRewards")}
             />
             <PointCard
-              title={pointLanguageData?.taskRepeatHire}
+              title={t("profilePoint.taskRepeatHire")}
               points={100.0}
               onCheckPoints={() => {}}
-              buttonLabel={pointLanguageData?.buttonCheckGetPoints}
-              viewLabel={pointLanguageData?.labelViewOtherRewards}
+              buttonLabel={t("profilePoint.buttonCheckGetPoints")}
+              viewLabel={t("profilePoint.labelViewOtherRewards")}
             />
             <PointCard
-              title={pointLanguageData?.taskFirstJobPost}
+              title={t("profilePoint.taskFirstJobPost")}
               points={10.0}
               onCheckPoints={() => {}}
-              buttonLabel={pointLanguageData?.buttonCheckGetPoints}
-              viewLabel={pointLanguageData?.labelViewOtherRewards}
+              buttonLabel={t("profilePoint.buttonCheckGetPoints")}
+              viewLabel={t("profilePoint.labelViewOtherRewards")}
             />
           </div>
         </div>

@@ -1,12 +1,13 @@
 "use client";
-import {createContext, useContext} from "react";
+import {createContext, useContext, useEffect, useState} from "react";
 import {VALID_LANGUAGES} from "@/constants/language";
+import {I18NextService} from "@/services/I18NextService";
+import {I18nextProvider} from "react-i18next";
 
 interface LanguageContextType {
   lang: string;
   setLang: (lang: string) => void;
 }
-
 
 const LanguageContext = createContext<LanguageContextType | undefined>(
   undefined
@@ -14,18 +15,26 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 
 export function LanguageProvider({
   children,
-  initialLang = "th",
+  initialLang = typeof window !== "undefined"
+    ? localStorage.getItem("lang") ||
+      document.cookie.match(/current-language=(\w+)/)?.[1] ||
+      "th"
+    : "th",
 }: {
   children: React.ReactNode;
   initialLang?: string;
 }) {
-  const lang = initialLang;
+  const [lang, setLangState] = useState<string>(initialLang);
+
+  useEffect(() => {
+    if (lang) {
+      I18NextService.i18n.changeLanguage(lang);
+    }
+  }, [lang]);
 
   const setLang = (newLang: string) => {
     if (!VALID_LANGUAGES.includes(newLang)) return;
-
-    localStorage.setItem("lang",
-      newLang);
+    localStorage.setItem("lang", newLang);
     document.cookie = `current-language=${newLang}; path=/`;
 
     const cleanPath = window.location.pathname.replace(/^\/(vi|en|th)/,
@@ -41,8 +50,10 @@ export function LanguageProvider({
   };
 
   return (
-    <LanguageContext.Provider value={{lang, setLang}}>
-      {children}
+    <LanguageContext.Provider value={{ lang, setLang }}>
+      <I18nextProvider i18n={I18NextService.i18n} key={lang}>
+        {children}
+      </I18nextProvider>
     </LanguageContext.Provider>
   );
 }

@@ -1,13 +1,10 @@
 "use client";
 import {AssetIcon} from "@/constants/icons";
 import {CategoriesImage, LandingImage} from "@/constants/images";
-import {LanguageFile} from "@/constants/language";
-import {getNamespace} from "@/utils/i18nHelper";
 import {Home} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-
+import { useTranslation } from "react-i18next";
 const categoryImages = [
   {
     image: CategoriesImage.seoImage,
@@ -44,15 +41,13 @@ const categoryImages = [
 ];
 
 export default function NotFound() {
-  const notFoundLanguageData = getNamespace(LanguageFile.NOT_FOUND);
-
-
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen flex flex-col ">
       {/* Header */}
       <header className="px-[1rem] flex h-[70px] items-center justify-start bg-primary">
         <div className=" px-4">
-          <Link prefetch={false} href="/">
+          <Link prefetch={false} href="/public">
             <Image
               src={AssetIcon.logo}
               alt="logo"
@@ -71,17 +66,17 @@ export default function NotFound() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
               <div className="fade-in">
                 <h1 className="text-[32px] md:text-4xl font-medium text-gray-800 mb-4">
-                  {notFoundLanguageData?.errorTitle}
+                  {t("notFound.errorTitle")}
                 </h1>
                 <p className="text-[#728197] text-[20px] font-sans mb-8">
-                  {notFoundLanguageData?.errorDescription}
+                  {t("notFound.errorDescription")}
                 </p>
                 <Link prefetch={false}
-                      href="/"
+                      href="/public"
                       className="inline-flex items-center gap-2 bg-third text-white px-6 py-3 rounded-md font-medium transition-all hover:bg-fastwork-dark-blue"
                 >
                   <Home className="w-5 h-5"/>
-                  {notFoundLanguageData?.backButton}
+                  {t("notFound.backButton")}
                 </Link>
               </div>
               <div className="fade-in stagger-1">
@@ -102,7 +97,7 @@ export default function NotFound() {
         <section className="py-12 px-4 bg-white">
           <div className="container mx-auto max-w-6xl">
             <h2 className="text-2xl font-bold text-gray-800 mb-8">
-              {notFoundLanguageData?.recommendedSectionTitle}
+              {t("notFound.recommendedSectionTitle")}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {categoryImages.map((category, index) => (
