@@ -1,5 +1,7 @@
-import {generateLocalizedMetadata} from "@/lib/metadata";
-import MyJobEdit from "../../_components/MyJobEdit";
+import {generateLocalizedMetadata} from "@/lib/metadata";;
+import {PostForm} from "@/components/Job/PostForm";
+import {useHttpGet} from "@/hooks/useHttpGet";
+import type {CommentId, PostId} from "@/lib/lemmy-js-client/src";
 
 export async function generateMetadata() {
   return generateLocalizedMetadata("catalog");
@@ -8,13 +10,16 @@ export async function generateMetadata() {
 export default async function Categories({
   params,
 }: {
-  params: Promise<{jobId: string}>;
+  params: {postId: PostId, commentId: CommentId };
 }) {
-  const resolvedParams = await params;
-
+  const { data } = useHttpGet("getPost", [
+    { id: params.postId, commentId: params.commentId },
+    undefined,
+  ]);
+  const postView =  data?.postView;
   return (
     <main className="w-full min-h-screen bg-[#F6F9FE] pt-16">
-      <MyJobEdit jobId={resolvedParams.jobId}/>
+      <PostForm mode={"edit"} postView={postView}/>
     </main>
   );
 }

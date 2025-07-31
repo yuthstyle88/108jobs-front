@@ -106,7 +106,7 @@ export const PostForm: React.FC<PostFormProps> = ({
   } = formMethods;
 
   useEffect(() => {
-    if (postView) {
+    if (postView && mode === "edit") {
       const post = postView.post
       reset({
         communityId: post.communityId,
