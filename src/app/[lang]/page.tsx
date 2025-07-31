@@ -17,7 +17,6 @@ import "../styles.css";
 
 import {Navigation} from "swiper/modules";
 
-import {API_ROUTES} from "@/api/endpoints";
 import CategoryCardMock from "@/components/CategoryCardMock";
 import CatalogBanner from "@/components/Home/Catalog";
 import HiringSection from "@/components/Home/HiringSection";
@@ -31,12 +30,11 @@ import {LandingImage} from "@/constants/images";
 import SpAdsSlider from "@/containers/SpAdsSlider";
 import SpCatalog from "@/containers/SpCatalog";
 import SpHeader from "@/containers/SpHeader";
-import {usePublicFetch} from "@/hooks/api-hooks";
 import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
-import {ServiceCatalogData} from "@/types/catalog";
 import Link from "next/link";
 import {useState} from "react";
 import {useTranslation} from "react-i18next";
+import {useHttpGet} from "@/hooks/useHttpGet";
 
 const interestImages = [
   LandingImage.interest1,
@@ -75,11 +73,16 @@ export default function Home() {
   const [expanded, setExpanded] = useState(false);
   const [isOpenLocationSelection, setIsOpenLocationSelection] = useState(false);
 
-  const {data: catalogData, isLoading: isCatalogLoading} =
-    usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.getAllCatalog);
+  const {
+    data: catalogData,
+    isMutating: isCatalogLoading,
+  } = useHttpGet("listCommunities");
 
-  const serviceCatalogs = catalogData?.serviceCatalogs || [];
+  const serviceCatalogs = catalogData?.communities || [];
   const activeCatalog = serviceCatalogs[activeCatalogIndex];
+
+  console.log("data: ", serviceCatalogs)
+
 
   if (isCatalogLoading) return <Loading/>;
 

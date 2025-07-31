@@ -81,4 +81,8 @@ export type Community = {
   reportCount: number;
   unresolvedReportCount: number;
   localRemoved: boolean;
+  path: string;
+  slug: string;
+  active: boolean;
+  is_new: boolean;
 };

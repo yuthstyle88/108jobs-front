@@ -14,8 +14,8 @@ import LoadingCircle from "@/components/LoadingCircle";
 import {z} from "zod";
 import {useLanguage} from "@/contexts/LanguageContext";
 import {getNumericCode} from "@/actions/getClientCurrentLanguage";
-import {useTranslation} from "@/hooks/translation/useTranslation";
 import {stripEmpty} from "@/utils/helpers";
+import {useTranslation} from "react-i18next";
 
 
 interface PostFormProps {
