@@ -1,8 +1,8 @@
 "use client";
-import {createContext, useContext, useEffect, useState} from "react";
-import {VALID_LANGUAGES} from "@/constants/language";
-import {I18NextService} from "@/services/I18NextService";
-import {I18nextProvider} from "react-i18next";
+import { createContext, useContext, useEffect, useState } from "react";
+import { VALID_LANGUAGES } from "@/constants/language";
+import { I18NextService } from "@/services/I18NextService";
+import { I18nextProvider } from "react-i18next";
 
 interface LanguageContextType {
   lang: string;
@@ -15,15 +15,30 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 
 export function LanguageProvider({
   children,
-  initialLang = typeof window !== "undefined"
-    ? localStorage.getItem("lang") ||
-      document.cookie.match(/current-language=(\w+)/)?.[1] ||
-      "th"
-    : "th",
+  userLangFromLogin,
 }: {
   children: React.ReactNode;
-  initialLang?: string;
+  userLangFromLogin?: string;
 }) {
+  const cookieLang =
+    typeof document !== "undefined"
+      ? document.cookie.match(/current-language=(\w+)/)?.[1]
+      : undefined;
+
+  const detectBrowserLang = () => {
+    if (typeof navigator !== "undefined") {
+      const browserLang = navigator.language.split("-")[0];
+      return VALID_LANGUAGES.includes(browserLang) ? browserLang : "th";
+    }
+    return "th";
+  };
+
+  const initialLang =
+    cookieLang ??
+    userLangFromLogin ??
+    detectBrowserLang() ??
+    "th";
+
   const [lang, setLangState] = useState<string>(initialLang);
 
   useEffect(() => {
@@ -37,16 +52,8 @@ export function LanguageProvider({
     localStorage.setItem("lang", newLang);
     document.cookie = `current-language=${newLang}; path=/`;
 
-    const cleanPath = window.location.pathname.replace(/^\/(vi|en|th)/,
-      "");
-    const isLocalhost = window.location.hostname === "localhost";
-
-    if (isLocalhost) {
-      window.location.pathname = `/${newLang}${cleanPath}`;
-    } else {
-      window.location.pathname = `/${newLang}${cleanPath}`;
-      // window.location.href = `https://${newLang}.test-fastwork.vercel.app/${newLang}${cleanPath}`;
-    }
+    const cleanPath = window.location.pathname.replace(/^\/(vi|en|th)/, "");
+    window.location.pathname = `/${newLang}${cleanPath}`;
   };
 
   return (
