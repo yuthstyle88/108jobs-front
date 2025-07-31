@@ -16,6 +16,7 @@ import {useLanguage} from "@/contexts/LanguageContext";
 import {getNumericCode} from "@/actions/getClientCurrentLanguage";
 import {stripEmpty} from "@/utils/helpers";
 import {useTranslation} from "react-i18next";
+import {REQUEST_STATE} from "@/services/HttpService";
 
 
 interface PostFormProps {
@@ -127,7 +128,7 @@ export const PostForm: React.FC<PostFormProps> = ({
     }, [postView]);
 
     useEffect(() => {
-        if (state.state === "success" && catalogData?.communities?.length && !postView) {
+        if (state.state === REQUEST_STATE.SUCCESS  && catalogData?.communities?.length && !postView) {
             const defaultCommunity = catalogData.communities.find(
                 (catalog) => catalog.community.slug !== "advise"
             ) || catalogData.communities[0];
