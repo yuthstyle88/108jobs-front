@@ -3,7 +3,7 @@ import CurrentProfileEmployer from "../components/CurrentProfileEmployer";
 import CurrentProfileFreelance from "../components/CurrentProfileFreelance";
 import EmployerProfile from "../components/EmployerProfile";
 import FreelancerProfile from "../components/FreelanerProfile";
-import NotFound from "@/app/[lang]/not-found";
+import NotFound from "@/app/not-found";
 import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 
 
