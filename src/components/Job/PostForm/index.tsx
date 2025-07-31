@@ -22,7 +22,7 @@ interface PostFormProps {
 }
 
 // Define schema with translation function
-const createJobSchema = (t: (key: string) => string) => z.object({
+const postJobSchema = (t: (key: string) => string) => z.object({
   communityId: z.coerce.number().int().positive(t("validation.communityIdPositive")),
   jobTitle: z.string().min(5,
     t("validation.jobTitleMinLength")),
@@ -38,7 +38,7 @@ const createJobSchema = (t: (key: string) => string) => z.object({
 });
 
 
-export const CreatePostForm: React.FC<PostFormProps> = ({
+export const PostForm: React.FC<PostFormProps> = ({
   redirectUrl: propRedirectUrl,
   history,
   setApiError
@@ -57,7 +57,7 @@ export const CreatePostForm: React.FC<PostFormProps> = ({
   const {state, data: catalogData, isMutating: isCatalogLoading} = useHttpGet("listCommunities");
 
   // Create schema with translations
-  const jobSchema = createJobSchema(t);
+  const jobSchema = postJobSchema(t);
 
   const formMethods = useForm<z.infer<typeof jobSchema>>({
     resolver: zodResolver(jobSchema), // Validation with schema

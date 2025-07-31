@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
-import {CreatePostForm} from "@/components/Job/PostCreate";
+import {PostForm} from "@/components/Job/PostForm";
 
 const CreateJobPage = () => {
 
   return (
-    <CreatePostForm/>
+    <PostForm/>
   );
 };
 
