@@ -472,3 +472,15 @@ export async function uploadSelectedImage(
 
   throw new Error("Image upload failed");
 }
+
+export function stripEmpty<T extends object>(obj: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(
+      ([_, v]) =>
+        v !== "" &&
+        v !== undefined &&
+        v !== null &&
+        !(typeof v === "object" && v !== null && Object.keys(v).length === 0)
+    )
+  ) as Partial<T>;
+}

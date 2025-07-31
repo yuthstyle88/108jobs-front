@@ -1,11 +1,11 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import useNotification from "@/hooks/useNotification";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {CreatePost, IntendedUse, JobType} from "lemmy-js-client";
+import {CreatePost, IntendedUse, JobType, PostView, PostId, EditPost} from "lemmy-js-client";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExclamationCircle, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
@@ -14,11 +14,15 @@ import {z} from "zod";
 import {useLanguage} from "@/contexts/LanguageContext";
 import {getNumericCode} from "@/actions/getClientCurrentLanguage";
 import {useTranslation} from "@/hooks/translation/useTranslation";
+import {stripEmpty} from "@/utils/helpers";
+
 
 interface PostFormProps {
   redirectUrl?: string,
   history?: any,
-  setApiError?: (err: string) => void
+  setApiError?: (err: string) => void,
+  postView?: PostView,
+  mode: "create" | "edit",
 }
 
 // Define schema with translation function
@@ -28,20 +32,37 @@ const postJobSchema = (t: (key: string) => string) => z.object({
     t("validation.jobTitleMinLength")),
   description: z.string().min(20,
     t("validation.descriptionMinLength")),
-  budget: z.string().min(1,
-    t("validation.budgetRequired")).refine((val) => !isNaN(Number(val)) && Number(val) > 0,
-    {
-      message: t("validation.budgetPositive"),
-    }),
+  budget: z
+  .string() // ยอมรับ budget เป็น string
+  .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+    message: t("validation.budgetPositive"), // เช็คว่าต้องเป็นตัวเลขและมากกว่า 0
+  })
+  .transform((val) => Number(val)),
+  isAnonymousPost: z.boolean(),
   workingFrom: z.nativeEnum(JobType),
   intendedUse: z.nativeEnum(IntendedUse),
+  url: z.string().optional(),
+  isEnglishRequired: z.boolean().optional(),
+  deadline: z
+  .string()
+  .optional()
+  .refine(val => {
+    if (!val) return true; // ✅ ถ้าไม่กรอกเลย = ผ่าน
+    const selected = new Date(val);
+    const now = new Date();
+    return selected.getTime() - now.getTime() > 24 * 60 * 60 * 1000;
+  }, {
+    message: "Deadline must be at least 1 day from today",
+  }),
 });
 
 
 export const PostForm: React.FC<PostFormProps> = ({
   redirectUrl: propRedirectUrl,
   history,
-  setApiError
+  setApiError,
+  postView,
+  mode
 }) => {
 
   const router = useRouter();
@@ -50,10 +71,11 @@ export const PostForm: React.FC<PostFormProps> = ({
 
   const languageId = getNumericCode(lang) || 1;
 
-  const {execute: createJob, isMutating} = useHttpPost("createPost");
+  const {execute: createPost, isMutating} = useHttpPost("createPost");
+  const {execute: editPost,} = useHttpPost("editPost");
 
   const {successMessage, errorMessage} = useNotification();
-
+  const [postId, setPostId] = useState<PostId>(0);
   const {state, data: catalogData, isMutating: isCatalogLoading} = useHttpGet("listCommunities");
 
   // Create schema with translations
@@ -67,7 +89,7 @@ export const PostForm: React.FC<PostFormProps> = ({
       communityId: 0,  // Check that value is not undefined
       jobTitle: "",
       description: "",
-      budget: "",
+      budget: 0,
       workingFrom: JobType.Freelance,
       intendedUse: IntendedUse.Personal,
     },
@@ -78,19 +100,37 @@ export const PostForm: React.FC<PostFormProps> = ({
     register,
     handleSubmit,
     setValue,
+    reset,
     watch,
     formState: {isValid, errors, isSubmitting}
   } = formMethods;
+
+  useEffect(() => {
+    if (postView) {
+      const post = postView.post
+      reset({
+        communityId: post.communityId,
+        jobTitle: post.name,
+        description: post.body,
+        isEnglishRequired: post.isEnglishRequired,
+        url: post.url ?? "",
+        budget: post.budget,
+        deadline: post.deadline?.split("T")[0] ?? "",
+        isAnonymousPost: false,
+        workingFrom: post.jobType,
+        intendedUse: post.intendedUse,
+      });
+      setPostId(post.id); // แยกไว้ต่างหาก
+    }
+  }, [postView]);
 
   const handleCreateSuccess = useCallback(async() => {
       router.replace("/job-board");
     },
     [router]);
 
-  const onSubmit = useCallback(async(data: any) => {
-
+  const onSubmit = useCallback(async(data: z.infer<typeof jobSchema>) => {
       try {
-        const budgetNumber = Math.floor(Number(data.budget) * 10) / 10;
         const payload: CreatePost = {
           name: data.jobTitle,
           body: data.description,
@@ -98,21 +138,13 @@ export const PostForm: React.FC<PostFormProps> = ({
           communityId: data.communityId,
           deadline: data.deadline,
           isEnglishRequired: data.isEnglishRequired || false,
-          url: data.exampleUrl || "",
+          url: data.url,
           intendedUse: data.intendedUse,
-          budget: budgetNumber,
+          budget: data.budget,
           languageId: languageId,
         };
-
-        if (!payload.deadline) {
-          delete (payload as {deadline?: typeof payload.deadline}).deadline;
-        }
-
-        if (!payload.url) {
-          delete (payload as {url?: typeof payload.url}).url;
-        }
-
-        await createJob(payload); // ฟังก์ชัน createJob ต้องตรวจสอบว่าส่งค่าได้ถูกต้อง
+        const dataStrip: CreatePost = stripEmpty(payload) as CreatePost;
+        const res = postId ? await createPost(dataStrip) : await editPost({postId: postId,...dataStrip});
         successMessage(null,
           null,
           "Success!");
@@ -124,7 +156,7 @@ export const PostForm: React.FC<PostFormProps> = ({
           "Submission failed!");
       }
     },
-    [createJob, handleCreateSuccess, successMessage, errorMessage]);
+    [createPost, editPost, handleCreateSuccess, successMessage, errorMessage]);
   return (
     <div className="bg-[#F6F9FE] min-h-screen py-8">
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8">
@@ -295,7 +327,8 @@ export const PostForm: React.FC<PostFormProps> = ({
                   {t("createJob.exampleUrl")}
                 </label>
                 <input
-                  id="exampleUrl"
+                  id="url"
+                  {...register("url")}
                   placeholder={t("createJob.serviceCategoryPlaceholderUrl")}
                   className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1`}
                 />

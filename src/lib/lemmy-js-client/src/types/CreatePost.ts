@@ -4,6 +4,7 @@ import type {LanguageId} from "./LanguageId";
 import type {TagId} from "./TagId";
 import {IntendedUse} from "./IntendedUse";
 import {Budget} from "./Budget";
+import {JobType} from "./JobType";
 
 /**
  * Create a post.
@@ -35,9 +36,9 @@ export type CreatePost = {
    * Time when this post should be scheduled. Null means publish immediately.
    */
   scheduledPublishTimeAt?: number;
-  deadline: boolean;
-  jobType: string;
-  isEnglishRequired?: boolean;
-  intendedUse?: IntendedUse;
+  deadline?: string;
+  jobType: JobType;
+  isEnglishRequired: boolean;
+  intendedUse: IntendedUse;
   budget: Budget;
 };

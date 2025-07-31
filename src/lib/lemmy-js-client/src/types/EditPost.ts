@@ -5,6 +5,7 @@ import type {TagId} from "./TagId";
 import {IntendedUse} from "./IntendedUse";
 import {JobType} from "./JobType";
 import {CommunityId} from "./CommunityId";
+import {Budget} from "./Budget";
 
 /**
  * Edit a post.
@@ -32,10 +33,9 @@ export type EditPost = {
    * Time when this post should be scheduled. Null means publish immediately.
    */
   scheduledPublishTimeAt?: number;
-  tags?: Array<TagId>;
-  intendedUse?: IntendedUse;
-  jobType?: JobType;
-  budget?: number;
   deadline?: string;
-  isEnglishRequired?: boolean;
+  jobType: JobType;
+  isEnglishRequired: boolean;
+  intendedUse: IntendedUse;
+  budget: Budget;
 };

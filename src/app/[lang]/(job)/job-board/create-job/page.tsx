@@ -5,7 +5,7 @@ import {PostForm} from "@/components/Job/PostForm";
 const CreateJobPage = () => {
 
   return (
-    <PostForm/>
+    <PostForm mode={"create"}/>
   );
 };
 
