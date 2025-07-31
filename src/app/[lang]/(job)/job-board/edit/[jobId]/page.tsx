@@ -1,26 +1,21 @@
-import {generateLocalizedMetadata} from "@/lib/metadata";;
 import {PostForm} from "@/components/Job/PostForm";
-import {useHttpGet} from "@/hooks/useHttpGet";
-import type {CommentId, PostId} from "@/lib/lemmy-js-client/src";
+import {HttpService} from "@/services";
+import {REQUEST_STATE} from "@/services/HttpService";
 
-export async function generateMetadata() {
-  return generateLocalizedMetadata("catalog");
-}
-
-export default async function Categories({
+export default async function editPost({
   params,
 }: {
-  params: {postId: PostId, commentId: CommentId };
+  params: Promise<{postId: number; commentId: number}>;
 }) {
-  const { data } = useHttpGet("getPost", [
-    { id: params.postId, commentId: params.commentId },
-    undefined,
-  ]);
-  const postView =  data?.postView;
+  const resolvedParams = await params;
+
+  const resp = await HttpService.client.getPost({
+    id: resolvedParams.postId,
+    commentId: resolvedParams.commentId,
+  });
   return (
     <main className="w-full min-h-screen bg-[#F6F9FE] pt-16">
-      <PostForm mode={"edit"} postView={postView}/>
+      <PostForm mode={"edit"} postView={resp.state === REQUEST_STATE.SUCCESS ? resp?.data.postView : null}/>
     </main>
   );
 }
-

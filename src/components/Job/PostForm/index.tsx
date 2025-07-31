@@ -1,3 +1,4 @@
+'use client'
 import React, {useCallback, useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {useHttpPost} from "@/hooks/useHttpPost";
@@ -21,7 +22,7 @@ interface PostFormProps {
   redirectUrl?: string,
   history?: any,
   setApiError?: (err: string) => void,
-  postView?: PostView,
+  postView?: PostView | null,
   mode: "create" | "edit",
 }
 
