@@ -14,6 +14,7 @@ const JobBoard = () => {
     const {t} = useTranslation();
     const [selectedCategory, setSelectedCategory] = useState<string>("");
     const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined);
+    const [cursorHistory, setCursorHistory] = useState<string[]>([]);
     const [sort, setSort] = useState<PostSortType | undefined>(undefined);
     const [budgetMin, setBudgetMin] = useState<number | undefined>(undefined);
     const [budgetMax, setBudgetMax] = useState<number | undefined>(undefined);
@@ -39,7 +40,6 @@ const JobBoard = () => {
         limit: 5,
     } as GetPosts);
 
-    // Format date for display
     const formatDate = (dateString: string) => {
         if (!dateString || dateString === "-") return "-";
         const date = new Date(dateString);
@@ -53,20 +53,26 @@ const JobBoard = () => {
     // Handle pagination
     const handleNextPage = () => {
         if (jobPostsPagination?.nextPage) {
+            setCursorHistory((prev) => [...prev, currentCursor || ""]);
             setCurrentCursor(jobPostsPagination.nextPage);
         }
     };
 
     const handlePrevPage = () => {
-        if (jobPostsPagination?.prevPage) {
-            setCurrentCursor(jobPostsPagination.prevPage);
+        if (cursorHistory.length > 0) {
+            const prevCursor = cursorHistory[cursorHistory.length - 1];
+            setCursorHistory((prev) => prev.slice(0, -1));
+            setCurrentCursor(prevCursor || undefined);
         }
     };
 
-    // Reset cursor on filter change
     useEffect(() => {
         setCurrentCursor(undefined);
+        setCursorHistory([]);
     }, [selectedCategory, sort, budgetMin, budgetMax, jobType, intendedUse]);
+
+    const hasPreviousPage = cursorHistory.length > 0;
+    const hasNextPage = !!jobPostsPagination?.nextPage;
 
     return (
         <div className="bg-[#F6F9FE] min-h-screen">
@@ -232,7 +238,7 @@ const JobBoard = () => {
                                 </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
-                                {jobPostsPagination?.posts ? (
+                                {jobPostsPagination?.posts?.length ? (
                                     jobPostsPagination.posts.map((job) => (
                                         <tr
                                             key={job.post.id}
@@ -288,7 +294,7 @@ const JobBoard = () => {
                                 ) : (
                                     <tr>
                                         <td colSpan={7} className="col-span-full text-center text-gray-500 py-4">
-                                            No job available
+                                            No jobs available
                                         </td>
                                     </tr>
                                 )}
@@ -298,39 +304,25 @@ const JobBoard = () => {
                     </div>
                 </div>
 
-                {jobPostsPagination && (jobPostsPagination.nextPage || jobPostsPagination.prevPage) && (
+                {(hasPreviousPage || hasNextPage) && (
                     <div className="mt-6 flex justify-center gap-4">
-                        {jobPostsPagination.prevPage && !jobPostsPagination.nextPage && (
+                        {hasPreviousPage && (
                             <button
                                 onClick={handlePrevPage}
-                                className="py-2 px-4 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                                className="py-2 px-4 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                disabled={isJobsLoading}
                             >
                                 Previous
                             </button>
                         )}
-                        {jobPostsPagination.nextPage && !jobPostsPagination.prevPage && (
+                        {hasNextPage && (
                             <button
                                 onClick={handleNextPage}
-                                className="py-2 px-4 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                                className="py-2 px-4 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                disabled={isJobsLoading}
                             >
                                 Next
                             </button>
-                        )}
-                        {jobPostsPagination.nextPage && jobPostsPagination.prevPage && (
-                            <>
-                                <button
-                                    onClick={handlePrevPage}
-                                    className="py-2 px-4 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-                                >
-                                    Previous
-                                </button>
-                                <button
-                                    onClick={handleNextPage}
-                                    className="py-2 px-4 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-                                >
-                                    Next
-                                </button>
-                            </>
                         )}
                     </div>
                 )}
