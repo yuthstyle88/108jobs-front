@@ -11,9 +11,12 @@ import ContactForm from "@/components/ContractForm";
 import Link from "next/link";
 import Image from "next/image";
 import {BusinessImage} from "@/constants/images";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
 
 const Index = () => {
   const heroRef = useRef<HTMLDivElement>(null);
+  const business = getNamespace(LanguageFile.BUSINESS);
 
   useEffect(() => {
       const observer = new IntersectionObserver(
@@ -46,16 +49,16 @@ const Index = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12">
             <div ref={heroRef} className="hero-text text-white max-w-xl z-10">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 animate-fade-in">
-                fastwork for business
+                {business.hero_title}
               </h1>
               <p className="text-lg md:text-xl mb-8 opacity-90 animate-fade-in">
-                ผู้ช่วยจัดหาฟรีแลนซ์สำหรับกลุ่มธุรกิจ
+                {business.hero_subtitle}
               </p>
               <Link prefetch={false}
                     href="/contact"
                     className="inline-block bg-white text-fastwork-blue py-3 px-8 rounded-md font-medium transition-all duration-300 hover:shadow-lg hover:bg-gray-50 animate-fade-in"
               >
-                ปรึกษาเรา
+                {business.contact_us}
               </Link>
             </div>
 

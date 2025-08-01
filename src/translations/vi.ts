@@ -1,4 +1,26 @@
 export const vi = {
+  business: {
+    price_list_title: "Giá gói và dịch vụ",
+    graphic_design_tab: "Bảng giá thiết kế đồ họa",
+    social_content_tab: "Gói tín dụng nội dung xã hội",
+    online_tab: "Trực tuyến",
+    offline_tab: "Ngoại tuyến",
+    branding_tab: "Thương hiệu",
+    table_type: "Loại nội dung / Tài liệu",
+    table_details: "Chi tiết",
+    table_new_design: "Thiết kế mới",
+    table_price_per_piece: "Giá / mảnh",
+    table_reference_design: "Dựa trên tham chiếu",
+    table_edit_once: "Chỉnh sửa/Cải thiện một lần",
+    table_edit_major: "Chỉnh sửa/Cải thiện lớn",
+    price_note_1: "*Giá niêm yết là giá khởi điểm. Giá có thể thay đổi tùy thuộc vào chi tiết công việc.",
+    price_note_2: "**Giá có thể thay đổi theo sự phù hợp của công việc.",
+    contact_section_title: "Bạn muốn chúng tôi giúp gì",
+    copyright: "Bản quyền © 2024 Fastjob for Business.",
+    hero_title: "fastwork for business",
+    hero_subtitle: "Trợ lý tìm kiếm freelancer cho doanh nghiệp",
+    contact_us: "Liên hệ với chúng tôi"
+  },
   translation: {
     validation: {
       communityIdPositive: "ID cộng đồng phải là số dương",

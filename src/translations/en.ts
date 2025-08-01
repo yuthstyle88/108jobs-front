@@ -1,4 +1,26 @@
 export const en = {
+  business: {
+    price_list_title: "Package and Service Prices",
+    graphic_design_tab: "Graphic Design Price List",
+    social_content_tab: "Social Content Credit Package",
+    online_tab: "Online",
+    offline_tab: "Offline",
+    branding_tab: "Branding",
+    table_type: "Type of content / Material",
+    table_details: "Details",
+    table_new_design: "New design",
+    table_price_per_piece: "Price / piece",
+    table_reference_design: "Based on reference",
+    table_edit_once: "Edit/Improve once",
+    table_edit_major: "Major Edit/Improve",
+    price_note_1: "*Prices listed are starting prices. Prices may vary depending on job details.",
+    price_note_2: "**Prices may change according to job appropriateness.",
+    contact_section_title: "What would you like us to help with",
+    copyright: "Copyright © 2024 Fastjob for Business.",
+    hero_title: "fastwork for business",
+    hero_subtitle: "Freelance sourcing assistant for businesses",
+    contact_us: "Contact us"
+  },
   translation: {
     validation: {
       communityIdPositive: "Community ID must be a positive number",

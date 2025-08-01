@@ -1,4 +1,26 @@
 export const th = {
+  business: {
+    price_list_title: "ราคาแพ็คเกจและบริการต่างๆ",
+    graphic_design_tab: "Graphic Design Price List",
+    social_content_tab: "Social Content Credit Package",
+    online_tab: "Online",
+    offline_tab: "Offline",
+    branding_tab: "Branding",
+    table_type: "Type of content / Material",
+    table_details: "รายละเอียด",
+    table_new_design: "New design",
+    table_price_per_piece: "ราคา / ชิ้น",
+    table_reference_design: "ตามรูปแบบอ้างอิง",
+    table_edit_once: "แก้ไข/ปรับปรุง 1 ครั้ง",
+    table_edit_major: "แก้ไข/ปรับปรุง รายใหญ่",
+    price_note_1: "*ราคาที่ระบุไว้เป็นราคาเริ่มต้น ราคาอาจมีการเปลี่ยนแปลงขึ้นอยู่กับรายละเอียดของงาน",
+    price_note_2: "**ราคาอาจมีการเปลี่ยนแปลงตามความเหมาะสมของงาน",
+    contact_section_title: "เรื่องที่อยากให้เราช่วย",
+    copyright: "Copyright © 2024 Fastjob for Business.",
+    hero_title: "fastwork for business",
+    hero_subtitle: "ผู้ช่วยจัดหาฟรีแลนซ์สำหรับกลุ่มธุรกิจ",
+    contact_us: "ปรึกษาเรา"
+  },
   translation: {
     validation: {
       communityIdPositive: "Community ID ต้องเป็นเลขบวก",

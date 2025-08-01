@@ -13,33 +13,16 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
   undefined
 );
 
+interface LanguageProviderProps {
+  children: React.ReactNode;
+  initialLang: string; // รับค่าจาก RootLayout
+}
+
 export function LanguageProvider({
   children,
-  userLangFromLogin,
-}: {
-  children: React.ReactNode;
-  userLangFromLogin?: string;
-}) {
-  const cookieLang =
-    typeof document !== "undefined"
-      ? document.cookie.match(/current-language=(\w+)/)?.[1]
-      : undefined;
-
-  const detectBrowserLang = () => {
-    if (typeof navigator !== "undefined") {
-      const browserLang = navigator.language.split("-")[0];
-      return VALID_LANGUAGES.includes(browserLang) ? browserLang : "th";
-    }
-    return "th";
-  };
-
-  const initialLang =
-    cookieLang ??
-    userLangFromLogin ??
-    detectBrowserLang() ??
-    "th";
-
-  const [lang, setLangState] = useState<string>(initialLang);
+  initialLang,
+}: LanguageProviderProps) {
+  const [lang, setLangState] = useState<string>(initialLang); // ใช้ค่าที่ส่งมา
 
   useEffect(() => {
     if (lang) {

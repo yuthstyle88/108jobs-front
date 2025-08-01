@@ -5,6 +5,9 @@ import * as TabsPrimitive from "@radix-ui/react-tabs";
 import {cn} from "@/lib/utils";
 import BusinessHeader from "@/components/BusinessHeader";
 import Link from "next/link";
+import {useTranslation} from "react-i18next";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
 
 // Tabs components defined inline
 const Tabs = TabsPrimitive.Root;
@@ -56,6 +59,7 @@ TabsContent.displayName = TabsPrimitive.Content.displayName;
 
 const PriceListPage = () => {
   const [isMounted, setIsMounted] = useState(false);
+  const business = getNamespace(LanguageFile.BUSINESS);
 
   useEffect(() => {
       setIsMounted(true);
@@ -72,7 +76,7 @@ const PriceListPage = () => {
       <section className="pt-24 pb-10 md:pt-32 md:pb-12 bg-blue-50 relative">
         <div className="container mx-auto px-4 md:px-6 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-4 text-black">
-            ราคาแพ็คเกจและบริการต่างๆ
+            {business.price_list_title}
           </h1>
           <div className="flex justify-center gap-2 mt-8">
             <div className="bg-white rounded-lg shadow-md w-60 md:w-72 p-1">
@@ -80,7 +84,7 @@ const PriceListPage = () => {
                     href="#"
                     className="block w-full py-2 px-4 rounded-lg bg-fastwork-blue text-white"
               >
-                Graphic Design Price List
+                {business.graphic_design_tab}
               </Link>
             </div>
             <div className="bg-white rounded-lg shadow-md w-60 md:w-72 p-1">
@@ -88,7 +92,7 @@ const PriceListPage = () => {
                     href="/bussiness/package-details"
                     className="block w-full py-2 px-4 rounded-lg bg-white text-gray-700"
               >
-                Social Content Credit Package
+                {business.social_content_tab}
               </Link>
             </div>
           </div>
@@ -104,19 +108,19 @@ const PriceListPage = () => {
                 value="online"
                 className="data-[state=active]:bg-fastwork-blue data-[state=active]:text-white"
               >
-                Online
+                {business.online_tab}
               </TabsTrigger>
               <TabsTrigger
                 value="offline"
                 className="data-[state=active]:bg-fastwork-blue data-[state=active]:text-white"
               >
-                Offline
+                {business.offline_tab}
               </TabsTrigger>
               <TabsTrigger
                 value="branding"
                 className="data-[state=active]:bg-fastwork-blue data-[state=active]:text-white"
               >
-                Branding
+                {business.branding_tab}
               </TabsTrigger>
             </TabsList>
 
@@ -129,33 +133,33 @@ const PriceListPage = () => {
                 <thead>
                 <tr>
                   <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
-                    Type of content / Material
+                    {business.table_type}
                   </th>
                   <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    รายละเอียด
+                    {business.table_details}
                   </th>
                   <th className="px-6 py-3 bg-blue-100 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
-                    New design
+                    {business.table_new_design}
                     <div className="text-xxs font-normal mt-1">
-                      ราคา / ชิ้น
+                      {business.table_price_per_piece}
                     </div>
                   </th>
                   <th className="px-6 py-3 bg-blue-50 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
-                    ตามรูปแบบอ้างอิง
+                    {business.table_reference_design}
                     <div className="text-xxs font-normal mt-1">
-                      ราคา / ชิ้น
+                      {business.table_price_per_piece}
                     </div>
                   </th>
                   <th className="px-6 py-3 bg-gray-100 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    แก้ไข/ปรับปรุง 1 ครั้ง
+                    {business.table_edit_once}
                     <div className="text-xxs font-normal mt-1">
-                      ราคา / ชิ้น
+                      {business.table_price_per_piece}
                     </div>
                   </th>
                   <th className="px-6 py-3 bg-gray-100 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    แก้ไข/ปรับปรุง รายใหญ่
+                    {business.table_edit_major}
                     <div className="text-xxs font-normal mt-1">
-                      ราคา / ชิ้น
+                      {business.table_price_per_piece}
                     </div>
                   </th>
                 </tr>
@@ -175,33 +179,33 @@ const PriceListPage = () => {
                 <thead>
                 <tr>
                   <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
-                    Type of content / Material
+                    {business.table_type}
                   </th>
                   <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    รายละเอียด
+                    {business.table_details}
                   </th>
                   <th className="px-6 py-3 bg-blue-100 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
-                    New design
+                    {business.table_new_design}
                     <div className="text-xxs font-normal mt-1">
-                      ราคา / ชิ้น
+                      {business.table_price_per_piece}
                     </div>
                   </th>
                   <th className="px-6 py-3 bg-blue-50 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
-                    ตามรูปแบบอ้างอิง
+                    {business.table_reference_design}
                     <div className="text-xxs font-normal mt-1">
-                      ราคา / ชิ้น
+                      {business.table_price_per_piece}
                     </div>
                   </th>
                   <th className="px-6 py-3 bg-gray-100 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    แก้ไข/ปรับปรุง 1 ครั้ง
+                    {business.table_edit_once}
                     <div className="text-xxs font-normal mt-1">
-                      ราคา / ชิ้น
+                      {business.table_price_per_piece}
                     </div>
                   </th>
                   <th className="px-6 py-3 bg-gray-100 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    แก้ไข/ปรับปรุง รายใหญ่
+                    {business.table_edit_major}
                     <div className="text-xxs font-normal mt-1">
-                      ราคา / ชิ้น
+                      {business.table_price_per_piece}
                     </div>
                   </th>
                 </tr>
@@ -221,21 +225,21 @@ const PriceListPage = () => {
                 <thead>
                 <tr>
                   <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
-                    Type of content / Material
+                    {business.table_type}
                   </th>
                   <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    รายละเอียด
+                    {business.table_details}
                   </th>
                   <th className="px-6 py-3 bg-blue-100 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
-                    New design
+                    {business.table_new_design}
                     <div className="text-xxs font-normal mt-1">
-                      ราคา / ชิ้น
+                      {business.table_price_per_piece}
                     </div>
                   </th>
                   <th className="px-6 py-3 bg-blue-50 text-center text-xs font-medium text-blue-700 uppercase tracking-wider">
-                    ตามรูปแบบอ้างอิง
+                    {business.table_reference_design}
                     <div className="text-xxs font-normal mt-1">
-                      ราคา / ชิ้น
+                      {business.table_price_per_piece}
                     </div>
                   </th>
                 </tr>
@@ -249,11 +253,10 @@ const PriceListPage = () => {
 
           <div className="mt-8 text-center text-sm text-gray-500">
             <p>
-              *ราคาที่ระบุไว้เป็นราคาเริ่มต้น
-              ราคาอาจมีการเปลี่ยนแปลงขึ้นอยู่กับรายละเอียดของงาน
+              {business.price_note_1}
             </p>
             <p className="mt-2">
-              **ราคาอาจมีการเปลี่ยนแปลงตามความเหมาะสมของงาน
+              {business.price_note_2}
             </p>
           </div>
         </div>
@@ -263,7 +266,7 @@ const PriceListPage = () => {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4 max-w-6xl">
           <h2 className="text-2xl font-bold mb-12 text-center text-black">
-            เรื่องที่อยากให้เราช่วย
+            {business.contact_section_title}
           </h2>
           <ContactForm/>
         </div>
@@ -274,7 +277,7 @@ const PriceListPage = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
-              <p className="text-sm">Copyright © 2024 Fastjob for Business.</p>
+              <p className="text-sm">{business.copyright}</p>
             </div>
             <div className="flex space-x-4">
               <Link prefetch={false} href="#" className="text-gray-400 hover:text-white">

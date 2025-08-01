@@ -48,6 +48,7 @@ export enum LanguageFile {
   CATEGORY_FOOTER = "categoryFooter",
   CONTRACT_FORM = "contractForm",
   AVATAR_UPLOAD = "avatarUpload",
+  BUSINESS = "business",
 }
 
 
