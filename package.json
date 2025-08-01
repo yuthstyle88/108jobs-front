@@ -6,7 +6,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start --turbo",
-    "lint": "next lint"
+    "lint": "next lint",
+    "setup:lemmy": "cd src/lib/lemmy-js-client && pnpm i"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
