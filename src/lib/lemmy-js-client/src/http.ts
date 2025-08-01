@@ -666,6 +666,25 @@ export class LemmyHttp extends Controller {
   }
 
   /**
+   * @summary List communities, with various filters.
+   */
+  @Security("bearerAuth")
+  @Security({})
+  @Get("/community/list/children")
+  @Tags("Community")
+  async listChildrenCommunities(
+      @Queries() form: ListCommunitiesI = {},
+      @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<ListCommunities, ListCommunitiesResponse>(
+        HttpType.Get,
+        "/community/list/children",
+        form,
+        options,
+    );
+  }
+
+  /**
    * @summary Follow / subscribe to a community.
    */
   @Security("bearerAuth")

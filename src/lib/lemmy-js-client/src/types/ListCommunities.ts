@@ -14,6 +14,7 @@ export type ListCommunities = {
    * IE 60 would give results for the past minute.
    */
   timeRangeSeconds?: number;
+  maxDepth?: number;
   showNsfw?: boolean;
   pageCursor?: PaginationCursor;
   pageBack?: boolean;

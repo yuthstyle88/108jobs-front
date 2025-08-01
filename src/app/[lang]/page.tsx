@@ -82,9 +82,6 @@ export default function Home() {
   const serviceCatalogs = catalogData?.communities || [];
   const activeCatalog = serviceCatalogs[activeCatalogIndex];
 
-  console.log("data: ", serviceCatalogs)
-
-
   if (isCatalogLoading) return <Loading/>;
 
   return (

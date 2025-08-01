@@ -10,24 +10,24 @@ import {IntendedUse} from "./IntendedUse";
  * Get a list of posts.
  */
 export type GetPosts = {
-  catalog_id?: CommunityId;
-  catalog_name?: string;
+  catalogId?: CommunityId;
+  catalogName?: string;
   sort?: PostSortType;
-  show_hidden?: boolean;
+  showHidden?: boolean;
   /** If true, then show the self_promotion posts (even if your user setting is to hide them) */
-  self_promotion?: boolean;
+  selfPromotion?: boolean;
   /** If false, then show posts with media attached (even if your user setting is to hide them) */
-  hide_media?: boolean;
+  hideMedia?: boolean;
   /** If true, then only show posts with no proposals */
-  no_proposals_only?: boolean;
-  intended_use?: IntendedUse;
-  job_type?: JobType;
+  noProposalsOnly?: boolean;
+  intendedUse?: IntendedUse;
+  jobType?: JobType;
   /** Minimum budget in your preferred currency */
-  budget_min?: number; // i64 in Rust maps to number (but watch for precision if > 53 bits)
+  budgetMin?: number;
   /** Maximum budget in your preferred currency */
-  budget_max?: number;
-  requires_english?: boolean;
-  page_cursor?: PaginationCursor;
-  page_back?: boolean;
+  budgetMax?: number;
+  requiresEnglish?: boolean;
+  pageCursor?: PaginationCursor;
+  pageBack?: boolean;
   limit?: number;
 };

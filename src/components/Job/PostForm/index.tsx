@@ -81,7 +81,11 @@ export const PostForm: React.FC<PostFormProps> = ({
 
     const {successMessage, errorMessage} = useNotification();
     const [postId, setPostId] = useState<PostId>(0);
-    const {state, data: catalogData, isMutating: isCatalogLoading} = useHttpGet("listCommunities");
+    const {
+        state,
+        data: catalogData,
+        isMutating: isCatalogLoading
+    } = useHttpGet("listChildrenCommunities", {maxDepth: 3});
 
     // Create schema with translations
     const jobSchema = postJobSchema(t);
@@ -128,7 +132,7 @@ export const PostForm: React.FC<PostFormProps> = ({
     }, [postView]);
 
     useEffect(() => {
-        if (state.state === REQUEST_STATE.SUCCESS  && catalogData?.communities?.length && !postView) {
+        if (state.state === REQUEST_STATE.SUCCESS && catalogData?.communities?.length && !postView) {
             const defaultCommunity = catalogData.communities.find(
                 (catalog) => catalog.community.slug !== "advise"
             ) || catalogData.communities[0];

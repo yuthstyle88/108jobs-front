@@ -8,7 +8,7 @@ export async function generateMetadata() {
 export default async function Categories({
   params,
 }: {
-  params: Promise<{jobId: string}>;
+  params: Promise<{jobId: number}>;
 }) {
   const resolvedParams = await params;
 
