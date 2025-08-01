@@ -10,7 +10,7 @@ import Link from "next/link";
 import {useEffect, useState} from "react";
 import Loading from "../Loading";
 import {notFound} from "next/navigation";
-import Error from "@/app/error";
+import Error from "@/app/[lang]/error";
 
 type Props = {
   slug: string;

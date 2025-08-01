@@ -72,7 +72,7 @@ export default function NotFound() {
                   {t("notFound.errorDescription")}
                 </p>
                 <Link prefetch={false}
-                      href="/"
+                      href="/public"
                       className="inline-flex items-center gap-2 bg-third text-white px-6 py-3 rounded-md font-medium transition-all hover:bg-fastwork-dark-blue"
                 >
                   <Home className="w-5 h-5"/>

@@ -32,7 +32,6 @@ export function LanguageProvider({
 
   const setLang = (newLang: string) => {
     if (!VALID_LANGUAGES.includes(newLang)) return;
-    localStorage.setItem("lang", newLang);
     document.cookie = `current-language=${newLang}; path=/`;
 
     const cleanPath = window.location.pathname.replace(/^\/(vi|en|th)/, "");

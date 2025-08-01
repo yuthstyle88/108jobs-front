@@ -21,6 +21,7 @@ import Link from "next/link";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
+import {useHttpGet} from "@/hooks/useHttpGet";
 
 
 const categoryRelated = [
@@ -37,6 +38,18 @@ const categoryRelated = [
 ];
 
 const CategoryDetail = () => {
+  const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined); // ตัวจัดการ cursor
+
+  const route = useRouter();
+
+  const {
+    data: proposals,
+    pagination,
+    isMutating: isLoading,
+  } = useHttpGet("getComments", {
+    pageCursor: currentCursor,
+  });
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const {t} = useTranslation();
@@ -88,11 +101,8 @@ const CategoryDetail = () => {
     },
     []);
 
-  const handlePageChange = (page: number) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set("page",
-      page.toString());
-    router.push(`?${newParams.toString()}`);
+  const handlePageChange = (pageCursor: string | null) => {
+    setCurrentCursor(pageCursor || undefined); // อัปเดต currentCursor
   };
 
   const handleTagChange = (tag: string) => {
@@ -253,8 +263,8 @@ const CategoryDetail = () => {
           <section className="flex justify-center col-start-2 col-end-auto mt-12">
             {searchResults?.totalPages || 0 > 1 && (
               <Pagination
-                totalPages={searchResults?.totalPages || 0}
-                currentPage={searchResults?.page || 0}
+                prevPage={pagination.prevPage}
+                nextPage={pagination.nextPage}
                 onPageChange={handlePageChange}
               />
             )}

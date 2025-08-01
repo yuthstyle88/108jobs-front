@@ -1,5 +1,5 @@
 "use client";
-import ErrorPage from "@/app/error";
+import ErrorPage from "@/app/[lang]/error";
 import LoadingBlur from "@/components/LoadingBlur";
 import {ERROR_CONSTANTS} from "@/constants/error";
 import useNotification from "@/hooks/useNotification";

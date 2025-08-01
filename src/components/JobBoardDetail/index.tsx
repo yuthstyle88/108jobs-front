@@ -3,7 +3,7 @@
 import {API_ROUTES} from "@/api/endpoints";
 import ConfirmVerifyFreelancer from "@/app/[lang]/(job)/job-board/_components/ConfirmVerifyFreelancer";
 import JobBoardTab from "@/app/[lang]/(job)/job-board/_components/JobBoardTab";
-import Error from "@/app/error";
+import Error from "@/app/[lang]/error";
 import {LandingImage, ProfileImage} from "@/constants/images";
 import {usePublicFetch} from "@/hooks/api-hooks";
 import {JobPostDetail} from "@/types/jobBoard";

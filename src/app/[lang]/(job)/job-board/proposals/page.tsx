@@ -1,28 +1,27 @@
 "use client";
-import LoadingMultiCircle from "@/components/LoadingMultiCircle";
+
 import {Pagination} from "@/components/Pagination";
 import {Badge} from "@/components/ui/Badge";
 import {ProfileImage} from "@/constants/images";
 import {formatDateTime} from "@/utils/formatDate";
 import Image from "next/image";
-import Link from "next/link";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 import ConfirmDeleteOffer from "../_components/ConfirmDeleteOffer";
 import JobBoardTab from "../_components/JobBoardTab";
-import {useMyJobs} from "../hooks/useMyJobs";
+import {useHttpGet} from "@/hooks/useHttpGet";
 
-const Offers = () => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
+const Proposal = () => {
+  const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined); // ตัวจัดการ cursor
 
   const route = useRouter();
 
   const {
-    jobPosts,
+    data: proposals,
     pagination,
-    isLoading: isJobsLoading,
-  } = useMyJobs({
-    page: currentPage,
+    isMutating: isLoading,
+  } = useHttpGet("getComments", {
+    pageCursor: currentCursor,
   });
 
   const [selectedJob, setSelectedJob] = useState<{
@@ -42,9 +41,8 @@ const Offers = () => {
     }
   };
 
-  const handlePageChange = (page: number) => {
-    if (page < 1 || (pagination && page > pagination.totalPages)) return;
-    setCurrentPage(page);
+  const handlePageChange = (pageCursor: string | null) => {
+    setCurrentCursor(pageCursor || undefined); // อัปเดต currentCursor
   };
 
   const getStatusBadge = (status: string) => {
@@ -72,13 +70,8 @@ const Offers = () => {
             <JobBoardTab/>
           </div>
           <div className="overflow-x-auto border-1 border-border-primary rounded-lg">
-            {isJobsLoading ? (
-              <div className="py-12 text-center">
-                <LoadingMultiCircle/>
-              </div>
-            ) : (
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
                     Job Title
@@ -96,88 +89,63 @@ const Offers = () => {
                     Delivery deadline
                   </th>
                 </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                {jobPosts.length > 0 ? (
-                  jobPosts.map((job) => (
-                    <tr
-                      key={job.id}
-                      onClick={() => route.push(`/job-board/${job.id}`)}
-                      className="hover:bg-gray-50 cursor-pointer"
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-start">
-                          <div className="mr-2 mt-1">
-                            <svg
-                              className="h-5 w-5 text-gray-400"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                            >
-                              <path
-                                d="M9 12h6m-3-3v6M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {proposals?.comments ? (
+                  proposals.comments.length > 0 ? (
+                    proposals.comments.map((proposals) => (
+                      <tr
+                        key={proposals.comment.id}
+                        onClick={() => route.push(`/job-board/${proposals.comment.id}`)}
+                        className="hover:bg-gray-50 cursor-pointer"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-start">
+                            <div className="mr-2 mt-1">
+                              <svg
+                                className="h-5 w-5 text-gray-400"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                              >
+                                <path
+                                  d="M9 12h6m-3-3v6M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <div>{proposals.comment.content}</div>
                           </div>
-                          <div>
-                            <Link prefetch={false}
-                                  href={`/job-board/${job.id}`}
-                                  className="hover:text-blue-600 font-medium text-base text-text-primary font-sans max-w-[300px] line-clamp-1 truncate"
-                            >
-                              {job.jobTitle}
-                            </Link>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-base text-gray-900 font-medium">
-                        {parseFloat(job.budget).toLocaleString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
-                        {getStatusBadge("closed")}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
-                        {formatDateTime(job.createdAt,
-                          "datetime")}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
-                        {formatDateTime(job.deadline,
-                          "date")}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleOpenModal(job.id);
-                          }}
-                          className="text-red-400 underline"
-                        >
-                          Delete
-                        </button>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
+                          {getStatusBadge("closed")}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
+                          {formatDateTime(proposals.comment.publishedAt, "datetime")}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={6}
+                        className="px-6 py-8 text-center text-gray-500"
+                      >
+                        No job posts found
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={6}
-                      className="px-6 py-8 text-center text-gray-500"
-                    >
-                      No job posts found
-                    </td>
-                  </tr>
-                )}
-                </tbody>
-              </table>
-            )}
+                  )
+                ) : null}
+              </tbody>
+            </table>
           </div>
 
-          {pagination && pagination.totalPages > 1 && (
+          {pagination && (
             <Pagination
-              totalPages={pagination.totalPages}
-              currentPage={pagination.page}
+              prevPage={pagination.prevPage}
+              nextPage={pagination.nextPage}
               onPageChange={handlePageChange}
             />
           )}
@@ -201,4 +169,4 @@ const Offers = () => {
   );
 };
 
-export default Offers;
+export default Proposal;

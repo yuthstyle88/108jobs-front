@@ -1,7 +1,7 @@
 "use client";
 
 import {API_ROUTES} from "@/api/endpoints";
-import Error from "@/app/error";
+import Error from "@/app/[lang]/error";
 import Loading from "@/components/Loading";
 import LoadingBlur from "@/components/LoadingBlur";
 import {ProfileImage} from "@/constants/images";

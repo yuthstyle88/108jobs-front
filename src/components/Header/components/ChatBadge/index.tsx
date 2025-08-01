@@ -1,5 +1,5 @@
 import {API_ROUTES} from "@/api/endpoints";
-import Error from "@/app/error";
+import Error from "@/app/[lang]/error";
 import Loading from "@/components/Loading";
 import {usePrivateFetch} from "@/hooks/api-hooks";
 import {ChatResponse} from "@/types/chat";

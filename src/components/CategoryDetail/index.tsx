@@ -25,6 +25,7 @@ import JobCard from "../JobCard";
 import SortSection from "../SortSection";
 import JobCardSkeleton from "../ui/JobCardSkeleton";
 import NotFoundJob from "./components/NotFoundJob";
+import {useHttpGet} from "@/hooks/useHttpGet";
 
 
 const categoryRelated = [
@@ -45,7 +46,18 @@ type Props = {
 };
 
 const CategoryDetail = ({slug}: Props) => {
+  const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined); // ตัวจัดการ cursor
+
   const router = useRouter();
+
+  const {
+    data: proposals,
+    pagination,
+    isMutating: isLoading,
+  } = useHttpGet("getComments", {
+    pageCursor: currentCursor,
+  });
+
   const searchParams = useSearchParams();
 
   const currentPage = parseInt(searchParams.get("page") || "1",
@@ -118,13 +130,9 @@ const CategoryDetail = ({slug}: Props) => {
     },
     []);
 
-  const handlePageChange = (page: number) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set("page",
-      page.toString());
-    router.push(`?${newParams.toString()}`);
+  const handlePageChange = (pageCursor: string | null) => {
+    setCurrentCursor(pageCursor || undefined); // อัปเดต currentCursor
   };
-
   const handleTagChange = (tag: string) => {
     const newParams = new URLSearchParams(searchParams.toString());
 
@@ -290,8 +298,8 @@ const CategoryDetail = ({slug}: Props) => {
           <section className="flex justify-center col-start-2 col-end-auto mt-12">
             {jobList?.totalPages || 0 > 1 && (
               <Pagination
-                totalPages={jobList?.totalPages || 0}
-                currentPage={jobList?.page || 0}
+                prevPage={pagination.prevPage}
+                nextPage={pagination.nextPage}
                 onPageChange={handlePageChange}
               />
             )}
