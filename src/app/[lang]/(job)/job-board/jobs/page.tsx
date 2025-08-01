@@ -10,41 +10,40 @@ import {useRouter} from "next/navigation";
 import {useState} from "react";
 import ConfirmCloseJob from "../_components/ConfirmCloseJobs";
 import JobBoardTab from "../_components/JobBoardTab";
-import {useMyJobs} from "../hooks/useMyJobs";
+import {useHttpGet} from "@/hooks/useHttpGet";
 
 const MyJobs = () => {
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined); // ตัวจัดการ cursor
 
   const route = useRouter();
 
   const {
-    jobPosts,
+    data: jobPosts,
     pagination,
-    isLoading: isJobsLoading,
-  } = useMyJobs({
-    page: currentPage,
+    isMutating: isJobsLoading,
+  } = useHttpGet("listPersonRead", {
+    pageCursor: currentCursor, // ส่ง cursor ไปยัง API
   });
 
-  const [selectedJob, setSelectedJob] = useState<{
-    id: string;
-  } | null>(null);
+  const [selectedJob, setSelectedJob] = useState<{ id: string } | null>(null);
 
   const handleOpenModal = (jobId: string) => {
-    setSelectedJob({id: jobId});
+    setSelectedJob({ id: jobId });
   };
+
   const handleCloseModal = () => {
     setSelectedJob(null);
   };
 
-  const handleConfirmDelete = async() => {
+  const handleConfirmDelete = async () => {
     if (selectedJob) {
       setSelectedJob(null);
     }
   };
 
-  const handlePageChange = (page: number) => {
-    if (page < 1 || (pagination && page > pagination.totalPages)) return;
-    setCurrentPage(page);
+  // ฟังก์ชันสำหรับจัดการ Pagination โดยใช้ cursor
+  const handlePageChange = (pageCursor: string | null) => {
+    setCurrentCursor(pageCursor || undefined); // อัปเดต currentCursor
   };
 
   const getStatusBadge = (status: string) => {
@@ -69,12 +68,12 @@ const MyJobs = () => {
       <div className="max-w-[1280px] mx-auto py-8 px-4 md:px-6 lg:px-8 rounded-lg shadow-sm">
         <div className="border-1 border-border-primary bg-white p-4 rounded-lg">
           <div className="border-b mb-6">
-            <JobBoardTab/>
+            <JobBoardTab />
           </div>
           <div className="overflow-x-auto border-1 border-border-primary rounded-lg">
             {isJobsLoading ? (
               <div className="py-12 text-center">
-                <LoadingMultiCircle/>
+                <LoadingMultiCircle />
               </div>
             ) : (
               <table className="min-w-full divide-y divide-gray-200">
@@ -98,76 +97,86 @@ const MyJobs = () => {
                 </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                {jobPosts.length > 0 ? (
-                  jobPosts.map((job) => (
-                    <tr
-                      key={job.id}
-                      onClick={() => route.push(`/job-board/${job.id}`)}
-                      className="hover:bg-gray-50 cursor-pointer"
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-start">
-                          <div className="mr-2 mt-1">
-                            <svg
-                              className="h-5 w-5 text-gray-400"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                            >
-                              <path
-                                d="M9 12h6m-3-3v6M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </svg>
+                {jobPosts?.read ? (
+                  jobPosts.read.length > 0 ? (
+                    jobPosts.read.map((job) => (
+                      <tr
+                        key={job.post.id}
+                        onClick={() => route.push(`/job-board/${job.post.id}`)}
+                        className="hover:bg-gray-50 cursor-pointer"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-start">
+                            <div className="mr-2 mt-1">
+                              <svg
+                                className="h-5 w-5 text-gray-400"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                              >
+                                <path
+                                  d="M9 12h6m-3-3v6M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <div>
+                              <Link
+                                prefetch={false}
+                                href={`/job-board/${job.post.id}`}
+                                className="hover:text-blue-600 font-medium text-base text-text-primary font-sans max-w-[300px] line-clamp-1 truncate"
+                              >
+                                {job.post.name}
+                              </Link>
+                            </div>
                           </div>
-                          <div>
-                            <Link prefetch={false}
-                                  href={`/job-board/${job.id}`}
-                                  className="hover:text-blue-600 font-medium text-base text-text-primary font-sans max-w-[300px] line-clamp-1 truncate"
-                            >
-                              {job.jobTitle}
-                            </Link>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-base text-gray-900 font-medium">
-                        {parseFloat(job.budget).toLocaleString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
-                        {getStatusBadge("closed")}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
-                        {formatDateTime(job.createdAt,
-                          "datetime")}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
-                        {formatDateTime(job.deadline,
-                          "date")}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            route.push(`/job-board/edit/${job.id}`)
-                          }}
-                          className="text-text-primary underline mr-3"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleOpenModal(job.id);
-                          }}
-                          className="text-red-400 underline"
-                        >
-                          Close Job
-                        </button>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-gray-900 font-medium">
+                          {job.post.budget.toLocaleString()}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
+                          {getStatusBadge("closed")}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
+                          {formatDateTime(job.post.publishedAt, "datetime")}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
+                          {formatDateTime(job.post.deadline || "", "date")}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              route.push(`/job-board/edit/${job.post.id}`);
+                            }}
+                            className="text-text-primary underline mr-3"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleOpenModal(job.post.id.toString());
+                            }}
+                            className="text-red-400 underline"
+                          >
+                            Close Job
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={6}
+                        className="px-6 py-8 text-center text-gray-500"
+                      >
+                        No job posts found
                       </td>
                     </tr>
-                  ))
+                  )
                 ) : (
                   <tr>
                     <td
@@ -183,10 +192,10 @@ const MyJobs = () => {
             )}
           </div>
 
-          {pagination && pagination.totalPages > 1 && (
+          {pagination && (
             <Pagination
-              totalPages={pagination.totalPages}
-              currentPage={pagination.page}
+              prevPage={pagination.prevPage}
+              nextPage={pagination.nextPage}
               onPageChange={handlePageChange}
             />
           )}

@@ -9,7 +9,7 @@ import React, {useCallback, useEffect, useRef, useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 
-import {Spinner} from "@/components/icon";
+import {Spinner} from "@/components/Common/icon";
 import {UserService} from "@/services";
 import {EMPTY_REQUEST, HttpService, isSuccess, LOADING_REQUEST, REQUEST_STATE, RequestState,} from "@/services/HttpService";
 import {toast} from "@/toast";

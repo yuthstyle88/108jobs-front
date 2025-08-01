@@ -3,39 +3,40 @@ import {useGlobalError} from "@/contexts/GlobalErrorContext"; // Import GlobalEr
 import useSWR, {SWRConfiguration} from "swr";
 import {callHttp, EMPTY_REQUEST, Payload, REQUEST_STATE, RequestState, WrappedLemmyHttp,} from "@/services/HttpService";
 
-/* ---------- implementation ---------- */
 export function useHttpGet<K extends keyof WrappedLemmyHttp>(
+  // ชื่อ request method
   method: K,
+  // พารามิเตอร์ที่อาจเป็น args (อาร์เรย์) หรือตัวเลือกเพิ่มเติม (option object)
   argsOrOptions?:
     | Parameters<WrappedLemmyHttp[K]>
-    | SWRConfiguration<RequestState<Payload<K>>, Error>,
+    | (Parameters<WrappedLemmyHttp[K]>[0] & SWRConfiguration<RequestState<Payload<K>>, Error>),
+  // SWR options
   maybeOptions?: SWRConfiguration<RequestState<Payload<K>>, Error>,
 ) {
-  const {setLoading} = useGlobalLoader(); // ใช้สำหรับ Global Loader
-  const {setError} = useGlobalError(); // ใช้สำหรับ Global Error
+  const { setLoading } = useGlobalLoader(); // ใช้สำหรับ Global Loader
+  const { setError } = useGlobalError(); // ใช้สำหรับ Global Error
 
   /* ---------- resolve param / options ---------- */
+  // เดิม args เป็นอาร์เรย์ แต่ตอนนี้รองรับ Object เพื่อเพิ่มความยืดหยุ่น
   const args = Array.isArray(argsOrOptions)
     ? (argsOrOptions as Parameters<WrappedLemmyHttp[K]>)
+    : argsOrOptions && typeof argsOrOptions === "object"
+    ? [argsOrOptions] // รวม options ไว้ในอาร์เรย์
     : undefined;
 
-  const options = Array.isArray(argsOrOptions)
+  // กำหนดค่าตัวเลือกสำหรับ SWR
+  const options = args && Array.isArray(argsOrOptions)
     ? maybeOptions
-    : (argsOrOptions as SWRConfiguration<
-      RequestState<Payload<K>>,
-      Error
-    > | undefined);
+    : (argsOrOptions as SWRConfiguration<RequestState<Payload<K>>, Error> | undefined);
 
   /* ---------- key / fetcher ---------- */
   const key = [method, ...(args ?? [])] as const;
 
-  const fetcher = async() => {
+  const fetcher = async () => {
     setLoading(true); // แสดง Loader
     setError(null); // ล้างข้อผิดพลาดเก่าก่อนเริ่มการดึงข้อมูลใหม่
     try {
       const typedArgs = (args ?? []) as Parameters<WrappedLemmyHttp[K]>;
-
-      // เรียกใช้ HTTP Service
       return (await callHttp(
         method,
         ...typedArgs,
@@ -54,21 +55,23 @@ export function useHttpGet<K extends keyof WrappedLemmyHttp>(
   };
 
   /* ---------- swr ---------- */
-  const swr = useSWR<RequestState<Payload<K>>, Error>(key,
-    fetcher,
-    {
-      keepPreviousData: true,
-      revalidateOnFocus: false,
-      ...options,
-    });
+  const swr = useSWR<RequestState<Payload<K>>, Error>(key, fetcher, {
+    keepPreviousData: true,
+    revalidateOnFocus: false,
+    ...options,
+  });
 
   /* ---------- mapping ---------- */
   const state = swr.data ?? EMPTY_REQUEST;
   const data =
     state.state === REQUEST_STATE.SUCCESS ? (state.data as Payload<K>) : null;
+  const pagination =
+    data && typeof data === "object" && "pagination" in data
+      ? (data.pagination as any)
+      : undefined;
 
   const execute = () => swr.mutate();
   const isMutating = swr.isValidating;
 
-  return {state, data, execute, isMutating};
+  return { state, data, execute, isMutating, pagination };
 }
