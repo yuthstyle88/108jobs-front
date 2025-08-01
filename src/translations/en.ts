@@ -671,7 +671,7 @@ export const en = {
       increaseHiringOpportunity: "Increase chances of getting hired",
       jobBoardButton: "Go to job board",
       jobBoardDesc: "View job posts from clients & propose your service",
-      jobBoardDescription: "Post your job details, receive offers from freelancers, and choose who to hire",
+      jobBoardDescription: "Post your job details, receive proposal from freelancers, and choose who to hire",
       jobBoardFreelancerTitle: "Get Jobs from the Job Board",
       jobBoardLinkText: "Go to Job Board",
       jobBoardSideDesc: "Show your services under client posts to increase your chances of getting hired.",
@@ -1414,11 +1414,11 @@ export const en = {
       verifyButton: "Verify"
     },
     profileCoupon: {
-      descriptionSpecialOffers: "Exclusive offers and promotions from partners, along with discount coupons",
+      descriptionSpecialOffers: "Exclusive proposal and promotions from partners, along with discount coupons",
       descriptionYourCoupons: "You can select a discount coupon while hiring and making payments",
       labelYourCoupons: "Your Coupons",
       messageNoCoupons: "You have no discount coupons",
-      messageNoOffers: "No special offers available",
+      messageNoOffers: "No special proposal available",
       sectionDiscountsPromotions: "Discounts and Promotions",
       sectionSpecialOffers: "Special Offers",
       subtitleDiscountsPromotions: "From Fastwork and partnered services",
@@ -2072,7 +2072,7 @@ export const en = {
       termsTitle: "Terms and Conditions of Fastwork",
       termsAcceptance: "I have read and accept the Terms and Conditions of use of Fastwork",
       privacyAcceptance: "I have read and accept the Privacy Policy",
-      marketingOptIn: "I am interested in receiving information, offers, and promotions from Fastwork",
+      marketingOptIn: "I am interested in receiving information, proposal, and promotions from Fastwork",
       freelancerSignup: "Register as a freelancer"
     },
     termsEmployer: {

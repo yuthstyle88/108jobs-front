@@ -39,7 +39,7 @@ export default async function RootLayout({
   const isoData = await isoDataInitializer();
   const cookieStore = await cookies();
   const cookieLang = cookieStore.get("current-language")?.value;
-  const userLang = isoData?.myUserInfo?.localUserView?.localUser?.interfaceLanguage
+  const userLang = isoData?.myUserInfo?.localUserView?.localUser?.interfaceLanguage;
   const initialLang = cookieLang || userLang || params.lang || "th";
   
   return (
