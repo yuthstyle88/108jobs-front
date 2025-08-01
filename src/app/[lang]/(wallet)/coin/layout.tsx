@@ -19,9 +19,6 @@ export default function ProfileLayout({children}: LayoutProps) {
         <SpHeader showSearch={false}/>
       </div>
       <section className="pt-[3rem] sm:pt-[4.5rem] bg-white">
-        <div className="hidden sm:block">
-          <SubMenu/>
-        </div>
         {children}
       </section>
       <Footer/>
