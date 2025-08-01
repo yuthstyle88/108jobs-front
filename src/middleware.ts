@@ -26,11 +26,6 @@ function decodePayload(token: string) {
 function getUserRole(req: NextRequest): RoleType | null {
   const token = req.cookies.get(authCookieName)?.value;
   const url = new URL(req.url); // แปลง Request URL เป็น Object
-  const pathname = url.pathname; // ดึง path (เช่น /vi หรือ /th)
-  const langFromURL = pathname.split("/")[1];
-
-  console.log("langFromURL",
-    langFromURL)
   if (!token) return null;
 
   const payload = decodePayload(token);
@@ -101,7 +96,7 @@ export async function middleware(req: NextRequest) {
 
   const rawCookie = req.cookies.get(authCookieName)?.value;
   const isLoggedIn = Boolean(rawCookie);
-
+  console.log("isLoggedIn", isLoggedIn);
   if (cleanPathname === "/login") {
     if (!isLoggedIn) return NextResponse.next();
     return NextResponse.redirect(new URL(`${langPrefix}/`,

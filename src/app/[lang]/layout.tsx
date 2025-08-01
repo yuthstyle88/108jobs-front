@@ -37,13 +37,12 @@ export default async function RootLayout({
   params: Promise<{ lang: string }>;
 }>) {
   const resolvedParams = await params;
-  const lang = resolvedParams.lang || "th"; // หากไม่มีภาษาใน params ให้ fallback เป็น "th"
+  const lang = resolvedParams.lang;
   const isoData = await isoDataInitializer();
   const cookieStore = await cookies();
   const cookieLang = cookieStore.get("current-language")?.value;
   const userLang = isoData?.myUserInfo?.localUserView?.localUser?.interfaceLanguage;
-  const initialLang = lang || cookieLang || userLang || "th";
-
+  const initialLang = userLang || lang || cookieLang;
 
   return (
     <html lang={initialLang} suppressHydrationWarning>
@@ -59,7 +58,7 @@ export default async function RootLayout({
         __html: `window.isoData = ${JSON.stringify(isoData)};`,
       }}
     />
-      <LanguageProvider initialLang={initialLang}>
+      <LanguageProvider initialLang={initialLang!}>
         <GlobalErrorProvider>
           <GlobalLoaderProvider>
             <ClientSWRProvider>

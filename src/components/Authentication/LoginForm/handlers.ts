@@ -14,7 +14,7 @@ export const handleUseOAuthProvider = async(params: {
   answer?: string;
   showNsfw?: boolean;
 }) => {
-  const redirectUri = `${window.location.origin}/api/auth/callback/${params.oauthProvider.displayName}`;
+  const redirectUri = `${window.location.origin}/en/api/auth/callback/${params.oauthProvider.displayName}`;
   const state = crypto.randomUUID();
   const requestUri =
     params.oauthProvider.authorizationEndpoint +

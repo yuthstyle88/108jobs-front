@@ -15,7 +15,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 
 interface LanguageProviderProps {
   children: React.ReactNode;
-  initialLang: string; // รับค่าจาก RootLayout
+  initialLang: string;
 }
 
 export function LanguageProvider({
