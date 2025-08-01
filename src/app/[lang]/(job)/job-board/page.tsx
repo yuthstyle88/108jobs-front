@@ -8,22 +8,10 @@ import {useState, useEffect} from "react";
 import {PostSortType, JobType, GetPosts, IntendedUse} from "lemmy-js-client";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import JobBoardTab from "@/app/[lang]/(job)/job-board/_components/JobBoardTab";
-
-const jobBoardLanguageData = {
-    sectionJobBoard: "Job Board",
-    subtitleJobBoard: "Find the perfect job or hire top talent",
-    dropdownSearchCategory: "All Categories",
-    buttonPostJob: "Post a Job",
-    tableHeaderTitle: "Title",
-    tableHeaderCategory: "Category",
-    tableHeaderJobType: "Job Type",
-    tableHeaderBudget: "Budget",
-    tableHeaderPostDate: "Posted Date",
-    tableHeaderDeadline: "Deadline",
-};
+import {useTranslation} from "react-i18next";
 
 const JobBoard = () => {
-    // State for filters
+    const {t} = useTranslation();
     const [selectedCategory, setSelectedCategory] = useState<string>("");
     const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined);
     const [sort, setSort] = useState<PostSortType | undefined>(undefined);
@@ -85,9 +73,9 @@ const JobBoard = () => {
             <div className="max-w-[1283px] mx-auto py-8 px-4 md:px-6 lg:px-8 rounded-lg shadow-sm">
                 <div className="mb-6">
                     <h2 className="text-2xl font-bold text-blue-600 mb-1">
-                        {jobBoardLanguageData.sectionJobBoard}
+                        {t("profileJob.sectionJobBoard")}
                     </h2>
-                    <p className="text-gray-600">{jobBoardLanguageData.subtitleJobBoard}</p>
+                    <p className="text-gray-600">{t("profileJob.subtitleJobBoard")}</p>
                 </div>
 
                 <div className="border-1 border-borderPrimary bg-white p-4 rounded-lg">
@@ -105,7 +93,7 @@ const JobBoard = () => {
                                         value={selectedCategory}
                                         onChange={(e) => setSelectedCategory(e.target.value)}
                                     >
-                                        <option value="">{jobBoardLanguageData.dropdownSearchCategory}</option>
+                                        <option value="">{t("profileJob.dropdownSearchCategory")}</option>
                                         {catalogData?.communities.map((category) => (
                                             <option key={category.community.id} value={category.community.id}>
                                                 {category.community.name}
@@ -208,7 +196,7 @@ const JobBoard = () => {
                                 href="/job-board/create-job"
                                 className="bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors"
                             >
-                                {jobBoardLanguageData.buttonPostJob} (0/3)
+                                {t("profileJob.buttonPostJob")} (0/3)
                             </Link>
                         </div>
                     </div>
@@ -223,22 +211,22 @@ const JobBoard = () => {
                                 <thead className="bg-gray-50">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                        {jobBoardLanguageData.tableHeaderTitle}
+                                        {t("profileJob.tableHeaderTitle")}
                                     </th>
                                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                        {jobBoardLanguageData.tableHeaderCategory}
+                                        {t("profileJob.tableHeaderCategory")}
                                     </th>
                                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                        {jobBoardLanguageData.tableHeaderJobType}
+                                        {t("profileJob.tableHeaderJobType")}
                                     </th>
                                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                                        {jobBoardLanguageData.tableHeaderBudget}
+                                        {t("profileJob.tableHeaderBudget")}
                                     </th>
                                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
-                                        {jobBoardLanguageData.tableHeaderPostDate}
+                                        {t("profileJob.tableHeaderPostDate")}
                                     </th>
                                     <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
-                                        {jobBoardLanguageData.tableHeaderDeadline}
+                                        {t("profileJob.tableHeaderDeadline")}
                                     </th>
                                     <th className="px-6 py-3"></th>
                                 </tr>
