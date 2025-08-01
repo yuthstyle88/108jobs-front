@@ -145,7 +145,6 @@ export const PostForm: React.FC<PostFormProps> = ({
 
     const onSubmit = useCallback(async (data: z.infer<typeof jobSchema>) => {
             try {
-                console.log("asdfasdfasfd");
                 const payload: CreatePost = {
                     name: data.jobTitle,
                     body: data.description,
