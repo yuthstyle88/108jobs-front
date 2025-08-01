@@ -8,7 +8,7 @@ const JobBoardTab = () => {
   const pathname = usePathname();
   const pathWithoutLang = '/' + pathname.split('/').slice(2).join('/');
 
-  const excludedPaths = ['/job-board/proposal', '/job-board/jobs'];
+  const excludedPaths = ['/job-board/proposals', '/job-board/jobs'];
 
   const isAllJobPostsActive =
     pathWithoutLang === '/job-board' ||
@@ -29,7 +29,7 @@ const JobBoardTab = () => {
 
       <Link prefetch={false}
             href="/job-board/offers"
-            className={`mr-6 py-2 text-[18px] font-medium border-b-2 ${pathWithoutLang === '/job-board/proposal'
+            className={`mr-6 py-2 text-[18px] font-medium border-b-2 ${pathWithoutLang === '/job-board/proposals'
               ? 'text-blue-600 border-blue-600'
               : 'text-gray-500 border-transparent hover:text-gray-700'
             }`}
