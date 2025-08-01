@@ -110,15 +110,24 @@ export function refreshTheme() {
   }
 }
 
-export function setAuthCookie(jwt: string) {
+export function setAuthCookie(jwt: string, language?: string) {
   document.cookie = cookie.serialize(authCookieName,
     jwt,
     {
-      maxAge: 365 * 24 * 60 * 60 * 1000,
+      maxAge: 365 * 24 * 60 * 60,
       secure: isHttps(),
       sameSite: "lax",
       path: "/",
     });
+  if (language) {
+    document.cookie = cookie.serialize("current-language", language, {
+      maxAge: 365 * 24 * 60 * 60,
+      secure: isHttps(),
+      sameSite: "lax",
+      path: "/",
+    });
+  }
+
 }
 
 export async function setThemeOverride(theme?: string) {

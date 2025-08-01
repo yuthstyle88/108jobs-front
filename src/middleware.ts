@@ -96,7 +96,7 @@ export async function middleware(req: NextRequest) {
 
   const rawCookie = req.cookies.get(authCookieName)?.value;
   const isLoggedIn = Boolean(rawCookie);
-  console.log("isLoggedIn", isLoggedIn);
+
   if (cleanPathname === "/login") {
     if (!isLoggedIn) return NextResponse.next();
     return NextResponse.redirect(new URL(`${langPrefix}/`,
