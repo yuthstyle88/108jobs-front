@@ -159,7 +159,11 @@ export class I18NextService {
 
   private constructor() {
     this.#i18n = i18next;
-    this.#i18n
+
+  }
+  public static async init() {
+    const instance = new I18NextService();
+    await instance.#i18n
     .use(LanguageDetector)
     .use(LazyLoader)
     .init({
@@ -176,9 +180,13 @@ export class I18NextService {
       interpolation: {format},
       partialBundledLanguages: true,
     });
+    instance.#i18n.on('missingKey', (lng, namespace, key, fallbackValue) => {
+      console.warn(lng, namespace, key, fallbackValue);
+    })
+    this.#instance = instance;
   }
-
   public static get i18n() {
+    if (!this.#instance) throw new Error("I18NextService not initialized");
     return this.#Instance.#i18n;
   }
 

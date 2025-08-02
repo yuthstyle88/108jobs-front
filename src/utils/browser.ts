@@ -15,6 +15,12 @@ export function clearAuthCookie() {
       sameSite: "lax",
       path: "/",
     });
+  document.cookie = cookie.serialize("current-language",  "",
+    {
+      maxAge: -1,
+      sameSite: "lax",
+      path: "/",
+    });
 }
 
 export function dataBsTheme(

@@ -27,7 +27,7 @@ export class UserService {
   static #instance: UserService;
   public myUserInfo?: MyUserInfo;
   public authInfo?: AuthInfo;
-  public currentLanguage: string = "en";
+  public currentLanguage: string = "th";
 
   private constructor() {
     this.#setAuthInfo();
@@ -38,7 +38,7 @@ export class UserService {
   }
 
   get getLanguage(): string {
-    return this.authInfo?.claims?.lang || this.currentLanguage;
+    return this.currentLanguage;
   }
 
   get isLoggedIn() {
@@ -62,15 +62,10 @@ export class UserService {
       if (showToast) {
         toast("loggedIn");
       }
-      setAuthCookie(res.jwt);
       this.#setAuthInfo({sharedKey});
+      setAuthCookie(res.jwt, this.getLanguage);
     } else {
-      const rawCookie =
-        typeof res === "string"
-          ? res
-          : "";
-
-      this.#setAuthInfo({rawCookie});
+      this.#setAuthInfo({rawCookie: res.toString()});
     }
   }
 
@@ -121,13 +116,12 @@ export class UserService {
     if (!auth) {
       HttpService.client.removeHeader?.("Authorization");
       this.authInfo = undefined;
-      this.currentLanguage = "en";
-
+      this.currentLanguage = "th";
       return;
     }
     HttpService.client.setHeaders({Authorization: `Bearer ${auth}`});
     const claims = jwtDecode<Claims>(auth);
     this.authInfo = {auth, claims, sharedKey};
-    this.currentLanguage = claims?.lang || "en";
+    this.currentLanguage = claims?.lang;
   }
 }

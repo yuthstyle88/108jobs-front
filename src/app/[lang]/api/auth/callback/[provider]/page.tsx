@@ -124,8 +124,6 @@ export default function OAuthCallbackPage() {
 // ฟังก์ชันช่วยจัดการการเข้าสู่ระบบที่สำเร็จ
 async function handleLoginSuccess(loginData: any, prev?: string) {
   try {
-    console.log("Login success handler called with data:",
-      loginData);
     UserService.Instance.login({
       res: loginData,
     });

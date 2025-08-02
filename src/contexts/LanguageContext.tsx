@@ -23,11 +23,15 @@ export function LanguageProvider({
   initialLang,
 }: LanguageProviderProps) {
   const [lang, setLangState] = useState<string>(initialLang); // ใช้ค่าที่ส่งมา
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (lang) {
-      I18NextService.i18n.changeLanguage(lang);
-    }
+    const initI18n = async () => {
+      await I18NextService.init();
+      await I18NextService.i18n.changeLanguage(lang);
+      setReady(true);
+    };
+    initI18n();
   }, [lang]);
 
   const setLang = (newLang: string) => {
@@ -37,6 +41,8 @@ export function LanguageProvider({
     const cleanPath = window.location.pathname.replace(/^\/(vi|en|th)/, "");
     window.location.pathname = `/${newLang}${cleanPath}`;
   };
+
+  if (!ready) return null;
 
   return (
     <LanguageContext.Provider value={{ lang, setLang }}>
