@@ -50,7 +50,7 @@ export function getEmail(localUser: LocalUser): string | undefined {
 }
 
 /**
- * Check if the user's email is verified
+ * Check if the profile's email is verified
  * @returns Whether the email is verified, preferring localUser.emailVerified if available
  * @param localUser
  */
@@ -59,8 +59,8 @@ export function isEmailVerified(localUser: LocalUser): boolean {
 }
 
 /**
- * Check if the user is an admin
- * @returns Whether the user is an admin
+ * Check if the profile is an admin
+ * @returns Whether the profile is an admin
  * @param localUser
  */
 export function isAdmin(localUser: LocalUser): boolean {
@@ -68,8 +68,8 @@ export function isAdmin(localUser: LocalUser): boolean {
 }
 
 /**
- * Get the user's role
- * @returns The user's role
+ * Get the profile's role
+ * @returns The profile's role
  * @param localUser
  */
 export function getRole(localUser: LocalUser): string {

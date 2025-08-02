@@ -249,7 +249,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Gets the site, and your user data.
+   * @summary Gets the site, and your profile data.
    */
   @Security("bearerAuth")
   @Security({})
@@ -331,7 +331,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Get data of current user.
+   * @summary Get data of current profile.
    */
   @Security("bearerAuth")
   @Get("/account")
@@ -346,7 +346,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Get data of current user.
+   * @summary Get data of current profile.
    */
   @Security("bearerAuth")
   @Get("/account/profile")
@@ -361,7 +361,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Get data of current user.
+   * @summary Get data of current profile.
    */
   @Security("bearerAuth")
   @Get("/account/profile/countries")
@@ -376,9 +376,9 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Export a backup of your user settings.
+   * @summary Export a backup of your profile settings.
    *
-   * Export a backup of your user settings, including your saved content,
+   * Export a backup of your profile settings, including your saved content,
    * followed communities, and blocks.
    */
   @Security("bearerAuth")
@@ -394,7 +394,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Import a backup of your user settings.
+   * @summary Import a backup of your profile settings.
    */
   @Security("bearerAuth")
   @Post("/account/settings/import")
@@ -409,7 +409,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary List login tokens for your user
+   * @summary List login tokens for your profile
    */
   @Security("bearerAuth")
   @Get("/account/list-logins")
@@ -853,10 +853,10 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Ban a user from a community.
+   * @summary Ban a profile from a community.
    */
   @Security("bearerAuth")
-  @Post("/community/ban-user")
+  @Post("/community/ban-profile")
   @Tags("Community",
     "Moderator")
   async banFromCommunity(
@@ -865,7 +865,7 @@ export class LemmyHttp extends Controller {
   ) {
     return this.#wrapper<BanFromCommunity, BanFromCommunityResponse>(
       HttpType.Post,
-      "/community/ban-user",
+      "/community/ban-profile",
       form,
       options,
     );
@@ -1489,7 +1489,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Register a new user.
+   * @summary Register a new profile.
    */
   @Post("/account/auth/register")
   @Tags("Account")
@@ -1753,7 +1753,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Save your user settings.
+   * @summary Save your profile settings.
    */
   @Security("bearerAuth")
   @Put("/account/settings/save")
@@ -1771,7 +1771,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Save your user settings.
+   * @summary Save your profile settings.
    */
   @Security("bearerAuth")
   @Put("/account/settings/update-profile")
@@ -1789,7 +1789,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Save your user settings.
+   * @summary Save your profile settings.
    */
   @Security("bearerAuth")
   @Put("/account/settings/update-address")
@@ -1807,7 +1807,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Save your user settings.
+   * @summary Save your profile settings.
    */
   @Security("bearerAuth")
   @Put("/profile/available")
@@ -1825,7 +1825,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Save your user settings.
+   * @summary Save your profile settings.
    */
   @Security("bearerAuth")
 
@@ -1845,7 +1845,7 @@ export class LemmyHttp extends Controller {
 
 
   /**
-   * @summary Change your user password.
+   * @summary Change your profile password.
    */
   @Security("bearerAuth")
   @Put("/account/auth/change-password")
@@ -2091,7 +2091,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Get the application a user submitted when they first registered their account
+   * @summary Get the application a profile submitted when they first registered their account
    */
   @Security("bearerAuth")
   @Get("/admin/registration-application")
@@ -2473,7 +2473,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary List user reports.
+   * @summary List profile reports.
    */
   @Security("bearerAuth")
   @Get("/report/list")
@@ -2491,7 +2491,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Block an instance as user.
+   * @summary Block an instance as profile.
    */
   @Security("bearerAuth")
   @Post("/account/block/instance")
@@ -2545,7 +2545,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Upload new user avatar.
+   * @summary Upload new profile avatar.
    */
   @Security("bearerAuth")
   @Post("/account/avatar")
@@ -2561,7 +2561,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Delete the user avatar.
+   * @summary Delete the profile avatar.
    */
   @Security("bearerAuth")
   @Delete("/account/avatar")
@@ -2579,7 +2579,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Upload new user banner.
+   * @summary Upload new profile banner.
    */
   @Security("bearerAuth")
   @Post("/account/banner")
@@ -2595,7 +2595,7 @@ export class LemmyHttp extends Controller {
   }
 
   /**
-   * @summary Delete the user banner.
+   * @summary Delete the profile banner.
    */
   @Security("bearerAuth")
   @Delete("/account/banner")
@@ -2785,12 +2785,12 @@ export class LemmyHttp extends Controller {
    * Mark donation dialog as shown, so it isn't displayed anymore.
    */
   @Security("bearerAuth")
-  @Post("/user/donation-dialog-shown")
+  @Post("/profile/donation-dialog-shown")
   @Tags("Miscellaneous")
   donationDialogShown(@Inject() options?: RequestOptions) {
     return this.#wrapper<object, SuccessResponse>(
       HttpType.Post,
-      "/user/donation-dialog-shown",
+      "/profile/donation-dialog-shown",
       {},
       options,
     );

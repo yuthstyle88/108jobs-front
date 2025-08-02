@@ -97,7 +97,7 @@ export const useProfileForm = (
       });
 
       if (userSettingsResult.state === "failed") {
-        throw new Error('Failed to update user settings');
+        throw new Error('Failed to update profile settings');
       }
 
       // Then, make a custom request to update the other profile fields

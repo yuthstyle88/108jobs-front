@@ -14,9 +14,9 @@ export type GetPosts = {
   catalogName?: string;
   sort?: PostSortType;
   showHidden?: boolean;
-  /** If true, then show the self_promotion posts (even if your user setting is to hide them) */
+  /** If true, then show the self_promotion posts (even if your profile setting is to hide them) */
   selfPromotion?: boolean;
-  /** If false, then show posts with media attached (even if your user setting is to hide them) */
+  /** If false, then show posts with media attached (even if your profile setting is to hide them) */
   hideMedia?: boolean;
   /** If true, then only show posts with no proposals */
   noProposalsOnly?: boolean;

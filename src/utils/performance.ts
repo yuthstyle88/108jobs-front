@@ -193,7 +193,7 @@ export function monitorCLS(callback: (value: number) => void): () => void {
   return createPerformanceObserver(['layout-shift'],
     (list) => {
       for (const entry of list.getEntries()) {
-        // Only count layout shifts without recent user input
+        // Only count layout shifts without recent profile input
         if (!(entry as any).hadRecentInput) {
           clsValue += (entry as any).value;
           clsEntries.push(entry);

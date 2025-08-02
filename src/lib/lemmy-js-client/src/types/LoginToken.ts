@@ -2,7 +2,7 @@
 import type {LocalUserId} from "./LocalUserId";
 
 /**
- * Stores data related to a specific user login session.
+ * Stores data related to a specific profile login session.
  */
 export type LoginToken = {
   userId: LocalUserId;

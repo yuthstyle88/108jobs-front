@@ -1,6 +1,4 @@
 import {ProfileImage} from "@/constants/images";
-import {useLanguage} from "@/contexts/LanguageContext";
-
 import {
   faBarsProgress,
   faBullhorn,
@@ -26,11 +24,10 @@ type ProfileSectionProps = {
 
 const ProfileSection = ({profile}: ProfileSectionProps) => {
   const logout = () => UserService.Instance.logout();
-  const {lang} = useLanguage();
   const {t} = useTranslation();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">
-      <Link prefetch={false} href={`${lang}/user`}>
+      <Link prefetch={false} href={"/profile"}>
         <div className="p-4 bg-secondary hover:bg-[#D0E1FB] duration-150 rounded-tl-lg rounded-tr-lg relative">
           <div className="flex items-center space-x-3">
             <div className="rounded-full bg-gray-200 flex items-center justify-center">
@@ -43,7 +40,7 @@ const ProfileSection = ({profile}: ProfileSectionProps) => {
               />
             </div>
             <div>
-              <p className="font-medium text-gray-900">username</p>
+              <p className="font-medium text-gray-900">{profile?.name}</p>
               <p className="text-sm font-sans text-text-secondary underline">
                 {t("global.labelViewProfile")}
               </p>

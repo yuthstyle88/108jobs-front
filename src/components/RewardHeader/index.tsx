@@ -1,7 +1,4 @@
 "use client";
-
-import { useTranslation } from "react-i18next";
-
 import {AssetIcon} from "@/constants/icons";
 import {ProfileImage} from "@/constants/images";
 import {LANGUAGES} from "@/constants/language";
@@ -22,7 +19,6 @@ import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 
 
 const RewardHeader = () => {
-  const { t } = useTranslation();
   const {isLoggedIn, isFreelancer} = useAuthInfo();
 
   const [showLang, setShowLang] = useState(false);
@@ -31,7 +27,7 @@ const RewardHeader = () => {
   const currentLang = LANGUAGES[lang as keyof typeof LANGUAGES];
 
   const {person} = useMyUser();
-
+  console.log("sdfsdfsdfsd",person);
 
   return (
     <header className="sticky top-0 z-[999] w-full transition-all duration-300 bg-transparent">

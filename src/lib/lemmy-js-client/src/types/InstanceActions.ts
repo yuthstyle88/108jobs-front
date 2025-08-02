@@ -6,7 +6,7 @@ export type InstanceActions = {
    */
   blockedAt?: string;
   /**
-   * When this user received a site ban.
+   * When this profile received a site ban.
    */
   receivedBanAt?: string;
   /**

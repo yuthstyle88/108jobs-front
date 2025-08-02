@@ -11,7 +11,7 @@ export default function AccountManagePage() {
   const [modalType, setModalType] = useState<"generate" | "remove">("generate");
   const [secretUrl, setSecretUrl] = useState<string | undefined>();
 
-  // Load user's current TOTP status on mount
+  // Load profile's current TOTP status on mount
   useEffect(() => {
       const enabled =
         !!UserService.Instance.myUserInfo?.localUserView.localUser.totp2faEnabled;
@@ -59,7 +59,7 @@ export default function AccountManagePage() {
           {type: "success"}
         );
 
-        // Refresh user info
+        // Refresh profile info
         const siteRes = await HttpService.client.getSite();
         if (siteRes.state === "success") {
           UserService.Instance.myUserInfo!.localUserView.localUser.totp2faEnabled =

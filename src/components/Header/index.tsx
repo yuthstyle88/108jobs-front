@@ -280,7 +280,7 @@ export default Header;
 //                     <div>
 //                       <p className="font-medium text-gray-900">uykpfzno</p>
 //                       <Link prefetch={false}
-//                         href="/user"
+//                         href="/profile"
 //                         className="text-sm text-blue-600 hover:underline"
 //                       >
 //                         {languageData?.labelViewProfile}

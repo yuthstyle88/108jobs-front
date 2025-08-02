@@ -94,13 +94,13 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
         origin)) as any;
     }
 
-    // Fetch site data and user info in parallel for better performance
+    // Fetch site data and profile info in parallel for better performance
     const [trySite, tryUser] = await Promise.all([
       HttpService.client.getSite(),
       HttpService.client.getMyUser()
     ]);
 
-    // Process user data with improved error handling
+    // Process profile data with improved error handling
     await processUserData(tryUser);
 
     // Process site data and fetch route-specific data
@@ -144,7 +144,7 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
   }
 
   /**
-   * Process user data and handle authentication errors
+   * Process profile data and handle authentication errors
    */
   async function processUserData(tryUser: RequestState<MyUserInfo>): Promise<void> {
     if (tryUser.state === "failed" && tryUser.err.message === "not_logged_in") {

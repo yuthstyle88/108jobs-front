@@ -7,7 +7,7 @@ import type {OAuthProviderId} from "./OAuthProviderId";
 export type OAuthProvider = {
   id: OAuthProviderId;
   /**
-   * The OAuth 2.0 provider name displayed to the user on the Login page
+   * The OAuth 2.0 provider name displayed to the profile on the Login page
    */
   displayName: string;
   /**
@@ -30,7 +30,7 @@ export type OAuthProvider = {
    */
   userinfoEndpoint: string;
   /**
-   * The OAuth 2.0 claim containing the unique user ID returned by the provider. Usually this
+   * The OAuth 2.0 claim containing the unique profile ID returned by the provider. Usually this
    * should be set to "sub".
    */
   idClaim: string;
@@ -49,7 +49,7 @@ export type OAuthProvider = {
    */
   autoVerifyEmail: boolean;
   /**
-   * Allows linking an OAUTH account to an existing user account by matching emails
+   * Allows linking an OAUTH account to an existing profile account by matching emails
    */
   accountLinkingEnabled: boolean;
   /**

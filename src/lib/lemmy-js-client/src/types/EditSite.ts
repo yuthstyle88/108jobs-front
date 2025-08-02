@@ -138,7 +138,7 @@ export type EditSite = {
   reportsEmailAdmins?: boolean;
   /**
    * If present, nsfw content is visible by default. Should be displayed by frontends/clients
-   * when the site is first opened by a user.
+   * when the site is first opened by a profile.
    */
   contentWarning?: string;
   /**

@@ -1,16 +1,29 @@
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 import SpHeader from "@/containers/SpHeader";
+import {generateLocalizedMetadata} from "@/lib/metadata";
 import {ReactNode} from "react";
 
-interface ProfileProps {
+interface UserLayoutProps {
   children: ReactNode;
 }
 
-export default function Profile({children}: ProfileProps) {
+export async function generateMetadata() {
+  return generateLocalizedMetadata("profile");
+}
+
+export default function UserLayout({
+  children,
+}: UserLayoutProps) {
   return (
     <>
-      <SpHeader showSearch={false}/>
-      <section className="pt-[48px] bg-white">{children}</section>
+      <div className="hidden sm:block">
+        <Header type="primary"/>
+      </div>
+      <div className="block sm:hidden">
+        <SpHeader showSearch={false}/>
+      </div>
+      <section className="pt-[3rem] sm:pt-[4.4rem] bg-white">{children}</section>
       <Footer/>
     </>
   );

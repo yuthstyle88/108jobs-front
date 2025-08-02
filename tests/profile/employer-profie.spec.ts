@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.use({ storageState: 'storage/auth.json' });
 
 test.describe('Freelancer Public Profile Page', () => {
-  test('should display user profile with avatar, name and bio', async ({ page }) => {
+  test('should display profile profile with avatar, name and bio', async ({ page }) => {
     await page.goto('/user/testuser');
 
     await expect(page.getByRole('img', { name: 'avatar' })).toBeVisible();

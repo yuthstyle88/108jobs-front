@@ -9,7 +9,7 @@ import type {ProfileData} from "./ProfileData";
 import {Person} from "./Person";
 
 /**
- * Your user info.
+ * Your profile info.
  */
 export type MyUserInfo = {
   localUserView: LocalUserView;

@@ -10,12 +10,12 @@ import type {VoteShow} from "./VoteShow";
 import {RoleType} from "./RoleType";
 
 /**
- * A local user.
+ * A local profile.
  */
 export type LocalUser = {
   id: LocalUserId;
   /**
-   * The person_id for the local user.
+   * The person_id for the local profile.
    */
   personId: PersonId;
   email?: SensitiveString;
@@ -71,12 +71,12 @@ export type LocalUser = {
    */
   enableKeyboardNavigation: boolean;
   /**
-   * Whether user avatars and inline images in the UI that are gifs should be allowed to play or
+   * Whether profile avatars and inline images in the UI that are gifs should be allowed to play or
    * should be paused
    */
   enableAnimatedImages: boolean;
   /**
-   * Whether a user can send / receive private messages
+   * Whether a profile can send / receive private messages
    */
   enablePrivateMessages: boolean;
   /**
@@ -89,7 +89,7 @@ export type LocalUser = {
    */
   autoMarkFetchedPostsAsRead: boolean;
   /**
-   * The last time a donation request was shown to this user. If this is more than a year ago,
+   * The last time a donation request was shown to this profile. If this is more than a year ago,
    * a new notification request should be shown.
    */
   lastDonationNotificationAt: string;

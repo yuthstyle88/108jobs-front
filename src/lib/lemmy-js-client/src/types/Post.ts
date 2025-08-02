@@ -94,7 +94,7 @@ export type Post = {
   reportCount: number;
   unresolvedReportCount: number;
   /**
-   * If a local user posts in a remote community, the comment is hidden until it is confirmed
+   * If a local profile posts in a remote community, the comment is hidden until it is confirmed
    * accepted by the community (by receiving it back via federation).
    */
   federationPending: boolean;

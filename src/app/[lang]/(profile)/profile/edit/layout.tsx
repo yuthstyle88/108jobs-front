@@ -22,12 +22,12 @@ export default function StartSellingLayout({
 
   const {profileState, person} = useMyUser();
   const menuItems = [
-    {href: "/user/edit/education", label: userEditLanguage?.education},
-    {href: "/user/edit/experience", label: userEditLanguage?.workExperience},
-    {href: "/user/edit/skills", label: userEditLanguage?.skills},
-    {href: "/user/edit/languages", label: userEditLanguage?.languages},
+    {href: "/profile/edit/education", label: userEditLanguage?.education},
+    {href: "/profile/edit/experience", label: userEditLanguage?.workExperience},
+    {href: "/profile/edit/skills", label: userEditLanguage?.skills},
+    {href: "/profile/edit/languages", label: userEditLanguage?.languages},
     {
-      href: "/user/edit/certifications",
+      href: "/profile/edit/certifications",
       label: userEditLanguage?.certificatesAwards,
     },
   ];

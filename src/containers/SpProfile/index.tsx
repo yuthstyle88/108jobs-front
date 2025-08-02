@@ -81,7 +81,7 @@ const SpProfile = () => {
           </div>
         </Link>
       </section>
-      {/* Assume user is an employer and check if freelancerType exists to determine if user is a freelancer */}
+      {/* Assume profile is an employer and check if freelancerType exists to determine if profile is a freelancer */}
       {localUser?.role && (
         <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
           <Link prefetch={false} href="/seller/my-service">
@@ -140,7 +140,7 @@ const SpProfile = () => {
           </Link>
         </section>
       )}
-      {/* Assume user is an employer and check if freelancerType doesn't exist to determine if user is not a freelancer */}
+      {/* Assume profile is an employer and check if freelancerType doesn't exist to determine if profile is not a freelancer */}
       {!localUser?.role && (
         <section className="grid grid-cols-4 px-3 mt-6 gap-y-6 gap-x-3">
           <Link prefetch={false} href="/reward/earn">
@@ -188,7 +188,7 @@ const SpProfile = () => {
           className="mt-6"
         >
           <ul className="p-0 m-0 list-none">
-            {/* Assume user is an employer and check if freelancerType doesn't exist to determine if user is not a freelancer */}
+            {/* Assume profile is an employer and check if freelancerType doesn't exist to determine if profile is not a freelancer */}
             {!localUser?.role && (
               <li>
                 <Link prefetch={false}
@@ -200,7 +200,7 @@ const SpProfile = () => {
                 </Link>
               </li>
             )}
-            {/* Assume user is an employer and check if freelancerType exists to determine if user is a freelancer */}
+            {/* Assume profile is an employer and check if freelancerType exists to determine if profile is a freelancer */}
             {localUser?.role && (
               <li>
                 <Link prefetch={false}
@@ -212,7 +212,7 @@ const SpProfile = () => {
                 </Link>
               </li>
             )}
-            {/* Assume user is an employer and check if freelancerType doesn't exist to determine if user is not a freelancer */}
+            {/* Assume profile is an employer and check if freelancerType doesn't exist to determine if profile is not a freelancer */}
             {!localUser?.role && (
               <li>
                 <Link prefetch={false}

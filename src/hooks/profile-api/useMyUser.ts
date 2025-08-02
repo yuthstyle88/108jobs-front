@@ -19,12 +19,12 @@ function getIsoData(): IsoData | null {
  */
 export const useMyUser = () => {
   const isoData = getIsoData();
-  const user: MyUserInfo | null = isoData?.myUserInfo ?? null;
+  const user: MyUserInfo = isoData?.myUserInfo!;
   const profileState = REQUEST_STATE.SUCCESS;
   return {
     profileState,
-    person: user?.localUserView?.person || null,
-    localUser: user?.localUserView?.localUser || null,
+    person: user?.localUserView?.person!,
+    localUser: user?.localUserView?.localUser!,
     contact: user?.profile?.contact || null,
     address: user?.profile?.address || null,
     card: user?.profile?.card || null,

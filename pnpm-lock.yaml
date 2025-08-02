@@ -3250,7 +3250,7 @@ packages:
       - npm-pick-manifest
       - npm-profile
       - npm-registry-fetch
-      - npm-user-validate
+      - npm-profile-validate
       - p-map
       - pacote
       - parse-conflict-json

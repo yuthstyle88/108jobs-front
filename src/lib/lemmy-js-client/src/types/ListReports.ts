@@ -21,7 +21,7 @@ export type ListReports = {
    */
   postId?: PostId;
   /**
-   * if no community is given, it returns reports for all communities moderated by the auth user
+   * if no community is given, it returns reports for all communities moderated by the auth profile
    */
   communityId?: CommunityId;
   pageCursor?: PaginationCursor;

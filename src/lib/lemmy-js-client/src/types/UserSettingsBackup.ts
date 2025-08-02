@@ -2,7 +2,7 @@
 import type {LocalUser} from "./LocalUser";
 
 /**
- * Backup of user data. This struct should never be changed so that the data can be used as a
+ * Backup of profile data. This struct should never be changed so that the data can be used as a
  * long-term backup in case the instance goes down unexpectedly. All fields are optional to allow
  * importing partial backups.
  *

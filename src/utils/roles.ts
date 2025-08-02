@@ -61,7 +61,7 @@ export function canCreateCommunity(
   myUserInfo?: MyUserInfo,
 ): boolean {
   const adminOnly = siteRes.siteView.localSite.communityCreationAdminOnly;
-  // TODO: Make this check if user is logged on as well
+  // TODO: Make this check if profile is logged on as well
   return !adminOnly || amAdmin(myUserInfo);
 }
 

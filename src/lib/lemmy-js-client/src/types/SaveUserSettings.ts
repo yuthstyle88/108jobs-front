@@ -8,7 +8,7 @@ import type {SensitiveString} from "./SensitiveString";
 import type {VoteShow} from "./VoteShow";
 
 /**
- * Saves settings for your user.
+ * Saves settings for your profile.
  */
 export type SaveUserSettings = {
   /**
@@ -20,7 +20,7 @@ export type SaveUserSettings = {
    */
   blurNsfw?: boolean;
   /**
-   * Your user's theme.
+   * Your profile's theme.
    */
   theme?: string;
   /**
@@ -60,7 +60,7 @@ export type SaveUserSettings = {
    */
   bio?: string;
   /**
-   * Your matrix user id. Ex: @myUser:matrix.org
+   * Your matrix profile id. Ex: @myUser:matrix.org
    */
   matrixUserId?: string;
   /**
@@ -101,12 +101,12 @@ export type SaveUserSettings = {
    */
   enableKeyboardNavigation?: boolean;
   /**
-   * Whether user avatars or inline images in the UI that are gifs should be allowed to play or
+   * Whether profile avatars or inline images in the UI that are gifs should be allowed to play or
    * should be paused
    */
   enableAnimatedImages?: boolean;
   /**
-   * Whether a user can send / receive private messages
+   * Whether a profile can send / receive private messages
    */
   enablePrivateMessages?: boolean;
   /**

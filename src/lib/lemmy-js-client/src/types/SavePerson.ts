@@ -2,7 +2,7 @@
 
 
 /**
- * Saves settings for your user.
+ * Saves settings for your profile.
  */
 export type SavePerson = {
   displayName?: string;

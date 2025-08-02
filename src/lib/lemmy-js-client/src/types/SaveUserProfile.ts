@@ -5,7 +5,7 @@ import {SaveAddress} from "./SaveAddress";
 import {SaveCard} from "./SaveCard";
 
 /**
- * Saves settings for your user.
+ * Saves settings for your profile.
  */
 export type SaveUserProfile = {
   updatePerson: SavePerson;

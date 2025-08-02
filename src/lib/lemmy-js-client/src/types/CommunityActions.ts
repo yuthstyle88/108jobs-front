@@ -16,11 +16,11 @@ export type CommunityActions = {
    */
   blockedAt?: string;
   /**
-   * When this user became a moderator.
+   * When this profile became a moderator.
    */
   becameModeratorAt?: string;
   /**
-   * When this user received a ban.
+   * When this profile received a ban.
    */
   receivedBanAt?: string;
   /**

@@ -3,7 +3,7 @@ import type {CommunityId} from "./CommunityId";
 import type {PersonId} from "./PersonId";
 
 /**
- * Ban a user from a community.
+ * Ban a profile from a community.
  */
 export type BanFromCommunity = {
   communityId: CommunityId;
