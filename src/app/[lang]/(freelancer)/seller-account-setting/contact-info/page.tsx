@@ -282,7 +282,7 @@ const ContactInfo = () => {
           <div className="mb-6 flex gap-2 items-end w-full">
             <div className="flex-1">
               <label className="block text-sm text-text-primary font-semibold mb-2">
-                {t("sellerContact.emailContact")}
+                {t("sellerContactInfo.emailContact")}
               </label>
               <input
                 type="email"
@@ -309,15 +309,15 @@ const ContactInfo = () => {
         >
           <div className="pb-4 pt-4 border-b">
             <h2 className="text-[16px] font-medium mb-2 text-text-primary">
-              {t("sellerContact.addressInfoTitle")}
+              {t("sellerContactInfo.addressInfoTitle")}
             </h2>
             <p className="text-gray-600 text-[14px] font-sans font-normal">
-              {t("sellerContact.addressInfoDescription")}
+              {t("sellerContactInfo.addressInfoDescription")}
             </p>
           </div>
           <div className="pt-6 flex flex-col">
             <h3 className="text-base font-medium mb-3">
-              {t("sellerContact.currentAddress")}
+              {t("sellerContactInfo.currentAddress")}
             </h3>
             <div className="grid grid-cols-2 gap-4 mb-4">
               {LOCATION_OPTIONS.map((option) => (
@@ -343,8 +343,8 @@ const ContactInfo = () => {
                     className="text-blue-600 mr-3"
                   />
                   {option === "Thailand"
-                    ? t("sellerContact.thailand")
-                    : t("sellerContact.international")}
+                    ? t("sellerContactInfo.thailand")
+                    : t("sellerContactInfo.international")}
                 </label>
               ))}
             </div>
@@ -352,7 +352,7 @@ const ContactInfo = () => {
             {locationType === "Foreign" ? (
               <>
                 <label className="block text-sm mb-1">
-                  {t("sellerContact.selectCountry")}
+                  {t("sellerContactInfo.selectCountry")}
                 </label>
                 <select
                   {...register("country")}
@@ -378,12 +378,12 @@ const ContactInfo = () => {
               <>
                 <div className="mb-4">
                   <label className="block text-sm text-text-primary font-semibold mb-2">
-                    {t("sellerContact.addressDetail")}
+                    {t("sellerContactInfo.addressDetail")}
                   </label>
                   <input
                     {...register("addressDetails")}
                     className="w-full px-3 py-2 border placeholder:font-normal placeholder:font-sans border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
-                    placeholder={t("sellerContact.addressPlaceholder")}
+                    placeholder={t("sellerContactInfo.addressPlaceholder")}
                   />
                   {errors.addressDetails && (
                     <p className="text-red-500 text-[12px] font-normal font-sans mt-1">
@@ -400,10 +400,10 @@ const ContactInfo = () => {
                   />
                   <div>
                     <label className="block font-semibold mb-1">
-                      {t("sellerContact.subDistrict")}
+                      {t("sellerContactInfo.subDistrict")}
                     </label>
                     <input
-                      placeholder={t("sellerContact.subDistrict")}
+                      placeholder={t("sellerContactInfo.subDistrict")}
                       {...register("subdistrictOrDistrict")}
                       className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
                     />
@@ -418,10 +418,10 @@ const ContactInfo = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block font-semibold mb-1">
-                      {t("sellerContact.district")}
+                      {t("sellerContactInfo.district")}
                     </label>
                     <input
-                      placeholder={t("sellerContact.district")}
+                      placeholder={t("sellerContactInfo.district")}
                       {...register("districtOrSubdistrict")}
                       className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
                     />
@@ -433,10 +433,10 @@ const ContactInfo = () => {
                   </div>
                   <div>
                     <label className="block font-semibold mb-1">
-                      {t("sellerContact.province")}
+                      {t("sellerContactInfo.province")}
                     </label>
                     <input
-                      placeholder={t("sellerContact.province")}
+                      placeholder={t("sellerContactInfo.province")}
                       {...register("province")}
                       className="placeholder:font-normal w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third text-text-primary"
                     />

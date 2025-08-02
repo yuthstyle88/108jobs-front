@@ -13,13 +13,14 @@ export const th = {
     table_reference_design: "ตามรูปแบบอ้างอิง",
     table_edit_once: "แก้ไข/ปรับปรุง 1 ครั้ง",
     table_edit_major: "แก้ไข/ปรับปรุง รายใหญ่",
-    price_note_1: "*ราคาที่ระบุไว้เป็นราคาเริ่มต้น ราคาอาจมีการเปลี่ยนแปลงขึ้นอยู่กับรายละเอียดของงาน",
+    price_note_1:
+      "*ราคาที่ระบุไว้เป็นราคาเริ่มต้น ราคาอาจมีการเปลี่ยนแปลงขึ้นอยู่กับรายละเอียดของงาน",
     price_note_2: "**ราคาอาจมีการเปลี่ยนแปลงตามความเหมาะสมของงาน",
     contact_section_title: "เรื่องที่อยากให้เราช่วย",
     copyright: "Copyright © 2024 Fastjob for Business.",
     hero_title: "fastwork for business",
     hero_subtitle: "ผู้ช่วยจัดหาฟรีแลนซ์สำหรับกลุ่มธุรกิจ",
-    contact_us: "ปรึกษาเรา"
+    contact_us: "ปรึกษาเรา",
   },
   translation: {
     validation: {
@@ -27,7 +28,7 @@ export const th = {
       jobTitleMinLength: "Job title ต้องมีอย่างน้อย 5 ตัวอักษร",
       descriptionMinLength: "รายละเอียดงานต้องมีอย่างน้อย 20 ตัวอักษร",
       budgetPositive: "Budget ต้องเป็นตัวเลขบวก",
-      budgetRequired: "จำเป็นต้องระบุงบประมาณ"
+      budgetRequired: "จำเป็นต้องระบุงบประมาณ",
     },
     allCategories: {
       allJobCategories: "หมวดหมู่งานทั้งหมด",
@@ -228,7 +229,7 @@ export const th = {
       java: "Java",
       reactjs: "ReactJS",
       golang: "Golang",
-      cPlusPlus: "C++"
+      cPlusPlus: "C++",
     },
     authen: {
       labelOrSignInWith: "เข้าสู่ระบบด้วยบัญชีโชเชียล",
@@ -240,7 +241,8 @@ export const th = {
       buttonVerifyEmail: "ยืนยันอีเมล",
       changePasswordButton: "เปลี่ยนรหัสผ่าน",
       changePasswordTitle: "เปลี่ยนรหัสผ่าน",
-      checkboxEmailPromotion: "ฉันสนใจรับข้อมูลข่าวสาร ส่วนลดและโปรโมชั่นผ่านทางอีเมล",
+      checkboxEmailPromotion:
+        "ฉันสนใจรับข้อมูลข่าวสาร ส่วนลดและโปรโมชั่นผ่านทางอีเมล",
       checkboxPrivacyPolicyRedirect: "นโยบายคุ้มครองความเป็นส่วนตัว",
       checkboxTermsConditions: "ฉันได้อ่านและยอมรับ ",
       checkboxTermsConditionsRedirect: "เงื่อนไขข้อตกลงการใช้บริการ",
@@ -268,11 +270,13 @@ export const th = {
       labelUsername: "ชื่อผู้ใช้",
       linkCreateAccount: "สร้างบัญชี",
       linkForgotPassword: "ลืมรหัสผ่าน?",
-      messageEnterCode: "กรุณากรอกรหัสเพื่อเปิดใช้งานบัญชี (หากไม่พบโปรดตรวจสอบกล่องอีเมล Spam และ Junk)",
+      messageEnterCode:
+        "กรุณากรอกรหัสเพื่อเปิดใช้งานบัญชี (หากไม่พบโปรดตรวจสอบกล่องอีเมล Spam และ Junk)",
       messageVerificationSent: "รหัสยืนยันถูกส่งไปที่อีเมล",
       passwordLabel: "รหัสผ่าน",
       passwordPlaceholder: "ระบุรหัสผ่าน",
-      passwordRequirements: "สร้างรหัสผ่านใหม่ โดยรหัสผ่านต้องมีความยาว อย่างน้อย 8 ตัวอักษร และผสมกันทั้งตัวอักษรและตัวเลข",
+      passwordRequirements:
+        "สร้างรหัสผ่านใหม่ โดยรหัสผ่านต้องมีความยาว อย่างน้อย 8 ตัวอักษร และผสมกันทั้งตัวอักษรและตัวเลข",
       placeholderConfirmPassword: "ยืนยันรหัสผ่าน",
       placeholderEmail: "กรอกอีเมล",
       placeholderEmailPhone: "ระบุอีเมลหรือเบอร์โทร",
@@ -289,13 +293,16 @@ export const th = {
       titleHireThrough: "จ้างผ่าน",
       titleLoginCreateAccount: "เข้าสู่ระบบ / สร้างบัญชี",
       titleVerifyEmail: "ยืนยันอีเมล",
-      verificationForgotMessage: "รหัสยืนยันได้ถูกส่งไปยังอีเมล / เบอร์โทรศัพท์ของคุณแล้ว",
-      verificationMessage: "Fastwork จะทำการส่งรหัสยืนยันไปยัง อีเมล/เบอร์โทรศัพท์ของคุณ เพื่อยืนยันความเป็นเจ้าของบัญชี",
+      verificationForgotMessage:
+        "รหัสยืนยันได้ถูกส่งไปยังอีเมล / เบอร์โทรศัพท์ของคุณแล้ว",
+      verificationMessage:
+        "Fastwork จะทำการส่งรหัสยืนยันไปยัง อีเมล/เบอร์โทรศัพท์ของคุณ เพื่อยืนยันความเป็นเจ้าของบัญชี",
       placeholderUsernameOrEmail: "กรอกชื่อผู้ใช้หรืออีเมลของคุณ",
       labelUsernameOrEmail: "ชื่อผู้ใช้หรืออีเมล",
       notFound: "ไม่พบชื่อผู้ใช้หรืออีเมล",
       incorrectLogin: "รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง!",
-      pleaseEnterEmailOrUsernameMin6: "กรุณากรอกอีเมลหรือชื่อผู้ใช้อย่างน้อย 6 ตัวอักษร",
+      pleaseEnterEmailOrUsernameMin6:
+        "กรุณากรอกอีเมลหรือชื่อผู้ใช้อย่างน้อย 6 ตัวอักษร",
       usernameMax32: "ชื่อผู้ใช้ต้องไม่เกิน 32 ตัวอักษร",
       passwordMin6: "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
       placeholderCaptchaAnswer: "กรอกคำตอบของแคปช่า",
@@ -304,7 +311,8 @@ export const th = {
       notMatchPassword: "รหัสผ่านไม่ตรงกัน",
       reloadCaptcha: "โหลดใหม่",
       captchaIncorrect: "คำตอบของแคปช่าไม่ถูกต้อง",
-      errorLoadingCaptcha: "ไม่สามารถโหลด captcha ได้ กรุณาลองโหลดหน้าใหม่อีกครั้ง",
+      errorLoadingCaptcha:
+        "ไม่สามารถโหลด captcha ได้ กรุณาลองโหลดหน้าใหม่อีกครั้ง",
       requireCaptcha: "กรุณากรอก captcha",
       enterCodeBelow: "กรอกรหัสด้านล่าง",
       playing: "กำลังเล่น",
@@ -319,7 +327,7 @@ export const th = {
       emailAlreadyExists: "อีเมลนี้มีอยู่แล้ว",
       invalidName: "ชื่อผู้ใช้ไม่ถูกต้อง",
       titleSignInCreateAccount: "เข้าสู่ระบบ FastJob",
-      userNotFound: "ชื่อผู้ใช้หรืออีเมลไม่มีอยู่ในระบบ"
+      userNotFound: "ชื่อผู้ใช้หรืออีเมลไม่มีอยู่ในระบบ",
     },
     breadcrumb: {
       accountSettingsBreadcrumb: "การตั้งค่าบัญชี",
@@ -328,7 +336,7 @@ export const th = {
       contactInfoBreadcrumb: "ข้อมูลการติดต่อ",
       freelancerInforBreadcrumb: "ข้อมูล Freelancer",
       idCardInformationBreadcrumb: "ข้อมูลบัตรประชาชน",
-      sellerCenterBreadcrumb: "ศูนย์ฟรีแลนซ์"
+      sellerCenterBreadcrumb: "ศูนย์ฟรีแลนซ์",
     },
     categoryFooter: {
       seoTitle: "ทำ SEO",
@@ -339,49 +347,72 @@ export const th = {
       seoLinksFacebook: "รับทำ SEO Facebook",
       seoLinksAudit: "SEO Audit",
       seoLinksMonthly: "ทำ SEO รายเดือน",
-      seoDescription2Part1: "คุณภาพ ช่วยให้เว็บไซต์ของคุณแสดงเป็นอันดับต้น ๆ บน Google ทำให้เว็บไซต์ของคุณมีโอกาสที่คนเข้าชมสูงขึ้นและเป็นที่รู้จักมากขึ้น ที่ Fastjob.co เรามีฟรีแลนซ์ให้บริการ SEO ผู้เชี่ยวชาญที่มีประสบการณ์ในการ ",
+      seoDescription2Part1:
+        "คุณภาพ ช่วยให้เว็บไซต์ของคุณแสดงเป็นอันดับต้น ๆ บน Google ทำให้เว็บไซต์ของคุณมีโอกาสที่คนเข้าชมสูงขึ้นและเป็นที่รู้จักมากขึ้น ที่ Fastjob.co เรามีฟรีแลนซ์ให้บริการ SEO ผู้เชี่ยวชาญที่มีประสบการณ์ในการ ",
       seoDescription2Strong1: "รับจ้างทำ SEO สายขาว",
-      seoDescription2Middle: " ให้เว็บไซต์ของคุณติดหน้าแรกบน Google ได้อย่างมั่นคงและมีคุณภาพทั้ง ",
+      seoDescription2Middle:
+        " ให้เว็บไซต์ของคุณติดหน้าแรกบน Google ได้อย่างมั่นคงและมีคุณภาพทั้ง ",
       seoDescription2Strong2: "SEO On-page, SEO Off-page, Backlink",
-      seoDescription2Part2: " รวมทั้งให้คำปรึกษาแนวทางการทำ SEO ที่ถูกต้อง ช่วยให้ธุรกิจของคุณเป็นที่รู้จักได้ง่ายมากขึ้น",
-      seoDescription3Part1: "SEO (Search Engine Optimization) คือการทำให้เว็บไซต์ติดหน้าผลการค้นหาของ Search Engine ด้วยคีย์เวิร์ด (Keyword) หรือคำค้นหาที่ต้องการ หรือคำที่เกี่ยวข้องกับธุรกิจของคุณ ประโยชน์ของการ ",
+      seoDescription2Part2:
+        " รวมทั้งให้คำปรึกษาแนวทางการทำ SEO ที่ถูกต้อง ช่วยให้ธุรกิจของคุณเป็นที่รู้จักได้ง่ายมากขึ้น",
+      seoDescription3Part1:
+        "SEO (Search Engine Optimization) คือการทำให้เว็บไซต์ติดหน้าผลการค้นหาของ Search Engine ด้วยคีย์เวิร์ด (Keyword) หรือคำค้นหาที่ต้องการ หรือคำที่เกี่ยวข้องกับธุรกิจของคุณ ประโยชน์ของการ ",
       seoDescription3Strong1: "จ้างทำ SEO",
-      seoDescription3Middle1: " คือการทำให้เว็บไซต์มีโอกาสที่คนเข้าชมสูงขึ้นและเป็นที่รู้จักมากขึ้น เพราะเมื่อเว็บไซต์เราอยู่หน้าแรก ๆ ของ Google แล้วก็จะช่วยเพิ่มโอกาสให้คนกดเข้ามาบนเว็บไซต์ของเรามากขึ้น ผู้เข้าชมตรงกลุ่มเป้าหมายที่วางไว้ การ ",
+      seoDescription3Middle1:
+        " คือการทำให้เว็บไซต์มีโอกาสที่คนเข้าชมสูงขึ้นและเป็นที่รู้จักมากขึ้น เพราะเมื่อเว็บไซต์เราอยู่หน้าแรก ๆ ของ Google แล้วก็จะช่วยเพิ่มโอกาสให้คนกดเข้ามาบนเว็บไซต์ของเรามากขึ้น ผู้เข้าชมตรงกลุ่มเป้าหมายที่วางไว้ การ ",
       seoDescription3Strong2: "จ้างบริการ SEO สายขาว",
-      seoDescription3Part2: " จะช่วยให้คุณสามารถประหยัดค่าใช้จ่ายในการทำโฆษณา เป็นอีกหนึ่งทางเลือกในการช่วยให้เว็บไซต์ของคุณเป็นที่รู้จัก นอกจากนี้การทำ SEO ยังช่วยทำให้เว็บไซต์มีความน่าเชื่อถือมากขึ้นด้วย ซึ่งระยะเวลาในการทำ SEO ให้ติดหน้าแรกนั้นไม่มีคำตอบที่ตายตัว ขึ้นอยู่กับอุตสาหกรรมและการแข่งขันของคีย์เวิร์ดนั้น ๆ แต่หากจ้างทำ SEO อย่างถูกวิธีและถูกหลักการของ Google ก็มีโอกาสสูงที่จะติดหน้าแรกอย่างแน่นอน",
+      seoDescription3Part2:
+        " จะช่วยให้คุณสามารถประหยัดค่าใช้จ่ายในการทำโฆษณา เป็นอีกหนึ่งทางเลือกในการช่วยให้เว็บไซต์ของคุณเป็นที่รู้จัก นอกจากนี้การทำ SEO ยังช่วยทำให้เว็บไซต์มีความน่าเชื่อถือมากขึ้นด้วย ซึ่งระยะเวลาในการทำ SEO ให้ติดหน้าแรกนั้นไม่มีคำตอบที่ตายตัว ขึ้นอยู่กับอุตสาหกรรมและการแข่งขันของคีย์เวิร์ดนั้น ๆ แต่หากจ้างทำ SEO อย่างถูกวิธีและถูกหลักการของ Google ก็มีโอกาสสูงที่จะติดหน้าแรกอย่างแน่นอน",
       seoPrinciplesTitle: "หลักการเบื้องต้นสำหรับบริการรับทำ SEO สายขาว",
-      seoPrinciples0: "ใส่ใจเรื่อง Domain Name ชื่อเว็บไซต์ควรเกี่ยวข้องกับผลิตภัณฑ์ เช่น เว็บไซต์เกี่ยวกับเกมก็ควรที่จะมีคำว่าเกมอยู่ในชื่อเว็บไซต์",
-      seoPrinciples1: "เนื้อหาเว็บไซต์ อัพเดทเว็บไซต์ให้มีความเคลื่อนไหวอยู่เสมอ และมีการอัพเดตเนื้อหาที่น่าสนใจ และต้องเป็นไปในทิศทางเดียวกัน และเกี่ยวข้องกับ keywords ที่ต้องการสำหรับทำ SEO",
-      seoPrinciples2: "ออกแบบเว็บไซต์ ประสบการณ์ของผู้ใช้ การคลิกเข้าชม จำนวนคนที่เข้า-ออกเว็บไซต์ ไปจนถึง ระยะเวลาการเข้าชมหน้าเว็บก็มีผลต่อ SEO เช่นกัน ดังนั้นการทำ SEO ที่ดีควรออกแบบเว็บไซต์ให้ง่ายต่อการใช้งาน จะช่วยดึงดูดให้ผู้ใช้อยู่ในเว็บไซต์ของเรา",
-      seoPrinciples3: "ทำการปรับปรุง Meta Tag ของเว็บไซต์ให้ตรงกับเนื้อหาในแต่ละหน้า (Keywords , Descriptions , Title)",
-      seoPrinciples4: "ทำการเพิ่มปริมาณของ Backlink ที่มีคุณภาพให้กับเว็บไซต์ให้ได้เยอะที่สุด เนื่องจาก Google จะมองว่าเนื้อหาที่เว็บไซต์เป็นประโยชน์ น่าสนใจจึงมีการกล่าวถึงไว้ในเว็บไซต์อื่น ๆ",
-      seoConclusionPart1: "รายละเอียดของการทำ SEO ไม่ได้มีตายตัว และเปลี่ยนแปลงบ่อย เพราะฉะนั้นต้องติดตามและคอยอัพเดตหลักการทำ SEO อยู่เสมอ ๆ หรือหากยังไม่มีประสบการณ์ ความรู้ ความชำนาญ สามารถจ้างฟรีแลนซ์ผู้เชี่ยวชาญรับทำ SEO ช่วยในการเริ่มต้น ให้คุณสำเร็จได้ง่ายกว่า Fastjob.co ได้รวบรวม Freelance รับทำ SEO มืออาชีพด้วย ",
+      seoPrinciples0:
+        "ใส่ใจเรื่อง Domain Name ชื่อเว็บไซต์ควรเกี่ยวข้องกับผลิตภัณฑ์ เช่น เว็บไซต์เกี่ยวกับเกมก็ควรที่จะมีคำว่าเกมอยู่ในชื่อเว็บไซต์",
+      seoPrinciples1:
+        "เนื้อหาเว็บไซต์ อัพเดทเว็บไซต์ให้มีความเคลื่อนไหวอยู่เสมอ และมีการอัพเดตเนื้อหาที่น่าสนใจ และต้องเป็นไปในทิศทางเดียวกัน และเกี่ยวข้องกับ keywords ที่ต้องการสำหรับทำ SEO",
+      seoPrinciples2:
+        "ออกแบบเว็บไซต์ ประสบการณ์ของผู้ใช้ การคลิกเข้าชม จำนวนคนที่เข้า-ออกเว็บไซต์ ไปจนถึง ระยะเวลาการเข้าชมหน้าเว็บก็มีผลต่อ SEO เช่นกัน ดังนั้นการทำ SEO ที่ดีควรออกแบบเว็บไซต์ให้ง่ายต่อการใช้งาน จะช่วยดึงดูดให้ผู้ใช้อยู่ในเว็บไซต์ของเรา",
+      seoPrinciples3:
+        "ทำการปรับปรุง Meta Tag ของเว็บไซต์ให้ตรงกับเนื้อหาในแต่ละหน้า (Keywords , Descriptions , Title)",
+      seoPrinciples4:
+        "ทำการเพิ่มปริมาณของ Backlink ที่มีคุณภาพให้กับเว็บไซต์ให้ได้เยอะที่สุด เนื่องจาก Google จะมองว่าเนื้อหาที่เว็บไซต์เป็นประโยชน์ น่าสนใจจึงมีการกล่าวถึงไว้ในเว็บไซต์อื่น ๆ",
+      seoConclusionPart1:
+        "รายละเอียดของการทำ SEO ไม่ได้มีตายตัว และเปลี่ยนแปลงบ่อย เพราะฉะนั้นต้องติดตามและคอยอัพเดตหลักการทำ SEO อยู่เสมอ ๆ หรือหากยังไม่มีประสบการณ์ ความรู้ ความชำนาญ สามารถจ้างฟรีแลนซ์ผู้เชี่ยวชาญรับทำ SEO ช่วยในการเริ่มต้น ให้คุณสำเร็จได้ง่ายกว่า Fastjob.co ได้รวบรวม Freelance รับทำ SEO มืออาชีพด้วย ",
       seoConclusionStrong1: "บริการรับจ้างทำ SEO รับทำ SEO สายขาว",
-      seoConclusionMiddle: " ทุกประเภทตามความต้องการของลูกค้า รับทำ SEO ราคาถูก ช่วยเซฟต้นทุนธุรกิจได้อย่างดี แต่มีประสิทธิภาพตามเป้าหมายที่คาดหวัง ",
-      seoConclusionStrong2: "รับทำ SEO WordPress รับทำ SEO Facebook, SEO On-page, SEO Off-page, Backlink",
+      seoConclusionMiddle:
+        " ทุกประเภทตามความต้องการของลูกค้า รับทำ SEO ราคาถูก ช่วยเซฟต้นทุนธุรกิจได้อย่างดี แต่มีประสิทธิภาพตามเป้าหมายที่คาดหวัง ",
+      seoConclusionStrong2:
+        "รับทำ SEO WordPress รับทำ SEO Facebook, SEO On-page, SEO Off-page, Backlink",
       seoConclusionPart2: " และทุกประเภท ตรวจสอบผลลัพธ์ได้ ติดอันดับไม่ยาก",
       howToHireTitle: "วิธีจ้างฟรีแลนซ์ ทำ SEO fastwork",
-      howToHireSteps0: "ค้นหาฟรีแลนซ์ที่ถูกใจ โดยพิจารณาจากผลงาน ความสามารถ ขั้นตอนการทำงาน รวมถึงรีวิวและความเห็นต่างๆ ที่ได้รับ",
-      howToHireSteps1: "พูดคุยรายละเอียดกับฟรีแลนซ์ โดยให้รายละเอียดงานที่ครบถ้วนกับฟรีแลนซ์ โดยฟรีแลนซ์จะสร้างใบเสนอราคาให้คุณพิจารณา",
-      howToHireSteps2: "ชำระเงินผ่าน Fastjob โดยชำระได้ 3 ช่องทางทั้ง บัตรเครดิต, โมบายแบงค์กิ้ง และจ่ายด้วย Fastjob coin มั่นใจได้แน่นอนด้วย Fastjob การันตี",
-      howToHireSteps3: "อนุมัติงานและรีวิว ตรวจสอบงานที่ได้รับ “อนุมัติงาน Final” หากพอใจในผลงาน “ขอแก้ไขงาน Final” หากคุณยังไม่พอใจกับงาน"
+      howToHireSteps0:
+        "ค้นหาฟรีแลนซ์ที่ถูกใจ โดยพิจารณาจากผลงาน ความสามารถ ขั้นตอนการทำงาน รวมถึงรีวิวและความเห็นต่างๆ ที่ได้รับ",
+      howToHireSteps1:
+        "พูดคุยรายละเอียดกับฟรีแลนซ์ โดยให้รายละเอียดงานที่ครบถ้วนกับฟรีแลนซ์ โดยฟรีแลนซ์จะสร้างใบเสนอราคาให้คุณพิจารณา",
+      howToHireSteps2:
+        "ชำระเงินผ่าน Fastjob โดยชำระได้ 3 ช่องทางทั้ง บัตรเครดิต, โมบายแบงค์กิ้ง และจ่ายด้วย Fastjob coin มั่นใจได้แน่นอนด้วย Fastjob การันตี",
+      howToHireSteps3:
+        "อนุมัติงานและรีวิว ตรวจสอบงานที่ได้รับ “อนุมัติงาน Final” หากพอใจในผลงาน “ขอแก้ไขงาน Final” หากคุณยังไม่พอใจกับงาน",
     },
     commission: {
       header: "ค่าบริการตามรายได้สะสม",
       subheader: "ค่าบริการ Fastwork ตามระดับ",
       allContentTitle: "เนื้อหาทั้งหมด",
-      allContentWhatIsFeeBasedOnAccumulatedIncome: "ค่าบริการตามรายได้สะสมคืออะไร?",
+      allContentWhatIsFeeBasedOnAccumulatedIncome:
+        "ค่าบริการตามรายได้สะสมคืออะไร?",
       allContentHowIsFeeCalculated: "ค่าบริการคำนวณอย่างไร?",
-      allContentExample1Title: "ตัวอย่าง 1: เมื่ออยู่ในระดับโครงการที่ได้รับการอนุมัติภายใต้สถานการณ์การเงินปัจจุบัน",
-      allContentExample2Title: "ตัวอย่าง 2: โครงการที่ได้รับการอนุมัติในเดือนนี้จนถึงปัจจุบัน",
+      allContentExample1Title:
+        "ตัวอย่าง 1: เมื่ออยู่ในระดับโครงการที่ได้รับการอนุมัติภายใต้สถานการณ์การเงินปัจจุบัน",
+      allContentExample2Title:
+        "ตัวอย่าง 2: โครงการที่ได้รับการอนุมัติในเดือนนี้จนถึงปัจจุบัน",
       allContentExample3Title: "ตัวอย่าง 3: เริ่มต้นของเดือนใหม่",
       allContentWhatIsFeeUsedFor: "ค่าบริการ Fastwork ใช้เพื่ออะไร?",
       whatIsAccumulatedIncomeFeeTitle: "ค่าบริการตามรายได้สะสมคืออะไร?",
-      whatIsAccumulatedIncomeFeeDescription: "นี่คือค่าบริการที่ประกาศล่วงหน้าตามยอดรวมแต่ละครั้งสำหรับฟรีแลนเซอร์ โดยคำนวณตามระดับสมาชิก Fastwork ระดับสมาชิกจะถูกกำหนดตามรายได้สะสมในช่วง 3 เดือนที่ผ่านมา ถึงวันที่สร้างรายงานโครงการและเสร็จสมบูรณ์",
+      whatIsAccumulatedIncomeFeeDescription:
+        "นี่คือค่าบริการที่ประกาศล่วงหน้าตามยอดรวมแต่ละครั้งสำหรับฟรีแลนเซอร์ โดยคำนวณตามระดับสมาชิก Fastwork ระดับสมาชิกจะถูกกำหนดตามรายได้สะสมในช่วง 3 เดือนที่ผ่านมา ถึงวันที่สร้างรายงานโครงการและเสร็จสมบูรณ์",
       checkYourTier: "ตรวจสอบระดับของคุณ",
       tierTableHeaderName: "รายละเอียดการคำนวณค่าบริการดังนี้:",
       tierTableHeadersMemberLevel: "ระดับสมาชิก",
-      tierTableHeadersAccumulatedIncome: "รายได้สะสมในช่วง 3 เดือนที่ผ่านมาจนถึงปัจจุบัน",
+      tierTableHeadersAccumulatedIncome:
+        "รายได้สะสมในช่วง 3 เดือนที่ผ่านมาจนถึงปัจจุบัน",
       tierTableHeadersServiceFeePercentage: "เปอร์เซ็นต์ค่าบริการ",
       tierTableRows0Level: "Member",
       tierTableRows1Level: "Bronze",
@@ -390,25 +421,36 @@ export const th = {
       tierTableRows4Level: "Platinum",
       tierTableRows5Level: "Diamond",
       tierTableRows5IncomeRangeUpper: "และสูงกว่า",
-      tierTableNote: "รายได้สะสมในช่วง 3 เดือนที่ผ่านมาจะถูกคำนวณตามโครงการที่ได้รับการอนุมัติ",
+      tierTableNote:
+        "รายได้สะสมในช่วง 3 เดือนที่ผ่านมาจะถูกคำนวณตามโครงการที่ได้รับการอนุมัติ",
       howIsFeeCalculatedSectionTitle: "ค่าบริการคำนวณอย่างไร?",
-      howIsFeeCalculatedSectionDescription1: "ระบบจะคำนวณค่าบริการตามยอดรายได้สะสมทั้งหมดในช่วง 3 เดือนที่ผ่านมา ถึงวันที่ปัจจุบัน โดยรวมเฉพาะโครงการที่ได้รับการอนุมัติเท่านั้น",
-      howIsFeeCalculatedSectionDescription2: "เปอร์เซ็นต์ค่าบริการสำหรับแต่ละใบเสนอราคาจะถูกคำนวณทันทีที่ฟรีแลนเซอร์สร้างใบเสนอราคา",
-      howIsFeeCalculatedSectionDescription3: "หากมีการแก้ไขใบเสนอราคา ระบบจะปรับและคำนวณเปอร์เซ็นต์ค่าบริการใหม่ตามวันที่แก้ไข",
-      howIsFeeCalculatedSectionFreelancerReference: "ฟรีแลนเซอร์สามารถดูข้อมูลเพิ่มเติมผ่านตัวอย่างต่อไปนี้",
+      howIsFeeCalculatedSectionDescription1:
+        "ระบบจะคำนวณค่าบริการตามยอดรายได้สะสมทั้งหมดในช่วง 3 เดือนที่ผ่านมา ถึงวันที่ปัจจุบัน โดยรวมเฉพาะโครงการที่ได้รับการอนุมัติเท่านั้น",
+      howIsFeeCalculatedSectionDescription2:
+        "เปอร์เซ็นต์ค่าบริการสำหรับแต่ละใบเสนอราคาจะถูกคำนวณทันทีที่ฟรีแลนเซอร์สร้างใบเสนอราคา",
+      howIsFeeCalculatedSectionDescription3:
+        "หากมีการแก้ไขใบเสนอราคา ระบบจะปรับและคำนวณเปอร์เซ็นต์ค่าบริการใหม่ตามวันที่แก้ไข",
+      howIsFeeCalculatedSectionFreelancerReference:
+        "ฟรีแลนเซอร์สามารถดูข้อมูลเพิ่มเติมผ่านตัวอย่างต่อไปนี้",
       howIsFeeCalculatedSectionCalculationStepsTitle: "ตารางการคำนวณค่าบริการ",
       howIsFeeCalculatedSectionCalculationStepsTitleMethod: "วิธีการคำนวณ",
       howIsFeeCalculatedSectionCalculationStepsStep1Title: "1. รายได้สะสม",
-      howIsFeeCalculatedSectionCalculationStepsStep1Description: "รายได้จากโครงการที่เสร็จสมบูรณ์ในช่วง 3 เดือนที่ผ่านมา ถึงวันที่สร้างใบเสนอราคา",
+      howIsFeeCalculatedSectionCalculationStepsStep1Description:
+        "รายได้จากโครงการที่เสร็จสมบูรณ์ในช่วง 3 เดือนที่ผ่านมา ถึงวันที่สร้างใบเสนอราคา",
       howIsFeeCalculatedSectionCalculationStepsStep2Title: "2. กำหนดระดับ",
-      howIsFeeCalculatedSectionCalculationStepsStep2Description: "กำหนดระดับสมาชิกที่สอดคล้องกันตามรายได้สะสม",
-      howIsFeeCalculatedSectionCalculationStepsStep3Title: "3. ใช้เปอร์เซ็นต์ค่าบริการ",
-      howIsFeeCalculatedSectionCalculationStepsStep3Description: "ใช้เปอร์เซ็นต์ค่าบริการที่สอดคล้องกับระดับสมาชิกสำหรับโครงการ",
+      howIsFeeCalculatedSectionCalculationStepsStep2Description:
+        "กำหนดระดับสมาชิกที่สอดคล้องกันตามรายได้สะสม",
+      howIsFeeCalculatedSectionCalculationStepsStep3Title:
+        "3. ใช้เปอร์เซ็นต์ค่าบริการ",
+      howIsFeeCalculatedSectionCalculationStepsStep3Description:
+        "ใช้เปอร์เซ็นต์ค่าบริการที่สอดคล้องกับระดับสมาชิกสำหรับโครงการ",
       example1Title: "ตัวอย่าง 1",
       example1Subtitle: "ไม่มีโครงการที่ได้รับการอนุมัติในเดือนนี้",
       example1DetailsDate: "วันนี้คือวันที่ 10 มิถุนายน 2024",
-      example1DetailsStatus: "ในเดือนมิถุนายนไม่มีโครงการใหม่ใดได้รับการอนุมัติ",
-      example1DetailsCalculationIntro: "ดังนั้น เปอร์เซ็นต์ค่าบริการ ณ วันที่ 10 มิถุนายน 2024 จะเป็นดังนี้:",
+      example1DetailsStatus:
+        "ในเดือนมิถุนายนไม่มีโครงการใหม่ใดได้รับการอนุมัติ",
+      example1DetailsCalculationIntro:
+        "ดังนั้น เปอร์เซ็นต์ค่าบริการ ณ วันที่ 10 มิถุนายน 2024 จะเป็นดังนี้:",
       example1DetailsMonths0Month: "มีนาคม 2024",
       example1DetailsMonths0Label: "รายได้",
       example1DetailsMonths1Month: "เมษายน 2024",
@@ -420,13 +462,17 @@ export const th = {
       example1DetailsMonths3Amount: "0 บาท",
       example1DetailsTotal: "รายได้สะสม",
       example1Button: "Bronze ค่าบริการ 10%",
-      example1Note: "หากฟรีแลนเซอร์สร้างใบเสนอราคาในวันที่ 10 มิถุนายน 2024 ค่าบริการสำหรับโครงการนั้นจะเป็น 10%",
-      example1AdditionalNote: "หมายเหตุ: หากมีการแก้ไขใบเสนอราคา เปอร์เซ็นต์ค่าบริการจะถูกคำนวณใหม่ตามวันที่แก้ไข",
+      example1Note:
+        "หากฟรีแลนเซอร์สร้างใบเสนอราคาในวันที่ 10 มิถุนายน 2024 ค่าบริการสำหรับโครงการนั้นจะเป็น 10%",
+      example1AdditionalNote:
+        "หมายเหตุ: หากมีการแก้ไขใบเสนอราคา เปอร์เซ็นต์ค่าบริการจะถูกคำนวณใหม่ตามวันที่แก้ไข",
       example2Title: "ตัวอย่าง 2",
       example2Subtitle: "มีโครงการที่ได้รับการอนุมัติในเดือนนี้จนถึงปัจจุบัน",
       example2DetailsDate: "วันนี้คือวันที่ 20 มิถุนายน 2024",
-      example2DetailsStatus: "ในเดือนมิถุนายนมีโครงการหนึ่งได้รับการอนุมัติด้วยรายได้",
-      example2DetailsCalculationIntro: "ดังนั้น เปอร์เซ็นต์ค่าบริการ ณ วันที่ 20 มิถุนายน 2024 จะเป็นดังนี้:",
+      example2DetailsStatus:
+        "ในเดือนมิถุนายนมีโครงการหนึ่งได้รับการอนุมัติด้วยรายได้",
+      example2DetailsCalculationIntro:
+        "ดังนั้น เปอร์เซ็นต์ค่าบริการ ณ วันที่ 20 มิถุนายน 2024 จะเป็นดังนี้:",
       example2DetailsMonths0Month: "มีนาคม 2024",
       example2DetailsMonths0Label: "รายได้",
       example2DetailsMonths1Month: "เมษายน 2024",
@@ -438,13 +484,17 @@ export const th = {
       example2DetailsMonths3Amount: "7,000,000 บาท",
       example2DetailsTotal: "รายได้สะสม",
       example2Button: "SILVER ค่าบริการ 9%",
-      example2Note: "หากฟรีแลนเซอร์สร้างใบเสนอราคาในวันที่ 20 มิถุนายน 2024 ค่าบริการสำหรับโครงการนั้นจะเป็น 9%",
-      example2AdditionalNote: "หมายเหตุ: หากมีการแก้ไขใบเสนอราคา เปอร์เซ็นต์ค่าบริการจะถูกคำนวณใหม่ตามวันที่แก้ไข",
+      example2Note:
+        "หากฟรีแลนเซอร์สร้างใบเสนอราคาในวันที่ 20 มิถุนายน 2024 ค่าบริการสำหรับโครงการนั้นจะเป็น 9%",
+      example2AdditionalNote:
+        "หมายเหตุ: หากมีการแก้ไขใบเสนอราคา เปอร์เซ็นต์ค่าบริการจะถูกคำนวณใหม่ตามวันที่แก้ไข",
       example3Title: "ตัวอย่าง 3",
       example3Subtitle: "เริ่มต้นของเดือนใหม่",
       example3DetailsDate: "วันนี้คือวันที่ 1 กรกฎาคม 2024",
-      example3DetailsStatus: "เดือนเมษายนจะไม่ถูกนับรวมอีกต่อไป ถูกแทนที่ด้วยเดือนกรกฎาคม",
-      example3DetailsCalculationIntro: "ดังนั้น เปอร์เซ็นต์ค่าบริการ ณ วันที่ 1 กรกฎาคม 2024 จะเป็นดังนี้:",
+      example3DetailsStatus:
+        "เดือนเมษายนจะไม่ถูกนับรวมอีกต่อไป ถูกแทนที่ด้วยเดือนกรกฎาคม",
+      example3DetailsCalculationIntro:
+        "ดังนั้น เปอร์เซ็นต์ค่าบริการ ณ วันที่ 1 กรกฎาคม 2024 จะเป็นดังนี้:",
       example3DetailsMonths0Month: "เมษายน 2024",
       example3DetailsMonths0Label: "รายได้",
       example3DetailsMonths1Month: "พฤษภาคม 2024",
@@ -455,10 +505,13 @@ export const th = {
       example3DetailsMonths3Label: "รายได้ถึงวันที่ 1 กรกฎาคม",
       example3DetailsTotal: "รายได้สะสม",
       example3Button: "BRONZE ค่าบริการ 10%",
-      example3Note: "หากฟรีแลนเซอร์สร้างใบเสนอราคาในวันที่ 1 กรกฎาคม 2024 ค่าบริการสำหรับโครงการนั้นจะเป็น 10%",
-      example3AdditionalNote: "หมายเหตุ: หากมีนโยบายใบเสนอราคา เปอร์เซ็นต์ค่าบริการจะถูกคำนวณใหม่ตามแหล่งที่แก้ไข",
+      example3Note:
+        "หากฟรีแลนเซอร์สร้างใบเสนอราคาในวันที่ 1 กรกฎาคม 2024 ค่าบริการสำหรับโครงการนั้นจะเป็น 10%",
+      example3AdditionalNote:
+        "หมายเหตุ: หากมีนโยบายใบเสนอราคา เปอร์เซ็นต์ค่าบริการจะถูกคำนวณใหม่ตามแหล่งที่แก้ไข",
       fastlaneFeePurposeQuest: "ค่าบริการ Fastwork ใช้เพื่ออะไร?",
-      fastlaneFeePurpose: "ค่าบริการบนระบบของเราจะถูกใช้เพื่อบำรุงรักษาและปรับปรุงแพลตฟอร์มเพื่อตอบสนองความต้องการของทั้งฟรีแลนเซอร์และนายจ้าง รวมถึงการปรับปรุงประสบการณ์ผู้ใช้บนแพลตฟอร์ม การเพิ่มรายได้ การส่งเสริมแบรนด์เพื่อดึงดูดผู้ใช้เพิ่มเติม และการสร้างโอกาสงานมากขึ้น",
+      fastlaneFeePurpose:
+        "ค่าบริการบนระบบของเราจะถูกใช้เพื่อบำรุงรักษาและปรับปรุงแพลตฟอร์มเพื่อตอบสนองความต้องการของทั้งฟรีแลนเซอร์และนายจ้าง รวมถึงการปรับปรุงประสบการณ์ผู้ใช้บนแพลตฟอร์ม การเพิ่มรายได้ การส่งเสริมแบรนด์เพื่อดึงดูดผู้ใช้เพิ่มเติม และการสร้างโอกาสงานมากขึ้น",
       title: "ค่าธรรมเนียมการแปลและข้อมูลการชำระเงิน",
       translatorTypeLabel: "ประเภทนักแปล",
       translatorTypeValue: "Member (ค่าธรรมเนียมการแปล 12%)",
@@ -471,7 +524,7 @@ export const th = {
       translatorTypeOptions5: "Platinum (ค่าธรรมเนียมการแปล 7%)",
       unitPriceLabel: "ราคาโครงการ",
       translationFeeLabel: "ค่าธรรมเนียมการแปล",
-      additionalFeeLabel: "ค่าธรรมเนียมเพิ่มเติม (ถ้ามี)"
+      additionalFeeLabel: "ค่าธรรมเนียมเพิ่มเติม (ถ้ามี)",
     },
     createJob: {
       catalogValidate: "จำเป็นต้องระบุหมวดหมู่บริการ",
@@ -481,7 +534,8 @@ export const th = {
       budgetValidate: "จำเป็นต้องระบุงบประมาณ",
       budgetPositive: "งบประมาณต้องเป็นจำนวนบวก",
       pageTitle: "โพสต์งานใหม่",
-      jobPostingNotice: "สำหรับการโพสต์งาน: การโปรโมตตัวเอง ข้อมูลการติดต่อ หรือการใช้งานที่ละเมิดข้อกำหนดของระบบไม่ได้รับอนุญาต โพสต์ที่ละเมิดข้อกำหนดเหล่านี้จะถูกลบออกทันที",
+      jobPostingNotice:
+        "สำหรับการโพสต์งาน: การโปรโมตตัวเอง ข้อมูลการติดต่อ หรือการใช้งานที่ละเมิดข้อกำหนดของระบบไม่ได้รับอนุญาต โพสต์ที่ละเมิดข้อกำหนดเหล่านี้จะถูกลบออกทันที",
       jobTitleLabel: "ชื่องาน",
       jobTitlePlaceholder: "ฉันกำลังมองหา",
       employmentTypeLabel: "ประเภทการจ้างงาน",
@@ -490,8 +544,10 @@ export const th = {
       employmentTypePartTime: "พาร์ทไทม์ (รายชั่วโมง/รายวัน)",
       employmentTypeFullTime: "เต็มเวลา",
       jobDescriptionLabel: "คำอธิบายงาน",
-      jobDescriptionNotice: "เมื่อมีคนสนใจ คุณจะได้รับการแจ้งเตือนผ่านระบบติดต่อ",
-      jobDescriptionDetails: "อธิบายความต้องการของงานของคุณ เช่น ข้อมูลงาน วัตถุประสงค์ กลุ่มเป้าหมาย แผนการดำเนินการ ฯลฯ รายละเอียด: จำนวนงานที่ต้องส่งมอบ ขอบเขต ความต้องการ ฯลฯ (ข้อมูลการติดต่อ เช่น อีเมล โทรศัพท์ LINE หรือรายละเอียดการติดต่ออื่น ๆ ไม่ได้รับอนุญาต)",
+      jobDescriptionNotice:
+        "เมื่อมีคนสนใจ คุณจะได้รับการแจ้งเตือนผ่านระบบติดต่อ",
+      jobDescriptionDetails:
+        "อธิบายความต้องการของงานของคุณ เช่น ข้อมูลงาน วัตถุประสงค์ กลุ่มเป้าหมาย แผนการดำเนินการ ฯลฯ รายละเอียด: จำนวนงานที่ต้องส่งมอบ ขอบเขต ความต้องการ ฯลฯ (ข้อมูลการติดต่อ เช่น อีเมล โทรศัพท์ LINE หรือรายละเอียดการติดต่ออื่น ๆ ไม่ได้รับอนุญาต)",
       jobDescriptionPlaceholder: "อธิบายงานของคุณที่นี่...",
       englishSpeakerLabel: "ต้องการผู้ขายที่พูดภาษาอังกฤษ",
       serviceCategoryLabel: "หมวดหมู่บริการ",
@@ -510,15 +566,17 @@ export const th = {
       intendedUsePlaceholder: "เลือกวัตถุประสงค์การใช้งาน...",
       anonymousPostLabel: "โพสต์แบบไม่ระบุชื่อ",
       previewButton: "ดูตัวอย่าง",
-      submitButton: "ส่ง"
+      submitButton: "ส่ง",
     },
     employeeRegister: {
-      howDidYouHearAboutUs: "ก่อนที่เราจะเริ่ม โปรดบอกเราว่าคุณรู้จักเราผ่านช่องทางใด?",
+      howDidYouHearAboutUs:
+        "ก่อนที่เราจะเริ่ม โปรดบอกเราว่าคุณรู้จักเราผ่านช่องทางใด?",
       multipleOptions: "คุณสามารถเลือกได้หลายตัวเลือก",
       skip: "ข้าม",
       saveAndContinue: "บันทึกและดำเนินการต่อ",
       chooseProfilePicture: "เลือกภาพถ่ายที่เป็นตัวแทนของคุณ",
-      profilePictureTip: "การใช้ภาพถ่ายใบหน้าที่ชัดเจนจะทำให้ลูกค้ามีแนวโน้มเลือกคุณมากกว่าการใช้โลโก้",
+      profilePictureTip:
+        "การใช้ภาพถ่ายใบหน้าที่ชัดเจนจะทำให้ลูกค้ามีแนวโน้มเลือกคุณมากกว่าการใช้โลโก้",
       uploadProfilePicture: "อัปโหลดรูปภาพโปรไฟล์",
       deleteImage: "ลบรูปภาพ",
       previewProfile: "ดูตัวอย่างโปรไฟล์",
@@ -529,18 +587,23 @@ export const th = {
       displayName: "ชื่อที่แสดงในระบบ",
       displayNameTip: "เลือกชื่อที่มีความหมายเพื่อสร้างความน่าเชื่อถือ",
       freelanceType: "ประเภทงานฟรีแลนซ์ (สามารถเปลี่ยนแปลงได้ในภายหลัง)",
-      freelanceTypeInstruction: "เลือกประเภทงานฟรีแลนซ์ที่เหมาะกับคุณ แม้จะเป็นงานพาร์ทไทม์",
+      freelanceTypeInstruction:
+        "เลือกประเภทงานฟรีแลนซ์ที่เหมาะกับคุณ แม้จะเป็นงานพาร์ทไทม์",
       partTime: "พาร์ทไทม์",
       fullTime: "เต็มเวลา",
       bio: "ประวัติ",
       bioStatistic: "กว่า 80% ของลูกค้าอ่านโปรไฟล์ของคุณก่อนตัดสินใจจ้าง",
       bioInstruction: "แนะนำตัวเองเพื่อให้ลูกค้าเข้าใจคุณมากขึ้น",
-      bioDetails: "บอกเล่าเกี่ยวกับประสบการณ์การทำงานของคุณ เช่น ประวัติการทำงาน การศึกษา และใบรับรองที่เกี่ยวข้อง",
+      bioDetails:
+        "บอกเล่าเกี่ยวกับประสบการณ์การทำงานของคุณ เช่น ประวัติการทำงาน การศึกษา และใบรับรองที่เกี่ยวข้อง",
       freelancerIntroduction: "แนะนำตัวฟรีแลนซ์",
-      experienceSkillsInstruction: "บอกเล่าเกี่ยวกับประสบการณ์ ทักษะ และความสามารถของคุณ...",
-      experienceSkillsDetails: "ให้ข้อมูลเกี่ยวกับประสบการณ์การทำงาน ทักษะเด่น และสิ่งที่คุณทำได้ดี",
+      experienceSkillsInstruction:
+        "บอกเล่าเกี่ยวกับประสบการณ์ ทักษะ และความสามารถของคุณ...",
+      experienceSkillsDetails:
+        "ให้ข้อมูลเกี่ยวกับประสบการณ์การทำงาน ทักษะเด่น และสิ่งที่คุณทำได้ดี",
       verifyIdentity: "ยืนยันตัวตนของคุณ",
-      uploadIdInstruction: "อัปโหลดบัตรประจำตัวประชาชนของคุณเพื่อการทำธุรกรรมที่ปลอดภัย",
+      uploadIdInstruction:
+        "อัปโหลดบัตรประจำตัวประชาชนของคุณเพื่อการทำธุรกรรมที่ปลอดภัย",
       uploadIdFront: "ภาพด้านหน้าบัตรประจำตัวประชาชน",
       idFrontInstruction: "ถ่ายภาพเพื่อให้เห็นด้านหน้าของบัตรประจำตัวประชาชน",
       uploadIdBack: "ภาพด้านหลังบัตรประจำตัวประชาชน",
@@ -591,19 +654,24 @@ export const th = {
       currentAddress: "ที่อยู่ปัจจุบัน",
       chooseCountry: "เลือกประเทศ",
       finalVerificationStep: "ขั้นตอนการยืนยันขั้นสุดท้าย",
-      transferVerificationInstruction: "กรุณาโอนเงินจำนวนใดก็ได้เพื่อยืนยันบัญชีฟรีแลนซ์ของคุณ",
+      transferVerificationInstruction:
+        "กรุณาโอนเงินจำนวนใดก็ได้เพื่อยืนยันบัญชีฟรีแลนซ์ของคุณ",
       accountHolder: "เจ้าของบัญชี",
-      transferToVerify: "โอนเงินจำนวนใดก็ได้ไปยังบัญชีนี้เพื่อเสร็จสิ้นการยืนยัน",
-      payLaterVerification: "คุณสามารถชำระเงินภายหลังเพื่อยืนยันการเป็นฟรีแลนซ์",
-      fastworkUsageTip: "การใช้ Fastwork อย่างถูกต้องช่วยลดความเสี่ยงในการถูกระงับบัญชี",
-      complianceTip: "การปฏิบัติตามกฎระเบียบจะช่วยให้คุณหลีกเลี่ยงการถูกแบนและมีรายได้อย่างมั่นใจ",
+      transferToVerify:
+        "โอนเงินจำนวนใดก็ได้ไปยังบัญชีนี้เพื่อเสร็จสิ้นการยืนยัน",
+      payLaterVerification:
+        "คุณสามารถชำระเงินภายหลังเพื่อยืนยันการเป็นฟรีแลนซ์",
+      fastworkUsageTip:
+        "การใช้ Fastwork อย่างถูกต้องช่วยลดความเสี่ยงในการถูกระงับบัญชี",
+      complianceTip:
+        "การปฏิบัติตามกฎระเบียบจะช่วยให้คุณหลีกเลี่ยงการถูกแบนและมีรายได้อย่างมั่นใจ",
       contactInfoUsage: "การใช้แบบฟอร์มข้อมูลการติดต่อ",
       noOffPlatformPayment: "ห้ามขอ/รับการชำระเงินนอกระบบ",
       noIllegalJobs: "ห้ามรับงานที่ผิดกฎหมาย",
       useToolsCorrectly: "ต้องใช้เครื่องมืออย่างถูกต้อง",
       acceptBySliding: "เลื่อนเพื่อยอมรับ",
       processing: "กำลังดำเนินการ...",
-      iAccept: "ฉันยอมรับ"
+      iAccept: "ฉันยอมรับ",
     },
     error: {
       title: "ขออภัย, เกิดข้อผิดพลาด",
@@ -631,27 +699,33 @@ export const th = {
       errorPasswordLength: "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
       errorPhoneLength: "หมายเลขโทรศัพท์ต้องมีอย่างน้อย 10 ตัวเลข",
       errorUsernameLength: "ชื่อผู้ใช้ต้องมีอย่างน้อย 3 ตัวอักษร",
-      pleaseEnterEmailOrUsernameMin6: "กรุณาใส่อีเมลหรือชื่อผู้ใช้ที่มีอย่างน้อย 6 ตัวอักษร",
+      pleaseEnterEmailOrUsernameMin6:
+        "กรุณาใส่อีเมลหรือชื่อผู้ใช้ที่มีอย่างน้อย 6 ตัวอักษร",
       usernameMax32: "ชื่อผู้ใช้ต้องไม่เกิน 32 ตัวอักษร",
-      passwordMin6: "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
+      passwordMin6: "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
     },
     freelancerRegistration: {
-      registerToBecomeASuccessfulFreelancer: "ลงทะเบียนเพื่อเป็นฟรีแลนซ์ที่ประสบความสำเร็จ",
-      youCanStartPostingYourJobRightAwayJustClickStartPostingJob: "คุณสามารถเริ่มโพสต์งานของคุณได้ทันที เพียงคลิกเริ่มโพสต์งาน",
+      registerToBecomeASuccessfulFreelancer:
+        "ลงทะเบียนเพื่อเป็นฟรีแลนซ์ที่ประสบความสำเร็จ",
+      youCanStartPostingYourJobRightAwayJustClickStartPostingJob:
+        "คุณสามารถเริ่มโพสต์งานของคุณได้ทันที เพียงคลิกเริ่มโพสต์งาน",
       startPostingJob: "เริ่มโพสต์งาน",
-      returnToHomePage: "กลับสู่หน้าหลัก"
+      returnToHomePage: "กลับสู่หน้าหลัก",
     },
     global: {
       jobVailable: "ข้อมูลเกี่ยวกับสถานะการรับงาน",
       availableSetting: "ตั้งค่าสถานะความพร้อม",
-      toggle: "เปิด/ปิดการตั้งค่านี้เพื่อแจ้งให้ลูกค้าทราบว่าคุณกำลังรับงานใหม่หรือไม่",
+      toggle:
+        "เปิด/ปิดการตั้งค่านี้เพื่อแจ้งให้ลูกค้าทราบว่าคุณกำลังรับงานใหม่หรือไม่",
       acptJob: "กำลังรับงาน",
       adsComingTitle: "โปรโมตบริการของคุณผ่านโฆษณา (เร็วๆ นี้...)",
       adsFeedbackLink: "ส่งความคิดเห็นของคุณเกี่ยวกับฟีเจอร์โฆษณา",
       adsSectionDescription: "เพิ่มโอกาสในการถูกจ้างโดยการโฆษณากับ Fastwork",
       bankInfo: "ข้อมูลธนาคาร",
-      businessServiceDescription: "บริการจัดหาฟรีแลนซ์เพื่อธุรกิจ (fastwork for business)",
-      businessServiceTitle: "บริการจัดหาฟรีแลนซ์เพื่อธุรกิจ (fastwork for business)",
+      businessServiceDescription:
+        "บริการจัดหาฟรีแลนซ์เพื่อธุรกิจ (fastwork for business)",
+      businessServiceTitle:
+        "บริการจัดหาฟรีแลนซ์เพื่อธุรกิจ (fastwork for business)",
       buttonCancel: "ยกเลิก",
       buttonChange: "เปลี่ยน",
       buttonConfirm: "ยืนยัน",
@@ -662,7 +736,8 @@ export const th = {
       buttonSubmit: "บันทึก",
       buttonVerify: "ยืนยัน",
       chatToHireButton: "แอดไลน์ @fastwork",
-      chatToHireDescription: "Chat to Hire หรือผู้ช่วยค้นหาฟรีแลนซ์ผ่านไลน์ เพียงแค่บอกรายละเอียด แอดมินก็พร้อมค้นหาฟรีแลนซ์ให้กับคุณ",
+      chatToHireDescription:
+        "Chat to Hire หรือผู้ช่วยค้นหาฟรีแลนซ์ผ่านไลน์ เพียงแค่บอกรายละเอียด แอดมินก็พร้อมค้นหาฟรีแลนซ์ให้กับคุณ",
       chatToHireTitle: "บริการ Chat to hire หรือผู้ช่วยค้นหาฟรีแลนซ์",
       clientDocumentInfo: "ข้อมูลเอกสารของผู้ว่าจ้าง (บุคคล)",
       clientDocumentSection: "ข้อมูลเอกสารของผู้ว่าจ้าง",
@@ -678,12 +753,15 @@ export const th = {
       freelancerAccountInfo: "ข้อมูลบัญชีฟรีแลนซ์",
       freelancerAccountSection: "บัญชีฟรีแลนซ์ของคุณ",
       freelancerProfile: "โปรไฟล์ฟรีแลนซ์",
-      freelancerSelectionDescription: "ค้นหาฟรีแลนซ์ตามหมวดหมู่ ดูผลงาน รีวิว และแชทเพื่อจ้างฟรีแลนซ์ด้วยตัวเอง",
+      freelancerSelectionDescription:
+        "ค้นหาฟรีแลนซ์ตามหมวดหมู่ ดูผลงาน รีวิว และแชทเพื่อจ้างฟรีแลนซ์ด้วยตัวเอง",
       freelancerSelectionTitle: "เลือกดูฟรีแลนซ์ที่ต้องการ และแชทได้ทันที",
       goToFastworkBusiness: "ไปยัง fastwork for business",
       greetingUser: "สวัสดี, {username}",
-      hintFreelanceSearchAssistant: "แชทเพื่อจ้างบริการหรือผู้ช่วยค้นหาฟรีแลนซ์",
-      hintFreelanceServicesBusiness: "ช่วยค้นหาและประสานงานกับฟรีแลนซ์จนกว่างานจะเสร็จสมบูรณ์",
+      hintFreelanceSearchAssistant:
+        "แชทเพื่อจ้างบริการหรือผู้ช่วยค้นหาฟรีแลนซ์",
+      hintFreelanceServicesBusiness:
+        "ช่วยค้นหาและประสานงานกับฟรีแลนซ์จนกว่างานจะเสร็จสมบูรณ์",
       hintHireOnBehalf: "เข้าสู่ระบบ กรอกข้อมูลของคุณ และแจ้งฟรีแลนซ์ได้ทันที!",
       hintLabelMenuOptionFindHire: "เลือกฟรีแลนซ์ที่คุณต้องการและแชทได้ทันที",
       hintLabelMenuOptionSearchJobBoard: "โพสต์และรอให้ฟรีแลนซ์เสนองานให้คุณ",
@@ -694,10 +772,12 @@ export const th = {
       increaseHiringOpportunity: "เพิ่มโอกาสการได้รับการจ้างงาน",
       jobBoardButton: "ไปบอร์ดประกาศงาน",
       jobBoardDesc: "ดูโพสต์งานจากผู้ว่าจ้างและเสนอขายบริการของคุณ",
-      jobBoardDescription: "โพสต์รายละเอียดงาน รอฟรีแลนซ์มาเสนองาน และเลือกจ้างได้เลย",
+      jobBoardDescription:
+        "โพสต์รายละเอียดงาน รอฟรีแลนซ์มาเสนองาน และเลือกจ้างได้เลย",
       jobBoardFreelancerTitle: "รับงานจากกระดานงาน",
       jobBoardLinkText: "ไปที่กระดานงาน",
-      jobBoardSideDesc: "แสดงบริการของคุณใต้โพสต์ของผู้ว่าจ้างเพื่อเพิ่มโอกาสในการถูกจ้าง",
+      jobBoardSideDesc:
+        "แสดงบริการของคุณใต้โพสต์ของผู้ว่าจ้างเพื่อเพิ่มโอกาสในการถูกจ้าง",
       jobBoardSideTitle: "ดูโพสต์งานจากผู้ว่าจ้างและเสนอขายบริการของคุณ",
       jobBoardTitle: "หาฟรีแลนซ์ผ่านบอร์ดประกาศงาน",
       labelAboutFastworkTitle: "เกี่ยวกับ Fastwork",
@@ -742,7 +822,8 @@ export const th = {
       labelWorkWithFastwork: "ร่วมงานกับ Fastwork",
       labelWorkingHoursTitle: "เวลาทำการ",
       labelWorkingHoursWeekdays: "จันทร์-ศุกร์ 9.30-22.00 น.",
-      labelWorkingHoursWeekends: "เสาร์-อาทิตย์ และวันหยุดนักขัตฤกษ์ 10.00-19.00 น.",
+      labelWorkingHoursWeekends:
+        "เสาร์-อาทิตย์ และวันหยุดนักขัตฤกษ์ 10.00-19.00 น.",
       loginStepsIntro: "เพียง 3 ขั้นตอน หลังเข้าสู่ระบบ",
       menuAccountSettings: "ตั้งค่าบัญชี",
       menuAccumulate: "สะสมแต้ม",
@@ -775,89 +856,132 @@ export const th = {
       tittleHeaderMenuSection1: "การจ้างงาน",
       tittleHeaderMenuSection2: "สำหรับลูกค้าองค์กร",
       tittlePopularHeaderSearch: "การค้นหายอดนิยม",
-      labelSignInButton: "เข้าสู่ระบบ"
+      labelSignInButton: "เข้าสู่ระบบ",
     },
     guarantee: {
       fastworkGuaranteeTitle: "Fastwork Guarantee",
-      fastworkGuaranteeSubtitle: "จ้างฟรีแลนซ์ผ่านแพลตฟอร์ม Fastwork ได้รับการคุ้มครองอย่างครอบคลุมในทุกขั้นตอน",
-      fastworkGuaranteeSubsubtitle: "ตั้งแต่เริ่มต้นจนถึงส่งมอบงานที่มีคุณภาพตามที่ต้องการ",
-      fastworkGuaranteeStepsTitle: "Fastwork Guarantee ปกป้องทุกขั้นตอนในกระบวนการจ้างงาน",
+      fastworkGuaranteeSubtitle:
+        "จ้างฟรีแลนซ์ผ่านแพลตฟอร์ม Fastwork ได้รับการคุ้มครองอย่างครอบคลุมในทุกขั้นตอน",
+      fastworkGuaranteeSubsubtitle:
+        "ตั้งแต่เริ่มต้นจนถึงส่งมอบงานที่มีคุณภาพตามที่ต้องการ",
+      fastworkGuaranteeStepsTitle:
+        "Fastwork Guarantee ปกป้องทุกขั้นตอนในกระบวนการจ้างงาน",
       verifiedFreelancersTitle: "ฟรีแลนซ์ที่ได้รับการยืนยัน",
-      verifiedFreelancersDescription: "ตรวจสอบมาตรฐานเอกสารยืนยันตัวตน, ข้อมูลติดต่อ และ Portfolio",
+      verifiedFreelancersDescription:
+        "ตรวจสอบมาตรฐานเอกสารยืนยันตัวตน, ข้อมูลติดต่อ และ Portfolio",
       moneyBackTitle: "รับประกันคืนเงินในกรณีที่ไม่ได้รับมอบผลิตภัณฑ์",
-      moneyBackDescription: "ด้วยระบบป้องกันการชำระเงินแบบ Escrow เงินจะถูกโอนให้ฟรีแลนซ์เมื่อผลงานสุดท้ายได้รับการอนุมัติเท่านั้น รับประกันการส่งมอบงานตามที่ตกลง",
+      moneyBackDescription:
+        "ด้วยระบบป้องกันการชำระเงินแบบ Escrow เงินจะถูกโอนให้ฟรีแลนซ์เมื่อผลงานสุดท้ายได้รับการอนุมัติเท่านั้น รับประกันการส่งมอบงานตามที่ตกลง",
       supportTeamTitle: "ทีมสนับสนุนพร้อมให้บริการลูกค้าและฟรีแลนซ์",
-      supportTeamDescription: "ทีมแก้ไขข้อพิพาทและทีมสนับสนุนพร้อมให้ความช่วยเหลือในกรณีที่เกิดข้อขัดแย้ง ตรวจสอบและตัดสินคดีอย่างเป็นธรรมสำหรับทั้งลูกค้าและฟรีแลนซ์",
-      termsConditionsTitle: "ข้อกำหนดและเงื่อนไขของโปรแกรม Fastwork Guarantee มั่นใจมากขึ้นในการจ้างงาน",
+      supportTeamDescription:
+        "ทีมแก้ไขข้อพิพาทและทีมสนับสนุนพร้อมให้ความช่วยเหลือในกรณีที่เกิดข้อขัดแย้ง ตรวจสอบและตัดสินคดีอย่างเป็นธรรมสำหรับทั้งลูกค้าและฟรีแลนซ์",
+      termsConditionsTitle:
+        "ข้อกำหนดและเงื่อนไขของโปรแกรม Fastwork Guarantee มั่นใจมากขึ้นในการจ้างงาน",
       protectionTitle: "นโยบายการคุ้มครอง",
       protectionCase1: "ฟรีแลนซ์ไม่ปฏิบัติตามสัญญาที่ระบุในใบเสนอราคา",
-      protectionCase2: "ผลงานสุดท้ายไม่มีคุณภาพตามที่ฟรีแลนซ์ได้โฆษณาไว้ในสินค้าหรือตามข้อตกลง",
+      protectionCase2:
+        "ผลงานสุดท้ายไม่มีคุณภาพตามที่ฟรีแลนซ์ได้โฆษณาไว้ในสินค้าหรือตามข้อตกลง",
       protectionCase3: "ฟรีแลนซ์หายตัวไปหรือติดต่อไม่ได้",
-      protectionCase4: "ผลงานสุดท้ายยังไม่ได้รับการอนุมัติด้วยตนเองหรืออัตโนมัติบนแพลตฟอร์ม Fastwork",
+      protectionCase4:
+        "ผลงานสุดท้ายยังไม่ได้รับการอนุมัติด้วยตนเองหรืออัตโนมัติบนแพลตฟอร์ม Fastwork",
       endProtectionTitle: "สิ้นสุดการคุ้มครอง",
       endProtectionCase1: "ลูกค้าละเมิดสัญญาการจ้างงานที่ระบุในใบเสนอราคา",
-      endProtectionCase2: "ลูกค้าไม่ได้ทำการจ้างงานและชำระเงินผ่านแพลตฟอร์ม Fastwork",
-      endProtectionCase3: "ผลงานสุดท้ายได้รับการอนุมัติด้วยตนเองหรืออัตโนมัติบนแพลตฟอร์ม Fastwork",
+      endProtectionCase2:
+        "ลูกค้าไม่ได้ทำการจ้างงานและชำระเงินผ่านแพลตฟอร์ม Fastwork",
+      endProtectionCase3:
+        "ผลงานสุดท้ายได้รับการอนุมัติด้วยตนเองหรืออัตโนมัติบนแพลตฟอร์ม Fastwork",
       tellUsMoreTitle: "บอกเราเพิ่มเติม!",
-      tellUsMoreDescription: "ข้อเสนอแนะเพิ่มเติมสามารถทำได้หลังจากที่ผลงานสุดท้ายได้รับการอนุมัติแล้ว ติดต่อฝ่ายสนับสนุนลูกค้าเมื่อคุณประสบปัญหาในการจ้างงานหรือต้องการให้ข้อเสนอแนะเพื่อการปรับปรุง",
+      tellUsMoreDescription:
+        "ข้อเสนอแนะเพิ่มเติมสามารถทำได้หลังจากที่ผลงานสุดท้ายได้รับการอนุมัติแล้ว ติดต่อฝ่ายสนับสนุนลูกค้าเมื่อคุณประสบปัญหาในการจ้างงานหรือต้องการให้ข้อเสนอแนะเพื่อการปรับปรุง",
       contactCustomerSupport: "ติดต่อฝ่ายสนับสนุนลูกค้า",
-      confidentHiringTitle: "มั่นใจในการจ้างงานกับ Fastwork คุณมีอิสระในการเลือกที่จะยอมรับผลงานสุดท้ายหรือขอคืนเงิน",
+      confidentHiringTitle:
+        "มั่นใจในการจ้างงานกับ Fastwork คุณมีอิสระในการเลือกที่จะยอมรับผลงานสุดท้ายหรือขอคืนเงิน",
       reviewProcessQuestion: "วิธีการให้คะแนนและรีวิวหลังจากอนุมัติผลงานแล้ว",
-      disputeProcessQuestion: "วิธีการเปิดข้อพิพาทสำหรับผลงานที่ยังไม่ได้รับการอนุมัติ",
+      disputeProcessQuestion:
+        "วิธีการเปิดข้อพิพาทสำหรับผลงานที่ยังไม่ได้รับการอนุมัติ",
       step1Title: "1. คลิกปุ่ม “รีวิว” ในหน้าแชท",
-      step1Description: "คลิกปุ่ม “รีวิว” ที่ด้านล่างของหน้าแชทหลังจากที่คุณอนุมัติผลงานสุดท้ายแล้ว แบบฟอร์มการรีวิวจะปรากฏขึ้น",
+      step1Description:
+        "คลิกปุ่ม “รีวิว” ที่ด้านล่างของหน้าแชทหลังจากที่คุณอนุมัติผลงานสุดท้ายแล้ว แบบฟอร์มการรีวิวจะปรากฏขึ้น",
       step2Title: "2. ให้คะแนนและรีวิวผลงานฟรีแลนซ์",
-      step2Description: "ให้คะแนนทักษะ คุณภาพ ความพึงพอใจ และรีวิวผลงานของฟรีแลนซ์ ข้อมูลนี้จะเป็นประโยชน์ต่อลูกค้ารายอื่น ข้อมูลในหน้ารีวิวแรกจะถูกสะสมและแสดงในโปรไฟล์และผลงานของฟรีแลนซ์",
+      step2Description:
+        "ให้คะแนนทักษะ คุณภาพ ความพึงพอใจ และรีวิวผลงานของฟรีแลนซ์ ข้อมูลนี้จะเป็นประโยชน์ต่อลูกค้ารายอื่น ข้อมูลในหน้ารีวิวแรกจะถูกสะสมและแสดงในโปรไฟล์และผลงานของฟรีแลนซ์",
       step3Title: "3. มั่นใจยิ่งขึ้นด้วยการรีวิวแบบไม่เปิดเผยตัวตน",
-      step3Description: "แจ้งความคาดหวังของคุณเกี่ยวกับผลงานและคุณภาพบริการของฟรีแลนซ์ ไม่มีใครสามารถเข้าถึงการรีวิวแบบไม่เปิดเผยตัวตนนี้ได้ ยกเว้นบุคลากรหลักของ Fastwork สิ่งนี้สำคัญอย่างยิ่งที่เราจะนำไปปรับปรุงคุณภาพฟรีแลนซ์ของเราเพื่อให้บริการคุณได้อย่างพึงพอใจที่สุด",
+      step3Description:
+        "แจ้งความคาดหวังของคุณเกี่ยวกับผลงานและคุณภาพบริการของฟรีแลนซ์ ไม่มีใครสามารถเข้าถึงการรีวิวแบบไม่เปิดเผยตัวตนนี้ได้ ยกเว้นบุคลากรหลักของ Fastwork สิ่งนี้สำคัญอย่างยิ่งที่เราจะนำไปปรับปรุงคุณภาพฟรีแลนซ์ของเราเพื่อให้บริการคุณได้อย่างพึงพอใจที่สุด",
       step4Title: "4. ให้คะแนนความประสงค์ในการแนะนำ Fastwork ให้ผู้อื่น",
-      step4Description: "คุณสามารถแบ่งปันปัญหาหรือความยากลำบากที่คุณพบเจอในระหว่างการใช้แพลตฟอร์ม นอกจากนี้ คุณยังสามารถให้ความคิดเห็นและข้อเสนอแนะแก่ทีม Fastwork ข้อเสนอแนะทั้งหมดของคุณจะได้รับการพิจารณาอย่างจริงจังเพื่อปรับปรุงคุณภาพบริการของเรา",
+      step4Description:
+        "คุณสามารถแบ่งปันปัญหาหรือความยากลำบากที่คุณพบเจอในระหว่างการใช้แพลตฟอร์ม นอกจากนี้ คุณยังสามารถให้ความคิดเห็นและข้อเสนอแนะแก่ทีม Fastwork ข้อเสนอแนะทั้งหมดของคุณจะได้รับการพิจารณาอย่างจริงจังเพื่อปรับปรุงคุณภาพบริการของเรา",
       customerSupportTitle: "ติดต่อฝ่ายสนับสนุนลูกค้า",
-      customerSupportDescription: "ปัญหาของคุณคือสิ่งที่เราให้ความสำคัญเป็นอันดับแรก คุณสามารถติดต่อฝ่ายสนับสนุนลูกค้าของเราผ่านช่องทางต่อไปนี้",
+      customerSupportDescription:
+        "ปัญหาของคุณคือสิ่งที่เราให้ความสำคัญเป็นอันดับแรก คุณสามารถติดต่อฝ่ายสนับสนุนลูกค้าของเราผ่านช่องทางต่อไปนี้",
       facebook: "Facebook",
       messenger: "Messenger",
       supportEmail: "support@fastwork.co",
-      customerSupportWorkingHours: "ทีมงานของเราพร้อมให้บริการทุกวัน จันทร์-ศุกร์ เวลา 9:30 - 22:00 น.",
-      customerSupportWeekendHours: "เสาร์-อาทิตย์, วันหยุดนักขัตฤกษ์ เวลา 10:00 - 19:00 น.",
+      customerSupportWorkingHours:
+        "ทีมงานของเราพร้อมให้บริการทุกวัน จันทร์-ศุกร์ เวลา 9:30 - 22:00 น.",
+      customerSupportWeekendHours:
+        "เสาร์-อาทิตย์, วันหยุดนักขัตฤกษ์ เวลา 10:00 - 19:00 น.",
       startHiringTitle: "เริ่มจ้างงานวันนี้ด้วยการคุ้มครองที่ดีที่สุด",
-      searchFreelancerButton: "ค้นหาฟรีแลนซ์"
+      searchFreelancerButton: "ค้นหาฟรีแลนซ์",
     },
     home: {
       architectureEngineering: "สถาปัตย์และวิศวกรรม",
-      architectureEngineeringServices: "รีโนเวทบ้าน, ออกแบบบ้าน, ถอดแบบประมาณราคา, เขียนแบบก่อสร้าง, ตรวจรับบ้าน, จัดสวนหน้าบ้าน งบไม่เยอะ, เขียนแบบบ้านชั้นเดียว, ออกแบบเตียงนอน, ถอดแบบเครื่องจักร, ดูเพิ่มเติม",
+      architectureEngineeringServices:
+        "รีโนเวทบ้าน, ออกแบบบ้าน, ถอดแบบประมาณราคา, เขียนแบบก่อสร้าง, ตรวจรับบ้าน, จัดสวนหน้าบ้าน งบไม่เยอะ, เขียนแบบบ้านชั้นเดียว, ออกแบบเตียงนอน, ถอดแบบเครื่องจักร, ดูเพิ่มเติม",
       businessConsulting: "ธุรกิจและที่ปรึกษา",
-      businessConsultingServices: "รับทำบัญชี, รับปรึกษาปัญหาชีวิต, ที่ปรึกษาทางการเงิน, ที่ปรึกษากฎหมาย, ปรึกษาสุขภาพจิต, สั่งสินค้าจากจีน, เลขาส่วนตัว, จดทะเบียนบริษัท, ปรึกษาธุรกิจ, ดูเพิ่มเติม",
+      businessConsultingServices:
+        "รับทำบัญชี, รับปรึกษาปัญหาชีวิต, ที่ปรึกษาทางการเงิน, ที่ปรึกษากฎหมาย, ปรึกษาสุขภาพจิต, สั่งสินค้าจากจีน, เลขาส่วนตัว, จดทะเบียนบริษัท, ปรึกษาธุรกิจ, ดูเพิ่มเติม",
       buttonBanner: "สำรวจบริการ",
       buttonDownloadApp: "ดาวน์โหลดแอปพลิเคชัน",
       buttonJobCategoriesViewMore: "ดูเพิ่มเติม",
-      confidenceInFastwork: "พบกับกองทัพฟรีแลนซ์คุณภาพ พร้อมตอบโจทย์ทุกธุรกิจ ครอบคลุมทุกสายงาน",
-      contentFastwork1: "Fastwork.co เป็นแพลตฟอร์มที่รวบรวมฟรีแลนซ์มืออาชีพจากหลากหลายสาขา ไม่ว่าจะเป็นการออกแบบโลโก้ ทำแบนเนอร์โฆษณา เขียนบทความ แปลภาษา การตลาดออนไลน์ พัฒนาเว็บไซต์ และงานอื่นๆ อีกกว่า 90 หมวดหมู่ เพื่อตอบสนองความต้องการที่หลากหลายของทั้งธุรกิจและผู้ใช้งาน ทีมงานของเราพัฒนา Fastwork.co โดยเน้นความเรียบง่าย และสะดวกต่อการใช้งาน เพื่อช่วยประหยัดเวลาให้กับฟรีแลนซ์และลูกค้า อีกทั้งยังสนับสนุนการสร้างและขยายธุรกิจ รวมถึงช่วยให้ฟรีแลนซ์หางานได้ง่ายขึ้น มีรายได้เพิ่มขึ้น และมีคุณภาพชีวิตที่ดีขึ้น.",
-      contentFastwork2: "Fastwork.co ทำหน้าที่เป็นสื่อกลางระหว่างฟรีแลนซ์และลูกค้า ทำให้ทั้งสองฝ่ายสามารถเชื่อมต่อกันได้ทุกที่ทุกเวลา ฟรีแลนซ์สามารถลงประกาศรับจ้างงานได้ ส่วนลูกค้าก็สามารถค้นหาฟรีแลนซ์ที่ต้องการได้ในที่เดียวกัน ระบบการชำระเงินที่ปลอดภัยของ Fastwork.co ช่วยรับประกันว่า ฟรีแลนซ์จะได้รับค่าจ้างเมื่อทำงานสำเร็จ และลูกค้าจะได้รับงานที่ตรงตามข้อตกลง.",
-      contentFastwork3: "ปัจจุบัน Fastwork.co มีฟรีแลนซ์ที่ผ่านการคัดกรองคุณภาพแล้วกว่า 50,000 คน ให้บริการในหมวดหมู่ที่ครอบคลุมกว่า 90 หมวดหมู่ มีงานให้เลือกมากกว่า 15,000 รายการ รองรับทุกกลุ่มลูกค้า ไม่ว่าจะเป็นเจ้าของกิจการ ธุรกิจ SME พ่อค้าแม่ค้าออนไลน์ หรือบุคคลทั่วไปที่ต้องการบริการระดับมืออาชีพในราคาที่เข้าถึงได้ Fastwork.co เป็นแพลตฟอร์มฟรีแลนซ์มืออาชีพที่ได้รับความไว้วางใจจากลูกค้ากว่า 700,000 ราย.",
-      contentFreelancerVerification: "ฟรีแลนซ์ผ่านการคัดเลือก และยืนยันตัวตน กับ Fastwork สามารถตรวจสอบได้",
-      contentPaymentProtection: "เงินของคุณจะได้รับความคุ้มครองตั้งแต่ฟรีแลนซ์เริ่มทํางานไปจนถึงได้รับงานที่พอใจ",
-      contentQualityFreelancers: "พบกับกองทัพฟรีแลนซ์คุณภาพ พร้อมตอบโจทย์ทุกธุรกิจ ครอบคลุมทุกสายงาน",
+      confidenceInFastwork:
+        "พบกับกองทัพฟรีแลนซ์คุณภาพ พร้อมตอบโจทย์ทุกธุรกิจ ครอบคลุมทุกสายงาน",
+      contentFastwork1:
+        "Fastwork.co เป็นแพลตฟอร์มที่รวบรวมฟรีแลนซ์มืออาชีพจากหลากหลายสาขา ไม่ว่าจะเป็นการออกแบบโลโก้ ทำแบนเนอร์โฆษณา เขียนบทความ แปลภาษา การตลาดออนไลน์ พัฒนาเว็บไซต์ และงานอื่นๆ อีกกว่า 90 หมวดหมู่ เพื่อตอบสนองความต้องการที่หลากหลายของทั้งธุรกิจและผู้ใช้งาน ทีมงานของเราพัฒนา Fastwork.co โดยเน้นความเรียบง่าย และสะดวกต่อการใช้งาน เพื่อช่วยประหยัดเวลาให้กับฟรีแลนซ์และลูกค้า อีกทั้งยังสนับสนุนการสร้างและขยายธุรกิจ รวมถึงช่วยให้ฟรีแลนซ์หางานได้ง่ายขึ้น มีรายได้เพิ่มขึ้น และมีคุณภาพชีวิตที่ดีขึ้น.",
+      contentFastwork2:
+        "Fastwork.co ทำหน้าที่เป็นสื่อกลางระหว่างฟรีแลนซ์และลูกค้า ทำให้ทั้งสองฝ่ายสามารถเชื่อมต่อกันได้ทุกที่ทุกเวลา ฟรีแลนซ์สามารถลงประกาศรับจ้างงานได้ ส่วนลูกค้าก็สามารถค้นหาฟรีแลนซ์ที่ต้องการได้ในที่เดียวกัน ระบบการชำระเงินที่ปลอดภัยของ Fastwork.co ช่วยรับประกันว่า ฟรีแลนซ์จะได้รับค่าจ้างเมื่อทำงานสำเร็จ และลูกค้าจะได้รับงานที่ตรงตามข้อตกลง.",
+      contentFastwork3:
+        "ปัจจุบัน Fastwork.co มีฟรีแลนซ์ที่ผ่านการคัดกรองคุณภาพแล้วกว่า 50,000 คน ให้บริการในหมวดหมู่ที่ครอบคลุมกว่า 90 หมวดหมู่ มีงานให้เลือกมากกว่า 15,000 รายการ รองรับทุกกลุ่มลูกค้า ไม่ว่าจะเป็นเจ้าของกิจการ ธุรกิจ SME พ่อค้าแม่ค้าออนไลน์ หรือบุคคลทั่วไปที่ต้องการบริการระดับมืออาชีพในราคาที่เข้าถึงได้ Fastwork.co เป็นแพลตฟอร์มฟรีแลนซ์มืออาชีพที่ได้รับความไว้วางใจจากลูกค้ากว่า 700,000 ราย.",
+      contentFreelancerVerification:
+        "ฟรีแลนซ์ผ่านการคัดเลือก และยืนยันตัวตน กับ Fastwork สามารถตรวจสอบได้",
+      contentPaymentProtection:
+        "เงินของคุณจะได้รับความคุ้มครองตั้งแต่ฟรีแลนซ์เริ่มทํางานไปจนถึงได้รับงานที่พอใจ",
+      contentQualityFreelancers:
+        "พบกับกองทัพฟรีแลนซ์คุณภาพ พร้อมตอบโจทย์ทุกธุรกิจ ครอบคลุมทุกสายงาน",
       contentQualityOfferFreelancerCard1: "ผ่านการยืนยันตัวตนในระบบ",
-      contentQualityOfferFreelancerCard2: "ผ่านการตรวจสอบผลงาน ตามมาตรฐานขั้นต้นของ Fastwork",
+      contentQualityOfferFreelancerCard2:
+        "ผ่านการตรวจสอบผลงาน ตามมาตรฐานขั้นต้นของ Fastwork",
       contentQualityOfferProfessionalCard1: "ผ่านการยืนยันตัวตนในระบบ",
-      contentQualityOfferProfessionalCard2: "ผ่านการคัดเลือก ทดสอบความรู้ตามสายงาน และทักษะในการทำงานโดย Fastwork",
-      contentQualityOfferProfessionalCard3: "ผ่านการอบรมพิเศษด้านทักษะและการให้บริการจาก Fastwork",
-      contentQualityOfferProfessionalCard4: "มีใบประกอบวิชาชีพที่จำเป็นตามสายงาน",
-      contentQualityOfferProfessionalCard5: "คัดกรองความเชี่ยวชาญขั้นสูงด้วยเกณฑ์พิเศษ",
-      contentQualityOfferProfessionalCard6: "มีความสามารถทำงานที่ซับซ้อนสูง และมีขนาดใหญ่",
+      contentQualityOfferProfessionalCard2:
+        "ผ่านการคัดเลือก ทดสอบความรู้ตามสายงาน และทักษะในการทำงานโดย Fastwork",
+      contentQualityOfferProfessionalCard3:
+        "ผ่านการอบรมพิเศษด้านทักษะและการให้บริการจาก Fastwork",
+      contentQualityOfferProfessionalCard4:
+        "มีใบประกอบวิชาชีพที่จำเป็นตามสายงาน",
+      contentQualityOfferProfessionalCard5:
+        "คัดกรองความเชี่ยวชาญขั้นสูงด้วยเกณฑ์พิเศษ",
+      contentQualityOfferProfessionalCard6:
+        "มีความสามารถทำงานที่ซับซ้อนสูง และมีขนาดใหญ่",
       contentQualityOfferSpecialistCard1: "ผ่านการยืนยันตัวตนในระบบ",
-      contentQualityOfferSpecialistCard2: "ผ่านการคัดเลือก ทดสอบความรู้ตามสายงาน และทักษะในการทำงานโดย Fastwork",
-      contentQualityOfferSpecialistCard3: "ผ่านการอบรมพิเศษด้านทักษะและการให้บริการจาก Fastwork",
-      contentQualityOfferSpecialistCard4: "มีใบประกอบวิชาชีพที่จำเป็นตามสายงาน Fastwork",
+      contentQualityOfferSpecialistCard2:
+        "ผ่านการคัดเลือก ทดสอบความรู้ตามสายงาน และทักษะในการทำงานโดย Fastwork",
+      contentQualityOfferSpecialistCard3:
+        "ผ่านการอบรมพิเศษด้านทักษะและการให้บริการจาก Fastwork",
+      contentQualityOfferSpecialistCard4:
+        "มีใบประกอบวิชาชีพที่จำเป็นตามสายงาน Fastwork",
       contentStartHiringSection1: "พิจารณาจากผลงาน ความสามารถ และรีวิว",
       contentStartHiringSection2: "อธิบายงานเพื่อให้ฟรีแลนซ์สร้างใบเสนอราคา",
       contentStartHiringSection3: "Fastwork Guarantee ได้งานแน่นอน",
       contentStartHiringSection4: "ตรวจสอบงานที่ได้รับ อนุมัติ และรีวิวงาน",
-      freelancerQuality: "ฟรีแลนซ์ผ่านการคัดเลือก และยืนยันตัวตน กับ Fastwork สามารถตรวจสอบได้",
-      freelancerStatistics: "ปัจจุบัน Fastwork.co มี ฟรีแลนซ์ กว่า 50,000 คน ที่ผ่านการคัดกรองคุณภาพ และให้บริการในหมวดหมู่ที่หลากหลายกว่า 90 หมวดหมู่ มีงานสำเร็จแล้วกว่า 15,000 งาน โดยคัดเลือก ฟรีแลนซ์ อย่างพิถีพิถันเพื่อตอบสนองความต้องการของลูกค้า ไม่ว่าจะเป็นเจ้าของกิจการ ธุรกิจ SME หรือบุคคลทั่วไปที่ต้องการบริการระดับมืออาชีพ ปัจจุบัน Fastwork ได้รับความไว้วางใจจากลูกค้ากว่า 70,000 ราย",
+      freelancerQuality:
+        "ฟรีแลนซ์ผ่านการคัดเลือก และยืนยันตัวตน กับ Fastwork สามารถตรวจสอบได้",
+      freelancerStatistics:
+        "ปัจจุบัน Fastwork.co มี ฟรีแลนซ์ กว่า 50,000 คน ที่ผ่านการคัดกรองคุณภาพ และให้บริการในหมวดหมู่ที่หลากหลายกว่า 90 หมวดหมู่ มีงานสำเร็จแล้วกว่า 15,000 งาน โดยคัดเลือก ฟรีแลนซ์ อย่างพิถีพิถันเพื่อตอบสนองความต้องการของลูกค้า ไม่ว่าจะเป็นเจ้าของกิจการ ธุรกิจ SME หรือบุคคลทั่วไปที่ต้องการบริการระดับมืออาชีพ ปัจจุบัน Fastwork ได้รับความไว้วางใจจากลูกค้ากว่า 70,000 ราย",
       graphicDesign: "กราฟิกและการออกแบบ",
-      graphicDesignServices: "ออกแบบแบนเนอร์, ออกแบบนามบัตร, ออกแบบโปสเตอร์, ทำ Infographic, รับทำเรซูเม่, ออกแบบลายสัก, ออกแบบแพคเกจจิ้ง, ออกแบบ CI, ดูเพิ่มเติม",
-      jobSecurity: "เงินของคุณจะได้รับความคุ้มครองตั้งแต่ฟรีแลนซ์เริ่มทํางานไปจนถึงได้รับงานที่พอใจ",
+      graphicDesignServices:
+        "ออกแบบแบนเนอร์, ออกแบบนามบัตร, ออกแบบโปสเตอร์, ทำ Infographic, รับทำเรซูเม่, ออกแบบลายสัก, ออกแบบแพคเกจจิ้ง, ออกแบบ CI, ดูเพิ่มเติม",
+      jobSecurity:
+        "เงินของคุณจะได้รับความคุ้มครองตั้งแต่ฟรีแลนซ์เริ่มทํางานไปจนถึงได้รับงานที่พอใจ",
       labelFreelancersPopularLogo: "ออกแบบโลโก้",
       labelRecommendSection: "สิ่งที่น่าสนใจ",
       labelReviewsCustomer: "ความคิดเห็นจากลูกค้า",
@@ -867,16 +991,23 @@ export const th = {
       labelStartHiringSection3: "3. ชำระเงินผ่าน Fastwork",
       labelStartHiringSection4: "4. อนุมัติงานและรีวิว",
       lifestyle: "ไลฟ์สไตล์",
-      lifestyleServices: "ตรวจรถมือสอง, ซินแสฮวงจุ้ยบ้าน, รับจ้างเล่นเกม, ดูดวง, ช่างแต่งหน้า, จ้างเทรนเนอร์, ปรึกษาโภชนาการ, หานักร้อง, รับวางแผนเที่ยว, สไตล์ลิสต์ส่วนตัว, ดูเพิ่มเติม",
+      lifestyleServices:
+        "ตรวจรถมือสอง, ซินแสฮวงจุ้ยบ้าน, รับจ้างเล่นเกม, ดูดวง, ช่างแต่งหน้า, จ้างเทรนเนอร์, ปรึกษาโภชนาการ, หานักร้อง, รับวางแผนเที่ยว, สไตล์ลิสต์ส่วนตัว, ดูเพิ่มเติม",
       marketingAdvertising: "การตลาดและโฆษณา",
-      marketingAdvertisingServices: "รับทำ SEO, โฆษณา Google, โฆษณา Facebook, โฆษณา TikTok, บล็อกเกอร์รีวิว, โปรโมทสินค้า, รับจ้างทดลองสินค้า, รับฝากขายบ้าน, ปักหมุด google map, ดูเพิ่มเติม",
+      marketingAdvertisingServices:
+        "รับทำ SEO, โฆษณา Google, โฆษณา Facebook, โฆษณา TikTok, บล็อกเกอร์รีวิว, โปรโมทสินค้า, รับจ้างทดลองสินค้า, รับฝากขายบ้าน, ปักหมุด google map, ดูเพิ่มเติม",
       mediaAudio: "ภาพและเสียง",
-      mediaAudioServices: "ตากล้อง, ถ่ายฟรีเวดดิ้ง, สร้าง Podcast, ตัดต่อเพลง, ตัดต่อวิดีโอ, ทำเว็บไซต์เคลื่อนไหว, Motion Graphic, รับไลฟ์สด, ถ่ายแฟชั่น, พากย์เสียง, ดูเพิ่มเติม",
-      platformDescription: "Fastwork.co คือเว็บไซต์ที่รวบรวม ฟรีแลนซ์ มืออาชีพจากหลากหลายสายงานไว้ในที่เดียวกัน ไม่ว่าจะเป็น งานออกแบบกราฟิก ทำแบนเนอร์โฆษณา เขียนบทความ แปลภาษา การตลาดออนไลน์ พัฒนาเว็บไซต์ และงานอื่นๆ อีกกว่า 90 หมวดหมู่ เพื่อตอบโจทย์ความต้องการที่หลากหลายของทั้งผู้ประกอบการและผู้ใช้งานทั่วไป ทีมพัฒนาของเราได้ออกแบบ Fastwork.co ให้เรียบง่ายและสะดวกในการใช้งาน เพื่อให้เป็นแพลตฟอร์มที่ช่วยประหยัดเวลาให้กับทั้ง ฟรีแลนซ์ และลูกค้า อีกทั้งยังช่วยสนับสนุนการสร้างธุรกิจใหม่ ๆ ให้กับผู้ประกอบการและยกระดับมาตรฐานของฟรีแลนซ์ไทยให้ดียิ่งขึ้น",
-      platformPurpose: "Fastwork.co ทำหน้าที่เป็นสื่อกลางออนไลน์ระหว่าง ฟรีแลนซ์ และผู้ว่าจ้าง ให้สามารถพบกันและทำงานร่วมกันได้ทุกที่ทุกเวลา โดยที่ ฟรีแลนซ์ สามารถใช้เว็บไซต์ Fastwork.co ในการลงประกาศรับงานได้อย่างสะดวกในที่เดียว อีกทั้งยังมีระบบการคัดกรองที่ช่วยให้ลูกค้าสามารถเปรียบเทียบราคาและคุณภาพของ ฟรีแลนซ์ ได้ง่ายขึ้น Fastwork.co ยังรับประกันการส่งมอบงานให้เสร็จสมบูรณ์ก่อนที่ฟรีแลนซ์จะได้รับเงิน เพื่อความมั่นใจของทั้งสองฝ่าย",
+      mediaAudioServices:
+        "ตากล้อง, ถ่ายฟรีเวดดิ้ง, สร้าง Podcast, ตัดต่อเพลง, ตัดต่อวิดีโอ, ทำเว็บไซต์เคลื่อนไหว, Motion Graphic, รับไลฟ์สด, ถ่ายแฟชั่น, พากย์เสียง, ดูเพิ่มเติม",
+      platformDescription:
+        "Fastwork.co คือเว็บไซต์ที่รวบรวม ฟรีแลนซ์ มืออาชีพจากหลากหลายสายงานไว้ในที่เดียวกัน ไม่ว่าจะเป็น งานออกแบบกราฟิก ทำแบนเนอร์โฆษณา เขียนบทความ แปลภาษา การตลาดออนไลน์ พัฒนาเว็บไซต์ และงานอื่นๆ อีกกว่า 90 หมวดหมู่ เพื่อตอบโจทย์ความต้องการที่หลากหลายของทั้งผู้ประกอบการและผู้ใช้งานทั่วไป ทีมพัฒนาของเราได้ออกแบบ Fastwork.co ให้เรียบง่ายและสะดวกในการใช้งาน เพื่อให้เป็นแพลตฟอร์มที่ช่วยประหยัดเวลาให้กับทั้ง ฟรีแลนซ์ และลูกค้า อีกทั้งยังช่วยสนับสนุนการสร้างธุรกิจใหม่ ๆ ให้กับผู้ประกอบการและยกระดับมาตรฐานของฟรีแลนซ์ไทยให้ดียิ่งขึ้น",
+      platformPurpose:
+        "Fastwork.co ทำหน้าที่เป็นสื่อกลางออนไลน์ระหว่าง ฟรีแลนซ์ และผู้ว่าจ้าง ให้สามารถพบกันและทำงานร่วมกันได้ทุกที่ทุกเวลา โดยที่ ฟรีแลนซ์ สามารถใช้เว็บไซต์ Fastwork.co ในการลงประกาศรับงานได้อย่างสะดวกในที่เดียว อีกทั้งยังมีระบบการคัดกรองที่ช่วยให้ลูกค้าสามารถเปรียบเทียบราคาและคุณภาพของ ฟรีแลนซ์ ได้ง่ายขึ้น Fastwork.co ยังรับประกันการส่งมอบงานให้เสร็จสมบูรณ์ก่อนที่ฟรีแลนซ์จะได้รับเงิน เพื่อความมั่นใจของทั้งสองฝ่าย",
       subtitleBanner: "ขยายธุรกิจของคุณให้เติบโตด้วยฟรีแลนซ์ที่ใช่",
-      subtitleDownloadApp: "ทำให้กระบวนการจ้างงานของคุณง่ายขึ้นด้วยแอป Fastwork ค้นหา, บรีฟ, ชำระเงิน และรับงานได้อย่างราบรื่น—all in one app.",
-      titleAstrologyFreelancers: "ฟรีแลนซ์ยอดนิยมในหมวดดูดวง โหราศาสตร์ ความเชื่อ",
+      subtitleDownloadApp:
+        "ทำให้กระบวนการจ้างงานของคุณง่ายขึ้นด้วยแอป Fastwork ค้นหา, บรีฟ, ชำระเงิน และรับงานได้อย่างราบรื่น—all in one app.",
+      titleAstrologyFreelancers:
+        "ฟรีแลนซ์ยอดนิยมในหมวดดูดวง โหราศาสตร์ ความเชื่อ",
       titleBanner: "Fastwork สำหรับธุรกิจ",
       titleBannerHomePage1: "เรามีฟรีแลนซ์มืออาชีพด้าน...",
       titleBannerHomePage2: "ที่พร้อมเปลี่ยนไอเดียของคุณให้เป็นความจริง",
@@ -886,19 +1017,24 @@ export const th = {
       titlePlatform: "Fastwork: แพลตฟอร์มอันดับหนึ่งสำหรับฟรีแลนซ์คุณภาพ",
       titlePopularFreelancers: "ฟรีแลนซ์ยอดนิยมในหมวดจัดดอกไม้",
       titleStartHiringSection: "เริ่มจ้างงานฟรีแลนซ์ง่ายๆ กับ Fastwork",
-      titleTrustedCompanies: "กว่า 150,000 โปรเจกต์ที่สำเร็จ โดยบริษัทชั้นนำที่ไว้วางใจ Fastwork",
+      titleTrustedCompanies:
+        "กว่า 150,000 โปรเจกต์ที่สำเร็จ โดยบริษัทชั้นนำที่ไว้วางใจ Fastwork",
       tittleFirstSlogan: "ฟรีแลนซ์คุณภาพอันดับ 1",
       tittlePrimaryWhySection: "ทำไมถึงต้องใช้ Fastwork?",
       tittleQualityOfferProfessionalCard: "Professional",
-      tittleQualityOfferSection: "เรามีฟรีแลนซ์คุณภาพ และผู้เชี่ยวชาญที่หลากหลายในระบบคอยให้บริการ",
+      tittleQualityOfferSection:
+        "เรามีฟรีแลนซ์คุณภาพ และผู้เชี่ยวชาญที่หลากหลายในระบบคอยให้บริการ",
       tittleQualityOfferSpecialistCard: "ผู้เชี่ยวชาญ",
       tittleSecondSlogan: "รับประกันการจ้างงาน",
-      tittleSecondaryWhySection: "เพราะเราเปลี่ยนไอเดียของคุณให้เป็นความจริง ด้วยฟรีแลนซ์มืออาชีพ",
+      tittleSecondaryWhySection:
+        "เพราะเราเปลี่ยนไอเดียของคุณให้เป็นความจริง ด้วยฟรีแลนซ์มืออาชีพ",
       tittleThirdSlogan: "ครบทุกงานที่ต้องการ มั่นใจ เลือก Fastwork",
       websiteProgramming: "เว็บไซต์และเขียนโปรแกรม",
-      websiteProgrammingServices: "ออกแบบเว็บไซต์, สร้างเว็บขายของ, เว็บไซต์สำเร็จรูป, รับเขียนโปรแกรม, Chatbot Facebook, สร้างบอตไลน์, Website Scraping, รับลงโปรแกรม, ดูเพิ่มเติม",
+      websiteProgrammingServices:
+        "ออกแบบเว็บไซต์, สร้างเว็บขายของ, เว็บไซต์สำเร็จรูป, รับเขียนโปรแกรม, Chatbot Facebook, สร้างบอตไลน์, Website Scraping, รับลงโปรแกรม, ดูเพิ่มเติม",
       writingTranslation: "เขียนและแปลภาษา",
-      writingTranslationServices: "แปลภาษา, ล่ามแปลภาษา, ถอดไฟล์เสียง, เขียนคอนเทนต์, เขียนบทความ SEO, เขียนบทความภาษาอังกฤษ, รับเขียนรายงาน, พิสูจน์อักษร, รับแต่งกลอน, ดูเพิ่มเติม"
+      writingTranslationServices:
+        "แปลภาษา, ล่ามแปลภาษา, ถอดไฟล์เสียง, เขียนคอนเทนต์, เขียนบทความ SEO, เขียนบทความภาษาอังกฤษ, รับเขียนรายงาน, พิสูจน์อักษร, รับแต่งกลอน, ดูเพิ่มเติม",
     },
     how: {
       howToBuySellTitle: "วิธีการซื้อขายบริการบน Fastwork?",
@@ -907,7 +1043,8 @@ export const th = {
       chooseServiceButton: "เลือกบริการที่คุณต้องการ",
       registerFreelancerButton: "ลงทะเบียนเพื่อเป็นฟรีแลนซ์",
       employerStep1Title: "เลือกบริการที่คุณต้องการ",
-      employerStep1Description: "สำรวจและเลือกฟรีแลนซ์จากสาขาผู้เชี่ยวชาญต่อไปนี้:",
+      employerStep1Description:
+        "สำรวจและเลือกฟรีแลนซ์จากสาขาผู้เชี่ยวชาญต่อไปนี้:",
       employerStep1List1: "กราฟิกและดีไซน์",
       employerStep1List2: "การตลาดและโฆษณา",
       employerStep1List3: "งานเขียนและแปลภาษา",
@@ -917,30 +1054,43 @@ export const th = {
       employerStep1List7: "ไลฟ์สไตล์",
       employerStep2Title: "ปรึกษารายละเอียดงานกับฟรีแลนซ์",
       employerStep2Description: "พูดคุยขอบเขตงานของคุณ",
-      employerStep2List1: "คุณสามารถพูดคุยกับฟรีแลนซ์เกี่ยวกับรายละเอียดและราคางานได้",
-      employerStep2List2: "หากรายละเอียดงานตกลงกันได้ ฟรีแลนซ์จะส่งใบเสนอราคาให้คุณ",
-      employerStep2List3: "ระบบไม่อนุญาตให้คุณส่ง LINE, เบอร์โทรศัพท์, อีเมล ก่อนการชำระเงิน",
+      employerStep2List1:
+        "คุณสามารถพูดคุยกับฟรีแลนซ์เกี่ยวกับรายละเอียดและราคางานได้",
+      employerStep2List2:
+        "หากรายละเอียดงานตกลงกันได้ ฟรีแลนซ์จะส่งใบเสนอราคาให้คุณ",
+      employerStep2List3:
+        "ระบบไม่อนุญาตให้คุณส่ง LINE, เบอร์โทรศัพท์, อีเมล ก่อนการชำระเงิน",
       employerStep3Title: "ทำการชำระเงินผ่านระบบ",
-      employerStep3Description: "ระบบทำหน้าที่เป็นตัวกลางในการเก็บเงินของคุณจนกว่าฟรีแลนซ์จะทำงานเสร็จ",
+      employerStep3Description:
+        "ระบบทำหน้าที่เป็นตัวกลางในการเก็บเงินของคุณจนกว่าฟรีแลนซ์จะทำงานเสร็จ",
       employerStep3List1: "ตรวจสอบรายละเอียดการจ้างงานในใบเสนอราคา",
       employerStep3List2: "คุณสามารถชำระเงินผ่าน Fastwork ด้วยวิธีต่อไปนี้:",
       employerStep3List3: "สแกน QR Code PromptPay",
       employerStep3List4: "บัตรเครดิต",
       employerStep3List5: "Fastwork Coin",
       employerStep3List6: "TrueMoney Wallet",
-      employerStep3List7: "หลังจากชำระเงินสำเร็จ คุณสามารถแลกเปลี่ยนข้อมูลติดต่อส่วนตัวได้",
+      employerStep3List7:
+        "หลังจากชำระเงินสำเร็จ คุณสามารถแลกเปลี่ยนข้อมูลติดต่อส่วนตัวได้",
       employerStep4Title: "รอฟรีแลนซ์ส่งมอบงานให้คุณ",
       employerStep4Description: "ตรวจสอบผลงานสุดท้ายที่ส่งโดยฟรีแลนซ์",
-      employerStep4List1: "คลิกอนุมัติผลงาน หากผลงานสุดท้ายที่ส่งมาตรงตามข้อตกลงในใบเสนอราคา",
-      employerStep4List2: "ฟรีแลนซ์จะได้รับเงินสดหลังจากคุณอนุมัติผลงานเท่านั้น",
-      employerStep4List3: "งานของฟรีแลนซ์จะได้รับการอนุมัติโดยอัตโนมัติภายใน 7 วัน หากคุณไม่ตรวจสอบหรือส่งคำขอแก้ไขงาน",
-      employerStep4List4: "คุณสามารถปฏิเสธผลงานสุดท้ายและอนุญาตให้ฟรีแลนซ์แก้ไขงานได้ ขึ้นอยู่กับข้อตกลงของทั้งสองฝ่าย",
-      employerStep4List5: "คุณสามารถดำเนินการฟ้องร้องได้ หากงานไม่เป็นไปตามที่ฟรีแลนซ์ตกลงไว้",
+      employerStep4List1:
+        "คลิกอนุมัติผลงาน หากผลงานสุดท้ายที่ส่งมาตรงตามข้อตกลงในใบเสนอราคา",
+      employerStep4List2:
+        "ฟรีแลนซ์จะได้รับเงินสดหลังจากคุณอนุมัติผลงานเท่านั้น",
+      employerStep4List3:
+        "งานของฟรีแลนซ์จะได้รับการอนุมัติโดยอัตโนมัติภายใน 7 วัน หากคุณไม่ตรวจสอบหรือส่งคำขอแก้ไขงาน",
+      employerStep4List4:
+        "คุณสามารถปฏิเสธผลงานสุดท้ายและอนุญาตให้ฟรีแลนซ์แก้ไขงานได้ ขึ้นอยู่กับข้อตกลงของทั้งสองฝ่าย",
+      employerStep4List5:
+        "คุณสามารถดำเนินการฟ้องร้องได้ หากงานไม่เป็นไปตามที่ฟรีแลนซ์ตกลงไว้",
       employerStep5Title: "การให้คะแนนและรีวิว",
       employerStep5Description: "เพื่อพัฒนาสังคม Fastwork",
-      employerStep5List1: "ให้คะแนนและรีวิวลูกค้าเพื่อประโยชน์ของฟรีแลนซ์คนอื่นๆ",
-      employerStep5List2: "แสดงความคิดเห็นเกี่ยวกับความพึงพอใจของคุณต่อระบบ Fastwork เพื่อช่วยปรับปรุงคุณภาพบริการ",
-      sellerStep1Title: "ลงประกาศสินค้า/โปรเจกต์ของคุณบน Fastwork เพื่อแสดงความสามารถพิเศษของคุณแก่ลูกค้าที่มีศักยภาพ",
+      employerStep5List1:
+        "ให้คะแนนและรีวิวลูกค้าเพื่อประโยชน์ของฟรีแลนซ์คนอื่นๆ",
+      employerStep5List2:
+        "แสดงความคิดเห็นเกี่ยวกับความพึงพอใจของคุณต่อระบบ Fastwork เพื่อช่วยปรับปรุงคุณภาพบริการ",
+      sellerStep1Title:
+        "ลงประกาศสินค้า/โปรเจกต์ของคุณบน Fastwork เพื่อแสดงความสามารถพิเศษของคุณแก่ลูกค้าที่มีศักยภาพ",
       sellerStep1Description: "ลงประกาศบริการของคุณในหมวดหมู่ต่อไปนี้:",
       sellerStep1List1: "กราฟิกและดีไซน์",
       sellerStep1List2: "การตลาดและโฆษณา",
@@ -952,9 +1102,11 @@ export const th = {
       sellerStep2Title: "ปรึกษารายละเอียดงานกับลูกค้าและสร้างใบเสนอราคา",
       sellerStep2Description: "พูดคุยรายละเอียดและสรุปงานกับลูกค้า",
       sellerStep2List1: "พูดคุยรายละเอียดงานและส่งใบเสนอราคาให้ลูกค้า",
-      sellerStep2List2: "ระบบไม่อนุญาตให้คุณส่ง LINE, เบอร์โทรศัพท์, อีเมล ก่อนการชำระเงิน",
+      sellerStep2List2:
+        "ระบบไม่อนุญาตให้คุณส่ง LINE, เบอร์โทรศัพท์, อีเมล ก่อนการชำระเงิน",
       sellerStep3Title: "รอการชำระเงินจากลูกค้า",
-      sellerStep3Description: "ลูกค้าต้องชำระเงินผ่านระบบก่อนที่คุณจะเริ่มทำงาน",
+      sellerStep3Description:
+        "ลูกค้าต้องชำระเงินผ่านระบบก่อนที่คุณจะเริ่มทำงาน",
       sellerStep3List1: "ระบบจะแจ้งเตือนเมื่อการชำระเงินเสร็จสมบูรณ์",
       sellerStep3List2: "เริ่มทำงานหลังจากได้รับการยืนยันเท่านั้น",
       sellerStep4Title: "ส่งมอบผลงานสุดท้าย",
@@ -964,7 +1116,7 @@ export const th = {
       sellerStep5Title: "รับการชำระเงินและข้อเสนอแนะ",
       sellerStep5Description: "สร้างชื่อเสียงของคุณด้วยรีวิวที่ยอดเยี่ยม",
       sellerStep5List1: "ถอนเงินที่ได้รับผ่านวิธีการที่รองรับ",
-      sellerStep5List2: "กระตุ้นให้ลูกค้าแสดงความคิดเห็น"
+      sellerStep5List2: "กระตุ้นให้ลูกค้าแสดงความคิดเห็น",
     },
     jobBoardCreate: {
       whyValidate: "ต้องมีอย่างน้อย 100 ตัวอักษร",
@@ -972,12 +1124,16 @@ export const th = {
       priceValidate: "จำเป็นต้องระบุราคา",
       timelineValidate: "จำเป็นต้องระบุระยะเวลา",
       serviceValidate: "กรุณาเลือกบริการ",
-      increateHire: "เพิ่มโอกาสในการถูกจ้าง! ด้วยประสบการณ์และโปรไฟล์โครงการที่มีคุณภาพและเกี่ยวข้อง",
-      mostClient: "ลูกค้าส่วนใหญ่เลือกฟรีแลนซ์จากประวัติการทำงานและตัวอย่างผลงาน",
-      warning: "คำเตือน: การชักชวนลูกค้าให้ชำระเงินนอกระบบ Fastwork เป็นการละเมิดข้อกำหนดการใช้งานและอาจนำไปสู่การระงับบัญชีได้",
+      increateHire:
+        "เพิ่มโอกาสในการถูกจ้าง! ด้วยประสบการณ์และโปรไฟล์โครงการที่มีคุณภาพและเกี่ยวข้อง",
+      mostClient:
+        "ลูกค้าส่วนใหญ่เลือกฟรีแลนซ์จากประวัติการทำงานและตัวอย่างผลงาน",
+      warning:
+        "คำเตือน: การชักชวนลูกค้าให้ชำระเงินนอกระบบ Fastwork เป็นการละเมิดข้อกำหนดการใช้งานและอาจนำไปสู่การระงับบัญชีได้",
       allInfo: "ข้อมูลทั้งหมดจะแสดงต่อสาธารณะ (ยกเว้น 'ราคาข้อเสนอ')",
       whyClient: "ทำไมลูกค้าถึงควรจ้างคุณ",
-      whyClientPlaceholder: "เช่น: โปรไฟล์ที่เกี่ยวข้อง / ประสบการณ์การทำงาน / กระบวนการทำงาน",
+      whyClientPlaceholder:
+        "เช่น: โปรไฟล์ที่เกี่ยวข้อง / ประสบการณ์การทำงาน / กระบวนการทำงาน",
       minimum: "ขั้นต่ำ 100 ตัวอักษร",
       portfolioUrl: "URL Portfolio ส่วนตัว (ไม่บังคับ)",
       portfolioSample: "ตัวอย่าง Portfolio (ไม่บังคับ)",
@@ -988,7 +1144,7 @@ export const th = {
       day: "วัน",
       selectService: "เลือกบริการของคุณ",
       cancel: "ยกเลิก",
-      submit: "ส่ง"
+      submit: "ส่ง",
     },
     jobBoardDetail: {
       open: "กำลังเปิดรับ",
@@ -1011,13 +1167,17 @@ export const th = {
       english: "ภาษาอังกฤษ",
       submit: "ส่งข้อเสนอ",
       interestFreelance: "ฟรีแลนซ์ที่สนใจการออกแบบตัวละครเกมมือถือ (0 ข้อเสนอ)",
-      recommendation: "เราขอแนะนำให้คุณสื่อสารและชำระเงินผ่าน Fastwork เพื่อป้องกันการฉ้อโกง! เราจะปกป้องการชำระเงินของคุณจนกว่าคุณจะได้รับผลงานจากฟรีแลนซ์",
-      wantToFind: "คุณกำลังมองหาฟรีแลนซ์บน Fastlance หรือไม่? ค้นหาและเชื่อมต่อกับฟรีแลนซ์ที่ยอดเยี่ยมได้แล้ววันนี้!",
+      recommendation:
+        "เราขอแนะนำให้คุณสื่อสารและชำระเงินผ่าน Fastwork เพื่อป้องกันการฉ้อโกง! เราจะปกป้องการชำระเงินของคุณจนกว่าคุณจะได้รับผลงานจากฟรีแลนซ์",
+      wantToFind:
+        "คุณกำลังมองหาฟรีแลนซ์บน Fastlance หรือไม่? ค้นหาและเชื่อมต่อกับฟรีแลนซ์ที่ยอดเยี่ยมได้แล้ววันนี้!",
       generate: "สร้างรายได้ผ่านแพลตฟอร์มและกระดานประกาศงาน",
-      wantToGet: "ต้องการรับงานผ่าน Fastlance หรือไม่? ลงทะเบียนเป็นฟรีแลนซ์ได้เลย!",
+      wantToGet:
+        "ต้องการรับงานผ่าน Fastlance หรือไม่? ลงทะเบียนเป็นฟรีแลนซ์ได้เลย!",
       cannotSubmit: "ไม่สามารถส่งข้อเสนอได้",
       noApproved: "ยังไม่มีบริการใด ๆ ที่ได้รับการอนุมัติ",
-      needApproved: "คุณต้องได้รับการอนุมัติจากผู้ดูแลระบบ หรือมีบริการที่ได้รับอนุมัติอย่างน้อย 1 รายการ กรุณาตรวจสอบสถานะบริการของคุณ",
+      needApproved:
+        "คุณต้องได้รับการอนุมัติจากผู้ดูแลระบบ หรือมีบริการที่ได้รับอนุมัติอย่างน้อย 1 รายการ กรุณาตรวจสอบสถานะบริการของคุณ",
       close: "ปิด",
       checkService: "ตรวจสอบบริการของคุณ",
       noProposal: "ยังไม่มีข้อเสนอจากฟรีแลนซ์",
@@ -1025,7 +1185,7 @@ export const th = {
       workSample: "ตัวอย่างผลงาน",
       attachService: "บริการที่แนบมา",
       timeLine: "ระยะเวลาดำเนินการ",
-      day: "วัน"
+      day: "วัน",
     },
     jobCard: {
       sold: "ขายแล้ว",
@@ -1033,7 +1193,7 @@ export const th = {
       expert: "ผู้เชี่ยวชาญ",
       popular: "ได้รับการว่าจ้างบ่อย",
       responseTime: "ตอบกลับภายใน {{n}} นาที",
-      startingPrice: "เริ่มต้นที่"
+      startingPrice: "เริ่มต้นที่",
     },
     jobCategory: {
       "4": "4",
@@ -1070,20 +1230,22 @@ export const th = {
       safeNoScam: "ปลอดภัย ไม่โดนโกง",
       supportThroughout: "ดูแลตลอดการจ้างงาน",
       highestPrice: "ราคาสูงสุด",
-      noResultsMessage: "ไม่พบผลการค้นหา กรุณาตรวจสอบคำค้นหาหรือเงื่อนไขการใช้งาน หรือโพสต์หาฟรีแลนซ์ผ่านบอร์ดงาน",
+      noResultsMessage:
+        "ไม่พบผลการค้นหา กรุณาตรวจสอบคำค้นหาหรือเงื่อนไขการใช้งาน หรือโพสต์หาฟรีแลนซ์ผ่านบอร์ดงาน",
       postJobBoard: "โพสต์บนบอร์ดงาน",
       allCategories: "ทั้งหมด",
       serviceCategory: "บริการ",
       action: "จ้างฟรีแลนซ์เพื่อ",
       scope: "ทุกหมวดหมู่งาน",
-      instruction: "เลือกประเภทบริการที่เหมาะกับความต้องการของคุณ"
+      instruction: "เลือกประเภทบริการที่เหมาะกับความต้องการของคุณ",
     },
     jobDetail: {
       allJobTypes: "ทุกประเภทงาน",
       marketingAdvertising: "การตลาดและโฆษณา",
       doSeo: "ทำ SEO",
       fastworkGuarantee: "การรับประกัน Fastwork",
-      fastworkGuaranteeDescription: "ดูแลตลอดการจ้างงาน ปลอดภัย ไม่ถูกโกง ตัวกลางปกป้องเงินจนกว่าสินค้าจะได้รับการอนุมัติ อ่านข้อกำหนดและเงื่อนไขเพิ่มเติมและสิทธิ์ในการป้องกัน",
+      fastworkGuaranteeDescription:
+        "ดูแลตลอดการจ้างงาน ปลอดภัย ไม่ถูกโกง ตัวกลางปกป้องเงินจนกว่าสินค้าจะได้รับการอนุมัติ อ่านข้อกำหนดและเงื่อนไขเพิ่มเติมและสิทธิ์ในการป้องกัน",
       chatWithFreelancers: "แชทกับฟรีแลนซ์",
       interestedInHiring: "สนใจจ้างงานแทนบริษัท",
       noChargesMessage: "คุณจะไม่ต้องเสียค่าใช้จ่ายใดๆ",
@@ -1093,7 +1255,8 @@ export const th = {
       seoTab: "SEO",
       freelanceReviewTab: "รีวิวฟรีแลนซ์",
       packageDescription: "แพ็กเกจ: เพิ่ม Traffic 30 วัน ดันอันดับ เร่งดัชนี",
-      trafficPackageDescription: "แพ็กเกจ Traffic: แพ็กเกจ Traffic ทั้งหมดทำงาน 30 วัน แพ็กเกจ Traffic 6,000 Traff...",
+      trafficPackageDescription:
+        "แพ็กเกจ Traffic: แพ็กเกจ Traffic ทั้งหมดทำงาน 30 วัน แพ็กเกจ Traffic 6,000 Traff...",
       viewPackageInformation: "ดูข้อมูลแพ็กเกจ",
       soldTimes: "ขายแล้ว {{sell_count}} ครั้ง",
       rating49: "4.9 ดาว",
@@ -1114,7 +1277,8 @@ export const th = {
       valueForMoney: "คุ้มค่าเงิน",
       anonymous: "(ไม่ระบุชื่อ)",
       viewPackageInfo: "ดูข้อมูลแพ็คเกจ",
-      readAdditionalProtectionTerms: "อ่านเงื่อนไขและสิทธิประโยชน์การคุ้มครองเพิ่มเติม",
+      readAdditionalProtectionTerms:
+        "อ่านเงื่อนไขและสิทธิประโยชน์การคุ้มครองเพิ่มเติม",
       save: "บันทึก",
       share: "แชร์",
       freelancer: "ฟรีแลนซ์",
@@ -1124,7 +1288,7 @@ export const th = {
       similarJobs: "งานที่คล้ายกัน",
       process: "ขั้นตอนการทำงานสำหรับ",
       duration: "ระยะเวลาดำเนินการ {{execution_time}} วัน",
-      callToAction: "เริ่มจ้างฟรีแลนซ์นี้และให้คะแนน"
+      callToAction: "เริ่มจ้างฟรีแลนซ์นี้และให้คะแนน",
     },
     manageProductCreate: {
       notSave: "คุณยังไม่ได้บันทึกการเปลี่ยนแปลงของคุณ",
@@ -1139,15 +1303,21 @@ export const th = {
       confirmationCheck2: "ฉันสามารถส่งมอบงานได้ตามรายละเอียด",
       confirmationCheck3: "ฉันได้อ่านและยอมรับข้อกำหนดการใช้งานของ Fastwork",
       confirmationError: "กรุณายอมรับข้อกำหนดเพื่อดำเนินการต่อ",
-      confirmationNotice1: "ระบบจะเริ่มตรวจสอบข้อมูลเมื่อโปรไฟล์ฟรีแลนซ์ได้รับการอนุมัติ",
+      confirmationNotice1:
+        "ระบบจะเริ่มตรวจสอบข้อมูลเมื่อโปรไฟล์ฟรีแลนซ์ได้รับการอนุมัติ",
       confirmationNotice2: "การตรวจสอบและอนุมัติใช้เวลาประมาณ 2 วันทำการ",
       confirmationTitle: "ยืนยันการให้บริการ",
-      confirmationWarning: "หากคุณไม่ยืนยันเงื่อนไข คุณจะไม่สามารถเผยแพร่บริการบน Fastwork ได้",
-      coverImageNote: "เลือกภาพหน้าปกที่แสดงถึงความเชี่ยวชาญของคุณ ภาพหน้าปกที่ดีจะช่วยดึงดูดลูกค้าได้",
-      coverImageNote2: "ควรใช้ภาพหน้าปกที่แตกต่างกันสำหรับบริการที่คล้ายกันในหมวดเดียวกัน การใช้ภาพซ้ำอาจทำให้ถูกปฏิเสธ",
-      createPackageDescription: "แพ็กเกจบริการช่วยให้การจัดการโครงการของคุณสะดวกขึ้น ลดขั้นตอนการพูดคุยรายละเอียดกับลูกค้า คุณสามารถสร้างได้อย่างน้อยหนึ่งและไม่เกินสามแพ็กเกจต่อบริการ",
+      confirmationWarning:
+        "หากคุณไม่ยืนยันเงื่อนไข คุณจะไม่สามารถเผยแพร่บริการบน Fastwork ได้",
+      coverImageNote:
+        "เลือกภาพหน้าปกที่แสดงถึงความเชี่ยวชาญของคุณ ภาพหน้าปกที่ดีจะช่วยดึงดูดลูกค้าได้",
+      coverImageNote2:
+        "ควรใช้ภาพหน้าปกที่แตกต่างกันสำหรับบริการที่คล้ายกันในหมวดเดียวกัน การใช้ภาพซ้ำอาจทำให้ถูกปฏิเสธ",
+      createPackageDescription:
+        "แพ็กเกจบริการช่วยให้การจัดการโครงการของคุณสะดวกขึ้น ลดขั้นตอนการพูดคุยรายละเอียดกับลูกค้า คุณสามารถสร้างได้อย่างน้อยหนึ่งและไม่เกินสามแพ็กเกจต่อบริการ",
       createPackageTitle: "สร้างแพ็กเกจบริการของคุณ",
-      defineWorkStepsDescription: "อธิบายขั้นตอนการทำงานเพื่อให้บริการเสร็จสมบูรณ์ สิ่งนี้จะช่วยให้ลูกค้าเข้าใจกระบวนการทำงานของคุณชัดเจน",
+      defineWorkStepsDescription:
+        "อธิบายขั้นตอนการทำงานเพื่อให้บริการเสร็จสมบูรณ์ สิ่งนี้จะช่วยให้ลูกค้าเข้าใจกระบวนการทำงานของคุณชัดเจน",
       gotItButton: "เข้าใจแล้ว",
       nextButton: "บันทึกและดำเนินการต่อ",
       packageDeliveryLabel: "ระยะเวลาดำเนินการ (นาที)",
@@ -1170,8 +1340,10 @@ export const th = {
       serviceDescriptionPlaceholder: "กรอกรายละเอียดบริการของคุณ...",
       serviceInfoTitle: "ข้อมูลบริการ",
       serviceTitleError: "ชื่อบริการต้องมีอย่างน้อย 5 ตัวอักษร",
-      serviceTitleGuide1: "ใช้ชื่อที่ชัดเจนและเฉพาะเจาะจงเพื่อให้ลูกค้าค้นหาบริการของคุณได้ง่าย",
-      serviceTitleGuide2: "ควรใช้ชื่อที่แตกต่างกันสำหรับบริการที่คล้ายกันในหมวดหมู่เดียวกัน",
+      serviceTitleGuide1:
+        "ใช้ชื่อที่ชัดเจนและเฉพาะเจาะจงเพื่อให้ลูกค้าค้นหาบริการของคุณได้ง่าย",
+      serviceTitleGuide2:
+        "ควรใช้ชื่อที่แตกต่างกันสำหรับบริการที่คล้ายกันในหมวดหมู่เดียวกัน",
       serviceTitleGuideHeader: "แนวทางการตั้งชื่อบริการ:",
       serviceTitleLabel: "ชื่อบริการ",
       serviceTitlePlaceholder: "เช่น: ออกแบบเว็บไซต์ระดับมืออาชีพ รองรับ SEO",
@@ -1182,10 +1354,12 @@ export const th = {
       step5: "ยืนยัน",
       stepLabel: "ขั้นตอนที่ ",
       subServiceLabel: "บริการย่อย",
-      submissionSuccess: "ข้อมูลของคุณกำลังอยู่ระหว่างการตรวจสอบ อาจใช้เวลาสูงสุด 2 วันทำการ",
+      submissionSuccess:
+        "ข้อมูลของคุณกำลังอยู่ระหว่างการตรวจสอบ อาจใช้เวลาสูงสุด 2 วันทำการ",
       submissionSuccessMessage: "ส่งเรียบร้อยแล้ว! โปรดรอผลการอนุมัติจากระบบ",
       systemNote: "ข้อมูลเพิ่มเติมจากระบบ",
-      uploadAtLeast2ImagesNote: "ลูกค้าต้องการเห็นทักษะของคุณ เลือกอย่างน้อย 2 ภาพเพื่อแสดงทักษะและความเชี่ยวชาญของคุณ",
+      uploadAtLeast2ImagesNote:
+        "ลูกค้าต้องการเห็นทักษะของคุณ เลือกอย่างน้อย 2 ภาพเพื่อแสดงทักษะและความเชี่ยวชาญของคุณ",
       uploadAtLeast2ImagesTitle: "อัปโหลดภาพบริการอย่างน้อย 2 ภาพ ({{n}}/30)",
       uploadCoverImageTitle: "อัปโหลดภาพหน้าปก",
       uploadServiceImagesTitle: "อัปโหลดภาพบริการ",
@@ -1194,13 +1368,14 @@ export const th = {
       workflowDescriptionError: "กรุณากรอกรายละเอียดของขั้นตอน",
       workflowDescriptionLabel: "รายละเอียด",
       workflowDescriptionPlaceholder: "กรอกรายละเอียดขั้นตอน...",
-      workflowTitle: "กำหนดขั้นตอนการทำงานของคุณ"
+      workflowTitle: "กำหนดขั้นตอนการทำงานของคุณ",
     },
     notFound: {
       backButton: "กลับหน้าหลัก",
-      errorDescription: "หน้าที่คุณต้องการไม่พร้อมใช้งาน คุณอาจเข้าลิงค์เก่าหรือข้อมูลได้ถูกย้ายไปแล้ว คุณสามารถไปยังหน้าหมวดหมู่งานได้ที่หมวดหมู่งานแนะนำด้านล่าง",
+      errorDescription:
+        "หน้าที่คุณต้องการไม่พร้อมใช้งาน คุณอาจเข้าลิงค์เก่าหรือข้อมูลได้ถูกย้ายไปแล้ว คุณสามารถไปยังหน้าหมวดหมู่งานได้ที่หมวดหมู่งานแนะนำด้านล่าง",
       errorTitle: "ไม่พบหน้าที่คุณต้องการ",
-      recommendedSectionTitle: "หมวดหมู่ยอดนิยม"
+      recommendedSectionTitle: "หมวดหมู่ยอดนิยม",
     },
     notification: {
       jobUpdateFavoriteSuccess: "บันทึกงานลงในรายการโปรดเรียบร้อยแล้ว",
@@ -1212,7 +1387,8 @@ export const th = {
       profileUpdateAvailableSuccess: "ตอนนี้คุณกำลังรับงานใหม่",
       profileUpdateNotAvailableSuccess: "คุณไม่ได้กำลังรับงานใหม่อีกต่อไป",
       profileSetDefaultFail: "ล้มเหลวในการตั้งค่าที่อยู่เริ่มต้น",
-      profileUpdateAvailableFail: "ล้มเหลวในการอัปเดตความพร้อมงาน โปรดลองอีกครั้ง",
+      profileUpdateAvailableFail:
+        "ล้มเหลวในการอัปเดตความพร้อมงาน โปรดลองอีกครั้ง",
       oauthVerificationFailed: "การตรวจสอบ OAuth ไม่ถูกต้อง",
       verificationEmailSent: "อีเมลยืนยันตัวตนถูกส่งแล้ว",
       registrationRequestSubmitted: "ส่งคำขอลงทะเบียนแล้ว",
@@ -1231,8 +1407,9 @@ export const th = {
       invalidCode: "รหัสไม่ถูกต้อง",
       invalidTotpCode: "รหัส TOTP ไม่ถูกต้อง",
       verifyEmailLinkSent: "ลิงก์ยืนยันอีเมลได้ถูกส่งไปยังอีเมลของคุณแล้ว",
-      checkInboxForEmail: "กรุณาตรวจสอบกล่องจดหมายของคุณ (หากคุณไม่พบ ให้ตรวจสอบในโฟลเดอร์สแปมและจดหมายขยะ) เพื่อดำเนินการต่อ",
-      passwordResetLinkSent: "ลิงก์รีเซ็ตรหัสผ่านได้ถูกส่งไปยังอีเมลของคุณแล้ว"
+      checkInboxForEmail:
+        "กรุณาตรวจสอบกล่องจดหมายของคุณ (หากคุณไม่พบ ให้ตรวจสอบในโฟลเดอร์สแปมและจดหมายขยะ) เพื่อดำเนินการต่อ",
+      passwordResetLinkSent: "ลิงก์รีเซ็ตรหัสผ่านได้ถูกส่งไปยังอีเมลของคุณแล้ว",
     },
     notifications: {
       changePassword: "เปลี่ยนรหัสผ่านสำเร็จแล้ว",
@@ -1241,7 +1418,7 @@ export const th = {
       updateWorkExperience: "บันทึกประสบการณ์การทำงานเรียบร้อย",
       updateCertification: "บันทึกการรับรองเรียบร้อย",
       updateSkill: "บันทึกทักษะเรียบร้อย",
-      updateLanguage: "บันทึกภาษาต่างประเทศเรียบร้อย"
+      updateLanguage: "บันทึกภาษาต่างประเทศเรียบร้อย",
     },
     profile: {
       verifyFreelancer: "ฟรีแลนซ์ที่ได้รับการยืนยัน",
@@ -1263,17 +1440,19 @@ export const th = {
       successRate: "อัตราการทำงานสำเร็จ",
       reviewTab: "รีวิวจากฟรีแลนซ์",
       times: "ครั้ง",
-      workTitle: "ผลงานของ {{username}}"
+      workTitle: "ผลงานของ {{username}}",
     },
     profileApply: {
       advantagesTitle: "เป็นฟรีแลนซ์ Fastwork ดียังไง?",
       applyButton: "สมัครเป็นฟรีแลนซ์",
       careerGrowth: "เติบโตสายงานด้วย Specialist",
-      careerGrowthDescription: "เข้าร่วมโปรแกรมทดสอบของ Fastwork เพื่อเพิ่มความน่าเชื่อถือและความโดดเด่นบนระบบ",
+      careerGrowthDescription:
+        "เข้าร่วมโปรแกรมทดสอบของ Fastwork เพื่อเพิ่มความน่าเชื่อถือและความโดดเด่นบนระบบ",
       ctaButton: "Apply to be a freelancer",
       ctaTitle: "Apply to be a freelancer on Fastwork now",
       freelanceTypesTitle: "Fastwork มี Freelance แบบไหนบ้าง?",
-      freelancer1: "สมัครวันนี้ แสดงรายละเอียดของคุณ และเป็นฟรีแลนซ์ภายใน 48 ชั่วโมง",
+      freelancer1:
+        "สมัครวันนี้ แสดงรายละเอียดของคุณ และเป็นฟรีแลนซ์ภายใน 48 ชั่วโมง",
       freelancer2: "ลงงานได้ตามความถนัด",
       freelancer3: "ช่วงราคาสามารถกำหนดเองได้ตามความเหมาะสมของงาน",
       freelancer4: "Fastwork support",
@@ -1281,34 +1460,45 @@ export const th = {
       freelancer6: "ใบเสร็จพิเศษ Freelancer",
       freelancerLabel: "ฟรีแลนซ์",
       freelancerProfessional: "Fastwork Professional",
-      freelancerProfessionalDescription: "ผู้เชี่ยวชาญหลายสาขาที่ผ่านการคัดเลือกจาก Fastwork",
+      freelancerProfessionalDescription:
+        "ผู้เชี่ยวชาญหลายสาขาที่ผ่านการคัดเลือกจาก Fastwork",
       freelancerSpecialist: "Fastwork Specialist",
-      freelancerSpecialistDescription: "ผู้เชี่ยวชาญที่ผ่านการทดสอบความสามารถตามมาตรฐาน Fastwork",
+      freelancerSpecialistDescription:
+        "ผู้เชี่ยวชาญที่ผ่านการทดสอบความสามารถตามมาตรฐาน Fastwork",
       freelancerStandard: "Fastwork Freelancer",
-      freelancerStandardDescription: "สมัครวันนี้ แสดงรายละเอียดของคุณ และเป็นฟรีแลนซ์ภายใน 48 ชั่วโมง",
+      freelancerStandardDescription:
+        "สมัครวันนี้ แสดงรายละเอียดของคุณ และเป็นฟรีแลนซ์ภายใน 48 ชั่วโมง",
       freelancerTitle: "Fastwork Freelancer",
       freelancerTypesTitle: "Fastwork มี Freelance แบบไหนบ้าง?",
       increaseHiring: "เพิ่มโอกาสในการจ้างงาน",
-      increaseHiringDescription: "ช่วยให้คุณหางานได้ง่ายขึ้น ไม่ว่าจะผ่าน Google, Facebook หรือช่องทางอื่นๆ เพิ่มโอกาสในการถูกจ้างงาน",
+      increaseHiringDescription:
+        "ช่วยให้คุณหางานได้ง่ายขึ้น ไม่ว่าจะผ่าน Google, Facebook หรือช่องทางอื่นๆ เพิ่มโอกาสในการถูกจ้างงาน",
       paperwork: "ไม่ต้องยุ่งยากกับเอกสาร",
-      paperworkDescription: "กรอกรายละเอียดงาน ระบุระยะเวลา ใส่ช่วงราคา และใบแจ้งหนี้จะถูกสร้างอัตโนมัติ",
+      paperworkDescription:
+        "กรอกรายละเอียดงาน ระบุระยะเวลา ใส่ช่วงราคา และใบแจ้งหนี้จะถูกสร้างอัตโนมัติ",
       paymentSecurity: "ไม่ต้องกลัวไม่ได้ค่าจ้าง",
-      paymentSecurityDescription: "เราช่วยดูแลเงินของคุณเมื่อทำงานเสร็จ ไม่ต้องกังวลว่านายจ้างจะไม่จ่ายเงิน",
+      paymentSecurityDescription:
+        "เราช่วยดูแลเงินของคุณเมื่อทำงานเสร็จ ไม่ต้องกังวลว่านายจ้างจะไม่จ่ายเงิน",
       popularCategories: "Popular categories",
       popularCategoriesTitle: "หมวดหมู่ยอดนิยม",
       privileges: "สิทธิพิเศษ และกิจกรรม",
-      privilegesDescription: "ยิ่งขายงานมาก ยิ่งได้สิทธิพิเศษจาก Fastwork มากขึ้น",
+      privilegesDescription:
+        "ยิ่งขายงานมาก ยิ่งได้สิทธิพิเศษจาก Fastwork มากขึ้น",
       professional1: "ผู้เชี่ยวชาญหลายสาขาที่ผ่านการคัดเลือกจาก Fastwork",
       professional2: "ใช้สิทธิ์ขอคำปรึกษาโดยตรงผู้เชี่ยวชาญ",
-      professional3: "Badge ที่แสดงสำหรับ Professional ผู้เชี่ยวชาญ Fastwork ช่วยให้คุณจ้างงานที่คุณได้อย่างมั่นใจ",
-      professional4: "โอกาสในการได้รับงานมากยิ่งขึ้น จากลูกค้าองค์กรชั้นนำของ Fastwork",
+      professional3:
+        "Badge ที่แสดงสำหรับ Professional ผู้เชี่ยวชาญ Fastwork ช่วยให้คุณจ้างงานที่คุณได้อย่างมั่นใจ",
+      professional4:
+        "โอกาสในการได้รับงานมากยิ่งขึ้น จากลูกค้าองค์กรชั้นนำของ Fastwork",
       professional5: "ใบตั๋วที่แสดงสำหรับ Professional",
       professionalLabel: "ผู้เชี่ยวชาญระดับ Professional",
       professionalTitle: "Fastwork Professional",
-      sellStep1DescPrefix: "ลงทะเบียนพร้อมเตรียมบัตรประชาชนและผูกบัญชีสำหรับยืนยันตัวตนให้พร้อม จากนั้นคุณสามารถลงประกาศขายงานได้เลย ดูวิดีโอ",
+      sellStep1DescPrefix:
+        "ลงทะเบียนพร้อมเตรียมบัตรประชาชนและผูกบัญชีสำหรับยืนยันตัวตนให้พร้อม จากนั้นคุณสามารถลงประกาศขายงานได้เลย ดูวิดีโอ",
       sellStep1LinkText: "ตัวอย่างการสมัครเป็นฟรีแลนซ์",
       sellStep1Title: "1. สมัครเป็นฟรีแลนซ์",
-      sellStep2Desc: "เตรียมผลงานและคำอธิบายงาน เพื่อแสดงให้ผู้ว่าจ้างเห็นถึงความสามารถของคุณ จากนั้นรอการตรวจสอบและอนุมัติจากทีมงานภายใน 48 ชั่วโมง",
+      sellStep2Desc:
+        "เตรียมผลงานและคำอธิบายงาน เพื่อแสดงให้ผู้ว่าจ้างเห็นถึงความสามารถของคุณ จากนั้นรอการตรวจสอบและอนุมัติจากทีมงานภายใน 48 ชั่วโมง",
       sellStep2Title: "2. ลงประกาศขายงาน",
       sellStep3DescMiddle: "หรือใช้",
       sellStep3DescPrefix: "ลองศึกษา",
@@ -1316,42 +1506,53 @@ export const th = {
       sellStep3Link1: "เทคนิคน่ารู้สำหรับฟรีแลนซ์",
       sellStep3Link2: "ศูนย์ฟรีแลนซ์",
       sellStep3Title: "3. เริ่มขายงานได้เลย",
-      sellStep4Desc: "มั่นใจทุกการจ้างงานผ่าน Fastwork การันตีดูแลเงินคุณ หมดกังวลเรื่องผู้ว่าจ้างไม่ชำระเงิน ช่วยให้คุณทำงานได้อย่างสบายใจ",
+      sellStep4Desc:
+        "มั่นใจทุกการจ้างงานผ่าน Fastwork การันตีดูแลเงินคุณ หมดกังวลเรื่องผู้ว่าจ้างไม่ชำระเงิน ช่วยให้คุณทำงานได้อย่างสบายใจ",
       sellStep4Title: "4. ทำงานไร้กังวล",
-      sellStep5Desc: "ส่งผลงานที่ทำสำเร็จให้ผู้ว่าจ้างอนุมัติงาน ยิ่งทำงานดี ผู้ว่าจ้างรีวิวดี จะช่วยเพิ่มความน่าเชื่อถือของผลงาน เพิ่มโอกาสขายงานได้มากขึ้น",
+      sellStep5Desc:
+        "ส่งผลงานที่ทำสำเร็จให้ผู้ว่าจ้างอนุมัติงาน ยิ่งทำงานดี ผู้ว่าจ้างรีวิวดี จะช่วยเพิ่มความน่าเชื่อถือของผลงาน เพิ่มโอกาสขายงานได้มากขึ้น",
       sellStep5Title: "5. ส่งงานและรีวิว",
       sellStep6DescPrefix: "Fastwork จะทำการโอนเงินเข้าบัญชีธนาคารของคุณตาม",
-      sellStep6DescSuffix: "ยิ่งขายงานได้มาก ยิ่งมีสิทธิพิเศษและกิจกรรมต่างๆ มากขึ้นเท่านั้น",
+      sellStep6DescSuffix:
+        "ยิ่งขายงานได้มาก ยิ่งมีสิทธิพิเศษและกิจกรรมต่างๆ มากขึ้นเท่านั้น",
       sellStep6LinkText: "เงื่อนไขการรับเงิน",
       sellStep6Title: "6. รับเงินและสิทธิพิเศษ",
       sellStepsTitle: "6 ขั้นตอนง่ายๆ ขายงานบน fastwork",
       specialist1: "ผู้เชี่ยวชาญที่ผ่านการทดสอบความสามารถตามมาตรฐาน Fastwork",
       specialist2: "ใช้สิทธิ์ขอคำปรึกษาโดยตรงกับทีมแอดฯ",
       specialist3: "โอกาสพิเศษรับงานจาก Partner ของเรา",
-      specialist4: "Badge ที่แสดงว่าเป็น ผู้เชี่ยวชาญ ซึ่งบริการจาก Fastwork ช่วยให้คุณจ้างงานที่คุณได้อย่างมั่นใจ",
+      specialist4:
+        "Badge ที่แสดงว่าเป็น ผู้เชี่ยวชาญ ซึ่งบริการจาก Fastwork ช่วยให้คุณจ้างงานที่คุณได้อย่างมั่นใจ",
       specialist5: "ใบตั๋วที่แสดงสำหรับ ผู้เชี่ยวชาญ",
       specialist6: "Event ที่แสดงสำหรับ ผู้เชี่ยวชาญ ระดับ Top",
       specialist7: "ผู้ช่วยพิเศษ (Personal Assistant) สำหรับผู้เชี่ยวชาญ",
       specialistLabel: "ผู้เชี่ยวชาญ",
       specialistTitle: "Fastwork Specialist",
       step1: "สมัครเป็นฟรีแลนซ์",
-      step1Description: "ลงทะเบียนด้วยบัตรประชาชนและสมุดบัญชีธนาคารของคุณ ยืนยันตัวตนแล้วเริ่มลงโฆษณางานได้",
+      step1Description:
+        "ลงทะเบียนด้วยบัตรประชาชนและสมุดบัญชีธนาคารของคุณ ยืนยันตัวตนแล้วเริ่มลงโฆษณางานได้",
       step2: "ลงประกาศขายงาน",
-      step2Description: "เตรียมพอร์ตโฟลิโอและรายละเอียดงานของคุณ รอทีมงานตรวจสอบภายใน 48 ชั่วโมง",
+      step2Description:
+        "เตรียมพอร์ตโฟลิโอและรายละเอียดงานของคุณ รอทีมงานตรวจสอบภายใน 48 ชั่วโมง",
       step3: "เริ่มขายงานได้เลย",
-      step3Description: "ศึกษากลยุทธ์ตั้งราคาฟรีแลนซ์ หรือใช้ Freelancer Center เพื่อเพิ่มโอกาสได้รับการจ้างงาน",
+      step3Description:
+        "ศึกษากลยุทธ์ตั้งราคาฟรีแลนซ์ หรือใช้ Freelancer Center เพื่อเพิ่มโอกาสได้รับการจ้างงาน",
       step4: "ทำงานได้อิสระ",
-      step4Description: "มั่นใจได้ทุกงาน! Fastwork ช่วยดูแลค่าจ้างของคุณ ไม่ต้องกังวลนายจ้างไม่จ่ายเงิน",
+      step4Description:
+        "มั่นใจได้ทุกงาน! Fastwork ช่วยดูแลค่าจ้างของคุณ ไม่ต้องกังวลนายจ้างไม่จ่ายเงิน",
       step5: "ส่งงานและรีวิว",
-      step5Description: "ส่งงานที่เสร็จแล้วให้นายจ้างตรวจสอบ ยิ่งงานดี ยิ่งเพิ่มความน่าเชื่อถือ",
+      step5Description:
+        "ส่งงานที่เสร็จแล้วให้นายจ้างตรวจสอบ ยิ่งงานดี ยิ่งเพิ่มความน่าเชื่อถือ",
       step6: "รับเงินและสิทธิพิเศษ",
-      step6Description: "Fastwork โอนเงินเข้าบัญชีของคุณตามข้อตกลง ยิ่งขายมาก ยิ่งได้มาก",
+      step6Description:
+        "Fastwork โอนเงินเข้าบัญชีของคุณตามข้อตกลง ยิ่งขายมาก ยิ่งได้มาก",
       stepsTitle: "6 ขั้นตอนง่ายๆ ขายงานบน Fastwork",
       subtitle: "อิสระของการทำงาน ที่คุณเลือกเองได้",
       supportTeam: "มีทีมงานช่วยเหลือ",
-      supportTeamDescription: "เราพร้อมช่วยเหลือคุณทันทีหากมีปัญหา และพัฒนาระบบเพื่อให้ประสบการณ์ที่ดีที่สุด",
+      supportTeamDescription:
+        "เราพร้อมช่วยเหลือคุณทันทีหากมีปัญหา และพัฒนาระบบเพื่อให้ประสบการณ์ที่ดีที่สุด",
       whyChooseTitle: "ทำไมฟรีแลนซ์ถึงเลือก Fastwork",
-      whyTitle: "Why freelancers choose Fastwork"
+      whyTitle: "Why freelancers choose Fastwork",
     },
     profileChat: {
       chatHistory: "ประวัติการแชท",
@@ -1373,7 +1574,8 @@ export const th = {
       selectedHere: "เลือกที่นี่",
       timeAgo: "เมื่อวาน",
       typeMessageHere: "พิมพ์ข้อความที่นี่",
-      unselectWarning: "คุณเลือก 'หยิบรายการที่เลือกส่งไปยังเซทตามการเบราว์ซ์ของฟรีแลนซ์มา' จากโอเพนแชทของลูกค้ามาที่แชทนี้แล้ว ลุพามาดูว่าฟรีแลนซ์กำลังขายอะไรอยู่"
+      unselectWarning:
+        "คุณเลือก 'หยิบรายการที่เลือกส่งไปยังเซทตามการเบราว์ซ์ของฟรีแลนซ์มา' จากโอเพนแชทของลูกค้ามาที่แชทนี้แล้ว ลุพามาดูว่าฟรีแลนซ์กำลังขายอะไรอยู่",
     },
     profileCoins: {
       buttonProceedPayment: "ดำเนินการชำระเงิน",
@@ -1383,8 +1585,10 @@ export const th = {
       labelChooseAmount: "หรือเลือกจำนวนเงินที่ต้องการเติมทันที",
       labelSpecifyAmount: "ระบุจำนวนเงินที่ต้องการเติม",
       labelYourCoin: "Fastwork Coin ของคุณ",
-      noteBalanceUpdate: "ในบางกรณี อาจใช้เวลาสูงสุด 5 นาทีในการอัปเดตยอดเงิน กรุณารอสักครู่",
-      noteCoinTerms: "• Fastwork Coin สามารถใช้ได้โดยไม่มีวันหมดอายุ และสามารถใช้ร่วมกับคูปองบัญชีอื่นได้• Fastwork Coin ไม่สามารถแลกเป็นเงินสดหรือโอนไปยังบัญชี Fastwork อื่นได้• เมื่อคุณเติม Fastwork Coin เข้าระบบ จะถือว่าคุณยอมรับข้อกำหนดและเงื่อนไข• หากคุณพบปัญหาในการเติมเงิน Fastwork Coin หรือชำระเงิน กรุณาติดต่อศูนย์ช่วยเหลือ",
+      noteBalanceUpdate:
+        "ในบางกรณี อาจใช้เวลาสูงสุด 5 นาทีในการอัปเดตยอดเงิน กรุณารอสักครู่",
+      noteCoinTerms:
+        "• Fastwork Coin สามารถใช้ได้โดยไม่มีวันหมดอายุ และสามารถใช้ร่วมกับคูปองบัญชีอื่นได้• Fastwork Coin ไม่สามารถแลกเป็นเงินสดหรือโอนไปยังบัญชี Fastwork อื่นได้• เมื่อคุณเติม Fastwork Coin เข้าระบบ จะถือว่าคุณยอมรับข้อกำหนดและเงื่อนไข• หากคุณพบปัญหาในการเติมเงิน Fastwork Coin หรือชำระเงิน กรุณาติดต่อศูนย์ช่วยเหลือ",
       noteMinMax: "ขั้นต่ำ 100 บาท และสูงสุด 500,000 บาท",
       placeholderSpecifyAmount: "ระบุจำนวนเงิน 100-500,000 บาท",
       sectionTopUpHistory: "ประวัติการเติมเงิน",
@@ -1397,12 +1601,13 @@ export const th = {
       tableStatus: "สถานะ",
       tableTopUpAmount: "จำนวนเงินที่เติม (บาท)",
       tableTotalCoins: "เหรียญทั้งหมดที่ได้รับ",
-      titleFastworkCoin: "Fastwork Coin"
+      titleFastworkCoin: "Fastwork Coin",
     },
     profileCompany: {
       buttonSearchCompany: "ค้นหาข้อมูลบริษัท",
       labelTaxId: "เลขประจำตัวผู้เสียภาษี (บริษัท)",
-      noteRequirements: "• ผู้ว่าจ้างกรุณาขอสำเนาบัตรประชาชนจาก “ฟรีแลนซ์” โดยตรง• ผู้ว่าจ้างต้องออกหนังสือรับรองการหักภาษี ณ ที่จ่าย (ทวิ 50) เป็น “ชื่อของฟรีแลนซ์” (ดูตัวอย่างเอกสาร)",
+      noteRequirements:
+        "• ผู้ว่าจ้างกรุณาขอสำเนาบัตรประชาชนจาก “ฟรีแลนซ์” โดยตรง• ผู้ว่าจ้างต้องออกหนังสือรับรองการหักภาษี ณ ที่จ่าย (ทวิ 50) เป็น “ชื่อของฟรีแลนซ์” (ดูตัวอย่างเอกสาร)",
       placeholderTaxId: "ระบุเลขประจำตัวผู้เสียภาษี",
       processDescriptionApproval: "ภายใน 2 ชั่วโมง",
       processDescriptionNotify: "แจ้งจ้างในนามบริษัท",
@@ -1417,20 +1622,23 @@ export const th = {
       stepNotifyFreelancerSub: "แจ้งจ้างในนามบริษัท",
       stepWaitApproval: "รอระบบอนุมัติ",
       stepWaitApprovalSub: "ภายใน 2 ชั่วโมง",
-      subtitleCompanyHiring: "สำหรับออกเอกสาร การจ้างแบบบริษัท"
+      subtitleCompanyHiring: "สำหรับออกเอกสาร การจ้างแบบบริษัท",
     },
     profileContact: {
       cancelButton: "ปิด",
       confirmButton: "เปลี่ยนอีเมล",
-      emailChangeDescription: "อีเมลปัจจุบันของคุณได้รับการยืนยันในระบบแล้ว หากคุณต้องการเปลี่ยนอีเมลจะต้องยืนยันอีกครั้ง",
+      emailChangeDescription:
+        "อีเมลปัจจุบันของคุณได้รับการยืนยันในระบบแล้ว หากคุณต้องการเปลี่ยนอีเมลจะต้องยืนยันอีกครั้ง",
       emailChangeTitle: "คุณต้องการเปลี่ยนอีเมลของคุณหรือไม่?",
-      emailVerificationDescription: "ป้อนรหัส 6 หลักที่ส่งไปยังอีเมลของคุณเพื่อยืนยันและยืนยันความเป็นเจ้าของบัญชี",
+      emailVerificationDescription:
+        "ป้อนรหัส 6 หลักที่ส่งไปยังอีเมลของคุณเพื่อยืนยันและยืนยันความเป็นเจ้าของบัญชี",
       emailVerificationTitle: "กรุณายืนยันอีเมลของคุณ",
       invalidOrExpiredCode: "รหัสไม่ถูกต้อง หรือ รหัสหมดอายุ",
       labelContactEmail: "อีเมลที่ติดต่อได้",
       labelContactPhone: "เบอร์โทรศัพท์ที่ติดต่อได้ (ในประเทศไทย)",
       labelCurrentLocation: "ที่อยู่ปัจจุบัน",
-      noteContactPhone: "หากใช้เบอร์ต่างประเทศ กรุณาติดต่อศูนย์ดูแลลูกค้าผ่านอีเมลเพื่อการยืนยัน",
+      noteContactPhone:
+        "หากใช้เบอร์ต่างประเทศ กรุณาติดต่อศูนย์ดูแลลูกค้าผ่านอีเมลเพื่อการยืนยัน",
       optionForeignCountry: "ต่างชาติ",
       optionThailand: "ประเทศไทย",
       pleaseEnterEmailOrPhone: "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์",
@@ -1441,11 +1649,13 @@ export const th = {
       sectionContactInfo: "ข้อมูลติดต่อ",
       subtitleAddressInfo: "เพื่อให้เราสามารถส่งของและเอกสารให้คุณได้",
       subtitleContactInfo: "เพื่อให้เราสามารถติดต่อคุณได้",
-      verifyButton: "ยืนยัน"
+      verifyButton: "ยืนยัน",
     },
     profileCoupon: {
-      descriptionSpecialOffers: "สิทธิพิเศษและส่วนลดจากพาร์ทเนอร์ พร้อมให้คุณเก็บคูปองส่วนลดแล้ว",
-      descriptionYourCoupons: "คุณสามารถเลือกใช้คูปองส่วนลดได้ เมื่อต้องการจ้างงานและชำระเงิน",
+      descriptionSpecialOffers:
+        "สิทธิพิเศษและส่วนลดจากพาร์ทเนอร์ พร้อมให้คุณเก็บคูปองส่วนลดแล้ว",
+      descriptionYourCoupons:
+        "คุณสามารถเลือกใช้คูปองส่วนลดได้ เมื่อต้องการจ้างงานและชำระเงิน",
       labelYourCoupons: "คูปองส่วนลดของคุณ",
       messageNoCoupons: "คุณยังไม่มีคูปองส่วนลด",
       messageNoOffers: "ยังไม่มีสิทธิพิเศษในขณะนี้",
@@ -1453,34 +1663,40 @@ export const th = {
       sectionSpecialOffers: "สิทธิพิเศษที่น่าสนใจ",
       subtitleDiscountsPromotions: "จากทาง Fastwork และบริการที่เข้าร่วม",
       tabForFreelancers: "สำหรับฟรีแลนซ์",
-      tabForHiring: "สำหรับการจ้างงาน"
+      tabForHiring: "สำหรับการจ้างงาน",
     },
     profileData: {
       concent: "ยินยอมรับข่าวสารและโปรโมชั่นพิเศษผ่านทุกช่องทางจาก Fastwork",
       privacy: "นโยบายความเป็นส่วนตัว",
-      cookieUse: "Fastwork ใช้คุกกี้เพื่อช่วยปรับปรุงและเพิ่มประสบการณ์การใช้งานของคุณเมื่อคุณเข้าชมเว็บไซต์ของเรา คุณสามารถเลือกยินยอมคุกกี้แต่ละประเภทได้ (ยกเว้นคุกกี้ที่จำเป็น)",
+      cookieUse:
+        "Fastwork ใช้คุกกี้เพื่อช่วยปรับปรุงและเพิ่มประสบการณ์การใช้งานของคุณเมื่อคุณเข้าชมเว็บไซต์ของเรา คุณสามารถเลือกยินยอมคุกกี้แต่ละประเภทได้ (ยกเว้นคุกกี้ที่จำเป็น)",
       cookiePrivacy: "นโยบายคุกกี้",
       always: "เปิดตลอด",
       noPrivacy: "ไม่พบฟรีแลนซ์ที่ต้องการ",
       analyticsCookies: "คุกกี้สำหรับเก็บข้อมูลวิเคราะห์การใช้งาน",
-      analyticsCookiesDescription: "ยินยอมให้ Fastwork เก็บรวบรวมข้อมูลการใช้งานเพื่อนำมาวิเคราะห์ เพื่อปรับปรุงและพัฒนาประสบการณ์การใช้งานให้ดียิ่งขึ้น",
+      analyticsCookiesDescription:
+        "ยินยอมให้ Fastwork เก็บรวบรวมข้อมูลการใช้งานเพื่อนำมาวิเคราะห์ เพื่อปรับปรุงและพัฒนาประสบการณ์การใช้งานให้ดียิ่งขึ้น",
       cookiesManagement: "จัดการคุกกี้",
       dataManagement: "จัดการการใช้ข้อมูล",
       dataUsageFastwork: "การใช้ข้อมูลสำหรับ Fastwork",
       functionalCookies: "คุกกี้ที่จำเป็นอย่างยิ่งในการใช้งาน",
-      functionalCookiesDescription: "Fastwork จำเป็นต้องใช้คุกกี้ประเภทนี้ เพื่อให้คุณสามารถเข้าถึงข้อมูลและใช้งานหน้าฟังก์ชันบนเว็บไซต์ได้อย่างมีประสิทธิภาพ โดยคุกกี้นี้ไม่มีการจัดเก็บข้อมูลที่สามารถระบุตัวตนของผู้ใช้",
-      mandatoryCookies: "คุกกี้เหล่านี้จำเป็นสำหรับการทำงานของเว็บไซต์และไม่สามารถปิดใช้งานได้",
+      functionalCookiesDescription:
+        "Fastwork จำเป็นต้องใช้คุกกี้ประเภทนี้ เพื่อให้คุณสามารถเข้าถึงข้อมูลและใช้งานหน้าฟังก์ชันบนเว็บไซต์ได้อย่างมีประสิทธิภาพ โดยคุกกี้นี้ไม่มีการจัดเก็บข้อมูลที่สามารถระบุตัวตนของผู้ใช้",
+      mandatoryCookies:
+        "คุกกี้เหล่านี้จำเป็นสำหรับการทำงานของเว็บไซต์และไม่สามารถปิดใช้งานได้",
       marketingCookies: "คุกกี้สำหรับการตลาดและโฆษณา",
-      marketingCookiesDescription: "ยินยอมให้ Fastwork เก็บรวบรวมข้อมูลสำหรับการทำโฆษณา เพื่อให้เราช่วยนำเสนอเนื้อหา บริการที่เหมาะสมกับคุณที่สุด",
+      marketingCookiesDescription:
+        "ยินยอมให้ Fastwork เก็บรวบรวมข้อมูลสำหรับการทำโฆษณา เพื่อให้เราช่วยนำเสนอเนื้อหา บริการที่เหมาะสมกับคุณที่สุด",
       newsletterAccept: "ยินยอม",
       newsletterDecline: "ไม่ยินยอม",
       newsletterPromotions: "รับข่าวสาร ส่วนลดและโปรโมชั่นจาก Fastwork",
       noFreelancerFavorites: "ไม่มีฟรีแลนซ์ที่ถูกใจ",
       saveData: "บันทึกข้อมูล",
-      termsConditions: "อ่าน เงื่อนไขข้อตกลงการใช้บริการ และ นโยบายคุ้มครองความเป็นส่วนตัว",
+      termsConditions:
+        "อ่าน เงื่อนไขข้อตกลงการใช้บริการ และ นโยบายคุ้มครองความเป็นส่วนตัว",
       thirdPartyDataSharing: "การแชร์ข้อมูลให้บุคคลที่สาม",
       toggleAnalyticsCookies: "เปิดหรือปิดคุกกี้วิเคราะห์",
-      toggleMarketingCookies: "เปิดหรือปิดคุกกี้การตลาด"
+      toggleMarketingCookies: "เปิดหรือปิดคุกกี้การตลาด",
     },
     profileIndividual: {
       labelFirstName: "ชื่อ",
@@ -1489,7 +1705,7 @@ export const th = {
       placeholderLastName: "กรอกนามสกุล",
       save: "บันทึก",
       sectionIndividualHiring: "ข้อมูลเพื่อจ้างในนามบุคคล",
-      subtitleIndividualHiring: "สำหรับออกเอกสาร การจ้างแบบบุคคลธรรมดา"
+      subtitleIndividualHiring: "สำหรับออกเอกสาร การจ้างแบบบุคคลธรรมดา",
     },
     profileInfo: {
       accountInfo: "ข้อมูลส่วนตัวเพื่อแนะนำตัวเอง",
@@ -1512,7 +1728,7 @@ export const th = {
       sectionAccountInfo: "ข้อมูลบัญชี",
       sectionPassword: "รหัสผ่าน",
       submitButton: "ยืนยัน",
-      subtitleAccountInfo: "กำหนดข้อมูลเบื้องต้นของคุณ"
+      subtitleAccountInfo: "กำหนดข้อมูลเบื้องต้นของคุณ",
     },
     profileJob: {
       noJob: "ไม่พบประกาศงาน",
@@ -1541,7 +1757,7 @@ export const th = {
       tableHeaderJobType: "ลักษณะการจ้าง",
       tableHeaderPostDate: "ลงประกาศเมื่อ",
       tableHeaderTitle: "ชื่องาน",
-      wantToGetJobBoard: "อยากรับงานบนบอร์ดประกาศงาน ?"
+      wantToGetJobBoard: "อยากรับงานบนบอร์ดประกาศงาน ?",
     },
     profileNavbar: {
       accountInfo: "ข้อมูลบัญชี",
@@ -1550,7 +1766,7 @@ export const th = {
       consentManage: "การจัดการความยินยอม",
       personalHiringInfo: "ข้อมูลเพื่อจ้างในนามบุคคล",
       sectionAccount: "บัญชีของคุณ",
-      sectionHiring: "ข้อมูลการจ้างงาน"
+      sectionHiring: "ข้อมูลการจ้างงาน",
     },
     profilePoint: {
       award1000BahtCoupon: "คูปองส่วนลด 1000 บาท",
@@ -1567,13 +1783,18 @@ export const th = {
       columnDetails: "รายละเอียด",
       columnPointsAmount: "จำนวน points",
       faqBenefits: "สิทธิประโยชน์จากโปรแกรม fastwork rewards มีอะไรบ้าง?",
-      faqBenefitsAnswer: "ตัวอย่างสิทธิประโยชน์จากโปรแกรม fastwork rewards: เงินคืน (Cashback) สำหรับฟรีแลนซ์ ส่วนลดพิเศษสำหรับใช้ในการจ้างงาน คูปองส่วนลดจากพาร์ทเนอร์ สิทธิพิเศษ ในการเข้าร่วมกิจกรรมต่างๆ ของ fastwork และอื่นๆ อีกมากมาย หมายเหตุ: สิทธิประโยชน์อาจมีการปรับเปลี่ยนตามช่วงเวลา เพื่อให้สอดคล้องกับความต้องการของผู้ใช้งาน",
+      faqBenefitsAnswer:
+        "ตัวอย่างสิทธิประโยชน์จากโปรแกรม fastwork rewards: เงินคืน (Cashback) สำหรับฟรีแลนซ์ ส่วนลดพิเศษสำหรับใช้ในการจ้างงาน คูปองส่วนลดจากพาร์ทเนอร์ สิทธิพิเศษ ในการเข้าร่วมกิจกรรมต่างๆ ของ fastwork และอื่นๆ อีกมากมาย หมายเหตุ: สิทธิประโยชน์อาจมีการปรับเปลี่ยนตามช่วงเวลา เพื่อให้สอดคล้องกับความต้องการของผู้ใช้งาน",
       faqExpiration: "Point ในโปรแกรม fastwork rewards มีวันหมดอายุหรือไม่?",
-      faqExpirationAnswer: "Fastwork Points มีอายุ 6 เดือน นับจากวันที่ได้รับ และจะหมดอายุสิ้นเดือนที่ 3 (ตัวอย่าง: หากได้รับ Points ในเดือนมกราคม จะหมดอายุวันที่ 30 เมษายน) เมื่อคุณแลกรางวัล ระบบจะใช้ Points ที่ใกล้หมดอายุก่อนโดยอัตโนมัติ",
-      faqJoinRewards: "จะเข้าร่วมโปรแกรม fastwork rewards เพื่อรับสิทธิประโยชน์ได้อย่างไร?",
-      faqJoinRewardsAnswer: "เพียงเข้าสู่ระบบ fastwork และไปที่หน้า 'ทำภารกิจ' เพื่อเริ่มสะสมคะแนน และแลกของรางวัลสุดพิเศษได้ทันที หากพบปัญหาในการเข้าใช้งาน กรุณาติดต่อศูนย์ช่วยเหลือของเรา",
+      faqExpirationAnswer:
+        "Fastwork Points มีอายุ 6 เดือน นับจากวันที่ได้รับ และจะหมดอายุสิ้นเดือนที่ 3 (ตัวอย่าง: หากได้รับ Points ในเดือนมกราคม จะหมดอายุวันที่ 30 เมษายน) เมื่อคุณแลกรางวัล ระบบจะใช้ Points ที่ใกล้หมดอายุก่อนโดยอัตโนมัติ",
+      faqJoinRewards:
+        "จะเข้าร่วมโปรแกรม fastwork rewards เพื่อรับสิทธิประโยชน์ได้อย่างไร?",
+      faqJoinRewardsAnswer:
+        "เพียงเข้าสู่ระบบ fastwork และไปที่หน้า 'ทำภารกิจ' เพื่อเริ่มสะสมคะแนน และแลกของรางวัลสุดพิเศษได้ทันที หากพบปัญหาในการเข้าใช้งาน กรุณาติดต่อศูนย์ช่วยเหลือของเรา",
       faqMorePoints: "อยากได้ Point เพิ่มใน fastwork rewards ต้องทำยังไงบ้าง?",
-      faqMorePointsAnswer: "ทำกิจกรรมที่ระบุไว้ในหน้าภารกิจ เช่น เข้าสู่ระบบ และ check-in ในหน้า rewards เป็นประจำทุกวัน พิเศษสำหรับฟรีแลนซ์! รับงานผ่านระบบ fastwork ทุก 320 บาท จะได้รับ 1 point จากหน่วยที่ผู้ว่าจ้างอนุมัติ",
+      faqMorePointsAnswer:
+        "ทำกิจกรรมที่ระบุไว้ในหน้าภารกิจ เช่น เข้าสู่ระบบ และ check-in ในหน้า rewards เป็นประจำทุกวัน พิเศษสำหรับฟรีแลนซ์! รับงานผ่านระบบ fastwork ทุก 320 บาท จะได้รับ 1 point จากหน่วยที่ผู้ว่าจ้างอนุมัติ",
       filterAll: "ทั้งหมด",
       filterEmployment: "สำหรับการจ้างงาน",
       filterGeneral: "ทั่วไป",
@@ -1601,16 +1822,19 @@ export const th = {
       taskFirstPayment: "การชำระเงินครั้งแรกบน Fastwork",
       taskRepeatHire: "จ้างฟรีแลนซ์คนเดิมมากกว่าหนึ่งครั้ง",
       taskSuccessfulHire: "การจ้างงานสำเร็จครั้งแรก",
-      terms1: "เมื่อแลกสิทธิประโยชน์ ส่วนลด หรือของรางวัลแล้ว จะไม่สามารถขอคืนหรือเปลี่ยนแปลงได้",
-      terms2: "โปรดตรวจสอบวันหมดอายุของคะแนนสะสมของคุณเป็นประจำ และแลกคะแนนภายในระยะเวลาที่กำหนด",
-      terms3: "Fastwork ขอสงวนสิทธิ์ในการกำหนดและเปลี่ยนแปลงเงื่อนไขของโปรแกรมสะสมคะแนน รวมถึงการแลกรางวัลโดยไม่ต้องแจ้งให้ทราบล่วงหน้า"
+      terms1:
+        "เมื่อแลกสิทธิประโยชน์ ส่วนลด หรือของรางวัลแล้ว จะไม่สามารถขอคืนหรือเปลี่ยนแปลงได้",
+      terms2:
+        "โปรดตรวจสอบวันหมดอายุของคะแนนสะสมของคุณเป็นประจำ และแลกคะแนนภายในระยะเวลาที่กำหนด",
+      terms3:
+        "Fastwork ขอสงวนสิทธิ์ในการกำหนดและเปลี่ยนแปลงเงื่อนไขของโปรแกรมสะสมคะแนน รวมถึงการแลกรางวัลโดยไม่ต้องแจ้งให้ทราบล่วงหน้า",
     },
     proposal: {
       whyHireYouLabel: "ทำไมเราควรจ้างคุณ?",
       portfolioUrlErrorUrl: "กรุณาใส่ URL ที่ถูกต้อง",
       priceErrorMin: "ต้องระบุราคา",
       timelineErrorMin: "ต้องระบุระยะเวลา",
-      serviceErrorMin: "กรุณาเลือกบริการ"
+      serviceErrorMin: "กรุณาเลือกบริการ",
     },
     seller: {
       accessHireNote: "หมายเหตุ: ข้อมูลจะได้รับการอัปเดตภายใน 24 ชั่วโมง",
@@ -1638,12 +1862,13 @@ export const th = {
       step1Status: "เสร็จสิ้น",
       step1Title: "ลงทะเบียนฟรีแลนซ์: ได้รับการยืนยันแล้ว",
       step2Action: "เพิ่มบริการ",
-      step2Desc: "สร้างบริการที่น่าสนใจเพื่อดึงดูดผู้ว่าจ้างและสร้างรายได้บน fastwork",
+      step2Desc:
+        "สร้างบริการที่น่าสนใจเพื่อดึงดูดผู้ว่าจ้างและสร้างรายได้บน fastwork",
       step2Title: "เพิ่มบริการของคุณ",
       step3Action: "เพิ่มข้อมูล",
       step3Desc: "เพิ่มประสบการณ์การทำงาน การศึกษา และทักษะของคุณ",
       step3Title: "แนะนำตัวเอง",
-      upgradeMembership: "อัปเกรดระดับสมาชิก"
+      upgradeMembership: "อัปเกรดระดับสมาชิก",
     },
     sellerAccountStatistics: {
       accountStatisticsTitle: "สถิติบัญชี",
@@ -1652,9 +1877,10 @@ export const th = {
       noDataAvailable: "ไม่มีข้อมูล",
       onlineActivityHint: "ออนไลน์อย่างสม่ำเสมอเพื่อเพิ่มการแสดงผล",
       onlineActivityTitle: "กิจกรรมออนไลน์",
-      serviceStatisticsNote: "หมายเหตุ: ข้อมูลจะได้รับการอัปเดตภายใน 24 ชั่วโมง",
+      serviceStatisticsNote:
+        "หมายเหตุ: ข้อมูลจะได้รับการอัปเดตภายใน 24 ชั่วโมง",
       serviceStatisticsTitle: "สถิติบริการ",
-      startSellingButton: "เริ่มขาย"
+      startSellingButton: "เริ่มขาย",
     },
     sellerBankAccount: {
       bankAccountNumberLabel: "หมายเลขบัญชีธนาคาร",
@@ -1664,12 +1890,15 @@ export const th = {
       bankNameLabel: "ชื่อธนาคาร",
       bankNamePlaceholder: "เลือกธนาคาร",
       bankQrUploadNote: "โปรดอัปโหลด QR Code จากแอปธนาคารที่แสดงชื่อของคุณ",
-      bankQrUploadTitle: "อัปโหลดรูป QR Code ธนาคารของคุณ (ชื่อบัญชีต้องตรงกับบัตรประชาชน)",
-      uploadButton: "อัปโหลดรูปภาพ"
+      bankQrUploadTitle:
+        "อัปโหลดรูป QR Code ธนาคารของคุณ (ชื่อบัญชีต้องตรงกับบัตรประชาชน)",
+      uploadButton: "อัปโหลดรูปภาพ",
     },
     sellerCommitmentLetter: {
-      incomeTaxDescription: "เพื่อรับชำระเงินผ่านระบบของ Fastwork ฟรีแลนซ์จะต้องยืนยันและยอมรับในการให้ข้อมูลรายได้ของตนเองเพื่อให้หน่วยงานภาษีตรวจสอบการปฏิบัติตามข้อกำหนดทางกฎหมาย",
-      step1Note: "เมื่อได้รับการยืนยันแล้ว ข้อมูลนี้จะไม่สามารถแก้ไขได้ (กรุณาติดต่อทีมสนับสนุน)",
+      incomeTaxDescription:
+        "เพื่อรับชำระเงินผ่านระบบของ Fastwork ฟรีแลนซ์จะต้องยืนยันและยอมรับในการให้ข้อมูลรายได้ของตนเองเพื่อให้หน่วยงานภาษีตรวจสอบการปฏิบัติตามข้อกำหนดทางกฎหมาย",
+      step1Note:
+        "เมื่อได้รับการยืนยันแล้ว ข้อมูลนี้จะไม่สามารถแก้ไขได้ (กรุณาติดต่อทีมสนับสนุน)",
       step1Placeholder: "กรุณากรอกข้อมูล",
       step1Title: "กรอกรหัสผู้เสียภาษี",
       step2Link: "แบบฟอร์มคำรับรอง",
@@ -1680,7 +1909,7 @@ export const th = {
       step4Note: "สามารถอัปโหลดไฟล์ .pdf, .png หรือ .jpg ขนาดไม่เกิน 10MB",
       step4Title: "ถ่ายรูปเอกสารและอัปโหลดผ่าน Fastwork",
       taxInfoTitle: "ข้อมูลการยื่นภาษี",
-      uploadButton: "อัปโหลดเอกสาร"
+      uploadButton: "อัปโหลดเอกสาร",
     },
     sellerContactInfo: {
       addressDetail: "รายละเอียดที่อยู่",
@@ -1698,7 +1927,7 @@ export const th = {
       subDistrict: "ตำบล/แขวง",
       thailand: "ประเทศไทย",
       zipcode: "รหัสไปรษณีย์",
-      zipcodePlaceholder: "Enter Zipcode"
+      zipcodePlaceholder: "Enter Zipcode",
     },
     sellerDocumentInfo: {
       firstnameLabel: "ชื่อจริงและชื่อกลาง",
@@ -1706,34 +1935,39 @@ export const th = {
       lastnameLabel: "นามสกุล",
       lastnamePlaceholder: "กรอกนามสกุล",
       subtitle: "สำหรับบุคคลทั่วไป",
-      title: "ข้อมูลเอกสารของผู้ว่าจ้าง (บุคคลธรรมดา)"
+      title: "ข้อมูลเอกสารของผู้ว่าจ้าง (บุคคลธรรมดา)",
     },
     sellerMyService: {
       modalTitle: "รายละเอียดงานที่ยังไม่ได้รับการอนุมัติ",
       serviceInformation: "ข้อมูลบริการ",
       submissionSuccessful: "ส่งสำเร็จ! โปรดรอผลการอนุมัติจากระบบ",
-      serviceDescriptionGuideline: "โปรดอธิบายงานของคุณอย่างชัดเจน รวมถึงบริการที่คุณนำเสนอ เช่น การออกแบบ การแปล การพิมพ์ การให้คำปรึกษา เป็นต้น หากคุณมีตัวอย่างผลงาน คุณสามารถแสดงและแนบรูปภาพในโปรไฟล์บริการได้ อย่างไรก็ตาม การใช้รูปภาพเป็นชื่อของงานหรือคำอธิบายบริการ อาจทำให้ลูกค้าเข้าใจผิดว่าคุณรับเฉพาะงานนั้นๆ",
+      serviceDescriptionGuideline:
+        "โปรดอธิบายงานของคุณอย่างชัดเจน รวมถึงบริการที่คุณนำเสนอ เช่น การออกแบบ การแปล การพิมพ์ การให้คำปรึกษา เป็นต้น หากคุณมีตัวอย่างผลงาน คุณสามารถแสดงและแนบรูปภาพในโปรไฟล์บริการได้ อย่างไรก็ตาม การใช้รูปภาพเป็นชื่อของงานหรือคำอธิบายบริการ อาจทำให้ลูกค้าเข้าใจผิดว่าคุณรับเฉพาะงานนั้นๆ",
       uploadServiceImages: "อัปโหลดรูปภาพบริการ",
-      uploadGuideline: "โปรดอัปโหลดรูปภาพสินค้าที่เกี่ยวข้องกับหมวดหมู่งานของคุณอย่างน้อย 3 ภาพ และตรวจสอบให้แน่ใจว่าไม่ซ้ำกัน สิ่งนี้จะช่วยให้โปรไฟล์ของคุณแสดงความหลากหลาย",
+      uploadGuideline:
+        "โปรดอัปโหลดรูปภาพสินค้าที่เกี่ยวข้องกับหมวดหมู่งานของคุณอย่างน้อย 3 ภาพ และตรวจสอบให้แน่ใจว่าไม่ซ้ำกัน สิ่งนี้จะช่วยให้โปรไฟล์ของคุณแสดงความหลากหลาย",
       understood: "เข้าใจแล้ว",
       addNewService: "เพิ่มบริการใหม่",
-      approvalNote: "สำหรับบริการที่อยู่ในสถานะรออนุมัติ เราจะตรวจสอบภายใน 2 วันทำการ (หลังจากบัญชีผู้ใช้งานได้รับการอนุมัติ)",
+      approvalNote:
+        "สำหรับบริการที่อยู่ในสถานะรออนุมัติ เราจะตรวจสอบภายใน 2 วันทำการ (หลังจากบัญชีผู้ใช้งานได้รับการอนุมัติ)",
       columnFeePercent: "ค่าบริการ (%)",
       columnManage: "การจัดการ",
       columnService: "บริการ",
       columnStatus: "สถานะบริการ",
       columnVisibility: "การแสดงบริการ",
-      confirmDeleteServiceMessage: "หลังจากยืนยันการลบบริการแล้ว คุณจะไม่สามารถกู้คืนข้อมูลได้อีก",
+      confirmDeleteServiceMessage:
+        "หลังจากยืนยันการลบบริการแล้ว คุณจะไม่สามารถกู้คืนข้อมูลได้อีก",
       confirmDeleteServiceTitle: "ยืนยันการลบบริการ",
       myServicesTitle: "บริการของฉัน ({{n}}/{{max}})",
       noService: "ยังไม่มีบริการ",
       serviceFeeButton: "กรอกเพื่อคำนวณ",
-      serviceFeeDescription: "ค่าบริการคิดเป็น 15% ของจำนวนเงินที่ฟรีแลนซ์ได้รับ",
+      serviceFeeDescription:
+        "ค่าบริการคิดเป็น 15% ของจำนวนเงินที่ฟรีแลนซ์ได้รับ",
       serviceFeeTitle: "คำนวณค่าบริการ",
       statusApproved: "อนุมัติแล้ว",
       statusDraft: "ฉบับร่าง",
       statusPending: "รอการอนุมัติ",
-      statusRejected: "ไม่อนุมัติ"
+      statusRejected: "ไม่อนุมัติ",
     },
     sellerPersonalInfo: {
       addressDetail: "ที่อยู่โดยละเอียด",
@@ -1752,7 +1986,7 @@ export const th = {
       lastName: "นามสกุล",
       postalCode: "รหัสไปรษณีย์",
       province: "จังหวัด",
-      subDistrict: "ตำบล/แขวง"
+      subDistrict: "ตำบล/แขวง",
     },
     sellerProfile: {
       aboutFreelancerLabel: "เกี่ยวกับฟรีแลนซ์",
@@ -1762,13 +1996,15 @@ export const th = {
       freelancerAccountInfoSubtitle: "ตั้งค่าข้อมูลพื้นฐานของคุณ",
       freelancerAccountInfoTitle: "ข้อมูลบัญชีฟรีแลนซ์",
       freelancerTypeLabel: "ประเภทฟรีแลนซ์",
-      freelancerTypeNote: "ใช้เพื่อปรับปรุงระบบ หากคุณเป็นนักเรียนหรือนักศึกษา โปรดเลือกพาร์ทไทม์",
+      freelancerTypeNote:
+        "ใช้เพื่อปรับปรุงระบบ หากคุณเป็นนักเรียนหรือนักศึกษา โปรดเลือกพาร์ทไทม์",
       fullTime: "ฟูลไทม์",
       partTime: "พาร์ทไทม์",
       saveButton: "บันทึก",
       usernameLabel: "ชื่อผู้ใช้งาน",
       usernameMinLengthError: "ชื่อผู้ใช้งานต้องมีอย่างน้อย 3 ตัวอักษร",
-      usernameNote: "ชื่อผู้ใช้งานจะแสดงใน URL การเปลี่ยนอาจมีผลกับผลลัพธ์การค้นหาบน Google"
+      usernameNote:
+        "ชื่อผู้ใช้งานจะแสดงใน URL การเปลี่ยนอาจมีผลกับผลลัพธ์การค้นหาบน Google",
     },
     sellerProjectManagement: {
       projectColumnAmount: "จำนวนเงิน (Baht)",
@@ -1781,7 +2017,7 @@ export const th = {
       projectInProgressTab: "กำลังดำเนินการ ({{n}})",
       projectInProgressTitle: "โครงการที่กำลังดำเนินการ",
       projectPendingTab: "รออนุมัติ ({{n}})",
-      projectPendingTitle: "โครงการที่รอการอนุมัติ"
+      projectPendingTitle: "โครงการที่รอการอนุมัติ",
     },
     sellerWithdrawal: {
       accumulatedBalance: "ยอดสะสม (บาท)",
@@ -1799,11 +2035,12 @@ export const th = {
       noTransactions: "ไม่มีธุรกรรมในเดือน {{month}} {{year}}",
       paymentSteps: "ขั้นตอนการรับเงิน",
       transactionHistory: "ประวัติการโอนเงิน",
-      transferNote: "คุณจะได้รับเงินภายใน 1–3 วันทำการ หลังจากสถานะเปลี่ยนเป็น โอนแล้ว ขึ้นอยู่กับเวลาการประมวลผลของแต่ละธนาคาร",
+      transferNote:
+        "คุณจะได้รับเงินภายใน 1–3 วันทำการ หลังจากสถานะเปลี่ยนเป็น โอนแล้ว ขึ้นอยู่กับเวลาการประมวลผลของแต่ละธนาคาร",
       verificationBank: "ข้อมูลบัญชีธนาคาร: เพิ่มข้อมูล",
       verificationId: "ข้อมูลบัตรประชาชน: ตรวจสอบข้อมูลของคุณ",
       verificationInfoTitle: "ข้อมูลที่ต้องยืนยันเมื่อมียอดสะสม",
-      verificationTax: "ข้อมูลการยื่นภาษี: เพิ่มข้อมูล"
+      verificationTax: "ข้อมูลการยื่นภาษี: เพิ่มข้อมูล",
     },
     spPrivacy: {
       myProfile: "โปรไฟล์ของฉัน",
@@ -1821,22 +2058,27 @@ export const th = {
       jobBoard: "บอร์ดประกาศงาน",
       otherServices: "บริการอื่นๆ",
       dataManagement: "การจัดการข้อมูล",
-      logout: "ออกจากระบบ"
+      logout: "ออกจากระบบ",
     },
     supportCenter: {
       faqTitle: "คำถามที่พบบ่อย",
       faqSubtitle: "รับคำตอบสำหรับคำถามทั่วไป",
       faqHeader: "คำถามที่พบบ่อย",
       faqQuestion1: "วิธีจ้างฟรีแลนซ์ผ่าน Fastwork?",
-      faqQuestion1Step1: "1. พูดคุยกับฟรีแลนซ์เกี่ยวกับรายละเอียดงาน (คุณจะไม่ถูกเรียกเก็บเงินในขั้นตอนนี้)",
+      faqQuestion1Step1:
+        "1. พูดคุยกับฟรีแลนซ์เกี่ยวกับรายละเอียดงาน (คุณจะไม่ถูกเรียกเก็บเงินในขั้นตอนนี้)",
       faqQuestion1Step2: "2. ขอให้ฟรีแลนซ์ส่งใบเสนอราคา",
-      faqQuestion1Step3: "3. ชำระเงินผ่านระบบเพื่อยืนยันการเริ่มงาน (การชำระเงินของคุณได้รับการคุ้มครองโดยระบบ)",
+      faqQuestion1Step3:
+        "3. ชำระเงินผ่านระบบเพื่อยืนยันการเริ่มงาน (การชำระเงินของคุณได้รับการคุ้มครองโดยระบบ)",
       faqQuestion1Step4: "4. ตรวจสอบและอนุมัติงาน",
-      faqQuestion1Note: "หมายเหตุ: การชำระเงินที่ทำในระบบได้รับการคุ้มครองโดย Fastwork ดูเพิ่มเติมที่ Fastwork Guarantee",
+      faqQuestion1Note:
+        "หมายเหตุ: การชำระเงินที่ทำในระบบได้รับการคุ้มครองโดย Fastwork ดูเพิ่มเติมที่ Fastwork Guarantee",
       faqQuestion2: "วิธีจ้างงานในนามบริษัท?",
-      faqQuestion2Step1: "1. ระบุข้อมูลบริษัทเพื่อออกเอกสารในหน้า 'จ้างงานในนามบริษัท'",
+      faqQuestion2Step1:
+        "1. ระบุข้อมูลบริษัทเพื่อออกเอกสารในหน้า 'จ้างงานในนามบริษัท'",
       faqQuestion2Step2: "2. รอการอนุมัติภายใน 2 ชั่วโมง",
-      faqQuestion2Step3: "3. เมื่อได้รับการอนุมัติแล้ว แจ้งฟรีแลนซ์ทันทีเพื่อออกเอกสารผ่านแชท",
+      faqQuestion2Step3:
+        "3. เมื่อได้รับการอนุมัติแล้ว แจ้งฟรีแลนซ์ทันทีเพื่อออกเอกสารผ่านแชท",
       faqQuestion3: "วิธีหาฟรีแลนซ์?",
       faqQuestion3Step1: "1. เพิ่ม @fastwork ผ่าน Line",
       faqQuestion3Step2: "2. เลือกบริการแชทเพื่อจ้าง (บริการสนับสนุนฟรีแลนซ์)",
@@ -1846,7 +2088,8 @@ export const th = {
       supportCenterTitle: "ศูนย์สนับสนุน",
       supportCenterDescription: "ต้องการความช่วยเหลือ? เรายินดีให้บริการ",
       chatWithUsButton: "💬 แชทกับเรา",
-      supportCenterHours: "จันทร์ - ศุกร์ 9:30-22:00 น. / เสาร์ - อาทิตย์ และวันหยุดนักขัตฤกษ์ 10:00-19:00 น.",
+      supportCenterHours:
+        "จันทร์ - ศุกร์ 9:30-22:00 น. / เสาร์ - อาทิตย์ และวันหยุดนักขัตฤกษ์ 10:00-19:00 น.",
       contactEmailTitle: "ติดต่อทางอีเมล",
       contactEmailResponseTime: "ทีมงานของเราจะตอบกลับภายใน",
       contactEmailResponseTimeHighlight: "24 ชั่วโมง",
@@ -1856,14 +2099,17 @@ export const th = {
       callUsHours: "จันทร์ - ศุกร์ 9:30-11:30 น. และ 13:00-16:00 น.",
       callUsClosed: "ปิดทำการ เสาร์ - อาทิตย์ และวันหยุดนักขัตฤกษ์",
       addLineTitle: "ให้เราช่วยคุณหาฟรีแลนซ์ที่ใช่ เพียงแค่เพิ่ม Line",
-      addLineDescription: "บริการแชทเพื่อจ้างฟรีแลนซ์หรือรับความช่วยเหลือจากผู้ช่วย",
-      addLineButton: "เพิ่ม @fastwork"
+      addLineDescription:
+        "บริการแชทเพื่อจ้างฟรีแลนซ์หรือรับความช่วยเหลือจากผู้ช่วย",
+      addLineButton: "เพิ่ม @fastwork",
     },
     terms: {
-      homepageTitle: "Fastwork.co - แพลตฟอร์มอันดับ 1 สำหรับฟรีแลนซ์คุณภาพที่ได้รับการเลือกจากธุรกิจทั่วประเทศไทย",
+      homepageTitle:
+        "Fastwork.co - แพลตฟอร์มอันดับ 1 สำหรับฟรีแลนซ์คุณภาพที่ได้รับการเลือกจากธุรกิจทั่วประเทศไทย",
       homepageSubtitle: "จ้างฟรีแลนซ์บน Fastwork",
       homepageAppPrompt: "เปิดผ่านแอปเพื่อประสบการณ์เต็มรูปแบบ",
-      homepageFreelancerSectionTitle: "เรามีทีมฟรีแลนซ์และผู้เชี่ยวชาญคุณภาพสูงหลากหลายพร้อมให้บริการคุณ",
+      homepageFreelancerSectionTitle:
+        "เรามีทีมฟรีแลนซ์และผู้เชี่ยวชาญคุณภาพสูงหลากหลายพร้อมให้บริการคุณ",
       freelancerCategoryTitle: "ฟรีแลนซ์",
       freelancerCategory1: "ยืนยันตัวตนและมีผลงานในระบบ",
       freelancerCategory2: "ยืนยันตัวตนในระบบ",
@@ -1872,32 +2118,43 @@ export const th = {
       specialistCategoryTitle: "ผู้เชี่ยวชาญ Fastwork",
       specialistCategory1: "มั่นใจในทักษะและบริการที่ผ่านการทดสอบ",
       specialistCategory2: "ยืนยันตัวตนในระบบ",
-      specialistCategory3: "ได้รับการคัดเลือกและทดสอบความรู้และทักษะเฉพาะด้านโดย Fastwork",
-      specialistCategory4: "สำเร็จการฝึกอบรมพิเศษด้านทักษะและการให้บริการจาก Fastwork",
+      specialistCategory3:
+        "ได้รับการคัดเลือกและทดสอบความรู้และทักษะเฉพาะด้านโดย Fastwork",
+      specialistCategory4:
+        "สำเร็จการฝึกอบรมพิเศษด้านทักษะและการให้บริการจาก Fastwork",
       specialistCategory5: "มีใบรับรองวิชาชีพที่จำเป็นในสาขานั้น",
       professionalCategoryTitle: "ผู้เชี่ยวชาญระดับสูง Fastwork",
       professionalCategory1: "ผู้เชี่ยวชาญในโปรเจกต์ที่ซับซ้อนและขนาดใหญ่",
       professionalCategory2: "ยืนยันตัวตนในระบบ",
-      professionalCategory3: "ได้รับการคัดเลือกและทดสอบความรู้และทักษะเฉพาะด้านโดย Fastwork",
-      professionalCategory4: "สำเร็จการฝึกอบรมพิเศษด้านทักษะและการให้บริการจาก Fastwork",
+      professionalCategory3:
+        "ได้รับการคัดเลือกและทดสอบความรู้และทักษะเฉพาะด้านโดย Fastwork",
+      professionalCategory4:
+        "สำเร็จการฝึกอบรมพิเศษด้านทักษะและการให้บริการจาก Fastwork",
       professionalCategory5: "มีใบรับรองวิชาชีพที่จำเป็นในสาขานั้น",
       professionalCategory6: "ผ่านการคัดกรองด้วยเกณฑ์ความเชี่ยวชาญขั้นสูง",
       professionalCategory7: "สามารถจัดการโปรเจกต์ที่ซับซ้อนและขนาดใหญ่ได้",
       howToUseTitle: "วิธีใช้ Fastwork?",
       howToUseStep1Title: "ค้นหาฟรีแลนซ์ที่เหมาะสม",
-      howToUseStep1Description: "ค้นหาด้วยแถบค้นหาหรือเลือกจากหมวดหมู่งานกว่า 70 หมวด",
+      howToUseStep1Description:
+        "ค้นหาด้วยแถบค้นหาหรือเลือกจากหมวดหมู่งานกว่า 70 หมวด",
       howToUseStep2Title: "พูดคุยรายละเอียด",
-      howToUseStep2Description: "คลิก “แชทเลย” เพื่อพูดคุยรายละเอียดงานและรับใบเสนอราคาจากฟรีแลนซ์",
+      howToUseStep2Description:
+        "คลิก “แชทเลย” เพื่อพูดคุยรายละเอียดงานและรับใบเสนอราคาจากฟรีแลนซ์",
       howToUseStep3Title: "ชำระเงินผ่าน Fastwork",
-      howToUseStep3Description: "ชำระเงินอย่างปลอดภัยผ่านช่องทางหลากหลาย มั่นใจทุกการจ้างงานด้วยการปกป้องเงินของคุณ",
+      howToUseStep3Description:
+        "ชำระเงินอย่างปลอดภัยผ่านช่องทางหลากหลาย มั่นใจทุกการจ้างงานด้วยการปกป้องเงินของคุณ",
       howToUseStep4Title: "อนุมัติงานและให้คะแนน",
-      howToUseStep4Description: "ให้คะแนนฟรีแลนซ์เพื่อแสดงความคิดเห็นและช่วยพัฒนาการทำงาน",
+      howToUseStep4Description:
+        "ให้คะแนนฟรีแลนซ์เพื่อแสดงความคิดเห็นและช่วยพัฒนาการทำงาน",
       trustedClientsTitle: "ลูกค้าที่ไว้วางใจเรา",
       trustedClientsCta: "ดูเพิ่มเติม",
-      termsAndConditionsTitle: "ข้อกำหนดและเงื่อนไขการใช้แพลตฟอร์ม Fastwork.co สำหรับฟรีแลนซ์",
+      termsAndConditionsTitle:
+        "ข้อกำหนดและเงื่อนไขการใช้แพลตฟอร์ม Fastwork.co สำหรับฟรีแลนซ์",
       section1Title: "คำนิยาม",
-      definition1: "แพลตฟอร์มหมายถึงเว็บไซต์ (https://fastwork.co) และแอปพลิเคชัน Fastwork",
-      definition2: "แพลตฟอร์มทำหน้าที่เป็นตัวกลางให้ผู้ใช้สร้างและแบ่งปันบริการ",
+      definition1:
+        "แพลตฟอร์มหมายถึงเว็บไซต์ (https://fastwork.co) และแอปพลิเคชัน Fastwork",
+      definition2:
+        "แพลตฟอร์มทำหน้าที่เป็นตัวกลางให้ผู้ใช้สร้างและแบ่งปันบริการ",
       definition3: "ผู้ใช้สามารถซื้อและขายบริการผ่านแพลตฟอร์ม",
       definition4: "การชำระเงินขึ้นอยู่กับมูลค่าของบริการ",
       definition5: "งานหมายถึงผลิตภัณฑ์หรือบริการที่ลูกค้าและฟรีแลนซ์ให้",
@@ -1907,7 +2164,8 @@ export const th = {
       definition9: "ผู้ใช้คือบุคคลที่ใช้บริการของแพลตฟอร์ม",
       definition10: "ลูกค้าคือผู้ใช้ที่จ้างผลิตภัณฑ์หรือบริการ",
       definition11: "ฟรีแลนซ์คือผู้ใช้ที่ให้ผลิตภัณฑ์หรือบริการ",
-      definition12: "โปรไฟล์บริการ (My Services) คือหน้าที่แสดงรายละเอียดบริการของฟรีแลนซ์",
+      definition12:
+        "โปรไฟล์บริการ (My Services) คือหน้าที่แสดงรายละเอียดบริการของฟรีแลนซ์",
       definition13: "ลูกค้าดูโปรไฟล์บริการก่อนชำระเงินสำหรับโปรเจกต์",
       definition14: "ข้อเสนองานคือหน้าที่ฟรีแลนซ์ใช้สมัครงานของลูกค้า",
       definition15: "ฟรีแลนซ์อธิบายทักษะและรวมผลงานในข้อเสนองาน",
@@ -1917,19 +2175,24 @@ export const th = {
       definition19: "โปรเจกต์ถูกสร้างเมื่อลูกค้าคลิก “แชทกับฟรีแลนซ์”",
       definition20: "ผู้ใช้พูดคุยรายละเอียดงานหลังจากสร้างโปรเจกต์",
       definition21: "ฟรีแลนซ์ส่งใบเสนอราคาให้ลูกค้าพิจารณ",
-      definition22: "โปรเจกต์ที่ไม่มีการเคลื่อนไหวคือโปรเจกต์ที่ไม่มีการเปลี่ยนแปลงสถานะหรือการโต้ตอบ",
+      definition22:
+        "โปรเจกต์ที่ไม่มีการเคลื่อนไหวคือโปรเจกต์ที่ไม่มีการเปลี่ยนแปลงสถานะหรือการโต้ตอบ",
       definition23: "ใบเสนอราคาคือข้อเสนอที่ฟรีแลนซ์ส่งให้ลูกค้า",
       definition24: "ใบเสนอราคารวมถึงขอบเขตโปรเจกต์ ระยะเวลา และค่าใช้จ่าย",
       definition25: "ค่าธรรมเนียมโปรเจกต์คือจำนวนเงินที่ลูกค้าตกลงจ่าย",
       definition26: "บริษัทเก็บค่าธรรมเนียมโปรเจกต์จนกว่าการส่งมอบจะเสร็จสิ้น",
       definition27: "ค่าธรรมเนียมโปรเจกต์ไม่รวมภาษีเงินได้บุคคลธรรมดา",
-      definition28: "ค่าธรรมเนียมการใช้แพลตฟอร์มของฟรีแลนซ์คือค่าธรรมเนียมที่เรียกเก็บจากฟรีแลนซ์",
-      definition29: "ค่าธรรมเนียมการใช้แพลตฟอร์มของลูกค้าคือค่าธรรมเนียมที่เรียกเก็บจากลูกค้า",
+      definition28:
+        "ค่าธรรมเนียมการใช้แพลตฟอร์มของฟรีแลนซ์คือค่าธรรมเนียมที่เรียกเก็บจากฟรีแลนซ์",
+      definition29:
+        "ค่าธรรมเนียมการใช้แพลตฟอร์มของลูกค้าคือค่าธรรมเนียมที่เรียกเก็บจากลูกค้า",
       definition30: "Fastwork Coins คือคะแนนที่ลูกค้าสะสมหลังจากการชำระเงิน",
       definition31: "Bonus Coins คือคะแนนที่บริษัทมอบให้",
-      definition32: "ข้อมูลส่วนบุคคลคือข้อมูลที่ระบุตัวตนบุคคลโดยตรงหรือโดยอ้อม",
+      definition32:
+        "ข้อมูลส่วนบุคคลคือข้อมูลที่ระบุตัวตนบุคคลโดยตรงหรือโดยอ้อม",
       section2Title: "ข้อกำหนดทั่วไป",
-      generalTerms1: "ข้อกำหนดเหล่านี้มีผลบังคับใช้ตั้งแต่วันที่ 21 สิงหาคม 2567",
+      generalTerms1:
+        "ข้อกำหนดเหล่านี้มีผลบังคับใช้ตั้งแต่วันที่ 21 สิงหาคม 2567",
       generalTerms2: "บริษัทจะอัปเดตแพลตฟอร์มเพื่อให้สอดคล้องกับการเปลี่ยนแปลง",
       generalTerms3: "ผู้ใช้ต้องยอมรับข้อกำหนดการใช้งานใหม่",
       generalTerms4: "ข้อกำหนดการใช้งานคือข้อตกลงระหว่างผู้ใช้และแพลตฟอร์ม",
@@ -1941,8 +2204,10 @@ export const th = {
       section3Title: "พันธสัญญาของฟรีแลนซ์",
       freelancerCommitment1: "ฟรีแลนซ์ต้องเข้าใจข้อกำหนดและเงื่อนไข",
       freelancerCommitment2: "ฟรีแลนซ์ต้องอัปเดตข้อมูลส่วนบุคคลอย่างสม่ำเสมอ",
-      freelancerCommitment3: "ฟรีแลนซ์ต้องตรวจสอบข้อความและโปรเจกต์อย่างทันท่วงที",
-      freelancerCommitment4: "การไม่ตอบสนองอาจนำไปสู่การยกเลิกโปรเจกต์โดยอัตโนมัติ",
+      freelancerCommitment3:
+        "ฟรีแลนซ์ต้องตรวจสอบข้อความและโปรเจกต์อย่างทันท่วงที",
+      freelancerCommitment4:
+        "การไม่ตอบสนองอาจนำไปสู่การยกเลิกโปรเจกต์โดยอัตโนมัติ",
       freelancerCommitment5: "การยกเลิกส่งผลต่อการมองเห็นและอันดับของบริการ",
       freelancerCommitment6: "การสนทนากับลูกค้าต้องเกิดขึ้นบนแพลตฟอร์ม",
       freelancerCommitment7: "ข้อพิพาทนอกแพลตฟอร์มอาจไม่ได้รับการช่วยเหลือ",
@@ -1953,7 +2218,8 @@ export const th = {
       freelancerCommitment12: "รายงานการติดต่อนอกแพลตฟอร์มภายใน 3 วัน",
       freelancerCommitment13: "ฟรีแลนซ์ต้องประเมินความสามารถก่อนลงรายการบริการ",
       freelancerCommitment14: "ฟรีแลนซ์ต้องรักษาการสื่อสารสำหรับโปรเจกต์",
-      freelancerCommitment15: "ฟรีแลนซ์ต้องไม่ใช้ผลิตภัณฑ์ของผู้อื่นเป็นของตนเอง",
+      freelancerCommitment15:
+        "ฟรีแลนซ์ต้องไม่ใช้ผลิตภัณฑ์ของผู้อื่นเป็นของตนเอง",
       freelancerCommitment16: "การละเมิดอาจนำไปสู่การระงับบัญชี",
       freelancerCommitment17: "ฟรีแลนซ์ต้องรับประกันการส่งมอบทันเวลา",
       section4Title: "การลงทะเบียนแพลตฟอร์ม",
@@ -2015,7 +2281,8 @@ export const th = {
       productService2: "ผลิตภัณฑ์ส่งผ่านปุ่ม “อัปโหลดผลิตภัณฑ์”",
       productService3: "การส่งมอบที่ไม่สอดคล้องอาจนำไปสู่การร้องเรียน",
       productService4: "ลูกค้าเป็นเจ้าของผลิตภัณฑ์ที่ส่งมอบ",
-      productService5: "โปรเจกต์ที่ถูกยกเลิก สิทธิความเป็นเจ้าของกลับสู่ฟรีแลนซ์",
+      productService5:
+        "โปรเจกต์ที่ถูกยกเลิก สิทธิความเป็นเจ้าของกลับสู่ฟรีแลนซ์",
       section10Title: "การรีวิวผลิตภัณฑ์/บริการ",
       review1: "การรีวิวมีความสำคัญต่อการเติบโตของแพลตฟอร์ม",
       review2: "เฉพาะลูกค้าที่ได้รับผลิตภัณฑ์เท่านั้นที่สามารถรีวิว",
@@ -2038,7 +2305,8 @@ export const th = {
       cancellationRestrictions4: "กิจกรรมฉ้อโกงจำกัดการยกเลิก",
       section13Title: "การระงับและลบบัญชี",
       accountSuspension1: "บริษัทอาจยืนยันความเป็นเจ้าของบัญชี",
-      accountSuspension2: "ผู้ใช้ให้หลักฐานเช่นบัตรประจำตัวหรือรายละเอียดธนาคาร",
+      accountSuspension2:
+        "ผู้ใช้ให้หลักฐานเช่นบัตรประจำตัวหรือรายละเอียดธนาคาร",
       accountSuspension3: "การละเมิดนำไปสู่การเตือนหรือการระงับ",
       accountSuspension4: "พฤติกรรมที่ไม่เหมาะสมละเมิดข้อกำหนดการใช้งาน",
       accountSuspension5: "กิจกรรมฉ้อโกงนำไปสู่การระงับ",
@@ -2063,7 +2331,8 @@ export const th = {
       disputeResolution8: "การลงโทษอาจรวมถึงการระงับบัญชี",
       section15Title: "การชดใช้ค่าเสียหาย",
       indemnification1: "ผู้ใช้ชดใช้ค่าเสียหายให้บุคคลที่สาม",
-      indemnification2: "ผู้ใช้ที่ใช้หรือเปิดเผยข้อมูลส่วนบุคคลตกลงชดใช้ให้เจ้าของข้อมูล",
+      indemnification2:
+        "ผู้ใช้ที่ใช้หรือเปิดเผยข้อมูลส่วนบุคคลตกลงชดใช้ให้เจ้าของข้อมูล",
       indemnification3: "ผู้ใช้ชดใช้สำหรับการใช้ทรัพย์สินทางปัญญาผิด",
       indemnification4: "ผู้ใช้ชดใช้สำหรับการรั่วไหลของข้อมูลลับ",
       indemnification5: "ผู้ใช้ชดใช้สำหรับข้อมูลที่เป็นอันตราย",
@@ -2081,11 +2350,13 @@ export const th = {
       companyLiability7: "บริษัทรับประกันมาตรฐานบริการ",
       companyLiability8: "บริษัทในเครือไม่รับผิดชอบต่อความเสียหายของแพลตฟอร์ม",
       section17Title: "ทรัพย์สินทางปัญญา",
-      intellectualProperty1: "ลูกค้าเป็นเจ้าของลิขสิทธิ์ผลิตภัณฑ์เว้นแต่ระบุไว้เป็นอย่างอื่น",
+      intellectualProperty1:
+        "ลูกค้าเป็นเจ้าของลิขสิทธิ์ผลิตภัณฑ์เว้นแต่ระบุไว้เป็นอย่างอื่น",
       intellectualProperty2: "ผู้ใช้ต้องไม่ละเมิดสิทธิในทรัพย์สินทางปัญญา",
       intellectualProperty3: "ผู้ละเมิดชดใช้ให้เจ้าของสิทธิในทรัพย์สินทางปัญญา",
       section18Title: "นโยบายความเป็นส่วนตัว",
-      privacyPolicy1: "อ่านนโยบายความเป็นส่วนตัวของเราที่ https://fastwork.co/seller-privacy",
+      privacyPolicy1:
+        "อ่านนโยบายความเป็นส่วนตัวของเราที่ https://fastwork.co/seller-privacy",
       privacyPolicy2: "ข้อมูลส่วนบุคคลถูกจัดการอย่างเป็นความลับ",
       privacyPolicy3: "บริษัทอาจเข้าถึงแชทเพื่อการตรวจสอบ",
       privacyPolicy4: "ผู้ใช้ยอมรับให้ใช้เนื้อหาเพื่อการตลาด",
@@ -2108,175 +2379,303 @@ export const th = {
       note11: "ผู้ใช้ยอมรับการรับการแจ้งเตือนจากแพลตฟอร์ม",
       note12: "บริษัทไม่รับผิดชอบต่อเนื้อหาที่ผู้ใช้สร้าง",
       termsTitle: "ข้อกำหนดและเงื่อนไขของ Fastwork",
-      termsAcceptance: "ฉันได้อ่านและยอมรับข้อกำหนดและเงื่อนไขการใช้งานของ Fastwork",
+      termsAcceptance:
+        "ฉันได้อ่านและยอมรับข้อกำหนดและเงื่อนไขการใช้งานของ Fastwork",
       privacyAcceptance: "ฉันได้อ่านและยอมรับนโยบายความเป็นส่วนตัว",
       marketingOptIn: "ฉันสนใจรับข้อมูล ข้อเสนอ และโปรโมชั่นจาก Fastwork",
-      freelancerSignup: "ลงทะเบียนเป็นฟรีแลนซ์"
+      freelancerSignup: "ลงทะเบียนเป็นฟรีแลนซ์",
     },
     termsEmployer: {
       pageTitle: "Terms & Conditions",
-      heading: "เงื่อนไขและข้อตกลงการใช้บริการแพลตฟอร์มสำหรับผู้ว่าจ้าง (Platform Terms & Conditions for Employer) ของ บริษัท ฟาสต์เวิร์ค เทคโนโลยีส์ จำกัด",
+      heading:
+        "เงื่อนไขและข้อตกลงการใช้บริการแพลตฟอร์มสำหรับผู้ว่าจ้าง (Platform Terms & Conditions for Employer) ของ บริษัท ฟาสต์เวิร์ค เทคโนโลยีส์ จำกัด",
       definitionTitle: "นิยาม",
-      definitionPlatform: "“แพลตฟอร์ม” หมายถึง เว็บไซต์ (https://fastwork.co/) หรือแอปพลิเคชั่น Fastwork ของบริษัทฯ เป็นช่องทางและเป็นพื้นที่กลางที่เปิดให้ผู้ใช้งานสามารถสร้าง แบ่งปัน ขาย และซื้องานหรือบริการในรูปแบบของการชำระเงินตามมูลค่าที่ถูกกำหนดเอาไว้ของงานหรือบริการดังกล่าว",
-      definitionWork: "“งาน” หมายถึง ผลงาน และ/หรือ การบริการต่าง ๆ ที่ผู้ว่าจ้างว่าจ้างและ ฟรีแลนซ์ได้ส่งมอบผ่านแพลตฟอร์ม",
-      definitionCompany: "“บริษัทฯ” หมายถึง บริษัท ฟาสต์เวิร์ค เทคโนโลยีส์ จำกัด",
-      definitionFastwork: "“Fastwork” หมายถึง บริษัทฯ ทางเทคโนโลยีที่ให้บริการแพลตฟอร์มสำหรับผู้ใช้งานเพื่อรับการบริการที่ให้บริการโดยผู้ให้บริการบุคคลที่สาม หน้าที่ของบริษัทฯ คือเป็นตัวกลางสื่อสารระหว่างผู้ว่าจ้างและฟรีแลนซ์",
+      definitionPlatform:
+        "“แพลตฟอร์ม” หมายถึง เว็บไซต์ (https://fastwork.co/) หรือแอปพลิเคชั่น Fastwork ของบริษัทฯ เป็นช่องทางและเป็นพื้นที่กลางที่เปิดให้ผู้ใช้งานสามารถสร้าง แบ่งปัน ขาย และซื้องานหรือบริการในรูปแบบของการชำระเงินตามมูลค่าที่ถูกกำหนดเอาไว้ของงานหรือบริการดังกล่าว",
+      definitionWork:
+        "“งาน” หมายถึง ผลงาน และ/หรือ การบริการต่าง ๆ ที่ผู้ว่าจ้างว่าจ้างและ ฟรีแลนซ์ได้ส่งมอบผ่านแพลตฟอร์ม",
+      definitionCompany:
+        "“บริษัทฯ” หมายถึง บริษัท ฟาสต์เวิร์ค เทคโนโลยีส์ จำกัด",
+      definitionFastwork:
+        "“Fastwork” หมายถึง บริษัทฯ ทางเทคโนโลยีที่ให้บริการแพลตฟอร์มสำหรับผู้ใช้งานเพื่อรับการบริการที่ให้บริการโดยผู้ให้บริการบุคคลที่สาม หน้าที่ของบริษัทฯ คือเป็นตัวกลางสื่อสารระหว่างผู้ว่าจ้างและฟรีแลนซ์",
       definitionUser: "“ผู้ใช้งาน” หมายถึง ผู้ว่าจ้างและฟรีแลนซ์",
-      definitionEmployer: "“ผู้ว่าจ้าง” หรือ “ท่าน” หมายถึง บุคคลที่ใช้บริการแพลตฟอร์ม โดยตกลงจ้างงานและรับมอบงานผ่านแพลตฟอร์ม",
-      definitionFreelancer: "“ฟรีแลนซ์” หมายถึง บุคคลที่ใช้บริการแพลตฟอร์ม โดยตกลงรับทำงานและส่งมอบงานผ่านแพลตฟอร์ม",
-      definitionMyWork: "“งานของฉัน” หมายถึง หน้าหนึ่งบนแพลตฟอร์มที่ฟรีแลนซ์เสนองานหรือประวัติการทำงานของฟรีแลนซ์เพื่อให้ผู้ว่าจ้างตรวจสอบคุณภาพงานหรือประวัติการทำงานก่อนสร้างออเดอร์",
-      definitionProposedWork: "“งานที่นำเสนอ” หมายถึง หน้าหนึ่งบนแพลตฟอร์มที่ฟรีแลนซ์เสนอเพื่อขอรับทำงานที่ผู้ว่าจ้างประกาศบนหน้าประกาศงาน โดยฟรีแลนซ์สามารถอธิบายถึงรายละเอียดของงานที่ตนจะเข้ารับทำงาน ตลอดจนงานของฉัน เพื่อให้ผู้ว่าจ้างศึกษาและตัดสินใจว่าจ้างฟรีแลนซ์ได้",
-      definitionJobAnnouncement: "“ประกาศงาน” หมายถึง หน้าหนึ่งบนแพลตฟอร์มที่ผู้ว่าจ้างใช้ประกาศรับฟรีแลนซ์เพื่อเข้าทำงาน",
-      definitionChat: "“พูดคุย” หมายถึง หน้าหนึ่งบนแพลตฟอร์ม สำหรับใช้เป็นช่องทางการสื่อสารระหว่างผู้ว่าจ้างกับฟรีแลนซ์ที่เกี่ยวข้องกับงานที่ผู้ว่าจ้างได้ตกลงว่าจ้างฟรีแลนซ์ ซึ่งอาจใช้งานได้ด้วยวิธีการสื่อสารผ่านข้อความ ข้อความเสียง ภาพ หรือวิธีการอื่นใด",
-      definitionOrder: "“ออเดอร์” หมายถึง หน้าหนึ่งบนแพลตฟอร์มที่ผู้ว่าจ้างสร้างขึ้นหลังจากสนใจงานที่ฟรีแลนซ์นำเสนอในหน้างานที่นำเสนอ เมื่อสร้างออเดอร์แล้ว ผู้ใช้งานย่อมสามารถพูดคุยกันถึงรายละเอียดของงาน และฟรีแลนซ์สามารถสร้างใบเสนอราคาเพื่อให้ผู้ว่าจ้างพิจารณาอนุมัติต่อไปได้",
-      definitionInactiveOrder: "“ออเดอร์ที่ไม่มีการเคลื่อนไหว” หมายถึง ออเดอร์ที่ถูกสร้างขึ้นโดยผู้ว่าจ้างแล้วแต่ไม่มีการเคลื่อนไหวทางสถานะ อาทิ ไม่มีการติดต่อระหว่างผู้ใช้งาน ไม่มีการสร้างใบเสนอราคา ฯลฯ",
-      definitionQuote: "“ใบเสนอราคา” หมายถึง หน้าหนึ่งบนแพลตฟอร์มที่ฟรีแลนซ์เสนอแก่ผู้ว่าจ้างที่สร้าง ออเดอร์ อันประกอบไปด้วยขอบเขตการทำงาน ระยะเวลาการทำงาน ขั้นตอนการทำงาน อัตราค่าบริการ เงื่อนไขการแก้ไขงาน ทั้งนี้ เพื่อประกอบการตัดสินใจในการจ้างงาน",
-      definitionServiceFee: "“ค่าบริการ” หมายถึง ค่าบริการที่ผู้ว่าจ้างตกลงชำระฟรีแลนซ์ เพื่อตอบแทนการเปิดออเดอร์ แต่ทั้งนี้ บริษัทฯ จะดูแลค่าบริการไว้จนกว่าฟรีแลนซ์จะได้ส่งมอบงานแก่ผู้ว่าจ้าง ทั้งนี้ ค่าบริการดังกล่าวจะไม่รวมภาษีหัก ณ ที่จ่าย",
+      definitionEmployer:
+        "“ผู้ว่าจ้าง” หรือ “ท่าน” หมายถึง บุคคลที่ใช้บริการแพลตฟอร์ม โดยตกลงจ้างงานและรับมอบงานผ่านแพลตฟอร์ม",
+      definitionFreelancer:
+        "“ฟรีแลนซ์” หมายถึง บุคคลที่ใช้บริการแพลตฟอร์ม โดยตกลงรับทำงานและส่งมอบงานผ่านแพลตฟอร์ม",
+      definitionMyWork:
+        "“งานของฉัน” หมายถึง หน้าหนึ่งบนแพลตฟอร์มที่ฟรีแลนซ์เสนองานหรือประวัติการทำงานของฟรีแลนซ์เพื่อให้ผู้ว่าจ้างตรวจสอบคุณภาพงานหรือประวัติการทำงานก่อนสร้างออเดอร์",
+      definitionProposedWork:
+        "“งานที่นำเสนอ” หมายถึง หน้าหนึ่งบนแพลตฟอร์มที่ฟรีแลนซ์เสนอเพื่อขอรับทำงานที่ผู้ว่าจ้างประกาศบนหน้าประกาศงาน โดยฟรีแลนซ์สามารถอธิบายถึงรายละเอียดของงานที่ตนจะเข้ารับทำงาน ตลอดจนงานของฉัน เพื่อให้ผู้ว่าจ้างศึกษาและตัดสินใจว่าจ้างฟรีแลนซ์ได้",
+      definitionJobAnnouncement:
+        "“ประกาศงาน” หมายถึง หน้าหนึ่งบนแพลตฟอร์มที่ผู้ว่าจ้างใช้ประกาศรับฟรีแลนซ์เพื่อเข้าทำงาน",
+      definitionChat:
+        "“พูดคุย” หมายถึง หน้าหนึ่งบนแพลตฟอร์ม สำหรับใช้เป็นช่องทางการสื่อสารระหว่างผู้ว่าจ้างกับฟรีแลนซ์ที่เกี่ยวข้องกับงานที่ผู้ว่าจ้างได้ตกลงว่าจ้างฟรีแลนซ์ ซึ่งอาจใช้งานได้ด้วยวิธีการสื่อสารผ่านข้อความ ข้อความเสียง ภาพ หรือวิธีการอื่นใด",
+      definitionOrder:
+        "“ออเดอร์” หมายถึง หน้าหนึ่งบนแพลตฟอร์มที่ผู้ว่าจ้างสร้างขึ้นหลังจากสนใจงานที่ฟรีแลนซ์นำเสนอในหน้างานที่นำเสนอ เมื่อสร้างออเดอร์แล้ว ผู้ใช้งานย่อมสามารถพูดคุยกันถึงรายละเอียดของงาน และฟรีแลนซ์สามารถสร้างใบเสนอราคาเพื่อให้ผู้ว่าจ้างพิจารณาอนุมัติต่อไปได้",
+      definitionInactiveOrder:
+        "“ออเดอร์ที่ไม่มีการเคลื่อนไหว” หมายถึง ออเดอร์ที่ถูกสร้างขึ้นโดยผู้ว่าจ้างแล้วแต่ไม่มีการเคลื่อนไหวทางสถานะ อาทิ ไม่มีการติดต่อระหว่างผู้ใช้งาน ไม่มีการสร้างใบเสนอราคา ฯลฯ",
+      definitionQuote:
+        "“ใบเสนอราคา” หมายถึง หน้าหนึ่งบนแพลตฟอร์มที่ฟรีแลนซ์เสนอแก่ผู้ว่าจ้างที่สร้าง ออเดอร์ อันประกอบไปด้วยขอบเขตการทำงาน ระยะเวลาการทำงาน ขั้นตอนการทำงาน อัตราค่าบริการ เงื่อนไขการแก้ไขงาน ทั้งนี้ เพื่อประกอบการตัดสินใจในการจ้างงาน",
+      definitionServiceFee:
+        "“ค่าบริการ” หมายถึง ค่าบริการที่ผู้ว่าจ้างตกลงชำระฟรีแลนซ์ เพื่อตอบแทนการเปิดออเดอร์ แต่ทั้งนี้ บริษัทฯ จะดูแลค่าบริการไว้จนกว่าฟรีแลนซ์จะได้ส่งมอบงานแก่ผู้ว่าจ้าง ทั้งนี้ ค่าบริการดังกล่าวจะไม่รวมภาษีหัก ณ ที่จ่าย",
       definitionPlatformFee1: "“ค่าธรรมเนียมการใช้",
       definitionPlatformFee2: "บริการแพลตฟอร์ม” การรับงานผ่านแพลตฟอร์ม",
-      definitionPaymentFee: "“ค่าธรรมเนียมการชำระเงิน” หมายถึง ค่าธรรมเนียมที่บริษัทฯ เรียกเก็บจากผู้ว่าจ้าง เพื่อตอบแทนการว่าจ้างงานผ่านแพลตฟอร์ม",
-      definitionFastworkCoin: "“เงินในระบบ (Fastwork Coin)” หมายถึง คะแนนที่ผู้ว่าจ้างเติมเข้าไปในบัญชีผู้ใช้งานเพื่อใช้ชำระค่าบริการ หรือค่าธรรมเนียมการชำระเงิน",
-      definitionBonusCoin: "“คะแนนโบนัส (Bonus Coin)” หมายถึง คะแนนที่บริษัทฯ จะโอนให้ผู้ใช้งานเพื่อตอบแทนการใช้บริการแพลตฟอร์มตามเงื่อนไขที่บริษัทฯ กำหนด",
-      definitionPersonalData: "“ข้อมูลส่วนบุคคล” หมายถึง ข้อมูลของบุคคลธรรมดาซึ่งทำให้สามารถระบุตัวบุคคลนั้นได้ ไม่ว่าทางตรงหรือทางอ้อม แต่ไม่รวมถึงข้อมูลของผู้ถึงแก่กรรมโดยกรรม",
+      definitionPaymentFee:
+        "“ค่าธรรมเนียมการชำระเงิน” หมายถึง ค่าธรรมเนียมที่บริษัทฯ เรียกเก็บจากผู้ว่าจ้าง เพื่อตอบแทนการว่าจ้างงานผ่านแพลตฟอร์ม",
+      definitionFastworkCoin:
+        "“เงินในระบบ (Fastwork Coin)” หมายถึง คะแนนที่ผู้ว่าจ้างเติมเข้าไปในบัญชีผู้ใช้งานเพื่อใช้ชำระค่าบริการ หรือค่าธรรมเนียมการชำระเงิน",
+      definitionBonusCoin:
+        "“คะแนนโบนัส (Bonus Coin)” หมายถึง คะแนนที่บริษัทฯ จะโอนให้ผู้ใช้งานเพื่อตอบแทนการใช้บริการแพลตฟอร์มตามเงื่อนไขที่บริษัทฯ กำหนด",
+      definitionPersonalData:
+        "“ข้อมูลส่วนบุคคล” หมายถึง ข้อมูลของบุคคลธรรมดาซึ่งทำให้สามารถระบุตัวบุคคลนั้นได้ ไม่ว่าทางตรงหรือทางอ้อม แต่ไม่รวมถึงข้อมูลของผู้ถึงแก่กรรมโดยกรรม",
       titleGeneral: "ทั่วไป",
-      general1: "เงื่อนไขและข้อตกลงการใช้บริการแพลตฟอร์มสำหรับผู้ว่าจ้าง (Platform Terms & Conditions for Employer) ฉบับนี้ (“ข้อตกลงการใช้งาน”) มีผลใช้บังคับแทนที่ข้อตกลงการใช้งาน ลงวันที่ 24 พฤษภาคม 2566 และให้มีผลใช้มีผลใช้บังคับตั้งแต่วันที่ 21 สิงหาคม 2567 เป็นต้นไปจนกว่าจะมีการประกาศแก้ไขเพิ่มเติม",
-      general2: "เมื่อมีการแก้ไขเพิ่มเติม บริษัทฯ จะประกาศข้อตกลงการใช้งานผ่านแพลตฟอร์มและแจ้งเตือนเพื่อให้ผู้ใช้งานรับทราบและอ่านข้อตกลงการใช้งานเพื่อยอมรับข้อตกลงการใช้งานใหม่ผ่านแพลตฟอร์ม ในกรณีที่ท่านไม่ยอมข้อตกลงการใช้งาน ท่านจะไม่สามารถใช้บริการแพลตฟอร์ม",
-      general3: "ข้อตกลงการใช้งานจะเป็นข้อตกลงการใช้งานระหว่างท่านกับบริษัทฯ ซึ่งกำหนดสิทธิ หน้าที่ และความรับผิดชอบที่แต่ละฝ่ายพึงมีตลอดระยะเวลาที่ใช้บริการแพลตฟอร์ม",
-      general4: "เมื่อท่านยอมรับข้อตกลงการใช้งานของบริษัทฯ แล้ว บริษัทฯ จะถือว่าท่านยอมรับที่จะปฏิบัติตามข้อตกลงการใช้งาน รวมถึงยอมรับนโยบายความเป็นส่วนตัวที่บริษัทฯ กำหนด ทั้งนี้ ท่านรับรองว่าจะไม่ดำเนินการใด ๆ อันเป็นการฝ่าฝืนกฎหมาย ขัดต่อความสงบเรียบร้อย หรือศีลธรรมอันดีของประชาชนผ่านแพลตฟอร์มโดยเด็ดขาด",
-      general5: "ในกรณีที่บริษัทฯ ตรวจพบว่าท่านกระทำการใด ๆ ที่ฝ่าฝืนข้อตกลงการใช้งาน นโยบายความเป็นส่วนตัว หรือฝ่าฝืนคำรับรองใด ๆ บริษัทฯ ขอสงวนสิทธิในการให้ท่านเข้าถึงการใช้บริการแพลตฟอร์ม ทั้งนี้ ดุลพินิจของบริษัทฯ ให้ถือเป็นที่สุด",
+      general1:
+        "เงื่อนไขและข้อตกลงการใช้บริการแพลตฟอร์มสำหรับผู้ว่าจ้าง (Platform Terms & Conditions for Employer) ฉบับนี้ (“ข้อตกลงการใช้งาน”) มีผลใช้บังคับแทนที่ข้อตกลงการใช้งาน ลงวันที่ 24 พฤษภาคม 2566 และให้มีผลใช้มีผลใช้บังคับตั้งแต่วันที่ 21 สิงหาคม 2567 เป็นต้นไปจนกว่าจะมีการประกาศแก้ไขเพิ่มเติม",
+      general2:
+        "เมื่อมีการแก้ไขเพิ่มเติม บริษัทฯ จะประกาศข้อตกลงการใช้งานผ่านแพลตฟอร์มและแจ้งเตือนเพื่อให้ผู้ใช้งานรับทราบและอ่านข้อตกลงการใช้งานเพื่อยอมรับข้อตกลงการใช้งานใหม่ผ่านแพลตฟอร์ม ในกรณีที่ท่านไม่ยอมข้อตกลงการใช้งาน ท่านจะไม่สามารถใช้บริการแพลตฟอร์ม",
+      general3:
+        "ข้อตกลงการใช้งานจะเป็นข้อตกลงการใช้งานระหว่างท่านกับบริษัทฯ ซึ่งกำหนดสิทธิ หน้าที่ และความรับผิดชอบที่แต่ละฝ่ายพึงมีตลอดระยะเวลาที่ใช้บริการแพลตฟอร์ม",
+      general4:
+        "เมื่อท่านยอมรับข้อตกลงการใช้งานของบริษัทฯ แล้ว บริษัทฯ จะถือว่าท่านยอมรับที่จะปฏิบัติตามข้อตกลงการใช้งาน รวมถึงยอมรับนโยบายความเป็นส่วนตัวที่บริษัทฯ กำหนด ทั้งนี้ ท่านรับรองว่าจะไม่ดำเนินการใด ๆ อันเป็นการฝ่าฝืนกฎหมาย ขัดต่อความสงบเรียบร้อย หรือศีลธรรมอันดีของประชาชนผ่านแพลตฟอร์มโดยเด็ดขาด",
+      general5:
+        "ในกรณีที่บริษัทฯ ตรวจพบว่าท่านกระทำการใด ๆ ที่ฝ่าฝืนข้อตกลงการใช้งาน นโยบายความเป็นส่วนตัว หรือฝ่าฝืนคำรับรองใด ๆ บริษัทฯ ขอสงวนสิทธิในการให้ท่านเข้าถึงการใช้บริการแพลตฟอร์ม ทั้งนี้ ดุลพินิจของบริษัทฯ ให้ถือเป็นที่สุด",
       titleEmployerWarranty: "คำรับรองของผู้ว่าจ้าง",
-      employerWarranty1: "ผู้ว่าจ้างตกลงและรับรองที่จะไม่กระทำการใด ๆ อันมีพฤติการณ์หรือลักษณะเป็นการหลอกลวงเพื่อหวังข้อมูล (ฟิชชิ่ง) หรือก่อให้เกิดความเดือดร้อนรำคาญแก่ฟรีแลนซ์ (สแปม)",
-      employerWarranty2: "ผู้ว่าจ้างตกลงและรับรองที่จะไม่กระทำการใด ๆ อันเป็นสิ่งผิดกฎหมาย หรือขัดต่อความสงบเรียบร้อยหรือศีลธรรมอันดีของประชาชนผ่านแพลตฟอร์ม",
-      employerWarranty3: "ผู้ว่าจ้างตกลงและรับรองที่จะติดต่อกับฟรีแลนซ์ผ่านพูดคุยของแพลตฟอร์มเพื่อขอข้อมูลเพิ่มเติมหรือสอบถามรายละเอียดต่าง ๆ ที่เกี่ยวข้องกับงาน ทั้งนี้ ผู้ว่าจ้างตกลงและรับรองที่จะไม่แสดงข้อมูลส่วนบุคคลของตน อาทิ ชื่อ สกุล เบอร์โทรศัพท์ จดหมายอิเล็กทรอนิกส์ ที่อยู่ ชื่อบัญชีผู้ใช้งานในช่องทางอื่น ๆ นอกเหนือจากแพลตฟอร์ม ซึ่งรวมถึงแต่ไม่จำกัดเพียง LINE, Whatsapp, WeChat, Facebook ฯลฯ หรือข้อมูลส่วนบุคคลอื่นใด ทั้งนี้ เพื่อปฏิบัติตามข้อตกลงการใช้งานฉบับนี้และเพื่อคุ้มครองข้อมูลส่วนบุคคลของท่านตามนโยบายความเป็นส่วนตัว",
-      employerWarranty4: "ในกรณีที่ผู้ว่าจ้างได้รับการติดต่อจากฟรีแลนซ์ในช่องทางอื่นนอกเหนือจากพูดคุยของแพลตฟอร์ม ผู้ว่าจ้างตกลงแจ้งเหตุละเมิดการใช้งานที่ฝ่าฝืนข้อตกลงการใช้งานให้บริษัทฯ ทราบโดยทันที ซึ่งต้องไม่เกินกว่า 3 วัน นับแต่วันที่ได้รับการติดต่อดังกล่าว",
-      employerWarranty5: "ผู้ว่าจ้างตกลงและรับรองที่จะไม่ใช้สิทธิในฐานะผู้ว่าจ้างหรือฐานะอื่นใดเพื่อชักชวนฟรีแลนซ์ให้ส่งมอบผลงาน และ/หรือ บริการ ติดต่อ หรือกระทำการอื่นใดที่เกี่ยวข้องกับงาน หรืองานที่อาจเกิดขึ้นในอนาคตนอกแพลตฟอร์ม ทั้งนี้ ไม่ว่าเพื่อผลประโยชน์แก่ผู้ว่าจ้างหรือบุคคลอื่น อาทิ การมีเจตนาชำระเงินผ่านระบบเพียงบางส่วน การสรรหาพนักงานเพื่อเข้าทำงานในบริษัทของตน หรือเพื่อสร้างข้อมูลหรือผลงานอันเป็นเท็จ เป็นต้น",
-      employerWarranty6: "ในกรณีที่บริษัทฯ พบเห็นว่าผู้ว่าจ้างกระทำการใด ๆ อันเป็นการฝ่าฝืนคำรับรอง บริษัทฯ มีสิทธิใช้ดุลพินิจระงับการใช้งานบัญชีผู้ใช้งาน ลบบัญชีผู้ใช้งาน ขึ้นทะเบียนแบล็คลิสต์ หรือกระทำการอื่นใดตามที่บริษัทฯ เห็นสมควร ซึ่งดุลพินิจของบริษัทฯ ให้ถือเป็นที่สุด",
+      employerWarranty1:
+        "ผู้ว่าจ้างตกลงและรับรองที่จะไม่กระทำการใด ๆ อันมีพฤติการณ์หรือลักษณะเป็นการหลอกลวงเพื่อหวังข้อมูล (ฟิชชิ่ง) หรือก่อให้เกิดความเดือดร้อนรำคาญแก่ฟรีแลนซ์ (สแปม)",
+      employerWarranty2:
+        "ผู้ว่าจ้างตกลงและรับรองที่จะไม่กระทำการใด ๆ อันเป็นสิ่งผิดกฎหมาย หรือขัดต่อความสงบเรียบร้อยหรือศีลธรรมอันดีของประชาชนผ่านแพลตฟอร์ม",
+      employerWarranty3:
+        "ผู้ว่าจ้างตกลงและรับรองที่จะติดต่อกับฟรีแลนซ์ผ่านพูดคุยของแพลตฟอร์มเพื่อขอข้อมูลเพิ่มเติมหรือสอบถามรายละเอียดต่าง ๆ ที่เกี่ยวข้องกับงาน ทั้งนี้ ผู้ว่าจ้างตกลงและรับรองที่จะไม่แสดงข้อมูลส่วนบุคคลของตน อาทิ ชื่อ สกุล เบอร์โทรศัพท์ จดหมายอิเล็กทรอนิกส์ ที่อยู่ ชื่อบัญชีผู้ใช้งานในช่องทางอื่น ๆ นอกเหนือจากแพลตฟอร์ม ซึ่งรวมถึงแต่ไม่จำกัดเพียง LINE, Whatsapp, WeChat, Facebook ฯลฯ หรือข้อมูลส่วนบุคคลอื่นใด ทั้งนี้ เพื่อปฏิบัติตามข้อตกลงการใช้งานฉบับนี้และเพื่อคุ้มครองข้อมูลส่วนบุคคลของท่านตามนโยบายความเป็นส่วนตัว",
+      employerWarranty4:
+        "ในกรณีที่ผู้ว่าจ้างได้รับการติดต่อจากฟรีแลนซ์ในช่องทางอื่นนอกเหนือจากพูดคุยของแพลตฟอร์ม ผู้ว่าจ้างตกลงแจ้งเหตุละเมิดการใช้งานที่ฝ่าฝืนข้อตกลงการใช้งานให้บริษัทฯ ทราบโดยทันที ซึ่งต้องไม่เกินกว่า 3 วัน นับแต่วันที่ได้รับการติดต่อดังกล่าว",
+      employerWarranty5:
+        "ผู้ว่าจ้างตกลงและรับรองที่จะไม่ใช้สิทธิในฐานะผู้ว่าจ้างหรือฐานะอื่นใดเพื่อชักชวนฟรีแลนซ์ให้ส่งมอบผลงาน และ/หรือ บริการ ติดต่อ หรือกระทำการอื่นใดที่เกี่ยวข้องกับงาน หรืองานที่อาจเกิดขึ้นในอนาคตนอกแพลตฟอร์ม ทั้งนี้ ไม่ว่าเพื่อผลประโยชน์แก่ผู้ว่าจ้างหรือบุคคลอื่น อาทิ การมีเจตนาชำระเงินผ่านระบบเพียงบางส่วน การสรรหาพนักงานเพื่อเข้าทำงานในบริษัทของตน หรือเพื่อสร้างข้อมูลหรือผลงานอันเป็นเท็จ เป็นต้น",
+      employerWarranty6:
+        "ในกรณีที่บริษัทฯ พบเห็นว่าผู้ว่าจ้างกระทำการใด ๆ อันเป็นการฝ่าฝืนคำรับรอง บริษัทฯ มีสิทธิใช้ดุลพินิจระงับการใช้งานบัญชีผู้ใช้งาน ลบบัญชีผู้ใช้งาน ขึ้นทะเบียนแบล็คลิสต์ หรือกระทำการอื่นใดตามที่บริษัทฯ เห็นสมควร ซึ่งดุลพินิจของบริษัทฯ ให้ถือเป็นที่สุด",
       titleRegistration: "การสมัครใช้บริการแพลตฟอร์ม",
-      registration1: "ฟรีแลนซ์ที่สมัครใช้บริการแพลตฟอร์มจะต้องเป็นบุคคลธรรมดาที่มีอายุครบ 15 ปีบริบูรณ์เท่านั้น",
-      registration2: "ผู้ว่าจ้างที่สมัครใช้บริการแพลตฟอร์มอาจเป็นบุคคลธรรมดาหรือนิติบุคคลก็ได้ ในกรณีที่เป็นบุคคลธรรมดา ผู้ใช้บริการจะต้องเป็นบุคคลธรรมดาที่มีอายุครบ 15 ปีบริบูรณ์เท่านั้น ในกรณีที่เป็นนิติบุคคล ผู้ใช้บริการต้องเป็นผู้แทนนิติบุคคลหรือผู้รับมอบอำนาจจากนิติบุคคลนั้น ๆ เพื่อสมัครใช้บริการแพลตฟอร์ม",
-      registration3: "ทั้งนี้ การใช้บริการแพลตฟอร์มถือเป็นการแสดงเจตนายืนยันว่าท่านมีคุณสมบัติตามเงื่อนไขที่กำหนด",
+      registration1:
+        "ฟรีแลนซ์ที่สมัครใช้บริการแพลตฟอร์มจะต้องเป็นบุคคลธรรมดาที่มีอายุครบ 15 ปีบริบูรณ์เท่านั้น",
+      registration2:
+        "ผู้ว่าจ้างที่สมัครใช้บริการแพลตฟอร์มอาจเป็นบุคคลธรรมดาหรือนิติบุคคลก็ได้ ในกรณีที่เป็นบุคคลธรรมดา ผู้ใช้บริการจะต้องเป็นบุคคลธรรมดาที่มีอายุครบ 15 ปีบริบูรณ์เท่านั้น ในกรณีที่เป็นนิติบุคคล ผู้ใช้บริการต้องเป็นผู้แทนนิติบุคคลหรือผู้รับมอบอำนาจจากนิติบุคคลนั้น ๆ เพื่อสมัครใช้บริการแพลตฟอร์ม",
+      registration3:
+        "ทั้งนี้ การใช้บริการแพลตฟอร์มถือเป็นการแสดงเจตนายืนยันว่าท่านมีคุณสมบัติตามเงื่อนไขที่กำหนด",
       orderTitle: "ออเดอร์",
-      order1: "ฟรีแลนซ์สามารถเสนอรายละเอียดงานผ่านงานที่นำเสนอบนแพลตฟอร์มได้ โดยฟรีแลนซ์ตกลงและรับรองว่ารายละเอียดงานนั้นจะเกี่ยวข้องกับงาน และ/หรือ ใบเสนอราคา (ถ้ามี) เพื่อให้ผู้ว่าจ้างพิจารณาและเข้าทำสัญญาจ้างงานต่อไปในอนาคต",
-      order2: "ฟรีแลนซ์รับรองและตกลงว่าข้อความใด ๆ ที่เผยแพร่ลงในงานที่นำเสนอนั้นมีความเหมาะสม ชอบด้วยกฎหมาย และไม่ละเมิดสิทธิของบุคคลอื่น",
-      order3: "ผู้ว่าจ้างอาจติดต่อหรือสอบถามรายละเอียดเกี่ยวกับรายละเอียดงานกับฟรีแลนซ์ได้ผ่านการพูดคุย",
-      order4: "เมื่อได้รับข้อมูลเกี่ยวกับรายละเอียดงานแล้ว ฟรีแลนซ์มีสิทธิตรวจสอบขอบเขตของงานเพื่อส่งมอบหรือให้บริการตามสัญญา ในกรณีที่ฟรีแลนซ์พิจารณาแล้วไม่ประสงค์เข้าร่วมงานดังกล่าว ฟรีแลนซ์มีสิทธิปฏิเสธการรับงานจากผู้ว่าจ้าง ทั้งนี้ ฟรีแลนซ์ตกลงแจ้งเหตุผลการปฏิเสธร่วมงานกับผู้ว่าจ้างโดยไม่ชักช้า",
-      order5: "เมื่อผู้ว่าจ้างได้รับใบเสนอราคาจากฟรีแลนซ์แล้วประสงค์จะร่วมงานหรือจ้างฟรีแลนซ์ทำงาน ผู้ว่าจ้างสามารถจ้างงานได้โดยการสร้างออเดอร์บนประกาศงาน เมื่อผู้ว่าจ้างสร้างออเดอร์บนประกาศงานแล้วให้ถือว่าผู้ว่าจ้างยอมรับเงื่อนไขและรายละเอียดเกี่ยวกับการจ้างงาน ขั้นตอนการส่งมอบงาน ขั้นตอนการแก้ไขงาน ความเป็นเจ้าของผลงาน กำหนดระยะเวลาการเริ่มและส่งงาน และรายละเอียดอื่น ๆ (ถ้ามี) ทั้งนี้ ตามที่ฟรีแลนซ์กำหนดไว้ในใบเสนอราคา อนึ่ง กำหนดระยะเวลาการเริ่มและส่งงานจะเริ่มนับแต่วันที่ผู้ว่าจ้างชำระเงินค่าบริการผ่านแพลตฟอร์ม",
-      order6: "ผู้ว่าจ้างตกลงชำระค่าบริการภายในระยะเวลาที่กำหนดในใบเสนอราคา ในกรณีที่ผู้ว่าจ้างไม่ชำระเงินภายในระยะเวลาที่กำหนด แพลตฟอร์มจะยกเลิกออเดอร์และใบเสนอราคาที่เกี่ยวข้องโดยอัตโนมัติ ทั้งนี้ ระบบจะมีการแจ้งเตือนกำหนดวันสุดท้ายของการชำระค่าบริการให้ผู้ว่าจ้างรับทราบ",
-      order7: "เมื่อผู้ว่าจ้างชำระค่าบริการในแพลตฟอร์มเสร็จสมบูรณ์ ผู้ว่าจ้างจะได้รับหมายเลขออเดอร์สำหรับงานที่ว่าจ้างและฟรีแลนซ์ตกลงทำงานที่ได้รับว่าจ้างเพื่อส่งมอบผลงาน และ/หรือ บริการภายในระยะเวลาที่กำหนดในใบเสนอราคา",
-      order8: "ตลอดระยะเวลาทำงาน ผู้ใช้งานอาจติดต่อกันผ่านพูดคุยของแพลตฟอร์มเพื่อขอข้อมูลเพิ่มเติมหรือสอบถามรายละเอียดต่าง ๆ ที่เกี่ยวข้องกับงาน ทั้งนี้ เพื่อให้ผลงาน และ/หรือ บริการเป็นไปตามวัตถุประสงค์ของงานที่ว่าจ้าง อนึ่ง ผู้ใช้งานตกลงและรับรองว่าจะไม่ดำเนินการแลกข้อมูลส่วนบุคคลหรือข้อมูลใด ๆ เพื่อติดต่อหรือส่งมอบงานในทางอื่นนอกเหนือจากพูดคุยที่บริษัทฯ จัดให้ไว้",
-      order9: "เมื่อฟรีแลนซ์ทำงานที่จ้างสมบูรณ์แล้ว ฟรีแลนซ์จะส่งมอบผลงาน และ/หรือ บริการให้ผู้ว่าจ้างพิจารณาเพื่ออนุมัติ เมื่อผู้ว่าจ้างอนุมัติแล้ว ออเดอร์จะถูกเปลี่ยนสถานะเป็นเสร็จสิ้นและผู้ว่าจ้างจะมีสิทธิประเมินผลงานดังกล่าว ในกรณีที่ผู้ว่าจ้างไม่อนุมัติ และ/หรือ ประเมินผลงานภายใน 7 วัน นับแต่วันที่ฟรีแลนซ์ส่งมอบผลงาน และ/หรือ บริการ ออเดอร์จะถูกเปลี่ยนสถานะเป็นเสร็จสิ้นโดยอัตโนมัติและถือว่าการจ้างงานเสร็จสิ้นโดยสมบูรณ์",
-      order10: "ในกรณีที่ฟรีแลนซ์ไม่ส่งมอบผลงาน และ/หรือ บริการภายในระยะเวลาที่กำหนดหรือส่งมอบภายในกำหนดแต่ไม่ถูกต้องครบถ้วน ผู้ว่าจ้างมีสิทธิร้องเรียนงาน และ/หรือ ประเมินผลงานของฟรีแลนซ์ได้",
-      order11: "ออเดอร์ที่ไม่มีการเคลื่อนไหวเกินกว่า 180 วัน จะถูกยกเลิกโดยความยินยอมของผู้ว่าจ้างและฟรีแลนซ์ ทั้งนี้ ผู้ใช้งานตกลงและยินยอมให้ค่าบริการที่ผู้ว่าจ้างชำระแล้วนั้นถือเป็นค่าธรรมเนียมการใช้บริการแพลตฟอร์ม และ/หรือ ค่าธรรมเนียมการชำระเงิน ทั้งนี้ บริษัทฯ ขอสงวนสิทธิในการคิดค่าธรรมเนียมดังกล่าวโดยไม่ต้องแจ้งให้ผู้ใช้งานทราบล่วงหน้า",
+      order1:
+        "ฟรีแลนซ์สามารถเสนอรายละเอียดงานผ่านงานที่นำเสนอบนแพลตฟอร์มได้ โดยฟรีแลนซ์ตกลงและรับรองว่ารายละเอียดงานนั้นจะเกี่ยวข้องกับงาน และ/หรือ ใบเสนอราคา (ถ้ามี) เพื่อให้ผู้ว่าจ้างพิจารณาและเข้าทำสัญญาจ้างงานต่อไปในอนาคต",
+      order2:
+        "ฟรีแลนซ์รับรองและตกลงว่าข้อความใด ๆ ที่เผยแพร่ลงในงานที่นำเสนอนั้นมีความเหมาะสม ชอบด้วยกฎหมาย และไม่ละเมิดสิทธิของบุคคลอื่น",
+      order3:
+        "ผู้ว่าจ้างอาจติดต่อหรือสอบถามรายละเอียดเกี่ยวกับรายละเอียดงานกับฟรีแลนซ์ได้ผ่านการพูดคุย",
+      order4:
+        "เมื่อได้รับข้อมูลเกี่ยวกับรายละเอียดงานแล้ว ฟรีแลนซ์มีสิทธิตรวจสอบขอบเขตของงานเพื่อส่งมอบหรือให้บริการตามสัญญา ในกรณีที่ฟรีแลนซ์พิจารณาแล้วไม่ประสงค์เข้าร่วมงานดังกล่าว ฟรีแลนซ์มีสิทธิปฏิเสธการรับงานจากผู้ว่าจ้าง ทั้งนี้ ฟรีแลนซ์ตกลงแจ้งเหตุผลการปฏิเสธร่วมงานกับผู้ว่าจ้างโดยไม่ชักช้า",
+      order5:
+        "เมื่อผู้ว่าจ้างได้รับใบเสนอราคาจากฟรีแลนซ์แล้วประสงค์จะร่วมงานหรือจ้างฟรีแลนซ์ทำงาน ผู้ว่าจ้างสามารถจ้างงานได้โดยการสร้างออเดอร์บนประกาศงาน เมื่อผู้ว่าจ้างสร้างออเดอร์บนประกาศงานแล้วให้ถือว่าผู้ว่าจ้างยอมรับเงื่อนไขและรายละเอียดเกี่ยวกับการจ้างงาน ขั้นตอนการส่งมอบงาน ขั้นตอนการแก้ไขงาน ความเป็นเจ้าของผลงาน กำหนดระยะเวลาการเริ่มและส่งงาน และรายละเอียดอื่น ๆ (ถ้ามี) ทั้งนี้ ตามที่ฟรีแลนซ์กำหนดไว้ในใบเสนอราคา อนึ่ง กำหนดระยะเวลาการเริ่มและส่งงานจะเริ่มนับแต่วันที่ผู้ว่าจ้างชำระเงินค่าบริการผ่านแพลตฟอร์ม",
+      order6:
+        "ผู้ว่าจ้างตกลงชำระค่าบริการภายในระยะเวลาที่กำหนดในใบเสนอราคา ในกรณีที่ผู้ว่าจ้างไม่ชำระเงินภายในระยะเวลาที่กำหนด แพลตฟอร์มจะยกเลิกออเดอร์และใบเสนอราคาที่เกี่ยวข้องโดยอัตโนมัติ ทั้งนี้ ระบบจะมีการแจ้งเตือนกำหนดวันสุดท้ายของการชำระค่าบริการให้ผู้ว่าจ้างรับทราบ",
+      order7:
+        "เมื่อผู้ว่าจ้างชำระค่าบริการในแพลตฟอร์มเสร็จสมบูรณ์ ผู้ว่าจ้างจะได้รับหมายเลขออเดอร์สำหรับงานที่ว่าจ้างและฟรีแลนซ์ตกลงทำงานที่ได้รับว่าจ้างเพื่อส่งมอบผลงาน และ/หรือ บริการภายในระยะเวลาที่กำหนดในใบเสนอราคา",
+      order8:
+        "ตลอดระยะเวลาทำงาน ผู้ใช้งานอาจติดต่อกันผ่านพูดคุยของแพลตฟอร์มเพื่อขอข้อมูลเพิ่มเติมหรือสอบถามรายละเอียดต่าง ๆ ที่เกี่ยวข้องกับงาน ทั้งนี้ เพื่อให้ผลงาน และ/หรือ บริการเป็นไปตามวัตถุประสงค์ของงานที่ว่าจ้าง อนึ่ง ผู้ใช้งานตกลงและรับรองว่าจะไม่ดำเนินการแลกข้อมูลส่วนบุคคลหรือข้อมูลใด ๆ เพื่อติดต่อหรือส่งมอบงานในทางอื่นนอกเหนือจากพูดคุยที่บริษัทฯ จัดให้ไว้",
+      order9:
+        "เมื่อฟรีแลนซ์ทำงานที่จ้างสมบูรณ์แล้ว ฟรีแลนซ์จะส่งมอบผลงาน และ/หรือ บริการให้ผู้ว่าจ้างพิจารณาเพื่ออนุมัติ เมื่อผู้ว่าจ้างอนุมัติแล้ว ออเดอร์จะถูกเปลี่ยนสถานะเป็นเสร็จสิ้นและผู้ว่าจ้างจะมีสิทธิประเมินผลงานดังกล่าว ในกรณีที่ผู้ว่าจ้างไม่อนุมัติ และ/หรือ ประเมินผลงานภายใน 7 วัน นับแต่วันที่ฟรีแลนซ์ส่งมอบผลงาน และ/หรือ บริการ ออเดอร์จะถูกเปลี่ยนสถานะเป็นเสร็จสิ้นโดยอัตโนมัติและถือว่าการจ้างงานเสร็จสิ้นโดยสมบูรณ์",
+      order10:
+        "ในกรณีที่ฟรีแลนซ์ไม่ส่งมอบผลงาน และ/หรือ บริการภายในระยะเวลาที่กำหนดหรือส่งมอบภายในกำหนดแต่ไม่ถูกต้องครบถ้วน ผู้ว่าจ้างมีสิทธิร้องเรียนงาน และ/หรือ ประเมินผลงานของฟรีแลนซ์ได้",
+      order11:
+        "ออเดอร์ที่ไม่มีการเคลื่อนไหวเกินกว่า 180 วัน จะถูกยกเลิกโดยความยินยอมของผู้ว่าจ้างและฟรีแลนซ์ ทั้งนี้ ผู้ใช้งานตกลงและยินยอมให้ค่าบริการที่ผู้ว่าจ้างชำระแล้วนั้นถือเป็นค่าธรรมเนียมการใช้บริการแพลตฟอร์ม และ/หรือ ค่าธรรมเนียมการชำระเงิน ทั้งนี้ บริษัทฯ ขอสงวนสิทธิในการคิดค่าธรรมเนียมดังกล่าวโดยไม่ต้องแจ้งให้ผู้ใช้งานทราบล่วงหน้า",
       "contact.title": "การติดต่อ",
-      "contact.1": "ผู้ใช้งานตกลงสื่อสารกันผ่านพูดคุย เพื่อให้ฟรีแลนซ์ทราบถึงความต้องการในงานที่ผู้ว่าจ้างประสงค์ว่าจ้าง รวมถึงการประเมินราคาและระยะเวลาที่ใช้ทำงานเพื่อจัดทำใบเสนอราคาส่งให้แก่ผู้ว่าจ้าง",
-      "contact.2": "ผู้ใช้งานรับรองและตกลงว่าข้อความใด ๆ ที่ใช้ในการติดต่อนั้นมีความเหมาะสม ชอบด้วยกฎหมาย และไม่ละเมิดสิทธิของบุคคลอื่น",
-      "contact.3": "ในกรณีที่ฟรีแลนซ์ต้องการติดต่อขอข้อมูลเพิ่มเติม หรือส่งมอบผลงานหรือบริการตามขั้นตอนหรือระยะเวลาที่เสนองานไว้ ฟรีแลนซ์ตกลงติดต่อสอบถามหรือส่งมอบงานบางส่วนแก่ผู้ว่าจ้างผ่านพูดคุยของแพลตฟอร์ม",
-      "contact.4": "ผู้ใช้งานรับทราบและตกลงว่าจะไม่ดำเนินการใด ๆ ซึ่งรวมถึงแต่ไม่จำกัดเพียง การชักจูงหรือจูงใจให้มีการติดต่อเพื่อจ้างงานนอกแพลตฟอร์ม การติดต่อสอบถามหรือส่งมอบงานเพิ่มเติมในช่องทางอื่นนอกเหนือจากแพลตฟอร์ม หรือการกระทำอื่นใดอันมีลักษณะฝ่าฝืนข้อตกลงการใช้งาน ในกรณีที่บริษัทฯ พบว่าผู้ใช้งานมีพฤติการณ์ใด ๆ ที่เป็นการชักจูงหรือจูงใจให้นำไปสู่การติดต่อเพื่อจ้างงานนอกแพลตฟอร์ม อาทิ การจ่ายเงินมัดจำ การชำระเพียงบางส่วน ฯลฯ บริษัทฯ จะถือว่าผู้ใช้งานกระทำการฝ่าฝืนข้อตกลงการใช้งาน และบริษัทฯ มีสิทธิระงับหรือยกเลิกบัญชีผู้ใช้งาน รวมถึงเรียกร้องค่าเสียหายที่เกิดขึ้นจากผู้ใช้งานได้",
-      "contact.5": "ข้อมูลส่วนบุคคลหรือข้อมูลอื่นใดที่ผู้ใช้งานสื่อสารผ่านพูดคุยของแพลตฟอร์มจะถือเป็นข้อมูลอันเป็นความลับของผู้ใช้งาน ผู้รับข้อมูลไม่สามารถนำข้อมูลอันเป็นความลับมาเปิดเผยได้ เว้นแต่จะได้รับความยินยอมเป็นหนังสือจากผู้ให้ข้อมูล หรือเป็นข้อมูลที่เปิดเผยโดยทั่วไป หรือเมื่อมีกฎหมายหรือการใช้อำนาจของหน่วยงานหน่วยงานของรัฐในการร้องขอหรือบังคับให้เปิดเผย",
-      "contact.6": "บริษัทฯ สนับสนุนให้ผู้ใช้งานสื่อสารกันด้วยความสุภาพ เพื่อป้องกันความเสี่ยงในการเกิดข้อพิพาท",
-      "fee.title": "ค่าบริการ ค่าธรรมเนียมการชำระเงิน และค่าธรรมเนียมการใช้บริการแพลตฟอร์ม",
+      "contact.1":
+        "ผู้ใช้งานตกลงสื่อสารกันผ่านพูดคุย เพื่อให้ฟรีแลนซ์ทราบถึงความต้องการในงานที่ผู้ว่าจ้างประสงค์ว่าจ้าง รวมถึงการประเมินราคาและระยะเวลาที่ใช้ทำงานเพื่อจัดทำใบเสนอราคาส่งให้แก่ผู้ว่าจ้าง",
+      "contact.2":
+        "ผู้ใช้งานรับรองและตกลงว่าข้อความใด ๆ ที่ใช้ในการติดต่อนั้นมีความเหมาะสม ชอบด้วยกฎหมาย และไม่ละเมิดสิทธิของบุคคลอื่น",
+      "contact.3":
+        "ในกรณีที่ฟรีแลนซ์ต้องการติดต่อขอข้อมูลเพิ่มเติม หรือส่งมอบผลงานหรือบริการตามขั้นตอนหรือระยะเวลาที่เสนองานไว้ ฟรีแลนซ์ตกลงติดต่อสอบถามหรือส่งมอบงานบางส่วนแก่ผู้ว่าจ้างผ่านพูดคุยของแพลตฟอร์ม",
+      "contact.4":
+        "ผู้ใช้งานรับทราบและตกลงว่าจะไม่ดำเนินการใด ๆ ซึ่งรวมถึงแต่ไม่จำกัดเพียง การชักจูงหรือจูงใจให้มีการติดต่อเพื่อจ้างงานนอกแพลตฟอร์ม การติดต่อสอบถามหรือส่งมอบงานเพิ่มเติมในช่องทางอื่นนอกเหนือจากแพลตฟอร์ม หรือการกระทำอื่นใดอันมีลักษณะฝ่าฝืนข้อตกลงการใช้งาน ในกรณีที่บริษัทฯ พบว่าผู้ใช้งานมีพฤติการณ์ใด ๆ ที่เป็นการชักจูงหรือจูงใจให้นำไปสู่การติดต่อเพื่อจ้างงานนอกแพลตฟอร์ม อาทิ การจ่ายเงินมัดจำ การชำระเพียงบางส่วน ฯลฯ บริษัทฯ จะถือว่าผู้ใช้งานกระทำการฝ่าฝืนข้อตกลงการใช้งาน และบริษัทฯ มีสิทธิระงับหรือยกเลิกบัญชีผู้ใช้งาน รวมถึงเรียกร้องค่าเสียหายที่เกิดขึ้นจากผู้ใช้งานได้",
+      "contact.5":
+        "ข้อมูลส่วนบุคคลหรือข้อมูลอื่นใดที่ผู้ใช้งานสื่อสารผ่านพูดคุยของแพลตฟอร์มจะถือเป็นข้อมูลอันเป็นความลับของผู้ใช้งาน ผู้รับข้อมูลไม่สามารถนำข้อมูลอันเป็นความลับมาเปิดเผยได้ เว้นแต่จะได้รับความยินยอมเป็นหนังสือจากผู้ให้ข้อมูล หรือเป็นข้อมูลที่เปิดเผยโดยทั่วไป หรือเมื่อมีกฎหมายหรือการใช้อำนาจของหน่วยงานหน่วยงานของรัฐในการร้องขอหรือบังคับให้เปิดเผย",
+      "contact.6":
+        "บริษัทฯ สนับสนุนให้ผู้ใช้งานสื่อสารกันด้วยความสุภาพ เพื่อป้องกันความเสี่ยงในการเกิดข้อพิพาท",
+      "fee.title":
+        "ค่าบริการ ค่าธรรมเนียมการชำระเงิน และค่าธรรมเนียมการใช้บริการแพลตฟอร์ม",
       "fee.1": "ผู้ใช้งานสามารถสมัครเป็นสมาชิกแพลตฟอร์มได้โดยไม่มีค่าใช้จ่าย",
-      "fee.2": "เพื่อคุ้มครองประโยชน์และความปลอดภัยของผู้ใช้งาน การชำระค่าบริการต้องทำรายการผ่านแพลตฟอร์ม โดยบริษัทฯ จะดูแลค่าบริการไว้จนกว่าฟรีแลนซ์จะได้ส่งมอบงานแก่ผู้ว่าจ้าง ทั้งนี้ ผู้ว่าจ้างสามารถตรวจสอบรายละเอียดการชำระเงินและค่าใช้จ่ายต่าง ๆ ได้ที่ช่องทางการชำระเงินซึ่งต้องทำรายการผ่านแพลตฟอร์ม อนึ่ง ผู้ว่าจ้างอาจชำระค่าบริการผ่านระบบแบ่งชำระบนแพลตฟอร์ม (Milestone payment) ตามงวดของการแบ่งชำระจนจบงานได้",
-      "fee.3": "บริษัทฯ จะเก็บค่าธรรมเนียมการใช้บริการแพลตฟอร์มจากผู้ว่าจ้าง เพื่อตอบแทนการว่าจ้างงานผ่านแพลตฟอร์ม ทั้งนี้ อัตราค่าธรรมเนียมการใช้บริการแพลตฟอร์มจะเป็นไปตามที่บริษัทฯ กำหนด และค่าธรรมเนียมดังกล่าวจะถูกหักออกจากบัญชีของผู้ว่าจ้างในวันที่มีออเดอร์โดยอัตโนมัติ",
-      "fee.4": "บริษัทฯ จะเก็บค่าธรรมเนียมการใช้บริการแพลตฟอร์มจากฟรีแลนซ์ เพื่อตอบแทนการรับงานผ่านแพลตฟอร์ม ทั้งนี้ อัตราค่าธรรมเนียมการใช้บริการแพลตฟอร์มจะเป็นไปตามที่บริษัทฯ กำหนด และค่าธรรมเนียมดังกล่าวจะถูกหักออกจากค่าบริการที่ฟรีแลนซ์พึงได้รับจากการให้บริการตามออเดอร์ในวันที่ส่งมอบงานโดยอัตโนมัติ",
-      "fee.5": "เพื่อให้บริษัทฯ สามารถโอนค่าบริการไปยังฟรีแลนซ์ได้ ฟรีแลนซ์มีความจำเป็นต้องให้ข้อมูลบัญชีธนาคาร อาทิ หน้าสมุดบัญชีธนาคาร ฯลฯ เข้าแพลตฟอร์ม ทั้งนี้ บริษัทฯ จะดูแลค่าบริการไว้จนกว่าฟรีแลนซ์จะได้ให้ข้อมูลบัญชีธนาคารแก่บริษัทฯ ในกรณีที่บัญชีผู้ใช้งานของฟรีแลนซ์รายใดไม่ให้ข้อมูลดังกล่าวภายใน 12 เดือน นับจากวันที่ได้รับอนุมัติจากผู้ว่าจ้าง บริษัทฯ อาจเรียกเก็บค่าธรรมเนียมการรักษาสถานภาพของบัญชีผู้ใช้งานในอัตราเดือนละ 50 บาทได้",
-      "fee.6": "ค่าบริการ ค่าธรรมเนียมการชำระเงิน และค่าธรรมเนียมการใช้บริการแพลตฟอร์ม ซึ่งผู้ใช้บริการต้องชำระจากการใช้บริการแพลตฟอร์มจะไม่รวมภาษีหัก ณ ที่จ่าย หรือภาษีหรือค่าธรรมเนียมอื่นใดที่ผู้ใช้บริการมีหน้าที่ต้องชำระตามกฎหมาย",
+      "fee.2":
+        "เพื่อคุ้มครองประโยชน์และความปลอดภัยของผู้ใช้งาน การชำระค่าบริการต้องทำรายการผ่านแพลตฟอร์ม โดยบริษัทฯ จะดูแลค่าบริการไว้จนกว่าฟรีแลนซ์จะได้ส่งมอบงานแก่ผู้ว่าจ้าง ทั้งนี้ ผู้ว่าจ้างสามารถตรวจสอบรายละเอียดการชำระเงินและค่าใช้จ่ายต่าง ๆ ได้ที่ช่องทางการชำระเงินซึ่งต้องทำรายการผ่านแพลตฟอร์ม อนึ่ง ผู้ว่าจ้างอาจชำระค่าบริการผ่านระบบแบ่งชำระบนแพลตฟอร์ม (Milestone payment) ตามงวดของการแบ่งชำระจนจบงานได้",
+      "fee.3":
+        "บริษัทฯ จะเก็บค่าธรรมเนียมการใช้บริการแพลตฟอร์มจากผู้ว่าจ้าง เพื่อตอบแทนการว่าจ้างงานผ่านแพลตฟอร์ม ทั้งนี้ อัตราค่าธรรมเนียมการใช้บริการแพลตฟอร์มจะเป็นไปตามที่บริษัทฯ กำหนด และค่าธรรมเนียมดังกล่าวจะถูกหักออกจากบัญชีของผู้ว่าจ้างในวันที่มีออเดอร์โดยอัตโนมัติ",
+      "fee.4":
+        "บริษัทฯ จะเก็บค่าธรรมเนียมการใช้บริการแพลตฟอร์มจากฟรีแลนซ์ เพื่อตอบแทนการรับงานผ่านแพลตฟอร์ม ทั้งนี้ อัตราค่าธรรมเนียมการใช้บริการแพลตฟอร์มจะเป็นไปตามที่บริษัทฯ กำหนด และค่าธรรมเนียมดังกล่าวจะถูกหักออกจากค่าบริการที่ฟรีแลนซ์พึงได้รับจากการให้บริการตามออเดอร์ในวันที่ส่งมอบงานโดยอัตโนมัติ",
+      "fee.5":
+        "เพื่อให้บริษัทฯ สามารถโอนค่าบริการไปยังฟรีแลนซ์ได้ ฟรีแลนซ์มีความจำเป็นต้องให้ข้อมูลบัญชีธนาคาร อาทิ หน้าสมุดบัญชีธนาคาร ฯลฯ เข้าแพลตฟอร์ม ทั้งนี้ บริษัทฯ จะดูแลค่าบริการไว้จนกว่าฟรีแลนซ์จะได้ให้ข้อมูลบัญชีธนาคารแก่บริษัทฯ ในกรณีที่บัญชีผู้ใช้งานของฟรีแลนซ์รายใดไม่ให้ข้อมูลดังกล่าวภายใน 12 เดือน นับจากวันที่ได้รับอนุมัติจากผู้ว่าจ้าง บริษัทฯ อาจเรียกเก็บค่าธรรมเนียมการรักษาสถานภาพของบัญชีผู้ใช้งานในอัตราเดือนละ 50 บาทได้",
+      "fee.6":
+        "ค่าบริการ ค่าธรรมเนียมการชำระเงิน และค่าธรรมเนียมการใช้บริการแพลตฟอร์ม ซึ่งผู้ใช้บริการต้องชำระจากการใช้บริการแพลตฟอร์มจะไม่รวมภาษีหัก ณ ที่จ่าย หรือภาษีหรือค่าธรรมเนียมอื่นใดที่ผู้ใช้บริการมีหน้าที่ต้องชำระตามกฎหมาย",
       "coinAndBonus.title": "Fastwork Coin และ Bonus Coin",
-      "coinAndBonus.detail1": "ผู้ว่าจ้างมีสิทธิเติม Fastwork Coin เข้าบัญชีผู้ใช้งานของตนเพื่อใช้ชำระค่าบริการหรือค่าธรรมเนียมการชำระเงินสำหรับงานใด ๆ ที่ใช้บริการผ่านแพลตฟอร์มได้ โดย Fastwork Coin จะต้องถูกใช้ภายใน 2 ปี นับแต่วันที่เติม Fastwork Coin ในกรณีที่ผู้ว่าจ้างไม่ใช้ Fastwork Coin ภายใน 2 ปี นับจากวันที่เติม บริษัทฯ อาจเรียกเก็บค่าธรรมเนียมการรักษาสถานภาพของบัญชีผู้ใช้งานในอัตราเดือนละ 50 บาทได้ อย่างไรก็ดี ไม่ตัดสิทธิผู้ว่าจ้างที่จะขอให้บริษัทฯ โอน Fastwork Coin ไปยังบัญชีธนาคารที่ผู้ว่าจ้างให้ข้อมูลสำหรับการคืน Fastwork Coin ทั้งนี้ บริษัทฯ มีสิทธิเรียกเก็บค่าธรรมเนียมการดำเนินธุรกรรมคืน Fastwork Coin ได้ในอัตรา 50 บาทต่อรายการ",
-      "coinAndBonus.detail2": "ผู้ใช้งานที่ใช้บริการแพลตฟอร์มตามเงื่อนไขที่บริษัทฯ กำหนดมีสิทธิได้รับ Bonus coin จากบริษัทฯ เป็นการตอบแทนเพื่อใช้ชำระค่าบริการหรือค่าธรรมเนียมการชำระเงินที่อาจเกิดขึ้นจากการใช้บริการแพลตฟอร์ม อย่างไรก็ดี ผู้ใช้งานจำเป็นต้องใช้ Bonus coin ที่ได้รับทั้งหมดภายใน 1 ปี นับแต่วันที่ได้รับ Bonus coin ในกรณีที่ผู้ใช้งานไม่ใช้ Bonus coin ภายในระยะเวลาที่กำหนด บริษัทฯ มีสิทธิริบ Bonus coin คืนได้",
+      "coinAndBonus.detail1":
+        "ผู้ว่าจ้างมีสิทธิเติม Fastwork Coin เข้าบัญชีผู้ใช้งานของตนเพื่อใช้ชำระค่าบริการหรือค่าธรรมเนียมการชำระเงินสำหรับงานใด ๆ ที่ใช้บริการผ่านแพลตฟอร์มได้ โดย Fastwork Coin จะต้องถูกใช้ภายใน 2 ปี นับแต่วันที่เติม Fastwork Coin ในกรณีที่ผู้ว่าจ้างไม่ใช้ Fastwork Coin ภายใน 2 ปี นับจากวันที่เติม บริษัทฯ อาจเรียกเก็บค่าธรรมเนียมการรักษาสถานภาพของบัญชีผู้ใช้งานในอัตราเดือนละ 50 บาทได้ อย่างไรก็ดี ไม่ตัดสิทธิผู้ว่าจ้างที่จะขอให้บริษัทฯ โอน Fastwork Coin ไปยังบัญชีธนาคารที่ผู้ว่าจ้างให้ข้อมูลสำหรับการคืน Fastwork Coin ทั้งนี้ บริษัทฯ มีสิทธิเรียกเก็บค่าธรรมเนียมการดำเนินธุรกรรมคืน Fastwork Coin ได้ในอัตรา 50 บาทต่อรายการ",
+      "coinAndBonus.detail2":
+        "ผู้ใช้งานที่ใช้บริการแพลตฟอร์มตามเงื่อนไขที่บริษัทฯ กำหนดมีสิทธิได้รับ Bonus coin จากบริษัทฯ เป็นการตอบแทนเพื่อใช้ชำระค่าบริการหรือค่าธรรมเนียมการชำระเงินที่อาจเกิดขึ้นจากการใช้บริการแพลตฟอร์ม อย่างไรก็ดี ผู้ใช้งานจำเป็นต้องใช้ Bonus coin ที่ได้รับทั้งหมดภายใน 1 ปี นับแต่วันที่ได้รับ Bonus coin ในกรณีที่ผู้ใช้งานไม่ใช้ Bonus coin ภายในระยะเวลาที่กำหนด บริษัทฯ มีสิทธิริบ Bonus coin คืนได้",
       "work.title": "งาน",
-      "work.detail1": "ผู้ว่าจ้างเป็นเจ้าของงานที่ออเดอร์บนแพลตฟอร์ม ผู้ว่าจ้างจึงมีสิทธิจำหน่าย ถ่าย โอน หรือกระทำการใด ๆ กับงานที่ว่าจ้างได้ อย่างไรก็ดี กรรมสิทธิ์ในงานจะโอนไปยังผู้ว่าจ้างต่อเมื่อมีการส่งมอบผลงาน และ/หรือ บริการแล้วเท่านั้น",
-      "work.detail2": "ในกรณีที่มีการยกเลิกงาน ฟรีแลนซ์จะเป็นเจ้าของงานที่ออเดอร์บนแพลตฟอร์ม เว้นแต่มีการระบุให้มีการโอนกรรมสิทธิ์ในงานไปยังผู้ว่าจ้าง",
+      "work.detail1":
+        "ผู้ว่าจ้างเป็นเจ้าของงานที่ออเดอร์บนแพลตฟอร์ม ผู้ว่าจ้างจึงมีสิทธิจำหน่าย ถ่าย โอน หรือกระทำการใด ๆ กับงานที่ว่าจ้างได้ อย่างไรก็ดี กรรมสิทธิ์ในงานจะโอนไปยังผู้ว่าจ้างต่อเมื่อมีการส่งมอบผลงาน และ/หรือ บริการแล้วเท่านั้น",
+      "work.detail2":
+        "ในกรณีที่มีการยกเลิกงาน ฟรีแลนซ์จะเป็นเจ้าของงานที่ออเดอร์บนแพลตฟอร์ม เว้นแต่มีการระบุให้มีการโอนกรรมสิทธิ์ในงานไปยังผู้ว่าจ้าง",
       "review.title": "การประเมินผลงาน",
-      "review.detail1": "การประเมินผลงานแก่งานที่ผู้ว่าจ้างได้รับมีความสำคัญต่อการพัฒนาแพลตฟอร์มและคัดเลือกฟรีแลนซ์ที่มีคุณสมบัติและศักยภาพแก่ผู้ว่าจ้างรายอื่น ๆ เพื่อป้องกันการใช้งานระบบการประเมินผลงานผิดวัตถุประสงค์",
-      "review.detail2": "ผู้ว่าจ้างที่มีสิทธิประเมินผลงานต้องเป็นผู้ว่าจ้างที่ได้รับมอบผลงาน และ/หรือ บริการ แล้วเท่านั้น การประเมินผลงานต้องดำเนินการภายใน 90 วัน นับแต่วันที่ได้รับมอบงาน โดยรายละเอียดการประเมินผลงานจะปรากฏอยู่ในงานของฉัน ซึ่งผู้ว่าจ้างต้องประเมินผลงานด้วยวิธีการให้คะแนนงานเป็นอย่างน้อยที่สุด อย่างไรก็ดี ผู้ว่าจ้างสามารถเลือกที่จะไม่บรรยายรายละเอียดของการประเมินผลงานได้",
-      "review.detail3": "การประเมินผลงานของฟรีแลนซ์จะถูกคำนวณขึ้นมาจากคะแนนประเมินผลงานที่ผู้ว่าจ้างได้ประเมินต่องานของฟรีแลนซ์หลังจากฟรีแลนซ์ได้ส่งมอบผลงาน และ/หรือ บริการ แล้ว โดยการประเมินผลงานจะอยู่บนพื้นฐานของความน่าเชื่อถือตามสภาพ (“as is basis”) และการให้บริการตามที่มีอยู่หรือเป็นอยู่ (“as available”) ซึ่งข้อความที่ปรากฏในแพลตฟอร์มนั้นไม่ถือเป็นการรับประกันหรือการรับรองคุณภาพ ความถูกต้อง ความปลอดภัย ความน่าเชื่อถือ หรือความพร้อมของฟรีแลนซ์แต่อย่างใด",
-      "review.detail4": "การประเมินผลงานเป็นสิทธิของผู้ว่าจ้าง ซึ่งจะไม่ถูกลบออกไม่ว่าด้วยเหตุผลใด ๆ เว้นแต่เป็นการประเมินผลงานที่ละเมิดข้อตกลงการใช้งาน ทั้งนี้ บริษัทฯ จะใช้ความพยายามอย่างถึงที่สุดในการสนับสนุนให้ผู้ว่าจ้างได้สื่อสารกับฟรีแลนซ์ถึงระดับความพึงพอใจของผลงานตลอดจนปัญหาที่ได้รับจากผลงาน และ/หรือ บริการ เพื่อให้ฟรีแลนซ์ได้แก้ไขปรับปรุงงานให้ตรงตามที่เสนอไว้กับผู้ว่าจ้าง อนึ่ง บริษัทมีสิทธิดำเนินการใด ๆ กับบัญชีผู้ใช้งานที่มีการใช้งานระบบการประเมินผลงานผิดวัตถุประสงค์ ซึ่งดุลพินิจของบริษัทฯ ให้ถือเป็นที่สุด",
-      "review.detail5": "ฟรีแลนซ์ไม่สามารถต่อรองการส่งมอบงานเพื่อให้ได้รับการประเมินผลงานที่ดีจากผู้ว่าจ้างได้ หากบริษัทฯ รับทราบการกระทำดังกล่าว บริษัทมีสิทธิดำเนินการกับบัญชีผู้ใช้งานที่มีการใช้งานระบบการประเมินผลงานผิดวัตถุประสงค์ ซึ่งดุลพินิจของบริษัทฯ ให้ถือเป็นที่สุด",
+      "review.detail1":
+        "การประเมินผลงานแก่งานที่ผู้ว่าจ้างได้รับมีความสำคัญต่อการพัฒนาแพลตฟอร์มและคัดเลือกฟรีแลนซ์ที่มีคุณสมบัติและศักยภาพแก่ผู้ว่าจ้างรายอื่น ๆ เพื่อป้องกันการใช้งานระบบการประเมินผลงานผิดวัตถุประสงค์",
+      "review.detail2":
+        "ผู้ว่าจ้างที่มีสิทธิประเมินผลงานต้องเป็นผู้ว่าจ้างที่ได้รับมอบผลงาน และ/หรือ บริการ แล้วเท่านั้น การประเมินผลงานต้องดำเนินการภายใน 90 วัน นับแต่วันที่ได้รับมอบงาน โดยรายละเอียดการประเมินผลงานจะปรากฏอยู่ในงานของฉัน ซึ่งผู้ว่าจ้างต้องประเมินผลงานด้วยวิธีการให้คะแนนงานเป็นอย่างน้อยที่สุด อย่างไรก็ดี ผู้ว่าจ้างสามารถเลือกที่จะไม่บรรยายรายละเอียดของการประเมินผลงานได้",
+      "review.detail3":
+        "การประเมินผลงานของฟรีแลนซ์จะถูกคำนวณขึ้นมาจากคะแนนประเมินผลงานที่ผู้ว่าจ้างได้ประเมินต่องานของฟรีแลนซ์หลังจากฟรีแลนซ์ได้ส่งมอบผลงาน และ/หรือ บริการ แล้ว โดยการประเมินผลงานจะอยู่บนพื้นฐานของความน่าเชื่อถือตามสภาพ (“as is basis”) และการให้บริการตามที่มีอยู่หรือเป็นอยู่ (“as available”) ซึ่งข้อความที่ปรากฏในแพลตฟอร์มนั้นไม่ถือเป็นการรับประกันหรือการรับรองคุณภาพ ความถูกต้อง ความปลอดภัย ความน่าเชื่อถือ หรือความพร้อมของฟรีแลนซ์แต่อย่างใด",
+      "review.detail4":
+        "การประเมินผลงานเป็นสิทธิของผู้ว่าจ้าง ซึ่งจะไม่ถูกลบออกไม่ว่าด้วยเหตุผลใด ๆ เว้นแต่เป็นการประเมินผลงานที่ละเมิดข้อตกลงการใช้งาน ทั้งนี้ บริษัทฯ จะใช้ความพยายามอย่างถึงที่สุดในการสนับสนุนให้ผู้ว่าจ้างได้สื่อสารกับฟรีแลนซ์ถึงระดับความพึงพอใจของผลงานตลอดจนปัญหาที่ได้รับจากผลงาน และ/หรือ บริการ เพื่อให้ฟรีแลนซ์ได้แก้ไขปรับปรุงงานให้ตรงตามที่เสนอไว้กับผู้ว่าจ้าง อนึ่ง บริษัทมีสิทธิดำเนินการใด ๆ กับบัญชีผู้ใช้งานที่มีการใช้งานระบบการประเมินผลงานผิดวัตถุประสงค์ ซึ่งดุลพินิจของบริษัทฯ ให้ถือเป็นที่สุด",
+      "review.detail5":
+        "ฟรีแลนซ์ไม่สามารถต่อรองการส่งมอบงานเพื่อให้ได้รับการประเมินผลงานที่ดีจากผู้ว่าจ้างได้ หากบริษัทฯ รับทราบการกระทำดังกล่าว บริษัทมีสิทธิดำเนินการกับบัญชีผู้ใช้งานที่มีการใช้งานระบบการประเมินผลงานผิดวัตถุประสงค์ ซึ่งดุลพินิจของบริษัทฯ ให้ถือเป็นที่สุด",
       "orderChange.title": "การเปลี่ยนแปลงสถานะและการยกเลิกออเดอร์",
-      "orderChange.detail1": "เมื่อมีการเปิดออเดอร์แล้ว ตลอดระยะเวลาที่ฟรีแลนซ์ยังไม่ส่งมอบผลงาน และ/หรือ บริการ ผู้ใช้งานสามารถเปลี่ยนแปลงสถานะออเดอร์หรือยกเลิกออเดอร์ได้ตลอดระยะเวลา โดยผู้ใช้งานจะต้องแจ้งมายังบริษัทฯ ตามช่องทางติดต่อของบริษัทฯ",
-      "orderChange.detail2": "ถึงแม้ว่าผู้ว่าจ้างจะได้ยื่นเปลี่ยนแปลงสถานะออเดอร์หรือยกเลิกออเดอร์แล้ว บริษัทฯ มีสิทธิใช้ดุลพินิจในการพิจารณาอนุมัติการเปลี่ยนแปลงสถานะหรือขอยกเลิกออเดอร์และการคืนเงินได้ ซึ่งดุลพินิจของบริษัทฯ ให้ถือเป็นที่สุด ทั้งนี้ อัตราค่าบริการที่ผู้ว่าจ้างจะได้รับคืนนั้นจะเป็นไปตามกระบวนการขอยกเลิกออเดอร์และการคืนเงินที่บริษัทฯ กำหนด",
-      "orderChange.detail3": "เมื่อมีการยื่นขอยกเลิกออเดอร์ เจ้าหน้าที่ของบริษัทฯ จะติดต่อกลับไปยังผู้ว่าจ้างตามข้อมูลการติดต่อที่ผู้ว่าจ้างได้ลงทะเบียนไว้เพื่อขอบัญชีธนาคารสำหรับการคืนค่าบริการ ทั้งนี้ บริษัทฯ ขอสงวนสิทธิ์ในการคืนค่าธรรมเนียมการชำระเงินให้กับผู้ว่าจ้าง",
-      "orderChange.detail4": "บริษัทฯ มีสิทธิแต่เพียงผู้เดียวในการพิจารณาสัดส่วนของค่าบริการที่จะคืนแก่ผู้ว่าจ้าง ซึ่งการพิจารณานั้นจะประกอบไปด้วยปัจจัยต่าง ๆ อาทิ การละเมิดข้อตกลง การละเมิดสิทธิการใช้งานของผู้ใช้งานคนอื่น ๆ การใช้บริการแพลตฟอร์มตามข้อตกลงการใช้งานอย่างไม่เหมาะสม การส่งมอบงานผิดวัตถุประสงค์ เป็นต้น",
-      "orderChange.detail5": "เมื่อได้สัดส่วนของค่าบริการที่จะคืนแก่ผู้ว่าจ้างแล้ว บริษัทฯ จะคืนค่าบริการให้แก่ผู้ว่าจ้างตามช่องทางต่อไปนี้",
-      "orderChange.method1": "กรณีผู้ว่าจ้างชำระค่าบริการผ่านบัญชีธนาคารหรือโมบายแบงก์กิ้งจะคืนค่าบริการดังกล่าวผ่านบัญชีธนาคารที่ผู้ว่าจ้างให้ข้อมูลสำหรับการคืนค่าบริการ",
-      "orderChange.method2": "กรณีผู้ว่าจ้างชำระค่าบริการผ่านบัตรเครดิตจะคืนค่าบริการดังกล่าวผ่านบัตรเครดิตที่ใช้ชำระบริการ โดยบริษัทฯ จะส่งเรื่องขอคืนเงินไปยังธนาคารผู้ให้บริการบัตรเครดิต ทั้งนี้ ระยะเวลาการคืนเงินจะขึ้นอยู่กับนโยบายของแต่ละธนาคาร",
-      "orderChange.method3": "กรณีผู้ว่าจ้างชำระค่าบริการด้วย Fastwork Coin จะคืนค่าบริการดังกล่าวในรูปแบบของ Fastwork Coin ผ่านบัญชีที่มีการชำระค่าบริการ",
-      "orderChange.method4": "กรณีผู้ว่าจ้างชำระค่าบริการผ่านทรู มันนี่ (TrueMoney Wallet) จะคืนค่าบริการดังกล่าวผ่านบัญชีธนาคารที่ผู้ว่าจ้างให้ข้อมูลสำหรับการคืนค่าบริการ",
+      "orderChange.detail1":
+        "เมื่อมีการเปิดออเดอร์แล้ว ตลอดระยะเวลาที่ฟรีแลนซ์ยังไม่ส่งมอบผลงาน และ/หรือ บริการ ผู้ใช้งานสามารถเปลี่ยนแปลงสถานะออเดอร์หรือยกเลิกออเดอร์ได้ตลอดระยะเวลา โดยผู้ใช้งานจะต้องแจ้งมายังบริษัทฯ ตามช่องทางติดต่อของบริษัทฯ",
+      "orderChange.detail2":
+        "ถึงแม้ว่าผู้ว่าจ้างจะได้ยื่นเปลี่ยนแปลงสถานะออเดอร์หรือยกเลิกออเดอร์แล้ว บริษัทฯ มีสิทธิใช้ดุลพินิจในการพิจารณาอนุมัติการเปลี่ยนแปลงสถานะหรือขอยกเลิกออเดอร์และการคืนเงินได้ ซึ่งดุลพินิจของบริษัทฯ ให้ถือเป็นที่สุด ทั้งนี้ อัตราค่าบริการที่ผู้ว่าจ้างจะได้รับคืนนั้นจะเป็นไปตามกระบวนการขอยกเลิกออเดอร์และการคืนเงินที่บริษัทฯ กำหนด",
+      "orderChange.detail3":
+        "เมื่อมีการยื่นขอยกเลิกออเดอร์ เจ้าหน้าที่ของบริษัทฯ จะติดต่อกลับไปยังผู้ว่าจ้างตามข้อมูลการติดต่อที่ผู้ว่าจ้างได้ลงทะเบียนไว้เพื่อขอบัญชีธนาคารสำหรับการคืนค่าบริการ ทั้งนี้ บริษัทฯ ขอสงวนสิทธิ์ในการคืนค่าธรรมเนียมการชำระเงินให้กับผู้ว่าจ้าง",
+      "orderChange.detail4":
+        "บริษัทฯ มีสิทธิแต่เพียงผู้เดียวในการพิจารณาสัดส่วนของค่าบริการที่จะคืนแก่ผู้ว่าจ้าง ซึ่งการพิจารณานั้นจะประกอบไปด้วยปัจจัยต่าง ๆ อาทิ การละเมิดข้อตกลง การละเมิดสิทธิการใช้งานของผู้ใช้งานคนอื่น ๆ การใช้บริการแพลตฟอร์มตามข้อตกลงการใช้งานอย่างไม่เหมาะสม การส่งมอบงานผิดวัตถุประสงค์ เป็นต้น",
+      "orderChange.detail5":
+        "เมื่อได้สัดส่วนของค่าบริการที่จะคืนแก่ผู้ว่าจ้างแล้ว บริษัทฯ จะคืนค่าบริการให้แก่ผู้ว่าจ้างตามช่องทางต่อไปนี้",
+      "orderChange.method1":
+        "กรณีผู้ว่าจ้างชำระค่าบริการผ่านบัญชีธนาคารหรือโมบายแบงก์กิ้งจะคืนค่าบริการดังกล่าวผ่านบัญชีธนาคารที่ผู้ว่าจ้างให้ข้อมูลสำหรับการคืนค่าบริการ",
+      "orderChange.method2":
+        "กรณีผู้ว่าจ้างชำระค่าบริการผ่านบัตรเครดิตจะคืนค่าบริการดังกล่าวผ่านบัตรเครดิตที่ใช้ชำระบริการ โดยบริษัทฯ จะส่งเรื่องขอคืนเงินไปยังธนาคารผู้ให้บริการบัตรเครดิต ทั้งนี้ ระยะเวลาการคืนเงินจะขึ้นอยู่กับนโยบายของแต่ละธนาคาร",
+      "orderChange.method3":
+        "กรณีผู้ว่าจ้างชำระค่าบริการด้วย Fastwork Coin จะคืนค่าบริการดังกล่าวในรูปแบบของ Fastwork Coin ผ่านบัญชีที่มีการชำระค่าบริการ",
+      "orderChange.method4":
+        "กรณีผู้ว่าจ้างชำระค่าบริการผ่านทรู มันนี่ (TrueMoney Wallet) จะคืนค่าบริการดังกล่าวผ่านบัญชีธนาคารที่ผู้ว่าจ้างให้ข้อมูลสำหรับการคืนค่าบริการ",
       orderCancelRefundTitle: "ข้อจำกัดการยกเลิกออเดอร์และการคืนเงิน",
-      orderCancelRefundIntro: "ในกรณีดังต่อไปนี้ ผู้ใช้งานอาจถูกจำกัดสิทธิในการยกเลิกออเดอร์และการคืนเงินตามกฎหมาย รวมถึงอาจถูกระงับการใช้งานบัญชีผู้ใช้งานชั่วคราวได้",
-      orderCancelRefundReason1: "ฟรีแลนซ์ได้ส่งมอบงานตามรายละเอียดที่กำหนดในงานที่นำเสนอ และ/หรือ ใบเสนอราคา (ถ้ามี)",
-      orderCancelRefundReason2: "ผู้ว่าจ้างมีส่วนเกี่ยวข้องในการยกเลิกออเดอร์ ซึ่งรวมถึงแต่ไม่จำกัดเพียง การเชิญชวนฟรีแลนซ์ให้บริการนอกระบบ การขอยกเลิกการจ้างโดยความประสงค์ของผู้ว่าจ้างฝ่ายเดียว ฯลฯ",
-      orderCancelRefundReason3: "ผู้ว่าจ้างมีส่วนเกี่ยวข้องในกิจกรรมใด ๆ ที่เป็นฉ้อโกงหรือแสวงหาผลประโยชน์ใด ๆ โดยมิชอบ ทั้งนี้ ไม่ว่าเพื่อประโยชน์แก่ตนเองหรือบุคคลอื่น บริษัทฯ จะถือว่าเป็นการฉ้อโกงการใช้บริการแพลตฟอร์มในส่วนที่เกี่ยวข้องกับออเดอร์ดังกล่าว",
-      orderCancelRefundReason4: "ผู้ว่าจ้างได้แจ้งระงับการชำระหรือขอรับค่าบริการคืนจากผู้ให้บริการรับชำระเงิน ซึ่งรวมถึงแต่ไม่จำกัดเพียง ธนาคาร สถาบันการเงิน หรือบุคคลอื่น ๆ นอกเหนือจากบริษัทฯ",
+      orderCancelRefundIntro:
+        "ในกรณีดังต่อไปนี้ ผู้ใช้งานอาจถูกจำกัดสิทธิในการยกเลิกออเดอร์และการคืนเงินตามกฎหมาย รวมถึงอาจถูกระงับการใช้งานบัญชีผู้ใช้งานชั่วคราวได้",
+      orderCancelRefundReason1:
+        "ฟรีแลนซ์ได้ส่งมอบงานตามรายละเอียดที่กำหนดในงานที่นำเสนอ และ/หรือ ใบเสนอราคา (ถ้ามี)",
+      orderCancelRefundReason2:
+        "ผู้ว่าจ้างมีส่วนเกี่ยวข้องในการยกเลิกออเดอร์ ซึ่งรวมถึงแต่ไม่จำกัดเพียง การเชิญชวนฟรีแลนซ์ให้บริการนอกระบบ การขอยกเลิกการจ้างโดยความประสงค์ของผู้ว่าจ้างฝ่ายเดียว ฯลฯ",
+      orderCancelRefundReason3:
+        "ผู้ว่าจ้างมีส่วนเกี่ยวข้องในกิจกรรมใด ๆ ที่เป็นฉ้อโกงหรือแสวงหาผลประโยชน์ใด ๆ โดยมิชอบ ทั้งนี้ ไม่ว่าเพื่อประโยชน์แก่ตนเองหรือบุคคลอื่น บริษัทฯ จะถือว่าเป็นการฉ้อโกงการใช้บริการแพลตฟอร์มในส่วนที่เกี่ยวข้องกับออเดอร์ดังกล่าว",
+      orderCancelRefundReason4:
+        "ผู้ว่าจ้างได้แจ้งระงับการชำระหรือขอรับค่าบริการคืนจากผู้ให้บริการรับชำระเงิน ซึ่งรวมถึงแต่ไม่จำกัดเพียง ธนาคาร สถาบันการเงิน หรือบุคคลอื่น ๆ นอกเหนือจากบริษัทฯ",
       accountSuspensionTitle: "การระงับการใช้งานและการยกเลิกบัญชีผู้ใช้งาน",
-      accountSuspensionIntro: "เพื่อควบคุมให้การใช้บริการแพลตฟอร์มเป็นไปตามข้อตกลงการใช้งาน บริษัทฯ มีสิทธิตรวจสอบความเป็นเจ้าของบัญชีผู้ใช้งานได้ตลอดระยะเวลาที่ใช้บริการแพลตฟอร์ม เมื่อมีการตรวจสอบ ผู้ใช้งานต้องแสดงความเป็นเจ้าของบัญชีผู้ใช้งานโดยการแสดงหลักฐานต่าง ๆ อาทิ บัตรประจำตัวประชาชน สมุดบัญชี พาสปอร์ต เอกสารทางกฎหมายต่าง ๆ ที่หน่วยงานของรัฐเป็นผู้ออกให้ หรือเอกสารอื่นใดตามที่บริษัทฯ ร้องขอ ทั้งนี้ เพื่อใช้ในการยืนยันตัวตน",
-      accountSuspensionViolationIntro: "ในกรณีที่ผู้ใช้งานกระทำการใด ๆ ที่ไม่เหมาะสม หรือกระทำการขัดต่อเงื่อนไขของข้อตกลงการใช้งาน",
-      accountSuspensionWarning: "บริษัทฯ อาจเตือนผู้ใช้งานให้ระงับหรือยุติการกระทำดังกล่าวผ่านช่องทางติดต่อที่ผู้ใช้งานได้ลงทะเบียนไว้ และ/หรือ แสดงการแจ้งเตือนบนแพลตฟอร์มขณะที่ผู้ใช้งานลงชื่อเข้าใช้งาน อนึ่ง แม้การเตือนดังกล่าวจะไม่ส่งผลต่อการใช้งานแพลตฟอร์มในทันที แต่อาจส่งผลต่อการระงับการใช้งานและการยกเลิกบัญชีผู้ใช้งานในอนาคตได้",
-      accountSuspensionRights: "บริษัทฯ มีดุลพินิจในการดำเนินการใด ๆ กับบัญชีผู้ใช้งาน อาทิ การระงับการใช้งานบัญชีผู้ใช้งาน ไม่ว่าชั่วคราวหรือถาวร การลบบัญชีผู้ใช้งาน การขึ้นทะเบียนแบล็คลิสต์บัญชีผู้ใช้งาน หรือการอื่นใดที่บริษัทฯ เห็นสมควร ฯลฯ หากบริษัทฯ เห็นว่าผู้ใช้งานฝ่าฝืนข้อตกลงการใช้งานฉบับนี้ ซึ่งรวมถึงแต่ไม่จำกัดเพียงกรณีต่อไปนี้",
-      accountSuspensionReason1: "ผู้ใช้งานกระทำการละเมิดข้อตกลงใช้งานหรือมีการกระทำที่ไม่เหมาะสมบนแพลตฟอร์ม อาทิ การใช้คำพูดที่ไม่เหมาะสม การใช้ถ้อยคำหยาบคาย การส่อเสียดเหยียดหยาม กลั่นแกล้ง หรือดูถูก เป็นต้น",
-      accountSuspensionReason2: "ผู้ใช้งานกระทำการใด ๆ อันมีพฤติการณ์หรือลักษณะเป็นการหลอกลวงเพื่อหวังข้อมูล (ฟิชชิ่ง) หรือก่อให้เกิดความเดือดร้อนรำคาญแก่ผู้อื่น (สแปม)",
-      accountSuspensionReason3: "ผู้ใช้งานกระทำการใด ๆ อันเป็นสิ่งผิดกฎหมาย หรือขัดต่อความสงบเรียบร้อยหรือศีลธรรมอันดีของประชาชนผ่านแพลตฟอร์ม ซึ่งรวมถึงแต่ไม่จำกัดเพียง การกระทำความผิดตามพระราชบัญญัติว่าด้วยการกระทำความผิดเกี่ยวกับคอมพิวเตอร์ พ.ศ. 2550 ฯลฯ",
-      accountSuspensionReason4: "ผู้ใช้งานกระทำการใด ๆ อันมีพฤติการณ์หรือลักษณะเป็นการพยายามที่จะเข้าสู่บัญชีผู้ใช้งานหรืออุปกรณ์การใช้งานของผู้ใช้อื่น ๆ ผ่านแพลตฟอร์ม",
-      accountSuspensionReason5: "ผู้ใช้งานกระทำการใด ๆ อันมีพฤติการณ์หรือลักษณะเป็นการละเมิดลิขสิทธิ์หรือละเมิดทรัพย์สินทางปัญญาของบุคคลอื่น",
-      accountSuspensionReason6: "ผู้ใช้งานกระทำการใด ๆ อันมีพฤติการณ์หรือลักษณะให้ตนเองหรือบุคคลอื่นได้รับสิทธิประโยชน์ที่ไม่มีสิทธิได้รับตามกฎหมาย ซึ่งรวมถึงแต่ไม่จำกัดเพียง การจ้างงานตนเองเพื่อหวังผลประโยชน์จากการส่งเสริมการขายและไม่ได้มีวัตถุประสงค์เพื่อการจ้างงานอย่างแท้จริง ฯลฯ",
-      accountSuspensionReason7: "ผู้ใช้งานมีบัญชีมากกว่าหนึ่งบัญชี หรือผู้ใช้งานใช้ข้อมูลส่วนบุคคลของบุคคลอื่นมาสมัครใช้งาน",
+      accountSuspensionIntro:
+        "เพื่อควบคุมให้การใช้บริการแพลตฟอร์มเป็นไปตามข้อตกลงการใช้งาน บริษัทฯ มีสิทธิตรวจสอบความเป็นเจ้าของบัญชีผู้ใช้งานได้ตลอดระยะเวลาที่ใช้บริการแพลตฟอร์ม เมื่อมีการตรวจสอบ ผู้ใช้งานต้องแสดงความเป็นเจ้าของบัญชีผู้ใช้งานโดยการแสดงหลักฐานต่าง ๆ อาทิ บัตรประจำตัวประชาชน สมุดบัญชี พาสปอร์ต เอกสารทางกฎหมายต่าง ๆ ที่หน่วยงานของรัฐเป็นผู้ออกให้ หรือเอกสารอื่นใดตามที่บริษัทฯ ร้องขอ ทั้งนี้ เพื่อใช้ในการยืนยันตัวตน",
+      accountSuspensionViolationIntro:
+        "ในกรณีที่ผู้ใช้งานกระทำการใด ๆ ที่ไม่เหมาะสม หรือกระทำการขัดต่อเงื่อนไขของข้อตกลงการใช้งาน",
+      accountSuspensionWarning:
+        "บริษัทฯ อาจเตือนผู้ใช้งานให้ระงับหรือยุติการกระทำดังกล่าวผ่านช่องทางติดต่อที่ผู้ใช้งานได้ลงทะเบียนไว้ และ/หรือ แสดงการแจ้งเตือนบนแพลตฟอร์มขณะที่ผู้ใช้งานลงชื่อเข้าใช้งาน อนึ่ง แม้การเตือนดังกล่าวจะไม่ส่งผลต่อการใช้งานแพลตฟอร์มในทันที แต่อาจส่งผลต่อการระงับการใช้งานและการยกเลิกบัญชีผู้ใช้งานในอนาคตได้",
+      accountSuspensionRights:
+        "บริษัทฯ มีดุลพินิจในการดำเนินการใด ๆ กับบัญชีผู้ใช้งาน อาทิ การระงับการใช้งานบัญชีผู้ใช้งาน ไม่ว่าชั่วคราวหรือถาวร การลบบัญชีผู้ใช้งาน การขึ้นทะเบียนแบล็คลิสต์บัญชีผู้ใช้งาน หรือการอื่นใดที่บริษัทฯ เห็นสมควร ฯลฯ หากบริษัทฯ เห็นว่าผู้ใช้งานฝ่าฝืนข้อตกลงการใช้งานฉบับนี้ ซึ่งรวมถึงแต่ไม่จำกัดเพียงกรณีต่อไปนี้",
+      accountSuspensionReason1:
+        "ผู้ใช้งานกระทำการละเมิดข้อตกลงใช้งานหรือมีการกระทำที่ไม่เหมาะสมบนแพลตฟอร์ม อาทิ การใช้คำพูดที่ไม่เหมาะสม การใช้ถ้อยคำหยาบคาย การส่อเสียดเหยียดหยาม กลั่นแกล้ง หรือดูถูก เป็นต้น",
+      accountSuspensionReason2:
+        "ผู้ใช้งานกระทำการใด ๆ อันมีพฤติการณ์หรือลักษณะเป็นการหลอกลวงเพื่อหวังข้อมูล (ฟิชชิ่ง) หรือก่อให้เกิดความเดือดร้อนรำคาญแก่ผู้อื่น (สแปม)",
+      accountSuspensionReason3:
+        "ผู้ใช้งานกระทำการใด ๆ อันเป็นสิ่งผิดกฎหมาย หรือขัดต่อความสงบเรียบร้อยหรือศีลธรรมอันดีของประชาชนผ่านแพลตฟอร์ม ซึ่งรวมถึงแต่ไม่จำกัดเพียง การกระทำความผิดตามพระราชบัญญัติว่าด้วยการกระทำความผิดเกี่ยวกับคอมพิวเตอร์ พ.ศ. 2550 ฯลฯ",
+      accountSuspensionReason4:
+        "ผู้ใช้งานกระทำการใด ๆ อันมีพฤติการณ์หรือลักษณะเป็นการพยายามที่จะเข้าสู่บัญชีผู้ใช้งานหรืออุปกรณ์การใช้งานของผู้ใช้อื่น ๆ ผ่านแพลตฟอร์ม",
+      accountSuspensionReason5:
+        "ผู้ใช้งานกระทำการใด ๆ อันมีพฤติการณ์หรือลักษณะเป็นการละเมิดลิขสิทธิ์หรือละเมิดทรัพย์สินทางปัญญาของบุคคลอื่น",
+      accountSuspensionReason6:
+        "ผู้ใช้งานกระทำการใด ๆ อันมีพฤติการณ์หรือลักษณะให้ตนเองหรือบุคคลอื่นได้รับสิทธิประโยชน์ที่ไม่มีสิทธิได้รับตามกฎหมาย ซึ่งรวมถึงแต่ไม่จำกัดเพียง การจ้างงานตนเองเพื่อหวังผลประโยชน์จากการส่งเสริมการขายและไม่ได้มีวัตถุประสงค์เพื่อการจ้างงานอย่างแท้จริง ฯลฯ",
+      accountSuspensionReason7:
+        "ผู้ใช้งานมีบัญชีมากกว่าหนึ่งบัญชี หรือผู้ใช้งานใช้ข้อมูลส่วนบุคคลของบุคคลอื่นมาสมัครใช้งาน",
       accountSuspensionReason8: "ผู้ใช้งานซื้อขายบัญชีผู้ใช้งานให้กับบุคคลอื่น",
-      accountSuspensionReason9: "ผู้ใช้งานกระทำการใด ๆ อันมีพฤติการณ์หรือลักษณะเป็นการหลีกเลี่ยงค่าธรรมเนียมการใช้บริการแพลตฟอร์ม และ/หรือ ค่าธรรมเนียมการชำระเงิน ซึ่งรวมถึงแต่ไม่จำกัดเพียง การชักจูงหรือจูงใจให้นำไปสู่การติดต่อเพื่อจ้างงานนอกแพลตฟอร์ม ฯลotto",
-      accountSuspensionFinalDecision: "ทั้งนี้ ดุลพินิจของบริษัทฯ ย่อมถือเป็นที่สุด ท่านจึงไม่สามารถอุทธรณ์หรือโต้แย้งการใช้ดุลพินิจของบริษัทฯ ในการระงับการใช้งานและการยกเลิกบัญชีผู้ใช้งานได้ แต่ไม่ตัดสิทธิท่านในการให้ข้อมูลหรือชี้แจงข้อเท็จจริงใด ๆ ที่เกี่ยวข้องกับการใช้ดุลพินิจในการระงับการใช้งานและการยกเลิกบัญชีผู้ใช้งานของท่าน",
-      accountSuspensionEffect: "บัญชีผู้ใช้งานที่ถูกระงับการใช้งานจะไม่สามารถทำการซื้อขายงานบนแพลตฟอร์ม รวมถึงลงผลงาน และ/หรือ บริการเพิ่มเติมได้",
-      accountSuspensionContact: "เมื่อมีการระงับการใช้งานบัญชีผู้ใช้งานรายใด ผู้ที่ได้รับผลกระทบจากการระงับบัญชีผู้ใช้งานสามารถติดต่อเจ้าหน้าที่ของบริษัทฯ ตามช่องทางที่บริษัทฯ กำหนดเพื่อสอบถามถึงข้อมูลหรือสถานะของบัญชีผู้ใช้งานดังกล่าว ตลอดจนแนวทางการขอยกเลิกออร์เดอร์ได้",
+      accountSuspensionReason9:
+        "ผู้ใช้งานกระทำการใด ๆ อันมีพฤติการณ์หรือลักษณะเป็นการหลีกเลี่ยงค่าธรรมเนียมการใช้บริการแพลตฟอร์ม และ/หรือ ค่าธรรมเนียมการชำระเงิน ซึ่งรวมถึงแต่ไม่จำกัดเพียง การชักจูงหรือจูงใจให้นำไปสู่การติดต่อเพื่อจ้างงานนอกแพลตฟอร์ม ฯลotto",
+      accountSuspensionFinalDecision:
+        "ทั้งนี้ ดุลพินิจของบริษัทฯ ย่อมถือเป็นที่สุด ท่านจึงไม่สามารถอุทธรณ์หรือโต้แย้งการใช้ดุลพินิจของบริษัทฯ ในการระงับการใช้งานและการยกเลิกบัญชีผู้ใช้งานได้ แต่ไม่ตัดสิทธิท่านในการให้ข้อมูลหรือชี้แจงข้อเท็จจริงใด ๆ ที่เกี่ยวข้องกับการใช้ดุลพินิจในการระงับการใช้งานและการยกเลิกบัญชีผู้ใช้งานของท่าน",
+      accountSuspensionEffect:
+        "บัญชีผู้ใช้งานที่ถูกระงับการใช้งานจะไม่สามารถทำการซื้อขายงานบนแพลตฟอร์ม รวมถึงลงผลงาน และ/หรือ บริการเพิ่มเติมได้",
+      accountSuspensionContact:
+        "เมื่อมีการระงับการใช้งานบัญชีผู้ใช้งานรายใด ผู้ที่ได้รับผลกระทบจากการระงับบัญชีผู้ใช้งานสามารถติดต่อเจ้าหน้าที่ของบริษัทฯ ตามช่องทางที่บริษัทฯ กำหนดเพื่อสอบถามถึงข้อมูลหรือสถานะของบัญชีผู้ใช้งานดังกล่าว ตลอดจนแนวทางการขอยกเลิกออร์เดอร์ได้",
       "dispute.title": "การระงับข้อพิพาทระหว่างผู้ใช้งาน",
-      "dispute.intro": "บริษัทฯ สนับสนุนให้ผู้ใช้งานแก้ไขข้อพิพาทด้วยการเจรจาบนพูดคุยของแพลตฟอร์ม ซึ่งรวมถึงแต่ไม่จำกัดเพียงข้อพิพาทดังต่อไปนี้",
+      "dispute.intro":
+        "บริษัทฯ สนับสนุนให้ผู้ใช้งานแก้ไขข้อพิพาทด้วยการเจรจาบนพูดคุยของแพลตฟอร์ม ซึ่งรวมถึงแต่ไม่จำกัดเพียงข้อพิพาทดังต่อไปนี้",
       "dispute.issues.quality": "คุณภาพของงาน",
       "dispute.issues.scope": "ขอบเขตของงาน",
       "dispute.issues.deadline": "กำหนดระยะเวลาส่งมอบงาน",
       "dispute.issues.damageDuring": "ความเสียหายที่เกิดขึ้นขณะทำงาน",
       "dispute.issues.damageAfter": "ความเสียหายที่อาจเกิดขึ้นภายหลังส่งมอบงาน",
-      "dispute.escalation": "ในกรณีที่ท่านไม่สามารถระงับข้อพิพาทได้ ผู้ว่าจ้างหรือฟรีแลนซ์ แล้วแต่กรณี อาจติดต่อมายังบริษัทฯ ผ่านช่องทางติดต่อที่ระบุไว้ เพื่อให้บริษัทฯ เข้ามาไกล่เกลี่ยเพื่อระงับข้อพิพาทได้ ทั้งนี้ เพื่อให้บริษัทฯ ไกล่เกลี่ยได้อย่างถูกต้องและเป็นธรรม ผู้ใช้งานตกลงส่งมอบข้อเท็จจริง เอกสาร หรือหลักฐานต่าง ๆ ที่เกี่ยวข้องกับข้อพิพาท ตลอดจนตกลงและยินยอมให้บริษัทฯ เข้าถึงพูดคุยของผู้ว่าจ้างและฟรีแลนซ์เพื่อตรวจสอบรายละเอียดหรือข้อมูลการติดต่อเพื่อระงับข้อพิพาทระหว่างผู้ใช้งานได้",
-      "dispute.complaint": "ในกรณีที่มีการร้องเรียนคุณภาพของงาน บริษัทฯ อาจตรวจสอบประวัติการทำงาน ออเดอร์ ข้อความ การชำระเงิน และข้อมูลอื่น ๆ ของฟรีแลนซ์ได้ โดยมิต้องขอความยินยอมหรือแจ้งให้ฟรีแลนซ์ทราบล่วงหน้า",
+      "dispute.escalation":
+        "ในกรณีที่ท่านไม่สามารถระงับข้อพิพาทได้ ผู้ว่าจ้างหรือฟรีแลนซ์ แล้วแต่กรณี อาจติดต่อมายังบริษัทฯ ผ่านช่องทางติดต่อที่ระบุไว้ เพื่อให้บริษัทฯ เข้ามาไกล่เกลี่ยเพื่อระงับข้อพิพาทได้ ทั้งนี้ เพื่อให้บริษัทฯ ไกล่เกลี่ยได้อย่างถูกต้องและเป็นธรรม ผู้ใช้งานตกลงส่งมอบข้อเท็จจริง เอกสาร หรือหลักฐานต่าง ๆ ที่เกี่ยวข้องกับข้อพิพาท ตลอดจนตกลงและยินยอมให้บริษัทฯ เข้าถึงพูดคุยของผู้ว่าจ้างและฟรีแลนซ์เพื่อตรวจสอบรายละเอียดหรือข้อมูลการติดต่อเพื่อระงับข้อพิพาทระหว่างผู้ใช้งานได้",
+      "dispute.complaint":
+        "ในกรณีที่มีการร้องเรียนคุณภาพของงาน บริษัทฯ อาจตรวจสอบประวัติการทำงาน ออเดอร์ ข้อความ การชำระเงิน และข้อมูลอื่น ๆ ของฟรีแลนซ์ได้ โดยมิต้องขอความยินยอมหรือแจ้งให้ฟรีแลนซ์ทราบล่วงหน้า",
       "liabilityClaim.title": "การเรียกร้องค่าเสียหาย",
-      "liabilityClaim.intro": "ในกรณีที่มีความเสียหายใด ๆ เกิดขึ้นต่อบุคคลภายนอก ซึ่งไม่ใช่ผู้ใช้งานแพลตฟอร์ม ผู้ใช้งานตกลงรับผิดใช้ค่าสินไหมทดแทนแก่บุคคลที่เกี่ยวข้องโดยตรง ซึ่งรวมถึงแต่ไม่จำกัดเพียงกรณีดังต่อไปนี้",
-      "liabilityClaim.personalData": "ผู้ใช้งานซึ่งเป็นผู้ใช้หรือเปิดเผยข้อมูลส่วนบุคคลตกลงรับผิดใช้ค่าสินไหมทดแทนต่อบุคคลภายนอกซึ่งเป็นเจ้าของข้อมูลส่วนบุคคล",
-      "liabilityClaim.ip": "ผู้ใช้งานซึ่งเป็นผู้ใช้หรือเผยแพร่ลิขสิทธิ์หรือทรัพย์สินทางปัญญาตกลงรับผิดใช้ค่าสินไหมทดแทนต่อบุคคลภายนอกซึ่งเป็นเจ้าของทรัพย์สินทางปัญญา",
-      "liabilityClaim.confidential": "ผู้ใช้งานซึ่งเป็นผู้ใช้หรือเปิดเผยข้อมูลอันเป็นความลับตกลงรับผิดใช้ค่าสินไหมทดแทนต่อผู้เปิดเผยข้อมูลอันเป็นความลับ",
-      "liabilityClaim.defamation": "ผู้ใช้งานซึ่งเป็นผู้ไขข่าวแพร่หลายตกลงรับผิดใช้ค่าสินไหมทดแทนต่อผู้ได้รับความเสียหายจากข้อมูลดังกล่าว",
-      "liabilityClaim.legalAction": "ในกรณีที่มีการฟ้องคดีหรือดำเนินการใด ๆ กับบุคคลภายนอกซึ่งส่งผลให้บริษัทฯ ต้องเข้าเป็นคู่ความหรือต้องให้การใด ๆ ตามคำสั่งของหน่วยงานของรัฐที่เกี่ยวข้อง ผู้ใช้งานตกลงรับผิดร่วมกันต่อบริษัทฯ ในการออกค่าใช้จ่ายต่าง ๆ ที่เกิดขึ้นจากการดำเนินการดังกล่าว ซึ่งรวมถึงแต่ไม่จำกัดเพียง ค่าทนายความ ค่าเดินทาง ค่าธรรมเนียม อากร ค่าบริการ ค่าปรับ ค่าสินไหมทดแทน หรือค่าเสียหายอื่นใดที่เกิดจากหรือสืบเนื่องจากการดำเนินการดังกล่าว ไม่ว่าโดยตรงหรือโดยอ้อม",
-      "liabilityClaim.toCompany": "ในกรณีที่ผู้ใช้งานต้องรับผิดต่อบริษัทฯ ผู้ใช้งานตกลงใช้ค่าสินไหมทดแทนต่อบริษัทฯ เพื่อเยียวยาความเสียหายไม่ว่าโดยทางตรงหรือโดยทางอ้อม",
-      "liabilityClaim.toEachOther": "ในกรณีที่ผู้ใช้งานต้องรับผิดระหว่างกัน ผู้ใช้งานตกลงใช้ค่าสินไหมทดแทนตามเงื่อนไขที่ได้จากการระงับข้อพิพาทระหว่างผู้ใช้งาน",
-      "liabilityClaim.companyLiability": "ในกรณีที่บริษัทฯ ต้องรับผิดต่อผู้ใช้งาน บริษัทฯ ตกลงใช้ค่าสินไหมทดแทนตามความเสียหายที่เกิดขึ้นจริงต่อผู้ใช้งานเพื่อเยียวยาความเสียหาย",
+      "liabilityClaim.intro":
+        "ในกรณีที่มีความเสียหายใด ๆ เกิดขึ้นต่อบุคคลภายนอก ซึ่งไม่ใช่ผู้ใช้งานแพลตฟอร์ม ผู้ใช้งานตกลงรับผิดใช้ค่าสินไหมทดแทนแก่บุคคลที่เกี่ยวข้องโดยตรง ซึ่งรวมถึงแต่ไม่จำกัดเพียงกรณีดังต่อไปนี้",
+      "liabilityClaim.personalData":
+        "ผู้ใช้งานซึ่งเป็นผู้ใช้หรือเปิดเผยข้อมูลส่วนบุคคลตกลงรับผิดใช้ค่าสินไหมทดแทนต่อบุคคลภายนอกซึ่งเป็นเจ้าของข้อมูลส่วนบุคคล",
+      "liabilityClaim.ip":
+        "ผู้ใช้งานซึ่งเป็นผู้ใช้หรือเผยแพร่ลิขสิทธิ์หรือทรัพย์สินทางปัญญาตกลงรับผิดใช้ค่าสินไหมทดแทนต่อบุคคลภายนอกซึ่งเป็นเจ้าของทรัพย์สินทางปัญญา",
+      "liabilityClaim.confidential":
+        "ผู้ใช้งานซึ่งเป็นผู้ใช้หรือเปิดเผยข้อมูลอันเป็นความลับตกลงรับผิดใช้ค่าสินไหมทดแทนต่อผู้เปิดเผยข้อมูลอันเป็นความลับ",
+      "liabilityClaim.defamation":
+        "ผู้ใช้งานซึ่งเป็นผู้ไขข่าวแพร่หลายตกลงรับผิดใช้ค่าสินไหมทดแทนต่อผู้ได้รับความเสียหายจากข้อมูลดังกล่าว",
+      "liabilityClaim.legalAction":
+        "ในกรณีที่มีการฟ้องคดีหรือดำเนินการใด ๆ กับบุคคลภายนอกซึ่งส่งผลให้บริษัทฯ ต้องเข้าเป็นคู่ความหรือต้องให้การใด ๆ ตามคำสั่งของหน่วยงานของรัฐที่เกี่ยวข้อง ผู้ใช้งานตกลงรับผิดร่วมกันต่อบริษัทฯ ในการออกค่าใช้จ่ายต่าง ๆ ที่เกิดขึ้นจากการดำเนินการดังกล่าว ซึ่งรวมถึงแต่ไม่จำกัดเพียง ค่าทนายความ ค่าเดินทาง ค่าธรรมเนียม อากร ค่าบริการ ค่าปรับ ค่าสินไหมทดแทน หรือค่าเสียหายอื่นใดที่เกิดจากหรือสืบเนื่องจากการดำเนินการดังกล่าว ไม่ว่าโดยตรงหรือโดยอ้อม",
+      "liabilityClaim.toCompany":
+        "ในกรณีที่ผู้ใช้งานต้องรับผิดต่อบริษัทฯ ผู้ใช้งานตกลงใช้ค่าสินไหมทดแทนต่อบริษัทฯ เพื่อเยียวยาความเสียหายไม่ว่าโดยทางตรงหรือโดยทางอ้อม",
+      "liabilityClaim.toEachOther":
+        "ในกรณีที่ผู้ใช้งานต้องรับผิดระหว่างกัน ผู้ใช้งานตกลงใช้ค่าสินไหมทดแทนตามเงื่อนไขที่ได้จากการระงับข้อพิพาทระหว่างผู้ใช้งาน",
+      "liabilityClaim.companyLiability":
+        "ในกรณีที่บริษัทฯ ต้องรับผิดต่อผู้ใช้งาน บริษัทฯ ตกลงใช้ค่าสินไหมทดแทนตามความเสียหายที่เกิดขึ้นจริงต่อผู้ใช้งานเพื่อเยียวยาความเสียหาย",
       "limitation.title": "ข้อจำกัดความรับผิดของบริษัทฯ",
-      "limitation.intro": "การให้บริการแพลตฟอร์มไม่ได้ส่งผลให้บริษัทฯ เป็นตัวการร่วม ตัวแทนร่วม ลูกหนี้ร่วม หรือนิติสัมพันธ์ใด ๆ ร่วมกับผู้ใช้งาน นอกจากการเป็นผู้ให้บริการ ซึ่งผู้ใช้บริการมีหน้าที่ชำระค่าธรรมเนียมการใช้บริการแพลตฟอร์มและค่าธรรมเนียมการชำระเงิน แล้วแต่กรณี ให้แก่บริษัทฯ",
-      "limitation.exclusions": "บริษัทฯ ขอสงวนสิทธิในความรับผิดใด ๆ จากผลงาน และ/หรือ บริการที่ผู้ว่าจ้างได้รับจากฟรีแลนซ์ในกรณีต่อไปนี้",
+      "limitation.intro":
+        "การให้บริการแพลตฟอร์มไม่ได้ส่งผลให้บริษัทฯ เป็นตัวการร่วม ตัวแทนร่วม ลูกหนี้ร่วม หรือนิติสัมพันธ์ใด ๆ ร่วมกับผู้ใช้งาน นอกจากการเป็นผู้ให้บริการ ซึ่งผู้ใช้บริการมีหน้าที่ชำระค่าธรรมเนียมการใช้บริการแพลตฟอร์มและค่าธรรมเนียมการชำระเงิน แล้วแต่กรณี ให้แก่บริษัทฯ",
+      "limitation.exclusions":
+        "บริษัทฯ ขอสงวนสิทธิในความรับผิดใด ๆ จากผลงาน และ/หรือ บริการที่ผู้ว่าจ้างได้รับจากฟรีแลนซ์ในกรณีต่อไปนี้",
       "limitation.exclusions.outOfOrder": "การจ้างงานที่ไม่อยู่ในออเดอร์",
-      "limitation.exclusions.noPayment": "การจ้างงานที่ไม่มีการชำระเงินผ่านแพลตฟอร์ม",
+      "limitation.exclusions.noPayment":
+        "การจ้างงานที่ไม่มีการชำระเงินผ่านแพลตฟอร์ม",
       "limitation.exclusions.violation": "การจ้างงานที่ละเมิดข้อตกลงการใช้งาน",
-      "limitation.exclusions.userMessages": "ข้อความใด ๆ ที่ปรากฏในงานที่นำเสนอหรือพูดคุยของผู้ใช้งาน",
+      "limitation.exclusions.userMessages":
+        "ข้อความใด ๆ ที่ปรากฏในงานที่นำเสนอหรือพูดคุยของผู้ใช้งาน",
       "limitation.exclusions.review": "ข้อความใด ๆ ที่ปรากฏในการประเมินผลงาน",
       "limitation.exclusions.quality": "คุณภาพของงาน",
-      "limitation.exclusions.damage": "ความเสียหายที่เกิดขึ้นหรืออาจเกิดขึ้นจากงาน",
-      "limitation.exclusions.dispute": "ความเสียหายที่เกิดขึ้นหรืออาจเกิดขึ้นจากการระงับข้อพิพาทระหว่างผู้ใช้งาน",
-      "limitation.noGuarantee": "บริษัทฯ ไม่อาจรับประกันคุณภาพของผลงาน และ/หรือ บริการที่ผู้ว่าจ้างพึงได้รับมอบจากฟรีแลนซ์ได้ ซึ่งรวมถึงแต่ไม่จำกัดเพียงขอบเขตงาน ความสำเร็จของงาน ความเสียหายที่เกิดขึ้นจากการทำงาน ทั้งนี้ ไม่ว่าจะเกิดขณะหรือภายหลังส่งมอบ ฯลฯ การศึกษาคุณภาพของงานนั้นสามารถทำได้จากการพิจารณารายละเอียดและคะแนนของการประเมินผลงานที่ฟรีแลนซ์ได้รับ อย่างไรก็ตาม บริษัทฯ จะใช้ความพยายามอย่างถึงที่สุดในการให้ผู้ว่าจ้างได้รับงานที่ถูกต้องตามคุณสมบัติที่เสนอในงานที่นำเสนอจากฟรีแลนซ์",
-      "limitation.disclaimer": "บริษัทในเครือ ผู้บริหาร กรรมการ ผู้ถือหุ้น ลูกจ้าง พนักงาน ตัวแทน คู่ค้า หรือบุคคลอื่นใดที่อยู่ภายใต้การกำกับดูแลของบริษัทฯ สามารถปฏิเสธความรับผิดต่อความเสียหายใด ๆ ที่เกี่ยวข้องกับการใช้บริการแพลตฟอร์ม ทั้งนี้ ไม่ว่าจะเป็นการความเสียหายโดยตรง ความเสียหายเพื่อพฤติการณ์พิเศษ หรือค่าเสียหายเชิงลงโทษ อาทิ การบาดเจ็บส่วนบุคคล ความเจ็บปวดทุกข์ทรมานไม่ว่าต่อร่างกายหรือจิตใจ การสูญเสียรายได้ การสูญเสียกำไร การสูญเสียโอกาสทางธุรกิจหรือกำไรที่คาดหวังไว้ ความเสียหายต่อร่างกาย ทรัพย์สิน ชื่อเสียง หรือข้อมูล เป็นต้น",
+      "limitation.exclusions.damage":
+        "ความเสียหายที่เกิดขึ้นหรืออาจเกิดขึ้นจากงาน",
+      "limitation.exclusions.dispute":
+        "ความเสียหายที่เกิดขึ้นหรืออาจเกิดขึ้นจากการระงับข้อพิพาทระหว่างผู้ใช้งาน",
+      "limitation.noGuarantee":
+        "บริษัทฯ ไม่อาจรับประกันคุณภาพของผลงาน และ/หรือ บริการที่ผู้ว่าจ้างพึงได้รับมอบจากฟรีแลนซ์ได้ ซึ่งรวมถึงแต่ไม่จำกัดเพียงขอบเขตงาน ความสำเร็จของงาน ความเสียหายที่เกิดขึ้นจากการทำงาน ทั้งนี้ ไม่ว่าจะเกิดขณะหรือภายหลังส่งมอบ ฯลฯ การศึกษาคุณภาพของงานนั้นสามารถทำได้จากการพิจารณารายละเอียดและคะแนนของการประเมินผลงานที่ฟรีแลนซ์ได้รับ อย่างไรก็ตาม บริษัทฯ จะใช้ความพยายามอย่างถึงที่สุดในการให้ผู้ว่าจ้างได้รับงานที่ถูกต้องตามคุณสมบัติที่เสนอในงานที่นำเสนอจากฟรีแลนซ์",
+      "limitation.disclaimer":
+        "บริษัทในเครือ ผู้บริหาร กรรมการ ผู้ถือหุ้น ลูกจ้าง พนักงาน ตัวแทน คู่ค้า หรือบุคคลอื่นใดที่อยู่ภายใต้การกำกับดูแลของบริษัทฯ สามารถปฏิเสธความรับผิดต่อความเสียหายใด ๆ ที่เกี่ยวข้องกับการใช้บริการแพลตฟอร์ม ทั้งนี้ ไม่ว่าจะเป็นการความเสียหายโดยตรง ความเสียหายเพื่อพฤติการณ์พิเศษ หรือค่าเสียหายเชิงลงโทษ อาทิ การบาดเจ็บส่วนบุคคล ความเจ็บปวดทุกข์ทรมานไม่ว่าต่อร่างกายหรือจิตใจ การสูญเสียรายได้ การสูญเสียกำไร การสูญเสียโอกาสทางธุรกิจหรือกำไรที่คาดหวังไว้ ความเสียหายต่อร่างกาย ทรัพย์สิน ชื่อเสียง หรือข้อมูล เป็นต้น",
       intellectualPropertyTitle: "สิทธิในทรัพย์สินทางปัญญา",
-      intellectualPropertyContent1: "ผู้ว่าจ้างเป็นเจ้าของลิขสิทธิ์หรือทรัพย์สินทางปัญญาอื่นใดในงานที่ฟรีแลนซ์ส่งมอบทั้งหมด เว้นแต่จะมีข้อกำหนดในงานที่นำเสนอ และ/หรือ ใบเสนอราคา (ถ้ามี) โดยชัดเจนถึงข้อยกเว้นดังกล่าว ทั้งนี้",
-      intellectualPropertyContent2: "ฟรีแลนซ์จะไม่กระทำการหรือร่วมกับบุคคลเพื่อกระทำการใด ซึ่งรวมถึงแต่ไม่จำกัดเพียง การยินยอมหรืออนุญาตให้บุคคลใดทำสำเนา คัดลอกงาน นำงานไปปรับปรุง เปลี่ยนแปลง ไม่ว่าจะเพื่อวัตถุประสงค์ใด ๆ ฯลฯ เว้นแต่ได้รับความยินยอมเป็นลายลักษณ์อักษร",
-      intellectualPropertyContent3: "ผู้ใช้งานจะใช้บริการแพลตฟอร์มด้วยวัตถุประสงค์ที่ชอบด้วยกฎหมายและไม่กระทำการใด ๆ อันเป็นการละเมิดลิขสิทธิ์หรือทรัพย์สินทางปัญญาของบุคคลอื่น ในกรณีที่มีการฝ่าฝืน บริษัทฯ มีดุลพินิจในการระงับการใช้งานและยกเลิกบัญชีผู้ใช้งานของท่านได้ ซึ่งดุลพินิจของบริษัทฯ ย่อมถือเป็นที่สุด",
-      intellectualPropertyContent4: "บริษัทฯ ไม่อนุญาตและไม่สนับสนุนการกระทำใด ๆ อันมีพฤติการณ์หรือลักษณะเป็นการลิขสิทธิ์หรือทรัพย์สินทางปัญญาของบุคคลอื่น ในกรณีที่ท่านฝ่าฝืน ท่านตกลงรับผิดใช้ค่าสินไหมทดแทนแก่เจ้าของลิขสิทธิ์หรือทรัพย์สินทางปัญญาของผู้นั้นแต่เพียงลำพัง",
+      intellectualPropertyContent1:
+        "ผู้ว่าจ้างเป็นเจ้าของลิขสิทธิ์หรือทรัพย์สินทางปัญญาอื่นใดในงานที่ฟรีแลนซ์ส่งมอบทั้งหมด เว้นแต่จะมีข้อกำหนดในงานที่นำเสนอ และ/หรือ ใบเสนอราคา (ถ้ามี) โดยชัดเจนถึงข้อยกเว้นดังกล่าว ทั้งนี้",
+      intellectualPropertyContent2:
+        "ฟรีแลนซ์จะไม่กระทำการหรือร่วมกับบุคคลเพื่อกระทำการใด ซึ่งรวมถึงแต่ไม่จำกัดเพียง การยินยอมหรืออนุญาตให้บุคคลใดทำสำเนา คัดลอกงาน นำงานไปปรับปรุง เปลี่ยนแปลง ไม่ว่าจะเพื่อวัตถุประสงค์ใด ๆ ฯลฯ เว้นแต่ได้รับความยินยอมเป็นลายลักษณ์อักษร",
+      intellectualPropertyContent3:
+        "ผู้ใช้งานจะใช้บริการแพลตฟอร์มด้วยวัตถุประสงค์ที่ชอบด้วยกฎหมายและไม่กระทำการใด ๆ อันเป็นการละเมิดลิขสิทธิ์หรือทรัพย์สินทางปัญญาของบุคคลอื่น ในกรณีที่มีการฝ่าฝืน บริษัทฯ มีดุลพินิจในการระงับการใช้งานและยกเลิกบัญชีผู้ใช้งานของท่านได้ ซึ่งดุลพินิจของบริษัทฯ ย่อมถือเป็นที่สุด",
+      intellectualPropertyContent4:
+        "บริษัทฯ ไม่อนุญาตและไม่สนับสนุนการกระทำใด ๆ อันมีพฤติการณ์หรือลักษณะเป็นการลิขสิทธิ์หรือทรัพย์สินทางปัญญาของบุคคลอื่น ในกรณีที่ท่านฝ่าฝืน ท่านตกลงรับผิดใช้ค่าสินไหมทดแทนแก่เจ้าของลิขสิทธิ์หรือทรัพย์สินทางปัญญาของผู้นั้นแต่เพียงลำพัง",
       privacyPolicyTitle: "นโยบายความเป็นส่วนตัว",
-      privacyPolicyContent1: "บริษัทฯ ให้ความสำคัญและตระหนักถึงการคุ้มครองความปลอดภัยของข้อมูลส่วนบุคคลของท่านตามกฎหมาย โดยท่านสามารถศึกษานโยบายความเป็นส่วนตัวได้ที่",
+      privacyPolicyContent1:
+        "บริษัทฯ ให้ความสำคัญและตระหนักถึงการคุ้มครองความปลอดภัยของข้อมูลส่วนบุคคลของท่านตามกฎหมาย โดยท่านสามารถศึกษานโยบายความเป็นส่วนตัวได้ที่",
       privacyPolicyLinkText: "https://fastwork.co/privacy",
-      privacyPolicyContent2: "ซึ่งนโยบายความเป็นส่วนตัวนี้ถือเป็นส่วนหนึ่งของข้อตกลงการใช้งานฉบับนี้ด้วย",
-      privacyPolicyContent3: "เพื่อคุ้มครองข้อมูลส่วนบุคคลของผู้ใช้งาน ข้อมูลส่วนบุคคลของผู้ใช้งานจะถือเป็นข้อมูลที่เป็นความลับ และจะถูกประมวลผลตามวัตถุประสงค์ของการเก็บรวบรวมตามข้อตกลงการใช้งานฉบับนี้และกฎหมายเท่านั้น บริษัทฯ จะไม่ประมวลผลข้อมูลส่วนบุคคลของท่านนอกเหนือจากข้อกำหนดดังกล่าวเว้นแต่จะได้รับการยินยอมจากท่านหรือมีอำนาจตามกฎหมาย",
-      privacyPolicyContent4: "บริษัทฯ อาจเข้าถึงพูดคุยของผู้ว่าจ้างและฟรีแลนซ์เพื่อควบคุมไม่ให้มีการใช้บริการแพลตฟอร์มที่ฝ่าฝืนกับข้อตกลงการใช้งาน โดยเฉพาะอย่างยิ่ง เรื่องการติดต่อ อาทิ การชักจูงหรือจูงใจให้มีการติดต่อเพื่อจ้างงานนอกแพลตฟอร์ม การติดต่อสอบถามหรือส่งมอบงานเพิ่มเติมในช่องทางอื่นนอกเหนือจากแพลตฟอร์ม เป็นต้น รวมถึงเพื่อระงับข้อพิพาทระหว่างผู้ใช้งาน เพื่อตรวจสอบกรณีมีข้อสงสัยเรื่องการกระทำที่ทุจริต ผิดกฎหมาย หรือขัดต่อความสงบเรียบร้อยหรือศีลธรรมอันดีของประชาชนผ่านแพลตฟอร์ม ฯลฯ การที่ท่านสมัครใช้บริการแพลตฟอร์มย่อมถือเป็นการยอมรับข้อกำหนดของข้อตกลงการใช้งาน ซึ่งบริษัทฯ มีอำนาจตามสัญญา ประโยชน์โดยชอบธรรม ตลอดจนความยินยอมของท่านในการเข้าถึงข้อมูลส่วนบุคคลดังกล่าว",
-      privacyPolicyContent5: "ท่านตกลงและยินยอมให้บริษัทฯ มีสิทธิที่นำเนื้อหาต่าง ๆ ที่ผู้ใช้งานเผยแพร่บนแพลตฟอร์ม อาทิ ข้อความ รูปภาพ วีดีโอ ชื่อบัญชี ผลงาน หรือข้อมูลอื่นใด เพื่อนำไปเผยแพร่เพื่อวัตถุประสงค์ของการประชาสัมพันธ์ทางการตลาด",
+      privacyPolicyContent2:
+        "ซึ่งนโยบายความเป็นส่วนตัวนี้ถือเป็นส่วนหนึ่งของข้อตกลงการใช้งานฉบับนี้ด้วย",
+      privacyPolicyContent3:
+        "เพื่อคุ้มครองข้อมูลส่วนบุคคลของผู้ใช้งาน ข้อมูลส่วนบุคคลของผู้ใช้งานจะถือเป็นข้อมูลที่เป็นความลับ และจะถูกประมวลผลตามวัตถุประสงค์ของการเก็บรวบรวมตามข้อตกลงการใช้งานฉบับนี้และกฎหมายเท่านั้น บริษัทฯ จะไม่ประมวลผลข้อมูลส่วนบุคคลของท่านนอกเหนือจากข้อกำหนดดังกล่าวเว้นแต่จะได้รับการยินยอมจากท่านหรือมีอำนาจตามกฎหมาย",
+      privacyPolicyContent4:
+        "บริษัทฯ อาจเข้าถึงพูดคุยของผู้ว่าจ้างและฟรีแลนซ์เพื่อควบคุมไม่ให้มีการใช้บริการแพลตฟอร์มที่ฝ่าฝืนกับข้อตกลงการใช้งาน โดยเฉพาะอย่างยิ่ง เรื่องการติดต่อ อาทิ การชักจูงหรือจูงใจให้มีการติดต่อเพื่อจ้างงานนอกแพลตฟอร์ม การติดต่อสอบถามหรือส่งมอบงานเพิ่มเติมในช่องทางอื่นนอกเหนือจากแพลตฟอร์ม เป็นต้น รวมถึงเพื่อระงับข้อพิพาทระหว่างผู้ใช้งาน เพื่อตรวจสอบกรณีมีข้อสงสัยเรื่องการกระทำที่ทุจริต ผิดกฎหมาย หรือขัดต่อความสงบเรียบร้อยหรือศีลธรรมอันดีของประชาชนผ่านแพลตฟอร์ม ฯลฯ การที่ท่านสมัครใช้บริการแพลตฟอร์มย่อมถือเป็นการยอมรับข้อกำหนดของข้อตกลงการใช้งาน ซึ่งบริษัทฯ มีอำนาจตามสัญญา ประโยชน์โดยชอบธรรม ตลอดจนความยินยอมของท่านในการเข้าถึงข้อมูลส่วนบุคคลดังกล่าว",
+      privacyPolicyContent5:
+        "ท่านตกลงและยินยอมให้บริษัทฯ มีสิทธิที่นำเนื้อหาต่าง ๆ ที่ผู้ใช้งานเผยแพร่บนแพลตฟอร์ม อาทิ ข้อความ รูปภาพ วีดีโอ ชื่อบัญชี ผลงาน หรือข้อมูลอื่นใด เพื่อนำไปเผยแพร่เพื่อวัตถุประสงค์ของการประชาสัมพันธ์ทางการตลาด",
       contactInfoTitle: "รายละเอียดการติดต่อ",
-      contactInfoContent1: "ในกรณีที่ท่านต้องการสอบถามข้อมูลเกี่ยวกับข้อตกลงการใช้งานฉบับนี้ รวมถึงขอใช้สิทธิตามข้อกำหนดต่อบริษัทฯ ท่านสามารถติดต่อบริษัทฯ ในวัน-เวลาทำการ (จันทร์-ศุกร์ 9.30-11.30น. และ 13.00-16.00น. หยุด เสาร์-อาทิตย์ และวันหยุดนักขัตฤกษ์) ได้ผ่านรายละเอียดดังนี้",
-      contactInfoCompanyName: "ชื่อบริษัทฯ บริษัท ฟาสต์เวิร์ค เทคโนโลยีส์ จำกัด",
-      contactInfoAddress: "ที่อยู่ เลขที่ 622 อาคารเอ็มโพเรียม ทาวเวอร์ ชั้นที่ 24/1-3,8 ถนนสุขุมวิท แขวงคลองตัน เขตคลองเตย กรุงเทพมหานคร 10110",
+      contactInfoContent1:
+        "ในกรณีที่ท่านต้องการสอบถามข้อมูลเกี่ยวกับข้อตกลงการใช้งานฉบับนี้ รวมถึงขอใช้สิทธิตามข้อกำหนดต่อบริษัทฯ ท่านสามารถติดต่อบริษัทฯ ในวัน-เวลาทำการ (จันทร์-ศุกร์ 9.30-11.30น. และ 13.00-16.00น. หยุด เสาร์-อาทิตย์ และวันหยุดนักขัตฤกษ์) ได้ผ่านรายละเอียดดังนี้",
+      contactInfoCompanyName:
+        "ชื่อบริษัทฯ บริษัท ฟาสต์เวิร์ค เทคโนโลยีส์ จำกัด",
+      contactInfoAddress:
+        "ที่อยู่ เลขที่ 622 อาคารเอ็มโพเรียม ทาวเวอร์ ชั้นที่ 24/1-3,8 ถนนสุขุมวิท แขวงคลองตัน เขตคลองเตย กรุงเทพมหานคร 10110",
       contactInfoEmail: "support@ibrowe.com",
       contactInfoPhone: "เบอร์โทรศัพท์ 02-114-7008",
-      contactInfoWebsiteLinkText: "https://static.fastwork.co/contents/support-center"
+      contactInfoWebsiteLinkText:
+        "https://static.fastwork.co/contents/support-center",
     },
     userEdit: {
       addInfo: "เพิ่มข้อมูล",
@@ -2322,7 +2721,36 @@ export const th = {
       startYear: "ปีเริ่มต้น",
       userEditHeading: "แก้ไขข้อมูลฟรีแลนซ์",
       viewProfile: "ดูโปรไฟล์ของคุณ",
-      workExperience: "ประสบการณ์ทำงาน"
-    }
-  }
+      workExperience: "ประสบการณ์ทำงาน",
+    },
+    uploadInstruction: {
+      uploadInstruction: "อัปโหลดรูปโปรไฟล์ของคุณ",
+      title: "ภาพโปรไฟล์",
+      selectImage: "เลือกรูปภาพ",
+      uploadError: "เกิดข้อผิดพลาดในการอัปโหลดภาพ กรุณาลองใหม่อีกครั้ง",
+    },
+    accountManage: {
+      title: "การจัดการบัญชี",
+      description: "ตั้งค่าข้อมูลบัญชีและความปลอดภัย",
+      totpTitle: "การยืนยันตัวตนแบบสองชั้น (TOTP)",
+      totpDescription:
+        "เพิ่มความปลอดภัยอีกขั้นโดยใช้แอปยืนยันตัวตนที่รองรับ TOTP",
+      totpEnabled: "เปิดใช้งาน",
+      totpDisabled: "ปิดใช้งาน",
+      totpStatus: "สถานะ",
+      totpSuccessEnable: "เปิดใช้งานการยืนยันตัวตนแบบสองชั้นแล้ว",
+      totpSuccessDisable: "ปิดใช้งานการยืนยันตัวตนแบบสองชั้นแล้ว",
+      totpIncorrectCode: "รหัส TOTP ไม่ถูกต้อง",
+      totpError: "เกิดข้อผิดพลาดในการอัปเดต TOTP",
+      totpUnexpectedError: "เกิดข้อผิดพลาดที่ไม่คาดคิด",
+      passwordTitle: "ตั้งรหัสผ่าน",
+      passwordDescription:
+        "ตั้งรหัสผ่านที่รัดกุมเพื่อป้องกันการเข้าถึงโดยไม่ได้รับอนุญาต",
+      passwordButton: "ตั้งรหัสผ่าน",
+      deleteTitle: "ลบบัญชี",
+      deleteDescription:
+        "การลบบัญชีเป็นแบบถาวร คุณจะไม่สามารถกู้คืนข้อมูลใด ๆ ได้",
+      deleteButton: "ลบบัญชี",
+    },
+  },
 };
