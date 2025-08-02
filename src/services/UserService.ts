@@ -6,6 +6,7 @@ import {amAdmin} from "@/utils/roles";
 import {HttpService} from "./index";
 import {toast} from "sonner";
 import {authCookieName} from "@/utils/config";
+import {VALID_LANGUAGES} from "@/constants/language";
 
 interface Claims {
   sub: number;
@@ -62,7 +63,13 @@ export class UserService {
         toast("loggedIn");
       }
       this.#setAuthInfo({sharedKey});
-      setAuthCookie(res.jwt, this.getLanguage);
+      setAuthCookie(res.jwt);
+
+      if (!VALID_LANGUAGES.includes(this.currentLanguage)) return;
+      document.cookie = `current-language=${this.currentLanguage}; path=/`;
+      const cleanPath = window.location.pathname.replace(/^\/(vi|en|th)/, "");
+      window.location.pathname = `/${this.currentLanguage}${cleanPath}`;
+
     } else {
       this.#setAuthInfo({rawCookie: res.toString()});
     }

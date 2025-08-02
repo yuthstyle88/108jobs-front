@@ -15,12 +15,6 @@ export function clearAuthCookie() {
       sameSite: "lax",
       path: "/",
     });
-  document.cookie = cookie.serialize("current-language",  "",
-    {
-      maxAge: -1,
-      sameSite: "lax",
-      path: "/",
-    });
 }
 
 export function dataBsTheme(
@@ -116,7 +110,7 @@ export function refreshTheme() {
   }
 }
 
-export function setAuthCookie(jwt: string, language?: string) {
+export function setAuthCookie(jwt: string) {
   document.cookie = cookie.serialize(authCookieName,
     jwt,
     {
@@ -125,15 +119,6 @@ export function setAuthCookie(jwt: string, language?: string) {
       sameSite: "lax",
       path: "/",
     });
-  if (language) {
-    document.cookie = cookie.serialize("current-language", language, {
-      maxAge: 365 * 24 * 60 * 60,
-      secure: isHttps(),
-      sameSite: "lax",
-      path: "/",
-    });
-  }
-
 }
 
 export async function setThemeOverride(theme?: string) {
