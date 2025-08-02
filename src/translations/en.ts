@@ -2309,6 +2309,12 @@ export const en = {
       userEditHeading: "Edit Freelancer information",
       viewProfile: "View your profile",
       workExperience: "Work experience"
+    },
+    uploadInstruction:{
+      uploadInstruction: "Upload your profile picture",
+      title: "Profile picture",
+      selectImage: "Choose image",
+      uploadError: "An error occurred while uploading the image. Please try again",
     }
   }
 };
