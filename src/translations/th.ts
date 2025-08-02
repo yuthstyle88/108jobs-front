@@ -2323,6 +2323,12 @@ export const th = {
       userEditHeading: "แก้ไขข้อมูลฟรีแลนซ์",
       viewProfile: "ดูโปรไฟล์ของคุณ",
       workExperience: "ประสบการณ์ทำงาน"
+    },
+    uploadInstruction:{
+      uploadInstruction: "อัปโหลดรูปโปรไฟล์ของคุณ",
+      title: "ภาพโปรไฟล์",
+      selectImage: "เลือกรูปภาพ",
+      uploadError: "เกิดข้อผิดพลาดในการอัปโหลดภาพ กรุณาลองใหม่อีกครั้ง",
     }
   }
 };

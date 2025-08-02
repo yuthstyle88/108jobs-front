@@ -1,14 +1,12 @@
-import {isBrowser} from "@/utils/browser";
-import {testHost} from "@/utils/config";
+import { isBrowser } from "@/utils/browser";
+import { testHost } from "@/utils/config";
 
 export function getBaseLocal(s = "") {
   return `http${s}://${getHost()}`;
 }
 
 export function getExternalHost() {
-  return isBrowser()
-    ? (window.isoData?.lemmyExternalHost ?? "")
-    : (process.env.LEMMY_UI_LEMMY_EXTERNAL_HOST ?? testHost);
+  return process.env.NEXT_PUBLIC_LEMMY_EXTERNAL_HOST;
 }
 
 export function getHost() {
@@ -34,13 +32,7 @@ export function getInternalHost() {
 }
 
 export function getSecure() {
-  return (
-    isBrowser()
-      ? window.location.protocol.includes("https")
-      : process.env.LEMMY_UI_HTTPS === "true"
-  )
-    ? "s"
-    : "";
+  return "s"
 }
 
 /**
@@ -55,7 +47,7 @@ export function getStaticDir() {
  * This is for html tags, don't include port
  */
 export function httpExternalPath(path: string) {
-  return `http${getSecure()}://${getExternalHost().replace(
+  return `http${getSecure()}://${getExternalHost()?.replace(
     /:\d+/g,
     "",
   )}${path}`;

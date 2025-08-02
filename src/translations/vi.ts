@@ -2317,6 +2317,12 @@ export const vi = {
       userEditHeading: "Chỉnh sửa thông tin Freelancer",
       viewProfile: "Xem hồ sơ của bạn",
       workExperience: "Kinh nghiệm làm việc"
+    },
+    uploadInstruction:{
+      uploadInstruction: "Tải lên ảnh đại diện của bạn",
+      title: "Ảnh đại diện",
+      selectImage: "Chọn hình ảnh",
+      uploadError: "Đã xảy ra lỗi khi tải ảnh lên, vui lòng thử lại.",
     }
   }
 };
