@@ -83,12 +83,7 @@ export class UserService {
     if (isBrowser()) {
       window.caches?.delete?.("instance-cache");
     }
-
-    if (isAuthPath(location.pathname)) {
-      location.replace("/");
-    } else {
-      location.reload();
-    }
+    location.replace("/");
   }
 
   public auth(throwErr = false): string | undefined {

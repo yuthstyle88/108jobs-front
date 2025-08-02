@@ -57,15 +57,11 @@ const logger = {
 
     // Development mode only - provide detailed error information
     if (!err) {
-      console.warn(prefix);
+      console.error(prefix);
       return;
     }
-
     const detail = err instanceof Error ? err.message.trim() : String(err).trim();
-    console.warn(
-      detail ? `${prefix}: ${detail}` : prefix,
-      err,
-    );
+    console.error(detail ? `${prefix}: ${detail}` : prefix, err);
   }
 };
 
