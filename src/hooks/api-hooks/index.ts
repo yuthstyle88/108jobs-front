@@ -1,4 +1,4 @@
-import {axiosFileUpload, axiosPrivate, axiosPublic, axiosPublicV2,} from "./../../lib/axios";
+import {axiosFileUpload, axiosPrivate, axiosPublic, axiosPublicV2,} from "@/lib/axios";
 import type {AxiosError} from "axios";
 import useSWR, {SWRConfiguration} from "swr";
 import useSWRMutation from "swr/mutation";

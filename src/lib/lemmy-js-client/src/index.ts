@@ -354,7 +354,6 @@ export type {Card} from "./types/Card";
 export type {Coin} from "./types/Coin";
 export type {Contact} from "./types/Contact";
 export type {SaveUserProfile} from "./types/SaveUserProfile";
-export type {ProfileShow} from "./types/ProfileShow";
 export type {Education} from "./types/Education";
 export type {WorkExperience} from "./types/WorkExperience";
 export type {Skill} from "./types/Skill";

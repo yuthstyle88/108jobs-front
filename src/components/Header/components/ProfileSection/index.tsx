@@ -19,7 +19,7 @@ import {UserService} from "@/services";
 import {useTranslation} from "react-i18next";
 
 type ProfileSectionProps = {
-  profile: Person | null;
+  profile: Person;
 };
 
 const ProfileSection = ({profile}: ProfileSectionProps) => {
@@ -40,7 +40,7 @@ const ProfileSection = ({profile}: ProfileSectionProps) => {
               />
             </div>
             <div>
-              <p className="font-medium text-gray-900">{profile?.name}</p>
+              <p className="font-medium text-gray-900">{profile.name}</p>
               <p className="text-sm font-sans text-text-secondary underline">
                 {t("global.labelViewProfile")}
               </p>

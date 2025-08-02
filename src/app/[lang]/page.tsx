@@ -25,7 +25,6 @@ import IntroductionSection from "@/components/Home/IntroductionSection";
 import OfferSection from "@/components/Home/OfferSection";
 import RecommendAndReview from "@/components/Home/RecommendAndReview";
 import Loading from "@/components/Loading";
-import LocationSelectionModal from "@/components/LocationSelectionModal";
 import SearchInput from "@/components/SearchInput";
 import {LandingImage} from "@/constants/images";
 import SpAdsSlider from "@/containers/SpAdsSlider";
@@ -67,12 +66,10 @@ const CustomNavigation = () => {
 };
 
 export default function Home() {
-  const {isLoggedIn} = useAuthInfo();
   const {t} = useTranslation();
 
   const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
   const [expanded, setExpanded] = useState(false);
-  const [isOpenLocationSelection, setIsOpenLocationSelection] = useState(false);
 
   const {
     data: catalogData,
@@ -344,14 +341,6 @@ export default function Home() {
         </div>
       </div>
       <Footer/>
-      {isLoggedIn && (
-        <LocationSelectionModal
-          isOpen={isOpenLocationSelection}
-          onClose={() => setIsOpenLocationSelection(false)}
-          onOpen={() => setIsOpenLocationSelection(true)}
-          handleConfirmChange={() => setIsOpenLocationSelection(false)}
-        />
-      )}
     </div>
   );
 }

@@ -28,7 +28,6 @@ export async function generateMetadata() {
     {lang: "th"});
 }
 
-
 export default async function RootLayout({
   children,
   params,
@@ -42,8 +41,7 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const cookieLang = cookieStore.get("current-language")?.value;
   const userLang = isoData?.myUserInfo?.localUserView?.localUser?.interfaceLanguage;
-  const initialLang = userLang || lang || cookieLang;
-
+  const initialLang = lang || userLang || cookieLang;
   return (
     <html lang={initialLang} suppressHydrationWarning>
     <head>

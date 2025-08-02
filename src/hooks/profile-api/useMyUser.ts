@@ -1,15 +1,15 @@
 import {IsoData} from "@/utils/types";
 import {isBrowser} from "@/utils/browser";
-import {MyUserInfo} from "lemmy-js-client";
 import {REQUEST_STATE} from "@/services/HttpService";
+import {assertExists} from "@/utils/helpers";
 
 /**
  * ดึง IsoData จาก window (เฉพาะฝั่งเบราว์เซอร์เท่านั้น)
  * หากรันบน SSR ให้คืนค่า null
  */
 function getIsoData(): IsoData | null {
-  if (isBrowser() && (window as any).isoData) {
-    return (window as any).isoData as IsoData;
+  if (isBrowser() && typeof window !== "undefined" && "isoData" in window) {
+    return (window as { isoData: IsoData }).isoData;
   }
   return null;
 }
@@ -19,12 +19,12 @@ function getIsoData(): IsoData | null {
  */
 export const useMyUser = () => {
   const isoData = getIsoData();
-  const user: MyUserInfo = isoData?.myUserInfo!;
+  const user = assertExists(isoData?.myUserInfo, "Missing myUserInfo");
   const profileState = REQUEST_STATE.SUCCESS;
   return {
     profileState,
-    person: user?.localUserView?.person!,
-    localUser: user?.localUserView?.localUser!,
+    person: assertExists(user.localUserView.person, "Missing person"),
+    localUser: assertExists(user.localUserView.localUser, "Missing localUser"),
     contact: user?.profile?.contact || null,
     address: user?.profile?.address || null,
     card: user?.profile?.card || null,

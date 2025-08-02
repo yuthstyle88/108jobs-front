@@ -484,3 +484,8 @@ export function stripEmpty<T extends object>(obj: T): Partial<T> {
     )
   ) as Partial<T>;
 }
+
+export function assertExists<T>(value: T | null | undefined, message?: string): T {
+  if (value == null) throw new Error(message ?? "Expected value to be present but got null or undefined");
+  return value;
+}

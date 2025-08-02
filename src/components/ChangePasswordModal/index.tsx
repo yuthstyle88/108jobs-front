@@ -8,18 +8,19 @@ import {z} from "zod";
 import LoadingCircle from "../LoadingCircle";
 import {CustomInput} from "../ui/InputField";
 import Modal from "../ui/Modal";
+import { useTranslation } from "react-i18next";
 
 interface PasswordChangeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  languageData: Record<string, string>;
 }
 
 const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
   isOpen,
   onClose,
-  languageData,
 }) => {
+  const { t } = useTranslation();
+
   const schema = useMemo(() => {
       return z
       .object({
@@ -27,25 +28,23 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
         .string()
         .min(
           6,
-          languageData?.passwordMinLengthError ||
-          "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
+          t("profile.passwordMinLengthError")
         ),
         newPassword: z
         .string()
         .min(
           6,
-          languageData?.passwordMinLengthError ||
-          "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"
+          t("profile.passwordMinLengthError")
         ),
         confirmPassword: z.string(),
       })
       .refine((data) => data.newPassword === data.confirmPassword,
         {
-          message: languageData?.passwordMinLengthError || "รหัสผ่านไม่ตรงกัน",
+          message: t("profile.passwordMismatchError"),
           path: ["confirmPassword"],
         });
     },
-    [languageData]);
+    [t]);
 
   type ChangePasswordFormData = z.infer<typeof schema>;
 
@@ -110,7 +109,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
       setApiError(
         error instanceof Error
           ? error.message
-          : "มีข้อผิดพลาดในการเปลี่ยนรหัสผ่านของคุณ"
+          : t("profile.changePasswordError")
       );
     }
   };
@@ -119,39 +118,39 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={handleCloseModal}
-      title={languageData?.password}
+      title={t("profile.password")}
       className="max-w-md w-full"
       closeOnOutsideClick={false}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <CustomInput
-          label={languageData?.oldPassword}
+          label={t("profile.oldPassword")}
           name="oldPassword"
           type="password"
           register={register("oldPassword")}
           error={errors.oldPassword?.message}
-          placeholder={languageData?.passwordPlaceholder}
+          placeholder={t("profile.passwordPlaceholder")}
           showPassword={showOldPassword}
           toggleShowPassword={() => setShowOldPassword(!showOldPassword)}
         />
         <CustomInput
-          label={languageData?.newPassword}
+          label={t("profile.newPassword")}
           name="newPassword"
           type="password"
           register={register("newPassword")}
           error={errors.newPassword?.message}
-          placeholder={languageData?.passwordPlaceholder}
+          placeholder={t("profile.passwordPlaceholder")}
           showPassword={showNewPassword}
           toggleShowPassword={() => setShowNewPassword(!showNewPassword)}
         />
 
         <CustomInput
-          label={languageData?.confirmPasswordLabel}
+          label={t("profile.confirmPasswordLabel")}
           name="confirmPassword"
           type="password"
           register={register("confirmPassword")}
           error={errors.confirmPassword?.message}
-          placeholder={languageData?.passwordPlaceholder}
+          placeholder={t("profile.passwordPlaceholder")}
           showPassword={showConfirmPassword}
           toggleShowPassword={() =>
             setShowConfirmPassword(!showConfirmPassword)
@@ -169,7 +168,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
           disabled={isSubmitting}
           className="submit-button py-2"
         >
-          {isSubmitting ? <LoadingCircle/> : languageData?.submitButton}
+          {isSubmitting ? <LoadingCircle/> : t("profile.submitButton")}
         </button>
       </form>
     </Modal>

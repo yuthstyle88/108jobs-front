@@ -77,6 +77,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      config:
+        specifier: link:@/config
+        version: link:@/config
       cookie:
         specifier: ^1.0.2
         version: 1.0.2
@@ -3250,7 +3253,7 @@ packages:
       - npm-pick-manifest
       - npm-profile
       - npm-registry-fetch
-      - npm-profile-validate
+      - npm-user-validate
       - p-map
       - pacote
       - parse-conflict-json

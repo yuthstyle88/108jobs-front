@@ -1,12 +1,11 @@
-import {isAuthPath} from "@/utils/app";
 import {clearAuthCookie, isBrowser, setAuthCookie} from "@/utils/browser";
 import * as cookie from "cookie";
 import {jwtDecode} from "jwt-decode";
 import {LoginResponse, MyUserInfo} from "lemmy-js-client";
 import {amAdmin} from "@/utils/roles";
 import {HttpService} from "./index";
-import {authCookieName} from "@/config";
 import {toast} from "sonner";
+import {authCookieName} from "@/utils/config";
 
 interface Claims {
   sub: number;

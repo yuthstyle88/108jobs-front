@@ -2,9 +2,9 @@
 import type {IsoData, RouteData} from '@/utils/types';
 import type {GetSiteResponse} from 'lemmy-js-client';
 import fetchIsoData from '@/lib/api/fetchIsoData';
-import {testHost} from '@/config';
 import {IncomingHttpHeaders} from "http";
 import {headers} from "next/headers";
+import {testHost} from "@/utils/config";
 
 const defaultIsoData: IsoData = {
   path: '/',

@@ -27,8 +27,6 @@ const RewardHeader = () => {
   const currentLang = LANGUAGES[lang as keyof typeof LANGUAGES];
 
   const {person} = useMyUser();
-  console.log("sdfsdfsdfsd",person);
-
   return (
     <header className="sticky top-0 z-[999] w-full transition-all duration-300 bg-transparent">
       <nav className="mx-3 sm:mx-[1.5rem] flex items-center justify-between h-auto min-h-[70px] py-4 ">
