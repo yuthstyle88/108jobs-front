@@ -231,6 +231,7 @@ export const vi = {
       cPlusPlus: "C++"
     },
     authen: {
+      labelOrSignInWith: "Or sign in with",
       buttonCreateAccount: "Tạo tài khoản",
       buttonLoginFacebook: "Đăng nhập bằng tài khoản Facebook",
       buttonLoginGoogle: "Đăng nhập bằng tài khoản Google",
@@ -1485,6 +1486,7 @@ export const vi = {
       subtitleIndividualHiring: "Dùng để phát hành tài liệu tuyển dụng cá nhân"
     },
     profileInfo: {
+      accountInfo: "Account Information",
       buttonSetPassword: "Đặt mật khẩu",
       confirmPasswordLabel: "Xác nhận mật khẩu",
       confirmPasswordPlaceholder: "Xác nhận mật khẩu",

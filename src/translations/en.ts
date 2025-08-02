@@ -231,6 +231,7 @@ export const en = {
       cPlusPlus: "C++"
     },
     authen: {
+      labelOrSignInWith: "Or sign in with",
       buttonCreateAccount: "Create Account",
       buttonLoginFacebook: "Log in with your Facebook account",
       buttonLoginGoogle: "Sign in with your Google account",
@@ -1484,6 +1485,7 @@ export const en = {
       subtitleIndividualHiring: "For issuing documents related to personal hiring"
     },
     profileInfo: {
+      accountInfo: "Account Information",
       buttonSetPassword: "Set a password",
       confirmPasswordLabel: "Confirm Password",
       confirmPasswordPlaceholder: "Confirm password",

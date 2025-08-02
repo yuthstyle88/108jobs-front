@@ -231,6 +231,7 @@ export const th = {
       cPlusPlus: "C++"
     },
     authen: {
+      labelOrSignInWith: "เข้าสู่ระบบด้วยบัญชีโชเชียล",
       buttonCreateAccount: "สร้างบัญชี",
       buttonLoginFacebook: "เข้าสู่ระบบด้วยบัญชี Facebook",
       buttonLoginGoogle: "เข้าสู่ระบบด้วยบัญชี Google",
@@ -1491,6 +1492,7 @@ export const th = {
       subtitleIndividualHiring: "สำหรับออกเอกสาร การจ้างแบบบุคคลธรรมดา"
     },
     profileInfo: {
+      accountInfo: "ข้อมูลส่วนตัวเพื่อแนะนำตัวเอง",
       buttonSetPassword: "ตั้งค่ารหัสผ่าน",
       confirmPasswordLabel: "ยืนยันรหัสผ่าน",
       confirmPasswordPlaceholder: "ยืนยันรหัสผ่าน",
