@@ -9,6 +9,7 @@ export enum LanguageFile {
   COINS = "profileCoins",
   BASIC_INFO = "profileInfo",
   CONTACT = "profileContact",
+  MANAGE = "consentManage",
   INDIVIDUAL = "profileIndividual",
   COMPANY = "profileCompany",
   CHAT = "profileChat",

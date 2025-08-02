@@ -13,13 +13,14 @@ export const vi = {
     table_reference_design: "Dựa trên tham chiếu",
     table_edit_once: "Chỉnh sửa/Cải thiện một lần",
     table_edit_major: "Chỉnh sửa/Cải thiện lớn",
-    price_note_1: "*Giá niêm yết là giá khởi điểm. Giá có thể thay đổi tùy thuộc vào chi tiết công việc.",
+    price_note_1:
+      "*Giá niêm yết là giá khởi điểm. Giá có thể thay đổi tùy thuộc vào chi tiết công việc.",
     price_note_2: "**Giá có thể thay đổi theo sự phù hợp của công việc.",
     contact_section_title: "Bạn muốn chúng tôi giúp gì",
     copyright: "Bản quyền © 2024 Fastjob for Business.",
     hero_title: "fastwork for business",
     hero_subtitle: "Trợ lý tìm kiếm freelancer cho doanh nghiệp",
-    contact_us: "Liên hệ với chúng tôi"
+    contact_us: "Liên hệ với chúng tôi",
   },
   translation: {
     validation: {
@@ -27,7 +28,7 @@ export const vi = {
       jobTitleMinLength: "Tiêu đề công việc phải có ít nhất 5 ký tự",
       descriptionMinLength: "Mô tả công việc phải có ít nhất 20 ký tự",
       budgetPositive: "Ngân sách phải là số dương",
-      budgetRequired: "Cần phải có ngân sách"
+      budgetRequired: "Cần phải có ngân sách",
     },
     allCategories: {
       allJobCategories: "Tất cả danh mục công việc",
@@ -184,7 +185,8 @@ export const vi = {
       reviewWriting: "Viết đánh giá",
       socialMediaAdvertising: "Quảng cáo truyền thông mạng xã hội",
       blogger: "Blogger",
-      influencerMarketing: "Tiếp thị thông qua người ảnh hưởng có ảnh hưởng trên mạng xã hội",
+      influencerMarketing:
+        "Tiếp thị thông qua người ảnh hưởng có ảnh hưởng trên mạng xã hội",
       trackingAnalysis: "Theo dõi và phân tích",
       digitalMarketing: "Tiếp thị kỹ thuật số",
       communityManager: "Quản lý cộng đồng",
@@ -228,7 +230,7 @@ export const vi = {
       java: "Java",
       reactjs: "ReactJS",
       golang: "Golang",
-      cPlusPlus: "C++"
+      cPlusPlus: "C++",
     },
     authen: {
       labelOrSignInWith: "Or sign in with",
@@ -240,7 +242,8 @@ export const vi = {
       buttonVerifyEmail: "Xác minh email",
       changePasswordButton: "Đổi mật khẩu",
       changePasswordTitle: "Đổi Mật Khẩu",
-      checkboxEmailPromotion: "Tôi quan tâm nhận thông tin, ưu đãi và khuyến mãi qua email",
+      checkboxEmailPromotion:
+        "Tôi quan tâm nhận thông tin, ưu đãi và khuyến mãi qua email",
       checkboxPrivacyPolicyRedirect: "Chính sách Bảo mật",
       checkboxTermsConditions: "Tôi đã đọc và đồng ý với ",
       checkboxTermsConditionsRedirect: "Điều khoản Dịch vụ",
@@ -249,7 +252,8 @@ export const vi = {
       confirmPasswordPlaceholder: "Nhập lại mật khẩu",
       emailPhonePlaceholder: "Nhập email hoặc số điện thoại",
       emailPlaceholder: "Nhập email của bạn",
-      enterCodePrompt: "Vui lòng nhập mã xác nhận để tiếp tục đặt lại mật khẩu.",
+      enterCodePrompt:
+        "Vui lòng nhập mã xác nhận để tiếp tục đặt lại mật khẩu.",
       errorEmailInvalid: "Vui lòng nhập email hợp lệ",
       errorPasswordLength: "Mật khẩu phải có ít nhất 6 ký tự",
       errorPhoneLength: "Số điện thoại phải có ít nhất 10 chữ số",
@@ -269,11 +273,13 @@ export const vi = {
       labelUsernameOrEmail: "Tên người dùng hoặc email",
       linkCreateAccount: "Tạo tài khoản",
       linkForgotPassword: "Quên mật khẩu?",
-      messageEnterCode: "Vui lòng nhập mã để kích hoạt tài khoản của bạn. (Nếu không thấy, hãy kiểm tra thư mục Spam và Junk)",
+      messageEnterCode:
+        "Vui lòng nhập mã để kích hoạt tài khoản của bạn. (Nếu không thấy, hãy kiểm tra thư mục Spam và Junk)",
       messageVerificationSent: "Mã xác minh đã được gửi đến email",
       passwordLabel: "Mật khẩu",
       passwordPlaceholder: "Nhập mật khẩu",
-      passwordRequirements: "Tạo mật khẩu mới. Mật khẩu phải có ít nhất 8 ký tự và bao gồm cả chữ cái và số.",
+      passwordRequirements:
+        "Tạo mật khẩu mới. Mật khẩu phải có ít nhất 8 ký tự và bao gồm cả chữ cái và số.",
       placeholderConfirmPassword: "Xác nhận mật khẩu",
       placeholderEmail: "Nhập email",
       placeholderEmailPhone: "Nhập email hoặc số điện thoại",
@@ -292,9 +298,12 @@ export const vi = {
       titleLoginCreateAccount: "Đăng nhập / Tạo tài khoản",
       titleVerifyEmail: "Xác minh email",
       notFound: "Tên người dùng hoặc email không tồn tại",
-      verificationForgotMessage: "Mã xác nhận đã được gửi đến email/số điện thoại của bạn.",
-      verificationMessage: "Fastwork sẽ gửi mã xác nhận đến email/số điện thoại của bạn để xác minh quyền sở hữu tài khoản.",
-      pleaseEnterEmailOrUsernameMin6: "Vui lòng nhập email hoặc tên người dùng có ít nhất 6 ký tự",
+      verificationForgotMessage:
+        "Mã xác nhận đã được gửi đến email/số điện thoại của bạn.",
+      verificationMessage:
+        "Fastwork sẽ gửi mã xác nhận đến email/số điện thoại của bạn để xác minh quyền sở hữu tài khoản.",
+      pleaseEnterEmailOrUsernameMin6:
+        "Vui lòng nhập email hoặc tên người dùng có ít nhất 6 ký tự",
       usernameMax32: "Tên người dùng không được vượt quá 32 ký tự",
       passwordMin6: "Mật khẩu phải có ít nhất 6 ký tự",
       placeholderCaptchaAnswer: "Nhập câu trả lời captcha",
@@ -318,7 +327,7 @@ export const vi = {
       emailAlreadyExists: "Email đã tồn tại",
       invalidName: "Tên người dùng không hợp lệ",
       titleSignInCreateAccount: "Đăng nhập FastJob",
-      userNotFound: "Tên người dùng hoặc email không tồn tại"
+      userNotFound: "Tên người dùng hoặc email không tồn tại",
     },
     breadcrumb: {
       accountSettingsBreadcrumb: "Cài đặt tài khoản",
@@ -327,7 +336,7 @@ export const vi = {
       contactInfoBreadcrumb: "Thông tin liên lạc",
       freelancerInforBreadcrumb: "Thông tin Freelancer",
       idCardInformationBreadcrumb: "Thông tin CMND/CCCD",
-      sellerCenterBreadcrumb: "Trung tâm freelancer"
+      sellerCenterBreadcrumb: "Trung tâm freelancer",
     },
     categoryFooter: {
       seoTitle: "Dịch vụ SEO",
@@ -338,49 +347,74 @@ export const vi = {
       seoLinksFacebook: "SEO Facebook",
       seoLinksAudit: "SEO Audit",
       seoLinksMonthly: "SEO hàng tháng",
-      seoDescription2Part1: "Chất lượng giúp website của bạn hiển thị ở vị trí hàng đầu trên Google, tăng cơ hội được truy cập và nhận diện thương hiệu. Tại Fastjob.co, chúng tôi có các freelancer chuyên môn cao trong việc ",
+      seoDescription2Part1:
+        "Chất lượng giúp website của bạn hiển thị ở vị trí hàng đầu trên Google, tăng cơ hội được truy cập và nhận diện thương hiệu. Tại Fastjob.co, chúng tôi có các freelancer chuyên môn cao trong việc ",
       seoDescription2Strong1: "cung cấp dịch vụ SEO mũ trắng",
-      seoDescription2Middle: " giúp website của bạn lên top Google một cách ổn định và hiệu quả, bao gồm ",
+      seoDescription2Middle:
+        " giúp website của bạn lên top Google một cách ổn định và hiệu quả, bao gồm ",
       seoDescription2Strong2: "SEO On-page, SEO Off-page, Backlink",
-      seoDescription2Part2: " cùng với tư vấn chiến lược SEO đúng chuẩn, giúp doanh nghiệp bạn dễ dàng được biết đến hơn.",
-      seoDescription3Part1: "SEO (Search Engine Optimization) là quá trình đưa website của bạn lên trang kết quả tìm kiếm của các công cụ tìm kiếm bằng từ khóa hoặc cụm từ liên quan đến lĩnh vực kinh doanh của bạn. Lợi ích của việc ",
+      seoDescription2Part2:
+        " cùng với tư vấn chiến lược SEO đúng chuẩn, giúp doanh nghiệp bạn dễ dàng được biết đến hơn.",
+      seoDescription3Part1:
+        "SEO (Search Engine Optimization) là quá trình đưa website của bạn lên trang kết quả tìm kiếm của các công cụ tìm kiếm bằng từ khóa hoặc cụm từ liên quan đến lĩnh vực kinh doanh của bạn. Lợi ích của việc ",
       seoDescription3Strong1: "thuê dịch vụ SEO",
-      seoDescription3Middle1: " là giúp tăng lượt truy cập và độ nhận diện cho website. Khi website hiển thị ở trang đầu của Google, khả năng người dùng nhấp vào sẽ cao hơn, tiếp cận đúng đối tượng mục tiêu. Việc ",
+      seoDescription3Middle1:
+        " là giúp tăng lượt truy cập và độ nhận diện cho website. Khi website hiển thị ở trang đầu của Google, khả năng người dùng nhấp vào sẽ cao hơn, tiếp cận đúng đối tượng mục tiêu. Việc ",
       seoDescription3Strong2: "thuê SEO mũ trắng",
-      seoDescription3Part2: " giúp bạn tiết kiệm chi phí quảng cáo, là một lựa chọn hiệu quả để xây dựng thương hiệu. Ngoài ra, SEO còn giúp website tăng độ uy tín. Thời gian để lên top không cố định, phụ thuộc vào ngành và độ cạnh tranh từ khóa. Tuy nhiên, nếu thực hiện đúng phương pháp theo tiêu chuẩn của Google, khả năng lên top sẽ rất cao.",
+      seoDescription3Part2:
+        " giúp bạn tiết kiệm chi phí quảng cáo, là một lựa chọn hiệu quả để xây dựng thương hiệu. Ngoài ra, SEO còn giúp website tăng độ uy tín. Thời gian để lên top không cố định, phụ thuộc vào ngành và độ cạnh tranh từ khóa. Tuy nhiên, nếu thực hiện đúng phương pháp theo tiêu chuẩn của Google, khả năng lên top sẽ rất cao.",
       seoPrinciplesTitle: "Nguyên tắc cơ bản cho dịch vụ SEO mũ trắng",
       seoPrinciples0: "Chọn tên miền liên quan đến sản phẩm hoặc lĩnh vực.",
-      seoPrinciples1: "Cập nhật thường xuyên nội dung hấp dẫn và liên quan đến từ khóa SEO.",
-      seoPrinciples2: "Thiết kế website thân thiện với người dùng, tối ưu trải nghiệm và thời gian truy cập.",
-      seoPrinciples3: "Tối ưu thẻ Meta (Từ khóa, Mô tả, Tiêu đề) tương ứng với nội dung.",
-      seoPrinciples4: "Tăng số lượng backlink chất lượng để nâng cao uy tín nội dung.",
-      seoConclusionPart1: "Chi tiết về SEO không cố định và thay đổi thường xuyên. Do đó, bạn cần cập nhật nguyên tắc SEO liên tục. Nếu bạn chưa có kinh nghiệm, kỹ năng hay kiến thức, có thể thuê freelancer chuyên SEO để bắt đầu dễ dàng hơn. Fastjob.co đã tập hợp các freelancer SEO chuyên nghiệp với ",
+      seoPrinciples1:
+        "Cập nhật thường xuyên nội dung hấp dẫn và liên quan đến từ khóa SEO.",
+      seoPrinciples2:
+        "Thiết kế website thân thiện với người dùng, tối ưu trải nghiệm và thời gian truy cập.",
+      seoPrinciples3:
+        "Tối ưu thẻ Meta (Từ khóa, Mô tả, Tiêu đề) tương ứng với nội dung.",
+      seoPrinciples4:
+        "Tăng số lượng backlink chất lượng để nâng cao uy tín nội dung.",
+      seoConclusionPart1:
+        "Chi tiết về SEO không cố định và thay đổi thường xuyên. Do đó, bạn cần cập nhật nguyên tắc SEO liên tục. Nếu bạn chưa có kinh nghiệm, kỹ năng hay kiến thức, có thể thuê freelancer chuyên SEO để bắt đầu dễ dàng hơn. Fastjob.co đã tập hợp các freelancer SEO chuyên nghiệp với ",
       seoConclusionStrong1: "dịch vụ SEO thuê ngoài, SEO mũ trắng",
-      seoConclusionMiddle: " theo mọi yêu cầu của khách hàng. Dịch vụ SEO giá rẻ, giúp tiết kiệm chi phí kinh doanh nhưng vẫn đảm bảo hiệu quả theo mục tiêu mong muốn ",
-      seoConclusionStrong2: "SEO WordPress, SEO Facebook, SEO On-page, SEO Off-page, Backlink",
-      seoConclusionPart2: " và các loại khác. Có thể kiểm tra kết quả, dễ dàng lên top.",
+      seoConclusionMiddle:
+        " theo mọi yêu cầu của khách hàng. Dịch vụ SEO giá rẻ, giúp tiết kiệm chi phí kinh doanh nhưng vẫn đảm bảo hiệu quả theo mục tiêu mong muốn ",
+      seoConclusionStrong2:
+        "SEO WordPress, SEO Facebook, SEO On-page, SEO Off-page, Backlink",
+      seoConclusionPart2:
+        " và các loại khác. Có thể kiểm tra kết quả, dễ dàng lên top.",
       howToHireTitle: "Cách thuê freelancer SEO trên Fastwork",
-      howToHireSteps0: "Tìm freelancer phù hợp dựa trên hồ sơ, kỹ năng và đánh giá.",
-      howToHireSteps1: "Trao đổi chi tiết dự án, freelancer sẽ gửi báo giá để bạn xem xét.",
-      howToHireSteps2: "Thanh toán qua Fastjob bằng thẻ tín dụng, ngân hàng di động hoặc Fastjob coin.",
-      howToHireSteps3: "Xem xét và duyệt kết quả cuối cùng. Nếu chưa hài lòng, bạn có thể yêu cầu chỉnh sửa."
+      howToHireSteps0:
+        "Tìm freelancer phù hợp dựa trên hồ sơ, kỹ năng và đánh giá.",
+      howToHireSteps1:
+        "Trao đổi chi tiết dự án, freelancer sẽ gửi báo giá để bạn xem xét.",
+      howToHireSteps2:
+        "Thanh toán qua Fastjob bằng thẻ tín dụng, ngân hàng di động hoặc Fastjob coin.",
+      howToHireSteps3:
+        "Xem xét và duyệt kết quả cuối cùng. Nếu chưa hài lòng, bạn có thể yêu cầu chỉnh sửa.",
     },
     commission: {
       header: "Phí dịch vụ dựa trên thu nhập tích lũy",
       subheader: "Phí dịch vụ Fastwork theo cấp độ",
       allContentTitle: "Tất cả nội dung",
-      allContentWhatIsFeeBasedOnAccumulatedIncome: "Phí dịch vụ dựa trên thu nhập tích lũy là gì?",
+      allContentWhatIsFeeBasedOnAccumulatedIncome:
+        "Phí dịch vụ dựa trên thu nhập tích lũy là gì?",
       allContentHowIsFeeCalculated: "Phí dịch vụ được tính như thế nào?",
-      allContentExample1Title: "Ví dụ 1: Khi ở cấp độ dự án được phê duyệt trong tình hình tài chính hiện tại",
-      allContentExample2Title: "Ví dụ 2: Có dự án được phê duyệt trong tháng này cho đến ngày hiện tại",
+      allContentExample1Title:
+        "Ví dụ 1: Khi ở cấp độ dự án được phê duyệt trong tình hình tài chính hiện tại",
+      allContentExample2Title:
+        "Ví dụ 2: Có dự án được phê duyệt trong tháng này cho đến ngày hiện tại",
       allContentExample3Title: "Ví dụ 3: Đầu tháng mới",
-      allContentWhatIsFeeUsedFor: "Phí dịch vụ Fastwork được sử dụng cho mục đích gì?",
-      whatIsAccumulatedIncomeFeeTitle: "Phí dịch vụ dựa trên thu nhập tích lũy là gì?",
-      whatIsAccumulatedIncomeFeeDescription: "Đây là phí dịch vụ được khai trước trên tổng tiền mỗi lần của freelancer được tính theo cấp bậc thành viên Fastwork. Trong đó, cấp bậc thành viên được xác định dự vào thu nhập tích lũy trong 3 tháng gần nhất tính đến ngày tạo báo cáo dự án và hoàn thành.",
+      allContentWhatIsFeeUsedFor:
+        "Phí dịch vụ Fastwork được sử dụng cho mục đích gì?",
+      whatIsAccumulatedIncomeFeeTitle:
+        "Phí dịch vụ dựa trên thu nhập tích lũy là gì?",
+      whatIsAccumulatedIncomeFeeDescription:
+        "Đây là phí dịch vụ được khai trước trên tổng tiền mỗi lần của freelancer được tính theo cấp bậc thành viên Fastwork. Trong đó, cấp bậc thành viên được xác định dự vào thu nhập tích lũy trong 3 tháng gần nhất tính đến ngày tạo báo cáo dự án và hoàn thành.",
       checkYourTier: "Kiểm tra cấp bậc của bạn",
       tierTableHeaderName: "Chi tiết cách tính phí dịch vụ như sau:",
       tierTableHeadersMemberLevel: "Cấp bậc thành viên",
-      tierTableHeadersAccumulatedIncome: "Thu nhập tích lũy trong vòng 3 tháng gần nhất tính đến hiện tại",
+      tierTableHeadersAccumulatedIncome:
+        "Thu nhập tích lũy trong vòng 3 tháng gần nhất tính đến hiện tại",
       tierTableHeadersServiceFeePercentage: "% Phí dịch vụ",
       tierTableRows0Level: "Member",
       tierTableRows1Level: "Bronze",
@@ -389,25 +423,38 @@ export const vi = {
       tierTableRows4Level: "Platinum",
       tierTableRows5Level: "Diamond",
       tierTableRows5IncomeRangeUpper: "trở lên",
-      tierTableNote: "Thu nhập tích lũy trong vòng 3 tháng trở lại sẽ được tính toán dựa trên các dự án đã được phê duyệt.",
+      tierTableNote:
+        "Thu nhập tích lũy trong vòng 3 tháng trở lại sẽ được tính toán dựa trên các dự án đã được phê duyệt.",
       howIsFeeCalculatedSectionTitle: "Phí dịch vụ được tính như thế nào?",
-      howIsFeeCalculatedSectionDescription1: "Hệ thống sẽ tính phí dựa trên tổng thu nhập tích lũy trong 3 tháng gần nhất tính đến ngày hiện tại, chỉ bao gồm các dự án đã được phê duyệt.",
-      howIsFeeCalculatedSectionDescription2: "Tỷ lệ phần trăm phí dịch vụ cho mỗi báo giá sẽ được tính toán ngay khi Freelancer tạo báo giá.",
-      howIsFeeCalculatedSectionDescription3: "Nếu báo giá được chỉnh sửa, tỷ lệ phần trăm phí dịch vụ hệ thống sẽ được điều chỉnh và tính toán dựa trên ngày chỉnh sửa.",
-      howIsFeeCalculatedSectionFreelancerReference: "Freelancer có thể tham khảo thêm thông tin chi tiết thông qua các ví dụ sau đây.",
+      howIsFeeCalculatedSectionDescription1:
+        "Hệ thống sẽ tính phí dựa trên tổng thu nhập tích lũy trong 3 tháng gần nhất tính đến ngày hiện tại, chỉ bao gồm các dự án đã được phê duyệt.",
+      howIsFeeCalculatedSectionDescription2:
+        "Tỷ lệ phần trăm phí dịch vụ cho mỗi báo giá sẽ được tính toán ngay khi Freelancer tạo báo giá.",
+      howIsFeeCalculatedSectionDescription3:
+        "Nếu báo giá được chỉnh sửa, tỷ lệ phần trăm phí dịch vụ hệ thống sẽ được điều chỉnh và tính toán dựa trên ngày chỉnh sửa.",
+      howIsFeeCalculatedSectionFreelancerReference:
+        "Freelancer có thể tham khảo thêm thông tin chi tiết thông qua các ví dụ sau đây.",
       howIsFeeCalculatedSectionCalculationStepsTitle: "Bảng tính phí dịch vụ",
       howIsFeeCalculatedSectionCalculationStepsTitleMethod: "Cách tính",
-      howIsFeeCalculatedSectionCalculationStepsStep1Title: "1. Thu nhập tích lũy",
-      howIsFeeCalculatedSectionCalculationStepsStep1Description: "Thu nhập của các dự án đã hoàn thành trong 3 tháng gần nhất, tính tới ngày tạo báo giá.",
-      howIsFeeCalculatedSectionCalculationStepsStep2Title: "2. Xác định cấp bậc",
-      howIsFeeCalculatedSectionCalculationStepsStep2Description: "Dựa vào thu nhập tích lũy để xác định cấp bậc thành viên tương ứng.",
-      howIsFeeCalculatedSectionCalculationStepsStep3Title: "3. Áp dụng % phí dịch vụ",
-      howIsFeeCalculatedSectionCalculationStepsStep3Description: "Áp dụng % phí dịch vụ tương ứng với cấp bậc thành viên cho dự án.",
+      howIsFeeCalculatedSectionCalculationStepsStep1Title:
+        "1. Thu nhập tích lũy",
+      howIsFeeCalculatedSectionCalculationStepsStep1Description:
+        "Thu nhập của các dự án đã hoàn thành trong 3 tháng gần nhất, tính tới ngày tạo báo giá.",
+      howIsFeeCalculatedSectionCalculationStepsStep2Title:
+        "2. Xác định cấp bậc",
+      howIsFeeCalculatedSectionCalculationStepsStep2Description:
+        "Dựa vào thu nhập tích lũy để xác định cấp bậc thành viên tương ứng.",
+      howIsFeeCalculatedSectionCalculationStepsStep3Title:
+        "3. Áp dụng % phí dịch vụ",
+      howIsFeeCalculatedSectionCalculationStepsStep3Description:
+        "Áp dụng % phí dịch vụ tương ứng với cấp bậc thành viên cho dự án.",
       example1Title: "Ví dụ 1",
       example1Subtitle: "Không có dự án được phê duyệt trong tháng hiện tại",
       example1DetailsDate: "Hôm nay là ngày 10 tháng 6 năm 2024.",
-      example1DetailsStatus: "Trong tháng 6, không có dự án mới nào được phê duyệt.",
-      example1DetailsCalculationIntro: "Do đó, % phí dịch vụ tính đến ngày 10 tháng 6 năm 2024 sẽ như sau:",
+      example1DetailsStatus:
+        "Trong tháng 6, không có dự án mới nào được phê duyệt.",
+      example1DetailsCalculationIntro:
+        "Do đó, % phí dịch vụ tính đến ngày 10 tháng 6 năm 2024 sẽ như sau:",
       example1DetailsMonths0Month: "tháng 3 năm 2024",
       example1DetailsMonths0Label: "Thu nhập",
       example1DetailsMonths1Month: "tháng 4 năm 2024",
@@ -419,13 +466,18 @@ export const vi = {
       example1DetailsMonths3Amount: "0 VND",
       example1DetailsTotal: "Thu nhập tích lũy",
       example1Button: "Bronze Phí dịch vụ 10%",
-      example1Note: "Nếu có dự án mà Freelancer \"tạo báo giá\" vào ngày 10 tháng 6 năm 2024, phí dịch vụ cho dự án đó sẽ là 10%.",
-      example1AdditionalNote: "Lưu ý: Nếu có chỉnh sửa báo giá, % phí dịch vụ sẽ được tính toán lại dựa trên ngày chỉnh sửa.",
+      example1Note:
+        'Nếu có dự án mà Freelancer "tạo báo giá" vào ngày 10 tháng 6 năm 2024, phí dịch vụ cho dự án đó sẽ là 10%.',
+      example1AdditionalNote:
+        "Lưu ý: Nếu có chỉnh sửa báo giá, % phí dịch vụ sẽ được tính toán lại dựa trên ngày chỉnh sửa.",
       example2Title: "Ví dụ 2",
-      example2Subtitle: "Có dự án được phê duyệt trong tháng này cho đến ngày hiện tại",
+      example2Subtitle:
+        "Có dự án được phê duyệt trong tháng này cho đến ngày hiện tại",
       example2DetailsDate: "Hôm nay là ngày 20 tháng 6 năm 2024.",
-      example2DetailsStatus: "Trong tháng 6, có 1 dự án đã được phê duyệt với thu nhập",
-      example2DetailsCalculationIntro: "Do đó, % phí dịch vụ tính đến ngày 20 tháng 6 năm 2024 sẽ như sau:",
+      example2DetailsStatus:
+        "Trong tháng 6, có 1 dự án đã được phê duyệt với thu nhập",
+      example2DetailsCalculationIntro:
+        "Do đó, % phí dịch vụ tính đến ngày 20 tháng 6 năm 2024 sẽ như sau:",
       example2DetailsMonths0Month: "tháng 3 năm 2024",
       example2DetailsMonths0Label: "Thu nhập",
       example2DetailsMonths1Month: "tháng 4 năm 2024",
@@ -437,13 +489,17 @@ export const vi = {
       example2DetailsMonths3Amount: "7.000.000 VND",
       example2DetailsTotal: "Thu nhập tích lũy",
       example2Button: "SILVER PHÍ DỊCH VỤ 9%",
-      example2Note: "Nếu có dự án mà Freelancer \"tạo báo giá\" vào ngày 20 tháng 6 năm 2024, phí dịch vụ cho dự án đó sẽ là 9%",
-      example2AdditionalNote: "Lưu ý: Nếu có chỉnh sửa báo giá, % phí dịch vụ sẽ được tính toán lại dựa trên ngày chỉnh sửa.",
+      example2Note:
+        'Nếu có dự án mà Freelancer "tạo báo giá" vào ngày 20 tháng 6 năm 2024, phí dịch vụ cho dự án đó sẽ là 9%',
+      example2AdditionalNote:
+        "Lưu ý: Nếu có chỉnh sửa báo giá, % phí dịch vụ sẽ được tính toán lại dựa trên ngày chỉnh sửa.",
       example3Title: "Ví dụ 3",
       example3Subtitle: "Đầu tháng mới",
       example3DetailsDate: "Hôm nay là ngày 1 tháng 7 năm 2024.",
-      example3DetailsStatus: "Tháng 4 không còn được tính, thay vào đó là tháng 7.",
-      example3DetailsCalculationIntro: "Do đó, % phí dịch vụ tính đến ngày 1 tháng 7 năm 2024 sẽ như sau:",
+      example3DetailsStatus:
+        "Tháng 4 không còn được tính, thay vào đó là tháng 7.",
+      example3DetailsCalculationIntro:
+        "Do đó, % phí dịch vụ tính đến ngày 1 tháng 7 năm 2024 sẽ như sau:",
       example3DetailsMonths0Month: "tháng 4 năm 2024",
       example3DetailsMonths0Label: "Thu nhập",
       example3DetailsMonths1Month: "tháng 5 năm 2024",
@@ -454,10 +510,14 @@ export const vi = {
       example3DetailsMonths3Label: "Thu nhập tính đến ngày 1 tháng 7",
       example3DetailsTotal: "Thu nhập tích lũy",
       example3Button: "BRONZE PHÍ DỊCH VỤ 10%",
-      example3Note: "Nếu có dự án mà Freelancer \"tạo báo giá\" vào ngày 1 tháng 7 năm 2024, phí dịch vụ cho dự án đó sẽ là 10%.",
-      example3AdditionalNote: "Lưu ý: Nếu có chính sách bảo giá, % phí dịch vụ sẽ được tính toàn lại dựa trên nguồn chính sửa.",
-      fastlaneFeePurposeQuest: "Phí dịch vụ Fastwork được sử dụng cho mục đích gì?",
-      fastlaneFeePurpose: "Phí dịch vụ trên hệ thống của chúng tôi sẽ được sử dụng để bảo trì, cải thiện nền tảng nhằm đáp ứng nhu cầu sử dụng của cả hai bên: freelancer và người thuê. Điều này bao gồm việc nâng cao trải nghiệm người dùng trên nền tảng, thúc đẩy doanh thu, quảng bá thương hiệu để thu hút thêm người dùng và tạo ra nhiều cơ hội việc làm hơn.",
+      example3Note:
+        'Nếu có dự án mà Freelancer "tạo báo giá" vào ngày 1 tháng 7 năm 2024, phí dịch vụ cho dự án đó sẽ là 10%.',
+      example3AdditionalNote:
+        "Lưu ý: Nếu có chính sách bảo giá, % phí dịch vụ sẽ được tính toàn lại dựa trên nguồn chính sửa.",
+      fastlaneFeePurposeQuest:
+        "Phí dịch vụ Fastwork được sử dụng cho mục đích gì?",
+      fastlaneFeePurpose:
+        "Phí dịch vụ trên hệ thống của chúng tôi sẽ được sử dụng để bảo trì, cải thiện nền tảng nhằm đáp ứng nhu cầu sử dụng của cả hai bên: freelancer và người thuê. Điều này bao gồm việc nâng cao trải nghiệm người dùng trên nền tảng, thúc đẩy doanh thu, quảng bá thương hiệu để thu hút thêm người dùng và tạo ra nhiều cơ hội việc làm hơn.",
       title: "Tình toán phí dịch vụ và giá dự án",
       translatorTypeLabel: "Cấp bậc thành viên",
       translatorTypeValue: "Member (Phí dịch vụ 12%)",
@@ -470,7 +530,7 @@ export const vi = {
       translatorTypeOptions5: "Platinum (Phí dịch vụ 7%)",
       unitPriceLabel: "Giá dự án",
       translationFeeLabel: "Phí dịch vụ",
-      additionalFeeLabel: "Số tiền nhận được từ nền tảng"
+      additionalFeeLabel: "Số tiền nhận được từ nền tảng",
     },
     createJob: {
       catalogValidate: "Danh mục dịch vụ là bắt buộc",
@@ -480,7 +540,8 @@ export const vi = {
       budgetValidate: "Ngân sách là bắt buộc",
       budgetPositive: "Ngân sách phải là một số dương",
       pageTitle: "Đăng công việc mới",
-      jobPostingNotice: "Dành cho việc đăng công việc: Tự quảng bá, thông tin liên hệ hoặc sử dụng vi phạm các điều khoản hệ thống không được phép. Các bài đăng vi phạm các điều khoản này sẽ bị xóa ngay lập tức.",
+      jobPostingNotice:
+        "Dành cho việc đăng công việc: Tự quảng bá, thông tin liên hệ hoặc sử dụng vi phạm các điều khoản hệ thống không được phép. Các bài đăng vi phạm các điều khoản này sẽ bị xóa ngay lập tức.",
       jobTitleLabel: "Tiêu đề công việc",
       jobTitlePlaceholder: "Tôi đang tìm kiếm",
       employmentTypeLabel: "Loại việc làm",
@@ -489,8 +550,10 @@ export const vi = {
       employmentTypePartTime: "Bán thời gian (theo giờ/ngày)",
       employmentTypeFullTime: "Toàn thời gian",
       jobDescriptionLabel: "Mô tả công việc",
-      jobDescriptionNotice: "Khi có người quan tâm, bạn sẽ nhận được thông báo qua hệ thống liên hệ.",
-      jobDescriptionDetails: "Mô tả yêu cầu công việc của bạn, chẳng hạn như thông tin công việc, mục đích, đối tượng mục tiêu, kế hoạch hành động, v.v. Chi tiết: Số lượng sản phẩm cần giao, phạm vi, yêu cầu, v.v. (Thông tin liên hệ như email, điện thoại, LINE hoặc các chi tiết liên hệ khác không được phép)",
+      jobDescriptionNotice:
+        "Khi có người quan tâm, bạn sẽ nhận được thông báo qua hệ thống liên hệ.",
+      jobDescriptionDetails:
+        "Mô tả yêu cầu công việc của bạn, chẳng hạn như thông tin công việc, mục đích, đối tượng mục tiêu, kế hoạch hành động, v.v. Chi tiết: Số lượng sản phẩm cần giao, phạm vi, yêu cầu, v.v. (Thông tin liên hệ như email, điện thoại, LINE hoặc các chi tiết liên hệ khác không được phép)",
       jobDescriptionPlaceholder: "Mô tả công việc của bạn tại đây...",
       englishSpeakerLabel: "Yêu cầu freelancer nói tiếng Anh",
       serviceCategoryLabel: "Danh mục dịch vụ",
@@ -509,37 +572,48 @@ export const vi = {
       intendedUsePlaceholder: "Chọn mục đích sử dụng...",
       anonymousPostLabel: "Đăng bài ẩn danh",
       previewButton: "Xem trước",
-      submitButton: "Gửi"
+      submitButton: "Gửi",
     },
     employeeRegister: {
-      howDidYouHearAboutUs: "Trước khi bắt đầu, hãy cho tôi biết bạn biết đến chúng tôi qua đâu?",
+      howDidYouHearAboutUs:
+        "Trước khi bắt đầu, hãy cho tôi biết bạn biết đến chúng tôi qua đâu?",
       multipleOptions: "Bạn có thể chọn nhiều tùy chọn.",
       skip: "Bỏ qua",
       saveAndContinue: "Lưu và tiếp tục",
       chooseProfilePicture: "Chọn một bức ảnh đại diện cho bạn.",
-      profilePictureTip: "Việc sử dụng hình ảnh khuôn mặt rõ nét sẽ giúp khách hàng chọn bạn nhiều hơn so với chỉ sử dụng logo đại diện cho bạn.",
+      profilePictureTip:
+        "Việc sử dụng hình ảnh khuôn mặt rõ nét sẽ giúp khách hàng chọn bạn nhiều hơn so với chỉ sử dụng logo đại diện cho bạn.",
       uploadProfilePicture: "Tải lên hình ảnh hồ sơ",
       deleteImage: "Xóa hình ảnh",
       previewProfile: "Xem trước hồ sơ",
       createFreelancerProfile: "Tạo hồ sơ làm việc tự do của bạn",
-      setupBasicInfo: "Thiết lập thông tin cơ bản ở giai đoạn xây dựng độ tin cậy",
+      setupBasicInfo:
+        "Thiết lập thông tin cơ bản ở giai đoạn xây dựng độ tin cậy",
       username: "Tên người dùng",
-      usernameDescription: "Tên này sẽ được đặt trên trang web và trang hồ sơ của bạn.",
+      usernameDescription:
+        "Tên này sẽ được đặt trên trang web và trang hồ sơ của bạn.",
       displayName: "Tên hiển thị trong hệ thống",
       displayNameTip: "Nên đặt tên có ý nghĩa để tạo độ tin cậy.",
       freelanceType: "Loại hình làm việc tự do (Có thể thay đổi sau)",
-      freelanceTypeInstruction: "Chọn loại công việc tự do phù hợp với bạn, thậm chí có thể là bán thời gian.",
+      freelanceTypeInstruction:
+        "Chọn loại công việc tự do phù hợp với bạn, thậm chí có thể là bán thời gian.",
       partTime: "Bán thời gian",
       fullTime: "Toàn thời gian",
       bio: "Tiểu sử",
-      bioStatistic: "Hơn 80% khách hàng đọc hồ sơ của bạn. Trước khi quyết định thuê",
-      bioInstruction: "Hãy giới thiệu bản thân để khách hàng hiểu rõ hơn về bạn.",
-      bioDetails: "Hãy kể về quá trình làm việc của bạn, ví dụ như: kinh nghiệm làm việc, quá trình học tập, các chứng chỉ liên quan.",
+      bioStatistic:
+        "Hơn 80% khách hàng đọc hồ sơ của bạn. Trước khi quyết định thuê",
+      bioInstruction:
+        "Hãy giới thiệu bản thân để khách hàng hiểu rõ hơn về bạn.",
+      bioDetails:
+        "Hãy kể về quá trình làm việc của bạn, ví dụ như: kinh nghiệm làm việc, quá trình học tập, các chứng chỉ liên quan.",
       freelancerIntroduction: "Giới thiệu về Freelancer",
-      experienceSkillsInstruction: "Hãy kể cho chúng tôi về kinh nghiệm, kỹ năng và khả năng của bạn...",
-      experienceSkillsDetails: "Cung cấp thông tin kinh nghiệm làm việc Kỹ năng nổi bật Và những gì bạn có thể làm tốt",
+      experienceSkillsInstruction:
+        "Hãy kể cho chúng tôi về kinh nghiệm, kỹ năng và khả năng của bạn...",
+      experienceSkillsDetails:
+        "Cung cấp thông tin kinh nghiệm làm việc Kỹ năng nổi bật Và những gì bạn có thể làm tốt",
       verifyIdentity: "Xác minh bạn là ai",
-      uploadIdInstruction: "Tải lên chứng minh thư của bạn để giao dịch an toàn.",
+      uploadIdInstruction:
+        "Tải lên chứng minh thư của bạn để giao dịch an toàn.",
       uploadIdFront: "Hình ảnh chứng minh thư nhân dân mặt trước",
       idFrontInstruction: "Chụp ảnh để thấy mặt trước của chứng minh thư.",
       uploadIdBack: "Hình ảnh chứng minh thư nhân dân mặt sau",
@@ -577,39 +651,47 @@ export const vi = {
       customer: "Khách hàng",
       address: "Địa chỉ",
       birthDateQuestion: "Bạn sinh vào ngày nào?",
-      birthDateNote: "Tuổi không ảnh hưởng đến việc tuyển dụng, nhưng có ảnh hưởng đến luật lao động.",
+      birthDateNote:
+        "Tuổi không ảnh hưởng đến việc tuyển dụng, nhưng có ảnh hưởng đến luật lao động.",
       birthDate: "Ngày sinh",
       day: "Ngày",
       month: "Tháng",
       year: "Năm",
       verifyContactInfo: "Xác nhận thông tin liên hệ của bạn",
-      contactInfoInstruction: "để chúng tôi có thể gửi lại thông tin liên hệ cho bạn.",
+      contactInfoInstruction:
+        "để chúng tôi có thể gửi lại thông tin liên hệ cho bạn.",
       contactEmail: "Email liên hệ",
       change: "Thay đổi",
       confirm: "Xác nhận",
       currentAddress: "Địa chỉ hiện tại",
       chooseCountry: "Chọn quốc gia",
       finalVerificationStep: "Bước xác minh cuối cùng",
-      transferVerificationInstruction: "Vui lòng chuyển bất kỳ số tiền nào để xác minh tài khoản freelancer của bạn",
+      transferVerificationInstruction:
+        "Vui lòng chuyển bất kỳ số tiền nào để xác minh tài khoản freelancer của bạn",
       accountHolder: "Chủ tài khoản",
-      transferToVerify: "Chuyển bất kỳ số tiền nào vào tài khoản này để hoàn tất xác minh.",
-      payLaterVerification: "Bạn có thể thanh toán sau để xác nhận trở thành freelancer",
-      fastworkUsageTip: "Việc sử dụng Fastwork đúng cách giúp giảm rủi ro bị khóa tài khoản",
-      complianceTip: "Tuân thủ quy định sẽ giúp bạn tránh bị cấm và kiếm thu nhập một cách an tâm.",
+      transferToVerify:
+        "Chuyển bất kỳ số tiền nào vào tài khoản này để hoàn tất xác minh.",
+      payLaterVerification:
+        "Bạn có thể thanh toán sau để xác nhận trở thành freelancer",
+      fastworkUsageTip:
+        "Việc sử dụng Fastwork đúng cách giúp giảm rủi ro bị khóa tài khoản",
+      complianceTip:
+        "Tuân thủ quy định sẽ giúp bạn tránh bị cấm và kiếm thu nhập một cách an tâm.",
       contactInfoUsage: "Việc sử dụng phiếu thông tin liên hệ",
       noOffPlatformPayment: "Cấm yêu cầu/nhận thanh toán ngoài hệ thống",
       noIllegalJobs: "Cấm nhận công việc vi phạm pháp luật",
       useToolsCorrectly: "Phải sử dụng công cụ một cách đúng đắn",
       acceptBySliding: "Kéo qua để chấp nhận",
       processing: "Đang xử lí...",
-      iAccept: "Tôi chấp nhận"
+      iAccept: "Tôi chấp nhận",
     },
     error: {
       title: "Xin lỗi, Đã xảy ra lỗi",
       emailExist: "Email này đã được sử dụng, vui lòng chọn email khác",
       emailVerified: "Email đã được xác minh",
       emailRequired: "Email là bắt buộc",
-      usernameExist: "Tên người dùng này đã được sử dụng, vui lòng chọn tên khác",
+      usernameExist:
+        "Tên người dùng này đã được sử dụng, vui lòng chọn tên khác",
       invalidCode: "Mã không hợp lệ hoặc đã hết hạn",
       serverError: "Đã xảy ra lỗi khi kết nối với máy chủ",
       resendFailed: "Gửi lại email không thành công",
@@ -625,32 +707,40 @@ export const vi = {
       emailAlreadyExists: "Email đã tồn tại",
       invalidName: "Tên người dùng không hợp lệ",
       userNotFound: "Tên người dùng hoặc email không tồn tại",
-      enterCodePrompt: "Vui lòng nhập mã xác minh để tiếp tục đặt lại mật khẩu.",
+      enterCodePrompt:
+        "Vui lòng nhập mã xác minh để tiếp tục đặt lại mật khẩu.",
       errorEmailInvalid: "Vui lòng nhập email hợp lệ",
       errorPasswordLength: "Mật khẩu phải có ít nhất 6 ký tự",
       errorPhoneLength: "Số điện thoại phải có ít nhất 10 chữ số",
       errorUsernameLength: "Tên người dùng phải có ít nhất 3 ký tự",
-      pleaseEnterEmailOrUsernameMin6: "Vui lòng nhập email hoặc tên người dùng có ít nhất 6 ký tự",
+      pleaseEnterEmailOrUsernameMin6:
+        "Vui lòng nhập email hoặc tên người dùng có ít nhất 6 ký tự",
       usernameMax32: "Tên người dùng không được vượt quá 32 ký tự",
-      passwordMin6: "Mật khẩu phải có ít nhất 6 ký tự"
+      passwordMin6: "Mật khẩu phải có ít nhất 6 ký tự",
     },
     freelancerRegistration: {
-      registerToBecomeASuccessfulFreelancer: "Đăng ký để trở thành một freelancer thành công",
-      youCanStartPostingYourJobRightAwayJustClickStartPostingJob: "Bạn có thể bắt đầu đăng công việc ngay lập tức, chỉ cần nhấp vào Bắt đầu đăng công việc.",
+      registerToBecomeASuccessfulFreelancer:
+        "Đăng ký để trở thành một freelancer thành công",
+      youCanStartPostingYourJobRightAwayJustClickStartPostingJob:
+        "Bạn có thể bắt đầu đăng công việc ngay lập tức, chỉ cần nhấp vào Bắt đầu đăng công việc.",
       startPostingJob: "Bắt đầu đăng công việc",
-      returnToHomePage: "Quay lại trang chủ"
+      returnToHomePage: "Quay lại trang chủ",
     },
     global: {
       jobVailable: "Thông tin về tình trạng nhận việc",
       availableSetting: "Cài đặt tình trạng sẵn sàng",
-      toggle: "Bật/tắt cài đặt này để cho khách hàng biết bạn có đang nhận công việc mới hay không.",
+      toggle:
+        "Bật/tắt cài đặt này để cho khách hàng biết bạn có đang nhận công việc mới hay không.",
       acptJob: "Đang nhận việc",
       adsComingTitle: "Quảng bá dịch vụ của bạn qua quảng cáo (Coming soon...)",
       adsFeedbackLink: "Gửi phản hồi của bạn về tính năng quảng cáo",
-      adsSectionDescription: "Nâng cao cơ hội được thuê bằng cách quảng cáo với Fastwork",
+      adsSectionDescription:
+        "Nâng cao cơ hội được thuê bằng cách quảng cáo với Fastwork",
       bankInfo: "Thông tin ngân hàng",
-      businessServiceDescription: "Dịch vụ thuê freelancer cho doanh nghiệp (fastwork for business)",
-      businessServiceTitle: "Dịch vụ thuê freelancer cho doanh nghiệp (fastwork for business)",
+      businessServiceDescription:
+        "Dịch vụ thuê freelancer cho doanh nghiệp (fastwork for business)",
+      businessServiceTitle:
+        "Dịch vụ thuê freelancer cho doanh nghiệp (fastwork for business)",
       buttonCancel: "Hủy",
       buttonChange: "Cập nhật",
       buttonConfirm: "Xác nhận",
@@ -661,7 +751,8 @@ export const vi = {
       buttonSubmit: "Lưu",
       buttonVerify: "Xác minh",
       chatToHireButton: "Thêm Line @fastwork",
-      chatToHireDescription: "Chat to Hire hoặc tìm trợ lý freelancer qua Line. Chỉ cần cung cấp thông tin, quản trị viên sẽ giúp bạn tìm freelancer phù hợp.",
+      chatToHireDescription:
+        "Chat to Hire hoặc tìm trợ lý freelancer qua Line. Chỉ cần cung cấp thông tin, quản trị viên sẽ giúp bạn tìm freelancer phù hợp.",
       chatToHireTitle: "Dịch vụ Chat to hire hoặc trợ lý tìm freelancer",
       clientDocumentInfo: "Thông tin tài liệu của người thuê (cá nhân)",
       clientDocumentSection: "Thông tin tài liệu của người thuê",
@@ -669,7 +760,8 @@ export const vi = {
       companyRegistrationStep1: "Nhập thông tin công ty",
       companyRegistrationStep2: "Chờ phê duyệt trong vòng 2 giờ",
       companyRegistrationStep3: "Thông báo freelancer để xuất tài liệu ngay",
-      companyRegistrationTitle: "Đăng nhập, nhập thông tin công ty và thông báo freelancer ngay!",
+      companyRegistrationTitle:
+        "Đăng nhập, nhập thông tin công ty và thông báo freelancer ngay!",
       contactInfo: "Thông tin liên lạc",
       fastworkRewardsButton: "Fastwork Rewards",
       fastworkRewardsSubtext: "Tích điểm để đổi thưởng",
@@ -677,27 +769,37 @@ export const vi = {
       freelancerAccountInfo: "Thông tin tài khoản freelancer",
       freelancerAccountSection: "Tài khoản freelancer của bạn",
       freelancerProfile: "Hồ sơ Freelancer",
-      freelancerSelectionDescription: "Tìm kiếm freelancer theo danh mục, xem mẫu công việc, đánh giá và trò chuyện để thuê freelancer trực tiếp.",
+      freelancerSelectionDescription:
+        "Tìm kiếm freelancer theo danh mục, xem mẫu công việc, đánh giá và trò chuyện để thuê freelancer trực tiếp.",
       freelancerSelectionTitle: "Chọn freelancer bạn cần và trò chuyện ngay",
       goToFastworkBusiness: "Đi đến fastwork for business",
       greetingUser: "Xin chào, {username}",
-      hintFreelanceSearchAssistant: "Trò chuyện để thuê dịch vụ hoặc trợ lý tìm kiếm freelancer.",
-      hintFreelanceServicesBusiness: "Hỗ trợ tìm kiếm và phối hợp với freelancer cho đến khi dự án hoàn thành.",
-      hintHireOnBehalf: "Đăng nhập, nhập thông tin và thông báo ngay cho freelancer!",
-      hintLabelMenuOptionFindHire: "Chọn freelancer bạn muốn và trò chuyện ngay lập tức.",
-      hintLabelMenuOptionSearchJobBoard: "Đăng tin và chờ freelancer gửi đề nghị công việc.",
+      hintFreelanceSearchAssistant:
+        "Trò chuyện để thuê dịch vụ hoặc trợ lý tìm kiếm freelancer.",
+      hintFreelanceServicesBusiness:
+        "Hỗ trợ tìm kiếm và phối hợp với freelancer cho đến khi dự án hoàn thành.",
+      hintHireOnBehalf:
+        "Đăng nhập, nhập thông tin và thông báo ngay cho freelancer!",
+      hintLabelMenuOptionFindHire:
+        "Chọn freelancer bạn muốn và trò chuyện ngay lập tức.",
+      hintLabelMenuOptionSearchJobBoard:
+        "Đăng tin và chờ freelancer gửi đề nghị công việc.",
       hintTextHeaderSearch: "Tìm kiếm freelancer...",
       hireOpportunityTitle: "Tăng cơ hội được thuê",
       hiring: "Tuyển dụng",
       idInfo: "Thông tin CMND/CCCD",
       increaseHiringOpportunity: "Tăng cơ hội được tuyển dụng",
       jobBoardButton: "Đến bảng tin tuyển dụng",
-      jobBoardDesc: "Xem bài đăng tuyển dụng của người thuê & đề xuất dịch vụ của bạn",
-      jobBoardDescription: "Đăng tin công việc, chờ freelancer gửi đề xuất và thuê ngay.",
+      jobBoardDesc:
+        "Xem bài đăng tuyển dụng của người thuê & đề xuất dịch vụ của bạn",
+      jobBoardDescription:
+        "Đăng tin công việc, chờ freelancer gửi đề xuất và thuê ngay.",
       jobBoardFreelancerTitle: "Nhận việc từ Bảng thông báo việc làm",
       jobBoardLinkText: "Đi đến Bảng thông báo việc làm",
-      jobBoardSideDesc: "Hiển thị dịch vụ của bạn dưới các bài đăng của người thuê để tăng cơ hội được thuê.",
-      jobBoardSideTitle: "Xem bài đăng tuyển dụng của người thuê & đề xuất dịch vụ của bạn",
+      jobBoardSideDesc:
+        "Hiển thị dịch vụ của bạn dưới các bài đăng của người thuê để tăng cơ hội được thuê.",
+      jobBoardSideTitle:
+        "Xem bài đăng tuyển dụng của người thuê & đề xuất dịch vụ của bạn",
       jobBoardTitle: "Tìm freelancer qua bảng tin tuyển dụng",
       labelAboutFastworkTitle: "Giới thiệu về Fastwork",
       labelApplyFreelancer: "Ứng tuyển làm freelancer",
@@ -717,7 +819,8 @@ export const vi = {
       labelMenuOption12: "Đăng tin tìm kiếm qua bảng việc làm",
       labelMenuOption13: "Trợ lý tìm freelancer, chỉ cần thêm Line",
       labelMenuOption21: "Thuê thay mặt công ty và phát hành tài liệu",
-      labelMenuOption22: "Dịch vụ freelancer cho doanh nghiệp (Fastwork for Business)",
+      labelMenuOption22:
+        "Dịch vụ freelancer cho doanh nghiệp (Fastwork for Business)",
       labelNavBarItem1: "Loại công việc phổ biến",
       labelNavBarItem10: "Loại công việc phổ biến",
       labelNavBarItem2: "Thiết kế đồ họa",
@@ -774,89 +877,144 @@ export const vi = {
       tittleHeaderMenuSection1: "Việc làm",
       tittleHeaderMenuSection2: "Dành cho khách hàng doanh nghiệp",
       tittlePopularHeaderSearch: "Tìm kiếm phổ biến",
-      labelSignInButton: "Đăng nhập"
+      labelSignInButton: "Đăng nhập",
     },
     guarantee: {
       fastworkGuaranteeTitle: "Đảm bảo của Fastwork",
-      fastworkGuaranteeSubtitle: "Thuê freelancer thông qua nền tảng Fastwork được bảo vệ một cách toàn diện ở mọi bước.",
-      fastworkGuaranteeSubsubtitle: "Từ đầu đến cuối, từ khi bắt đầu đến khi bàn giao công việc đạt chất lượng yêu cầu.",
-      fastworkGuaranteeStepsTitle: "\"Đảm bảo của Fastwork\"Bảo vệ toàn diện mọi bước trong quy trình tuyển dụng",
+      fastworkGuaranteeSubtitle:
+        "Thuê freelancer thông qua nền tảng Fastwork được bảo vệ một cách toàn diện ở mọi bước.",
+      fastworkGuaranteeSubsubtitle:
+        "Từ đầu đến cuối, từ khi bắt đầu đến khi bàn giao công việc đạt chất lượng yêu cầu.",
+      fastworkGuaranteeStepsTitle:
+        '"Đảm bảo của Fastwork"Bảo vệ toàn diện mọi bước trong quy trình tuyển dụng',
       verifiedFreelancersTitle: "Freelancer đã xác minh",
-      verifiedFreelancersDescription: "Xác minh tiêu chuẩn đối với giấy tờ tùy thân, thông tin liên hệ và hồ sơ năng lực.",
-      moneyBackTitle: "Đảm bảo hoàn tiền trong trường hợp không bàn giao sản phẩm",
-      moneyBackDescription: "Với hệ thống bảo vệ thanh toán ký quỹ, tiền sẽ chỉ được chuyển cho freelancer khi bản giao sản phẩm cuối cùng được phê duyệt. Đảm bảo bàn giao công việc đúng cam kết",
-      supportTeamTitle: "Đội ngũ hỗ trợ sẵn sàng phục vụ khách hàng và freelancer",
-      supportTeamDescription: "Đội ngũ giải quyết tranh chấp và hỗ trợ luôn sẵn sàng giúp đỡ trong trường hợp xảy ra xung đột. Điều tra và phán xét vụ việc một cách công bằng cho cả khách hàng và freelancer",
-      termsConditionsTitle: "Điều khoản và điều kiện của chương trình Đảm bảo. An tâm hơn khi tuyển dụng.",
+      verifiedFreelancersDescription:
+        "Xác minh tiêu chuẩn đối với giấy tờ tùy thân, thông tin liên hệ và hồ sơ năng lực.",
+      moneyBackTitle:
+        "Đảm bảo hoàn tiền trong trường hợp không bàn giao sản phẩm",
+      moneyBackDescription:
+        "Với hệ thống bảo vệ thanh toán ký quỹ, tiền sẽ chỉ được chuyển cho freelancer khi bản giao sản phẩm cuối cùng được phê duyệt. Đảm bảo bàn giao công việc đúng cam kết",
+      supportTeamTitle:
+        "Đội ngũ hỗ trợ sẵn sàng phục vụ khách hàng và freelancer",
+      supportTeamDescription:
+        "Đội ngũ giải quyết tranh chấp và hỗ trợ luôn sẵn sàng giúp đỡ trong trường hợp xảy ra xung đột. Điều tra và phán xét vụ việc một cách công bằng cho cả khách hàng và freelancer",
+      termsConditionsTitle:
+        "Điều khoản và điều kiện của chương trình Đảm bảo. An tâm hơn khi tuyển dụng.",
       protectionTitle: "Chính sách bảo vệ",
-      protectionCase1: "Freelancer không tuân thủ hợp đồng được mô tả trong báo giá",
-      protectionCase2: "Sản phẩm cuối cùng không đạt chất lượng như freelancer đã quảng cáo trong sản phẩm hoặc theo thỏa thuận",
+      protectionCase1:
+        "Freelancer không tuân thủ hợp đồng được mô tả trong báo giá",
+      protectionCase2:
+        "Sản phẩm cuối cùng không đạt chất lượng như freelancer đã quảng cáo trong sản phẩm hoặc theo thỏa thuận",
       protectionCase3: "Freelancer biến mất hoặc không thể liên lạc được",
-      protectionCase4: "Bản cuối cùng chưa được phê duyệt thủ công hoặc tự động trên nền tảng Fastwork",
+      protectionCase4:
+        "Bản cuối cùng chưa được phê duyệt thủ công hoặc tự động trên nền tảng Fastwork",
       endProtectionTitle: "Chấm dứt bảo vệ",
-      endProtectionCase1: "Khách hàng vi phạm hợp đồng thuê được mô tả trong báo giá",
-      endProtectionCase2: "Khách hàng không thực hiện việc thuê và thanh toán qua nền tảng Fastwork",
-      endProtectionCase3: "Bản cuối cùng đã được phê duyệt thủ công hoặc tự động trên nền tảng Fastwork",
+      endProtectionCase1:
+        "Khách hàng vi phạm hợp đồng thuê được mô tả trong báo giá",
+      endProtectionCase2:
+        "Khách hàng không thực hiện việc thuê và thanh toán qua nền tảng Fastwork",
+      endProtectionCase3:
+        "Bản cuối cùng đã được phê duyệt thủ công hoặc tự động trên nền tảng Fastwork",
       tellUsMoreTitle: "Hãy cho chúng tôi biết thêm!",
-      tellUsMoreDescription: "Phản hồi bổ sung có thể được thực hiện sau khi sản phẩm cuối cùng đã được phê duyệt. Liên hệ với bộ phận hỗ trợ khách hàng khi bạn gặp vấn đề khi tuyển dụng hoặc muốn đóng góp ý kiến cải thiện.",
+      tellUsMoreDescription:
+        "Phản hồi bổ sung có thể được thực hiện sau khi sản phẩm cuối cùng đã được phê duyệt. Liên hệ với bộ phận hỗ trợ khách hàng khi bạn gặp vấn đề khi tuyển dụng hoặc muốn đóng góp ý kiến cải thiện.",
       contactCustomerSupport: "Liên hệ bộ phận hỗ trợ khách hàng",
-      confidentHiringTitle: "An tâm khi tuyển dụng với Fastwork. Bạn được tự do lựa chọn chấp nhận sản phẩm cuối cùng hoặc yêu cầu hoàn tiền.",
-      reviewProcessQuestion: "Làm thế nào để đưa ra đánh giá sau khi đã phê duyệt sản phẩm cuối cùng?",
-      disputeProcessQuestion: "Hướng dẫn khởi tạo tranh chấp đối với sản phẩm chưa được phê duyệt",
-      step1Title: "1. Nhấp vào nút \"Đánh giá\" trong màn hình trò chuyện",
-      step1Description: "Nhấp vào nút \"Đánh giá\" ở cuối màn hình trò chuyện sau khi bạn đã phê duyệt sản phẩm cuối cùng. Biểu mẫu đánh giá sẽ được hiển thị.",
-      step2Title: "2. Đánh giá bằng cách cho điểm và nhận xét về sản phẩm cuối cùng",
-      step2Description: "Đánh giá kỹ năng, chất lượng, sự hài lòng và nhận xét về sản phẩm của freelancer. Điều này sẽ là thông tin quý giá cho khách hàng khác. Thông tin trên trang đánh giá đầu tiên sẽ được tích lũy và hiển thị trên hồ sơ và sản phẩm của freelancer.",
+      confidentHiringTitle:
+        "An tâm khi tuyển dụng với Fastwork. Bạn được tự do lựa chọn chấp nhận sản phẩm cuối cùng hoặc yêu cầu hoàn tiền.",
+      reviewProcessQuestion:
+        "Làm thế nào để đưa ra đánh giá sau khi đã phê duyệt sản phẩm cuối cùng?",
+      disputeProcessQuestion:
+        "Hướng dẫn khởi tạo tranh chấp đối với sản phẩm chưa được phê duyệt",
+      step1Title: '1. Nhấp vào nút "Đánh giá" trong màn hình trò chuyện',
+      step1Description:
+        'Nhấp vào nút "Đánh giá" ở cuối màn hình trò chuyện sau khi bạn đã phê duyệt sản phẩm cuối cùng. Biểu mẫu đánh giá sẽ được hiển thị.',
+      step2Title:
+        "2. Đánh giá bằng cách cho điểm và nhận xét về sản phẩm cuối cùng",
+      step2Description:
+        "Đánh giá kỹ năng, chất lượng, sự hài lòng và nhận xét về sản phẩm của freelancer. Điều này sẽ là thông tin quý giá cho khách hàng khác. Thông tin trên trang đánh giá đầu tiên sẽ được tích lũy và hiển thị trên hồ sơ và sản phẩm của freelancer.",
       step3Title: "3. Tự tin hơn với đánh giá ẩn danh",
-      step3Description: "Hãy cho chúng tôi biết kỳ vọng của bạn về sản phẩm và chất lượng dịch vụ của freelancer. Không ai có thể truy cập đánh giá ẩn danh này ngoại trừ những người chủ chốt tại Fastwork. Điều này rất quan trọng để chúng tôi cải thiện chất lượng freelancer của mình nhằm phục vụ bạn một cách hài lòng nhất.",
-      step4Title: "4. Cho điểm đánh giá mức độ bạn muốn giới thiệu Fastwork cho người khác",
-      step4Description: "Bạn có thể chia sẻ cho chúng tôi vấn đề hoặc khó khăn bạn gặp phải trong quá trình sử dụng nền tảng. Ngoài ra, bạn cũng có thể đưa ra nhận xét và đề xuất cho đội ngũ Fastwork. Mọi phản hồi của bạn đều được chúng tôi trân trọng và xem xét nghiêm túc nhằm cải thiện chất lượng dịch vụ.",
+      step3Description:
+        "Hãy cho chúng tôi biết kỳ vọng của bạn về sản phẩm và chất lượng dịch vụ của freelancer. Không ai có thể truy cập đánh giá ẩn danh này ngoại trừ những người chủ chốt tại Fastwork. Điều này rất quan trọng để chúng tôi cải thiện chất lượng freelancer của mình nhằm phục vụ bạn một cách hài lòng nhất.",
+      step4Title:
+        "4. Cho điểm đánh giá mức độ bạn muốn giới thiệu Fastwork cho người khác",
+      step4Description:
+        "Bạn có thể chia sẻ cho chúng tôi vấn đề hoặc khó khăn bạn gặp phải trong quá trình sử dụng nền tảng. Ngoài ra, bạn cũng có thể đưa ra nhận xét và đề xuất cho đội ngũ Fastwork. Mọi phản hồi của bạn đều được chúng tôi trân trọng và xem xét nghiêm túc nhằm cải thiện chất lượng dịch vụ.",
       customerSupportTitle: "Liên hệ bộ phận hỗ trợ khách hàng",
-      customerSupportDescription: "Vấn đề của bạn là ưu tiên hàng đầu của chúng tôi. Bạn có thể liên hệ bộ phận hỗ trợ khách hàng của chúng tôi qua các kênh sau.",
+      customerSupportDescription:
+        "Vấn đề của bạn là ưu tiên hàng đầu của chúng tôi. Bạn có thể liên hệ bộ phận hỗ trợ khách hàng của chúng tôi qua các kênh sau.",
       facebook: "Facebook",
       messenger: "Messenger",
       supportEmail: "support@fastwork.co",
-      customerSupportWorkingHours: "Đội ngũ của chúng tôi sẵn sàng phục vụ bạn mỗi ngày, Thứ Hai-Thứ Sáu từ 9:30 - 22:00",
+      customerSupportWorkingHours:
+        "Đội ngũ của chúng tôi sẵn sàng phục vụ bạn mỗi ngày, Thứ Hai-Thứ Sáu từ 9:30 - 22:00",
       customerSupportWeekendHours: "Thứ Bảy-Chủ Nhật, ngày lễ từ 10:00 - 19:00",
       startHiringTitle: "Bắt đầu tuyển dụng ngay hôm nay với sự bảo vệ tối ưu",
-      searchFreelancerButton: "Tìm freelancer"
+      searchFreelancerButton: "Tìm freelancer",
     },
     home: {
       architectureEngineering: "Kiến trúc & Kỹ thuật",
-      architectureEngineeringServices: "Cải tạo nhà, thiết kế nhà, lập dự toán xây dựng, vẽ bản vẽ thi công, kiểm tra nhà, thiết kế sân vườn, thiết kế nhà một tầng, thiết kế giường ngủ, vẽ bản vẽ máy móc, và nhiều hơn nữa.",
+      architectureEngineeringServices:
+        "Cải tạo nhà, thiết kế nhà, lập dự toán xây dựng, vẽ bản vẽ thi công, kiểm tra nhà, thiết kế sân vườn, thiết kế nhà một tầng, thiết kế giường ngủ, vẽ bản vẽ máy móc, và nhiều hơn nữa.",
       businessConsulting: "Kinh doanh & Tư vấn",
-      businessConsultingServices: "Dịch vụ kế toán, tư vấn tâm lý, tư vấn tài chính, tư vấn pháp lý, tư vấn sức khỏe tinh thần, đặt hàng từ Trung Quốc, trợ lý cá nhân, đăng ký công ty, tư vấn kinh doanh, và nhiều hơn nữa.",
+      businessConsultingServices:
+        "Dịch vụ kế toán, tư vấn tâm lý, tư vấn tài chính, tư vấn pháp lý, tư vấn sức khỏe tinh thần, đặt hàng từ Trung Quốc, trợ lý cá nhân, đăng ký công ty, tư vấn kinh doanh, và nhiều hơn nữa.",
       buttonBanner: "Khám phá dịch vụ",
       buttonDownloadApp: "Tải xuống ứng dụng",
       buttonJobCategoriesViewMore: "Xem thêm",
-      confidenceInFastwork: "Gặp gỡ đội ngũ freelancer chất lượng, sẵn sàng đáp ứng mọi nhu cầu của mọi doanh nghiệp, bao gồm mọi lĩnh vực, ngành nghề.",
-      contentFastwork1: "Fastwork.co là nền tảng tập hợp các freelancer chuyên nghiệp từ nhiều lĩnh vực khác nhau, bao gồm thiết kế logo, làm banner quảng cáo, viết bài, dịch thuật, tiếp thị trực tuyến, phát triển website và hơn 90 danh mục khác nhằm đáp ứng nhu cầu đa dạng của doanh nghiệp và người dùng. Đội ngũ Fastwork.co tập trung vào sự đơn giản và tiện lợi, giúp freelancer và khách hàng tiết kiệm thời gian, đồng thời hỗ trợ phát triển và mở rộng kinh doanh cho các doanh nghiệp lớn, nhỏ cũng như giúp freelancer dễ dàng tìm việc, tăng thu nhập và nâng cao chất lượng dịch vụ.",
-      contentFastwork2: "Fastwork.co hoạt động như một nền tảng trung gian trực tuyến giữa freelancer và khách hàng, giúp họ kết nối mọi lúc, mọi nơi. Freelancer có thể đăng tải dịch vụ trên Fastwork.co, trong khi khách hàng có thể tìm kiếm và thuê freelancer phù hợp. Hệ thống thanh toán an toàn của Fastwork.co đảm bảo freelancer nhận được tiền công khi hoàn thành công việc, đồng thời bảo vệ quyền lợi của khách hàng khi nhận sản phẩm đúng yêu cầu.",
-      contentFastwork3: "Hiện tại, Fastwork.co có hơn 50.000 freelancer đã qua kiểm duyệt chất lượng, cung cấp hơn 15.000 dịch vụ trong 90 danh mục khác nhau. Dịch vụ phù hợp với nhiều đối tượng khách hàng, từ chủ doanh nghiệp, SME, freelancer hàng online đến cá nhân đang tìm kiếm dịch vụ chuyên nghiệp với chi phí hợp lý. Fastwork.co là nền tảng freelancer chuyên nghiệp được hơn 700.000 khách hàng tin tưởng.",
-      contentFreelancerVerification: "Freelancer được tuyển chọn và xác minh bởi Fastwork có thể được kiểm tra.",
-      contentPaymentProtection: "Tiền của bạn được bảo vệ từ khi freelancer bắt đầu làm việc cho đến khi bạn hài lòng với kết quả cuối cùng.",
-      contentQualityFreelancers: "Gặp gỡ đội ngũ freelancer chất lượng, sẵn sàng đáp ứng mọi nhu cầu kinh doanh trên nhiều lĩnh vực.",
-      contentQualityOfferFreelancerCard1: "Đã xác minh danh tính trong hệ thống",
-      contentQualityOfferFreelancerCard2: "Danh mục công việc được đánh giá theo tiêu chuẩn cơ bản của Fastwork",
-      contentQualityOfferProfessionalCard1: "Đã xác minh danh tính trong hệ thống",
-      contentQualityOfferProfessionalCard2: "Được lựa chọn và kiểm tra kiến thức, kỹ năng, và chuyên môn bởi Fastwork",
-      contentQualityOfferProfessionalCard3: "Hoàn thành khóa đào tạo đặc biệt về kỹ năng và dịch vụ khách hàng do Fastwork cung cấp",
-      contentQualityOfferProfessionalCard4: "Có các chứng chỉ chuyên môn cần thiết theo yêu cầu của lĩnh vực",
-      contentQualityOfferProfessionalCard5: "Được lọc theo các tiêu chí đặc biệt để đảm bảo chuyên môn cao",
-      contentQualityOfferProfessionalCard6: "Có khả năng xử lý các dự án có độ phức tạp cao và quy mô lớn",
-      contentQualityOfferSpecialistCard1: "Đã xác minh danh tính trong hệ thống",
-      contentQualityOfferSpecialistCard2: "Được lựa chọn và kiểm tra kiến thức, kỹ năng, và chuyên môn bởi Fastwork",
-      contentQualityOfferSpecialistCard3: "Hoàn thành khóa đào tạo đặc biệt về kỹ năng và dịch vụ khách hàng do Fastwork cung cấp",
-      contentQualityOfferSpecialistCard4: "Có các chứng chỉ chuyên môn cần thiết theo yêu cầu của lĩnh vực",
-      contentStartHiringSection1: "Tìm freelancer phù hợp dựa trên danh mục công việc, quy trình làm việc, bước thực hiện, đánh giá và nhận xét",
+      confidenceInFastwork:
+        "Gặp gỡ đội ngũ freelancer chất lượng, sẵn sàng đáp ứng mọi nhu cầu của mọi doanh nghiệp, bao gồm mọi lĩnh vực, ngành nghề.",
+      contentFastwork1:
+        "Fastwork.co là nền tảng tập hợp các freelancer chuyên nghiệp từ nhiều lĩnh vực khác nhau, bao gồm thiết kế logo, làm banner quảng cáo, viết bài, dịch thuật, tiếp thị trực tuyến, phát triển website và hơn 90 danh mục khác nhằm đáp ứng nhu cầu đa dạng của doanh nghiệp và người dùng. Đội ngũ Fastwork.co tập trung vào sự đơn giản và tiện lợi, giúp freelancer và khách hàng tiết kiệm thời gian, đồng thời hỗ trợ phát triển và mở rộng kinh doanh cho các doanh nghiệp lớn, nhỏ cũng như giúp freelancer dễ dàng tìm việc, tăng thu nhập và nâng cao chất lượng dịch vụ.",
+      contentFastwork2:
+        "Fastwork.co hoạt động như một nền tảng trung gian trực tuyến giữa freelancer và khách hàng, giúp họ kết nối mọi lúc, mọi nơi. Freelancer có thể đăng tải dịch vụ trên Fastwork.co, trong khi khách hàng có thể tìm kiếm và thuê freelancer phù hợp. Hệ thống thanh toán an toàn của Fastwork.co đảm bảo freelancer nhận được tiền công khi hoàn thành công việc, đồng thời bảo vệ quyền lợi của khách hàng khi nhận sản phẩm đúng yêu cầu.",
+      contentFastwork3:
+        "Hiện tại, Fastwork.co có hơn 50.000 freelancer đã qua kiểm duyệt chất lượng, cung cấp hơn 15.000 dịch vụ trong 90 danh mục khác nhau. Dịch vụ phù hợp với nhiều đối tượng khách hàng, từ chủ doanh nghiệp, SME, freelancer hàng online đến cá nhân đang tìm kiếm dịch vụ chuyên nghiệp với chi phí hợp lý. Fastwork.co là nền tảng freelancer chuyên nghiệp được hơn 700.000 khách hàng tin tưởng.",
+      contentFreelancerVerification:
+        "Freelancer được tuyển chọn và xác minh bởi Fastwork có thể được kiểm tra.",
+      contentPaymentProtection:
+        "Tiền của bạn được bảo vệ từ khi freelancer bắt đầu làm việc cho đến khi bạn hài lòng với kết quả cuối cùng.",
+      contentQualityFreelancers:
+        "Gặp gỡ đội ngũ freelancer chất lượng, sẵn sàng đáp ứng mọi nhu cầu kinh doanh trên nhiều lĩnh vực.",
+      contentQualityOfferFreelancerCard1:
+        "Đã xác minh danh tính trong hệ thống",
+      contentQualityOfferFreelancerCard2:
+        "Danh mục công việc được đánh giá theo tiêu chuẩn cơ bản của Fastwork",
+      contentQualityOfferProfessionalCard1:
+        "Đã xác minh danh tính trong hệ thống",
+      contentQualityOfferProfessionalCard2:
+        "Được lựa chọn và kiểm tra kiến thức, kỹ năng, và chuyên môn bởi Fastwork",
+      contentQualityOfferProfessionalCard3:
+        "Hoàn thành khóa đào tạo đặc biệt về kỹ năng và dịch vụ khách hàng do Fastwork cung cấp",
+      contentQualityOfferProfessionalCard4:
+        "Có các chứng chỉ chuyên môn cần thiết theo yêu cầu của lĩnh vực",
+      contentQualityOfferProfessionalCard5:
+        "Được lọc theo các tiêu chí đặc biệt để đảm bảo chuyên môn cao",
+      contentQualityOfferProfessionalCard6:
+        "Có khả năng xử lý các dự án có độ phức tạp cao và quy mô lớn",
+      contentQualityOfferSpecialistCard1:
+        "Đã xác minh danh tính trong hệ thống",
+      contentQualityOfferSpecialistCard2:
+        "Được lựa chọn và kiểm tra kiến thức, kỹ năng, và chuyên môn bởi Fastwork",
+      contentQualityOfferSpecialistCard3:
+        "Hoàn thành khóa đào tạo đặc biệt về kỹ năng và dịch vụ khách hàng do Fastwork cung cấp",
+      contentQualityOfferSpecialistCard4:
+        "Có các chứng chỉ chuyên môn cần thiết theo yêu cầu của lĩnh vực",
+      contentStartHiringSection1:
+        "Tìm freelancer phù hợp dựa trên danh mục công việc, quy trình làm việc, bước thực hiện, đánh giá và nhận xét",
       contentStartHiringSection2: "Trao đổi chi tiết dự án và nhận báo giá.",
-      contentStartHiringSection3: "Fastwork đảm bảo bạn sẽ nhận được công việc hoàn thành đúng yêu cầu.",
-      contentStartHiringSection4: "Xem xét công việc được gửi, xác nhận và để lại đánh giá.",
-      freelancerQuality: "Freelancer đã qua tuyển chọn và xác minh danh tính bởi Fastwork và bạn có thể kiểm tra thông tin này.",
-      freelancerStatistics: "Hiện tại, Fastwork.co có hơn 50.000 freelancer chất lượng, cung cấp dịch vụ trong hơn 90 danh mục khác nhau. Hơn 15.000 công việc đã được hoàn thành thành công, với các freelancer được lựa chọn kỹ lưỡng theo kỹ năng và kinh nghiệm để đáp ứng tốt nhất nhu cầu của khách hàng—bao gồm chủ doanh nghiệp, SME, người kinh doanh trực tuyến hoặc cá nhân đang tìm kiếm dịch vụ chuyên nghiệp. Fastwork hiện đang được hơn 70.000 khách hàng tin tưởng sử dụng.",
+      contentStartHiringSection3:
+        "Fastwork đảm bảo bạn sẽ nhận được công việc hoàn thành đúng yêu cầu.",
+      contentStartHiringSection4:
+        "Xem xét công việc được gửi, xác nhận và để lại đánh giá.",
+      freelancerQuality:
+        "Freelancer đã qua tuyển chọn và xác minh danh tính bởi Fastwork và bạn có thể kiểm tra thông tin này.",
+      freelancerStatistics:
+        "Hiện tại, Fastwork.co có hơn 50.000 freelancer chất lượng, cung cấp dịch vụ trong hơn 90 danh mục khác nhau. Hơn 15.000 công việc đã được hoàn thành thành công, với các freelancer được lựa chọn kỹ lưỡng theo kỹ năng và kinh nghiệm để đáp ứng tốt nhất nhu cầu của khách hàng—bao gồm chủ doanh nghiệp, SME, người kinh doanh trực tuyến hoặc cá nhân đang tìm kiếm dịch vụ chuyên nghiệp. Fastwork hiện đang được hơn 70.000 khách hàng tin tưởng sử dụng.",
       graphicDesign: "Thiết kế đồ họa",
-      graphicDesignServices: "Thiết kế banner, danh thiếp, áp phích, đồ họa thông tin (infographic), hồ sơ xin việc (resume), thiết kế hình xăm, bao bì sản phẩm, nhận diện thương hiệu (CI), và nhiều hơn nữa.",
-      jobSecurity: "Tiền của bạn sẽ được bảo vệ từ lúc freelancer bắt đầu làm việc cho đến khi bạn nhận được kết quả công việc hài lòng.",
+      graphicDesignServices:
+        "Thiết kế banner, danh thiếp, áp phích, đồ họa thông tin (infographic), hồ sơ xin việc (resume), thiết kế hình xăm, bao bì sản phẩm, nhận diện thương hiệu (CI), và nhiều hơn nữa.",
+      jobSecurity:
+        "Tiền của bạn sẽ được bảo vệ từ lúc freelancer bắt đầu làm việc cho đến khi bạn nhận được kết quả công việc hài lòng.",
       labelFreelancersPopularLogo: "Thiết kế Logo",
       labelRecommendSection: "Đề xuất cho bạn",
       labelReviewsCustomer: "Đánh giá từ khách hàng",
@@ -866,38 +1024,54 @@ export const vi = {
       labelStartHiringSection3: "3. Thanh toán an toàn qua Fastwork",
       labelStartHiringSection4: "4. Xác nhận công việc và đánh giá",
       lifestyle: "Phong cách sống",
-      lifestyleServices: "Kiểm tra xe cũ, tư vấn phong thủy nhà ở, dịch vụ chơi game thuê, xem tử vi, chuyên gia trang điểm, thuê huấn luyện viên cá nhân, tư vấn dinh dưỡng, tìm ca sĩ, lập kế hoạch du lịch, stylist cá nhân, và nhiều hơn nữa.",
+      lifestyleServices:
+        "Kiểm tra xe cũ, tư vấn phong thủy nhà ở, dịch vụ chơi game thuê, xem tử vi, chuyên gia trang điểm, thuê huấn luyện viên cá nhân, tư vấn dinh dưỡng, tìm ca sĩ, lập kế hoạch du lịch, stylist cá nhân, và nhiều hơn nữa.",
       marketingAdvertising: "Tiếp thị & Quảng cáo",
-      marketingAdvertisingServices: "Dịch vụ SEO, quảng cáo Google, quảng cáo Facebook, quảng cáo TikTok, tiếp thị qua người có ảnh hưởng, quảng bá sản phẩm, dịch vụ thử nghiệm sản phẩm, quảng cáo bán nhà, ghim vị trí trên Google Maps, và nhiều hơn nữa.",
+      marketingAdvertisingServices:
+        "Dịch vụ SEO, quảng cáo Google, quảng cáo Facebook, quảng cáo TikTok, tiếp thị qua người có ảnh hưởng, quảng bá sản phẩm, dịch vụ thử nghiệm sản phẩm, quảng cáo bán nhà, ghim vị trí trên Google Maps, và nhiều hơn nữa.",
       mediaAudio: "Truyền thông & Âm thanh",
-      mediaAudioServices: "Nhiếp ảnh, chụp ảnh sự kiện, tạo podcast, chỉnh sửa bài hát, biên tập video, thiết kế website động, đồ họa chuyển động, phát trực tiếp, thuê người mẫu, lồng tiếng, và nhiều hơn nữa.",
-      platformDescription: "Fastwork.co là nền tảng kết nối các freelancer chuyên nghiệp từ nhiều lĩnh vực khác nhau tại một nơi, bao gồm thiết kế đồ họa, quảng cáo banner, viết bài, dịch thuật, tiếp thị trực tuyến, phát triển website và hơn 90 danh mục khác để đáp ứng nhu cầu đa dạng của doanh nghiệp và người dùng. Đội ngũ phát triển của chúng tôi đã thiết kế Fastwork.co với sự đơn giản và tiện lợi, tạo ra một nền tảng giúp freelancer và khách hàng tiết kiệm thời gian. Ngoài ra, chúng tôi còn hỗ trợ các doanh nghiệp mới khởi nghiệp, thúc đẩy tinh thần kinh doanh và giúp freelancer làm việc hiệu quả hơn, tạo thu nhập ổn định và nâng cao tiêu chuẩn của freelancer tại Thái Lan.",
-      platformPurpose: "Fastwork.co đóng vai trò là nền tảng trung gian trực tuyến kết nối freelancer với khách hàng, giúp họ dễ dàng tìm thấy và hợp tác với nhau mọi lúc. Freelancer có thể đăng tin tìm việc trên Fastwork.co một cách thuận tiện tại một nơi duy nhất, đồng thời khách hàng có thể dễ dàng tìm kiếm, so sánh giá cả và đánh giá chất lượng freelancer để lựa chọn dịch vụ phù hợp nhất. Hệ thống thanh toán an toàn của Fastwork.co đảm bảo freelancer chỉ nhận được tiền sau khi công việc đã hoàn thành, mang lại sự an tâm cho cả hai bên.",
-      subtitleBanner: "Tăng trưởng doanh nghiệp nhanh chóng với freelancer phù hợp",
-      subtitleDownloadApp: "Đơn giản hóa quy trình tuyển dụng của bạn với ứng dụng Fastwork. Tìm kiếm, tóm tắt, thanh toán và nhận công việc liền mạch—all in one app.",
-      titleAstrologyFreelancers: "Những freelancer phổ biến trong lĩnh vực tử vi, chiêm tinh và tín ngưỡng",
+      mediaAudioServices:
+        "Nhiếp ảnh, chụp ảnh sự kiện, tạo podcast, chỉnh sửa bài hát, biên tập video, thiết kế website động, đồ họa chuyển động, phát trực tiếp, thuê người mẫu, lồng tiếng, và nhiều hơn nữa.",
+      platformDescription:
+        "Fastwork.co là nền tảng kết nối các freelancer chuyên nghiệp từ nhiều lĩnh vực khác nhau tại một nơi, bao gồm thiết kế đồ họa, quảng cáo banner, viết bài, dịch thuật, tiếp thị trực tuyến, phát triển website và hơn 90 danh mục khác để đáp ứng nhu cầu đa dạng của doanh nghiệp và người dùng. Đội ngũ phát triển của chúng tôi đã thiết kế Fastwork.co với sự đơn giản và tiện lợi, tạo ra một nền tảng giúp freelancer và khách hàng tiết kiệm thời gian. Ngoài ra, chúng tôi còn hỗ trợ các doanh nghiệp mới khởi nghiệp, thúc đẩy tinh thần kinh doanh và giúp freelancer làm việc hiệu quả hơn, tạo thu nhập ổn định và nâng cao tiêu chuẩn của freelancer tại Thái Lan.",
+      platformPurpose:
+        "Fastwork.co đóng vai trò là nền tảng trung gian trực tuyến kết nối freelancer với khách hàng, giúp họ dễ dàng tìm thấy và hợp tác với nhau mọi lúc. Freelancer có thể đăng tin tìm việc trên Fastwork.co một cách thuận tiện tại một nơi duy nhất, đồng thời khách hàng có thể dễ dàng tìm kiếm, so sánh giá cả và đánh giá chất lượng freelancer để lựa chọn dịch vụ phù hợp nhất. Hệ thống thanh toán an toàn của Fastwork.co đảm bảo freelancer chỉ nhận được tiền sau khi công việc đã hoàn thành, mang lại sự an tâm cho cả hai bên.",
+      subtitleBanner:
+        "Tăng trưởng doanh nghiệp nhanh chóng với freelancer phù hợp",
+      subtitleDownloadApp:
+        "Đơn giản hóa quy trình tuyển dụng của bạn với ứng dụng Fastwork. Tìm kiếm, tóm tắt, thanh toán và nhận công việc liền mạch—all in one app.",
+      titleAstrologyFreelancers:
+        "Những freelancer phổ biến trong lĩnh vực tử vi, chiêm tinh và tín ngưỡng",
       titleBanner: "Fastwork cho doanh nghiệp",
       titleBannerHomePage1: "Chúng tôi có các chuyên gia trong ...",
       titleBannerHomePage2: "Sẵn sàng biến ý tưởng của bạn thành hiện thực",
       titleFeaturedWorks: "Tác phẩm nổi bật từ freelancer trên Fastwork",
       titleJobCategories: "Danh mục công việc trên Fastwork",
-      titleLogoDesignFreelancers: "Những freelancer phổ biến trong lĩnh vực thiết kế logo",
+      titleLogoDesignFreelancers:
+        "Những freelancer phổ biến trong lĩnh vực thiết kế logo",
       titlePlatform: "Fastwork: Nền tảng hàng đầu cho Freelancer chất lượng",
-      titlePopularFreelancers: "Những freelancer phổ biến trong lĩnh vực cắm hoa",
+      titlePopularFreelancers:
+        "Những freelancer phổ biến trong lĩnh vực cắm hoa",
       titleStartHiringSection: "Bắt đầu thuê Freelancer với Fastwork",
-      titleTrustedCompanies: "Hơn 150.000 dự án thành công được hoàn thành bởi các công ty hàng đầu tin tưởng Fastwork",
+      titleTrustedCompanies:
+        "Hơn 150.000 dự án thành công được hoàn thành bởi các công ty hàng đầu tin tưởng Fastwork",
       tittleFirstSlogan: "Freelancer chất lượng hàng đầu",
       tittlePrimaryWhySection: "Tại sao chọn Fastwork?",
       tittleQualityOfferProfessionalCard: "Chuyên nghiệp",
-      tittleQualityOfferSection: "Chúng tôi cung cấp nhiều freelancer và chuyên gia chất lượng sẵn sàng phục vụ bạn.",
+      tittleQualityOfferSection:
+        "Chúng tôi cung cấp nhiều freelancer và chuyên gia chất lượng sẵn sàng phục vụ bạn.",
       tittleQualityOfferSpecialistCard: "Chuyên gia",
       tittleSecondSlogan: "Đảm bảo công việc",
-      tittleSecondaryWhySection: "Biến ý tưởng của bạn thành hiện thực với các freelancer chuyên nghiệp",
-      tittleThirdSlogan: "Mọi công việc đều được đảm bảo, hãy chọn Fastwork với sự tự tin",
+      tittleSecondaryWhySection:
+        "Biến ý tưởng của bạn thành hiện thực với các freelancer chuyên nghiệp",
+      tittleThirdSlogan:
+        "Mọi công việc đều được đảm bảo, hãy chọn Fastwork với sự tự tin",
       websiteProgramming: "Website & Lập trình",
-      websiteProgrammingServices: "Thiết kế website, tạo website bán hàng, website có sẵn, lập trình phần mềm, chatbot Facebook, hệ thống đặt lịch online, quét dữ liệu website, phát triển phần mềm, và nhiều hơn nữa.",
+      websiteProgrammingServices:
+        "Thiết kế website, tạo website bán hàng, website có sẵn, lập trình phần mềm, chatbot Facebook, hệ thống đặt lịch online, quét dữ liệu website, phát triển phần mềm, và nhiều hơn nữa.",
       writingTranslation: "Viết & Dịch thuật",
-      writingTranslationServices: "Dịch thuật, phiên dịch, chuyển đổi âm thanh thành văn bản, viết nội dung, viết bài chuẩn SEO, viết tiếng Anh, viết báo cáo, hiệu đính văn bản, sáng tác thơ, và nhiều hơn nữa."
+      writingTranslationServices:
+        "Dịch thuật, phiên dịch, chuyển đổi âm thanh thành văn bản, viết nội dung, viết bài chuẩn SEO, viết tiếng Anh, viết báo cáo, hiệu đính văn bản, sáng tác thơ, và nhiều hơn nữa.",
     },
     how: {
       howToBuySellTitle: "Làm thế nào để giao dịch dịch vụ trên Fastwork?",
@@ -906,7 +1080,8 @@ export const vi = {
       chooseServiceButton: "Chọn dịch vụ bạn muốn.",
       registerFreelancerButton: "Đăng ký để trở thành Freelancer.",
       employerStep1Title: "Chọn dịch vụ bạn muốn.",
-      employerStep1Description: "Khám phá và chọn freelancer từ các lĩnh vực chuyên môn sau:",
+      employerStep1Description:
+        "Khám phá và chọn freelancer từ các lĩnh vực chuyên môn sau:",
       employerStep1List1: "Đồ họa & Thiết kế",
       employerStep1List2: "Tiếp thị và Quảng cáo",
       employerStep1List3: "Viết và Dịch thuật",
@@ -916,30 +1091,45 @@ export const vi = {
       employerStep1List7: "Phong cách sống",
       employerStep2Title: "Thảo luận chi tiết công việc với freelancer.",
       employerStep2Description: "Thảo luận phạm vi công việc của bạn",
-      employerStep2List1: "Bạn có thể trao đổi với freelancer về chi tiết và giá cả công việc",
-      employerStep2List2: "Nếu các chi tiết về công việc đã được thống nhất, Freelancer sẽ gửi cho bạn một báo giá.",
-      employerStep2List3: "Hệ thống không cho phép bạn gửi LINE, số điện thoại, email trước khi thanh toán",
+      employerStep2List1:
+        "Bạn có thể trao đổi với freelancer về chi tiết và giá cả công việc",
+      employerStep2List2:
+        "Nếu các chi tiết về công việc đã được thống nhất, Freelancer sẽ gửi cho bạn một báo giá.",
+      employerStep2List3:
+        "Hệ thống không cho phép bạn gửi LINE, số điện thoại, email trước khi thanh toán",
       employerStep3Title: "Thực hiện thanh toán qua hệ thống",
-      employerStep3Description: "Hệ thống hoạt động như một bên trung gian giữ tiền của bạn cho đến khi freelancer hoàn thành công việc của mình.",
+      employerStep3Description:
+        "Hệ thống hoạt động như một bên trung gian giữ tiền của bạn cho đến khi freelancer hoàn thành công việc của mình.",
       employerStep3List1: "Xác minh chi tiết tuyển dụng trong báo giá",
-      employerStep3List2: "Bạn có thể thanh toán qua Fastwork bằng các phương thức sau:",
+      employerStep3List2:
+        "Bạn có thể thanh toán qua Fastwork bằng các phương thức sau:",
       employerStep3List3: "Quét mã QR PromptPay",
       employerStep3List4: "Thẻ tín dụng",
       employerStep3List5: "Fastwork Coin",
       employerStep3List6: "Ví TrueMoney",
-      employerStep3List7: "Sau khi thanh toán thành công, bạn có thể trao đổi thông tin liên hệ cá nhân.",
+      employerStep3List7:
+        "Sau khi thanh toán thành công, bạn có thể trao đổi thông tin liên hệ cá nhân.",
       employerStep4Title: "Chờ freelancer bàn giao công việc cho bạn.",
-      employerStep4Description: "Kiểm tra sản phẩm cuối cùng được giao bởi freelancer.",
-      employerStep4List1: "Nhấp vào chấp thuận sản phẩm, nếu sản phẩm cuối cùng được gửi phù hợp với thỏa thuận báo giá",
-      employerStep4List2: "Freelancer sẽ nhận được tiền mặt chỉ sau khi bạn chấp thuận sản phẩm",
-      employerStep4List3: "Công việc của freelancer sẽ được hệ thống phê duyệt trong vòng 7 ngày. Nếu bạn không xem xét hoặc gửi yêu cầu sửa đổi công việc.",
-      employerStep4List4: "Bạn có thể từ chối sản phẩm cuối cùng và cho phép freelancer chỉnh sửa công việc của họ. Điều này phụ thuộc vào thỏa thuận của cả hai bên.",
-      employerStep4List5: "Bạn có thể khởi kiện nếu công việc không được thực hiện đúng như cam kết của freelancer.",
+      employerStep4Description:
+        "Kiểm tra sản phẩm cuối cùng được giao bởi freelancer.",
+      employerStep4List1:
+        "Nhấp vào chấp thuận sản phẩm, nếu sản phẩm cuối cùng được gửi phù hợp với thỏa thuận báo giá",
+      employerStep4List2:
+        "Freelancer sẽ nhận được tiền mặt chỉ sau khi bạn chấp thuận sản phẩm",
+      employerStep4List3:
+        "Công việc của freelancer sẽ được hệ thống phê duyệt trong vòng 7 ngày. Nếu bạn không xem xét hoặc gửi yêu cầu sửa đổi công việc.",
+      employerStep4List4:
+        "Bạn có thể từ chối sản phẩm cuối cùng và cho phép freelancer chỉnh sửa công việc của họ. Điều này phụ thuộc vào thỏa thuận của cả hai bên.",
+      employerStep4List5:
+        "Bạn có thể khởi kiện nếu công việc không được thực hiện đúng như cam kết của freelancer.",
       employerStep5Title: "Đánh giá và Nhận xét",
       employerStep5Description: "Để phát triển cộng đồng Fastwork",
-      employerStep5List1: "Đánh giá và nhận xét khách hàng để hỗ trợ mang lại lợi ích cho các freelancer khác",
-      employerStep5List2: "Đưa ra nhận xét về mức độ hài lòng của bạn đối với hệ thống Fastwork nhằm giúp nâng cao chất lượng dịch vụ",
-      sellerStep1Title: "Đăng sản phẩm/dự án của bạn lên Fastwork để giới thiệu năng lực chuyên môn đến với khách hàng tiềm năng",
+      employerStep5List1:
+        "Đánh giá và nhận xét khách hàng để hỗ trợ mang lại lợi ích cho các freelancer khác",
+      employerStep5List2:
+        "Đưa ra nhận xét về mức độ hài lòng của bạn đối với hệ thống Fastwork nhằm giúp nâng cao chất lượng dịch vụ",
+      sellerStep1Title:
+        "Đăng sản phẩm/dự án của bạn lên Fastwork để giới thiệu năng lực chuyên môn đến với khách hàng tiềm năng",
       sellerStep1Description: "Đăng dịch vụ của bạn trong các danh mục sau:",
       sellerStep1List1: "Đồ họa & Thiết kế",
       sellerStep1List2: "Tiếp thị và Quảng cáo",
@@ -948,22 +1138,30 @@ export const vi = {
       sellerStep1List5: "Web & Lập trình",
       sellerStep1List6: "Tư vấn",
       sellerStep1List7: "Phong cách sống",
-      sellerStep2Title: "Thảo luận chi tiết công việc với freelancer và tạo báo giá",
-      sellerStep2Description: "Thảo luận về chi tiết và tóm tắt công việc với khách hàng.",
-      sellerStep2List1: "Thảo luận chi tiết công việc và gửi báo giá cho khách hàng",
-      sellerStep2List2: "Hệ thống không cho phép bạn gửi LINE, số điện thoại, email trước khi thanh toán",
+      sellerStep2Title:
+        "Thảo luận chi tiết công việc với freelancer và tạo báo giá",
+      sellerStep2Description:
+        "Thảo luận về chi tiết và tóm tắt công việc với khách hàng.",
+      sellerStep2List1:
+        "Thảo luận chi tiết công việc và gửi báo giá cho khách hàng",
+      sellerStep2List2:
+        "Hệ thống không cho phép bạn gửi LINE, số điện thoại, email trước khi thanh toán",
       sellerStep3Title: "Chờ khách hàng thanh toán",
-      sellerStep3Description: "Khách hàng phải thanh toán qua hệ thống trước khi bạn bắt đầu làm việc.",
+      sellerStep3Description:
+        "Khách hàng phải thanh toán qua hệ thống trước khi bạn bắt đầu làm việc.",
       sellerStep3List1: "Hệ thống sẽ thông báo khi thanh toán hoàn tất",
       sellerStep3List2: "Chỉ làm việc sau khi nhận được xác nhận",
       sellerStep4Title: "Bàn giao sản phẩm cuối cùng",
-      sellerStep4Description: "Gửi công việc qua hệ thống và chờ khách hàng phê duyệt.",
+      sellerStep4Description:
+        "Gửi công việc qua hệ thống và chờ khách hàng phê duyệt.",
       sellerStep4List1: "Khách hàng có thể phê duyệt hoặc yêu cầu chỉnh sửa",
-      sellerStep4List2: "Bạn sẽ nhận được tiền sau khi khách hàng phê duyệt hoặc sau 7 ngày",
+      sellerStep4List2:
+        "Bạn sẽ nhận được tiền sau khi khách hàng phê duyệt hoặc sau 7 ngày",
       sellerStep5Title: "Nhận thanh toán và phản hồi",
-      sellerStep5Description: "Xây dựng danh tiếng của bạn bằng những đánh giá tuyệt vời.",
+      sellerStep5Description:
+        "Xây dựng danh tiếng của bạn bằng những đánh giá tuyệt vời.",
       sellerStep5List1: "Rút tiền kiếm được qua các phương thức được hỗ trợ",
-      sellerStep5List2: "Khuyến khích khách hàng để lại đánh giá"
+      sellerStep5List2: "Khuyến khích khách hàng để lại đánh giá",
     },
     jobBoardCreate: {
       whyValidate: "Yêu cầu tối thiểu 100 ký tự",
@@ -971,12 +1169,17 @@ export const vi = {
       priceValidate: "Giá là bắt buộc",
       timelineValidate: "Thời gian là bắt buộc",
       serviceValidate: "Vui lòng chọn một dịch vụ",
-      increateHire: "Tăng cơ hội được tuyển dụng! Với kinh nghiệm và hồ sơ dự án chất lượng có liên quan",
-      mostClient: "Phần lớn khách hàng lựa chọn freelancer dựa trên lịch sử làm việc và các minh chứng công việc",
-      warning: "Cảnh báo: Mời khách hàng thanh toán ngoài hệ thống Fastwork là vi phạm điều khoản sử dụng và có thể dẫn đến khóa tài khoản.",
-      allInfo: "Tất cả thông tin sẽ được hiển thị công khai (ngoại trừ 'Giá đề xuất')",
+      increateHire:
+        "Tăng cơ hội được tuyển dụng! Với kinh nghiệm và hồ sơ dự án chất lượng có liên quan",
+      mostClient:
+        "Phần lớn khách hàng lựa chọn freelancer dựa trên lịch sử làm việc và các minh chứng công việc",
+      warning:
+        "Cảnh báo: Mời khách hàng thanh toán ngoài hệ thống Fastwork là vi phạm điều khoản sử dụng và có thể dẫn đến khóa tài khoản.",
+      allInfo:
+        "Tất cả thông tin sẽ được hiển thị công khai (ngoại trừ 'Giá đề xuất')",
       whyClient: "Tại sao khách hàng nên thuê bạn",
-      whyClientPlaceholder: "Ví dụ: Hồ sơ liên quan / Kinh nghiệm làm việc / Quy trình thực hiện",
+      whyClientPlaceholder:
+        "Ví dụ: Hồ sơ liên quan / Kinh nghiệm làm việc / Quy trình thực hiện",
       minimum: "Tối thiểu 100 ký tự",
       portfolioUrl: "URL hồ sơ năng lực cá nhân (Không bắt buộc)",
       portfolioSample: "Minh chứng hồ sơ năng lực (Không bắt buộc)",
@@ -987,7 +1190,7 @@ export const vi = {
       day: "ngày",
       selectService: "Chọn dịch vụ của bạn",
       cancel: "Hủy",
-      submit: "Gửi"
+      submit: "Gửi",
     },
     jobBoardDetail: {
       open: "Đang mở",
@@ -1009,14 +1212,18 @@ export const vi = {
       specialReq: "Yêu cầu đặc biệt",
       english: "Tiếng Anh",
       submit: "Gửi đề xuất",
-      interestFreelance: "Freelancer quan tâm thiết kế nhân vật game mobile (0 đề xuất)",
-      recommendation: "Chúng tôi khuyến nghị bạn nên trao đổi và thanh toán qua Fastwork để đảm bảo không có sự lừa đảo! Chúng tôi sẽ bảo vệ khoản thanh toán của bạn cho đến khi bạn nhận được sản phẩm từ freelancer.",
-      wantToFind: "Bạn đang tìm kiếm freelancer trên Fastlance? Hãy tìm kiếm và kết nối với những freelancer xuất sắc ngay hôm nay!",
+      interestFreelance:
+        "Freelancer quan tâm thiết kế nhân vật game mobile (0 đề xuất)",
+      recommendation:
+        "Chúng tôi khuyến nghị bạn nên trao đổi và thanh toán qua Fastwork để đảm bảo không có sự lừa đảo! Chúng tôi sẽ bảo vệ khoản thanh toán của bạn cho đến khi bạn nhận được sản phẩm từ freelancer.",
+      wantToFind:
+        "Bạn đang tìm kiếm freelancer trên Fastlance? Hãy tìm kiếm và kết nối với những freelancer xuất sắc ngay hôm nay!",
       generate: "Tạo thu nhập qua các nền tảng và bảng thông báo công việc",
       wantToGet: "Muốn nhận việc qua Fastlance? Đăng ký làm freelancer ngay!",
       cannotSubmit: "Không thể gửi đề xuất",
       noApproved: "Chưa có dịch vụ nào được phê duyệt",
-      needApproved: "Bạn cần được quản trị viên phê duyệt hoặc có ít nhất 1 dịch vụ đã được duyệt. Vui lòng kiểm tra trạng thái dịch vụ của bạn.",
+      needApproved:
+        "Bạn cần được quản trị viên phê duyệt hoặc có ít nhất 1 dịch vụ đã được duyệt. Vui lòng kiểm tra trạng thái dịch vụ của bạn.",
       close: "Đóng",
       checkService: "Kiểm tra dịch vụ của bạn",
       noProposal: "Chưa có nào đề xuất từ freelancer",
@@ -1024,7 +1231,7 @@ export const vi = {
       workSample: "Minh chứng cho công việc",
       attachService: "Dịch vụ đính kèm",
       timeLine: "Thời gian thực hiện",
-      day: "ngày"
+      day: "ngày",
     },
     jobCard: {
       expert: "Chuyên gia",
@@ -1032,7 +1239,7 @@ export const vi = {
       rating: "Đánh giá",
       responseTime: "Phản hồi trong {{n}} phút",
       sold: "Đã bán",
-      startingPrice: "Bắt đầu từ"
+      startingPrice: "Bắt đầu từ",
     },
     jobCategory: {
       "4": "4",
@@ -1056,7 +1263,8 @@ export const vi = {
       promoteFacebookIgYoutube: "Quảng bá trang Facebook / IG / Youtube",
       becomeMarketingConsultant: "Trở thành tư vấn tiếp thị",
       priceRange: "Khoảng giá",
-      languageUsedToCommunicateWithEmployers: "Ngôn ngữ dùng để giao tiếp với nhà tuyển dụng",
+      languageUsedToCommunicateWithEmployers:
+        "Ngôn ngữ dùng để giao tiếp với nhà tuyển dụng",
       thai: "Tiếng Thái",
       english: "Tiếng Anh",
       pointsReceived: "Điểm nhận được",
@@ -1069,18 +1277,20 @@ export const vi = {
       safeNoScam: "An toàn, không bị lừa đảo",
       supportThroughout: "Hỗ trợ trong suốt quá trình làm việc",
       highestPrice: "Giá cao nhất",
-      noResultsMessage: "Không tìm thấy kết quả tìm kiếm, kiểm tra lại từ khóa hoặc điều kiện sử dụng hoặc đăng tìm freelancer qua bảng công việc",
+      noResultsMessage:
+        "Không tìm thấy kết quả tìm kiếm, kiểm tra lại từ khóa hoặc điều kiện sử dụng hoặc đăng tìm freelancer qua bảng công việc",
       postJobBoard: "Đăng trên bảng công việc",
       allCategories: "Tất cả",
       serviceCategory: "Dịch vụ",
       action: "Thuê freelancer để",
       scope: "Tất cả danh mục công việc",
-      instruction: "Chọn loại dịch vụ phù hợp với nhu cầu của bạn"
+      instruction: "Chọn loại dịch vụ phù hợp với nhu cầu của bạn",
     },
     jobDetail: {
       allJobTypes: "Tất cả loại công việc",
       fastworkGuarantee: "Bảo đảm Fastwork",
-      fastworkGuaranteeDescription: "Chăm sóc suốt quá trình làm việc, an toàn, không bị lừa, trung gian bảo vệ tiền cho đến khi công việc được phê duyệt. Đọc thêm điều khoản và quyền bảo vệ.",
+      fastworkGuaranteeDescription:
+        "Chăm sóc suốt quá trình làm việc, an toàn, không bị lừa, trung gian bảo vệ tiền cho đến khi công việc được phê duyệt. Đọc thêm điều khoản và quyền bảo vệ.",
       chatWithFreelancers: "Trò chuyện với freelancer",
       interestedInHiring: "Quan tâm đến việc thuê thay mặt công ty",
       noChargesMessage: "Bạn sẽ không phải chịu bất kỳ chi phí nào.",
@@ -1088,10 +1298,12 @@ export const vi = {
       overviewTab: "Tổng quan",
       packageTab: "Gói dịch vụ",
       freelanceReviewTab: "Đánh giá freelancer",
-      packageDescription: "Gói dịch vụ: tăng Traffic trong 30 ngày, đẩy xếp hạng, tăng tốc Index",
+      packageDescription:
+        "Gói dịch vụ: tăng Traffic trong 30 ngày, đẩy xếp hạng, tăng tốc Index",
       viewPackageInformation: "Xem thông tin gói dịch vụ",
       soldTimes: "Đã bán {{sell_count}} lần",
-      employersTrust: "Nhà tuyển dụng tin tưởng họ, nhiều người quay lại thuê lại",
+      employersTrust:
+        "Nhà tuyển dụng tin tưởng họ, nhiều người quay lại thuê lại",
       otherJobsSection: "Các công việc khác mà nhiều người quan tâm",
       viewProfile: "Xem hồ sơ",
       workCompleted: "Công việc đã hoàn thành",
@@ -1108,7 +1320,8 @@ export const vi = {
       valueForMoney: "Đáng giá tiền",
       anonymous: "(Ẩn danh)",
       viewPackageInfo: "Xem thông tin gói dịch vụ",
-      readAdditionalProtectionTerms: "Đọc điều kiện và quyền lợi bảo vệ bổ sung",
+      readAdditionalProtectionTerms:
+        "Đọc điều kiện và quyền lợi bảo vệ bổ sung",
       save: "Lưu lại",
       share: "Chia sẻ",
       freelancer: "Freelancer",
@@ -1118,11 +1331,12 @@ export const vi = {
       similarJobs: "Công việc tương tự",
       process: "Các bước thực hiện cho",
       duration: "Thời gian thực hiện {{execution_time}} ngày",
-      callToAction: "Bắt đầu thuê freelancer này và đánh giá"
+      callToAction: "Bắt đầu thuê freelancer này và đánh giá",
     },
     manageProductCreate: {
       notSave: "Bạn chưa lưu các thay đổi của mình.",
-      plsSave: "Vui lòng lưu trước khi rời khỏi trang này để tránh mất dữ liệu.",
+      plsSave:
+        "Vui lòng lưu trước khi rời khỏi trang này để tránh mất dữ liệu.",
       continue: "Tiếp tục chỉnh sửa",
       leave: "Rời đi",
       addImageButton: "Thêm ảnh",
@@ -1131,17 +1345,26 @@ export const vi = {
       backButton: "Quay lại",
       confirmationCheck1: "Tôi là chủ sở hữu thực sự của dịch vụ",
       confirmationCheck2: "Tôi có thể hoàn thành tất cả công việc như đã mô tả",
-      confirmationCheck3: "Tôi đã đọc và đồng ý với các gợi ý Điều khoản sử dụng dịch vụ của Fastwork",
-      confirmationError: "Vui lòng chấp nhận điều khoản và điều kiện để tiếp tục",
-      confirmationNotice1: "Hệ thống sẽ bắt đầu kiểm tra thông tin công việc sau khi hồ sơ Freelancer được phê duyệt",
-      confirmationNotice2: "Việc kiểm tra và phê duyệt hồ sơ dịch vụ sẽ mất khoảng 2 ngày làm việc",
+      confirmationCheck3:
+        "Tôi đã đọc và đồng ý với các gợi ý Điều khoản sử dụng dịch vụ của Fastwork",
+      confirmationError:
+        "Vui lòng chấp nhận điều khoản và điều kiện để tiếp tục",
+      confirmationNotice1:
+        "Hệ thống sẽ bắt đầu kiểm tra thông tin công việc sau khi hồ sơ Freelancer được phê duyệt",
+      confirmationNotice2:
+        "Việc kiểm tra và phê duyệt hồ sơ dịch vụ sẽ mất khoảng 2 ngày làm việc",
       confirmationTitle: "Xác nhận dịch vụ",
-      confirmationWarning: "Nếu không xác nhận đồng ý với các điều khoản, bạn sẽ không thể đăng bán dịch vụ trên Fastwork.",
-      coverImageNote: "Chọn ảnh bìa thể hiện rõ lĩnh vực và chuyên môn của bạn. Ảnh bìa giúp thu hút khách hàng tiềm năng.",
-      coverImageNote2: "Đảm bảo sử dụng ảnh bìa khác nhau cho các dịch vụ tương tự trong cùng một danh mục. Việc sử dụng ảnh lặp lại có thể bị từ chối.",
-      createPackageDescription: "Gói dịch vụ sẽ giúp quá trình nhận dự án của bạn trở nên thuận tiện hơn, giảm bớt các bước thảo luận chi tiết với người thuê. Bạn cần tạo ít nhất một gói và tối đa ba gói cho một dịch vụ.",
+      confirmationWarning:
+        "Nếu không xác nhận đồng ý với các điều khoản, bạn sẽ không thể đăng bán dịch vụ trên Fastwork.",
+      coverImageNote:
+        "Chọn ảnh bìa thể hiện rõ lĩnh vực và chuyên môn của bạn. Ảnh bìa giúp thu hút khách hàng tiềm năng.",
+      coverImageNote2:
+        "Đảm bảo sử dụng ảnh bìa khác nhau cho các dịch vụ tương tự trong cùng một danh mục. Việc sử dụng ảnh lặp lại có thể bị từ chối.",
+      createPackageDescription:
+        "Gói dịch vụ sẽ giúp quá trình nhận dự án của bạn trở nên thuận tiện hơn, giảm bớt các bước thảo luận chi tiết với người thuê. Bạn cần tạo ít nhất một gói và tối đa ba gói cho một dịch vụ.",
       createPackageTitle: "Tạo gói dịch vụ của bạn",
-      defineWorkStepsDescription: "Mô tả các bước thực hiện để hoàn thành dịch vụ của bạn. Điều này giúp khách hàng hiểu rõ quy trình làm việc.",
+      defineWorkStepsDescription:
+        "Mô tả các bước thực hiện để hoàn thành dịch vụ của bạn. Điều này giúp khách hàng hiểu rõ quy trình làm việc.",
       gotItButton: "Tôi hiểu rồi",
       nextButton: "Lưu và tiếp tục",
       packageDeliveryLabel: "Thời gian thực hiện (phút)",
@@ -1164,11 +1387,14 @@ export const vi = {
       serviceDescriptionPlaceholder: "Mô tả chi tiết dịch vụ của bạn...",
       serviceInfoTitle: "Thông tin dịch vụ",
       serviceTitleError: "Tiêu đề phải có ít nhất 5 ký tự",
-      serviceTitleGuide1: "Sử dụng tiêu đề rõ ràng và chính xác để người thuê dễ dàng tìm thấy dịch vụ của bạn.",
-      serviceTitleGuide2: "Đảm bảo sử dụng tiêu đề khác nhau cho các dịch vụ tương tự trong cùng một danh mục.",
+      serviceTitleGuide1:
+        "Sử dụng tiêu đề rõ ràng và chính xác để người thuê dễ dàng tìm thấy dịch vụ của bạn.",
+      serviceTitleGuide2:
+        "Đảm bảo sử dụng tiêu đề khác nhau cho các dịch vụ tương tự trong cùng một danh mục.",
       serviceTitleGuideHeader: "Hướng dẫn đặt tiêu đề dịch vụ:",
       serviceTitleLabel: "Tiêu đề dịch vụ",
-      serviceTitlePlaceholder: "Ví dụ: Thiết kế website chuyên nghiệp, tối ưu SEO",
+      serviceTitlePlaceholder:
+        "Ví dụ: Thiết kế website chuyên nghiệp, tối ưu SEO",
       step1: "Thông tin",
       step2: "Gói dịch vụ",
       step3: "Ảnh/video",
@@ -1176,11 +1402,15 @@ export const vi = {
       step5: "Xác nhận",
       stepLabel: "Bước ",
       subServiceLabel: "Dịch vụ con",
-      submissionSuccess: "Dịch vụ của bạn đã được gửi thành công và đang chờ phê duyệt.",
-      submissionSuccessMessage: "Gửi thành công! Vui lòng chờ kết quả phê duyệt từ hệ thống",
+      submissionSuccess:
+        "Dịch vụ của bạn đã được gửi thành công và đang chờ phê duyệt.",
+      submissionSuccessMessage:
+        "Gửi thành công! Vui lòng chờ kết quả phê duyệt từ hệ thống",
       systemNote: "Thông tin bổ sung từ hệ thống",
-      uploadAtLeast2ImagesNote: "Người thuê muốn biết về kỹ năng của bạn, chọn ít nhất 2 hình ảnh thể hiện kỹ năng và chuyên môn của bạn",
-      uploadAtLeast2ImagesTitle: "Tải lên ít nhất 2 hình ảnh dịch vụ ({{n}}/30)",
+      uploadAtLeast2ImagesNote:
+        "Người thuê muốn biết về kỹ năng của bạn, chọn ít nhất 2 hình ảnh thể hiện kỹ năng và chuyên môn của bạn",
+      uploadAtLeast2ImagesTitle:
+        "Tải lên ít nhất 2 hình ảnh dịch vụ ({{n}}/30)",
       uploadCoverImageTitle: "Tải lên ảnh bìa",
       uploadServiceImagesTitle: "Tải lên hình ảnh dịch vụ",
       uploadCoverError: "Vui lòng tải ảnh bìa",
@@ -1188,25 +1418,32 @@ export const vi = {
       workflowDescriptionError: "Vui lòng nhập mô tả bước",
       workflowDescriptionLabel: "Mô tả",
       workflowDescriptionPlaceholder: "Mô tả chi tiết bước thực hiện...",
-      workflowTitle: "Xác định các bước làm việc của bạn"
+      workflowTitle: "Xác định các bước làm việc của bạn",
     },
     notFound: {
       backButton: "Quay lại trang chủ",
-      errorDescription: "Trang bạn yêu cầu hiện không khả dụng. Có thể bạn đã truy cập một liên kết cũ hoặc nội dung đã bị di chuyển. Bạn có thể truy cập trang danh mục công việc qua phần gợi ý bên dưới.",
+      errorDescription:
+        "Trang bạn yêu cầu hiện không khả dụng. Có thể bạn đã truy cập một liên kết cũ hoặc nội dung đã bị di chuyển. Bạn có thể truy cập trang danh mục công việc qua phần gợi ý bên dưới.",
       errorTitle: "Không tìm thấy trang bạn cần",
-      recommendedSectionTitle: "Danh mục phổ biến"
+      recommendedSectionTitle: "Danh mục phổ biến",
     },
     notification: {
-      jobUpdateFavoriteSuccess: "Đã lưu công việc vào danh sách yêu thích thành công",
-      jobDeleteFavoriteSuccess: "Đã bỏ lưu công việc khỏi danh sách yêu thích thành công",
+      jobUpdateFavoriteSuccess:
+        "Đã lưu công việc vào danh sách yêu thích thành công",
+      jobDeleteFavoriteSuccess:
+        "Đã bỏ lưu công việc khỏi danh sách yêu thích thành công",
       jobCreateJobBoardSuccess: "Đã tạo bảng công việc mới thành công",
       jobCreateJobBoardFail: "Không thể tạo bảng công việc mới",
-      profileUpdateFavoriteSuccess: "Đã lưu công việc vào danh sách yêu thích thành công",
-      profileDeleteFavoriteSuccess: "Đã bỏ lưu công việc khỏi danh sách yêu thích thành công",
+      profileUpdateFavoriteSuccess:
+        "Đã lưu công việc vào danh sách yêu thích thành công",
+      profileDeleteFavoriteSuccess:
+        "Đã bỏ lưu công việc khỏi danh sách yêu thích thành công",
       profileUpdateAvailableSuccess: "Bạn đang chấp nhận công việc mới.",
-      profileUpdateNotAvailableSuccess: "Bạn không còn chấp nhận công việc mới nữa.",
+      profileUpdateNotAvailableSuccess:
+        "Bạn không còn chấp nhận công việc mới nữa.",
       profileSetDefaultFail: "Không thể đặt địa chỉ mặc định",
-      profileUpdateAvailableFail: "Không thể cập nhật tình trạng sẵn sàng công việc. Vui lòng thử lại.",
+      profileUpdateAvailableFail:
+        "Không thể cập nhật tình trạng sẵn sàng công việc. Vui lòng thử lại.",
       oauthVerificationFailed: "Kiểm tra OAuth không thành công",
       verificationEmailSent: "Email xác minh đã được gửi",
       registrationRequestSubmitted: "Yêu cầu đăng ký đã được gửi",
@@ -1224,9 +1461,12 @@ export const vi = {
       copySuccess: "Sao chép thành công",
       invalidCode: "Mã không hợp lệ",
       invalidTotpCode: "Mã TOTP không hợp lệ",
-      verifyEmailLinkSent: "Liên kết xác minh email đã được gửi đến email của bạn",
-      checkInboxForEmail: "Vui lòng kiểm tra hộp thư đến của bạn (Nếu bạn không thấy, hãy kiểm tra thư mục Spam và Junk) để tiếp tục.",
-      passwordResetLinkSent: "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn"
+      verifyEmailLinkSent:
+        "Liên kết xác minh email đã được gửi đến email của bạn",
+      checkInboxForEmail:
+        "Vui lòng kiểm tra hộp thư đến của bạn (Nếu bạn không thấy, hãy kiểm tra thư mục Spam và Junk) để tiếp tục.",
+      passwordResetLinkSent:
+        "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn",
     },
     notifications: {
       changePassword: "Đổi mật khẩu thành công",
@@ -1235,7 +1475,7 @@ export const vi = {
       updateWorkExperience: "Lưu kinh nghiệm làm việc thành công",
       updateCertification: "Lưu chứng chỉ thành công",
       updateSkill: "Lưu kỹ năng thành công",
-      updateLanguage: "Lưu ngôn ngữ thành công"
+      updateLanguage: "Lưu ngôn ngữ thành công",
     },
     profile: {
       verifyFreelancer: "Freelancer đã xác minh",
@@ -1257,17 +1497,19 @@ export const vi = {
       successRate: "Tỷ lệ hoàn thành công việc",
       reviewTab: "Đánh giá từ freelancer",
       times: "Lần",
-      workTitle: "Công việc của {{username}}"
+      workTitle: "Công việc của {{username}}",
     },
     profileApply: {
       advantagesTitle: "Lợi ích khi trở thành freelancer trên Fastwork?",
       applyButton: "Đăng ký làm freelancer",
       careerGrowth: "Phát triển sự nghiệp với Specialist",
-      careerGrowthDescription: "Tham gia chương trình đánh giá và kiểm tra chuyên môn của Fastwork để tăng độ tin cậy và cơ hội xuất hiện trên hệ thống.",
+      careerGrowthDescription:
+        "Tham gia chương trình đánh giá và kiểm tra chuyên môn của Fastwork để tăng độ tin cậy và cơ hội xuất hiện trên hệ thống.",
       ctaButton: "Đăng ký freelancer",
       ctaTitle: "Đăng ký làm freelancer trên Fastwork ngay",
       freelanceTypesTitle: "Fastwork có những loại Freelancer nào?",
-      freelancer1: "Đăng ký ngay hôm nay, điền thông tin chi tiết và trở thành freelancer trong vòng 48 giờ.",
+      freelancer1:
+        "Đăng ký ngay hôm nay, điền thông tin chi tiết và trở thành freelancer trong vòng 48 giờ.",
       freelancer2: "Làm việc theo chuyên môn của bạn.",
       freelancer3: "Tự đặt khoảng giá phù hợp với công việc.",
       freelancer4: "Hỗ trợ từ Fastwork",
@@ -1275,34 +1517,45 @@ export const vi = {
       freelancer6: "Hóa đơn đặc biệt dành cho Freelancer",
       freelancerLabel: "Freelancer",
       freelancerProfessional: "Fastwork Professional",
-      freelancerProfessionalDescription: "Những chuyên gia đa năng được Fastwork tuyển chọn dựa trên kỹ năng và hồ sơ công việc.",
+      freelancerProfessionalDescription:
+        "Những chuyên gia đa năng được Fastwork tuyển chọn dựa trên kỹ năng và hồ sơ công việc.",
       freelancerSpecialist: "Fastwork Specialist",
-      freelancerSpecialistDescription: "Chuyên gia đã vượt qua bài kiểm tra đánh giá theo tiêu chuẩn chuyên môn của Fastwork.",
+      freelancerSpecialistDescription:
+        "Chuyên gia đã vượt qua bài kiểm tra đánh giá theo tiêu chuẩn chuyên môn của Fastwork.",
       freelancerStandard: "Freelancer Fastwork",
-      freelancerStandardDescription: "Đăng ký ngay hôm nay, hiển thị hồ sơ của bạn và trở thành freelancer trong vòng 48 giờ.",
+      freelancerStandardDescription:
+        "Đăng ký ngay hôm nay, hiển thị hồ sơ của bạn và trở thành freelancer trong vòng 48 giờ.",
       freelancerTitle: "Fastwork Freelancer",
       freelancerTypesTitle: "Các loại Freelancer trên Fastwork?",
       increaseHiring: "Tăng cơ hội được thuê",
-      increaseHiringDescription: "Chúng tôi giúp công việc của bạn dễ dàng tìm thấy trên Google, Facebook hoặc các kênh khác, tăng cơ hội được tuyển dụng.",
+      increaseHiringDescription:
+        "Chúng tôi giúp công việc của bạn dễ dàng tìm thấy trên Google, Facebook hoặc các kênh khác, tăng cơ hội được tuyển dụng.",
       paperwork: "Không cần lo giấy tờ",
-      paperworkDescription: "Chỉ cần nhập thông tin công việc, thời gian thực hiện, phạm vi giá cả và hệ thống sẽ tự động tạo hóa đơn.",
+      paperworkDescription:
+        "Chỉ cần nhập thông tin công việc, thời gian thực hiện, phạm vi giá cả và hệ thống sẽ tự động tạo hóa đơn.",
       paymentSecurity: "Không lo bị quỵt tiền",
-      paymentSecurityDescription: "Fastwork đóng vai trò trung gian để đảm bảo thanh toán khi công việc hoàn thành. Không cần lo lắng về việc khách hàng không trả tiền.",
+      paymentSecurityDescription:
+        "Fastwork đóng vai trò trung gian để đảm bảo thanh toán khi công việc hoàn thành. Không cần lo lắng về việc khách hàng không trả tiền.",
       popularCategories: "Danh mục phổ biến",
       popularCategoriesTitle: "Danh mục phổ biến",
       privileges: "Đặc quyền và hoạt động",
-      privilegesDescription: "Bạn càng bán nhiều công việc, bạn càng có nhiều quyền truy cập vào các đặc quyền và hoạt động của Fastwork.",
+      privilegesDescription:
+        "Bạn càng bán nhiều công việc, bạn càng có nhiều quyền truy cập vào các đặc quyền và hoạt động của Fastwork.",
       professional1: "Chuyên gia đa lĩnh vực được Fastwork tuyển chọn.",
       professional2: "Quyền tư vấn trực tiếp với chuyên gia.",
-      professional3: "Huy hiệu dành cho Professional giúp khách hàng thuê dễ dàng qua Fastwork.",
-      professional4: "Cơ hội nhận thêm dự án từ các khách hàng doanh nghiệp lớn của Fastwork.",
+      professional3:
+        "Huy hiệu dành cho Professional giúp khách hàng thuê dễ dàng qua Fastwork.",
+      professional4:
+        "Cơ hội nhận thêm dự án từ các khách hàng doanh nghiệp lớn của Fastwork.",
       professional5: "Vé đặc biệt dành cho Professional.",
       professionalLabel: "Chuyên gia cấp cao",
       professionalTitle: "Fastwork Professional",
-      sellStep1DescPrefix: "Đăng ký tài khoản với thông tin cá nhân và tài khoản ngân hàng để xác minh thanh toán. Sau đó bạn có thể đăng tin bán dịch vụ ngay. Xem",
+      sellStep1DescPrefix:
+        "Đăng ký tài khoản với thông tin cá nhân và tài khoản ngân hàng để xác minh thanh toán. Sau đó bạn có thể đăng tin bán dịch vụ ngay. Xem",
       sellStep1LinkText: "hướng dẫn trở thành freelancer",
       sellStep1Title: "1. Đăng ký trở thành freelancer",
-      sellStep2Desc: "Chuẩn bị hồ sơ và mô tả dịch vụ của bạn để thể hiện kỹ năng. Đội ngũ Fastwork sẽ kiểm duyệt và phê duyệt bài đăng trong vòng 48 giờ.",
+      sellStep2Desc:
+        "Chuẩn bị hồ sơ và mô tả dịch vụ của bạn để thể hiện kỹ năng. Đội ngũ Fastwork sẽ kiểm duyệt và phê duyệt bài đăng trong vòng 48 giờ.",
       sellStep2Title: "2. Đăng bài bán dịch vụ",
       sellStep3DescMiddle: "hoặc sử dụng",
       sellStep3DescPrefix: "Tham khảo",
@@ -1310,42 +1563,55 @@ export const vi = {
       sellStep3Link1: "Mẹo hay cho freelancer",
       sellStep3Link2: "Freelancer Center",
       sellStep3Title: "3. Bắt đầu bán ngay",
-      sellStep4Desc: "Fastwork đảm bảo thanh toán an toàn, giúp bạn yên tâm làm việc mà không lo bị quỵt tiền.",
+      sellStep4Desc:
+        "Fastwork đảm bảo thanh toán an toàn, giúp bạn yên tâm làm việc mà không lo bị quỵt tiền.",
       sellStep4Title: "4. Làm việc an tâm",
-      sellStep5Desc: "Gửi bài hoàn thành cho khách duyệt. Làm tốt sẽ nhận được đánh giá tích cực, tăng độ uy tín và khả năng bán hàng.",
+      sellStep5Desc:
+        "Gửi bài hoàn thành cho khách duyệt. Làm tốt sẽ nhận được đánh giá tích cực, tăng độ uy tín và khả năng bán hàng.",
       sellStep5Title: "5. Gửi bài và nhận đánh giá",
-      sellStep6DescPrefix: "Fastwork sẽ chuyển tiền vào tài khoản ngân hàng của bạn theo",
-      sellStep6DescSuffix: ". Bán càng nhiều, bạn càng có nhiều quyền lợi và ưu đãi.",
+      sellStep6DescPrefix:
+        "Fastwork sẽ chuyển tiền vào tài khoản ngân hàng của bạn theo",
+      sellStep6DescSuffix:
+        ". Bán càng nhiều, bạn càng có nhiều quyền lợi và ưu đãi.",
       sellStep6LinkText: "Chính sách thanh toán",
       sellStep6Title: "6. Nhận tiền và quyền lợi đặc biệt",
       sellStepsTitle: "6 bước đơn giản để bán dịch vụ trên Fastwork",
-      specialist1: "Chuyên gia đã vượt qua bài kiểm tra kỹ năng theo tiêu chuẩn Fastwork.",
+      specialist1:
+        "Chuyên gia đã vượt qua bài kiểm tra kỹ năng theo tiêu chuẩn Fastwork.",
       specialist2: "Quyền tư vấn trực tiếp với đội ngũ admin.",
       specialist3: "Cơ hội đặc biệt nhận dự án từ đối tác của chúng tôi.",
-      specialist4: "Huy hiệu xác nhận bạn là chuyên gia giúp khách hàng tin tưởng khi thuê qua Fastwork.",
+      specialist4:
+        "Huy hiệu xác nhận bạn là chuyên gia giúp khách hàng tin tưởng khi thuê qua Fastwork.",
       specialist5: "Vé đặc biệt dành cho Chuyên gia.",
       specialist6: "Sự kiện riêng dành cho Chuyên gia cấp cao.",
       specialist7: "Trợ lý cá nhân cho Chuyên gia.",
       specialistLabel: "Chuyên gia",
       specialistTitle: "Fastwork Specialist",
       step1: "Đăng ký làm freelancer",
-      step1Description: "Đăng ký bằng thẻ căn cước và sổ ngân hàng của bạn để xác minh danh tính. Sau đó, bạn có thể đăng tin tuyển dụng.",
+      step1Description:
+        "Đăng ký bằng thẻ căn cước và sổ ngân hàng của bạn để xác minh danh tính. Sau đó, bạn có thể đăng tin tuyển dụng.",
       step2: "Đăng tin tuyển dụng",
-      step2Description: "Chuẩn bị hồ sơ và mô tả công việc để thể hiện kỹ năng của bạn, sau đó chờ đội ngũ kiểm duyệt trong vòng 48 giờ.",
+      step2Description:
+        "Chuẩn bị hồ sơ và mô tả công việc để thể hiện kỹ năng của bạn, sau đó chờ đội ngũ kiểm duyệt trong vòng 48 giờ.",
       step3: "Bắt đầu bán công việc ngay",
-      step3Description: "Hãy nghiên cứu kỹ thuật định giá freelancer hoặc sử dụng Freelancer Center để tăng cơ hội được tuyển dụng.",
+      step3Description:
+        "Hãy nghiên cứu kỹ thuật định giá freelancer hoặc sử dụng Freelancer Center để tăng cơ hội được tuyển dụng.",
       step4: "Làm việc từ xa",
-      step4Description: "Yên tâm làm việc với mọi dự án! Fastwork đảm bảo thanh toán, không cần lo lắng về việc khách hàng không trả tiền.",
+      step4Description:
+        "Yên tâm làm việc với mọi dự án! Fastwork đảm bảo thanh toán, không cần lo lắng về việc khách hàng không trả tiền.",
       step5: "Nộp bài và nhận xét",
-      step5Description: "Gửi công việc đã hoàn thành để khách hàng phê duyệt. Công việc càng tốt, độ tin cậy của bạn càng cao.",
+      step5Description:
+        "Gửi công việc đã hoàn thành để khách hàng phê duyệt. Công việc càng tốt, độ tin cậy của bạn càng cao.",
       step6: "Nhận tiền và đặc quyền",
-      step6Description: "Fastwork sẽ chuyển tiền vào tài khoản ngân hàng của bạn theo điều khoản thanh toán. Bạn bán càng nhiều, bạn kiếm được càng nhiều.",
+      step6Description:
+        "Fastwork sẽ chuyển tiền vào tài khoản ngân hàng của bạn theo điều khoản thanh toán. Bạn bán càng nhiều, bạn kiếm được càng nhiều.",
       stepsTitle: "6 bước đơn giản để bán công việc trên Fastwork",
       subtitle: "Tự do làm việc theo cách bạn chọn.",
       supportTeam: "Có đội ngũ hỗ trợ",
-      supportTeamDescription: "Chúng tôi sẵn sàng hỗ trợ bạn ngay lập tức nếu có vấn đề phát sinh và liên tục phát triển hệ thống để mang lại trải nghiệm tốt nhất.",
+      supportTeamDescription:
+        "Chúng tôi sẵn sàng hỗ trợ bạn ngay lập tức nếu có vấn đề phát sinh và liên tục phát triển hệ thống để mang lại trải nghiệm tốt nhất.",
       whyChooseTitle: "Tại sao freelancer chọn Fastwork?",
-      whyTitle: "Tại sao freelancer chọn Fastwork"
+      whyTitle: "Tại sao freelancer chọn Fastwork",
     },
     profileChat: {
       chatHistory: "Lịch sử trò chuyện",
@@ -1360,14 +1626,16 @@ export const vi = {
       guide: "Hướng dẫn sử dụng",
       jobBranch: "Ngành nghề",
       labelFilterJobs: "Ngành nghề",
-      labelNoConversation: "Vui lòng chọn đơn hàng ở bên trái để bắt đầu trò chuyện",
+      labelNoConversation:
+        "Vui lòng chọn đơn hàng ở bên trái để bắt đầu trò chuyện",
       searchPlaceholder: "Tìm kiếm gì đó",
       sectionChat: "Trò chuyện",
       securePaymentNote: "An toàn hơn khi thanh toán qua fastwork",
       selectedHere: "Đã chọn ở đây",
       timeAgo: "Hôm qua",
       typeMessageHere: "Nhập tin nhắn tại đây",
-      unselectWarning: "Bạn đã bỏ chọn mục trước đó được gửi theo lượt duyệt của freelancer. Hãy xem freelancer đang chào bán gì."
+      unselectWarning:
+        "Bạn đã bỏ chọn mục trước đó được gửi theo lượt duyệt của freelancer. Hãy xem freelancer đang chào bán gì.",
     },
     profileCoins: {
       buttonProceedPayment: "Tiến hành thanh toán",
@@ -1377,13 +1645,16 @@ export const vi = {
       labelChooseAmount: "Hoặc chọn số tiền bạn muốn ngay lập tức",
       labelSpecifyAmount: "Chỉ định số tiền bạn muốn nạp",
       labelYourCoin: "Fastwork Coin của bạn",
-      noteBalanceUpdate: "Trong một số trường hợp, có thể mất đến 5 phút để cập nhật số dư. Vui lòng đợi trong giây lát.",
-      noteCoinTerms: "• Fastwork Coin có thể được sử dụng mà không có ngày hết hạn và có thể được sử dụng cùng với các Coupon tài khoản khác.• Fastwork Coin không thể quy đổi thành tiền mặt hoặc chuyển sang tài khoản Fastwork khác.• Khi bạn nạp Fastwork Coin vào hệ thống, điều đó có nghĩa là bạn chấp nhận các điều khoản và điều kiện.• Nếu bạn gặp bất kỳ vấn đề nào khi nạp Fastwork Coin hoặc thanh toán, vui lòng liên hệ Trung tâm hỗ trợ.",
+      noteBalanceUpdate:
+        "Trong một số trường hợp, có thể mất đến 5 phút để cập nhật số dư. Vui lòng đợi trong giây lát.",
+      noteCoinTerms:
+        "• Fastwork Coin có thể được sử dụng mà không có ngày hết hạn và có thể được sử dụng cùng với các Coupon tài khoản khác.• Fastwork Coin không thể quy đổi thành tiền mặt hoặc chuyển sang tài khoản Fastwork khác.• Khi bạn nạp Fastwork Coin vào hệ thống, điều đó có nghĩa là bạn chấp nhận các điều khoản và điều kiện.• Nếu bạn gặp bất kỳ vấn đề nào khi nạp Fastwork Coin hoặc thanh toán, vui lòng liên hệ Trung tâm hỗ trợ.",
       noteMinMax: "Tối thiểu 100 baht và tối đa 500.000 baht.",
       placeholderSpecifyAmount: "Nhập số tiền 100-500.000 baht",
       sectionTopUpHistory: "Lịch sử nạp tiền",
       statusWaiting: "Đang chờ thanh toán",
-      subtitleFastworkCoin: "Nạp tiền vào tài khoản trực tuyến để thuê freelancer thuận tiện hơn.",
+      subtitleFastworkCoin:
+        "Nạp tiền vào tài khoản trực tuyến để thuê freelancer thuận tiện hơn.",
       tableDateTransaction: "Ngày giao dịch",
       tablePaymentCode: "Mã thanh toán",
       tablePaymentMethod: "Phương thức thanh toán",
@@ -1391,12 +1662,13 @@ export const vi = {
       tableStatus: "Trạng thái",
       tableTopUpAmount: "Số tiền nạp (baht)",
       tableTotalCoins: "Tổng số coins nhận được",
-      titleFastworkCoin: "Fastwork Coin"
+      titleFastworkCoin: "Fastwork Coin",
     },
     profileCompany: {
       buttonSearchCompany: "Tìm kiếm thông tin công ty",
       labelTaxId: "Mã số thuế doanh nghiệp",
-      noteRequirements: "• Người tuyển dụng phải yêu cầu bản sao CCCD từ freelancer trực tiếp.• Người tuyển dụng phải cấp chứng từ khấu trừ thuế (Mẫu 50) dưới tên của freelancer. (Xem mẫu tài liệu)",
+      noteRequirements:
+        "• Người tuyển dụng phải yêu cầu bản sao CCCD từ freelancer trực tiếp.• Người tuyển dụng phải cấp chứng từ khấu trừ thuế (Mẫu 50) dưới tên của freelancer. (Xem mẫu tài liệu)",
       placeholderTaxId: "Nhập mã số thuế",
       processDescriptionApproval: "Trong vòng 2 giờ",
       processDescriptionNotify: "Thông báo tuyển dụng dưới danh nghĩa công ty",
@@ -1411,20 +1683,23 @@ export const vi = {
       stepNotifyFreelancerSub: "Thuê với danh nghĩa công ty",
       stepWaitApproval: "Chờ hệ thống phê duyệt",
       stepWaitApprovalSub: "Trong vòng 2 giờ",
-      subtitleCompanyHiring: "Dùng để phát hành tài liệu tuyển dụng công ty"
+      subtitleCompanyHiring: "Dùng để phát hành tài liệu tuyển dụng công ty",
     },
     profileContact: {
       cancelButton: "Đóng",
       confirmButton: "Thay đổi email",
-      emailChangeDescription: "Email hiện tại của bạn đã được xác minh trong hệ thống. Nếu bạn muốn thay đổi, email mới sẽ cần được xác minh lại.",
+      emailChangeDescription:
+        "Email hiện tại của bạn đã được xác minh trong hệ thống. Nếu bạn muốn thay đổi, email mới sẽ cần được xác minh lại.",
       emailChangeTitle: "Bạn có muốn thay đổi email của mình không?",
-      emailVerificationDescription: "Nhập mã gồm 6 chữ số đã được gửi tới email của bạn để xác minh và xác nhận quyền sở hữu tài khoản",
+      emailVerificationDescription:
+        "Nhập mã gồm 6 chữ số đã được gửi tới email của bạn để xác minh và xác nhận quyền sở hữu tài khoản",
       emailVerificationTitle: "Vui lòng xác minh email của bạn",
       invalidOrExpiredCode: "Mã không hợp lệ hoặc đã hết hạn",
       labelContactEmail: "Email liên hệ",
       labelContactPhone: "Số điện thoại liên hệ (Thái Lan)",
       labelCurrentLocation: "Vị trí hiện tại",
-      noteContactPhone: "Nếu sử dụng số điện thoại nước ngoài, vui lòng liên hệ hỗ trợ qua email để xác minh.",
+      noteContactPhone:
+        "Nếu sử dụng số điện thoại nước ngoài, vui lòng liên hệ hỗ trợ qua email để xác minh.",
       optionForeignCountry: "Nước ngoài",
       optionThailand: "Thái Lan",
       pleaseEnterEmailOrPhone: "Vui lòng nhập email hoặc số điện thoại",
@@ -1433,13 +1708,16 @@ export const vi = {
       resendCode: "Gửi lại",
       sectionAddressInfo: "Thông tin địa chỉ",
       sectionContactInfo: "Thông tin liên hệ",
-      subtitleAddressInfo: "Để đảm bảo chúng tôi có thể gửi hàng và tài liệu cho bạn",
+      subtitleAddressInfo:
+        "Để đảm bảo chúng tôi có thể gửi hàng và tài liệu cho bạn",
       subtitleContactInfo: "Để đảm bảo chúng tôi có thể liên hệ với bạn",
-      verifyButton: "Xác minh"
+      verifyButton: "Xác minh",
     },
     profileCoupon: {
-      descriptionSpecialOffers: "Ưu đãi độc quyền và khuyến mãi từ đối tác, cùng với phiếu giảm giá",
-      descriptionYourCoupons: "Bạn có thể chọn phiếu giảm giá khi thuê và thanh toán",
+      descriptionSpecialOffers:
+        "Ưu đãi độc quyền và khuyến mãi từ đối tác, cùng với phiếu giảm giá",
+      descriptionYourCoupons:
+        "Bạn có thể chọn phiếu giảm giá khi thuê và thanh toán",
       labelYourCoupons: "Phiếu giảm giá của bạn",
       messageNoCoupons: "Bạn không có phiếu giảm giá nào",
       messageNoOffers: "Hiện chưa có ưu đãi nào",
@@ -1447,25 +1725,31 @@ export const vi = {
       sectionSpecialOffers: "Ưu đãi đặc biệt",
       subtitleDiscountsPromotions: "Từ Fastwork và các dịch vụ đối tác",
       tabForFreelancers: "Dành cho Freelancer",
-      tabForHiring: "Dành cho tuyển dụng"
+      tabForHiring: "Dành cho tuyển dụng",
     },
     profileData: {
-      concent: "Đồng ý nhận tin tức và các chương trình khuyến mãi đặc biệt qua tất cả các kênh từ Fastwork.",
+      concent:
+        "Đồng ý nhận tin tức và các chương trình khuyến mãi đặc biệt qua tất cả các kênh từ Fastwork.",
       privacy: "Chính sách quyền riêng tư",
-      cookieUse: "Fastwork sử dụng cookie để giúp cải thiện và nâng cao trải nghiệm người dùng của bạn khi bạn truy cập trang web của chúng tôi. Bạn có thể chọn đồng ý với từng loại cookie (ngoại trừ cookie thiết yếu).",
+      cookieUse:
+        "Fastwork sử dụng cookie để giúp cải thiện và nâng cao trải nghiệm người dùng của bạn khi bạn truy cập trang web của chúng tôi. Bạn có thể chọn đồng ý với từng loại cookie (ngoại trừ cookie thiết yếu).",
       cookiePrivacy: "Chính sách Cookie",
       always: "Luôn bật",
       noPrivacy: "Không tìm thấy freelancer ưu tiên",
       analyticsCookies: "Cookie phân tích và hiệu suất",
-      analyticsCookiesDescription: "Cho phép Fastwork thu thập dữ liệu sử dụng để phân tích và cải thiện hiệu suất nền tảng.",
+      analyticsCookiesDescription:
+        "Cho phép Fastwork thu thập dữ liệu sử dụng để phân tích và cải thiện hiệu suất nền tảng.",
       cookiesManagement: "Quản lý Cookie",
       dataManagement: "Quản lý dữ liệu",
       dataUsageFastwork: "Sử dụng dữ liệu cho Fastwork",
       functionalCookies: "Cookie cần thiết",
-      functionalCookiesDescription: "Fastwork cần sử dụng các cookie này để cho phép bạn truy cập trang web và lưu chi tiết phiên làm việc để duyệt web hiệu quả. Những cookie này không lưu trữ dữ liệu người dùng có thể nhận dạng.",
-      mandatoryCookies: "Những cookie này là bắt buộc để trang web hoạt động và không thể bị vô hiệu hóa.",
+      functionalCookiesDescription:
+        "Fastwork cần sử dụng các cookie này để cho phép bạn truy cập trang web và lưu chi tiết phiên làm việc để duyệt web hiệu quả. Những cookie này không lưu trữ dữ liệu người dùng có thể nhận dạng.",
+      mandatoryCookies:
+        "Những cookie này là bắt buộc để trang web hoạt động và không thể bị vô hiệu hóa.",
       marketingCookies: "Cookie tiếp thị và quảng cáo",
-      marketingCookiesDescription: "Cho phép Fastwork thu thập dữ liệu quảng cáo để đề xuất phù hợp.",
+      marketingCookiesDescription:
+        "Cho phép Fastwork thu thập dữ liệu quảng cáo để đề xuất phù hợp.",
       newsletterAccept: "Chấp nhận",
       newsletterDecline: "Từ chối",
       newsletterPromotions: "Nhận tin tức, giảm giá và khuyến mãi từ Fastwork",
@@ -1474,7 +1758,7 @@ export const vi = {
       termsConditions: "Đọc Điều khoản dịch vụ và Chính sách quyền riêng tư",
       thirdPartyDataSharing: "Chia sẻ dữ liệu với bên thứ ba",
       toggleAnalyticsCookies: "Bật hoặc tắt Cookie phân tích",
-      toggleMarketingCookies: "Bật hoặc tắt Cookie tiếp thị"
+      toggleMarketingCookies: "Bật hoặc tắt Cookie tiếp thị",
     },
     profileIndividual: {
       labelFirstName: "Tên",
@@ -1483,7 +1767,7 @@ export const vi = {
       placeholderLastName: "Nhập họ",
       save: "Lưu",
       sectionIndividualHiring: "Thông tin tuyển dụng cá nhân",
-      subtitleIndividualHiring: "Dùng để phát hành tài liệu tuyển dụng cá nhân"
+      subtitleIndividualHiring: "Dùng để phát hành tài liệu tuyển dụng cá nhân",
     },
     profileInfo: {
       accountInfo: "Account Information",
@@ -1506,7 +1790,7 @@ export const vi = {
       sectionAccountInfo: "Thông tin tài khoản",
       sectionPassword: "Mật khẩu",
       submitButton: "Xác nhận",
-      subtitleAccountInfo: "Thiết lập thông tin tài khoản cơ bản của bạn"
+      subtitleAccountInfo: "Thiết lập thông tin tài khoản cơ bản của bạn",
     },
     profileJob: {
       noJob: "Không tìm thấy bài đăng công việc nào",
@@ -1535,7 +1819,7 @@ export const vi = {
       tableHeaderJobType: "Loại công việc",
       tableHeaderPostDate: "Ngày đăng",
       tableHeaderTitle: "Tiêu đề",
-      wantToGetJobBoard: "Nhận công việc từ bảng thông báo việc làm?"
+      wantToGetJobBoard: "Nhận công việc từ bảng thông báo việc làm?",
     },
     profileNavbar: {
       accountInfo: "Thông tin tài khoản",
@@ -1544,7 +1828,7 @@ export const vi = {
       consentManage: "Quản lý sự đồng ý",
       personalHiringInfo: "Tuyển dụng với tư cách cá nhân",
       sectionAccount: "Tài khoản của bạn",
-      sectionHiring: "Thông tin tuyển dụng"
+      sectionHiring: "Thông tin tuyển dụng",
     },
     profilePoint: {
       award1000BahtCoupon: "Phiếu giảm giá 1000 baht",
@@ -1561,13 +1845,20 @@ export const vi = {
       columnDetails: "Chi tiết",
       columnPointsAmount: "Số điểm",
       faqBenefits: "Lợi ích của chương trình tích điểm Fastwork là gì?",
-      faqBenefitsAnswer: "Các ví dụ về lợi ích từ chương trình tích điểm Fastwork bao gồm hoàn tiền cho freelancer, giảm giá đặc biệt khi thuê dịch vụ, phiếu giảm giá đối tác độc quyền, và nhiều quyền lợi khác. Lưu ý: Các quyền lợi có thể thay đổi theo thời gian để phù hợp với nhu cầu của người dùng.",
-      faqExpiration: "Điểm trong chương trình tích điểm Fastwork có hết hạn không?",
-      faqExpirationAnswer: "Điểm Fastwork có thời hạn sử dụng 6 tháng và sẽ hết hạn vào cuối tháng thứ 3. Ví dụ: Nếu bạn nhận điểm vào tháng 1, chúng sẽ hết hạn vào ngày 30 tháng 4. Khi bạn đổi thưởng, hệ thống sẽ tự động sử dụng các điểm gần hết hạn trước.",
-      faqJoinRewards: "Làm thế nào để tham gia chương trình tích điểm Fastwork?",
-      faqJoinRewardsAnswer: "Chỉ cần đăng nhập vào Fastwork và vào trang 'Nhiệm vụ' để bắt đầu tích điểm và đổi thưởng ngay lập tức. Nếu bạn gặp vấn đề khi truy cập hệ thống, vui lòng liên hệ với trung tâm hỗ trợ của chúng tôi.",
-      faqMorePoints: "Làm thế nào để nhận thêm điểm trong chương trình tích điểm Fastwork?",
-      faqMorePointsAnswer: "Hoàn thành các nhiệm vụ được liệt kê trên trang nhiệm vụ, chẳng hạn như đăng nhập và check-in hàng ngày. Đặc biệt dành cho freelancer! Nhận công việc thông qua hệ thống Fastwork mỗi 320 baht và tự động nhận 1 điểm.",
+      faqBenefitsAnswer:
+        "Các ví dụ về lợi ích từ chương trình tích điểm Fastwork bao gồm hoàn tiền cho freelancer, giảm giá đặc biệt khi thuê dịch vụ, phiếu giảm giá đối tác độc quyền, và nhiều quyền lợi khác. Lưu ý: Các quyền lợi có thể thay đổi theo thời gian để phù hợp với nhu cầu của người dùng.",
+      faqExpiration:
+        "Điểm trong chương trình tích điểm Fastwork có hết hạn không?",
+      faqExpirationAnswer:
+        "Điểm Fastwork có thời hạn sử dụng 6 tháng và sẽ hết hạn vào cuối tháng thứ 3. Ví dụ: Nếu bạn nhận điểm vào tháng 1, chúng sẽ hết hạn vào ngày 30 tháng 4. Khi bạn đổi thưởng, hệ thống sẽ tự động sử dụng các điểm gần hết hạn trước.",
+      faqJoinRewards:
+        "Làm thế nào để tham gia chương trình tích điểm Fastwork?",
+      faqJoinRewardsAnswer:
+        "Chỉ cần đăng nhập vào Fastwork và vào trang 'Nhiệm vụ' để bắt đầu tích điểm và đổi thưởng ngay lập tức. Nếu bạn gặp vấn đề khi truy cập hệ thống, vui lòng liên hệ với trung tâm hỗ trợ của chúng tôi.",
+      faqMorePoints:
+        "Làm thế nào để nhận thêm điểm trong chương trình tích điểm Fastwork?",
+      faqMorePointsAnswer:
+        "Hoàn thành các nhiệm vụ được liệt kê trên trang nhiệm vụ, chẳng hạn như đăng nhập và check-in hàng ngày. Đặc biệt dành cho freelancer! Nhận công việc thông qua hệ thống Fastwork mỗi 320 baht và tự động nhận 1 điểm.",
       filterAll: "Tất cả",
       filterEmployment: "Dành cho tuyển dụng",
       filterGeneral: "Chung",
@@ -1595,16 +1886,19 @@ export const vi = {
       taskFirstPayment: "Thanh toán đầu tiên trên Fastwork",
       taskRepeatHire: "Thuê freelancer cùng một người nhiều lần",
       taskSuccessfulHire: "Thuê thành công lần đầu tiên",
-      terms1: "Mọi giao dịch đổi thưởng, giảm giá hoặc đặc quyền sau khi đổi đều không thể hoàn lại hoặc đổi lại.",
-      terms2: "Để đảm bảo bạn nhận được lợi ích tối đa từ chương trình tích điểm Fastwork, vui lòng kiểm tra ngày hết hạn của điểm tích lũy thường xuyên và đổi thưởng trong thời gian quy định.",
-      terms3: "Fastwork có quyền quyết định và thay đổi điều kiện của chương trình tích điểm, bao gồm đổi thưởng, mà không cần thông báo trước."
+      terms1:
+        "Mọi giao dịch đổi thưởng, giảm giá hoặc đặc quyền sau khi đổi đều không thể hoàn lại hoặc đổi lại.",
+      terms2:
+        "Để đảm bảo bạn nhận được lợi ích tối đa từ chương trình tích điểm Fastwork, vui lòng kiểm tra ngày hết hạn của điểm tích lũy thường xuyên và đổi thưởng trong thời gian quy định.",
+      terms3:
+        "Fastwork có quyền quyết định và thay đổi điều kiện của chương trình tích điểm, bao gồm đổi thưởng, mà không cần thông báo trước.",
     },
     proposal: {
       whyHireYouLabel: "Tại sao chúng tôi nên chọn bạn?",
       portfolioUrlErrorUrl: "Vui lòng nhập một URL hợp lệ",
       priceErrorMin: "Yêu cầu nhập giá",
       timelineErrorMin: "Yêu cầu nhập thời gian",
-      serviceErrorMin: "Vui lòng chọn một dịch vụ"
+      serviceErrorMin: "Vui lòng chọn một dịch vụ",
     },
     seller: {
       accessHireNote: "Lưu ý: Dữ liệu sẽ được cập nhật trong vòng 24 giờ",
@@ -1632,23 +1926,27 @@ export const vi = {
       step1Status: "Hoàn tất",
       step1Title: "Đăng ký làm freelancer: Freelance đã được xác minh",
       step2Action: "Đăng dịch vụ",
-      step2Desc: "Tạo các dịch vụ hấp dẫn để thu hút người thuê và tạo ra thu nhập trên fastwork",
+      step2Desc:
+        "Tạo các dịch vụ hấp dẫn để thu hút người thuê và tạo ra thu nhập trên fastwork",
       step2Title: "Đăng dịch vụ của bạn",
       step3Action: "Thêm thông tin",
-      step3Desc: "Thêm kinh nghiệm làm việc, trình độ học vấn và các kỹ năng của bạn",
+      step3Desc:
+        "Thêm kinh nghiệm làm việc, trình độ học vấn và các kỹ năng của bạn",
       step3Title: "Giới thiệu bản thân",
-      upgradeMembership: "Để nâng hạng thành viên"
+      upgradeMembership: "Để nâng hạng thành viên",
     },
     sellerAccountStatistics: {
       accountStatisticsTitle: "Thống kê tài khoản",
       averageResponseTime: "Thời gian phản hồi trung bình",
       findJobsButton: "Tìm công việc",
       noDataAvailable: "Chưa có dữ liệu",
-      onlineActivityHint: "Hoạt động trực tuyến liên tục để tăng khả năng hiển thị",
+      onlineActivityHint:
+        "Hoạt động trực tuyến liên tục để tăng khả năng hiển thị",
       onlineActivityTitle: "Hoạt động trực tuyến",
-      serviceStatisticsNote: "Chú ý: Dữ liệu sẽ được cập nhật trong vòng 24 giờ",
+      serviceStatisticsNote:
+        "Chú ý: Dữ liệu sẽ được cập nhật trong vòng 24 giờ",
       serviceStatisticsTitle: "Thống Kê Dịch Vụ",
-      startSellingButton: "Bắt Đầu Bán"
+      startSellingButton: "Bắt Đầu Bán",
     },
     sellerBankAccount: {
       bankAccountNumberLabel: "Số tài khoản ngân hàng",
@@ -1657,28 +1955,35 @@ export const vi = {
       bankInfoTitle: "Thông tin ngân hàng",
       bankNameLabel: "Tên ngân hàng",
       bankNamePlaceholder: "Chọn ngân hàng",
-      bankQrUploadNote: "Vui lòng tải lên mã QR từ ứng dụng ngân hàng trực tuyến có hiển thị tên của bạn",
-      bankQrUploadTitle: "Ảnh mã QR ngân hàng của bạn (Tên tài khoản phải trùng với CMND/CCCD)",
-      uploadButton: "Tải ảnh lên"
+      bankQrUploadNote:
+        "Vui lòng tải lên mã QR từ ứng dụng ngân hàng trực tuyến có hiển thị tên của bạn",
+      bankQrUploadTitle:
+        "Ảnh mã QR ngân hàng của bạn (Tên tài khoản phải trùng với CMND/CCCD)",
+      uploadButton: "Tải ảnh lên",
     },
     sellerCommitmentLetter: {
-      incomeTaxDescription: "Để nhận thanh toán thông qua hệ thống Fastwork, freelancer phải xác nhận và đồng ý tự cung cấp thông tin thu nhập của mình để cơ quan thuế xem xét tuân thủ các yêu cầu pháp lý.",
-      step1Note: "Sau khi được xác minh, thông tin này không thể thay đổi (vui lòng liên hệ đội ngũ hỗ trợ)",
+      incomeTaxDescription:
+        "Để nhận thanh toán thông qua hệ thống Fastwork, freelancer phải xác nhận và đồng ý tự cung cấp thông tin thu nhập của mình để cơ quan thuế xem xét tuân thủ các yêu cầu pháp lý.",
+      step1Note:
+        "Sau khi được xác minh, thông tin này không thể thay đổi (vui lòng liên hệ đội ngũ hỗ trợ)",
       step1Placeholder: "Vui lòng nhập thông tin",
       step1Title: "Nhập mã số thuế",
       step2Link: "Bản cam kết",
       step2Note: "Bạn có thể tải xuống tài liệu tại đây",
       step2Title: "Tải xuống bản cam kết",
-      step3Note: "Chữ ký số không được chấp nhận; tài liệu phải được ký bằng chữ ký viết tay",
+      step3Note:
+        "Chữ ký số không được chấp nhận; tài liệu phải được ký bằng chữ ký viết tay",
       step3Title: "Đọc kỹ và ký tài liệu",
-      step4Note: "Bạn có thể tải lên các tệp có định dạng .pdf, .png hoặc .jpg với dung lượng tối đa 10MB",
+      step4Note:
+        "Bạn có thể tải lên các tệp có định dạng .pdf, .png hoặc .jpg với dung lượng tối đa 10MB",
       step4Title: "Chụp hình tài liệu và tải lên thông qua Fastwork",
       taxInfoTitle: "Thông tin khai báo thuế",
-      uploadButton: "Tải lên tài liệu"
+      uploadButton: "Tải lên tài liệu",
     },
     sellerContactInfo: {
       addressDetail: "Chi tiết địa chỉ",
-      addressInfoDescription: "Để chúng tôi có thể gửi hàng và tài liệu cho bạn",
+      addressInfoDescription:
+        "Để chúng tôi có thể gửi hàng và tài liệu cho bạn",
       addressInfoTitle: "Thông tin địa chỉ",
       addressPlaceholder: "Ghi rõ địa chỉ, số nhà, đường, ngõ",
       contactInfoDescription: "Để chúng tôi và khách hàng có thể liên hệ bạn",
@@ -1692,7 +1997,7 @@ export const vi = {
       subDistrict: "Phường/Xã",
       thailand: "Thái Lan",
       zipcode: "Mã bưu điện",
-      zipcodePlaceholder: "Nhập mã bưu điện"
+      zipcodePlaceholder: "Nhập mã bưu điện",
     },
     sellerDocumentInfo: {
       firstnameLabel: "Tên đệm và tên",
@@ -1700,34 +2005,40 @@ export const vi = {
       lastnameLabel: "Họ",
       lastnamePlaceholder: "Nhập họ",
       subtitle: "Dành cho cá nhân",
-      title: "Thông tin tài liệu của người thuê (cá nhân)"
+      title: "Thông tin tài liệu của người thuê (cá nhân)",
     },
     sellerMyService: {
       modalTitle: "Chi tiết công việc chưa được duyệt",
       serviceInformation: "Thông tin dịch vụ",
-      submissionSuccessful: "Gửi thành công! Vui lòng chờ kết quả duyệt từ hệ thống.",
-      serviceDescriptionGuideline: "Vui lòng mô tả trực quan công việc của bạn, bao gồm các dịch vụ bạn cung cấp như thiết kế, dịch thuật, in ấn, tư vấn, v.v. Nếu bạn có sản phẩm mẫu, bạn có thể trình bày và đính kèm hình ảnh vào hồ sơ dịch vụ. Tuy nhiên, việc sử dụng hình ảnh làm tiêu đề công việc hoặc mô tả dịch vụ có thể khiến khách hàng hiểu nhầm rằng bạn chỉ chấp nhận công việc cụ thể đó.",
+      submissionSuccessful:
+        "Gửi thành công! Vui lòng chờ kết quả duyệt từ hệ thống.",
+      serviceDescriptionGuideline:
+        "Vui lòng mô tả trực quan công việc của bạn, bao gồm các dịch vụ bạn cung cấp như thiết kế, dịch thuật, in ấn, tư vấn, v.v. Nếu bạn có sản phẩm mẫu, bạn có thể trình bày và đính kèm hình ảnh vào hồ sơ dịch vụ. Tuy nhiên, việc sử dụng hình ảnh làm tiêu đề công việc hoặc mô tả dịch vụ có thể khiến khách hàng hiểu nhầm rằng bạn chỉ chấp nhận công việc cụ thể đó.",
       uploadServiceImages: "Tải ảnh dịch vụ lên",
-      uploadGuideline: "Vui lòng tải lên ít nhất 3 hình ảnh sản phẩm liên quan đến danh mục công việc của bạn, đảm bảo chúng không trùng lặp. Điều này giúp hồ sơ của bạn thể hiện sự đa dạng.",
+      uploadGuideline:
+        "Vui lòng tải lên ít nhất 3 hình ảnh sản phẩm liên quan đến danh mục công việc của bạn, đảm bảo chúng không trùng lặp. Điều này giúp hồ sơ của bạn thể hiện sự đa dạng.",
       understood: "Đã hiểu",
       addNewService: "Thêm dịch vụ mới",
-      approvalNote: "Đối với hồ sơ dịch vụ đang ở trạng thái Đang chờ duyệt, chúng tôi sẽ xem xét trong vòng 2 ngày làm việc (sau khi tài khoản người dùng được phê duyệt)",
+      approvalNote:
+        "Đối với hồ sơ dịch vụ đang ở trạng thái Đang chờ duyệt, chúng tôi sẽ xem xét trong vòng 2 ngày làm việc (sau khi tài khoản người dùng được phê duyệt)",
       columnFeePercent: "Phí dịch vụ (%)",
       columnManage: "Quản lý",
       columnService: "Dịch vụ",
       columnStatus: "Trạng thái dịch vụ",
       columnVisibility: "Hiển thị dịch vụ",
-      confirmDeleteServiceMessage: "Sau khi xác nhận xóa dịch vụ, bạn sẽ không thể khôi phục lại dữ liệu.",
+      confirmDeleteServiceMessage:
+        "Sau khi xác nhận xóa dịch vụ, bạn sẽ không thể khôi phục lại dữ liệu.",
       confirmDeleteServiceTitle: "Xác nhận xóa dịch vụ",
       myServicesTitle: "Dịch vụ của tôi ({{n}}/{{max}})",
       noService: "Chưa có dịch vụ nào",
       serviceFeeButton: "Nhập để tính toán",
-      serviceFeeDescription: "Phí dịch vụ được tính 15% trên giá trị mà freelancer nhận được",
+      serviceFeeDescription:
+        "Phí dịch vụ được tính 15% trên giá trị mà freelancer nhận được",
       serviceFeeTitle: "Tính phí dịch vụ",
       statusApproved: "Đã phê duyệt",
       statusDraft: "Bản nháp",
       statusPending: "Đang chờ duyệt",
-      statusRejected: "Từ chối"
+      statusRejected: "Từ chối",
     },
     sellerPersonalInfo: {
       addressDetail: "Chi tiết địa chỉ",
@@ -1746,7 +2057,7 @@ export const vi = {
       lastName: "Tên đệm và tên",
       postalCode: "Mã bưu điện",
       province: "Tỉnh/Thành phố",
-      subDistrict: "Xã/Phường"
+      subDistrict: "Xã/Phường",
     },
     sellerProfile: {
       aboutFreelancerLabel: "Về freelancer",
@@ -1756,13 +2067,15 @@ export const vi = {
       freelancerAccountInfoSubtitle: "Thiết lập thông tin cơ bản của bạn",
       freelancerAccountInfoTitle: "Thông tin tài khoản freelancer",
       freelancerTypeLabel: "Loại freelancer",
-      freelancerTypeNote: "Chỉ sử dụng để cải thiện hệ thống, nếu bạn còn là sinh viên, vui lòng chọn Bán thời gian",
+      freelancerTypeNote:
+        "Chỉ sử dụng để cải thiện hệ thống, nếu bạn còn là sinh viên, vui lòng chọn Bán thời gian",
       fullTime: "Full-time",
       partTime: "Part-time",
       saveButton: "Lưu",
       usernameLabel: "Username",
       usernameMinLengthError: "Username phải có ít nhất 3 ký tự",
-      usernameNote: "Username sẽ hiển thị trong URL, chỉnh sửa username có thể ảnh hưởng đến kết quả tìm kiếm trên Google"
+      usernameNote:
+        "Username sẽ hiển thị trong URL, chỉnh sửa username có thể ảnh hưởng đến kết quả tìm kiếm trên Google",
     },
     sellerProjectManagement: {
       projectColumnAmount: "Số tiền (Baht)",
@@ -1775,7 +2088,7 @@ export const vi = {
       projectInProgressTab: "Đang thực hiện ({{n}})",
       projectInProgressTitle: "Dự án đang thực hiện",
       projectPendingTab: "Chờ phê duyệt ({{n}})",
-      projectPendingTitle: "Dự án đang chờ phê duyệt"
+      projectPendingTitle: "Dự án đang chờ phê duyệt",
     },
     sellerWithdrawal: {
       accumulatedBalance: "Số dư tích lũy (Baht)",
@@ -1793,11 +2106,13 @@ export const vi = {
       noTransactions: "Chưa có giao dịch nào trong {{month}} {{year}}",
       paymentSteps: "Các bước để nhận tiền",
       transactionHistory: "Lịch sử chuyển tiền",
-      transferNote: "Bạn sẽ nhận được tiền trong 1–3 ngày làm việc sau khi trạng thái chuyển tiền thay đổi thành Đã chuyển tiền tùy thuộc vào thời gian xử lý của từng ngân hàng",
+      transferNote:
+        "Bạn sẽ nhận được tiền trong 1–3 ngày làm việc sau khi trạng thái chuyển tiền thay đổi thành Đã chuyển tiền tùy thuộc vào thời gian xử lý của từng ngân hàng",
       verificationBank: "Thông tin tài khoản ngân hàng: Thêm dữ liệu",
       verificationId: "Thông tin CMND/CCCD: Kiểm tra thông tin của bạn",
-      verificationInfoTitle: "Thông tin cần được xác minh khi có số dư tích lũy",
-      verificationTax: "Thông tin khai báo thuế: Thêm dữ liệu"
+      verificationInfoTitle:
+        "Thông tin cần được xác minh khi có số dư tích lũy",
+      verificationTax: "Thông tin khai báo thuế: Thêm dữ liệu",
     },
     spPrivacy: {
       myProfile: "Hồ sơ của tôi",
@@ -1815,32 +2130,41 @@ export const vi = {
       jobBoard: "Bảng tin tuyển dụng",
       otherServices: "Các dịch vụ khác",
       dataManagement: "Quản lý dữ liệu",
-      logout: "Đăng xuất"
+      logout: "Đăng xuất",
     },
     supportCenter: {
       faqTitle: "Các câu hỏi thường gặp",
       faqSubtitle: "Nhận câu trả lời cho các câu hỏi phổ biến",
       faqHeader: "Các câu hỏi thường gặp",
       faqQuestion1: "Làm cách nào để tuyển dụng freelancer qua Fastwork?",
-      faqQuestion1Step1: "1. Thảo luận với freelancer về chi tiết công việc (Bạn sẽ không bị tính phí ở bước này)",
+      faqQuestion1Step1:
+        "1. Thảo luận với freelancer về chi tiết công việc (Bạn sẽ không bị tính phí ở bước này)",
       faqQuestion1Step2: "2. Yêu cầu freelancer gửi báo giá",
-      faqQuestion1Step3: "3. Thực hiện thanh toán qua hệ thống để xác nhận bắt đầu công việc (Thanh toán của bạn được hệ thống bảo vệ)",
+      faqQuestion1Step3:
+        "3. Thực hiện thanh toán qua hệ thống để xác nhận bắt đầu công việc (Thanh toán của bạn được hệ thống bảo vệ)",
       faqQuestion1Step4: "4. Xem xét và phê duyệt công việc",
-      faqQuestion1Note: "Lưu ý: Các khoản thanh toán được thực hiện trong hệ thống được Fastwork bảo vệ. Xem thêm tại Đảm bảo của Fastwork.",
+      faqQuestion1Note:
+        "Lưu ý: Các khoản thanh toán được thực hiện trong hệ thống được Fastwork bảo vệ. Xem thêm tại Đảm bảo của Fastwork.",
       faqQuestion2: "Làm cách nào để tuyển dụng thay mặt một công ty?",
-      faqQuestion2Step1: "1. Cung cấp thông tin công ty để xuất tài liệu trên trang 'Tuyển dụng thay mặt công ty'",
+      faqQuestion2Step1:
+        "1. Cung cấp thông tin công ty để xuất tài liệu trên trang 'Tuyển dụng thay mặt công ty'",
       faqQuestion2Step2: "2. Chờ phê duyệt trong vòng 2 giờ",
-      faqQuestion2Step3: "3. Sau khi được phê duyệt, thông báo ngay cho freelancer để xuất tài liệu qua trò chuyện",
+      faqQuestion2Step3:
+        "3. Sau khi được phê duyệt, thông báo ngay cho freelancer để xuất tài liệu qua trò chuyện",
       faqQuestion3: "Làm cách nào để tìm freelancer?",
       faqQuestion3Step1: "1. Thêm @fastwork qua Line",
-      faqQuestion3Step2: "2. Chọn dịch vụ trò chuyện để thuê (dịch vụ hỗ trợ freelancer)",
-      faqQuestion3Step3: "3. Cung cấp thông tin chi tiết cho quản trị viên ngay lập tức",
+      faqQuestion3Step2:
+        "2. Chọn dịch vụ trò chuyện để thuê (dịch vụ hỗ trợ freelancer)",
+      faqQuestion3Step3:
+        "3. Cung cấp thông tin chi tiết cho quản trị viên ngay lập tức",
       viewAllQuestions: "Xem tất cả câu hỏi →",
       contactUsHeader: "Liên hệ với chúng tôi",
       supportCenterTitle: "Trung tâm hỗ trợ",
-      supportCenterDescription: "Cần giúp đỡ? Chúng tôi rất sẵn lòng hỗ trợ bạn.",
+      supportCenterDescription:
+        "Cần giúp đỡ? Chúng tôi rất sẵn lòng hỗ trợ bạn.",
       chatWithUsButton: "💬 Trò chuyện với chúng tôi",
-      supportCenterHours: "Thứ Hai - Thứ Sáu 9:30-22:00 / Thứ Bảy - Chủ Nhật và ngày lễ 10:00-19:00",
+      supportCenterHours:
+        "Thứ Hai - Thứ Sáu 9:30-22:00 / Thứ Bảy - Chủ Nhật và ngày lễ 10:00-19:00",
       contactEmailTitle: "Liên hệ qua Email",
       contactEmailResponseTime: "Đội ngũ của chúng tôi sẽ phản hồi trong vòng",
       contactEmailResponseTimeHighlight: "24 giờ",
@@ -1849,113 +2173,165 @@ export const vi = {
       callUsPhone: "02-114-7008",
       callUsHours: "Thứ Hai - Thứ Sáu 9:30-11:30 và 13:00-16:00",
       callUsClosed: "Nghỉ việc vào Thứ Bảy - Chủ Nhật và ngày lễ",
-      addLineTitle: "Hãy để chúng tôi giúp bạn tìm freelancer phù hợp bằng cách đơn giản là  chỉ cần thêm Line",
-      addLineDescription: "Dịch vụ trò chuyện để thuê freelancer hoặc nhận hỗ trợ từ trợ lý",
-      addLineButton: "Thêm @fastwork"
+      addLineTitle:
+        "Hãy để chúng tôi giúp bạn tìm freelancer phù hợp bằng cách đơn giản là  chỉ cần thêm Line",
+      addLineDescription:
+        "Dịch vụ trò chuyện để thuê freelancer hoặc nhận hỗ trợ từ trợ lý",
+      addLineButton: "Thêm @fastwork",
     },
     terms: {
-      homepageTitle: "Fastwork.co - Nền tảng số 1 cung cấp freelancer chất lượng được doanh nghiệp trên khắp Thái Lan lựa chọn",
+      homepageTitle:
+        "Fastwork.co - Nền tảng số 1 cung cấp freelancer chất lượng được doanh nghiệp trên khắp Thái Lan lựa chọn",
       homepageSubtitle: "Thuê Freelancer trên Fastwork",
       homepageAppPrompt: "Mở ứng dụng để trải nghiệm đầy đủ",
-      homepageFreelancerSectionTitle: "Chúng tôi có đội ngũ freelancer và chuyên gia chất lượng cao, đa dạng, sẵn sàng phục vụ bạn",
+      homepageFreelancerSectionTitle:
+        "Chúng tôi có đội ngũ freelancer và chuyên gia chất lượng cao, đa dạng, sẵn sàng phục vụ bạn",
       freelancerCategoryTitle: "Freelancer",
-      freelancerCategory1: "Đã xác minh danh tính và có danh mục công việc trong hệ thống",
+      freelancerCategory1:
+        "Đã xác minh danh tính và có danh mục công việc trong hệ thống",
       freelancerCategory2: "Đã xác minh danh tính trong hệ thống",
-      freelancerCategory3: "Danh mục công việc đạt tiêu chuẩn cơ bản của Fastwork",
+      freelancerCategory3:
+        "Danh mục công việc đạt tiêu chuẩn cơ bản của Fastwork",
       freelancerCategoryCta: "Xem tất cả công việc",
       specialistCategoryTitle: "Chuyên gia Fastwork",
       specialistCategory1: "Tự tin với kỹ năng và dịch vụ đã được kiểm tra",
       specialistCategory2: "Đã xác minh danh tính trong hệ thống",
-      specialistCategory3: "Được Fastwork lựa chọn và kiểm tra kiến thức, kỹ năng chuyên môn",
-      specialistCategory4: "Hoàn thành khóa đào tạo đặc biệt về kỹ năng và cung cấp dịch vụ từ Fastwork",
-      specialistCategory5: "Sở hữu chứng chỉ nghề nghiệp cần thiết trong lĩnh vực",
+      specialistCategory3:
+        "Được Fastwork lựa chọn và kiểm tra kiến thức, kỹ năng chuyên môn",
+      specialistCategory4:
+        "Hoàn thành khóa đào tạo đặc biệt về kỹ năng và cung cấp dịch vụ từ Fastwork",
+      specialistCategory5:
+        "Sở hữu chứng chỉ nghề nghiệp cần thiết trong lĩnh vực",
       professionalCategoryTitle: "Chuyên gia cao cấp Fastwork",
-      professionalCategory1: "Chuyên gia trong các dự án phức tạp và quy mô lớn",
+      professionalCategory1:
+        "Chuyên gia trong các dự án phức tạp và quy mô lớn",
       professionalCategory2: "Đã xác minh danh tính trong hệ thống",
-      professionalCategory3: "Được Fastwork lựa chọn và kiểm tra kiến thức, kỹ năng chuyên môn",
-      professionalCategory4: "Hoàn thành khóa đào tạo đặc biệt về kỹ năng và cung cấp dịch vụ từ Fastwork",
-      professionalCategory5: "Sở hữu chứng chỉ nghề nghiệp cần thiết trong lĩnh vực",
-      professionalCategory6: "Được sàng lọc với các tiêu chí chuyên môn nâng cao",
-      professionalCategory7: "Có khả năng xử lý các dự án phức tạp và quy mô lớn",
+      professionalCategory3:
+        "Được Fastwork lựa chọn và kiểm tra kiến thức, kỹ năng chuyên môn",
+      professionalCategory4:
+        "Hoàn thành khóa đào tạo đặc biệt về kỹ năng và cung cấp dịch vụ từ Fastwork",
+      professionalCategory5:
+        "Sở hữu chứng chỉ nghề nghiệp cần thiết trong lĩnh vực",
+      professionalCategory6:
+        "Được sàng lọc với các tiêu chí chuyên môn nâng cao",
+      professionalCategory7:
+        "Có khả năng xử lý các dự án phức tạp và quy mô lớn",
       howToUseTitle: "Cách sử dụng Fastwork?",
       howToUseStep1Title: "Tìm kiếm Freelancer lý tưởng",
-      howToUseStep1Description: "Tìm kiếm bằng thanh tìm kiếm hoặc chọn từ hơn 70 danh mục công việc.",
+      howToUseStep1Description:
+        "Tìm kiếm bằng thanh tìm kiếm hoặc chọn từ hơn 70 danh mục công việc.",
       howToUseStep2Title: "Thảo luận chi tiết",
-      howToUseStep2Description: "Nhấp vào “Chat ngay” để trao đổi chi tiết công việc và nhận báo giá từ freelancer.",
+      howToUseStep2Description:
+        "Nhấp vào “Chat ngay” để trao đổi chi tiết công việc và nhận báo giá từ freelancer.",
       howToUseStep3Title: "Thanh toán qua Fastwork",
-      howToUseStep3Description: "Thanh toán an toàn qua nhiều kênh, yên tâm với mỗi lần thuê vì chúng tôi bảo vệ khoản thanh toán của bạn.",
+      howToUseStep3Description:
+        "Thanh toán an toàn qua nhiều kênh, yên tâm với mỗi lần thuê vì chúng tôi bảo vệ khoản thanh toán của bạn.",
       howToUseStep4Title: "Phê duyệt công việc và đánh giá",
-      howToUseStep4Description: "Đánh giá freelancer để cung cấp phản hồi và hỗ trợ họ cải thiện.",
+      howToUseStep4Description:
+        "Đánh giá freelancer để cung cấp phản hồi và hỗ trợ họ cải thiện.",
       trustedClientsTitle: "Một số khách hàng tiêu biểu",
       trustedClientsCta: "Xem thêm",
-      termsAndConditionsTitle: "Điều khoản và Điều kiện sử dụng nền tảng Fastwork.co dành cho Freelancer",
+      termsAndConditionsTitle:
+        "Điều khoản và Điều kiện sử dụng nền tảng Fastwork.co dành cho Freelancer",
       section1Title: "Định nghĩa",
-      definition1: "Nền tảng là website (https://fastwork.co) và ứng dụng Fastwork.",
-      definition2: "Nền tảng đóng vai trò trung gian để người dùng tạo và chia sẻ dịch vụ.",
+      definition1:
+        "Nền tảng là website (https://fastwork.co) và ứng dụng Fastwork.",
+      definition2:
+        "Nền tảng đóng vai trò trung gian để người dùng tạo và chia sẻ dịch vụ.",
       definition3: "Người dùng có thể mua và bán dịch vụ qua nền tảng.",
       definition4: "Thanh toán được thực hiện dựa trên giá trị dịch vụ.",
-      definition5: "Công việc là sản phẩm hoặc dịch vụ do khách hàng và freelancer cung cấp.",
+      definition5:
+        "Công việc là sản phẩm hoặc dịch vụ do khách hàng và freelancer cung cấp.",
       definition6: "Công ty là tổ chức điều hành Fastwork.co.",
       definition7: "Fastwork cung cấp nền tảng cho các dịch vụ bên thứ ba.",
       definition8: "Công ty hỗ trợ tương tác giữa khách hàng và freelancer.",
       definition9: "Người dùng là cá nhân sử dụng dịch vụ của nền tảng.",
       definition10: "Khách hàng là người dùng thuê sản phẩm hoặc dịch vụ.",
       definition11: "Freelancer là người dùng cung cấp sản phẩm hoặc dịch vụ.",
-      definition12: "Hồ sơ dịch vụ (My Services) là trang hiển thị chi tiết dịch vụ của freelancer.",
-      definition13: "Khách hàng xem hồ sơ dịch vụ trước khi thanh toán cho dự án.",
-      definition14: "Đề xuất công việc là trang để freelancer ứng tuyển công việc của khách hàng.",
-      definition15: "Freelancer mô tả kỹ năng và bao gồm danh mục công việc trong đề xuất.",
-      definition16: "Bảng công việc là trang để khách hàng đăng yêu cầu công việc.",
+      definition12:
+        "Hồ sơ dịch vụ (My Services) là trang hiển thị chi tiết dịch vụ của freelancer.",
+      definition13:
+        "Khách hàng xem hồ sơ dịch vụ trước khi thanh toán cho dự án.",
+      definition14:
+        "Đề xuất công việc là trang để freelancer ứng tuyển công việc của khách hàng.",
+      definition15:
+        "Freelancer mô tả kỹ năng và bao gồm danh mục công việc trong đề xuất.",
+      definition16:
+        "Bảng công việc là trang để khách hàng đăng yêu cầu công việc.",
       definition17: "Khung trò chuyện là kênh giao tiếp của nền tảng.",
-      definition18: "Giao tiếp bao gồm văn bản, giọng nói, hình ảnh hoặc phương tiện khác.",
-      definition19: "Dự án được tạo khi khách hàng nhấp vào “Chat với Freelancer”.",
-      definition20: "Người dùng thảo luận chi tiết công việc sau khi tạo dự án.",
+      definition18:
+        "Giao tiếp bao gồm văn bản, giọng nói, hình ảnh hoặc phương tiện khác.",
+      definition19:
+        "Dự án được tạo khi khách hàng nhấp vào “Chat với Freelancer”.",
+      definition20:
+        "Người dùng thảo luận chi tiết công việc sau khi tạo dự án.",
       definition21: "Freelancer gửi báo giá để khách hàng xem xét.",
-      definition22: "Dự án không hoạt động là dự án không có thay đổi trạng thái hoặc tương tác.",
+      definition22:
+        "Dự án không hoạt động là dự án không có thay đổi trạng thái hoặc tương tác.",
       definition23: "Báo giá là đề xuất do freelancer gửi đến khách hàng.",
       definition24: "Báo giá bao gồm phạm vi dự án, thời gian và chi phí.",
       definition25: "Phí dự án là số tiền khách hàng đồng ý thanh toán.",
       definition26: "Công ty giữ phí dự án cho đến khi hoàn thành.",
       definition27: "Phí dự án không bao gồm thuế thu nhập cá nhân.",
-      definition28: "Phí sử dụng nền tảng của Freelancer là phí áp dụng cho freelancer.",
-      definition29: "Phí sử dụng nền tảng của Khách hàng là phí áp dụng cho khách hàng.",
-      definition30: "Fastwork Coins là điểm tích lũy của khách hàng sau khi thanh toán.",
+      definition28:
+        "Phí sử dụng nền tảng của Freelancer là phí áp dụng cho freelancer.",
+      definition29:
+        "Phí sử dụng nền tảng của Khách hàng là phí áp dụng cho khách hàng.",
+      definition30:
+        "Fastwork Coins là điểm tích lũy của khách hàng sau khi thanh toán.",
       definition31: "Bonus Coins là điểm tặng bởi công ty.",
-      definition32: "Dữ liệu cá nhân là thông tin xác định cá nhân trực tiếp hoặc gián tiếp.",
+      definition32:
+        "Dữ liệu cá nhân là thông tin xác định cá nhân trực tiếp hoặc gián tiếp.",
       section2Title: "Điều khoản chung",
-      generalTerms1: "Các điều khoản này có hiệu lực từ ngày 21 tháng 8 năm 2024.",
-      generalTerms2: "Công ty sẽ cập nhật nền tảng để phù hợp với các thay đổi.",
+      generalTerms1:
+        "Các điều khoản này có hiệu lực từ ngày 21 tháng 8 năm 2024.",
+      generalTerms2:
+        "Công ty sẽ cập nhật nền tảng để phù hợp với các thay đổi.",
       generalTerms3: "Người dùng phải đồng ý với các Điều khoản sử dụng mới.",
-      generalTerms4: "Điều khoản sử dụng là thỏa thuận giữa người dùng và nền tảng.",
+      generalTerms4:
+        "Điều khoản sử dụng là thỏa thuận giữa người dùng và nền tảng.",
       generalTerms5: "Thỏa thuận xác định quyền và trách nhiệm.",
       generalTerms6: "Người dùng tuân thủ chính sách bảo mật.",
-      generalTerms7: "Người dùng không được tham gia các hoạt động bất hợp pháp.",
+      generalTerms7:
+        "Người dùng không được tham gia các hoạt động bất hợp pháp.",
       generalTerms8: "Công ty có thể hạn chế sử dụng dịch vụ nếu vi phạm.",
       generalTerms9: "Người dùng chịu trách nhiệm tuân thủ pháp luật.",
       section3Title: "Cam kết của Freelancer",
-      freelancerCommitment1: "Freelancer phải hiểu các Điều khoản và Điều kiện.",
-      freelancerCommitment2: "Freelancer cập nhật thông tin cá nhân thường xuyên.",
+      freelancerCommitment1:
+        "Freelancer phải hiểu các Điều khoản và Điều kiện.",
+      freelancerCommitment2:
+        "Freelancer cập nhật thông tin cá nhân thường xuyên.",
       freelancerCommitment3: "Freelancer kiểm tra tin nhắn và dự án kịp thời.",
       freelancerCommitment4: "Không phản hồi có thể dẫn đến hủy dự án tự động.",
-      freelancerCommitment5: "Hủy dự án ảnh hưởng đến mức độ hiển thị và xếp hạng dịch vụ.",
-      freelancerCommitment6: "Cuộc trò chuyện với khách hàng phải diễn ra trên nền tảng.",
-      freelancerCommitment7: "Tranh chấp ngoài nền tảng có thể không được hỗ trợ.",
+      freelancerCommitment5:
+        "Hủy dự án ảnh hưởng đến mức độ hiển thị và xếp hạng dịch vụ.",
+      freelancerCommitment6:
+        "Cuộc trò chuyện với khách hàng phải diễn ra trên nền tảng.",
+      freelancerCommitment7:
+        "Tranh chấp ngoài nền tảng có thể không được hỗ trợ.",
       freelancerCommitment8: "Freelancer không được tạo thông tin giả mạo.",
       freelancerCommitment9: "Freelancer không được tham gia hành vi gian lận.",
-      freelancerCommitment10: "Chi tiết công việc được trao đổi qua Khung trò chuyện.",
-      freelancerCommitment11: "Không chia sẻ thông tin liên hệ cá nhân ra ngoài nền tảng.",
-      freelancerCommitment12: "Báo cáo liên hệ ngoài nền tảng trong vòng 3 ngày.",
-      freelancerCommitment13: "Freelancer đánh giá khả năng trước khi liệt kê dịch vụ.",
+      freelancerCommitment10:
+        "Chi tiết công việc được trao đổi qua Khung trò chuyện.",
+      freelancerCommitment11:
+        "Không chia sẻ thông tin liên hệ cá nhân ra ngoài nền tảng.",
+      freelancerCommitment12:
+        "Báo cáo liên hệ ngoài nền tảng trong vòng 3 ngày.",
+      freelancerCommitment13:
+        "Freelancer đánh giá khả năng trước khi liệt kê dịch vụ.",
       freelancerCommitment14: "Freelancer duy trì liên lạc cho các dự án.",
-      freelancerCommitment15: "Freelancer không được sử dụng sản phẩm của người khác làm của mình.",
+      freelancerCommitment15:
+        "Freelancer không được sử dụng sản phẩm của người khác làm của mình.",
       freelancerCommitment16: "Vi phạm có thể dẫn đến đình chỉ tài khoản.",
       freelancerCommitment17: "Freelancer đảm bảo giao hàng đúng hạn.",
       section4Title: "Đăng ký nền tảng",
       registration1: "Freelancer phải từ 15 tuổi trở lên.",
-      registration2: "Sử dụng nền tảng đồng nghĩa với việc chấp nhận Điều khoản sử dụng.",
+      registration2:
+        "Sử dụng nền tảng đồng nghĩa với việc chấp nhận Điều khoản sử dụng.",
       registration3: "Người dùng tuân thủ quy trình đăng ký của công ty.",
       registration4: "Người dùng cung cấp thông tin đăng ký bắt buộc.",
-      registration5: "Người dùng xác minh danh tính theo quy trình của công ty.",
+      registration5:
+        "Người dùng xác minh danh tính theo quy trình của công ty.",
       registration6: "Dịch vụ được liệt kê trên trang “My Services”.",
       registration7: "Dịch vụ phải được phân loại chính xác.",
       registration8: "Hồ sơ không tuân thủ có thể không được phê duyệt.",
@@ -2032,7 +2408,8 @@ export const vi = {
       cancellationRestrictions4: "Hoạt động gian lận hạn chế hủy.",
       section13Title: "Đình chỉ và Xóa tài khoản",
       accountSuspension1: "Công ty có thể xác minh quyền sở hữu tài khoản.",
-      accountSuspension2: "Người dùng cung cấp bằng chứng như ID hoặc chi tiết ngân hàng.",
+      accountSuspension2:
+        "Người dùng cung cấp bằng chứng như ID hoặc chi tiết ngân hàng.",
       accountSuspension3: "Vi phạm dẫn đến cảnh báo hoặc đình chỉ.",
       accountSuspension4: "Hành vi không phù hợp vi phạm Điều khoản sử dụng.",
       accountSuspension5: "Hoạt động gian lận dẫn đến đình chỉ.",
@@ -2045,44 +2422,63 @@ export const vi = {
       accountSuspension12: "Tránh phí vi phạm Điều khoản sử dụng.",
       accountSuspension13: "Quyết định của công ty là cuối cùng.",
       accountSuspension14: "Tài khoản bị đình chỉ không thể giao dịch.",
-      accountSuspension15: "Người dùng bị đình chỉ liên hệ công ty để biết trạng thái.",
+      accountSuspension15:
+        "Người dùng bị đình chỉ liên hệ công ty để biết trạng thái.",
       section14Title: "Giải quyết tranh chấp giữa người dùng",
-      disputeResolution1: "Người dùng giải quyết tranh chấp qua trò chuyện nền tảng.",
-      disputeResolution2: "Tranh chấp bao gồm chất lượng sản phẩm và phạm vi công việc.",
+      disputeResolution1:
+        "Người dùng giải quyết tranh chấp qua trò chuyện nền tảng.",
+      disputeResolution2:
+        "Tranh chấp bao gồm chất lượng sản phẩm và phạm vi công việc.",
       disputeResolution3: "Người dùng liên hệ công ty để hòa giải.",
-      disputeResolution4: "Người dùng cung cấp bằng chứng để giải quyết tranh chấp.",
-      disputeResolution5: "Công ty truy cập trò chuyện để giải quyết tranh chấp.",
+      disputeResolution4:
+        "Người dùng cung cấp bằng chứng để giải quyết tranh chấp.",
+      disputeResolution5:
+        "Công ty truy cập trò chuyện để giải quyết tranh chấp.",
       disputeResolution6: "Khiếu nại chất lượng dẫn đến điều tra.",
       disputeResolution7: "Vi phạm dẫn đến hình phạt như cảnh báo.",
       disputeResolution8: "Hình phạt có thể bao gồm đình chỉ tài khoản.",
       section15Title: "Bồi thường",
       indemnification1: "Người dùng bồi thường thiệt hại cho bên thứ ba.",
-      indemnification2: "Người dùng sử dụng hoặc tiết lộ dữ liệu cá nhân đồng ý bồi thường cho chủ sở hữu dữ liệu.",
-      indemnification3: "Người dùng bồi thường cho việc sử dụng sai quyền sở hữu trí tuệ.",
+      indemnification2:
+        "Người dùng sử dụng hoặc tiết lộ dữ liệu cá nhân đồng ý bồi thường cho chủ sở hữu dữ liệu.",
+      indemnification3:
+        "Người dùng bồi thường cho việc sử dụng sai quyền sở hữu trí tuệ.",
       indemnification4: "Người dùng bồi thường cho rò rỉ thông tin bí mật.",
       indemnification5: "Người dùng bồi thường cho thông tin gây hại.",
       indemnification6: "Người dùng bồi thường chi phí pháp lý cho công ty.",
-      indemnification7: "Người dùng chịu trách nhiệm bồi thường thiệt hại cho công ty.",
-      indemnification8: "Người dùng bồi thường lẫn nhau theo điều khoản tranh chấp.",
+      indemnification7:
+        "Người dùng chịu trách nhiệm bồi thường thiệt hại cho công ty.",
+      indemnification8:
+        "Người dùng bồi thường lẫn nhau theo điều khoản tranh chấp.",
       indemnification9: "Công ty bồi thường người dùng cho thiệt hại thực tế.",
       section16Title: "Giới hạn trách nhiệm của Công ty",
       companyLiability1: "Dịch vụ nền tảng không tạo trách nhiệm chung.",
-      companyLiability2: "Công ty không chịu trách nhiệm cho công việc ngoài phạm vi.",
-      companyLiability3: "Công ty không chịu trách nhiệm cho thanh toán ngoài nền tảng.",
-      companyLiability4: "Công ty không chịu trách nhiệm cho các dự án vi phạm.",
+      companyLiability2:
+        "Công ty không chịu trách nhiệm cho công việc ngoài phạm vi.",
+      companyLiability3:
+        "Công ty không chịu trách nhiệm cho thanh toán ngoài nền tảng.",
+      companyLiability4:
+        "Công ty không chịu trách nhiệm cho các dự án vi phạm.",
       companyLiability5: "Công ty không chịu trách nhiệm cho nội dung dịch vụ.",
-      companyLiability6: "Công ty không chịu trách nhiệm cho chất lượng công việc.",
+      companyLiability6:
+        "Công ty không chịu trách nhiệm cho chất lượng công việc.",
       companyLiability7: "Công ty đảm bảo tiêu chuẩn dịch vụ.",
-      companyLiability8: "Các chi nhánh không chịu trách nhiệm cho thiệt hại nền tảng.",
+      companyLiability8:
+        "Các chi nhánh không chịu trách nhiệm cho thiệt hại nền tảng.",
       section17Title: "Quyền sở hữu trí tuệ",
-      intellectualProperty1: "Khách hàng sở hữu bản quyền sản phẩm trừ khi có quy định khác.",
-      intellectualProperty2: "Người dùng không được vi phạm quyền sở hữu trí tuệ.",
-      intellectualProperty3: "Người vi phạm bồi thường cho chủ sở hữu quyền sở hữu trí tuệ.",
+      intellectualProperty1:
+        "Khách hàng sở hữu bản quyền sản phẩm trừ khi có quy định khác.",
+      intellectualProperty2:
+        "Người dùng không được vi phạm quyền sở hữu trí tuệ.",
+      intellectualProperty3:
+        "Người vi phạm bồi thường cho chủ sở hữu quyền sở hữu trí tuệ.",
       section18Title: "Chính sách bảo mật",
-      privacyPolicy1: "Xem chính sách bảo mật tại https://fastwork.co/seller-privacy.",
+      privacyPolicy1:
+        "Xem chính sách bảo mật tại https://fastwork.co/seller-privacy.",
       privacyPolicy2: "Dữ liệu cá nhân được xử lý bí mật.",
       privacyPolicy3: "Công ty có thể truy cập trò chuyện để giám sát.",
-      privacyPolicy4: "Người dùng đồng ý sử dụng nội dung cho mục đích tiếp thị.",
+      privacyPolicy4:
+        "Người dùng đồng ý sử dụng nội dung cho mục đích tiếp thị.",
       section19Title: "Liên hệ",
       contact1: "Liên hệ công ty trong giờ làm việc.",
       contact2: "Tên công ty: Fastwork",
@@ -2100,177 +2496,315 @@ export const vi = {
       note9: "Người dùng phải báo cáo vấn đề nền tảng kịp thời.",
       note10: "Nền tảng thúc đẩy thực hành thuê mướn công bằng và minh bạch.",
       note11: "Người dùng đồng ý nhận thông báo từ nền tảng.",
-      note12: "Công ty không chịu trách nhiệm cho nội dung do người dùng tạo ra.",
+      note12:
+        "Công ty không chịu trách nhiệm cho nội dung do người dùng tạo ra.",
       termsTitle: "Điều khoản và điều kiện của Fastwork",
-      termsAcceptance: "Tôi đã đọc và chấp nhận Điều khoản và Điều kiện sử dụng của fastwork",
+      termsAcceptance:
+        "Tôi đã đọc và chấp nhận Điều khoản và Điều kiện sử dụng của fastwork",
       privacyAcceptance: "Tôi đã đọc và chấp nhận Chính sách bảo mật",
-      marketingOptIn: "Tôi quan tâm đến việc nhận thông tin, ưu đãi, và khuyến mãi từ fastwork",
-      freelancerSignup: "Đăng ký làm freelancer"
+      marketingOptIn:
+        "Tôi quan tâm đến việc nhận thông tin, ưu đãi, và khuyến mãi từ fastwork",
+      freelancerSignup: "Đăng ký làm freelancer",
     },
     termsEmployer: {
       pageTitle: "Điều khoản & Điều kiện",
-      heading: "Điều khoản & Điều kiện sử dụng nền tảng dành cho nhà tuyển dụng của Công ty Fastwork Technologies Co., Ltd.",
+      heading:
+        "Điều khoản & Điều kiện sử dụng nền tảng dành cho nhà tuyển dụng của Công ty Fastwork Technologies Co., Ltd.",
       definitionTitle: "Định nghĩa",
-      definitionPlatform: "“Nền tảng” đề cập đến trang web (https://fastwork.co/) hoặc ứng dụng Fastwork của công ty. Đây là một kênh, không gian trung gian cho phép người dùng tạo, chia sẻ, bán và mua công việc hoặc dịch vụ với hình thức thanh toán theo giá trị đã được xác định trước cho từng công việc hoặc dịch vụ đó.",
-      definitionWork: "“Công việc” đề cập đến các sản phẩm và/hoặc dịch vụ mà nhà tuyển dụng đã thuê và freelancer đã bàn giao thông qua nền tảng.",
-      definitionCompany: "“Công ty” đề cập đến Công ty Fastwork Technologies Co., Ltd.",
-      definitionFastwork: "“Fastwork” đề cập đến công ty công nghệ cung cấp nền tảng cho người dùng để nhận dịch vụ do các nhà cung cấp bên thứ ba cung cấp. Vai trò của công ty là đóng vai trò trung gian giao tiếp giữa nhà tuyển dụng và freelancer.",
+      definitionPlatform:
+        "“Nền tảng” đề cập đến trang web (https://fastwork.co/) hoặc ứng dụng Fastwork của công ty. Đây là một kênh, không gian trung gian cho phép người dùng tạo, chia sẻ, bán và mua công việc hoặc dịch vụ với hình thức thanh toán theo giá trị đã được xác định trước cho từng công việc hoặc dịch vụ đó.",
+      definitionWork:
+        "“Công việc” đề cập đến các sản phẩm và/hoặc dịch vụ mà nhà tuyển dụng đã thuê và freelancer đã bàn giao thông qua nền tảng.",
+      definitionCompany:
+        "“Công ty” đề cập đến Công ty Fastwork Technologies Co., Ltd.",
+      definitionFastwork:
+        "“Fastwork” đề cập đến công ty công nghệ cung cấp nền tảng cho người dùng để nhận dịch vụ do các nhà cung cấp bên thứ ba cung cấp. Vai trò của công ty là đóng vai trò trung gian giao tiếp giữa nhà tuyển dụng và freelancer.",
       definitionUser: "“Người dùng” đề cập đến nhà tuyển dụng và freelancer.",
-      definitionEmployer: "“Nhà tuyển dụng” hoặc “Bạn” đề cập đến cá nhân sử dụng dịch vụ nền tảng, đồng ý tuyển dụng và nhận công việc thông qua nền tảng.",
-      definitionFreelancer: "“Freelancer” đề cập đến cá nhân sử dụng dịch vụ nền tảng, đồng ý nhận và bàn giao công việc thông qua nền tảng.",
-      definitionMyWork: "“Công việc của tôi” đề cập đến một trang trên nền tảng nơi freelancer giới thiệu công việc hoặc lịch sử làm việc của mình để nhà tuyển dụng xem xét chất lượng sản phẩm hoặc lịch sử làm việc trước khi tạo đơn đặt hàng.",
-      definitionProposedWork: "“Công việc đề xuất” đề cập đến một trang trên nền tảng nơi freelancer đề xuất nhận công việc mà nhà tuyển dụng đã đăng trên trang thông báo việc làm. Freelancer có thể mô tả chi tiết công việc mà mình sẽ nhận, cũng như công việc của tôi, để nhà tuyển dụng nghiên cứu và quyết định thuê freelancer.",
-      definitionJobAnnouncement: "“Thông báo việc làm” đề cập đến một trang trên nền tảng mà nhà tuyển dụng sử dụng để đăng tuyển freelancer.",
-      definitionChat: "“Trò chuyện” đề cập đến một trang trên nền tảng được sử dụng làm kênh liên lạc giữa nhà tuyển dụng và freelancer liên quan đến công việc mà nhà tuyển dụng đã đồng ý tuyển dụng freelancer, có thể được sử dụng để liên lạc thông qua tin nhắn văn bản, tin nhắn thoại, hình ảnh hoặc bất kỳ phương tiện nào khác.",
-      definitionOrder: "“Đơn đặt hàng” đề cập đến một trang trên nền tảng mà nhà tuyển dụng tạo sau khi quan tâm đến công việc mà freelancer đã đề xuất trong trang công việc được đề xuất. Khi đơn đặt hàng được tạo, người dùng có thể thảo luận chi tiết về công việc và freelancer có thể tạo báo giá để nhà tuyển dụng xem xét và phê duyệt.",
-      definitionInactiveOrder: "“Đơn đặt hàng không hoạt động” đề cập đến một đơn đặt hàng được tạo bởi nhà tuyển dụng nhưng không có sự thay đổi trạng thái, ví dụ: không có liên lạc giữa người dùng, không có báo giá được tạo, v.v.",
-      definitionQuote: "“Báo giá” đề cập đến một trang trên nền tảng mà freelancer đề xuất cho nhà tuyển dụng đã tạo Đơn đặt hàng, bao gồm phạm vi công việc, thời gian thực hiện công việc, quy trình làm việc, mức phí dịch vụ, điều kiện sửa đổi công việc, để làm cơ sở cho quyết định tuyển dụng.",
-      definitionServiceFee: "“Phí dịch vụ” đề cập đến phí mà nhà tuyển dụng đồng ý thanh toán cho freelancer để mở đơn đặt hàng. Tuy nhiên, Công ty sẽ giữ phí dịch vụ cho đến khi freelancer bàn giao sản phẩm cuối cùng cho nhà tuyển dụng. Phí dịch vụ này không bao gồm thuế khấu trừ tại nguồn.",
+      definitionEmployer:
+        "“Nhà tuyển dụng” hoặc “Bạn” đề cập đến cá nhân sử dụng dịch vụ nền tảng, đồng ý tuyển dụng và nhận công việc thông qua nền tảng.",
+      definitionFreelancer:
+        "“Freelancer” đề cập đến cá nhân sử dụng dịch vụ nền tảng, đồng ý nhận và bàn giao công việc thông qua nền tảng.",
+      definitionMyWork:
+        "“Công việc của tôi” đề cập đến một trang trên nền tảng nơi freelancer giới thiệu công việc hoặc lịch sử làm việc của mình để nhà tuyển dụng xem xét chất lượng sản phẩm hoặc lịch sử làm việc trước khi tạo đơn đặt hàng.",
+      definitionProposedWork:
+        "“Công việc đề xuất” đề cập đến một trang trên nền tảng nơi freelancer đề xuất nhận công việc mà nhà tuyển dụng đã đăng trên trang thông báo việc làm. Freelancer có thể mô tả chi tiết công việc mà mình sẽ nhận, cũng như công việc của tôi, để nhà tuyển dụng nghiên cứu và quyết định thuê freelancer.",
+      definitionJobAnnouncement:
+        "“Thông báo việc làm” đề cập đến một trang trên nền tảng mà nhà tuyển dụng sử dụng để đăng tuyển freelancer.",
+      definitionChat:
+        "“Trò chuyện” đề cập đến một trang trên nền tảng được sử dụng làm kênh liên lạc giữa nhà tuyển dụng và freelancer liên quan đến công việc mà nhà tuyển dụng đã đồng ý tuyển dụng freelancer, có thể được sử dụng để liên lạc thông qua tin nhắn văn bản, tin nhắn thoại, hình ảnh hoặc bất kỳ phương tiện nào khác.",
+      definitionOrder:
+        "“Đơn đặt hàng” đề cập đến một trang trên nền tảng mà nhà tuyển dụng tạo sau khi quan tâm đến công việc mà freelancer đã đề xuất trong trang công việc được đề xuất. Khi đơn đặt hàng được tạo, người dùng có thể thảo luận chi tiết về công việc và freelancer có thể tạo báo giá để nhà tuyển dụng xem xét và phê duyệt.",
+      definitionInactiveOrder:
+        "“Đơn đặt hàng không hoạt động” đề cập đến một đơn đặt hàng được tạo bởi nhà tuyển dụng nhưng không có sự thay đổi trạng thái, ví dụ: không có liên lạc giữa người dùng, không có báo giá được tạo, v.v.",
+      definitionQuote:
+        "“Báo giá” đề cập đến một trang trên nền tảng mà freelancer đề xuất cho nhà tuyển dụng đã tạo Đơn đặt hàng, bao gồm phạm vi công việc, thời gian thực hiện công việc, quy trình làm việc, mức phí dịch vụ, điều kiện sửa đổi công việc, để làm cơ sở cho quyết định tuyển dụng.",
+      definitionServiceFee:
+        "“Phí dịch vụ” đề cập đến phí mà nhà tuyển dụng đồng ý thanh toán cho freelancer để mở đơn đặt hàng. Tuy nhiên, Công ty sẽ giữ phí dịch vụ cho đến khi freelancer bàn giao sản phẩm cuối cùng cho nhà tuyển dụng. Phí dịch vụ này không bao gồm thuế khấu trừ tại nguồn.",
       definitionPlatformFee1: "“Phí sử dụng",
-      definitionPlatformFee2: "Dịch vụ nền tảng” để nhận công việc thông qua nền tảng.",
-      definitionPaymentFee: "“Phí thanh toán” đề cập đến phí mà Công ty thu từ nhà tuyển dụng để đổi lấy việc thuê công việc thông qua nền tảng.",
-      definitionFastworkCoin: "“Tiền trong hệ thống (Fastwork Coin)” đề cập đến điểm mà nhà tuyển dụng nạp vào tài khoản người dùng để thanh toán phí dịch vụ hoặc phí thanh toán.",
-      definitionBonusCoin: "“Điểm thưởng (Bonus Coin)” đề cập đến điểm mà Công ty sẽ chuyển cho người dùng để đổi lấy việc sử dụng dịch vụ nền tảng theo các điều kiện do Công ty quy định.",
-      definitionPersonalData: "“Dữ liệu cá nhân” đề cập đến thông tin liên quan đến một cá nhân tự nhiên mà có thể xác định được danh tính của người đó, dù trực tiếp hay gián tiếp, nhưng không bao gồm dữ liệu của người đã chết.",
+      definitionPlatformFee2:
+        "Dịch vụ nền tảng” để nhận công việc thông qua nền tảng.",
+      definitionPaymentFee:
+        "“Phí thanh toán” đề cập đến phí mà Công ty thu từ nhà tuyển dụng để đổi lấy việc thuê công việc thông qua nền tảng.",
+      definitionFastworkCoin:
+        "“Tiền trong hệ thống (Fastwork Coin)” đề cập đến điểm mà nhà tuyển dụng nạp vào tài khoản người dùng để thanh toán phí dịch vụ hoặc phí thanh toán.",
+      definitionBonusCoin:
+        "“Điểm thưởng (Bonus Coin)” đề cập đến điểm mà Công ty sẽ chuyển cho người dùng để đổi lấy việc sử dụng dịch vụ nền tảng theo các điều kiện do Công ty quy định.",
+      definitionPersonalData:
+        "“Dữ liệu cá nhân” đề cập đến thông tin liên quan đến một cá nhân tự nhiên mà có thể xác định được danh tính của người đó, dù trực tiếp hay gián tiếp, nhưng không bao gồm dữ liệu của người đã chết.",
       titleGeneral: "Tổng quan",
-      general1: "Các Điều khoản và Điều kiện sử dụng nền tảng dành cho nhà tuyển dụng này (sau đây gọi là “Thỏa thuận sử dụng”) có hiệu lực thay thế cho thỏa thuận sử dụng ngày 24 tháng 5 năm 2023 và có hiệu lực từ ngày 21 tháng 8 năm 2024 trở đi cho đến khi có thông báo sửa đổi bổ sung.",
-      general2: "Khi có sửa đổi bổ sung, Công ty sẽ công bố thỏa thuận sử dụng thông qua nền tảng và thông báo cho người dùng biết và đọc thỏa thuận sử dụng để chấp nhận thỏa thuận sử dụng mới thông qua nền tảng. Trong trường hợp bạn không chấp nhận thỏa thuận sử dụng, bạn sẽ không thể sử dụng dịch vụ trên nền tảng.",
-      general3: "Thỏa thuận sử dụng này sẽ là thỏa thuận sử dụng giữa bạn và Công ty, quy định các quyền, nghĩa vụ và trách nhiệm mà mỗi bên phải có trong suốt thời gian sử dụng dịch vụ trên nền tảng.",
-      general4: "Khi bạn chấp nhận thỏa thuận sử dụng của Công ty, Công ty sẽ coi rằng bạn đã chấp nhận tuân thủ thỏa thuận sử dụng, bao gồm cả việc chấp nhận chính sách bảo mật mà Công ty quy định. Bạn cam đoan sẽ không thực hiện bất kỳ hành vi nào vi phạm pháp luật, gây mất trật tự công cộng hoặc trái với đạo đức xã hội thông qua nền tảng này dưới bất kỳ hình thức nào.",
-      general5: "Trong trường hợp Công ty phát hiện bạn thực hiện bất kỳ hành vi nào vi phạm thỏa thuận sử dụng, chính sách bảo mật hoặc vi phạm bất kỳ cam đoan nào, Công ty có quyền từ chối bạn truy cập sử dụng dịch vụ trên nền tảng. Quyết định của Công ty là quyết định cuối cùng.",
+      general1:
+        "Các Điều khoản và Điều kiện sử dụng nền tảng dành cho nhà tuyển dụng này (sau đây gọi là “Thỏa thuận sử dụng”) có hiệu lực thay thế cho thỏa thuận sử dụng ngày 24 tháng 5 năm 2023 và có hiệu lực từ ngày 21 tháng 8 năm 2024 trở đi cho đến khi có thông báo sửa đổi bổ sung.",
+      general2:
+        "Khi có sửa đổi bổ sung, Công ty sẽ công bố thỏa thuận sử dụng thông qua nền tảng và thông báo cho người dùng biết và đọc thỏa thuận sử dụng để chấp nhận thỏa thuận sử dụng mới thông qua nền tảng. Trong trường hợp bạn không chấp nhận thỏa thuận sử dụng, bạn sẽ không thể sử dụng dịch vụ trên nền tảng.",
+      general3:
+        "Thỏa thuận sử dụng này sẽ là thỏa thuận sử dụng giữa bạn và Công ty, quy định các quyền, nghĩa vụ và trách nhiệm mà mỗi bên phải có trong suốt thời gian sử dụng dịch vụ trên nền tảng.",
+      general4:
+        "Khi bạn chấp nhận thỏa thuận sử dụng của Công ty, Công ty sẽ coi rằng bạn đã chấp nhận tuân thủ thỏa thuận sử dụng, bao gồm cả việc chấp nhận chính sách bảo mật mà Công ty quy định. Bạn cam đoan sẽ không thực hiện bất kỳ hành vi nào vi phạm pháp luật, gây mất trật tự công cộng hoặc trái với đạo đức xã hội thông qua nền tảng này dưới bất kỳ hình thức nào.",
+      general5:
+        "Trong trường hợp Công ty phát hiện bạn thực hiện bất kỳ hành vi nào vi phạm thỏa thuận sử dụng, chính sách bảo mật hoặc vi phạm bất kỳ cam đoan nào, Công ty có quyền từ chối bạn truy cập sử dụng dịch vụ trên nền tảng. Quyết định của Công ty là quyết định cuối cùng.",
       titleEmployerWarranty: "Cam đoan của nhà tuyển dụng",
-      employerWarranty1: "Nhà tuyển dụng đồng ý và cam đoan không thực hiện bất kỳ hành vi nào có hành vi hoặc tính chất lừa đảo để lấy thông tin (phishing) hoặc gây phiền toái cho freelancer (spam).",
-      employerWarranty2: "Nhà tuyển dụng đồng ý và cam đoan sẽ không thực hiện bất kỳ hành vi nào vi phạm pháp luật, gây mất trật tự công cộng hoặc trái với đạo đức xã hội thông qua nền tảng này dưới bất kỳ hình thức nào.",
-      employerWarranty3: "Nhà tuyển dụng đồng ý và cam đoan sẽ liên hệ với freelancer thông qua trò chuyện của nền tảng để yêu cầu thêm thông tin hoặc hỏi các chi tiết khác liên quan đến công việc. Nhà tuyển dụng đồng ý và cam đoan không hiển thị thông tin cá nhân của mình, ví dụ: tên, họ, số điện thoại, email, địa chỉ, tên tài khoản người dùng trên các kênh khác ngoài nền tảng, bao gồm nhưng không giới hạn ở LINE, Whatsapp, WeChat, Facebook, v.v., hoặc bất kỳ thông tin cá nhân nào khác. Điều này nhằm tuân thủ thỏa thuận sử dụng này và để bảo vệ dữ liệu cá nhân của bạn theo chính sách bảo mật.",
-      employerWarranty4: "Trong trường hợp nhà tuyển dụng nhận được liên hệ từ freelancer trên các kênh khác ngoài trò chuyện của nền tảng, nhà tuyển dụng đồng ý thông báo vi phạm quy định thỏa thuận sử dụng cho Công ty biết ngay lập tức, thời hạn thông báo không quá 3 ngày kể từ ngày nhận được liên hệ đó.",
-      employerWarranty5: "Nhà tuyển dụng đồng ý và cam đoan không lợi dụng quyền của nhà tuyển dụng hoặc bất kỳ tư cách nào khác để mời chào freelancer bàn giao sản phẩm và/hoặc dịch vụ, liên hệ hoặc thực hiện bất kỳ hành vi nào khác liên quan đến công việc hiện tại hoặc công việc có thể phát sinh trong tương lai ngoài nền tảng. Cam kết này áp dụng trong mọi trường hợp, dù nhằm phục vụ lợi ích của nhà tuyển dụng hay người khác, ví dụ: cố ý thanh toán một phần thông qua nền tảng rồi giao dịch riêng phần còn lại, tuyển dụng freelancer vào làm việc tại công ty của mình, hoặc yêu cầu freelancer tạo dữ liệu hoặc sản phẩm sai sự thật, v.v.",
-      employerWarranty6: "Trong trường hợp Công ty phát hiện nhà tuyển dụng thực hiện bất kỳ hành vi nào vi phạm cam đoan, Công ty có quyền đình chỉ tài khoản người dùng, xóa tài khoản người dùng, đưa vào danh sách đen hoặc thực hiện bất kỳ hành vi nào khác mà Công ty thấy phù hợp. Quyết định của Công ty là quyết định cuối cùng.",
+      employerWarranty1:
+        "Nhà tuyển dụng đồng ý và cam đoan không thực hiện bất kỳ hành vi nào có hành vi hoặc tính chất lừa đảo để lấy thông tin (phishing) hoặc gây phiền toái cho freelancer (spam).",
+      employerWarranty2:
+        "Nhà tuyển dụng đồng ý và cam đoan sẽ không thực hiện bất kỳ hành vi nào vi phạm pháp luật, gây mất trật tự công cộng hoặc trái với đạo đức xã hội thông qua nền tảng này dưới bất kỳ hình thức nào.",
+      employerWarranty3:
+        "Nhà tuyển dụng đồng ý và cam đoan sẽ liên hệ với freelancer thông qua trò chuyện của nền tảng để yêu cầu thêm thông tin hoặc hỏi các chi tiết khác liên quan đến công việc. Nhà tuyển dụng đồng ý và cam đoan không hiển thị thông tin cá nhân của mình, ví dụ: tên, họ, số điện thoại, email, địa chỉ, tên tài khoản người dùng trên các kênh khác ngoài nền tảng, bao gồm nhưng không giới hạn ở LINE, Whatsapp, WeChat, Facebook, v.v., hoặc bất kỳ thông tin cá nhân nào khác. Điều này nhằm tuân thủ thỏa thuận sử dụng này và để bảo vệ dữ liệu cá nhân của bạn theo chính sách bảo mật.",
+      employerWarranty4:
+        "Trong trường hợp nhà tuyển dụng nhận được liên hệ từ freelancer trên các kênh khác ngoài trò chuyện của nền tảng, nhà tuyển dụng đồng ý thông báo vi phạm quy định thỏa thuận sử dụng cho Công ty biết ngay lập tức, thời hạn thông báo không quá 3 ngày kể từ ngày nhận được liên hệ đó.",
+      employerWarranty5:
+        "Nhà tuyển dụng đồng ý và cam đoan không lợi dụng quyền của nhà tuyển dụng hoặc bất kỳ tư cách nào khác để mời chào freelancer bàn giao sản phẩm và/hoặc dịch vụ, liên hệ hoặc thực hiện bất kỳ hành vi nào khác liên quan đến công việc hiện tại hoặc công việc có thể phát sinh trong tương lai ngoài nền tảng. Cam kết này áp dụng trong mọi trường hợp, dù nhằm phục vụ lợi ích của nhà tuyển dụng hay người khác, ví dụ: cố ý thanh toán một phần thông qua nền tảng rồi giao dịch riêng phần còn lại, tuyển dụng freelancer vào làm việc tại công ty của mình, hoặc yêu cầu freelancer tạo dữ liệu hoặc sản phẩm sai sự thật, v.v.",
+      employerWarranty6:
+        "Trong trường hợp Công ty phát hiện nhà tuyển dụng thực hiện bất kỳ hành vi nào vi phạm cam đoan, Công ty có quyền đình chỉ tài khoản người dùng, xóa tài khoản người dùng, đưa vào danh sách đen hoặc thực hiện bất kỳ hành vi nào khác mà Công ty thấy phù hợp. Quyết định của Công ty là quyết định cuối cùng.",
       titleRegistration: "Đăng ký sử dụng dịch vụ nền tảng",
-      registration1: "Freelancer đăng ký sử dụng dịch vụ nền tảng phải là cá nhân từ 15 tuổi trở lên.",
-      registration2: "Nhà tuyển dụng đăng ký sử dụng dịch vụ nền tảng có thể là cá nhân hoặc pháp nhân. Trong trường hợp là cá nhân, người dùng phải là cá nhân từ 15 tuổi trở lên. Trong trường hợp là pháp nhân, người dùng phải là đại diện pháp nhân hoặc người được ủy quyền từ pháp nhân đó để đăng ký sử dụng dịch vụ nền tảng.",
-      registration3: "Việc sử dụng dịch vụ nền tảng được coi là xác nhận rằng bạn có đủ điều kiện theo các điều kiện đã quy định.",
+      registration1:
+        "Freelancer đăng ký sử dụng dịch vụ nền tảng phải là cá nhân từ 15 tuổi trở lên.",
+      registration2:
+        "Nhà tuyển dụng đăng ký sử dụng dịch vụ nền tảng có thể là cá nhân hoặc pháp nhân. Trong trường hợp là cá nhân, người dùng phải là cá nhân từ 15 tuổi trở lên. Trong trường hợp là pháp nhân, người dùng phải là đại diện pháp nhân hoặc người được ủy quyền từ pháp nhân đó để đăng ký sử dụng dịch vụ nền tảng.",
+      registration3:
+        "Việc sử dụng dịch vụ nền tảng được coi là xác nhận rằng bạn có đủ điều kiện theo các điều kiện đã quy định.",
       orderTitle: "Đơn đặt hàng",
-      order1: "Freelancer có thể đề xuất chi tiết công việc thông qua các công việc được đề xuất trên nền tảng. Freelancer đồng ý và cam đoan rằng các chi tiết công việc đó sẽ liên quan đến công việc và/hoặc báo giá (nếu có) để nhà tuyển dụng xem xét và ký hợp đồng thuê trong tương lai.",
-      order2: "Freelancer cam đoan và đồng ý rằng bất kỳ nội dung nào được đăng tải trong công việc đề xuất đều phù hợp, hợp pháp và không vi phạm quyền lợi của bất kỳ cá nhân nào.",
-      order3: "Nhà tuyển dụng có thể liên hệ hoặc hỏi chi tiết về công việc với freelancer thông qua trò chuyện.",
-      order4: "Sau khi nhận được thông tin chi tiết về công việc, freelancer có quyền kiểm tra phạm vi công việc để đảm bảo việc thực hiện hoặc cung cấp dịch vụ theo đúng thoả thuận. Trong trường hợp freelancer xem xét và không muốn tham gia công việc đó, freelancer có quyền từ chối nhận công việc từ nhà tuyển dụng. Freelancer đồng ý thông báo lý do từ chối công việc cho nhà tuyển dụng mà không chậm trễ.",
-      order5: "Khi nhà tuyển dụng nhận được báo giá từ freelancer và muốn hợp tác hoặc thuê freelancer làm việc, nhà tuyển dụng có thể thuê bằng cách tạo đơn đặt hàng trên thông báo việc làm. Khi nhà tuyển dụng tạo đơn đặt hàng trên thông báo việc làm, điều đó có nghĩa là nhà tuyển dụng chấp nhận các điều kiện và chi tiết liên quan đến việc thuê, quy trình bàn giao công việc, quy trình sửa đổi công việc, quyền sở hữu sản phẩm, thời gian bắt đầu và bàn giao công việc, và các chi tiết khác (nếu có), tất cả đều theo quy định của freelancer trong báo giá. Hơn nữa, thời gian bắt đầu và bàn giao công việc sẽ bắt đầu tính từ ngày nhà tuyển dụng thanh toán phí dịch vụ thông qua nền tảng.",
-      order6: "Nhà tuyển dụng đồng ý thanh toán phí dịch vụ theo thời gian quy định trong báo giá. Trong trường hợp nhà tuyển dụng không thanh toán trong thời gian quy định, nền tảng sẽ tự động hủy đơn đặt hàng và báo giá liên quan. Hệ thống sẽ thông báo cho nhà tuyển dụng về ngày cuối cùng để thanh toán phí dịch vụ.",
-      order7: "Khi nhà tuyển dụng hoàn tất việc thanh toán phí dịch vụ trên nền tảng, nhà tuyển dụng sẽ nhận được mã số đơn đặt hàng cho công việc đã thuê và freelancer đồng ý thực hiện công việc đã nhận để bàn giao sản phẩm và/hoặc dịch vụ theo thời gian quy định trong báo giá.",
-      order8: "Trong suốt thời gian làm việc, người dùng có thể liên lạc với nhau thông qua trò chuyện của nền tảng để yêu cầu thêm thông tin hoặc hỏi các chi tiết khác liên quan đến công việc. Điều này nhằm đảm bảo sản phẩm và/hoặc dịch vụ phù hợp với mục đích của công việc đã thuê. Hơn nữa, người dùng đồng ý và cam đoan không trao đổi thông tin cá nhân hoặc bất kỳ thông tin nào khác để liên hệ hoặc bàn giao công việc theo cách khác ngoài trò chuyện do Công ty cung cấp.",
-      order9: "Khi freelancer hoàn thành công việc đã thuê, freelancer sẽ bàn giao sản phẩm và/hoặc dịch vụ cho nhà tuyển dụng để xem xét và phê duyệt. Khi nhà tuyển dụng phê duyệt, đơn đặt hàng sẽ được chuyển trạng thái thành đã hoàn thành và nhà tuyển dụng sẽ có quyền đánh giá sản phẩm đó. Trong trường hợp nhà tuyển dụng không phê duyệt và/hoặc đánh giá sản phẩm trong vòng 7 ngày kể từ ngày freelancer bàn giao sản phẩm và/hoặc dịch vụ, đơn đặt hàng sẽ tự động được chuyển trạng thái thành đã hoàn thành và được coi là việc thuê đã hoàn tất.",
-      order10: "Trong trường hợp freelancer không bàn giao sản phẩm và/hoặc dịch vụ trong thời gian quy định hoặc bàn giao trong thời gian quy định nhưng không đầy đủ, nhà tuyển dụng có quyền khiếu nại công việc và/hoặc đánh giá sản phẩm của freelancer.",
-      order11: "Các đơn đặt hàng không hoạt động quá 180 ngày sẽ bị hủy theo sự đồng ý của nhà tuyển dụng và freelancer. Người dùng đồng ý và chấp nhận rằng phí dịch vụ đã thanh toán bởi nhà tuyển dụng sẽ được coi là phí sử dụng dịch vụ nền tảng và/hoặc phí thanh toán. Công ty có quyền thu các khoản phí này mà không cần thông báo trước cho người dùng.",
+      order1:
+        "Freelancer có thể đề xuất chi tiết công việc thông qua các công việc được đề xuất trên nền tảng. Freelancer đồng ý và cam đoan rằng các chi tiết công việc đó sẽ liên quan đến công việc và/hoặc báo giá (nếu có) để nhà tuyển dụng xem xét và ký hợp đồng thuê trong tương lai.",
+      order2:
+        "Freelancer cam đoan và đồng ý rằng bất kỳ nội dung nào được đăng tải trong công việc đề xuất đều phù hợp, hợp pháp và không vi phạm quyền lợi của bất kỳ cá nhân nào.",
+      order3:
+        "Nhà tuyển dụng có thể liên hệ hoặc hỏi chi tiết về công việc với freelancer thông qua trò chuyện.",
+      order4:
+        "Sau khi nhận được thông tin chi tiết về công việc, freelancer có quyền kiểm tra phạm vi công việc để đảm bảo việc thực hiện hoặc cung cấp dịch vụ theo đúng thoả thuận. Trong trường hợp freelancer xem xét và không muốn tham gia công việc đó, freelancer có quyền từ chối nhận công việc từ nhà tuyển dụng. Freelancer đồng ý thông báo lý do từ chối công việc cho nhà tuyển dụng mà không chậm trễ.",
+      order5:
+        "Khi nhà tuyển dụng nhận được báo giá từ freelancer và muốn hợp tác hoặc thuê freelancer làm việc, nhà tuyển dụng có thể thuê bằng cách tạo đơn đặt hàng trên thông báo việc làm. Khi nhà tuyển dụng tạo đơn đặt hàng trên thông báo việc làm, điều đó có nghĩa là nhà tuyển dụng chấp nhận các điều kiện và chi tiết liên quan đến việc thuê, quy trình bàn giao công việc, quy trình sửa đổi công việc, quyền sở hữu sản phẩm, thời gian bắt đầu và bàn giao công việc, và các chi tiết khác (nếu có), tất cả đều theo quy định của freelancer trong báo giá. Hơn nữa, thời gian bắt đầu và bàn giao công việc sẽ bắt đầu tính từ ngày nhà tuyển dụng thanh toán phí dịch vụ thông qua nền tảng.",
+      order6:
+        "Nhà tuyển dụng đồng ý thanh toán phí dịch vụ theo thời gian quy định trong báo giá. Trong trường hợp nhà tuyển dụng không thanh toán trong thời gian quy định, nền tảng sẽ tự động hủy đơn đặt hàng và báo giá liên quan. Hệ thống sẽ thông báo cho nhà tuyển dụng về ngày cuối cùng để thanh toán phí dịch vụ.",
+      order7:
+        "Khi nhà tuyển dụng hoàn tất việc thanh toán phí dịch vụ trên nền tảng, nhà tuyển dụng sẽ nhận được mã số đơn đặt hàng cho công việc đã thuê và freelancer đồng ý thực hiện công việc đã nhận để bàn giao sản phẩm và/hoặc dịch vụ theo thời gian quy định trong báo giá.",
+      order8:
+        "Trong suốt thời gian làm việc, người dùng có thể liên lạc với nhau thông qua trò chuyện của nền tảng để yêu cầu thêm thông tin hoặc hỏi các chi tiết khác liên quan đến công việc. Điều này nhằm đảm bảo sản phẩm và/hoặc dịch vụ phù hợp với mục đích của công việc đã thuê. Hơn nữa, người dùng đồng ý và cam đoan không trao đổi thông tin cá nhân hoặc bất kỳ thông tin nào khác để liên hệ hoặc bàn giao công việc theo cách khác ngoài trò chuyện do Công ty cung cấp.",
+      order9:
+        "Khi freelancer hoàn thành công việc đã thuê, freelancer sẽ bàn giao sản phẩm và/hoặc dịch vụ cho nhà tuyển dụng để xem xét và phê duyệt. Khi nhà tuyển dụng phê duyệt, đơn đặt hàng sẽ được chuyển trạng thái thành đã hoàn thành và nhà tuyển dụng sẽ có quyền đánh giá sản phẩm đó. Trong trường hợp nhà tuyển dụng không phê duyệt và/hoặc đánh giá sản phẩm trong vòng 7 ngày kể từ ngày freelancer bàn giao sản phẩm và/hoặc dịch vụ, đơn đặt hàng sẽ tự động được chuyển trạng thái thành đã hoàn thành và được coi là việc thuê đã hoàn tất.",
+      order10:
+        "Trong trường hợp freelancer không bàn giao sản phẩm và/hoặc dịch vụ trong thời gian quy định hoặc bàn giao trong thời gian quy định nhưng không đầy đủ, nhà tuyển dụng có quyền khiếu nại công việc và/hoặc đánh giá sản phẩm của freelancer.",
+      order11:
+        "Các đơn đặt hàng không hoạt động quá 180 ngày sẽ bị hủy theo sự đồng ý của nhà tuyển dụng và freelancer. Người dùng đồng ý và chấp nhận rằng phí dịch vụ đã thanh toán bởi nhà tuyển dụng sẽ được coi là phí sử dụng dịch vụ nền tảng và/hoặc phí thanh toán. Công ty có quyền thu các khoản phí này mà không cần thông báo trước cho người dùng.",
       "contact.title": "Liên hệ",
-      "contact.1": "Người dùng đồng ý liên lạc thông qua trò chuyện để freelancer biết được nhu cầu công việc mà nhà tuyển dụng muốn thuê, bao gồm cả việc ước tính giá cả và thời gian thực hiện công việc để lập báo giá gửi cho nhà tuyển dụng.",
-      "contact.2": "Người dùng cam đoan và đồng ý rằng bất kỳ nội dung nào được sử dụng trong giao tiếp đều phù hợp, hợp pháp và không vi phạm quyền lợi của bất kỳ người nào khác.",
-      "contact.3": "Trong trường hợp freelancer cần liên hệ để yêu cầu thêm thông tin, hoặc gửi bàn giao sản phẩm/dịch vụ theo quy trình hoặc thời gian đã đề xuất trong bảng báo giá, freelancer đồng ý thực hiện việc trao đổi thông tin hoặc bàn giao một phần công việc cho khách hàng thông qua hệ thống trò chuyện của nền tảng.",
-      "contact.4": "Người dùng thừa nhận và đồng ý không thực hiện bất kỳ hành vi nào, bao gồm nhưng không giới hạn ở việc khuyến khích hoặc dụ dỗ liên hệ để tuyển dụng ngoài nền tảng, liên hệ hỏi hoặc bàn giao công việc bổ sung trên các kênh khác ngoài nền tảng, hoặc bất kỳ hành vi nào khác có tính chất vi phạm thỏa thuận sử dụng. Trong trường hợp Công ty phát hiện người dùng có bất kỳ hành vi nào khuyến khích hoặc dụ dỗ dẫn đến việc liên hệ để tuyển dụng ngoài nền tảng, ví dụ: trả tiền đặt cọc, thanh toán một phần, v.v., Công ty sẽ coi người dùng đã vi phạm thỏa thuận sử dụng và Công ty có quyền đình chỉ hoặc hủy tài khoản người dùng, cũng như yêu cầu bồi thường thiệt hại phát sinh từ người dùng.",
-      "contact.5": "Dữ liệu cá nhân hoặc bất kỳ dữ liệu nào khác mà người dùng giao tiếp thông qua trò chuyện của nền tảng sẽ được coi là thông tin mật của người dùng. Người nhận thông tin không được tiết lộ thông tin mật trừ khi có sự đồng ý bằng văn bản từ người cung cấp thông tin, hoặc là thông tin đã được công khai, hoặc khi có luật pháp hoặc cơ quan nhà nước yêu cầu hoặc buộc phải tiết lộ.",
-      "contact.6": "Công ty khuyến khích người dùng giao tiếp một cách lịch sự để ngăn ngừa rủi ro tranh chấp.",
-      "fee.title": "Phí dịch vụ, phí thanh toán và phí sử dụng dịch vụ nền tảng",
-      "fee.1": "Người dùng có thể đăng ký thành viên nền tảng mà không mất phí.",
-      "fee.2": "Để bảo vệ lợi ích và an toàn của người dùng, việc thanh toán phí dịch vụ phải được thực hiện thông qua nền tảng. Công ty sẽ giữ phí dịch vụ cho đến khi freelancer bàn giao công việc cho nhà tuyển dụng. Nhà tuyển dụng có thể kiểm tra chi tiết thanh toán và các chi phí khác tại kênh thanh toán phải được thực hiện thông qua nền tảng. Nhà tuyển dụng có thể thanh toán phí dịch vụ thông qua hệ thống thanh toán theo giai đoạn trên nền tảng (Milestone payment) theo từng đợt thanh toán cho đến khi hoàn thành công việc.",
-      "fee.3": "Công ty sẽ thu phí sử dụng dịch vụ nền tảng từ nhà tuyển dụng để đổi lấy việc tuyển dụng công việc thông qua nền tảng. Mức phí sử dụng dịch vụ nền tảng sẽ theo quy định của Công ty và khoản phí này sẽ tự động được khấu trừ từ tài khoản của nhà tuyển dụng vào ngày có đơn đặt hàng.",
-      "fee.4": "Công ty sẽ thu phí sử dụng dịch vụ nền tảng từ freelancer để đổi lấy việc nhận công việc thông qua nền tảng. Mức phí sử dụng dịch vụ nền tảng sẽ theo quy định của Công ty và khoản phí này sẽ tự động được khấu trừ từ phí dịch vụ mà freelancer nhận được từ việc cung cấp dịch vụ theo đơn đặt hàng vào ngày bàn giao công việc.",
-      "fee.5": "Để Công ty có thể chuyển phí dịch vụ cho freelancer, freelancer cần cung cấp thông tin tài khoản ngân hàng, ví dụ: ảnh chụp sổ tiết kiệm ngân hàng, v.v., vào nền tảng. Công ty sẽ giữ phí dịch vụ cho đến khi freelancer cung cấp thông tin tài khoản ngân hàng cho Công ty. Trong trường hợp tài khoản người dùng của bất kỳ freelancer nào không cung cấp thông tin đó trong vòng 12 tháng kể từ ngày được nhà tuyển dụng phê duyệt, Công ty có thể thu phí duy trì trạng thái tài khoản người dùng với mức 50 baht mỗi tháng.",
-      "fee.6": "Phí dịch vụ, phí thanh toán và phí sử dụng dịch vụ nền tảng mà người dùng phải thanh toán khi sử dụng dịch vụ nền tảng không bao gồm thuế khấu trừ tại nguồn hoặc bất kỳ khoản thuế hoặc phí nào khác mà người dùng có nghĩa vụ phải thanh toán theo luật pháp.",
+      "contact.1":
+        "Người dùng đồng ý liên lạc thông qua trò chuyện để freelancer biết được nhu cầu công việc mà nhà tuyển dụng muốn thuê, bao gồm cả việc ước tính giá cả và thời gian thực hiện công việc để lập báo giá gửi cho nhà tuyển dụng.",
+      "contact.2":
+        "Người dùng cam đoan và đồng ý rằng bất kỳ nội dung nào được sử dụng trong giao tiếp đều phù hợp, hợp pháp và không vi phạm quyền lợi của bất kỳ người nào khác.",
+      "contact.3":
+        "Trong trường hợp freelancer cần liên hệ để yêu cầu thêm thông tin, hoặc gửi bàn giao sản phẩm/dịch vụ theo quy trình hoặc thời gian đã đề xuất trong bảng báo giá, freelancer đồng ý thực hiện việc trao đổi thông tin hoặc bàn giao một phần công việc cho khách hàng thông qua hệ thống trò chuyện của nền tảng.",
+      "contact.4":
+        "Người dùng thừa nhận và đồng ý không thực hiện bất kỳ hành vi nào, bao gồm nhưng không giới hạn ở việc khuyến khích hoặc dụ dỗ liên hệ để tuyển dụng ngoài nền tảng, liên hệ hỏi hoặc bàn giao công việc bổ sung trên các kênh khác ngoài nền tảng, hoặc bất kỳ hành vi nào khác có tính chất vi phạm thỏa thuận sử dụng. Trong trường hợp Công ty phát hiện người dùng có bất kỳ hành vi nào khuyến khích hoặc dụ dỗ dẫn đến việc liên hệ để tuyển dụng ngoài nền tảng, ví dụ: trả tiền đặt cọc, thanh toán một phần, v.v., Công ty sẽ coi người dùng đã vi phạm thỏa thuận sử dụng và Công ty có quyền đình chỉ hoặc hủy tài khoản người dùng, cũng như yêu cầu bồi thường thiệt hại phát sinh từ người dùng.",
+      "contact.5":
+        "Dữ liệu cá nhân hoặc bất kỳ dữ liệu nào khác mà người dùng giao tiếp thông qua trò chuyện của nền tảng sẽ được coi là thông tin mật của người dùng. Người nhận thông tin không được tiết lộ thông tin mật trừ khi có sự đồng ý bằng văn bản từ người cung cấp thông tin, hoặc là thông tin đã được công khai, hoặc khi có luật pháp hoặc cơ quan nhà nước yêu cầu hoặc buộc phải tiết lộ.",
+      "contact.6":
+        "Công ty khuyến khích người dùng giao tiếp một cách lịch sự để ngăn ngừa rủi ro tranh chấp.",
+      "fee.title":
+        "Phí dịch vụ, phí thanh toán và phí sử dụng dịch vụ nền tảng",
+      "fee.1":
+        "Người dùng có thể đăng ký thành viên nền tảng mà không mất phí.",
+      "fee.2":
+        "Để bảo vệ lợi ích và an toàn của người dùng, việc thanh toán phí dịch vụ phải được thực hiện thông qua nền tảng. Công ty sẽ giữ phí dịch vụ cho đến khi freelancer bàn giao công việc cho nhà tuyển dụng. Nhà tuyển dụng có thể kiểm tra chi tiết thanh toán và các chi phí khác tại kênh thanh toán phải được thực hiện thông qua nền tảng. Nhà tuyển dụng có thể thanh toán phí dịch vụ thông qua hệ thống thanh toán theo giai đoạn trên nền tảng (Milestone payment) theo từng đợt thanh toán cho đến khi hoàn thành công việc.",
+      "fee.3":
+        "Công ty sẽ thu phí sử dụng dịch vụ nền tảng từ nhà tuyển dụng để đổi lấy việc tuyển dụng công việc thông qua nền tảng. Mức phí sử dụng dịch vụ nền tảng sẽ theo quy định của Công ty và khoản phí này sẽ tự động được khấu trừ từ tài khoản của nhà tuyển dụng vào ngày có đơn đặt hàng.",
+      "fee.4":
+        "Công ty sẽ thu phí sử dụng dịch vụ nền tảng từ freelancer để đổi lấy việc nhận công việc thông qua nền tảng. Mức phí sử dụng dịch vụ nền tảng sẽ theo quy định của Công ty và khoản phí này sẽ tự động được khấu trừ từ phí dịch vụ mà freelancer nhận được từ việc cung cấp dịch vụ theo đơn đặt hàng vào ngày bàn giao công việc.",
+      "fee.5":
+        "Để Công ty có thể chuyển phí dịch vụ cho freelancer, freelancer cần cung cấp thông tin tài khoản ngân hàng, ví dụ: ảnh chụp sổ tiết kiệm ngân hàng, v.v., vào nền tảng. Công ty sẽ giữ phí dịch vụ cho đến khi freelancer cung cấp thông tin tài khoản ngân hàng cho Công ty. Trong trường hợp tài khoản người dùng của bất kỳ freelancer nào không cung cấp thông tin đó trong vòng 12 tháng kể từ ngày được nhà tuyển dụng phê duyệt, Công ty có thể thu phí duy trì trạng thái tài khoản người dùng với mức 50 baht mỗi tháng.",
+      "fee.6":
+        "Phí dịch vụ, phí thanh toán và phí sử dụng dịch vụ nền tảng mà người dùng phải thanh toán khi sử dụng dịch vụ nền tảng không bao gồm thuế khấu trừ tại nguồn hoặc bất kỳ khoản thuế hoặc phí nào khác mà người dùng có nghĩa vụ phải thanh toán theo luật pháp.",
       "coinAndBonus.title": "Fastwork Coin và Bonus Coin",
-      "coinAndBonus.detail1": "Nhà tuyển dụng có quyền nạp Fastwork Coin vào tài khoản người dùng của mình để thanh toán phí dịch vụ hoặc phí thanh toán cho bất kỳ công việc nào sử dụng thông qua nền tảng. Fastwork Coin phải được sử dụng trong vòng 2 năm kể từ ngày nạp Fastwork Coin. Trong trường hợp nhà tuyển dụng không sử dụng Fastwork Coin trong vòng 2 năm kể từ ngày nạp, Công ty có thể thu phí duy trì trạng thái tài khoản người dùng với mức 50 baht mỗi tháng. Tuy nhiên, điều này không tước quyền của nhà tuyển dụng yêu cầu Công ty chuyển Fastwork Coin vào tài khoản ngân hàng mà nhà tuyển dụng đã cung cấp thông tin để hoàn trả Fastwork Coin. Công ty có quyền thu phí xử lý giao dịch hoàn trả Fastwork Coin với mức 50 baht mỗi giao dịch.",
-      "coinAndBonus.detail2": "Người dùng sử dụng dịch vụ nền tảng theo các điều kiện do Công ty quy định có quyền nhận Bonus Coin từ Công ty để đổi lấy việc sử dụng dịch vụ nền tảng để thanh toán phí dịch vụ hoặc phí thanh toán có thể phát sinh từ việc sử dụng dịch vụ nền tảng. Tuy nhiên, người dùng cần phải sử dụng tất cả Bonus Coin đã nhận trong vòng 1 năm kể từ ngày nhận Bonus Coin. Trong trường hợp người dùng không sử dụng Bonus Coin trong thời gian quy định, Công ty có quyền thu hồi Bonus Coin.",
+      "coinAndBonus.detail1":
+        "Nhà tuyển dụng có quyền nạp Fastwork Coin vào tài khoản người dùng của mình để thanh toán phí dịch vụ hoặc phí thanh toán cho bất kỳ công việc nào sử dụng thông qua nền tảng. Fastwork Coin phải được sử dụng trong vòng 2 năm kể từ ngày nạp Fastwork Coin. Trong trường hợp nhà tuyển dụng không sử dụng Fastwork Coin trong vòng 2 năm kể từ ngày nạp, Công ty có thể thu phí duy trì trạng thái tài khoản người dùng với mức 50 baht mỗi tháng. Tuy nhiên, điều này không tước quyền của nhà tuyển dụng yêu cầu Công ty chuyển Fastwork Coin vào tài khoản ngân hàng mà nhà tuyển dụng đã cung cấp thông tin để hoàn trả Fastwork Coin. Công ty có quyền thu phí xử lý giao dịch hoàn trả Fastwork Coin với mức 50 baht mỗi giao dịch.",
+      "coinAndBonus.detail2":
+        "Người dùng sử dụng dịch vụ nền tảng theo các điều kiện do Công ty quy định có quyền nhận Bonus Coin từ Công ty để đổi lấy việc sử dụng dịch vụ nền tảng để thanh toán phí dịch vụ hoặc phí thanh toán có thể phát sinh từ việc sử dụng dịch vụ nền tảng. Tuy nhiên, người dùng cần phải sử dụng tất cả Bonus Coin đã nhận trong vòng 1 năm kể từ ngày nhận Bonus Coin. Trong trường hợp người dùng không sử dụng Bonus Coin trong thời gian quy định, Công ty có quyền thu hồi Bonus Coin.",
       "work.title": "Công việc",
-      "work.detail1": "Nhà tuyển dụng là chủ sở hữu của công việc được đặt hàng trên nền tảng. Do đó, nhà tuyển dụng có quyền bán, chuyển nhượng hoặc thực hiện bất kỳ hành vi nào đối với công việc đã thuê. Tuy nhiên, quyền sở hữu công việc sẽ chuyển sang nhà tuyển dụng chỉ khi sản phẩm và/hoặc dịch vụ đã được bàn giao.",
-      "work.detail2": "Trong trường hợp công việc bị hủy, freelancer sẽ là chủ sở hữu của công việc đã đặt hàng trên nền tảng, trừ khi có quy định rõ ràng trong công việc đề xuất và/hoặc báo giá (nếu có) về việc chuyển giao quyền sở hữu công việc cho nhà tuyển dụng.",
+      "work.detail1":
+        "Nhà tuyển dụng là chủ sở hữu của công việc được đặt hàng trên nền tảng. Do đó, nhà tuyển dụng có quyền bán, chuyển nhượng hoặc thực hiện bất kỳ hành vi nào đối với công việc đã thuê. Tuy nhiên, quyền sở hữu công việc sẽ chuyển sang nhà tuyển dụng chỉ khi sản phẩm và/hoặc dịch vụ đã được bàn giao.",
+      "work.detail2":
+        "Trong trường hợp công việc bị hủy, freelancer sẽ là chủ sở hữu của công việc đã đặt hàng trên nền tảng, trừ khi có quy định rõ ràng trong công việc đề xuất và/hoặc báo giá (nếu có) về việc chuyển giao quyền sở hữu công việc cho nhà tuyển dụng.",
       "review.title": "Đánh giá công việc",
-      "review.detail1": "Việc đánh giá công việc mà nhà tuyển dụng nhận được là quan trọng đối với việc phát triển nền tảng và lựa chọn freelancer có đủ điều kiện và năng lực cho các nhà tuyển dụng khác để ngăn ngừa việc sử dụng hệ thống đánh giá công việc sai mục đích.",
-      "review.detail2": "Nhà tuyển dụng có quyền đánh giá công việc phải là nhà tuyển dụng đã nhận được sản phẩm và/hoặc dịch vụ. Việc đánh giá công việc phải được thực hiện trong vòng 90 ngày kể từ ngày nhận được công việc. Chi tiết đánh giá công việc sẽ xuất hiện trong mục công việc của tôi, nơi nhà tuyển dụng bắt buộc phải chấm điểm công việc tối thiểu bằng hình thức cho điểm. Tuy nhiên, nhà tuyển dụng có thể chọn không mô tả chi tiết về nội dung đánh giá công việc.",
-      "review.detail3": "Việc đánh giá công việc của freelancer sẽ được tính toán từ điểm đánh giá công việc mà nhà tuyển dụng đã đánh giá đối với công việc của freelancer sau khi freelancer đã bàn giao sản phẩm và/hoặc dịch vụ. Việc đánh giá công việc sẽ dựa trên cơ sở độ tin cậy theo trạng thái (“as is basis”) và dịch vụ theo tình trạng sẵn có (“as available”), và bất kỳ tuyên bố nào xuất hiện trên nền tảng không cấu thành bất kỳ bảo đảm hoặc cam đoan nào về chất lượng, độ chính xác, an toàn, độ tin cậy hoặc tính sẵn có của freelancer.",
-      "review.detail4": "Việc đánh giá công việc là quyền của nhà tuyển dụng, sẽ không bị xóa vì bất kỳ lý do gì, trừ khi đó là đánh giá công việc vi phạm thỏa thuận sử dụng. Công ty sẽ nỗ lực hết sức để hỗ trợ nhà tuyển dụng giao tiếp với freelancer về mức độ hài lòng với sản phẩm cũng như các vấn đề phát sinh từ sản phẩm và/hoặc dịch vụ để freelancer có thể sửa đổi và cải thiện công việc theo những gì đã đề xuất với nhà tuyển dụng. Hơn nữa, Công ty có quyền thực hiện bất kỳ hành động nào đối với tài khoản người dùng sử dụng hệ thống đánh giá công việc sai mục đích. Quyết định của Công ty là quyết định cuối cùng.",
-      "review.detail5": "Freelancer không được mặc cả việc bàn giao công việc để nhận được đánh giá tốt từ nhà tuyển dụng. Nếu Công ty biết được hành vi đó, Công ty có quyền xử lý tài khoản người dùng sử dụng hệ thống đánh giá công việc sai mục đích. Quyết định của Công ty là quyết định cuối cùng.",
+      "review.detail1":
+        "Việc đánh giá công việc mà nhà tuyển dụng nhận được là quan trọng đối với việc phát triển nền tảng và lựa chọn freelancer có đủ điều kiện và năng lực cho các nhà tuyển dụng khác để ngăn ngừa việc sử dụng hệ thống đánh giá công việc sai mục đích.",
+      "review.detail2":
+        "Nhà tuyển dụng có quyền đánh giá công việc phải là nhà tuyển dụng đã nhận được sản phẩm và/hoặc dịch vụ. Việc đánh giá công việc phải được thực hiện trong vòng 90 ngày kể từ ngày nhận được công việc. Chi tiết đánh giá công việc sẽ xuất hiện trong mục công việc của tôi, nơi nhà tuyển dụng bắt buộc phải chấm điểm công việc tối thiểu bằng hình thức cho điểm. Tuy nhiên, nhà tuyển dụng có thể chọn không mô tả chi tiết về nội dung đánh giá công việc.",
+      "review.detail3":
+        "Việc đánh giá công việc của freelancer sẽ được tính toán từ điểm đánh giá công việc mà nhà tuyển dụng đã đánh giá đối với công việc của freelancer sau khi freelancer đã bàn giao sản phẩm và/hoặc dịch vụ. Việc đánh giá công việc sẽ dựa trên cơ sở độ tin cậy theo trạng thái (“as is basis”) và dịch vụ theo tình trạng sẵn có (“as available”), và bất kỳ tuyên bố nào xuất hiện trên nền tảng không cấu thành bất kỳ bảo đảm hoặc cam đoan nào về chất lượng, độ chính xác, an toàn, độ tin cậy hoặc tính sẵn có của freelancer.",
+      "review.detail4":
+        "Việc đánh giá công việc là quyền của nhà tuyển dụng, sẽ không bị xóa vì bất kỳ lý do gì, trừ khi đó là đánh giá công việc vi phạm thỏa thuận sử dụng. Công ty sẽ nỗ lực hết sức để hỗ trợ nhà tuyển dụng giao tiếp với freelancer về mức độ hài lòng với sản phẩm cũng như các vấn đề phát sinh từ sản phẩm và/hoặc dịch vụ để freelancer có thể sửa đổi và cải thiện công việc theo những gì đã đề xuất với nhà tuyển dụng. Hơn nữa, Công ty có quyền thực hiện bất kỳ hành động nào đối với tài khoản người dùng sử dụng hệ thống đánh giá công việc sai mục đích. Quyết định của Công ty là quyết định cuối cùng.",
+      "review.detail5":
+        "Freelancer không được mặc cả việc bàn giao công việc để nhận được đánh giá tốt từ nhà tuyển dụng. Nếu Công ty biết được hành vi đó, Công ty có quyền xử lý tài khoản người dùng sử dụng hệ thống đánh giá công việc sai mục đích. Quyết định của Công ty là quyết định cuối cùng.",
       "orderChange.title": "Thay đổi trạng thái và hủy đơn đặt hàng",
-      "orderChange.detail1": "Sau khi đơn đặt hàng được mở, trong suốt thời gian freelancer chưa bàn giao sản phẩm và/hoặc dịch vụ, người dùng có thể thay đổi trạng thái đơn đặt hàng hoặc hủy đơn đặt hàng bất cứ lúc nào. Người dùng phải thông báo cho Công ty thông qua các kênh liên hệ của Công ty.",
-      "orderChange.detail2": "Mặc dù nhà tuyển dụng đã gửi yêu cầu thay đổi trạng thái đơn đặt hàng hoặc hủy đơn đặt hàng, Công ty có quyền xem xét và phê duyệt việc thay đổi trạng thái hoặc yêu cầu hủy đơn đặt hàng và hoàn tiền. Quyết định của Công ty là quyết định cuối cùng. Tỷ lệ phí dịch vụ mà nhà tuyển dụng sẽ nhận được hoàn trả sẽ theo quy trình yêu cầu hủy đơn đặt hàng và hoàn tiền do Công ty quy định.",
-      "orderChange.detail3": "Khi có yêu cầu hủy đơn đặt hàng, nhân viên của Công ty sẽ liên hệ lại với nhà tuyển dụng theo thông tin liên hệ mà nhà tuyển dụng đã đăng ký để yêu cầu tài khoản ngân hàng để hoàn trả phí dịch vụ. Công ty có quyền không hoàn trả phí thanh toán cho nhà tuyển dụng.",
-      "orderChange.detail4": "Công ty có quyền duy nhất trong việc xem xét tỷ lệ phí dịch vụ sẽ hoàn trả cho nhà tuyển dụng. Việc xem xét này sẽ bao gồm các yếu tố như vi phạm thỏa thuận, vi phạm quyền sử dụng của người dùng khác, sử dụng dịch vụ nền tảng không đúng cách theo thỏa thuận sử dụng, bàn giao công việc sai mục đích, v.v.",
-      "orderChange.detail5": "Sau khi xác định được tỷ lệ phí dịch vụ sẽ hoàn trả cho nhà tuyển dụng, Công ty sẽ hoàn trả phí dịch vụ cho nhà tuyển dụng theo các phương thức sau:",
-      "orderChange.method1": "Trong trường hợp nhà tuyển dụng thanh toán phí dịch vụ qua tài khoản ngân hàng hoặc mobile banking, phí dịch vụ sẽ được hoàn trả vào tài khoản ngân hàng mà nhà tuyển dụng đã cung cấp thông tin để hoàn trả phí dịch vụ.",
-      "orderChange.method2": "Trong trường hợp nhà tuyển dụng thanh toán phí dịch vụ qua thẻ tín dụng, phí dịch vụ sẽ được hoàn trả vào thẻ tín dụng đã được sử dụng để thanh toán dịch vụ. Công ty sẽ gửi yêu cầu hoàn tiền đến ngân hàng cung cấp thẻ tín dụng. Thời gian hoàn tiền sẽ tùy thuộc vào chính sách của từng ngân hàng.",
-      "orderChange.method3": "Trong trường hợp nhà tuyển dụng thanh toán phí dịch vụ bằng Fastwork Coin, phí dịch vụ sẽ được hoàn trả dưới dạng Fastwork Coin vào tài khoản đã thực hiện thanh toán phí dịch vụ.",
-      "orderChange.method4": "Trong trường hợp nhà tuyển dụng thanh toán phí dịch vụ qua TrueMoney Wallet, phí dịch vụ sẽ được hoàn trả vào tài khoản ngân hàng mà nhà tuyển dụng đã cung cấp thông tin để hoàn trả phí dịch vụ.",
+      "orderChange.detail1":
+        "Sau khi đơn đặt hàng được mở, trong suốt thời gian freelancer chưa bàn giao sản phẩm và/hoặc dịch vụ, người dùng có thể thay đổi trạng thái đơn đặt hàng hoặc hủy đơn đặt hàng bất cứ lúc nào. Người dùng phải thông báo cho Công ty thông qua các kênh liên hệ của Công ty.",
+      "orderChange.detail2":
+        "Mặc dù nhà tuyển dụng đã gửi yêu cầu thay đổi trạng thái đơn đặt hàng hoặc hủy đơn đặt hàng, Công ty có quyền xem xét và phê duyệt việc thay đổi trạng thái hoặc yêu cầu hủy đơn đặt hàng và hoàn tiền. Quyết định của Công ty là quyết định cuối cùng. Tỷ lệ phí dịch vụ mà nhà tuyển dụng sẽ nhận được hoàn trả sẽ theo quy trình yêu cầu hủy đơn đặt hàng và hoàn tiền do Công ty quy định.",
+      "orderChange.detail3":
+        "Khi có yêu cầu hủy đơn đặt hàng, nhân viên của Công ty sẽ liên hệ lại với nhà tuyển dụng theo thông tin liên hệ mà nhà tuyển dụng đã đăng ký để yêu cầu tài khoản ngân hàng để hoàn trả phí dịch vụ. Công ty có quyền không hoàn trả phí thanh toán cho nhà tuyển dụng.",
+      "orderChange.detail4":
+        "Công ty có quyền duy nhất trong việc xem xét tỷ lệ phí dịch vụ sẽ hoàn trả cho nhà tuyển dụng. Việc xem xét này sẽ bao gồm các yếu tố như vi phạm thỏa thuận, vi phạm quyền sử dụng của người dùng khác, sử dụng dịch vụ nền tảng không đúng cách theo thỏa thuận sử dụng, bàn giao công việc sai mục đích, v.v.",
+      "orderChange.detail5":
+        "Sau khi xác định được tỷ lệ phí dịch vụ sẽ hoàn trả cho nhà tuyển dụng, Công ty sẽ hoàn trả phí dịch vụ cho nhà tuyển dụng theo các phương thức sau:",
+      "orderChange.method1":
+        "Trong trường hợp nhà tuyển dụng thanh toán phí dịch vụ qua tài khoản ngân hàng hoặc mobile banking, phí dịch vụ sẽ được hoàn trả vào tài khoản ngân hàng mà nhà tuyển dụng đã cung cấp thông tin để hoàn trả phí dịch vụ.",
+      "orderChange.method2":
+        "Trong trường hợp nhà tuyển dụng thanh toán phí dịch vụ qua thẻ tín dụng, phí dịch vụ sẽ được hoàn trả vào thẻ tín dụng đã được sử dụng để thanh toán dịch vụ. Công ty sẽ gửi yêu cầu hoàn tiền đến ngân hàng cung cấp thẻ tín dụng. Thời gian hoàn tiền sẽ tùy thuộc vào chính sách của từng ngân hàng.",
+      "orderChange.method3":
+        "Trong trường hợp nhà tuyển dụng thanh toán phí dịch vụ bằng Fastwork Coin, phí dịch vụ sẽ được hoàn trả dưới dạng Fastwork Coin vào tài khoản đã thực hiện thanh toán phí dịch vụ.",
+      "orderChange.method4":
+        "Trong trường hợp nhà tuyển dụng thanh toán phí dịch vụ qua TrueMoney Wallet, phí dịch vụ sẽ được hoàn trả vào tài khoản ngân hàng mà nhà tuyển dụng đã cung cấp thông tin để hoàn trả phí dịch vụ.",
       orderCancelRefundTitle: "Hạn chế hủy đơn đặt hàng và hoàn tiền",
-      orderCancelRefundIntro: "Trong các trường hợp sau đây, người dùng có thể bị hạn chế quyền hủy đơn đặt hàng và hoàn tiền theo luật pháp, bao gồm cả việc có thể bị tạm thời đình chỉ tài khoản người dùng:",
-      orderCancelRefundReason1: "Freelancer đã bàn giao công việc theo các chi tiết được quy định trong công việc đề xuất và/hoặc báo giá (nếu có).",
-      orderCancelRefundReason2: "Nhà tuyển dụng có liên quan đến việc hủy đơn đặt hàng, bao gồm nhưng không giới hạn ở việc mời freelancer cung cấp dịch vụ bên ngoài hệ thống, yêu cầu hủy việc tuyển dụng do ý muốn đơn phương của nhà tuyển dụng, v.v.",
-      orderCancelRefundReason3: "Nhà tuyển dụng có liên quan đến bất kỳ hoạt động lừa đảo hoặc trục lợi bất hợp pháp nào, dù vì lợi ích của bản thân hay người khác. Công ty sẽ coi đó là hành vi gian lận trong việc sử dụng dịch vụ nền tảng liên quan đến đơn đặt hàng đó.",
-      orderCancelRefundReason4: "Nhà tuyển dụng đã thông báo đình chỉ thanh toán hoặc yêu cầu hoàn trả phí dịch vụ từ nhà cung cấp dịch vụ thanh toán, bao gồm nhưng không giới hạn ở ngân hàng, tổ chức tài chính hoặc các bên thứ ba khác ngoài Công ty.",
+      orderCancelRefundIntro:
+        "Trong các trường hợp sau đây, người dùng có thể bị hạn chế quyền hủy đơn đặt hàng và hoàn tiền theo luật pháp, bao gồm cả việc có thể bị tạm thời đình chỉ tài khoản người dùng:",
+      orderCancelRefundReason1:
+        "Freelancer đã bàn giao công việc theo các chi tiết được quy định trong công việc đề xuất và/hoặc báo giá (nếu có).",
+      orderCancelRefundReason2:
+        "Nhà tuyển dụng có liên quan đến việc hủy đơn đặt hàng, bao gồm nhưng không giới hạn ở việc mời freelancer cung cấp dịch vụ bên ngoài hệ thống, yêu cầu hủy việc tuyển dụng do ý muốn đơn phương của nhà tuyển dụng, v.v.",
+      orderCancelRefundReason3:
+        "Nhà tuyển dụng có liên quan đến bất kỳ hoạt động lừa đảo hoặc trục lợi bất hợp pháp nào, dù vì lợi ích của bản thân hay người khác. Công ty sẽ coi đó là hành vi gian lận trong việc sử dụng dịch vụ nền tảng liên quan đến đơn đặt hàng đó.",
+      orderCancelRefundReason4:
+        "Nhà tuyển dụng đã thông báo đình chỉ thanh toán hoặc yêu cầu hoàn trả phí dịch vụ từ nhà cung cấp dịch vụ thanh toán, bao gồm nhưng không giới hạn ở ngân hàng, tổ chức tài chính hoặc các bên thứ ba khác ngoài Công ty.",
       accountSuspensionTitle: "Đình chỉ và hủy tài khoản người dùng",
-      accountSuspensionIntro: "Để kiểm soát việc sử dụng dịch vụ nền tảng theo thỏa thuận sử dụng, Công ty có quyền kiểm tra quyền sở hữu tài khoản người dùng trong suốt thời gian sử dụng dịch vụ nền tảng. Khi có kiểm tra, người dùng phải chứng minh quyền sở hữu tài khoản người dùng bằng cách xuất trình các bằng chứng như thẻ căn cước, sổ ngân hàng, hộ chiếu, các văn bản pháp lý do cơ quan nhà nước cấp hoặc bất kỳ tài liệu nào khác theo yêu cầu của Công ty. Điều này nhằm mục đích xác minh danh tính.",
-      accountSuspensionViolationIntro: "Trong trường hợp người dùng thực hiện bất kỳ hành vi nào không phù hợp hoặc vi phạm các điều kiện của thỏa thuận sử dụng,",
-      accountSuspensionWarning: "Công ty có thể cảnh báo người dùng ngừng hoặc chấm dứt hành vi đó thông qua kênh liên hệ mà người dùng đã đăng ký và/hoặc hiển thị thông báo trên nền tảng khi người dùng đăng nhập. Mặc dù cảnh báo đó sẽ không ảnh hưởng ngay lập tức đến việc sử dụng nền tảng, nhưng có thể dẫn đến việc đình chỉ và hủy tài khoản người dùng trong tương lai.",
-      accountSuspensionRights: "Công ty có quyền quyết định thực hiện bất kỳ hành động nào đối với tài khoản người dùng, ví dụ: đình chỉ tài khoản người dùng, dù tạm thời hay vĩnh viễn, xóa tài khoản người dùng, đưa tài khoản người dùng vào danh sách đen, hoặc bất kỳ hành động nào khác mà Công ty thấy phù hợp, nếu Công ty thấy rằng người dùng vi phạm thỏa thuận sử dụng này, bao gồm nhưng không giới hạn ở các trường hợp sau:",
-      accountSuspensionReason1: "Người dùng vi phạm thỏa thuận sử dụng hoặc có hành vi không phù hợp trên nền tảng, ví dụ: sử dụng từ ngữ không phù hợp, sử dụng ngôn từ thô tục, chế nhạo, bắt nạt hoặc coi thường, v.v.",
-      accountSuspensionReason2: "Người dùng thực hiện bất kỳ hành vi nào có tính chất lừa đảo để lấy thông tin (phishing) hoặc gây phiền toái cho người khác (spam).",
-      accountSuspensionReason3: "Người dùng thực hiện bất kỳ hành vi nào là bất hợp pháp hoặc trái với trật tự công cộng hoặc đạo đức xã hội thông qua nền tảng, bao gồm nhưng không giới hạn ở việc vi phạm Đạo luật về Tội phạm Máy tính năm 2007, v.v.",
-      accountSuspensionReason4: "Người dùng thực hiện bất kỳ hành vi nào có tính chất hoặc đặc điểm cố gắng truy cập vào tài khoản người dùng hoặc thiết bị của người dùng khác thông qua nền tảng.",
-      accountSuspensionReason5: "Người dùng thực hiện bất kỳ hành vi nào có tính chất hoặc đặc điểm vi phạm bản quyền hoặc quyền sở hữu trí tuệ của người khác.",
-      accountSuspensionReason6: "Người dùng thực hiện bất kỳ hành vi nào có tính chất hoặc đặc điểm nhằm mục đích cho bản thân hoặc người khác nhận được lợi ích mà không có quyền hợp pháp, bao gồm nhưng không giới hạn ở việc tự thuê để trục lợi từ các chương trình khuyến mãi và không có mục đích thuê thực sự, v.v.",
-      accountSuspensionReason7: "Người dùng có nhiều hơn một tài khoản, hoặc người dùng sử dụng thông tin cá nhân của người khác để đăng ký sử dụng.",
-      accountSuspensionReason8: "Người dùng mua bán tài khoản người dùng cho người khác.",
-      accountSuspensionReason9: "Người dùng thực hiện bất kỳ hành vi nào có tính chất hoặc đặc điểm trốn tránh phí sử dụng dịch vụ nền tảng và/hoặc phí thanh toán, bao gồm nhưng không giới hạn ở việc khuyến khích hoặc dụ dỗ dẫn đến việc liên hệ để tuyển dụng ngoài nền tảng, v.v.",
-      accountSuspensionFinalDecision: "Quyết định của Công ty là quyết định cuối cùng. Bạn không thể kháng cáo hoặc phản đối việc Công ty thực hiện quyền đình chỉ và hủy tài khoản người dùng của bạn. Tuy nhiên, điều này không tước quyền của bạn trong việc cung cấp thông tin hoặc giải thích bất kỳ sự thật nào liên quan đến việc Công ty thực hiện quyền đình chỉ và hủy tài khoản người dùng của bạn.",
-      accountSuspensionEffect: "Tài khoản người dùng bị đình chỉ sẽ không thể giao dịch công việc trên nền tảng, cũng như đăng thêm sản phẩm và/hoặc dịch vụ.",
-      accountSuspensionContact: "Khi có tài khoản người dùng nào bị đình chỉ, những người bị ảnh hưởng bởi việc đình chỉ tài khoản người dùng có thể liên hệ với nhân viên của Công ty theo các kênh do Công ty quy định để hỏi thông tin hoặc trạng thái của tài khoản người dùng đó, cũng như hướng dẫn về việc yêu cầu hủy đơn đặt hàng.",
+      accountSuspensionIntro:
+        "Để kiểm soát việc sử dụng dịch vụ nền tảng theo thỏa thuận sử dụng, Công ty có quyền kiểm tra quyền sở hữu tài khoản người dùng trong suốt thời gian sử dụng dịch vụ nền tảng. Khi có kiểm tra, người dùng phải chứng minh quyền sở hữu tài khoản người dùng bằng cách xuất trình các bằng chứng như thẻ căn cước, sổ ngân hàng, hộ chiếu, các văn bản pháp lý do cơ quan nhà nước cấp hoặc bất kỳ tài liệu nào khác theo yêu cầu của Công ty. Điều này nhằm mục đích xác minh danh tính.",
+      accountSuspensionViolationIntro:
+        "Trong trường hợp người dùng thực hiện bất kỳ hành vi nào không phù hợp hoặc vi phạm các điều kiện của thỏa thuận sử dụng,",
+      accountSuspensionWarning:
+        "Công ty có thể cảnh báo người dùng ngừng hoặc chấm dứt hành vi đó thông qua kênh liên hệ mà người dùng đã đăng ký và/hoặc hiển thị thông báo trên nền tảng khi người dùng đăng nhập. Mặc dù cảnh báo đó sẽ không ảnh hưởng ngay lập tức đến việc sử dụng nền tảng, nhưng có thể dẫn đến việc đình chỉ và hủy tài khoản người dùng trong tương lai.",
+      accountSuspensionRights:
+        "Công ty có quyền quyết định thực hiện bất kỳ hành động nào đối với tài khoản người dùng, ví dụ: đình chỉ tài khoản người dùng, dù tạm thời hay vĩnh viễn, xóa tài khoản người dùng, đưa tài khoản người dùng vào danh sách đen, hoặc bất kỳ hành động nào khác mà Công ty thấy phù hợp, nếu Công ty thấy rằng người dùng vi phạm thỏa thuận sử dụng này, bao gồm nhưng không giới hạn ở các trường hợp sau:",
+      accountSuspensionReason1:
+        "Người dùng vi phạm thỏa thuận sử dụng hoặc có hành vi không phù hợp trên nền tảng, ví dụ: sử dụng từ ngữ không phù hợp, sử dụng ngôn từ thô tục, chế nhạo, bắt nạt hoặc coi thường, v.v.",
+      accountSuspensionReason2:
+        "Người dùng thực hiện bất kỳ hành vi nào có tính chất lừa đảo để lấy thông tin (phishing) hoặc gây phiền toái cho người khác (spam).",
+      accountSuspensionReason3:
+        "Người dùng thực hiện bất kỳ hành vi nào là bất hợp pháp hoặc trái với trật tự công cộng hoặc đạo đức xã hội thông qua nền tảng, bao gồm nhưng không giới hạn ở việc vi phạm Đạo luật về Tội phạm Máy tính năm 2007, v.v.",
+      accountSuspensionReason4:
+        "Người dùng thực hiện bất kỳ hành vi nào có tính chất hoặc đặc điểm cố gắng truy cập vào tài khoản người dùng hoặc thiết bị của người dùng khác thông qua nền tảng.",
+      accountSuspensionReason5:
+        "Người dùng thực hiện bất kỳ hành vi nào có tính chất hoặc đặc điểm vi phạm bản quyền hoặc quyền sở hữu trí tuệ của người khác.",
+      accountSuspensionReason6:
+        "Người dùng thực hiện bất kỳ hành vi nào có tính chất hoặc đặc điểm nhằm mục đích cho bản thân hoặc người khác nhận được lợi ích mà không có quyền hợp pháp, bao gồm nhưng không giới hạn ở việc tự thuê để trục lợi từ các chương trình khuyến mãi và không có mục đích thuê thực sự, v.v.",
+      accountSuspensionReason7:
+        "Người dùng có nhiều hơn một tài khoản, hoặc người dùng sử dụng thông tin cá nhân của người khác để đăng ký sử dụng.",
+      accountSuspensionReason8:
+        "Người dùng mua bán tài khoản người dùng cho người khác.",
+      accountSuspensionReason9:
+        "Người dùng thực hiện bất kỳ hành vi nào có tính chất hoặc đặc điểm trốn tránh phí sử dụng dịch vụ nền tảng và/hoặc phí thanh toán, bao gồm nhưng không giới hạn ở việc khuyến khích hoặc dụ dỗ dẫn đến việc liên hệ để tuyển dụng ngoài nền tảng, v.v.",
+      accountSuspensionFinalDecision:
+        "Quyết định của Công ty là quyết định cuối cùng. Bạn không thể kháng cáo hoặc phản đối việc Công ty thực hiện quyền đình chỉ và hủy tài khoản người dùng của bạn. Tuy nhiên, điều này không tước quyền của bạn trong việc cung cấp thông tin hoặc giải thích bất kỳ sự thật nào liên quan đến việc Công ty thực hiện quyền đình chỉ và hủy tài khoản người dùng của bạn.",
+      accountSuspensionEffect:
+        "Tài khoản người dùng bị đình chỉ sẽ không thể giao dịch công việc trên nền tảng, cũng như đăng thêm sản phẩm và/hoặc dịch vụ.",
+      accountSuspensionContact:
+        "Khi có tài khoản người dùng nào bị đình chỉ, những người bị ảnh hưởng bởi việc đình chỉ tài khoản người dùng có thể liên hệ với nhân viên của Công ty theo các kênh do Công ty quy định để hỏi thông tin hoặc trạng thái của tài khoản người dùng đó, cũng như hướng dẫn về việc yêu cầu hủy đơn đặt hàng.",
       "dispute.title": "Giải quyết tranh chấp giữa người dùng",
-      "dispute.intro": "Công ty khuyến khích người dùng giải quyết tranh chấp bằng cách đàm phán trên trò chuyện của nền tảng, bao gồm nhưng không giới hạn ở các tranh chấp sau:",
+      "dispute.intro":
+        "Công ty khuyến khích người dùng giải quyết tranh chấp bằng cách đàm phán trên trò chuyện của nền tảng, bao gồm nhưng không giới hạn ở các tranh chấp sau:",
       "dispute.issues.quality": "Chất lượng công việc",
       "dispute.issues.scope": "Phạm vi công việc",
       "dispute.issues.deadline": "Thời hạn bàn giao công việc",
-      "dispute.issues.damageDuring": "Thiệt hại phát sinh trong quá trình làm việc",
-      "dispute.issues.damageAfter": "Thiệt hại có thể phát sinh sau khi bàn giao công việc",
-      "dispute.escalation": "Trong trường hợp bạn không thể giải quyết tranh chấp, nhà tuyển dụng hoặc freelancer, tùy từng trường hợp, có thể liên hệ với Công ty thông qua các kênh liên hệ đã cung cấp để Công ty can thiệp hòa giải giải quyết tranh chấp. Để Công ty hòa giải chính xác và công bằng, người dùng đồng ý cung cấp các sự thật, tài liệu hoặc bằng chứng liên quan đến tranh chấp, đồng thời đồng ý và cho phép Công ty truy cập vào cuộc trò chuyện của nhà tuyển dụng và freelancer để kiểm tra chi tiết hoặc thông tin liên hệ để giải quyết tranh chấp giữa người dùng.",
-      "dispute.complaint": "Trong trường hợp có khiếu nại về chất lượng công việc, Công ty có thể kiểm tra lịch sử làm việc, đơn đặt hàng, tin nhắn, thanh toán và các thông tin khác của freelancer mà không cần sự đồng ý hoặc thông báo trước cho freelancer.",
+      "dispute.issues.damageDuring":
+        "Thiệt hại phát sinh trong quá trình làm việc",
+      "dispute.issues.damageAfter":
+        "Thiệt hại có thể phát sinh sau khi bàn giao công việc",
+      "dispute.escalation":
+        "Trong trường hợp bạn không thể giải quyết tranh chấp, nhà tuyển dụng hoặc freelancer, tùy từng trường hợp, có thể liên hệ với Công ty thông qua các kênh liên hệ đã cung cấp để Công ty can thiệp hòa giải giải quyết tranh chấp. Để Công ty hòa giải chính xác và công bằng, người dùng đồng ý cung cấp các sự thật, tài liệu hoặc bằng chứng liên quan đến tranh chấp, đồng thời đồng ý và cho phép Công ty truy cập vào cuộc trò chuyện của nhà tuyển dụng và freelancer để kiểm tra chi tiết hoặc thông tin liên hệ để giải quyết tranh chấp giữa người dùng.",
+      "dispute.complaint":
+        "Trong trường hợp có khiếu nại về chất lượng công việc, Công ty có thể kiểm tra lịch sử làm việc, đơn đặt hàng, tin nhắn, thanh toán và các thông tin khác của freelancer mà không cần sự đồng ý hoặc thông báo trước cho freelancer.",
       "liabilityClaim.title": "Yêu cầu bồi thường thiệt hại",
-      "liabilityClaim.intro": "Trong trường hợp có bất kỳ thiệt hại nào phát sinh cho bên thứ ba không phải là người dùng nền tảng, người dùng đồng ý chịu trách nhiệm bồi thường cho các cá nhân liên quan trực tiếp, bao gồm nhưng không giới hạn ở các trường hợp sau:",
-      "liabilityClaim.personalData": "Người dùng là người sử dụng hoặc tiết lộ dữ liệu cá nhân đồng ý chịu trách nhiệm bồi thường cho bên thứ ba là chủ sở hữu dữ liệu cá nhân.",
-      "liabilityClaim.ip": "Người dùng là người sử dụng hoặc phát tán bản quyền hoặc sở hữu trí tuệ đồng ý chịu trách nhiệm bồi thường cho bên thứ ba là chủ sở hữu sở hữu trí tuệ.",
-      "liabilityClaim.confidential": "Người dùng là người sử dụng hoặc tiết lộ thông tin mật đồng ý chịu trách nhiệm bồi thường cho người tiết lộ thông tin mật.",
-      "liabilityClaim.defamation": "Người dùng là người phao tin đồn đồng ý chịu trách nhiệm bồi thường cho người bị thiệt hại do thông tin đó.",
-      "liabilityClaim.legalAction": "Trong trường hợp có vụ kiện hoặc bất kỳ hành động nào được thực hiện đối với bên thứ ba dẫn đến việc Công ty phải trở thành một bên trong vụ kiện hoặc phải cung cấp bất kỳ lời khai nào theo lệnh của cơ quan nhà nước có liên quan, người dùng đồng ý chịu trách nhiệm liên đới với Công ty trong việc thanh toán các chi phí phát sinh từ hành động đó, bao gồm nhưng không giới hạn ở phí luật sư, chi phí đi lại, phí, thuế, phí dịch vụ, phạt tiền, bồi thường thiệt hại hoặc bất kỳ thiệt hại nào khác phát sinh trực tiếp hoặc gián tiếp từ hoặc liên quan đến hành động đó.",
-      "liabilityClaim.toCompany": "Trong trường hợp người dùng phải chịu trách nhiệm với Công ty, người dùng đồng ý bồi thường cho Công ty để khắc phục thiệt hại trực tiếp hoặc gián tiếp.",
-      "liabilityClaim.toEachOther": "Trong trường hợp người dùng phải chịu trách nhiệm với nhau, người dùng đồng ý bồi thường theo các điều kiện có được từ việc giải quyết tranh chấp giữa người dùng.",
-      "liabilityClaim.companyLiability": "Trong trường hợp Công ty phải chịu trách nhiệm với người dùng, Công ty đồng ý bồi thường theo thiệt hại thực tế phát sinh cho người dùng để khắc phục thiệt hại.",
+      "liabilityClaim.intro":
+        "Trong trường hợp có bất kỳ thiệt hại nào phát sinh cho bên thứ ba không phải là người dùng nền tảng, người dùng đồng ý chịu trách nhiệm bồi thường cho các cá nhân liên quan trực tiếp, bao gồm nhưng không giới hạn ở các trường hợp sau:",
+      "liabilityClaim.personalData":
+        "Người dùng là người sử dụng hoặc tiết lộ dữ liệu cá nhân đồng ý chịu trách nhiệm bồi thường cho bên thứ ba là chủ sở hữu dữ liệu cá nhân.",
+      "liabilityClaim.ip":
+        "Người dùng là người sử dụng hoặc phát tán bản quyền hoặc sở hữu trí tuệ đồng ý chịu trách nhiệm bồi thường cho bên thứ ba là chủ sở hữu sở hữu trí tuệ.",
+      "liabilityClaim.confidential":
+        "Người dùng là người sử dụng hoặc tiết lộ thông tin mật đồng ý chịu trách nhiệm bồi thường cho người tiết lộ thông tin mật.",
+      "liabilityClaim.defamation":
+        "Người dùng là người phao tin đồn đồng ý chịu trách nhiệm bồi thường cho người bị thiệt hại do thông tin đó.",
+      "liabilityClaim.legalAction":
+        "Trong trường hợp có vụ kiện hoặc bất kỳ hành động nào được thực hiện đối với bên thứ ba dẫn đến việc Công ty phải trở thành một bên trong vụ kiện hoặc phải cung cấp bất kỳ lời khai nào theo lệnh của cơ quan nhà nước có liên quan, người dùng đồng ý chịu trách nhiệm liên đới với Công ty trong việc thanh toán các chi phí phát sinh từ hành động đó, bao gồm nhưng không giới hạn ở phí luật sư, chi phí đi lại, phí, thuế, phí dịch vụ, phạt tiền, bồi thường thiệt hại hoặc bất kỳ thiệt hại nào khác phát sinh trực tiếp hoặc gián tiếp từ hoặc liên quan đến hành động đó.",
+      "liabilityClaim.toCompany":
+        "Trong trường hợp người dùng phải chịu trách nhiệm với Công ty, người dùng đồng ý bồi thường cho Công ty để khắc phục thiệt hại trực tiếp hoặc gián tiếp.",
+      "liabilityClaim.toEachOther":
+        "Trong trường hợp người dùng phải chịu trách nhiệm với nhau, người dùng đồng ý bồi thường theo các điều kiện có được từ việc giải quyết tranh chấp giữa người dùng.",
+      "liabilityClaim.companyLiability":
+        "Trong trường hợp Công ty phải chịu trách nhiệm với người dùng, Công ty đồng ý bồi thường theo thiệt hại thực tế phát sinh cho người dùng để khắc phục thiệt hại.",
       "limitation.title": "Giới hạn trách nhiệm của Công ty",
-      "limitation.intro": "Việc cung cấp dịch vụ nền tảng không làm cho Công ty trở thành đối tác chung, đại diện chung, con nợ chung hoặc bất kỳ quan hệ pháp lý nào khác với người dùng, ngoài việc là nhà cung cấp dịch vụ mà người dùng có nghĩa vụ thanh toán phí sử dụng dịch vụ nền tảng và phí thanh toán, tùy từng trường hợp, cho Công ty.",
-      "limitation.exclusions": "Công ty có quyền từ chối mọi trách nhiệm đối với sản phẩm và/hoặc dịch vụ mà nhà tuyển dụng nhận được từ freelancer trong các trường hợp sau:",
-      "limitation.exclusions.outOfOrder": "Việc tuyển dụng không nằm trong đơn đặt hàng.",
-      "limitation.exclusions.noPayment": "Việc tuyển dụng không có thanh toán thông qua nền tảng.",
-      "limitation.exclusions.violation": "Việc tuyển dụng vi phạm thỏa thuận sử dụng.",
-      "limitation.exclusions.userMessages": "Bất kỳ tin nhắn nào xuất hiện trong công việc được đề xuất hoặc cuộc trò chuyện của người dùng.",
-      "limitation.exclusions.review": "Bất kỳ tin nhắn nào xuất hiện trong đánh giá công việc.",
+      "limitation.intro":
+        "Việc cung cấp dịch vụ nền tảng không làm cho Công ty trở thành đối tác chung, đại diện chung, con nợ chung hoặc bất kỳ quan hệ pháp lý nào khác với người dùng, ngoài việc là nhà cung cấp dịch vụ mà người dùng có nghĩa vụ thanh toán phí sử dụng dịch vụ nền tảng và phí thanh toán, tùy từng trường hợp, cho Công ty.",
+      "limitation.exclusions":
+        "Công ty có quyền từ chối mọi trách nhiệm đối với sản phẩm và/hoặc dịch vụ mà nhà tuyển dụng nhận được từ freelancer trong các trường hợp sau:",
+      "limitation.exclusions.outOfOrder":
+        "Việc tuyển dụng không nằm trong đơn đặt hàng.",
+      "limitation.exclusions.noPayment":
+        "Việc tuyển dụng không có thanh toán thông qua nền tảng.",
+      "limitation.exclusions.violation":
+        "Việc tuyển dụng vi phạm thỏa thuận sử dụng.",
+      "limitation.exclusions.userMessages":
+        "Bất kỳ tin nhắn nào xuất hiện trong công việc được đề xuất hoặc cuộc trò chuyện của người dùng.",
+      "limitation.exclusions.review":
+        "Bất kỳ tin nhắn nào xuất hiện trong đánh giá công việc.",
       "limitation.exclusions.quality": "Chất lượng sản phẩm.",
-      "limitation.exclusions.damage": "Thiệt hại đã phát sinh hoặc có thể phát sinh từ công việc.",
-      "limitation.exclusions.dispute": "Thiệt hại đã phát sinh hoặc có thể phát sinh từ việc giải quyết tranh chấp giữa người dùng.",
-      "limitation.noGuarantee": "Công ty không thể đảm bảo chất lượng của sản phẩm và/hoặc dịch vụ mà nhà tuyển dụng sẽ nhận được từ freelancer, bao gồm nhưng không giới hạn ở phạm vi công việc, thành công của công việc, thiệt hại phát sinh từ công việc, dù xảy ra trong quá trình hay sau khi bàn giao, v.v. Việc đánh giá chất lượng công việc có thể được thực hiện bằng cách xem xét chi tiết và điểm đánh giá công việc mà freelancer nhận được. Tuy nhiên, Công ty sẽ nỗ lực hết sức để nhà tuyển dụng nhận được công việc chính xác theo các thuộc tính được đề xuất trong công việc được đề xuất từ freelancer.",
-      "limitation.disclaimer": "Các công ty liên kết, giám đốc điều hành, ban giám đốc, cổ đông, nhân viên, đại lý, đối tác hoặc bất kỳ cá nhân nào khác dưới sự giám sát của Công ty có thể từ chối trách nhiệm đối với bất kỳ thiệt hại nào liên quan đến việc sử dụng dịch vụ nền tảng, bao gồm thiệt hại trực tiếp, thiệt hại do hoàn cảnh đặc biệt hoặc thiệt hại mang tính trừng phạt, ví dụ: thương tích cá nhân, đau đớn về thể chất hoặc tinh thần, mất thu nhập, mất lợi nhuận, mất cơ hội kinh doanh hoặc lợi nhuận dự kiến, thiệt hại về thể chất, tài sản, danh tiếng hoặc dữ liệu, v.v.",
+      "limitation.exclusions.damage":
+        "Thiệt hại đã phát sinh hoặc có thể phát sinh từ công việc.",
+      "limitation.exclusions.dispute":
+        "Thiệt hại đã phát sinh hoặc có thể phát sinh từ việc giải quyết tranh chấp giữa người dùng.",
+      "limitation.noGuarantee":
+        "Công ty không thể đảm bảo chất lượng của sản phẩm và/hoặc dịch vụ mà nhà tuyển dụng sẽ nhận được từ freelancer, bao gồm nhưng không giới hạn ở phạm vi công việc, thành công của công việc, thiệt hại phát sinh từ công việc, dù xảy ra trong quá trình hay sau khi bàn giao, v.v. Việc đánh giá chất lượng công việc có thể được thực hiện bằng cách xem xét chi tiết và điểm đánh giá công việc mà freelancer nhận được. Tuy nhiên, Công ty sẽ nỗ lực hết sức để nhà tuyển dụng nhận được công việc chính xác theo các thuộc tính được đề xuất trong công việc được đề xuất từ freelancer.",
+      "limitation.disclaimer":
+        "Các công ty liên kết, giám đốc điều hành, ban giám đốc, cổ đông, nhân viên, đại lý, đối tác hoặc bất kỳ cá nhân nào khác dưới sự giám sát của Công ty có thể từ chối trách nhiệm đối với bất kỳ thiệt hại nào liên quan đến việc sử dụng dịch vụ nền tảng, bao gồm thiệt hại trực tiếp, thiệt hại do hoàn cảnh đặc biệt hoặc thiệt hại mang tính trừng phạt, ví dụ: thương tích cá nhân, đau đớn về thể chất hoặc tinh thần, mất thu nhập, mất lợi nhuận, mất cơ hội kinh doanh hoặc lợi nhuận dự kiến, thiệt hại về thể chất, tài sản, danh tiếng hoặc dữ liệu, v.v.",
       intellectualPropertyTitle: "Quyền sở hữu trí tuệ",
-      intellectualPropertyContent1: "Nhà tuyển dụng là chủ sở hữu tất cả bản quyền hoặc quyền sở hữu trí tuệ khác đối với công việc mà freelancer bàn giao, trừ khi có quy định rõ ràng trong công việc đề xuất và/hoặc báo giá (nếu có) về các trường hợp ngoại lệ đó. Cụ thể:",
-      intellectualPropertyContent2: "Freelancer sẽ không thực hiện hoặc cùng với cá nhân khác thực hiện bất kỳ hành vi nào, bao gồm nhưng không giới hạn ở việc cho phép hoặc ủy quyền cho bất kỳ cá nhân nào sao chép, sao chép công việc, điều chỉnh, thay đổi công việc, dù với bất kỳ mục đích nào, v.v., trừ khi có sự đồng ý bằng văn bản.",
-      intellectualPropertyContent3: "Người dùng sẽ sử dụng dịch vụ nền tảng với mục đích hợp pháp và không thực hiện bất kỳ hành vi nào vi phạm bản quyền hoặc sở hữu trí tuệ của người khác. Trong trường hợp có vi phạm, Công ty có quyền quyết định đình chỉ và hủy tài khoản người dùng của bạn. Quyết định của Công ty là cuối cùng.",
-      intellectualPropertyContent4: "Công ty không cho phép và không khuyến khích bất kỳ hành vi nào có tính chất hoặc đặc điểm vi phạm bản quyền hoặc sở hữu trí tuệ của người khác. Trong trường hợp bạn vi phạm, bạn đồng ý chịu trách nhiệm bồi thường cho chủ sở hữu bản quyền hoặc sở hữu trí tuệ đó một mình.",
+      intellectualPropertyContent1:
+        "Nhà tuyển dụng là chủ sở hữu tất cả bản quyền hoặc quyền sở hữu trí tuệ khác đối với công việc mà freelancer bàn giao, trừ khi có quy định rõ ràng trong công việc đề xuất và/hoặc báo giá (nếu có) về các trường hợp ngoại lệ đó. Cụ thể:",
+      intellectualPropertyContent2:
+        "Freelancer sẽ không thực hiện hoặc cùng với cá nhân khác thực hiện bất kỳ hành vi nào, bao gồm nhưng không giới hạn ở việc cho phép hoặc ủy quyền cho bất kỳ cá nhân nào sao chép, sao chép công việc, điều chỉnh, thay đổi công việc, dù với bất kỳ mục đích nào, v.v., trừ khi có sự đồng ý bằng văn bản.",
+      intellectualPropertyContent3:
+        "Người dùng sẽ sử dụng dịch vụ nền tảng với mục đích hợp pháp và không thực hiện bất kỳ hành vi nào vi phạm bản quyền hoặc sở hữu trí tuệ của người khác. Trong trường hợp có vi phạm, Công ty có quyền quyết định đình chỉ và hủy tài khoản người dùng của bạn. Quyết định của Công ty là cuối cùng.",
+      intellectualPropertyContent4:
+        "Công ty không cho phép và không khuyến khích bất kỳ hành vi nào có tính chất hoặc đặc điểm vi phạm bản quyền hoặc sở hữu trí tuệ của người khác. Trong trường hợp bạn vi phạm, bạn đồng ý chịu trách nhiệm bồi thường cho chủ sở hữu bản quyền hoặc sở hữu trí tuệ đó một mình.",
       privacyPolicyTitle: "Chính sách bảo mật",
-      privacyPolicyContent1: "Công ty coi trọng và nhận thức được việc bảo vệ an toàn dữ liệu cá nhân của bạn theo pháp luật. Bạn có thể tìm hiểu chính sách bảo mật tại",
+      privacyPolicyContent1:
+        "Công ty coi trọng và nhận thức được việc bảo vệ an toàn dữ liệu cá nhân của bạn theo pháp luật. Bạn có thể tìm hiểu chính sách bảo mật tại",
       privacyPolicyLinkText: "https://fastwork.co/privacy",
-      privacyPolicyContent2: "Chính sách bảo mật này là một phần của thỏa thuận sử dụng này.",
-      privacyPolicyContent3: "Để bảo vệ dữ liệu cá nhân của người dùng, dữ liệu cá nhân của người dùng sẽ được coi là thông tin mật và chỉ được xử lý theo mục đích thu thập theo thỏa thuận sử dụng này và luật pháp. Công ty sẽ không xử lý dữ liệu cá nhân của bạn ngoài các quy định đã nêu trừ khi có sự đồng ý của bạn hoặc có thẩm quyền theo luật pháp.",
-      privacyPolicyContent4: "Công ty có thể truy cập vào cuộc trò chuyện của nhà tuyển dụng và freelancer để kiểm soát việc sử dụng dịch vụ nền tảng không vi phạm thỏa thuận sử dụng, đặc biệt là các vấn đề liên lạc, ví dụ: khuyến khích hoặc dụ dỗ liên hệ để tuyển dụng ngoài nền tảng, liên hệ hỏi hoặc bàn giao công việc bổ sung trên các kênh khác ngoài nền tảng, v.v., cũng như để giải quyết tranh chấp giữa người dùng, để kiểm tra các trường hợp nghi ngờ về hành vi gian lận, bất hợp pháp hoặc trái với trật tự công cộng hoặc đạo đức xã hội thông qua nền tảng, v.v. Việc bạn đăng ký sử dụng dịch vụ nền tảng được coi là chấp nhận các quy định của thỏa thuận sử dụng, theo đó Công ty có quyền theo hợp đồng, lợi ích hợp pháp, cũng như sự đồng ý của bạn trong việc truy cập dữ liệu cá nhân đó.",
-      privacyPolicyContent5: "Bạn đồng ý và cho phép Công ty có quyền sử dụng các nội dung mà người dùng công bố trên nền tảng, ví dụ: văn bản, hình ảnh, video, tên tài khoản, sản phẩm hoặc bất kỳ thông tin nào khác, để công bố cho mục đích quảng bá tiếp thị.",
+      privacyPolicyContent2:
+        "Chính sách bảo mật này là một phần của thỏa thuận sử dụng này.",
+      privacyPolicyContent3:
+        "Để bảo vệ dữ liệu cá nhân của người dùng, dữ liệu cá nhân của người dùng sẽ được coi là thông tin mật và chỉ được xử lý theo mục đích thu thập theo thỏa thuận sử dụng này và luật pháp. Công ty sẽ không xử lý dữ liệu cá nhân của bạn ngoài các quy định đã nêu trừ khi có sự đồng ý của bạn hoặc có thẩm quyền theo luật pháp.",
+      privacyPolicyContent4:
+        "Công ty có thể truy cập vào cuộc trò chuyện của nhà tuyển dụng và freelancer để kiểm soát việc sử dụng dịch vụ nền tảng không vi phạm thỏa thuận sử dụng, đặc biệt là các vấn đề liên lạc, ví dụ: khuyến khích hoặc dụ dỗ liên hệ để tuyển dụng ngoài nền tảng, liên hệ hỏi hoặc bàn giao công việc bổ sung trên các kênh khác ngoài nền tảng, v.v., cũng như để giải quyết tranh chấp giữa người dùng, để kiểm tra các trường hợp nghi ngờ về hành vi gian lận, bất hợp pháp hoặc trái với trật tự công cộng hoặc đạo đức xã hội thông qua nền tảng, v.v. Việc bạn đăng ký sử dụng dịch vụ nền tảng được coi là chấp nhận các quy định của thỏa thuận sử dụng, theo đó Công ty có quyền theo hợp đồng, lợi ích hợp pháp, cũng như sự đồng ý của bạn trong việc truy cập dữ liệu cá nhân đó.",
+      privacyPolicyContent5:
+        "Bạn đồng ý và cho phép Công ty có quyền sử dụng các nội dung mà người dùng công bố trên nền tảng, ví dụ: văn bản, hình ảnh, video, tên tài khoản, sản phẩm hoặc bất kỳ thông tin nào khác, để công bố cho mục đích quảng bá tiếp thị.",
       contactInfoTitle: "Chi tiết liên hệ",
-      contactInfoContent1: "Trong trường hợp bạn muốn hỏi thông tin về thỏa thuận sử dụng này, bao gồm cả việc yêu cầu thực hiện các quyền theo quy định đối với Công ty, bạn có thể liên hệ với Công ty trong giờ làm việc (Thứ Hai - Thứ Sáu, 9:30 - 11:30 và 13:00 - 16:00, nghỉ Thứ Bảy, Chủ Nhật và các ngày lễ) thông qua các chi tiết sau:",
-      contactInfoCompanyName: "Tên công ty: Công ty Fastwork Technologies Co., Ltd.",
-      contactInfoAddress: "Địa chỉ: Số 622, Tòa nhà Emporium Tower, Tầng 24/1-3,8, Đường Sukhumvit, Phường Khlong Tan, Quận Khlong Toei, Bangkok 10110",
+      contactInfoContent1:
+        "Trong trường hợp bạn muốn hỏi thông tin về thỏa thuận sử dụng này, bao gồm cả việc yêu cầu thực hiện các quyền theo quy định đối với Công ty, bạn có thể liên hệ với Công ty trong giờ làm việc (Thứ Hai - Thứ Sáu, 9:30 - 11:30 và 13:00 - 16:00, nghỉ Thứ Bảy, Chủ Nhật và các ngày lễ) thông qua các chi tiết sau:",
+      contactInfoCompanyName:
+        "Tên công ty: Công ty Fastwork Technologies Co., Ltd.",
+      contactInfoAddress:
+        "Địa chỉ: Số 622, Tòa nhà Emporium Tower, Tầng 24/1-3,8, Đường Sukhumvit, Phường Khlong Tan, Quận Khlong Toei, Bangkok 10110",
       contactInfoEmail: "support@ibrowe.com",
       contactInfoPhone: "Số điện thoại: 02-114-7008",
-      contactInfoWebsiteLinkText: "https://static.fastwork.co/contents/support-center"
+      contactInfoWebsiteLinkText:
+        "https://static.fastwork.co/contents/support-center",
     },
     userEdit: {
       addInfo: "Thêm thông tin",
@@ -2316,13 +2850,35 @@ export const vi = {
       startYear: "Năm bắt đầu",
       userEditHeading: "Chỉnh sửa thông tin Freelancer",
       viewProfile: "Xem hồ sơ của bạn",
-      workExperience: "Kinh nghiệm làm việc"
+      workExperience: "Kinh nghiệm làm việc",
     },
-    uploadInstruction:{
+    uploadInstruction: {
       uploadInstruction: "Tải lên ảnh đại diện của bạn",
       title: "Ảnh đại diện",
       selectImage: "Chọn hình ảnh",
       uploadError: "Đã xảy ra lỗi khi tải ảnh lên, vui lòng thử lại.",
-    }
-  }
+    },
+    accountManage: {
+      title: "Quản lý tài khoản",
+      description: "Thiết lập thông tin tài khoản và bảo mật",
+      totpTitle: "Xác thực hai lớp (TOTP)",
+      totpDescription: "Thêm một lớp bảo mật bằng ứng dụng xác thực TOTP.",
+      totpEnabled: "Đã bật",
+      totpDisabled: "Đã tắt",
+      totpStatus: "Trạng thái",
+      totpSuccessEnable: "Đã bật xác thực hai lớp",
+      totpSuccessDisable: "Đã tắt xác thực hai lớp",
+      totpIncorrectCode: "Mã TOTP không chính xác",
+      totpError: "Lỗi khi cập nhật TOTP",
+      totpUnexpectedError: "Đã xảy ra lỗi không mong muốn",
+      passwordTitle: "Đặt mật khẩu",
+      passwordDescription:
+        "Đặt mật khẩu mạnh để bảo vệ tài khoản khỏi truy cập trái phép.",
+      passwordButton: "Đặt mật khẩu",
+      deleteTitle: "Xóa tài khoản",
+      deleteDescription:
+        "Việc xóa tài khoản là vĩnh viễn. Bạn sẽ không thể khôi phục dữ liệu.",
+      deleteButton: "Xóa tài khoản",
+    },
+  },
 };
