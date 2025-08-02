@@ -2,8 +2,6 @@
 import ImageUploadModal from "@/components/AvatarUploadModal";
 import PasswordChangeModal from "@/components/ChangePasswordModal";
 import {ProfileImage} from "@/constants/images";
-import {LanguageFile} from "@/constants/language";
-import {getNamespace} from "@/utils/i18nHelper";
 import {useDateOptions} from "@/hooks/useDateOptions";
 import Image from "next/image";
 import {useState} from "react";
@@ -11,10 +9,11 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {useProfileForm} from "../hooks/useProfileForm";
 import {useImagePicker} from "@/hooks/useImagePicker";
 import {useHttpPost} from "@/hooks/useHttpPost";
+import { useTranslation } from "react-i18next";
 
 
 export default function BasicInformation() {
-  const languageData = getNamespace(LanguageFile.BASIC_INFO);
+  const { t } = useTranslation();
   const {days, months, years} = useDateOptions();
 
   const {execute: uploadImage, isMutating: isUploadMuting} =
@@ -60,10 +59,10 @@ export default function BasicInformation() {
       >
         <div className="border-b-1 px-6">
           <h2 className="text-[16px] font-medium mb-2 text-text-primary">
-            {languageData.sectionAccountInfo}
+            {t("profileInfo.sectionAccountInfo")}
           </h2>
           <p className="text-gray-600 mb-6 text-[14px] font-sans">
-            {languageData.subtitleAccountInfo}
+            {t("profileInfo.subtitleAccountInfo")}
           </p>
         </div>
 
@@ -111,7 +110,7 @@ export default function BasicInformation() {
         <div className="flex flex-col gap-6 px-6 font-sans">
           <div>
             <label className="block text-sm text-text-primary font-semibold mb-2">
-              {languageData.labelUsername}
+              {t("profileInfo.labelUsername")}
             </label>
             <div className="flex items-center">
               <span className="text-gray-500 mr-2">fastwork.co/user/</span>
@@ -124,17 +123,17 @@ export default function BasicInformation() {
 
           <div>
             <label className="block text-sm text-text-primary font-semibold text-gray-600 mb-2">
-              {languageData.labelDisplayName}
+              {t("profileInfo.labelDisplayName")}
             </label>
             <p className="text-[12px] text-gray-500 mb-2">
-              {languageData.nameTrustNote}
+              {t("profileInfo.nameTrustNote")}
             </p>
             <input
               {...register("displayName",
                 {
-                  required: languageData.accountInfo,
+                  required: t("profileInfo.accountInfo"),
                   validate: (value) =>
-                    value.trim().length > 0 || "Invalid display name",
+                    value.trim().length > 0 || t("profileInfo.invalidDisplayName"),
                 })}
               className="text-text-primary w-full px-4 py-2 border border-border-primary rounded-lg outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
             />
@@ -147,7 +146,7 @@ export default function BasicInformation() {
 
           <div className="col-span-2">
             <label className="block text-sm text-text-primary font-semibold text-gray-600 mb-2">
-              {languageData.labelBirthdate}
+              {t("profileInfo.labelBirthdate")}
             </label>
             <div className="grid grid-cols-3 gap-4">
               <select
@@ -156,7 +155,7 @@ export default function BasicInformation() {
                 className="border border-gray-300 rounded-lg px-3 py-2 text-text-primary"
               >
                 <option disabled value="Day">
-                  Day
+                  {t("profileInfo.day")}
                 </option>
                 {days.map((day) => (
                   <option key={day} value={day}>
@@ -170,7 +169,7 @@ export default function BasicInformation() {
                 className="border border-gray-300 rounded-lg px-3 py-2 text-text-primary"
               >
                 <option disabled value="Month">
-                  Month
+                  {t("profileInfo.month")}
                 </option>
                 {months.map((month) => (
                   <option key={month} value={month}>
@@ -184,7 +183,7 @@ export default function BasicInformation() {
                 className="border border-gray-300 rounded-lg px-3 py-2 text-text-primary"
               >
                 <option disabled value="Year">
-                  Year
+                  {t("profileInfo.year")}
                 </option>
                 {years.map((year) => (
                   <option key={year} value={year}>
@@ -202,9 +201,9 @@ export default function BasicInformation() {
               className="submit-button px-4 py-2"
             >
               {isSubmitting || isUpdateMuting || isUploadMuting ? (
-                <span>{languageData.save}...</span>
+                <span>{t("profileInfo.save")}...</span>
               ) : (
-                languageData.save
+                t("profileInfo.save")
               )}
             </button>
           </div>
@@ -213,9 +212,9 @@ export default function BasicInformation() {
 
       <div className="border-1 border-border-primary rounded-lg bg-white mt-5 p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
         <div className="text-[16px] text-text-primary font-medium">
-          {languageData.sectionPassword}
+          {t("profileInfo.sectionPassword")}
           <p className="text-[14px] text-text-secondary font-normal">
-            {languageData.passwordDescription}
+            {t("profileInfo.passwordDescription")}
           </p>
         </div>
         <div className="self-end w-full sm:w-fit">
@@ -223,12 +222,12 @@ export default function BasicInformation() {
             onClick={openModal}
             className="w-full bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            {languageData.buttonSetPassword}
+            {t("profileInfo.buttonSetPassword")}
           </button>
         </div>
       </div>
 
-      <PasswordChangeModal isOpen={isModalOpen} onClose={closeModal} languageData={languageData}/>
+      <PasswordChangeModal isOpen={isModalOpen} onClose={closeModal}/>
       <ImageUploadModal
         isOpen={isImageModalOpen}
         onClose={closeImageModal}
