@@ -11,8 +11,10 @@ import {useState} from "react";
 import ConfirmCloseJob from "../_components/ConfirmCloseJobs";
 import JobBoardTab from "../_components/JobBoardTab";
 import {useHttpGet} from "@/hooks/useHttpGet";
+import {useTranslation} from "react-i18next";
 
 const MyJobs = () => {
+  const {t} = useTranslation();
   const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined); // ตัวจัดการ cursor
 
   const route = useRouter();
@@ -79,22 +81,22 @@ const MyJobs = () => {
                     <thead className="bg-gray-100">
                     <tr>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                        Job Title
+                        {t("profileJob.tableHeaderTitle")}
                       </th>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                        Budget (BATH)
+                        {t("profileJob.tableHeaderBudget")}
                       </th>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                        Status
+                        {t("profileJob.tableHeaderStatus")}
                       </th>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                        Posted on
+                        {t("profileJob.tableHeaderPostDate")}
                       </th>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider min-w-[120px]">
-                        Delivery Deadline
+                        {t("profileJob.tableHeaderDeadline")}
                       </th>
                       <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">
-                        Actions
+                        {t("profileJob.tableHeaderActions")}
                       </th>
                     </tr>
                     </thead>
@@ -157,7 +159,7 @@ const MyJobs = () => {
                                         }}
                                         className="text-blue-600 hover:text-blue-800 font-medium mr-4 transition-colors duration-200"
                                     >
-                                      Edit
+                                      {t("profileJob.tableHeaderActionEdit")}
                                     </button>
                                     <button
                                         onClick={(e) => {
@@ -166,7 +168,7 @@ const MyJobs = () => {
                                         }}
                                         className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200"
                                     >
-                                      Close Job
+                                      {t("profileJob.tableHeaderActionCloseJob")}
                                     </button>
                                   </td>
                                 </tr>

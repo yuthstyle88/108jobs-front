@@ -1839,7 +1839,11 @@ export const vi = {
             noJobsTitleWithFilters: "Không có công việc phù hợp với bộ lọc của bạn",
             noJobsTitleNoFilters: "Hiện chưa có công việc nào",
             noJobsDescriptionWithFilters: "Hãy thử điều chỉnh tiêu chí tìm kiếm hoặc xóa bộ lọc",
-            noJobsDescriptionNoFilters: "Quay lại sau để xem những cơ hội mới"
+            noJobsDescriptionNoFilters: "Quay lại sau để xem những cơ hội mới",
+            tableHeaderStatus: "Trạng thái",
+            tableHeaderActions: "Hành động",
+            tableHeaderActionEdit: "Chỉnh sửa",
+            tableHeaderActionCloseJob: "Đóng công việc"
         },
         profileNavbar: {
             accountInfo: "Thông tin tài khoản",
