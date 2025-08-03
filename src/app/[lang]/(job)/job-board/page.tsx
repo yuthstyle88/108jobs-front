@@ -10,6 +10,7 @@ import {useHttpGet} from "@/hooks/useHttpGet";
 import JobBoardTab from "@/app/[lang]/(job)/job-board/_components/JobBoardTab";
 import {useTranslation} from "react-i18next";
 import {toCamelCaseLastSegment} from "@/utils/helpers";
+import ErrorState from "@/components/ErrorState";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -158,14 +159,7 @@ const JobBoard = () => {
     }, [isJobsLoading]);
 
     if (catalogState.state === "failed") {
-        return (
-            <div className="bg-[#F6F9FE] min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <h2 className="text-xl font-semibold text-red-600 mb-2">{t("global.failedToLoadCategories")}</h2>
-                    <p className="text-gray-600">{t("global.tryRefreshingPage")}</p>
-                </div>
-            </div>
-        );
+        return <ErrorState/>;
     }
 
     return (
