@@ -490,12 +490,10 @@ export function assertExists<T>(value: T | null | undefined, message?: string): 
   return value;
 }
 
-export function slugToCamelCase(slug: string): string {
-  return slug
-      .toLowerCase()
-      .split('-')
-      .map((word, index) =>
-          index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)
-      )
-      .join('');
+export function toCamelCaseLastSegment(path: string): string {
+  const last = path.split('.').pop() || '';
+  return last
+      .replace(/[_-](\w)/g, (_, c) => c.toUpperCase()) // snake_case → camelCase
+      .replace(/^([A-Z])/, (_, c) => c.toLowerCase()); // lowercase first letter if needed
 }
+

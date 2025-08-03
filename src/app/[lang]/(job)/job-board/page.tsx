@@ -9,7 +9,7 @@ import {PostSortType, JobType, GetPosts, IntendedUse} from "lemmy-js-client";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import JobBoardTab from "@/app/[lang]/(job)/job-board/_components/JobBoardTab";
 import {useTranslation} from "react-i18next";
-import {slugToCamelCase} from "@/utils/helpers";
+import {toCamelCaseLastSegment} from "@/utils/helpers";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -142,6 +142,7 @@ const JobBoard = () => {
         });
     }, []);
 
+
     const hasActiveFilters = useMemo(() => {
         return filters.category || filters.jobType || filters.intendedUse ||
             filters.budgetMin || filters.budgetMax || filters.sort;
@@ -205,7 +206,7 @@ const JobBoard = () => {
                                     <option value="">{t("profileJob.dropdownSearchCategory")}</option>
                                     {catalogData?.communities?.map((category) => (
                                         <option key={category.community.id} value={category.community.id}>
-                                            {t(`catalogs.${slugToCamelCase(category.community.slug)}`)}
+                                            {t(`catalogs.${toCamelCaseLastSegment(category.community.path)}`)}
                                         </option>
                                     ))}
                                 </select>
@@ -413,7 +414,7 @@ const JobBoard = () => {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
-                                                {t(`catalogs.${slugToCamelCase(job.community.slug)}`) || "-"}
+                                                {t(`catalogs.${toCamelCaseLastSegment(job.community.path)}`) || "-"}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
                                                 {getJobTypeLabel(job.post.jobType)}

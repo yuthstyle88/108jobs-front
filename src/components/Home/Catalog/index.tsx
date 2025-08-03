@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import {useTranslation} from "react-i18next";
-import {slugToCamelCase} from "@/utils/helpers";
+import {toCamelCaseLastSegment} from "@/utils/helpers";
 
 type Props = {
     serviceCatalogs: CommunityNodeView[];
@@ -71,7 +71,7 @@ const CatalogBanner = (props: Props) => {
                                             />
                                         </div>
                                         <p className="text-sm font-medium text-gray-800 leading-tight">
-                                            {t(`catalogs.${slugToCamelCase(catalog.community.slug)}`)}
+                                            {t(`catalogs.${toCamelCaseLastSegment(catalog.community.slug)}`)}
                                         </p>
                                     </div>
                                 </div>
@@ -99,7 +99,7 @@ const CatalogBanner = (props: Props) => {
                                             <div
                                                 className="relative flex items-end h-full px-4 py-3 text-white bg-[rgba(0,0,0,0.6)] font-semibold transition-all duration-150">
                         <span className="group-hover:-translate-y-1">
-                          {t(`catalogs.${slugToCamelCase(community.slug)}`)}
+                          {t(`catalogs.${toCamelCaseLastSegment(community.path)}`)}
                         </span>
                                             </div>
                                         </div>
