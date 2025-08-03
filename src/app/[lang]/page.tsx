@@ -30,7 +30,6 @@ import {LandingImage} from "@/constants/images";
 import SpAdsSlider from "@/containers/SpAdsSlider";
 import SpCatalog from "@/containers/SpCatalog";
 import SpHeader from "@/containers/SpHeader";
-import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 import Link from "next/link";
 import {useState} from "react";
 import {useTranslation} from "react-i18next";
@@ -83,7 +82,6 @@ export default function Home() {
 
   return (
     <div className="min-h-[100vh] bg-white">
-      {/* <Header type="transparent" languageData={globalLanguageData} /> */}
       <div className="hidden sm:block">
         <Header type="transparent"/>
       </div>
