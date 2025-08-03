@@ -3,8 +3,10 @@
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
 import React from 'react'
+import {useTranslation} from "react-i18next";
 
 const JobBoardTab = () => {
+  const {t} = useTranslation();
   const pathname = usePathname();
   const pathWithoutLang = '/' + pathname.split('/').slice(2).join('/');
 
@@ -24,7 +26,7 @@ const JobBoardTab = () => {
               : 'text-gray-500 border-transparent hover:text-gray-700'
             }`}
       >
-        All Job Posts
+          {t("profileJob.allPostJobs")}
       </Link>
 
       <Link prefetch={false}
@@ -34,7 +36,7 @@ const JobBoardTab = () => {
               : 'text-gray-500 border-transparent hover:text-gray-700'
             }`}
       >
-        Jobs you have proposed
+          {t("profileJob.proposalJobs")}
       </Link>
 
       <Link prefetch={false}
@@ -44,7 +46,7 @@ const JobBoardTab = () => {
               : 'text-gray-500 border-transparent hover:text-gray-700'
             }`}
       >
-        Jobs you have posted
+          {t("profileJob.postedJobs")}
       </Link>
     </div>
   )

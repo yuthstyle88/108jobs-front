@@ -14,7 +14,7 @@ import LoadingCircle from "@/components/LoadingCircle";
 import {z} from "zod";
 import {useLanguage} from "@/contexts/LanguageContext";
 import {getNumericCode} from "@/actions/getClientCurrentLanguage";
-import {stripEmpty} from "@/utils/helpers";
+import {slugToCamelCase, stripEmpty} from "@/utils/helpers";
 import {useTranslation} from "react-i18next";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
@@ -389,7 +389,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                                     {catalogData?.communities
                                         .map((catalog) => (
                                             <option key={catalog.community.id} value={catalog.community.id}>
-                                                {catalog.community.name}
+                                                {t(`catalogs.${slugToCamelCase(catalog.community.slug)}`)}
                                             </option>
                                         ))}
                                 </select>

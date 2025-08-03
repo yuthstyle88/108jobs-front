@@ -19,8 +19,10 @@ export default function ProfileLayout({
       <div className="block sm:hidden">
         <SpHeader/>
       </div>
-      <section className="pt-[5.5rem] sm:pt-[4.5rem] bg-white min-h-screen">
-        {children}
+      <section className="pt-[5.5rem] sm:pt-[4.5rem] px-4 sm:px-6 lg:px-8 bg-white min-h-screen">
+          <div className="max-w-[1280px] mx-auto w-full">
+              {children}
+          </div>
       </section>
     </>
   );
