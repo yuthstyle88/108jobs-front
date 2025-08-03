@@ -328,6 +328,7 @@ export const th = {
             invalidName: "ชื่อผู้ใช้ไม่ถูกต้อง",
             titleSignInCreateAccount: "เข้าสู่ระบบ FastJob",
             userNotFound: "ชื่อผู้ใช้หรืออีเมลไม่มีอยู่ในระบบ",
+            roleSelectionLabel: "คุณต้องการเป็น:",
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "การตั้งค่าบัญชี",

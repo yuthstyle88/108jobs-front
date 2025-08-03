@@ -328,6 +328,7 @@ export const vi = {
             invalidName: "Tên người dùng không hợp lệ",
             titleSignInCreateAccount: "Đăng nhập FastJob",
             userNotFound: "Tên người dùng hoặc email không tồn tại",
+            roleSelectionLabel: "Bạn muốn trở thành:",
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "Cài đặt tài khoản",

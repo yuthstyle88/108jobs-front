@@ -1,5 +1,5 @@
 import {isSuccess, RequestState} from "@/services/HttpService";
-import {GetSiteResponse, PaginationCursor, UploadImageResponse} from "lemmy-js-client";
+import {GetSiteResponse, JobType, PaginationCursor, UploadImageResponse} from "lemmy-js-client";
 import {IncomingHttpHeaders} from "http";
 import * as cookie from "cookie";
 import {authCookieName} from "@/utils/config";
@@ -496,4 +496,41 @@ export function toCamelCaseLastSegment(path: string): string {
       .replace(/[_-](\w)/g, (_, c) => c.toUpperCase()) // snake_case → camelCase
       .replace(/^([A-Z])/, (_, c) => c.toLowerCase()); // lowercase first letter if needed
 }
+
+export const formatDate = (dateString: string): string => {
+  if (!dateString || dateString === "-") return "-";
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("th-TH-u-ca-gregory", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  } catch (error) {
+    console.error("Error formatting date:", error);
+    return "-";
+  }
+};
+
+export const formatBudget = (budget: string | number | null | undefined): string => {
+  if (!budget) return "-";
+  try {
+    const amount = parseFloat(String(budget));
+    return isNaN(amount) ? "-" : amount.toLocaleString();
+  } catch (error) {
+    console.error("Error formatting budget:", error);
+    return "-";
+  }
+};
+
+export const getJobTypeLabel = (jobType: string | null | undefined, t: (key: string) => string): string => {
+  if (!jobType) return "-";
+  const typeMap: Record<string, string> = {
+    [JobType.FullTime]: t("profileJob.tableFullTimeLabel"),
+    [JobType.PartTime]: t("profileJob.tablePartTimeLabel"),
+    [JobType.Contract]: t("profileJob.tableContractLabel"),
+    [JobType.Freelance]: t("profileJob.tableFreelanceLabel"),
+  };
+  return typeMap[jobType] || jobType;
+};
 

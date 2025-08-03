@@ -9,7 +9,7 @@ import {PostSortType, JobType, GetPosts, IntendedUse} from "lemmy-js-client";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import JobBoardTab from "@/app/[lang]/(job)/job-board/_components/JobBoardTab";
 import {useTranslation} from "react-i18next";
-import {toCamelCaseLastSegment} from "@/utils/helpers";
+import {formatBudget, formatDate, getJobTypeLabel, toCamelCaseLastSegment} from "@/utils/helpers";
 import ErrorState from "@/components/ErrorState";
 
 const ITEMS_PER_PAGE = 20;
@@ -64,43 +64,6 @@ const JobBoard = () => {
     const hasPreviousPage = useMemo(() => cursorHistory.length > 0, [cursorHistory]);
     const hasNextPage = useMemo(() => !!jobPostsPagination?.nextPage, [jobPostsPagination?.nextPage]);
     const totalJobs = useMemo(() => jobPostsPagination?.posts?.length || 0, [jobPostsPagination?.posts]);
-
-    const formatDate = useCallback((dateString: string) => {
-        if (!dateString || dateString === "-") return "-";
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString("th-TH-u-ca-gregory", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-            });
-        } catch (error) {
-            console.error("Error formatting date:", error);
-            return "-";
-        }
-    }, []);
-
-    const formatBudget = useCallback((budget: string | number | null | undefined) => {
-        if (!budget) return "-";
-        try {
-            const amount = parseFloat(String(budget));
-            return isNaN(amount) ? "-" : amount.toLocaleString();
-        } catch (error) {
-            console.error("Error formatting budget:", error);
-            return "-";
-        }
-    }, []);
-
-    const getJobTypeLabel = useCallback((jobType: string | null | undefined) => {
-        if (!jobType) return "-";
-        const typeMap: Record<string, string> = {
-            [JobType.FullTime]: t("profileJob.tableFullTimeLabel"),
-            [JobType.PartTime]: t("profileJob.tablePartTimeLabel"),
-            [JobType.Contract]: t("profileJob.tableContractLabel"),
-            [JobType.Freelance]: t("profileJob.tableFreelanceLabel"),
-        };
-        return typeMap[jobType] || jobType;
-    }, []);
 
     const handleFilterChange = useCallback((key: keyof FilterState, value: unknown) => {
         setFilters(prev => ({...prev, [key]: value}));
@@ -226,10 +189,10 @@ const JobBoard = () => {
                                     onChange={(e) => handleFilterChange("jobType", e.target.value as JobType || undefined)}
                                 >
                                     <option value="">{t("profileJob.tableAllJobTypesPlaceholder")}</option>
-                                    <option value={JobType.FullTime}>{getJobTypeLabel(JobType.FullTime)}</option>
-                                    <option value={JobType.PartTime}>{getJobTypeLabel(JobType.PartTime)}</option>
-                                    <option value={JobType.Contract}>{getJobTypeLabel(JobType.Contract)}</option>
-                                    <option value={JobType.Freelance}>{getJobTypeLabel(JobType.Freelance)}</option>
+                                    <option value={JobType.FullTime}>{getJobTypeLabel(JobType.FullTime, t)}</option>
+                                    <option value={JobType.PartTime}>{getJobTypeLabel(JobType.PartTime, t)}</option>
+                                    <option value={JobType.Contract}>{getJobTypeLabel(JobType.Contract, t)}</option>
+                                    <option value={JobType.Freelance}>{getJobTypeLabel(JobType.Freelance, t)}</option>
                                 </select>
                                 <div
                                     className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-gray-500 top-7">
@@ -356,7 +319,7 @@ const JobBoard = () => {
                                         {t("profileJob.tableHeaderDeadline")}
                                     </th>
                                     <th scope="col" className="relative px-6 py-3">
-                                        <span className="sr-only">Actions</span>
+                                        <span className="sr-only">{t("profileJob.tableHeaderActions")}</span>
                                     </th>
                                 </tr>
                                 </thead>
@@ -411,7 +374,7 @@ const JobBoard = () => {
                                                 {t(`catalogs.${toCamelCaseLastSegment(job.community.path)}`) || "-"}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
-                                                {getJobTypeLabel(job.post.jobType)}
+                                                {getJobTypeLabel(job.post.jobType, t)}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-base text-gray-900 font-medium">
                                                 {formatBudget(job.post.budget)}

@@ -331,6 +331,7 @@ export const en = {
             invalidName: "Username is not valid",
             titleSignInCreateAccount: "Sign in FastJob",
             userNotFound: "Username or email does not exist",
+            roleSelectionLabel: "You want to be a/an:",
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "Account Settings",
