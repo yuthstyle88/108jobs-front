@@ -1,6 +1,6 @@
 'use client'
 import React, {useCallback, useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
+import {notFound, useRouter} from "next/navigation";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import useNotification from "@/hooks/useNotification";
 import {useHttpGet} from "@/hooks/useHttpGet";
@@ -14,9 +14,10 @@ import LoadingCircle from "@/components/LoadingCircle";
 import {z} from "zod";
 import {useLanguage} from "@/contexts/LanguageContext";
 import {getNumericCode} from "@/actions/getClientCurrentLanguage";
-import {stripEmpty} from "@/utils/helpers";
+import {slugToCamelCase, stripEmpty} from "@/utils/helpers";
 import {useTranslation} from "react-i18next";
 import {REQUEST_STATE} from "@/services/HttpService";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 
 interface PostFormProps {
@@ -69,6 +70,13 @@ export const PostForm: React.FC<PostFormProps> = ({
                                                       postView,
                                                       mode
                                                   }) => {
+    const { person } = useMyUser();
+    if (mode === "edit") {
+        const isOwner = postView?.creator.id === person?.id;
+        if (!isOwner) {
+            notFound();
+        }
+    }
 
     const router = useRouter();
     const {lang} = useLanguage();
@@ -78,6 +86,9 @@ export const PostForm: React.FC<PostFormProps> = ({
 
     const {execute: createPost, isMutating} = useHttpPost("createPost");
     const {execute: editPost} = useHttpPost("editPost");
+    const title = mode === "create"
+        ? t('createJob.pageTitle')
+        : t('jobBoardDetail.jobDetail');
 
     const {successMessage, errorMessage} = useNotification();
     const [postId, setPostId] = useState<PostId>(0);
@@ -183,7 +194,7 @@ export const PostForm: React.FC<PostFormProps> = ({
             <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8">
                 <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
                     <h1 className="text-4xl font-bold text-gray-900 mb-10 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                        {t("createJob.pageTitle")}
+                        {title}
                     </h1>
 
                     <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start">
@@ -378,7 +389,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                                     {catalogData?.communities
                                         .map((catalog) => (
                                             <option key={catalog.community.id} value={catalog.community.id}>
-                                                {catalog.community.name}
+                                                {t(`catalogs.${slugToCamelCase(catalog.community.slug)}`)}
                                             </option>
                                         ))}
                                 </select>

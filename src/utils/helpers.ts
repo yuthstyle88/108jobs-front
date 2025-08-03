@@ -489,3 +489,13 @@ export function assertExists<T>(value: T | null | undefined, message?: string): 
   if (value == null) throw new Error(message ?? "Expected value to be present but got null or undefined");
   return value;
 }
+
+export function slugToCamelCase(slug: string): string {
+  return slug
+      .toLowerCase()
+      .split('-')
+      .map((word, index) =>
+          index === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)
+      )
+      .join('');
+}
