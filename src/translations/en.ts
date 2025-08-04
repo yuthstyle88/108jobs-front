@@ -272,6 +272,10 @@ export const en = {
                 "If the conditions are violated, we will refund your money.",
             labelUsername: "Username",
             labelUsernameOrEmail: "Username or email",
+            labelOTP: "Enter OTP for verification",
+            btnVerifyOTP: "Verify OTP",
+            placeholderOTP: "Enter OTP",
+            invalidOTP: "Invalid OTP",
             linkCreateAccount: "Create an account",
             linkForgotPassword: "Forgot your password?",
             messageEnterCode:

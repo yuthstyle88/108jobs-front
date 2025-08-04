@@ -124,7 +124,6 @@ export default function OAuthCallbackPage() {
 
 // ฟังก์ชันช่วยจัดการการเข้าสู่ระบบที่สำเร็จ
 async function handleLoginSuccess(loginData: LoginResponse, prev?: string) {
-  const applicationPending = loginData.applicationPending;
   try {
     UserService.Instance.login({
       res: loginData,
@@ -146,10 +145,6 @@ async function handleLoginSuccess(loginData: LoginResponse, prev?: string) {
         res: loginData,
         sharedKey: sharedKeyHex
       });
-    }
-    if (applicationPending) {
-      window.location.href = "/update-term";
-      return
     }
     if (prev) {
       window.location.href = prev;

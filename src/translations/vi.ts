@@ -272,6 +272,10 @@ export const vi = {
             labelRefundPolicy: "Nếu vi phạm điều kiện, chúng tôi sẽ hoàn tiền.",
             labelUsername: "Tên người dùng",
             labelUsernameOrEmail: "Tên người dùng hoặc email",
+            labelOTP: "Enter OTP for verification",
+            btnVerifyOTP: "Verify OTP",
+            placeholderOTP: "Enter OTP",
+            invalidOTP: "Invalid OTP",
             linkCreateAccount: "Tạo tài khoản",
             linkForgotPassword: "Quên mật khẩu?",
             messageEnterCode:

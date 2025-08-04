@@ -11,8 +11,9 @@ import {getNamespace} from "@/utils/i18nHelper";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
+import {VerifyOTPForm} from "@/components/Authentication/VerifyOTP";
 
-type ViewState = "register" | "verify-email";
+type ViewState = "register" | "verify-otp";
 
 export default function RegisterPage() {
   const route = useRouter();
@@ -20,6 +21,7 @@ export default function RegisterPage() {
 
   const [currentView, setCurrentView] = useState<ViewState>("register");
   const [dataDataRegister, setDataDataRegister] = useState<RegisterDataProps | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   return (
     <div
@@ -108,21 +110,23 @@ export default function RegisterPage() {
           />
           {currentView === "register" && (
             <AuthFormContainer
-              title={`Sign up FastJob`}
+              title={`Sign up`}
               onBack={() => route.push("/login")}
             >
               <RegisterForm
-                switchToVerifyEmail={() => setCurrentView("verify-email")}
-                setDataRegister={setDataDataRegister} history={undefined} setApiError={function (err: string): void {
-                throw new Error("Function not implemented.");
-              }}/>
+                switchToVerifyOTP={() => setCurrentView("verify-otp")}
+                setApiError={setApiError}
+              />
+              {apiError && (
+                <p className="text-red-600 text-sm mt-2">{apiError}</p>
+              )}
             </AuthFormContainer>
           )}
-          {currentView === "verify-email" && (
+          {currentView === "verify-otp" && (
             <AuthFormContainer
-              title={`Verify register email`}
+              title={`Verify OTP`}
             >
-              <VerifyEmailConfirm/>
+              <VerifyOTPForm/>
             </AuthFormContainer>
           )}
 

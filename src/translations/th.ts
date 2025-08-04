@@ -269,6 +269,10 @@ export const th = {
             labelProfessionalLicense: "มีใบประกอบวิชาชีพ",
             labelRefundPolicy: "ผิดเงื่อนไข ยินดีคืนเงิน",
             labelUsername: "ชื่อผู้ใช้",
+             labelOTP: "กรอกรหัสเพื่อตรวจสอบตัวตน",
+            btnVerifyOTP: "ตรวจสอบรหัส",
+            placeholderOTP: "กรอกรหัส",
+            invalidOTP: "กรอกรหัสไม่ถูกต้อง",
             linkCreateAccount: "สร้างบัญชี",
             linkForgotPassword: "ลืมรหัสผ่าน?",
             messageEnterCode:
