@@ -19,7 +19,7 @@ function getUserRoleAndAppAccept(token: string): [RoleType, boolean] | null {
     payload?.role === RoleType.Employer ||
     payload?.role === RoleType.Freelancer
   ) {
-    return [payload.role, !payload.applicationPending];
+    return [payload.role, !payload.accepted_application];
   }
   return null;
 }

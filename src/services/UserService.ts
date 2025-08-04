@@ -8,14 +8,14 @@ import {toast} from "sonner";
 import {authCookieName} from "@/utils/config";
 import {VALID_LANGUAGES} from "@/constants/language";
 
-interface Claims {
+export interface Claims {
   sub: number;
   iss: string;
   iat: number;
   email: string;
   role: string;
   lang: string;
-  applicationPending: boolean
+  accepted_application: boolean
 }
 
 interface AuthInfo {
@@ -130,6 +130,6 @@ export class UserService {
     const claims = jwtDecode<Claims>(auth);
     this.authInfo = {auth, claims, sharedKey};
     this.currentLanguage = claims?.lang;
-    this.applicationPending = claims?.applicationPending;
+    this.applicationPending = claims?.accepted_application;
   }
 }
