@@ -23,17 +23,15 @@ function decodePayload(token: string) {
   }
 }
 
-function getUserRole(req: NextRequest): RoleType | null {
+function getUserRoleAndAppAccept(req: NextRequest): [RoleType, boolean] | null {
   const token = req.cookies.get(authCookieName)?.value;
-  const url = new URL(req.url); // แปลง Request URL เป็น Object
   if (!token) return null;
-
   const payload = decodePayload(token);
   if (
     payload?.role === RoleType.Employer ||
     payload?.role === RoleType.Freelancer
   ) {
-    return payload.role;
+    return [payload.role, payload.applicationPending];
   }
   return null;
 }
@@ -114,7 +112,14 @@ export async function middleware(req: NextRequest) {
         origin)
     );
   }
-  const userRole = getUserRole(req);
+  const [userRole, applicationPending] = getUserRoleAndAppAccept(req) ?? [];
+
+  if (applicationPending) {
+    return NextResponse.redirect(
+      new URL(`${langPrefix}/update-term`,
+        origin)
+    );
+  }
 
   if (cleanPathname.startsWith("/seller") && userRole !== RoleType.Freelancer) {
     return NextResponse.redirect(
