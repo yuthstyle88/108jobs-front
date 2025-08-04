@@ -29,6 +29,7 @@ export const vi = {
             descriptionMinLength: "Mô tả công việc phải có ít nhất 20 ký tự",
             budgetPositive: "Ngân sách phải là số dương",
             budgetRequired: "Cần phải có ngân sách",
+            urlInvalid: "URL is invalid",
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",

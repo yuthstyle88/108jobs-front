@@ -29,6 +29,7 @@ export const th = {
             descriptionMinLength: "รายละเอียดงานต้องมีอย่างน้อย 20 ตัวอักษร",
             budgetPositive: "Budget ต้องเป็นตัวเลขบวก",
             budgetRequired: "จำเป็นต้องระบุงบประมาณ",
+            urlInvalid: "Url ไม่ถูกต้อง",
         },
         allCategories: {
             allJobCategories: "หมวดหมู่งานทั้งหมด",

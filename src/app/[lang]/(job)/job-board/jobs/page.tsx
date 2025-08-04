@@ -13,6 +13,7 @@ import JobBoardTab from "../_components/JobBoardTab";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {useTranslation} from "react-i18next";
 
+
 const MyJobs = () => {
   const {t} = useTranslation();
   const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined); // ตัวจัดการ cursor

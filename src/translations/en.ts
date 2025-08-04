@@ -29,6 +29,7 @@ export const en = {
             descriptionMinLength: "Job description must be at least 20 characters",
             budgetPositive: "Budget must be a positive number",
             budgetRequired: "Budget is required",
+            urlInvalid: "URL is invalid",
         },
         allCategories: {
             allJobCategories: "All Job Categories",
