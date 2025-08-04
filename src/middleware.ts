@@ -2,6 +2,8 @@ import {type NextRequest, NextResponse} from "next/server";
 import {middleware as langMiddleware} from "./middleware-lang";
 import {authCookieName} from "@/utils/config";
 import {VALID_LANGUAGES} from "@/constants/language";
+import {jwtDecode} from "jwt-decode";
+import {Claims} from "@/services/UserService";
 
 // can't import from a type
 export enum RoleType {
@@ -9,29 +11,15 @@ export enum RoleType {
   Freelancer = "Freelancer",
 }
 
-function decodePayload(token: string) {
-  try {
-    const payloadBase64 = token.split(".")[1];
-    const payloadJson = atob(
-      payloadBase64.replace(/-/g,
-        "+").replace(/_/g,
-        "/")
-    );
-    return JSON.parse(payloadJson);
-  } catch {
-    return null;
-  }
-}
-
-function getUserRoleAndAppAccept(req: NextRequest): [RoleType, boolean] | null {
-  const token = req.cookies.get(authCookieName)?.value;
+function getUserRoleAndAppAccept(token: string): [RoleType, boolean] | null {
   if (!token) return null;
-  const payload = decodePayload(token);
+  const payload = jwtDecode<Claims>(token);
+  if (!payload) return null;
   if (
     payload?.role === RoleType.Employer ||
     payload?.role === RoleType.Freelancer
   ) {
-    return [payload.role, payload.applicationPending];
+    return [payload.role, !payload.applicationPending];
   }
   return null;
 }
@@ -73,7 +61,8 @@ function getRolesAllowedForPath(pathname: string): RoleType[] {
 }
 
 export async function middleware(req: NextRequest) {
-
+  const rawCookie = req.cookies.get(authCookieName)?.value ?? "";
+  const [userRole, applicationPending] = getUserRoleAndAppAccept(rawCookie) ?? [];
   const {pathname, origin} = req.nextUrl;
 
   const langRedirect = langMiddleware(req);
@@ -87,12 +76,16 @@ export async function middleware(req: NextRequest) {
   const cleanPathname = pathname.replace(langPrefix,
     "") || "/";
 
+  if (applicationPending === true && cleanPathname !== "/update-term") {
+    return NextResponse.redirect(
+      new URL(`${langPrefix}/update-term`, origin)
+    );
+  }
 
   if (publicRoutes.includes(cleanPathname)) {
     return NextResponse.next();
   }
 
-  const rawCookie = req.cookies.get(authCookieName)?.value;
   const isLoggedIn = Boolean(rawCookie);
 
   if (cleanPathname === "/login") {
@@ -112,14 +105,7 @@ export async function middleware(req: NextRequest) {
         origin)
     );
   }
-  const [userRole, applicationPending] = getUserRoleAndAppAccept(req) ?? [];
 
-  if (applicationPending) {
-    return NextResponse.redirect(
-      new URL(`${langPrefix}/update-term`,
-        origin)
-    );
-  }
 
   if (cleanPathname.startsWith("/seller") && userRole !== RoleType.Freelancer) {
     return NextResponse.redirect(
