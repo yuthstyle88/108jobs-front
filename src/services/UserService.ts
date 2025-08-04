@@ -15,6 +15,7 @@ interface Claims {
   email: string;
   role: string;
   lang: string;
+  applicationPending: boolean
 }
 
 interface AuthInfo {
@@ -28,6 +29,7 @@ export class UserService {
   public myUserInfo?: MyUserInfo;
   public authInfo?: AuthInfo;
   public currentLanguage: string = "th";
+  public applicationPending: boolean = false;
 
   private constructor() {
     this.#setAuthInfo();
@@ -39,6 +41,10 @@ export class UserService {
 
   get getLanguage(): string {
     return this.currentLanguage;
+  }
+
+  get getApplicationPending(): boolean {
+    return this.applicationPending;
   }
 
   get isLoggedIn() {
@@ -124,5 +130,6 @@ export class UserService {
     const claims = jwtDecode<Claims>(auth);
     this.authInfo = {auth, claims, sharedKey};
     this.currentLanguage = claims?.lang;
+    this.applicationPending = claims?.applicationPending;
   }
 }

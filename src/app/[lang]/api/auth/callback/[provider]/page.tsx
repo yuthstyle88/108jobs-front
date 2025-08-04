@@ -7,6 +7,7 @@ import {arrayBufferToHex, exportPublicKey, generateEcKeyPair, importEcPublicKeyH
 import {UserService} from "@/services";
 import {HttpService} from "@/services/HttpService";
 import {useTranslation} from "react-i18next";
+import {LoginResponse} from "@/lib/lemmy-js-client/src";
 
 // ฟังก์ชันสำหรับดึงค่า query parameters
 function useOAuthCallbackQueryParams() {
@@ -122,7 +123,8 @@ export default function OAuthCallbackPage() {
 }
 
 // ฟังก์ชันช่วยจัดการการเข้าสู่ระบบที่สำเร็จ
-async function handleLoginSuccess(loginData: any, prev?: string) {
+async function handleLoginSuccess(loginData: LoginResponse, prev?: string) {
+  const applicationPending = loginData.applicationPending;
   try {
     UserService.Instance.login({
       res: loginData,
@@ -145,7 +147,10 @@ async function handleLoginSuccess(loginData: any, prev?: string) {
         sharedKey: sharedKeyHex
       });
     }
-
+    if (applicationPending) {
+      window.location.href = "/update-term";
+      return
+    }
     if (prev) {
       window.location.href = prev;
     } else if (window.history.length > 1) {
