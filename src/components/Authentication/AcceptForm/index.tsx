@@ -16,14 +16,10 @@ import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {RegisterDataProps} from "@/types/register-data";
 
-type UpdateFormProps = {
-  switchToVerifyEmail: () => void,
-  setDataUpdate?: Dispatch<SetStateAction<RegisterDataProps | null>>
-};
+type UpdateFormProps = {};
 
 export const AcceptForm = ({
-  switchToVerifyEmail,
-  setDataUpdate
+
 }: UpdateFormProps) => {
   const authen = getNamespace(LanguageFile.AUTHEN);
 
@@ -100,7 +96,7 @@ export const AcceptForm = ({
 
     if (isSuccess(res)) {
       UserService.Instance.login({res: res.data});
-      switchToVerifyEmail();      // หรือ logic อื่นตามต้องการ
+      window.location.href = "/";
     } else if (res.state === "failed") {
       setApiError(res.err.message);
     }

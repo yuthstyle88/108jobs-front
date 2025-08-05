@@ -11,15 +11,12 @@ import {useState} from "react";
 import {AcceptForm} from "@/components/Authentication/AcceptForm";
 
 
-type ViewState = "update-term" | "verify-password";
+type ViewState = "update-term";
 
 export default function RegisterTermPage() {
   const loginLanguageData = getNamespace(LanguageFile.AUTHEN);
 
-
   const [currentView, setCurrentView] = useState<ViewState>("update-term");
-  const [dataDataUpdate, setDataUpdate] = useState<RegisterDataProps | null>(null);
-
 
   return (
     <div
@@ -111,10 +108,7 @@ export default function RegisterTermPage() {
               title={`Sign up FastJob`}
               onBack={() => setCurrentView("update-term")}
             >
-              <AcceptForm
-                switchToVerifyEmail={() => setCurrentView("verify-password")}
-                setDataUpdate={setDataUpdate}
-              />
+              <AcceptForm/>
             </AuthFormContainer>
           )}
 
