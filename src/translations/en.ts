@@ -331,7 +331,7 @@ export const en = {
             errorFetchingSiteData:
                 "Error fetching site data. Please refresh the page.",
             signUpWithSocial: "Or sign up with",
-            usernameAlreadyExists: "Username already exist",
+            usernameAlreadyExists: "Username already exist please try to login",
             emailAlreadyExists: "Email already exist",
             invalidName: "Username is not valid",
             titleSignInCreateAccount: "Sign in FastJob",

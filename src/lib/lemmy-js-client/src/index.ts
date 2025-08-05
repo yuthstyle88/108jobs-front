@@ -340,7 +340,6 @@ export type {UploadImageResponse} from "./types/UploadImageResponse";
 export type {UserBlockInstanceParams} from "./types/UserBlockInstanceParams";
 export type {UserSettingsBackup} from "./types/UserSettingsBackup";
 export type {VerifyEmail} from "./types/VerifyEmail";
-export type {VerifyOTP} from "./types/VerifyOTP";
 export type {VoteShow} from "./types/VoteShow";
 export type {VoteView} from "./types/VoteView";
 export type {PersonCommentMentionView} from "./types/PersonCommentMentionView";

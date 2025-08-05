@@ -17,7 +17,7 @@ interface VerifyOTPProps {
 
 const createOTPSchema = (t: any) => z
 .object({
-  otp: z.string().min(5,t("authen.invalidOTP")),
+  code: z.string().min(5,t("authen.invalidOTP")),
 });
 
 export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
@@ -51,8 +51,8 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
   } = formMethods;
   const onSubmit = useCallback(async(data: any) => {
 
-      const verifyRes = await HttpService.client.verifyOTP({
-        otp: data.otp,
+      const verifyRes = await HttpService.client.verifyEmail({
+        code: data.code,
       });
       switch (verifyRes.state) {
         case REQUEST_STATE.FAILED: {
@@ -83,10 +83,10 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
       <CustomInput
         label={t("authen.labelOTP")}
         type="string"
-        name={"otp"}
+        name={"code"}
         placeholder={t("authen.placeholderOTP")}
-        register={register("otp")}
-        error={errors.otp?.message}
+        register={register("code")}
+        error={errors.code?.message}
       />
 
       <div className="text-center">

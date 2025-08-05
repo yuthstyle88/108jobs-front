@@ -328,7 +328,7 @@ export const th = {
             apiErrorState: "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
             errorFetchingSiteData: "เกิดข้อผิดพลาดในการดึงข้อมูล กรุณารีเฟรชหน้า",
             signUpWithSocial: "หรือสมัครด้วย",
-            usernameAlreadyExists: "ชื่อผู้ใช้นี้มีอยู่แล้ว",
+            usernameAlreadyExists: "ชื่อผู้ใช้นี้มีอยู่แล้วกรุณาล็อกอิน",
             emailAlreadyExists: "อีเมลนี้มีอยู่แล้ว",
             invalidName: "ชื่อผู้ใช้ไม่ถูกต้อง",
             titleSignInCreateAccount: "เข้าสู่ระบบ FastJob",

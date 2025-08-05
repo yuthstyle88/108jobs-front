@@ -66,21 +66,21 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     });
   };
   const onSubmit = useCallback(async(data: any) => {
-      if (switchToVerifyOTP) {
-        switchToVerifyOTP();
-      }
+
       const registerRes = await HttpService.client.register({
         email: data.email,
         answer: "FastJob"
       });
       switch (registerRes.state) {
         case REQUEST_STATE.FAILED: {
-          handleApiError(registerRes.err.name);
+          handleApiError(t(`authen.${registerRes.err.name}`));
           break;
         }
         case REQUEST_STATE.SUCCESS: {
-          if (switchToVerifyOTP) {
-            switchToVerifyOTP();
+          if (registerRes.data.verifyEmailSent){
+            if (switchToVerifyOTP) {
+              switchToVerifyOTP();
+            }
           }
         }
         break;
@@ -96,7 +96,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       )}
       {errors.root && (
         <p className="text-red-500 text-sm text-center mb-4">
-          {errors.root.message}
+          {errors.root.message}sss
         </p>
       )}
       <CustomInput

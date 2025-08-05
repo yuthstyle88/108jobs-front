@@ -205,7 +205,6 @@ import type {UpdateAvailable} from "./types/UpdateAvailable";
 import type {UpsertCard} from "./types/UpsertCard";
 import type {SaveAddress} from "./types/SaveAddress";
 import {CountriesResponse} from "./types/CountriesResponse";
-import type {VerifyOTP} from "./types/VerifyOTP";
 
 enum HttpType {
   Get = "GET",
@@ -1941,30 +1940,13 @@ export class LemmyHttp extends Controller {
     @Body() form: VerifyEmail,
     @Inject() options?: RequestOptions,
   ) {
-    return this.#wrapper<VerifyEmail, SuccessResponse>(
+    return this.#wrapper<VerifyEmail, LoginResponse>(
       HttpType.Post,
       "/account/auth/verify-email",
       form,
       options,
     );
   }
-  /**
-   * @summary send a verification email.
-   */
-  @Post("/account/auth/verify-otp")
-  @Tags("Account")
-  async verifyOTP(
-    @Body() form: VerifyOTP,
-    @Inject() options?: RequestOptions,
-  ) {
-    return this.#wrapper<VerifyOTP, LoginResponse>(
-      HttpType.Post,
-      "/account/auth/verify-otp",
-      form,
-      options,
-    );
-  }
-
   /**
    * @summary List your saved content.
    */
