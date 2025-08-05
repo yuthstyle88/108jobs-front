@@ -563,7 +563,7 @@ export const vi = {
             jobDescriptionPlaceholder: "Mô tả công việc của bạn tại đây...",
             englishSpeakerLabel: "Yêu cầu freelancer nói tiếng Anh",
             serviceCategoryLabel: "Danh mục dịch vụ",
-            exampleUrl: "Ví dụ URL(tuỳ chọn)",
+            exampleUrl: "Ví dụ URL",
             serviceCategoryPlaceholderUrl: "ví dụ: https://example.com",
             serviceCategoryPlaceholderSelect: "Chọn danh mục dịch vụ...",
             budgetLabel: "Ngân sách",
@@ -579,6 +579,7 @@ export const vi = {
             anonymousPostLabel: "Đăng bài ẩn danh",
             previewButton: "Xem trước",
             submitButton: "Gửi",
+            postNameAlreadyExists: "Tên công việc đã tồn tại, vui lòng thử tên khác"
         },
         employeeRegister: {
             howDidYouHearAboutUs:
@@ -884,6 +885,7 @@ export const vi = {
             tittleHeaderMenuSection2: "Dành cho khách hàng doanh nghiệp",
             tittlePopularHeaderSearch: "Tìm kiếm phổ biến",
             labelSignInButton: "Đăng nhập",
+            success: "Chúc mừng bạn đã thành công"
         },
         guarantee: {
             fastworkGuaranteeTitle: "Đảm bảo của Fastwork",

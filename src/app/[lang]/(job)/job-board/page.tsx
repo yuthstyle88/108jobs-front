@@ -15,7 +15,7 @@ import ErrorState from "@/components/ErrorState";
 const ITEMS_PER_PAGE = 20;
 
 interface FilterState {
-    category: string;
+    community: string;
     jobType: JobType | undefined;
     intendedUse: IntendedUse | undefined;
     budgetMin: number | undefined;
@@ -28,7 +28,7 @@ const JobBoard = () => {
     const router = useRouter();
 
     const [filters, setFilters] = useState<FilterState>({
-        category: "",
+        community: "",
         jobType: undefined,
         intendedUse: undefined,
         budgetMin: undefined,
@@ -51,7 +51,7 @@ const JobBoard = () => {
         data: jobPostsPagination,
         isMutating: isJobsLoading,
     } = useHttpGet("getPosts", {
-        catalogId: filters.category || undefined,
+        communityId: filters.community || undefined,
         pageCursor: currentCursor,
         sort: filters.sort,
         budgetMin: filters.budgetMin,
@@ -97,7 +97,7 @@ const JobBoard = () => {
 
     const clearFilters = useCallback(() => {
         setFilters({
-            category: "",
+            community: "",
             jobType: undefined,
             intendedUse: undefined,
             budgetMin: undefined,
@@ -108,14 +108,14 @@ const JobBoard = () => {
 
 
     const hasActiveFilters = useMemo(() => {
-        return filters.category || filters.jobType || filters.intendedUse ||
+        return filters.community || filters.jobType || filters.intendedUse ||
             filters.budgetMin || filters.budgetMax || filters.sort;
     }, [filters]);
 
     useEffect(() => {
         setCurrentCursor(undefined);
         setCursorHistory([]);
-    }, [filters.category, filters.sort, filters.budgetMin, filters.budgetMax, filters.jobType, filters.intendedUse]);
+    }, [filters.community, filters.sort, filters.budgetMin, filters.budgetMax, filters.jobType, filters.intendedUse]);
 
     useEffect(() => {
         setIsLoading(isJobsLoading);
@@ -156,8 +156,8 @@ const JobBoard = () => {
                                 <select
                                     id="category-filter"
                                     className="w-full appearance-none bg-white border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all duration-200 hover:border-blue-300"
-                                    value={filters.category}
-                                    onChange={(e) => handleFilterChange("category", e.target.value)}
+                                    value={filters.community}
+                                    onChange={(e) => handleFilterChange("community", e.target.value)}
                                     disabled={isCatalogLoading}
                                 >
                                     <option value="">{t("profileJob.dropdownSearchCategory")}</option>

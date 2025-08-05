@@ -559,7 +559,7 @@ export const th = {
             serviceCategoryLabel: "หมวดหมู่บริการ",
             serviceCategoryPlaceholderUrl: "เช่น https://example.com",
             serviceCategoryPlaceholderSelect: "เลือกหมวดหมู่บริการ...",
-            exampleUrl: "ตัวอย่าง URL (ไม่จำเป็น)",
+            exampleUrl: "ตัวอย่าง URL",
             budgetLabel: "งบประมาณ",
             budgetPlaceholder: "บาท",
             deadlineLabel: "กำหนดเส้นตาย (ไม่บังคับ)",
@@ -573,6 +573,7 @@ export const th = {
             anonymousPostLabel: "โพสต์แบบไม่ระบุชื่อ",
             previewButton: "ดูตัวอย่าง",
             submitButton: "ส่ง",
+            postNameAlreadyExists: "ชื่องานนี้มีอยู่แล้ว กรุณาลองชื่ออื่น"
         },
         employeeRegister: {
             howDidYouHearAboutUs:
@@ -863,6 +864,7 @@ export const th = {
             tittleHeaderMenuSection2: "สำหรับลูกค้าองค์กร",
             tittlePopularHeaderSearch: "การค้นหายอดนิยม",
             labelSignInButton: "เข้าสู่ระบบ",
+            success: "ขอแสดงความยินดี คุณทำสำเร็จแล้ว"
         },
         guarantee: {
             fastworkGuaranteeTitle: "Fastwork Guarantee",

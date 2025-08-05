@@ -332,7 +332,7 @@ export const en = {
                 "Error fetching site data. Please refresh the page.",
             signUpWithSocial: "Or sign up with",
             usernameAlreadyExists: "Username already exist please try to login",
-            emailAlreadyExists: "Email already exist",
+            emailAlreadyExists: "Email already exist please try to login",
             invalidName: "Username is not valid",
             titleSignInCreateAccount: "Sign in FastJob",
             userNotFound: "Username or email does not exist",
@@ -566,7 +566,7 @@ export const en = {
             serviceCategoryLabel: "Service Category",
             serviceCategoryPlaceholderUrl: "e.g. https://example.com",
             serviceCategoryPlaceholderSelect: "Select a service category...",
-            exampleUrl: "Example URL (optional)",
+            exampleUrl: "Example URL",
             budgetLabel: "Budget",
             budgetPlaceholder: "THB",
             deadlineLabel: "Deadline (Optional)",
@@ -580,6 +580,7 @@ export const en = {
             anonymousPostLabel: "Anonymous post",
             previewButton: "Preview",
             submitButton: "Submit",
+            postNameAlreadyExists: "Job name already exists please try another name",
         },
         employeeRegister: {
             howDidYouHearAboutUs:
@@ -884,6 +885,7 @@ export const en = {
             labelSignInButton: "Login",
             failedToLoadCategories: "Failed to load categories",
             tryRefreshingPage: "Please try refreshing the page",
+            success: "Congratulations! You have succeeded"
         },
         guarantee: {
             fastworkGuaranteeTitle: "Fastwork Guarantee",
