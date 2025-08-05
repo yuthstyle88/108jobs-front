@@ -62,7 +62,7 @@ function getRolesAllowedForPath(pathname: string): RoleType[] {
 
 export async function middleware(req: NextRequest) {
   const rawCookie = req.cookies.get(authCookieName)?.value ?? "";
-  const [userRole, applicationPending] = getUserRoleAndAppAccept(rawCookie) ?? [];
+  const [userRole, applicationPending] = getUserRoleAndAppAccept(rawCookie) ?? [undefined, undefined];
   const {pathname, origin} = req.nextUrl;
 
   const langRedirect = langMiddleware(req);

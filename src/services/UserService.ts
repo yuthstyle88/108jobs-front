@@ -130,6 +130,6 @@ export class UserService {
     const claims = jwtDecode<Claims>(auth);
     this.authInfo = {auth, claims, sharedKey};
     this.currentLanguage = claims?.lang;
-    this.applicationPending = claims?.accepted_application;
+    this.applicationPending = !claims?.accepted_application;
   }
 }
