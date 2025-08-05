@@ -71,7 +71,7 @@ const CatalogBanner = (props: Props) => {
                                             />
                                         </div>
                                         <p className="text-sm font-medium text-gray-800 leading-tight">
-                                            {t(`catalogs.${toCamelCaseLastSegment(catalog.community.slug)}`)}
+                                            {t(`catalogs.${toCamelCaseLastSegment(catalog.community.path)}`)}
                                         </p>
                                     </div>
                                 </div>
@@ -89,7 +89,7 @@ const CatalogBanner = (props: Props) => {
                                     <Link
                                         prefetch={false}
                                         key={community.id}
-                                        href={`/job/${community.slug}`}
+                                        href={`/job/${community.id}`}
                                         className="group"
                                     >
                                         <div

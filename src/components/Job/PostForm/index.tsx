@@ -28,7 +28,6 @@ interface PostFormProps {
   mode: "create" | "edit",
 }
 
-// Define schema with translation function
 const postJobSchema = (t: (key: string) => string) => z.object({
   communityId: z.coerce.number().int().positive(t("validation.communityIdPositive")),
   jobTitle: z.string().min(5,
@@ -152,7 +151,7 @@ export const PostForm: React.FC<PostFormProps> = ({
   useEffect(() => {
       if (state.state === REQUEST_STATE.SUCCESS && catalogData?.communities?.length && !postView) {
         const defaultCommunity = catalogData.communities.find(
-          (catalog) => catalog.community.slug !== "advise"
+          (catalog) => catalog.community.id !== 1
         ) || catalogData.communities[0];
         if (defaultCommunity) {
           setValue("communityId",

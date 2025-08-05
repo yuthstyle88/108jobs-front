@@ -8,13 +8,13 @@ export async function generateMetadata() {
 export default async function Categories({
   params,
 }: {
-  params: Promise<{slug: string}>;
+  params: Promise<{name: string}>;
 }) {
   const resolvedParams = await params;
 
   return (
     <main className="grid-container-desktop-banner w-full min-h-screen">
-      <PopularSubCat slug={resolvedParams.slug}/>
+      <PopularSubCat name={resolvedParams.name}/>
     </main>
   );
 }

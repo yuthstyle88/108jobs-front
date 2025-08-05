@@ -1,23 +1,23 @@
-import {API_ROUTES} from "@/api/endpoints";
 import {LanguageFile} from "@/constants/language";
-import {usePublicFetch} from "@/hooks/api-hooks";
 import {getNamespace} from "@/utils/i18nHelper";
-import {ServiceCatalogData} from "@/types/catalog";
 import {faArrowRight} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import {useHttpGet} from "@/hooks/useHttpGet";
 
 const Find = () => {
   const global = getNamespace(LanguageFile.GLOBAL);
 
-  const {
-    data: catalogData,
-  } = usePublicFetch<ServiceCatalogData>(API_ROUTES.catalog.getAllCatalog);
+    const {
+        data: catalogData,
+        isMutating: isCatalogLoading,
+    } = useHttpGet("listCommunities");
+
 
   const popularCategories =
-    catalogData?.serviceCatalogs?.find(
-      (catalog) => catalog.name === "Popular service"
-    )?.sections?.[0]?.categories || [];
+    catalogData?.communities?.find(
+      (catalog) => catalog.community.id === 1
+    )?.children || [];
 
   return (
     <div className="flex flex-col w-[420px] mt-8">
@@ -34,11 +34,11 @@ const Find = () => {
         <div className="mt-2 flex flex-col mr-4">
           {popularCategories.map((job, index) => (
             <Link prefetch={false}
-                  href={`/job/${job.slug}`}
+                  href={`/job/${job.community.id}`}
                   key={index}
                   className="text-[0.875rem] text-text-secondary px-2 py-[4px] flex-1 flex items-center justify-between rounded-sm transition-all duration-150 ease-in-out"
             >
-              {job.name}
+              {job.community.name}
               <FontAwesomeIcon
                 icon={faArrowRight}
                 className="text-[rgba(43,50,59,.4)]"
