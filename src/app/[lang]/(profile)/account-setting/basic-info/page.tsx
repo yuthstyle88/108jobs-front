@@ -37,7 +37,6 @@ export default function BasicInformation() {
     handleSubmit,
     errors,
     isSubmitting,
-    isUpdateMuting,
     onSubmit,
   } = useProfileForm(
     person,
@@ -200,7 +199,7 @@ export default function BasicInformation() {
               disabled={isSubmitting}
               className="submit-button px-4 py-2"
             >
-              {isSubmitting || isUpdateMuting || isUploadMuting ? (
+              {isSubmitting || isUploadMuting ? (
                 <span>{t("profileInfo.save")}...</span>
               ) : (
                 t("profileInfo.save")

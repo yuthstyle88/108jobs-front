@@ -1785,6 +1785,7 @@ export const en = {
             password: "Password",
             passwordDescription: "Manage passwords in the Fastwork system",
             passwordMinLengthError: "Password must be at least 6 characters",
+            passwordMismatchError: "Passwords do not match.",
             passwordPlaceholder: "Enter password",
             placeholderDisplayName: "Enter display name",
             placeholderUsername: "Enter username",

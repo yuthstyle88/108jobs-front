@@ -1798,6 +1798,7 @@ export const vi = {
             password: "Mật khẩu",
             passwordDescription: "Quản lý mật khẩu trong hệ thống Fastwork",
             passwordMinLengthError: "Mật khẩu phải có ít nhất 6 ký tự",
+             passwordMismatchError: "Mật khẩu không khớp.",
             passwordPlaceholder: "Nhập mật khẩu",
             placeholderDisplayName: "Nhập tên hiển thị",
             placeholderUsername: "Nhập tên người dùng",

@@ -1737,6 +1737,7 @@ export const th = {
             password: "รหัสผ่าน",
             passwordDescription: "จัดการรหัสผ่านในระบบ Fastwork",
             passwordMinLengthError: "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร",
+            passwordMismatchError: "รหัสผ่านไม่ตรงกัน",
             passwordPlaceholder: "ระบุรหัสผ่าน",
             placeholderDisplayName: "กรอกชื่อที่แสดง",
             placeholderUsername: "กรอกชื่อผู้ใช้",

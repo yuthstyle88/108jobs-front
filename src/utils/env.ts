@@ -33,15 +33,10 @@ export function getInternalHost() {
     : testHost; // used for local dev
 }
 
-export function getSecure() {
-  return (
-    isBrowser()
-      ? window.location.protocol.includes("https")
-      : process.env.LEMMY_UI_HTTPS === "true"
-  )
-    ? "s"
-    : "";
+export function getSecure(): string {
+  return "s";
 }
+
 
 /**
  * Returns path to static directory, intended

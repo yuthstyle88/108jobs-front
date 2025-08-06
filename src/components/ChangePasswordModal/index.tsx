@@ -1,14 +1,15 @@
 "use client";
-import {ERROR_CONSTANTS} from "@/constants/error";
+import { ERROR_CONSTANTS } from "@/constants/error";
 import useNotification from "@/hooks/useNotification";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {useMemo, useState} from "react";
-import {useForm} from "react-hook-form";
-import {z} from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import LoadingCircle from "../LoadingCircle";
-import {CustomInput} from "../ui/InputField";
+import { CustomInput } from "../ui/InputField";
 import Modal from "../ui/Modal";
 import { useTranslation } from "react-i18next";
+import { useHttpPost } from "@/hooks/useHttpPost";
 
 interface PasswordChangeModalProps {
   isOpen: boolean;
@@ -22,28 +23,28 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
   const { t } = useTranslation();
 
   const schema = useMemo(() => {
-      return z
+    return z
       .object({
         oldPassword: z
-        .string()
-        .min(
-          6,
-          t("profile.passwordMinLengthError")
-        ),
+          .string()
+          .min(
+            6,
+            t("profileInfo.passwordMinLengthError")
+          ),
         newPassword: z
-        .string()
-        .min(
-          6,
-          t("profile.passwordMinLengthError")
-        ),
+          .string()
+          .min(
+            6,
+            t("profileInfo.passwordMinLengthError")
+          ),
         confirmPassword: z.string(),
       })
       .refine((data) => data.newPassword === data.confirmPassword,
         {
-          message: t("profile.passwordMismatchError"),
+          message: t("profileInfo.passwordMismatchError"),
           path: ["confirmPassword"],
         });
-    },
+  },
     [t]);
 
   type ChangePasswordFormData = z.infer<typeof schema>;
@@ -53,13 +54,18 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
     handleSubmit,
     setError,
     reset,
-    formState: {errors, isSubmitting},
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
     mode: "onChange",
   });
 
-  const {successMessage} = useNotification();
+  const {
+    state: changeState,
+    execute: changePassword,
+  } = useHttpPost("changePassword");
+
+  const { successMessage } = useNotification();
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -70,46 +76,33 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
     onClose();
   };
 
-  const onSubmit = async(data: ChangePasswordFormData) => {
+  const onSubmit = async (data: ChangePasswordFormData) => {
     try {
       setApiError(null);
 
-      const response = await fetch("/api/auth/update-password",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            oldPassword: data.oldPassword,
-            newPassword: data.newPassword,
-          }),
-        });
+      const res = await changePassword({
+        oldPassword: data.oldPassword,
+        newPassword: data.newPassword,
+        newPasswordVerify: data.confirmPassword
+      });
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        if (result.fieldErrors?.oldPassword) {
-          setError("oldPassword",
-            {
-              type: "manual",
-              message: result.fieldErrors.oldPassword,
-            });
-        }
-        if (result.error && !result.fieldErrors?.oldPassword) {
-          setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);
-        }
+      if (res.state === "failed") {
+        setApiError(ERROR_CONSTANTS.CHANGE_PASSWORD_FAILED);
         return;
       }
-      reset();
-      onClose();
-      successMessage("profile",
-        "changePassword");
+
+      if (res.state === "success") {
+        successMessage(null,
+          null,
+          t("notification.changePasswordSuccess"));
+        onClose();
+        reset();
+      }
     } catch (error) {
       setApiError(
         error instanceof Error
           ? error.message
-          : t("profile.changePasswordError")
+          : t("profileInfo.changePasswordError")
       );
     }
   };
@@ -118,39 +111,39 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={handleCloseModal}
-      title={t("profile.password")}
+      title={t("profileInfo.password")}
       className="max-w-md w-full"
       closeOnOutsideClick={false}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <CustomInput
-          label={t("profile.oldPassword")}
+          label={t("profileInfo.oldPassword")}
           name="oldPassword"
           type="password"
           register={register("oldPassword")}
           error={errors.oldPassword?.message}
-          placeholder={t("profile.passwordPlaceholder")}
+          placeholder={t("profileInfo.passwordPlaceholder")}
           showPassword={showOldPassword}
           toggleShowPassword={() => setShowOldPassword(!showOldPassword)}
         />
         <CustomInput
-          label={t("profile.newPassword")}
+          label={t("profileInfo.newPassword")}
           name="newPassword"
           type="password"
           register={register("newPassword")}
           error={errors.newPassword?.message}
-          placeholder={t("profile.passwordPlaceholder")}
+          placeholder={t("profileInfo.passwordPlaceholder")}
           showPassword={showNewPassword}
           toggleShowPassword={() => setShowNewPassword(!showNewPassword)}
         />
 
         <CustomInput
-          label={t("profile.confirmPasswordLabel")}
+          label={t("profileInfo.confirmPasswordLabel")}
           name="confirmPassword"
           type="password"
           register={register("confirmPassword")}
           error={errors.confirmPassword?.message}
-          placeholder={t("profile.passwordPlaceholder")}
+          placeholder={t("profileInfo.passwordPlaceholder")}
           showPassword={showConfirmPassword}
           toggleShowPassword={() =>
             setShowConfirmPassword(!showConfirmPassword)
@@ -168,7 +161,7 @@ const PasswordChangeModal: React.FC<PasswordChangeModalProps> = ({
           disabled={isSubmitting}
           className="submit-button py-2"
         >
-          {isSubmitting ? <LoadingCircle/> : t("profile.submitButton")}
+          {isSubmitting ? <LoadingCircle /> : t("profileInfo.submitButton")}
         </button>
       </form>
     </Modal>
