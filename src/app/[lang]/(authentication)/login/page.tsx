@@ -5,17 +5,16 @@ import {LoginForm} from "@/components/Authentication/LoginForm";
 import VerificationForgotPassword from "@/components/Authentication/VerifyForgotPassword";
 import {AuthenticateIcon} from "@/constants/icons";
 import {CategoriesImage} from "@/constants/images";
-import {LanguageFile} from "@/constants/language";
 import {RegisterDataProps} from "@/types/register-data";
-import {getNamespace} from "@/utils/i18nHelper";
 import Image from "next/image";
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
 
 type ViewState = "login" | "forgot-password" | "verify-forgot-password";
 
 export default function LoginPage() {
-  const authen = getNamespace(LanguageFile.AUTHEN);
+  const {t} = useTranslation();
 
   const params = useSearchParams();
   const viewParam = params.get("view") as ViewState | null;
@@ -42,13 +41,13 @@ export default function LoginPage() {
           <div className="flex flex-col gap-2">
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
-                {authen.titleHireThrough}
+                {t("authen.titleHireThrough")}
               </h2>
               <Image src={CategoriesImage.logodefault} alt="logo"/>
             </div>
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
-                {authen.subtitleSafeMoney}
+                {t("authen.subtitleSafeMoney")}
               </h2>
             </div>
           </div>
@@ -67,7 +66,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {authen.labelGuaranteedPay}
+                {t("authen.labelGuaranteedPay")}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -77,7 +76,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {authen.labelProfessionalLicense}
+                {t("authen.labelProfessionalLicense")}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -87,7 +86,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {authen.labelRefundPolicy}
+                {t("authen.labelRefundPolicy")}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -97,7 +96,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {authen.labelHiringAdvice}
+                {t("authen.labelHiringAdvice")}
               </span>
             </div>
             <div className="flex gap-2 items-center">
@@ -107,7 +106,7 @@ export default function LoginPage() {
                 className="h-[48px] w-[48px]"
               />
               <span className="font-sans text-[20px] font-medium leading-[23px] text-[rgba(43,50,59,0.95)]">
-                {authen.labelFreelancerVerified}
+                {t("authen.labelFreelancerVerified")}
               </span>
             </div>
           </div>
@@ -120,7 +119,7 @@ export default function LoginPage() {
             alt="logo"
           />
           {currentView === "login" && (
-            <AuthFormContainer title="Sign in FastJob">
+            <AuthFormContainer title={t("authen.titleLoginForm")}>
               <LoginForm
                 switchToRegister={() => route.push("/register")}
                 switchToForgotPassword={() => setCurrentView("forgot-password")}
@@ -129,7 +128,7 @@ export default function LoginPage() {
           )}
           {currentView === "forgot-password" && (
             <AuthFormContainer
-              title={authen.linkForgotPassword}
+              title={t("authen.linkForgotPassword")}
               onBack={() => setCurrentView("login")}
             >
               <ForgotPasswordForm

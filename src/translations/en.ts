@@ -299,7 +299,7 @@ export const en = {
             sampleCode: "Sample code: 0JFPMQ",
             sendCodeButton: "Send verification code",
             subtitleSafeMoney: "Safe money, guaranteed job",
-            titleCreateAccount: "Create an Account Fastwork",
+            titleCreateAccount: "Create an account",
             titleHireThrough: "Hire through",
             titleLoginCreateAccount: "Login / Create Account",
             titleVerifyEmail: "Verify Email",
@@ -334,7 +334,7 @@ export const en = {
             usernameAlreadyExists: "Username already exist please try to login",
             emailAlreadyExists: "Email already exist",
             invalidName: "Username is not valid",
-            titleSignInCreateAccount: "Sign in FastJob",
+            titleLoginForm: "Welcome back",
             userNotFound: "Username or email does not exist",
             roleSelectionLabel: "You want to be a/an:",
             resendOTP: "Resend OTP",
@@ -342,7 +342,8 @@ export const en = {
             resendOTPSuccess: "OTP resent successfully",
             resendVerifyCode: "Resend verification code",
             emailRegistered: "This email has already been registered. Please login with your password.",
-            invalidPassword: "Invalid password"
+            invalidPassword: "Invalid password",
+            titleVerifyingCode: "Check your inbox"
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "Account Settings",
@@ -890,6 +891,7 @@ export const en = {
             labelSignInButton: "Login",
             failedToLoadCategories: "Failed to load categories",
             tryRefreshingPage: "Please try refreshing the page",
+            labelContinue: "Continue"
         },
         guarantee: {
             fastworkGuaranteeTitle: "Fastwork Guarantee",

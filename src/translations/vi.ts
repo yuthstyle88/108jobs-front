@@ -298,7 +298,7 @@ export const vi = {
             sampleCode: "Mã tham khảo: 0JFPMQ",
             sendCodeButton: "Gửi mã xác nhận",
             subtitleSafeMoney: "Tiền an toàn, công việc đảm bảo",
-            titleCreateAccount: "Tạo tài khoản Fastwork",
+            titleCreateAccount: "Tạo tài khoản",
             titleHireThrough: "Thuê qua",
             titleLoginCreateAccount: "Đăng nhập / Tạo tài khoản",
             titleVerifyEmail: "Xác minh email",
@@ -331,7 +331,7 @@ export const vi = {
             usernameAlreadyExists: "Tên người dùng đã tồn tại",
             emailAlreadyExists: "Email đã tồn tại",
             invalidName: "Tên người dùng không hợp lệ",
-            titleSignInCreateAccount: "Đăng nhập FastJob",
+            titleLoginForm: "Chào mừng bạn trở lại",
             userNotFound: "Tên người dùng hoặc email không tồn tại",
             roleSelectionLabel: "Bạn muốn trở thành:",
             resendOTP: "Gửi lại mã OTP",
@@ -339,7 +339,8 @@ export const vi = {
             resendOTPSuccess: "Gửi lại mã OTP thành công",
             resendVerifyCode: "Resend verification code",
             emailRegistered: "Email này đã được đăng ký. Vui lòng đăng nhập bằng mật khẩu của bạn.",
-            invalidPassword: "Mật khẩu không hợp lệ"
+            invalidPassword: "Mật khẩu không hợp lệ",
+            titleVerifyingCode: "Kiểm tra hộp thư của bạn"
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "Cài đặt tài khoản",
@@ -890,6 +891,7 @@ export const vi = {
             tittleHeaderMenuSection2: "Dành cho khách hàng doanh nghiệp",
             tittlePopularHeaderSearch: "Tìm kiếm phổ biến",
             labelSignInButton: "Đăng nhập",
+            labelContinue: "Tiếp tục"
         },
         guarantee: {
             fastworkGuaranteeTitle: "Đảm bảo của Fastwork",
