@@ -149,6 +149,7 @@ export class LoginFormClass extends Component<
 
     if (this.props.initialEmail) {
       this.props.formMethods.setValue("usernameOrEmail", this.props.initialEmail);
+      this.props.setApiError("This email has already been registered. Please login with your password.");
     }
 
     return (
