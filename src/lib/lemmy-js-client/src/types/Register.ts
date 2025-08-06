@@ -6,9 +6,9 @@ import {RoleType} from "./RoleType";
  * Register / Sign up to lemmy.
  */
 export type Register = {
-  username: string;
-  password: SensitiveString;
-  passwordVerify: SensitiveString;
+  username?: string;
+  password?: SensitiveString;
+  passwordVerify?: SensitiveString;
   showNsfw?: boolean;
   /**
    * email is mandatory if email verification is enabled on the server
@@ -31,5 +31,5 @@ export type Register = {
    */
   answer?: string;
   role?: RoleType;
-  acceptedApplication: boolean;
+  acceptedApplication?: boolean;
 };

@@ -18,16 +18,21 @@ type ViewState = "register" | "verify-otp";
 export default function RegisterPage() {
   const route = useRouter();
   const loginLanguageData = getNamespace(LanguageFile.AUTHEN);
+  const [email, setEmail] = useState<string>("");
+
+  const switchToVerifyOTP = (email: string) => {
+    setEmail(email);
+    setCurrentView("verify-otp");
+  };
 
   const [currentView, setCurrentView] = useState<ViewState>("register");
-  const [dataDataRegister, setDataDataRegister] = useState<RegisterDataProps | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
 
   return (
     <div
       className="min-h-screen bg-[#E3EDFD] grid 2xl:grid-cols-[1fr_1240px_1fr] lg:grid-cols-[1fr_984px_1fr] md:grid-cols-[1fr_768px_1fr] grid-cols-[12px_minmax(0,auto)12px]">
       <div className="flex justify-center items-center lg:flex-row lg:gap-[3rem] lg:justify-between col-start-2 col-end-3">
-        <div className="hidden lg:flex m-auto flex-col gap-[4rem]">
+        <div className="hidden lg:flex m-auto flex-col gap-[5rem]">
           <div className="flex flex-col gap-2">
             <div className="flex gap-2 flex-row items-center">
               <h2 className="text-[2.5rem] text-[hsl(215,15%,20%,0.95)]">
@@ -118,8 +123,8 @@ export default function RegisterPage() {
             >
 
               <RegisterForm
-                switchToVerifyOTP={() => setCurrentView("verify-otp")}
-                setApiError={setApiError}
+                  switchToVerifyOTP={switchToVerifyOTP}
+                  setApiError={setApiError}
               />
 
             </AuthFormContainer>
@@ -128,7 +133,7 @@ export default function RegisterPage() {
             <AuthFormContainer
               title={`Verify OTP`}
             >
-              <VerifyOTPForm/>
+              <VerifyOTPForm email={email}/>
             </AuthFormContainer>
           )}
 

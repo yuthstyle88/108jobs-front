@@ -302,7 +302,7 @@ export const vi = {
             titleHireThrough: "Thuê qua",
             titleLoginCreateAccount: "Đăng nhập / Tạo tài khoản",
             titleVerifyEmail: "Xác minh email",
-            notFound: "Tên người dùng hoặc email không tồn tại",
+            notFound: "Mã OTP không chính xác. Vui lòng nhập lại mã đúng.",
             verificationForgotMessage:
                 "Mã xác nhận đã được gửi đến email/số điện thoại của bạn.",
             verificationMessage:
@@ -334,6 +334,9 @@ export const vi = {
             titleSignInCreateAccount: "Đăng nhập FastJob",
             userNotFound: "Tên người dùng hoặc email không tồn tại",
             roleSelectionLabel: "Bạn muốn trở thành:",
+            resendOTP: "Gửi lại mã OTP",
+            resendFailed: "Gửi lại mã OTP không thành công. Vui lòng thử lại.",
+            resendOTPSuccess: "Gửi lại mã OTP thành công"
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "Cài đặt tài khoản",

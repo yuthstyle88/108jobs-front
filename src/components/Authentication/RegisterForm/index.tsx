@@ -20,7 +20,7 @@ const createRegisterSchema = (t: any) => z
 });
 
 interface RegisterFormProps {
-  switchToVerifyOTP?: () => void;
+  switchToVerifyOTP?: (email: string) => void;
   setApiError?: (err: string) => void;
 }
 
@@ -69,7 +69,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
       const registerRes = await HttpService.client.register({
         email: data.email,
-        answer: "FastJob"
+        answer: "FastJob",
       });
       switch (registerRes.state) {
         case REQUEST_STATE.FAILED: {
@@ -79,7 +79,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         case REQUEST_STATE.SUCCESS: {
           if (registerRes.data.verifyEmailSent){
             if (switchToVerifyOTP) {
-              switchToVerifyOTP();
+              switchToVerifyOTP(data.email);
             }
           }
         }

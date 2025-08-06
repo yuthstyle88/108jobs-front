@@ -304,7 +304,7 @@ export const th = {
                 "Fastwork จะทำการส่งรหัสยืนยันไปยัง อีเมล/เบอร์โทรศัพท์ของคุณ เพื่อยืนยันความเป็นเจ้าของบัญชี",
             placeholderUsernameOrEmail: "กรอกชื่อผู้ใช้หรืออีเมลของคุณ",
             labelUsernameOrEmail: "ชื่อผู้ใช้หรืออีเมล",
-            notFound: "ไม่พบชื่อผู้ใช้หรืออีเมล",
+            notFound: "รหัส OTP ไม่ถูกต้อง กรุณากรอกรหัสใหม่อีกครั้ง",
             incorrectLogin: "รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง!",
             pleaseEnterEmailOrUsernameMin6:
                 "กรุณากรอกอีเมลหรือชื่อผู้ใช้อย่างน้อย 6 ตัวอักษร",
@@ -334,6 +334,9 @@ export const th = {
             titleSignInCreateAccount: "เข้าสู่ระบบ FastJob",
             userNotFound: "ชื่อผู้ใช้หรืออีเมลไม่มีอยู่ในระบบ",
             roleSelectionLabel: "คุณต้องการเป็น:",
+            resendOTP: "ส่งรหัส OTP อีกครั้ง",
+            resendFailed: "ไม่สามารถส่งรหัส OTP อีกครั้ง กรุณาลองใหม่",
+            resendSuccess: "ส่งรหัส OTP อีกครั้งเรียบร้อยแล้ว"
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "การตั้งค่าบัญชี",
