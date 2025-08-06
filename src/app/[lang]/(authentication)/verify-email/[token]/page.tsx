@@ -7,5 +7,5 @@ export default async function Page({
 }) {
   const resolvedParams = await params;
 
-  return <VerifyEmailRegister token={resolvedParams.token}/>;
+  return <VerifyEmailRegister code={resolvedParams.token}/>;
 }

@@ -16,11 +16,12 @@ import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {RegisterDataProps} from "@/types/register-data";
 
-type UpdateFormProps = {};
+type UpdateFormProps = {
+  title?: string;
+};
 
-export const AcceptForm = ({
-
-}: UpdateFormProps) => {
+export const AcceptForm = ({ title }
+: UpdateFormProps) => {
   const authen = getNamespace(LanguageFile.AUTHEN);
 
   const UpdateSchema = z

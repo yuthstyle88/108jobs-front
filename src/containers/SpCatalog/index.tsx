@@ -22,7 +22,7 @@ const SpCatalog = ({ activeCatalog }: Props) => {
                             <Link
                                 prefetch={false}
                                 key={community.id}
-                                href={`/job/${community.slug}`}
+                                href={`/job/${community.apId}`}
                                 className="group"
                             >
                                 <div

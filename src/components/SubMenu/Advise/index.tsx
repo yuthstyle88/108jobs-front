@@ -36,12 +36,7 @@ const Advise: React.FC = () => {
           <CategoryList
             key={section.community.title}
             title={section.community.name}
-            items={
-              section.children?.map((cat: CommunityNodeView) => ({
-                title: cat.community.name,
-                slug: cat.community.slug,
-              })) ?? []
-            }
+            items={section.children}
           />
         ))}
       </div>
