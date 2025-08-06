@@ -334,13 +334,14 @@ export const vi = {
             titleLoginForm: "Chào mừng bạn trở lại",
             userNotFound: "Tên người dùng hoặc email không tồn tại",
             roleSelectionLabel: "Bạn muốn trở thành:",
-            resendOTP: "Gửi lại mã OTP",
+            resendEmail: "Gửi lại email",
             resendFailed: "Gửi lại mã OTP không thành công. Vui lòng thử lại.",
             resendOTPSuccess: "Gửi lại mã OTP thành công",
             resendVerifyCode: "Resend verification code",
             emailRegistered: "Email này đã được đăng ký. Vui lòng đăng nhập bằng mật khẩu của bạn.",
             invalidPassword: "Mật khẩu không hợp lệ",
-            titleVerifyingCode: "Kiểm tra hộp thư của bạn"
+            titleVerifyingCode: "Kiểm tra hộp thư của bạn",
+            enterCodeWithEmail: "Nhập mã được gửi đến <strong>{{email}}</strong> để xác minh tài khoản của bạn"
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "Cài đặt tài khoản",

@@ -335,13 +335,14 @@ export const th = {
             titleSignInCreateAccount: "เข้าสู่ระบบ FastJob",
             userNotFound: "ชื่อผู้ใช้หรืออีเมลไม่มีอยู่ในระบบ",
             roleSelectionLabel: "คุณต้องการเป็น:",
-            resendOTP: "ส่งรหัส OTP อีกครั้ง",
+            resendEmail: "ส่งอีเมลอีกครั้ง",
             resendFailed: "ไม่สามารถส่งรหัส OTP อีกครั้ง กรุณาลองใหม่",
             resendSuccess: "ส่งรหัส OTP อีกครั้งเรียบร้อยแล้ว",
             resendVerifyCode: "ขอใหม่รหัสอีกครั้ง",
             emailRegistered: "อีเมลนี้ได้ลงทะเบียนไว้แล้ว กรุณาเข้าสู่ระบบด้วยรหัสผ่านของคุณ",
             invalidPassword: "รหัสผ่านไม่ถูกต้อง",
-            titleVerifyingCode: "ตรวจสอบกล่องจดหมายของคุณ"
+            titleVerifyingCode: "ตรวจสอบกล่องจดหมายของคุณ",
+            enterCodeWithEmail: "ป้อนรหัสที่ส่งไปยัง <strong>{{email}}</strong> เพื่อยืนยันบัญชีของคุณ"
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "การตั้งค่าบัญชี",

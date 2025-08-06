@@ -337,13 +337,14 @@ export const en = {
             titleLoginForm: "Welcome back",
             userNotFound: "Username or email does not exist",
             roleSelectionLabel: "You want to be a/an:",
-            resendOTP: "Resend OTP",
+            resendEmail: "Resend email",
             resendFailed: "Failed to resend OTP. Please try again.",
             resendOTPSuccess: "OTP resent successfully",
             resendVerifyCode: "Resend verification code",
             emailRegistered: "This email has already been registered. Please login with your password.",
             invalidPassword: "Invalid password",
-            titleVerifyingCode: "Check your inbox"
+            titleVerifyingCode: "Check your inbox",
+            enterCodeWithEmail: "Enter the code sent to <strong>{{email}}</strong> to verify your account."
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "Account Settings",

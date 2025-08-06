@@ -3,7 +3,7 @@ import {HttpService, UserService,} from "@/services";
 import React, {useCallback, useState} from "react";
 
 import {CustomInput} from "@/components/ui/InputField";
-import {useTranslation} from "react-i18next";
+import {Trans, useTranslation} from "react-i18next";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -54,42 +54,50 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
   } = formMethods;
   const onSubmit = useCallback(async(data: any) => {
 
-      const verifyRes = await HttpService.client.verifyEmail({
-        code: data.code,
-      });
-      switch (verifyRes.state) {
-        case REQUEST_STATE.FAILED: {
-          handleApiError(verifyRes.err.name);
-          break;
-        }
-        case REQUEST_STATE.SUCCESS: {
-          UserService.Instance.login({
-            res: verifyRes.data,
-          });
-        }
-        break;
-      }
-    },
-    []);
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-      {apiErrorState && (
-        <p className="text-red-500 text-sm text-center mb-4">
-          {t("authen.apiErrorState")}
-        </p>
-      )}
-
-     <p className="text-text-primary text-sm font-sans">
-       Enter the code sent to <span className="font-medium">{email?.toString()}</span> to verify your account.
-     </p>
-      <CustomInput
-        label={t("authen.labelOTP")}
-        type="string"
-        name={"code"}
-        placeholder={t("authen.placeholderOTP")}
-        register={register("code")}
-        error={errors.code?.message}
-      />
+            const verifyRes = await HttpService.client.verifyEmail({
+                code: data.code,
+            });
+            switch (verifyRes.state) {
+                case REQUEST_STATE.FAILED: {
+                    handleApiError(verifyRes.err.name);
+                    break;
+                }
+                case REQUEST_STATE.SUCCESS: {
+                    UserService.Instance.login({
+                        res: verifyRes.data,
+                    });
+                }
+                    break;
+            }
+        },
+        []);
+    return (
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+            {apiErrorState && (
+                <p className="text-red-500 text-sm text-center mb-4">
+                    {t("authen.apiErrorState")}
+                </p>
+            )}
+            {errors.root && (
+                <p className="text-red-500 text-sm text-center mb-4">
+                    {errors.root.message}
+                </p>
+            )}
+            <p className="text-text-primary text-sm">
+                <Trans
+                    i18nKey="authen.enterCodeWithEmail"
+                    components={{ strong: <span className="text-blue-700 font-semibold break-all" /> }}
+                    values={{ email }}
+                />
+            </p>
+            <CustomInput
+                label={t("authen.labelOTP")}
+                type="string"
+                name={"code"}
+                placeholder={t("authen.placeholderOTP")}
+                register={register("code")}
+                error={errors.code?.message}
+            />
 
       <div className="text-center">
         <button
@@ -97,7 +105,7 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
           className="submit-button py-3"
           disabled={!isValid || isSubmitting}
         >
-          {isSubmitting ? <LoadingCircle/> : t("authen.labelContinue")}
+          {isSubmitting ? <LoadingCircle/> : t("global.labelContinue")}
         </button>
       </div>
       <div className="text-center">
@@ -116,7 +124,7 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
          }}
          className="text-text-primary text-sm font-sans"
        >
-         Resend Email
+           {t("authen.resendEmail")}
        </button>
         {errors.root && (
           <p className="text-red-500 text-sm text-center mb-4">
