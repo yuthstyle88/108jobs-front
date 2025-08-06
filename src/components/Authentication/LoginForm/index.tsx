@@ -15,6 +15,7 @@ import {LoginFormProps, LoginFormState, State} from "@/components/Authentication
 import {OAuthButtons} from "@/components/Authentication/LoginForm/oauth-provider";
 import TotpModal from "@/components/Common/Modal/TotpModal";
 import {useTranslation} from "react-i18next";
+import {t} from "i18next";
 
 
 const withHooks = (Component: any) => {
@@ -121,7 +122,7 @@ export class LoginFormClass extends Component<
         hasFetchedSite: true,
       });
     } else {
-      this.props.setApiError("เกิดข้อผิดพลาดในการดึงข้อมูลเว็บไซต์");
+      this.props.setApiError(t("error.serverError"));
       this.setState({
         hasFetchedSite: true,
         oauthProviders: [],
@@ -149,7 +150,7 @@ export class LoginFormClass extends Component<
 
     if (this.props.initialEmail) {
       this.props.formMethods.setValue("usernameOrEmail", this.props.initialEmail);
-      this.props.setApiError("This email has already been registered. Please login with your password.");
+      this.props.setApiError(t("authen.emailRegistered"));
     }
 
     return (
