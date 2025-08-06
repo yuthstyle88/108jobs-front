@@ -107,9 +107,14 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
       <div className="text-center">
        <button
          type="button"
-         onClick={() => {
-           // TODO: Replace this with the actual resend email method
-           console.log("Resend email triggered");
+         onClick={ async() => {
+           const emailString: string = email?.toString() ?? "";
+           const verifyRes = await HttpService.client.resendVerificationEmail({
+             email: emailString,
+           });
+           if (verifyRes.state === REQUEST_STATE.FAILED) {
+             handleApiError(verifyRes.err.name);
+           }
          }}
          className="text-text-primary text-sm font-sans"
        >
