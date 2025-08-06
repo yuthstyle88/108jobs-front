@@ -30,6 +30,7 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
     const {t} = useTranslation();
     // State
     const [apiErrorState, setApiErrorState] = useState<string | null>(null);
+    const [apiSuccessState, setApiSuccessState] = useState<string | null>(null);
 
     // Use the provided setApiError function if available, otherwise use the local state setter
     const handleApiError = useCallback((err: string) => {
@@ -59,6 +60,7 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
             switch (verifyRes.state) {
                 case REQUEST_STATE.FAILED: {
                     handleApiError(verifyRes.err.name);
+                    setApiSuccessState(null);
                     break;
                 }
                 case REQUEST_STATE.SUCCESS: {
@@ -102,13 +104,14 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
                     type="button"
                     onClick={async () => {
                         const emailString: string = email?.toString() || "";
-                        const verifyRes = await HttpService.client.resendVerificationEmail({
+                        const resendRes = await HttpService.client.resendVerificationEmail({
                             email: emailString,
                         });
-                        if (verifyRes.state === REQUEST_STATE.FAILED) {
-                            handleApiError(verifyRes.err.name);
+                        if (resendRes.state === REQUEST_STATE.FAILED) {
+                            handleApiError(resendRes.err.name);
                         } else {
-                            handleApiError("please check your email for the verification code.");
+                            setApiErrorState(null);
+                            setApiSuccessState(t("authen.resendEmailSuccess"));
                         }
                     }}
                     className="text-text-primary text-sm font-sans"
@@ -123,6 +126,11 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
                 {errors.root && (
                     <p className="text-red-500 text-sm text-center mb-4">
                         {errors.root.message}
+                    </p>
+                )}
+                {apiSuccessState && (
+                    <p className="text-green-500 text-sm text-center mb-4">
+                        {apiSuccessState}
                     </p>
                 )}
             </div>

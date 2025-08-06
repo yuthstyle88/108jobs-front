@@ -339,7 +339,7 @@ export const en = {
             roleSelectionLabel: "You want to be a/an:",
             resendEmail: "Resend email",
             resendFailed: "Failed to resend OTP. Please try again.",
-            resendOTPSuccess: "OTP resent successfully",
+            resendEmailSuccess: "Email resent successfully",
             resendVerifyCode: "Resend verification code",
             emailRegistered: "This email has already been registered. Please login with your password.",
             invalidPassword: "Invalid password",
