@@ -307,7 +307,7 @@ export const en = {
                 "The verification code has been sent to your email/phone number.",
             verificationMessage:
                 "Fastwork will send a verification code to your email/phone number to confirm account ownership.",
-            notFound: "Username or email does not exist",
+            notFound: "Incorrect OTP. Please re-enter the correct code.",
             incorrectLogin: "Wrong password. Please try again!",
             pleaseEnterEmailOrUsernameMin6:
                 "Please enter an email or username with at least 6 characters",
@@ -337,6 +337,9 @@ export const en = {
             titleSignInCreateAccount: "Sign in FastJob",
             userNotFound: "Username or email does not exist",
             roleSelectionLabel: "You want to be a/an:",
+            resendOTP: "Resend OTP",
+            resendFailed: "Failed to resend OTP. Please try again.",
+            resendOTPSuccess: "OTP resent successfully",
             resendVerifyCode: "Resend verification code",
         },
         breadcrumb: {

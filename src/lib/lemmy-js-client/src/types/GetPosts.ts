@@ -10,8 +10,7 @@ import {IntendedUse} from "./IntendedUse";
  * Get a list of posts.
  */
 export type GetPosts = {
-  catalogId?: CommunityId;
-  catalogName?: string;
+  communityId?: CommunityId;
   sort?: PostSortType;
   showHidden?: boolean;
   /** If true, then show the self_promotion posts (even if your profile setting is to hide them) */

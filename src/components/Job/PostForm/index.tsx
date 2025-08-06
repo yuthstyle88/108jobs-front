@@ -21,68 +21,68 @@ import {useHttpPost} from "@/hooks/useHttpPost";
 
 
 interface PostFormProps {
-  redirectUrl?: string,
-  history?: any,
-  setApiError?: (err: string) => void,
-  postView?: PostView | null,
-  mode: "create" | "edit",
+    redirectUrl?: string,
+    history?: any,
+    setApiError?: (err: string) => void,
+    postView?: PostView | null,
+    mode: "create" | "edit",
 }
 
 const postJobSchema = (t: (key: string) => string) => z.object({
-  communityId: z.coerce.number().int().positive(t("validation.communityIdPositive")),
-  jobTitle: z.string().min(5,
-    t("validation.jobTitleMinLength")),
-  description: z.string().min(20,
-    t("validation.descriptionMinLength")),
-  budget: z
-  .string()
-  .refine((val) => !isNaN(Number(val)) && Number(val) > 0,
-    {
-      message: t("validation.budgetPositive"),
-    })
-  .transform((val) => Number(val)),
-  workingFrom: z.nativeEnum(JobType),
-  intendedUse: z.nativeEnum(IntendedUse),
-  url: z.string().url(t("validation.urlInvalid")).optional(),
-  isEnglishRequired: z.boolean().optional(),
-  deadline: z
-  .string()
-  .optional()
-  .refine((val) => {
-      if (!val) return true;
-      const selected = new Date(val);
-      const now = new Date();
-      return selected.getTime() - now.getTime() > 24 * 60 * 60 * 1000;
-    },
-    {
-      message: t("validation.deadlineMin"),
-    })
-  .transform((val) => {
-    if (!val) return undefined;
-    return `${val}T23:59:59Z`;
-  }),
+    communityId: z.coerce.number().int().positive(t("validation.communityIdPositive")),
+    jobTitle: z.string().min(5,
+        t("validation.jobTitleMinLength")),
+    description: z.string().min(20,
+        t("validation.descriptionMinLength")),
+    budget: z
+        .string()
+        .refine((val) => !isNaN(Number(val)) && Number(val) > 0,
+            {
+                message: t("validation.budgetPositive"),
+            })
+        .transform((val) => Number(val)),
+    workingFrom: z.nativeEnum(JobType),
+    intendedUse: z.nativeEnum(IntendedUse),
+    url: z.string().url(t("validation.urlInvalid")).optional(),
+    isEnglishRequired: z.boolean().optional(),
+    deadline: z
+        .string()
+        .optional()
+        .refine((val) => {
+                if (!val) return true;
+                const selected = new Date(val);
+                const now = new Date();
+                return selected.getTime() - now.getTime() > 24 * 60 * 60 * 1000;
+            },
+            {
+                message: t("validation.deadlineMin"),
+            })
+        .transform((val) => {
+            if (!val) return undefined;
+            return `${val}T23:59:59Z`;
+        }),
 });
 
 
 export const PostForm: React.FC<PostFormProps> = ({
-  redirectUrl: propRedirectUrl,
-  history,
-  setApiError,
-  postView,
-  mode
-}) => {
-  const {person} = useMyUser();
-  if (mode === "edit") {
-    const isOwner = postView?.creator.id === person?.id;
-    if (!isOwner) {
-      notFound();
+                                                      redirectUrl: propRedirectUrl,
+                                                      history,
+                                                      setApiError,
+                                                      postView,
+                                                      mode
+                                                  }) => {
+    const {person} = useMyUser();
+    if (mode === "edit") {
+        const isOwner = postView?.creator.id === person?.id;
+        if (!isOwner) {
+            notFound();
+        }
     }
-  }
 
-  const router = useRouter();
-  const {lang} = useLanguage();
-  const {t} = useTranslation();
-  const languageId = getNumericCode(lang) || 1;
+    const router = useRouter();
+    const {lang} = useLanguage();
+    const {t} = useTranslation();
+    const languageId = getNumericCode(lang) || 1;
 
     const {execute: createPost} = useHttpPost("createPost");
     const {execute: editPost} = useHttpPost("editPost");
@@ -90,84 +90,85 @@ export const PostForm: React.FC<PostFormProps> = ({
         ? t('createJob.pageTitle')
         : t('jobBoardDetail.jobDetail');
 
-  const {successMessage, errorMessage} = useNotification();
-  const [postId, setPostId] = useState<PostId>(0);
-  const {
-    state,
-    data: catalogData,
-    isMutating: isCatalogLoading
-  } = useHttpGet("listChildrenCommunities",
-    {maxDepth: 3});
+    const {successMessage, errorMessage} = useNotification();
+    const [postId, setPostId] = useState<PostId>(0);
+    const {
+        state,
+        data: catalogData,
+        isMutating: isCatalogLoading
+    } = useHttpGet("listChildrenCommunities",
+        {maxDepth: 3});
 
-  // Create schema with translations
-  const jobSchema = postJobSchema(t);
+    // Create schema with translations
+    const jobSchema = postJobSchema(t);
 
-  const formMethods = useForm<z.infer<typeof jobSchema>>({
-    resolver: zodResolver(jobSchema),
-    mode: "onChange",
-    criteriaMode: "all",
-    defaultValues: {
-      communityId: undefined,
-      jobTitle: "",
-      description: "",
-      workingFrom: JobType.Freelance,
-      intendedUse: IntendedUse.Personal,
-      budget: 0,
-      deadline: "",
-      url: "",
-      isEnglishRequired: false,
-    },
-  });
+    const formMethods = useForm<z.infer<typeof jobSchema>>({
+        resolver: zodResolver(jobSchema),
+        mode: "onChange",
+        criteriaMode: "all",
+        defaultValues: {
+            communityId: undefined,
+            jobTitle: "",
+            description: "",
+            workingFrom: JobType.Freelance,
+            intendedUse: IntendedUse.Personal,
+            budget: 0,
+            deadline: "",
+            url: "",
+            isEnglishRequired: false,
+        },
+    });
 
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    watch,
-    formState: {isValid, errors, isSubmitting}
-  } = formMethods;
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        reset,
+        watch,
+        formState: {isValid, errors, isSubmitting}
+    } = formMethods;
 
-  useEffect(() => {
-      if (postView && mode === "edit") {
-        const post = postView.post
-        reset({
-          communityId: post.communityId,
-          jobTitle: post.name,
-          description: post.body,
-          isEnglishRequired: post.isEnglishRequired,
-          url: post.url ?? "",
-          budget: post.budget,
-          deadline: post.deadline ? post.deadline.split("T")[0] : "",
-          workingFrom: post.jobType,
-          intendedUse: post.intendedUse,
-        });
-        setPostId(post.id);
-      }
-    },
-    [postView]);
+    useEffect(() => {
+            if (postView && mode === "edit") {
+                const post = postView.post
+                reset({
+                    communityId: post.communityId,
+                    jobTitle: post.name,
+                    description: post.body,
+                    isEnglishRequired: post.isEnglishRequired,
+                    url: post.url ?? "",
+                    budget: post.budget,
+                    deadline: post.deadline ? post.deadline.split("T")[0] : "",
+                    workingFrom: post.jobType,
+                    intendedUse: post.intendedUse,
+                });
+                setPostId(post.id);
+            }
+        },
+        [postView]);
 
-  useEffect(() => {
-      if (state.state === REQUEST_STATE.SUCCESS && catalogData?.communities?.length && !postView) {
-        const defaultCommunity = catalogData.communities.find(
-          (catalog) => catalog.community.id !== 1
-        ) || catalogData.communities[0];
-        if (defaultCommunity) {
-          setValue("communityId",
-            defaultCommunity.community.id,
-            {shouldValidate: true});
-        }
-      }
-    },
-    [state, catalogData, setValue, postView]);
+    useEffect(() => {
+            if (state.state === REQUEST_STATE.SUCCESS && catalogData?.communities?.length && !postView) {
+                const defaultCommunity = catalogData.communities.find(
+                    (catalog) => catalog.community.id !== 1
+                ) || catalogData.communities[0];
+                if (defaultCommunity) {
+                    setValue("communityId",
+                        defaultCommunity.community.id,
+                        {shouldValidate: true});
+                }
+            }
+        },
+        [state, catalogData, setValue, postView]);
 
-  const handleCreateSuccess = useCallback(async() => {
-      router.replace("/job-board");
-    },
-    [router]);
+    const handleCreateSuccess = useCallback(async () => {
+            router.replace("/job-board");
+        },
+        [router]);
 
-    const onSubmit = useCallback(async (data: z.infer<typeof jobSchema>) => {
+    const onSubmit = useCallback(
+        async (data: z.infer<typeof jobSchema>) => {
             try {
                 const payload: CreatePost = {
                     name: data.jobTitle,
@@ -175,28 +176,33 @@ export const PostForm: React.FC<PostFormProps> = ({
                     jobType: data.workingFrom,
                     communityId: data.communityId,
                     deadline: data.deadline,
-                    isEnglishRequired: data.isEnglishRequired || false,
+                    isEnglishRequired: data.isEnglishRequired ?? false,
                     url: data.url,
                     intendedUse: data.intendedUse,
                     budget: data.budget,
-                    languageId: languageId,
+                    languageId,
                 };
-                if (!postId) {
-                    await createPost(payload);
-                } else {
-                    await editPost({postId: postId, ...payload});
+
+                const response = postId
+                    ? await editPost({postId, ...payload})
+                    : await createPost(payload);
+
+                if (response.state === REQUEST_STATE.FAILED) {
+                    const key = postId ? `editJob.${response.err.name}` : `createJob.${response.err.name}`;
+                    const messageError = t(key) ?? t("global.serverError");
+                    errorMessage(null, null, messageError);
+                    return;
                 }
-                successMessage(null, null, "Success!");
-                await handleCreateSuccess()
+
+                successMessage(null, null, t("global.success") ?? "Success!");
+                await handleCreateSuccess();
             } catch (error) {
-                console.error("Error creating job: ",
-                    error);
-                errorMessage(null,
-                    null,
-                    "Submission failed!");
+                errorMessage(null, null, t("global.submissionFailed") ?? "Submission failed!");
             }
         },
-        [createPost, editPost, handleCreateSuccess, successMessage, errorMessage]);
+        [createPost, editPost, handleCreateSuccess, successMessage, errorMessage, postId, t, languageId]
+    );
+
     return (
         <div className="bg-[#F6F9FE] min-h-screen py-8">
             <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8">
@@ -205,394 +211,394 @@ export const PostForm: React.FC<PostFormProps> = ({
                         {title}
                     </h1>
 
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start">
-            <FontAwesomeIcon
-              icon={faInfoCircle}
-              className="text-blue-600 mt-1 mr-3"
-            />
-            <p className="text-blue-800">
-              {t("createJob.jobPostingNotice")}
-            </p>
-          </div>
+                    <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start">
+                        <FontAwesomeIcon
+                            icon={faInfoCircle}
+                            className="text-blue-600 mt-1 mr-3"
+                        />
+                        <p className="text-blue-800">
+                            {t("createJob.jobPostingNotice")}
+                        </p>
+                    </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-            <input type="hidden" name="languageId" value={languageId}/>
-            {/* Job Title */}
-            <div className="mb-6">
-              <label
-                htmlFor="jobTitle"
-                className="block text-gray-700 font-medium mb-2"
-              >
-                {t("createJob.jobTitleLabel")}
-              </label>
-              <input
-                id="jobTitle"
-                {...register("jobTitle")}
-                placeholder={t("createJob.jobTitlePlaceholder")}
-                className={`w-full text-text-primary placeholder:text-text-secondary placeholder:font-sans p-3 border rounded-lg focus:outline-none focus:ring-1 ${
-                  errors.jobTitle
-                    ? "border-red-200 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-blue-500"
-                }`}
-              />
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                        <input type="hidden" name="languageId" value={languageId}/>
+                        {/* Job Title */}
+                        <div className="mb-6">
+                            <label
+                                htmlFor="jobTitle"
+                                className="block text-gray-700 font-medium mb-2"
+                            >
+                                {t("createJob.jobTitleLabel")}
+                            </label>
+                            <input
+                                id="jobTitle"
+                                {...register("jobTitle")}
+                                placeholder={t("createJob.jobTitlePlaceholder")}
+                                className={`w-full text-text-primary placeholder:text-text-secondary placeholder:font-sans p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                                    errors.jobTitle
+                                        ? "border-red-200 focus:ring-red-500"
+                                        : "border-gray-300 focus:ring-blue-500"
+                                }`}
+                            />
 
-              {errors.jobTitle && (
-                <p className="mt-1 text-red-500 text-sm flex items-center">
-                  <FontAwesomeIcon
-                    icon={faExclamationCircle}
-                    className="mr-1"
-                  />
-                  {errors.jobTitle.message}
-                </p>
-              )}
-            </div>
+                            {errors.jobTitle && (
+                                <p className="mt-1 text-red-500 text-sm flex items-center">
+                                    <FontAwesomeIcon
+                                        icon={faExclamationCircle}
+                                        className="mr-1"
+                                    />
+                                    {errors.jobTitle.message}
+                                </p>
+                            )}
+                        </div>
 
-            {/* Working From */}
-            <div className="mb-6">
-              <label className="block text-gray-700 font-medium mb-2">
-                {t("createJob.employmentTypeLabel")}
-              </label>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="flex items-center p-3 border border-gray-300 rounded-lg">
-                  <input
-                    type="radio"
-                    id="freelance"
-                    value={JobType.Freelance}
-                    {...register("workingFrom")}
-                    className="h-4 w-4 text-blue-600"
-                  />
-                  <label htmlFor="freelance" className="ml-2 text-gray-700">
-                    {t("createJob.employmentTypeFreelance")}
-                  </label>
-                </div>
+                        {/* Working From */}
+                        <div className="mb-6">
+                            <label className="block text-gray-700 font-medium mb-2">
+                                {t("createJob.employmentTypeLabel")}
+                            </label>
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div className="flex items-center p-3 border border-gray-300 rounded-lg">
+                                    <input
+                                        type="radio"
+                                        id="freelance"
+                                        value={JobType.Freelance}
+                                        {...register("workingFrom")}
+                                        className="h-4 w-4 text-blue-600"
+                                    />
+                                    <label htmlFor="freelance" className="ml-2 text-gray-700">
+                                        {t("createJob.employmentTypeFreelance")}
+                                    </label>
+                                </div>
 
-                <div className="flex items-center p-3 border border-gray-300 rounded-lg">
-                  <input
-                    type="radio"
-                    id="contract"
-                    value={JobType.Contract}
-                    {...register("workingFrom")}
-                    className="h-4 w-4 text-blue-600"
-                  />
-                  <label htmlFor="contract" className="ml-2 text-gray-700">
-                    {t("createJob.employmentTypeContract")}
-                  </label>
-                </div>
+                                <div className="flex items-center p-3 border border-gray-300 rounded-lg">
+                                    <input
+                                        type="radio"
+                                        id="contract"
+                                        value={JobType.Contract}
+                                        {...register("workingFrom")}
+                                        className="h-4 w-4 text-blue-600"
+                                    />
+                                    <label htmlFor="contract" className="ml-2 text-gray-700">
+                                        {t("createJob.employmentTypeContract")}
+                                    </label>
+                                </div>
 
-                <div className="flex items-center p-3 border border-gray-300 rounded-lg">
-                  <input
-                    type="radio"
-                    id="parttime"
-                    value={JobType.PartTime}
-                    {...register("workingFrom")}
-                    className="h-4 w-4 text-blue-600"
-                  />
-                  <label htmlFor="parttime" className="ml-2 text-gray-700">
-                    {t("createJob.employmentTypePartTime")}
-                  </label>
-                </div>
+                                <div className="flex items-center p-3 border border-gray-300 rounded-lg">
+                                    <input
+                                        type="radio"
+                                        id="parttime"
+                                        value={JobType.PartTime}
+                                        {...register("workingFrom")}
+                                        className="h-4 w-4 text-blue-600"
+                                    />
+                                    <label htmlFor="parttime" className="ml-2 text-gray-700">
+                                        {t("createJob.employmentTypePartTime")}
+                                    </label>
+                                </div>
 
-                <div className="flex items-center p-3 border border-gray-300 rounded-lg">
-                  <input
-                    type="radio"
-                    id="fulltime"
-                    value={JobType.FullTime}
-                    {...register("workingFrom")}
-                    className="h-4 w-4 text-blue-600"
-                  />
-                  <label htmlFor="fulltime" className="ml-2 text-gray-700">
-                    {t("createJob.employmentTypeFullTime")}
-                  </label>
-                </div>
-              </div>
-            </div>
+                                <div className="flex items-center p-3 border border-gray-300 rounded-lg">
+                                    <input
+                                        type="radio"
+                                        id="fulltime"
+                                        value={JobType.FullTime}
+                                        {...register("workingFrom")}
+                                        className="h-4 w-4 text-blue-600"
+                                    />
+                                    <label htmlFor="fulltime" className="ml-2 text-gray-700">
+                                        {t("createJob.employmentTypeFullTime")}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
 
-            {/* Job Description */}
-            <div className="mb-6">
-              <label
-                htmlFor="description"
-                className="block text-gray-700 font-medium mb-2"
-              >
-                {t("createJob.jobDescriptionLabel")}
-              </label>
-              <p className="text-gray-500 text-sm mb-2">
-                {t("createJob.jobDescriptionNotice")}
-              </p>
-              <textarea
-                id="description"
-                {...register("description")}
-                placeholder={t("createJob.jobDescriptionDetails")}
-                className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 min-h-[200px] ${
-                  errors.description
-                    ? "border-red-200 focus:ring-red-500"
-                    : "border-gray-300 focus:ring-blue-500"
-                }`}
-              />
+                        {/* Job Description */}
+                        <div className="mb-6">
+                            <label
+                                htmlFor="description"
+                                className="block text-gray-700 font-medium mb-2"
+                            >
+                                {t("createJob.jobDescriptionLabel")}
+                            </label>
+                            <p className="text-gray-500 text-sm mb-2">
+                                {t("createJob.jobDescriptionNotice")}
+                            </p>
+                            <textarea
+                                id="description"
+                                {...register("description")}
+                                placeholder={t("createJob.jobDescriptionDetails")}
+                                className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 min-h-[200px] ${
+                                    errors.description
+                                        ? "border-red-200 focus:ring-red-500"
+                                        : "border-gray-300 focus:ring-blue-500"
+                                }`}
+                            />
 
-              {errors.description && (
-                <p className="mt-1 text-red-500 text-sm flex items-center">
-                  <FontAwesomeIcon
-                    icon={faExclamationCircle}
-                    className="mr-1"
-                  />
-                  {errors.description.message}
-                </p>
-              )}
-            </div>
+                            {errors.description && (
+                                <p className="mt-1 text-red-500 text-sm flex items-center">
+                                    <FontAwesomeIcon
+                                        icon={faExclamationCircle}
+                                        className="mr-1"
+                                    />
+                                    {errors.description.message}
+                                </p>
+                            )}
+                        </div>
 
-            {/* English Required Checkbox */}
-            <div className="mb-6">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="isEnglishRequired"
-                  {...register("isEnglishRequired")}
-                  className="h-4 w-4 text-blue-600"
-                />
-                <label
-                  htmlFor="isEnglishRequired"
-                  className="ml-2 text-gray-700"
-                >
-                  {t("createJob.englishSpeakerLabel")}
-                </label>
-              </div>
-            </div>
+                        {/* English Required Checkbox */}
+                        <div className="mb-6">
+                            <div className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    id="isEnglishRequired"
+                                    {...register("isEnglishRequired")}
+                                    className="h-4 w-4 text-blue-600"
+                                />
+                                <label
+                                    htmlFor="isEnglishRequired"
+                                    className="ml-2 text-gray-700"
+                                >
+                                    {t("createJob.englishSpeakerLabel")}
+                                </label>
+                            </div>
+                        </div>
 
-            {/* Example URL and Service Catalog */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label
-                  htmlFor="exampleUrl"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  {t("createJob.exampleUrl")}
-                </label>
-                <input
-                  id="url"
-                  {...register("url")}
-                  placeholder={t("createJob.serviceCategoryPlaceholderUrl")}
-                  className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1`}
-                />
+                        {/* Example URL and Service Catalog */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label
+                                    htmlFor="exampleUrl"
+                                    className="block text-gray-700 font-medium mb-2"
+                                >
+                                    {t("createJob.exampleUrl")}
+                                </label>
+                                <input
+                                    id="url"
+                                    {...register("url")}
+                                    placeholder={t("createJob.serviceCategoryPlaceholderUrl")}
+                                    className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1`}
+                                />
 
-              </div>
+                            </div>
 
-              <div>
-                <label
-                  htmlFor="communityId"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  {t("createJob.serviceCategoryLabel")}
-                </label>
-                <select
-                  id="communityId"
-                  {...register("communityId")}
-                  className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
-                    errors.communityId
-                      ? "border-red-200 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-500"
-                  }`}
-                >
-                  <option disabled value="">
-                    {t("createJob.serviceCategoryPlaceholderSelect")}
-                  </option>
-                  {catalogData?.communities
-                  .map((catalog) => (
-                    <option key={catalog.community.id} value={catalog.community.id}>
-                      {t(`catalogs.${toCamelCaseLastSegment(catalog.community.path)}`)}
-                    </option>
-                  ))}
-                </select>
+                            <div>
+                                <label
+                                    htmlFor="communityId"
+                                    className="block text-gray-700 font-medium mb-2"
+                                >
+                                    {t("createJob.serviceCategoryLabel")}
+                                </label>
+                                <select
+                                    id="communityId"
+                                    {...register("communityId")}
+                                    className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                                        errors.communityId
+                                            ? "border-red-200 focus:ring-red-500"
+                                            : "border-gray-300 focus:ring-blue-500"
+                                    }`}
+                                >
+                                    <option disabled value="">
+                                        {t("createJob.serviceCategoryPlaceholderSelect")}
+                                    </option>
+                                    {catalogData?.communities
+                                        .map((catalog) => (
+                                            <option key={catalog.community.id} value={catalog.community.id}>
+                                                {t(`catalogs.${toCamelCaseLastSegment(catalog.community.path)}`)}
+                                            </option>
+                                        ))}
+                                </select>
 
-                {errors.communityId && (
-                  <p className="mt-1 text-red-500 text-sm flex items-center">
-                    <FontAwesomeIcon
-                      icon={faExclamationCircle}
-                      className="mr-1"
-                    />
-                    {errors.communityId.message}
-                  </p>
-                )}
-              </div>
-            </div>
+                                {errors.communityId && (
+                                    <p className="mt-1 text-red-500 text-sm flex items-center">
+                                        <FontAwesomeIcon
+                                            icon={faExclamationCircle}
+                                            className="mr-1"
+                                        />
+                                        {errors.communityId.message}
+                                    </p>
+                                )}
+                            </div>
+                        </div>
 
-            {/* Budget and Deadline */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label
-                  htmlFor="budget"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  {t("createJob.budgetLabel")}
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    id="budget"
-                    {...register("budget")}
-                    placeholder="0"
-                    onFocus={(e) => e.target.select()}
-                    className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
-                      errors.budget
-                        ? "border-red-200 focus:ring-red-500"
-                        : "border-gray-300 focus:ring-blue-500"
-                    }`}
-                  />
+                        {/* Budget and Deadline */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label
+                                    htmlFor="budget"
+                                    className="block text-gray-700 font-medium mb-2"
+                                >
+                                    {t("createJob.budgetLabel")}
+                                </label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        id="budget"
+                                        {...register("budget")}
+                                        placeholder="0"
+                                        onFocus={(e) => e.target.select()}
+                                        className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                                            errors.budget
+                                                ? "border-red-200 focus:ring-red-500"
+                                                : "border-gray-300 focus:ring-blue-500"
+                                        }`}
+                                    />
 
-                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                    {t("createJob.budgetPlaceholder")}
-                  </div>
-                </div>
-                {errors.budget && (
-                  <p className="mt-1 text-red-500 text-sm flex items-center">
-                    <FontAwesomeIcon
-                      icon={faExclamationCircle}
-                      className="mr-1"
-                    />
-                    {errors.budget.message}
-                  </p>
-                )}
-              </div>
+                                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                                        {t("createJob.budgetPlaceholder")}
+                                    </div>
+                                </div>
+                                {errors.budget && (
+                                    <p className="mt-1 text-red-500 text-sm flex items-center">
+                                        <FontAwesomeIcon
+                                            icon={faExclamationCircle}
+                                            className="mr-1"
+                                        />
+                                        {errors.budget.message}
+                                    </p>
+                                )}
+                            </div>
 
-              <div>
-                <label
-                  htmlFor="deadline"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  {t("createJob.deadlineLabel")}
-                </label>
-                <input
-                  type="date"
-                  id="deadline"
-                  {...register("deadline")}
-                  min={new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split("T")[0]}
-                  className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
-                    errors.deadline
-                      ? "border-red-200 focus:ring-red-500"
-                      : "border-gray-300 focus:ring-blue-500"
-                  }`}
-                />
-              </div>
-            </div>
+                            <div>
+                                <label
+                                    htmlFor="deadline"
+                                    className="block text-gray-700 font-medium mb-2"
+                                >
+                                    {t("createJob.deadlineLabel")}
+                                </label>
+                                <input
+                                    type="date"
+                                    id="deadline"
+                                    {...register("deadline")}
+                                    min={new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split("T")[0]}
+                                    className={`text-text-primary placeholder:text-text-secondary placeholder:font-sans w-full p-3 border rounded-lg focus:outline-none focus:ring-1 ${
+                                        errors.deadline
+                                            ? "border-red-200 focus:ring-red-500"
+                                            : "border-gray-300 focus:ring-blue-500"
+                                    }`}
+                                />
+                            </div>
+                        </div>
 
-            {/* Intended Use */}
-            <div className="mb-6">
-              <label className="block text-gray-700 font-medium mb-2">
-                {t("createJob.intendedUseLabel")}
-              </label>
-              <p className="text-gray-500 text-sm mb-2">
-                {t("createJob.intendedUseNotice")}
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
-                <div
-                  className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer ${
-                    watch("intendedUse") === "Business"
-                      ? "bg-blue-100 border border-blue-300"
-                      : "bg-white border border-gray-200"
-                  }`}
-                  onClick={() => setValue("intendedUse",
-                    IntendedUse.Business)}
-                >
-                  <div className="text-blue-600 mb-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-8 w-8"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">
+                        {/* Intended Use */}
+                        <div className="mb-6">
+                            <label className="block text-gray-700 font-medium mb-2">
+                                {t("createJob.intendedUseLabel")}
+                            </label>
+                            <p className="text-gray-500 text-sm mb-2">
+                                {t("createJob.intendedUseNotice")}
+                            </p>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
+                                <div
+                                    className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer ${
+                                        watch("intendedUse") === "Business"
+                                            ? "bg-blue-100 border border-blue-300"
+                                            : "bg-white border border-gray-200"
+                                    }`}
+                                    onClick={() => setValue("intendedUse",
+                                        IntendedUse.Business)}
+                                >
+                                    <div className="text-blue-600 mb-2">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-8 w-8"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <span className="text-gray-700">
                     {t("createJob.intendedUseBusiness")}
                   </span>
-                </div>
+                                </div>
 
-                <div
-                  className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer ${
-                    watch("intendedUse") === "Personal"
-                      ? "bg-blue-100 border border-blue-300"
-                      : "bg-white border border-gray-200"
-                  }`}
-                  onClick={() => setValue("intendedUse",
-                    IntendedUse.Personal)}
-                >
-                  <div className="text-blue-600 mb-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-8 w-8"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">
+                                <div
+                                    className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer ${
+                                        watch("intendedUse") === "Personal"
+                                            ? "bg-blue-100 border border-blue-300"
+                                            : "bg-white border border-gray-200"
+                                    }`}
+                                    onClick={() => setValue("intendedUse",
+                                        IntendedUse.Personal)}
+                                >
+                                    <div className="text-blue-600 mb-2">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-8 w-8"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <span className="text-gray-700">
                     {t("createJob.intendedUsePersonal")}
                   </span>
-                </div>
+                                </div>
 
-                <div
-                  className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer ${
-                    watch("intendedUse") === "Unknown"
-                      ? "bg-blue-100 border border-blue-300"
-                      : "bg-white border border-gray-200"
-                  }`}
-                  onClick={() => setValue("intendedUse",
-                    IntendedUse.Unknown)}
-                >
-                  <div className="text-blue-600 mb-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-8 w-8"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">
+                                <div
+                                    className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer ${
+                                        watch("intendedUse") === "Unknown"
+                                            ? "bg-blue-100 border border-blue-300"
+                                            : "bg-white border border-gray-200"
+                                    }`}
+                                    onClick={() => setValue("intendedUse",
+                                        IntendedUse.Unknown)}
+                                >
+                                    <div className="text-blue-600 mb-2">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-8 w-8"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                            />
+                                        </svg>
+                                    </div>
+                                    <span className="text-gray-700">
                     {t("createJob.intendedUseUnknown")}
                   </span>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Buttons */}
+                        <div className="flex justify-end space-x-4 mt-10">
+                            <Link prefetch={false}
+                                  href="/job-board"
+                                  className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50"
+                            >
+                                {t("createJob.previewButton")}
+                            </Link>
+                            <button
+                                type="submit"
+                                className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? <LoadingCircle/> : t("createJob.submitButton")}
+                            </button>
+                        </div>
+                    </form>
                 </div>
-              </div>
             </div>
-            {/* Buttons */}
-            <div className="flex justify-end space-x-4 mt-10">
-              <Link prefetch={false}
-                    href="/job-board"
-                    className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50"
-              >
-                {t("createJob.previewButton")}
-              </Link>
-              <button
-                type="submit"
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? <LoadingCircle/> : t("createJob.submitButton")}
-              </button>
-            </div>
-          </form>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
