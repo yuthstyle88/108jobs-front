@@ -23,6 +23,7 @@ const withHooks = (Component: any) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const redirectUrl = searchParams.get("redirect") || "/";
+    const initialEmail = searchParams.get("email") || "";
 
     // Handle loading and error states
     const loginSchema = z.object({
@@ -52,6 +53,7 @@ const withHooks = (Component: any) => {
         loginSchema={loginSchema}
         apiError={apiError}
         setApiError={setApiError}
+        initialEmail={initialEmail}
       />
     );
   };
@@ -71,6 +73,7 @@ export class LoginFormClass extends Component<
   loginSchema: any;
   apiError: string | null;
   setApiError: (value: string | null) => void;
+  initialEmail: string;
 },
   State> {
   state: State = {
@@ -143,6 +146,10 @@ export class LoginFormClass extends Component<
     const {switchToRegister, switchToForgotPassword, t, formMethods} = this.props;
     const {showPassword, oauthProviders} = this.state;
     const {register, handleSubmit, formState: {errors, isSubmitting}} = formMethods;
+
+    if (this.props.initialEmail) {
+      this.props.formMethods.setValue("usernameOrEmail", this.props.initialEmail);
+    }
 
     return (
       <div>
