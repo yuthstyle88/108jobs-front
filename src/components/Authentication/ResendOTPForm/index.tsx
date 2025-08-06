@@ -99,6 +99,9 @@ export const ResendOTPForm: React.FC<OTPFormProps> = ({
     [switchToVerifyOTP]);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
+      <div className="text-sm text-red-700 mb-6">
+        This email already exists in the system. Please verify your email with the code sent.
+      </div>
       <CustomInput
         label={t("authen.labelEmail")}
         type="email"
