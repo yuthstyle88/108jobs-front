@@ -109,9 +109,6 @@ export default function RegisterPage() {
             src={CategoriesImage.logodefault}
             alt="logo"
           />
-          {apiError && (
-            <p className="text-red-600 text-sm mt-2">{apiError}</p>
-          )}
           {currentView === "register" && (
             <AuthFormContainer
               title={t("authen.titleCreateAccount")}

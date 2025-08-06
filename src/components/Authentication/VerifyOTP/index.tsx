@@ -73,16 +73,6 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
         []);
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-            {apiErrorState && (
-                <p className="text-red-500 text-sm text-center mb-4">
-                    {t("authen.apiErrorState")}
-                </p>
-            )}
-            {errors.root && (
-                <p className="text-red-500 text-sm text-center mb-4">
-                    {errors.root.message}
-                </p>
-            )}
             <p className="text-text-primary text-sm">
                 <Trans
                     i18nKey="authen.enterCodeWithEmail"
@@ -126,11 +116,16 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
        >
            {t("authen.resendEmail")}
        </button>
-        {errors.root && (
-          <p className="text-red-500 text-sm text-center mb-4">
-            {errors.root.message}
-          </p>
-        )}
+          {apiErrorState && (
+              <p className="text-red-500 text-sm text-center mb-4">
+                  {t("authen.notFound")}
+              </p>
+          )}
+          {errors.root && (
+              <p className="text-red-500 text-sm text-center mb-4">
+                  {errors.root.message}
+              </p>
+          )}
       </div>
     </form>
   );
