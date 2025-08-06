@@ -101,7 +101,7 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
           className="submit-button py-3"
           disabled={!isValid || isSubmitting}
         >
-          {isSubmitting ? <LoadingCircle/> : t("authen.btnVerifyOTP")}
+          {isSubmitting ? <LoadingCircle/> : t("authen.labelContinue")}
         </button>
       </div>
       <div className="text-center">

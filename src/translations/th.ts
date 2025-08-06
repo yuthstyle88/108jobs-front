@@ -294,7 +294,7 @@ export const th = {
             sampleCode: "รหัสอ้างอิง 0JFPMQ",
             sendCodeButton: "ส่งรหัสยืนยัน",
             subtitleSafeMoney: "เงินปลอดภัย ได้งานชัวร์",
-            titleCreateAccount: "สร้างบัญชี Fastwork",
+            titleCreateAccount: "สร้างบัญชี",
             titleHireThrough: "จ้างผ่าน",
             titleLoginCreateAccount: "เข้าสู่ระบบ / สร้างบัญชี",
             titleVerifyEmail: "ยืนยันอีเมล",
@@ -313,6 +313,7 @@ export const th = {
             placeholderCaptchaAnswer: "กรอกคำตอบของแคปช่า",
             usernameMin6: "ชื่อผู้ใช้ต้องมีอย่างน้อย 6 ตัวอักษร",
             invalidEmail: "กรุณากรอกอีเมลที่ถูกต้อง",
+            titleLoginForm: "ยินดีต้อนรับกลับมา",
             notMatchPassword: "รหัสผ่านไม่ตรงกัน",
             reloadCaptcha: "โหลดใหม่",
             captchaIncorrect: "คำตอบของแคปช่าไม่ถูกต้อง",
@@ -339,7 +340,8 @@ export const th = {
             resendSuccess: "ส่งรหัส OTP อีกครั้งเรียบร้อยแล้ว",
             resendVerifyCode: "ขอใหม่รหัสอีกครั้ง",
             emailRegistered: "อีเมลนี้ได้ลงทะเบียนไว้แล้ว กรุณาเข้าสู่ระบบด้วยรหัสผ่านของคุณ",
-            invalidPassword: "รหัสผ่านไม่ถูกต้อง"
+            invalidPassword: "รหัสผ่านไม่ถูกต้อง",
+            titleVerifyingCode: "ตรวจสอบกล่องจดหมายของคุณ"
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "การตั้งค่าบัญชี",
@@ -869,6 +871,7 @@ export const th = {
             tittleHeaderMenuSection2: "สำหรับลูกค้าองค์กร",
             tittlePopularHeaderSearch: "การค้นหายอดนิยม",
             labelSignInButton: "เข้าสู่ระบบ",
+            labelContinue: "ดำเนินการต่อ"
         },
         guarantee: {
             fastworkGuaranteeTitle: "Fastwork Guarantee",
