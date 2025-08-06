@@ -118,7 +118,6 @@ export default function RegisterPage() {
               <RegisterForm
                 setApiError={setApiError}
                 switchToVerifyOTP={(data) => {
-                  alert(data)
                   if (data) {
                     setDataDataRegister(data);
                     setCurrentView("verify-otp");
@@ -132,7 +131,10 @@ export default function RegisterPage() {
             <AuthFormContainer
               title={`Verify OTP`}
             >
-              <VerifyOTPForm email={dataDataRegister}/>
+              <VerifyOTPForm
+                setApiError={setApiError}
+                email={dataDataRegister}
+              />
             </AuthFormContainer>
           )}
         </div>

@@ -78,11 +78,7 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
           {t("authen.apiErrorState")}
         </p>
       )}
-      {errors.root && (
-        <p className="text-red-500 text-sm text-center mb-4">
-          {errors.root.message}
-        </p>
-      )}
+
      <p className="text-text-primary text-sm font-sans">
        Enter the code sent to <span className="font-medium">{email?.toString()}</span> to verify your account.
      </p>
@@ -108,18 +104,25 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
        <button
          type="button"
          onClick={ async() => {
-           const emailString: string = email?.toString() ?? "";
+           const emailString: string = email?.toString() || "";
            const verifyRes = await HttpService.client.resendVerificationEmail({
              email: emailString,
            });
            if (verifyRes.state === REQUEST_STATE.FAILED) {
              handleApiError(verifyRes.err.name);
+           } else {
+             handleApiError("please check your email for the verification code.");
            }
          }}
          className="text-text-primary text-sm font-sans"
        >
          Resend Email
        </button>
+        {errors.root && (
+          <p className="text-red-500 text-sm text-center mb-4">
+            {errors.root.message}
+          </p>
+        )}
       </div>
     </form>
   );
