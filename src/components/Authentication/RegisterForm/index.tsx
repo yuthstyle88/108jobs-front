@@ -75,7 +75,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       });
       switch (registerRes.state) {
         case REQUEST_STATE.FAILED: {
-          if (registerRes.err.name === "requireVerification" && onSendToResendOTP && setApiError) {
+          if (registerRes.err.name === "requireVerification" && onSendToResendOTP) {
             onSendToResendOTP?.({ email: data.email });
           } else if (registerRes.err.name === "emailAlreadyExists"){
              window.location.href = `/login/email-already-exists?redirect=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(data.email)}`;
@@ -94,7 +94,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         break;
       }
     },
-    [switchToVerifyOTP, onSendToResendOTP, setApiError]);
+    [switchToVerifyOTP, onSendToResendOTP]);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
       {apiErrorState && (
