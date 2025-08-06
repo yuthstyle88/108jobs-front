@@ -1785,6 +1785,9 @@ export const vi = {
             subtitleIndividualHiring: "Dùng để phát hành tài liệu tuyển dụng cá nhân",
         },
         profileInfo: {
+            day:"Ngày",
+            month:"Tháng",
+            year:"Năm",
             accountInfo: "Account Information",
             buttonSetPassword: "Đặt mật khẩu",
             confirmPasswordLabel: "Xác nhận mật khẩu",

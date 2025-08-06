@@ -1771,6 +1771,9 @@ export const en = {
                 "For issuing documents related to personal hiring",
         },
         profileInfo: {
+            day:"Day",
+            month:"Month",
+            year:"Year",
             accountInfo: "Account Information",
             buttonSetPassword: "Set a password",
             confirmPasswordLabel: "Confirm Password",

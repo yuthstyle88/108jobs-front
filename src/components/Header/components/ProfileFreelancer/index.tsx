@@ -23,19 +23,16 @@ import {UserService} from "@/services";
 import {useTranslation} from "react-i18next";
 
 type ProfileFreelancerProps = {
-  profile: Person | null;
+  profile: Person;
 };
 
 const ProfileFreelancer = ({profile}: ProfileFreelancerProps) => {
   const logout = () => UserService.Instance.logout();
-  console.log("profile",
-    profile);
-
   const {lang: currentLang} = useLanguage();
   const {t} = useTranslation();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">
-      <Link prefetch={false} href={`/${currentLang}/user/`}>
+      <Link prefetch={false} href={`/${currentLang}/profile`}>
         <div className="p-4 bg-secondary hover:bg-[#D0E1FB] duration-150 rounded-tl-lg rounded-tr-lg relative">
           <div className="flex items-center space-x-3">
             <div className="bg-gray-200 flex items-center justify-center rounded-full">
@@ -48,7 +45,7 @@ const ProfileFreelancer = ({profile}: ProfileFreelancerProps) => {
               />
             </div>
             <div>
-              <p className="font-medium text-gray-900">username</p>
+              <p className="font-medium text-gray-900">{profile.name}</p>
               <p className="text-sm font-sans text-text-secondary underline">
                 {t("global.labelViewProfile")}
               </p>

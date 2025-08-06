@@ -1724,6 +1724,9 @@ export const th = {
             subtitleIndividualHiring: "สำหรับออกเอกสาร การจ้างแบบบุคคลธรรมดา",
         },
         profileInfo: {
+            day: "วัน",
+            month: "เดือน",
+            year: "ปี",
             accountInfo: "ข้อมูลส่วนตัวเพื่อแนะนำตัวเอง",
             buttonSetPassword: "ตั้งค่ารหัสผ่าน",
             confirmPasswordLabel: "ยืนยันรหัสผ่าน",
