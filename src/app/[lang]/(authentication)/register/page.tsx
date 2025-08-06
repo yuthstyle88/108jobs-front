@@ -11,7 +11,6 @@ import Image from "next/image";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 import {VerifyOTPForm} from "@/components/Authentication/VerifyOTP";
-import {ResendOTPForm} from "@/components/Authentication/ResendOTPForm";
 
 type ViewState = "register" | "verify-otp"  | "resend-otp";
 
@@ -134,14 +133,6 @@ export default function RegisterPage() {
               <VerifyOTPForm/>
             </AuthFormContainer>
           )}
-          {currentView === "resend-otp" && (
-            <AuthFormContainer
-              title={`Resend OTP`}
-            >
-              <ResendOTPForm email={dataDataRegister?.email}/>
-            </AuthFormContainer>
-          )}
-
         </div>
       </div>
     </div>

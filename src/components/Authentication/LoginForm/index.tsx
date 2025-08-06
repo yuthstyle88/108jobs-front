@@ -127,6 +127,11 @@ export class LoginFormClass extends Component<
         oauthProviders: [],
       });
     }
+
+    if (this.props.initialEmail) {
+      this.props.formMethods.setValue("usernameOrEmail", this.props.initialEmail);
+      this.props.setApiError("This email has already been registered. Please login with your password.");
+    }
   }
 
   toggleShowPassword = () => {
@@ -146,11 +151,6 @@ export class LoginFormClass extends Component<
     const {switchToRegister, switchToForgotPassword, t, formMethods} = this.props;
     const {showPassword, oauthProviders} = this.state;
     const {register, handleSubmit, formState: {errors, isSubmitting}} = formMethods;
-
-    if (this.props.initialEmail) {
-      this.props.formMethods.setValue("usernameOrEmail", this.props.initialEmail);
-      this.props.setApiError("This email has already been registered. Please login with your password.");
-    }
 
     return (
       <div>

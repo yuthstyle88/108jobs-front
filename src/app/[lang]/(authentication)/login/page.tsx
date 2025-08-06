@@ -32,8 +32,6 @@ export default function LoginPage() {
 
   const [forgotEmail, setForgotEmail] = useState<RegisterDataProps>();
   // Load singUpData from sessionStorage if available, only on client
-  console.log("🧭 currentView:",
-    currentView);
   const route = useRouter();
 
   return (
