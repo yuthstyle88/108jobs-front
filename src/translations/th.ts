@@ -334,6 +334,7 @@ export const th = {
             titleSignInCreateAccount: "เข้าสู่ระบบ FastJob",
             userNotFound: "ชื่อผู้ใช้หรืออีเมลไม่มีอยู่ในระบบ",
             roleSelectionLabel: "คุณต้องการเป็น:",
+            resendVerifyCode: "ขอใหม่รหัสอีกครั้ง",
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "การตั้งค่าบัญชี",

@@ -2,7 +2,6 @@
 import {AuthFormContainer} from "@/components/Authentication/AuthFormContainer";
 
 import {RegisterForm} from "@/components/Authentication/RegisterForm";
-import VerifyEmailConfirm from "@/components/Authentication/VerifyEmailConfirm";
 import {AuthenticateIcon} from "@/constants/icons";
 import {CategoriesImage} from "@/constants/images";
 import {LanguageFile} from "@/constants/language";
@@ -12,8 +11,9 @@ import Image from "next/image";
 import {useRouter} from "next/navigation";
 import {useState} from "react";
 import {VerifyOTPForm} from "@/components/Authentication/VerifyOTP";
+import {ResendOTPForm} from "@/components/Authentication/ResendOTPForm";
 
-type ViewState = "register" | "verify-otp";
+type ViewState = "register" | "verify-otp"  | "resend-otp";
 
 export default function RegisterPage() {
   const route = useRouter();
@@ -116,10 +116,14 @@ export default function RegisterPage() {
               title={`Sign up`}
               onBack={() => route.push("/login")}
             >
-
               <RegisterForm
                 switchToVerifyOTP={() => setCurrentView("verify-otp")}
                 setApiError={setApiError}
+                onSendToResendOTP={(data) => {
+                  setDataDataRegister(data);
+                  setCurrentView("resend-otp");
+                  setApiError("");
+                }}
               />
 
             </AuthFormContainer>
@@ -129,6 +133,13 @@ export default function RegisterPage() {
               title={`Verify OTP`}
             >
               <VerifyOTPForm/>
+            </AuthFormContainer>
+          )}
+          {currentView === "resend-otp" && (
+            <AuthFormContainer
+              title={`Resend OTP`}
+            >
+              <ResendOTPForm email={dataDataRegister?.email}/>
             </AuthFormContainer>
           )}
 

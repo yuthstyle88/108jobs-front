@@ -2,7 +2,7 @@
 import LoadingCircle from "@/components/LoadingCircle";
 import {CustomInput} from "@/components/ui/InputField";
 import {zodResolver} from "@hookform/resolvers/zod";
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {HttpService, REQUEST_STATE,} from "@/services/HttpService";
@@ -12,31 +12,31 @@ import {useIsoData} from "@/hooks/profile-api/useIsoData";
 import {OAuthProvider} from "@/lib/lemmy-js-client/src";
 import {handleUseOAuthProvider} from "@/components/Authentication/LoginForm/handlers";
 import {useSearchParams} from "next/navigation";
+import {UserService} from "@/services";
 
 // Form schema definition
-const createRegisterSchema = (t: any) => z
+const createOTPSchema = (t: any) => z
 .object({
   email: z.string().email(t("authen.invalidEmail")),
 });
 
-interface RegisterFormProps {
+interface OTPFormProps {
   switchToVerifyOTP?: () => void;
   setApiError?: (err: string) => void;
-  onSendToResendOTP?: (data: { email: string }) => void;
+  email?: string;
 }
 
-export const RegisterForm: React.FC<RegisterFormProps> = ({
+export const ResendOTPForm: React.FC<OTPFormProps> = ({
   switchToVerifyOTP,
   setApiError,
-  onSendToResendOTP
+  email
 }) => {
   const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get("redirect") || "/";
   // Hooks
   const {t} = useTranslation();
   // State
   const [apiErrorState, setApiErrorState] = useState<string | null>(null);
-  const {site, oauthProviders} = useIsoData();
+
   // Use the provided setApiError function if available, otherwise use the local state setter
   const handleApiError = useCallback((err: string) => {
       if (setApiError) {
@@ -48,7 +48,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     [setApiError]);
 
   // Form setup
-  const registerSchema = createRegisterSchema(t);
+  const registerSchema = createOTPSchema(t);
   const formMethods = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     mode: "onChange",
@@ -58,30 +58,32 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: {isValid, errors, isSubmitting}
   } = formMethods;
+  useEffect(() => {
+      if (email) {
+        try {
+          if (email) {
+            setValue("email",
+              email);
+          }
+        } catch (error) {
+          console.error("Error",
+            error);
+        }
+      }
+    },
+    [email, setValue]);
 
-  const handleLoginWithProvider = (provider: OAuthProvider) => {
-    handleUseOAuthProvider({
-      oauthProvider: provider,
-      prev: redirectUrl,
-    });
-  };
   const onSubmit = useCallback(async(data: any) => {
-
       const registerRes = await HttpService.client.register({
         email: data.email,
         answer: "FastJob"
       });
       switch (registerRes.state) {
         case REQUEST_STATE.FAILED: {
-          if (registerRes.err.name === "requireVerification" && onSendToResendOTP && setApiError) {
-            onSendToResendOTP?.({ email: data.email });
-          } else if (registerRes.err.name === "emailAlreadyExists"){
-             window.location.href = `/login/email-already-exists?redirect=${encodeURIComponent(redirectUrl)}&email=${encodeURIComponent(data.email)}`;
-          }else{
-            handleApiError(t(`authen.${registerRes.err.name}`));
-          }
+          handleApiError(t(`authen.${registerRes.err.name}`));
           break;
         }
         case REQUEST_STATE.SUCCESS: {
@@ -94,19 +96,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         break;
       }
     },
-    [switchToVerifyOTP, onSendToResendOTP, setApiError]);
+    [switchToVerifyOTP]);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-      {apiErrorState && (
-        <p className="text-red-500 text-sm text-center mb-4">
-          {t("authen.apiErrorState")}
-        </p>
-      )}
-      {errors.root && (
-        <p className="text-red-500 text-sm text-center mb-4">
-          {errors.root.message}sss
-        </p>
-      )}
       <CustomInput
         label={t("authen.labelEmail")}
         type="email"
@@ -115,7 +107,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         register={register("email")}
         error={errors.email?.message}
       />
-
       {apiErrorState && (
         <div className="p-3 bg-red-100 text-red-700 rounded text-sm">
           {apiErrorState}
@@ -126,15 +117,12 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         <button
           type="submit"
           className="submit-button py-3"
-          disabled={!isValid || isSubmitting}
+          disabled={isSubmitting}
         >
-          {isSubmitting ? <LoadingCircle/> : t("authen.linkCreateAccount")}
+          {isSubmitting ? <LoadingCircle/> : t("authen.resendVerifyCode")}
         </button>
       </div>
 
-      <div className="flex flex-col gap-3 mt-6">
-        <OAuthButtons providers={oauthProviders} onLogin={handleLoginWithProvider} label={t("authen.labelOrSignInWith")}/>
-      </div>
     </form>
   );
 };

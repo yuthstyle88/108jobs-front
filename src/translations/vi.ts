@@ -334,6 +334,7 @@ export const vi = {
             titleSignInCreateAccount: "Đăng nhập FastJob",
             userNotFound: "Tên người dùng hoặc email không tồn tại",
             roleSelectionLabel: "Bạn muốn trở thành:",
+            resendVerifyCode: "Resend verification code",
         },
         breadcrumb: {
             accountSettingsBreadcrumb: "Cài đặt tài khoản",

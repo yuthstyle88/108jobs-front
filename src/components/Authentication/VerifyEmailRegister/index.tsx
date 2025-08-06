@@ -9,10 +9,10 @@ import {t} from "@/utils/i18nHelper";
 import {LanguageFile} from "@/constants/language";
 
 type VerifyEmailRegisterProps = {
-  token: string;
+  code: string;
 };
 
-export const VerifyEmailRegister = ({token}: VerifyEmailRegisterProps) => {
+export const VerifyEmailRegister = ({code}: VerifyEmailRegisterProps) => {
   const {successMessage} = useNotification();
   const [apiError, setApiError] = useState<string | null>(null);
   const hasCalled = useRef(false);
@@ -25,7 +25,7 @@ export const VerifyEmailRegister = ({token}: VerifyEmailRegisterProps) => {
       const verifyEmail = async() => {
         try {
           setApiError(null);
-          const verifyRes = await HttpService.client.verifyEmail({token});
+          const verifyRes = await HttpService.client.verifyEmail({code});
           console.log("verifyRes",
             verifyRes);
 
@@ -48,7 +48,7 @@ export const VerifyEmailRegister = ({token}: VerifyEmailRegisterProps) => {
 
       verifyEmail();
     },
-    [token]);
+    [code]);
 
   return apiError ? <ErrorPage/> : <LoadingBlur text=""/>;
 };
