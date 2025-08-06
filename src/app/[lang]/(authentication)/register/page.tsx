@@ -19,7 +19,7 @@ export default function RegisterPage() {
   const loginLanguageData = getNamespace(LanguageFile.AUTHEN);
 
   const [currentView, setCurrentView] = useState<ViewState>("register");
-  const [dataDataRegister, setDataDataRegister] = useState<RegisterDataProps | null>(null);
+  const [dataDataRegister, setDataDataRegister] = useState<RegisterDataProps>();
   const [apiError, setApiError] = useState<string | null>(null);
 
   return (
@@ -116,11 +116,13 @@ export default function RegisterPage() {
               onBack={() => route.push("/login")}
             >
               <RegisterForm
-                switchToVerifyOTP={() => setCurrentView("verify-otp")}
                 setApiError={setApiError}
-                onSendToResendOTP={(data) => {
-                  setDataDataRegister(data);
-                  setCurrentView("resend-otp");
+                switchToVerifyOTP={(data) => {
+                  alert(data)
+                  if (data) {
+                    setDataDataRegister(data);
+                    setCurrentView("verify-otp");
+                  }
                 }}
               />
 
@@ -130,7 +132,7 @@ export default function RegisterPage() {
             <AuthFormContainer
               title={`Verify OTP`}
             >
-              <VerifyOTPForm/>
+              <VerifyOTPForm email={dataDataRegister}/>
             </AuthFormContainer>
           )}
         </div>

@@ -9,10 +9,12 @@ import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {REQUEST_STATE} from "@/services/HttpService";
 import LoadingCircle from "@/components/LoadingCircle";
+import {RegisterDataProps} from "@/types/register-data";
 
 interface VerifyOTPProps {
   switchToVerifyEmail?: () => void;
   setApiError?: (err: string) => void;
+  email?: RegisterDataProps;
 }
 
 const createOTPSchema = (t: any) => z
@@ -21,7 +23,8 @@ const createOTPSchema = (t: any) => z
 });
 
 export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
-  setApiError
+  setApiError,
+  email,
 }) => {
   // Hooks
   const {t} = useTranslation();
@@ -80,6 +83,9 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
           {errors.root.message}
         </p>
       )}
+     <p className="text-text-primary text-sm font-sans">
+       Enter the code sent to <span className="font-medium">{email?.toString()}</span> to verify your account.
+     </p>
       <CustomInput
         label={t("authen.labelOTP")}
         type="string"
@@ -98,7 +104,18 @@ export const VerifyOTPForm: React.FC<VerifyOTPProps> = ({
           {isSubmitting ? <LoadingCircle/> : t("authen.btnVerifyOTP")}
         </button>
       </div>
-
+      <div className="text-center">
+       <button
+         type="button"
+         onClick={() => {
+           // TODO: Replace this with the actual resend email method
+           console.log("Resend email triggered");
+         }}
+         className="text-text-primary text-sm font-sans"
+       >
+         Resend Email
+       </button>
+      </div>
     </form>
   );
 };
