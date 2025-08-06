@@ -2,7 +2,7 @@
 const nextConfig = {
     images: {
         remotePatterns: [
-            { protocol: 'http',  hostname: 'images.example.com', pathname: '/**' },
+            { protocol: 'http', hostname: 'images.example.com', pathname: '/**' },
             {
                 protocol: "https",
                 hostname: "fastwork.ibrowe.com",
@@ -14,6 +14,11 @@ const nextConfig = {
                 hostname: "example.com",
                 port: "",
                 pathname: "/**",
+            },
+            {
+                protocol: 'https',
+                hostname: 'api-fastwork-stg.ibrowe.com',
+                pathname: '/api/v4/image/**',
             },
         ],
         formats: ['image/avif', 'image/webp'],

@@ -444,35 +444,28 @@ async function toBlob(src: string | File | Blob): Promise<Blob> {
  */
 export async function uploadSelectedImage(
   selectedImage: File | string,
-  uploadImage: (payload: {image: File}) => Promise<any>,
+  uploadImage: (payload: { image: File }) => Promise<any>
 ): Promise<string> {
   let file: File;
 
-  // If it's already a File object, use it directly
   if (selectedImage instanceof File) {
     file = selectedImage;
   } else {
-    // If it's a base64 string or URL, convert to Blob then File
     const blob = await toBlob(selectedImage);
-    file = new File([blob],
-      "profile.jpg",
-      {
-        type: blob.type || "image/jpeg",
-      });
+    file = new File([blob], "profile.jpg", {
+      type: blob.type || "image/jpeg",
+    });
   }
 
-  // Upload the file
-  const result = await uploadImage({image: file});
+  const result = await uploadImage({ image: file });
 
-  // Check for successful upload and return the image URL
-  if (isSuccess<UploadImageResponse>(result) && result.data.images?.length) {
-    const url = result.data.images[0].imageUrl;
-    if (url) return url;
+  if (isSuccess(result) && result.data?.imageUrl) {
+    return result.data.imageUrl;
   }
 
+  console.error("Upload failed response:", result);
   throw new Error("Image upload failed");
 }
-
 export function stripEmpty<T extends object>(obj: T): Partial<T> {
   return Object.fromEntries(
     Object.entries(obj).filter(
