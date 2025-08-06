@@ -108,6 +108,10 @@ export class LoginFormClass extends Component<
         oauthProviders: this.isoData.siteRes.oauthProviders ?? [],
         hasFetchedSite: true,
       });
+      if (this.props.initialEmail) {
+        this.props.formMethods.setValue("usernameOrEmail", this.props.initialEmail);
+        this.props.setApiError(t("error.emailAlreadyExists"));
+      }
       return;
     }
     if (this.hasFetchedSite || this.state.hasFetchedSite) return;
@@ -148,11 +152,6 @@ export class LoginFormClass extends Component<
     const {switchToRegister, switchToForgotPassword, t, formMethods} = this.props;
     const {showPassword, oauthProviders} = this.state;
     const {register, handleSubmit, formState: {errors, isSubmitting}} = formMethods;
-
-    if (this.props.initialEmail) {
-      this.props.formMethods.setValue("usernameOrEmail", this.props.initialEmail);
-      this.props.setApiError(t("error.emailAlreadyExists"));
-    }
 
     return (
       <div>
