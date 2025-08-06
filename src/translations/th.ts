@@ -336,7 +336,7 @@ export const th = {
             roleSelectionLabel: "คุณต้องการเป็น:",
             resendOTP: "ส่งรหัส OTP อีกครั้ง",
             resendFailed: "ไม่สามารถส่งรหัส OTP อีกครั้ง กรุณาลองใหม่",
-            resendSuccess: "ส่งรหัส OTP อีกครั้งเรียบร้อยแล้ว"
+            resendSuccess: "ส่งรหัส OTP อีกครั้งเรียบร้อยแล้ว",
             resendVerifyCode: "ขอใหม่รหัสอีกครั้ง",
         },
         breadcrumb: {

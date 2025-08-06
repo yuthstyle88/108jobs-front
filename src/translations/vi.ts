@@ -336,7 +336,7 @@ export const vi = {
             roleSelectionLabel: "Bạn muốn trở thành:",
             resendOTP: "Gửi lại mã OTP",
             resendFailed: "Gửi lại mã OTP không thành công. Vui lòng thử lại.",
-            resendOTPSuccess: "Gửi lại mã OTP thành công"
+            resendOTPSuccess: "Gửi lại mã OTP thành công",
             resendVerifyCode: "Resend verification code",
         },
         breadcrumb: {
