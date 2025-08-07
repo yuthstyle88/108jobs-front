@@ -1986,6 +1986,9 @@ export const en = {
             bankQrUploadTitle:
                 "Your bank QR code image (Account name must match ID card)",
             uploadButton: "Upload Image",
+            buttonAddBank: "Add Bank",
+            noBankFound: "No banks found.",
+            buttonEditBank: "Edit Bank",
         },
         sellerCommitmentLetter: {
             incomeTaxDescription:

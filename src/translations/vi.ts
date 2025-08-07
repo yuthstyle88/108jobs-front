@@ -2003,6 +2003,9 @@ export const vi = {
             bankQrUploadTitle:
                 "Ảnh mã QR ngân hàng của bạn (Tên tài khoản phải trùng với CMND/CCCD)",
             uploadButton: "Tải ảnh lên",
+            buttonAddBank:"Thêm ngân hàng",
+            noBankFound: "Không tìm thấy ngân hàng nào.",
+            buttonEditBank: "Chỉnh sửa ngân hàng"
         },
         sellerCommitmentLetter: {
             incomeTaxDescription:

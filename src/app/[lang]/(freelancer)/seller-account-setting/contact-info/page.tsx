@@ -54,14 +54,6 @@ function normalizeAddress(address: RawAddress | any | undefined): AddressFormDat
 const ContactInfo = () => {
   const {profileState, contact, address} = useMyUser();
   const {t} = useTranslation();
-  const sellerContactLanguage = getNamespace(LanguageFile.SELLER_CONTACT_INFO);
-
-  const contactInfoLanguageData = getNamespace(
-    LanguageFile.CONTACT
-  );
-
-  const {data: global} = getNamespace(LanguageFile.GLOBAL);
-
   const emailSchema = z.object({
     email: z.string().min(6,
       "กรุณากรอกอีเมลหรือเบอร์โทรศัพท์").optional(),

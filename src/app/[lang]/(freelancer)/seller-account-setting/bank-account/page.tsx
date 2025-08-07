@@ -1,130 +1,101 @@
 "use client";
-import {LanguageFile} from "@/constants/language";
-import {getNamespace} from "@/utils/i18nHelper";
-import {Upload} from "lucide-react";
-import Image from "next/image";
-import {useRef, useState} from "react";
-
+import { useState } from "react";
+import { getNamespace } from "@/utils/i18nHelper";
+import { LanguageFile } from "@/constants/language";
+import { Pencil, Plus } from "lucide-react";
+import BankAccountModal, { BankAccountFormValues } from "../components/AddBankAccountModal";
+import { useHttpGet } from "@/hooks/useHttpGet";
+import { useHttpPost } from "@/hooks/useHttpPost";
+import LoadingBlur from "@/components/LoadingBlur";
 
 const BankAccount = () => {
-  const [qrImage, setQrImage] = useState<string>(
-    "/lovable-uploads/48265f16-fe13-43a1-9d7e-9b24975b0217.png"
-  );
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const sellerBankAccountLanguage = getNamespace(LanguageFile.SELLER_BANK_ACCOUNT);
+  const global = getNamespace(LanguageFile.GLOBAL);
 
-  const sellerBankAccountLanguage = getNamespace(
-    LanguageFile.SELLER_BANK_ACCOUNT
-  );
+  const { data, isMutating: isBankLoading } = useHttpGet("getBankAccount");
+  const bankList = data?.banks || [];
 
-  const global = getNamespace(
-    LanguageFile.GLOBAL
-  );
+  const { execute: createBank, isMutating: isCreating } = useHttpPost("addBankAccount");
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        setQrImage(result);
-      };
-      reader.readAsDataURL(file);
-    }
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingAccount, setEditingAccount] = useState<BankAccountFormValues | null>(null);
+
+  const handleAdd = () => {
+    setEditingAccount(null);
+    setModalOpen(true);
   };
 
-  const handleUploadClick = () => {
-    fileInputRef.current?.click();
+  const handleEdit = (acc: BankAccountFormValues) => {
+    setEditingAccount(acc);
+    setModalOpen(true);
   };
 
-  const handleSave = () => {
-    console.log("Saving account settings");
+  const handleSubmit = async (data: BankAccountFormValues & { id?: string }) => {
+    await createBank({
+      bankId: Number(data.bankId),
+      accountNumber: data.accountNumber,
+      accountName: data.accountName,
+    });
   };
 
   return (
     <div className="bg-white rounded-md shadow-sm overflow-hidden">
-      <div className="border-b border-gray-200 p-5">
-        <h2 className="text-lg font-medium text-gray-800">
-          {sellerBankAccountLanguage?.bankInfoTitle}
-        </h2>
-        <p className="text-sm text-gray-500">
-          {sellerBankAccountLanguage?.bankInfoDescription}
-        </p>
-      </div>
-
-      <div className="p-6">
-        <div className="mb-8">
-          <h3 className="text-base font-medium text-gray-800 mb-4">
-            {sellerBankAccountLanguage?.bankQrUploadTitle}
-          </h3>
-          <p className="text-sm text-gray-500 mb-4">
-            {sellerBankAccountLanguage?.bankQrUploadNote}
+      <div className="flex justify-between items-center border-b border-gray-200 p-5">
+        <div>
+          <h2 className="text-lg font-medium text-gray-800">
+            {sellerBankAccountLanguage?.bankInfoTitle}
+          </h2>
+          <p className="text-sm text-gray-500">
+            {sellerBankAccountLanguage?.bankInfoDescription}
           </p>
-
-          <div className="flex items-center justify-center p-6 bg-gray-100 rounded-lg mb-4">
-            <Image
-              src={qrImage}
-              alt="ProfileImage"
-              width={200}
-              height={200}
-              className="max-h-60"
-            />
-          </div>
-
-          <button
-            onClick={handleUploadClick}
-            className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-blue-600 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 mx-auto"
-          >
-            <Upload className="w-5 h-5 mr-2"/>
-            {sellerBankAccountLanguage?.uploadButton}
-          </button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleImageUpload}
-            accept="image/*"
-            className="hidden"
-          />
         </div>
-
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {sellerBankAccountLanguage?.bankNameLabel}
-          </label>
-          <select
-            className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-            <option selected disabled>
-              {sellerBankAccountLanguage?.bankNamePlaceholder}
-            </option>
-            <option>VietComBank</option>
-            <option>BIDV</option>
-            <option>Techcombank</option>
-            <option>VPBank</option>
-            <option>MB Bank</option>
-          </select>
-        </div>
-
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            {sellerBankAccountLanguage?.bankAccountNumberLabel}
-          </label>
-          <input
-            type="text"
-            placeholder={
-              sellerBankAccountLanguage?.bankAccountNumberPlaceholder
-            }
-            className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          />
-        </div>
-
-        <div className="flex justify-end">
-          <button
-            onClick={handleSave}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            {global?.buttonSave}
-          </button>
-        </div>
+        <button
+          onClick={handleAdd}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        >
+          <Plus className="w-5 h-5" />
+          {sellerBankAccountLanguage?.buttonAddBank}
+        </button>
       </div>
+
+      {/* Nếu có danh sách ngân hàng */}
+      <div className="p-6">
+        {isBankLoading || isCreating && <LoadingBlur text=""/>}
+        {!isBankLoading && bankList.length === 0 && <p>{sellerBankAccountLanguage?.noBankFound}</p>}
+        {!isBankLoading &&
+          bankList.map((bank) => (
+            <div
+              key={bank.id}
+              className="border border-gray-200 p-4 rounded-md flex justify-between items-center mb-4"
+            >
+              <div>
+                <p className="font-medium text-gray-800">{bank.name}</p>
+                <p className="text-gray-500">{bank.bankCode}</p>
+              </div>
+              <button
+                onClick={() =>
+                  handleEdit({
+                    bankId: String(bank.id),
+                    accountName: "",
+                    accountNumber: "",
+                  })
+                }
+                className="flex items-center gap-1 px-3 py-2 text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50"
+              >
+                <Pencil className="w-4 h-4" />
+                {global?.buttonEdit || "Edit"}
+              </button>
+            </div>
+          ))}
+      </div>
+
+      <BankAccountModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        initialData={editingAccount}
+        onSubmit={handleSubmit}
+        bankList={bankList}
+      />
     </div>
   );
 };

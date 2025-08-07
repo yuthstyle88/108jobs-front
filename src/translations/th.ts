@@ -1937,6 +1937,9 @@ export const th = {
             bankQrUploadTitle:
                 "อัปโหลดรูป QR Code ธนาคารของคุณ (ชื่อบัญชีต้องตรงกับบัตรประชาชน)",
             uploadButton: "อัปโหลดรูปภาพ",
+            buttonAddBank:"เพิ่มธนาคาร",
+            noBankFound: "ไม่พบธนาคารใด ๆ",
+            buttonEditBank: "แก้ไขธนาคาร"
         },
         sellerCommitmentLetter: {
             incomeTaxDescription:
