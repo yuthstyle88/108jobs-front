@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
-import { Pencil, Plus, Star, Trash2 } from "lucide-react";
-import BankAccountModal, { BankAccountFormValues } from "../components/AddBankAccountModal";
-import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import { useHttpDelete } from "@/hooks/useHttpDelete";
 import { useHttpGet } from "@/hooks/useHttpGet";
 import { useHttpPost } from "@/hooks/useHttpPost";
+import { useHttpPut } from "@/hooks/useHttpPut";
+import { getNamespace } from "@/utils/i18nHelper";
+import { Pencil, Plus, Star, Trash2 } from "lucide-react";
+import { useState } from "react";
+import BankAccountModal, { BankAccountFormValues } from "../components/AddBankAccountModal";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 
 interface Bank {
   id: number;
@@ -38,9 +40,9 @@ const BankAccount = () => {
   } = useHttpGet("getMyBankAccounts");
 
   const { execute: createBankAccount } = useHttpPost("addBankAccount");
-  const { execute: setDefaultBankAccount } = useHttpPost("setDefaultBankAccount");
+  const { execute: setDefaultBankAccount } = useHttpPut("setDefaultBankAccount");
   const { execute: deleteBankAccount, isMutating: isDeleting } =
-    useHttpPost("deleteBankAccount");
+    useHttpDelete("deleteBankAccount");
 
   const bankList: Bank[] = bankListRes?.banks || [];
   const bankAccounts: BankAccount[] = bankAccountsRes?.bankAccounts || [];
