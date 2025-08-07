@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { getNamespace } from "@/utils/i18nHelper";
 import { LanguageFile } from "@/constants/language";
-import { Pencil, Plus, Star } from "lucide-react";
+import { Pencil, Plus, Star, Trash2 } from "lucide-react";
 import BankAccountModal, { BankAccountFormValues } from "../components/AddBankAccountModal";
+import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
 import { useHttpGet } from "@/hooks/useHttpGet";
 import { useHttpPost } from "@/hooks/useHttpPost";
 
@@ -26,7 +27,6 @@ const BankAccount = () => {
   const sellerBankAccountLanguage = getNamespace(LanguageFile.SELLER_BANK_ACCOUNT);
   const global = getNamespace(LanguageFile.GLOBAL);
 
-  // 1. API Hooks
   const {
     data: bankListRes,
     isMutating: isBankListLoading,
@@ -35,21 +35,22 @@ const BankAccount = () => {
   const {
     data: bankAccountsRes,
     isMutating: isBankAccountsLoading,
-    refetch: refetchAccounts,
   } = useHttpGet("getMyBankAccounts");
 
-  const { execute: createBankAccount, isMutating: isCreating } = useHttpPost("addBankAccount");
-  const { execute: setDefaultBankAccount, isMutating: isSettingDefault } =
-    useHttpPost("setDefaultBankAccount");
+  const { execute: createBankAccount } = useHttpPost("addBankAccount");
+  const { execute: setDefaultBankAccount } = useHttpPost("setDefaultBankAccount");
+  const { execute: deleteBankAccount, isMutating: isDeleting } =
+    useHttpPost("deleteBankAccount");
 
   const bankList: Bank[] = bankListRes?.banks || [];
   const bankAccounts: BankAccount[] = bankAccountsRes?.bankAccounts || [];
 
-  // 2. Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<BankAccountFormValues | null>(null);
 
-  // 3. Open modal
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deletingAccountId, setDeletingAccountId] = useState<number | null>(null);
+
   const handleAdd = () => {
     setEditingAccount(null);
     setModalOpen(true);
@@ -65,25 +66,32 @@ const BankAccount = () => {
     setModalOpen(true);
   };
 
-  // 4. Submit new bank account
   const handleSubmit = async (data: BankAccountFormValues & { id?: string }) => {
     await createBankAccount({
       bankId: Number(data.bankId),
       accountNumber: data.accountNumber,
       accountName: data.accountName,
     });
-    refetchAccounts();
   };
 
-  // 5. Set default
   const handleSetDefault = async (id: number) => {
     await setDefaultBankAccount({ bankAccountId: id });
-    refetchAccounts();
+  };
+
+  const handleConfirmDelete = (id: number) => {
+    setDeletingAccountId(id);
+    setConfirmDeleteOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (deletingAccountId == null) return;
+    await deleteBankAccount({ bankAccountId: deletingAccountId });
+    setConfirmDeleteOpen(false);
+    setDeletingAccountId(null);
   };
 
   return (
     <div className="bg-white rounded-md shadow-sm overflow-hidden">
-      {/* Header */}
       <div className="flex justify-between items-center border-b border-gray-200 p-5">
         <div>
           <h2 className="text-lg font-medium text-gray-800">
@@ -102,7 +110,6 @@ const BankAccount = () => {
         </button>
       </div>
 
-      {/* Content */}
       <div className="p-6 space-y-4">
         {isBankAccountsLoading && <p>Loading accounts...</p>}
 
@@ -129,7 +136,6 @@ const BankAccount = () => {
               {!acc.isDefault && (
                 <button
                   onClick={() => handleSetDefault(acc.id)}
-                  disabled={isSettingDefault}
                   className="text-sm text-blue-600 border border-blue-600 rounded-md px-3 py-1 hover:bg-blue-50"
                 >
                   <Star className="w-4 h-4 inline mr-1" />
@@ -143,18 +149,33 @@ const BankAccount = () => {
                 <Pencil className="w-4 h-4 inline mr-1" />
                 Edit
               </button>
+              <button
+                onClick={() => handleConfirmDelete(acc.id)}
+                className="text-sm text-red-600 border border-red-600 rounded-md px-3 py-1 hover:bg-red-50"
+              >
+                <Trash2 className="w-4 h-4 inline mr-1" />
+                Delete
+              </button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Modal */}
       <BankAccountModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         initialData={editingAccount}
         onSubmit={handleSubmit}
         bankList={bankList}
+      />
+
+      <ConfirmDeleteModal
+        isOpen={confirmDeleteOpen}
+        onClose={() => setConfirmDeleteOpen(false)}
+        onConfirm={handleDelete}
+        isLoading={isDeleting}
+        title="Delete Bank Account"
+        description="Are you sure you want to delete this bank account? This action cannot be undone."
       />
     </div>
   );
