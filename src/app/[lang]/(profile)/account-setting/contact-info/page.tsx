@@ -19,6 +19,7 @@ import useNotification from "@/hooks/useNotification";
 import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
 import {Address, CountriesResponse} from "lemmy-js-client";
 import {getNamespace} from "@/utils/i18nHelper";
+import {ThaiAddressSelect} from "@/components/ThaiAddressSelect";
 
 const emailSchema = z.object({
   email: z.string().min(1,
