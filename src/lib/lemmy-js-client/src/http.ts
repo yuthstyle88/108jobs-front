@@ -203,8 +203,13 @@ import type {ProfileData} from "./types/ProfileData";
 import type {SaveUserProfile} from "./types/SaveUserProfile";
 import type {UpdateAvailable} from "./types/UpdateAvailable";
 import type {UpsertCard} from "./types/UpsertCard";
-import type {SaveAddress} from "./types/SaveAddress";
-import {CountriesResponse} from "./types/CountriesResponse";
+import type {CountriesResponse} from "./types/CountriesResponse";
+import type {AddressForm} from "./types/AddressForm";
+import type {AddressResponse} from "./types/AddressResponse";
+import {ContactForm} from "./types/ContactForm";
+import {ContactResponse} from "./types/ContactResponse";
+import {IdentityCardForm} from "./types/IdentityCardForm";
+import {IdentityCardResponse} from "./types/IdentityCardResponse";
 
 enum HttpType {
   Get = "GET",
@@ -1792,21 +1797,56 @@ export class LemmyHttp extends Controller {
    * @summary Save your profile settings.
    */
   @Security("bearerAuth")
-  @Put("/account/settings/update-address")
+  @Put("/account/update-address")
   @Tags("Account")
   async updateAddress(
-    @Body() form: SaveAddress,
+    @Body() form: AddressForm,
     @Inject() options?: RequestOptions,
   ) {
-    return this.#wrapper<SaveAddress, SuccessResponse>(
+    return this.#wrapper<AddressForm, AddressResponse>(
       HttpType.Put,
-      "/account/settings/update-address",
+      "/account/update-address",
       form,
       options,
     );
   }
 
-  /**
+    /**
+     * @summary Save your profile settings.
+     */
+    @Security("bearerAuth")
+    @Put("/account/update-contact")
+    @Tags("Account")
+    async updateContact(
+        @Body() form: ContactForm,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<ContactForm, ContactResponse>(
+            HttpType.Put,
+            "/account/update-contact",
+            form,
+            options,
+        );
+    }
+    /**
+     * @summary Save your profile settings.
+     */
+    @Security("bearerAuth")
+    @Put("/account/update-identity-card")
+    @Tags("Account")
+    async updateIdentityCard(
+        @Body() form: IdentityCardForm,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<IdentityCardForm, IdentityCardResponse>(
+            HttpType.Put,
+            "/account/update-identity-card",
+            form,
+            options,
+        );
+    }
+
+    /**
    * @summary Save your profile settings.
    */
   @Security("bearerAuth")
