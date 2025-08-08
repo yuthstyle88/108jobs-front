@@ -50,7 +50,7 @@ export const instanceLinkRegex = new RegExp(
   "g",
 );
 
-export const testHost = "api-fastwork-stg.ibrowe.com";
+export const testHost = "localhost:8532";
 
 export const validActorRegexPattern =
   "^\\w+|[\\p{Script=Arabic}\\d_]+|[\\p{Script=Cyrillic}\\d_]+$";

@@ -3,13 +3,53 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type Province = { code: string | number; name_th?: string; name_en?: string; province_code?: string | number };
-type District = { code: string | number; name_th?: string; name_en?: string; province_code?: string | number };
-type Subdistrict = { code: string | number; name_th?: string; name_en?: string; district_code?: string | number; zip_code?: string | number };
+type Province = { code: string | number; nameTh?: string; nameEn?: string; provinceCode?: string | number };
+type District = { code: string | number; nameTh?: string; nameEn?: string; provinceCode?: string | number };
+type Subdistrict = { code: string | number; nameTh?: string; nameEn?: string; districtCode?: string | number; postalCode?: string | number };
 
 export type Option = { value: string; label: string };
 const norm = (v: unknown) => String(v);
-const labelTH = (x: { name_th?: string; name_en?: string }) => x.name_th ?? x.name_en ?? "";
+
+// Helpers to read flexible schemas (name fields / code fields may vary by dataset)
+const pick = (o: any, keys: string[]) => {
+  for (const k of keys) {
+    const v = o?.[k];
+    if (v !== undefined && v !== null && v !== "") return v;
+  }
+  return undefined;
+};
+
+const labelENAny = (o: any) =>
+  pick(o, [
+    "nameEn",
+    "name_en",
+    "provinceNameEn",
+    "districtNameEn",
+    "amphoeNameEn",
+    "subdistrictNameEn",
+    "tambonNameEn",
+    "en",
+  ]);
+
+const labelTHAny = (o: any) =>
+  pick(o, [
+    "nameTh",
+    "name_th",
+    "provinceNameTh",
+    "districtNameTh",
+    "amphoeNameTh",
+    "subdistrictNameTh",
+    "tambonNameTh",
+    "th",
+    "name",
+  ]) ?? labelENAny(o);
+
+const provinceCodeAny = (o: any) =>
+  pick(o, ["provinceCode", "province_code", "code"]);
+const districtCodeAny = (o: any) =>
+  pick(o, ["districtCode", "district_code", "amphoeCode", "amphoe_code", "code"]);
+const subdistrictCodeAny = (o: any) =>
+  pick(o, ["subdistrictCode", "subdistrict_code", "tambonCode", "tambon_code", "code"]);
 
 async function getJSON<T>(path: string): Promise<T> {
     const res = await fetch(path, { cache: "force-cache" });
@@ -34,8 +74,8 @@ export function useProvinces() {
     }, []);
 
     const options: Option[] = useMemo(
-        () => data.map(p => ({ value: norm(p.province_code ?? p.code), label: labelTH(p) })),
-        [data]
+      () => data.map(p => ({ value: norm(provinceCodeAny(p)), label: String(labelTHAny(p) ?? "") })),
+      [data]
     );
 
     return { options, loading, error, raw: data };
@@ -55,7 +95,10 @@ export function useDistricts(provinceCode?: string) {
         getJSON<District[]>("/thai-geo/districts.json")
             .then((all) => {
                 if (!alive) return;
-                const filtered = all.filter(d => norm(d.province_code ?? String(d.code).slice(0, 2)) === norm(provinceCode));
+                const filtered = all.filter(d => {
+                  const pcode = provinceCodeAny(d) ?? String(districtCodeAny(d) ?? "").slice(0, 2);
+                  return norm(pcode) === norm(provinceCode);
+                });
                 setData(filtered);
             })
             .catch((e) => alive && setError(e))
@@ -64,8 +107,8 @@ export function useDistricts(provinceCode?: string) {
     }, [provinceCode]);
 
     const options: Option[] = useMemo(
-        () => data.map(d => ({ value: norm(d.code), label: labelTH(d) })),
-        [data]
+      () => data.map(d => ({ value: norm(districtCodeAny(d)), label: String(labelTHAny(d) ?? "") })),
+      [data]
     );
 
     return { options, loading, error, raw: data };
@@ -85,7 +128,10 @@ export function useSubdistricts(districtCode?: string) {
         getJSON<Subdistrict[]>("/thai-geo/subdistricts.json")
             .then((all) => {
                 if (!alive) return;
-                const filtered = all.filter(s => norm(s.district_code ?? String(s.code).slice(0, 4)) === norm(districtCode));
+                const filtered = all.filter(s => {
+                  const dcode = districtCodeAny(s) ?? String(subdistrictCodeAny(s) ?? "").slice(0, 4);
+                  return norm(dcode) === norm(districtCode);
+                });
                 setData(filtered);
             })
             .catch((e) => alive && setError(e))
@@ -94,8 +140,8 @@ export function useSubdistricts(districtCode?: string) {
     }, [districtCode]);
 
     const options: Option[] = useMemo(
-        () => data.map(s => ({ value: norm(s.code), label: labelTH(s) })),
-        [data]
+      () => data.map(s => ({ value: norm(subdistrictCodeAny(s)), label: String(labelTHAny(s) ?? "") })),
+      [data]
     );
 
     return { options, loading, error, raw: data };

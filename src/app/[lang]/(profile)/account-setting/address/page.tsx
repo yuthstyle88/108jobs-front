@@ -1,8 +1,5 @@
 "use client";
 import {useState} from "react";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {useProfileForm} from "../hooks/useProfileForm";
-import {useImagePicker} from "@/hooks/useImagePicker";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
@@ -11,8 +8,7 @@ import DistrictSelect from "@/components/ThaiAddress/DistrictSelect";
 import SubdistrictSelect from "@/components/ThaiAddress/SubdistrictSelect";
 import { useProvinces, useDistricts, useSubdistricts } from "@/hooks/useThaiGeography";
 
-type CreateOrUpdateAddress = {
-    localUserId: number;
+type CreateUpdateAddress = {
     addressLine1: string;
     addressLine2?: string;
     subdistrict?: string;
@@ -29,27 +25,7 @@ export default function Address() {
     const {execute: uploadImage, isMutating: isUploadMuting} =
         useHttpPost("uploadImage");
 
-    const {profileState, person, card} = useMyUser();
-
-    const {
-        selectedImage,
-        setSelectedImage,
-    } = useImagePicker(profileState === "success" ? person?.avatar : undefined);
-
-    const {
-        register: profileRegister,
-        handleSubmit: handleProfileSubmit,
-        errors: profileErrors,
-        isSubmitting: isProfileSubmitting,
-        onSubmit: onSubmitProfile,
-    } = useProfileForm(
-        person,
-        card,
-        selectedImage,
-        uploadImage,
-        setSelectedImage
-    );
-
+    // const {profileState, person, card} = useMyUser();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -60,10 +36,9 @@ export default function Address() {
         handleSubmit,
         setValue,
         formState: { errors, isSubmitting },
-    } = useForm<CreateOrUpdateAddress>({
+    } = useForm<CreateUpdateAddress>({
         mode: "onChange",
         defaultValues: {
-            localUserId: 0,
             addressLine1: "",
             addressLine2: "",
             subdistrict: "",
@@ -82,9 +57,9 @@ export default function Address() {
 
     const { options: provinceOptions, loading: loadingProv } = useProvinces();
     const { options: districtOptions, loading: loadingDist } = useDistricts(provinceCode);
-    const { options: subdistrictOptions, loading: loadingSub } = useSubdistricts(districtCode);
+    const { options: subdistrictOptions, loading: loadingSub, raw: subdistrictRaw } = useSubdistricts(districtCode);
 
-    const onSubmitAddress = async (data: CreateOrUpdateAddress) => {
+    const onSubmitAddress = async (data: CreateUpdateAddress) => {
         // data.province / data.district / data.subdistrict จะมาจาก ThaiAddressSelect โดยตรง
         console.log("Submit CreateOrUpdateAddress:", data);
         // TODO: เรียก API บันทึกตามที่ต้องการ
@@ -103,19 +78,6 @@ export default function Address() {
                 </div>
 
                 <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* localUserId */}
-                    <div>
-                        <label className="block text-sm font-semibold mb-2">Local User ID</label>
-                        <input
-                            type="number"
-                            {...register("localUserId", { valueAsNumber: true })}
-                            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third ${
-                                errors.localUserId ? "border-red-500" : "border-gray-300"
-                            }`}
-                            placeholder="เช่น 1"
-                        />
-                    </div>
-
                     {/* countryId */}
                     <div>
                         <label className="block text-sm font-semibold mb-2">ประเทศ</label>
@@ -192,6 +154,12 @@ export default function Address() {
                             onChange={(v) => {
                               setSubdistrictCode(v);
                               setValue("subdistrict", v ?? "");
+                              // Auto-fill postal code from local dataset (support multiple key names)
+                                const found = subdistrictRaw?.find(
+                                    (s: any) => String(s.subdistrictCode ?? s.code) === String(v)
+                                );
+                                const zip = found?.postalCode;
+                                setValue("postalCode", v && zip != null ? String(zip) : "");
                             }}
                             placeholder="เลือกตำบล"
                           />
@@ -203,6 +171,7 @@ export default function Address() {
                         <label className="block text-sm font-semibold mb-2">รหัสไปรษณีย์</label>
                         <input
                             {...register("postalCode")}
+                            readOnly
                             className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third ${
                                 errors.postalCode ? "border-red-500" : "border-gray-300"
                             }`}
