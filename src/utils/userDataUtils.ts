@@ -66,13 +66,3 @@ export function isEmailVerified(localUser: LocalUser): boolean {
 export function isAdmin(localUser: LocalUser): boolean {
   return localUser?.admin ?? false;
 }
-
-/**
- * Get the profile's role
- * @returns The profile's role
- * @param localUser
- */
-export function getRole(localUser: LocalUser): string {
-  // Return a default role or empty string as roles property is not available in the new structure
-  return localUser?.role ?? "";
-}

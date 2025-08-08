@@ -11,10 +11,7 @@ import FreelancerSession from "./components/FreelancerSection";
 import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
 import {useScrollHandler} from "./hooks/useScrollHandler";
-import {I18NextService,} from "@/services/I18NextService";
-import {useEffect} from "react";
 import {useTranslation} from "react-i18next";
-import {useLanguage} from "@/contexts/LanguageContext";
 
 const TYPES: Record<string, {bg: string}> = {
   transparent: {
@@ -31,7 +28,7 @@ interface BgProps {
 }
 
 const Header = ({type, forceShowSearch = false}: BgProps) => {
-  const {isLoggedIn, isEmployer, isFreelancer} = useAuthInfo();
+  const {isLoggedIn} = useAuthInfo();
   const {t} = useTranslation();
   const {scrollY, showSearch} = useScrollHandler(forceShowSearch);
   const {bg} = TYPES[type];
@@ -83,11 +80,11 @@ const Header = ({type, forceShowSearch = false}: BgProps) => {
               {t("global.labelApplyToBeFreelancerButton")}
             </Link>
           )}
-          {isFreelancer && (
-            <FreelancerSession/>
-          )}
-          {isEmployer && (
-            <EmployerSection/>
+          {isLoggedIn && (
+            <>
+              <FreelancerSession/>
+              <EmployerSection/>
+            </>
           )}
           {!isLoggedIn && (
             <Link prefetch={false}
@@ -425,5 +422,3 @@ export default Header;
 //     </header>
 //   );
 // };
-
-// export default Header;

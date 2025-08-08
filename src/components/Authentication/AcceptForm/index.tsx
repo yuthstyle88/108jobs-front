@@ -9,12 +9,10 @@ import {isSuccess} from "@/services/HttpService"; // เพิ่ม import น�
 import {RegisterOAuthFormData} from "@/types/formTypes/RegisterOAuth";
 import {getNamespace} from "@/utils/i18nHelper";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {RoleType} from "lemmy-js-client";
 import Link from "next/link";
-import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-import {RegisterDataProps} from "@/types/register-data";
 
 type UpdateFormProps = {
   title?: string;
@@ -27,12 +25,10 @@ export const AcceptForm = ({ title }
   const UpdateSchema = z
   .object({
     email: z.string().email(authen?.invalidEmail),
-    password: z.string().min(6,
-      authen?.passwordMin6),
+    password: z.string().min(6, authen?.passwordMin6),
     confirmPassword: z.string(),
     termsAccepted: z.boolean().refine((val) => val === true),
     privacyAccepted: z.boolean().refine((val) => val === true),
-    role: z.nativeEnum(RoleType).default(RoleType.Employer),
   })
   .refine((data) => data.password === data.confirmPassword,
     {
@@ -73,7 +69,7 @@ export const AcceptForm = ({ title }
               email);
           }
         } catch (error) {
-          console.error("Error decoding JWT:",
+          console.error("System Error: ",
             error);
         }
       }
@@ -89,7 +85,6 @@ export const AcceptForm = ({ title }
       email: data.email,
       password: data.password,
       passwordVerify: data.confirmPassword,
-      role: data.role,
       termsAccepted: data.termsAccepted,
     };
 
@@ -136,30 +131,6 @@ export const AcceptForm = ({ title }
         showPassword={showConfirmPassword}
         toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
       />
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          {"Account Type"}
-        </label>
-        <div className="flex gap-6 items-center text-base text-text-primary">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              value={RoleType.Employer}
-              {...register("role")}
-              defaultChecked
-            />
-            {"Employer"}
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              value={RoleType.Freelancer}
-              {...register("role")}
-            />
-            {"Freelancer"}
-          </label>
-        </div>
-      </div>
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <input

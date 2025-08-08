@@ -52,7 +52,7 @@ export const useHttpPut = <K extends keyof WrappedLemmyHttp>(method: K) => {
 
   const execute = (...args: Parameters<WrappedLemmyHttp[K]>) => {
     if (args.length === 0) {
-      return (trigger as () => Promise<RequestState<Payload<K>>>())();
+        return (trigger as () => Promise<RequestState<Payload<K>>>)();
     }
     return (trigger as (arg: Parameters<WrappedLemmyHttp[K]>) => Promise<RequestState<Payload<K>>>)(args);
   };

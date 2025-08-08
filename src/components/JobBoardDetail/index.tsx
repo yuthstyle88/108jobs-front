@@ -3,7 +3,7 @@
 import ConfirmVerifyFreelancer from "@/app/[lang]/(job)/job-board/_components/ConfirmVerifyFreelancer";
 import JobBoardTab from "@/app/[lang]/(job)/job-board/_components/JobBoardTab";
 import {LandingImage, ProfileImage} from "@/constants/images";
-import {PostId, RoleType} from "lemmy-js-client";
+import {PostId} from "lemmy-js-client";
 import {formatDateToLong} from "@/utils/formatDateToLong";
 import {MoveRight} from "lucide-react";
 import Image from "next/image";
@@ -35,11 +35,9 @@ const JobBoardDetail = ({jobId}: Props) => {
 
     const {localUser, person} = useMyUser();
 
-    const userRole = localUser?.role;
     const isVerify = person?.isVerified;
-    const isOnlyEmployer = userRole === RoleType.Employer;
-    const isFreelancer = userRole === RoleType.Freelancer;
-    const canShowProposalButton = !isGuest && isFreelancer && !isOnlyEmployer;
+    // Single-user mode: any logged-in user can submit proposals
+    const canShowProposalButton = !isGuest;
 
     const calculateDaysUntil = (dateString: string) => {
         const targetDate = new Date(dateString);

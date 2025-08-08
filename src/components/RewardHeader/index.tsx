@@ -19,7 +19,7 @@ import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
 
 
 const RewardHeader = () => {
-  const {isLoggedIn, isFreelancer} = useAuthInfo();
+  const {isLoggedIn} = useAuthInfo();
 
   const [showLang, setShowLang] = useState(false);
   const {lang} = useLanguage();
@@ -99,15 +99,9 @@ const RewardHeader = () => {
 
                 {isOpen && (
                   <>
-                    {isFreelancer ? (
-                      <ProfileFreelancer
-                        profile={person}
-                      />
-                    ) : (
-                      <ProfileSection
-                        profile={person}
-                      />
-                    )}
+                    <ProfileSection
+                      profile={person}
+                    />
                     <div
                       className="fixed inset-0 z-40"
                       onClick={close}

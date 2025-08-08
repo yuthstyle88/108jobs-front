@@ -57,7 +57,7 @@ const logger = {
 
     // Development mode only - provide detailed error information
     if (!err) {
-      console.error(prefix);
+      console.warn(prefix);
       return;
     }
     const detail = err instanceof Error ? err.message.trim() : String(err).trim();
