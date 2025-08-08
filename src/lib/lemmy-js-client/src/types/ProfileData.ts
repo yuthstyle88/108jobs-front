@@ -22,6 +22,5 @@ export type ProfileData = {
   contact: Contact;
   address: Address;
   card: Card;
-  showCountrySelectionBox: false;
   isNewBuyer: false;
 };
