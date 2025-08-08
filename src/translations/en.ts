@@ -1976,6 +1976,7 @@ export const en = {
         },
         sellerBankAccount: {
             bankAccountNumberLabel: "Bank Account Number",
+            bankAccountName: "Account Holder Name",
             bankAccountNumberPlaceholder: "Enter account number",
             bankInfoDescription: "To receive payments when hired",
             bankInfoTitle: "Bank Information",

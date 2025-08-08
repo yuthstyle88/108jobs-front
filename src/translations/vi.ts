@@ -1993,6 +1993,7 @@ export const vi = {
         },
         sellerBankAccount: {
             bankAccountNumberLabel: "Số tài khoản ngân hàng",
+            bankAccountName: "Tên chủ tài khoản",
             bankAccountNumberPlaceholder: "Nhập số tài khoản",
             bankInfoDescription: "Để nhận tiền khi có việc được thuê",
             bankInfoTitle: "Thông tin ngân hàng",

@@ -9,21 +9,9 @@ import { getNamespace } from "@/utils/i18nHelper";
 import { Pencil, Plus, Star, Trash2 } from "lucide-react";
 import { useState } from "react";
 import BankAccountModal, { BankAccountFormValues } from "../components/AddBankAccountModal";
-import ConfirmDeleteModal from "../components/ConfirmDeleteModal";
+import ConfirmDeleteModal from "../components/DeleteBankModal";
+import LoadingBlur from "@/components/LoadingBlur";
 
-interface Bank {
-  id: number;
-  name: string;
-  bankCode: string;
-}
-
-interface BankAccount {
-  id: number;
-  bank: Bank;
-  accountNumber: string;
-  accountName: string;
-  isDefault?: boolean;
-}
 
 const BankAccount = () => {
   const sellerBankAccountLanguage = getNamespace(LanguageFile.SELLER_BANK_ACCOUNT);
@@ -32,20 +20,20 @@ const BankAccount = () => {
   const {
     data: bankListRes,
     isMutating: isBankListLoading,
-  } = useHttpGet("getBankAccount");
+  } = useHttpGet("getBankList");
 
   const {
     data: bankAccountsRes,
     isMutating: isBankAccountsLoading,
-  } = useHttpGet("getMyBankAccounts");
+  } = useHttpGet("getBankAccount");
 
-  const { execute: createBankAccount } = useHttpPost("addBankAccount");
+  const { execute: createBankAccount } = useHttpPost("createBankAccount");
   const { execute: setDefaultBankAccount } = useHttpPut("setDefaultBankAccount");
   const { execute: deleteBankAccount, isMutating: isDeleting } =
     useHttpDelete("deleteBankAccount");
 
-  const bankList: Bank[] = bankListRes?.banks || [];
-  const bankAccounts: BankAccount[] = bankAccountsRes?.bankAccounts || [];
+  const bankList = bankListRes?.banks || [];
+  const bankAccounts = bankAccountsRes?.bankAccounts || [];
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<BankAccountFormValues | null>(null);
@@ -58,12 +46,11 @@ const BankAccount = () => {
     setModalOpen(true);
   };
 
-  const handleEdit = (account: BankAccount) => {
+  const handleEdit = (account: any) => {
     setEditingAccount({
-      bankId: String(account.bank.id),
+      bankId: String(account.id),
       accountNumber: account.accountNumber,
       accountName: account.accountName,
-      id: String(account.id),
     });
     setModalOpen(true);
   };
@@ -108,22 +95,22 @@ const BankAccount = () => {
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
           <Plus className="w-5 h-5" />
-          {global?.buttonAdd || "Add"}
+          {sellerBankAccountLanguage?.buttonAddBank}
         </button>
       </div>
 
       <div className="p-6 space-y-4">
         {isBankAccountsLoading && <p>Loading accounts...</p>}
-
+        {isBankListLoading || isBankAccountsLoading && <LoadingBlur text="" />}
+        {!isBankAccountsLoading && bankList.length === 0 && <p className="text-text-primary">{sellerBankAccountLanguage?.noBankFound}</p>}
         {bankAccounts.map((acc) => (
           <div
             key={acc.id}
-            className={`border rounded-md p-4 flex justify-between items-center ${
-              acc.isDefault ? "border-blue-500 bg-blue-50" : "border-gray-200"
-            }`}
+            className={`border rounded-md p-4 flex justify-between items-center ${acc.isDefault ? "border-blue-500 bg-blue-50" : "border-gray-200"
+              }`}
           >
             <div>
-              <p className="font-medium text-gray-800">{acc.bank.name}</p>
+              <p className="font-medium text-gray-800">{acc.bankName}</p>
               <p className="text-gray-500">
                 {acc.accountNumber} — {acc.accountName}
               </p>

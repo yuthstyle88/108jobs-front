@@ -1,4 +1,17 @@
-import {Body, Controller, Delete, Get, Inject, Post, Put, Queries, Route, Security, Tags, UploadedFile,} from "@tsoa/runtime";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Post,
+  Put,
+  Queries,
+  Route,
+  Security,
+  Tags,
+  UploadedFile,
+} from "@tsoa/runtime";
 import type {
   AdminListUsersI,
   CommunityIdQueryI,
@@ -32,184 +45,189 @@ import type {
   ListTaglinesI,
   ResolveObjectI,
   SearchI,
-  UploadImage
+  UploadImage,
 } from "./other_types";
-import {VERSION} from "./other_types";
-import type {AddAdmin} from "./types/AddAdmin";
-import type {AddAdminResponse} from "./types/AddAdminResponse";
-import type {AddModToCommunity} from "./types/AddModToCommunity";
-import type {AddModToCommunityResponse} from "./types/AddModToCommunityResponse";
-import type {ApproveRegistrationApplication} from "./types/ApproveRegistrationApplication";
-import type {BanFromCommunity} from "./types/BanFromCommunity";
-import type {BanFromCommunityResponse} from "./types/BanFromCommunityResponse";
-import type {MarkManyPostsAsRead} from "./types/MarkManyPostsAsRead";
-import type {BanPerson} from "./types/BanPerson";
-import type {BanPersonResponse} from "./types/BanPersonResponse";
-import type {BlockCommunity} from "./types/BlockCommunity";
-import type {BlockCommunityResponse} from "./types/BlockCommunityResponse";
-import type {BlockPerson} from "./types/BlockPerson";
-import type {BlockPersonResponse} from "./types/BlockPersonResponse";
-import type {ChangePassword} from "./types/ChangePassword";
-import type {CommentReportResponse} from "./types/CommentReportResponse";
-import type {CommentResponse} from "./types/CommentResponse";
-import type {CommunityReportResponse} from "./types/CommunityReportResponse";
-import type {CommunityResponse} from "./types/CommunityResponse";
-import type {CreateComment} from "./types/CreateComment";
-import type {CreateCommentLike} from "./types/CreateCommentLike";
-import type {CreateCommentReport} from "./types/CreateCommentReport";
-import type {CreateCommunity} from "./types/CreateCommunity";
-import type {CreateCommunityReport} from "./types/CreateCommunityReport";
-import type {CreateCommunityTag} from "./types/CreateCommunityTag";
-import type {CreateCustomEmoji} from "./types/CreateCustomEmoji";
-import type {CreateOAuthProvider} from "./types/CreateOAuthProvider";
-import type {CreatePost} from "./types/CreatePost";
-import type {CreatePostLike} from "./types/CreatePostLike";
-import type {CreatePostReport} from "./types/CreatePostReport";
-import type {CreateSite} from "./types/CreateSite";
-import type {CustomEmojiResponse} from "./types/CustomEmojiResponse";
-import type {DeleteAccount} from "./types/DeleteAccount";
-import type {DeleteComment} from "./types/DeleteComment";
-import type {DeleteCommunity} from "./types/DeleteCommunity";
-import type {DeleteCommunityTag} from "./types/DeleteCommunityTag";
-import type {DeleteCustomEmoji} from "./types/DeleteCustomEmoji";
-import type {DeleteOAuthProvider} from "./types/DeleteOAuthProvider";
-import type {DeletePost} from "./types/DeletePost";
-import type {DistinguishComment} from "./types/DistinguishComment";
-import type {EditComment} from "./types/EditComment";
-import type {EditCommunity} from "./types/EditCommunity";
-import type {EditCustomEmoji} from "./types/EditCustomEmoji";
-import type {EditOAuthProvider} from "./types/EditOAuthProvider";
-import type {EditPost} from "./types/EditPost";
-import type {EditSite} from "./types/EditSite";
-import type {OAuthProvider} from "./types/OAuthProvider";
-import type {FeaturePost} from "./types/FeaturePost";
-import type {FollowCommunity} from "./types/FollowCommunity";
-import type {GetCaptchaResponse} from "./types/GetCaptchaResponse";
-import type {GetComment} from "./types/GetComment";
-import type {GetComments} from "./types/GetComments";
-import type {GetCommentsResponse} from "./types/GetCommentsResponse";
-import type {GetCommunity} from "./types/GetCommunity";
-import type {GetCommunityResponse} from "./types/GetCommunityResponse";
-import type {GetFederatedInstancesResponse} from "./types/GetFederatedInstancesResponse";
-import type {GetModlog} from "./types/GetModlog";
-import type {GetModlogResponse} from "./types/GetModlogResponse";
-import type {GetPersonDetails} from "./types/GetPersonDetails";
-import type {GetPersonDetailsResponse} from "./types/GetPersonDetailsResponse";
-import type {GetPost} from "./types/GetPost";
-import type {GetPostResponse} from "./types/GetPostResponse";
-import type {GetPosts} from "./types/GetPosts";
-import type {GetPostsResponse} from "./types/GetPostsResponse";
-import type {GetReportCount} from "./types/GetReportCount";
-import type {GetReportCountResponse} from "./types/GetReportCountResponse";
-import type {GetSiteMetadata} from "./types/GetSiteMetadata";
-import type {GetSiteMetadataResponse} from "./types/GetSiteMetadataResponse";
-import type {GetSiteResponse} from "./types/GetSiteResponse";
-import type {GetUnreadCountResponse} from "./types/GetUnreadCountResponse";
-import type {GetUnreadRegistrationApplicationCountResponse} from "./types/GetUnreadRegistrationApplicationCountResponse";
-import type {ListCommunities} from "./types/ListCommunities";
-import type {ListCommunitiesResponse} from "./types/ListCommunitiesResponse";
-import type {ListRegistrationApplications} from "./types/ListRegistrationApplications";
-import type {ListRegistrationApplicationsResponse} from "./types/ListRegistrationApplicationsResponse";
-import type {LockPost} from "./types/LockPost";
-import type {Login} from "./types/Login";
-import type {LoginResponse} from "./types/LoginResponse";
-import type {MarkPostAsRead} from "./types/MarkPostAsRead";
-import type {PasswordChangeAfterReset} from "./types/PasswordChangeAfterReset";
-import type {PasswordReset} from "./types/PasswordReset";
-import type {PostReportResponse} from "./types/PostReportResponse";
-import type {PostResponse} from "./types/PostResponse";
-import type {PurgeComment} from "./types/PurgeComment";
-import type {PurgeCommunity} from "./types/PurgeCommunity";
-import type {PurgePerson} from "./types/PurgePerson";
-import type {PurgePost} from "./types/PurgePost";
-import type {Register} from "./types/Register";
-import type {RegistrationApplicationResponse} from "./types/RegistrationApplicationResponse";
-import type {RemoveComment} from "./types/RemoveComment";
-import type {RemoveCommunity} from "./types/RemoveCommunity";
-import type {RemovePost} from "./types/RemovePost";
-import type {ResolveCommentReport} from "./types/ResolveCommentReport";
-import type {ResolveCommunityReport} from "./types/ResolveCommunityReport";
-import type {ResolveObject} from "./types/ResolveObject";
-import type {ResolvePostReport} from "./types/ResolvePostReport";
-import type {SaveComment} from "./types/SaveComment";
-import type {SavePost} from "./types/SavePost";
-import type {SaveUserSettings} from "./types/SaveUserSettings";
-import type {Search} from "./types/Search";
-import type {SearchResponse} from "./types/SearchResponse";
-import type {SiteResponse} from "./types/SiteResponse";
-import type {TransferCommunity} from "./types/TransferCommunity";
-import type {UpdateCommunityTag} from "./types/UpdateCommunityTag";
-import type {VerifyEmail} from "./types/VerifyEmail";
-import type {HideCommunity} from "./types/HideCommunity";
-import type {GenerateTotpSecretResponse} from "./types/GenerateTotpSecretResponse";
-import type {UpdateTotp} from "./types/UpdateTotp";
-import type {UpdateTotpResponse} from "./types/UpdateTotpResponse";
-import type {SuccessResponse} from "./types/SuccessResponse";
-import type {ListPostLikes} from "./types/ListPostLikes";
-import type {ListPostLikesResponse} from "./types/ListPostLikesResponse";
-import type {ListCommentLikes} from "./types/ListCommentLikes";
-import type {ListCommentLikesResponse} from "./types/ListCommentLikesResponse";
-import type {HidePost} from "./types/HidePost";
-import type {ListMedia} from "./types/ListMedia";
-import type {ListMediaResponse} from "./types/ListMediaResponse";
-import type {AuthenticateWithOauth} from "./types/AuthenticateWithOauth";
-import type {GetRegistrationApplication} from "./types/GetRegistrationApplication";
-import type {CreateTagline} from "./types/CreateTagline";
-import type {TaglineResponse} from "./types/TaglineResponse";
-import type {UpdateTagline} from "./types/UpdateTagline";
-import type {DeleteTagline} from "./types/DeleteTagline";
-import type {ListTaglines} from "./types/ListTaglines";
-import type {ListTaglinesResponse} from "./types/ListTaglinesResponse";
-import type {ListCustomEmojis} from "./types/ListCustomEmojis";
-import type {ListCustomEmojisResponse} from "./types/ListCustomEmojisResponse";
-import type {GetRandomCommunity} from "./types/GetRandomCommunity";
-import type {ApproveCommunityPendingFollower} from "./types/ApproveCommunityPendingFollower";
-import type {GetCommunityPendingFollowsCount} from "./types/GetCommunityPendingFollowsCount";
-import type {GetCommunityPendingFollowsCountResponse} from "./types/GetCommunityPendingFollowsCountResponse";
-import type {ListCommunityPendingFollowsResponse} from "./types/ListCommunityPendingFollowsResponse";
-import type {ListCommunityPendingFollows} from "./types/ListCommunityPendingFollows";
-import type {ListReports} from "./types/ListReports";
-import type {ListReportsResponse} from "./types/ListReportsResponse";
-import type {MyUserInfo} from "./types/MyUserInfo";
-import type {UserBlockInstanceParams} from "./types/UserBlockInstanceParams";
-import type {AdminAllowInstanceParams} from "./types/AdminAllowInstanceParams";
-import type {AdminBlockInstanceParams} from "./types/AdminBlockInstanceParams";
-import type {ListPersonContent} from "./types/ListPersonContent";
-import type {ListPersonContentResponse} from "./types/ListPersonContentResponse";
-import type {ListPersonSaved} from "./types/ListPersonSaved";
-import type {ListPersonSavedResponse} from "./types/ListPersonSavedResponse";
-import type {DeleteImageParams} from "./types/DeleteImageParams";
-import type {UploadImageResponse} from "./types/UploadImageResponse";
-import type {GetCommentsSlimResponse} from "./types/GetCommentsSlimResponse";
-import type {Tag} from "./types/Tag";
-import type {ResendVerificationEmail} from "./types/ResendVerificationEmail";
-import type {ListPersonRead} from "./types/ListPersonRead";
-import type {ListPersonReadResponse} from "./types/ListPersonReadResponse";
-import type {ListPersonHidden} from "./types/ListPersonHidden";
-import type {ListPersonHiddenResponse} from "./types/ListPersonHiddenResponse";
-import type {CommunityIdQuery} from "./types/CommunityIdQuery";
-import type {AdminListUsers} from "./types/AdminListUsers";
-import type {AdminListUsersResponse} from "./types/AdminListUsersResponse";
-import type {ListLoginsResponse} from "./types/ListLoginsResponse";
-import type {ListPersonLiked} from "./types/ListPersonLiked";
-import type {ListPersonLikedResponse} from "./types/ListPersonLikedResponse";
-import type {MarkNotificationAsRead} from "./types/MarkNotificationAsRead";
-import type {ListNotifications} from "./types/ListNotifications";
-import type {ListNotificationsResponse} from "./types/ListNotificationsResponse";
-import type {UpdateTerm} from "./types/UpdateTerm";
-import type {ExchangeKey} from "./types/ExchangeKey";
-import type {ExchangeKeyResponse} from "./types/ExchangeKeyResponse";
-import type {ProfileData} from "./types/ProfileData";
-import type {SaveUserProfile} from "./types/SaveUserProfile";
-import type {UpdateAvailable} from "./types/UpdateAvailable";
-import type {UpsertCard} from "./types/UpsertCard";
-import type {CountriesResponse} from "./types/CountriesResponse";
-import type {AddressForm} from "./types/AddressForm";
-import type {AddressResponse} from "./types/AddressResponse";
-import {ContactForm} from "./types/ContactForm";
-import {ContactResponse} from "./types/ContactResponse";
-import {IdentityCardForm} from "./types/IdentityCardForm";
-import {IdentityCardResponse} from "./types/IdentityCardResponse";
+import { VERSION } from "./other_types";
+import type { AddAdmin } from "./types/AddAdmin";
+import type { AddAdminResponse } from "./types/AddAdminResponse";
+import type { AddModToCommunity } from "./types/AddModToCommunity";
+import type { AddModToCommunityResponse } from "./types/AddModToCommunityResponse";
+import type { ApproveRegistrationApplication } from "./types/ApproveRegistrationApplication";
+import type { BanFromCommunity } from "./types/BanFromCommunity";
+import type { BanFromCommunityResponse } from "./types/BanFromCommunityResponse";
+import type { MarkManyPostsAsRead } from "./types/MarkManyPostsAsRead";
+import type { BanPerson } from "./types/BanPerson";
+import type { BanPersonResponse } from "./types/BanPersonResponse";
+import type { BlockCommunity } from "./types/BlockCommunity";
+import type { BlockCommunityResponse } from "./types/BlockCommunityResponse";
+import type { BlockPerson } from "./types/BlockPerson";
+import type { BlockPersonResponse } from "./types/BlockPersonResponse";
+import type { ChangePassword } from "./types/ChangePassword";
+import type { CommentReportResponse } from "./types/CommentReportResponse";
+import type { CommentResponse } from "./types/CommentResponse";
+import type { CommunityReportResponse } from "./types/CommunityReportResponse";
+import type { CommunityResponse } from "./types/CommunityResponse";
+import type { CreateComment } from "./types/CreateComment";
+import type { CreateCommentLike } from "./types/CreateCommentLike";
+import type { CreateCommentReport } from "./types/CreateCommentReport";
+import type { CreateCommunity } from "./types/CreateCommunity";
+import type { CreateCommunityReport } from "./types/CreateCommunityReport";
+import type { CreateCommunityTag } from "./types/CreateCommunityTag";
+import type { CreateCustomEmoji } from "./types/CreateCustomEmoji";
+import type { CreateOAuthProvider } from "./types/CreateOAuthProvider";
+import type { CreatePost } from "./types/CreatePost";
+import type { CreatePostLike } from "./types/CreatePostLike";
+import type { CreatePostReport } from "./types/CreatePostReport";
+import type { CreateSite } from "./types/CreateSite";
+import type { CustomEmojiResponse } from "./types/CustomEmojiResponse";
+import type { DeleteAccount } from "./types/DeleteAccount";
+import type { DeleteComment } from "./types/DeleteComment";
+import type { DeleteCommunity } from "./types/DeleteCommunity";
+import type { DeleteCommunityTag } from "./types/DeleteCommunityTag";
+import type { DeleteCustomEmoji } from "./types/DeleteCustomEmoji";
+import type { DeleteOAuthProvider } from "./types/DeleteOAuthProvider";
+import type { DeletePost } from "./types/DeletePost";
+import type { DistinguishComment } from "./types/DistinguishComment";
+import type { EditComment } from "./types/EditComment";
+import type { EditCommunity } from "./types/EditCommunity";
+import type { EditCustomEmoji } from "./types/EditCustomEmoji";
+import type { EditOAuthProvider } from "./types/EditOAuthProvider";
+import type { EditPost } from "./types/EditPost";
+import type { EditSite } from "./types/EditSite";
+import type { OAuthProvider } from "./types/OAuthProvider";
+import type { FeaturePost } from "./types/FeaturePost";
+import type { FollowCommunity } from "./types/FollowCommunity";
+import type { GetCaptchaResponse } from "./types/GetCaptchaResponse";
+import type { GetComment } from "./types/GetComment";
+import type { GetComments } from "./types/GetComments";
+import type { GetCommentsResponse } from "./types/GetCommentsResponse";
+import type { GetCommunity } from "./types/GetCommunity";
+import type { GetCommunityResponse } from "./types/GetCommunityResponse";
+import type { GetFederatedInstancesResponse } from "./types/GetFederatedInstancesResponse";
+import type { GetModlog } from "./types/GetModlog";
+import type { GetModlogResponse } from "./types/GetModlogResponse";
+import type { GetPersonDetails } from "./types/GetPersonDetails";
+import type { GetPersonDetailsResponse } from "./types/GetPersonDetailsResponse";
+import type { GetPost } from "./types/GetPost";
+import type { GetPostResponse } from "./types/GetPostResponse";
+import type { GetPosts } from "./types/GetPosts";
+import type { GetPostsResponse } from "./types/GetPostsResponse";
+import type { GetReportCount } from "./types/GetReportCount";
+import type { GetReportCountResponse } from "./types/GetReportCountResponse";
+import type { GetSiteMetadata } from "./types/GetSiteMetadata";
+import type { GetSiteMetadataResponse } from "./types/GetSiteMetadataResponse";
+import type { GetSiteResponse } from "./types/GetSiteResponse";
+import type { GetUnreadCountResponse } from "./types/GetUnreadCountResponse";
+import type { GetUnreadRegistrationApplicationCountResponse } from "./types/GetUnreadRegistrationApplicationCountResponse";
+import type { ListCommunities } from "./types/ListCommunities";
+import type { ListCommunitiesResponse } from "./types/ListCommunitiesResponse";
+import type { ListRegistrationApplications } from "./types/ListRegistrationApplications";
+import type { ListRegistrationApplicationsResponse } from "./types/ListRegistrationApplicationsResponse";
+import type { LockPost } from "./types/LockPost";
+import type { Login } from "./types/Login";
+import type { LoginResponse } from "./types/LoginResponse";
+import type { MarkPostAsRead } from "./types/MarkPostAsRead";
+import type { PasswordChangeAfterReset } from "./types/PasswordChangeAfterReset";
+import type { PasswordReset } from "./types/PasswordReset";
+import type { PostReportResponse } from "./types/PostReportResponse";
+import type { PostResponse } from "./types/PostResponse";
+import type { PurgeComment } from "./types/PurgeComment";
+import type { PurgeCommunity } from "./types/PurgeCommunity";
+import type { PurgePerson } from "./types/PurgePerson";
+import type { PurgePost } from "./types/PurgePost";
+import type { Register } from "./types/Register";
+import type { RegistrationApplicationResponse } from "./types/RegistrationApplicationResponse";
+import type { RemoveComment } from "./types/RemoveComment";
+import type { RemoveCommunity } from "./types/RemoveCommunity";
+import type { RemovePost } from "./types/RemovePost";
+import type { ResolveCommentReport } from "./types/ResolveCommentReport";
+import type { ResolveCommunityReport } from "./types/ResolveCommunityReport";
+import type { ResolveObject } from "./types/ResolveObject";
+import type { ResolvePostReport } from "./types/ResolvePostReport";
+import type { SaveComment } from "./types/SaveComment";
+import type { SavePost } from "./types/SavePost";
+import type { SaveUserSettings } from "./types/SaveUserSettings";
+import type { Search } from "./types/Search";
+import type { SearchResponse } from "./types/SearchResponse";
+import type { SiteResponse } from "./types/SiteResponse";
+import type { TransferCommunity } from "./types/TransferCommunity";
+import type { UpdateCommunityTag } from "./types/UpdateCommunityTag";
+import type { VerifyEmail } from "./types/VerifyEmail";
+import type { HideCommunity } from "./types/HideCommunity";
+import type { GenerateTotpSecretResponse } from "./types/GenerateTotpSecretResponse";
+import type { UpdateTotp } from "./types/UpdateTotp";
+import type { UpdateTotpResponse } from "./types/UpdateTotpResponse";
+import type { SuccessResponse } from "./types/SuccessResponse";
+import type { ListPostLikes } from "./types/ListPostLikes";
+import type { ListPostLikesResponse } from "./types/ListPostLikesResponse";
+import type { ListCommentLikes } from "./types/ListCommentLikes";
+import type { ListCommentLikesResponse } from "./types/ListCommentLikesResponse";
+import type { HidePost } from "./types/HidePost";
+import type { ListMedia } from "./types/ListMedia";
+import type { ListMediaResponse } from "./types/ListMediaResponse";
+import type { AuthenticateWithOauth } from "./types/AuthenticateWithOauth";
+import type { GetRegistrationApplication } from "./types/GetRegistrationApplication";
+import type { CreateTagline } from "./types/CreateTagline";
+import type { TaglineResponse } from "./types/TaglineResponse";
+import type { UpdateTagline } from "./types/UpdateTagline";
+import type { DeleteTagline } from "./types/DeleteTagline";
+import type { ListTaglines } from "./types/ListTaglines";
+import type { ListTaglinesResponse } from "./types/ListTaglinesResponse";
+import type { ListCustomEmojis } from "./types/ListCustomEmojis";
+import type { ListCustomEmojisResponse } from "./types/ListCustomEmojisResponse";
+import type { GetRandomCommunity } from "./types/GetRandomCommunity";
+import type { ApproveCommunityPendingFollower } from "./types/ApproveCommunityPendingFollower";
+import type { GetCommunityPendingFollowsCount } from "./types/GetCommunityPendingFollowsCount";
+import type { GetCommunityPendingFollowsCountResponse } from "./types/GetCommunityPendingFollowsCountResponse";
+import type { ListCommunityPendingFollowsResponse } from "./types/ListCommunityPendingFollowsResponse";
+import type { ListCommunityPendingFollows } from "./types/ListCommunityPendingFollows";
+import type { ListReports } from "./types/ListReports";
+import type { ListReportsResponse } from "./types/ListReportsResponse";
+import type { MyUserInfo } from "./types/MyUserInfo";
+import type { UserBlockInstanceParams } from "./types/UserBlockInstanceParams";
+import type { AdminAllowInstanceParams } from "./types/AdminAllowInstanceParams";
+import type { AdminBlockInstanceParams } from "./types/AdminBlockInstanceParams";
+import type { ListPersonContent } from "./types/ListPersonContent";
+import type { ListPersonContentResponse } from "./types/ListPersonContentResponse";
+import type { ListPersonSaved } from "./types/ListPersonSaved";
+import type { ListPersonSavedResponse } from "./types/ListPersonSavedResponse";
+import type { DeleteImageParams } from "./types/DeleteImageParams";
+import type { UploadImageResponse } from "./types/UploadImageResponse";
+import type { GetCommentsSlimResponse } from "./types/GetCommentsSlimResponse";
+import type { Tag } from "./types/Tag";
+import type { ResendVerificationEmail } from "./types/ResendVerificationEmail";
+import type { ListPersonRead } from "./types/ListPersonRead";
+import type { ListPersonReadResponse } from "./types/ListPersonReadResponse";
+import type { ListPersonHidden } from "./types/ListPersonHidden";
+import type { ListPersonHiddenResponse } from "./types/ListPersonHiddenResponse";
+import type { CommunityIdQuery } from "./types/CommunityIdQuery";
+import type { AdminListUsers } from "./types/AdminListUsers";
+import type { AdminListUsersResponse } from "./types/AdminListUsersResponse";
+import type { ListLoginsResponse } from "./types/ListLoginsResponse";
+import type { ListPersonLiked } from "./types/ListPersonLiked";
+import type { ListPersonLikedResponse } from "./types/ListPersonLikedResponse";
+import type { MarkNotificationAsRead } from "./types/MarkNotificationAsRead";
+import type { ListNotifications } from "./types/ListNotifications";
+import type { ListNotificationsResponse } from "./types/ListNotificationsResponse";
+import type { UpdateTerm } from "./types/UpdateTerm";
+import type { ExchangeKey } from "./types/ExchangeKey";
+import type { ExchangeKeyResponse } from "./types/ExchangeKeyResponse";
+import type { ProfileData } from "./types/ProfileData";
+import type { SaveUserProfile } from "./types/SaveUserProfile";
+import type { UpdateAvailable } from "./types/UpdateAvailable";
+import type { UpsertCard } from "./types/UpsertCard";
+import type { CountriesResponse } from "./types/CountriesResponse";
+import type { AddressForm } from "./types/AddressForm";
+import type { AddressResponse } from "./types/AddressResponse";
+import { ContactForm } from "./types/ContactForm";
+import { ContactResponse } from "./types/ContactResponse";
+import { IdentityCardForm } from "./types/IdentityCardForm";
+import { IdentityCardResponse } from "./types/IdentityCardResponse";
+import { BanksResponse } from "./types/BankList";
+import { BankAccountsResponse } from "./types/GetBankAccountResponse";
+import { CreateBankAccount } from "./types/CreateBankAccount";
+import { SetDefaultBankAccount } from "./types/SetDefaultBankAccount";
+import { DeleteBankAccount } from "./types/DeleteBankAccount";
 
 enum HttpType {
   Get = "GET",
@@ -226,7 +244,7 @@ type RequestOptions = Pick<RequestInit, "signal">;
 @Route("api/v4")
 export class LemmyHttp extends Controller {
   #apiUrl: string;
-  #headers: {[key: string]: string} = {};
+  #headers: { [key: string]: string } = {};
   #fetchFunction: typeof fetch = fetch.bind(globalThis);
 
   /**
@@ -238,12 +256,11 @@ export class LemmyHttp extends Controller {
     baseUrl: string,
     options?: {
       fetchFunction?: typeof fetch;
-      headers?: {[key: string]: string};
+      headers?: { [key: string]: string };
     },
   ) {
     super();
-    this.#apiUrl = `${baseUrl.replace(/\/+$/,
-      "")}/api/${VERSION}`;
+    this.#apiUrl = `${baseUrl.replace(/\/+$/, "")}/api/${VERSION}`;
 
     if (options?.headers) {
       this.#headers = options.headers;
@@ -448,8 +465,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Get("/account/media/list")
-  @Tags("Account",
-    "Media")
+  @Tags("Account", "Media")
   async listMedia(
     @Queries() form: ListMediaI = {},
     @Inject() options?: RequestOptions,
@@ -467,8 +483,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/account/media")
-  @Tags("Account",
-    "Media")
+  @Tags("Account", "Media")
   async deleteMedia(
     @Queries() form: DeleteImageParamsI,
     @Inject() options?: RequestOptions,
@@ -486,8 +501,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/image")
-  @Tags("Admin",
-    "Media")
+  @Tags("Admin", "Media")
   async deleteMediaAdmin(
     @Queries() form: DeleteImageParamsI,
     @Inject() options?: RequestOptions,
@@ -505,8 +519,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Get("/image/list")
-  @Tags("Admin",
-    "Media")
+  @Tags("Admin", "Media")
   async listMediaAdmin(
     @Queries() form: ListMediaI = {},
     @Inject() options?: RequestOptions,
@@ -678,14 +691,14 @@ export class LemmyHttp extends Controller {
   @Get("/community/list/children")
   @Tags("Community")
   async listChildrenCommunities(
-      @Queries() form: ListCommunitiesI = {},
-      @Inject() options?: RequestOptions,
+    @Queries() form: ListCommunitiesI = {},
+    @Inject() options?: RequestOptions,
   ) {
     return this.#wrapper<ListCommunities, ListCommunitiesResponse>(
-        HttpType.Get,
-        "/community/list/children",
-        form,
-        options,
+      HttpType.Get,
+      "/community/list/children",
+      form,
+      options,
     );
   }
 
@@ -720,10 +733,7 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       GetCommunityPendingFollowsCount,
       GetCommunityPendingFollowsCountResponse
-    >(HttpType.Get,
-      "/community/pending-follows/count",
-      form,
-      options);
+    >(HttpType.Get, "/community/pending-follows/count", form, options);
   }
 
   /**
@@ -739,10 +749,7 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       ListCommunityPendingFollows,
       ListCommunityPendingFollowsResponse
-    >(HttpType.Get,
-      "/community/pending-follows/list",
-      form,
-      options);
+    >(HttpType.Get, "/community/pending-follows/list", form, options);
   }
 
   /**
@@ -768,8 +775,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/account/block/community")
-  @Tags("Account",
-    "Community")
+  @Tags("Account", "Community")
   async blockCommunity(
     @Body() form: BlockCommunity,
     @Inject() options?: RequestOptions,
@@ -805,8 +811,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Put("/community/hide")
-  @Tags("Community",
-    "Admin")
+  @Tags("Community", "Admin")
   async hideCommunity(
     @Body() form: HideCommunity,
     @Inject() options?: RequestOptions,
@@ -824,8 +829,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/community/remove")
-  @Tags("Community",
-    "Moderator")
+  @Tags("Community", "Moderator")
   async removeCommunity(
     @Body() form: RemoveCommunity,
     @Inject() options?: RequestOptions,
@@ -843,8 +847,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/community/transfer")
-  @Tags("Community",
-    "Moderator")
+  @Tags("Community", "Moderator")
   async transferCommunity(
     @Body() form: TransferCommunity,
     @Inject() options?: RequestOptions,
@@ -862,8 +865,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/community/ban-profile")
-  @Tags("Community",
-    "Moderator")
+  @Tags("Community", "Moderator")
   async banFromCommunity(
     @Body() form: BanFromCommunity,
     @Inject() options?: RequestOptions,
@@ -881,8 +883,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/community/mod")
-  @Tags("Community",
-    "Moderator")
+  @Tags("Community", "Moderator")
   async addModToCommunity(
     @Body() form: AddModToCommunity,
     @Inject() options?: RequestOptions,
@@ -937,8 +938,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Put("/community/report/resolve")
-  @Tags("Community",
-    "Admin")
+  @Tags("Community", "Admin")
   async resolveCommunityReport(
     @Body() form: ResolveCommunityReport,
     @Inject() options?: RequestOptions,
@@ -1026,8 +1026,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/post/remove")
-  @Tags("Post",
-    "Moderator")
+  @Tags("Post", "Moderator")
   async removePost(
     @Body() form: RemovePost,
     @Inject() options?: RequestOptions,
@@ -1111,8 +1110,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/post/feature")
-  @Tags("Post",
-    "Moderator")
+  @Tags("Post", "Moderator")
   async featurePost(
     @Body() form: FeaturePost,
     @Inject() options?: RequestOptions,
@@ -1167,8 +1165,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Get("/post/like/list")
-  @Tags("Post",
-    "Admin")
+  @Tags("Post", "Admin")
   async listPostLikes(
     @Queries() form: ListPostLikesI,
     @Inject() options?: RequestOptions,
@@ -1219,8 +1216,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Put("/post/report/resolve")
-  @Tags("Post",
-    "Moderator")
+  @Tags("Post", "Moderator")
   async resolvePostReport(
     @Body() form: ResolvePostReport,
     @Inject() options?: RequestOptions,
@@ -1238,8 +1234,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Get("/post/site-metadata")
-  @Tags("Miscellaneous",
-    "Post")
+  @Tags("Miscellaneous", "Post")
   async getSiteMetadata(
     @Queries() form: GetSiteMetadataI,
     @Inject() options?: RequestOptions,
@@ -1311,8 +1306,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/comment/remove")
-  @Tags("Comment",
-    "Moderator")
+  @Tags("Comment", "Moderator")
   async removeComment(
     @Body() form: RemoveComment,
     @Inject() options?: RequestOptions,
@@ -1348,8 +1342,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Get("/comment/like/list")
-  @Tags("Comment",
-    "Admin")
+  @Tags("Comment", "Admin")
   async listCommentLikes(
     @Queries() form: ListCommentLikesI,
     @Inject() options?: RequestOptions,
@@ -1385,8 +1378,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/comment/distinguish")
-  @Tags("Comment",
-    "Moderator")
+  @Tags("Comment", "Moderator")
   async distinguishComment(
     @Body() form: DistinguishComment,
     @Inject() options?: RequestOptions,
@@ -1479,8 +1471,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Put("/comment/report/resolve")
-  @Tags("Comment",
-    "Moderator")
+  @Tags("Comment", "Moderator")
   async resolveCommentReport(
     @Body() form: ResolveCommentReport,
     @Inject() options?: RequestOptions,
@@ -1527,7 +1518,10 @@ export class LemmyHttp extends Controller {
   @Security("bearerAuth")
   @Post("/account/auth/exchange-public-key")
   @Tags("Account")
-  async exchange_public_key(@Body() form: ExchangeKey, @Inject() options?: RequestOptions) {
+  async exchange_public_key(
+    @Body() form: ExchangeKey,
+    @Inject() options?: RequestOptions,
+  ) {
     return this.#wrapper<ExchangeKey, ExchangeKeyResponse>(
       HttpType.Post,
       "/account/auth/exchange-public-key",
@@ -1541,7 +1535,10 @@ export class LemmyHttp extends Controller {
    */
   @Post("/account/auth/update-term")
   @Tags("Account")
-  async updateTerm(@Body() form: UpdateTerm, @Inject() options?: RequestOptions) {
+  async updateTerm(
+    @Body() form: UpdateTerm,
+    @Inject() options?: RequestOptions,
+  ) {
     return this.#wrapper<UpdateTerm, LoginResponse>(
       HttpType.Post,
       "/account/auth/update-term",
@@ -1549,7 +1546,6 @@ export class LemmyHttp extends Controller {
       options,
     );
   }
-
 
   /**
    * @summary Invalidate the currently used auth token.
@@ -1624,8 +1620,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Get("/admin/users")
-  @Tags("Admin",
-    "Miscellaneous")
+  @Tags("Admin", "Miscellaneous")
   async listUsers(
     @Queries() form: AdminListUsersI = {},
     @Inject() options?: RequestOptions,
@@ -1725,6 +1720,88 @@ export class LemmyHttp extends Controller {
   }
 
   /**
+   * @summary Get bank list.
+   */
+  @Get("/account/banks")
+  @Tags("Bank List")
+  async getBankList(@Inject() options?: RequestOptions) {
+    return this.#wrapper<object, BanksResponse>(
+      HttpType.Get,
+      "/account/banks",
+      {},
+      options,
+    );
+  }
+
+  /**
+   * @summary Get bank account.
+   */
+  @Get("/account/bank-account")
+  @Tags("Bank Account")
+  async getBankAccount(@Inject() options?: RequestOptions) {
+    return this.#wrapper<object, BankAccountsResponse>(
+      HttpType.Get,
+      "/account/bank-account",
+      {},
+      options,
+    );
+  }
+
+  /**
+   * @summary Set Default Bank Account.
+   */
+  @Security("bearerAuth")
+  @Put("/account/bank-account/default")
+  @Tags("Default Bank")
+  async setDefaultBankAccount(
+    @Body() form: SetDefaultBankAccount,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<SetDefaultBankAccount, SuccessResponse>(
+      HttpType.Put,
+      "/account/bank-account/default",
+      form,
+      options,
+    );
+  }
+
+  /**
+   * @summary Create new bank account.
+   */
+  @Security("bearerAuth")
+  @Post("/account/bank-account")
+  @Tags("Create Bank Account")
+  async createBankAccount(
+    @Body() form: CreateBankAccount,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<CreateBankAccount, SuccessResponse>(
+      HttpType.Post,
+      "/account/bank-account",
+      form,
+      options,
+    );
+  }
+
+  /**
+   * @summary Delete bank account.
+   */
+  @Security("bearerAuth")
+  @Post("/account/bank-account/delete")
+  @Tags("Delete Bank Account")
+  async deleteBankAccount(
+    @Body() form: DeleteBankAccount,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<DeleteBankAccount, SuccessResponse>(
+      HttpType.Post,
+      "/account/bank-account/delete",
+      form,
+      options,
+    );
+  }
+
+  /**
    * @summary Mark all replies as read.
    */
   @Security("bearerAuth")
@@ -1811,42 +1888,42 @@ export class LemmyHttp extends Controller {
     );
   }
 
-    /**
-     * @summary Save your profile settings.
-     */
-    @Security("bearerAuth")
-    @Put("/account/update-contact")
-    @Tags("Account")
-    async updateContact(
-        @Body() form: ContactForm,
-        @Inject() options?: RequestOptions,
-    ) {
-        return this.#wrapper<ContactForm, ContactResponse>(
-            HttpType.Put,
-            "/account/update-contact",
-            form,
-            options,
-        );
-    }
-    /**
-     * @summary Save your profile settings.
-     */
-    @Security("bearerAuth")
-    @Put("/account/update-identity-card")
-    @Tags("Account")
-    async updateIdentityCard(
-        @Body() form: IdentityCardForm,
-        @Inject() options?: RequestOptions,
-    ) {
-        return this.#wrapper<IdentityCardForm, IdentityCardResponse>(
-            HttpType.Put,
-            "/account/update-identity-card",
-            form,
-            options,
-        );
-    }
+  /**
+   * @summary Save your profile settings.
+   */
+  @Security("bearerAuth")
+  @Put("/account/update-contact")
+  @Tags("Account")
+  async updateContact(
+    @Body() form: ContactForm,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<ContactForm, ContactResponse>(
+      HttpType.Put,
+      "/account/update-contact",
+      form,
+      options,
+    );
+  }
+  /**
+   * @summary Save your profile settings.
+   */
+  @Security("bearerAuth")
+  @Put("/account/update-identity-card")
+  @Tags("Account")
+  async updateIdentityCard(
+    @Body() form: IdentityCardForm,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<IdentityCardForm, IdentityCardResponse>(
+      HttpType.Put,
+      "/account/update-identity-card",
+      form,
+      options,
+    );
+  }
 
-    /**
+  /**
    * @summary Save your profile settings.
    */
   @Security("bearerAuth")
@@ -1868,7 +1945,6 @@ export class LemmyHttp extends Controller {
    * @summary Save your profile settings.
    */
   @Security("bearerAuth")
-
   @Put("/account/upsert-card")
   @Tags("Account")
   async upsertCard(
@@ -1882,7 +1958,6 @@ export class LemmyHttp extends Controller {
       options,
     );
   }
-
 
   /**
    * @summary Change your profile password.
@@ -1952,7 +2027,6 @@ export class LemmyHttp extends Controller {
       options,
     );
   }
-
 
   /**
    * @summary Resend a verification email.
@@ -2104,10 +2178,7 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       ListRegistrationApplications,
       ListRegistrationApplicationsResponse
-    >(HttpType.Get,
-      "/admin/registration-application/list",
-      form,
-      options);
+    >(HttpType.Get, "/admin/registration-application/list", form, options);
   }
 
   /**
@@ -2123,10 +2194,7 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       ApproveRegistrationApplication,
       RegistrationApplicationResponse
-    >(HttpType.Put,
-      "/admin/registration-application/approve",
-      form,
-      options);
+    >(HttpType.Put, "/admin/registration-application/approve", form, options);
   }
 
   /**
@@ -2142,10 +2210,7 @@ export class LemmyHttp extends Controller {
     return this.#wrapper<
       GetRegistrationApplication,
       RegistrationApplicationResponse
-    >(HttpType.Get,
-      "/admin/registration-application",
-      form,
-      options);
+    >(HttpType.Get, "/admin/registration-application", form, options);
   }
 
   /**
@@ -2295,8 +2360,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/admin/tagline")
-  @Tags("Admin",
-    "Tagline")
+  @Tags("Admin", "Tagline")
   async createTagline(
     @Body() form: CreateTagline,
     @Inject() options?: RequestOptions,
@@ -2314,8 +2378,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Put("/admin/tagline")
-  @Tags("Admin",
-    "Tagline")
+  @Tags("Admin", "Tagline")
   async editTagline(
     @Body() form: UpdateTagline,
     @Inject() options?: RequestOptions,
@@ -2333,8 +2396,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/admin/tagline/delete")
-  @Tags("Admin",
-    "Tagline")
+  @Tags("Admin", "Tagline")
   async deleteTagline(
     @Body() form: DeleteTagline,
     @Inject() options?: RequestOptions,
@@ -2353,8 +2415,7 @@ export class LemmyHttp extends Controller {
   @Security("bearerAuth")
   @Security({})
   @Get("/admin/tagline/list")
-  @Tags("Admin",
-    "Tagline")
+  @Tags("Admin", "Tagline")
   async listTaglines(
     @Queries() form: ListTaglinesI,
     @Inject() options?: RequestOptions,
@@ -2426,8 +2487,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/oauth-provider")
-  @Tags("Miscellaneous",
-    "OAuth")
+  @Tags("Miscellaneous", "OAuth")
   async createOAuthProvider(
     @Body() form: CreateOAuthProvider,
     @Inject() options?: RequestOptions,
@@ -2445,8 +2505,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Put("/oauth-provider")
-  @Tags("Miscellaneous",
-    "OAuth")
+  @Tags("Miscellaneous", "OAuth")
   async editOAuthProvider(
     @Body() form: EditOAuthProvider,
     @Inject() options?: RequestOptions,
@@ -2464,8 +2523,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/oauth-provider/delete")
-  @Tags("Miscellaneous",
-    "OAuth")
+  @Tags("Miscellaneous", "OAuth")
   async deleteOAuthProvider(
     @Body() form: DeleteOAuthProvider,
     @Inject() options?: RequestOptions,
@@ -2483,8 +2541,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/oauth/authenticate")
-  @Tags("Miscellaneous",
-    "OAuth")
+  @Tags("Miscellaneous", "OAuth")
   async authenticateWithOAuth(
     @Body() form: AuthenticateWithOauth,
     @Inject() options?: RequestOptions,
@@ -2588,15 +2645,12 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/account/avatar")
-  @Tags("Account",
-    "Media")
+  @Tags("Account", "Media")
   async uploadUserAvatar(
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#upload("/account/avatar",
-      image,
-      options);
+    return this.#upload("/account/avatar", image, options);
   }
 
   /**
@@ -2604,8 +2658,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/account/avatar")
-  @Tags("Account",
-    "Media")
+  @Tags("Account", "Media")
   async deleteUserAvatar(
     @Inject() options?: RequestOptions,
   ): Promise<SuccessResponse> {
@@ -2622,15 +2675,12 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/account/banner")
-  @Tags("Account",
-    "Media")
+  @Tags("Account", "Media")
   async uploadUserBanner(
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#upload("/account/banner",
-      image,
-      options);
+    return this.#upload("/account/banner", image, options);
   }
 
   /**
@@ -2638,8 +2688,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/account/banner")
-  @Tags("Account",
-    "Media")
+  @Tags("Account", "Media")
   async deleteUserBanner(@Inject() options?: RequestOptions) {
     return this.#wrapper<object, SuccessResponse>(
       HttpType.Delete,
@@ -2654,17 +2703,13 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/community/icon")
-  @Tags("Community",
-    "Media")
+  @Tags("Community", "Media")
   async uploadCommunityIcon(
     @Queries() query: CommunityIdQueryI,
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#uploadWithQuery("/community/icon",
-      query,
-      image,
-      options);
+    return this.#uploadWithQuery("/community/icon", query, image, options);
   }
 
   /**
@@ -2672,8 +2717,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/community/icon")
-  @Tags("Community",
-    "Media")
+  @Tags("Community", "Media")
   async deleteCommunityIcon(
     @Body() form: CommunityIdQuery,
     @Inject() options?: RequestOptions,
@@ -2691,17 +2735,13 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/community/banner")
-  @Tags("Community",
-    "Media")
+  @Tags("Community", "Media")
   async uploadCommunityBanner(
     @Queries() query: CommunityIdQueryI,
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#uploadWithQuery("/community/banner",
-      query,
-      image,
-      options);
+    return this.#uploadWithQuery("/community/banner", query, image, options);
   }
 
   /**
@@ -2709,8 +2749,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/community/banner")
-  @Tags("Community",
-    "Media")
+  @Tags("Community", "Media")
   async deleteCommunityBanner(
     @Body() form: CommunityIdQuery,
     @Inject() options?: RequestOptions,
@@ -2728,15 +2767,12 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/site/icon")
-  @Tags("Site",
-    "Media")
+  @Tags("Site", "Media")
   async uploadSiteIcon(
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#upload("/site/icon",
-      image,
-      options);
+    return this.#upload("/site/icon", image, options);
   }
 
   /**
@@ -2744,8 +2780,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/site/icon")
-  @Tags("Site",
-    "Media")
+  @Tags("Site", "Media")
   async deleteSiteIcon(
     @Inject() options?: RequestOptions,
   ): Promise<SuccessResponse> {
@@ -2762,15 +2797,12 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Post("/site/banner")
-  @Tags("Site",
-    "Media")
+  @Tags("Site", "Media")
   async uploadSiteBanner(
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#upload("/site/banner",
-      image,
-      options);
+    return this.#upload("/site/banner", image, options);
   }
 
   /**
@@ -2778,8 +2810,7 @@ export class LemmyHttp extends Controller {
    */
   @Security("bearerAuth")
   @Delete("/site/banner")
-  @Tags("Site",
-    "Media")
+  @Tags("Site", "Media")
   async deleteSiteBanner(
     @Inject() options?: RequestOptions,
   ): Promise<SuccessResponse> {
@@ -2801,9 +2832,7 @@ export class LemmyHttp extends Controller {
     @UploadedFile() image: UploadImage,
     @Inject() options?: RequestOptions,
   ): Promise<UploadImageResponse> {
-    return this.#upload("/image",
-      image,
-      options);
+    return this.#upload("/image", image, options);
   }
 
   /**
@@ -2838,7 +2867,7 @@ export class LemmyHttp extends Controller {
   /**
    * Set the headers (can be used to set the auth header)
    */
-  setHeaders(headers: {[key: string]: string}) {
+  setHeaders(headers: { [key: string]: string }) {
     this.#headers = headers;
   }
 
@@ -2848,30 +2877,29 @@ export class LemmyHttp extends Controller {
 
   async #upload<ResponseType>(
     path: string,
-    {image}: UploadImage,
+    { image }: UploadImage,
     options?: RequestOptions,
   ): Promise<ResponseType> {
     const formData = createFormData(image);
 
-    const response = await this.#fetchFunction(this.#buildFullUrl(path),
-      {
-        ...options,
-        method: HttpType.Post,
-        body: formData as unknown as BodyInit,
-        headers: this.#headers,
-      });
+    const response = await this.#fetchFunction(this.#buildFullUrl(path), {
+      ...options,
+      method: HttpType.Post,
+      body: formData as unknown as BodyInit,
+      headers: this.#headers,
+    });
     return response.json();
   }
 
   async #uploadWithQuery<QueryType extends object, ResponseType>(
     path: string,
     query: QueryType,
-    {image}: UploadImage,
+    { image }: UploadImage,
     options?: RequestOptions,
   ): Promise<ResponseType> {
     return this.#upload<ResponseType>(
       `${path}?${encodeGetParams(query)}`,
-      {image},
+      { image },
       options,
     );
   }
@@ -2885,23 +2913,21 @@ export class LemmyHttp extends Controller {
     let response: Response;
     if (type_ === HttpType.Get) {
       const getUrl = `${this.#buildFullUrl(endpoint)}?${encodeGetParams(form)}`;
-      response = await this.#fetchFunction(getUrl,
-        {
-          ...options,
-          method: HttpType.Get,
-          headers: this.#headers,
-        });
+      response = await this.#fetchFunction(getUrl, {
+        ...options,
+        method: HttpType.Get,
+        headers: this.#headers,
+      });
     } else {
-      response = await this.#fetchFunction(this.#buildFullUrl(endpoint),
-        {
-          ...options,
-          method: type_,
-          headers: {
-            "Content-Type": "application/json",
-            ...this.#headers,
-          },
-          body: JSON.stringify(form),
-        });
+      response = await this.#fetchFunction(this.#buildFullUrl(endpoint), {
+        ...options,
+        method: type_,
+        headers: {
+          "Content-Type": "application/json",
+          ...this.#headers,
+        },
+        body: JSON.stringify(form),
+      });
     }
 
     let json: any | undefined = undefined;
@@ -2913,8 +2939,7 @@ export class LemmyHttp extends Controller {
     }
 
     if (!response.ok) {
-      throw new LemmyError(json.error ?? response.statusText,
-        json.message);
+      throw new LemmyError(json.error ?? response.statusText, json.message);
     } else {
       return json;
     }
@@ -2923,23 +2948,21 @@ export class LemmyHttp extends Controller {
 
 function encodeGetParams<BodyType extends object>(p: BodyType): string {
   return Object.entries(p)
-  .filter(kv => kv[1] !== undefined && kv[1] !== null)
-  .map(kv => kv.map(encodeURIComponent).join("="))
-  .join("&");
+    .filter(kv => kv[1] !== undefined && kv[1] !== null)
+    .map(kv => kv.map(encodeURIComponent).join("="))
+    .join("&");
 }
 
 function createFormData(image: File | Buffer): FormData {
   const formData = new FormData();
 
   if (image instanceof File) {
-    formData.append("images[]",
-      image);
+    formData.append("images[]", image);
   } else {
     // The filename doesn't affect the file type or file name that ends up in pictrs
     formData.append(
       "images[]",
-      new Blob([image],
-        {type: "image/jpeg"}),
+      new Blob([image], { type: "image/jpeg" }),
       "image.jpg",
     );
   }
@@ -2959,7 +2982,6 @@ export class LemmyError extends Error {
     this.name = name;
 
     // Set the prototype explicitly.
-    Object.setPrototypeOf(this,
-      LemmyError.prototype);
+    Object.setPrototypeOf(this, LemmyError.prototype);
   }
 }

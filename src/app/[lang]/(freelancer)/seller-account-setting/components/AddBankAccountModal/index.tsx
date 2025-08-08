@@ -73,7 +73,7 @@ const BankAccountModal: React.FC<BankAccountModalProps> = ({
       onClose={onClose}
       title={initialData ? sellerBankAccountLanguage?.buttonEditBank : sellerBankAccountLanguage?.buttonAddBank}
     >
-      <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmitForm)} className="space-y-4 text-text-primary">
         <div>
           <label className="block text-sm font-medium mb-1">
             {sellerBankAccountLanguage?.bankNameLabel}
@@ -88,6 +88,7 @@ const BankAccountModal: React.FC<BankAccountModalProps> = ({
                 {bank.name}
               </option>
             ))}
+            <option value="1">ABC</option>
           </select>
           {errors.bankId && (
             <p className="text-red-500 text-sm mt-1">{errors.bankId.message}</p>
@@ -111,7 +112,7 @@ const BankAccountModal: React.FC<BankAccountModalProps> = ({
 
         <div>
           <label className="block text-sm font-medium mb-1">
-            {sellerBankAccountLanguage?.accountNameLabel || "Account holder name"}
+            {sellerBankAccountLanguage?.bankAccountName }
           </label>
           <input
             type="text"

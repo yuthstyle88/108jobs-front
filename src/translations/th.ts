@@ -1928,6 +1928,7 @@ export const th = {
         },
         sellerBankAccount: {
             bankAccountNumberLabel: "หมายเลขบัญชีธนาคาร",
+            bankAccountName: "ชื่อเจ้าของบัญชี",
             bankAccountNumberPlaceholder: "กรอกหมายเลขบัญชี",
             bankInfoDescription: "สำหรับรับเงินเมื่อได้รับการจ้างงาน",
             bankInfoTitle: "ข้อมูลบัญชีธนาคาร",
