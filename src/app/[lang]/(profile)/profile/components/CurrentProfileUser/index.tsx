@@ -3,25 +3,25 @@ import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
 import {AssetIcon} from "@/constants/icons";
 import {ProfileImage} from "@/constants/images";
 import {LanguageFile} from "@/constants/language";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {getNamespace} from "@/utils/i18nHelper";
 import {formatDateToLong} from "@/utils/formatDateToLong";
 import {interpolateDouble} from "@/utils/interpolate";
-import {faStar} from "@fortawesome/free-solid-svg-icons";
+import {faEdit, faStar} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {ClipboardX} from "lucide-react";
+import {ClipboardX, SquarePen} from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import {useEffect, useRef, useState} from "react";
 import {Certificate, Education, LanguageSkill, Person, Skill, WorkExperience} from "lemmy-js-client";
 import {getProfileData} from "@/utils/getProfileData";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
-
-const FreelancerProfile = () => {
+const CurrentProfileUser = () => {
   const {profileState, person} = useMyUser();
+
   const goToProfileLanguage = getNamespace(
     LanguageFile.GO_TO_PROFILE
   );
-
   const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
   const [showFullBio, setShowFullBio] = useState(false);
   const [isClamped, setIsClamped] = useState(false);
@@ -83,26 +83,6 @@ const FreelancerProfile = () => {
                   />
                 ))}
               </div>
-              {person?.isVerified && (
-                <div className="flex items-center justify-center w-full">
-                  <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-[#1EB899] text-white w-fit">
-                    <svg
-                      className="w-4 h-4 mr-1"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="text-sm font-medium">
-                      Verified Freelance
-                    </span>
-                  </div>
-                </div>
-              )}
               {person?.deleted === false && (
                 <div className="flex items-center justify-center w-full">
                   <div className="mt-3 px-4 py-1 rounded-full flex items-center justify-center bg-red-500 text-white w-fit">
@@ -165,18 +145,34 @@ const FreelancerProfile = () => {
                   </div>
                 </div>
               )}
+
+              <Link prefetch={false}
+                    href="/seller-account-setting/freelance-profile"
+                    className="absolute top-4 right-4"
+              >
+                <FontAwesomeIcon
+                  icon={faEdit}
+                  className="text-[18px] text-text-secondary"
+                />
+              </Link>
             </div>
             <div className="w-full sm:w-[320px] mt-4 relative border-[0.0625rem] border-border-primary bg-white rounded-[0.25rem]">
               <div className="max-w-4xl mx-auto">
                 <div className="p-6">
                   {/* Education Section */}
                   <div className="bg-white rounded-lg pb-6">
-                    <div className="mb-2">
+                    <div className="flex justify-between items-center mb-4">
                       <h2 className="text-blue-600 font-medium">
                         {goToProfileLanguage?.educationTitle}
                       </h2>
+                      <Link prefetch={false}
+                            href="/user/edit/education"
+                            className="text-gray-500"
+                      >
+                        <SquarePen className="w-[16px] text-gray-500"/>
+                      </Link>
                     </div>
-                    {person && educations.length > 0 ? (
+                    {educations.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {educations.map((education: Education) => {
                           return (
@@ -203,12 +199,18 @@ const FreelancerProfile = () => {
                   <hr className="bg-border-secondary h-[1px] block w-full border-none m-0 box-content"/>
                   {/* Work Experience Section */}
                   <div className="bg-white rounded-lg py-6">
-                    <div className="mb-2">
+                    <div className="flex justify-between items-center mb-4">
                       <h2 className="text-blue-600 font-medium">
                         {goToProfileLanguage?.experienceTitle}
                       </h2>
+                      <Link prefetch={false}
+                            href="/user/edit/experience"
+                            className="text-gray-500"
+                      >
+                        <SquarePen className="w-[16px] text-gray-500"/>
+                      </Link>
                     </div>
-                    {person && workExperience.length > 0 ? (
+                    {workExperience.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {workExperience.map(
                           (experience: WorkExperience) => {
@@ -244,12 +246,15 @@ const FreelancerProfile = () => {
 
                   {/* Skills Section */}
                   <div className="bg-white rounded-lg py-6">
-                    <div className="mb-2">
+                    <div className="flex justify-between items-center mb-4">
                       <h2 className="text-blue-600 font-medium">
                         {goToProfileLanguage?.skillTitle}
                       </h2>
+                      <Link prefetch={false} href="/user/edit/skills" className="text-gray-500">
+                        <SquarePen className="w-[16px] text-gray-500"/>
+                      </Link>
                     </div>
-                    {person && skill.length > 0 ? (
+                    {skill.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {skill.map((skill: Skill) => {
                           return (
@@ -278,12 +283,18 @@ const FreelancerProfile = () => {
 
                   {/* Languages Section */}
                   <div className="bg-white rounded-lg py-6">
-                    <div className="mb-2">
+                    <div className="flex justify-between items-center mb-4">
                       <h2 className="text-blue-600 font-medium">
                         {goToProfileLanguage?.languageTitle}
                       </h2>
+                      <Link prefetch={false}
+                            href="/user/edit/languages"
+                            className="text-gray-500"
+                      >
+                        <SquarePen className="w-[16px] text-gray-500"/>
+                      </Link>
                     </div>
-                    {person && language.length > 0 ? (
+                    {language.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {language.map(
                           (language: LanguageSkill) => {
@@ -314,12 +325,18 @@ const FreelancerProfile = () => {
 
                   {/* Certifications Section */}
                   <div className="bg-white rounded-lg py-6">
-                    <div className="mb-2">
+                    <div className="flex justify-between items-center mb-4">
                       <h2 className="text-blue-600 font-medium">
                         {goToProfileLanguage?.certificationTitle}
                       </h2>
+                      <Link prefetch={false}
+                            href="/user/edit/certifications"
+                            className="text-gray-500"
+                      >
+                        <SquarePen className="w-[16px] text-gray-500"/>
+                      </Link>
                     </div>
-                    {person && certAndAward.length > 0 ? (
+                    {certAndAward.length > 0 ? (
                       <div className="flex flex-col gap-4">
                         {certAndAward.map(
                           (cert: Certificate) => {
@@ -346,9 +363,8 @@ const FreelancerProfile = () => {
               </div>
             </div>
           </aside>
-
           <section className="w-full px-4">
-            <h2 className="pt-8 pb-4 text-[28px] font-medium text-text-primary w-full">
+            <h2 className="pt-[3rem] text-[28px] font-medium text-text-primary w-full">
               {interpolateDouble(goToProfileLanguage?.workTitle || "",
                 {
                   username: person?.displayName,
@@ -441,4 +457,4 @@ const FreelancerProfile = () => {
   );
 };
 
-export default FreelancerProfile;
+export default CurrentProfileUser;

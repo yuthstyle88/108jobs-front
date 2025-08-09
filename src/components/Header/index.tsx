@@ -1,19 +1,18 @@
 "use client";
-import {AssetIcon} from "@/constants/icons";
-import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { AssetIcon } from "@/constants/icons";
+import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 import LanguageDropdown from "../LanguageDropDown";
-import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
-import EmployerSection from "./components/EmployerSection";
-import FreelancerSession from "./components/FreelancerSection";
+import UserProfileSection from "./components/UserProfileSection";
 import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
-import {useScrollHandler} from "./hooks/useScrollHandler";
-import {useTranslation} from "react-i18next";
+import { useScrollHandler } from "./hooks/useScrollHandler";
 
-const TYPES: Record<string, {bg: string}> = {
+const TYPES: Record<string, { bg: string }> = {
   transparent: {
     bg: "#transparent",
   },
@@ -27,16 +26,16 @@ interface BgProps {
   forceShowSearch?: boolean;
 }
 
-const Header = ({type, forceShowSearch = false}: BgProps) => {
-  const {isLoggedIn} = useAuthInfo();
-  const {t} = useTranslation();
-  const {scrollY, showSearch} = useScrollHandler(forceShowSearch);
-  const {bg} = TYPES[type];
+const Header = ({ type, forceShowSearch = false }: BgProps) => {
+  const { isLoggedIn } = useAuthInfo();
+  const { t } = useTranslation();
+  const { scrollY, showSearch } = useScrollHandler(forceShowSearch);
+  const { bg } = TYPES[type];
 
   return (
     <header
       className={`fixed top-0 z-[999] w-full transition-all duration-300 ${scrollY > 0 ? "bg-primary" : bg
-      }`}
+        }`}
     >
       <nav className="mx-[1.5rem] flex flex-wrap items-center justify-center h-auto min-h-[70px] py-4 xl:py-1 xl:justify-between">
         <section className="flex items-center gap-x-4 w-full md:w-auto">
@@ -51,7 +50,7 @@ const Header = ({type, forceShowSearch = false}: BgProps) => {
             />
           </Link>
 
-          <Search showSearch={showSearch}/>
+          <Search showSearch={showSearch} />
         </section>
 
         <section className="flex items-center gap-4 w-full md:w-auto mt-4 md:mt-0 justify-end">
@@ -62,39 +61,38 @@ const Header = ({type, forceShowSearch = false}: BgProps) => {
                   <p className="">
                     {t("global.labelEmploymentButton")}
                   </p>
-                  <FontAwesomeIcon icon={faChevronDown}/>
+                  <FontAwesomeIcon icon={faChevronDown} />
                 </div>
                 <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
               </div>
               <div
                 className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
-                <MegaMenu/>
+                <MegaMenu />
               </div>
             </div>
           )}
           {!isLoggedIn && (
             <Link prefetch={false}
-                  href="/apply-freelancer"
-                  className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
+              href="/job-board"
+              className="text-white text-sm hover:text-white px-3"
             >
-              {t("global.labelApplyToBeFreelancerButton")}
+              {t("global.labelJobBoardCenter")}
             </Link>
           )}
           {isLoggedIn && (
             <>
-              <FreelancerSession/>
-              <EmployerSection/>
+              <UserProfileSection />
             </>
           )}
           {!isLoggedIn && (
             <Link prefetch={false}
-                  href="/login"
-                  className="text-white text-sm hover:bg-blue-800 hover:text-white"
+              href="/login"
+              className="text-white text-sm hover:text-white"
             >
               {t("global.labelSignInButton")}
             </Link>
           )}
-          {!isLoggedIn && <LanguageDropdown/>}
+          {!isLoggedIn && <LanguageDropdown />}
         </section>
       </nav>
     </header>
@@ -102,10 +100,6 @@ const Header = ({type, forceShowSearch = false}: BgProps) => {
 };
 
 export default Header;
-
-// "use client";
-// import { AssetIcon, ProfileIcon } from "@/constants/icons";
-// import { ProfileImage } from "@/constants/images";
 // import { GlobalLanguage } from "@/types/language";
 // import {
 //   faBarsProgress,

@@ -1,7 +1,6 @@
 "use client";
 import {useEffect, useState} from 'react';
-import EmployerSection from './EmployerSection';
-import FreelancerSession from './FreelancerSection';
+import UserProfileSection from './UserProfileSection';
 
 interface ClientOnlyRoleSectionProps {
   globalLanguageData?: Record<string, string>;
@@ -23,8 +22,7 @@ const ClientOnlyRoleSection = ({globalLanguageData}: ClientOnlyRoleSectionProps)
   // Single-user mode: show both capabilities
   return (
     <>
-      <FreelancerSession />
-      <EmployerSection />
+      <UserProfileSection />
     </>
   );
 };

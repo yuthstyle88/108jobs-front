@@ -1,40 +1,45 @@
-import {ProfileImage} from "@/constants/images";
+import { ProfileImage } from "@/constants/images";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { interpolateElement } from "@/utils/interpolateElement";
+import { faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
 import {
   faBarsProgress,
+  faBriefcase,
   faBullhorn,
-  faCodePullRequest,
-  faCoins,
+  faChevronRight,
   faGear,
   faGift,
   faHeart,
   faMessage,
+  faMoneyBillTrendUp,
   faSignOut,
   faTicket,
 } from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Person} from "lemmy-js-client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Person } from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
-import {UserService} from "@/services";
-import {useTranslation} from "react-i18next";
+import { UserService } from "@/services";
+import { useTranslation } from "react-i18next";
 
-type ProfileSectionProps = {
+type ProfileUserProps = {
   profile: Person;
 };
 
-const ProfileSection = ({profile}: ProfileSectionProps) => {
+const ProfileUser = ({ profile }: ProfileUserProps) => {
   const logout = () => UserService.Instance.logout();
-  const {t} = useTranslation();
+  const { lang: currentLang } = useLanguage();
+  const { t } = useTranslation();
   return (
     <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">
-      <Link prefetch={false} href={"/profile"}>
+      <Link prefetch={false} href={`/${currentLang}/profile/my-profile`}>
         <div className="p-4 bg-secondary hover:bg-[#D0E1FB] duration-150 rounded-tl-lg rounded-tr-lg relative">
           <div className="flex items-center space-x-3">
-            <div className="rounded-full bg-gray-200 flex items-center justify-center">
+            <div className="bg-gray-200 flex items-center justify-center rounded-full">
               <Image
                 src={ProfileImage.avatar}
                 alt="avatar"
-                className="rounded-full w-12 h-12 object-cover"
+                className="rounded-full w-12 h-12 object-cover border-1 border-border-primary"
                 width={500}
                 height={500}
               />
@@ -55,21 +60,10 @@ const ProfileSection = ({profile}: ProfileSectionProps) => {
           />
         </div>
       </Link>
-
       <div className="py-2">
         <Link prefetch={false}
-              href="/coin"
-              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
-        >
-          <FontAwesomeIcon
-            icon={faCoins}
-            className="text-[24px] text-primary "
-          />
-          <span className="text-gray-700">Coins 0.00</span>
-        </Link>
-        <Link prefetch={false}
-              href="/account-setting/basic-info"
-              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+          href="/account-setting/basic-info"
+          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faGear}
@@ -78,8 +72,8 @@ const ProfileSection = ({profile}: ProfileSectionProps) => {
           <span className="text-gray-700">{t("global.menuAccountSettings")}</span>
         </Link>
         <Link prefetch={false}
-              href="/chat"
-              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+          href="/chat"
+          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faMessage}
@@ -88,18 +82,8 @@ const ProfileSection = ({profile}: ProfileSectionProps) => {
           <span className="text-gray-700">{t("global.menuMessagesOrders")}</span>
         </Link>
         <Link prefetch={false}
-              href="/promotion"
-              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
-        >
-          <FontAwesomeIcon
-            icon={faTicket}
-            className="text-[24px] text-primary "
-          />
-          <span className="text-gray-700">{t("global.menuCoupons")}</span>
-        </Link>
-        <Link prefetch={false}
-              href="/favorites"
-              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+          href="/favorites"
+          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faHeart}
@@ -108,8 +92,8 @@ const ProfileSection = ({profile}: ProfileSectionProps) => {
           <span className="text-gray-700">{t("global.menuFavoriteJobs")}</span>
         </Link>
         <Link prefetch={false}
-              href="/job-board"
-              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
+          href="/job-board"
+          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
             icon={faBullhorn}
@@ -118,31 +102,18 @@ const ProfileSection = ({profile}: ProfileSectionProps) => {
           <span className="text-gray-700">{t("global.menuJobBoard")}</span>
         </Link>
         <Link prefetch={false}
-              href="/reward/earn"
-              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+          href="/job-board/jobs"
+          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
         >
           <FontAwesomeIcon
-            icon={faGift}
+            icon={faBriefcase}
             className="text-[24px] text-primary "
           />
-          <span className="text-gray-700">Rewards</span>
-          <span className="ml-2 px-2 py-1 text-xs text-white bg-blue-500 rounded">
-            New
-          </span>
+          <span className="text-gray-700">{t("global.menuMyJob")}</span>
         </Link>
         <Link prefetch={false}
-              href="/start-selling"
-              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
-        >
-          <FontAwesomeIcon
-            icon={faCodePullRequest}
-            className="text-[24px] text-primary "
-          />
-          <span className="text-gray-700">{t("global.menuBecomeFreelancer")}</span>
-        </Link>
-        <Link prefetch={false}
-              href="/consent-management"
-              className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t w-full"
+          href="/consent-management"
+          className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
         >
           <FontAwesomeIcon
             icon={faBarsProgress}
@@ -165,4 +136,4 @@ const ProfileSection = ({profile}: ProfileSectionProps) => {
   );
 };
 
-export default ProfileSection;
+export default ProfileUser;

@@ -1,10 +1,10 @@
 "use client";
-import {useEffect, useState} from 'react';
-import {UserService} from "@/services";
+import { useEffect, useState } from 'react';
+import { UserService } from "@/services";
 import Link from "next/link";
 import LanguageDropdown from "@/components/LanguageDropDown";
-import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MegaMenu from "@/components/Header/components/MegaMenu";
 
 
@@ -12,12 +12,12 @@ interface ClientOnlyGuestSectionProps {
   globalLanguageData?: Record<string, string>;
 }
 
-const ClientOnlyGuestSection = ({globalLanguageData}: ClientOnlyGuestSectionProps) => {
+const ClientOnlyGuestSection = ({ globalLanguageData }: ClientOnlyGuestSectionProps) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-      setIsClient(true);
-    },
+    setIsClient(true);
+  },
     []);
 
   if (!isClient) {
@@ -40,7 +40,7 @@ const ClientOnlyGuestSection = ({globalLanguageData}: ClientOnlyGuestSectionProp
             <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
               {globalLanguageData?.labelEmploymentButton}
               <span className="inline-block">
-                <FontAwesomeIcon icon={faChevronDown}/>
+                <FontAwesomeIcon icon={faChevronDown} />
               </span>
             </div>
           </div>
@@ -48,22 +48,22 @@ const ClientOnlyGuestSection = ({globalLanguageData}: ClientOnlyGuestSectionProp
         </div>
         <div
           className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
-          <MegaMenu/>
+          <MegaMenu />
         </div>
       </div>
       <Link prefetch={false}
-            href="/apply-freelancer"
-            className="text-white text-sm hover:bg-blue-800 hover:text-white border-r-[1px] pr-4"
+        href="/job-board"
+        className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
       >
-        {globalLanguageData?.labelApplyToBeFreelancerButton}
+        {globalLanguageData?.labelJobBoardCenter}
       </Link>
       <Link prefetch={false}
-            href="/login"
-            className="text-white text-sm hover:bg-blue-800 hover:text-white"
+        href="/login"
+        className="text-white text-sm hover:bg-blue-800 hover:text-white"
       >
         {globalLanguageData?.labelSignInButton}
       </Link>
-      <LanguageDropdown/>
+      <LanguageDropdown />
     </>
   );
 };

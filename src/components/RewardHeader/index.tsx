@@ -10,7 +10,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import {useState} from "react";
-import ProfileFreelancer from "../Header/components/ProfileFreelancer";
+import ProfileFreelancer from "../Header/components/ProfileUser";
 import ProfileSection from "../Header/components/ProfileSection";
 import LanguageDropdown from "../LanguageDropDown";
 

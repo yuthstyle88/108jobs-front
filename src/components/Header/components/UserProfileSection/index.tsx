@@ -8,13 +8,13 @@ import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import FreelanceMegaMenu from "../FreelanceMegaMenu";
-import FreelanceImproveMenu from "../FreelancerImproveMenu";
-import ProfileFreelancer from "../ProfileFreelancer";
+import UserMegaMenu from "../UserMegaMenu";
+import UserImproveMenu from "../UserImproveMenu";
+import ProfileUser from "../ProfileUser";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {useTranslation} from "react-i18next";
 
-const FreelancerSession = () => {
+const UserProfileSection = () => {
   const {person} = useMyUser();
 
   const {isOpen, toggle, close} = useToggle();
@@ -33,14 +33,14 @@ const FreelancerSession = () => {
         </div>
         <div
           className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
-          <FreelanceImproveMenu/>
+          <UserImproveMenu/>
         </div>
       </div>
       <Link prefetch={false}
-            href="/seller"
+            href="/job-board"
             className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
       >
-        {t("global.labelSellerCenter")}
+        {t("global.labelJobBoardCenter")}
       </Link>
       <div className="group hidden md:block">
         <div className="relative">
@@ -53,7 +53,7 @@ const FreelancerSession = () => {
         </div>
         <div
           className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
-          <FreelanceMegaMenu/>
+          <UserMegaMenu/>
         </div>
       </div>
       {/* <ChatBadge /> */}
@@ -96,7 +96,7 @@ const FreelancerSession = () => {
             className="w-[14px] h-[14px] text-white"
           />
         </button>
-        {isOpen && <ProfileFreelancer profile={person}/>}
+        {isOpen && <ProfileUser profile={person}/>}
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()}/>
         )}
@@ -105,4 +105,4 @@ const FreelancerSession = () => {
   );
 };
 
-export default FreelancerSession;
+export default UserProfileSection;

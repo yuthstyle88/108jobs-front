@@ -1,21 +1,17 @@
 "use client";
-import CurrentProfileEmployer from "../components/CurrentProfileEmployer";
-import CurrentProfileFreelance from "../components/CurrentProfileFreelance";
-import EmployerProfile from "../components/EmployerProfile";
-import FreelancerProfile from "../components/FreelanerProfile";
 import NotFound from "@/app/[lang]/not-found";
-import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
+import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
+import CurrentProfileUser from "../components/CurrentProfileUser";
 
 
 export default function CheckRoleProfile() {
-  const {isEmployer, isFreelancer} = useAuthInfo();
+  const { isLoggedIn } = useAuthInfo();
 
-  if (isEmployer) return <CurrentProfileEmployer/>;
-  if (isFreelancer)
-    return <CurrentProfileFreelance/>;
-  if (isFreelancer)
-    return <FreelancerProfile/>;
-  if (isEmployer) return <EmployerProfile/>;
 
-  return <NotFound/>;
+  if (isLoggedIn)
+    return <CurrentProfileUser />;
+  // if (isLoggedIn)
+  //   return <FreelancerProfile/>;
+
+  return <NotFound />;
 }
