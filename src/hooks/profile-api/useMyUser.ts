@@ -27,7 +27,7 @@ export const useMyUser = () => {
     localUser: assertExists(user.localUserView.localUser, "Missing localUser"),
     contact: user?.profile?.contact || null,
     address: user?.profile?.address || null,
-    card: user?.profile?.card || null,
+    card: user?.profile?.identityCard || null,
     coin: user?.profile?.coin || null,
   };
 };
