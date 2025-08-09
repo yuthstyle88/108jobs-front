@@ -2883,6 +2883,8 @@ export const th = {
             provinceRequired: "กรุณากรอกจังหวัด",
             postalCodeRequired: "กรุณากรอกรหัสไปรษณีย์",
             updateFailed: "ไม่สามารถอัปเดตที่อยู่ได้",
+            thaiCountryLabel: "ประเทศไทย",
+            vietnamCountryLabel: "เวียดนาม",
         }
 
     },

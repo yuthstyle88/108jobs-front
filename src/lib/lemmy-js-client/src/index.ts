@@ -80,6 +80,7 @@ export type {CreateCommunityReport} from "./types/CreateCommunityReport";
 export type {CreateCommunityTag} from "./types/CreateCommunityTag";
 export type {CreateCustomEmoji} from "./types/CreateCustomEmoji";
 export type {CreateOAuthProvider} from "./types/CreateOAuthProvider";
+export type {CreateOrUpdateAddress} from "./types/CreateOrUpdateAddress";
 export type {CreatePost} from "./types/CreatePost";
 export type {CreatePostLike} from "./types/CreatePostLike";
 export type {CreatePostReport} from "./types/CreatePostReport";

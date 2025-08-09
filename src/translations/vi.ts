@@ -3010,6 +3010,8 @@ export const vi = {
             provinceRequired: "Vui lòng nhập tỉnh/thành phố",
             postalCodeRequired: "Vui lòng nhập mã bưu điện",
             updateFailed: "Cập nhật địa chỉ thất bại",
+            thaiCountryLabel: "Thái Lan",
+            vietnamCountryLabel: "Việt Nam",
         }
 
     },

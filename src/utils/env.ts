@@ -34,7 +34,7 @@ export function getInternalHost() {
 }
 
 export function getSecure(): string {
-  return "s";
+  return "";
 }
 
 

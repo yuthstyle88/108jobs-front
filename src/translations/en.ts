@@ -2955,6 +2955,8 @@ export const en = {
             provinceRequired: "Please enter province",
             postalCodeRequired: "Please enter postal code",
             updateFailed: "Failed to update address",
+            thaiCountryLabel: "Thailand",
+            vietnamCountryLabel: "Vietnam",
         }
     },
 };

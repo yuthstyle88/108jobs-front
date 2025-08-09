@@ -228,6 +228,7 @@ import { BankAccountsResponse } from "./types/GetBankAccountResponse";
 import { CreateBankAccount } from "./types/CreateBankAccount";
 import { SetDefaultBankAccount } from "./types/SetDefaultBankAccount";
 import { DeleteBankAccount } from "./types/DeleteBankAccount";
+import {CreateOrUpdateAddress} from "./types/CreateOrUpdateAddress";
 
 enum HttpType {
   Get = "GET",
@@ -1877,10 +1878,10 @@ export class LemmyHttp extends Controller {
   @Post("/account/update-address")
   @Tags("Account")
   async updateAddress(
-    @Body() form: AddressForm,
+    @Body() form: CreateOrUpdateAddress,
     @Inject() options?: RequestOptions,
   ) {
-    return this.#wrapper<AddressForm, AddressResponse>(
+    return this.#wrapper<CreateOrUpdateAddress, AddressResponse>(
       HttpType.Post,
       "/account/update-address",
       form,
