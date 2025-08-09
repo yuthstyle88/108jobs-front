@@ -5,8 +5,8 @@ import { useEffect, useMemo, useState } from "react";
 import {useTranslation} from "react-i18next";
 
 type Province = { code: string | number; nameTh?: string; nameEn?: string; provinceCode?: string | number };
-type District = { code: string | number; nameTh?: string; nameEn?: string; provinceCode?: string | number };
-type Subdistrict = { code: string | number; nameTh?: string; nameEn?: string; districtCode?: string | number; postalCode?: string | number };
+type District = { districtCode: string | number; nameTh?: string; nameEn?: string; provinceCode?: string | number };
+type Subdistrict = { subdistrictCode: string | number; nameTh?: string; nameEn?: string; districtCode?: string | number; postalCode?: string | number };
 
 export type Option = { value: string; label: string };
 const norm = (v: unknown) => String(v);
