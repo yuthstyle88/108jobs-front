@@ -19,7 +19,6 @@ import useNotification from "@/hooks/useNotification";
 import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
 import {Address, CountriesResponse} from "lemmy-js-client";
 import {getNamespace} from "@/utils/i18nHelper";
-import {ThaiAddressSelect} from "@/components/ThaiAddressSelect";
 
 const emailSchema = z.object({
   email: z.string().min(1,
@@ -106,16 +105,6 @@ export default function ContactPage() {
   const [locationType, setLocationType] = useState<LocationType>("Thailand");
 
   const country = watch("country");
-
-  const countryOptions = useMemo(() => {
-      return (
-        countriesData?.countries.map((c) => ({
-          label: c.name,
-          value: c.name,
-        })) ?? []
-      );
-    },
-    [countriesData]);
 
   useEffect(() => {
       if (profileState === "success" && address && !isReady) {
@@ -372,11 +361,11 @@ export default function ContactPage() {
                 <option value="">
                   -- {t("contact.placeholderSelectCountry")} --
                 </option>
-                {countryOptions.map((c) => (
-                  <option key={c.value} value={c.value}>
-                    {c.label}
-                  </option>
-                ))}
+                {/*{countryOptions.map((c) => (*/}
+                {/*  <option key={c.value} value={c.value}>*/}
+                {/*    {c.label}*/}
+                {/*  </option>*/}
+                {/*))}*/}
               </select>
               {errors.country && (
                 <p className="text-red-500 text-[12px] mt-1">

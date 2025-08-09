@@ -2,6 +2,7 @@
 // Keep it UI-agnostic so you can place selects anywhere.
 
 import { useEffect, useMemo, useState } from "react";
+import {useTranslation} from "react-i18next";
 
 type Province = { code: string | number; nameTh?: string; nameEn?: string; provinceCode?: string | number };
 type District = { code: string | number; nameTh?: string; nameEn?: string; provinceCode?: string | number };
@@ -59,10 +60,10 @@ async function getJSON<T>(path: string): Promise<T> {
 
 // Load provinces once
 export function useProvinces() {
+    const { i18n } = useTranslation();
     const [data, setData] = useState<Province[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<unknown>(null);
-
     useEffect(() => {
         let alive = true;
         setLoading(true);
@@ -74,8 +75,11 @@ export function useProvinces() {
     }, []);
 
     const options: Option[] = useMemo(
-      () => data.map(p => ({ value: norm(provinceCodeAny(p)), label: String(labelTHAny(p) ?? "") })),
-      [data]
+        () => data.map(p => ({
+            value: norm(provinceCodeAny(p)),
+            label: String(i18n.language === "th" ? labelTHAny(p) : labelENAny(p) ?? "")
+        })),
+        [data, i18n.language]
     );
 
     return { options, loading, error, raw: data };
@@ -83,6 +87,7 @@ export function useProvinces() {
 
 // Load districts for a given provinceCode
 export function useDistricts(provinceCode?: string) {
+    const { i18n } = useTranslation();
     const [data, setData] = useState<District[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<unknown>(null);
@@ -107,8 +112,11 @@ export function useDistricts(provinceCode?: string) {
     }, [provinceCode]);
 
     const options: Option[] = useMemo(
-      () => data.map(d => ({ value: norm(districtCodeAny(d)), label: String(labelTHAny(d) ?? "") })),
-      [data]
+        () => data.map(d => ({
+            value: norm(districtCodeAny(d)),
+            label: String(i18n.language === "th" ? labelTHAny(d) : labelENAny(d) ?? "")
+        })),
+        [data, i18n.language]
     );
 
     return { options, loading, error, raw: data };
@@ -116,6 +124,7 @@ export function useDistricts(provinceCode?: string) {
 
 // Load subdistricts for a given districtCode
 export function useSubdistricts(districtCode?: string) {
+    const { i18n } = useTranslation();
     const [data, setData] = useState<Subdistrict[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<unknown>(null);
@@ -140,8 +149,11 @@ export function useSubdistricts(districtCode?: string) {
     }, [districtCode]);
 
     const options: Option[] = useMemo(
-      () => data.map(s => ({ value: norm(subdistrictCodeAny(s)), label: String(labelTHAny(s) ?? "") })),
-      [data]
+        () => data.map(s => ({
+            value: norm(subdistrictCodeAny(s)),
+            label: String(i18n.language === "th" ? labelTHAny(s) : labelENAny(s) ?? "")
+        })),
+        [data, i18n.language]
     );
 
     return { options, loading, error, raw: data };

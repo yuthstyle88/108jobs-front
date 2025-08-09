@@ -2852,6 +2852,31 @@ export const th = {
             cartoonDrawing: "การวาดการ์ตูน",
             contentEditing: "การแก้ไขเนื้อหา",
             infographicDesign: "การออกแบบอินโฟกราฟิก"
+        },
+        address: {
+            addressTitleHeading: "ข้อมูลที่อยู่",
+            addressSubheading: "กรุณากรอกข้อมูลให้ครบถ้วน",
+            addressRequired: "กรุณากรอกที่อยู่",
+            city: "อำเภอ/เขต",
+            cityPlaceholder: "กรอกอำเภอ/เขต",
+            cityRequired: "กรุณากรอกอำเภอ/เขต",
+            country: "ประเทศ",
+            countryPlaceholder: "กรอกประเทศ",
+            countryRequired: "กรุณากรอกประเทศ",
+            postalCodeLabel: "รหัสไปรษณีย์",
+            postalCodePlaceholder: "เช่น 10310",
+            addressLine1Label: "ที่อยู่บรรทัดที่ 1",
+            addressLine1Placeholder: "บ้านเลขที่ หมู่บ้าน ถนน",
+            addressLine2Label: "ที่อยู่บรรทัดที่ 2 (ถ้ามี)",
+            addressLine2Placeholder: "อาคาร ชั้น ห้อง (ถ้ามี)",
+            provinceDistrictSubdistrict: "จังหวัด / อำเภอ / ตำบล",
+            setDefaultAddress: "ตั้งเป็นที่อยู่เริ่มต้น",
+            provincePlaceholder: "เลือกจังหวัด",
+            districtPlaceholder: "เลือกอำเภอ",
+            subdistrictPlaceholder: "เลือกตำบล",
+            isSavingButtonLabel: "กำลังบันทึก...",
+            saveAddressButtonLabel: "บันทึก",
         }
+
     },
 };

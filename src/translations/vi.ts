@@ -2979,6 +2979,31 @@ export const vi = {
             cartoonDrawing: "Vẽ Hoạt hình",
             contentEditing: "Biên tập Nội dung",
             infographicDesign: "Thiết kế Infographic"
+        },
+        address: {
+            addressTitleHeading: "Thông tin địa chỉ",
+            addressSubheading: "Vui lòng điền đầy đủ thông tin.",
+            addressRequired: "Vui lòng nhập địa chỉ",
+            city: "Thành phố / Quận / Huyện",
+            cityPlaceholder: "Nhập thành phố / quận / huyện",
+            cityRequired: "Vui lòng nhập thành phố / quận / huyện",
+            country: "Quốc gia",
+            countryPlaceholder: "Nhập quốc gia",
+            countryRequired: "Vui lòng nhập quốc gia",
+            postalCodeLabel: "Mã bưu điện",
+            postalCodePlaceholder: "Ví dụ: 10310",
+            addressLine1Label: "Địa chỉ dòng 1",
+            addressLine1Placeholder: "Số nhà, thôn/xóm, đường",
+            addressLine2Label: "Địa chỉ dòng 2 (tùy chọn)",
+            addressLine2Placeholder: "Tòa nhà, tầng, phòng (nếu có)",
+            provinceDistrictSubdistrict: "Tỉnh / Quận / Xã",
+            setDefaultAddress: "Đặt làm địa chỉ mặc định",
+            provincePlaceholder: "Chọn tỉnh",
+            districtPlaceholder: "Chọn quận/huyện",
+            subdistrictPlaceholder: "Chọn xã/phường",
+            isSavingButtonLabel: "Đang lưu...",
+            saveAddressButtonLabel: "Lưu",
         }
+
     },
 };

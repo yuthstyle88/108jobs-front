@@ -1,12 +1,11 @@
 "use client";
 import {useState} from "react";
-import {useHttpPost} from "@/hooks/useHttpPost";
-import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
+import {useTranslation} from "react-i18next";
+import {useForm} from "react-hook-form";
 import ProvinceSelect from "@/components/ThaiAddress/ProvinceSelect";
 import DistrictSelect from "@/components/ThaiAddress/DistrictSelect";
 import SubdistrictSelect from "@/components/ThaiAddress/SubdistrictSelect";
-import { useProvinces, useDistricts, useSubdistricts } from "@/hooks/useThaiGeography";
+import {useProvinces, useDistricts, useSubdistricts} from "@/hooks/useThaiGeography";
 
 type CreateUpdateAddress = {
     addressLine1: string;
@@ -20,10 +19,7 @@ type CreateUpdateAddress = {
 };
 
 export default function Address() {
-    const { t } = useTranslation();
-
-    const {execute: uploadImage, isMutating: isUploadMuting} =
-        useHttpPost("uploadImage");
+    const {t} = useTranslation();
 
     // const {profileState, person, card} = useMyUser();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,7 +31,7 @@ export default function Address() {
         register,
         handleSubmit,
         setValue,
-        formState: { errors, isSubmitting },
+        formState: {errors, isSubmitting},
     } = useForm<CreateUpdateAddress>({
         mode: "onChange",
         defaultValues: {
@@ -55,32 +51,30 @@ export default function Address() {
     const [districtCode, setDistrictCode] = useState<string | undefined>(undefined);
     const [subdistrictCode, setSubdistrictCode] = useState<string | undefined>(undefined);
 
-    const { options: provinceOptions, loading: loadingProv } = useProvinces();
-    const { options: districtOptions, loading: loadingDist } = useDistricts(provinceCode);
-    const { options: subdistrictOptions, loading: loadingSub, raw: subdistrictRaw } = useSubdistricts(districtCode);
+    const {options: provinceOptions, loading: loadingProv} = useProvinces();
+    const {options: districtOptions, loading: loadingDist} = useDistricts(provinceCode);
+    const {options: subdistrictOptions, loading: loadingSub, raw: subdistrictRaw} = useSubdistricts(districtCode);
 
     const onSubmitAddress = async (data: CreateUpdateAddress) => {
-        // data.province / data.district / data.subdistrict จะมาจาก ThaiAddressSelect โดยตรง
         console.log("Submit CreateOrUpdateAddress:", data);
         // TODO: เรียก API บันทึกตามที่ต้องการ
     };
 
     return (
         <>
-            {/* การ์ดฟอร์มที่อยู่ใหม่ ตามสไตล์เดิม + ThaiAddressSelect */}
             <form
                 onSubmit={handleSubmit(onSubmitAddress)}
                 className="bg-white rounded-lg text-sm text-text-primary font-sans mb-6 shadow-sm border-1 border-border-primary mt-5"
             >
                 <div className="p-6 border-b">
-                    <h2 className="text-[16px] font-medium mb-2 text-text-primary">ข้อมูลที่อยู่</h2>
-                    <p className="text-gray-600 text-[14px]">กรุณากรอกข้อมูลให้ครบถ้วน</p>
+                    <h2 className="text-[16px] font-medium mb-2 text-text-primary">{t("address.addressTitleHeading")}</h2>
+                    <p className="text-gray-600 text-[14px]">{t("address.addressSubheading")}</p>
                 </div>
 
                 <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* countryId */}
                     <div>
-                        <label className="block text-sm font-semibold mb-2">ประเทศ</label>
+                        <label className="block text-sm font-semibold mb-2">{t("address.country")}</label>
                         <select
                             {...register("countryId")}
                             className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third ${
@@ -93,97 +87,97 @@ export default function Address() {
 
                     {/* Address line 1 */}
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-semibold mb-2">ที่อยู่บรรทัดที่ 1</label>
+                        <label className="block text-sm font-semibold mb-2">{t("address.addressLine1Label")}</label>
                         <input
                             {...register("addressLine1")}
                             className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third ${
                                 errors.addressLine1 ? "border-red-500" : "border-gray-300"
                             }`}
-                            placeholder="บ้านเลขที่, หมู่บ้าน, ถนน"
+                            placeholder={t("address.addressLine1Placeholder")}
                         />
                     </div>
 
                     {/* Address line 2 */}
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-semibold mb-2">ที่อยู่บรรทัดที่ 2 (ไม่บังคับ)</label>
+                        <label className="block text-sm font-semibold mb-2">{t("address.addressLine2Label")}</label>
                         <input
                             {...register("addressLine2")}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-third"
-                            placeholder="อาคาร, ชั้น, ห้อง (ถ้ามี)"
+                            placeholder={t("address.addressLine2Placeholder")}
                         />
                     </div>
 
                     {/* ThaiAddressSelect */}
                     <div className="md:col-span-2">
                         <label className="block text-sm text-text-primary font-semibold mb-2">
-                            จังหวัด / อำเภอ / ตำบล
+                            {t("address.provinceDistrictSubdistrict")}
                         </label>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                          <ProvinceSelect
-                            value={provinceCode}
-                            options={provinceOptions}
-                            loading={loadingProv}
-                            onChange={(v) => {
-                              setProvinceCode(v);
-                              setDistrictCode(undefined);
-                              setSubdistrictCode(undefined);
-                              setValue("province", v ?? "");
-                              setValue("district", "");
-                              setValue("subdistrict", "");
-                            }}
-                            placeholder="เลือกจังหวัด"
-                          />
-                          <DistrictSelect
-                            value={districtCode}
-                            options={districtOptions}
-                            loading={loadingDist}
-                            disabled={!provinceCode}
-                            onChange={(v) => {
-                              setDistrictCode(v);
-                              setSubdistrictCode(undefined);
-                              setValue("district", v ?? "");
-                              setValue("subdistrict", "");
-                            }}
-                            placeholder="เลือกอำเภอ"
-                          />
-                          <SubdistrictSelect
-                            value={subdistrictCode}
-                            options={subdistrictOptions}
-                            loading={loadingSub}
-                            disabled={!districtCode}
-                            onChange={(v) => {
-                              setSubdistrictCode(v);
-                              setValue("subdistrict", v ?? "");
-                              // Auto-fill postal code from local dataset (support multiple key names)
-                                const found = subdistrictRaw?.find(
-                                    (s: any) => String(s.subdistrictCode ?? s.code) === String(v)
-                                );
-                                const zip = found?.postalCode;
-                                setValue("postalCode", v && zip != null ? String(zip) : "");
-                            }}
-                            placeholder="เลือกตำบล"
-                          />
+                            <ProvinceSelect
+                                value={provinceCode}
+                                options={provinceOptions}
+                                loading={loadingProv}
+                                onChange={(v) => {
+                                    setProvinceCode(v);
+                                    setDistrictCode(undefined);
+                                    setSubdistrictCode(undefined);
+                                    setValue("province", v ?? "");
+                                    setValue("district", "");
+                                    setValue("subdistrict", "");
+                                }}
+                                placeholder={t("address.provincePlaceholder")}
+                            />
+                            <DistrictSelect
+                                value={districtCode}
+                                options={districtOptions}
+                                loading={loadingDist}
+                                disabled={!provinceCode}
+                                onChange={(v) => {
+                                    setDistrictCode(v);
+                                    setSubdistrictCode(undefined);
+                                    setValue("district", v ?? "");
+                                    setValue("subdistrict", "");
+                                }}
+                                placeholder={t("address.districtPlaceholder")}
+                            />
+                            <SubdistrictSelect
+                                value={subdistrictCode}
+                                options={subdistrictOptions}
+                                loading={loadingSub}
+                                disabled={!districtCode}
+                                onChange={(v) => {
+                                    setSubdistrictCode(v);
+                                    setValue("subdistrict", v ?? "");
+                                    // Auto-fill postal code from local dataset (support multiple key names)
+                                    const found = subdistrictRaw?.find(
+                                        (s: any) => String(s.subdistrictCode ?? s.code) === String(v)
+                                    );
+                                    const zip = found?.postalCode;
+                                    setValue("postalCode", v && zip != null ? String(zip) : "");
+                                }}
+                                placeholder={t("address.subdistrictPlaceholder")}
+                            />
                         </div>
                     </div>
 
                     {/* Postal code */}
                     <div>
-                        <label className="block text-sm font-semibold mb-2">รหัสไปรษณีย์</label>
+                        <label className="block text-sm font-semibold mb-2">{t("address.postalCodeLabel")}</label>
                         <input
                             {...register("postalCode")}
                             readOnly
                             className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-third ${
                                 errors.postalCode ? "border-red-500" : "border-gray-300"
                             }`}
-                            placeholder="เช่น 10310"
+                            placeholder={t("address.postalCodePlaceholder")}
                         />
                     </div>
 
                     {/* isDefault */}
                     <div className="md:col-span-2">
                         <label className="inline-flex items-center gap-2">
-                            <input type="checkbox" {...register("isDefault")} className="h-4 w-4" />
-                            <span className="text-sm">ตั้งเป็นที่อยู่เริ่มต้น</span>
+                            <input type="checkbox" {...register("isDefault")} className="h-4 w-4"/>
+                            <span className="text-sm">{t("address.setDefaultAddress")}</span>
                         </label>
                     </div>
                 </div>
@@ -194,12 +188,13 @@ export default function Address() {
                         disabled={isSubmitting}
                         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                     >
-                        {isSubmitting ? "กำลังบันทึก..." : "บันทึกที่อยู่"}
+                        {isSubmitting ? t("address.isSavingButtonLabel") : t("address.saveAddressButtonLabel")}
                     </button>
                 </div>
             </form>
 
-            <div className="border-1 border-border-primary rounded-lg bg-white mt-5 p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
+            <div
+                className="border-1 border-border-primary rounded-lg bg-white mt-5 p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
                 <div className="text-[16px] text-text-primary font-medium">
                     {t("profileInfo.sectionPassword")}
                     <p className="text-[14px] text-text-secondary font-normal">
