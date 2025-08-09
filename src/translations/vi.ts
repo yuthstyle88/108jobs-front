@@ -851,7 +851,7 @@ export const vi = {
             labelProductFastwork: "Fastwork",
             labelProductFastworkBusiness: "Fastwork for Business",
             labelProductTitle: "Thông tin sản phẩm",
-            labelSellerCenter: "Trung tâm freelancer",
+            labelJobBoardCenter: "Trung tâm việc làm",
             labelStartSellingWork: "Cách bắt đầu bán công việc của bạn",
             labelTermsOfService: "Điều khoản dịch vụ",
             labelViewProfile: "Xem hồ sơ",

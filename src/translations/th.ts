@@ -830,7 +830,7 @@ export const th = {
             labelProductFastwork: "Fastwork",
             labelProductFastworkBusiness: "Fastwork for Business",
             labelProductTitle: "ข้อมูลผลิตภัณฑ์",
-            labelSellerCenter: "ศูนย์ฟรีแลนซ์",
+            labelJobBoardCenter: "ศูนย์กระดานงาน",
             labelStartSellingWork: "วิธีเริ่มขายงานของคุณ",
             labelTermsOfService: "ข้อกำหนดการให้บริการ",
             labelViewProfile: "ดูโปรไฟล์",
