@@ -1874,14 +1874,14 @@ export class LemmyHttp extends Controller {
    * @summary Save your profile settings.
    */
   @Security("bearerAuth")
-  @Put("/account/update-address")
+  @Post("/account/update-address")
   @Tags("Account")
   async updateAddress(
     @Body() form: AddressForm,
     @Inject() options?: RequestOptions,
   ) {
     return this.#wrapper<AddressForm, AddressResponse>(
-      HttpType.Put,
+      HttpType.Post,
       "/account/update-address",
       form,
       options,

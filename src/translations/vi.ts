@@ -3003,6 +3003,12 @@ export const vi = {
             subdistrictPlaceholder: "Chọn xã/phường",
             isSavingButtonLabel: "Đang lưu...",
             saveAddressButtonLabel: "Lưu",
+            addressLine1Required: "Vui lòng nhập địa chỉ dòng 1",
+            subdistrictRequired: "Vui lòng nhập phường/xã",
+            districtRequired: "Vui lòng nhập quận/huyện",
+            provinceRequired: "Vui lòng nhập tỉnh/thành phố",
+            postalCodeRequired: "Vui lòng nhập mã bưu điện",
+            updateFailed: "Cập nhật địa chỉ thất bại",
         }
 
     },

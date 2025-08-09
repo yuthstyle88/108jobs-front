@@ -2948,6 +2948,12 @@ export const en = {
             subdistrictPlaceholder: "Select a subdistrict",
             isSavingButtonLabel: "Saving...",
             saveAddressButtonLabel: "Save",
+            addressLine1Required: "Please enter address line 1",
+            subdistrictRequired: "Please enter subdistrict",
+            districtRequired: "Please enter district",
+            provinceRequired: "Please enter province",
+            postalCodeRequired: "Please enter postal code",
+            updateFailed: "Failed to update address",
         }
     },
 };
