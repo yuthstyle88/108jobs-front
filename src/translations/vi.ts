@@ -1728,6 +1728,14 @@ export const vi = {
                 "Để đảm bảo chúng tôi có thể gửi hàng và tài liệu cho bạn",
             subtitleContactInfo: "Để đảm bảo chúng tôi có thể liên hệ với bạn",
             verifyButton: "Xác minh",
+            labelLineId: "Line ID",
+            placeholderLineId: "Nhập Line ID của bạn",
+            labelFacebook: "Facebook",
+            placeholderFacebook: "Nhập liên kết hoặc tên Facebook của bạn",
+            labelSecondEmail: "Email phụ",
+            placeholderSecondEmail: "Nhập email phụ của bạn",
+            socialLinksTitle: "Quản lý liên kết mạng xã hội",
+            socialLinksSubtitle: "Kết nối tài khoản mạng xã hội của bạn"
         },
         profileCoupon: {
             descriptionSpecialOffers:
@@ -1870,9 +1878,13 @@ export const vi = {
             companyHiringInfo: "Tuyển dụng với tư cách công ty",
             contactInfo: "Thông tin liên hệ",
             consentManage: "Quản lý sự đồng ý",
+            addressManage: "Quản lý địa chỉ",
+            idInfo: "Thông tin CMND/CCCD",
+            bankInfo: "Thông tin ngân hàng",
             personalHiringInfo: "Tuyển dụng với tư cách cá nhân",
             sectionAccount: "Tài khoản của bạn",
-            sectionHiring: "Thông tin tuyển dụng",
+            sectionSetting: "Cài đặt & Quản lý",
+            jobAvailability: "Trạng thái nhận việc"
         },
         profilePoint: {
             award1000BahtCoupon: "Phiếu giảm giá 1000 baht",

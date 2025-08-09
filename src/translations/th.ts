@@ -1667,7 +1667,15 @@ export const th = {
             subtitleAddressInfo: "เพื่อให้เราสามารถส่งของและเอกสารให้คุณได้",
             subtitleContactInfo: "เพื่อให้เราสามารถติดต่อคุณได้",
             verifyButton: "ยืนยัน",
-        },
+            labelLineId: "รหัสไลน์",
+            placeholderLineId: "กรอก Line ID ของคุณ",
+            labelFacebook: "เฟซบุ๊ก",
+            placeholderFacebook: "กรอกโปรไฟล์/ลิงก์ Facebook ของคุณ",
+            labelSecondEmail: "อีเมลสำรอง",
+            placeholderSecondEmail: "กรอกอีเมลสำรองของคุณ",
+            socialLinksTitle: "จัดการลิงก์โซเชียลมีเดีย",
+            socialLinksSubtitle: "เชื่อมต่อบัญชีโซเชียลมีเดียของคุณ"
+          },
         profileCoupon: {
             descriptionSpecialOffers:
                 "สิทธิพิเศษและส่วนลดจากพาร์ทเนอร์ พร้อมให้คุณเก็บคูปองส่วนลดแล้ว",
@@ -1809,9 +1817,13 @@ export const th = {
             companyHiringInfo: "ข้อมูลเพื่อจ้างในนามบริษัท",
             contactInfo: "ข้อมูลติดต่อ",
             consentManage: "การจัดการความยินยอม",
+            addressManage: "การจัดการที่อยู่",
+            idInfo: "ข้อมูลบัตรประจำตัวประชาชน",
+            bankInfo: "ข้อมูลธนาคาร",
             personalHiringInfo: "ข้อมูลเพื่อจ้างในนามบุคคล",
             sectionAccount: "บัญชีของคุณ",
-            sectionHiring: "ข้อมูลการจ้างงาน",
+            sectionSetting: "การตั้งค่าและการจัดการ",
+            jobAvailability: "สถานะการรับงาน"
         },
         profilePoint: {
             award1000BahtCoupon: "คูปองส่วนลด 1000 บาท",

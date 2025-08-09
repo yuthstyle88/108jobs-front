@@ -95,6 +95,8 @@ export const useProfileForm = (
       const userSettingsResult = await HttpService.client.saveUserSettings({
         displayName: formData.displayName,
       });
+      successMessage("profile",
+        "update");
 
       if (userSettingsResult.state === "failed") {
         throw new Error('Failed to update profile settings');

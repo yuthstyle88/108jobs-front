@@ -1,25 +1,25 @@
 "use client";
 import ImageUploadModal from "@/components/AvatarUploadModal";
 import PasswordChangeModal from "@/components/ChangePasswordModal";
-import {ProfileImage} from "@/constants/images";
-import {useDateOptions} from "@/hooks/useDateOptions";
+import { ProfileImage } from "@/constants/images";
+import { useDateOptions } from "@/hooks/useDateOptions";
 import Image from "next/image";
-import {useState} from "react";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {useProfileForm} from "../hooks/useProfileForm";
-import {useImagePicker} from "@/hooks/useImagePicker";
-import {useHttpPost} from "@/hooks/useHttpPost";
+import { useState } from "react";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
+import { useProfileForm } from "../hooks/useProfileForm";
+import { useImagePicker } from "@/hooks/useImagePicker";
+import { useHttpPost } from "@/hooks/useHttpPost";
 import { useTranslation } from "react-i18next";
+import useNotification from "@/hooks/useNotification";
 
 
 export default function BasicInformation() {
   const { t } = useTranslation();
-  const {days, months, years} = useDateOptions();
-
-  const {execute: uploadImage, isMutating: isUploadMuting} =
+  const { days, months, years } = useDateOptions();
+  const { execute: uploadImage, isMutating: isUploadMuting } =
     useHttpPost("uploadImage");
 
-  const {profileState, person, card} = useMyUser();
+  const { profileState, person, card } = useMyUser();
 
   const {
     selectedImage,
@@ -100,7 +100,7 @@ export default function BasicInformation() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
               </svg>
             </button>
           </div>
@@ -226,7 +226,7 @@ export default function BasicInformation() {
         </div>
       </div>
 
-      <PasswordChangeModal isOpen={isModalOpen} onClose={closeModal}/>
+      <PasswordChangeModal isOpen={isModalOpen} onClose={closeModal} />
       <ImageUploadModal
         isOpen={isImageModalOpen}
         onClose={closeImageModal}

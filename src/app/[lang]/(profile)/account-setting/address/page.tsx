@@ -149,11 +149,11 @@ export default function Address() {
         <>
             <form
                 onSubmit={handleSubmit(onSubmitAddress)}
-                className="bg-white rounded-xl text-sm text-gray-900 font-sans shadow-lg border border-gray-200 mt-6 max-w-3xl mx-auto"
+                className="bg-white rounded-xl font-sans shadow-lg border border-gray-200"
             >
-                <div className="p-8 border-b border-gray-200">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-3">{t("address.addressTitleHeading")}</h2>
-                    <p className="text-gray-500 text-sm">{t("address.addressSubheading")}</p>
+                <div className="p-6 border-b border-gray-200">
+                    <h2 className="text-[16px] font-medium mb-2 text-text-primary">{t("address.addressTitleHeading")}</h2>
+                    <p className="text-gray-600 mb-6 text-[14px] font-sans">{t("address.addressSubheading")}</p>
                 </div>
 
                 <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">

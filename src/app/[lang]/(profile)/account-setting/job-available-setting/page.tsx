@@ -6,7 +6,7 @@ import useNotification from "@/hooks/useNotification";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {REQUEST_STATE} from "@/services/HttpService";
 
-const DocumentInfo = () => {
+const JobAvailable = () => {
   const [isAvailable, setIsAvailable] = useState(false);
   const {successMessage, errorMessage} = useNotification();
 
@@ -59,4 +59,4 @@ const DocumentInfo = () => {
   );
 };
 
-export default DocumentInfo;
+export default JobAvailable;

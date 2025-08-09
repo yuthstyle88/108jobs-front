@@ -112,7 +112,7 @@ const ProfileUser = ({ profile }: ProfileUserProps) => {
           <span className="text-gray-700">{t("global.menuMyJob")}</span>
         </Link>
         <Link prefetch={false}
-          href="/consent-management"
+          href="/account-setting/manage"
           className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
         >
           <FontAwesomeIcon

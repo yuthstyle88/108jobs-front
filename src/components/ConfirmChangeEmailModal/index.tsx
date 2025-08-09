@@ -59,10 +59,10 @@ const ConfirmChangeEmailModal: React.FC<ConfirmChangeEmailModalProps> = ({
         <Mail className="w-[60px] h-[60px] text-third"/>
         <article>
           <h1 className="text-base font-bold text-text-primary text-center">
-            {t("contact.emailChangeTitle")}
+            {t("profileContact.emailChangeTitle")}
           </h1>
           <p className="text-[14px] font-sans text-text-secondary text-center">
-            {t("contact.emailChangeDescription")}
+            {t("profileContact.emailChangeDescription")}
           </p>
         </article>
       </section>

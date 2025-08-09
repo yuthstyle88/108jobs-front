@@ -13,24 +13,16 @@ import {LanguageFile} from "@/constants/language";
 import {getNamespace} from "@/utils/i18nHelper";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import { useTranslation } from "react-i18next";
 
-const PersonalInfo = () => {
-  // Function to upload image using HttpService
+const IdCard = () => {
 
-  // Create an object that matches the structure expected by the component
-  // Note: We can't track loading state in an async component, so we set isMutating to false
   const {execute: uploadImage, isMutating: isUploadMuting} =
     useHttpPost("uploadImage");
 
   const {profileState, card} = useMyUser();
 
-  const sellerPersonalInfoLanguage = getNamespace(
-    LanguageFile.SELLER_PERSONAL_INFO
-  );
-
-  const global = getNamespace(
-    LanguageFile.GLOBAL
-  );
+  const { t } = useTranslation();
 
   const {days, months, years} = useDateOptions();
   const frontInputRef = useRef<HTMLInputElement>(null);
@@ -70,13 +62,13 @@ const PersonalInfo = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="bg-white rounded-md shadow-sm overflow-hidden"
+      className="border-1 border-border-primary bg-white rounded-md shadow-sm overflow-hidden"
     >
-      <div className="border-b border-gray-200 p-5">
-        <h2 className="text-lg font-medium text-gray-800">
-          {sellerPersonalInfoLanguage?.idInfoTitle}
+      <div className="border-b border-gray-200 p-6">
+        <h2 className="text-[16px] font-medium mb-2 text-text-primary">
+          {t("sellerPersonalInfo.idInfoTitle")}
         </h2>
-        <p className="text-sm text-gray-500">{sellerPersonalInfoLanguage?.idInfoDescription}</p>
+        <p className="text-gray-600 mb-6 text-[14px] font-sans">{t("sellerPersonalInfo.idInfoDescription")}</p>
       </div>
 
       <div className="p-6">
@@ -87,9 +79,9 @@ const PersonalInfo = () => {
           {/* ID front */}
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
             <h4 className="text-sm font-medium mb-1 text-text-primary">
-              {sellerPersonalInfoLanguage?.frontIdImage}
+              {t("sellerPersonalInfo.frontIdImage")}
             </h4>
-            <p className="text-xs text-gray-500 mb-3">{sellerPersonalInfoLanguage?.imageHint}</p>
+            <p className="text-xs text-gray-500 mb-3">{t("sellerPersonalInfo.imageHint")}</p>
             <div className="relative border border-gray-200 rounded-lg overflow-hidden mb-3">
               {frontPreview ? (
                 <>
@@ -132,16 +124,16 @@ const PersonalInfo = () => {
               onClick={() => frontInputRef.current?.click()}
               className="w-full py-2 text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              {frontPreview ? sellerPersonalInfoLanguage?.changeImage : sellerPersonalInfoLanguage?.changeImage}
+              {frontPreview ? t("sellerPersonalInfo.changeImage") : t("sellerPersonalInfo.changeImage")}
             </button>
           </div>
 
           {/* ID back */}
           <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
             <h4 className="text-sm font-medium mb-1 text-text-primary">
-              {sellerPersonalInfoLanguage?.backIdImage}
+              {t("sellerPersonalInfo.backIdImage")}
             </h4>
-            <p className="text-xs text-gray-500 mb-3">{sellerPersonalInfoLanguage?.imageHint}</p>
+            <p className="text-xs text-gray-500 mb-3">{t("sellerPersonalInfo.imageHint")}</p>
             <div className="relative border border-gray-200 rounded-lg overflow-hidden mb-3">
               {backPreview ? (
                 <>
@@ -184,17 +176,15 @@ const PersonalInfo = () => {
               onClick={() => backInputRef.current?.click()}
               className="w-full py-2 text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              {backPreview ? sellerPersonalInfoLanguage?.changeImage : sellerPersonalInfoLanguage?.changeImage}
+              {backPreview ? t("sellerPersonalInfo.changeImage") :  t("sellerPersonalInfo.changeImage")}
             </button>
           </div>
         </div>
 
-        {/* ... Các phần form còn lại ... */}
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              {sellerPersonalInfoLanguage?.firstName}
+              {t("sellerPersonalInfo.firstName")}
             </label>
             <input
               {...register("name")}
@@ -204,7 +194,7 @@ const PersonalInfo = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              {sellerPersonalInfoLanguage?.lastName}
+               {t("sellerPersonalInfo.lastName")}
             </label>
             <input
               {...register("surname")}
@@ -216,7 +206,7 @@ const PersonalInfo = () => {
 
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {sellerPersonalInfoLanguage?.idNumber}
+            {t("sellerPersonalInfo.idNumber")}
           </label>
           <input
             {...register("cardNumber")}
@@ -227,7 +217,7 @@ const PersonalInfo = () => {
 
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            {sellerPersonalInfoLanguage?.dateOfBirth}
+            {t("sellerPersonalInfo.dateOfBirth")}
           </label>
           <div className="grid grid-cols-3 gap-4">
             <select
@@ -235,7 +225,7 @@ const PersonalInfo = () => {
               className="border border-gray-300 rounded-lg px-3 py-2 text-text-primary"
             >
               <option disabled value="Day">
-                วัน
+                {t("profileInfo.day")}
               </option>
               {days.map((day) => (
                 <option key={day} value={day}>
@@ -248,7 +238,7 @@ const PersonalInfo = () => {
               className="border border-gray-300 rounded-lg px-3 py-2 text-text-primary"
             >
               <option disabled value="Month">
-                เดือน
+                {t("profileInfo.month")}
               </option>
               {months.map((month) => (
                 <option key={month} value={month}>
@@ -261,7 +251,7 @@ const PersonalInfo = () => {
               className="border border-gray-300 rounded-lg px-3 py-2 text-text-primary"
             >
               <option disabled value="Year">
-                ปี
+                {t("profileInfo.year")}
               </option>
               {years.map((year) => (
                 <option key={year} value={year}>
@@ -278,76 +268,7 @@ const PersonalInfo = () => {
             }
           />
         </div>
-
-        <div className="mb-6">
-          <h3 className="text-sm font-medium text-gray-700 mb-2">
-            {sellerPersonalInfoLanguage?.addressInfoTitle}
-          </h3>
-          <p className="text-sm text-gray-500 mb-2">
-            {sellerPersonalInfoLanguage?.addressInfoNote}
-          </p>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              {sellerPersonalInfoLanguage?.addressDetail}
-            </label>
-            <input
-              {...register("cardAddressDetails")}
-              className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
-            <InputError message={errors.cardAddressDetails?.message}/>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {sellerPersonalInfoLanguage?.postalCode}
-              </label>
-              <input
-                {...register("cardZipCode")}
-                className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-              <InputError message={errors.cardZipCode?.message}/>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {sellerPersonalInfoLanguage?.subDistrict}
-              </label>
-              <input
-                {...register("cardSubdistrictOrDistrict")}
-                className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-              <InputError
-                message={errors.cardSubdistrictOrDistrict?.message}
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {sellerPersonalInfoLanguage?.district}
-              </label>
-              <input
-                {...register("cardDistrictOrSubdistrict")}
-                className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-              <InputError
-                message={errors.cardDistrictOrSubdistrict?.message}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {sellerPersonalInfoLanguage?.province}
-              </label>
-              <input
-                {...register("cardProvince")}
-                className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-              <InputError message={errors.cardProvince?.message}/>
-            </div>
-          </div>
-        </div>
+     
         <div className="flex justify-end">
           <button
             type="submit"
@@ -355,9 +276,9 @@ const PersonalInfo = () => {
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             {isSubmitting || isUpdateMuting || isUploadMuting ? (
-              <span>{global?.buttonSave}...</span>
+              <span>{t("global.buttonSave")}...</span>
             ) : (
-              global?.buttonSave
+              t("global.buttonSave")
             )}
           </button>
         </div>
@@ -366,4 +287,4 @@ const PersonalInfo = () => {
   );
 };
 
-export default PersonalInfo;
+export default IdCard;

@@ -8,14 +8,13 @@ import { useHttpPut } from "@/hooks/useHttpPut";
 import { getNamespace } from "@/utils/i18nHelper";
 import { Pencil, Plus, Star, Trash2 } from "lucide-react";
 import { useState } from "react";
-import BankAccountModal, { BankAccountFormValues } from "../components/AddBankAccountModal";
-import ConfirmDeleteModal from "../components/DeleteBankModal";
+import BankAccountModal, { BankAccountFormValues } from "../_components/AddBankAccountModal";
+import ConfirmDeleteModal from "../_components/DeleteBankModal";
 import LoadingBlur from "@/components/LoadingBlur";
 
 
 const BankAccount = () => {
   const sellerBankAccountLanguage = getNamespace(LanguageFile.SELLER_BANK_ACCOUNT);
-  const global = getNamespace(LanguageFile.GLOBAL);
 
   const {
     data: bankListRes,
@@ -80,13 +79,13 @@ const BankAccount = () => {
   };
 
   return (
-    <div className="bg-white rounded-md shadow-sm overflow-hidden">
-      <div className="flex justify-between items-center border-b border-gray-200 p-5">
+    <div className="border-1 border-border-primary bg-white rounded-md shadow-sm overflow-hidden">
+      <div className="flex justify-between items-center border-b border-gray-200 p-6">
         <div>
-          <h2 className="text-lg font-medium text-gray-800">
+          <h2 className="text-[16px] font-medium mb-2 text-text-primary">
             {sellerBankAccountLanguage?.bankInfoTitle}
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-gray-600 mb-6 text-[14px] font-sans">
             {sellerBankAccountLanguage?.bankInfoDescription}
           </p>
         </div>

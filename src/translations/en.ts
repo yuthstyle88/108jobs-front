@@ -1712,6 +1712,14 @@ export const en = {
             subtitleAddressInfo: "To ensure we can send your packages and documents",
             subtitleContactInfo: "To ensure we can contact you",
             verifyButton: "Verify",
+            labelLineId: "Line ID",
+            placeholderLineId: "Enter your Line ID",
+            labelFacebook: "Facebook",
+            placeholderFacebook: "Enter your Facebook profile/link",
+            labelSecondEmail: "Secondary Email",
+            placeholderSecondEmail: "Enter your secondary email",
+            socialLinksTitle: "Manage Social Media Links",
+            socialLinksSubtitle: "Connect your social media accounts"
         },
         profileCoupon: {
             descriptionSpecialOffers:
@@ -1857,9 +1865,13 @@ export const en = {
             companyHiringInfo: "Hiring as a Company",
             contactInfo: "Contact Information",
             consentManage: "Consent management",
+            addressManage: "Address management",
+            idInfo: "National ID Information", 
+            bankInfo: "Bank Information",
             personalHiringInfo: "Hiring as an Individual",
             sectionAccount: "Your Account",
-            sectionHiring: "Hiring Information",
+            sectionSetting: "Settings & Management",
+            jobAvailability: "Job Availability"
         },
         profilePoint: {
             award1000BahtCoupon: "1000 baht discount coupon",

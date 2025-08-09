@@ -1,157 +1,97 @@
 "use client";
-import {useLanguage} from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
+import { usePathname } from "next/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 import Link from "next/link";
-import {usePathname} from "next/navigation";
-import {useTranslation} from "react-i18next";
+import {
+    User,
+    Mail,
+    ShieldCheck,
+    MapPin,
+    IdCard,
+    CreditCard,
+    Briefcase
+} from "lucide-react";
 
-export default function AccountSettingWrapper() {
-    const {t} = useTranslation();
+const AccountSettingWrapper = () => {
+    const { t } = useTranslation();
     const pathname = usePathname();
-    const {lang} = useLanguage();
-    const isActive = (path: string) => pathname === `/${lang}${path}`;
+    const { lang } = useLanguage();
+
+    const accountMenu = [
+        {
+            href: "/account-setting/basic-info",
+            label: t("profileNavbar.accountInfo"),
+            icon: User
+        },
+        {
+            href: "/account-setting/contact-info",
+            label: t("profileNavbar.contactInfo"),
+            icon: Mail
+        },
+        {
+            href: "/account-setting/id-card",
+            label: t("profileNavbar.idInfo"),
+            icon: IdCard
+        },
+        {
+            href: "/account-setting/address",
+            label: t("profileContact.sectionAddressInfo"),
+            icon: MapPin
+        },
+        {
+            href: "/account-setting/bank-account",
+            label: t("profileNavbar.bankInfo"),
+            icon: CreditCard
+        },
+    ];
+
+    const hiringMenu = [
+        {
+            href: "/account-setting/manage",
+            label: t("profileNavbar.consentManage"),
+            icon: ShieldCheck
+        },
+        {
+            href: "/account-setting/job-available-setting",
+            label: t("profileNavbar.jobAvailability"),
+            icon: Briefcase
+        }
+    ];
+
+    const renderMenu = (items: typeof accountMenu) =>
+        items.map(({ href, label, icon: Icon }) => {
+            const isActive = pathname === `/${lang}${href}`;
+            return (
+                <li key={href}>
+                    <Link
+                        prefetch={false}
+                        href={href}
+                        className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-4 ${isActive
+                                ? "text-blue-600 border-l-4 border-third bg-blue-50"
+                                : "text-gray-600 hover:text-gray-800 border-l-transparent hover:bg-gray-50"
+                            }`}
+                    >
+                        <Icon className={`w-5 h-5 ${isActive ? "text-blue-600" : ""}`} />
+                        {label}
+                    </Link>
+                </li>
+            );
+        });
 
     return (
         <div>
             <p className="font-medium text-[16px] text-text-primary pb-[16px]">
                 {t("profileNavbar.sectionAccount")}
             </p>
-            <div className="flex flex-col mt-4">
-                <Link prefetch={false}
-                      href="/account-setting/basic-info"
-                      className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-4 ${isActive("/account-setting/basic-info")
-                          ? "text-blue-600 border-l-4 border-third bg-blue-50"
-                          : "text-gray-600 hover:text-gray-800 border-l-transparent hover:bg-gray-50"
-                      }`}
-                >
-                    <svg
-                        className="w-5 h-5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                    <span>{t("profileNavbar.accountInfo")}</span>
-                </Link>
+            <ul className="flex flex-col mt-4">{renderMenu(accountMenu)}</ul>
 
-                <Link prefetch={false}
-                      href="/account-setting/contact-info"
-                      className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-4  ${isActive("/account-setting/contact-info")
-                          ? "text-blue-600 border-l-4 border-third bg-blue-50"
-                          : "text-gray-600 hover:text-gray-800 border-l-transparent hover:bg-gray-50"
-                      }`}
-                >
-                    <svg
-                        className="w-5 h-5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                        <polyline points="22,6 12,13 2,6"/>
-                    </svg>
-                    <span>{t("profileNavbar.contactInfo")}</span>
-                </Link>
-                <Link prefetch={false}
-                      href="/account-setting/manage"
-                      className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-4  ${isActive("/account-setting/manage")
-                          ? "text-blue-600 border-l-4 border-third bg-blue-50"
-                          : "text-gray-600 hover:text-gray-800 border-l-transparent hover:bg-gray-50"
-                      }`}
-                >
-                    <svg
-                        className="w-5 h-5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M12 2L3 5v6c0 7 4.5 13 9 13s9-6 9-13V5l-9-3z"/>
-                        <path d="M9 12l2 2 4-4"/>
-                    </svg>
-                    <span>{t("profileNavbar.consentManage")}</span>
-                </Link>
-
-                <Link prefetch={false}
-                      href="/account-setting/address"
-                      className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-4  ${isActive("/account-setting/address")
-                          ? "text-blue-600 border-l-4 border-third bg-blue-50"
-                          : "text-gray-600 hover:text-gray-800 border-l-transparent hover:bg-gray-50"
-                      }`}
-                >
-                    <svg
-                        className="w-5 h-5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7z" />
-                        <circle cx="12" cy="9" r="2" />
-                    </svg>
-                    <span>{t("profileContact.sectionAddressInfo")}</span>
-                </Link>
-
-                <p className="font-medium text-[16px] text-text-primary py-4">
-                    {t("profileNavbar.sectionHiring")}
-                </p>
-
-                <Link prefetch={false}
-                      href="/account-setting/document-info"
-                      className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-4 ${isActive("/account-setting/document-info")
-                          ? "text-blue-600 border-l-4 border-third bg-blue-50"
-                          : "text-gray-600 hover:text-gray-800 border-l-transparent hover:bg-gray-50"
-                      }`}
-                >
-                    <svg
-                        className="w-5 h-5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                        <circle cx="12" cy="10" r="3"/>
-                    </svg>
-                    <span>{t("profileNavbar.personalHiringInfo")}</span>
-                </Link>
-
-                <Link prefetch={false}
-                      href="/account-setting/company-info"
-                      className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-4 ${isActive("/account-setting/company-info")
-                          ? "text-blue-600 border-l-4 border-third bg-blue-50"
-                          : "text-gray-600 hover:text-gray-800 border-l-transparent hover:bg-gray-50"
-                      }`}
-                >
-                    <svg
-                        className="w-5 h-5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <path d="M3 3h18v18H3z"/>
-                        <path d="M3 9h18"/>
-                        <path d="M9 21V9"/>
-                    </svg>
-                    <span>{t("profileNavbar.companyHiringInfo")}</span>
-                </Link>
-            </div>
+            <p className="font-medium text-[16px] text-text-primary py-4">
+                {t("profileNavbar.sectionSetting")}
+            </p>
+            <ul>{renderMenu(hiringMenu)}</ul>
         </div>
     );
-}
+};
+
+export default AccountSettingWrapper;
