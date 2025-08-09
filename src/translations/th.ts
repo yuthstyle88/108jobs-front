@@ -269,7 +269,7 @@ export const th = {
             labelProfessionalLicense: "มีใบประกอบวิชาชีพ",
             labelRefundPolicy: "ผิดเงื่อนไข ยินดีคืนเงิน",
             labelUsername: "ชื่อผู้ใช้",
-             labelOTP: "กรอกรหัสเพื่อตรวจสอบตัวตน",
+            labelOTP: "กรอกรหัสเพื่อตรวจสอบตัวตน",
             btnVerifyOTP: "ตรวจสอบรหัส",
             placeholderOTP: "กรอกรหัส",
             invalidOTP: "กรอกรหัสไม่ถูกต้อง",
@@ -1938,7 +1938,7 @@ export const th = {
             bankQrUploadTitle:
                 "อัปโหลดรูป QR Code ธนาคารของคุณ (ชื่อบัญชีต้องตรงกับบัตรประชาชน)",
             uploadButton: "อัปโหลดรูปภาพ",
-            buttonAddBank:"เพิ่มธนาคาร",
+            buttonAddBank: "เพิ่มธนาคาร",
             noBankFound: "ไม่พบธนาคารใด ๆ",
             buttonEditBank: "แก้ไขธนาคาร"
         },
@@ -2876,6 +2876,12 @@ export const th = {
             subdistrictPlaceholder: "เลือกตำบล",
             isSavingButtonLabel: "กำลังบันทึก...",
             saveAddressButtonLabel: "บันทึก",
+            addressLine1Required: "กรุณากรอกที่อยู่บรรทัดที่ 1",
+            subdistrictRequired: "กรุณากรอกตำบล/แขวง",
+            districtRequired: "กรุณากรอกอำเภอ/เขต",
+            provinceRequired: "กรุณากรอกจังหวัด",
+            postalCodeRequired: "กรุณากรอกรหัสไปรษณีย์",
+            updateFailed: "ไม่สามารถอัปเดตที่อยู่ได้",
         }
 
     },
