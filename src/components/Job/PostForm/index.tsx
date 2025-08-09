@@ -95,7 +95,6 @@ export const PostForm: React.FC<PostFormProps> = ({
     const {
         state,
         data: catalogData,
-        isMutating: isCatalogLoading
     } = useHttpGet("listChildrenCommunities",
         {maxDepth: 3});
 
@@ -119,14 +118,13 @@ export const PostForm: React.FC<PostFormProps> = ({
         },
     });
 
-
     const {
         register,
         handleSubmit,
         setValue,
         reset,
         watch,
-        formState: {isValid, errors, isSubmitting}
+        formState: {errors, isSubmitting}
     } = formMethods;
 
     useEffect(() => {

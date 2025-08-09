@@ -587,6 +587,7 @@ export const vi = {
             anonymousPostLabel: "Đăng bài ẩn danh",
             previewButton: "Xem trước",
             submitButton: "Gửi",
+            postNameAlreadyExists: "Tên công việc đã tồn tại",
         },
         employeeRegister: {
             howDidYouHearAboutUs:

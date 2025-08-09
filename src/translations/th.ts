@@ -582,6 +582,7 @@ export const th = {
             anonymousPostLabel: "โพสต์แบบไม่ระบุชื่อ",
             previewButton: "ดูตัวอย่าง",
             submitButton: "ส่ง",
+            postNameAlreadyExists: "ชื่องานมีอยู่แล้ว",
         },
         employeeRegister: {
             howDidYouHearAboutUs:

@@ -588,6 +588,7 @@ export const en = {
             anonymousPostLabel: "Anonymous post",
             previewButton: "Preview",
             submitButton: "Submit",
+            postNameAlreadyExists: "Job name already exists",
         },
         employeeRegister: {
             howDidYouHearAboutUs:
