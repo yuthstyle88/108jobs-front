@@ -89,7 +89,7 @@ const CatalogBanner = (props: Props) => {
                                     <Link
                                         prefetch={false}
                                         key={community.id}
-                                        href={`/job/${community.id}`}
+                                        href={`/job-board?community=${community.id}`}
                                         className="group"
                                     >
                                         <div

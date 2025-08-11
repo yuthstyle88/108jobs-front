@@ -22,7 +22,7 @@ const SearchInput = () => {
     const trimmed = data.query.trim();
     if (trimmed) {
       const encoded = encodeURIComponent(trimmed);
-      router.push(`/job/search?titleSearch=${encoded}`);
+      router.push(`/job-board?q=${encoded}`);
     }
   };
   return (

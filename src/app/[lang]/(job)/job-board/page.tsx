@@ -56,7 +56,7 @@ const JobBoard = () => {
         state: catalogState,
         data: catalogData,
         isMutating: isCatalogLoading,
-    } = useHttpGet("listChildrenCommunities", {maxDepth: 3});
+    } = useHttpGet("listChildrenCommunities", {limit: 50, maxDepth: 3});
 
     const {
         state: searchState,
@@ -81,7 +81,10 @@ const JobBoard = () => {
     const handleFilterChange = useCallback(
         (key: keyof FilterState, value: unknown) => {
             setFilters((prev) => {
-                const newFilters = { ...prev, [key]: key === "community" ? (typeof value === "string" && value ? parseInt(value) : undefined) : value };
+                const newFilters = {
+                    ...prev,
+                    [key]: key === "community" ? (typeof value === "string" && value ? parseInt(value) : undefined) : value
+                };
                 const params = new URLSearchParams(searchParams);
                 if (newFilters.community) params.set("community", newFilters.community.toString());
                 else params.delete("community");
@@ -93,7 +96,7 @@ const JobBoard = () => {
                 else params.delete("budgetMin");
                 if (newFilters.budgetMax) params.set("budgetMax", newFilters.budgetMax.toString());
                 else params.delete("budgetMax");
-                router.push(`?${params.toString()}`, { scroll: false });
+                router.push(`?${params.toString()}`, {scroll: false});
                 return newFilters;
             });
             if (key === "budgetMin") setBudgetError(null);
@@ -294,7 +297,8 @@ const JobBoard = () => {
                             </div>
 
                             <div className="flex flex-col gap-2">
-                                <label className="block text-sm font-semibold text-gray-700">{t("profileJob.dropdownSearchBudget")}</label>
+                                <label
+                                    className="block text-sm font-semibold text-gray-700">{t("profileJob.dropdownSearchBudget")}</label>
                                 <div className="flex gap-3">
                                     <input
                                         id="budget-min"
