@@ -5,28 +5,38 @@ import type {PaginationCursor} from "./PaginationCursor";
 import type {PersonId} from "./PersonId";
 import type {SearchSortType} from "./SearchSortType";
 import type {SearchType} from "./SearchType";
+import {IntendedUse} from "./IntendedUse";
+import {JobType} from "./JobType";
 
 /**
  * Searches the site, given a search term, and some optional filters.
  */
 export type Search = {
-  searchTerm?: string;
-  communityId?: CommunityId;
-  communityName?: string;
-  creatorId?: PersonId;
-  type_?: SearchType;
-  sort?: SearchSortType;
-  /**
-   * Filter to within a given time range, in seconds.
-   * IE 60 would give results for the past minute.
-   */
-  timeRangeSeconds?: number;
-  listingType?: ListingType;
-  titleOnly?: boolean;
-  postUrlOnly?: boolean;
-  likedOnly?: boolean;
-  dislikedOnly?: boolean;
-  pageCursor?: PaginationCursor;
-  pageBack?: boolean;
-  limit?: number;
+    q?: string;
+    communityId?: CommunityId;
+    communityName?: string;
+    creatorId?: PersonId;
+    type?: SearchType;
+    sort?: SearchSortType;
+    /**
+     * Filter to within a given time range, in seconds.
+     * IE 60 would give results for the past minute.
+     */
+    timeRangeSeconds?: number;
+    listingType?: ListingType;
+    titleOnly?: boolean;
+    postUrlOnly?: boolean;
+    likedOnly?: boolean;
+    dislikedOnly?: boolean;
+    selfPromotion?: boolean;
+    intendedUse?: IntendedUse;
+    jobType?: JobType;
+    /** Minimum budget in your preferred currency */
+    budgetMin?: number;
+    /** Maximum budget in your preferred currency */
+    budgetMax?: number;
+    requiresEnglish?: boolean;
+    pageCursor?: PaginationCursor;
+    pageBack?: boolean;
+    limit?: number;
 };

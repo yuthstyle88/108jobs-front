@@ -192,7 +192,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                     return;
                 }
 
-                successMessage(null, null, t("global.success") ?? "Success!");
+                successMessage(null, null, t("notification.jobCreateJobBoardSuccess") ?? "Success!");
                 await handleCreateSuccess();
             } catch (error) {
                 errorMessage(null, null, t("global.submissionFailed") ?? "Submission failed!");

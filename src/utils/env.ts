@@ -34,7 +34,7 @@ export function getInternalHost() {
 }
 
 export function getSecure(): string {
-  return "s";
+  return "";
 }
 
 
@@ -57,5 +57,5 @@ export function httpExternalPath(path: string) {
 }
 
 export function isHttps() {
-  return getSecure() === "s";
+  return getSecure() === "";
 }

@@ -799,7 +799,7 @@ export const en = {
                 "Select the freelancer you want and chat instantly.",
             hintLabelMenuOptionSearchJobBoard:
                 "Post and wait for freelancers to proposals you work.",
-            hintTextHeaderSearch: "Find freelancers...",
+            hintTextHeaderSearch: "Find...",
             hireOpportunityTitle: "Increase hiring opportunities",
             hiring: "Hiring",
             idInfo: "National ID Information",
@@ -891,7 +891,7 @@ export const en = {
             tittleHeaderMenuSection2: "For corporate clients",
             tittlePopularHeaderSearch: "Popular Searches",
             labelSignInButton: "Login",
-            failedToLoadCategories: "Failed to load categories",
+            failedToLoad: "Failed to load",
             tryRefreshingPage: "Please try refreshing the page",
             labelContinue: "Continue"
         },
@@ -1859,6 +1859,7 @@ export const en = {
             noJobsTitleNoFilters: "No jobs available",
             noJobsDescriptionWithFilters: "Try adjusting your search criteria or clear filters",
             noJobsDescriptionNoFilters: "Check back later for new opportunities",
+            budgetNegativeError: "Budget cannot be negative.",
         },
         profileNavbar: {
             accountInfo: "Account Information",

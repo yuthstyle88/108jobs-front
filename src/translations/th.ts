@@ -781,7 +781,7 @@ export const th = {
             hintHireOnBehalf: "เข้าสู่ระบบ กรอกข้อมูลของคุณ และแจ้งฟรีแลนซ์ได้ทันที!",
             hintLabelMenuOptionFindHire: "เลือกฟรีแลนซ์ที่คุณต้องการและแชทได้ทันที",
             hintLabelMenuOptionSearchJobBoard: "โพสต์และรอให้ฟรีแลนซ์เสนองานให้คุณ",
-            hintTextHeaderSearch: "ค้นหาฟรีแลนซ์...",
+            hintTextHeaderSearch: "ค้นหา...",
             hireOpportunityTitle: "เพิ่มโอกาสในการถูกจ้าง",
             hiring: "การจ้างงาน",
             idInfo: "ข้อมูลบัตรประจำตัวประชาชน",
@@ -873,7 +873,8 @@ export const th = {
             tittleHeaderMenuSection2: "สำหรับลูกค้าองค์กร",
             tittlePopularHeaderSearch: "การค้นหายอดนิยม",
             labelSignInButton: "เข้าสู่ระบบ",
-            labelContinue: "ดำเนินการต่อ"
+            labelContinue: "ดำเนินการต่อ",
+            failedToLoad: "โหลดไม่สำเร็จ",
         },
         guarantee: {
             fastworkGuaranteeTitle: "Fastwork Guarantee",
@@ -1810,7 +1811,8 @@ export const th = {
             noJobsTitleWithFilters: "ไม่พบงานที่ตรงกับตัวกรองของคุณ",
             noJobsTitleNoFilters: "ยังไม่มีงานในขณะนี้",
             noJobsDescriptionWithFilters: "ลองปรับเกณฑ์การค้นหาหรือล้างตัวกรอง",
-            noJobsDescriptionNoFilters: "กลับมาตรวจสอบอีกครั้งในภายหลังเพื่อโอกาสใหม่ ๆ"
+            noJobsDescriptionNoFilters: "กลับมาตรวจสอบอีกครั้งในภายหลังเพื่อโอกาสใหม่ ๆ",
+            budgetNegativeError: "งบประมาณต้องไม่เป็นค่าติดลบ"
         },
         profileNavbar: {
             accountInfo: "ข้อมูลบัญชี",

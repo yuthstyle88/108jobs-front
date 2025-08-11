@@ -1,42 +1,46 @@
 "use client";
 import {useEffect, useState} from "react";
+import {usePathname} from "next/navigation";
 
 export const useScrollHandler = (forceShowSearch: boolean = false) => {
-  const [scrollY, setScrollY] = useState(0);
-  const [showSearch, setShowSearch] = useState(false);
+    const pathname = usePathname();
+    const [scrollY, setScrollY] = useState(0);
+    const [showSearch, setShowSearch] = useState(false);
 
-  useEffect(() => {
-      if (forceShowSearch) {
-        setShowSearch(true);
-        return; // skip all scroll/resize logic
-      }
+    const isHomePage = pathname === "/" || /^\/[a-z]{2}(-[a-z]{2})?\/?$/.test(pathname);
 
-      const updateState = () => {
-        const currentScrollY = window.scrollY;
-        const isSmallScreen = window.innerWidth <= 1280;
-        setScrollY(currentScrollY);
+    useEffect(() => {
+            if (!isHomePage || forceShowSearch) {
+                setShowSearch(true);
+                return;
+            }
 
-        if (isSmallScreen) {
-          setShowSearch(true);
-        } else {
-          setShowSearch(currentScrollY > window.innerHeight / 2);
-        }
-      };
+            const updateState = () => {
+                const currentScrollY = window.scrollY;
+                const isSmallScreen = window.innerWidth <= 1280;
+                setScrollY(currentScrollY);
 
-      window.addEventListener("scroll",
-        updateState);
-      window.addEventListener("resize",
-        updateState);
-      updateState(); // initial check
+                if (isSmallScreen) {
+                    setShowSearch(true);
+                } else {
+                    setShowSearch(currentScrollY > window.innerHeight / 2);
+                }
+            };
 
-      return () => {
-        window.removeEventListener("scroll",
-          updateState);
-        window.removeEventListener("resize",
-          updateState);
-      };
-    },
-    [forceShowSearch]);
+            window.addEventListener("scroll",
+                updateState);
+            window.addEventListener("resize",
+                updateState);
+            updateState();
 
-  return {scrollY, showSearch};
+            return () => {
+                window.removeEventListener("scroll",
+                    updateState);
+                window.removeEventListener("resize",
+                    updateState);
+            };
+        },
+        [forceShowSearch]);
+
+    return {scrollY, showSearch};
 };

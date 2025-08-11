@@ -799,7 +799,7 @@ export const vi = {
                 "Chọn freelancer bạn muốn và trò chuyện ngay lập tức.",
             hintLabelMenuOptionSearchJobBoard:
                 "Đăng tin và chờ freelancer gửi đề nghị công việc.",
-            hintTextHeaderSearch: "Tìm kiếm freelancer...",
+            hintTextHeaderSearch: "Tìm...",
             hireOpportunityTitle: "Tăng cơ hội được thuê",
             hiring: "Tuyển dụng",
             idInfo: "Thông tin CMND/CCCD",
@@ -893,7 +893,8 @@ export const vi = {
             tittleHeaderMenuSection2: "Dành cho khách hàng doanh nghiệp",
             tittlePopularHeaderSearch: "Tìm kiếm phổ biến",
             labelSignInButton: "Đăng nhập",
-            labelContinue: "Tiếp tục"
+            labelContinue: "Tiếp tục",
+            failedToLoad: "Tải không thành công",
         },
         guarantee: {
             fastworkGuaranteeTitle: "Đảm bảo của Fastwork",
@@ -1871,7 +1872,8 @@ export const vi = {
             tableHeaderStatus: "Trạng thái",
             tableHeaderActions: "Hành động",
             tableHeaderActionEdit: "Chỉnh sửa",
-            tableHeaderActionCloseJob: "Đóng công việc"
+            tableHeaderActionCloseJob: "Đóng công việc",
+            budgetNegativeError: "Ngân sách không được âm"
         },
         profileNavbar: {
             accountInfo: "Thông tin tài khoản",

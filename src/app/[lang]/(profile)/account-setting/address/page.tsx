@@ -156,7 +156,7 @@ export default function Address() {
                     <p className="text-gray-600 mb-6 text-[14px] font-sans">{t("address.addressSubheading")}</p>
                 </div>
 
-                <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-600">
                     {apiError && (
                         <div className="md:col-span-2 bg-red-50 text-red-600 text-sm font-sans p-4 rounded-lg">
                             {apiError}

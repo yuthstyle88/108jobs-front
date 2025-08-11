@@ -22,7 +22,7 @@ const ErrorState = () => {
                         />
                     </svg>
                 </div>
-                <h2 className="text-3xl font-bold text-red-600 mb-4">{t("global.failedToLoadCategories")}</h2>
+                <h2 className="text-3xl font-bold text-red-600 mb-4">{t("global.failedToLoad")}</h2>
                 <p className="text-gray-600 text-lg mb-8">{t("global.tryRefreshingPage")}</p>
             </div>
         </div>
