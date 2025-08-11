@@ -2,15 +2,14 @@
 import ImageUploadModal from "@/components/AvatarUploadModal";
 import PasswordChangeModal from "@/components/ChangePasswordModal";
 import { ProfileImage } from "@/constants/images";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { useDateOptions } from "@/hooks/useDateOptions";
+import { useHttpPost } from "@/hooks/useHttpPost";
+import { useImagePicker } from "@/hooks/useImagePicker";
 import Image from "next/image";
 import { useState } from "react";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { useProfileForm } from "../hooks/useProfileForm";
-import { useImagePicker } from "@/hooks/useImagePicker";
-import { useHttpPost } from "@/hooks/useHttpPost";
 import { useTranslation } from "react-i18next";
-import useNotification from "@/hooks/useNotification";
+import { useProfileForm } from "../hooks/useProfileForm";
 
 
 export default function BasicInformation() {
@@ -190,6 +189,17 @@ export default function BasicInformation() {
                   </option>
                 ))}
               </select>
+            </div>
+            <div className="mt-6">
+              <label className="block text-sm font-medium text-text-primary mb-2">
+                {t("profileInfo.save")}
+              </label>
+              <textarea
+                {...register("bio")}
+                placeholder="Mô tả ngắn gọn điểm mạnh của bạn để giúp khách hàng quyết định"
+                rows={5}
+                className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              ></textarea>
             </div>
           </div>
 

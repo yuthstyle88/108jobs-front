@@ -1806,6 +1806,7 @@ export const en = {
             sectionPassword: "Password",
             submitButton: "Confirm",
             subtitleAccountInfo: "Set up your basic account information",
+            bio:"Bio"
         },
         profileJob: {
             noJob: "No job posts found",

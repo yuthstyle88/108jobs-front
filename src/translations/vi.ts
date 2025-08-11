@@ -1820,6 +1820,7 @@ export const vi = {
             sectionPassword: "Mật khẩu",
             submitButton: "Xác nhận",
             subtitleAccountInfo: "Thiết lập thông tin tài khoản cơ bản của bạn",
+            bio:"Tiểu sử",
         },
         profileJob: {
             noJob: "Không tìm thấy bài đăng công việc nào",

@@ -1759,6 +1759,7 @@ export const th = {
             sectionPassword: "รหัสผ่าน",
             submitButton: "ยืนยัน",
             subtitleAccountInfo: "กำหนดข้อมูลเบื้องต้นของคุณ",
+            bio:"ชีวประวัติ"
         },
         profileJob: {
             noJob: "ไม่พบประกาศงาน",
