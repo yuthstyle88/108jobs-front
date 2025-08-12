@@ -10,6 +10,7 @@ import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
 import {useTranslation} from "react-i18next";
+import { useHttpGet } from "@/hooks/useHttpGet";
 
 type CertificationFromServer = {
   id: string;
@@ -52,28 +53,29 @@ const EditCertifications = () => {
 
   const [isFormReady, setIsFormReady] = useState(false);
 
-  const {data, isLoading} = usePrivateFetch<{
-    certOrAwards: CertificationFromServer[];
-  }>(API_ROUTES_SELLER.profile.certificate);
+    const {
+      data: certData,
+      isMutating: isCertLoading,
+    } = useHttpGet("getUserLanguages");
 
   const {trigger: sendCertificates, isMutating} = usePrivatePost(
     API_ROUTES_SELLER.profile.certificate
   );
 
   useEffect(() => {
-      if (data?.certOrAwards) {
-        const mapped = data.certOrAwards.map((item) => ({
+      if (certData?.certificates) {
+        const mapped = certData.certificates.map((item) => ({
           id: item.id,
           name: item.name,
         }));
         reset({certificationItems: mapped});
         replace(mapped);
         setIsFormReady(true);
-      } else if (!isLoading) {
+      } else if (!isCertLoading) {
         setIsFormReady(true);
       }
     },
-    [data, reset, replace, isLoading]);
+    [certData, reset, replace, isCertLoading]);
 
   const onSubmit = async(formData: CertificationFormData) => {
     const body = {
@@ -93,7 +95,7 @@ const EditCertifications = () => {
     }
   };
 
-  const isFetching = isLoading || !isFormReady;
+  const isFetching = isCertLoading || !isFormReady;
 
   return (
     <div className="flex-1">

@@ -1,12 +1,15 @@
-import {Month} from "./Month";
-
-export interface WorkExperience {
-  id: string;
+export type WorkExperience = {
+  id: number | null;
   companyName: string;
   position: string;
-  startMonth: Month;
+  startDate: string;  
+  startMonth: string; 
   startYear: number;
+  endMonth: string; 
+  endYear: number;  
   isCurrent: boolean;
-  endMonth: Month | null;
-  endYear: number | null;
-}
+};
+
+export type WorkExperiencesResponse = {
+  work_experience: WorkExperience[];
+};

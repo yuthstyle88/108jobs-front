@@ -11,6 +11,7 @@ import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
 import {getNamespace} from "@/utils/i18nHelper";
 import {LanguageFile} from "@/constants/language";
+import { useHttpGet } from "@/hooks/useHttpGet";
 
 type ExperienceFromServer = {
   id: string;
@@ -88,9 +89,10 @@ const EditExperience = () => {
     name: "experienceItems",
   });
 
-  const {data, isLoading} = usePrivateFetch<{
-    workExperiences: ExperienceFromServer[];
-  }>(API_ROUTES_SELLER.profile.workExperience);
+  const {
+      data: experienceData,
+      isMutating: isLoading,
+    } = useHttpGet("getUserExperience");
 
   const {trigger: sendExperience, isMutating} = usePrivatePost(
     API_ROUTES_SELLER.profile.workExperience
@@ -99,8 +101,8 @@ const EditExperience = () => {
   const [isFormReady, setIsFormReady] = useState(false);
 
   useEffect(() => {
-      if (data?.workExperiences) {
-        const mapped = data.workExperiences.map((item) => ({
+      if (experienceData) {
+        const mapped = experienceData.work_experience.map((item) => ({
           id: item.id,
           company: item.companyName,
           position: item.position,
@@ -116,7 +118,7 @@ const EditExperience = () => {
         setIsFormReady(true);
       }
     },
-    [data, reset, replace]);
+    [experienceData, reset, replace]);
 
   const watchExperience = watch("experienceItems");
 
