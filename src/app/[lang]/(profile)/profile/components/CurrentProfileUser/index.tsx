@@ -1,24 +1,24 @@
 "use client";
 import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
-import {AssetIcon} from "@/constants/icons";
-import {ProfileImage} from "@/constants/images";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {formatDateToLong} from "@/utils/formatDateToLong";
-import {interpolateDouble} from "@/utils/interpolate";
-import {faEdit, faStar} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {CircleCheckBig, ClipboardX, SquarePen} from "lucide-react";
+import { AssetIcon } from "@/constants/icons";
+import { ProfileImage } from "@/constants/images";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
+import { formatDateToLong } from "@/utils/formatDateToLong";
+import { interpolateDouble } from "@/utils/interpolate";
+import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CircleCheckBig, ClipboardX, SquarePen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import {useEffect, useRef, useState} from "react";
-import {Certificate, Education, LanguageSkill, Person, Skill, WorkExperience} from "lemmy-js-client";
-import {getProfileData} from "@/utils/getProfileData";
-import {useTranslation} from "react-i18next";
+import { useEffect, useRef, useState } from "react";
+import { Certificate, Education, LanguageSkill, Person, Skill, WorkExperience } from "lemmy-js-client";
+import { getProfileData } from "@/utils/getProfileData";
+import { useTranslation } from "react-i18next";
 
 const CurrentProfileUser = () => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
-    const {localUser, person} = useMyUser();
+    const { localUser, person } = useMyUser();
     const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
     const [showFullBio, setShowFullBio] = useState(false);
     const [isClamped, setIsClamped] = useState(false);
@@ -77,7 +77,7 @@ const CurrentProfileUser = () => {
                                         href="/seller-account-setting/freelance-profile"
                                         className="absolute top-2 right-2 bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition-colors"
                                     >
-                                        <FontAwesomeIcon icon={faEdit} className="text-gray-600"/>
+                                        <FontAwesomeIcon icon={faEdit} className="text-gray-600" />
                                     </Link>
                                 </div>
                                 <h2 className="mt-4 text-xl font-semibold text-gray-800">
@@ -95,14 +95,14 @@ const CurrentProfileUser = () => {
                                 {localUser?.acceptedApplication === true && (
                                     <div
                                         className="mt-4 bg-green-100 text-green-700 px-4 py-2 rounded-full flex items-center text-sm font-medium">
-                                        <CircleCheckBig className="w-4 h-4 mr-2"/>
+                                        <CircleCheckBig className="w-4 h-4 mr-2" />
                                         {(t("profile.verified"))}
                                     </div>
                                 )}
                                 {person?.deleted === true && (
                                     <div
                                         className="mt-4 bg-red-100 text-red-700 px-4 py-2 rounded-full flex items-center text-sm font-medium">
-                                        <ClipboardX className="w-4 h-4 mr-2"/>
+                                        <ClipboardX className="w-4 h-4 mr-2" />
                                         {(t("profile.notVerified"))}
                                     </div>
                                 )}
@@ -130,9 +130,8 @@ const CurrentProfileUser = () => {
                                     <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
                                         <p
                                             ref={bioRef}
-                                            className={`text-gray-600 text-sm leading-relaxed ${
-                                                showFullBio ? "" : "line-clamp-4"
-                                            }`}
+                                            className={`text-gray-600 text-sm leading-relaxed ${showFullBio ? "" : "line-clamp-4"
+                                                }`}
                                         >
                                             <i>{person?.bio}</i>
                                         </p>
@@ -154,8 +153,8 @@ const CurrentProfileUser = () => {
                                 <div className="bg-white rounded-lg p-4 shadow-sm">
                                     <div className="flex justify-between items-center mb-3">
                                         <h3 className="text-blue-600 font-semibold">{t("profile.educationTitle")}</h3>
-                                        <Link prefetch={false} href="/user/edit/education">
-                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700"/>
+                                        <Link prefetch={false} href="/profile/edit/education">
+                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700" />
                                         </Link>
                                     </div>
                                     {educations.length > 0 ? (
@@ -176,8 +175,8 @@ const CurrentProfileUser = () => {
                                 <div className="bg-white rounded-lg p-4 shadow-sm">
                                     <div className="flex justify-between items-center mb-3">
                                         <h3 className="text-blue-600 font-semibold">{t("profile.experienceTitle")}</h3>
-                                        <Link prefetch={false} href="/user/edit/experience">
-                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700"/>
+                                        <Link prefetch={false} href="/profile/edit/experience">
+                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700" />
                                         </Link>
                                     </div>
                                     {workExperience.length > 0 ? (
@@ -188,7 +187,7 @@ const CurrentProfileUser = () => {
                                                     <p className="text-sm text-gray-600">{t("experience.position")}</p>
                                                     <p className="text-sm text-gray-500">
                                                         {t("experience.startMonth")} {t("experience.startYear")} -{" "}
-                                                        {t("experience.endMonth") || t("experience.present") } {t("experience.endYear") || ""}
+                                                        {t("experience.endMonth") || t("experience.present")} {t("experience.endYear") || ""}
                                                     </p>
                                                 </div>
                                             ))}
@@ -202,8 +201,8 @@ const CurrentProfileUser = () => {
                                 <div className="bg-white rounded-lg p-4 shadow-sm">
                                     <div className="flex justify-between items-center mb-3">
                                         <h3 className="text-blue-600 font-semibold">{t("profile.skillTitle")}</h3>
-                                        <Link prefetch={false} href="/user/edit/skills">
-                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700"/>
+                                        <Link prefetch={false} href="/profile/edit/skills">
+                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700" />
                                         </Link>
                                     </div>
                                     {skill.length > 0 ? (
@@ -213,8 +212,8 @@ const CurrentProfileUser = () => {
                                                     <p className="text-sm font-medium text-gray-800">{skill?.skillName}</p>
                                                     <span
                                                         className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                            {skill?.levelName}
-                          </span>
+                                                        {skill?.levelName}
+                                                    </span>
                                                 </div>
                                             ))}
                                         </div>
@@ -227,8 +226,8 @@ const CurrentProfileUser = () => {
                                 <div className="bg-white rounded-lg p-4 shadow-sm">
                                     <div className="flex justify-between items-center mb-3">
                                         <h3 className="text-blue-600 font-semibold">{t("profile.languageTitle")}</h3>
-                                        <Link prefetch={false} href="/user/edit/languages">
-                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700"/>
+                                        <Link prefetch={false} href="/profile/edit/languages">
+                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700" />
                                         </Link>
                                     </div>
                                     {language.length > 0 ? (
@@ -238,8 +237,8 @@ const CurrentProfileUser = () => {
                                                     <p className="text-sm font-medium text-gray-800">{language?.lang}</p>
                                                     <span
                                                         className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                            {language?.levelName}
-                          </span>
+                                                        {language?.levelName}
+                                                    </span>
                                                 </div>
                                             ))}
                                         </div>
@@ -252,8 +251,8 @@ const CurrentProfileUser = () => {
                                 <div className="bg-white rounded-lg p-4 shadow-sm">
                                     <div className="flex justify-between items-center mb-3">
                                         <h3 className="text-blue-600 font-semibold">{t("profile.certificationTitle")}</h3>
-                                        <Link prefetch={false} href="/user/edit/certifications">
-                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700"/>
+                                        <Link prefetch={false} href="/profile/edit/certifications">
+                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700" />
                                         </Link>
                                     </div>
                                     {certAndAward.length > 0 ? (
@@ -294,21 +293,19 @@ const CurrentProfileUser = () => {
                             <div className="border-b border-gray-200 mb-6">
                                 <div className="flex space-x-6">
                                     <button
-                                        className={`pb-2 text-sm font-medium transition-colors ${
-                                            activeTab === "reviews"
+                                        className={`pb-2 text-sm font-medium transition-colors ${activeTab === "reviews"
                                                 ? "text-blue-600 border-b-2 border-blue-600"
                                                 : "text-gray-500 hover:text-gray-700"
-                                        }`}
+                                            }`}
                                         onClick={() => setActiveTab("reviews")}
                                     >
                                         {t("profile.reviewTab")} ({t("reviews.length")})
                                     </button>
                                     <button
-                                        className={`pb-2 text-sm font-medium transition-colors ${
-                                            activeTab === "clients"
+                                        className={`pb-2 text-sm font-medium transition-colors ${activeTab === "clients"
                                                 ? "text-blue-600 border-b-2 border-blue-600"
                                                 : "text-gray-500 hover:text-gray-700"
-                                        }`}
+                                            }`}
                                         onClick={() => setActiveTab("clients")}
                                     >
                                         {t("profile.freelancerReview")} (1)
@@ -319,7 +316,7 @@ const CurrentProfileUser = () => {
                             <div className="space-y-6">
                                 {reviews.map((review) => (
                                     <div key={review.id}
-                                         className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                                        className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
                                         <div className="flex items-start">
                                             <Image
                                                 src={review.reviewerAvatar || ProfileImage.avatar}

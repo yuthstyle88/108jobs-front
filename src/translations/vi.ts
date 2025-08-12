@@ -2913,7 +2913,7 @@ export const vi = {
             skillsRequire: "Vui lòng nhập kĩ năng",
             startMonth: "Tháng bắt đầu",
             startYear: "Năm bắt đầu",
-            userEditHeading: "Chỉnh sửa thông tin Freelancer",
+            userEditHeading: "Chỉnh sửa thông tin người dùng",
             viewProfile: "Xem hồ sơ của bạn",
             workExperience: "Kinh nghiệm làm việc",
         },

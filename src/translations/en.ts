@@ -2856,7 +2856,7 @@ export const en = {
             skillsRequire: "Please enter skills",
             startMonth: "Start month",
             startYear: "Start year",
-            userEditHeading: "Edit Freelancer information",
+            userEditHeading: "Edit user information",
             viewProfile: "View your profile",
             workExperience: "Work experience",
         },

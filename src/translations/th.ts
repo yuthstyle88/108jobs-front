@@ -2785,7 +2785,7 @@ export const th = {
             skillsRequire: "กรุณากรอกทักษะ",
             startMonth: "เดือนเริ่มต้น",
             startYear: "ปีเริ่มต้น",
-            userEditHeading: "แก้ไขข้อมูลฟรีแลนซ์",
+            userEditHeading: "แก้ไขข้อมูลผู้ใช้ ",
             viewProfile: "ดูโปรไฟล์ของคุณ",
             workExperience: "ประสบการณ์ทำงาน",
         },

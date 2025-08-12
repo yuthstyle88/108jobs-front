@@ -66,7 +66,7 @@ export default function StartSellingLayout({
 
               <div className="px-4 py-2 mt-4 border-1 border-border-primary rounded-lg">
                 <Link prefetch={false}
-                      href={`/user/${person?.name}`}
+                      href={`/profile/${person?.name}`}
                       className="text-blue-600 flex justify-center items-center gap-2"
                 >
                   <p className="font-medium">
