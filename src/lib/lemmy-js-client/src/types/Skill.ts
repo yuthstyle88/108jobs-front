@@ -1,9 +1,9 @@
-export interface Skill {
-  id: string;
-  profileId: string;
-  levelId: string;
+export type Skill = {
+  id: number | null;
   skillName: string;
-  createdAt: string;
-  updatedAt: string;
-  levelName: string;
-}
+  levelId: number;
+};
+
+export type SkillsResponse = {
+  skills: Skill[];
+};

@@ -52,21 +52,34 @@ import type { AddAdmin } from "./types/AddAdmin";
 import type { AddAdminResponse } from "./types/AddAdminResponse";
 import type { AddModToCommunity } from "./types/AddModToCommunity";
 import type { AddModToCommunityResponse } from "./types/AddModToCommunityResponse";
+import type { AddressResponse } from "./types/AddressResponse";
+import type { AdminAllowInstanceParams } from "./types/AdminAllowInstanceParams";
+import type { AdminBlockInstanceParams } from "./types/AdminBlockInstanceParams";
+import type { AdminListUsers } from "./types/AdminListUsers";
+import type { AdminListUsersResponse } from "./types/AdminListUsersResponse";
+import type { ApproveCommunityPendingFollower } from "./types/ApproveCommunityPendingFollower";
 import type { ApproveRegistrationApplication } from "./types/ApproveRegistrationApplication";
+import type { AuthenticateWithOauth } from "./types/AuthenticateWithOauth";
 import type { BanFromCommunity } from "./types/BanFromCommunity";
 import type { BanFromCommunityResponse } from "./types/BanFromCommunityResponse";
-import type { MarkManyPostsAsRead } from "./types/MarkManyPostsAsRead";
+import { BanksResponse } from "./types/BankList";
 import type { BanPerson } from "./types/BanPerson";
 import type { BanPersonResponse } from "./types/BanPersonResponse";
 import type { BlockCommunity } from "./types/BlockCommunity";
 import type { BlockCommunityResponse } from "./types/BlockCommunityResponse";
 import type { BlockPerson } from "./types/BlockPerson";
 import type { BlockPersonResponse } from "./types/BlockPersonResponse";
+import { CertificatesResponse } from './types/Certificate';
 import type { ChangePassword } from "./types/ChangePassword";
 import type { CommentReportResponse } from "./types/CommentReportResponse";
 import type { CommentResponse } from "./types/CommentResponse";
+import type { CommunityIdQuery } from "./types/CommunityIdQuery";
 import type { CommunityReportResponse } from "./types/CommunityReportResponse";
 import type { CommunityResponse } from "./types/CommunityResponse";
+import { ContactForm } from "./types/ContactForm";
+import { ContactResponse } from "./types/ContactResponse";
+import type { CountriesResponse } from "./types/CountriesResponse";
+import { CreateBankAccount } from "./types/CreateBankAccount";
 import type { CreateComment } from "./types/CreateComment";
 import type { CreateCommentLike } from "./types/CreateCommentLike";
 import type { CreateCommentReport } from "./types/CreateCommentReport";
@@ -75,18 +88,23 @@ import type { CreateCommunityReport } from "./types/CreateCommunityReport";
 import type { CreateCommunityTag } from "./types/CreateCommunityTag";
 import type { CreateCustomEmoji } from "./types/CreateCustomEmoji";
 import type { CreateOAuthProvider } from "./types/CreateOAuthProvider";
+import { CreateOrUpdateAddress } from "./types/CreateOrUpdateAddress";
 import type { CreatePost } from "./types/CreatePost";
 import type { CreatePostLike } from "./types/CreatePostLike";
 import type { CreatePostReport } from "./types/CreatePostReport";
 import type { CreateSite } from "./types/CreateSite";
+import type { CreateTagline } from "./types/CreateTagline";
 import type { CustomEmojiResponse } from "./types/CustomEmojiResponse";
 import type { DeleteAccount } from "./types/DeleteAccount";
+import { DeleteBankAccount } from "./types/DeleteBankAccount";
 import type { DeleteComment } from "./types/DeleteComment";
 import type { DeleteCommunity } from "./types/DeleteCommunity";
 import type { DeleteCommunityTag } from "./types/DeleteCommunityTag";
 import type { DeleteCustomEmoji } from "./types/DeleteCustomEmoji";
+import type { DeleteImageParams } from "./types/DeleteImageParams";
 import type { DeleteOAuthProvider } from "./types/DeleteOAuthProvider";
 import type { DeletePost } from "./types/DeletePost";
+import type { DeleteTagline } from "./types/DeleteTagline";
 import type { DistinguishComment } from "./types/DistinguishComment";
 import type { EditComment } from "./types/EditComment";
 import type { EditCommunity } from "./types/EditCommunity";
@@ -94,14 +112,21 @@ import type { EditCustomEmoji } from "./types/EditCustomEmoji";
 import type { EditOAuthProvider } from "./types/EditOAuthProvider";
 import type { EditPost } from "./types/EditPost";
 import type { EditSite } from "./types/EditSite";
-import type { OAuthProvider } from "./types/OAuthProvider";
+import { EducationResponse } from "./types/Education";
+import type { ExchangeKey } from "./types/ExchangeKey";
+import type { ExchangeKeyResponse } from "./types/ExchangeKeyResponse";
 import type { FeaturePost } from "./types/FeaturePost";
 import type { FollowCommunity } from "./types/FollowCommunity";
+import type { GenerateTotpSecretResponse } from "./types/GenerateTotpSecretResponse";
+import { BankAccountsResponse } from "./types/GetBankAccountResponse";
 import type { GetCaptchaResponse } from "./types/GetCaptchaResponse";
 import type { GetComment } from "./types/GetComment";
 import type { GetComments } from "./types/GetComments";
 import type { GetCommentsResponse } from "./types/GetCommentsResponse";
+import type { GetCommentsSlimResponse } from "./types/GetCommentsSlimResponse";
 import type { GetCommunity } from "./types/GetCommunity";
+import type { GetCommunityPendingFollowsCount } from "./types/GetCommunityPendingFollowsCount";
+import type { GetCommunityPendingFollowsCountResponse } from "./types/GetCommunityPendingFollowsCountResponse";
 import type { GetCommunityResponse } from "./types/GetCommunityResponse";
 import type { GetFederatedInstancesResponse } from "./types/GetFederatedInstancesResponse";
 import type { GetModlog } from "./types/GetModlog";
@@ -112,6 +137,8 @@ import type { GetPost } from "./types/GetPost";
 import type { GetPostResponse } from "./types/GetPostResponse";
 import type { GetPosts } from "./types/GetPosts";
 import type { GetPostsResponse } from "./types/GetPostsResponse";
+import type { GetRandomCommunity } from "./types/GetRandomCommunity";
+import type { GetRegistrationApplication } from "./types/GetRegistrationApplication";
 import type { GetReportCount } from "./types/GetReportCount";
 import type { GetReportCountResponse } from "./types/GetReportCountResponse";
 import type { GetSiteMetadata } from "./types/GetSiteMetadata";
@@ -119,18 +146,55 @@ import type { GetSiteMetadataResponse } from "./types/GetSiteMetadataResponse";
 import type { GetSiteResponse } from "./types/GetSiteResponse";
 import type { GetUnreadCountResponse } from "./types/GetUnreadCountResponse";
 import type { GetUnreadRegistrationApplicationCountResponse } from "./types/GetUnreadRegistrationApplicationCountResponse";
+import type { HideCommunity } from "./types/HideCommunity";
+import type { HidePost } from "./types/HidePost";
+import { IdentityCardForm } from "./types/IdentityCardForm";
+import { IdentityCardResponse } from "./types/IdentityCardResponse";
+import { LanguageProfilesResponse } from "./types/LanguageProfile";
+import type { ListCommentLikes } from "./types/ListCommentLikes";
+import type { ListCommentLikesResponse } from "./types/ListCommentLikesResponse";
 import type { ListCommunities } from "./types/ListCommunities";
 import type { ListCommunitiesResponse } from "./types/ListCommunitiesResponse";
+import type { ListCommunityPendingFollows } from "./types/ListCommunityPendingFollows";
+import type { ListCommunityPendingFollowsResponse } from "./types/ListCommunityPendingFollowsResponse";
+import type { ListCustomEmojis } from "./types/ListCustomEmojis";
+import type { ListCustomEmojisResponse } from "./types/ListCustomEmojisResponse";
+import type { ListLoginsResponse } from "./types/ListLoginsResponse";
+import type { ListMedia } from "./types/ListMedia";
+import type { ListMediaResponse } from "./types/ListMediaResponse";
+import type { ListNotifications } from "./types/ListNotifications";
+import type { ListNotificationsResponse } from "./types/ListNotificationsResponse";
+import type { ListPersonContent } from "./types/ListPersonContent";
+import type { ListPersonContentResponse } from "./types/ListPersonContentResponse";
+import type { ListPersonHidden } from "./types/ListPersonHidden";
+import type { ListPersonHiddenResponse } from "./types/ListPersonHiddenResponse";
+import type { ListPersonLiked } from "./types/ListPersonLiked";
+import type { ListPersonLikedResponse } from "./types/ListPersonLikedResponse";
+import type { ListPersonRead } from "./types/ListPersonRead";
+import type { ListPersonReadResponse } from "./types/ListPersonReadResponse";
+import type { ListPersonSaved } from "./types/ListPersonSaved";
+import type { ListPersonSavedResponse } from "./types/ListPersonSavedResponse";
+import type { ListPostLikes } from "./types/ListPostLikes";
+import type { ListPostLikesResponse } from "./types/ListPostLikesResponse";
 import type { ListRegistrationApplications } from "./types/ListRegistrationApplications";
 import type { ListRegistrationApplicationsResponse } from "./types/ListRegistrationApplicationsResponse";
+import type { ListReports } from "./types/ListReports";
+import type { ListReportsResponse } from "./types/ListReportsResponse";
+import type { ListTaglines } from "./types/ListTaglines";
+import type { ListTaglinesResponse } from "./types/ListTaglinesResponse";
 import type { LockPost } from "./types/LockPost";
 import type { Login } from "./types/Login";
 import type { LoginResponse } from "./types/LoginResponse";
+import type { MarkManyPostsAsRead } from "./types/MarkManyPostsAsRead";
+import type { MarkNotificationAsRead } from "./types/MarkNotificationAsRead";
 import type { MarkPostAsRead } from "./types/MarkPostAsRead";
+import type { MyUserInfo } from "./types/MyUserInfo";
+import type { OAuthProvider } from "./types/OAuthProvider";
 import type { PasswordChangeAfterReset } from "./types/PasswordChangeAfterReset";
 import type { PasswordReset } from "./types/PasswordReset";
 import type { PostReportResponse } from "./types/PostReportResponse";
 import type { PostResponse } from "./types/PostResponse";
+import type { ProfileData } from "./types/ProfileData";
 import type { PurgeComment } from "./types/PurgeComment";
 import type { PurgeCommunity } from "./types/PurgeCommunity";
 import type { PurgePerson } from "./types/PurgePerson";
@@ -140,95 +204,35 @@ import type { RegistrationApplicationResponse } from "./types/RegistrationApplic
 import type { RemoveComment } from "./types/RemoveComment";
 import type { RemoveCommunity } from "./types/RemoveCommunity";
 import type { RemovePost } from "./types/RemovePost";
+import type { ResendVerificationEmail } from "./types/ResendVerificationEmail";
 import type { ResolveCommentReport } from "./types/ResolveCommentReport";
 import type { ResolveCommunityReport } from "./types/ResolveCommunityReport";
 import type { ResolveObject } from "./types/ResolveObject";
 import type { ResolvePostReport } from "./types/ResolvePostReport";
 import type { SaveComment } from "./types/SaveComment";
 import type { SavePost } from "./types/SavePost";
+import type { SaveUserProfile } from "./types/SaveUserProfile";
 import type { SaveUserSettings } from "./types/SaveUserSettings";
 import type { Search } from "./types/Search";
 import type { SearchResponse } from "./types/SearchResponse";
+import { SetDefaultBankAccount } from "./types/SetDefaultBankAccount";
 import type { SiteResponse } from "./types/SiteResponse";
+import { SkillsResponse } from './types/Skill';
+import type { SuccessResponse } from "./types/SuccessResponse";
+import type { Tag } from "./types/Tag";
+import type { TaglineResponse } from "./types/TaglineResponse";
 import type { TransferCommunity } from "./types/TransferCommunity";
+import type { UpdateAvailable } from "./types/UpdateAvailable";
 import type { UpdateCommunityTag } from "./types/UpdateCommunityTag";
-import type { VerifyEmail } from "./types/VerifyEmail";
-import type { HideCommunity } from "./types/HideCommunity";
-import type { GenerateTotpSecretResponse } from "./types/GenerateTotpSecretResponse";
+import type { UpdateTagline } from "./types/UpdateTagline";
+import type { UpdateTerm } from "./types/UpdateTerm";
 import type { UpdateTotp } from "./types/UpdateTotp";
 import type { UpdateTotpResponse } from "./types/UpdateTotpResponse";
-import type { SuccessResponse } from "./types/SuccessResponse";
-import type { ListPostLikes } from "./types/ListPostLikes";
-import type { ListPostLikesResponse } from "./types/ListPostLikesResponse";
-import type { ListCommentLikes } from "./types/ListCommentLikes";
-import type { ListCommentLikesResponse } from "./types/ListCommentLikesResponse";
-import type { HidePost } from "./types/HidePost";
-import type { ListMedia } from "./types/ListMedia";
-import type { ListMediaResponse } from "./types/ListMediaResponse";
-import type { AuthenticateWithOauth } from "./types/AuthenticateWithOauth";
-import type { GetRegistrationApplication } from "./types/GetRegistrationApplication";
-import type { CreateTagline } from "./types/CreateTagline";
-import type { TaglineResponse } from "./types/TaglineResponse";
-import type { UpdateTagline } from "./types/UpdateTagline";
-import type { DeleteTagline } from "./types/DeleteTagline";
-import type { ListTaglines } from "./types/ListTaglines";
-import type { ListTaglinesResponse } from "./types/ListTaglinesResponse";
-import type { ListCustomEmojis } from "./types/ListCustomEmojis";
-import type { ListCustomEmojisResponse } from "./types/ListCustomEmojisResponse";
-import type { GetRandomCommunity } from "./types/GetRandomCommunity";
-import type { ApproveCommunityPendingFollower } from "./types/ApproveCommunityPendingFollower";
-import type { GetCommunityPendingFollowsCount } from "./types/GetCommunityPendingFollowsCount";
-import type { GetCommunityPendingFollowsCountResponse } from "./types/GetCommunityPendingFollowsCountResponse";
-import type { ListCommunityPendingFollowsResponse } from "./types/ListCommunityPendingFollowsResponse";
-import type { ListCommunityPendingFollows } from "./types/ListCommunityPendingFollows";
-import type { ListReports } from "./types/ListReports";
-import type { ListReportsResponse } from "./types/ListReportsResponse";
-import type { MyUserInfo } from "./types/MyUserInfo";
-import type { UserBlockInstanceParams } from "./types/UserBlockInstanceParams";
-import type { AdminAllowInstanceParams } from "./types/AdminAllowInstanceParams";
-import type { AdminBlockInstanceParams } from "./types/AdminBlockInstanceParams";
-import type { ListPersonContent } from "./types/ListPersonContent";
-import type { ListPersonContentResponse } from "./types/ListPersonContentResponse";
-import type { ListPersonSaved } from "./types/ListPersonSaved";
-import type { ListPersonSavedResponse } from "./types/ListPersonSavedResponse";
-import type { DeleteImageParams } from "./types/DeleteImageParams";
 import type { UploadImageResponse } from "./types/UploadImageResponse";
-import type { GetCommentsSlimResponse } from "./types/GetCommentsSlimResponse";
-import type { Tag } from "./types/Tag";
-import type { ResendVerificationEmail } from "./types/ResendVerificationEmail";
-import type { ListPersonRead } from "./types/ListPersonRead";
-import type { ListPersonReadResponse } from "./types/ListPersonReadResponse";
-import type { ListPersonHidden } from "./types/ListPersonHidden";
-import type { ListPersonHiddenResponse } from "./types/ListPersonHiddenResponse";
-import type { CommunityIdQuery } from "./types/CommunityIdQuery";
-import type { AdminListUsers } from "./types/AdminListUsers";
-import type { AdminListUsersResponse } from "./types/AdminListUsersResponse";
-import type { ListLoginsResponse } from "./types/ListLoginsResponse";
-import type { ListPersonLiked } from "./types/ListPersonLiked";
-import type { ListPersonLikedResponse } from "./types/ListPersonLikedResponse";
-import type { MarkNotificationAsRead } from "./types/MarkNotificationAsRead";
-import type { ListNotifications } from "./types/ListNotifications";
-import type { ListNotificationsResponse } from "./types/ListNotificationsResponse";
-import type { UpdateTerm } from "./types/UpdateTerm";
-import type { ExchangeKey } from "./types/ExchangeKey";
-import type { ExchangeKeyResponse } from "./types/ExchangeKeyResponse";
-import type { ProfileData } from "./types/ProfileData";
-import type { SaveUserProfile } from "./types/SaveUserProfile";
-import type { UpdateAvailable } from "./types/UpdateAvailable";
 import type { UpsertCard } from "./types/UpsertCard";
-import type { CountriesResponse } from "./types/CountriesResponse";
-import type { AddressForm } from "./types/AddressForm";
-import type { AddressResponse } from "./types/AddressResponse";
-import { ContactForm } from "./types/ContactForm";
-import { ContactResponse } from "./types/ContactResponse";
-import { IdentityCardForm } from "./types/IdentityCardForm";
-import { IdentityCardResponse } from "./types/IdentityCardResponse";
-import { BanksResponse } from "./types/BankList";
-import { BankAccountsResponse } from "./types/GetBankAccountResponse";
-import { CreateBankAccount } from "./types/CreateBankAccount";
-import { SetDefaultBankAccount } from "./types/SetDefaultBankAccount";
-import { DeleteBankAccount } from "./types/DeleteBankAccount";
-import {CreateOrUpdateAddress} from "./types/CreateOrUpdateAddress";
+import type { UserBlockInstanceParams } from "./types/UserBlockInstanceParams";
+import type { VerifyEmail } from "./types/VerifyEmail";
+import { WorkExperiencesResponse } from "./types/WorkExperience";
 
 enum HttpType {
   Get = "GET",
@@ -1798,6 +1802,73 @@ export class LemmyHttp extends Controller {
       HttpType.Post,
       "/account/bank-account/delete",
       form,
+      options,
+    );
+  }
+
+  /**
+   * @summary Get education.
+   */
+  @Get("/account/education")
+  @Tags("User Education")
+  async getUserEducation(@Inject() options?: RequestOptions) {
+    return this.#wrapper<object, EducationResponse>(
+      HttpType.Get,
+      "/account/education",
+      {},
+      options,
+    );
+  }
+
+  /**
+   * @summary Get work experience.
+   */
+  @Get("/account/work-experience")
+  @Tags("User work experience")
+  async getUserExperience(@Inject() options?: RequestOptions) {
+    return this.#wrapper<object, WorkExperiencesResponse>(
+      HttpType.Get,
+      "/account/work-experience",
+      {},
+      options,
+    );
+  }
+  /**
+   * @summary Get language profile.
+   */
+  @Get("/account/language-profiles")
+  @Tags("User language profile")
+  async getUserLanguages(@Inject() options?: RequestOptions) {
+    return this.#wrapper<object, LanguageProfilesResponse>(
+      HttpType.Get,
+      "/account/language-profiles",
+      {},
+      options,
+    );
+  }
+  /**
+   * @summary Get skills.
+   */
+  @Get("/account/skills")
+  @Tags("User skills")
+  async getUserSkills(@Inject() options?: RequestOptions) {
+    return this.#wrapper<object, SkillsResponse>(
+      HttpType.Get,
+      "/account/skills",
+      {},
+      options,
+    );
+  }
+  /**
+   * @summary Get certificates.
+   */
+  @Get("/account/certificates")
+  @Tags("User certificates")
+  async getUserCertificates(@Inject() options?: RequestOptions) {
+    return this.#wrapper<object, CertificatesResponse>(
+      HttpType.Get,
+      "/account/certificates",
+      {},
       options,
     );
   }

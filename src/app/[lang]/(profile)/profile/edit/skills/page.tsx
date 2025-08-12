@@ -10,6 +10,7 @@ import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
 import {useTranslation} from "react-i18next";
+import { useHttpGet } from "@/hooks/useHttpGet";
 
 type SkillLevel = {
   id: string;
@@ -66,9 +67,11 @@ const EditSkills = () => {
     levels: SkillLevel[];
   }>(API_ROUTES_SELLER.profile.skillLevel);
 
-  const {data: skillData, isLoading: isSkillLoading} = usePrivateFetch<{
-    skillProfiles: SkillFromServer[];
-  }>(API_ROUTES_SELLER.profile.skills);
+  const {
+        data: skillData,
+        isMutating: isSkillLoading,
+      } = useHttpGet("getUserSkills");
+
 
   const {trigger: sendSkills, isMutating} = usePrivatePost(
     API_ROUTES_SELLER.profile.skills
@@ -77,10 +80,10 @@ const EditSkills = () => {
   useEffect(() => {
       if (!isSkillLoading && !isLevelLoading) {
         const mapped =
-          skillData?.skillProfiles.map((item) => ({
+          skillData?.skills.map((item) => ({
             id: item.id,
             skill: item.skillName,
-            level: item.levelName,
+            level: item.skillName,
           })) || [];
 
         reset({skillItems: mapped});
