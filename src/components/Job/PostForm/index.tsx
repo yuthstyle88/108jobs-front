@@ -2,7 +2,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {notFound, useRouter} from "next/navigation";
 import useNotification from "@/hooks/useNotification";
-import {useHttpGet} from "@/hooks/useHttpGet";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {CreatePost, IntendedUse, JobType, PostId, PostView} from "lemmy-js-client";
@@ -13,11 +12,12 @@ import LoadingCircle from "@/components/LoadingCircle";
 import {z} from "zod";
 import {useLanguage} from "@/contexts/LanguageContext";
 import {getNumericCode} from "@/actions/getClientCurrentLanguage";
-import {toCamelCaseLastSegment} from "@/utils/helpers";
+import {getCommunitiesAtLevel, toCamelCaseLastSegment} from "@/utils/helpers";
 import {useTranslation} from "react-i18next";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {useHttpPost} from "@/hooks/useHttpPost";
+import {useCommunities} from "@/hooks/communites-api/useCommunities";
 
 
 interface PostFormProps {
@@ -92,11 +92,8 @@ export const PostForm: React.FC<PostFormProps> = ({
 
     const {successMessage, errorMessage} = useNotification();
     const [postId, setPostId] = useState<PostId>(0);
-    const {
-        state,
-        data: catalogData,
-    } = useHttpGet("listChildrenCommunities",
-        {maxDepth: 3});
+    const communitiesResponse = useCommunities();
+    const catalogData = getCommunitiesAtLevel(communitiesResponse.communities, 3);
 
     // Create schema with translations
     const jobSchema = postJobSchema(t);
@@ -147,10 +144,10 @@ export const PostForm: React.FC<PostFormProps> = ({
         [postView]);
 
     useEffect(() => {
-            if (state.state === REQUEST_STATE.SUCCESS && catalogData?.communities?.length && !postView) {
-                const defaultCommunity = catalogData.communities.find(
+            if (communitiesResponse.state === REQUEST_STATE.SUCCESS && catalogData?.length && !postView) {
+                const defaultCommunity = catalogData.find(
                     (catalog) => catalog.community.id !== 1
-                ) || catalogData.communities[0];
+                ) || catalogData[0];
                 if (defaultCommunity) {
                     setValue("communityId",
                         defaultCommunity.community.id,
@@ -158,7 +155,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                 }
             }
         },
-        [state, catalogData, setValue, postView]);
+        [catalogData, setValue, postView]);
 
     const handleCreateSuccess = useCallback(async () => {
             router.replace("/job-board");
@@ -399,7 +396,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                                     <option disabled value="">
                                         {t("createJob.serviceCategoryPlaceholderSelect")}
                                     </option>
-                                    {catalogData?.communities
+                                    {catalogData
                                         .map((catalog) => (
                                             <option key={catalog.community.id} value={catalog.community.id}>
                                                 {t(`catalogs.${toCamelCaseLastSegment(catalog.community.path)}`)}
