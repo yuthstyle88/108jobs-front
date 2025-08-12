@@ -1,13 +1,13 @@
 import {
-  Comment,
-  CommentReply,
-  CommentView,
-  CommunityView,
-  CreateOAuthProvider,
-  GetSiteResponse,
-  MyUserInfo,
-  PersonCommentMention,
-  PersonView,
+    Comment,
+    CommentReply,
+    CommentView,
+    CommunityView,
+    CreateOAuthProvider,
+    GetSiteResponse, ListCommunitiesResponse,
+    MyUserInfo,
+    PersonCommentMention,
+    PersonView,
 } from "lemmy-js-client";
 import {RequestState} from "@/services/HttpService";
 import {Match} from "@/utils/router"
@@ -17,6 +17,7 @@ export interface IsoData<T extends RouteData = any> {
   path: string;
   routeData: T;
   siteRes?: GetSiteResponse;
+  communities?: ListCommunitiesResponse,
   myUserInfo?: MyUserInfo;
   errorPageData?: ErrorPageData;
   lemmyExternalHost: string;

@@ -16,9 +16,16 @@ import {
 import {useHttpGet} from "@/hooks/useHttpGet";
 import JobBoardTab from "@/app/[lang]/(job)/job-board/_components/JobBoardTab";
 import {useTranslation} from "react-i18next";
-import {formatBudget, formatDate, getJobTypeLabel, toCamelCaseLastSegment} from "@/utils/helpers";
+import {
+    formatBudget,
+    formatDate,
+    getCommunitiesAtLevel,
+    getJobTypeLabel,
+    toCamelCaseLastSegment
+} from "@/utils/helpers";
 import ErrorState from "@/components/ErrorState";
 import {REQUEST_STATE} from "@/services/HttpService";
+import {useCommunities} from "@/hooks/communites-api/useCommunities";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -51,12 +58,8 @@ const JobBoard = () => {
     const [cursorHistory, setCursorHistory] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [budgetError, setBudgetError] = useState<string | null>(null);
-
-    const {
-        state: catalogState,
-        data: catalogData,
-        isMutating: isCatalogLoading,
-    } = useHttpGet("listChildrenCommunities", {limit: 50, maxDepth: 3});
+    const communitiesResponse = useCommunities();
+    const catalogData = getCommunitiesAtLevel(communitiesResponse.communities, 3);
 
     const {
         state: searchState,
@@ -182,7 +185,7 @@ const JobBoard = () => {
         setIsLoading(isJobsLoading);
     }, [isJobsLoading]);
 
-    if (catalogState.state === REQUEST_STATE.FAILED || searchState.state === REQUEST_STATE.FAILED) {
+    if (searchState.state === REQUEST_STATE.FAILED) {
         return (
             <ErrorState/>
         );
@@ -218,11 +221,10 @@ const JobBoard = () => {
                                     className="w-full appearance-none bg-white border border-gray-200 rounded-lg py-3 px-4 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all duration-200 hover:border-blue-300"
                                     value={filters.community || ""}
                                     onChange={(e) => handleFilterChange("community", e.target.value || undefined)}
-                                    disabled={isCatalogLoading}
                                     aria-label={t("profileJob.dropdownSearchCategory")}
                                 >
                                     <option value="">{t("profileJob.dropdownSearchCategory")}</option>
-                                    {catalogData?.communities?.map((category) => (
+                                    {catalogData.map((category) => (
                                         <option key={category.community.id} value={category.community.id}>
                                             {t(`catalogs.${toCamelCaseLastSegment(category.community.path)}`)}
                                         </option>
