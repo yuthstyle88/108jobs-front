@@ -1,5 +1,5 @@
 export type Certificate = {
-  id: number | null;
+  id?: number | null;
   name: string;
   achievedDate: string;
   expiresDate: string | null;

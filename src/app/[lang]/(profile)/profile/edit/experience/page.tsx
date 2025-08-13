@@ -1,74 +1,59 @@
 "use client";
-import {Plus, Trash2} from "lucide-react";
-import {useEffect, useState} from "react";
-import {useFieldArray, useForm} from "react-hook-form";
-import {z} from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {usePrivateFetch, usePrivatePost} from "@/hooks/api-hooks";
-import {API_ROUTES_SELLER} from "@/api/endpoints";
+import { Plus, Trash2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
-import {getNamespace} from "@/utils/i18nHelper";
-import {LanguageFile} from "@/constants/language";
+import { getNamespace } from "@/utils/i18nHelper";
+import { LanguageFile } from "@/constants/language";
 import { useHttpGet } from "@/hooks/useHttpGet";
-
-type ExperienceFromServer = {
-  id: string;
-  companyName: string;
-  position: string;
-  startMonth: string;
-  startYear: number;
-  endMonth: string | null;
-  endYear: number | null;
-  isCurrent: boolean;
-};
+import { useHttpPost } from "@/hooks/useHttpPost";
+import { WorkExperiencesResponse } from "lemmy-js-client/dist/types/WorkExperience";
+import { WorkExperience } from "@/lib/lemmy-js-client/dist";
 
 const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December",
 ];
+const monthToMM = (m: string) => {
+  const idx = months.indexOf(m);
+  return idx >= 0 ? String(idx + 1).padStart(2, "0") : "01";
+};
 
 const currentDate = new Date();
 const currentYear = currentDate.getFullYear();
 const defaultMonth = months[currentDate.getMonth()];
-const defaultYear = currentYear.toString();
-const years = Array.from({length: 40},
-  (_, i) =>
-    (currentYear - i).toString()
-);
+const defaultYear = String(currentYear);
+const years = Array.from({ length: 40 }, (_, i) => String(currentYear - i));
 
-const EditExperience = () => {
-  const userEditLanguage = getNamespace(LanguageFile.PROFILE_USER_EDIT);
-
-  const experienceSchema = z.object({
+const makeSchema = (lang: any) =>
+  z.object({
     experienceItems: z.array(
       z.object({
-        id: z.string().optional(),
-        company: z.string().min(1,
-          userEditLanguage.companyNameRequired),
-        position: z.string().min(1,
-          userEditLanguage.jobTitleRequired),
+        id: z.number().nullable().optional(),
+        company: z.string().min(1, lang.companyNameRequired),
+        position: z.string().min(1, lang.jobTitleRequired),
         startMonth: z.string(),
-        startYear: z.string(),
-        endMonth: z.string().nullable(),
-        endYear: z.string().nullable(),
+        startYear: z.string(),    
+        endMonth: z.string(),     
+        endYear: z.string(),    
         isCurrent: z.boolean(),
       })
     ),
   });
 
-  type ExperienceFormData = z.infer<typeof experienceSchema>;
+type ExperienceFormData = z.infer<ReturnType<typeof makeSchema>>;
+
+const EditExperience = () => {
+  const userEditLanguage = getNamespace(LanguageFile.PROFILE_USER_EDIT);
+
+  const experienceSchema = useMemo(
+    () => makeSchema(userEditLanguage),
+    [userEditLanguage]
+  );
 
   const {
     control,
@@ -77,88 +62,88 @@ const EditExperience = () => {
     reset,
     setValue,
     watch,
-    formState: {errors},
+    formState: { errors },
   } = useForm<ExperienceFormData>({
     resolver: zodResolver(experienceSchema),
-    defaultValues: {experienceItems: []},
+    defaultValues: { experienceItems: [] },
   });
 
-  const {successMessage} = useNotification();
-  const {fields, append, remove, replace} = useFieldArray({
+  const { successMessage } = useNotification();
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "experienceItems",
   });
 
   const {
-      data: experienceData,
-      isMutating: isLoading,
-    } = useHttpGet("getUserExperience");
+    data: experienceData,
+    isMutating: isLoading,
+  } = useHttpGet("getUserExperience");
 
-  const {trigger: sendExperience, isMutating} = usePrivatePost(
-    API_ROUTES_SELLER.profile.workExperience
-  );
+  const { execute: sendExperience, isMutating } =
+    useHttpPost("upsertUserExperience");
 
   const [isFormReady, setIsFormReady] = useState(false);
 
   useEffect(() => {
-      if (experienceData) {
-        const mapped = experienceData.work_experience.map((item) => ({
-          id: item.id,
-          company: item.companyName,
-          position: item.position,
-          startMonth: item.startMonth,
-          startYear: item.startYear.toString(),
-          endMonth: item.endMonth ?? defaultMonth,
-          endYear: item.endYear?.toString() ?? defaultYear,
-          isCurrent: item.isCurrent,
-        }));
-
-        reset({experienceItems: mapped});
-        replace(mapped);
-        setIsFormReady(true);
-      }
-    },
-    [experienceData, reset, replace]);
-
-  const watchExperience = watch("experienceItems");
-
-  useEffect(() => {
-      watchExperience.forEach((item, index) => {
-        if (!item.isCurrent) {
-          if (!item.endMonth) {
-            setValue(`experienceItems.${index}.endMonth`,
-              defaultMonth);
-          }
-          if (!item.endYear) {
-            setValue(`experienceItems.${index}.endYear`,
-              defaultYear);
-          }
-        }
-      });
-    },
-    [watchExperience, setValue]);
-
-  const onSubmit = async(formData: ExperienceFormData) => {
-    const body = {
-      workExperiences: formData.experienceItems.map((item) => ({
-        ...(item.id ? {id: item.id} : {}),
-        companyName: item.company,
+    if (experienceData?.workExperience) {
+      const mapped = experienceData.workExperience.map((item) => ({
+        id: item.id ?? undefined,
+        company: item.companyName,
         position: item.position,
         startMonth: item.startMonth,
-        startYear: Number(item.startYear),
-        endMonth: item.isCurrent ? null : item.endMonth,
-        endYear: item.isCurrent ? null : Number(item.endYear),
+        startYear: String(item.startYear),
+        endMonth: item.endMonth || defaultMonth,
+        endYear: String(item.endYear ?? currentYear),
         isCurrent: item.isCurrent,
-      })),
+      }));
+      reset({ experienceItems: mapped });
+      replace(mapped);
+      setIsFormReady(true);
+    }
+  }, [experienceData, reset, replace]);
+
+  const watchExperience = watch("experienceItems");
+  useEffect(() => {
+    watchExperience.forEach((item, index) => {
+      if (!item.endMonth) {
+        setValue(`experienceItems.${index}.endMonth`, defaultMonth);
+      }
+      if (!item.endYear) {
+        setValue(`experienceItems.${index}.endYear`, defaultYear);
+      }
+    });
+  }, [watchExperience, setValue]);
+
+  const onSubmit = async (formData: ExperienceFormData) => {
+    const payloadItems: WorkExperience[] = formData.experienceItems.map(
+      (item) => {
+        const startYearNum = Number(item.startYear);
+        const endYearNum = Number(item.endYear);
+        const startDate = `${startYearNum}-${monthToMM(item.startMonth)}-01`;
+
+        return {
+          id: item.id ?? undefined,
+          companyName: item.company,
+          position: item.position,
+          startDate,
+          startMonth: item.startMonth,
+          startYear: startYearNum,
+          endMonth: item.endMonth,    
+          endYear: endYearNum,       
+          isCurrent: item.isCurrent,
+        };
+      }
+    );
+
+    const body: WorkExperiencesResponse = {
+      workExperience: payloadItems,
     };
 
     try {
       await sendExperience(body);
-      successMessage("profile",
-        "updateWorkExperience");
+      successMessage("profile", "updateWorkExperience");
     } catch (error) {
-      console.error("Lỗi khi lưu kinh nghiệm:",
-        error);
+      console.error("Lỗi khi lưu kinh nghiệm:", error);
     }
   };
 
@@ -173,7 +158,7 @@ const EditExperience = () => {
 
         {isFetching ? (
           <div className="bg-white w-full h-40 flex justify-center items-center">
-            <LoadingMultiCircle/>
+            <LoadingMultiCircle />
           </div>
         ) : fields.length === 0 ? (
           <div className="bg-white w-full py-8 px-6 rounded-lg shadow-sm text-center">
@@ -197,8 +182,7 @@ const EditExperience = () => {
               }}
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2"/>{" "}
-              {userEditLanguage.addMoreButton}
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage.addMoreButton}
             </button>
             <div className="flex justify-end">
               <button
@@ -207,17 +191,17 @@ const EditExperience = () => {
                 disabled={isMutating}
                 className="min-w-[128px] px-2 py-2 submit-button-custom"
               >
-                {isMutating ? <LoadingCircle/> : userEditLanguage.saveButton}
+                {isMutating ? <LoadingCircle /> : userEditLanguage.saveButton}
               </button>
             </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)}>
-            {fields.map((item, index) => {
+            {fields.map((field, index) => {
               const isCurrent = watch(`experienceItems.${index}.isCurrent`);
               return (
                 <div
-                  key={item.id || index}
+                  key={field.id} 
                   className="bg-white rounded-lg p-6 mb-6 shadow-sm"
                 >
                   <div className="grid grid-cols-2 gap-6 mb-6">
@@ -342,7 +326,7 @@ const EditExperience = () => {
                       onClick={() => remove(index)}
                       className="border-1 border-border-secondary w-fit flex flex-row px-3 rounded-[4px] items-center text-red-500 text-sm"
                     >
-                      <Trash2 className="w-4"/>
+                      <Trash2 className="w-4" />
                       <span className="ml-2 font-medium">
                         {userEditLanguage.deleteInfo}
                       </span>
@@ -368,7 +352,7 @@ const EditExperience = () => {
               }
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2"/> {userEditLanguage.addInfo}
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage.addInfo}
             </button>
 
             <div className="flex justify-end">
@@ -377,7 +361,7 @@ const EditExperience = () => {
                 disabled={isMutating}
                 className="min-w-[128px] px-2 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
-                {isMutating ? <LoadingCircle/> : userEditLanguage.saveInfo}
+                {isMutating ? <LoadingCircle /> : userEditLanguage.saveInfo}
               </button>
             </div>
           </form>

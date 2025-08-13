@@ -1,5 +1,5 @@
 export type Skill = {
-  id: number | null;
+  id?: number | null;
   skillName: string;
   levelId: number;
 };

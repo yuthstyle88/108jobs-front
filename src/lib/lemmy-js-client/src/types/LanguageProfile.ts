@@ -4,5 +4,5 @@ export type LanguageProfile = {
 };
 
 export type LanguageProfilesResponse = {
-  language_profiles: LanguageProfile[];
+  languageProfiles: LanguageProfile[];
 };

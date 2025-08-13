@@ -69,7 +69,7 @@ import type { BlockCommunity } from "./types/BlockCommunity";
 import type { BlockCommunityResponse } from "./types/BlockCommunityResponse";
 import type { BlockPerson } from "./types/BlockPerson";
 import type { BlockPersonResponse } from "./types/BlockPersonResponse";
-import { CertificatesResponse } from './types/Certificate';
+import { CertificatesResponse } from "./types/Certificate";
 import type { ChangePassword } from "./types/ChangePassword";
 import type { CommentReportResponse } from "./types/CommentReportResponse";
 import type { CommentResponse } from "./types/CommentResponse";
@@ -217,7 +217,7 @@ import type { Search } from "./types/Search";
 import type { SearchResponse } from "./types/SearchResponse";
 import { SetDefaultBankAccount } from "./types/SetDefaultBankAccount";
 import type { SiteResponse } from "./types/SiteResponse";
-import { SkillsResponse } from './types/Skill';
+import { SkillsResponse } from "./types/Skill";
 import type { SuccessResponse } from "./types/SuccessResponse";
 import type { Tag } from "./types/Tag";
 import type { TaglineResponse } from "./types/TaglineResponse";
@@ -1821,6 +1821,24 @@ export class LemmyHttp extends Controller {
   }
 
   /**
+   * @summary Upcert User Education
+   */
+  @Security("bearerAuth")
+  @Post("/account/education")
+  @Tags("Upcert User Education")
+  async upsertUserEducation(
+    @Body() form: EducationResponse,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<EducationResponse, EducationResponse>(
+      HttpType.Post,
+      "/account/education",
+      form,
+      options,
+    );
+  }
+
+  /**
    * @summary Get work experience.
    */
   @Get("/account/work-experience")
@@ -1833,6 +1851,25 @@ export class LemmyHttp extends Controller {
       options,
     );
   }
+
+  /**
+   * @summary Upcert User experience
+   */
+  @Security("bearerAuth")
+  @Post("/account/work-experience")
+  @Tags("Upcert User experience")
+  async upsertUserExperience(
+    @Body() form: WorkExperiencesResponse,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<WorkExperiencesResponse, WorkExperiencesResponse>(
+      HttpType.Post,
+      "/account/work-experience",
+      form,
+      options,
+    );
+  }
+
   /**
    * @summary Get language profile.
    */
@@ -1846,6 +1883,25 @@ export class LemmyHttp extends Controller {
       options,
     );
   }
+
+  /**
+   * @summary Upcert User language profile
+   */
+  @Security("bearerAuth")
+  @Post("/account/language-profiles")
+  @Tags("Upcert User language profile")
+  async upsertUserLanguages(
+    @Body() form: LanguageProfilesResponse,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<LanguageProfilesResponse, LanguageProfilesResponse>(
+      HttpType.Post,
+      "/account/language-profiles",
+      form,
+      options,
+    );
+  }
+
   /**
    * @summary Get skills.
    */
@@ -1859,6 +1915,26 @@ export class LemmyHttp extends Controller {
       options,
     );
   }
+
+  
+  /**
+   * @summary Upcert User skills
+   */
+  @Security("bearerAuth")
+  @Post("/account/skills")
+  @Tags("Upcert User skills")
+  async upsertUserSkills(
+    @Body() form: SkillsResponse,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<SkillsResponse, SkillsResponse>(
+      HttpType.Post,
+      "/account/skills",
+      form,
+      options,
+    );
+  }
+
   /**
    * @summary Get certificates.
    */
@@ -1869,6 +1945,26 @@ export class LemmyHttp extends Controller {
       HttpType.Get,
       "/account/certificates",
       {},
+      options,
+    );
+  }
+
+  
+  
+  /**
+   * @summary Upcert User certificates
+   */
+  @Security("bearerAuth")
+  @Post("/account/certificates")
+  @Tags("Upcert User certificates")
+  async upsertUserCertificates(
+    @Body() form: CertificatesResponse,
+    @Inject() options?: RequestOptions,
+  ) {
+    return this.#wrapper<CertificatesResponse, CertificatesResponse>(
+      HttpType.Post,
+      "/account/certificates",
+      form,
       options,
     );
   }

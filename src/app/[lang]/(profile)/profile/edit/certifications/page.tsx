@@ -4,28 +4,25 @@ import {useEffect, useState} from "react";
 import {useFieldArray, useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {usePrivateFetch, usePrivatePost} from "@/hooks/api-hooks";
-import {API_ROUTES_SELLER} from "@/api/endpoints";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
 import {useTranslation} from "react-i18next";
-import { useHttpGet } from "@/hooks/useHttpGet";
-
-type CertificationFromServer = {
-  id: string;
-  name: string;
-  profileId: string;
-};
+import {useHttpGet} from "@/hooks/useHttpGet";
+import {useHttpPost} from "@/hooks/useHttpPost";
+import { CertificatesResponse } from "lemmy-js-client/dist/types/Certificate";
 
 const EditCertifications = () => {
   const {t} = useTranslation();
+
   const certificationSchema = z.object({
-    certificationItems: z.array(
+    certificates: z.array(
       z.object({
-        id: z.string().optional(),
-        name: z.string().min(1,
-          t("userEdit.certificatesPlaceholder")),
+        id: z.union([z.string(), z.number()]).optional(),
+        name: z.string().min(1, t("userEdit.certificatesPlaceholder")),
+        achievedDate: z.string().min(1, t("userEdit.achievedDateRequired")),
+        expiresDate: z.string().nullable(),
+        url: z.string().url(t("userEdit.urlInvalid")),
       })
     ),
   });
@@ -41,57 +38,57 @@ const EditCertifications = () => {
   } = useForm<CertificationFormData>({
     resolver: zodResolver(certificationSchema),
     defaultValues: {
-      certificationItems: [],
+      certificates: [],
     },
   });
 
   const {successMessage} = useNotification();
   const {fields, append, remove, replace} = useFieldArray({
     control,
-    name: "certificationItems",
+    name: "certificates",
   });
 
   const [isFormReady, setIsFormReady] = useState(false);
 
-    const {
-      data: certData,
-      isMutating: isCertLoading,
-    } = useHttpGet("getUserLanguages");
+  const {data: certData, isMutating: isCertLoading} =
+    useHttpGet("getUserCertificates");
 
-  const {trigger: sendCertificates, isMutating} = usePrivatePost(
-    API_ROUTES_SELLER.profile.certificate
-  );
+  const {execute: sendCertificates, isMutating} =
+    useHttpPost("upsertUserCertificates");
 
   useEffect(() => {
-      if (certData?.certificates) {
-        const mapped = certData.certificates.map((item) => ({
-          id: item.id,
-          name: item.name,
-        }));
-        reset({certificationItems: mapped});
-        replace(mapped);
-        setIsFormReady(true);
-      } else if (!isCertLoading) {
-        setIsFormReady(true);
-      }
-    },
-    [certData, reset, replace, isCertLoading]);
-
-  const onSubmit = async(formData: CertificationFormData) => {
-    const body = {
-      certOrAwards: formData.certificationItems.map((item) => ({
-        ...(item.id ? {id: item.id} : {}),
+    if (certData?.certificates) {
+      const mapped = certData.certificates.map((item) => ({
+        id: item.id ?? undefined,
         name: item.name,
+        achievedDate: item.achievedDate,
+        expiresDate: item.expiresDate,
+        url: item.url,
+      }));
+      reset({certificates: mapped});
+      replace(mapped);
+      setIsFormReady(true);
+    } else if (!isCertLoading) {
+      setIsFormReady(true);
+    }
+  }, [certData, reset, replace, isCertLoading]);
+
+  const onSubmit = async (formData: CertificationFormData) => {
+    const body: CertificatesResponse = {
+      certificates: formData.certificates.map((item) => ({
+        id: typeof item.id === "number" ? item.id : item.id ? Number(item.id) : undefined,
+        name: item.name,
+        achievedDate: item.achievedDate,
+        expiresDate: item.expiresDate,
+        url: item.url,
       })),
     };
 
     try {
       await sendCertificates(body);
-      successMessage("profile",
-        "updateCertification");
+      successMessage("profile", "updateCertification");
     } catch (error) {
-      console.error("Lỗi khi lưu chứng chỉ:",
-        error);
+      console.error("Lỗi khi lưu chứng chỉ:", error);
     }
   };
 
@@ -115,7 +112,15 @@ const EditCertifications = () => {
             </p>
             <button
               type="button"
-              onClick={() => append({id: undefined, name: ""})}
+              onClick={() =>
+                append({
+                  id: undefined,
+                  name: "",
+                  achievedDate: "",
+                  expiresDate: null,
+                  url: "",
+                })
+              }
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
               <Plus className="w-5 h-5 mr-2"/> {t("userEdit.addMoreButton")}
@@ -147,11 +152,52 @@ const EditCertifications = () => {
                     type="text"
                     className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder={t("userEdit.awardPlaceholder")}
-                    {...register(`certificationItems.${index}.name`)}
+                    {...register(`certificates.${index}.name`)}
                   />
-                  {errors.certificationItems?.[index]?.name && (
+                  {errors.certificates?.[index]?.name && (
                     <p className="text-red-500 text-xs mt-1">
-                      {errors.certificationItems[index]?.name?.message}
+                      {errors.certificates[index]?.name?.message}
+                    </p>
+                  )}
+                </div>
+                <div className="mt-4">
+                  <label className="block text-gray-700 mb-2">
+                    {t("userEdit.achievedDate")}
+                  </label>
+                  <input
+                    type="date"
+                    className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md"
+                    {...register(`certificates.${index}.achievedDate`)}
+                  />
+                  {errors.certificates?.[index]?.achievedDate && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.certificates[index]?.achievedDate?.message}
+                    </p>
+                  )}
+                </div>
+                <div className="mt-4">
+                  <label className="block text-gray-700 mb-2">
+                    {t("userEdit.expiresDate")}
+                  </label>
+                  <input
+                    type="date"
+                    className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md"
+                    {...register(`certificates.${index}.expiresDate`)}
+                  />
+                </div>
+                <div className="mt-4">
+                  <label className="block text-gray-700 mb-2">
+                    {t("userEdit.url")}
+                  </label>
+                  <input
+                    type="url"
+                    className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md"
+                    placeholder="https://example.com"
+                    {...register(`certificates.${index}.url`)}
+                  />
+                  {errors.certificates?.[index]?.url && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.certificates[index]?.url?.message}
                     </p>
                   )}
                 </div>
@@ -171,7 +217,15 @@ const EditCertifications = () => {
 
             <button
               type="button"
-              onClick={() => append({id: undefined, name: ""})}
+              onClick={() =>
+                append({
+                  id: undefined,
+                  name: "",
+                  achievedDate: "",
+                  expiresDate: null,
+                  url: "",
+                })
+              }
               className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
               <Plus className="w-5 h-5 mr-2"/> {t("userEdit.addInfo")}

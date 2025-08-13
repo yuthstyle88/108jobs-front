@@ -1,24 +1,19 @@
 "use client";
+import { API_ROUTES_SELLER } from "@/api/endpoints";
+import LoadingCircle from "@/components/LoadingCircle";
+import LoadingMultiCircle from "@/components/LoadingMultiCircle";
+import { LanguageFile } from "@/constants/language";
+import { usePrivateFetch } from "@/hooks/api-hooks";
+import { useHttpGet } from "@/hooks/useHttpGet";
+import { useHttpPost } from "@/hooks/useHttpPost";
+import useNotification from "@/hooks/useNotification";
+import { LanguageProfilesResponse } from "@/lib/lemmy-js-client/dist/types/LanguageProfile";
+import { getNamespace } from "@/utils/i18nHelper";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { usePrivateFetch, usePrivatePost } from "@/hooks/api-hooks";
-import { API_ROUTES_SELLER } from "@/api/endpoints";
-import LoadingMultiCircle from "@/components/LoadingMultiCircle";
-import LoadingCircle from "@/components/LoadingCircle";
-import useNotification from "@/hooks/useNotification";
-import { getNamespace } from "@/utils/i18nHelper";
-import { LanguageFile } from "@/constants/language";
-import { useHttpGet } from "@/hooks/useHttpGet";
-
-type LanguageFromServer = {
-  id: string;
-  lang: string;
-  levelId: string;
-  levelName: string;
-};
 
 type LevelItem = {
   id: string;
@@ -29,13 +24,10 @@ const EditLanguages = () => {
   const userEditLanguage = getNamespace(LanguageFile.PROFILE_USER_EDIT);
 
   const languageSchema = z.object({
-    languageItems: z.array(
+    languageProfiles: z.array(
       z.object({
-        id: z.string().optional(),
-        language: z.string().min(1,
-          userEditLanguage.languagesRequire),
-        level: z.string().min(1,
-          "Vui lòng chọn cấp độ"),
+        language: z.string().min(1, userEditLanguage.languagesRequire),
+        level: z.string().min(1, "Vui lòng chọn cấp độ"),
       })
     ),
   });
@@ -56,14 +48,14 @@ const EditLanguages = () => {
   } = useForm<LanguageFormData>({
     resolver: zodResolver(languageSchema),
     defaultValues: {
-      languageItems: [],
+      languageProfiles: [],
     },
   });
 
   const { successMessage } = useNotification();
   const { fields, append, remove, replace } = useFieldArray({
     control,
-    name: "languageItems",
+    name: "languageProfiles",
   });
 
   const [isFormReady, setIsFormReady] = useState(false);
@@ -77,55 +69,44 @@ const EditLanguages = () => {
     isMutating: isLangLoading,
   } = useHttpGet("getUserLanguages");
 
-  const { trigger: sendLanguages, isMutating } = usePrivatePost(
-    API_ROUTES_SELLER.profile.languages
-  );
+  const { execute: sendLanguages, isMutating } =
+    useHttpPost("upsertUserLanguages");
 
   useEffect(() => {
     if (!isLangLoading && !isLevelLoading) {
       const mapped =
-        languageData?.language_profiles.map((item) => ({
+        languageData?.languageProfiles.map((item) => ({
           language: item.lang,
-          level: item.levelName,
+          level: item.level,
         })) || [];
 
-      reset({ languageItems: mapped });
+      reset({ languageProfiles: mapped });
       replace(mapped);
       setIsFormReady(true);
     }
-  },
-    [languageData, levelData, isLangLoading, isLevelLoading, reset, replace]);
+  }, [languageData, levelData, isLangLoading, isLevelLoading, reset, replace]);
 
   const onSubmit = async (data: LanguageFormData) => {
     if (!levelData) return;
 
-    const body = {
-      languageProfiles: data.languageItems.map((item) => {
-        const levelObj = levelData.levels.find(
-          (lvl) => lvl.title === item.level
-        );
-        return {
-          ...(item.id ? { id: item.id } : {}),
-          lang: item.language,
-          levelId: levelObj?.id || "",
-        };
-      }),
+    const body: LanguageProfilesResponse = {
+      languageProfiles: data.languageProfiles.map((item) => ({
+        lang: item.language,
+        level: item.level,
+      })),
     };
 
     try {
       await sendLanguages(body);
-      successMessage("profile",
-        "updateLanguage");
+      successMessage("profile", "updateLanguage");
     } catch (error) {
-      console.error("Lỗi khi lưu ngôn ngữ:",
-        error);
+      console.error("Lỗi khi lưu ngôn ngữ:", error);
     }
   };
 
   const levelOptions = levelData?.levels || [];
 
-  const isFetching =
-    isLangLoading || isLevelLoading || !isFormReady;
+  const isFetching = isLangLoading || isLevelLoading || !isFormReady;
 
   return (
     <div className="flex-1">
@@ -145,15 +126,13 @@ const EditLanguages = () => {
               type="button"
               onClick={() =>
                 append({
-                  id: undefined,
                   language: "",
                   level: levelOptions[0]?.title || "",
                 })
               }
               className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
-              <Plus className="w-5 h-5 mr-2" />{" "}
-              {userEditLanguage.addMoreButton}
+              <Plus className="w-5 h-5 mr-2" /> {userEditLanguage.addMoreButton}
             </button>
 
             <div className="flex justify-end">
@@ -183,19 +162,21 @@ const EditLanguages = () => {
                       type="text"
                       className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder={userEditLanguage.languagePlaceholder}
-                      {...register(`languageItems.${index}.language`)}
+                      {...register(`languageProfiles.${index}.language`)}
                     />
-                    {errors.languageItems?.[index]?.language && (
+                    {errors.languageProfiles?.[index]?.language && (
                       <p className="text-red-500 text-xs mt-1">
-                        {errors.languageItems[index]?.language?.message}
+                        {errors.languageProfiles[index]?.language?.message}
                       </p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-gray-700 mb-2">{userEditLanguage.level}</label>
+                    <label className="block text-gray-700 mb-2">
+                      {userEditLanguage.level}
+                    </label>
                     <select
                       className="text-text-primary w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      {...register(`languageItems.${index}.level`)}
+                      {...register(`languageProfiles.${index}.level`)}
                     >
                       {levelOptions.map((lvl) => (
                         <option key={lvl.id} value={lvl.title}>
@@ -203,9 +184,9 @@ const EditLanguages = () => {
                         </option>
                       ))}
                     </select>
-                    {errors.languageItems?.[index]?.level && (
+                    {errors.languageProfiles?.[index]?.level && (
                       <p className="text-red-500 text-xs mt-1">
-                        {errors.languageItems[index]?.level?.message}
+                        {errors.languageProfiles[index]?.level?.message}
                       </p>
                     )}
                   </div>
@@ -230,7 +211,6 @@ const EditLanguages = () => {
               type="button"
               onClick={() =>
                 append({
-                  id: undefined,
                   language: "",
                   level: levelOptions[0]?.title || "",
                 })

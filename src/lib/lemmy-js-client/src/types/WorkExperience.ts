@@ -1,5 +1,5 @@
 export type WorkExperience = {
-  id: number | null;
+  id?: number | null;
   companyName: string;
   position: string;
   startDate: string;  
@@ -11,5 +11,5 @@ export type WorkExperience = {
 };
 
 export type WorkExperiencesResponse = {
-  work_experience: WorkExperience[];
+  workExperience: WorkExperience[];
 };

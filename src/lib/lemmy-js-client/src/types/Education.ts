@@ -1,7 +1,7 @@
 export type Education = {
-  id: number;
+  id?: number;
   personId: number;
-  schoolName: string;
+  school: string;
   major: string;
   createdAt: string; 
   updatedAt: string;
