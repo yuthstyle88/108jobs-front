@@ -8,7 +8,6 @@ import {CreatePost, IntendedUse, JobType, PostId, PostView} from "lemmy-js-clien
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExclamationCircle, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-import LoadingCircle from "@/components/LoadingCircle";
 import {z} from "zod";
 import {useLanguage} from "@/contexts/LanguageContext";
 import {getNumericCode} from "@/actions/getClientCurrentLanguage";
@@ -65,9 +64,6 @@ const postJobSchema = (t: (key: string) => string) => z.object({
 
 
 export const PostForm: React.FC<PostFormProps> = ({
-                                                      redirectUrl: propRedirectUrl,
-                                                      history,
-                                                      setApiError,
                                                       postView,
                                                       mode
                                                   }) => {
@@ -121,7 +117,7 @@ export const PostForm: React.FC<PostFormProps> = ({
         setValue,
         reset,
         watch,
-        formState: {errors, isSubmitting}
+        formState: {errors}
     } = formMethods;
 
     useEffect(() => {
@@ -142,20 +138,6 @@ export const PostForm: React.FC<PostFormProps> = ({
             }
         },
         [postView]);
-
-    useEffect(() => {
-            if (communitiesResponse.state === REQUEST_STATE.SUCCESS && catalogData?.length && !postView) {
-                const defaultCommunity = catalogData.find(
-                    (catalog) => catalog.community.id !== 1
-                ) || catalogData[0];
-                if (defaultCommunity) {
-                    setValue("communityId",
-                        defaultCommunity.community.id,
-                        {shouldValidate: true});
-                }
-            }
-        },
-        [catalogData, setValue, postView]);
 
     const handleCreateSuccess = useCallback(async () => {
             router.replace("/job-board");
@@ -510,8 +492,8 @@ export const PostForm: React.FC<PostFormProps> = ({
                                         </svg>
                                     </div>
                                     <span className="text-gray-700">
-                    {t("createJob.intendedUseBusiness")}
-                  </span>
+                                        {t("createJob.intendedUseBusiness")}
+                                    </span>
                                 </div>
 
                                 <div
@@ -540,10 +522,9 @@ export const PostForm: React.FC<PostFormProps> = ({
                                         </svg>
                                     </div>
                                     <span className="text-gray-700">
-                    {t("createJob.intendedUsePersonal")}
-                  </span>
+                                        {t("createJob.intendedUsePersonal")}
+                                    </span>
                                 </div>
-
                                 <div
                                     className={`flex flex-col items-center justify-center p-4 rounded-lg cursor-pointer ${
                                         watch("intendedUse") === "Unknown"
@@ -570,25 +551,25 @@ export const PostForm: React.FC<PostFormProps> = ({
                                         </svg>
                                     </div>
                                     <span className="text-gray-700">
-                    {t("createJob.intendedUseUnknown")}
-                  </span>
+                                        {t("createJob.intendedUseUnknown")}
+                                    </span>
                                 </div>
                             </div>
                         </div>
+
                         {/* Buttons */}
                         <div className="flex justify-end space-x-4 mt-10">
-                            <Link prefetch={false}
-                                  href="/job-board"
-                                  className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50"
+                            <button
+                                onClick={() => router.replace("/job-board")}
+                                className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50"
                             >
                                 {t("createJob.previewButton")}
-                            </Link>
+                            </button>
                             <button
                                 type="submit"
                                 className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
-                                disabled={isSubmitting}
                             >
-                                {isSubmitting ? <LoadingCircle/> : t("createJob.submitButton")}
+                                {t("createJob.submitButton")}
                             </button>
                         </div>
                     </form>
