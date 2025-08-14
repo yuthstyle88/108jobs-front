@@ -2819,6 +2819,11 @@ export const en = {
             awardPlaceholder: "Enter award name",
             certificatesAwards: "Certificates & Awards",
             certificatesName: "Award/Certificate name",
+            achievedDate: "Achieved Date",
+            expiresDate: "Expiry Date",
+            url: "URL",
+            achievedDateRequired:"Please select the achieved date",
+            urlInvalid:"Invalid URL",
             certificatesPlaceholder:
                 "Please enter the name of the certificate or award",
             companyName: "Company name",

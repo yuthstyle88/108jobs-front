@@ -11,7 +11,6 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { useHttpGet } from "@/hooks/useHttpGet";
 import { useHttpPost } from "@/hooks/useHttpPost";
-import { WorkExperiencesResponse } from "lemmy-js-client/dist/types/WorkExperience";
 
 const EditEducation = () => {
   const userEditLanguage = getNamespace(LanguageFile.PROFILE_USER_EDIT);
@@ -76,7 +75,7 @@ const EditEducation = () => {
   }, [educationData, reset, replace]);
 
   const onSubmit = async (data: EducationFormData) => {
-    const body: WorkExperiencesResponse = {
+    const body = {
       education: data.education.map((item) => ({
         ...(typeof item.id === "number" ? { id: item.id } : {}),
         school: item.school,
