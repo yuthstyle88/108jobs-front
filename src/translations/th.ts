@@ -1678,7 +1678,7 @@ export const th = {
             placeholderSecondEmail: "กรอกอีเมลสำรองของคุณ",
             socialLinksTitle: "จัดการลิงก์โซเชียลมีเดีย",
             socialLinksSubtitle: "เชื่อมต่อบัญชีโซเชียลมีเดียของคุณ"
-          },
+        },
         profileCoupon: {
             descriptionSpecialOffers:
                 "สิทธิพิเศษและส่วนลดจากพาร์ทเนอร์ พร้อมให้คุณเก็บคูปองส่วนลดแล้ว",
@@ -1761,7 +1761,7 @@ export const th = {
             sectionPassword: "รหัสผ่าน",
             submitButton: "ยืนยัน",
             subtitleAccountInfo: "กำหนดข้อมูลเบื้องต้นของคุณ",
-            bio:"ชีวประวัติ"
+            bio: "ชีวประวัติ"
         },
         profileJob: {
             noJob: "ไม่พบประกาศงาน",
@@ -2902,7 +2902,44 @@ export const th = {
             updateFailed: "ไม่สามารถอัปเดตที่อยู่ได้",
             thaiCountryLabel: "ประเทศไทย",
             vietnamCountryLabel: "เวียดนาม",
+        },
+        jobApplication: {
+            pageTitle: "เพิ่มโอกาสในการจ้างงานของคุณ! ด้วยประสบการณ์ที่เกี่ยวข้องและพอร์ตโฟลิโอ",
+            pageSubheading: "ลูกค้าส่วนใหญ่เลือกฟรีแลนซ์โดยอิงจากประวัติการทำงานและตัวอย่างพอร์ตโฟลิโอ",
+            warningMessage: "คำเตือน: การชักชวนให้ลูกค้าชำระเงินนอกระบบ Fastjob ถือเป็นการฝ่าฝืนข้อกำหนดการใช้งานและอาจนำไปสู่การระงับบัญชี",
+            publicInfoMessage: "ข้อมูลทั้งหมดจะถูกเผยแพร่ต่อสาธารณะ (ยกเว้น 'ราคาที่เสนอ')",
+            whyHireYou: {
+                label: "เหตุผลที่ลูกค้าควรจ้างคุณ",
+                placeholder: "เช่น พอร์ตโฟลิโอที่เกี่ยวข้อง / ประวัติการทำงาน / รายละเอียดกระบวนการทำงาน",
+                required: "ต้องมีอย่างน้อย 100 ตัวอักษร",
+                characterCount: "{{count}} / ต้องมีอย่างน้อย 100 ตัวอักษร"
+            },
+            portfolioUrl: {
+                label: "URL พอร์ตโฟลิโอ (ไม่บังคับ)",
+                placeholder: "เช่น https://example.com",
+                required: "กรุณากรอก URL ที่ถูกต้อง"
+            },
+            portfolioFiles: {
+                label: "ตัวอย่างพอร์ตโฟลิโอ (ไม่บังคับ)",
+                subtext: "สูงสุด 25MB ต่อไฟล์ สามารถอัปโหลดได้สูงสุด 10 ไฟล์",
+                button: "เลือกไฟล์พอร์ตโฟลิโอ"
+            },
+            price: {
+                label: "ราคา (มองเห็นได้เฉพาะลูกค้า)",
+                placeholder: "0",
+                currency: "บาท",
+                required: "ต้องระบุราคา"
+            },
+            timeline: {
+                label: "ระยะเวลา",
+                placeholder: "0",
+                unit: "วัน",
+                required: "ต้องระบุระยะเวลา"
+            },
+            buttons: {
+                cancel: "ยกเลิก",
+                submit: "ส่ง"
+            }
         }
-
     },
 };

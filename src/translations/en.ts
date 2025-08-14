@@ -1782,9 +1782,9 @@ export const en = {
                 "For issuing documents related to personal hiring",
         },
         profileInfo: {
-            day:"Day",
-            month:"Month",
-            year:"Year",
+            day: "Day",
+            month: "Month",
+            year: "Year",
             accountInfo: "Account Information",
             buttonSetPassword: "Set a password",
             confirmPasswordLabel: "Confirm Password",
@@ -1808,7 +1808,7 @@ export const en = {
             sectionPassword: "Password",
             submitButton: "Confirm",
             subtitleAccountInfo: "Set up your basic account information",
-            bio:"Bio"
+            bio: "Bio"
         },
         profileJob: {
             noJob: "No job posts found",
@@ -1870,7 +1870,7 @@ export const en = {
             contactInfo: "Contact Information",
             consentManage: "Consent management",
             addressManage: "Address management",
-            idInfo: "National ID Information", 
+            idInfo: "National ID Information",
             bankInfo: "Bank Information",
             personalHiringInfo: "Hiring as an Individual",
             sectionAccount: "Your Account",
@@ -2973,6 +2973,44 @@ export const en = {
             updateFailed: "Failed to update address",
             thaiCountryLabel: "Thailand",
             vietnamCountryLabel: "Vietnam",
+        },
+        jobApplication: {
+            pageTitle: "Increase Your Hiring Chances! With Relevant Experience and Portfolio",
+            pageSubheading: "Most clients choose freelancers based on work history and portfolio samples",
+            warningMessage: "Warning: Inviting clients to make payments outside the Fastjob system is against the terms of use and will result in account suspension.",
+            publicInfoMessage: "All information will be publicly visible (except 'Proposed Price')",
+            whyHireYou: {
+                label: "Why Clients Should Hire You",
+                placeholder: "e.g. Relevant portfolio / Work history / Work process details",
+                required: "Minimum 100 characters required",
+                characterCount: "{{count}} / Minimum 100 characters"
+            },
+            portfolioUrl: {
+                label: "Portfolio URL (Optional)",
+                placeholder: "e.g. https://example.com",
+                required: "Please enter a valid URL"
+            },
+            portfolioFiles: {
+                label: "Portfolio Samples (Optional)",
+                subtext: "Max 25MB per file, up to 10 files",
+                button: "Select Portfolio Files"
+            },
+            price: {
+                label: "Price (Visible to client only)",
+                placeholder: "0",
+                currency: "BATH",
+                required: "Price is required"
+            },
+            timeline: {
+                label: "Timeline",
+                placeholder: "0",
+                unit: "days",
+                required: "Timeline is required"
+            },
+            buttons: {
+                cancel: "Cancel",
+                submit: "Submit"
+            }
         }
     },
 };

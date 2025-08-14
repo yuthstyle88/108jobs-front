@@ -1797,9 +1797,9 @@ export const vi = {
             subtitleIndividualHiring: "Dùng để phát hành tài liệu tuyển dụng cá nhân",
         },
         profileInfo: {
-            day:"Ngày",
-            month:"Tháng",
-            year:"Năm",
+            day: "Ngày",
+            month: "Tháng",
+            year: "Năm",
             accountInfo: "Account Information",
             buttonSetPassword: "Đặt mật khẩu",
             confirmPasswordLabel: "Xác nhận mật khẩu",
@@ -1813,7 +1813,7 @@ export const vi = {
             password: "Mật khẩu",
             passwordDescription: "Quản lý mật khẩu trong hệ thống Fastwork",
             passwordMinLengthError: "Mật khẩu phải có ít nhất 6 ký tự",
-             passwordMismatchError: "Mật khẩu không khớp.",
+            passwordMismatchError: "Mật khẩu không khớp.",
             passwordPlaceholder: "Nhập mật khẩu",
             placeholderDisplayName: "Nhập tên hiển thị",
             placeholderUsername: "Nhập tên người dùng",
@@ -1822,7 +1822,7 @@ export const vi = {
             sectionPassword: "Mật khẩu",
             submitButton: "Xác nhận",
             subtitleAccountInfo: "Thiết lập thông tin tài khoản cơ bản của bạn",
-            bio:"Tiểu sử",
+            bio: "Tiểu sử",
         },
         profileJob: {
             noJob: "Không tìm thấy bài đăng công việc nào",
@@ -2022,7 +2022,7 @@ export const vi = {
             bankQrUploadTitle:
                 "Ảnh mã QR ngân hàng của bạn (Tên tài khoản phải trùng với CMND/CCCD)",
             uploadButton: "Tải ảnh lên",
-            buttonAddBank:"Thêm ngân hàng",
+            buttonAddBank: "Thêm ngân hàng",
             noBankFound: "Không tìm thấy ngân hàng nào.",
             buttonEditBank: "Chỉnh sửa ngân hàng"
         },
@@ -3029,7 +3029,44 @@ export const vi = {
             updateFailed: "Cập nhật địa chỉ thất bại",
             thaiCountryLabel: "Thái Lan",
             vietnamCountryLabel: "Việt Nam",
+        },
+        jobApplication: {
+            pageTitle: "Tăng Cơ Hội Tuyển Dụng Của Bạn! Với Kinh Nghiệm Liên Quan và Hồ Sơ",
+            pageSubheading: "Hầu hết khách hàng chọn freelancer dựa trên lịch sử làm việc và mẫu hồ sơ",
+            warningMessage: "Cảnh báo: Mời khách hàng thanh toán ngoài hệ thống Fastjob là vi phạm điều khoản sử dụng và có thể dẫn đến việc đình chỉ tài khoản.",
+            publicInfoMessage: "Tất cả thông tin sẽ được công khai (trừ 'Giá Đề Xuất')",
+            whyHireYou: {
+                label: "Tại Sao Khách Hàng Nên Thuê Bạn",
+                placeholder: "Ví dụ: Hồ sơ liên quan / Lịch sử làm việc / Chi tiết quy trình làm việc",
+                required: "Yêu cầu tối thiểu 100 ký tự",
+                characterCount: "{{count}} / Tối thiểu 100 ký tự"
+            },
+            portfolioUrl: {
+                label: "URL Hồ Sơ (Tùy Chọn)",
+                placeholder: "Ví dụ: https://example.com",
+                required: "Vui lòng nhập URL hợp lệ"
+            },
+            portfolioFiles: {
+                label: "Mẫu Hồ Sơ (Tùy Chọn)",
+                subtext: "Tối đa 25MB mỗi tệp, lên đến 10 tệp",
+                button: "Chọn Tệp Hồ Sơ"
+            },
+            price: {
+                label: "Giá (Chỉ Khách Hàng Thấy)",
+                placeholder: "0",
+                currency: "BATH",
+                required: "Yêu cầu nhập giá"
+            },
+            timeline: {
+                label: "Thời Hạn",
+                placeholder: "0",
+                unit: "ngày",
+                required: "Yêu cầu nhập thời hạn"
+            },
+            buttons: {
+                cancel: "Hủy",
+                submit: "Gửi"
+            }
         }
-
     },
 };

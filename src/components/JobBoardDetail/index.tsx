@@ -33,7 +33,7 @@ const JobBoardDetail = ({jobId}: Props) => {
         data: jobDetailData,
     } = useHttpGet("getPost", {id: jobId})
 
-    const {localUser, person} = useMyUser();
+    const {person} = useMyUser();
 
     const isVerify = person?.isVerified;
     // Single-user mode: any logged-in user can submit proposals
@@ -64,7 +64,7 @@ const JobBoardDetail = ({jobId}: Props) => {
             setIsModalOpen(true);
             return;
         }
-        route.push(`${jobId}/offer`);
+        route.push(`${jobId}/proposal`);
     };
 
     return (

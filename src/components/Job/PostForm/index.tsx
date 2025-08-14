@@ -409,7 +409,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                                 </label>
                                 <div className="relative">
                                     <input
-                                        type="text"
+                                        type="number"
                                         id="budget"
                                         {...register("budget")}
                                         placeholder="0"
