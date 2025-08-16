@@ -2,6 +2,6 @@
 import type { BankAccountId } from "./BankAccountId";
 
 /**
- * Delete bank account.
+ * Bank account operation response.
  */
-export type DeleteBankAccount = { bankAccountId: BankAccountId, };
+export type BankAccountOperationResponse = { bankAccountId: BankAccountId, success: boolean, };

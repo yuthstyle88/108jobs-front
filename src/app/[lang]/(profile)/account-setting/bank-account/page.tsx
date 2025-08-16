@@ -11,6 +11,7 @@ import { useState } from "react";
 import BankAccountModal, { BankAccountFormValues } from "../_components/AddBankAccountModal";
 import ConfirmDeleteModal from "../_components/DeleteBankModal";
 import LoadingBlur from "@/components/LoadingBlur";
+import type { BankAccountView } from "lemmy-js-client";
 
 
 const BankAccount = () => {
@@ -32,7 +33,7 @@ const BankAccount = () => {
     useHttpDelete("deleteBankAccount");
 
   const bankList = bankListRes?.banks || [];
-  const bankAccounts = bankAccountsRes?.bankAccounts || [];
+  const bankAccounts: BankAccountView[] = bankAccountsRes?.bankAccounts ?? [];
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<BankAccountFormValues | null>(null);
@@ -45,11 +46,11 @@ const BankAccount = () => {
     setModalOpen(true);
   };
 
-  const handleEdit = (account: any) => {
+  const handleEdit = (account: BankAccountView) => {
     setEditingAccount({
-      bankId: String(account.id),
-      accountNumber: account.accountNumber,
-      accountName: account.accountName,
+      bankId: String(account.user_bank_account.bankId),
+      accountNumber: account.user_bank_account.accountNumber,
+      accountName: account.user_bank_account.accountName,
     });
     setModalOpen(true);
   };
@@ -100,30 +101,31 @@ const BankAccount = () => {
 
       <div className="p-6 space-y-4">
         {isBankAccountsLoading && <p>Loading accounts...</p>}
-        {isBankListLoading || isBankAccountsLoading && <LoadingBlur text="" />}
-        {!isBankAccountsLoading && bankList.length === 0 && <p className="text-text-primary">{sellerBankAccountLanguage?.noBankFound}</p>}
+        {(isBankListLoading || isBankAccountsLoading) && <LoadingBlur text="" />}
+        {!isBankAccountsLoading && bankAccounts.length === 0 && (
+          <p className="text-text-primary">{sellerBankAccountLanguage?.noBankFound}</p>
+        )}
         {bankAccounts.map((acc) => (
           <div
-            key={acc.id}
-            className={`border rounded-md p-4 flex justify-between items-center ${acc.isDefault ? "border-blue-500 bg-blue-50" : "border-gray-200"
-              }`}
+            key={acc.user_bank_account.id}
+            className={`border rounded-md p-4 flex justify-between items-center ${
+              acc.user_bank_account.isDefault ? "border-blue-500 bg-blue-50" : "border-gray-200"
+            }`}
           >
             <div>
-              <p className="font-medium text-gray-800">{acc.bankName}</p>
+              <p className="font-medium text-gray-800">{acc.bank.name}</p>
               <p className="text-gray-500">
-                {acc.accountNumber} — {acc.accountName}
+                {acc.user_bank_account.accountNumber} — {acc.user_bank_account.accountName}
               </p>
-              {acc.isDefault && (
-                <span className="text-xs text-blue-600 font-medium">
-                  ✅ Default
-                </span>
+              {acc.user_bank_account.isDefault && (
+                <span className="text-xs text-blue-600 font-medium">✅ Default</span>
               )}
             </div>
 
             <div className="flex gap-2">
-              {!acc.isDefault && (
+              {!acc.user_bank_account.isDefault && (
                 <button
-                  onClick={() => handleSetDefault(acc.id)}
+                  onClick={() => handleSetDefault(acc.user_bank_account.id)}
                   className="text-sm text-blue-600 border border-blue-600 rounded-md px-3 py-1 hover:bg-blue-50"
                 >
                   <Star className="w-4 h-4 inline mr-1" />
@@ -138,7 +140,7 @@ const BankAccount = () => {
                 Edit
               </button>
               <button
-                onClick={() => handleConfirmDelete(acc.id)}
+                onClick={() => handleConfirmDelete(acc.user_bank_account.id)}
                 className="text-sm text-red-600 border border-red-600 rounded-md px-3 py-1 hover:bg-red-50"
               >
                 <Trash2 className="w-4 h-4 inline mr-1" />
