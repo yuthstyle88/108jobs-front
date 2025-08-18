@@ -7,11 +7,11 @@ import { formatDateToLong } from "@/utils/formatDateToLong";
 import { interpolateDouble } from "@/utils/interpolate";
 import { faEdit, faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { CircleCheckBig, ClipboardX, SquarePen } from "lucide-react";
+import { CircleCheckBig, ClipboardX, ChevronLeft, ChevronRight, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Certificate, Education, LanguageSkill, Person, Skill, WorkExperience } from "lemmy-js-client";
+import { Person, Skill } from "lemmy-js-client";
 import { getProfileData } from "@/utils/getProfileData";
 import { useTranslation } from "react-i18next";
 
@@ -22,6 +22,9 @@ const CurrentProfileUser = () => {
     const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
     const [showFullBio, setShowFullBio] = useState(false);
     const [isClamped, setIsClamped] = useState(false);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [currentSampleIndex, setCurrentSampleIndex] = useState(0);
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const bioRef = useRef<HTMLParagraphElement>(null);
 
     useEffect(() => {
@@ -40,6 +43,158 @@ const CurrentProfileUser = () => {
         services,
         reviews,
     } = getProfileData(person as Person);
+
+    // Fake data for reviews
+    const fakeReviews = [
+        {
+            id: 1,
+            reviewerName: "Alice Smith",
+            reviewerAvatar: ProfileImage.avatar,
+            rating: 5,
+            createdAt: "2025-07-15T10:00:00Z",
+            comment: "Amazing work! Delivered on time and exceeded expectations.",
+        },
+        {
+            id: 2,
+            reviewerName: "Bob Johnson",
+            reviewerAvatar: ProfileImage.avatar,
+            rating: 4,
+            createdAt: "2025-06-20T14:30:00Z",
+            comment: "Very professional and great communication.",
+        },
+        {
+            id: 3,
+            reviewerName: "Carol Williams",
+            reviewerAvatar: ProfileImage.avatar,
+            rating: 5,
+            createdAt: "2025-05-10T09:15:00Z",
+            comment: "Highly skilled and a pleasure to work with!",
+        },
+    ];
+
+    // Fake data for clients
+    const fakeClients = [
+        {
+            id: 1,
+            clientName: "TechCorp",
+            projectTitle: "E-commerce Website Development",
+            completionDate: "2025-04-01",
+            description: "Developed a fully responsive e-commerce platform with payment integration.",
+        },
+        {
+            id: 2,
+            clientName: "CreativeAgency",
+            projectTitle: "Brand Identity Design",
+            completionDate: "2025-02-15",
+            description: "Created a comprehensive brand identity package including logo and marketing materials.",
+        },
+    ];
+
+    // Fake data for portfolio (images)
+    const portfolioItems = [
+        {
+            id: 1,
+            imageUrl: "https://colorlib.com/wp/wp-content/uploads/sites/2/dalya-baron.jpg",
+            title: "Portfolio Image 1",
+        },
+        {
+            id: 2,
+            imageUrl: "https://colorlib.com/wp/wp-content/uploads/sites/2/dalya-baron.jpg",
+            title: "Portfolio Image 2",
+        },
+        {
+            id: 3,
+            imageUrl: "https://colorlib.com/wp/wp-content/uploads/sites/2/dalya-baron.jpg",
+            title: "Portfolio Image 3",
+        },
+        {
+            id: 4,
+            imageUrl: "https://colorlib.com/wp/wp-content/uploads/sites/2/dalya-baron.jpg",
+            title: "Portfolio Image 4",
+        },
+    ];
+
+    // Fake data for work samples (URLs)
+    const workSamples = [
+        {
+            id: 1,
+            title: "E-commerce Website",
+            url: "https://example.com/ecommerce",
+            description: "A fully responsive e-commerce platform with payment integration.",
+        },
+        {
+            id: 2,
+            title: "Brand Identity Project",
+            url: "https://example.com/brand-identity",
+            description: "Designed a complete brand identity package including logo and marketing materials.",
+        },
+        {
+            id: 3,
+            title: "Portfolio Website",
+            url: "https://example.com/portfolio",
+            description: "Developed a personal portfolio website showcasing creative work.",
+        },
+        {
+            id: 4,
+            title: "Mobile App Landing Page",
+            url: "https://example.com/mobile-app",
+            description: "Created a sleek landing page for a mobile application launch.",
+        },
+    ];
+
+    const imagesPerPage = 3;
+    const samplesPerPage = 2;
+    const totalImagePages = Math.ceil(portfolioItems.length / imagesPerPage);
+    const totalSamplePages = Math.ceil(workSamples.length / samplesPerPage);
+
+    const handleNextImage = () => {
+        setCurrentImageIndex((prev) =>
+            prev + imagesPerPage < portfolioItems.length ? prev + imagesPerPage : prev
+        );
+    };
+
+    const handlePrevImage = () => {
+        setCurrentImageIndex((prev) =>
+            prev - imagesPerPage >= 0 ? prev - imagesPerPage : 0
+        );
+    };
+
+    const handleNextSample = () => {
+        setCurrentSampleIndex((prev) =>
+            prev + samplesPerPage < workSamples.length ? prev + samplesPerPage : prev
+        );
+    };
+
+    const handlePrevSample = () => {
+        setCurrentSampleIndex((prev) =>
+            prev - samplesPerPage >= 0 ? prev - samplesPerPage : 0
+        );
+    };
+
+    const openImageModal = (imageUrl: string) => {
+        setSelectedImage(imageUrl);
+    };
+
+    const closeImageModal = () => {
+        setSelectedImage(null);
+    };
+
+    // Combine education, work experience, languages, and certifications into a single paragraph bio
+    const enhancedBio = [
+        person?.bio || "I am a dedicated professional freelancer with extensive experience in delivering high-quality projects.",
+        educations.length > 0
+            ? `I hold a degree from ${educations.map((e: any) => `${e.schoolName} in ${e.major}`).join("; ")}.`
+            : "I have pursued self-directed learning to enhance my expertise.",
+        workExperience.length > 0
+            ? `My professional experience includes roles such as ${workExperience.map((w: any) => `${w.position} at ${w.companyName} from ${w.startMonth} ${w.startYear} to ${w.endMonth || "Present"} ${w.endYear || ""}`).join("; ")}.`
+            : "I have gained practical experience through various freelance projects.",
+        language.length > 0
+            ? `I am proficient in ${language.map((l: any) => `${l.lang} (${l.levelName})`).join(", ")}.`
+            : "I am fluent in English and continuously improving my language skills.",
+        certAndAward.length > 0
+            ? `I have earned certifications including ${certAndAward.map((c: any) => c.name).join(", ")}.`
+            : "I am committed to professional development through ongoing certifications."
+    ].join(" ");
 
     return (
         <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
@@ -63,6 +218,7 @@ const CurrentProfileUser = () => {
                     <aside className="lg:col-span-1">
                         <div
                             className="bg-white shadow-lg rounded-2xl p-6 -mt-24 relative transition-all duration-300 hover:shadow-xl">
+                            {/* Name, Profile Picture, Headline */}
                             <div className="flex flex-col items-center">
                                 <div className="relative">
                                     <Image
@@ -81,242 +237,266 @@ const CurrentProfileUser = () => {
                                     </Link>
                                 </div>
                                 <h2 className="mt-4 text-xl font-semibold text-gray-800">
-                                    {person?.name}
+                                    {person?.name || "John Doe"}
                                 </h2>
-                                <div className="flex items-center mt-2">
-                                    {[...Array(person?.ratings || 0)].map((_, index) => (
+                                <p className="text-gray-600 text-sm mt-1">
+                                    {person?.bio || "Professional Freelancer"}
+                                </p>
+                            </div>
+
+                            {/* Bio Section */}
+                            <div className="mt-6 px-4">
+                                <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
+                                    <p
+                                        ref={bioRef}
+                                        className={`text-gray-600 text-sm leading-relaxed ${showFullBio ? "" : "line-clamp-4"}`}
+                                    >
+                                        {enhancedBio}
+                                    </p>
+                                    {isClamped && !showFullBio && (
+                                        <button
+                                            onClick={() => setShowFullBio(true)}
+                                            className="mt-2 text-blue-600 text-sm font-medium hover:underline"
+                                        >
+                                            See More
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Core Skills */}
+                            <div className="mt-6">
+                                <h3 className="text-blue-600 font-semibold mb-3">Core Skills</h3>
+                                {skill.length > 0 ? (
+                                    <div className="flex flex-wrap gap-2">
+                                        {skill.map((skill: Skill) => (
+                                            <span
+                                                key={skill.id}
+                                                className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"
+                                            >
+                                                {skill?.skillName}
+                                            </span>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-500 text-sm">No skills listed</p>
+                                )}
+                            </div>
+
+                            {/* Rate & Work Model */}
+                            <div className="mt-6">
+                                <h3 className="text-blue-600 font-semibold mb-3">Rate & Work Model</h3>
+                                <p className="text-gray-600 text-sm">
+                                    ${person?.rate || 50}/hour | Remote, Full-time
+                                </p>
+                            </div>
+
+                            {/* Reviews & Trust */}
+                            <div className="mt-6">
+                                <h3 className="text-blue-600 font-semibold mb-3">Reviews & Trust</h3>
+                                <div className="flex items-center mb-2">
+                                    {[...Array(person?.ratings || 5)].map((_, index) => (
                                         <FontAwesomeIcon
                                             icon={faStar}
                                             key={index}
                                             className="text-yellow-400 text-sm"
                                         />
                                     ))}
+                                    <span className="ml-2 text-gray-600 text-sm">
+                                        {person?.ratings || 5} ({fakeReviews.length} reviews)
+                                    </span>
                                 </div>
                                 {localUser?.acceptedApplication === true && (
                                     <div
-                                        className="mt-4 bg-green-100 text-green-700 px-4 py-2 rounded-full flex items-center text-sm font-medium">
+                                        className="bg-green-100 text-green-700 px-4 py-2 rounded-full flex items-center text-sm font-medium">
                                         <CircleCheckBig className="w-4 h-4 mr-2" />
-                                        {(t("profile.verified"))}
+                                        Verified Identity
                                     </div>
                                 )}
                                 {person?.deleted === true && (
                                     <div
-                                        className="mt-4 bg-red-100 text-red-700 px-4 py-2 rounded-full flex items-center text-sm font-medium">
+                                        className="bg-red-100 text-red-700 px-4 py-2 rounded-full flex items-center text-sm font-medium">
                                         <ClipboardX className="w-4 h-4 mr-2" />
-                                        {(t("profile.notVerified"))}
+                                        Not Verified
                                     </div>
                                 )}
                             </div>
 
-                            {/* Profile Stats */}
-                            <div className="mt-6 space-y-3 px-4">
-                                <div className="flex justify-between items-center text-sm">
-                                    <span className="text-gray-500">{t("profile.memberSince")}</span>
-                                    <span className="font-medium text-gray-700">
-                                        {formatDateToLong(person?.publishedAt)}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between items-center text-sm">
-                                    <span className="text-gray-500">{t("profile.jobCount")}</span>
-                                    <span className="font-medium text-gray-700">
-                                        {person.postCount}
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Bio Section */}
-                            {person?.bio && (
-                                <div className="mt-6 px-4">
-                                    <div className="bg-gray-50 p-4 rounded-lg shadow-sm">
-                                        <p
-                                            ref={bioRef}
-                                            className={`text-gray-600 text-sm leading-relaxed ${showFullBio ? "" : "line-clamp-4"
-                                                }`}
-                                        >
-                                            <i>{person?.bio}</i>
-                                        </p>
-                                        {isClamped && !showFullBio && (
-                                            <button
-                                                onClick={() => setShowFullBio(true)}
-                                                className="mt-2 text-blue-600 text-sm font-medium hover:underline"
-                                            >
-                                                {t("profile.seeMore")}
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Additional Info Sections */}
-                            <div className="mt-6 space-y-6">
-                                {/* Education */}
-                                <div className="bg-white rounded-lg p-4 shadow-sm">
-                                    <div className="flex justify-between items-center mb-3">
-                                        <h3 className="text-blue-600 font-semibold">{t("profile.educationTitle")}</h3>
-                                        <Link prefetch={false} href="/profile/edit/education">
-                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700" />
-                                        </Link>
-                                    </div>
-                                    {educations.length > 0 ? (
-                                        <div className="space-y-3">
-                                            {educations.map((education: Education) => (
-                                                <div key={education.id} className="text-sm">
-                                                    <p className="font-medium text-gray-800">{education?.schoolName}</p>
-                                                    <p className="text-gray-600">{education?.major}</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <p className="text-gray-500 text-sm">{t("profile.notProvided")}</p>
-                                    )}
-                                </div>
-
-                                {/* Work Experience */}
-                                <div className="bg-white rounded-lg p-4 shadow-sm">
-                                    <div className="flex justify-between items-center mb-3">
-                                        <h3 className="text-blue-600 font-semibold">{t("profile.experienceTitle")}</h3>
-                                        <Link prefetch={false} href="/profile/edit/experience">
-                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700" />
-                                        </Link>
-                                    </div>
-                                    {workExperience.length > 0 ? (
-                                        <div className="space-y-3">
-                                            {workExperience.map((experience: WorkExperience) => (
-                                                <div key={experience.id} className="bg-gray-50 p-3 rounded-lg">
-                                                    <p className="text-sm font-medium text-gray-800">{t("experience.companyName")}</p>
-                                                    <p className="text-sm text-gray-600">{t("experience.position")}</p>
-                                                    <p className="text-sm text-gray-500">
-                                                        {t("experience.startMonth")} {t("experience.startYear")} -{" "}
-                                                        {t("experience.endMonth") || t("experience.present")} {t("experience.endYear") || ""}
-                                                    </p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <p className="text-gray-500 text-sm">{t("profile.notProvided")}</p>
-                                    )}
-                                </div>
-
-                                {/* Skills */}
-                                <div className="bg-white rounded-lg p-4 shadow-sm">
-                                    <div className="flex justify-between items-center mb-3">
-                                        <h3 className="text-blue-600 font-semibold">{t("profile.skillTitle")}</h3>
-                                        <Link prefetch={false} href="/profile/edit/skills">
-                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700" />
-                                        </Link>
-                                    </div>
-                                    {skill.length > 0 ? (
-                                        <div className="space-y-3">
-                                            {skill.map((skill: Skill) => (
-                                                <div key={skill.id} className="flex justify-between items-center">
-                                                    <p className="text-sm font-medium text-gray-800">{skill?.skillName}</p>
-                                                    <span
-                                                        className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                                                        {skill?.levelName}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <p className="text-gray-500 text-sm">{t("profile.notProvided")}</p>
-                                    )}
-                                </div>
-
-                                {/* Languages */}
-                                <div className="bg-white rounded-lg p-4 shadow-sm">
-                                    <div className="flex justify-between items-center mb-3">
-                                        <h3 className="text-blue-600 font-semibold">{t("profile.languageTitle")}</h3>
-                                        <Link prefetch={false} href="/profile/edit/languages">
-                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700" />
-                                        </Link>
-                                    </div>
-                                    {language.length > 0 ? (
-                                        <div className="space-y-3">
-                                            {language.map((language: LanguageSkill) => (
-                                                <div key={language.id} className="flex justify-between items-center">
-                                                    <p className="text-sm font-medium text-gray-800">{language?.lang}</p>
-                                                    <span
-                                                        className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
-                                                        {language?.levelName}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <p className="text-gray-500 text-sm">{t("profile.notProvided")}</p>
-                                    )}
-                                </div>
-
-                                {/* Certifications */}
-                                <div className="bg-white rounded-lg p-4 shadow-sm">
-                                    <div className="flex justify-between items-center mb-3">
-                                        <h3 className="text-blue-600 font-semibold">{t("profile.certificationTitle")}</h3>
-                                        <Link prefetch={false} href="/profile/edit/certifications">
-                                            <SquarePen className="w-5 h-5 text-gray-500 hover:text-gray-700" />
-                                        </Link>
-                                    </div>
-                                    {certAndAward.length > 0 ? (
-                                        <div className="space-y-3">
-                                            {certAndAward.map((cert: Certificate) => (
-                                                <div key={cert.id} className="text-sm">
-                                                    <p className="font-medium text-gray-800">{cert?.name}</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <p className="text-gray-500 text-sm">{t("profile.notProvided")}</p>
-                                    )}
-                                </div>
+                            {/* Location */}
+                            <div className="mt-6">
+                                <h3 className="text-blue-600 font-semibold mb-3">Location</h3>
+                                <p className="text-gray-600 text-sm">
+                                    {person?.location || "New York, USA"}
+                                </p>
                             </div>
                         </div>
                     </aside>
 
                     {/* Main Content Section */}
                     <section className="lg:col-span-2">
+                        {/* Portfolio (Images) */}
+                        <div className="mb-8">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800">
+                                    Portfolio
+                                </h2>
+                            </div>
+                            <div className="relative bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 relative">
+                                    {portfolioItems.slice(currentImageIndex, currentImageIndex + imagesPerPage).map((item) => (
+                                        <div key={item.id} className="h-48 rounded-lg flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105">
+                                            <div
+                                                className="w-full h-36 cursor-pointer"
+                                                onClick={() => openImageModal(item.imageUrl)}
+                                            >
+                                                <Image
+                                                    src={item.imageUrl}
+                                                    alt={item.title}
+                                                    width={300}
+                                                    height={200}
+                                                    className="w-full h-full object-cover rounded-t-lg"
+                                                />
+                                            </div>
+                                            <div className="p-2 text-center">
+                                                <p className="text-gray-700 text-sm font-medium">{item.title}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {portfolioItems.length > imagesPerPage && (
+                                        <>
+                                            <button
+                                                onClick={handlePrevImage}
+                                                disabled={currentImageIndex === 0}
+                                                className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${currentImageIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"}`}
+                                            >
+                                                <ChevronLeft className="w-6 h-6" />
+                                            </button>
+                                            <button
+                                                onClick={handleNextImage}
+                                                disabled={currentImageIndex + imagesPerPage >= portfolioItems.length}
+                                                className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${currentImageIndex + imagesPerPage >= portfolioItems.length ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"}`}
+                                            >
+                                                <ChevronRight className="w-6 h-6" />
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Work Samples (URLs) */}
+                        <div className="mb-8">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800">
+                                    Work Samples
+                                </h2>
+                                {localUser?.id === person?.id && (
+                                    <Link
+                                        href="/seller-account-setting/portfolio-management"
+                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium"
+                                    >
+                                        Manage Work Samples
+                                    </Link>
+                                )}
+                            </div>
+                            <div className="relative bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative">
+                                    {workSamples.slice(currentSampleIndex, currentSampleIndex + samplesPerPage).map((sample) => (
+                                        <div key={sample.id} className="p-4 rounded-lg border border-gray-200 transition-transform duration-300 hover:scale-105">
+                                            <h4 className="font-medium text-gray-800">{sample.title}</h4>
+                                            <p className="text-gray-600 text-sm mt-1">{sample.description}</p>
+                                            <Link href={sample.url} target="_blank" className="text-blue-600 text-sm hover:underline">
+                                                View Work Sample
+                                            </Link>
+                                        </div>
+                                    ))}
+                                    {workSamples.length > samplesPerPage && (
+                                        <>
+                                            <button
+                                                onClick={handlePrevSample}
+                                                disabled={currentSampleIndex === 0}
+                                                className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${currentSampleIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"}`}
+                                            >
+                                                <ChevronLeft className="w-6 h-6" />
+                                            </button>
+                                            <button
+                                                onClick={handleNextSample}
+                                                disabled={currentSampleIndex + samplesPerPage >= workSamples.length}
+                                                className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${currentSampleIndex + samplesPerPage >= workSamples.length ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"}`}
+                                            >
+                                                <ChevronRight className="w-6 h-6" />
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Image Modal */}
+                        {selectedImage && (
+                            <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+                                <div className="relative max-w-4xl w-full">
+                                    <button
+                                        onClick={closeImageModal}
+                                        className="absolute top-2 right-2 p-2 rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors duration-200"
+                                    >
+                                        <X className="w-6 h-6" />
+                                    </button>
+                                    <Image
+                                        src={selectedImage}
+                                        alt="Enlarged portfolio image"
+                                        width={800}
+                                        height={600}
+                                        className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
                         <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 mb-6">
-                            {interpolateDouble(t("profile.workTitle") || "", {
-                                username: person?.name,
+                            {interpolateDouble("{username}'s Work" || "", {
+                                username: person?.name || "John Doe",
                             })}
                         </h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {services.map((service, index) => (
                                 <CategoryCard
                                     data={service}
-                                    username={person?.name || ""}
+                                    username={person?.name || "John Doe"}
                                     key={index}
                                 />
                             ))}
                         </div>
 
-                        {/* Reviews Section */}
+                        {/* Reviews and Clients Section */}
                         <div className="mt-8">
                             <div className="border-b border-gray-200 mb-6">
                                 <div className="flex space-x-6">
                                     <button
                                         className={`pb-2 text-sm font-medium transition-colors ${activeTab === "reviews"
-                                                ? "text-blue-600 border-b-2 border-blue-600"
-                                                : "text-gray-500 hover:text-gray-700"
-                                            }`}
+                                            ? "text-blue-600 border-b-2 border-blue-600"
+                                            : "text-gray-500 hover:text-gray-700"
+                                        }`}
                                         onClick={() => setActiveTab("reviews")}
                                     >
-                                        {t("profile.reviewTab")} ({t("reviews.length")})
+                                        Reviews ({fakeReviews.length})
                                     </button>
                                     <button
                                         className={`pb-2 text-sm font-medium transition-colors ${activeTab === "clients"
-                                                ? "text-blue-600 border-b-2 border-blue-600"
-                                                : "text-gray-500 hover:text-gray-700"
-                                            }`}
+                                            ? "text-blue-600 border-b-2 border-blue-600"
+                                            : "text-gray-500 hover:text-gray-700"
+                                        }`}
                                         onClick={() => setActiveTab("clients")}
                                     >
-                                        {t("profile.freelancerReview")} (1)
+                                        Clients ({fakeClients.length})
                                     </button>
                                 </div>
                             </div>
 
                             <div className="space-y-6">
-                                {reviews.map((review) => (
+                                {activeTab === "reviews" && fakeReviews.map((review) => (
                                     <div key={review.id}
-                                        className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                                         className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
                                         <div className="flex items-start">
                                             <Image
                                                 src={review.reviewerAvatar || ProfileImage.avatar}
@@ -328,9 +508,8 @@ const CurrentProfileUser = () => {
                                             <div className="flex-1">
                                                 <div className="flex justify-between items-start">
                                                     <div>
-                                                        <h4 className="font-medium text-gray-800">{review.reviewerName || "username"}</h4>
-                                                        <span
-                                                            className="text-sm text-gray-500">{formatDateToLong(review.createdAt)}</span>
+                                                        <h4 className="font-medium text-gray-800">{review.reviewerName}</h4>
+                                                        <span className="text-sm text-gray-500">{formatDateToLong(review.createdAt)}</span>
                                                     </div>
                                                     <div className="flex items-center">
                                                         <svg
@@ -342,12 +521,21 @@ const CurrentProfileUser = () => {
                                                                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.799-2.034c-.784-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
                                                             />
                                                         </svg>
-                                                        <span
-                                                            className="ml-1 font-medium text-gray-800">{review.rating}</span>
+                                                        <span className="ml-1 font-medium text-gray-800">{review.rating}</span>
                                                     </div>
                                                 </div>
+                                                <p className="text-gray-600 text-sm mt-2">{review.comment}</p>
                                             </div>
                                         </div>
+                                    </div>
+                                ))}
+                                {activeTab === "clients" && fakeClients.map((client) => (
+                                    <div key={client.id}
+                                         className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                                        <h4 className="font-medium text-gray-800">{client.clientName}</h4>
+                                        <p className="text-gray-600 text-sm font-semibold mt-1">{client.projectTitle}</p>
+                                        <p className="text-gray-500 text-sm">Completed: {client.completionDate}</p>
+                                        <p className="text-gray-600 text-sm mt-2">{client.description}</p>
                                     </div>
                                 ))}
                             </div>
