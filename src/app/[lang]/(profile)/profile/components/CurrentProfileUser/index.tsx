@@ -4,7 +4,7 @@ import {AssetIcon} from "@/constants/icons";
 import {ProfileImage} from "@/constants/images";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {formatDateToLong} from "@/utils/formatDateToLong";
-import {faEdit, faStar} from "@fortawesome/free-solid-svg-icons";
+import {faEdit} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {CircleCheckBig, ClipboardX, ChevronLeft, ChevronRight, X} from "lucide-react";
 import Image from "next/image";
@@ -34,13 +34,7 @@ const CurrentProfileUser = () => {
     }, [person?.bio]);
 
     const {
-        educations,
-        workExperience,
-        skill,
-        language,
-        certAndAward,
         services,
-        reviews,
     } = getProfileData(person as Person);
 
     // Fake data for reviews
@@ -92,11 +86,8 @@ const CurrentProfileUser = () => {
     const portfolioItems = person?.portfolioPics ?? [];
     const workSamples = person?.workSamples ?? [];
 
-
     const imagesPerPage = 3;
     const samplesPerPage = 2;
-    const totalImagePages = Math.ceil(portfolioItems.length / imagesPerPage);
-    const totalSamplePages = Math.ceil(workSamples.length / samplesPerPage);
 
     const handleNextImage = () => {
         setCurrentImageIndex((prev) =>
@@ -174,9 +165,20 @@ const CurrentProfileUser = () => {
                                 <h2 className="mt-4 text-xl font-semibold text-gray-800">
                                     {person?.name}
                                 </h2>
-                                <p className="text-gray-600 text-sm mt-1">
-                                    Professional Freelancer
-                                </p>
+                                {localUser?.acceptedApplication === true && (
+                                    <div
+                                        className="bg-green-100 text-green-700 px-4 py-2 rounded-full flex items-center text-sm font-medium">
+                                        <CircleCheckBig className="w-4 h-4 mr-2"/>
+                                        {t("profile.verified")}
+                                    </div>
+                                )}
+                                {localUser?.acceptedApplication === false && (
+                                    <div
+                                        className="bg-red-100 text-red-700 px-4 py-2 rounded-full flex items-center text-sm font-medium">
+                                        <ClipboardX className="w-4 h-4 mr-2"/>
+                                        {t("profile.notVerified")}
+                                    </div>
+                                )}
                             </div>
 
                             {/* Bio Section */}
@@ -201,7 +203,7 @@ const CurrentProfileUser = () => {
 
                             {/* Core Skills */}
                             <div className="mt-6">
-                                <h3 className="text-blue-600 font-semibold mb-3">Core Skills</h3>
+                                <h3 className="text-blue-600 font-semibold mb-3">{t("profile.coreSkills")}</h3>
                                 <div className="flex flex-wrap gap-2">
                                             <span
                                                 className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"
@@ -209,37 +211,6 @@ const CurrentProfileUser = () => {
                                                 {person?.skills}
                                             </span>
                                 </div>
-                            </div>
-
-                            {/* Reviews & Trust */}
-                            <div className="mt-6">
-                                <h3 className="text-blue-600 font-semibold mb-3">Reviews & Trust</h3>
-                                <div className="flex items-center mb-2">
-                                    {[...Array(person?.ratings || 5)].map((_, index) => (
-                                        <FontAwesomeIcon
-                                            icon={faStar}
-                                            key={index}
-                                            className="text-yellow-400 text-sm"
-                                        />
-                                    ))}
-                                    <span className="ml-2 text-gray-600 text-sm">
-                                        {person?.ratings || 5} ({fakeReviews.length} reviews)
-                                    </span>
-                                </div>
-                                {localUser?.acceptedApplication === true && (
-                                    <div
-                                        className="bg-green-100 text-green-700 px-4 py-2 rounded-full flex items-center text-sm font-medium">
-                                        <CircleCheckBig className="w-4 h-4 mr-2"/>
-                                        Verified Identity
-                                    </div>
-                                )}
-                                {person?.deleted === true && (
-                                    <div
-                                        className="bg-red-100 text-red-700 px-4 py-2 rounded-full flex items-center text-sm font-medium">
-                                        <ClipboardX className="w-4 h-4 mr-2"/>
-                                        Not Verified
-                                    </div>
-                                )}
                             </div>
 
                             {/* Contact Info */}
@@ -277,7 +248,7 @@ const CurrentProfileUser = () => {
                             <div className="mb-8">
                                 <div className="flex justify-between items-center mb-4">
                                     <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800">
-                                        Portfolio
+                                        {t("profile.portfolio")}
                                     </h2>
                                 </div>
                                 <div className="relative bg-white p-4 rounded-lg shadow-sm border border-gray-100">
@@ -330,7 +301,7 @@ const CurrentProfileUser = () => {
                             <div className="mb-8">
                                 <div className="flex justify-between items-center mb-4">
                                     <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800">
-                                        Work Samples
+                                        {t("profile.workSamples")}
                                     </h2>
                                 </div>
                                 <div className="relative bg-white p-4 rounded-lg shadow-sm border border-gray-100">
@@ -342,7 +313,7 @@ const CurrentProfileUser = () => {
                                                 <p className="text-gray-600 text-sm mt-1">{sample.description}</p>
                                                 <Link href={sample.sampleUrl} target="_blank"
                                                       className="text-blue-600 text-sm hover:underline">
-                                                    View Work Sample
+                                                    {t("profile.viewWorkSample")}
                                                 </Link>
                                             </div>
                                         ))}
@@ -411,7 +382,7 @@ const CurrentProfileUser = () => {
                                         }`}
                                         onClick={() => setActiveTab("reviews")}
                                     >
-                                        Reviews ({fakeReviews.length})
+                                        {t("profile.reviewTab")} ({fakeReviews.length})
                                     </button>
                                     <button
                                         className={`pb-2 text-sm font-medium transition-colors ${activeTab === "clients"
@@ -420,7 +391,7 @@ const CurrentProfileUser = () => {
                                         }`}
                                         onClick={() => setActiveTab("clients")}
                                     >
-                                        Clients ({fakeClients.length})
+                                        {t("profile.clientTab")} ({fakeClients.length})
                                     </button>
                                 </div>
                             </div>

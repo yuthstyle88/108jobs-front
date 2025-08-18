@@ -1497,8 +1497,15 @@ export const en = {
             skillTitle: "Skills",
             successRate: "Job success rate",
             times: "Times",
-            reviewTab: "Reviews from freelancers",
+            reviewTab: "Reviews",
+            clientTab: "Clients",
             workTitle: "{{username}}'s Services",
+            portfolio: "Portfolio",
+            workSamples: "Work Samples",
+            coreSkills: "Core Skills",
+            reviews: "Reviews",
+            viewWorkSample: "View Work Sample",
+            enlargedPortfolioImage: "Enlarged portfolio image",
         },
         profileApply: {
             advantagesTitle:

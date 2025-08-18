@@ -25,11 +25,6 @@ const AccountSettingWrapper = () => {
             icon: User
         },
         {
-            href: "/account-setting/contact-info",
-            label: t("profileNavbar.contactInfo"),
-            icon: Mail
-        },
-        {
             href: "/account-setting/id-card",
             label: t("profileNavbar.idInfo"),
             icon: IdCard
