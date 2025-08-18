@@ -9,4 +9,5 @@ export type SavePerson = {
   name?: string;
   avatar?: string;
   bio?: string;
+  skills?: string;
 };

@@ -1,16 +1,16 @@
 "use client";
 import ImageUploadModal from "@/components/AvatarUploadModal";
 import PasswordChangeModal from "@/components/ChangePasswordModal";
-import { ProfileImage } from "@/constants/images";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { useDateOptions } from "@/hooks/useDateOptions";
-import { useHttpPost } from "@/hooks/useHttpPost";
-import { useImagePicker } from "@/hooks/useImagePicker";
+import {ProfileImage} from "@/constants/images";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {useDateOptions} from "@/hooks/useDateOptions";
+import {useHttpPost} from "@/hooks/useHttpPost";
+import {useImagePicker} from "@/hooks/useImagePicker";
 import Image from "next/image";
-import { useState, useRef } from "react";
-import { useTranslation } from "react-i18next";
-import { useProfileForm } from "../hooks/useProfileForm";
-import { Plus, Edit, Trash, ChevronLeft, ChevronRight } from "lucide-react";
+import {useState, useRef} from "react";
+import {useTranslation} from "react-i18next";
+import {useProfileForm} from "../hooks/useProfileForm";
+import {Plus, Edit, Trash, ChevronLeft, ChevronRight} from "lucide-react";
 
 interface PortfolioItem {
     id: number;
@@ -21,15 +21,20 @@ interface PortfolioItem {
 interface WorkSample {
     id: number;
     title: string;
-    url: string;
+    sampleUrl: string;
     description: string;
 }
 
+interface SkillsData {
+    portfolio: PortfolioItem[];
+    workSamples: WorkSample[];
+}
+
 export default function BasicInformation() {
-    const { t } = useTranslation();
-    const { days, months, years } = useDateOptions();
-    const { execute: uploadImage, isMutating: isUploadMuting } = useHttpPost("uploadImage");
-    const { profileState, person, card } = useMyUser();
+    const {t} = useTranslation();
+    const {execute: uploadUserAvatar} = useHttpPost("uploadUserAvatar");
+    const {execute: uploadImage, isMutating: isUploadMuting} = useHttpPost("uploadImage");
+    const {profileState, person, card} = useMyUser();
 
     // Avatar image picker
     const {
@@ -55,67 +60,36 @@ export default function BasicInformation() {
         closeImageModal: closePortfolioImageModal,
     } = useImagePicker();
 
+    const defaultSkills: SkillsData = {
+        portfolio: person?.portfolioPics ?? [],
+        workSamples: person?.workSamples ?? [],
+    };
+
+    const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>(defaultSkills.portfolio);
+    const [workSamples, setWorkSamples] = useState<WorkSample[]>(defaultSkills.workSamples);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [currentSampleIndex, setCurrentSampleIndex] = useState(0);
+    const [newImage, setNewImage] = useState({title: ""});
+    const [newSample, setNewSample] = useState({title: "", sampleUrl: "", description: ""});
+    const [editingImage, setEditingImage] = useState<PortfolioItem | null>(null);
+    const [editingSample, setEditingSample] = useState<WorkSample | null>(null);
+    const imagesPerPage = 3;
+    const samplesPerPage = 2;
+
     const {
         register,
         handleSubmit,
         errors,
         isSubmitting,
         onSubmit,
-    } = useProfileForm(person, card, selectedAvatar, uploadImage, setSelectedAvatar);
+    } = useProfileForm(person, card, selectedAvatar, uploadUserAvatar, setSelectedAvatar,
+        portfolioItems,
+        workSamples,
+    );
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-
-    // State for portfolio images, work samples, and core skills
-    const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([
-        { id: 1, imageUrl: "https://colorlib.com/wp/wp-content/uploads/sites/2/dalya-baron.jpg", title: "Portfolio Image 1" },
-        { id: 2, imageUrl: "https://colorlib.com/wp/wp-content/uploads/sites/2/dalya-baron.jpg", title: "Portfolio Image 2" },
-        { id: 3, imageUrl: "https://colorlib.com/wp/wp-content/uploads/sites/2/dalya-baron.jpg", title: "Portfolio Image 3" },
-        { id: 4, imageUrl: "https://colorlib.com/wp/wp-content/uploads/sites/2/dalya-baron.jpg", title: "Portfolio Image 4" },
-    ]);
-
-    const [workSamples, setWorkSamples] = useState<WorkSample[]>([
-        {
-            id: 1,
-            title: "E-commerce Website",
-            url: "https://example.com/ecommerce",
-            description: "A fully responsive e-commerce platform with payment integration.",
-        },
-        {
-            id: 2,
-            title: "Brand Identity Project",
-            url: "https://example.com/brand-identity",
-            description: "Designed a complete brand identity package including logo and marketing materials.",
-        },
-        {
-            id: 3,
-            title: "Portfolio Website",
-            url: "https://example.com/portfolio",
-            description: "Developed a personal portfolio website showcasing creative work.",
-        },
-        {
-            id: 4,
-            title: "Mobile App Landing Page",
-            url: "https://example.com/mobile-app",
-            description: "Created a sleek landing page for a mobile application launch.",
-        },
-    ]);
-
-    const [coreSkills, setCoreSkills] = useState<string[]>(person?.coreSkills || []);
-    const [newSkill, setNewSkill] = useState("");
-    const [editingSkillIndex, setEditingSkillIndex] = useState<number | null>(null);
-
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [currentSampleIndex, setCurrentSampleIndex] = useState(0);
-    const [newImage, setNewImage] = useState({ title: "" });
-    const [newSample, setNewSample] = useState({ title: "", url: "", description: "" });
-    const [editingImage, setEditingImage] = useState<PortfolioItem | null>(null);
-    const [editingSample, setEditingSample] = useState<WorkSample | null>(null);
-    const imagesPerPage = 3;
-    const samplesPerPage = 2;
-    const totalImagePages = Math.ceil(portfolioItems.length / imagesPerPage);
-    const totalSamplePages = Math.ceil(workSamples.length / samplesPerPage);
 
     // Handlers for portfolio images
     const handleNextImage = () => {
@@ -128,44 +102,36 @@ export default function BasicInformation() {
         setCurrentImageIndex((prev) => (prev - imagesPerPage >= 0 ? prev - imagesPerPage : 0));
     };
 
-    const handleAddImage = async () => {
+    const handleAddImage = () => {
         if (newImage.title && selectedPortfolioImage) {
-            const uploadedImageUrl = await handlePortfolioImageUpload();
-            if (uploadedImageUrl) {
-                setPortfolioItems([
-                    ...portfolioItems,
-                    { id: portfolioItems.length + 1, title: newImage.title, imageUrl: uploadedImageUrl },
-                ]);
-                setNewImage({ title: "" });
-                setSelectedPortfolioImage(null);
-                closePortfolioImageModal();
-            }
+            setPortfolioItems([
+                ...portfolioItems,
+                { id: portfolioItems.length + 1, title: newImage.title, imageUrl: selectedPortfolioImage },
+            ]);
+            setNewImage({ title: "" });
+            setSelectedPortfolioImage(null);
+            closePortfolioImageModal();
         }
     };
 
+
     const handleEditImage = (item: PortfolioItem) => {
         setEditingImage(item);
-        setNewImage({ title: item.title });
+        setNewImage({title: item.title});
         setSelectedPortfolioImage(item.imageUrl);
     };
 
-    const handleUpdateImage = async () => {
-        if (editingImage && newImage.title) {
-            let imageUrl = editingImage.imageUrl;
-            if (selectedPortfolioImage && selectedPortfolioImage !== editingImage.imageUrl) {
-                imageUrl = await handlePortfolioImageUpload();
-            }
-            if (imageUrl) {
-                setPortfolioItems(
-                    portfolioItems.map((item) =>
-                        item.id === editingImage.id ? { ...item, title: newImage.title, imageUrl } : item
-                    )
-                );
-                setEditingImage(null);
-                setNewImage({ title: "" });
-                setSelectedPortfolioImage(null);
-                closePortfolioImageModal();
-            }
+    const handleUpdateImage = () => {
+        if (editingImage && newImage.title && selectedPortfolioImage) {
+            setPortfolioItems(
+                portfolioItems.map((item) =>
+                    item.id === editingImage.id ? { ...item, title: newImage.title, imageUrl: selectedPortfolioImage } : item
+                )
+            );
+            setEditingImage(null);
+            setNewImage({ title: "" });
+            setSelectedPortfolioImage(null);
+            closePortfolioImageModal();
         }
     };
 
@@ -173,7 +139,6 @@ export default function BasicInformation() {
         setPortfolioItems(portfolioItems.filter((item) => item.id !== id));
     };
 
-    // Handlers for work samples
     const handleNextSample = () => {
         setCurrentSampleIndex((prev) =>
             prev + samplesPerPage < workSamples.length ? prev + samplesPerPage : prev
@@ -185,63 +150,41 @@ export default function BasicInformation() {
     };
 
     const handleAddSample = () => {
-        if (newSample.title && newSample.url && newSample.description) {
+        if (newSample.title && newSample.sampleUrl && newSample.description) {
             setWorkSamples([
                 ...workSamples,
-                { id: workSamples.length + 1, title: newSample.title, url: newSample.url, description: newSample.description },
+                {
+                    id: workSamples.length + 1,
+                    title: newSample.title,
+                    sampleUrl: newSample.sampleUrl,
+                    description: newSample.description
+                },
             ]);
-            setNewSample({ title: "", url: "", description: "" });
+            setNewSample({title: "", sampleUrl: "", description: ""});
         }
     };
 
     const handleEditSample = (sample: WorkSample) => {
         setEditingSample(sample);
-        setNewSample({ title: sample.title, url: sample.url, description: sample.description });
+        setNewSample({title: sample.title, sampleUrl: sample.sampleUrl, description: sample.description});
     };
 
     const handleUpdateSample = () => {
-        if (editingSample && newSample.title && newSample.url && newSample.description) {
+        if (editingSample && newSample.title && newSample.sampleUrl && newSample.description) {
             setWorkSamples(
                 workSamples.map((sample) =>
                     sample.id === editingSample.id
-                        ? { ...sample, title: newSample.title, url: newSample.url, description: newSample.description }
+                        ? {...sample, title: newSample.title, url: newSample.sampleUrl, description: newSample.description}
                         : sample
                 )
             );
             setEditingSample(null);
-            setNewSample({ title: "", url: "", description: "" });
+            setNewSample({title: "", sampleUrl: "", description: ""});
         }
     };
 
     const handleDeleteSample = (id: number) => {
         setWorkSamples(workSamples.filter((sample) => sample.id !== id));
-    };
-
-    // Handlers for core skills
-    const handleAddSkill = () => {
-        if (newSkill.trim()) {
-            setCoreSkills([...coreSkills, newSkill.trim()]);
-            setNewSkill("");
-        }
-    };
-
-    const handleEditSkill = (index: number) => {
-        setEditingSkillIndex(index);
-        setNewSkill(coreSkills[index]);
-    };
-
-    const handleUpdateSkill = () => {
-        if (editingSkillIndex !== null && newSkill.trim()) {
-            const updatedSkills = [...coreSkills];
-            updatedSkills[editingSkillIndex] = newSkill.trim();
-            setCoreSkills(updatedSkills);
-            setEditingSkillIndex(null);
-            setNewSkill("");
-        }
-    };
-
-    const handleDeleteSkill = (index: number) => {
-        setCoreSkills(coreSkills.filter((_, i) => i !== index));
     };
 
     return (
@@ -294,7 +237,7 @@ export default function BasicInformation() {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                             >
-                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
                             </svg>
                         </button>
                     </div>
@@ -337,53 +280,6 @@ export default function BasicInformation() {
                     </div>
 
                     <div className="col-span-2">
-                        <label className="block text-sm text-text-primary font-semibold text-gray-600 mb-2">
-                            {t("profileInfo.labelBirthdate")}
-                        </label>
-                        <div className="grid grid-cols-3 gap-4">
-                            <select
-                                {...register("birthDay")}
-                                defaultValue="Day"
-                                className="border border-gray-300 rounded-lg px-3 py-2 text-text-primary"
-                            >
-                                <option disabled value="Day">
-                                    {t("profileInfo.day")}
-                                </option>
-                                {days.map((day) => (
-                                    <option key={day} value={day}>
-                                        {day}
-                                    </option>
-                                ))}
-                            </select>
-                            <select
-                                {...register("birthMonth")}
-                                defaultValue="Month"
-                                className="border border-gray-300 rounded-lg px-3 py-2 text-text-primary"
-                            >
-                                <option disabled value="Month">
-                                    {t("profileInfo.month")}
-                                </option>
-                                {months.map((month) => (
-                                    <option key={month} value={month}>
-                                        {month}
-                                    </option>
-                                ))}
-                            </select>
-                            <select
-                                {...register("birthYear")}
-                                defaultValue="Year"
-                                className="border border-gray-300 rounded-lg px-3 py-2 text-text-primary"
-                            >
-                                <option disabled value="Year">
-                                    {t("profileInfo.year")}
-                                </option>
-                                {years.map((year) => (
-                                    <option key={year} value={year}>
-                                        {year}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
                         <div className="mt-6">
                             <label className="block text-sm font-medium text-text-primary mb-2">
                                 {t("profileInfo.bio")}
@@ -395,6 +291,7 @@ export default function BasicInformation() {
                                 className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             ></textarea>
                         </div>
+
                         <div className="mt-6">
                             <label className="block text-sm font-medium text-text-primary mb-2">
                                 {t("profileInfo.sectionCoreSkills")}
@@ -404,50 +301,349 @@ export default function BasicInformation() {
                             </p>
                             <div className="flex items-center gap-4">
                                 <input
+                                    {...register("skills")}
                                     type="text"
                                     placeholder={t("profileInfo.coreSkillPlaceholder")}
-                                    value={newSkill}
-                                    onChange={(e) => setNewSkill(e.target.value)}
-                                    className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                    className="text-text-primary flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                                 />
-                                <button
-                                    type="button"
-                                    onClick={editingSkillIndex !== null ? handleUpdateSkill : handleAddSkill}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
-                                    disabled={!newSkill.trim()}
-                                >
-                                    <Plus className="w-5 h-5 mr-2" />
-                                    {editingSkillIndex !== null ? t("profileInfo.updateSkill") : t("profileInfo.addSkill")}
-                                </button>
                             </div>
-                            {errors.coreSkills && (
-                                <p className="text-red-500 text-sm mt-1">
-                                    {errors.coreSkills.message}
-                                </p>
-                            )}
-                            <div className="mt-4 flex flex-wrap gap-2">
-                                {coreSkills.map((skill, index) => (
-                                    <div
-                                        key={index}
-                                        className="flex items-center gap-2 px-3 py-1 bg-gray-100 border border-gray-200 rounded-lg transition-transform duration-200 hover:scale-105"
-                                    >
-                                        <span className="text-gray-700 text-sm">{skill}</span>
+                        </div>
+
+                        <div className="mt-6 text-text-primary">
+                            <label className="block text-sm font-medium text-text-primary mb-2">
+                                {t("profileInfo.sectionPortfolioImages")}
+                            </label>
+                            <p className="text-[12px] text-gray-500 mb-2">
+                                {t("profileInfo.subtitlePortfolioImages")}
+                            </p>
+                            <div className="mb-6">
+                                <h3 className="text-sm font-medium text-gray-700 mb-2">
+                                    {editingImage ? t("profileInfo.editImage") : t("profileInfo.addImage")}
+                                </h3>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <input
+                                        type="text"
+                                        placeholder={t("profileInfo.imageTitle")}
+                                        value={newImage.title}
+                                        onChange={(e) => setNewImage({ ...newImage, title: e.target.value })}
+                                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                    />
+                                    <div className="relative">
+                                        <div
+                                            onClick={handleSelectPortfolioFile}
+                                            className="w-full h-10 border border-gray-300 rounded-lg flex items-center justify-center cursor-pointer bg-gray-50"
+                                        >
+                                            <input
+                                                type="file"
+                                                ref={portfolioFileInputRef}
+                                                className="hidden"
+                                                accept="image/*"
+                                                onChange={handlePortfolioFileChange}
+                                            />
+                                            <span className="text-gray-500 text-sm">
+                                                {selectedPortfolioImage ? t("profileInfo.imageSelected") : t("profileInfo.selectImage")}
+                                            </span>
+                                        </div>
+                                        {selectedPortfolioImage && (
+                                            <Image
+                                                src={selectedPortfolioImage}
+                                                alt="Portfolio preview"
+                                                width={100}
+                                                height={100}
+                                                className="mt-2 h-20 w-20 object-cover rounded-lg"
+                                            />
+                                        )}
                                         <button
                                             type="button"
-                                            onClick={() => handleEditSkill(index)}
-                                            className="p-1 text-blue-600 hover:text-blue-800"
+                                            onClick={handleSelectPortfolioFile}
+                                            className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-blue-600 rounded-full p-2"
+                                            disabled={isUploadMuting}
                                         >
-                                            <Edit className="w-4 h-4" />
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => handleDeleteSkill(index)}
-                                            className="p-1 text-red-600 hover:text-red-800"
-                                        >
-                                            <Trash className="w-4 h-4" />
+                                            <svg
+                                                className="w-4 h-4 text-white"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                                            </svg>
                                         </button>
                                     </div>
-                                ))}
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={editingImage ? handleUpdateImage : handleAddImage}
+                                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
+                                    disabled={isUploadMuting || !newImage.title || !selectedPortfolioImage}
+                                >
+                                    <Plus className="w-5 h-5 mr-2" />
+                                    {editingImage ? t("profileInfo.updateImage") : t("profileInfo.addImage")}
+                                </button>
+                                {editingImage && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setEditingImage(null);
+                                            setNewImage({ title: "" });
+                                            setSelectedPortfolioImage(null);
+                                        }}
+                                        className="mt-2 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                                    >
+                                        {t("profileInfo.cancel")}
+                                    </button>
+                                )}
+                            </div>
+                            <div className="relative">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {portfolioItems.slice(currentImageIndex, currentImageIndex + imagesPerPage).map((item) => (
+                                        <div key={item.id} className="h-56 rounded-lg flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105">
+                                            <Image
+                                                src={item.imageUrl}
+                                                alt={item.title}
+                                                width={300}
+                                                height={200}
+                                                className="w-full h-36 object-cover rounded-t-lg"
+                                            />
+                                            <div className="p-2 text-center w-full">
+                                                <p className="text-gray-700 text-sm font-medium">{item.title}</p>
+                                                <div className="flex justify-center gap-2 mt-2">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleEditImage(item)}
+                                                        className="p-1 text-blue-600 hover:text-blue-800"
+                                                    >
+                                                        <Edit className="w-5 h-5" />
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleDeleteImage(item.id)}
+                                                        className="p-1 text-red-600 hover:text-red-800"
+                                                    >
+                                                        <Trash className="w-5 h-5" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {portfolioItems.length > imagesPerPage && (
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={handlePrevImage}
+                                                disabled={currentImageIndex === 0}
+                                                className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${
+                                                    currentImageIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"
+                                                }`}
+                                            >
+                                                <ChevronLeft className="w-6 h-6" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={handleNextImage}
+                                                disabled={currentImageIndex + imagesPerPage >= portfolioItems.length}
+                                                className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${
+                                                    currentImageIndex + imagesPerPage >= portfolioItems.length
+                                                        ? "opacity-50 cursor-not-allowed"
+                                                        : "hover:backdrop-blur-none hover:bg-blue-700"
+                                                }`}
+                                            >
+                                                <ChevronRight className="w-6 h-6" />
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-6 text-text-primary">
+                            <label className="block text-sm font-medium text-text-primary mb-2">
+                                {t("profileInfo.sectionWorkSamples")}
+                            </label>
+                            <p className="text-[12px] text-gray-500 mb-2">
+                                {t("profileInfo.subtitleWorkSamples")}
+                            </p>
+                            <div className="mb-6">
+                                <h3 className="text-sm font-medium text-gray-700 mb-2">
+                                    {editingSample ? t("profileInfo.editWorkSample") : t("profileInfo.addWorkSample")}
+                                </h3>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <input
+                                        type="text"
+                                        placeholder={t("profileInfo.sampleTitle")}
+                                        value={newSample.title}
+                                        onChange={(e) => setNewSample({...newSample, title: e.target.value})}
+                                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder={t("profileInfo.sampleUrl")}
+                                        value={newSample.sampleUrl}
+                                        onChange={(e) => setNewSample({...newSample, sampleUrl: e.target.value})}
+                                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                    />
+                                    <textarea
+                                        placeholder={t("profileInfo.sampleDescription")}
+                                        value={newSample.description}
+                                        onChange={(e) => setNewSample({...newSample, description: e.target.value})}
+                                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 col-span-1 sm:col-span-2"
+                                        rows={4}
+                                    />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={editingSample ? handleUpdateSample : handleAddSample}
+                                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
+                                >
+                                    <Plus className="w-5 h-5 mr-2"/>
+                                    {editingSample ? t("profileInfo.updateWorkSample") : t("profileInfo.addWorkSample")}
+                                </button>
+                                {editingSample && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setEditingSample(null);
+                                            setNewSample({title: "", sampleUrl: "", description: ""});
+                                        }}
+                                        className="mt-2 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                                    >
+                                        {t("profileInfo.cancel")}
+                                    </button>
+                                )}
+                            </div>
+                            <div className="relative">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    {workSamples.slice(currentSampleIndex, currentSampleIndex + samplesPerPage).map((sample) => (
+                                        <div key={sample.id}
+                                             className="p-4 rounded-lg border border-gray-200 transition-transform duration-300 hover:scale-105">
+                                            <h4 className="font-medium text-gray-800">{sample.title}</h4>
+                                            <p className="text-gray-600 text-sm mt-1">{sample.description}</p>
+                                            <a href={sample.sampleUrl} target="_blank" rel="noopener noreferrer"
+                                               className="text-blue-600 text-sm hover:underline">
+                                                {t("profileInfo.viewWorkSample")}
+                                            </a>
+                                            <div className="flex justify-start gap-2 mt-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleEditSample(sample)}
+                                                    className="p-1 text-blue-600 hover:text-blue-800"
+                                                >
+                                                    <Edit className="w-5 h-5"/>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleDeleteSample(sample.id)}
+                                                    className="p-1 text-red-600 hover:text-red-800"
+                                                >
+                                                    <Trash className="w-5 h-5"/>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {workSamples.length > samplesPerPage && (
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={handlePrevSample}
+                                                disabled={currentSampleIndex === 0}
+                                                className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${
+                                                    currentSampleIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"
+                                                }`}
+                                            >
+                                                <ChevronLeft className="w-6 h-6"/>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={handleNextSample}
+                                                disabled={currentSampleIndex + samplesPerPage >= workSamples.length}
+                                                className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${
+                                                    currentSampleIndex + samplesPerPage >= workSamples.length
+                                                        ? "opacity-50 cursor-not-allowed"
+                                                        : "hover:backdrop-blur-none hover:bg-blue-700"
+                                                }`}
+                                            >
+                                                <ChevronRight className="w-6 h-6"/>
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* contact info */}
+                    <div className="mt-6 text-text-primary">
+                        <label className="block text-sm font-medium text-text-primary mb-2">
+                            {t("profileInfo.sectionContactInfo")}
+                        </label>
+                        <p className="text-[12px] text-gray-500 mb-2">
+                            {t("profileInfo.subtitleContactInfo")}
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm text-text-primary mb-1">
+                                    {t("profileInfo.labelLineId")}
+                                </label>
+                                <input
+                                    {...register("contacts.lineId", {
+                                        pattern: {
+                                            value: /^[a-zA-Z0-9._-]+$/,
+                                            message: t("profileInfo.invalidLineId"),
+                                        },
+                                    })}
+                                    type="text"
+                                    placeholder={t("profileInfo.lineIdPlaceholder")}
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                />
+                                {errors.contacts?.lineId && (
+                                    <p className="text-red-500 text-sm mt-1">
+                                        {errors.contacts.lineId.message}
+                                    </p>
+                                )}
+                            </div>
+                            <div>
+                                <label className="block text-sm text-text-primary mb-1">
+                                    {t("profileInfo.labelFacebook")}
+                                </label>
+                                <input
+                                    {...register("contacts.facebook", {
+                                        pattern: {
+                                            value: /^[a-zA-Z0-9._-]+$/,
+                                            message: t("profileInfo.invalidFacebook"),
+                                        },
+                                    })}
+                                    type="text"
+                                    placeholder={t("profileInfo.facebookPlaceholder")}
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                />
+                                {errors.contacts?.facebook && (
+                                    <p className="text-red-500 text-sm mt-1">
+                                        {errors.contacts.facebook.message}
+                                    </p>
+                                )}
+                            </div>
+                            <div>
+                                <label className="block text-sm text-text-primary mb-1">
+                                    {t("profileInfo.labelPhoneNumber")}
+                                </label>
+                                <input
+                                    {...register("contacts.phoneNumber", {
+                                        pattern: {
+                                            value: /^\+?[1-9]\d{1,14}$/,
+                                            message: t("profileInfo.invalidPhoneNumber"),
+                                        },
+                                    })}
+                                    type="tel"
+                                    placeholder={t("profileInfo.phoneNumberPlaceholder")}
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                />
+                                {errors.contacts?.phoneNumber && (
+                                    <p className="text-red-500 text-sm mt-1">
+                                        {errors.contacts.phoneNumber.message}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -468,259 +664,8 @@ export default function BasicInformation() {
                 </div>
             </form>
 
-            {/* Portfolio Images Section */}
-            <section className="border border-border-primary rounded-lg bg-white p-6 mb-8">
-                <h2 className="text-[16px] font-medium mb-2 text-text-primary">
-                    {t("profileInfo.sectionPortfolioImages")}
-                </h2>
-                <p className="text-gray-600 mb-6 text-[14px] font-sans">
-                    {t("profileInfo.subtitlePortfolioImages")}
-                </p>
-                <div className="mb-6">
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">
-                        {editingImage ? t("profileInfo.editImage") : t("profileInfo.addImage")}
-                    </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <input
-                            type="text"
-                            placeholder={t("profileInfo.imageTitle")}
-                            value={newImage.title}
-                            onChange={(e) => setNewImage({ ...newImage, title: e.target.value })}
-                            className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        />
-                        <div className="relative">
-                            <div
-                                onClick={handleSelectPortfolioFile}
-                                className="w-full h-10 border border-gray-300 rounded-lg flex items-center justify-center cursor-pointer bg-gray-50"
-                            >
-                                <input
-                                    type="file"
-                                    ref={portfolioFileInputRef}
-                                    className="hidden"
-                                    accept="image/*"
-                                    onChange={handlePortfolioFileChange}
-                                />
-                                <span className="text-gray-500 text-sm">
-                                    {selectedPortfolioImage ? t("profileInfo.imageSelected") : t("profileInfo.selectImage")}
-                                </span>
-                            </div>
-                            {selectedPortfolioImage && (
-                                <Image
-                                    src={selectedPortfolioImage}
-                                    alt="Portfolio preview"
-                                    width={100}
-                                    height={100}
-                                    className="mt-2 h-20 w-20 object-cover rounded-lg"
-                                />
-                            )}
-                            <button
-                                type="button"
-                                onClick={handleSelectPortfolioFile}
-                                className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-blue-600 rounded-full p-2"
-                            >
-                                <svg
-                                    className="w-4 h-4 text-white"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <button
-                        onClick={editingImage ? handleUpdateImage : handleAddImage}
-                        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
-                        disabled={isUploadMuting}
-                    >
-                        <Plus className="w-5 h-5 mr-2" />
-                        {editingImage ? t("profileInfo.updateImage") : t("profileInfo.addImage")}
-                    </button>
-                    {editingImage && (
-                        <button
-                            onClick={() => {
-                                setEditingImage(null);
-                                setNewImage({ title: "" });
-                                setSelectedPortfolioImage(null);
-                            }}
-                            className="mt-2 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
-                        >
-                            {t("profileInfo.cancel")}
-                        </button>
-                    )}
-                </div>
-
-                <div className="relative">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {portfolioItems.slice(currentImageIndex, currentImageIndex + imagesPerPage).map((item) => (
-                            <div key={item.id} className="h-56 rounded-lg flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105">
-                                <Image
-                                    src={item.imageUrl}
-                                    alt={item.title}
-                                    width={300}
-                                    height={200}
-                                    className="w-full h-36 object-cover rounded-t-lg"
-                                />
-                                <div className="p-2 text-center w-full">
-                                    <p className="text-gray-700 text-sm font-medium">{item.title}</p>
-                                    <div className="flex justify-center gap-2 mt-2">
-                                        <button
-                                            onClick={() => handleEditImage(item)}
-                                            className="p-1 text-blue-600 hover:text-blue-800"
-                                        >
-                                            <Edit className="w-5 h-5" />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteImage(item.id)}
-                                            className="p-1 text-red-600 hover:text-red-800"
-                                        >
-                                            <Trash className="w-5 h-5" />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                        {portfolioItems.length > imagesPerPage && (
-                            <>
-                                <button
-                                    onClick={handlePrevImage}
-                                    disabled={currentImageIndex === 0}
-                                    className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${
-                                        currentImageIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"
-                                    }`}
-                                >
-                                    <ChevronLeft className="w-6 h-6" />
-                                </button>
-                                <button
-                                    onClick={handleNextImage}
-                                    disabled={currentImageIndex + imagesPerPage >= portfolioItems.length}
-                                    className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${
-                                        currentImageIndex + imagesPerPage >= portfolioItems.length
-                                            ? "opacity-50 cursor-not-allowed"
-                                            : "hover:backdrop-blur-none hover:bg-blue-700"
-                                    }`}
-                                >
-                                    <ChevronRight className="w-6 h-6" />
-                                </button>
-                            </>
-                        )}
-                    </div>
-                </div>
-            </section>
-
-            {/* Work Samples Section */}
-            <section className="border border-border-primary rounded-lg bg-white p-6 mb-8">
-                <h2 className="text-[16px] font-medium mb-2 text-text-primary">
-                    {t("profileInfo.sectionWorkSamples")}
-                </h2>
-                <p className="text-gray-600 mb-6 text-[14px] font-sans">
-                    {t("profileInfo.subtitleWorkSamples")}
-                </p>
-                <div className="mb-6">
-                    <h3 className="text-sm font-medium text-gray-700 mb-2">
-                        {editingSample ? t("profileInfo.editWorkSample") : t("profileInfo.addWorkSample")}
-                    </h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <input
-                            type="text"
-                            placeholder={t("profileInfo.sampleTitle")}
-                            value={newSample.title}
-                            onChange={(e) => setNewSample({ ...newSample, title: e.target.value })}
-                            className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        />
-                        <input
-                            type="text"
-                            placeholder={t("profileInfo.sampleUrl")}
-                            value={newSample.url}
-                            onChange={(e) => setNewSample({ ...newSample, url: e.target.value })}
-                            className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        />
-                        <textarea
-                            placeholder={t("profileInfo.sampleDescription")}
-                            value={newSample.description}
-                            onChange={(e) => setNewSample({ ...newSample, description: e.target.value })}
-                            className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 col-span-1 sm:col-span-2"
-                            rows={4}
-                        />
-                    </div>
-                    <button
-                        onClick={editingSample ? handleUpdateSample : handleAddSample}
-                        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
-                    >
-                        <Plus className="w-5 h-5 mr-2" />
-                        {editingSample ? t("profileInfo.updateWorkSample") : t("profileInfo.addWorkSample")}
-                    </button>
-                    {editingSample && (
-                        <button
-                            onClick={() => {
-                                setEditingSample(null);
-                                setNewSample({ title: "", url: "", description: "" });
-                            }}
-                            className="mt-2 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
-                        >
-                            {t("profileInfo.cancel")}
-                        </button>
-                    )}
-                </div>
-
-                <div className="relative">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        {workSamples.slice(currentSampleIndex, currentSampleIndex + samplesPerPage).map((sample) => (
-                            <div key={sample.id} className="p-4 rounded-lg border border-gray-200 transition-transform duration-300 hover:scale-105">
-                                <h4 className="font-medium text-gray-800">{sample.title}</h4>
-                                <p className="text-gray-600 text-sm mt-1">{sample.description}</p>
-                                <a href={sample.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm hover:underline">
-                                    {t("profileInfo.viewWorkSample")}
-                                </a>
-                                <div className="flex justify-start gap-2 mt-2">
-                                    <button
-                                        onClick={() => handleEditSample(sample)}
-                                        className="p-1 text-blue-600 hover:text-blue-800"
-                                    >
-                                        <Edit className="w-5 h-5" />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDeleteSample(sample.id)}
-                                        className="p-1 text-red-600 hover:text-red-800"
-                                    >
-                                        <Trash className="w-5 h-5" />
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                        {workSamples.length > samplesPerPage && (
-                            <>
-                                <button
-                                    onClick={handlePrevSample}
-                                    disabled={currentSampleIndex === 0}
-                                    className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${
-                                        currentSampleIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"
-                                    }`}
-                                >
-                                    <ChevronLeft className="w-6 h-6" />
-                                </button>
-                                <button
-                                    onClick={handleNextSample}
-                                    disabled={currentSampleIndex + samplesPerPage >= workSamples.length}
-                                    className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${
-                                        currentSampleIndex + samplesPerPage >= workSamples.length
-                                            ? "opacity-50 cursor-not-allowed"
-                                            : "hover:backdrop-blur-none hover:bg-blue-700"
-                                    }`}
-                                >
-                                    <ChevronRight className="w-6 h-6" />
-                                </button>
-                            </>
-                        )}
-                    </div>
-                </div>
-            </section>
-
-            <div className="border border-border-primary rounded-lg bg-white p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
+            <div
+                className="border border-border-primary rounded-lg bg-white p-6 flex flex-col gap-4 sm:gap-0 sm:flex-row justify-between">
                 <div className="text-[16px] text-text-primary font-medium">
                     {t("profileInfo.sectionPassword")}
                     <p className="text-[14px] text-text-secondary font-normal">
@@ -737,12 +682,12 @@ export default function BasicInformation() {
                 </div>
             </div>
 
-            <PasswordChangeModal isOpen={isModalOpen} onClose={closeModal} />
+            <PasswordChangeModal isOpen={isModalOpen} onClose={closeModal}/>
             <ImageUploadModal
                 isOpen={isAvatarModalOpen}
                 onClose={closeAvatarImageModal}
                 onImageUpload={handleAvatarImageUpload}
-                uploadImage={uploadImage}
+                uploadImage={uploadUserAvatar}
             />
             <ImageUploadModal
                 isOpen={isPortfolioImageModalOpen}
