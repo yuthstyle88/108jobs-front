@@ -67,7 +67,7 @@ export default function BasicInformation() {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
-    // State for portfolio images and work samples
+    // State for portfolio images, work samples, and core skills
     const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([
         { id: 1, imageUrl: "https://colorlib.com/wp/wp-content/uploads/sites/2/dalya-baron.jpg", title: "Portfolio Image 1" },
         { id: 2, imageUrl: "https://colorlib.com/wp/wp-content/uploads/sites/2/dalya-baron.jpg", title: "Portfolio Image 2" },
@@ -102,6 +102,10 @@ export default function BasicInformation() {
         },
     ]);
 
+    const [coreSkills, setCoreSkills] = useState<string[]>(person?.coreSkills || []);
+    const [newSkill, setNewSkill] = useState("");
+    const [editingSkillIndex, setEditingSkillIndex] = useState<number | null>(null);
+
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [currentSampleIndex, setCurrentSampleIndex] = useState(0);
     const [newImage, setNewImage] = useState({ title: "" });
@@ -126,7 +130,6 @@ export default function BasicInformation() {
 
     const handleAddImage = async () => {
         if (newImage.title && selectedPortfolioImage) {
-            // Simulate upload and get URL (in real app, this comes from backend)
             const uploadedImageUrl = await handlePortfolioImageUpload();
             if (uploadedImageUrl) {
                 setPortfolioItems([
@@ -212,6 +215,33 @@ export default function BasicInformation() {
 
     const handleDeleteSample = (id: number) => {
         setWorkSamples(workSamples.filter((sample) => sample.id !== id));
+    };
+
+    // Handlers for core skills
+    const handleAddSkill = () => {
+        if (newSkill.trim()) {
+            setCoreSkills([...coreSkills, newSkill.trim()]);
+            setNewSkill("");
+        }
+    };
+
+    const handleEditSkill = (index: number) => {
+        setEditingSkillIndex(index);
+        setNewSkill(coreSkills[index]);
+    };
+
+    const handleUpdateSkill = () => {
+        if (editingSkillIndex !== null && newSkill.trim()) {
+            const updatedSkills = [...coreSkills];
+            updatedSkills[editingSkillIndex] = newSkill.trim();
+            setCoreSkills(updatedSkills);
+            setEditingSkillIndex(null);
+            setNewSkill("");
+        }
+    };
+
+    const handleDeleteSkill = (index: number) => {
+        setCoreSkills(coreSkills.filter((_, i) => i !== index));
     };
 
     return (
@@ -365,6 +395,61 @@ export default function BasicInformation() {
                                 className="text-text-primary w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             ></textarea>
                         </div>
+                        <div className="mt-6">
+                            <label className="block text-sm font-medium text-text-primary mb-2">
+                                {t("profileInfo.sectionCoreSkills")}
+                            </label>
+                            <p className="text-[12px] text-gray-500 mb-2">
+                                {t("profileInfo.subtitleCoreSkills")}
+                            </p>
+                            <div className="flex items-center gap-4">
+                                <input
+                                    type="text"
+                                    placeholder={t("profileInfo.coreSkillPlaceholder")}
+                                    value={newSkill}
+                                    onChange={(e) => setNewSkill(e.target.value)}
+                                    className="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={editingSkillIndex !== null ? handleUpdateSkill : handleAddSkill}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
+                                    disabled={!newSkill.trim()}
+                                >
+                                    <Plus className="w-5 h-5 mr-2" />
+                                    {editingSkillIndex !== null ? t("profileInfo.updateSkill") : t("profileInfo.addSkill")}
+                                </button>
+                            </div>
+                            {errors.coreSkills && (
+                                <p className="text-red-500 text-sm mt-1">
+                                    {errors.coreSkills.message}
+                                </p>
+                            )}
+                            <div className="mt-4 flex flex-wrap gap-2">
+                                {coreSkills.map((skill, index) => (
+                                    <div
+                                        key={index}
+                                        className="flex items-center gap-2 px-3 py-1 bg-gray-100 border border-gray-200 rounded-lg transition-transform duration-200 hover:scale-105"
+                                    >
+                                        <span className="text-gray-700 text-sm">{skill}</span>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleEditSkill(index)}
+                                            className="p-1 text-blue-600 hover:text-blue-800"
+                                        >
+                                            <Edit className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDeleteSkill(index)}
+                                            className="p-1 text-red-600 hover:text-red-800"
+                                        >
+                                            <Trash className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
                     <div className="self-end w-fit">
@@ -416,8 +501,8 @@ export default function BasicInformation() {
                                     onChange={handlePortfolioFileChange}
                                 />
                                 <span className="text-gray-500 text-sm">
-                  {selectedPortfolioImage ? t("profileInfo.imageSelected") : t("profileInfo.selectImage")}
-                </span>
+                                    {selectedPortfolioImage ? t("profileInfo.imageSelected") : t("profileInfo.selectImage")}
+                                </span>
                             </div>
                             {selectedPortfolioImage && (
                                 <Image
