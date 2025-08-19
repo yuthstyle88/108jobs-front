@@ -142,7 +142,9 @@ export type {GetSiteMetadata} from "./types/GetSiteMetadata";
 export type {GetSiteMetadataResponse} from "./types/GetSiteMetadataResponse";
 export type {GetSiteResponse} from "./types/GetSiteResponse";
 export type {GetUnreadCountResponse} from "./types/GetUnreadCountResponse";
-export type {GetUnreadRegistrationApplicationCountResponse} from "./types/GetUnreadRegistrationApplicationCountResponse";
+export type {
+    GetUnreadRegistrationApplicationCountResponse
+} from "./types/GetUnreadRegistrationApplicationCountResponse";
 export type {HideCommunity} from "./types/HideCommunity";
 export type {HidePost} from "./types/HidePost";
 export type {ImageDetails} from "./types/ImageDetails";
@@ -374,3 +376,4 @@ export type {CreateBankAccount} from "./types/CreateBankAccount";
 export type {BankAccountForm} from "./types/BankAccountForm";
 export type {ListBankAccounts} from "./types/ListBankAccounts";
 export type {ListBankAccountsResponse} from "./types/ListBankAccountsResponse";
+export type {VisitProfileResponse} from "./types/VisitProfileResponse";

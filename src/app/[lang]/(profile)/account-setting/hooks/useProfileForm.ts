@@ -22,15 +22,11 @@ interface FormValues {
     username: string;
     bio: string;
     skills: string;
-    contacts: {
-        lineId: string;
-        facebook: string;
-        phoneNumber: string;
-    };
+    contacts: string;
 }
 
 export const useProfileForm = (
-    person: Person | null,
+    person: Person | undefined,
     card: IdentityCard | null,
     selectedImage: string | null,
     uploadImage: (
@@ -56,29 +52,12 @@ export const useProfileForm = (
 
     useEffect(() => {
         if (person) {
-            const defaultContact = {
-                lineid: "",
-                facebook: "",
-                email: "",
-                phone: "",
-            };
-            const contactParts = person.contacts && person.contacts !== ""
-                ? person.contacts.split("|").reduce((acc, part) => {
-                    const [key, value] = part.split(":");
-                    acc[key.toLowerCase()] = value || ""; // Ensure value is not undefined
-                    return acc;
-                }, {} as any)
-                : defaultContact;
             reset({
                 displayName: person.displayName || "",
                 username: person.name || "",
                 bio: person.bio || "",
                 skills: person.skills || "",
-                contacts: {
-                    lineId: contactParts.lineid || "",
-                    facebook: contactParts.facebook || "",
-                    phoneNumber: contactParts.phone || "",
-                },
+                contacts: person.contacts || "",
             });
             setSelectedImage(person.avatar || "");
         }
@@ -87,13 +66,12 @@ export const useProfileForm = (
     const onSubmit = async (formData: FormValues) => {
         try {
             setUpdateProfileState(LOADING_REQUEST);
-            const contactString = `LineID:${formData.contacts.lineId}|Facebook:${formData.contacts.facebook}|Phone:${formData.contacts.phoneNumber}`;
             const updateData: SaveUserSettings = {
                 portfolioPics: portfolioItems,
                 skills: formData.skills,
                 workSamples: workSamples,
                 displayName: formData.displayName,
-                contacts: contactString,
+                contacts: formData.contacts,
                 bio: formData.bio
             };
             // Use HttpService.client for updating the profile

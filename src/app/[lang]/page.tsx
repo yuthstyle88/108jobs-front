@@ -71,6 +71,7 @@ export default function Home() {
     const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
     const [expanded, setExpanded] = useState(false);
     const catalogData = useCommunities();
+    console.log("data: ", catalogData);
     const serviceCatalogs = buildCommunitiesTree(catalogData.communities) || [];
     const activeCatalog = serviceCatalogs[activeCatalogIndex];
 

@@ -761,6 +761,7 @@ export const en = {
             buttonEdit: "Edit",
             buttonRemove: "Remove",
             buttonSave: "Save",
+            buttonReset: "Reset",
             buttonSubmit: "Submit",
             buttonVerify: "Verify",
             chatToHireButton: "Add LINE @fastwork",
@@ -2906,6 +2907,7 @@ export const en = {
         uploadInstruction: {
             uploadInstruction: "Upload your profile picture",
             title: "Profile picture",
+            portfolioTitle: "Portfolio image uploading",
             selectImage: "Choose image",
             uploadError: "An error occurred while uploading the image. Please try again",
         },

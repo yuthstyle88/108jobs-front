@@ -106,9 +106,9 @@ export default function BasicInformation() {
         if (newImage.title && selectedPortfolioImage) {
             setPortfolioItems([
                 ...portfolioItems,
-                { id: portfolioItems.length + 1, title: newImage.title, imageUrl: selectedPortfolioImage },
+                {id: portfolioItems.length + 1, title: newImage.title, imageUrl: selectedPortfolioImage},
             ]);
-            setNewImage({ title: "" });
+            setNewImage({title: ""});
             setSelectedPortfolioImage(null);
             closePortfolioImageModal();
         }
@@ -125,11 +125,15 @@ export default function BasicInformation() {
         if (editingImage && newImage.title && selectedPortfolioImage) {
             setPortfolioItems(
                 portfolioItems.map((item) =>
-                    item.id === editingImage.id ? { ...item, title: newImage.title, imageUrl: selectedPortfolioImage } : item
+                    item.id === editingImage.id ? {
+                        ...item,
+                        title: newImage.title,
+                        imageUrl: selectedPortfolioImage
+                    } : item
                 )
             );
             setEditingImage(null);
-            setNewImage({ title: "" });
+            setNewImage({title: ""});
             setSelectedPortfolioImage(null);
             closePortfolioImageModal();
         }
@@ -174,7 +178,12 @@ export default function BasicInformation() {
             setWorkSamples(
                 workSamples.map((sample) =>
                     sample.id === editingSample.id
-                        ? {...sample, title: newSample.title, url: newSample.sampleUrl, description: newSample.description}
+                        ? {
+                            ...sample,
+                            title: newSample.title,
+                            url: newSample.sampleUrl,
+                            description: newSample.description
+                        }
                         : sample
                 )
             );
@@ -320,18 +329,11 @@ export default function BasicInformation() {
                                 <h3 className="text-sm font-medium text-gray-700 mb-2">
                                     {editingImage ? t("profileInfo.editImage") : t("profileInfo.addImage")}
                                 </h3>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <input
-                                        type="text"
-                                        placeholder={t("profileInfo.imageTitle")}
-                                        value={newImage.title}
-                                        onChange={(e) => setNewImage({ ...newImage, title: e.target.value })}
-                                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                    />
-                                    <div className="relative">
+                                <div className="relative flex items-start space-x-4">
+                                    <div className="flex-1 max-w-md">
                                         <div
                                             onClick={handleSelectPortfolioFile}
-                                            className="w-full h-10 border border-gray-300 rounded-lg flex items-center justify-center cursor-pointer bg-gray-50"
+                                            className="w-full h-12 border border-gray-300 rounded-lg flex items-center justify-between px-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
                                         >
                                             <input
                                                 type="file"
@@ -340,38 +342,40 @@ export default function BasicInformation() {
                                                 accept="image/*"
                                                 onChange={handlePortfolioFileChange}
                                             />
-                                            <span className="text-gray-500 text-sm">
-                                                {selectedPortfolioImage ? t("profileInfo.imageSelected") : t("profileInfo.selectImage")}
-                                            </span>
+                                            <span className="text-gray-500 text-sm truncate">
+        {selectedPortfolioImage ? t("profileInfo.imageSelected") : t("profileInfo.selectImage")}
+      </span>
+                                            <button
+                                                type="button"
+                                                onClick={handleSelectPortfolioFile}
+                                                className="flex items-center justify-center bg-blue-600 rounded-full p-2 hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                disabled={isUploadMuting}
+                                            >
+                                                <svg
+                                                    className="w-4 h-4 text-white"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                >
+                                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                                                </svg>
+                                            </button>
                                         </div>
-                                        {selectedPortfolioImage && (
+                                    </div>
+                                    {selectedPortfolioImage && (
+                                        <div className="flex-shrink-0">
                                             <Image
                                                 src={selectedPortfolioImage}
                                                 alt="Portfolio preview"
-                                                width={100}
-                                                height={100}
-                                                className="mt-2 h-20 w-20 object-cover rounded-lg"
+                                                width={80}
+                                                height={80}
+                                                className="h-20 w-20 object-cover rounded-lg shadow-sm border border-gray-200"
                                             />
-                                        )}
-                                        <button
-                                            type="button"
-                                            onClick={handleSelectPortfolioFile}
-                                            className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-blue-600 rounded-full p-2"
-                                            disabled={isUploadMuting}
-                                        >
-                                            <svg
-                                                className="w-4 h-4 text-white"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            >
-                                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-                                            </svg>
-                                        </button>
-                                    </div>
+                                        </div>
+                                    )}
                                 </div>
                                 <button
                                     type="button"
@@ -379,7 +383,7 @@ export default function BasicInformation() {
                                     className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
                                     disabled={isUploadMuting || !newImage.title || !selectedPortfolioImage}
                                 >
-                                    <Plus className="w-5 h-5 mr-2" />
+                                    <Plus className="w-5 h-5 mr-2"/>
                                     {editingImage ? t("profileInfo.updateImage") : t("profileInfo.addImage")}
                                 </button>
                                 {editingImage && (
@@ -387,7 +391,7 @@ export default function BasicInformation() {
                                         type="button"
                                         onClick={() => {
                                             setEditingImage(null);
-                                            setNewImage({ title: "" });
+                                            setNewImage({title: ""});
                                             setSelectedPortfolioImage(null);
                                         }}
                                         className="mt-2 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
@@ -399,7 +403,8 @@ export default function BasicInformation() {
                             <div className="relative">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {portfolioItems.slice(currentImageIndex, currentImageIndex + imagesPerPage).map((item) => (
-                                        <div key={item.id} className="h-56 rounded-lg flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105">
+                                        <div key={item.id}
+                                             className="h-56 rounded-lg flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105">
                                             <Image
                                                 src={item.imageUrl}
                                                 alt={item.title}
@@ -415,14 +420,14 @@ export default function BasicInformation() {
                                                         onClick={() => handleEditImage(item)}
                                                         className="p-1 text-blue-600 hover:text-blue-800"
                                                     >
-                                                        <Edit className="w-5 h-5" />
+                                                        <Edit className="w-5 h-5"/>
                                                     </button>
                                                     <button
                                                         type="button"
                                                         onClick={() => handleDeleteImage(item.id)}
                                                         className="p-1 text-red-600 hover:text-red-800"
                                                     >
-                                                        <Trash className="w-5 h-5" />
+                                                        <Trash className="w-5 h-5"/>
                                                     </button>
                                                 </div>
                                             </div>
@@ -438,7 +443,7 @@ export default function BasicInformation() {
                                                     currentImageIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"
                                                 }`}
                                             >
-                                                <ChevronLeft className="w-6 h-6" />
+                                                <ChevronLeft className="w-6 h-6"/>
                                             </button>
                                             <button
                                                 type="button"
@@ -450,7 +455,7 @@ export default function BasicInformation() {
                                                         : "hover:backdrop-blur-none hover:bg-blue-700"
                                                 }`}
                                             >
-                                                <ChevronRight className="w-6 h-6" />
+                                                <ChevronRight className="w-6 h-6"/>
                                             </button>
                                         </>
                                     )}
@@ -583,65 +588,16 @@ export default function BasicInformation() {
                         </p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm text-text-primary mb-1">
-                                    {t("profileInfo.labelLineId")}
-                                </label>
-                                <input
-                                    {...register("contacts.lineId", {
-                                        pattern: {
-                                            value: /^[a-zA-Z0-9._-]+$/,
-                                            message: t("profileInfo.invalidLineId"),
-                                        },
-                                    })}
-                                    type="text"
-                                    placeholder={t("profileInfo.lineIdPlaceholder")}
-                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+
+                                <textarea
+                                    {...register("contacts")}
+                                    placeholder={t("profileInfo.customContactPlaceholder")}
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 resize-y"
+                                    rows="3"
                                 />
-                                {errors.contacts?.lineId && (
+                                {errors.contacts && (
                                     <p className="text-red-500 text-sm mt-1">
-                                        {errors.contacts.lineId.message}
-                                    </p>
-                                )}
-                            </div>
-                            <div>
-                                <label className="block text-sm text-text-primary mb-1">
-                                    {t("profileInfo.labelFacebook")}
-                                </label>
-                                <input
-                                    {...register("contacts.facebook", {
-                                        pattern: {
-                                            value: /^[a-zA-Z0-9._-]+$/,
-                                            message: t("profileInfo.invalidFacebook"),
-                                        },
-                                    })}
-                                    type="text"
-                                    placeholder={t("profileInfo.facebookPlaceholder")}
-                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                />
-                                {errors.contacts?.facebook && (
-                                    <p className="text-red-500 text-sm mt-1">
-                                        {errors.contacts.facebook.message}
-                                    </p>
-                                )}
-                            </div>
-                            <div>
-                                <label className="block text-sm text-text-primary mb-1">
-                                    {t("profileInfo.labelPhoneNumber")}
-                                </label>
-                                <input
-                                    {...register("contacts.phoneNumber", {
-                                        pattern: {
-                                            value: /^\+?[1-9]\d{1,14}$/,
-                                            message: t("profileInfo.invalidPhoneNumber"),
-                                        },
-                                    })}
-                                    type="tel"
-                                    placeholder={t("profileInfo.phoneNumberPlaceholder")}
-                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-                                />
-                                {errors.contacts?.phoneNumber && (
-                                    <p className="text-red-500 text-sm mt-1">
-                                        {errors.contacts.phoneNumber.message}
+                                        {errors.contacts.message}
                                     </p>
                                 )}
                             </div>
@@ -690,6 +646,7 @@ export default function BasicInformation() {
                 uploadImage={uploadUserAvatar}
             />
             <ImageUploadModal
+                title={t("uploadInstruction.portfolioTitle")}
                 isOpen={isPortfolioImageModalOpen}
                 onClose={closePortfolioImageModal}
                 onImageUpload={handlePortfolioImageUpload}

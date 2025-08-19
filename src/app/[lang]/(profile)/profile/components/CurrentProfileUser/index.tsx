@@ -1,23 +1,26 @@
 "use client";
-import CategoryCard from "@/components/CategoryDetail/components/CategoryCard";
 import {AssetIcon} from "@/constants/icons";
 import {ProfileImage} from "@/constants/images";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {formatDateToLong} from "@/utils/formatDateToLong";
 import {faEdit} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {CircleCheckBig, ClipboardX, ChevronLeft, ChevronRight, X} from "lucide-react";
+import {ChevronLeft, ChevronRight, X} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import {useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Person} from "lemmy-js-client";
-import {getProfileData} from "@/utils/getProfileData";
 import {useTranslation} from "react-i18next";
+import NotFound from "@/app/[lang]/not-found";
 
-const CurrentProfileUser = () => {
+interface ProfileProps {
+    profile: Person | null;
+}
+
+const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
     const {t} = useTranslation();
 
-    const {localUser, person} = useMyUser();
+    const {person: currentUserProfile} = useMyUser();
     const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
     const [showFullBio, setShowFullBio] = useState(false);
     const [isClamped, setIsClamped] = useState(false);
@@ -31,11 +34,7 @@ const CurrentProfileUser = () => {
             const el = bioRef.current;
             setIsClamped(el.scrollHeight > el.clientHeight);
         }
-    }, [person?.bio]);
-
-    const {
-        services,
-    } = getProfileData(person as Person);
+    }, [profile?.bio]);
 
     // Fake data for reviews
     const fakeReviews = [
@@ -83,8 +82,8 @@ const CurrentProfileUser = () => {
         },
     ];
 
-    const portfolioItems = person?.portfolioPics ?? [];
-    const workSamples = person?.workSamples ?? [];
+    const portfolioItems = profile?.portfolioPics ?? [];
+    const workSamples = profile?.workSamples ?? [];
 
     const imagesPerPage = 3;
     const samplesPerPage = 2;
@@ -121,6 +120,13 @@ const CurrentProfileUser = () => {
         setSelectedImage(null);
     };
 
+    if (!profile) {
+        NotFound();
+    }
+
+    console.log("profile: ", profile?.contacts)
+
+    const isOwnProfile = currentUserProfile?.id === profile?.id;
 
     return (
         <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
@@ -148,37 +154,25 @@ const CurrentProfileUser = () => {
                             <div className="flex flex-col items-center">
                                 <div className="relative">
                                     <Image
-                                        src={person?.avatar || ProfileImage.avatar}
+                                        src={profile?.avatar || ProfileImage.avatar}
                                         alt="Avatar"
                                         className="rounded-full w-32 h-32 sm:w-40 sm:h-40 object-cover border-4 border-white shadow-md"
                                         width={160}
                                         height={160}
                                     />
-                                    <Link
-                                        prefetch={false}
-                                        href="/account-setting/basic-info"
-                                        className="absolute top-2 right-2 bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition-colors"
-                                    >
-                                        <FontAwesomeIcon icon={faEdit} className="text-gray-600"/>
-                                    </Link>
+                                    {isOwnProfile && (
+                                        <Link
+                                            prefetch={false}
+                                            href="/account-setting/basic-info"
+                                            className="absolute top-2 right-2 bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition-colors"
+                                        >
+                                            <FontAwesomeIcon icon={faEdit} className="text-gray-600"/>
+                                        </Link>
+                                    )}
                                 </div>
                                 <h2 className="mt-4 text-xl font-semibold text-gray-800">
-                                    {person?.name}
+                                    {profile?.name}
                                 </h2>
-                                {localUser?.acceptedApplication === true && (
-                                    <div
-                                        className="bg-green-100 text-green-700 px-4 py-2 rounded-full flex items-center text-sm font-medium">
-                                        <CircleCheckBig className="w-4 h-4 mr-2"/>
-                                        {t("profile.verified")}
-                                    </div>
-                                )}
-                                {localUser?.acceptedApplication === false && (
-                                    <div
-                                        className="bg-red-100 text-red-700 px-4 py-2 rounded-full flex items-center text-sm font-medium">
-                                        <ClipboardX className="w-4 h-4 mr-2"/>
-                                        {t("profile.notVerified")}
-                                    </div>
-                                )}
                             </div>
 
                             {/* Bio Section */}
@@ -188,7 +182,7 @@ const CurrentProfileUser = () => {
                                         ref={bioRef}
                                         className={`text-gray-600 text-sm leading-relaxed ${showFullBio ? "" : "line-clamp-4"}`}
                                     >
-                                        {person?.bio}
+                                        {profile?.bio}
                                     </p>
                                     {isClamped && !showFullBio && (
                                         <button
@@ -208,7 +202,7 @@ const CurrentProfileUser = () => {
                                             <span
                                                 className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"
                                             >
-                                                {person?.skills}
+                                                {profile?.skills}
                                             </span>
                                 </div>
                             </div>
@@ -218,24 +212,12 @@ const CurrentProfileUser = () => {
                                 <h3 className="text-blue-600 font-semibold mb-3">
                                     {t("profileInfo.sectionContactInfo")}
                                 </h3>
-                                {person?.contacts && (
-                                    <div className="text-sm text-gray-600">
-                                        {(() => {
-                                            const contactParts = person.contacts.split("|").reduce((acc, part) => {
-                                                const [key, value] = part.split(":");
-                                                acc[key.toLowerCase()] = value;
-                                                return acc;
-                                            }, {} as any);
-                                            return (
-                                                <>
-                                                    <p><strong>{t("profileInfo.labelLineId")}:</strong> {contactParts.lineid || "N/A"}</p>
-                                                    <p><strong>{t("profileInfo.labelFacebook")}:</strong> {contactParts.facebook || "N/A"}</p>
-                                                    <p><strong>{t("profileInfo.labelPhoneNumber")}:</strong> {contactParts.phone || "N/A"}</p>
-                                                </>
-                                            );
-                                        })()}
-                                    </div>
-                                )}
+                                <div className="flex flex-wrap gap-2">
+                                    <p className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded whitespace-pre-line">
+                                        {profile?.contacts}
+                                    </p>
+                                </div>
+
                             </div>
                         </div>
                     </aside>
@@ -360,16 +342,6 @@ const CurrentProfileUser = () => {
                                 </div>
                             </div>
                         )}
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {services.map((service, index) => (
-                                <CategoryCard
-                                    data={service}
-                                    username={person?.name || "John Doe"}
-                                    key={index}
-                                />
-                            ))}
-                        </div>
 
                         {/* Reviews and Clients Section */}
                         <div className="mt-8">

@@ -537,14 +537,14 @@ export const getJobTypeLabel = (jobType: string | null | undefined, t: (key: str
     return typeMap[jobType] || jobType;
 };
 
-export function buildCommunitiesTree(listCommunitiesResponse: ListCommunitiesResponse) {
+export function buildCommunitiesTree(listCommunitiesResponse: ListCommunitiesResponse | undefined) {
     const tree: CommunityNodeView[] = [];
     const map = new Map<CommunityId, CommunityNodeView>();
-    listCommunitiesResponse.communities.forEach(c => {
+    listCommunitiesResponse?.communities.forEach(c => {
         map.set(c.community.id, {...c, children: []});
     });
 
-    listCommunitiesResponse.communities.forEach(c => {
+    listCommunitiesResponse?.communities.forEach(c => {
         const node = map.get(c.community.id);
         if (!node) return;
 
@@ -568,7 +568,7 @@ export function buildCommunitiesTree(listCommunitiesResponse: ListCommunitiesRes
     return tree;
 }
 
-export function getCommunitiesAtLevel(catalogData: ListCommunitiesResponse | null, level: number) {
+export function getCommunitiesAtLevel(catalogData: ListCommunitiesResponse | undefined, level: number) {
     if (!catalogData || level < 1) {
         return [];
     }

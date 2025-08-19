@@ -17,12 +17,14 @@ import {useRouter} from "next/navigation";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {UserService} from "@/services";
 import {useHttpGet} from "@/hooks/useHttpGet";
+import {useTranslation} from "react-i18next";
 
 type Props = {
     jobId: PostId;
 };
 
 const JobBoardDetail = ({jobId}: Props) => {
+    const {t} = useTranslation();
     const isLoggedIn = UserService.Instance.isLoggedIn;
     const isGuest = !isLoggedIn;
     const shouldFetchProfile = isLoggedIn;
@@ -131,7 +133,7 @@ const JobBoardDetail = ({jobId}: Props) => {
 
                         <div className="bg-white">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                                Job Details
+                                {t("jobBoardDetail.jobDetail")}
                             </h3>
                             <div className="break-words whitespace-pre-wrap space-y-2 text-gray-700">
                                 <p>{jobDetailData?.postView.post.body}</p>

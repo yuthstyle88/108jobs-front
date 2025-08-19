@@ -7,7 +7,6 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {CreatePost, IntendedUse, JobType, PostId, PostView} from "lemmy-js-client";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExclamationCircle, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
 import {z} from "zod";
 import {useLanguage} from "@/contexts/LanguageContext";
 import {getNumericCode} from "@/actions/getClientCurrentLanguage";

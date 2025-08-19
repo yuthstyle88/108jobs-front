@@ -7,12 +7,12 @@ import {getIsoData} from "@/hooks/useIsoData";
  */
 export const useMyUser = () => {
   const isoData = getIsoData();
-  const user = assertExists(isoData?.myUserInfo, "Missing myUserInfo");
+  const user = isoData?.myUserInfo;
   const profileState = REQUEST_STATE.SUCCESS;
   return {
     profileState,
-    person: assertExists(user.localUserView.person, "Missing person"),
-    localUser: assertExists(user.localUserView.localUser, "Missing localUser"),
+    person: user?.localUserView.person,
+    localUser: user?.localUserView.localUser,
     contact: user?.profile?.contact || null,
     address: user?.profile?.address || null,
     card: user?.profile?.identityCard || null,
