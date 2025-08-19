@@ -12,7 +12,7 @@ import JobBoardTab from "../_components/JobBoardTab";
 import {useHttpGet} from "@/hooks/useHttpGet";
 
 const Proposal = () => {
-  const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined); // ตัวจัดการ cursor
+  const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined);
 
   const route = useRouter();
 

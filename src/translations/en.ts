@@ -17,7 +17,7 @@ export const en = {
             "*Prices listed are starting prices. Prices may vary depending on job details.",
         price_note_2: "**Prices may change according to job appropriateness.",
         contact_section_title: "What would you like us to help with",
-        copyright: "Copyright © 2024 Fastjob for Business.",
+        copyright: "Copyright © 2024 108jobs for Business.",
         hero_title: "fastwork for business",
         hero_subtitle: "Freelance sourcing assistant for businesses",
         contact_us: "Contact us",
@@ -366,7 +366,7 @@ export const en = {
             seoLinksAudit: "SEO Audit",
             seoLinksMonthly: "Monthly SEO",
             seoDescription2Part1:
-                "High-quality service helps your website rank at the top of Google, increasing traffic and visibility. At Fastjob.co, we proposals experienced freelancers specializing in ",
+                "High-quality service helps your website rank at the top of Google, increasing traffic and visibility. At 108jobs.com, we proposals experienced freelancers specializing in ",
             seoDescription2Strong1: "white-hat SEO services",
             seoDescription2Middle:
                 " to get your site to the first page of Google consistently and effectively, including ",
@@ -392,7 +392,7 @@ export const en = {
             seoPrinciples4:
                 "Increase the number of high-quality backlinks as Google sees them as indicators of useful content.",
             seoConclusionPart1:
-                "SEO practices are not fixed and frequently change, so it's important to keep updating your SEO approach. If you lack experience or expertise, hiring a skilled freelancer can help you get started more easily. Fastjob.co has gathered professional SEO freelancers offering ",
+                "SEO practices are not fixed and frequently change, so it's important to keep updating your SEO approach. If you lack experience or expertise, hiring a skilled freelancer can help you get started more easily. 108jobs.com has gathered professional SEO freelancers offering ",
             seoConclusionStrong1: "SEO outsourcing services, white-hat SEO",
             seoConclusionMiddle:
                 " of all types to meet client needs. Affordable SEO services help reduce business costs while still achieving effective goals with ",
@@ -406,7 +406,7 @@ export const en = {
             howToHireSteps1:
                 "Discuss project details; the freelancer will send you a quote.",
             howToHireSteps2:
-                "Pay securely through Fastjob via credit card, mobile banking, or Fastjob coin.",
+                "Pay securely through 108jobs via credit card, mobile banking, or 108jobs coin.",
             howToHireSteps3:
                 "Review and approve the final work. If needed, request revisions before final approval.",
         },
@@ -3022,13 +3022,13 @@ export const en = {
         jobApplication: {
             pageTitle: "Increase Your Hiring Chances! With Relevant Experience and Portfolio",
             pageSubheading: "Most clients choose freelancers based on work history and portfolio samples",
-            warningMessage: "Warning: Inviting clients to make payments outside the Fastjob system is against the terms of use and will result in account suspension.",
+            warningMessage: "Warning: Inviting clients to make payments outside the 108jobs system is against the terms of use and will result in account suspension.",
             publicInfoMessage: "All information will be publicly visible (except 'Proposed Price')",
             whyHireYou: {
                 label: "Why Clients Should Hire You",
                 placeholder: "e.g. Relevant portfolio / Work history / Work process details",
-                required: "Minimum 100 characters required",
-                characterCount: "{{count}} / Minimum 100 characters"
+                required: "Minimum 300 characters required",
+                characterCount: "{{count}} / Minimum 300 characters"
             },
             portfolioUrl: {
                 label: "Portfolio URL (Optional)",

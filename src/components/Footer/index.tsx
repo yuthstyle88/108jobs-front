@@ -94,15 +94,15 @@ const Footer = () => {
           <h3 className="font-bold mb-3">{global.tittleFooter3}</h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link prefetch={false} href="/">Fastjob</Link>
+              <Link prefetch={false} href="/">108jobs</Link>
             </li>
             <li>
-              <Link prefetch={false} href="/business">Fastjob for Business</Link>
+              <Link prefetch={false} href="/business">108jobs for Business</Link>
             </li>
           </ul>
         </div>
 
-        {/* About Fastjob */}
+        {/* About 108jobs */}
         <div>
           <h3 className="font-bold mb-3">{global.tittleFooter4}</h3>
           <ul className="space-y-2 text-sm">
@@ -171,7 +171,7 @@ const Footer = () => {
 
             {/* Copyright */}
             <p className="text-sm font-sans text-white mt-3 md:mt-0">
-              © 2025 Fastjob
+              © 2025 108jobs
             </p>
           </div>
         </div>

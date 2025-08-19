@@ -16,9 +16,9 @@ export async function generateMetadata({
   const locale = isSupportedLang(lang) ? lang : "th";
 
   const defaultDescriptions: Record<string, string> = {
-    th: "จ้างฟรีแลนซ์มืออาชีพสำหรับโปรเจกต์ของคุณที่ Fastjob ธุรกิจและสตาร์ทอัปชั้นนำไว้วางใจเรา",
-    en: "Find professional freelancers for your project on Fastjob. Trusted by businesses and startups across Southeast Asia.",
-    vi: "Tìm freelancer chuyên nghiệp cho dự án của bạn tại Fastjob. Được các doanh nghiệp và startup trên toàn Đông Nam Á tin tưởng.",
+    th: "จ้างฟรีแลนซ์มืออาชีพสำหรับโปรเจกต์ของคุณที่ 108jobs ธุรกิจและสตาร์ทอัปชั้นนำไว้วางใจเรา",
+    en: "Find professional freelancers for your project on 108jobs. Trusted by businesses and startups across Southeast Asia.",
+    vi: "Tìm freelancer chuyên nghiệp cho dự án của bạn tại 108jobs. Được các doanh nghiệp và startup trên toàn Đông Nam Á tin tưởng.",
   };
 
   try {
@@ -31,16 +31,16 @@ export async function generateMetadata({
     }
 
     const jobDetail = await res.data.json();
-    const title = jobDetail?.title || "Fastjob";
+    const title = jobDetail?.title || "108jobs";
     const description = defaultDescriptions[locale] || defaultDescriptions.th;
 
     return generateLocalizedMetadata({
-      title: `${title} - Fastjob`,
+      title: `${title} - 108jobs`,
       description,
     });
   } catch {
     return generateLocalizedMetadata({
-      title: "Fastjob - Hire Freelancers for Any Job",
+      title: "108jobs - Hire Freelancers for Any Job",
       description: defaultDescriptions[locale] || defaultDescriptions.th,
     });
   }

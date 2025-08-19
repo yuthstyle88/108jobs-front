@@ -27,7 +27,6 @@ const JobBoardDetail = ({jobId}: Props) => {
     const {t} = useTranslation();
     const isLoggedIn = UserService.Instance.isLoggedIn;
     const isGuest = !isLoggedIn;
-    const shouldFetchProfile = isLoggedIn;
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const route = useRouter();
@@ -238,7 +237,7 @@ const JobBoardDetail = ({jobId}: Props) => {
                         proposals)
                     </h4>
                     <InfoMessage
-                        message="We recommend communicating and paying through Fastjob - guaranteed no scams! We protect your payment until you receive work from the freelancer"/>
+                        message="We recommend communicating and paying through 108jobs - guaranteed no scams! We protect your payment until you receive work from the freelancer"/>
                 </div>
                 <JobBoardProposal/>
             </section>

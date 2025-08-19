@@ -31,7 +31,7 @@ export async function generateLocalizedMetadata(
 
   return {
     metadataBase: new URL(BASE_URL),
-    applicationName: "Fastjob.co",
+    applicationName: "108jobs.com",
     title: page.title,
     description: page.description,
     openGraph: {
@@ -39,7 +39,7 @@ export async function generateLocalizedMetadata(
       title: page.title,
       description: page.description,
       url: overrides?.openGraph?.url ?? BASE_URL,
-      siteName: "Fastjob.co",
+      siteName: "108jobs.com",
       images: [
         {
           url: t.ogImage,

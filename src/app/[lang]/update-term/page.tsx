@@ -105,7 +105,7 @@ export default function RegisterTermPage() {
           />
           {currentView === "update-term" && (
             <AuthFormContainer
-              title={`Sign up FastJob`}
+              title={`Sign up 108jobs`}
               onBack={() => setCurrentView("update-term")}
             >
               <AcceptForm/>

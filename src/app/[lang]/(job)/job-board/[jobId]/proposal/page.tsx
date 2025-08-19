@@ -2,37 +2,22 @@
 import {Button} from "@/components/ui/Button";
 import {ProfileImage} from "@/constants/images";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {AlertTriangle, ArrowLeft, Info, Paperclip} from "lucide-react";
+import {AlertTriangle, ArrowLeft, Info} from "lucide-react";
 import Image from "next/image";
-import {useRouter} from "next/navigation";
-import {useState} from "react";
+import {useParams, useRouter} from "next/navigation";
 import {useForm} from "react-hook-form";
 import * as z from "zod";
 import {useTranslation} from "react-i18next";
+import {useHttpPost} from "@/hooks/useHttpPost";
+import {useCallback} from "react";
+import {CreateComment, PostId} from "@/lib/lemmy-js-client/src";
+import {REQUEST_STATE} from "@/services/HttpService";
+import useNotification from "@/hooks/useNotification";
+import {router} from "next/client";
 
 const createJobApplicationSchema = (t: (key: string, options?: any) => string) =>
     z.object({
-        whyHireYou: z.string().min(100, t("jobApplication.whyHireYou.required")),
-        portfolioUrl: z
-            .string()
-            .url(t("jobApplication.portfolioUrl.required"))
-            .optional()
-            .or(z.literal("")),
-        portfolioFiles: z.any().optional(),
-        price: z
-            .coerce
-            .number()
-            .min(1, t("jobApplication.price.required"))
-            .refine((val) => !isNaN(val) && val !== null, {
-                message: t("jobApplication.price.required"),
-            }),
-        timeline: z
-            .coerce
-            .number()
-            .min(1, t("jobApplication.timeline.required"))
-            .refine((val) => !isNaN(val) && val !== null, {
-                message: t("jobApplication.timeline.required"),
-            }),
+        whyHireYou: z.string().min(300, t("jobApplication.whyHireYou.required")),
     });
 
 type JobApplicationFormData = z.infer<ReturnType<typeof createJobApplicationSchema>>;
@@ -40,8 +25,9 @@ type JobApplicationFormData = z.infer<ReturnType<typeof createJobApplicationSche
 const JobApplication = () => {
     const {t} = useTranslation();
     const route = useRouter();
-
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const {successMessage, errorMessage} = useNotification();
+    const {jobId} = useParams<{ jobId: string }>();
+    const postId: PostId = parseInt(jobId, 10);
 
     const {
         register,
@@ -52,27 +38,36 @@ const JobApplication = () => {
         resolver: zodResolver(createJobApplicationSchema(t)),
     });
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files) {
-            setSelectedFiles(Array.from(e.target.files));
-        }
-    };
+    const {execute: createComment} = useHttpPost("createComment");
+    const handleCreateSuccess = useCallback(async () => {
+            router.replace("/jobs");
+        },
+        [router]);
+    const onSubmit = useCallback(
+        async (data: JobApplicationFormData) => {
+            try {
+                const payload: CreateComment = {
+                    postId,
+                    content: data.whyHireYou,
+                    languageId: 1
+                };
 
-    const onSubmit = (data: JobApplicationFormData) => {
-        const formData = new FormData();
-        formData.append("whyHireYou", data.whyHireYou);
-        formData.append("portfolioUrl", data.portfolioUrl || "");
-        formData.append("price", data.price.toString());
-        formData.append("timeline", data.timeline.toString());
+                const response = await createComment(payload);
 
-        if (selectedFiles.length > 0) {
-            selectedFiles.forEach((file) => {
-                formData.append("portfolioFiles", file);
-            });
-        }
+                if (response.state === REQUEST_STATE.FAILED) {
+                    const messageError = t("global.serverError");
+                    errorMessage(null, null, messageError);
+                    return;
+                }
 
-        route.back();
-    };
+                successMessage(null, null, t("notification.jobCreateJobBoardSuccess") ?? "Success!");
+                await handleCreateSuccess();
+            } catch (error) {
+                errorMessage(null, null, t("global.submissionFailed") ?? "Submission failed!");
+            }
+        },
+        [createComment, handleCreateSuccess, successMessage, errorMessage, t]
+    );
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-gray-100">
@@ -127,7 +122,7 @@ const JobApplication = () => {
                                     <textarea
                                         {...register("whyHireYou")}
                                         placeholder={t("jobApplication.whyHireYou.placeholder")}
-                                        className="w-full min-h-[150px] px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900"
+                                        className="w-full min-h-[300px] px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900"
                                     />
                                     {errors.whyHireYou ? (
                                         <p className="text-red-500 text-sm mt-1">{errors.whyHireYou.message}</p>
@@ -137,96 +132,6 @@ const JobApplication = () => {
                                         </div>
                                     )}
                                 </div>
-
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                        {t("jobApplication.portfolioUrl.label")}
-                                    </label>
-                                    <input
-                                        type="url"
-                                        {...register("portfolioUrl")}
-                                        placeholder={t("jobApplication.portfolioUrl.placeholder")}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900"
-                                    />
-                                    {errors.portfolioUrl && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.portfolioUrl.message}</p>
-                                    )}
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                        {t("jobApplication.portfolioFiles.label")}
-                                    </label>
-                                    <p className="text-xs text-gray-500 mb-2">{t("jobApplication.portfolioFiles.subtext")}</p>
-                                    <input
-                                        type="file"
-                                        multiple
-                                        hidden
-                                        id="portfolioFiles"
-                                        onChange={handleFileChange}
-                                    />
-                                    <label htmlFor="portfolioFiles">
-                                        <Button variant="outline" type="button"
-                                                className="w-full text-gray-900 border-blue-500 hover:bg-blue-50">
-                                            <Paperclip className="w-5 h-5 mr-2 text-blue-600"/>
-                                            {t("jobApplication.portfolioFiles.button")}
-                                        </Button>
-                                    </label>
-                                    {selectedFiles.length > 0 && (
-                                        <ul className="mt-2 text-sm text-gray-600 list-disc list-inside">
-                                            {selectedFiles.map((file, index) => (
-                                                <li key={index} className="text-blue-600">{file.name}</li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                            {t("jobApplication.price.label")}
-                                        </label>
-                                        <div className="relative">
-                                            <input
-                                                type="number"
-                                                {...register("price", {valueAsNumber: true, required: true})}
-                                                placeholder={t("jobApplication.price.placeholder")}
-                                                className="w-full px-4 py-3 pr-16 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900"
-                                                defaultValue={0}
-                                            />
-                                            <span
-                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                                                {t("jobApplication.price.currency")}
-                                            </span>
-                                        </div>
-                                        {errors.price && (
-                                            <p className="text-red-500 text-sm mt-1">{errors.price.message}</p>
-                                        )}
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                            {t("jobApplication.timeline.label")}
-                                        </label>
-                                        <div className="relative">
-                                            <input
-                                                type="number"
-                                                {...register("timeline", {valueAsNumber: true})}
-                                                placeholder={t("jobApplication.timeline.placeholder")}
-                                                className="w-full px-4 py-3 pr-16 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-900"
-                                                defaultValue={0}
-                                            />
-                                            <span
-                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                                                {t("jobApplication.timeline.unit")}
-                                            </span>
-                                        </div>
-                                        {errors.timeline && (
-                                            <p className="text-red-500 text-sm mt-1">{errors.timeline.message}</p>
-                                        )}
-                                    </div>
-                                </div>
-
                                 <div className="flex justify-end gap-4 pt-6">
                                     <Button
                                         type="button"

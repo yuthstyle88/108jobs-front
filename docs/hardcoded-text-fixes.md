@@ -54,7 +54,7 @@ This document lists hardcoded text found in components that should be moved to t
 - `"ปรึกษานักโภชนาการ"` (Nutrition consultant) - Line 351
 
 #### Home/RecommendAndReview
-- `"Fastjob ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"` (Fastjob makes work convenient and much easier. We can choose freelancers according to our style) - Lines 152-153
+- `"108jobs ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ"` (108jobs makes work convenient and much easier. We can choose freelancers according to our style) - Lines 152-153
 
 #### StatsAndClients
 - `"ลูกค้ากลุ่มองค์กรที่ใช้บริการ"` (Corporate clients using the service) - Line 19

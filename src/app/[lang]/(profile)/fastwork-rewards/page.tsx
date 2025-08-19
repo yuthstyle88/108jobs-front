@@ -1,10 +1,10 @@
 import React from 'react'
 
 
-const FastjobReward = () => {
+const 108jobsReward = () => {
   return (
-    <div>FastjobReward</div>
+    <div>108jobsReward</div>
   )
 }
 
-export default FastjobReward
+export default 108jobsReward

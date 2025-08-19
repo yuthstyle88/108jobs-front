@@ -69,7 +69,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
             const registerRes = await HttpService.client.register({
                 email: data.email,
-                answer: "FastJob",
+                answer: "108jobs",
             });
             switch (registerRes.state) {
                 case REQUEST_STATE.FAILED: {

@@ -49,7 +49,7 @@ const VideoPromo = () => {
             <div className="mb-8">
               <div className="flex justify-center md:justify-start">
                 <div className="relative">
-                  {/* Fastjob logo */}
+                  {/* 108jobs logo */}
                   <div className="flex items-center">
                     <Image
                       src={BusinessImage.logoBusiness}

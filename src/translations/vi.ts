@@ -17,7 +17,7 @@ export const vi = {
             "*Giá niêm yết là giá khởi điểm. Giá có thể thay đổi tùy thuộc vào chi tiết công việc.",
         price_note_2: "**Giá có thể thay đổi theo sự phù hợp của công việc.",
         contact_section_title: "Bạn muốn chúng tôi giúp gì",
-        copyright: "Bản quyền © 2024 Fastjob for Business.",
+        copyright: "Bản quyền © 2024 108jobs for Business.",
         hero_title: "fastwork for business",
         hero_subtitle: "Trợ lý tìm kiếm freelancer cho doanh nghiệp",
         contact_us: "Liên hệ với chúng tôi",
@@ -362,7 +362,7 @@ export const vi = {
             seoLinksAudit: "SEO Audit",
             seoLinksMonthly: "SEO hàng tháng",
             seoDescription2Part1:
-                "Chất lượng giúp website của bạn hiển thị ở vị trí hàng đầu trên Google, tăng cơ hội được truy cập và nhận diện thương hiệu. Tại Fastjob.co, chúng tôi có các freelancer chuyên môn cao trong việc ",
+                "Chất lượng giúp website của bạn hiển thị ở vị trí hàng đầu trên Google, tăng cơ hội được truy cập và nhận diện thương hiệu. Tại 108jobs.com, chúng tôi có các freelancer chuyên môn cao trong việc ",
             seoDescription2Strong1: "cung cấp dịch vụ SEO mũ trắng",
             seoDescription2Middle:
                 " giúp website của bạn lên top Google một cách ổn định và hiệu quả, bao gồm ",
@@ -388,7 +388,7 @@ export const vi = {
             seoPrinciples4:
                 "Tăng số lượng backlink chất lượng để nâng cao uy tín nội dung.",
             seoConclusionPart1:
-                "Chi tiết về SEO không cố định và thay đổi thường xuyên. Do đó, bạn cần cập nhật nguyên tắc SEO liên tục. Nếu bạn chưa có kinh nghiệm, kỹ năng hay kiến thức, có thể thuê freelancer chuyên SEO để bắt đầu dễ dàng hơn. Fastjob.co đã tập hợp các freelancer SEO chuyên nghiệp với ",
+                "Chi tiết về SEO không cố định và thay đổi thường xuyên. Do đó, bạn cần cập nhật nguyên tắc SEO liên tục. Nếu bạn chưa có kinh nghiệm, kỹ năng hay kiến thức, có thể thuê freelancer chuyên SEO để bắt đầu dễ dàng hơn. 108jobs.com đã tập hợp các freelancer SEO chuyên nghiệp với ",
             seoConclusionStrong1: "dịch vụ SEO thuê ngoài, SEO mũ trắng",
             seoConclusionMiddle:
                 " theo mọi yêu cầu của khách hàng. Dịch vụ SEO giá rẻ, giúp tiết kiệm chi phí kinh doanh nhưng vẫn đảm bảo hiệu quả theo mục tiêu mong muốn ",
@@ -402,7 +402,7 @@ export const vi = {
             howToHireSteps1:
                 "Trao đổi chi tiết dự án, freelancer sẽ gửi báo giá để bạn xem xét.",
             howToHireSteps2:
-                "Thanh toán qua Fastjob bằng thẻ tín dụng, ngân hàng di động hoặc Fastjob coin.",
+                "Thanh toán qua 108jobs bằng thẻ tín dụng, ngân hàng di động hoặc 108jobs coin.",
             howToHireSteps3:
                 "Xem xét và duyệt kết quả cuối cùng. Nếu chưa hài lòng, bạn có thể yêu cầu chỉnh sửa.",
         },
@@ -3079,13 +3079,13 @@ export const vi = {
         jobApplication: {
             pageTitle: "Tăng Cơ Hội Tuyển Dụng Của Bạn! Với Kinh Nghiệm Liên Quan và Hồ Sơ",
             pageSubheading: "Hầu hết khách hàng chọn freelancer dựa trên lịch sử làm việc và mẫu hồ sơ",
-            warningMessage: "Cảnh báo: Mời khách hàng thanh toán ngoài hệ thống Fastjob là vi phạm điều khoản sử dụng và có thể dẫn đến việc đình chỉ tài khoản.",
+            warningMessage: "Cảnh báo: Mời khách hàng thanh toán ngoài hệ thống 108jobs là vi phạm điều khoản sử dụng và có thể dẫn đến việc đình chỉ tài khoản.",
             publicInfoMessage: "Tất cả thông tin sẽ được công khai (trừ 'Giá Đề Xuất')",
             whyHireYou: {
                 label: "Tại Sao Khách Hàng Nên Thuê Bạn",
                 placeholder: "Ví dụ: Hồ sơ liên quan / Lịch sử làm việc / Chi tiết quy trình làm việc",
-                required: "Yêu cầu tối thiểu 100 ký tự",
-                characterCount: "{{count}} / Tối thiểu 100 ký tự"
+                required: "Yêu cầu tối thiểu 300 ký tự",
+                characterCount: "{{count}} / Tối thiểu 300 ký tự"
             },
             portfolioUrl: {
                 label: "URL Hồ Sơ (Tùy Chọn)",
