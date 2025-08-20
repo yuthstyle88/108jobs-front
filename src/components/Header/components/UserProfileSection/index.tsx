@@ -13,6 +13,7 @@ import UserImproveMenu from "../UserImproveMenu";
 import ProfileUser from "../ProfileUser";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {useTranslation} from "react-i18next";
+import ChatBadge from "../ChatBadge";
 
 const UserProfileSection = () => {
   const {person} = useMyUser();
@@ -56,7 +57,7 @@ const UserProfileSection = () => {
           <UserMegaMenu/>
         </div>
       </div>
-      {/* <ChatBadge /> */}
+      <ChatBadge />
       <NotificationDropdown/>
       <Link prefetch={false}
             href="/reward/earn"

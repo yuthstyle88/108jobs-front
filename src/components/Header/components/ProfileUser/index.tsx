@@ -1,7 +1,7 @@
-import {ProfileImage} from "@/constants/images";
-import {useLanguage} from "@/contexts/LanguageContext";
-import {interpolateElement} from "@/utils/interpolateElement";
-import {faMoneyBill1} from "@fortawesome/free-regular-svg-icons";
+import { ProfileImage } from "@/constants/images";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { interpolateElement } from "@/utils/interpolateElement";
+import { faMoneyBill1 } from "@fortawesome/free-regular-svg-icons";
 import {
     faBarsProgress,
     faBriefcase,
@@ -15,22 +15,22 @@ import {
     faSignOut,
     faTicket,
 } from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Person} from "lemmy-js-client";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Person } from "lemmy-js-client";
 import Image from "next/image";
 import Link from "next/link";
-import {UserService} from "@/services";
-import {useTranslation} from "react-i18next";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import { UserService } from "@/services";
+import { useTranslation } from "react-i18next";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
 
 type ProfileUserProps = {
     profile: Person;
 };
 
-const ProfileUser = ({profile}: ProfileUserProps) => {
+const ProfileUser = ({ profile }: ProfileUserProps) => {
     const logout = () => UserService.Instance.logout();
-    const {lang: currentLang} = useLanguage();
-    const {t} = useTranslation();
+    const { lang: currentLang } = useLanguage();
+    const { t } = useTranslation();
     return (
         <div className="absolute right-0 mt-2 w-[22rem] bg-white rounded-lg shadow-job-card z-50 select-none">
             <Link prefetch={false} href={`/${currentLang}/profile/${profile.name}`}>
@@ -63,8 +63,8 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
             </Link>
             <div className="py-2">
                 <Link prefetch={false}
-                      href="/account-setting/basic-info"
-                      className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                    href="/account-setting/basic-info"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                 >
                     <FontAwesomeIcon
                         icon={faGear}
@@ -73,8 +73,8 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                     <span className="text-gray-700">{t("global.menuAccountSettings")}</span>
                 </Link>
                 <Link prefetch={false}
-                      href="/chat"
-                      className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                    href="/chat"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                 >
                     <FontAwesomeIcon
                         icon={faMessage}
@@ -83,8 +83,8 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                     <span className="text-gray-700">{t("global.menuMessagesOrders")}</span>
                 </Link>
                 <Link prefetch={false}
-                      href="/favorites"
-                      className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                    href="/favorites"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                 >
                     <FontAwesomeIcon
                         icon={faHeart}
@@ -93,8 +93,8 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                     <span className="text-gray-700">{t("global.menuFavoriteJobs")}</span>
                 </Link>
                 <Link prefetch={false}
-                      href="/job-board"
-                      className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                    href="/job-board"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                 >
                     <FontAwesomeIcon
                         icon={faBullhorn}
@@ -103,8 +103,8 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                     <span className="text-gray-700">{t("global.menuJobBoard")}</span>
                 </Link>
                 <Link prefetch={false}
-                      href="/job-board/jobs"
-                      className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
+                    href="/job-board/jobs"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50"
                 >
                     <FontAwesomeIcon
                         icon={faBriefcase}
@@ -113,8 +113,8 @@ const ProfileUser = ({profile}: ProfileUserProps) => {
                     <span className="text-gray-700">{t("global.menuMyJob")}</span>
                 </Link>
                 <Link prefetch={false}
-                      href="/account-setting/manage"
-                      className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
+                    href="/account-setting/manage"
+                    className="flex items-center gap-5 px-4 py-3 hover:bg-gray-50 border-t"
                 >
                     <FontAwesomeIcon
                         icon={faBarsProgress}

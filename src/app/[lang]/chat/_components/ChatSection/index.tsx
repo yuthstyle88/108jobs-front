@@ -1,23 +1,29 @@
 "use client";
 
 import Image from "next/image";
-import {useEffect, useRef, useState} from "react";
-import {mutate} from "swr";
+import { useEffect, useRef, useState } from "react";
+import { mutate } from "swr";
 
-import {API_ROUTES} from "@/api/endpoints";
+import { API_ROUTES } from "@/api/endpoints";
 import LoadingBlur from "@/components/LoadingBlur";
 
-import {useChatLanguage} from "@/contexts/ChatLanguage";
-import {useWebSocket} from "@/contexts/RealtimeChatContext";
-import {usePrivateFetch, usePrivateImagePost} from "@/hooks/api-hooks";
+import { useChatLanguage } from "@/contexts/ChatLanguage";
+import { useWebSocket } from "@/contexts/RealtimeChatContext.mock";
+import { usePrivateFetch, usePrivateImagePost } from "@/hooks/api-hooks";
 
-import {JobDetailIcon} from "@/constants/icons";
-import {CategoriesImage, ProfileImage} from "@/constants/images";
-import {ChatMessage, ChatResponse} from "@/types/chat";
+import { JobDetailIcon } from "@/constants/icons";
+import { CategoriesImage, ProfileImage } from "@/constants/images";
+import { ChatMessage, ChatResponse } from "@/types/chat";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatJob from "../ChatJob";
 import ChatMessages from "../ChatMessages";
+import Quotation from "../Quotation";
+import QuotationDetailModal from "../Quotation/components/QuotationDetailModal";
+import QuotationCard, { QuotationModel } from "../Quotation/components/QuotationCard";
+import { WorkflowStepper } from "../WorkflowStep";
+import { mockConversations } from "../../mocks/mockData";
+import { QuotationFormValues } from "../Quotation/components/QuotationDialog";
 
 type MessageForm = {
   message: string;
@@ -29,12 +35,16 @@ type UploadedFile = {
   fileName: string;
 };
 const ChatSection = () => {
-  const {languageData: chatLanguageData} = useChatLanguage();
+  const { languageData: chatLanguageData } = useChatLanguage();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [quotations, setQuotations] = useState<QuotationModel[]>([]);
+  const [viewing, setViewing] = useState<QuotationFormValues | null>(null);
   const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
 
-  const {sendMessage, partnerId} = useWebSocket(
+  const conversation = mockConversations[3]
+
+  const { sendMessage, partnerId } = useWebSocket(
     "chat-message",
     (event: MessageEvent) => {
       const data = JSON.parse(event.data);
@@ -45,11 +55,11 @@ const ChatSection = () => {
     }
   );
 
-  const {data: chatData, isLoading: isChatLoading} = usePrivateFetch<
+  const { data: chatData, isLoading: isChatLoading } = usePrivateFetch<
     ChatResponse[]
   >(API_ROUTES.chat.getChatHistory);
 
-  const {trigger: uploadFile, isMutating: isUploading} = usePrivateImagePost(
+  const { trigger: uploadFile, isMutating: isUploading } = usePrivateImagePost(
     API_ROUTES.chat.uploadFile + `?roomId=${partnerId}`
   );
 
@@ -73,7 +83,7 @@ const ChatSection = () => {
     mutate(API_ROUTES.chat.getChatHistory);
   };
 
-  const handleFileUpload = async(e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -90,13 +100,16 @@ const ChatSection = () => {
         err);
     }
   };
+  const handleQuotationCreated = (q: QuotationModel) => {
+    setQuotations((prev) => [...prev, q]);
+  };
 
   useEffect(() => {
-      endRef.current?.scrollIntoView({behavior: "smooth"});
-    },
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  },
     [messages]);
 
-  if (isChatLoading) return <LoadingBlur text=""/>;
+  if (isChatLoading) return <LoadingBlur text="" />;
 
   return (
     <>
@@ -114,7 +127,8 @@ const ChatSection = () => {
           data-testid="chat-list"
           className="flex-1 overflow-y-auto p-4 bg-gray-50"
         >
-          <ChatJob currentRoom={currentRoom}/>
+          <WorkflowStepper status={conversation.project.currentStatus} />
+          <ChatJob currentRoom={currentRoom} />
 
           <div className="flex items-center justify-center my-4">
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mx-auto max-w-lg">
@@ -146,7 +160,23 @@ const ChatSection = () => {
             partnerAvatar={currentRoom?.partnerAvatar || ProfileImage.avatar}
           />
 
-          <div ref={endRef}/>
+          <div className="mt-4 flex flex-col items-start gap-3">
+            {quotations.map((q) => (
+              <QuotationCard
+                key={q.id}
+                data={q.card}
+                onView={() => setViewing(q.form)}
+                onDownload={() => console.log("download", q.id)}
+              />
+            ))}
+          </div>
+          <div ref={endRef} />
+          <Quotation onCreated={handleQuotationCreated} />
+          <QuotationDetailModal
+            isOpen={!!viewing}
+            onClose={() => setViewing(null)}
+            data={viewing}
+          />
         </div>
 
         {/* Message input */}
@@ -200,94 +230,6 @@ const ChatSection = () => {
           </div>
         </div>
 
-        {/* <div className="border-b">
-          <button
-            className="flex items-center justify-between w-full p-4 text-sm hover:bg-gray-50 transition-colors"
-            onClick={toggleEmployment}
-          >
-            <div className="flex items-center text-blue-600">
-              <span className="inline-block mr-2">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="8" y1="6" x2="21" y2="6"></line>
-                  <line x1="8" y1="12" x2="21" y2="12"></line>
-                  <line x1="8" y1="18" x2="21" y2="18"></line>
-                  <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                  <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                  <line x1="3" y1="18" x2="3.01" y2="18"></line>
-                </svg>
-              </span>
-              <span>ข้อมูลการจ้างงาน</span>
-            </div>
-            {isEmploymentOpen ? (
-              <ChevronUp size={16} color="blue" />
-            ) : (
-              <ChevronDown size={16} color="blue" />
-            )}
-          </button>
-          {isEmploymentOpen && (
-            <div className="px-4 pb-4 animate-fade-in">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">เลขคำสั่งซื้อ</span>
-                <div className="flex items-center">
-                  <span className="text-green-600 font-medium">LPC8527T</span>
-                  <button className="ml-1 text-gray-400 hover:text-gray-600">
-                    <Copy size={14} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="border-b">
-          <button
-            className="flex items-center justify-between w-full p-4 text-sm hover:bg-gray-50 transition-colors"
-            onClick={toggleDocuments}
-          >
-            <div className="flex items-center text-blue-600">
-              <span className="inline-block mr-2">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
-              </span>
-              <span>เอกสารจ้างงาน</span>
-            </div>
-            {isDocumentsOpen ? (
-              <ChevronUp size={16} color="blue" />
-            ) : (
-              <ChevronDown size={16} color="blue" />
-            )}
-          </button>
-          {isDocumentsOpen && (
-            <div className="px-4 pb-4 animate-fade-in">
-              <p className="text-sm text-gray-500 text-center">
-                ยังไม่มีเอกสาร
-              </p>
-            </div>
-          )}
-        </div> */}
       </div>
     </>
   );
