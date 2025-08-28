@@ -4,7 +4,12 @@ import debounce from "lodash.debounce";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {useTranslation} from "@/hooks/translation/useTranslation";
 import {Control, FieldError, UseFormSetValue, useWatch,} from "react-hook-form";
-import {AddressFormData} from "../../contact-info/page";
+type AddressFormData = {
+  province: string;
+  districtOrSubdistrict: string;
+  subdistrictOrDistrict: string;
+  zipCode: string;
+};
 
 type Geography = {
   provinceNameTh: string;

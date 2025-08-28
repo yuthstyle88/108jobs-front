@@ -37,10 +37,34 @@ const ChatSection = () => {
   const {sendMessage, partnerId} = useWebSocket(
     "chat-message",
     (event: MessageEvent) => {
-      const data = JSON.parse(event.data);
+      const safeParse = (val: unknown) => {
+        try {
+          return typeof val === "string" ? JSON.parse(val as string) : val;
+        } catch {
+          return val;
+        }
+      };
+
+      let parsed: any = safeParse(event.data);
+      // Handle nested JSON string payloads
+      if (typeof parsed === "string") {
+        parsed = safeParse(parsed);
+      }
+
+      // Normalize to an array of message-like objects
+      const items: any[] = Array.isArray(parsed)
+        ? parsed
+        : parsed && typeof parsed === "object"
+          ? [parsed]
+          : [];
+
+      if (!items.length) return;
+
       setMessages((prev) => {
-        if (prev.some((msg) => msg.id === data.id)) return prev;
-        return [...prev, data];
+        const existing = new Set(prev.map((m) => m.id));
+        const fresh = items.filter((it) => it && it.id && !existing.has(it.id));
+        if (!fresh.length) return prev;
+        return [...prev, ...fresh];
       });
     }
   );

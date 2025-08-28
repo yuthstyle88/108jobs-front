@@ -17,7 +17,11 @@ interface ChatInputProps {
     fileType: string;
     fileName: string;
   } | null;
-  setSelectedFile: (file: null) => void;
+  setSelectedFile: (file: {
+    fileUrl: string;
+    fileType: string;
+    fileName: string;
+  } | null) => void;
   isUploading: boolean;
   chatLanguageData?: Record<string, string>;
 }
@@ -57,6 +61,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
   return (
     <form
+      data-testid="chat-form"
       onSubmit={handleSubmit(internalSubmit)}
       className="flex flex-col gap-2"
     >
@@ -80,6 +85,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
         <div className="flex-1 border rounded-lg overflow-hidden flex">
           <textarea
+            data-testid="chat-input"
             {...rest}
             ref={(e) => {
               ref(e);

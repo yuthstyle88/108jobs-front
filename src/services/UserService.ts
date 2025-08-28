@@ -51,9 +51,6 @@ export class UserService {
     return Boolean(this.authInfo?.auth);
   }
 
-  public get moderatesSomething(): boolean {
-    return amAdmin() || (this.myUserInfo?.moderates?.length ?? 0) > 0;
-  }
 
   public login({
     res,

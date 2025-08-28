@@ -11,7 +11,6 @@ import { useState } from "react";
 import BankAccountModal, { BankAccountFormValues } from "../_components/AddBankAccountModal";
 import ConfirmDeleteModal from "../_components/DeleteBankModal";
 import LoadingBlur from "@/components/LoadingBlur";
-import type { BankAccountView } from "lemmy-js-client";
 
 
 const BankAccount = () => {
@@ -33,7 +32,7 @@ const BankAccount = () => {
     useHttpDelete("deleteBankAccount");
 
   const bankList = bankListRes?.banks || [];
-  const bankAccounts: BankAccountView[] = bankAccountsRes?.bankAccounts ?? [];
+  const bankAccounts = (bankAccountsRes?.bankAccounts ?? []) as any[];
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<BankAccountFormValues | null>(null);
@@ -46,7 +45,7 @@ const BankAccount = () => {
     setModalOpen(true);
   };
 
-  const handleEdit = (account: BankAccountView) => {
+  const handleEdit = (account: any) => {
     setEditingAccount({
       bankId: String(account.user_bank_account.bankId),
       accountNumber: account.user_bank_account.accountNumber,

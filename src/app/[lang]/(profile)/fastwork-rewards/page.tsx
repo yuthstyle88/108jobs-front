@@ -1,10 +1,10 @@
 import React from 'react'
 
 
-const 108jobsReward = () => {
+const Rewards108Jobs = () => {
   return (
     <div>108jobsReward</div>
   )
 }
 
-export default 108jobsReward
+export default Rewards108Jobs

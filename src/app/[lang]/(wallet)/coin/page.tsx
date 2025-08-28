@@ -8,7 +8,7 @@ import Image from "next/image";
 import {useState} from "react";
 import {getNamespace} from "@/utils/i18nHelper";
 
-const 108jobsCoin = () => {
+const Coins108Jobs = () => {
   const [amount, setAmount] = useState("");
 
   const coinLanguageData = getNamespace(LanguageFile.COINS);
@@ -148,4 +148,4 @@ const 108jobsCoin = () => {
   );
 };
 
-export default 108jobsCoin;
+export default Coins108Jobs;

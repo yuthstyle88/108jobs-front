@@ -593,7 +593,7 @@ export default function BasicInformation() {
                                     {...register("contacts")}
                                     placeholder={t("profileInfo.customContactPlaceholder")}
                                     className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 resize-y"
-                                    rows="3"
+                                    rows={3}
                                 />
                                 {errors.contacts && (
                                     <p className="text-red-500 text-sm mt-1">

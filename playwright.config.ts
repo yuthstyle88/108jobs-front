@@ -22,6 +22,10 @@ export default defineConfig({
     url: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
+    env: {
+      NEXT_PUBLIC_E2E_MODE: process.env.NEXT_PUBLIC_E2E_MODE || 'mock',
+      NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3000',
+    },
   },
 
   projects: [

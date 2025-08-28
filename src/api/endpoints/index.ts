@@ -29,7 +29,7 @@ export const API_ROUTES = {
     updatePassword: "/profile/change/password",
     verifyForgotPassword: "/users/verify/reset-password",
     getCaptcha: "/site/get-captcha",
-    exchangeKey: "/account/auth/exchange-key",
+    exchangeKey: "/account/auth/exchange-public-key",
   },
   authV2: {
     registerV2: "/account/auth/register",

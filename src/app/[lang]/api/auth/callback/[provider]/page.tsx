@@ -3,7 +3,7 @@
 import {useRouter, useSearchParams} from "next/navigation";
 import {useEffect} from "react";
 import {toast} from "sonner"; // หรือไลบรารีที่คุณใช้สำหรับ toast notifications
-import {arrayBufferToHex, exportPublicKey, generateEcKeyPair, importEcPublicKeyHex} from "@/lib/web-crypto";
+// Note: E2EE key exchange imports removed to prevent pairing on login
 import {UserService} from "@/services";
 import {HttpService} from "@/services/HttpService";
 import {useTranslation} from "react-i18next";
@@ -119,7 +119,7 @@ export default function OAuthCallbackPage() {
     },
     [code, state, router]);
 
-  return true
+  return null
 }
 
 // ฟังก์ชันช่วยจัดการการเข้าสู่ระบบที่สำเร็จ
@@ -129,23 +129,9 @@ async function handleLoginSuccess(loginData: LoginResponse, prev?: string) {
       res: loginData,
     });
 
-    const {privateKey, publicKey} = await generateEcKeyPair();
-    const exportPub = await exportPublicKey(publicKey);
-    const res = await HttpService.client.exchange_public_key({publicKey: exportPub});
-    if (res.state === "success") {
-      const serverPubKey = await importEcPublicKeyHex(res.data.publicKey);
-      const sharedKey = await crypto.subtle.deriveBits(
-        {name: "ECDH", public: serverPubKey},
-        privateKey,
-        256
-      );
-      const sharedKeyHex = arrayBufferToHex(sharedKey);
-
-      UserService.Instance.login({
-        res: loginData,
-        sharedKey: sharedKeyHex
-      });
-    }
+    // Skip E2EE key exchange during login to avoid unintended pairing on login.
+    // If needed, the key exchange will be performed lazily when entering chat.
+    // (Previously performed an ECDH exchange here and stored sharedKey.)
     if (prev) {
       window.location.href = prev;
     } else if (window.history.length > 1) {

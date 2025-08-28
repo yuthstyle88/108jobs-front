@@ -11,7 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {useState} from "react";
 import ProfileFreelancer from "../Header/components/ProfileUser";
-import ProfileSection from "../Header/components/ProfileSection";
+import UserProfileSection from "../Header/components/UserProfileSection";
 import LanguageDropdown from "../LanguageDropDown";
 
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
@@ -99,9 +99,7 @@ const RewardHeader = () => {
 
                 {isOpen && (
                   <>
-                    <ProfileSection
-                      profile={person}
-                    />
+                    <UserProfileSection />
                     <div
                       className="fixed inset-0 z-40"
                       onClick={close}
