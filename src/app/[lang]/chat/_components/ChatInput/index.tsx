@@ -4,132 +4,133 @@ import {Paperclip, Send, Smile} from "lucide-react";
 import {useEffect, useRef} from "react";
 import {useForm} from "react-hook-form";
 import FilePreview from "../FilePreview";
+import {useTranslation} from "react-i18next";
 
 type MessageForm = {
-  message: string;
+    message: string;
 };
 
 interface ChatInputProps {
-  onSubmit: (data: MessageForm) => void;
-  onFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  selectedFile: {
-    fileUrl: string;
-    fileType: string;
-    fileName: string;
-  } | null;
-  setSelectedFile: (file: {
-    fileUrl: string;
-    fileType: string;
-    fileName: string;
-  } | null) => void;
-  isUploading: boolean;
-  chatLanguageData?: Record<string, string>;
+    onSubmit: (data: MessageForm) => void;
+    onFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    selectedFile: {
+        fileUrl: string;
+        fileType: string;
+        fileName: string;
+    } | null;
+    setSelectedFile: (file: {
+        fileUrl: string;
+        fileType: string;
+        fileName: string;
+    } | null) => void;
+    isUploading: boolean;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({
-  onSubmit,
-  onFileUpload,
-  selectedFile,
-  isUploading,
-  chatLanguageData,
-}) => {
-  const {register, handleSubmit, reset, watch} = useForm<MessageForm>();
-  const messageRef = useRef<HTMLTextAreaElement | null>(null);
+                                                 onSubmit,
+                                                 onFileUpload,
+                                                 selectedFile,
+                                                 isUploading,
+                                             }) => {
+    const {t} = useTranslation();
+    const {register, handleSubmit, reset, watch} = useForm<MessageForm>();
+    const messageRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const {ref, ...rest} = register("message");
+    const {ref, ...rest} = register("message");
 
-  const resizeTextarea = () => {
-    const textarea = messageRef.current;
-    if (textarea) {
-      textarea.style.height = "auto";
-      textarea.style.height = textarea.scrollHeight + "px";
-    }
-  };
+    const resizeTextarea = () => {
+        const textarea = messageRef.current;
+        if (textarea) {
+            textarea.style.height = "auto";
+            textarea.style.height = textarea.scrollHeight + "px";
+        }
+    };
 
-  useEffect(() => {
-      resizeTextarea();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },
-    [watch("message")]);
+    useEffect(() => {
+            resizeTextarea();
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        },
+        [watch("message")]);
 
-  const internalSubmit = (data: MessageForm) => {
-    onSubmit(data);
-    reset();
-    setTimeout(() => resizeTextarea(),
-      0);
-  };
+    const internalSubmit = (data: MessageForm) => {
+        onSubmit(data);
+        reset();
+        setTimeout(() => resizeTextarea(),
+            0);
+    };
 
-  return (
-    <form
-      data-testid="chat-form"
-      onSubmit={handleSubmit(internalSubmit)}
-      className="flex flex-col gap-2"
-    >
-      <div className="flex items-center w-full">
-        <input
-          type="file"
-          id="fileInput"
-          className="hidden"
-          onChange={onFileUpload}
-        />
-        <label
-          htmlFor="fileInput"
-          className="text-gray-400 hover:text-gray-600 mr-3 cursor-pointer"
+    return (
+        <form
+            data-testid="chat-form"
+            onSubmit={handleSubmit(internalSubmit)}
+            className="flex flex-col gap-2"
         >
-          {isUploading ? (
-            <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
-          ) : (
-            <Paperclip size={20}/>
-          )}
-        </label>
+            <div className="flex items-center w-full">
+                <input
+                    type="file"
+                    id="fileInput"
+                    className="hidden"
+                    onChange={onFileUpload}
+                />
+                <label
+                    htmlFor="fileInput"
+                    className="text-gray-400 hover:text-gray-600 mr-3 cursor-pointer"
+                >
+                    {isUploading ? (
+                        <div
+                            className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+                    ) : (
+                        <Paperclip size={20}/>
+                    )}
+                </label>
 
-        <div className="flex-1 border rounded-lg overflow-hidden flex">
+                <div className="flex-1 border rounded-lg overflow-hidden flex">
           <textarea
-            data-testid="chat-input"
-            {...rest}
-            ref={(e) => {
-              ref(e);
-              messageRef.current = e;
-            }}
-            placeholder={
-              chatLanguageData?.typeMessageHere || "Type a message..."
-            }
-            className="text-text-primary flex-1 px-3 py-2 resize-none focus:outline-none min-h-[40px] max-h-[150px] overflow-y-auto break-words whitespace-pre-wrap"
-            rows={1}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                const form = e.currentTarget.closest("form");
-                if (form) form.requestSubmit();
+              data-testid="chat-input"
+              {...rest}
+              ref={(e) => {
+                  ref(e);
+                  messageRef.current = e;
+              }}
+              placeholder={
+                  t("profileChat.typeMessageHere")|| "Type a message..."
               }
-            }}
+              className="text-text-primary flex-1 px-3 py-2 resize-none focus:outline-none min-h-[40px] max-h-[150px] overflow-y-auto break-words whitespace-pre-wrap"
+              rows={1}
+              onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      const form = e.currentTarget.closest("form");
+                      if (form) form.requestSubmit();
+                  }
+              }}
           />
-          <button
-            type="button"
-            className="bg-white px-3 text-gray-400 hover:text-gray-600"
-          >
-            <Smile size={20}/>
-          </button>
-        </div>
+                    <button
+                        type="button"
+                        className="bg-white px-3 text-gray-400 hover:text-gray-600"
+                    >
+                        <Smile size={20}/>
+                    </button>
+                </div>
 
-        <button
-          type="submit"
-          className="ml-3 text-blue-500 hover:text-blue-600"
-        >
-          <Send size={20}/>
-        </button>
-      </div>
+                <button
+                    type="submit"
+                    className="ml-3 text-blue-500 hover:text-blue-600"
+                >
+                    <Send size={20}/>
+                </button>
+            </div>
 
-      {selectedFile && (
-        <FilePreview
-          fileUrl={selectedFile.fileUrl}
-          fileType={selectedFile.fileType}
-          fileName={selectedFile.fileName}
-          showDownloadLink={false}
-        />
-      )}
-    </form>
-  );
+            {selectedFile && (
+                <FilePreview
+                    fileUrl={selectedFile.fileUrl}
+                    fileType={selectedFile.fileType}
+                    fileName={selectedFile.fileName}
+                    showDownloadLink={false}
+                />
+            )}
+        </form>
+    );
 };
 
 export default ChatInput;

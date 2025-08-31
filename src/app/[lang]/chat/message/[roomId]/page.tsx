@@ -3,11 +3,11 @@ import MessageClient from "./MessageClient";
 export default async function ChatMessage({
   params,
 }: {
-  params: Promise<{senderId: string}>;
+  params: Promise<{roomId: string}>;
 }) {
-  const {senderId} = await params;
+  const {roomId} = await params;
 
   return (
-    <MessageClient senderId={senderId}/>
+    <MessageClient roomId={roomId}/>
   );
 }

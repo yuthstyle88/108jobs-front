@@ -2,18 +2,17 @@ import {isSuccess, RequestState} from "@/services/HttpService";
 import {
     CommunityId,
     CommunityNodeView,
-    CommunityResponse,
     GetSiteResponse,
     JobType,
     ListCommunitiesResponse,
-    PaginationCursor,
-    UploadImageResponse
+    PaginationCursor
 } from "lemmy-js-client";
 import {IncomingHttpHeaders} from "http";
 import * as cookie from "cookie";
 import {authCookieName} from "@/utils/config";
 import {Match} from "@/utils/router";
 import {ErrorPageData} from "@/utils/types";
+import {createHash} from "node:crypto";
 
 export function capitalizeFirstLetter(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -574,5 +573,21 @@ export function getCommunitiesAtLevel(catalogData: ListCommunitiesResponse | und
     }
 
     return catalogData.communities.filter(c => c.community.path.split('.').length === level);
+}
+
+/**
+ * Generate deterministic roomId for a DM between 2 users.
+ * Always the same string for the same pair.
+ */
+export function dmRoomId(userA: number, userB: number): string {
+    // normalize order (smaller id first)
+    const [low, high] = userA < userB ? [userA, userB] : [userB, userA];
+    const input = `dm:${low}:${high}`;
+
+    // SHA-256 hash -> take first 16 hex chars
+    const hash = createHash("sha256").update(input).digest("hex");
+
+    // return safe string (64-bit worth of entropy, no collision risk)
+    return hash.slice(0, 16);
 }
 

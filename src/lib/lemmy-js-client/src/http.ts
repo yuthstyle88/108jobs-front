@@ -1527,7 +1527,7 @@ export class LemmyHttp extends Controller {
     @Security("bearerAuth")
     @Post("/account/auth/exchange-public-key")
     @Tags("Account")
-    async exchange_public_key(
+    async exchangePublicKey(
         @Body() form: ExchangeKey,
         @Inject() options?: RequestOptions,
     ) {

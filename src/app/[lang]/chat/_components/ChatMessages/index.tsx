@@ -9,25 +9,27 @@ interface ChatMessagesProps {
   partnerAvatar: StaticImageData | string;
 }
 
-const formatDate = (dateStr: string) => {
+const formatDate = (dateStr: string, locale?: string) => {
   const date = new Date(dateStr);
-  const day = date.getDate();
-  const month = date.toLocaleString("th-TH",
-    {month: "long"});
-  const year = date.getFullYear();
-  return `${day} ${month} ${year}`;
+  const formatter = new Intl.DateTimeFormat(locale || undefined, {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  return formatter.format(date);
 };
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
   messages,
   partnerAvatar,
 }) => {
+  const userLocale = typeof navigator !== "undefined" ? navigator.language : undefined;
   return (
     <>
       {messages.map((msg, index) => {
-        const currentDate = formatDate(msg.createdAt);
+        const currentDate = formatDate(msg.createdAt, userLocale);
         const prevDate =
-          index > 0 ? formatDate(messages[index - 1].createdAt) : null;
+          index > 0 ? formatDate(messages[index - 1].createdAt, userLocale) : null;
         const showDate = currentDate !== prevDate;
 
         return (
