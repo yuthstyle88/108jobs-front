@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { encrypt, decrypt, hexToUint8Array } from "@/lib/web-crypto";
-import { exchange as exchangeSharedKey } from "@/lib/api/auth";
 import { UserService } from "@/services";
 import { ChatMessage } from "@/types/chat";
 import { v4 as uuidv4 } from "uuid";
@@ -34,11 +33,17 @@ function buildWsUrl(token: string, roomId: string): string {
     return `ws://localhost:8532/ws?token=${token}&room_id=${roomId}`;
 }
 
-async function ensureSharedKey(userId?: number | string | null): Promise<void> {
+async function ensureSharedKeyForRoom(roomId: string): Promise<void> {
     const token = UserService.Instance.auth();
-    if (!token || UserService.Instance.authInfo?.sharedKey) return;
+    if (!token) {
+        if (process.env.NODE_ENV !== "production") {
+            console.debug(`ensureSharedKeyForRoom: Skipped - no token`);
+        }
+        return;
+    }
+
     try {
-        const storageKey = `sharedKey_${userId}`;
+        const storageKey = `sharedKey_room_${roomId}`;
         const storedKey = typeof window !== "undefined" ? localStorage.getItem(storageKey) : null;
         if (storedKey) {
             UserService.Instance.authInfo = {
@@ -46,22 +51,38 @@ async function ensureSharedKey(userId?: number | string | null): Promise<void> {
                 sharedKey: storedKey,
                 claims: UserService.Instance.authInfo?.claims,
             };
+            if (process.env.NODE_ENV !== "production") {
+                console.debug(`ensureSharedKeyForRoom: Loaded shared key from localStorage for room ${roomId}`);
+            }
             return;
         }
-        const derived = await exchangeSharedKey();
+
+        // Derive a deterministic per-room key so all participants share the same key.
+        // We use SHA-256(roomId) and take the full 32 bytes as AES-256 key material.
+        const roomIdBytes = new TextEncoder().encode(roomId);
+        const digest = await crypto.subtle.digest("SHA-256", roomIdBytes);
+        const derived = Array.from(new Uint8Array(digest))
+            .map(b => b.toString(16).padStart(2, "0")).join("");
+
         UserService.Instance.authInfo = {
             ...(UserService.Instance.authInfo || { auth: token }),
             sharedKey: derived,
             claims: UserService.Instance.authInfo?.claims,
         };
         if (typeof window !== "undefined") localStorage.setItem(storageKey, derived);
+        if (process.env.NODE_ENV !== "production") {
+            console.debug(`ensureSharedKeyForRoom: Derived and stored new shared key for room ${roomId}`);
+        }
     } catch (ex) {
-        console.warn("Key exchange failed.", ex);
+        console.warn(`ensureSharedKeyForRoom: Key derivation failed for room ${roomId}`, ex);
     }
 }
 
 async function importAesKey(sharedKeyHex: string, usage: KeyUsage): Promise<AESKey> {
     const keyData = hexToUint8Array(sharedKeyHex);
+    if (process.env.NODE_ENV !== "production") {
+        console.debug(`importAesKey: Importing AES key for ${usage}`);
+    }
     return crypto.subtle.importKey("raw", keyData, { name: "AES-CBC", length: 256 }, false, [usage]);
 }
 
@@ -71,24 +92,46 @@ function isBase64Like(s: string): boolean {
 
 function safeParse(val: unknown): any {
     try {
-        return typeof val === "string" ? JSON.parse(val as string) : val;
+        const result = typeof val === "string" ? JSON.parse(val as string) : val;
+        if (process.env.NODE_ENV !== "production") {
+            console.debug(`safeParse: Parsed value`, result);
+        }
+        return result;
     } catch {
+        if (process.env.NODE_ENV !== "production") {
+            console.debug(`safeParse: Failed to parse value`, val);
+        }
         return val;
     }
 }
 
 function getReceiverIdFromRoom(roomId: string): number {
-    return roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0;
+    const receiverId = roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0;
+    if (process.env.NODE_ENV !== "production") {
+        console.debug(`getReceiverIdFromRoom: Extracted receiverId ${receiverId} from roomId ${roomId}`);
+    }
+    return receiverId;
 }
 
 function addOnce(set: Set<string>, key: string): boolean {
-    if (set.has(key)) return false;
+    if (set.has(key)) {
+        if (process.env.NODE_ENV !== "production") {
+            console.debug(`addOnce: Key ${key} already exists in set`);
+        }
+        return false;
+    }
     set.add(key);
+    if (process.env.NODE_ENV !== "production") {
+        console.debug(`addOnce: Added key ${key} to set`);
+    }
     return true;
 }
 
 function broadcastToListeners(payload: unknown): void {
     const event = { data: JSON.stringify(payload) } as MessageEvent;
+    if (process.env.NODE_ENV !== "production") {
+        console.debug(`broadcastToListeners: Broadcasting payload`, payload);
+    }
     for (const fn of listeners.values()) fn(event);
 }
 
@@ -110,32 +153,47 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     const sentMessagesRef = useRef<Set<string>>(new Set());
     const receivedMessagesRef = useRef<Set<string>>(new Set());
 
-    const defaultWsOrigin =
-        typeof window !== "undefined"
-            ? `${window.location.protocol === "https:" ? "wss" : "ws"}://${window.location.host}`
-            : "";
     const wsUrl = buildWsUrl(token, roomId);
 
     useEffect(() => {
         if (isE2EMock) {
+            if (process.env.NODE_ENV !== "production") {
+                console.debug(`WebSocketProvider: Mock mode enabled, setting isConnected to true`);
+            }
             setIsConnected(true);
             return;
         }
-        if (!token || !roomId || !localUser) return;
+        if (!token || !roomId || !localUser) {
+            if (process.env.NODE_ENV !== "production") {
+                console.debug(`WebSocketProvider: Missing prerequisites - token: ${!!token}, roomId: ${!!roomId}, localUser: ${!!localUser}`);
+            }
+            return;
+        }
 
         let cancelled = false;
         isManuallyClosingRef.current = false;
 
         (async () => {
             try {
-                await ensureSharedKey(localUser?.id);
+                await ensureSharedKeyForRoom(roomId);
+                if (process.env.NODE_ENV !== "production") {
+                    console.debug(`WebSocketProvider: Shared key ensured for room ${roomId}`);
+                }
             } catch (e) {
-                console.warn("Pre-WS key exchange error", e);
+                console.warn(`WebSocketProvider: Pre-WS key derivation error for room ${roomId}`, e);
             }
-            if (cancelled) return;
+            if (cancelled) {
+                if (process.env.NODE_ENV !== "production") {
+                    console.debug(`WebSocketProvider: Operation cancelled before WebSocket creation`);
+                }
+                return;
+            }
 
             const newSocket = new WebSocket(wsUrl);
             setSocket(newSocket);
+            if (process.env.NODE_ENV !== "production") {
+                console.debug(`WebSocketProvider: Created new WebSocket for room ${roomId}`);
+            }
 
             newSocket.onopen = () => {
                 setIsConnected(true);
@@ -144,24 +202,25 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 if (reconnectTimeoutRef.current) {
                     clearTimeout(reconnectTimeoutRef.current);
                     reconnectTimeoutRef.current = null;
+                    if (process.env.NODE_ENV !== "production") {
+                        console.debug(`WebSocketProvider: Cleared reconnect timeout`);
+                    }
                 }
-                console.log("✅ WebSocket connected to", roomId);
+                console.log(`WebSocket connected for room ${roomId}`);
             };
 
             newSocket.onmessage = async (event) => {
-                console.log("📥 Raw WebSocket message received:", event.data);
                 try {
                     const token = UserService.Instance.auth();
                     const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
 
-
                     let parsed: any = safeParse(event.data);
                     if (typeof parsed === "string") parsed = safeParse(parsed);
 
-                    console.log("📜 Parsed WebSocket message:", parsed);
-
                     const items: any[] = Array.isArray(parsed) ? parsed : parsed && typeof parsed === "object" ? [parsed] : [];
-                    console.log("📜 Items extracted:", items);
+                    if (process.env.NODE_ENV !== "production") {
+                        console.debug(`onmessage: Parsed ${items.length} items from event data`);
+                    }
 
                     const transformedItems: ChatMessage[] = [];
 
@@ -169,17 +228,19 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     if (typeof parsed === "string" && isBase64Like(parsed)) {
                         const messageSignature = `${parsed}:${new Date().toISOString().slice(0, 19)}`;
                         if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                            console.log("🛑 Duplicate raw base64 message ignored:", parsed);
                             return;
                         }
 
                         if (token && sharedKeyHex) {
                             try {
                                 const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-                                const plain = await decrypt(parsed, token, aesKey);
+                                const plain = await decrypt(parsed, roomId, aesKey);
+                                if (process.env.NODE_ENV !== "production") {
+                                    console.debug(`onmessage: Decrypted raw base64 message`);
+                                }
                                 if (plain.length > 0) {
                                     transformedItems.push({
-                                        id: sentMessagesRef.current.has(parsed) ? Array.from(sentMessagesRef.current).find((id) => id.includes(parsed)) || `msg_${uuidv4()}` : `msg_${uuidv4()}`, // Match sent ID if available
+                                        id: sentMessagesRef.current.has(parsed) ? Array.from(sentMessagesRef.current).find((id) => id.includes(parsed)) || `msg_${uuidv4()}` : `msg_${uuidv4()}`,
                                         senderId: localUser?.id,
                                         roomId,
                                         content: plain,
@@ -187,42 +248,51 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                                         createdAt: new Date().toISOString(),
                                         isOwner: false,
                                     });
-                                    console.log("📜 Decrypted raw base64 message:", plain);
                                 }
                             } catch (e) {
-                                console.warn("Failed to decrypt raw base64 message:", parsed, "Error:", e);
+                                console.warn(`onmessage: Failed to decrypt raw base64 message: ${parsed}`, e);
                             }
                         } else {
-                            console.warn("Received raw base64 message but no sharedKey available:", parsed);
+                            console.warn(`onmessage: No sharedKey for raw base64 message: ${parsed}`);
                         }
-                    } else if (parsed?.content && parsed?.sent_at) {
-                        const messageSignature = `${parsed.content}:${parsed.sent_at}`;
-                        if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                            console.log("🛑 Duplicate {content, sent_at} message ignored:", parsed);
-                            return;
-                        }
+                    } else if (parsed?.room_id && parsed?.sender_id && parsed?.content) {
+                        if (parsed.room_id !== roomId) {
+                            if (process.env.NODE_ENV !== "production") {
+                                console.debug(`onmessage: Ignored message for other room ${parsed.room_id}`);
+                            }
+                        } else {
+                            const createdAtVal = parsed.created_at || parsed.createdAt || new Date().toISOString();
+                            const messageSignature = `${parsed.content}:${createdAtVal}`;
+                            if (!addOnce(receivedMessagesRef.current, messageSignature)) {
+                                if (process.env.NODE_ENV !== "production") {
+                                    console.debug(`onmessage: Ignored duplicate new-format message`);
+                                }
+                            } else {
+                                let contentOut: string = parsed.content;
 
-                        if (token && sharedKeyHex) {
-                            try {
-                                const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-                                const plain = await decrypt(parsed.content, token, aesKey);
-                                if (plain.length > 0) {
-                                    transformedItems.push({
-                                        id: parsed.id || `msg_${uuidv4()}`,
-                                        senderId: Number(localUser?.id) || 0,
-                                        roomId,
-                                        content: plain,
-                                        status: 1,
-                                        createdAt: parsed.sent_at || new Date().toISOString(),
-                                        isOwner: true,
-                                    });
-                                    console.log("📜 Decrypted content from {content, sent_at} payload:", plain);
+                                if (token && sharedKeyHex) {
+                                    try {
+                                        const aesKey = await importAesKey(sharedKeyHex, "decrypt");
+                                        console.log("sharedKeyHex: ", sharedKeyHex)
+                                        const plain = await decrypt(contentOut, roomId, aesKey);
+                                        if (plain && plain.length > 0) {
+                                            contentOut = plain;
+                                        }
+                                    } catch (e) {
+                                        console.warn(`onmessage: Decryption failed for new-format payload, using original content`, e);
+                                    }
                                 }
-                            } catch (e) {
-                                console.warn("Failed to decrypt content from {content, sent_at} payload:", parsed, "Error:", e);
+
+                                transformedItems.push({
+                                    id: parsed.id || `msg_${uuidv4()}`,
+                                    senderId: Number(parsed.sender_id) || 0,
+                                    roomId: parsed.room_id,
+                                    content: contentOut,
+                                    status: typeof parsed.status === "number" ? parsed.status : 1,
+                                    createdAt: createdAtVal,
+                                    isOwner: Number(parsed.sender_id) === Number(localUser?.id),
+                                });
                             }
-                        } else {
-                            console.warn("Received {content, sent_at} payload but no sharedKey available:", parsed);
                         }
                     }
 
@@ -230,23 +300,33 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     if (token && sharedKeyHex && items.length) {
                         try {
                             const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-
                             for (const it of items) {
-                                if (it?.op === "SendMessage" && it?.content) {
+                                if (it?.op !== "SendMessage") {
+                                    if (process.env.NODE_ENV !== "production") {
+                                        console.debug(`onmessage: Skipped non-SendMessage item`, it);
+                                    }
+                                    continue;
+                                }
+                                if (it?.content) {
                                     const messageSignature = `${it.content}:${it.createdAt || new Date().toISOString()}`;
                                     if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                                        console.log("🛑 Duplicate SendMessage payload ignored:", it);
+                                        if (process.env.NODE_ENV !== "production") {
+                                            console.debug(`onmessage: Ignored duplicate SendMessage`);
+                                        }
                                         continue;
                                     }
 
                                     let content = it.content;
                                     try {
-                                        const plain = await decrypt(it.content, token, aesKey);
+                                        const plain = await decrypt(it.content, roomId, aesKey);
                                         if (plain.length > 0) {
                                             content = plain;
+                                            if (process.env.NODE_ENV !== "production") {
+                                                console.debug(`onmessage: Decrypted SendMessage content`);
+                                            }
                                         }
                                     } catch (e) {
-                                        console.warn("Decryption failed for SendMessage:", it, "Error:", e);
+                                        console.warn(`onmessage: Decryption failed for SendMessage`, e);
                                     }
 
                                     transformedItems.push({
@@ -260,20 +340,28 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                                         isOwner: it.sender_id === Number(localUser?.id),
                                     });
                                 } else {
-                                    console.warn("Invalid SendMessage payload:", it);
+                                    console.warn(`onmessage: Invalid SendMessage payload (missing content)`, it);
                                 }
                             }
                         } catch (e) {
-                            console.warn("Failed to decrypt incoming message(s). Using original payload.", e);
+                            console.warn(`onmessage: Failed to decrypt incoming message(s)`, e);
                         }
                     }
 
                     // Handle non-encrypted SendMessage payloads
                     for (const it of items) {
-                        if (it?.op === "SendMessage" && it?.content) {
+                        if (it?.op !== "SendMessage") {
+                            if (process.env.NODE_ENV !== "production") {
+                                console.debug(`onmessage: Skipped non-SendMessage item in non-encrypted branch`, it);
+                            }
+                            continue;
+                        }
+                        if (it?.content) {
                             const messageSignature = `${it.content}:${it.createdAt || new Date().toISOString()}`;
                             if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                                console.log("🛑 Duplicate non-encrypted SendMessage payload ignored:", it);
+                                if (process.env.NODE_ENV !== "production") {
+                                    console.debug(`onmessage: Ignored duplicate SendMessage in non-encrypted branch`);
+                                }
                                 continue;
                             }
 
@@ -287,50 +375,63 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                                 createdAt: it.createdAt || new Date().toISOString(),
                                 isOwner: it.sender_id === Number(localUser?.id),
                             });
+                            if (process.env.NODE_ENV !== "production") {
+                                console.debug(`onmessage: Processed non-encrypted SendMessage`);
+                            }
                         } else {
-                            console.warn("Invalid SendMessage payload in non-encrypted branch:", it);
+                            console.warn(`onmessage: Invalid SendMessage payload in non-encrypted branch (missing content)`, it);
                         }
                     }
 
                     if (transformedItems.length) {
                         const transformed = Array.isArray(parsed) ? transformedItems : transformedItems[0];
-                        console.log("📤 Transformed message sent to listeners:", transformed);
-                        broadcastToListeners(transformed)
+                        if (process.env.NODE_ENV !== "production") {
+                            console.debug(`onmessage: Broadcasting ${transformedItems.length} transformed items`);
+                        }
+                        broadcastToListeners(transformed);
                     } else {
-                        console.warn("No valid SendMessage items to transform");
+                        console.warn(`onmessage: No valid SendMessage items to transform`);
                     }
                 } catch (e) {
-                    console.error("Error processing WebSocket message:", e);
+                    console.error(`onmessage: Error processing WebSocket message`, e);
                     for (const fn of listeners.values()) fn(event);
                 }
             };
 
             newSocket.onclose = (event) => {
                 setIsConnected(false);
-                console.warn("❌ WebSocket closed. Code:", event.code);
+                console.log(`WebSocket closed for room ${roomId}. Code: ${event.code}, Reason: ${event.reason || "unknown"}`);
 
                 if (isManuallyClosingRef.current) {
-                    console.log("🟡 WebSocket closed manually. Skipping error handling.");
+                    if (process.env.NODE_ENV !== "production") {
+                        console.debug(`onclose: WebSocket closed manually`);
+                    }
                     return;
                 }
 
                 if ([1008, 4000, 4400].includes(event.code)) {
                     setConnectionError(true);
+                    console.warn(`onclose: Connection error with code ${event.code}, setting connectionError`);
                     return;
                 }
 
                 reconnectTimeoutRef.current = setTimeout(() => {
                     setSocket(null);
                     setConnectionAttemptKey((prev) => prev + 1);
+                    if (process.env.NODE_ENV !== "production") {
+                        console.debug(`onclose: Scheduled reconnect attempt ${connectionAttemptKey + 1}`);
+                    }
                 }, 3000);
             };
 
             newSocket.onerror = (err) => {
                 if (isManuallyClosingRef.current) {
-                    console.log("🟡 WebSocket error ignored due to manual close.");
+                    if (process.env.NODE_ENV !== "production") {
+                        console.debug(`onerror: WebSocket error ignored due to manual close`);
+                    }
                     return;
                 }
-                console.error("🚨 WebSocket encountered error", err);
+                console.error(`WebSocket error for room ${roomId}`, err);
             };
         })();
 
@@ -339,21 +440,36 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             isManuallyClosingRef.current = true;
             try {
                 socket?.close();
+                if (process.env.NODE_ENV !== "production") {
+                    console.debug(`WebSocketProvider cleanup: Closed WebSocket for room ${roomId}`);
+                }
             } catch {
-                // ignore
+                if (process.env.NODE_ENV !== "production") {
+                    console.debug(`WebSocketProvider cleanup: Error closing WebSocket for room ${roomId}`);
+                }
             }
         };
-    }, [wsUrl, connectionAttemptKey]);
+    }, [wsUrl, connectionAttemptKey, localUser, roomId, token]);
 
     useEffect(() => {
         if (connectionError) {
+            if (process.env.NODE_ENV !== "production") {
+                console.debug(`WebSocketProvider: Connection error detected, redirecting to /not-found`);
+            }
             router.replace("/not-found");
         }
     }, [connectionError, router]);
 
     useEffect(() => {
-        if (!socket) return;
-        console.log("📡 Socket state:", socket.readyState);
+        if (!socket) {
+            if (process.env.NODE_ENV !== "production") {
+                console.debug(`WebSocketProvider: Socket is null`);
+            }
+            return;
+        }
+        if (process.env.NODE_ENV !== "production") {
+            console.debug(`WebSocketProvider: Socket state changed, readyState: ${socket.readyState}`);
+        }
     }, [socket]);
 
     const sendMessage = useCallback(
@@ -370,19 +486,23 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     status: 1,
                     isOwner: true,
                 };
-                console.log("📤 Mock message sent to listeners:", mockMessage);
-                broadcastToListeners(mockMessage)
+                if (process.env.NODE_ENV !== "production") {
+                    console.debug(`sendMessage: Emitting mock message`, mockMessage);
+                }
+                broadcastToListeners(mockMessage);
                 return;
             }
 
             if (!data.message?.trim()) {
-                console.warn("Cannot send empty message");
+                console.warn(`sendMessage: Cannot send empty message`);
                 return;
             }
 
             const messageId = data.id || uuidv4();
             if (!addOnce(sentMessagesRef.current, messageId)) {
-                console.log("🛑 Duplicate sendMessage call ignored:", data.message);
+                if (process.env.NODE_ENV !== "production") {
+                    console.debug(`sendMessage: Ignored duplicate message ID ${messageId}`);
+                }
                 return;
             }
 
@@ -402,9 +522,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 const token = UserService.Instance.auth();
                 if (token && !UserService.Instance.authInfo?.sharedKey) {
                     try {
-                        await ensureSharedKey(localUser?.id);
+                        await ensureSharedKeyForRoom(roomId);
+                        if (process.env.NODE_ENV !== "production") {
+                            console.debug(`sendMessage: Ensured shared key for room ${roomId}`);
+                        }
                     } catch (ex) {
-                        console.warn("Could not derive shared key, sending plaintext.", ex);
+                        console.warn(`sendMessage: Could not derive shared key for room, sending plaintext`, ex);
                     }
                 }
 
@@ -412,18 +535,23 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 const shouldEncrypt = !!(token && sharedKeyHex && data.message && data.message.trim());
                 if (shouldEncrypt) {
                     const aesKey = await importAesKey(sharedKeyHex!, "encrypt");
-                    const encrypted = await encrypt(data.message, aesKey, token!);
+                    const encrypted = await encrypt(data.message, aesKey, roomId);
                     payload = { ...apiPayload, content: encrypted };
+                    if (process.env.NODE_ENV !== "production") {
+                        console.debug(`sendMessage: Encrypted message for sending`);
+                    }
                 }
             } catch (e) {
-                console.warn("E2EE encryption failed, sending plaintext.", e);
+                console.warn(`sendMessage: E2EE encryption failed, sending plaintext`, e);
             }
 
             if (socket?.readyState === WebSocket.OPEN) {
-                console.log("📤 Sending WebSocket message:", payload);
+                if (process.env.NODE_ENV !== "production") {
+                    console.debug(`sendMessage: Sending WebSocket message`, payload);
+                }
                 socket.send(JSON.stringify(payload));
             } else {
-                console.warn("❗ WebSocket not ready to send, state:", socket?.readyState);
+                console.warn(`sendMessage: WebSocket not ready, state: ${socket?.readyState}`);
             }
         },
         [socket, isE2EMock, roomId, localUser?.id]
@@ -448,8 +576,14 @@ export const useWebSocket = (
     }
 
     useEffect(() => {
+        if (process.env.NODE_ENV !== "production") {
+            console.debug(`useWebSocket: Registered listener for key ${key}`);
+        }
         listeners.set(key, onMessage);
         return () => {
+            if (process.env.NODE_ENV !== "production") {
+                console.debug(`useWebSocket: Unregistered listener for key ${key}`);
+            }
             listeners.delete(key);
         };
     }, [key, onMessage]);

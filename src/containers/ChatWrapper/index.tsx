@@ -14,7 +14,7 @@ import {dmRoomId} from "@/utils/helpers";
 // Fake chat data
 const fakeChatData = [
     {
-        roomId: dmRoomId(2, 3),
+        roomId: dmRoomId(2, 4),
         partnerDisplayName: "John Doe",
         partnerAvatar: "https://example.com/avatar1.jpg",
         lastMessage: {
@@ -45,6 +45,17 @@ const fakeChatData = [
             createdAt: "2025-08-28T16:20:00Z",
         },
         job: { id: "3" }
+    },
+    {
+        roomId: dmRoomId(2, 3),
+        partnerDisplayName: "Alex Johnson",
+        partnerAvatar: "https://example.com/avatar3.jpg",
+        lastMessage: {
+            senderId: "3",
+            content: "I sent you the documents",
+            createdAt: "2025-08-28T16:20:00Z",
+        },
+        job: { id: "3" }
     }
 ];
 
@@ -54,7 +65,7 @@ function extractRealImageUrl(url: string): string {
         const realUrl = u.searchParams.get("url");
         return realUrl ? decodeURIComponent(realUrl) : url;
     } catch (err) {
-        console.log("err", err);
+        if (process.env.NODE_ENV !== "production") console.debug("Invalid URL in extractRealImageUrl");
         return url;
     }
 }

@@ -33,7 +33,7 @@ const ChatSection = () => {
     const { sendMessage, isConnected, roomId } = useWebSocket(
         "chat-message",
         (event: MessageEvent<ChatMessage | ChatMessage[]>) => {
-            console.log("📥 ChatSection received message:", event.data);
+            if (process.env.NODE_ENV !== "production") console.debug("Message received");
             let parsed: ChatMessage | ChatMessage[];
             try {
                 parsed = JSON.parse(event.data);
@@ -57,14 +57,14 @@ const ChatSection = () => {
                             Math.abs(new Date(m.createdAt).getTime() - new Date(msg.createdAt).getTime()) < 2000
                     );
                     if (isDuplicate) {
-                        console.log("🛑 Duplicate message ignored in ChatSection:", msg);
+                        if (process.env.NODE_ENV !== "production") console.debug("Duplicate message ignored");
                         continue;
                     }
 
                     // Replace pending message if it exists
                     const idx = copy.findIndex((m) => m.id === msg.id && m.status === 0);
                     if (idx >= 0) {
-                        console.log("🔄 Replacing pending message with ID:", msg.id);
+                        if (process.env.NODE_ENV !== "production") console.debug("Replacing pending message");
                         copy[idx] = { ...msg, status: 1 };
                     } else {
                         copy.push({ ...msg, status: 1 });
@@ -91,7 +91,7 @@ const ChatSection = () => {
     const onSubmit = useCallback(
         (data: MessageForm) => {
             if (isSubmittingRef.current) {
-                console.log("🛑 Ignoring duplicate submit:", data.message);
+                if (process.env.NODE_ENV !== "production") console.debug("Duplicate submit ignored");
                 return;
             }
             const message = data.message?.trim() || "";
