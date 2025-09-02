@@ -24,7 +24,6 @@ import HiringSection from "@/components/Home/HiringSection";
 import IntroductionSection from "@/components/Home/IntroductionSection";
 import OfferSection from "@/components/Home/OfferSection";
 import RecommendAndReview from "@/components/Home/RecommendAndReview";
-import Loading from "@/components/Loading";
 import SearchInput from "@/components/SearchInput";
 import {LandingImage} from "@/constants/images";
 import SpAdsSlider from "@/containers/SpAdsSlider";
@@ -33,7 +32,6 @@ import SpHeader from "@/containers/SpHeader";
 import Link from "next/link";
 import {useState} from "react";
 import {useTranslation} from "react-i18next";
-import {useHttpGet} from "@/hooks/useHttpGet";
 import {buildCommunitiesTree} from "@/utils/helpers";
 import {useCommunities} from "@/hooks/communites-api/useCommunities";
 
