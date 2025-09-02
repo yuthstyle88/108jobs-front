@@ -143,10 +143,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     const [isConnected, setIsConnected] = useState(false);
     const [socket, setSocket] = useState<WebSocket | null>(null);
     const [connectionError, setConnectionError] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1); // Track current page
+    const [currentPage, setCurrentPage] = useState(1); // Track current page (legacy)
     const [hasMoreMessages, setHasMoreMessages] = useState(true); // Track if more messages are available
     const [isFetching, setIsFetching] = useState(false); // Prevent multiple fetch requests
-    const pageSize = 10; // Match payload page_size
+    const pageSize = 10; // Default page size / limit for history
+    const [afterId, setAfterId] = useState<number | null>(null); // Cursor-based pagination: fetch messages after this id
     const router = useRouter();
     const { localUser } = useMyUser();
     const isE2EMock = process.env.NEXT_PUBLIC_E2E_MODE === "mock";
@@ -161,7 +162,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
     // Function to send FetchHistory payload
     const fetchHistory = useCallback(async () => {
-        console.log('[CHAT][FETCH] fetchHistory called', { currentPage, pageSize, hasMoreMessages, isFetching });
+        console.log('[CHAT][FETCH] fetchHistory called', { currentPage, pageSize, hasMoreMessages, isFetching, afterId });
         if (isE2EMock) {
             console.log('[CHAT][FETCH] Skipping (E2E mock mode)');
             return;
@@ -173,14 +174,21 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
         }
 
         setIsFetching(true);
-        const payload = {
+        // Use new cursor-based pagination if possible
+        const cursorPayload: any = {
             op: "FetchHistory",
             sender_id: Number(localUser?.id) || 0,
             receiver_id: getReceiverIdFromRoom(roomId),
             room_id: roomId,
             content: "",
-            page: currentPage,
-            page_size: pageSize,
+            after_id: afterId ?? undefined,
+            limit: pageSize,
+        };
+        // Include legacy fields for backward compatibility
+        const payload = {
+            ...cursorPayload,
+            page: currentPage, // legacy
+            page_size: pageSize, // legacy
         };
         console.log('[CHAT][FETCH] Prepared payload', payload);
 
@@ -230,6 +238,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 setIsConnected(true);
                 setConnectionError(false);
                 isManuallyClosingRef.current = false;
+                // Reset pagination cursors on (re)connect
+                setAfterId(null);
+                setHasMoreMessages(true);
+                setIsFetching(false);
+                setCurrentPage(1);
                 if (reconnectTimeoutRef.current) {
                     clearTimeout(reconnectTimeoutRef.current);
                     reconnectTimeoutRef.current = null;
@@ -248,8 +261,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 try {
                     const token = UserService.Instance.auth();
                     const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
-
-                    console.log("sharedKeyHex: ", sharedKeyHex);
 
                     let parsed: any = safeParse(event.data);
                     if (parsed === 'pong' || parsed === 'ping' || parsed?.op === 'Ping') {
@@ -270,14 +281,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                             return;
                         }
 
-                        console.log('[WS][MSG] FetchHistory response', { count: parsed.messages.length, pageSize });
+                        console.log('[WS][MSG] FetchHistory response', { count: parsed.messages.length, limit: pageSize });
                         setIsFetching(false);
                         if (parsed.messages.length < pageSize) {
                             setHasMoreMessages(false); // No more messages to fetch
                             console.log('[WS][MSG] No more messages to fetch');
-                        } else {
-                            setCurrentPage((prev) => prev + 1); // Increment page for next fetch
-                            console.log('[WS][MSG] Incrementing page');
                         }
 
                         for (const msg of parsed.messages) {
@@ -356,7 +364,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                             try {
                                 const aesKey = await importAesKey(sharedKeyHex, "decrypt");
                                 const plain = await decrypt(parsed, token, aesKey);
-                                console.debug(`onmessage: Decrypted raw base64 message`);
                                 if (plain.length > 0) {
                                     transformedItems.push({
                                         id: sentMessagesRef.current.has(parsed) ? Array.from(sentMessagesRef.current).find((id) => id.includes(parsed)) || `msg_${uuidv4()}` : `msg_${uuidv4()}`,
@@ -411,7 +418,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     } else if (parsed?.op === "SendMessage" && parsed?.content) {
                         const messageSignature = `${parsed.content}:${parsed.createdAt || new Date().toISOString()}`;
                         if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                            console.debug(`onmessage: Ignored duplicate SendMessage`);
                             return;
                         }
 
@@ -422,7 +428,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                                 const plain = await decrypt(parsed.content, token, aesKey);
                                 if (plain.length > 0) {
                                     content = plain;
-                                    console.debug(`onmessage: Decrypted SendMessage content`);
                                 }
                             } catch (e) {
                                 console.warn(`onmessage: Decryption failed for SendMessage`, e);
@@ -446,6 +451,16 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                         if (parsed?.op === "FetchHistory") {
                             // For history loads, broadcast the full array so the UI can prepend older messages
                             toBroadcast = transformedItems;
+                            // Update cursor after_id using the earliest (smallest) numeric id in the returned batch
+                            const ids = Array.isArray(parsed.messages)
+                                ? parsed.messages
+                                      .map((m: any) => (typeof m.id === 'number' ? m.id : Number(m.id)))
+                                      .filter((n: any) => typeof n === 'number' && !isNaN(n))
+                                : [];
+                            if (ids.length) {
+                                const minId = Math.min(...ids);
+                                setAfterId(minId);
+                            }
                         } else if (Array.isArray(parsed)) {
                             toBroadcast = transformedItems;
                         }
