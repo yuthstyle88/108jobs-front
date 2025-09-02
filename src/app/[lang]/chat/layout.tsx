@@ -4,6 +4,7 @@ import SpHeader from "@/containers/SpHeader";
 import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
 import {generateLocalizedMetadata} from "@/lib/metadata";
 import {LayoutProps} from "@/types/layout";
+import { ChatRoomsProvider } from "@/contexts/ChatRoomsContext";
 
 export async function generateMetadata() {
   return generateLocalizedMetadata("chat");
@@ -12,18 +13,20 @@ export async function generateMetadata() {
 export default function ProfileLayout({children}: LayoutProps) {
   return (
     <ChatLanguageProvider>
-      <div className="hidden sm:block">
-        <Header type="primary"/>
-      </div>
-      <div className="block sm:hidden">
-        <SpHeader/>
-      </div>
-      <div className="h-screen flex flex-col pt-16">
-        <div className="flex flex-1 overflow-hidden">
-          <ChatWrapper/>
-          {children}
+      <ChatRoomsProvider>
+        <div className="hidden sm:block">
+          <Header type="primary"/>
         </div>
-      </div>
+        <div className="block sm:hidden">
+          <SpHeader/>
+        </div>
+        <div className="h-screen flex flex-col pt-16">
+          <div className="flex flex-1 overflow-hidden">
+            <ChatWrapper/>
+            {children}
+          </div>
+        </div>
+      </ChatRoomsProvider>
     </ChatLanguageProvider>
   );
 }

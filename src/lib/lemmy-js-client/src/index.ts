@@ -174,6 +174,8 @@ export type {ListMedia} from "./types/ListMedia";
 export type {ListMediaResponse} from "./types/ListMediaResponse";
 export type {ListNotifications} from "./types/ListNotifications";
 export type {ListNotificationsResponse} from "./types/ListNotificationsResponse";
+export type {ListUserChatRoomsQuery} from "./types/ListUserChatRoomsQuery";
+export type {ListUserChatRoomsResponse} from "./types/ListUserChatRoomsResponse";
 export type {ListPersonContent} from "./types/ListPersonContent";
 export type {ListPersonContentResponse} from "./types/ListPersonContentResponse";
 export type {ListPersonHidden} from "./types/ListPersonHidden";

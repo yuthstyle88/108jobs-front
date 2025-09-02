@@ -2,62 +2,14 @@
 
 import {ProfileImage} from "@/constants/images";
 import {useLanguage} from "@/contexts/LanguageContext";
-import {ChatResponse} from "@/types/chat";
 import {formatMessageTime} from "@/utils/formatMessageTime";
 import Image from "next/image";
 import Link from "next/link";
-import {useParams, useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
+import {useParams} from "next/navigation";
+import {useEffect, useMemo, useState} from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {dmRoomId} from "@/utils/helpers";
-
-// Fake chat data
-const fakeChatData = [
-    {
-        roomId: dmRoomId(2, 4),
-        partnerDisplayName: "John Doe",
-        partnerAvatar: "https://example.com/avatar1.jpg",
-        lastMessage: {
-            senderId: "1",
-            content: "Hey, how's the project going?",
-            createdAt: "2025-08-29T10:30:00Z",
-        },
-        job: { id: "1" }
-    },
-    {
-        roomId: dmRoomId(1, 2),
-        partnerDisplayName: "Jane Smith",
-        partnerAvatar: "https://example.com/avatar2.jpg",
-        lastMessage: {
-            senderId: "2",
-            content: "Can we schedule a meeting?",
-            createdAt: "2025-08-29T09:15:00Z",
-        },
-        job: { id: "2" }
-    },
-    {
-        roomId: dmRoomId(1, 3),
-        partnerDisplayName: "Alex Johnson",
-        partnerAvatar: "https://example.com/avatar3.jpg",
-        lastMessage: {
-            senderId: "3",
-            content: "I sent you the documents",
-            createdAt: "2025-08-28T16:20:00Z",
-        },
-        job: { id: "3" }
-    },
-    {
-        roomId: dmRoomId(2, 3),
-        partnerDisplayName: "Alex Johnson",
-        partnerAvatar: "https://example.com/avatar3.jpg",
-        lastMessage: {
-            senderId: "3",
-            content: "I sent you the documents",
-            createdAt: "2025-08-28T16:20:00Z",
-        },
-        job: { id: "3" }
-    }
-];
+import { useChatRooms } from "@/contexts/ChatRoomsContext";
+import type { ChatRoom } from "@/types/chat";
 
 function extractRealImageUrl(url: string): string {
     try {
@@ -72,21 +24,29 @@ function extractRealImageUrl(url: string): string {
 
 const ChatWrapper = () => {
     const params = useParams();
-    const router = useRouter();
     const activeRoomId = params?.senderId;
     const {lang: currentLang} = useLanguage();
     const {localUser} = useMyUser();
-    const [searchQuery, setSearchQuery] = useState("");
-    const [filteredChats, setFilteredChats] = useState<ChatResponse[]>(fakeChatData);
+    const { rooms, isLoading, error } = useChatRooms();
 
-    // Filter chats based on search query
-    useEffect(() => {
-        const filtered = fakeChatData.filter((chat) =>
-            chat.partnerDisplayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            chat.lastMessage?.content.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        setFilteredChats(filtered);
-    }, [searchQuery]);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const filteredRooms = useMemo(() => {
+        const list = rooms || [];
+        const q = searchQuery.trim().toLowerCase();
+        const filtered = q
+            ? list.filter(r =>
+                r.name.toLowerCase().includes(q) ||
+                (r.lastMessage?.content || "").toLowerCase().includes(q)
+              )
+            : list;
+        // Sort by lastMessage timestamp desc if exists
+        return [...filtered].sort((a, b) => {
+            const ta = a.lastMessage?.timestamp ? new Date(a.lastMessage.timestamp).getTime() : 0;
+            const tb = b.lastMessage?.timestamp ? new Date(b.lastMessage.timestamp).getTime() : 0;
+            return tb - ta;
+        });
+    }, [rooms, searchQuery]);
 
     return (
         <div className="max-w-[390px] flex flex-col border-r bg-white h-full">
@@ -104,17 +64,21 @@ const ChatWrapper = () => {
             </div>
 
             <div className="max-w-[390px] overflow-y-auto flex-1">
-                {filteredChats?.map((chat) => {
-                    const chatMessage = chat.lastMessage;
-                    if (!chatMessage) return null;
-                    const senderId = Number(chatMessage.senderId);
-                    const isUser = (localUser?.id ?? -1) === senderId;
-                    const isActive = String(chat.roomId) === activeRoomId
+                {isLoading && filteredRooms.length === 0 && (
+                    <p className="p-4 text-sm text-gray-500 text-center">Loading chats…</p>
+                )}
+                {error && filteredRooms.length === 0 && (
+                    <p className="p-4 text-sm text-red-500 text-center">Failed to load chats</p>
+                )}
+                {filteredRooms?.map((room: ChatRoom) => {
+                    const chatMessage = room.lastMessage;
+                    const isActive = String(room.id) === activeRoomId;
+                    const isUser = chatMessage ? (localUser?.id ?? -1) === Number(chatMessage.senderId) : false;
 
                     return (
                         <Link prefetch={false}
-                              key={chat.roomId}
-                              href={`/chat/message/${chat.roomId}`}
+                              key={room.id}
+                              href={`/chat/message/${room.id}`}
                               className="block"
                         >
                             <div
@@ -126,38 +90,42 @@ const ChatWrapper = () => {
                             >
                                 <div className="w-10 h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
                                     <Image
-                                        src={
-                                            extractRealImageUrl(chat.partnerAvatar) ||
-                                            ProfileImage.avatar
-                                        }
+                                        src={ProfileImage.avatar}
                                         alt="User"
                                         width={40}
                                         height={40}
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
-                                <div className="ml-3">
+                                <div className="ml-3 min-w-0">
                                     <div className="flex items-center">
-                                        <h4 className="font-medium text-sm text-text-primary">
-                                            {chat.partnerDisplayName}
+                                        <h4 className="font-medium text-sm text-text-primary truncate max-w-[200px]">
+                                            {room.name}
                                         </h4>
                                         <span className="ml-2 text-xs text-gray-400">
-                      {formatMessageTime(
-                          chatMessage.createdAt,
+                      {chatMessage?.timestamp ? formatMessageTime(
+                          chatMessage.timestamp,
                           currentLang || "th"
-                      )}
+                      ) : ""}
                     </span>
                                     </div>
-                                    <p className="text-sm font-sans text-text-primary mt-1 line-clamp-1 overflow-hidden break-all max-w-[200px]">
-                                        {isUser && "You: "}
-                                        {chatMessage.content}
-                                    </p>
+                                    {chatMessage && (
+                                        <p className="text-sm font-sans text-text-primary mt-1 line-clamp-1 overflow-hidden break-all max-w-[220px]">
+                                            {isUser && "You: "}
+                                            {chatMessage.content}
+                                        </p>
+                                    )}
                                 </div>
+                                {room.unreadCount > 0 && (
+                                    <span className="ml-auto text-xs bg-blue-600 text-white rounded-full px-2 py-0.5">
+                                        {room.unreadCount}
+                                    </span>
+                                )}
                             </div>
                         </Link>
                     );
                 })}
-                {filteredChats.length === 0 && (
+                {filteredRooms.length === 0 && !isLoading && !error && (
                     <p className="p-4 text-sm text-gray-500 text-center">No chats found</p>
                 )}
             </div>

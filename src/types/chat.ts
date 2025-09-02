@@ -9,6 +9,20 @@ export type ChatMessage = {
     isOwner: boolean;
 };
 
+export interface ChatRoom {
+    id: string;
+    name: string;
+    participants: { id: number; name: string }[];
+    lastMessage?: {
+        content: string;
+        timestamp: string;
+        senderId: number;
+    };
+    unreadCount: number;
+    type: "direct" | "group";
+    createdAt: string;
+}
+
 export type Job = {
     id: string;
     userId: string;
@@ -44,4 +58,11 @@ export type ChatResponse = {
     lastMessage: ChatMessage;
     job: Job;
     jobCoverImage: string;
+};
+
+export type Paginated<T> = {
+    items: T[];
+    total: number;
+    page: number;
+    pageSize: number;
 };

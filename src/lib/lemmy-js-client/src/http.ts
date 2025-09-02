@@ -43,7 +43,7 @@ import type {
     ListPostLikesI,
     ListRegistrationApplicationsI,
     ListReportsI,
-    ListTaglinesI,
+    ListTaglinesI, ListUserChatRoomsQueryI,
     ResolveObjectI,
     SearchI,
     UploadImage,
@@ -237,6 +237,8 @@ import type {UserBlockInstanceParams} from "./types/UserBlockInstanceParams";
 import type {VerifyEmail} from "./types/VerifyEmail";
 import {WorkExperiencesResponse} from "./types/WorkExperience";
 import {VisitProfileResponse} from "./types/VisitProfileResponse";
+import {ListUserChatRoomsQuery} from "./types/ListUserChatRoomsQuery";
+import {ListUserChatRoomsResponse} from "./types/ListUserChatRoomsResponse";
 
 enum HttpType {
     Get = "GET",
@@ -3051,6 +3053,24 @@ export class LemmyHttp extends Controller {
             HttpType.Post,
             "/profile/donation-dialog-shown",
             {},
+            options,
+        );
+    }
+
+    /**
+     * @summary Get a list of chat rooms.
+     */
+    @Security("bearerAuth")
+    @Get("/chat/rooms")
+    @Tags("Chat", "Room")
+    async listChatRooms(
+        @Queries() form: ListUserChatRoomsQueryI = {},
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<ListUserChatRoomsQuery, ListUserChatRoomsResponse>(
+            HttpType.Get,
+            "/chat/rooms",
+            form,
             options,
         );
     }

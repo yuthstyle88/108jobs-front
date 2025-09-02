@@ -158,6 +158,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     const sentMessagesRef = useRef<Set<string>>(new Set());
     const receivedMessagesRef = useRef<Set<string>>(new Set());
 
+    const tempReceiverId = 3;
+
     const wsUrl = buildWsUrl(token, roomId);
 
     // Function to send FetchHistory payload
@@ -178,7 +180,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
         const cursorPayload: any = {
             op: "FetchHistory",
             sender_id: Number(localUser?.id) || 0,
-            receiver_id: getReceiverIdFromRoom(roomId),
+            receiver_id: tempReceiverId,
             room_id: roomId,
             content: "",
             after_id: afterId ?? undefined,
@@ -563,11 +565,10 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 return;
             }
 
-            const receiverId = getReceiverIdFromRoom(roomId);
             const apiPayload = {
                 op: "SendMessage",
                 sender_id: Number(localUser?.id) || 0,
-                receiver_id: receiverId,
+                receiver_id: tempReceiverId,
                 room_id: roomId,
                 content: data.message,
                 id: messageId,

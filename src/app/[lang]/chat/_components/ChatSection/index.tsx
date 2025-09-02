@@ -1,21 +1,21 @@
 'use client';
 
 import Image from 'next/image';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { v4 as uuidv4 } from 'uuid';
-import { useMyUser } from '@/hooks/profile-api/useMyUser';
-import { API_ROUTES } from '@/api/endpoints';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import {v4 as uuidv4} from 'uuid';
+import {useMyUser} from '@/hooks/profile-api/useMyUser';
+import {API_ROUTES} from '@/api/endpoints';
 import LoadingBlur from '@/components/LoadingBlur';
-import { CategoriesImage, ProfileImage } from '@/constants/images';
-import { ChatMessage } from '@/types/chat';
+import {CategoriesImage, ProfileImage} from '@/constants/images';
+import {ChatMessage} from '@/types/chat';
 import ChatHeader from '../ChatHeader';
 import ChatInput from '../ChatInput';
 import ChatMessages from '../ChatMessages';
-import { useWebSocket } from '@/contexts/RealtimeChatContext';
-import FreelanceChatFlow, { StatusKey, FlowActions } from '@/components/FreelanceChatFlow';
+import {useWebSocket} from '@/contexts/RealtimeChatContext';
+import FreelanceChatFlow, {FlowActions, StatusKey} from '@/components/FreelanceChatFlow';
 import QuotationModal from '@/components/QuotationModal';
-import { usePrivateImagePost } from '@/hooks/api-hooks';
+import {usePrivateImagePost} from '@/hooks/api-hooks';
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -153,8 +153,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
 
         // Simulate PDF generation (client-side workaround)
         const blob = new Blob([latexTemplate], { type: 'application/x-latex' });
-        const file = new File([blob], `quotation-${uuidv4()}.tex`, { type: 'application/x-latex' });
-        return file;
+        return new File([blob], `quotation-${uuidv4()}.tex`, {type: 'application/x-latex'});
     };
 
     // Handle quotation form submission
@@ -374,31 +373,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                         partnerAvatar={currentRoom?.partnerAvatar || ProfileImage.avatar}
                     />
                     <div ref={endRef} />
-                    <div className="flex items-center justify-center my-4">
-                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mx-auto max-w-lg">
-                            <div className="flex">
-                                <div className="text-yellow-600 mr-2">
-                                    <svg
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                                    </svg>
-                                </div>
-                                <div className="text-sm text-gray-700">
-                                    <p>{t('profileChat.unselectWarning')}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
                 <div className="border-t px-4 py-3 bg-white">
                     <div className="flex items-center gap-2">
@@ -443,7 +418,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                     <div className="flex">
                         <div className="w-12 h-12 rounded bg-gray-200 overflow-hidden mr-3 flex-shrink-0">
                             <Image
-                                src={currentRoom?.jobCoverImage || CategoriesImage.seoJob}
+                                src="https://image.api.playstation.com/vulcan/ap/rnd/202505/1910/d37be317fa9878d572fb53a7bfc818fe5611ba4af6e6adb9.png"
                                 alt="jobCover"
                                 width={64}
                                 height={48}
