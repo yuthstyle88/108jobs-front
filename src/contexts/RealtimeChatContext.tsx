@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { encrypt, decrypt, hexToUint8Array } from "@/lib/web-crypto";
+import { exchange } from "@/lib/api/auth";
 import { UserService } from "@/services";
 import { ChatMessage } from "@/types/chat";
 import { v4 as uuidv4 } from "uuid";
@@ -60,10 +61,8 @@ async function ensureSharedKeyForRoom(roomId: string): Promise<void> {
             return;
         }
 
-        const roomIdBytes = new TextEncoder().encode(roomId);
-        const digest = await crypto.subtle.digest("SHA-256", roomIdBytes);
-        const derived = Array.from(new Uint8Array(digest))
-            .map(b => b.toString(16).padStart(2, "0")).join("");
+        // Use server-assisted ECDH to derive shared key
+        const derived = await exchange();
 
         UserService.Instance.authInfo = {
             ...(UserService.Instance.authInfo || { auth: token }),
@@ -72,10 +71,10 @@ async function ensureSharedKeyForRoom(roomId: string): Promise<void> {
         };
         if (typeof window !== "undefined") localStorage.setItem(storageKey, derived);
         if (process.env.NODE_ENV !== "production") {
-            console.debug(`ensureSharedKeyForRoom: Derived and stored new shared key for room ${roomId}`);
+            console.debug(`ensureSharedKeyForRoom: Exchanged and stored new shared key for room ${roomId}`);
         }
     } catch (ex) {
-        console.warn(`ensureSharedKeyForRoom: Key derivation failed for room ${roomId}`, ex);
+        console.warn(`ensureSharedKeyForRoom: Key exchange failed for room ${roomId}`, ex);
     }
 }
 
@@ -250,6 +249,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     const token = UserService.Instance.auth();
                     const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
 
+                    console.log("sharedKeyHex: ", sharedKeyHex);
+
                     let parsed: any = safeParse(event.data);
                     if (parsed === 'pong' || parsed === 'ping' || parsed?.op === 'Ping') {
                         console.debug('onmessage: heartbeat received');
@@ -291,7 +292,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                             if (token && sharedKeyHex && isBase64Like(msg.content)) {
                                 try {
                                     const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-                                    const plain = await decrypt(msg.content, roomId, aesKey);
+                                    const plain = await decrypt(msg.content, token, aesKey);
                                     if (plain.length > 0) {
                                         content = plain;
                                         console.log(`onmessage: Decrypted FetchHistory message content`);
@@ -326,7 +327,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                             if (token && sharedKeyHex && isBase64Like(msg.content)) {
                                 try {
                                     const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-                                    const plain = await decrypt(msg.content, roomId, aesKey);
+                                    const plain = await decrypt(msg.content, token, aesKey);
                                     if (plain.length > 0) {
                                         content = plain;
                                     }
@@ -354,7 +355,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                         if (token && sharedKeyHex) {
                             try {
                                 const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-                                const plain = await decrypt(parsed, roomId, aesKey);
+                                const plain = await decrypt(parsed, token, aesKey);
                                 console.debug(`onmessage: Decrypted raw base64 message`);
                                 if (plain.length > 0) {
                                     transformedItems.push({
@@ -387,7 +388,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                                 if (token && sharedKeyHex) {
                                     try {
                                         const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-                                        const plain = await decrypt(contentOut, roomId, aesKey);
+                                        const plain = await decrypt(contentOut, token, aesKey);
                                         if (plain && plain.length > 0) {
                                             contentOut = plain;
                                         }
@@ -418,7 +419,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                         if (token && sharedKeyHex) {
                             try {
                                 const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-                                const plain = await decrypt(parsed.content, roomId, aesKey);
+                                const plain = await decrypt(parsed.content, token, aesKey);
                                 if (plain.length > 0) {
                                     content = plain;
                                     console.debug(`onmessage: Decrypted SendMessage content`);
@@ -574,7 +575,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 const shouldEncrypt = !!(token && sharedKeyHex && data.message && data.message.trim());
                 if (shouldEncrypt) {
                     const aesKey = await importAesKey(sharedKeyHex!, "encrypt");
-                    const encrypted = await encrypt(data.message, aesKey, roomId);
+                    const encrypted = await encrypt(data.message, aesKey, token);
                     payload = { ...apiPayload, content: encrypted };
                     console.debug(`sendMessage: Encrypted message for sending`);
                 }
