@@ -2,11 +2,13 @@
 
 import React, {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {ChatRoom as AppChatRoom} from "@/types/chat";
-import {UserService} from "@/services";
+import {HttpService, UserService} from "@/services";
 // E2EE exchange is ensured for future needs
 import {exchange} from "@/lib/api/auth";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import type { ListUserChatRoomsResponse } from "@/lib/lemmy-js-client/src/types/ListUserChatRoomsResponse";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {REQUEST_STATE} from "@/services/HttpService";
 
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 
@@ -23,6 +25,8 @@ interface ChatRoomsContextValue extends RoomsState {
     refresh: () => void;
     loadMore: () => void;
     markRoomRead: (roomId: string) => Promise<void>;
+    bumpRoomToTop: (roomId: string, updatedAt?: string) => void;
+    updateRoomLastMessage: (roomId: string, content: string, senderId: number, timestamp?: string) => void;
 }
 
 const ChatRoomsContext = createContext<ChatRoomsContextValue | undefined>(undefined);
@@ -31,6 +35,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     = ({children, pageSize = 20}) => {
     const [page, setPage] = useState(1);
     const sharedKeyReadyRef = useRef(false);
+    const { localUser } = useMyUser();
 
     const { state: reqState, data, isMutating: isLoading, execute } = useHttpGet("listChatRooms", { limit: page * pageSize });
     const error = reqState.state === "failed" ? (reqState as any).err : null;
@@ -66,20 +71,26 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         const hasMore = totalLoaded >= page * pageSize;
         const mapped: AppChatRoom[] = [];
         for (const it of items as any[]) {
+            const other = it.participants.find(
+                (p: any) => String(p.memberId) !== String(localUser?.id)
+            );
+
+            const res = await HttpService.client.visitProfile(String(other.memberId));
+            const profile = res.state === REQUEST_STATE.SUCCESS ? res?.data.profile : { name: "Unknown" };
+
             mapped.push({
-                id: String(it.id),
-                name: it.room_name || 'Unknown',
-                participants: [],
+                id: String(it.room.id),
+                name: profile.name,
+                participants: it.participants.map((p: any) => String(p.memberId)),
                 lastMessage: {
-                    content: "Nice to meet you!",
-                    timestamp: new Date().toISOString(),
-                    senderId: 3
+                    content: it.lastMessage?.content,
+                    timestamp: it.lastMessage?.timestamp,
+                    senderId: it.lastMessage?.senderId,
                 },
                 unreadCount: 0,
-                type: 'direct',
-                createdAt: it.created_at || new Date().toISOString(),
             });
         }
+
         return {
             rooms: mapped,
             isLoading,
@@ -104,9 +115,15 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         (async () => {
             const result = await mapToRooms(data || undefined);
             if (!alive) return;
+            // Sort rooms so that the most recently active (updated_at or created_at) are first
+            const sortedRooms = [...result.rooms].sort((a, b) => {
+                const aTs = a.lastMessage?.timestamp || '';
+                const bTs = b.lastMessage?.timestamp || '';
+                return new Date(bTs).getTime() - new Date(aTs).getTime();
+            });
             setState(prev => ({
                 ...result,
-                rooms: page > 1 ? result.rooms : result.rooms, // replace; server returns cumulative by limit
+                rooms: sortedRooms,
             }));
         })();
         return () => {
@@ -128,12 +145,48 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         // await axiosPrivate.post(`/messages/rooms/${roomId}/read`)
     }, []);
 
+    // Expose a helper to move a room to the top when a new message arrives
+    const bumpRoomToTop = useCallback((roomId: string, updatedAt?: string) => {
+        setState(prev => {
+            const idx = prev.rooms.findIndex(r => r.id === roomId);
+            if (idx === -1) return prev;
+            const room = prev.rooms[idx] as any;
+            const newUpdatedAt = updatedAt || new Date().toISOString();
+            const updatedRoom = { ...room, lastMessage: { ...(room.lastMessage || {}), timestamp: newUpdatedAt } };
+            const remaining = prev.rooms.filter((_, i) => i !== idx);
+            const nextRooms = [updatedRoom as any, ...remaining];
+            return { ...prev, rooms: nextRooms } as any;
+        });
+    }, []);
+
+    const updateRoomLastMessage = useCallback((roomId: string, content: string, senderId: number, timestamp?: string) => {
+        setState(prev => {
+            const idx = prev.rooms.findIndex(r => r.id === roomId);
+            if (idx === -1) return prev;
+            const room = prev.rooms[idx] as any;
+            const ts = timestamp || new Date().toISOString();
+            const updatedRoom = {
+                ...room,
+                lastMessage: {
+                    content,
+                    timestamp: ts,
+                    senderId,
+                },
+            };
+            const remaining = prev.rooms.filter((_, i) => i !== idx);
+            const nextRooms = [updatedRoom as any, ...remaining];
+            return { ...prev, rooms: nextRooms } as any;
+        });
+    }, []);
+
     const value = useMemo<ChatRoomsContextValue>(() => ({
         ...state,
         refresh,
         loadMore,
         markRoomRead,
-    }), [state, refresh, loadMore, markRoomRead]);
+        bumpRoomToTop,
+        updateRoomLastMessage,
+    }), [state, refresh, loadMore, markRoomRead, bumpRoomToTop, updateRoomLastMessage]);
 
     return (
         <ChatRoomsContext.Provider value={value}>

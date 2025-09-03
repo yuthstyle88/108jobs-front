@@ -19,8 +19,6 @@ export interface ChatRoom {
         senderId: number;
     };
     unreadCount: number;
-    type: "direct" | "group";
-    createdAt: string;
 }
 
 export type Job = {
@@ -58,11 +56,4 @@ export type ChatResponse = {
     lastMessage: ChatMessage;
     job: Job;
     jobCoverImage: string;
-};
-
-export type Paginated<T> = {
-    items: T[];
-    total: number;
-    page: number;
-    pageSize: number;
 };

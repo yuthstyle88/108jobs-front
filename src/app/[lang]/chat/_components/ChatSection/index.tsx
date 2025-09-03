@@ -13,6 +13,7 @@ import ChatHeader from '../ChatHeader';
 import ChatInput from '../ChatInput';
 import ChatMessages from '../ChatMessages';
 import {useWebSocket} from '@/contexts/RealtimeChatContext';
+import { useChatRooms } from '@/contexts/ChatRoomsContext';
 import FreelanceChatFlow, {FlowActions, StatusKey} from '@/components/FreelanceChatFlow';
 import QuotationModal from '@/components/QuotationModal';
 import {usePrivateImagePost} from '@/hooks/api-hooks';
@@ -25,6 +26,7 @@ interface ChatSectionProps {
 }
 
 const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
+    const { bumpRoomToTop, updateRoomLastMessage } = useChatRooms();
     const [activeStep, setActiveStep] = useState<number>(0);
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
@@ -59,6 +61,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                 let added = 0;
                 let replaced = 0;
                 let skippedDup = 0;
+                let latestTs = 0;
+                let latestContent: string | null = null;
+                let latestSenderId: number | null = null;
                 for (const msg of items) {
                     const isDuplicate = copy.some(
                         (m) =>
@@ -79,9 +84,19 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                         added++;
                         copy.push({ ...msg, status: 1 });
                     }
+                    const ts = new Date(msg.createdAt).getTime();
+                    if (ts > latestTs) {
+                        latestTs = ts;
+                        latestContent = msg.content;
+                        latestSenderId = msg.senderId;
+                    }
                 }
                 const sorted = copy.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
                 console.log('[CHAT][STATE] apply incoming', { incoming: items.length, added, replaced, skippedDup, beforeLen, afterLen: sorted.length });
+                // Update lastMessage and bump the room to the top using latest message
+                if (latestTs > 0 && latestContent != null && latestSenderId != null) {
+                    try { updateRoomLastMessage(roomId, latestContent, latestSenderId, new Date(latestTs).toISOString()); } catch {}
+                }
                 return sorted;
             });
         }
@@ -254,13 +269,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                 } as ChatMessage,
                 ...prev,
             ]);
+            // Optimistically update lastMessage and bump room
+            try { updateRoomLastMessage(roomId, message, Number(localUser?.id) || 0, new Date().toISOString()); } catch {}
 
             sendMessage({ message, id: messageId });
 
             setSelectedFile(null);
             isSubmittingRef.current = false;
         },
-        [sendMessage, currentRoom, roomId, selectedFile, localUser?.id]
+        [sendMessage, currentRoom, roomId, selectedFile, localUser?.id, updateRoomLastMessage]
     );
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
