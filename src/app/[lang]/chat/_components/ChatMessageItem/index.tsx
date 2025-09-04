@@ -40,15 +40,15 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
           isIncoming ? "items-start" : "items-end"
         }`}
       >
-        <p className="text-[12.8px] text-[#728197]">{time}</p>
+        <p className="text-[11px] text-gray-400">{time}</p>
 
         {/* Text message bubble */}
         {message.content?.trim() && (
           <div
-            className={`max-w-xs px-3 py-2 rounded-xl text-base font-sans break-words whitespace-pre-line ${
+            className={`max-w-[80vw] sm:max-w-xs px-3 py-2 rounded-2xl text-[15px] leading-relaxed font-sans break-words whitespace-pre-line shadow-sm ${
               isIncoming
-                ? "bg-gray-200 text-gray-800 rounded-bl-none"
-                : "bg-blue-500 text-white rounded-br-none"
+                ? "bg-white text-gray-800 rounded-bl-sm ring-1 ring-gray-200"
+                : "bg-blue-600 text-white rounded-br-sm"
             }`}
           >
             {message.content}
@@ -56,7 +56,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
         )}
 
         {message.fileUrl && (
-          <div className="mt-1 max-w-xs">
+          <div className="mt-1 max-w-[80vw] sm:max-w-xs">
             <FilePreview
               fileUrl={message.fileUrl}
               fileType={message.fileType || "application/octet-stream"}

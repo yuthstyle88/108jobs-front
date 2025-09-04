@@ -1,32 +1,32 @@
+"use client";
+
 import Header from "@/components/Header";
 import ChatWrapper from "@/containers/ChatWrapper";
 import SpHeader from "@/containers/SpHeader";
-import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
-import {generateLocalizedMetadata} from "@/lib/metadata";
-import {LayoutProps} from "@/types/layout";
+import { ChatLanguageProvider } from "@/contexts/ChatLanguage";
+import { LayoutProps } from "@/types/layout";
 import { ChatRoomsProvider } from "@/contexts/ChatRoomsContext";
 
-export async function generateMetadata() {
-  return generateLocalizedMetadata("chat");
-}
-
-export default function ProfileLayout({children}: LayoutProps) {
-  return (
-    <ChatLanguageProvider>
-      <ChatRoomsProvider>
-        <div className="hidden sm:block">
-          <Header type="primary"/>
-        </div>
-        <div className="block sm:hidden">
-          <SpHeader/>
-        </div>
-        <div className="h-screen flex flex-col pt-16">
-          <div className="flex flex-1 overflow-hidden">
-            <ChatWrapper/>
-            {children}
-          </div>
-        </div>
-      </ChatRoomsProvider>
-    </ChatLanguageProvider>
-  );
+export default function ProfileLayout({ children }: LayoutProps) {
+    return (
+        <ChatLanguageProvider>
+            <ChatRoomsProvider>
+                {/* Desktop Header */}
+                <div className="hidden sm:block fixed top-0 left-0 right-0 z-50">
+                    <Header type="primary" />
+                </div>
+                {/* Mobile Header */}
+                <div className="block sm:hidden fixed top-0 left-0 right-0 z-50">
+                    <SpHeader showBackButton={true} />
+                </div>
+                {/* Main Content: fix viewport height and prevent page scroll */}
+                <div className="fixed top-[80px] left-0 right-0 h-[calc(100vh-80px)] overflow-hidden">
+                    <div className="flex h-full">
+                        <ChatWrapper />
+                        {children}
+                    </div>
+                </div>
+            </ChatRoomsProvider>
+        </ChatLanguageProvider>
+    );
 }

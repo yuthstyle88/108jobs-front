@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import {useCallback, useEffect, useRef, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {v4 as uuidv4} from 'uuid';
-import {useMyUser} from '@/hooks/profile-api/useMyUser';
-import {API_ROUTES} from '@/api/endpoints';
-import LoadingBlur from '@/components/LoadingBlur';
-import {CategoriesImage, ProfileImage} from '@/constants/images';
-import {ChatMessage} from '@/types/chat';
-import ChatHeader from '../ChatHeader';
-import ChatInput from '../ChatInput';
-import ChatMessages from '../ChatMessages';
-import {useWebSocket} from '@/contexts/RealtimeChatContext';
-import { useChatRooms } from '@/contexts/ChatRoomsContext';
-import FreelanceChatFlow, {FlowActions, StatusKey} from '@/components/FreelanceChatFlow';
-import QuotationModal from '@/components/QuotationModal';
-import {usePrivateImagePost} from '@/hooks/api-hooks';
+import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { v4 as uuidv4 } from "uuid";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
+import { API_ROUTES } from "@/api/endpoints";
+import LoadingBlur from "@/components/LoadingBlur";
+import { CategoriesImage, ProfileImage } from "@/constants/images";
+import { ChatMessage } from "@/types/chat";
+import ChatHeader from "../ChatHeader";
+import ChatInput from "../ChatInput";
+import ChatMessages from "../ChatMessages";
+import { useWebSocket } from "@/contexts/RealtimeChatContext";
+import { useChatRooms } from "@/contexts/ChatRoomsContext";
+import FreelanceChatFlow, { FlowActions, StatusKey } from "@/components/FreelanceChatFlow";
+import QuotationModal from "@/components/QuotationModal";
+import { usePrivateImagePost } from "@/hooks/api-hooks";
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -30,6 +30,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
     const [activeStep, setActiveStep] = useState<number>(0);
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
+    const [isFlowOpen, setIsFlowOpen] = useState(false); // Toggle for flow panel on mobile
     const { t } = useTranslation();
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
@@ -43,12 +44,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
     const { sendMessage, fetchHistory, isConnected, hasMoreMessages, isFetching } = useWebSocket(
         `chat_${roomId}`,
         (event: MessageEvent<ChatMessage | ChatMessage[]>) => {
-            if (process.env.NODE_ENV !== 'production') console.debug('Message received:', event.data);
+            if (process.env.NODE_ENV !== "production")
+                console.debug("Message received:", event.data);
             let parsed: ChatMessage | ChatMessage[];
             try {
                 parsed = JSON.parse(event.data);
             } catch (e) {
-                console.error('Failed to parse WebSocket message:', e);
+                console.error("Failed to parse WebSocket message:", e);
                 return;
             }
 
@@ -69,7 +71,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                         (m) =>
                             m.content === msg.content &&
                             m.senderId === msg.senderId &&
-                            Math.abs(new Date(m.createdAt).getTime() - new Date(msg.createdAt).getTime()) < 2000
+                            Math.abs(
+                                new Date(m.createdAt).getTime() - new Date(msg.createdAt).getTime()
+                            ) < 2000
                     );
                     if (isDuplicate) {
                         skippedDup++;
@@ -91,11 +95,27 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                         latestSenderId = msg.senderId;
                     }
                 }
-                const sorted = copy.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-                console.log('[CHAT][STATE] apply incoming', { incoming: items.length, added, replaced, skippedDup, beforeLen, afterLen: sorted.length });
-                // Update lastMessage and bump the room to the top using latest message
+                const sorted = copy.sort(
+                    (a, b) =>
+                        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+                );
+                console.log("[CHAT][STATE] apply incoming", {
+                    incoming: items.length,
+                    added,
+                    replaced,
+                    skippedDup,
+                    beforeLen,
+                    afterLen: sorted.length,
+                });
                 if (latestTs > 0 && latestContent != null && latestSenderId != null) {
-                    try { updateRoomLastMessage(roomId, latestContent, latestSenderId, new Date(latestTs).toISOString()); } catch {}
+                    try {
+                        updateRoomLastMessage(
+                            roomId,
+                            latestContent,
+                            latestSenderId,
+                            new Date(latestTs).toISOString()
+                        );
+                    } catch {}
                 }
                 return sorted;
             });
@@ -106,20 +126,25 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
         API_ROUTES.chat.uploadFile + `?roomId=${roomId}`
     );
 
-    // Mock currentRoom for compatibility (replace with actual data if needed)
     const currentRoom = {
         roomId,
         partnerAvatar: ProfileImage.avatar,
-        partnerDisplayName: 'User',
-        job: { id: roomId, title: 'Sample Job', coverImage: CategoriesImage.seoJob },
+        partnerDisplayName: "User",
+        job: { id: roomId, title: "Sample Job", coverImage: CategoriesImage.seoJob },
         messages: [],
     };
 
-    // Map activeStep to StatusKey
-    const statusMap: StatusKey[] = ['new', 'queue', 'assign', 'accept', 'chat', 'review', 'pay'];
-    const currentStatus: StatusKey = statusMap[activeStep] || 'new';
+    const statusMap: StatusKey[] = [
+        "new",
+        "queue",
+        "assign",
+        "accept",
+        "chat",
+        "review",
+        "pay",
+    ];
+    const currentStatus: StatusKey = statusMap[activeStep] || "new";
 
-    // Handle status change
     const handleChangeStatus = (key: StatusKey) => {
         const newIndex = statusMap.indexOf(key);
         if (newIndex !== -1) {
@@ -127,8 +152,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
         }
     };
 
-    // Generate PDF quotation
-    const generateQuotationPDF = async (data: { price: number; description: string; terms?: string }) => {
+    const generateQuotationPDF = async (data: {
+        price: number;
+        description: string;
+        terms?: string;
+    }) => {
         const latexTemplate = `
 \\documentclass[a4paper,12pt]{article}
 \\usepackage{geometry}
@@ -149,15 +177,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
 \\begin{document}
 \\maketitle
 \\section*{Quotation Details}
-\\textbf{To:} ${currentRoom.partnerDisplayName || 'Client'} \\
-\\textbf{From:} ${localUser?.displayName || 'Freelancer'} \\
+\\textbf{To:} ${currentRoom.partnerDisplayName || "Client"} \\
+\\textbf{From:} ${localUser?.displayName || "Freelancer"} \\
 \\textbf{Date:} \\today \\
 \\textbf{Quotation ID:} \\the\\day\\the\\month\\the\\year-\\thepage
 \\section*{Service Details}
 \\begin{description}[font=\\normalfont\\bfseries]
-    \\item[Description:] ${data.description || 'No description provided'}
+    \\item[Description:] ${data.description || "No description provided"}
     \\item[Price:] \\$${data.price.toFixed(2)}
-    \\item[Terms:] ${data.terms || 'No additional terms'}
+    \\item[Terms:] ${data.terms || "No additional terms"}
 \\end{description}
 \\vspace{2cm}
 \\hrule
@@ -166,17 +194,21 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
 \\end{document}
 `;
 
-        // Simulate PDF generation (client-side workaround)
-        const blob = new Blob([latexTemplate], { type: 'application/x-latex' });
-        return new File([blob], `quotation-${uuidv4()}.tex`, {type: 'application/x-latex'});
+        const blob = new Blob([latexTemplate], { type: "application/x-latex" });
+        return new File([blob], `quotation-${uuidv4()}.tex`, {
+            type: "application/x-latex",
+        });
     };
 
-    // Handle quotation form submission
-    const handleQuotationSubmit = async (data: { price: number; description: string; terms?: string }) => {
+    const handleQuotationSubmit = async (data: {
+        price: number;
+        description: string;
+        terms?: string;
+    }) => {
         try {
             const pdfFile = await generateQuotationPDF(data);
             const formData = new FormData();
-            formData.append('file', pdfFile);
+            formData.append("file", pdfFile);
 
             const result = (await uploadFile(formData)) as UploadedFile;
             setSelectedFile(result);
@@ -186,59 +218,71 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                 {
                     id: messageId,
                     roomId: currentRoom?.roomId || roomId,
-                    content: t('profileChat.proposeQuoteMsg') || `Proposed quotation: $${data.price.toFixed(2)}`,
+                    content:
+                        t("profileChat.proposeQuoteMsg") ||
+                        `Proposed quotation: $${data.price.toFixed(2)}`,
                     createdAt: new Date().toISOString(),
                     senderId: Number(localUser?.id) || 0,
-                    receiverId: roomId.includes(':') ? Number(roomId.split(':')[1]) || 0 : 0,
+                    receiverId: roomId.includes(":")
+                        ? Number(roomId.split(":")[1]) || 0
+                        : 0,
                     status: 0,
                     isOwner: true,
                 } as ChatMessage,
                 ...prev,
             ]);
 
-            sendMessage({ message: `Proposed quotation: $${data.price.toFixed(2)}`, id: messageId });
+            sendMessage({
+                message: `Proposed quotation: $${data.price.toFixed(2)}`,
+                id: messageId,
+            });
         } catch (err) {
-            console.error('Failed to send quotation:', err);
-            alert(t('profileChat.quotationError') || 'Failed to send quotation.');
+            console.error("Failed to send quotation:", err);
+            alert(t("profileChat.quotationError") || "Failed to send quotation.");
         }
     };
 
-    // Define FlowActions callbacks
     const flowActions: FlowActions = {
         onProposeQuote: () => {
             setShowQuotationModal(true);
         },
         onAcceptJob: () => {
-            setActiveStep(4); // Move to 'chat' step
-            sendMessage({ message: t('profileChat.acceptJobMsg') || 'I have accepted the job.', id: uuidv4() });
+            setActiveStep(4);
+            sendMessage({
+                message: t("profileChat.acceptJobMsg") || "I have accepted the job.",
+                id: uuidv4(),
+            });
         },
         onUploadAsset: () => {
-            const input = document.createElement('input');
-            input.type = 'file';
+            const input = document.createElement("input");
+            input.type = "file";
             input.onchange = (e) => handleFileUpload(e as any);
             input.click();
         },
         onSendMessage: () => {
-            const input = scrollContainerRef.current?.querySelector('input');
+            const input = scrollContainerRef.current?.querySelector("input");
             if (input) input.focus();
         },
         onSubmitDelivery: () => {
-            setActiveStep(5); // Move to 'review' step
+            setActiveStep(5);
             setShowReviewModal(true);
         },
         onRequestRevision: () => {
-            setActiveStep(4); // Move to 'chat' step
+            setActiveStep(4);
             setShowReviewModal(false);
             sendMessage({
-                message: t('profileChat.requestRevisionMsg') || 'Please revise and resubmit.',
+                message:
+                    t("profileChat.requestRevisionMsg") || "Please revise and resubmit.",
                 id: uuidv4(),
             });
         },
         onReleasePayment: () => {
-            setActiveStep(6); // Move to 'pay' step
+            setActiveStep(6);
             setShowReviewModal(false);
             sendMessage({
-                message: t('profileChat.deliveryAccepted') || 'Delivery accepted. Proceed to payment.',
+                message:
+                    t("profileChat.deliveryAccepted") ||
+                    "Delivery accepted. Proceed to payment.",
                 id: uuidv4(),
             });
         },
@@ -247,10 +291,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
     const onSubmit = useCallback(
         (data: MessageForm) => {
             if (isSubmittingRef.current) {
-                if (process.env.NODE_ENV !== 'production') console.debug('Duplicate submit ignored');
+                if (process.env.NODE_ENV !== "production")
+                    console.debug("Duplicate submit ignored");
                 return;
             }
-            const message = data.message?.trim() || '';
+            const message = data.message?.trim() || "";
             if (!message && !selectedFile) return;
 
             isSubmittingRef.current = true;
@@ -260,17 +305,23 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                 {
                     id: messageId,
                     roomId: currentRoom?.roomId || roomId,
-                    content: message || '',
+                    content: message || "",
                     createdAt: new Date().toISOString(),
                     senderId: Number(localUser?.id) || 0,
-                    receiverId: roomId.includes(':') ? Number(roomId.split(':')[1]) || 0 : 0,
+                    receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
                     status: 0,
                     isOwner: true,
                 } as ChatMessage,
                 ...prev,
             ]);
-            // Optimistically update lastMessage and bump room
-            try { updateRoomLastMessage(roomId, message, Number(localUser?.id) || 0, new Date().toISOString()); } catch {}
+            try {
+                updateRoomLastMessage(
+                    roomId,
+                    message,
+                    Number(localUser?.id) || 0,
+                    new Date().toISOString()
+                );
+            } catch {}
 
             sendMessage({ message, id: messageId });
 
@@ -285,21 +336,21 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
         if (!file) return;
 
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append("file", file);
 
         try {
             const result = (await uploadFile(formData)) as UploadedFile;
             setSelectedFile(result);
-            e.target.value = '';
+            e.target.value = "";
         } catch (err) {
-            console.error('Upload file failed', err);
+            console.error("Upload file failed", err);
         }
     };
 
     useEffect(() => {
         const rootEl = scrollContainerRef.current;
         if (!topSentinelRef.current || !rootEl || !hasMoreMessages || !isConnected) {
-            console.log('[CHAT][OBS] Skipping observer setup', {
+            console.log("[CHAT][OBS] Skipping observer setup", {
                 hasTopSentinel: !!topSentinelRef.current,
                 hasRoot: !!rootEl,
                 hasMoreMessages,
@@ -313,23 +364,28 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
             scrollHeight: rootEl.scrollHeight,
             scrollTop: rootEl.scrollTop,
         };
-        console.log('[CHAT][OBS] Creating IntersectionObserver with root info', rootInfo);
+        console.log("[CHAT][OBS] Creating IntersectionObserver with root info", rootInfo);
 
         const observer = new IntersectionObserver(
             (entries) => {
                 const e = entries[0];
-                console.log('[CHAT][OBS] Intersection change', {
+                console.log("[CHAT][OBS] Intersection change", {
                     isIntersecting: e.isIntersecting,
                     ratio: e.intersectionRatio,
-                    rootBounds: e.rootBounds ? { height: e.rootBounds.height, top: e.rootBounds.top } : null,
-                    boundingClientRect: { top: e.boundingClientRect.top, height: e.boundingClientRect.height },
+                    rootBounds: e.rootBounds
+                        ? { height: e.rootBounds.height, top: e.rootBounds.top }
+                        : null,
+                    boundingClientRect: {
+                        top: e.boundingClientRect.top,
+                        height: e.boundingClientRect.height,
+                    },
                 });
                 if (e.isIntersecting) {
                     if (isFetching) {
-                        console.log('[CHAT][OBS] Visible but skip, already fetching');
+                        console.log("[CHAT][OBS] Visible but skip, already fetching");
                         return;
                     }
-                    console.log('[CHAT][OBS] Top sentinel visible -> fetchHistory()');
+                    console.log("[CHAT][OBS] Top sentinel visible -> fetchHistory()");
                     fetchHistory();
                 }
             },
@@ -339,18 +395,18 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
         observer.observe(topSentinelRef.current);
 
         return () => {
-            console.log('[CHAT][OBS] Disconnecting observer');
+            console.log("[CHAT][OBS] Disconnecting observer");
             observer.disconnect();
         };
     }, [fetchHistory, hasMoreMessages, isConnected]);
 
     useEffect(() => {
         if (isConnected) {
-            console.log('[CHAT][INIT] Connected -> initial fetchHistory()');
+            console.log("[CHAT][INIT] Connected -> initial fetchHistory()");
             fetchHistory();
             setIsInitialLoading(false);
         } else {
-            console.log('[CHAT][INIT] Not connected yet');
+            console.log("[CHAT][INIT] Not connected yet");
         }
     }, [isConnected, fetchHistory]);
 
@@ -359,11 +415,21 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
         if (!messages.length || !endRef.current) return;
         const latestTs = new Date(messages[messages.length - 1].createdAt).getTime();
         if (latestTs > prevLatestTsRef.current) {
-            console.log('[CHAT][SCROLL] Scrolling to bottom', { from: prevLatestTsRef.current, to: latestTs, count: messages.length });
-            endRef.current.scrollIntoView({ behavior: prevLatestTsRef.current === 0 ? 'auto' : 'smooth' });
+            console.log("[CHAT][SCROLL] Scrolling to bottom", {
+                from: prevLatestTsRef.current,
+                to: latestTs,
+                count: messages.length,
+            });
+            endRef.current.scrollIntoView({
+                behavior: prevLatestTsRef.current === 0 ? "auto" : "smooth",
+            });
             prevLatestTsRef.current = latestTs;
         } else {
-            console.log('[CHAT][SCROLL] Not scrolling (likely prepended history)', { latestTs, prev: prevLatestTsRef.current, count: messages.length });
+            console.log("[CHAT][SCROLL] Not scrolling (likely prepended history)", {
+                latestTs,
+                prev: prevLatestTsRef.current,
+                count: messages.length,
+            });
         }
     }, [messages]);
 
@@ -373,96 +439,109 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
 
     return (
         <>
-            <div className="flex-1 flex flex-col h-full">
-                <ChatHeader
-                    avatarUrl={currentRoom?.partnerAvatar || ProfileImage.avatar}
-                    displayName={currentRoom?.partnerDisplayName || 'User'}
-                    guideText={t('profileChat.guide') || 'Usage Guide'}
-                />
+            <div className="relative flex-1 flex flex-col md:flex-row h-full bg-slate-50">
+                {/* Chat Area */}
+                <div className="flex-1 flex flex-col h-full z-0">
+                    <div className="sticky top-0 z-10 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b">
+                        <ChatHeader
+                            avatarUrl={currentRoom?.partnerAvatar || ProfileImage.avatar}
+                            displayName={currentRoom?.partnerDisplayName || "User"}
+                            guideText={t("profileChat.guide") || "Usage Guide"}
+                        />
+                    </div>
+                    <div
+                        ref={scrollContainerRef}
+                        data-testid="chat-list"
+                        className="flex-1 overflow-y-auto overflow-x-hidden p-3 md:p-5 bg-gradient-to-b from-slate-50 to-white flex flex-col"
+                    >
+                        <div ref={topSentinelRef} style={{ height: "10px" }} />
+                        <ChatMessages
+                            messages={messages}
+                            partnerAvatar={currentRoom?.partnerAvatar || ProfileImage.avatar}
+                        />
+                        <div ref={endRef} />
+                    </div>
+                    <div className="border-t px-3 py-2 md:px-4 md:py-3 bg-white sticky bottom-0 z-10 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]" style={{paddingBottom: 'env(safe-area-inset-bottom)'}}>
+                        <div className="flex items-center gap-2">
+                            <div className="flex-1">
+                                <ChatInput
+                                    onSubmit={onSubmit}
+                                    onFileUpload={handleFileUpload}
+                                    selectedFile={selectedFile}
+                                    setSelectedFile={setSelectedFile}
+                                    isUploading={isUploading}
+                                />
+                            </div>
+                            {/* Toggle Flow Button for Mobile */}
+                            <button
+                                className="whitespace-nowrap rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm px-2 py-1 md:px-3 md:py-2"
+                                onClick={() => setIsFlowOpen(!isFlowOpen)}
+                            >
+                                {isFlowOpen ? "Hide Flow" : "Show Flow"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {/* Flow Panel */}
                 <div
-                    ref={scrollContainerRef}
-                    data-testid="chat-list"
-                    className="flex-1 overflow-y-auto p-4 bg-gray-50 flex flex-col"
+                    className={`border-l bg-white h-full transition-all duration-300 ${
+                        isFlowOpen ? "translate-x-0 pointer-events-auto" : "translate-x-full pointer-events-none"
+                    } md:translate-x-0 fixed md:static top-[80px] right-0 h-[calc(100vh-80px)] w-64 sm:w-72 md:w-80 lg:w-96 max-w-full z-40 flex flex-col overflow-hidden shadow-md md:shadow-none`}
                 >
-                    <div ref={topSentinelRef} style={{ height: '10px' }} />
-                    <ChatMessages
-                        messages={messages}
-                        partnerAvatar={currentRoom?.partnerAvatar || ProfileImage.avatar}
+                    <FreelanceChatFlow
+                        currentStatus={currentStatus}
+                        onChangeStatus={handleChangeStatus}
+                        orientation="vertical"
+                        compact={false}
+                        className="p-2 md:p-4 overflow-hidden"
+                        onProposeQuote={flowActions.onProposeQuote}
+                        onAcceptJob={flowActions.onAcceptJob}
+                        onUploadAsset={flowActions.onUploadAsset}
+                        onSendMessage={flowActions.onSendMessage}
+                        onSubmitDelivery={flowActions.onSubmitDelivery}
+                        onRequestRevision={flowActions.onRequestRevision}
+                        onReleasePayment={flowActions.onReleasePayment}
                     />
-                    <div ref={endRef} />
-
-                </div>
-                <div className="border-t px-4 py-3 bg-white">
-                    <div className="flex items-center gap-2">
-                        <div className="flex-1">
-                            <ChatInput
-                                onSubmit={onSubmit}
-                                onFileUpload={handleFileUpload}
-                                selectedFile={selectedFile}
-                                setSelectedFile={setSelectedFile}
-                                isUploading={isUploading}
-                            />
-                        </div>
-                        <button
-                            type="button"
-                            className="whitespace-nowrap rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-2"
-                            onClick={() => {
-                                setActiveStep(5);
-                                setShowReviewModal(true);
-                            }}
-                        >
-                            {t('profileChat.submitDelivery') || 'Submit Delivery'}
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div className="w-80 flex flex-col border-l bg-white h-full">
-                <FreelanceChatFlow
-                    currentStatus={currentStatus}
-                    onChangeStatus={handleChangeStatus}
-                    orientation="vertical"
-                    compact={false}
-                    className="flex-1"
-                    onProposeQuote={flowActions.onProposeQuote}
-                    onAcceptJob={flowActions.onAcceptJob}
-                    onUploadAsset={flowActions.onUploadAsset}
-                    onSendMessage={flowActions.onSendMessage}
-                    onSubmitDelivery={flowActions.onSubmitDelivery}
-                    onRequestRevision={flowActions.onRequestRevision}
-                    onReleasePayment={flowActions.onReleasePayment}
-                />
-                <div className="p-4 border-t">
-                    <div className="flex">
-                        <div className="w-12 h-12 rounded bg-gray-200 overflow-hidden mr-3 flex-shrink-0">
-                            <Image
-                                src="https://image.api.playstation.com/vulcan/ap/rnd/202505/1910/d37be317fa9878d572fb53a7bfc818fe5611ba4af6e6adb9.png"
-                                alt="jobCover"
-                                width={64}
-                                height={48}
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                        <div>
-                            <p className="text-sm text-text-primary font-sans line-clamp-2">
-                                {currentRoom?.job?.title || 'No Job Title'}
-                            </p>
+                    <div className="p-3 md:p-4 border-t">
+                        <div className="flex">
+                            <div className="w-10 h-10 md:w-12 md:h-12 rounded bg-gray-200 overflow-hidden mr-2 md:mr-3 flex-shrink-0">
+                                <Image
+                                    src="https://image.api.playstation.com/vulcan/ap/rnd/202505/1910/d37be317fa9878d572fb53a7bfc818fe5611ba4af6e6adb9.png"
+                                    alt="jobCover"
+                                    width={64}
+                                    height={48}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                            <div>
+                                <p className="text-xs md:text-sm text-text-primary font-sans line-clamp-2">
+                                    {currentRoom?.job?.title || "No Job Title"}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
+                {/* Overlay for mobile when flow panel is open */}
+                {isFlowOpen && (
+                    <div
+                        className="md:hidden fixed inset-0 bg-black/50 z-30"
+                        onClick={() => setIsFlowOpen(false)}
+                    />
+                )}
             </div>
             {showReviewModal && (
-                <div className="fixed inset-0 z-40 bg-black/50 flex items-center justify-center">
-                    <div className="bg-white rounded-lg p-6 w-[90%] max-w-md text-center shadow-lg">
-                        <h3 className="text-lg font-semibold mb-2">
-                            {t('profileChat.reviewDeliveryTitle') || 'Review Delivery'}
+                <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+                    <div className="bg-white rounded-lg p-4 md:p-6 w-[95%] sm:w-[90%] max-w-md text-center shadow-lg">
+                        <h3 className="text-base md:text-lg font-semibold mb-2">
+                            {t("profileChat.reviewDeliveryTitle") || "Review Delivery"}
                         </h3>
-                        <p className="text-sm text-gray-600 mb-4">
-                            {t('profileChat.reviewDeliveryDesc') ||
-                                'The freelancer submitted work. Do you want to accept or request revision?'}
+                        <p className="text-xs md:text-sm text-gray-600 mb-4">
+                            {t("profileChat.reviewDeliveryDesc") ||
+                                "The freelancer submitted work. Do you want to accept or request revision?"}
                         </p>
-                        <div className="flex justify-center gap-3">
+                        <div className="flex justify-center gap-2 md:gap-3">
                             <button
-                                className="rounded-md bg-green-600 hover:bg-green-700 text-white px-4 py-2 text-sm"
+                                className="rounded-md bg-green-600 hover:bg-green-700 text-white px-3 py-1 md:px-4 md:py-2 text-sm"
                                 onClick={() => {
                                     setShowReviewModal(false);
                                     setActiveStep(6);
@@ -470,10 +549,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                                         {
                                             id: uuidv4(),
                                             roomId: currentRoom?.roomId || roomId,
-                                            content: t('profileChat.deliveryAccepted') || 'Delivery accepted. Proceed to payment.',
+                                            content:
+                                                t("profileChat.deliveryAccepted") ||
+                                                "Delivery accepted. Proceed to payment.",
                                             createdAt: new Date().toISOString(),
                                             senderId: Number(localUser?.id) || 0,
-                                            receiverId: roomId.includes(':') ? Number(roomId.split(':')[1]) || 0 : 0,
+                                            receiverId: roomId.includes(":")
+                                                ? Number(roomId.split(":")[1]) || 0
+                                                : 0,
                                             status: 1,
                                             isOwner: true,
                                         } as ChatMessage,
@@ -481,10 +564,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                                     ]);
                                 }}
                             >
-                                {t('profileChat.acceptAndRelease') || 'Accept & Release Payment'}
+                                {t("profileChat.acceptAndRelease") || "Accept & Release Payment"}
                             </button>
                             <button
-                                className="rounded-md bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm"
+                                className="rounded-md bg-red-600 hover:bg-red-700 text-white px-3 py-1 md:px-4 md:py-2 text-sm"
                                 onClick={() => {
                                     setShowReviewModal(false);
                                     setActiveStep(4);
@@ -492,10 +575,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                                         {
                                             id: uuidv4(),
                                             roomId: currentRoom?.roomId || roomId,
-                                            content: t('profileChat.requestRevisionMsg') || 'Please revise and resubmit.',
+                                            content:
+                                                t("profileChat.requestRevisionMsg") ||
+                                                "Please revise and resubmit.",
                                             createdAt: new Date().toISOString(),
                                             senderId: Number(localUser?.id) || 0,
-                                            receiverId: roomId.includes(':') ? Number(roomId.split(':')[1]) || 0 : 0,
+                                            receiverId: roomId.includes(":")
+                                                ? Number(roomId.split(":")[1]) || 0
+                                                : 0,
                                             status: 1,
                                             isOwner: true,
                                         } as ChatMessage,
@@ -503,7 +590,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                                     ]);
                                 }}
                             >
-                                {t('profileChat.requestRevision') || 'Request Revision'}
+                                {t("profileChat.requestRevision") || "Request Revision"}
                             </button>
                         </div>
                     </div>
