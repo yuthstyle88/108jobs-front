@@ -1,0 +1,45 @@
+export const __DEV__ = process.env.NODE_ENV !== "production";
+
+export function logDebug(...args: any[]) {
+  if (__DEV__) console.debug(...args);
+}
+
+export function logWarn(...args: any[]) {
+  console.warn(...args);
+}
+
+export function safeParse(val: unknown): any {
+  try {
+    const result = typeof val === "string" ? JSON.parse(val as string) : val;
+    logDebug(`safeParse: Parsed value`, result);
+    return result;
+  } catch {
+    logDebug(`safeParse: Failed to parse value`, val);
+    return val;
+  }
+}
+
+export function buildWsUrl(token: string, roomId: string): string {
+  const base = process.env.NEXT_PUBLIC_WS_BASE_URL || "ws://localhost:8532";
+  return `${base}/ws?token=${encodeURIComponent(token)}&room_id=${encodeURIComponent(roomId)}`;
+}
+
+export function isBase64Like(s: string): boolean {
+  return /^[A-Za-z0-9+/=]+$/.test(s);
+}
+
+export function getReceiverIdFromRoom(roomId: string): number {
+  const receiverId = roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0;
+  logDebug(`getReceiverIdFromRoom: Extracted receiverId ${receiverId} from roomId ${roomId}`);
+  return receiverId;
+}
+
+export function addOnce(set: Set<string>, key: string): boolean {
+  if (set.has(key)) {
+    logDebug(`addOnce: Key ${key} already exists in set`);
+    return false;
+  }
+  set.add(key);
+  logDebug(`addOnce: Added key ${key} to set`);
+  return true;
+}

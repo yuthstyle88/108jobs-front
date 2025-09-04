@@ -115,17 +115,29 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         (async () => {
             const result = await mapToRooms(data || undefined);
             if (!alive) return;
-            // Sort rooms so that the most recently active (updated_at or created_at) are first
-            const sortedRooms = [...result.rooms].sort((a, b) => {
-                const aTs = a.lastMessage?.timestamp || '';
-                const bTs = b.lastMessage?.timestamp || '';
-                return new Date(bTs).getTime() - new Date(aTs).getTime();
-            });
+            // Merge new result into existing state without re-sorting to preserve stable order across pagination
             setState(prev => {
-                // Avoid unnecessary re-renders if nothing changed
-                const sameLength = prev.rooms.length === sortedRooms.length;
+                // Build a map of existing rooms to preserve their order
+                const existingOrder = prev.rooms.map(r => r.id);
+                const nextById = new Map<string, any>();
+                // Start with previous rooms in their current order
+                prev.rooms.forEach(r => nextById.set(r.id, r));
+                // Upsert incoming rooms (update fields if exist, append later if brand new)
+                (result.rooms as any[]).forEach(r => {
+                    const old = nextById.get(r.id);
+                    nextById.set(r.id, old ? { ...old, ...r } : r);
+                });
+                // Reconstruct list: keep prior order first, then append any brand-new ids at the end
+                const kept = existingOrder.map(id => nextById.get(id)).filter(Boolean);
+                const appended = Array.from(nextById.keys())
+                    .filter(id => !existingOrder.includes(id))
+                    .map(id => nextById.get(id));
+                const mergedRooms = [...kept, ...appended] as any[];
+
+                // If nothing changed besides loading/error flags, avoid re-render
+                const sameLength = prev.rooms.length === mergedRooms.length;
                 const isSame = sameLength && prev.rooms.every((r, i) => {
-                    const n = sortedRooms[i];
+                    const n = mergedRooms[i];
                     return r.id === n.id &&
                         r.name === n.name &&
                         (r.lastMessage?.content || '') === (n.lastMessage?.content || '') &&
@@ -134,12 +146,16 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                         r.unreadCount === n.unreadCount;
                 });
                 if (isSame) {
-                    // Preserve previous paging/loading flags to avoid flicker
                     return { ...prev, isLoading: isLoading, error } as any;
                 }
                 return {
-                    ...result,
-                    rooms: sortedRooms,
+                    ...prev,
+                    isLoading: isLoading,
+                    error,
+                    page: result.page,
+                    pageSize: result.pageSize,
+                    hasMore: result.hasMore,
+                    rooms: mergedRooms as any,
                 } as any;
             });
         })();

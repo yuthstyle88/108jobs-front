@@ -3,8 +3,7 @@
 import { useRouter } from "next/navigation";
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { encrypt, decrypt, hexToUint8Array } from "@/lib/web-crypto";
-import { exchange } from "@/lib/api/auth";
+import { encrypt, decrypt } from "@/lib/web-crypto";
 import { UserService } from "@/services";
 import { ChatMessage } from "@/types/chat";
 import { v4 as uuidv4 } from "uuid";
@@ -14,12 +13,22 @@ interface MessagePayload {
     id?: string;
 }
 
+/**
+ * Public API exposed by the Realtime chat WebSocket context.
+ * Keep this minimal and stable; prefer adding helpers inside the provider.
+ */
 interface WebSocketContextValue {
+    /** Send a chat message (handles encryption if configured). */
     sendMessage: (data: MessagePayload) => void;
-    fetchHistory: () => Promise<void>; // Updated to Promise<void>
+    /** Request next page of history over the socket if supported. */
+    fetchHistory: () => Promise<void>;
+    /** True if WebSocket is open and ready. */
     isConnected: boolean;
+    /** Current room identifier. */
     roomId: string;
+    /** True when server indicates there are more messages to fetch. */
     hasMoreMessages: boolean;
+    /** True when a history fetch is in-flight. */
     isFetching: boolean;
 }
 
@@ -31,105 +40,12 @@ interface WebSocketProviderProps {
     children: React.ReactNode;
 }
 
-type AESKey = CryptoKey;
-
-function buildWsUrl(token: string, roomId: string): string {
-    return `ws://localhost:8532/ws?token=${token}&room_id=${roomId}`;
-}
-
-async function ensureSharedKeyForRoom(roomId: string): Promise<void> {
-    const token = UserService.Instance.auth();
-    if (!token) {
-        if (process.env.NODE_ENV !== "production") {
-            console.debug(`ensureSharedKeyForRoom: Skipped - no token`);
-        }
-        return;
-    }
-
-    try {
-        const storageKey = `sharedKey_room_${roomId}`;
-        const storedKey = typeof window !== "undefined" ? localStorage.getItem(storageKey) : null;
-        if (storedKey) {
-            UserService.Instance.authInfo = {
-                ...(UserService.Instance.authInfo || { auth: token }),
-                sharedKey: storedKey,
-                claims: UserService.Instance.authInfo?.claims,
-            };
-            if (process.env.NODE_ENV !== "production") {
-                console.debug(`ensureSharedKeyForRoom: Loaded shared key from localStorage for room ${roomId}`);
-            }
-            return;
-        }
-
-        const derived = await exchange();
-        UserService.Instance.authInfo = {
-            ...(UserService.Instance.authInfo || { auth: token }),
-            sharedKey: derived,
-            claims: UserService.Instance.authInfo?.claims,
-        };
-        if (typeof window !== "undefined") localStorage.setItem(storageKey, derived);
-        if (process.env.NODE_ENV !== "production") {
-            console.debug(`ensureSharedKeyForRoom: Exchanged and stored new shared key for room ${roomId}`);
-        }
-    } catch (ex) {
-        console.warn(`ensureSharedKeyForRoom: Key exchange failed for room ${roomId}`, ex);
-    }
-}
-
-async function importAesKey(sharedKeyHex: string, usage: KeyUsage): Promise<AESKey> {
-    const keyData = hexToUint8Array(sharedKeyHex);
-    if (process.env.NODE_ENV !== "production") {
-        console.debug(`importAesKey: Importing AES key for ${usage}`);
-    }
-    return crypto.subtle.importKey("raw", keyData, { name: "AES-CBC", length: 256 }, false, [usage]);
-}
-
-function isBase64Like(s: string): boolean {
-    return /^[A-Za-z0-9+/=]+$/.test(s);
-}
-
-function safeParse(val: unknown): any {
-    try {
-        const result = typeof val === "string" ? JSON.parse(val as string) : val;
-        if (process.env.NODE_ENV !== "production") {
-            console.debug(`safeParse: Parsed value`, result);
-        }
-        return result;
-    } catch {
-        if (process.env.NODE_ENV !== "production") {
-            console.debug(`safeParse: Failed to parse value`, val);
-        }
-        return val;
-    }
-}
-
-function getReceiverIdFromRoom(roomId: string): number {
-    const receiverId = roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0;
-    if (process.env.NODE_ENV !== "production") {
-        console.debug(`getReceiverIdFromRoom: Extracted receiverId ${receiverId} from roomId ${roomId}`);
-    }
-    return receiverId;
-}
-
-function addOnce(set: Set<string>, key: string): boolean {
-    if (set.has(key)) {
-        if (process.env.NODE_ENV !== "production") {
-            console.debug(`addOnce: Key ${key} already exists in set`);
-        }
-        return false;
-    }
-    set.add(key);
-    if (process.env.NODE_ENV !== "production") {
-        console.debug(`addOnce: Added key ${key} to set`);
-    }
-    return true;
-}
+import { buildWsUrl, isBase64Like, __DEV__, logDebug, logWarn, safeParse, getReceiverIdFromRoom, addOnce } from "@/utils/realtime";
+import { ensureSharedKeyForRoom, importAesKey } from "@/utils/crypto";
 
 function broadcastToListeners(payload: unknown): void {
     const event = { data: JSON.stringify(payload) } as MessageEvent;
-    if (process.env.NODE_ENV !== "production") {
-        console.debug(`broadcastToListeners: Broadcasting payload`, payload);
-    }
+    logDebug(`broadcastToListeners: Broadcasting payload`, payload);
     for (const fn of listeners.values()) fn(event);
 }
 
@@ -157,22 +73,18 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     const receivedMessagesRef = useRef<Set<string>>(new Set());
     const fetchResolveRef = useRef<((value?: void) => void) | null>(null);
 
+    // TODO: remove temporary receiver fallback when backend provides proper mapping
     const tempReceiverId = 3;
     const wsUrl = buildWsUrl(token, roomId);
 
     const fetchHistory = useCallback(() => {
         return new Promise<void>((resolve, reject) => {
-            console.log('[CHAT][FETCH] fetchHistory called', { currentPage, pageSize, hasMoreMessages, isFetching, afterId, isConnected });
             if (isE2EMock) {
-                console.log('[CHAT][FETCH] Skipping (E2E mock mode)');
                 resolve();
                 return;
             }
 
             if (!hasMoreMessages || isFetching || !isConnected) {
-                console.log('[CHAT][FETCH] Skip fetch', {
-                    reason: !hasMoreMessages ? 'no-more' : !isConnected ? 'not-connected' : 'already-fetching'
-                });
                 resolve();
                 return;
             }
@@ -194,28 +106,23 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 page: currentPage,
                 page_size: pageSize,
             };
-            console.log('[CHAT][FETCH] Prepared payload', payload);
 
             const timeout = setTimeout(() => {
                 setIsFetching(false);
                 fetchResolveRef.current = null;
-                console.log('[CHAT][FETCH] Timeout after 5s');
                 reject(new Error('Fetch history timeout after 5s'));
             }, 5000);
 
             try {
                 if (socket?.readyState === WebSocket.OPEN) {
-                    console.log('[CHAT][FETCH] Sending payload over WS', { readyState: socket.readyState });
                     socket.send(JSON.stringify(payload));
                     setCurrentPage((prev) => prev + 1);
                 } else {
-                    console.log('[CHAT][FETCH] WS not open', { readyState: socket?.readyState });
                     setIsFetching(false);
                     clearTimeout(timeout);
                     reject(new Error('WebSocket not open'));
                 }
             } catch (e) {
-                console.log('[CHAT][FETCH] Error sending payload', e);
                 setIsFetching(false);
                 clearTimeout(timeout);
                 reject(e);
@@ -240,18 +147,15 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
         (async () => {
             try {
                 await ensureSharedKeyForRoom(roomId);
-                console.debug(`WebSocketProvider: Shared key ensured for room ${roomId}`);
             } catch (e) {
                 console.warn(`WebSocketProvider: Pre-WS key derivation error for room ${roomId}`, e);
             }
             if (cancelled) {
-                console.debug(`WebSocketProvider: Operation cancelled before WebSocket creation`);
                 return;
             }
 
             const newSocket = new WebSocket(wsUrl);
             setSocket(newSocket);
-            console.debug(`WebSocketProvider: Created new WebSocket for room ${roomId}, URL: ${wsUrl}`);
 
             newSocket.onopen = () => {
                 setIsConnected(true);
@@ -264,52 +168,40 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 if (reconnectTimeoutRef.current) {
                     clearTimeout(reconnectTimeoutRef.current);
                     reconnectTimeoutRef.current = null;
-                    console.debug(`WebSocketProvider: Cleared reconnect timeout`);
                 }
                 console.log(`[WS] WebSocket connected for room ${roomId}`);
             };
 
             newSocket.onmessage = async (event) => {
-                if (process.env.NODE_ENV !== "production") {
-                    try {
-                        const preview = typeof event.data === 'string' ? event.data.slice(0, 200) : String(event.data);
-                        console.debug(`[WS][MSG] Raw message received`, { type: typeof event.data, preview });
-                    } catch {}
-                }
                 try {
                     const token = UserService.Instance.auth();
                     const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
 
                     let parsed: any = safeParse(event.data);
                     if (parsed === 'pong' || parsed === 'ping' || parsed?.op === 'Ping') {
-                        console.debug('[WS][MSG] Heartbeat received');
                         return;
                     }
                     if (typeof parsed === "string") parsed = safeParse(parsed);
 
                     const items: any[] = Array.isArray(parsed) ? parsed : parsed && typeof parsed === "object" ? [parsed] : [];
-                    console.debug(`[WS][MSG] Parsed ${items.length} items from event data`, { parsed });
+                    logDebug(`[WS][MSG] Parsed ${items.length} items from event data`, { parsed });
 
                     const transformedItems: ChatMessage[] = [];
 
                     if (parsed?.op === "FetchHistory" && Array.isArray(parsed.messages)) {
                         if (parsed.room_id !== roomId) {
-                            console.log('[WS][MSG] Ignored FetchHistory for other room', { got: parsed.room_id, expected: roomId });
                             return;
                         }
 
-                        console.log('[WS][MSG] FetchHistory response', { count: parsed.messages.length, limit: pageSize });
                         setIsFetching(false);
                         if (parsed.messages.length < pageSize) {
                             setHasMoreMessages(false);
-                            console.log('[WS][MSG] No more messages to fetch');
                         }
 
                         for (const msg of parsed.messages) {
                             const createdAtVal = msg.created_at || msg.createdAt || new Date().toISOString();
                             const messageSignature = `${msg.content}:${createdAtVal}`;
                             if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                                console.debug(`[WS][MSG] Ignored duplicate FetchHistory message`);
                                 continue;
                             }
 
@@ -320,7 +212,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                                     const plain = await decrypt(msg.content, token, aesKey);
                                     if (plain.length > 0) {
                                         content = plain;
-                                        console.log(`[WS][MSG] Decrypted FetchHistory message content`);
                                     }
                                 } catch (e) {
                                     console.warn(`[WS][MSG] Decryption failed for FetchHistory message`, e);
@@ -345,8 +236,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                         }
                     } else {
                         console.warn('[WS][MSG] Unhandled message format', { parsed });
-                        // Handle other message types (SendMessage, raw base64, etc.) as before
-                        // ... (unchanged code) ...
                     }
 
                     if (transformedItems.length) {
@@ -363,7 +252,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                         } else if (Array.isArray(parsed)) {
                             toBroadcast = transformedItems;
                         }
-                        console.debug(`[WS][MSG] Broadcasting ${transformedItems.length} transformed items`);
+                        logDebug(`[WS][MSG] Broadcasting ${transformedItems.length} transformed items`);
                         broadcastToListeners(toBroadcast);
                     } else {
                         console.warn(`[WS][MSG] No valid items to transform`, { parsed });
@@ -371,7 +260,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                             setIsFetching(false);
                             fetchResolveRef.current();
                             fetchResolveRef.current = null;
-                            console.log('[WS][MSG] Resolved fetchHistory Promise (no valid items)');
                         }
                     }
                 } catch (e) {
@@ -380,7 +268,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     if (fetchResolveRef.current) {
                         fetchResolveRef.current();
                         fetchResolveRef.current = null;
-                        console.log('[WS][MSG] Resolved fetchHistory Promise (error case)');
                     }
                     for (const fn of listeners.values()) fn(event);
                 }
@@ -388,14 +275,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
             newSocket.onclose = (event) => {
                 setIsConnected(false);
-                setIsFetching(false); // Reset isFetching on close
-                console.log(`[WS] WebSocket closed for room ${roomId}. Code: ${event.code}, Reason: ${event.reason || "unknown"}`);
-                // ... (unchanged code) ...
+                setIsFetching(false);
             };
 
             newSocket.onerror = (err) => {
                 if (isManuallyClosingRef.current) {
-                    console.debug(`[WS] WebSocket error ignored due to manual close`);
                     return;
                 }
                 console.error(`[WS] WebSocket error for room ${roomId}`, err);
@@ -403,7 +287,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 if (fetchResolveRef.current) {
                     fetchResolveRef.current();
                     fetchResolveRef.current = null;
-                    console.log('[WS] Resolved fetchHistory Promise (WebSocket error)');
                 }
             };
         })();
@@ -413,27 +296,23 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             isManuallyClosingRef.current = true;
             try {
                 socket?.close();
-                console.debug(`WebSocketProvider cleanup: Closed WebSocket for room ${roomId}`);
             } catch {
-                console.debug(`WebSocketProvider cleanup: Error closing WebSocket for room ${roomId}`);
+                console.warn(`WebSocketProvider cleanup: Error closing WebSocket for room ${roomId}`);
             }
             if (fetchResolveRef.current) {
                 fetchResolveRef.current();
                 fetchResolveRef.current = null;
                 setIsFetching(false);
-                console.log('[WS] Cleanup: Resolved fetchHistory Promise');
             }
         };
     }, [wsUrl, connectionAttemptKey, localUser, roomId, token]);
 
     useEffect(() => {
         if (isE2EMock) {
-            console.debug(`WebSocketProvider: Mock mode enabled, setting isConnected to true`);
             setIsConnected(true);
             return;
         }
         if (!token || !roomId || !localUser) {
-            console.debug(`WebSocketProvider: Missing prerequisites - token: ${!!token}, roomId: ${!!roomId}, localUser: ${!!localUser}`);
             return;
         }
 
@@ -443,18 +322,15 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
         (async () => {
             try {
                 await ensureSharedKeyForRoom(roomId);
-                console.debug(`WebSocketProvider: Shared key ensured for room ${roomId}`);
             } catch (e) {
                 console.warn(`WebSocketProvider: Pre-WS key derivation error for room ${roomId}`, e);
             }
             if (cancelled) {
-                console.debug(`WebSocketProvider: Operation cancelled before WebSocket creation`);
                 return;
             }
 
             const newSocket = new WebSocket(wsUrl);
             setSocket(newSocket);
-            console.debug(`WebSocketProvider: Created new WebSocket for room ${roomId}`);
 
             newSocket.onopen = () => {
                 setIsConnected(true);
@@ -467,7 +343,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 if (reconnectTimeoutRef.current) {
                     clearTimeout(reconnectTimeoutRef.current);
                     reconnectTimeoutRef.current = null;
-                    console.debug(`WebSocketProvider: Cleared reconnect timeout`);
                 }
                 console.log(`WebSocket connected for room ${roomId}`);
             };
@@ -476,7 +351,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 if (process.env.NODE_ENV !== "production") {
                     try {
                         const preview = typeof event.data === 'string' ? event.data.slice(0, 200) : String(event.data);
-                        console.debug(`onmessage: raw event`, { type: typeof event.data, preview });
+                        logDebug(`onmessage: raw event`, { type: typeof event.data, preview });
                     } catch {}
                 }
                 try {
@@ -747,17 +622,17 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
     useEffect(() => {
         if (connectionError) {
-            console.debug(`WebSocketProvider: Connection error detected, redirecting to /not-found`);
+            logDebug(`WebSocketProvider: Connection error detected, redirecting to /not-found`);
             router.replace("/not-found");
         }
     }, [connectionError, router]);
 
     useEffect(() => {
         if (!socket) {
-            console.debug(`WebSocketProvider: Socket is null`);
+            logDebug(`WebSocketProvider: Socket is null`);
             return;
         }
-        console.debug(`WebSocketProvider: Socket state changed, readyState: ${socket.readyState}`);
+        logDebug(`WebSocketProvider: Socket state changed, readyState: ${socket.readyState}`);
     }, [socket]);
 
     const sendMessage = useCallback(
@@ -853,10 +728,10 @@ export const useWebSocket = (
     }
 
     useEffect(() => {
-        console.debug(`useWebSocket: Registered listener for key ${key}`);
+        logDebug(`useWebSocket: Registered listener for key ${key}`);
         listeners.set(key, onMessage);
         return () => {
-            console.debug(`useWebSocket: Unregistered listener for key ${key}`);
+            logDebug(`useWebSocket: Unregistered listener for key ${key}`);
             listeners.delete(key);
         };
     }, [key, onMessage]);

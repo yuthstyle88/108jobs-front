@@ -65,7 +65,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                 return;
             }
 
-            const items: ChatMessage[] = Array.isArray(parsed) ? parsed : [parsed];
+            const isHistoryBatch = Array.isArray(parsed);
+            const items: ChatMessage[] = isHistoryBatch ? parsed : [parsed];
             if (!items.length) return;
 
             setMessages((prev) => {
@@ -117,8 +118,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                     skippedDup,
                     beforeLen,
                     afterLen: sorted.length,
+                    isHistoryBatch,
                 });
-                if (latestTs > 0 && latestContent != null && latestSenderId != null) {
+                if (!isHistoryBatch && latestTs > 0 && latestContent != null && latestSenderId != null) {
                     const tsIso = new Date(latestTs).toISOString();
                     try {
                         updateRoomLastMessage(roomId, latestContent, latestSenderId, tsIso);
