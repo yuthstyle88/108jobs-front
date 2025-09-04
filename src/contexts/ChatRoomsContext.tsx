@@ -121,10 +121,27 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                 const bTs = b.lastMessage?.timestamp || '';
                 return new Date(bTs).getTime() - new Date(aTs).getTime();
             });
-            setState(prev => ({
-                ...result,
-                rooms: sortedRooms,
-            }));
+            setState(prev => {
+                // Avoid unnecessary re-renders if nothing changed
+                const sameLength = prev.rooms.length === sortedRooms.length;
+                const isSame = sameLength && prev.rooms.every((r, i) => {
+                    const n = sortedRooms[i];
+                    return r.id === n.id &&
+                        r.name === n.name &&
+                        (r.lastMessage?.content || '') === (n.lastMessage?.content || '') &&
+                        (r.lastMessage?.timestamp || '') === (n.lastMessage?.timestamp || '') &&
+                        (r.lastMessage?.senderId || 0) === (n.lastMessage?.senderId || 0) &&
+                        r.unreadCount === n.unreadCount;
+                });
+                if (isSame) {
+                    // Preserve previous paging/loading flags to avoid flicker
+                    return { ...prev, isLoading: isLoading, error } as any;
+                }
+                return {
+                    ...result,
+                    rooms: sortedRooms,
+                } as any;
+            });
         })();
         return () => {
             alive = false;
@@ -134,6 +151,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     const refresh = useCallback(() => {
         execute();
     }, [execute]);
+
     const loadMore = useCallback(() => {
         if (state.hasMore && !isLoading) setPage(p => p + 1);
     }, [state.hasMore, isLoading]);
@@ -178,6 +196,17 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
             return { ...prev, rooms: nextRooms } as any;
         });
     }, []);
+
+    // Listen for global chat:new-message events to immediately update the left list
+    useEffect(() => {
+        const handler = (e: Event) => {
+            const detail = (e as CustomEvent).detail as { roomId: string; content: string; senderId: number; timestamp?: string };
+            if (!detail || !detail.roomId) return;
+            updateRoomLastMessage(detail.roomId, detail.content, detail.senderId, detail.timestamp);
+        };
+        window.addEventListener('chat:new-message' as any, handler as any);
+        return () => window.removeEventListener('chat:new-message' as any, handler as any);
+    }, [updateRoomLastMessage]);
 
     const value = useMemo<ChatRoomsContextValue>(() => ({
         ...state,

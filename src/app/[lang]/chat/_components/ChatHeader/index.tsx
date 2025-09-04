@@ -2,18 +2,20 @@
 
 import {ProfileImage} from "@/constants/images";
 import Image, {StaticImageData} from "next/image";
-import Link from "next/link";
 
 interface ChatHeaderProps {
   avatarUrl: StaticImageData | string;
   displayName: string;
   guideText: string;
+  onToggleFlow?: () => void; // mobile toggle for right sidebar
+  isFlowOpen?: boolean; // state for label
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({
   avatarUrl,
   displayName,
-  guideText,
+  onToggleFlow,
+  isFlowOpen,
 }) => {
   return (
     <div className="border-b p-4 flex justify-between items-center bg-white">
@@ -29,12 +31,15 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
           {displayName}
         </span>
       </div>
-      <Link prefetch={false}
-            href="#"
-            className="text-third hover:bg-gray-100 text-[14px] px-4 py-2 rounded-sm border border-border-primary"
-      >
-        {guideText}
-      </Link>
+      <div className="flex items-center gap-2">
+        {/* Mobile: toggle Flow in header; User Guide moved to right sidebar */}
+        <button
+          onClick={onToggleFlow}
+          className="block md:hidden whitespace-nowrap rounded-md bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-2"
+        >
+          {isFlowOpen ? "Hide Flow" : "Show Flow"}
+        </button>
+      </div>
     </div>
   );
 };

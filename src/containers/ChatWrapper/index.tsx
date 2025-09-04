@@ -6,19 +6,33 @@ import { formatMessageTime } from "@/utils/formatMessageTime";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { useChatRooms } from "@/contexts/ChatRoomsContext";
 import type { ChatRoom } from "@/types/chat";
 
 const ChatWrapper = () => {
     const params = useParams();
-    const activeRoomId = params?.senderId;
+    const activeRoomId = params?.roomId as string | undefined;
     const { lang: currentLang } = useLanguage();
     const { localUser } = useMyUser();
     const { rooms, isLoading, error } = useChatRooms();
     const [searchQuery, setSearchQuery] = useState("");
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Toggle state for mobile
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    // Reset isSidebarOpen to false on mobile screens
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 640) {
+                setIsSidebarOpen(false); // Hide sidebar on mobile by default
+            } else {
+                setIsSidebarOpen(true); // Show sidebar on larger screens
+            }
+        };
+        handleResize(); // Check on mount
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     const filteredRooms = useMemo(() => {
         const list = rooms || [];
@@ -45,15 +59,16 @@ const ChatWrapper = () => {
         <>
             {/* Toggle Button for Mobile */}
             <button
-                className="md:hidden fixed top-24 left-4 z-50 p-2 bg-blue-600 text-white rounded-lg shadow"
+                className="md:hidden fixed top-[72px] left-4 z-50 p-2 bg-blue-600 text-white rounded-lg shadow"
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                aria-label={isSidebarOpen ? "Close chat list" : "Open chat list"}
             >
                 {isSidebarOpen ? "Close" : "Chats"}
             </button>
             <div
                 className={`flex flex-col border-r bg-white transition-all duration-300 ${
-                    isSidebarOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"
-                } md:translate-x-0 fixed md:static top-[80px] left-0 h-[calc(100vh-80px)] w-80 md:w-1/4 lg:w-1/5 max-w-md z-40 overflow-hidden shadow-md md:shadow-none`}
+                    isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+                } md:translate-x-0 fixed md:static top-[64px] left-0 h-[calc(100vh-64px)] w-80 md:w-1/4 lg:w-1/5 max-w-md z-40 overflow-hidden shadow-md md:shadow-none`}
             >
                 <div className="p-4 border-b">
                     <div className="relative">
@@ -69,7 +84,7 @@ const ChatWrapper = () => {
                         />
                     </div>
                 </div>
-                <div className="flex-1 overflow-hidden">
+                <div className="flex-1 overflow-y-auto">
                     {isLoading && filteredRooms.length === 0 && (
                         <p className="p-4 text-sm text-gray-500 text-center">
                             Loading chats…
@@ -88,11 +103,16 @@ const ChatWrapper = () => {
                             : false;
 
                         return (
-                            <Link prefetch={false} key={room.id} href={`/chat/message/${room.id}`} className="block">
+                            <Link
+                                prefetch={false}
+                                key={room.id}
+                                href={`/${currentLang || 'th'}/chat/message/${room.id}`}
+                                className="block focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
                                 <div
                                     className={`p-3 md:p-4 flex items-start transition-colors cursor-pointer border-b ${
                                         isActive
-                                            ? "border-l-4 border-third bg-blue-100 hover:bg-blue-100"
+                                            ? "border-l-4 border-blue-600 bg-blue-100 hover:bg-blue-100"
                                             : "hover:bg-gray-100 border-b-gray-200"
                                     }`}
                                 >
@@ -111,10 +131,10 @@ const ChatWrapper = () => {
                                                 {room.name}
                                             </h4>
                                             <span className="ml-2 text-xs text-gray-400">
-                        {chatMessage?.timestamp
-                            ? formatMessageTime(chatMessage.timestamp, currentLang || "th")
-                            : ""}
-                      </span>
+                                                {chatMessage?.timestamp
+                                                    ? formatMessageTime(chatMessage.timestamp, currentLang || "th")
+                                                    : ""}
+                                            </span>
                                         </div>
                                         {chatMessage && (
                                             <p className="text-xs md:text-sm font-sans text-text-primary mt-1 line-clamp-1 overflow-hidden break-all max-w-[180px] md:max-w-[220px]">
@@ -125,8 +145,8 @@ const ChatWrapper = () => {
                                     </div>
                                     {room.unreadCount > 0 && (
                                         <span className="ml-auto text-xs bg-blue-600 text-white rounded-full px-2 py-0.5">
-                      {room.unreadCount}
-                    </span>
+                                            {room.unreadCount}
+                                        </span>
                                     )}
                                 </div>
                             </Link>

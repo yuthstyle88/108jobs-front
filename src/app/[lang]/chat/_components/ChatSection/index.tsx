@@ -108,12 +108,26 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                     afterLen: sorted.length,
                 });
                 if (latestTs > 0 && latestContent != null && latestSenderId != null) {
+                    const tsIso = new Date(latestTs).toISOString();
                     try {
                         updateRoomLastMessage(
                             roomId,
                             latestContent,
                             latestSenderId,
-                            new Date(latestTs).toISOString()
+                            tsIso
+                        );
+                    } catch {}
+                    // Notify other parts of the app (e.g., chat list) that a new message arrived
+                    try {
+                        window.dispatchEvent(
+                            new CustomEvent("chat:new-message", {
+                                detail: {
+                                    roomId,
+                                    content: latestContent,
+                                    senderId: latestSenderId,
+                                    timestamp: tsIso,
+                                },
+                            })
                         );
                     } catch {}
                 }
@@ -236,6 +250,19 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                 message: `Proposed quotation: $${data.price.toFixed(2)}`,
                 id: messageId,
             });
+            try {
+                const tsIso = new Date().toISOString();
+                window.dispatchEvent(
+                    new CustomEvent("chat:new-message", {
+                        detail: {
+                            roomId,
+                            content: `Proposed quotation: $${data.price.toFixed(2)}`,
+                            senderId: Number(localUser?.id) || 0,
+                            timestamp: tsIso,
+                        },
+                    })
+                );
+            } catch {}
         } catch (err) {
             console.error("Failed to send quotation:", err);
             alert(t("profileChat.quotationError") || "Failed to send quotation.");
@@ -252,6 +279,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                 message: t("profileChat.acceptJobMsg") || "I have accepted the job.",
                 id: uuidv4(),
             });
+            try {
+                const content = t("profileChat.acceptJobMsg") || "I have accepted the job.";
+                const tsIso = new Date().toISOString();
+                window.dispatchEvent(new CustomEvent("chat:new-message", { detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+            } catch {}
         },
         onUploadAsset: () => {
             const input = document.createElement("input");
@@ -275,6 +307,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                     t("profileChat.requestRevisionMsg") || "Please revise and resubmit.",
                 id: uuidv4(),
             });
+            try {
+                const content = t("profileChat.requestRevisionMsg") || "Please revise and resubmit.";
+                const tsIso = new Date().toISOString();
+                window.dispatchEvent(new CustomEvent("chat:new-message", { detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+            } catch {}
         },
         onReleasePayment: () => {
             setActiveStep(6);
@@ -285,6 +322,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                     "Delivery accepted. Proceed to payment.",
                 id: uuidv4(),
             });
+            try {
+                const content = t("profileChat.deliveryAccepted") || "Delivery accepted. Proceed to payment.";
+                const tsIso = new Date().toISOString();
+                window.dispatchEvent(new CustomEvent("chat:new-message", { detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+            } catch {}
         },
     };
 
@@ -315,12 +357,21 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                 ...prev,
             ]);
             try {
+                const tsIso = new Date().toISOString();
                 updateRoomLastMessage(
                     roomId,
                     message,
                     Number(localUser?.id) || 0,
-                    new Date().toISOString()
+                    tsIso
                 );
+                // Emit global event so chat list updates immediately
+                try {
+                    window.dispatchEvent(
+                        new CustomEvent("chat:new-message", {
+                            detail: { roomId, content: message, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                        })
+                    );
+                } catch {}
             } catch {}
 
             sendMessage({ message, id: messageId });
@@ -447,6 +498,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                             avatarUrl={currentRoom?.partnerAvatar || ProfileImage.avatar}
                             displayName={currentRoom?.partnerDisplayName || "User"}
                             guideText={t("profileChat.guide") || "Usage Guide"}
+                            onToggleFlow={() => setIsFlowOpen(!isFlowOpen)}
+                            isFlowOpen={isFlowOpen}
                         />
                     </div>
                     <div
@@ -472,13 +525,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                                     isUploading={isUploading}
                                 />
                             </div>
-                            {/* Toggle Flow Button for Mobile */}
-                            <button
-                                className="whitespace-nowrap rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm px-2 py-1 md:px-3 md:py-2"
-                                onClick={() => setIsFlowOpen(!isFlowOpen)}
-                            >
-                                {isFlowOpen ? "Hide Flow" : "Show Flow"}
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -488,6 +534,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                         isFlowOpen ? "translate-x-0 pointer-events-auto" : "translate-x-full pointer-events-none"
                     } md:translate-x-0 fixed md:static top-[80px] right-0 h-[calc(100vh-80px)] w-64 sm:w-72 md:w-80 lg:w-96 max-w-full z-40 flex flex-col overflow-hidden shadow-md md:shadow-none`}
                 >
+                    {/* User Guide moved here to right sidebar */}
+                    <div className="p-2 md:p-3 border-b flex justify-end bg-white">
+                        <a
+                            href="#"
+                            className="text-third hover:bg-gray-100 text-[12px] md:text-[14px] px-3 py-1.5 rounded-sm border border-border-primary"
+                        >
+                            {t("profileChat.guide") || "Usage Guide"}
+                        </a>
+                    </div>
                     <FreelanceChatFlow
                         currentStatus={currentStatus}
                         onChangeStatus={handleChangeStatus}
