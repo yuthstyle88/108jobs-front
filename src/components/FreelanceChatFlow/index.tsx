@@ -122,9 +122,6 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
             } ${compact ? 'space-y-2' : 'space-y-4'} ${className}`}
             aria-label="สถานะปัจจุบัน"
         >
-            <h2 className="px-4 py-6 text-lg font-medium text-gray-800 border-b border-gray-200">
-                {t('profileChat.details') || 'สถานะปัจจุบัน'}
-            </h2>
             <ul
                 className={`flex ${
                     orientation === 'horizontal' ? 'flex-row flex-wrap gap-4' : 'flex-col'

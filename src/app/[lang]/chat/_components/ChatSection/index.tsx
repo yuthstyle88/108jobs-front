@@ -30,7 +30,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
     const [activeStep, setActiveStep] = useState<number>(0);
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
-    const [isFlowOpen, setIsFlowOpen] = useState(false); // Toggle for flow panel on mobile
+    const [isFlowOpen, setIsFlowOpen] = useState(false);
     const { t } = useTranslation();
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
@@ -40,6 +40,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
     const topSentinelRef = useRef<HTMLDivElement>(null);
     const isSubmittingRef = useRef(false);
     const { localUser } = useMyUser();
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 640) {
+                setIsFlowOpen(false);
+            }
+        };
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     const { sendMessage, fetchHistory, isConnected, hasMoreMessages, isFetching } = useWebSocket(
         `chat_${roomId}`,
@@ -97,7 +108,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                 }
                 const sorted = copy.sort(
                     (a, b) =>
-                        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+                        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 );
                 console.log("[CHAT][STATE] apply incoming", {
                     incoming: items.length,
@@ -110,14 +121,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                 if (latestTs > 0 && latestContent != null && latestSenderId != null) {
                     const tsIso = new Date(latestTs).toISOString();
                     try {
-                        updateRoomLastMessage(
-                            roomId,
-                            latestContent,
-                            latestSenderId,
-                            tsIso
-                        );
+                        updateRoomLastMessage(roomId, latestContent, latestSenderId, tsIso);
                     } catch {}
-                    // Notify other parts of the app (e.g., chat list) that a new message arrived
                     try {
                         window.dispatchEvent(
                             new CustomEvent("chat:new-message", {
@@ -144,19 +149,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
         roomId,
         partnerAvatar: ProfileImage.avatar,
         partnerDisplayName: "User",
-        job: { id: roomId, title: "Sample Job", coverImage: CategoriesImage.seoJob },
+        job: { id: roomId, title: "Sample Job", coverImage: CategoriesImage.seoJob, description: "Sample job description" },
         messages: [],
     };
 
-    const statusMap: StatusKey[] = [
-        "new",
-        "queue",
-        "assign",
-        "accept",
-        "chat",
-        "review",
-        "pay",
-    ];
+    const statusMap: StatusKey[] = ["new", "queue", "assign", "accept", "chat", "review", "pay"];
     const currentStatus: StatusKey = statusMap[activeStep] || "new";
 
     const handleChangeStatus = (key: StatusKey) => {
@@ -282,7 +279,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
             try {
                 const content = t("profileChat.acceptJobMsg") || "I have accepted the job.";
                 const tsIso = new Date().toISOString();
-                window.dispatchEvent(new CustomEvent("chat:new-message", { detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+                window.dispatchEvent(
+                    new CustomEvent("chat:new-message", {
+                        detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                    })
+                );
             } catch {}
         },
         onUploadAsset: () => {
@@ -310,7 +311,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
             try {
                 const content = t("profileChat.requestRevisionMsg") || "Please revise and resubmit.";
                 const tsIso = new Date().toISOString();
-                window.dispatchEvent(new CustomEvent("chat:new-message", { detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+                window.dispatchEvent(
+                    new CustomEvent("chat:new-message", {
+                        detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                    })
+                );
             } catch {}
         },
         onReleasePayment: () => {
@@ -325,7 +330,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
             try {
                 const content = t("profileChat.deliveryAccepted") || "Delivery accepted. Proceed to payment.";
                 const tsIso = new Date().toISOString();
-                window.dispatchEvent(new CustomEvent("chat:new-message", { detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+                window.dispatchEvent(
+                    new CustomEvent("chat:new-message", {
+                        detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                    })
+                );
             } catch {}
         },
     };
@@ -358,13 +367,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
             ]);
             try {
                 const tsIso = new Date().toISOString();
-                updateRoomLastMessage(
-                    roomId,
-                    message,
-                    Number(localUser?.id) || 0,
-                    tsIso
-                );
-                // Emit global event so chat list updates immediately
+                updateRoomLastMessage(roomId, message, Number(localUser?.id) || 0, tsIso);
                 try {
                     window.dispatchEvent(
                         new CustomEvent("chat:new-message", {
@@ -410,13 +413,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
             return;
         }
 
-        const rootInfo = {
-            clientHeight: rootEl.clientHeight,
-            scrollHeight: rootEl.scrollHeight,
-            scrollTop: rootEl.scrollTop,
-        };
-        console.log("[CHAT][OBS] Creating IntersectionObserver with root info", rootInfo);
-
+        console.log("[CHAT][OBS] Setting up observer");
         const observer = new IntersectionObserver(
             (entries) => {
                 const e = entries[0];
@@ -431,16 +428,27 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                         height: e.boundingClientRect.height,
                     },
                 });
-                if (e.isIntersecting) {
+                if (e.isIntersecting && e.intersectionRatio > 0) {
                     if (isFetching) {
                         console.log("[CHAT][OBS] Visible but skip, already fetching");
                         return;
                     }
                     console.log("[CHAT][OBS] Top sentinel visible -> fetchHistory()");
-                    fetchHistory();
+                    const scrollHeight = rootEl.scrollHeight;
+                    fetchHistory().then(() => {
+                        const newScrollHeight = rootEl.scrollHeight;
+                        console.log("[CHAT][OBS] Scroll adjustment", {
+                            oldHeight: scrollHeight,
+                            newHeight: newScrollHeight,
+                            scrollTop: rootEl.scrollTop,
+                        });
+                        rootEl.scrollTop += newScrollHeight - scrollHeight;
+                    }).catch((err) => {
+                        console.error("[CHAT][OBS] Failed to fetch history:", err);
+                    });
                 }
             },
-            { root: rootEl, threshold: 0 }
+            { root: rootEl, threshold: [0, 0.1], margin: "10px" }
         );
 
         observer.observe(topSentinelRef.current);
@@ -454,8 +462,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
     useEffect(() => {
         if (isConnected) {
             console.log("[CHAT][INIT] Connected -> initial fetchHistory()");
-            fetchHistory();
-            setIsInitialLoading(false);
+            fetchHistory().then(() => {
+                setIsInitialLoading(false);
+            }).catch((err) => {
+                console.error("[CHAT][INIT] Failed to fetch initial history:", err);
+                setIsInitialLoading(false);
+            });
         } else {
             console.log("[CHAT][INIT] Not connected yet");
         }
@@ -463,17 +475,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
 
     const prevLatestTsRef = useRef<number>(0);
     useEffect(() => {
-        if (!messages.length || !endRef.current) return;
-        const latestTs = new Date(messages[messages.length - 1].createdAt).getTime();
-        if (latestTs > prevLatestTsRef.current) {
+        if (!messages.length || !scrollContainerRef.current) return;
+        const latestTs = new Date(messages[0].createdAt).getTime();
+        if (latestTs > prevLatestTsRef.current || prevLatestTsRef.current === 0) {
             console.log("[CHAT][SCROLL] Scrolling to bottom", {
                 from: prevLatestTsRef.current,
                 to: latestTs,
                 count: messages.length,
             });
-            endRef.current.scrollIntoView({
-                behavior: prevLatestTsRef.current === 0 ? "auto" : "smooth",
-            });
+            scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
             prevLatestTsRef.current = latestTs;
         } else {
             console.log("[CHAT][SCROLL] Not scrolling (likely prepended history)", {
@@ -490,31 +500,29 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
 
     return (
         <>
-            <div className="relative flex-1 flex flex-col md:flex-row h-full bg-slate-50">
-                {/* Chat Area */}
-                <div className="flex-1 flex flex-col h-full z-0">
-                    <div className="sticky top-0 z-10 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b">
-                        <ChatHeader
-                            avatarUrl={currentRoom?.partnerAvatar || ProfileImage.avatar}
-                            displayName={currentRoom?.partnerDisplayName || "User"}
-                            guideText={t("profileChat.guide") || "Usage Guide"}
-                            onToggleFlow={() => setIsFlowOpen(!isFlowOpen)}
-                            isFlowOpen={isFlowOpen}
-                        />
-                    </div>
+            <div className="relative flex-1 flex flex-col md:flex-row h-full">
+                <div className="flex-1 flex flex-col h-full w-full">
+                    <ChatHeader
+                        avatarUrl={currentRoom?.partnerAvatar || ProfileImage.avatar}
+                        displayName={currentRoom?.partnerDisplayName || "User"}
+                        guideText={t("profileChat.guide") || "Usage Guide"}
+                    />
                     <div
                         ref={scrollContainerRef}
                         data-testid="chat-list"
-                        className="flex-1 overflow-y-auto overflow-x-hidden p-3 md:p-5 bg-gradient-to-b from-slate-50 to-white flex flex-col"
+                        className="flex-1 overflow-y-auto p-3 md:p-4 bg-gray-50 flex flex-col-reverse"
+                        aria-live="polite"
                     >
-                        <div ref={topSentinelRef} style={{ height: "10px" }} />
+                        <div ref={endRef} />
                         <ChatMessages
                             messages={messages}
                             partnerAvatar={currentRoom?.partnerAvatar || ProfileImage.avatar}
                         />
-                        <div ref={endRef} />
+                        {hasMoreMessages && (
+                            <div ref={topSentinelRef} style={{ height: "20px", background: "transparent" }} aria-hidden="true" />
+                        )}
                     </div>
-                    <div className="border-t px-3 py-2 md:px-4 md:py-3 bg-white sticky bottom-0 z-10 shadow-[0_-2px_8px_rgba(0,0,0,0.04)]" style={{paddingBottom: 'env(safe-area-inset-bottom)'}}>
+                    <div className="border-t px-3 py-2 md:px-4 md:py-3 bg-white">
                         <div className="flex items-center gap-2">
                             <div className="flex-1">
                                 <ChatInput
@@ -525,62 +533,94 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                                     isUploading={isUploading}
                                 />
                             </div>
+                            <button
+                                className="md:hidden p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200"
+                                onClick={() => setIsFlowOpen(!isFlowOpen)}
+                                aria-label={isFlowOpen ? "Hide job flow" : "Show job flow"}
+                            >
+                                {isFlowOpen ? "Hide" : "Flow"}
+                            </button>
                         </div>
                     </div>
                 </div>
-                {/* Flow Panel */}
                 <div
-                    className={`border-l bg-white h-full transition-all duration-300 ${
-                        isFlowOpen ? "translate-x-0 pointer-events-auto" : "translate-x-full pointer-events-none"
-                    } md:translate-x-0 fixed md:static top-[80px] right-0 h-[calc(100vh-80px)] w-64 sm:w-72 md:w-80 lg:w-96 max-w-full z-40 flex flex-col overflow-hidden shadow-md md:shadow-none`}
+                    className={`border-l bg-gray-50 h-full transition-all duration-300 ${
+                        isFlowOpen ? "translate-x-0" : "translate-x-full"
+                    } md:translate-x-0 fixed md:static top-[64px] h-[calc(100vh-64px)] w-64 sm:w-72 md:w-80 lg:w-96 max-w-md z-40 flex flex-col shadow-lg md:shadow-none`}
+                    role="complementary"
+                    aria-label="Job Flow Sidebar"
                 >
-                    {/* User Guide moved here to right sidebar */}
-                    <div className="p-2 md:p-3 border-b flex justify-end bg-white">
-                        <a
-                            href="#"
-                            className="text-third hover:bg-gray-100 text-[12px] md:text-[14px] px-3 py-1.5 rounded-sm border border-border-primary"
+                    <div className="p-4 bg-blue-50 border-b border-blue-100 flex items-center justify-between">
+                        <h2 className="text-lg font-semibold text-blue-800">
+                            {t("profileChat.jobFlow") || "Job Flow"}
+                        </h2>
+                        <button
+                            className="md:hidden p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all duration-200"
+                            onClick={() => setIsFlowOpen(false)}
+                            aria-label="Close job flow sidebar"
                         >
-                            {t("profileChat.guide") || "Usage Guide"}
-                        </a>
+                            <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
                     </div>
-                    <FreelanceChatFlow
-                        currentStatus={currentStatus}
-                        onChangeStatus={handleChangeStatus}
-                        orientation="vertical"
-                        compact={false}
-                        className="p-2 md:p-4 overflow-hidden"
-                        onProposeQuote={flowActions.onProposeQuote}
-                        onAcceptJob={flowActions.onAcceptJob}
-                        onUploadAsset={flowActions.onUploadAsset}
-                        onSendMessage={flowActions.onSendMessage}
-                        onSubmitDelivery={flowActions.onSubmitDelivery}
-                        onRequestRevision={flowActions.onRequestRevision}
-                        onReleasePayment={flowActions.onReleasePayment}
-                    />
-                    <div className="p-3 md:p-4 border-t">
-                        <div className="flex">
-                            <div className="w-10 h-10 md:w-12 md:h-12 rounded bg-gray-200 overflow-hidden mr-2 md:mr-3 flex-shrink-0">
+                    <div className="flex-1 p-4 md:p-6 overflow-y-auto border-b border-gray-200">
+                        <FreelanceChatFlow
+                            currentStatus={currentStatus}
+                            onChangeStatus={handleChangeStatus}
+                            orientation="vertical"
+                            compact={false}
+                            className="space-y-4"
+                            onProposeQuote={flowActions.onProposeQuote}
+                            onAcceptJob={flowActions.onAcceptJob}
+                            onUploadAsset={flowActions.onUploadAsset}
+                            onSendMessage={flowActions.onSendMessage}
+                            onSubmitDelivery={flowActions.onSubmitDelivery}
+                            onRequestRevision={flowActions.onRequestRevision}
+                            onReleasePayment={flowActions.onReleasePayment}
+                        />
+                    </div>
+                    <div className="p-4 md:p-6 bg-white border-t border-gray-200">
+                        <div
+                            className="flex items-center bg-white rounded-lg shadow-sm p-3 hover:shadow-md transition-all duration-200 hover:transform hover:scale-105"
+                            aria-label="Job details"
+                        >
+                            <div className="w-12 h-12 md:w-16 md:h-16 rounded-md bg-gray-200 overflow-hidden mr-3 md:mr-4 flex-shrink-0">
                                 <Image
-                                    src="https://image.api.playstation.com/vulcan/ap/rnd/202505/1910/d37be317fa9878d572fb53a7bfc818fe5611ba4af6e6adb9.png"
-                                    alt="jobCover"
+                                    src={currentRoom?.job?.coverImage || CategoriesImage.seoJob}
+                                    alt={currentRoom?.job?.title || "Job Cover"}
                                     width={64}
-                                    height={48}
+                                    height={64}
                                     className="w-full h-full object-cover"
                                 />
                             </div>
-                            <div>
-                                <p className="text-xs md:text-sm text-text-primary font-sans line-clamp-2">
+                            <div className="flex-1">
+                                <h3 className="text-sm md:text-base font-semibold text-gray-900 line-clamp-1">
                                     {currentRoom?.job?.title || "No Job Title"}
+                                </h3>
+                                <p className="text-xs md:text-sm text-gray-600 line-clamp-2">
+                                    {currentRoom?.job?.description || "No description available"}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
-                {/* Overlay for mobile when flow panel is open */}
                 {isFlowOpen && (
                     <div
                         className="md:hidden fixed inset-0 bg-black/50 z-30"
                         onClick={() => setIsFlowOpen(false)}
+                        aria-hidden="true"
                     />
                 )}
             </div>
@@ -596,7 +636,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                         </p>
                         <div className="flex justify-center gap-2 md:gap-3">
                             <button
-                                className="rounded-md bg-green-600 hover:bg-green-700 text-white px-3 py-1 md:px-4 md:py-2 text-sm"
+                                className="rounded-md bg-green-600 hover:bg-green-700 text-white px-3 py-1 md:px-4 md:py-2 text-sm transition-all duration-200"
                                 onClick={() => {
                                     setShowReviewModal(false);
                                     setActiveStep(6);
@@ -622,7 +662,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                                 {t("profileChat.acceptAndRelease") || "Accept & Release Payment"}
                             </button>
                             <button
-                                className="rounded-md bg-red-600 hover:bg-red-700 text-white px-3 py-1 md:px-4 md:py-2 text-sm"
+                                className="rounded-md bg-red-600 hover:bg-red-700 text-white px-3 py-1 md:px-4 md:py-2 text-sm transition-all duration-200"
                                 onClick={() => {
                                     setShowReviewModal(false);
                                     setActiveStep(4);

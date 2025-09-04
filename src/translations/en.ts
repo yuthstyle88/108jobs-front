@@ -1677,6 +1677,7 @@ export const en = {
             quotationFile: 'Quotation PDF',
             cancel: 'Cancel',
             sendQuotation: 'Send Quotation',
+            jobFlow: "Work Flow",
         },
         profileCoins: {
             buttonProceedPayment: "Proceed to payment",

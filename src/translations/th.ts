@@ -1610,7 +1610,7 @@ export const th = {
             step3: 'มอบหมาย',
             step3Sub: 'ระบบ/แอดมินเลือกคน',
             step4: 'ฟรีแลนซ์รับงาน',
-            step4Sub: 'Accept / Decline',
+            step4Sub: 'ยอมรับ / ปฏิเสธ',
             step5: 'คุยงาน',
             step5Sub: 'แชท + แนบไฟล์',
             step6: 'ส่งงาน & รีวิว',
@@ -1633,6 +1633,7 @@ export const th = {
             quotationFile: 'ไฟล์ใบเสนอราคา (PDF)',
             cancel: 'ยกเลิก',
             sendQuotation: 'ส่งใบเสนอราคา',
+            jobFlow: "ขั้นตอนการทำงาน",
         },
         profileCoins: {
             buttonProceedPayment: "ดำเนินการชำระเงิน",

@@ -1693,6 +1693,7 @@ export const vi = {
             quotationFile: 'Tệp Báo giá (PDF)',
             cancel: 'Hủy',
             sendQuotation: 'Gửi Báo giá',
+            jobFlow: "Quy trình làm việc",
         },
         profileCoins: {
             buttonProceedPayment: "Tiến hành thanh toán",
