@@ -1629,6 +1629,7 @@ export const th = {
             submitDelivery: 'ส่งงาน',
             requestRevision: 'ขอแก้ไขรอบใหม่',
             releasePayment: 'ปล่อยเงิน/ปิดงาน',
+            proposeQuoteMsg: 'ฟรีแลนซ์ได้สร้างใบเสนอราคาแล้ว กำลังรอนายจ้างตรวจสอบ',
             quotationTitle: 'สร้างใบเสนอราคา',
             quotationFile: 'ไฟล์ใบเสนอราคา (PDF)',
             cancel: 'ยกเลิก',

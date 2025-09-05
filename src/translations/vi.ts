@@ -1689,6 +1689,7 @@ export const vi = {
             submitDelivery: 'Gửi sản phẩm',
             requestRevision: 'Yêu cầu chỉnh sửa',
             releasePayment: 'Thanh toán/Kết thúc công việc',
+            proposeQuoteMsg: 'Báo giá đã được tạo bởi freelancer, đang chờ nhà tuyển dụng xem xét',
             quotationTitle: 'Tạo Báo giá',
             quotationFile: 'Tệp Báo giá (PDF)',
             cancel: 'Hủy',

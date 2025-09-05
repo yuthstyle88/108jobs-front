@@ -1673,6 +1673,7 @@ export const en = {
             submitDelivery: 'Submit Delivery',
             requestRevision: 'Request Revision',
             releasePayment: 'Release Payment/Close Job',
+            proposeQuoteMsg: 'Quotation created by freelancer, waiting for employer review',
             quotationTitle: 'Create Quotation',
             quotationFile: 'Quotation PDF',
             cancel: 'Cancel',

@@ -260,8 +260,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 console.warn("Failed to dispatch chat:new-message event");
             }
 
-            // Move to 'assign' step
-            goToStatus("assign");
+            // Upon sending a quotation, freelancer should remain at step 2 (queue)
+            goToStatus("queue");
 
             // Close modal
             setShowQuotationModal(false);
@@ -274,6 +274,46 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
     const flowActions: FlowActions = {
         onProposeQuote: () => {
             setShowQuotationModal(true);
+        },
+        onConfirmAssign: () => {
+            // Employer confirms assignment -> notify freelancer to move to 'accept'
+            const messageId = uuidv4();
+            const readable = t("profileChat.confirmAssignMsg") || "Assignment confirmed. Waiting for freelancer to accept.";
+            const payload = { type: "employer-assigned" };
+
+            // Add local human-readable message
+            setMessages((prev) => [
+                {
+                    id: messageId,
+                    roomId: currentRoom?.roomId || roomId,
+                    content: readable,
+                    createdAt: new Date().toISOString(),
+                    senderId: Number(localUser?.id) || 0,
+                    receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
+                    status: 0,
+                    isOwner: true,
+                } as ChatMessage,
+                ...prev,
+            ]);
+
+            // Send structured event to the other side
+            sendMessage({
+                message: JSON.stringify(payload),
+                id: messageId,
+            });
+
+            try {
+                const tsIso = new Date().toISOString();
+                updateRoomLastMessage(roomId, readable, Number(localUser?.id) || 0, tsIso);
+                window.dispatchEvent(
+                    new CustomEvent("chat:new-message", {
+                        detail: { roomId, content: readable, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                    })
+                );
+            } catch {
+            }
+            // Move employer directly to 'chat' (Work Discussion) after confirming assign
+            goToStatus("chat");
         },
         onAcceptJob: () => {
             goToStatus("chat");
@@ -499,7 +539,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         }
     }, [messages]);
 
-    // Update workflow automatically based on latest quotation message
+    // Update workflow automatically based on latest special messages
     useEffect(() => {
         if (!messages.length) return;
         const latest = messages[0];
@@ -509,9 +549,16 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             const parsed = JSON.parse(content);
             if (parsed && parsed.type === "proposed-quote") {
                 if (latest.isOwner) {
-                    goToStatus("assign");
-                } else {
+                    // Freelancer created quotation -> should be at step 2 (queue)
                     goToStatus("queue");
+                } else {
+                    // Employer received a quotation -> go to step 'assign'
+                    goToStatus("assign");
+                }
+            } else if (parsed && parsed.type === "employer-assigned") {
+                if (!latest.isOwner) {
+                    // Employer finished assign -> both sides proceed to 'chat' (Work Discussion)
+                    goToStatus("chat");
                 }
             }
         } catch {
@@ -593,6 +640,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             compact={false}
                             className="space-y-4"
                             onProposeQuote={flowActions.onProposeQuote}
+                            onConfirmAssign={flowActions.onConfirmAssign}
                             onAcceptJob={flowActions.onAcceptJob}
                             onUploadAsset={flowActions.onUploadAsset}
                             onSendMessage={flowActions.onSendMessage}
@@ -649,6 +697,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 compact={false}
                                 className="space-y-4"
                                 onProposeQuote={flowActions.onProposeQuote}
+                                onConfirmAssign={flowActions.onConfirmAssign}
                                 onAcceptJob={flowActions.onAcceptJob}
                                 onUploadAsset={flowActions.onUploadAsset}
                                 onSendMessage={flowActions.onSendMessage}

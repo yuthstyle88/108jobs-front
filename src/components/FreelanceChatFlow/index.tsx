@@ -8,6 +8,7 @@ export type StatusKey = 'new' | 'queue' | 'assign' | 'accept' | 'chat' | 'review
 
 export type FlowActions = {
     onProposeQuote?: () => void;
+    onConfirmAssign?: () => void;
     onAcceptJob?: () => void;
     onUploadAsset?: () => void;
     onSendMessage?: () => void;
@@ -27,9 +28,9 @@ export type FreelanceChatFlowProps = {
 const STEPS: Array<{ key: StatusKey; title: string; sub: string }> = [
     {key: 'new', title: 'ลูกค้าทัก', sub: 'เริ่มแชท / ฟอร์มบรีฟ'},
     {key: 'queue', title: 'เข้า Queue', sub: 'รอคนรับงาน / เสนอราคา'},
-    {key: 'assign', title: 'มอบหมาย', sub: 'ระบบ/แอดมินเลือกคน'},
-    {key: 'accept', title: 'ฟรีแลนซ์รับงาน', sub: 'Accept / Decline'},
-    {key: 'chat', title: 'คุยงาน', sub: 'แชท + แนบไฟล์'},
+    {key: 'assign', title: 'ขั้นที่ 4 (ฟรีแลนซ์)', sub: 'ไปยังขั้นตอนของฟรีแลนซ์'},
+    {key: 'accept', title: 'นายจ้างตัดสินใจ', sub: 'ยอมรับ/ปฏิเสธ (ถ้ายอมรับไปขั้นที่ 5)'},
+    {key: 'chat', title: 'คุยงาน (ขั้นที่ 5)', sub: 'เริ่มคุยงานหลังยอมรับ'},
     {key: 'review', title: 'ส่งงาน & รีวิว', sub: 'อัปโหลดไฟล์ส่งงาน'},
     {key: 'pay', title: 'จ่ายเงิน', sub: 'Escrow → ปล่อยเงิน'},
 ];
@@ -51,6 +52,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  compact = false,
                                                                  className = '',
                                                                  onProposeQuote,
+                                                                 onConfirmAssign,
                                                                  onAcceptJob,
                                                                  onUploadAsset,
                                                                  onSendMessage,
@@ -112,7 +114,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 ];
             case 'assign':
                 return [
-                    btn(t('profileChat.acceptJob') || 'กดรับงาน (Accept)', onAcceptJob),
+                    btn(t('profileChat.confirmAssign') || 'ยืนยันมอบหมาย (นายจ้าง)', onConfirmAssign),
                     btn(t('profileChat.askDetails') || 'ถามรายละเอียด', onSendMessage, 'ghost'),
                 ];
             case 'accept':

@@ -61,20 +61,26 @@ export const createMachineStore = <S extends StateKey, E extends string>(
 export type WorkflowState = "new" | "queue" | "assign" | "accept" | "chat" | "review" | "pay";
 export type WorkflowEvent =
   | { type: "QUOTE_PROPOSED"; by: "freelancer" | "employer" }
-  | { type: "JOB_ASSIGNED" }
-  | { type: "JOB_ACCEPTED" }
+  | { type: "MOVE_TO_QUEUE" }
+  | { type: "EMPLOYER_DECISION"; decision: "accept" | "reject" }
   | { type: "START_CHAT" }
   | { type: "SUBMIT_DELIVERY" }
   | { type: "REQUEST_REVISION" }
   | { type: "RELEASE_PAYMENT" }
   | { type: "SET"; state: WorkflowState };
 
+// New required sequence based on issue description:
+// 1. Freelancer creates quotation (new -> queue)
+// 2. Queue (waiting)
+// 3. Employer accepts or rejects (queue -> accept | new)
+// 4. Freelancer path from queue to step 4 (assign)
+// 5. After employer accepts they go to step 5 work discussion (accept -> chat)
 export const ORDER = ["new", "queue", "assign", "accept", "chat", "review", "pay"] as const;
 
 const WORKFLOW_TRANSITIONS: TransitionMap<typeof ORDER[number], Exclude<WorkflowEvent["type"], "SET">> = {
   new: { QUOTE_PROPOSED: "queue" },
-  queue: { JOB_ASSIGNED: "assign" },
-  assign: { JOB_ACCEPTED: "accept" },
+  queue: { MOVE_TO_QUEUE: "assign", EMPLOYER_DECISION: "accept" },
+  assign: {},
   accept: { START_CHAT: "chat" },
   chat: { SUBMIT_DELIVERY: "review" },
   review: { RELEASE_PAYMENT: "pay", REQUEST_REVISION: "chat" },
