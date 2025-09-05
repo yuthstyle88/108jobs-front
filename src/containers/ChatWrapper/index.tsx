@@ -1,147 +1,127 @@
 "use client";
 
-import { ProfileImage } from "@/constants/images";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { formatMessageTime } from "@/utils/formatMessageTime";
-import Image from "next/image";
-import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { useChatRooms } from "@/contexts/ChatRoomsContext";
 import type { ChatRoom } from "@/types/chat";
+import { debounce } from "lodash";
+import React from "react";
+import ChatListItem from "@/app/[lang]/chat/_components/ChatListItem";
 
 const ChatWrapper = () => {
     const params = useParams();
-    // In this route, the dynamic segment is [roomId], not senderId
-    const activeRoomId = (params as any)?.roomId as string | undefined;
+    const activeRoomId = params?.roomId as string | undefined;
     const { lang: currentLang } = useLanguage();
     const { localUser } = useMyUser();
-    const { rooms, isLoading, error } = useChatRooms();
+    const { rooms, isLoading, error, refresh } = useChatRooms();
     const [searchQuery, setSearchQuery] = useState("");
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Toggle state for mobile
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+    // Debounce search input to prevent excessive re-renders
+    const debouncedSetSearchQuery = useCallback(
+        debounce((value: string) => setSearchQuery(value), 300),
+        []
+    );
+
+    // Memoized filtered rooms to optimize search performance
     const filteredRooms = useMemo(() => {
         const list = rooms || [];
         const q = searchQuery.trim().toLowerCase();
-        const filtered = q
+        return q
             ? list.filter(
                 (r) =>
                     r.name.toLowerCase().includes(q) ||
                     (r.lastMessage?.content || "").toLowerCase().includes(q)
             )
             : list;
-        // Preserve provider order to avoid index shifting; only filter here
-        return filtered;
     }, [rooms, searchQuery]);
+
+    // Handle search input change
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        debouncedSetSearchQuery(e.target.value);
+    };
+
+    // Toggle sidebar with accessibility
+    const toggleSidebar = () => {
+        setIsSidebarOpen((prev) => !prev);
+    };
 
     return (
         <>
             {/* Toggle Button for Mobile */}
             <button
-                className="md:hidden fixed top-24 left-4 z-50 p-2 bg-blue-600 text-white rounded-lg shadow"
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="md:hidden fixed top-16 sm:top-20 left-3 sm:left-4 z-50 p-2 sm:p-2.5 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors min-w-[40px] min-h-[40px]"
+                onClick={toggleSidebar}
+                aria-label={isSidebarOpen ? "Close chat sidebar" : "Open chat sidebar"}
             >
-                {isSidebarOpen ? "Close" : "Chats"}
+                {isSidebarOpen ? (
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                ) : (
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                )}
             </button>
+
+            {/* Sidebar */}
             <div
-                className={`flex flex-col border-r bg-white transition-all duration-300 ${
-                    isSidebarOpen ? "translate-x-0 pointer-events-auto" : "-translate-x-full pointer-events-none"
-                } md:translate-x-0 md:pointer-events-auto fixed md:static top-[80px] left-0 h-[calc(100vh-80px)] w-80 md:w-1/4 lg:w-1/5 max-w-md z-40 overflow-hidden shadow-md md:shadow-none`}
+                className={`flex flex-col bg-white border-r border-gray-200 shadow-lg md:shadow-none transition-transform duration-300 ease-in-out ${
+                    isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+                } fixed top-16 sm:top-20 left-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[80vw] sm:w-[70vw] md:w-64 lg:w-80 xl:w-96 max-w-[360px] z-40 overflow-y-auto md:static md:max-w-none md:h-auto md:flex-[0_0_20%] lg:flex-[0_0_25%]`}
             >
-                <div className="p-4 border-b">
-                    <div className="relative">
-                        <p className="text-text-primary text-center font-semibold w-full py-2 text-base md:text-lg">
-                            Chat History
-                        </p>
-                        <input
-                            type="text"
-                            placeholder="Search chats..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full mt-2 p-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
+                {/* Header with Search */}
+                <div className="p-3 sm:p-4 border-b border-gray-200 bg-gray-50">
+                    <h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800 text-center">
+                        Chat History
+                    </h2>
+                    <input
+                        type="text"
+                        placeholder="Search chats..."
+                        defaultValue={searchQuery}
+                        onChange={handleSearchChange}
+                        className="w-full mt-2 sm:mt-3 p-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow bg-white"
+                        aria-label="Search chat rooms"
+                    />
                 </div>
-                <div className="flex-1 overflow-hidden">
+
+                {/* Chat List */}
+                <div className="flex-1 overflow-y-auto">
                     {isLoading && filteredRooms.length === 0 && (
-                        <p className="p-4 text-sm text-gray-500 text-center">
+                        <p className="p-3 sm:p-4 text-xs sm:text-sm text-gray-500 text-center">
                             Loading chats…
                         </p>
                     )}
-                    {error && filteredRooms.length === 0 && (
-                        <p className="p-4 text-sm text-red-500 text-center">
-                            Failed to load chats
-                        </p>
-                    )}
-                    {filteredRooms?.map((room: ChatRoom) => {
-                        const chatMessage = room.lastMessage;
-                        const isActive = String(room.id) === activeRoomId;
-                        const isUser = chatMessage
-                            ? (localUser?.id ?? -1) === Number(chatMessage.senderId)
-                            : false;
-
-                        return (
-                            <Link prefetch={false} key={room.id} href={`/${currentLang || 'th'}/chat/message/${room.id}`} className="block">
-                                <div
-                                    className={`p-3 md:p-4 flex items-start transition-colors cursor-pointer border-b ${
-                                        isActive
-                                            ? "border-l-4 border-third bg-blue-100 hover:bg-blue-100"
-                                            : "hover:bg-gray-100 border-b-gray-200"
-                                    }`}
-                                >
-                                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
-                                        <Image
-                                            src={ProfileImage.avatar}
-                                            alt="User"
-                                            width={40}
-                                            height={40}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div>
-                                    <div className="ml-2 md:ml-3 min-w-0 flex-1">
-                                        <div className="flex items-center">
-                                            <h4 className="font-medium text-sm md:text-base text-text-primary truncate max-w-[150px] md:max-w-[200px]">
-                                                {room.name}
-                                            </h4>
-                                            <span className="ml-2 text-xs text-gray-400">
-                        {chatMessage?.timestamp
-                            ? formatMessageTime(chatMessage.timestamp, currentLang || "th")
-                            : ""}
-                      </span>
-                                        </div>
-                                        {chatMessage && (
-                                            <p className="text-xs md:text-sm font-sans text-text-primary mt-1 line-clamp-1 overflow-hidden break-all max-w-[180px] md:max-w-[220px]">
-                                                {isUser && "You: "}
-                                                {chatMessage.content}
-                                            </p>
-                                        )}
-                                    </div>
-                                    {room.unreadCount > 0 && (
-                                        <span className="ml-auto text-xs bg-blue-600 text-white rounded-full px-2 py-0.5">
-                      {room.unreadCount}
-                    </span>
-                                    )}
-                                </div>
-                            </Link>
-                        );
-                    })}
+                    {filteredRooms.map((room: ChatRoom) => (
+                        <ChatListItem
+                            key={room.id}
+                            room={room}
+                            isActive={String(room.id) === activeRoomId}
+                            currentLang={currentLang || "th"}
+                            localUser={localUser}
+                        />
+                    ))}
                     {filteredRooms.length === 0 && !isLoading && !error && (
-                        <p className="p-4 text-sm text-gray-500 text-center">
+                        <p className="p-3 sm:p-4 text-xs sm:text-sm text-gray-500 text-center">
                             No chats found
                         </p>
                     )}
                 </div>
             </div>
-            {/* Overlay for mobile when sidebar is open */}
+
+            {/* Overlay for Mobile */}
             {isSidebarOpen && (
                 <div
-                    className="md:hidden fixed inset-0 bg-black/50 z-30"
-                    onClick={() => setIsSidebarOpen(false)}
+                    className="md:hidden fixed inset-0 bg-black/40 z-30"
+                    onClick={toggleSidebar}
+                    aria-hidden="true"
                 />
             )}
         </>
     );
 };
 
-export default ChatWrapper;
+export default React.memo(ChatWrapper);

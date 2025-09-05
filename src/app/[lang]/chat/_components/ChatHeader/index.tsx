@@ -18,7 +18,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   isFlowOpen,
 }) => {
   return (
-    <div className="border-b p-4 flex justify-between items-center bg-white">
+    <div className="sticky top-0 z-10 border-b p-4 flex justify-between items-center bg-white">
       <div className="flex items-center gap-2">
         <Image
           src={avatarUrl || ProfileImage.avatar}

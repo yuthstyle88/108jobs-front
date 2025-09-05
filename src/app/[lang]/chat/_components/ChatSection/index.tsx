@@ -502,12 +502,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
 
     return (
         <>
-            <div className="relative flex-1 flex flex-col md:flex-row h-full">
-                <div className="flex-1 flex flex-col h-full w-full">
+            <div className="relative flex-1 min-w-0 flex flex-col md:flex-row h-full">
+                <div className="flex-1 min-w-0 flex flex-col h-full w-full">
                     <ChatHeader
                         avatarUrl={currentRoom?.partnerAvatar || ProfileImage.avatar}
                         displayName={currentRoom?.partnerDisplayName || "User"}
                         guideText={t("profileChat.guide") || "Usage Guide"}
+                        onToggleFlow={() => setIsFlowOpen((v) => !v)}
+                        isFlowOpen={isFlowOpen}
                     />
                     <div
                         ref={scrollContainerRef}
@@ -546,9 +548,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                     </div>
                 </div>
                 <div
-                    className={`border-l bg-gray-50 h-full transition-all duration-300 ${
+                    className={`hidden md:flex border-l bg-gray-50 h-full transition-all duration-300 ${
                         isFlowOpen ? "translate-x-0" : "translate-x-full"
-                    } md:translate-x-0 fixed md:static top-[64px] h-[calc(100vh-64px)] w-64 sm:w-72 md:w-80 lg:w-96 max-w-md z-40 flex flex-col shadow-lg md:shadow-none`}
+                    } md:translate-x-0 fixed md:static top-16 sm:top-20 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-64 sm:w-72 md:w-80 lg:w-96 max-w-md z-40 flex-col shadow-lg md:shadow-none`}
                     role="complementary"
                     aria-label="Job Flow Sidebar"
                 >
@@ -618,6 +620,67 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                         </div>
                     </div>
                 </div>
+                {isFlowOpen && (
+                    <div className="md:hidden fixed top-16 sm:top-20 right-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[85vw] sm:w-[75vw] max-w-md bg-white border-l shadow-xl z-40 flex flex-col">
+                        <div className="p-4 bg-blue-50 border-b border-blue-100 flex items-center justify-between">
+                            <h2 className="text-lg font-semibold text-blue-800">
+                                {t("profileChat.jobFlow") || "Job Flow"}
+                            </h2>
+                            <button
+                                className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all duration-200"
+                                onClick={() => setIsFlowOpen(false)}
+                                aria-label="Close job flow drawer"
+                            >
+                                <svg
+                                    className="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div className="flex-1 p-4 overflow-y-auto border-b border-gray-200">
+                            <FreelanceChatFlow
+                                currentStatus={currentStatus}
+                                onChangeStatus={handleChangeStatus}
+                                orientation="vertical"
+                                compact={false}
+                                className="space-y-4"
+                                onProposeQuote={flowActions.onProposeQuote}
+                                onAcceptJob={flowActions.onAcceptJob}
+                                onUploadAsset={flowActions.onUploadAsset}
+                                onSendMessage={flowActions.onSendMessage}
+                                onSubmitDelivery={flowActions.onSubmitDelivery}
+                                onRequestRevision={flowActions.onRequestRevision}
+                                onReleasePayment={flowActions.onReleasePayment}
+                            />
+                        </div>
+                        <div className="p-4 bg-white">
+                            <div className="flex items-center bg-white rounded-lg shadow-sm p-3" aria-label="Job details">
+                                <div className="w-12 h-12 rounded-md bg-gray-200 overflow-hidden mr-3 flex-shrink-0">
+                                    <Image
+                                        src={currentRoom?.job?.coverImage || CategoriesImage.seoJob}
+                                        alt={currentRoom?.job?.title || "Job Cover"}
+                                        width={48}
+                                        height={48}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="text-sm font-semibold text-gray-900 line-clamp-1">
+                                        {currentRoom?.job?.title || "No Job Title"}
+                                    </h3>
+                                    <p className="text-xs text-gray-600 line-clamp-2">
+                                        {currentRoom?.job?.description || "No description available"}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 {isFlowOpen && (
                     <div
                         className="md:hidden fixed inset-0 bg-black/50 z-30"

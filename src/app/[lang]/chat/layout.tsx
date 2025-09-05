@@ -20,10 +20,12 @@ export default function ProfileLayout({ children }: LayoutProps) {
                     <SpHeader showBackButton={true} />
                 </div>
                 {/* Main Content: fix viewport height and prevent page scroll */}
-                <div className="fixed top-[80px] left-0 right-0 h-[calc(100vh-80px)] overflow-hidden">
+                <div className="fixed top-16 sm:top-20 left-0 right-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] overflow-hidden">
                     <div className="flex h-full">
                         <ChatWrapper />
-                        {children}
+                        <div className="flex-1 min-w-0 h-full">
+                            {children}
+                        </div>
                     </div>
                 </div>
             </ChatRoomsProvider>
