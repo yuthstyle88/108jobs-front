@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {useTranslation} from 'react-i18next';
+import { useWorkflowStepper } from '@/hooks/useWorkflowMachine';
 
 export type StatusKey = 'new' | 'queue' | 'assign' | 'accept' | 'chat' | 'review' | 'pay';
 
@@ -44,7 +45,7 @@ const DOT_COLORS: Record<StatusKey, string> = {
 };
 
 const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
-                                                                 currentStatus = 'new',
+                                                                 currentStatus: controlledStatus,
                                                                  onChangeStatus,
                                                                  orientation = 'vertical',
                                                                  compact = false,
@@ -58,7 +59,28 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  onReleasePayment,
                                                              }) => {
     const {t} = useTranslation();
+    const stepper = useWorkflowStepper();
+    const derivedStatus = stepper?.state?.name as StatusKey | undefined;
+    const isControlled = controlledStatus != null && onChangeStatus != null;
+    const currentStatus: StatusKey = (isControlled ? controlledStatus! : (derivedStatus || 'new')) as StatusKey;
     const currentIndex = Math.max(0, STEPS.findIndex((s) => s.key === currentStatus));
+
+    const ORDER: StatusKey[] = ['new','queue','assign','accept','chat','review','pay'];
+
+    const handleActivateStep = (toIndex: number, targetKey: StatusKey) => {
+        const curIdx = currentIndex;
+        const canAdjacent = toIndex === curIdx || Math.abs(toIndex - curIdx) === 1;
+        if (canAdjacent) {
+            if (isControlled) {
+                onChangeStatus?.(targetKey);
+            } else if (stepper && stepper.canGo(targetKey)) {
+                const fromOrderIdx = ORDER.indexOf(currentStatus);
+                const toOrderIdx = ORDER.indexOf(targetKey);
+                if (toOrderIdx > fromOrderIdx) stepper.send({ type: 'NEXT' });
+                if (toOrderIdx < fromOrderIdx) stepper.send({ type: 'BACK' });
+            }
+        }
+    };
 
     // Action buttons for each step
     const actionsForStep = (key: StatusKey) => {
@@ -140,13 +162,15 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                             } ${compact ? 'py-1' : 'py-2'} ${
                                 isActive ? 'font-semibold text-blue-600' : isFuture ? 'opacity-50 pointer-events-none' : ''
                             } hover:bg-gray-50 cursor-pointer transition-colors`}
-                            onClick={() => onChangeStatus?.(step.key)}
+                            onClick={() => {
+                                handleActivateStep(index, step.key);
+                              }}
                             role="button"
                             aria-current={isActive ? 'step' : undefined}
                             tabIndex={0}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter' || e.key === ' ') {
-                                    onChangeStatus?.(step.key);
+                                    handleActivateStep(index, step.key);
                                 }
                             }}
                         >

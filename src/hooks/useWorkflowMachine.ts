@@ -1,54 +1,35 @@
-import { useStateMachineStore, indexToStatus, type GenericMachineStore, type StateKey } from "@/stores/stateMachineStore";
-import type { WorkflowState, WorkflowEvent } from "@/stores/stateMachineStore";
+import { useStateMachineStore, ORDER } from "@/stores/stateMachineStore";
+import type { WorkflowState } from "@/stores/stateMachineStore";
 
-// Generic hook factory for any machine created via createMachineStore
-export const createUseMachineHook = <S extends StateKey, E extends string>(
-  useStore: () => GenericMachineStore<S, E>,
-  indexToState: (i: number) => S
-) => {
-  return () => {
-    // useStore() is itself a hook from zustand; select slices to avoid re-renders
-    const state = (useStore() as any).state as S;
-    const stepIndex = (useStore() as any).stepIndex as number;
-    const set = (useStore() as any).set as (s: S) => void;
-    const send = (useStore() as any).send as (e: { type: E } | { type: "SET"; state: S }) => void;
-    const reset = (useStore() as any).reset as () => void;
-
-    const setState = (s: S) => set(s);
-    const setStepIndex = (i: number) => set(indexToState(i));
-
-    return { state, currentStatus: state, stepIndex, setState, setStepIndex, send, reset } as const;
-  };
+// A stepper-friendly hook that mirrors the issue description API
+export type StepperEvents = { type: 'NEXT' } | { type: 'BACK' } | { type: 'RESET' };
+export type UseWorkflowStepper = {
+  state: { name: WorkflowState };
+  ORDER: readonly WorkflowState[];
+  idx: number;
+  canNext: boolean;
+  canBack: boolean;
+  canGo: (to: WorkflowState) => boolean;
+  send: (e: StepperEvents) => void;
 };
 
-// Backward-compatible workflow-specific hook
-export type UseWorkflowMachine = {
-  state: WorkflowState;
-  currentStatus: WorkflowState;
-  stepIndex: number;
-  setState: (s: WorkflowState) => void;
-  setStepIndex: (i: number) => void;
-  send: (event: WorkflowEvent) => void;
-  reset: () => void;
-};
-
-export const useWorkflowMachine = (): UseWorkflowMachine => {
+export const useWorkflowStepper = (): UseWorkflowStepper => {
   const state = useStateMachineStore((s) => s.state);
-  const stepIndex = useStateMachineStore((s) => s.stepIndex);
-  const set = useStateMachineStore((s) => s.set);
-  const send = useStateMachineStore((s) => s.send);
+  const idx = useStateMachineStore((s) => s.stepIndex);
+  const next = useStateMachineStore((s) => s.next);
+  const back = useStateMachineStore((s) => s.back);
   const reset = useStateMachineStore((s) => s.reset);
 
-  const setState = (s: WorkflowState) => set(s);
-  const setStepIndex = (i: number) => set(indexToStatus(i));
-
-  return {
-    state,
-    currentStatus: state,
-    stepIndex,
-    setState,
-    setStepIndex,
-    send,
-    reset,
+  const canNext = idx < ORDER.length - 1;
+  const canBack = idx > 0;
+  const canGo = (to: WorkflowState) => {
+    const toIdx = ORDER.indexOf(to);
+    return toIdx === idx || Math.abs(toIdx - idx) === 1;
   };
+  const send = (e: StepperEvents) => {
+    if (e.type === 'NEXT') return next();
+    if (e.type === 'BACK') return back();
+    if (e.type === 'RESET') return reset();
+  };
+  return { state: { name: state }, ORDER, idx, canNext, canBack, canGo, send };
 };

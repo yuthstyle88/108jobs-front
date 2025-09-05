@@ -17,7 +17,7 @@ import {useChatRooms} from "@/contexts/ChatRoomsContext";
 import FreelanceChatFlow, {FlowActions, StatusKey} from "@/components/FreelanceChatFlow";
 import QuotationModal, {ProposedQuotePayload} from "@/components/QuotationModal";
 import {usePrivateImagePost} from "@/hooks/api-hooks";
-import {useWorkflowMachine} from "@/hooks/useWorkflowMachine";
+import {useWorkflowStepper} from "@/hooks/useWorkflowMachine";
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -30,7 +30,7 @@ interface ChatSectionProps {
 
 const ChatSection: React.FC<ChatSectionProps> = ({roomId, partnerName, partnerAvatar}) => {
     const {updateRoomLastMessage} = useChatRooms();
-    const { state: workflowState, stepIndex: activeStep, setState: setWorkflowState, setStepIndex } = useWorkflowMachine();
+    const { state: stepperState, idx: activeStep, send, canGo } = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
@@ -156,10 +156,27 @@ const ChatSection: React.FC<ChatSectionProps> = ({roomId, partnerName, partnerAv
         messages: [],
     };
 
-    const currentStatus: StatusKey = (workflowState as StatusKey);
+    const currentStatus: StatusKey = (stepperState.name as StatusKey);
+
+    const ORDER: StatusKey[] = ['new','queue','assign','accept','chat','review','pay'];
+
+    const goToStatus = (target: StatusKey) => {
+        const targetIdx = ORDER.indexOf(target);
+        let curIdx = ORDER.indexOf(currentStatus);
+        while (curIdx < targetIdx) { send({ type: 'NEXT' }); curIdx++; }
+        while (curIdx > targetIdx) { send({ type: 'BACK' }); curIdx--; }
+    };
 
     const handleChangeStatus = (key: StatusKey) => {
-        setWorkflowState(key as any);
+        // Only allow adjacent or same step navigation via the stepper guard
+        if (!canGo(key)) return;
+        const curIdx = ORDER.indexOf(currentStatus);
+        const toIdx = ORDER.indexOf(key);
+        if (toIdx === curIdx) return;
+        if (Math.abs(toIdx - curIdx) === 1) {
+            return toIdx > curIdx ? send({ type: 'NEXT' }) : send({ type: 'BACK' });
+        }
+        // For non-adjacent requests, do nothing to respect stepper policy
     };
 
 
@@ -189,8 +206,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({roomId, partnerName, partnerAv
                 message: JSON.stringify(payload),
                 id: messageId,
             });
-            // After sending a quotation, move freelancer to step 3: assign (index 2)
-            setStepIndex(2);
+            // After sending a quotation, attempt to move towards 'assign' step using adjacent navigation
+            const targetIdx = ORDER.indexOf('assign');
+            let curIdx = ORDER.indexOf(currentStatus);
+            while (curIdx < targetIdx) { send({ type: 'NEXT' }); curIdx++; }
+            while (curIdx > targetIdx) { send({ type: 'BACK' }); curIdx--; }
             try {
                 const tsIso = new Date().toISOString();
                 window.dispatchEvent(
@@ -217,7 +237,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({roomId, partnerName, partnerAv
             setShowQuotationModal(true);
         },
         onAcceptJob: () => {
-            setStepIndex(4);
+            goToStatus('chat');
             sendMessage({
                 message: t("profileChat.acceptJobMsg") || "I have accepted the job.",
                 id: uuidv4(),
@@ -244,11 +264,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({roomId, partnerName, partnerAv
             if (input) input.focus();
         },
         onSubmitDelivery: () => {
-            setStepIndex(5);
+            goToStatus('review');
             setShowReviewModal(true);
         },
         onRequestRevision: () => {
-            setStepIndex(4);
+            goToStatus('chat');
             setShowReviewModal(false);
             sendMessage({
                 message:
@@ -267,7 +287,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({roomId, partnerName, partnerAv
             }
         },
         onReleasePayment: () => {
-            setStepIndex(6);
+            goToStatus('pay');
             setShowReviewModal(false);
             sendMessage({
                 message:
@@ -455,10 +475,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({roomId, partnerName, partnerAv
             if (parsed && parsed.type === 'proposed-quote') {
                 if (latest.isOwner) {
                     // Sender (freelancer) moves to step 3: assign
-                    setStepIndex(2);
+                    goToStatus('assign');
                 } else {
                     // Receiver (employer) stays/goes to step 2: queue
-                    setStepIndex(1);
+                    goToStatus('queue');
                 }
             }
         } catch {/* ignore parse errors */
@@ -671,7 +691,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({roomId, partnerName, partnerAv
                                 className="rounded-md bg-green-600 hover:bg-green-700 text-white px-3 py-1 md:px-4 md:py-2 text-sm transition-all duration-200"
                                 onClick={() => {
                                     setShowReviewModal(false);
-                                    setStepIndex(6);
+                                    goToStatus('pay');
                                     setMessages((prev) => [
                                         {
                                             id: uuidv4(),
@@ -697,7 +717,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({roomId, partnerName, partnerAv
                                 className="rounded-md bg-red-600 hover:bg-red-700 text-white px-3 py-1 md:px-4 md:py-2 text-sm transition-all duration-200"
                                 onClick={() => {
                                     setShowReviewModal(false);
-                                    setStepIndex(4);
+                                    goToStatus('chat');
                                     setMessages((prev) => [
                                         {
                                             id: uuidv4(),

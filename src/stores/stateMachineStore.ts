@@ -10,6 +10,9 @@ export interface GenericMachineStore<S extends StateKey, E extends string> {
   stepIndex: number;
   set: (state: S) => void;
   send: (event: { type: E } | { type: "SET"; state: S }) => void;
+  // Stepper-style helpers
+  next: () => void;
+  back: () => void;
   reset: () => void;
 }
 
@@ -34,6 +37,22 @@ export const createMachineStore = <S extends StateKey, E extends string>(
         set({ state: next, stepIndex: idx(next) });
       }
     },
+    next: () => {
+      const current = get().state;
+      const i = order.indexOf(current);
+      if (i >= 0 && i < order.length - 1) {
+        const ns = order[i + 1];
+        set({ state: ns, stepIndex: idx(ns) });
+      }
+    },
+    back: () => {
+      const current = get().state;
+      const i = order.indexOf(current);
+      if (i > 0) {
+        const ns = order[i - 1];
+        set({ state: ns, stepIndex: idx(ns) });
+      }
+    },
     reset: () => set({ state: initial, stepIndex: idx(initial) }),
   }));
 };
@@ -50,7 +69,7 @@ export type WorkflowEvent =
   | { type: "RELEASE_PAYMENT" }
   | { type: "SET"; state: WorkflowState };
 
-const ORDER = ["new", "queue", "assign", "accept", "chat", "review", "pay"] as const;
+export const ORDER = ["new", "queue", "assign", "accept", "chat", "review", "pay"] as const;
 
 const WORKFLOW_TRANSITIONS: TransitionMap<typeof ORDER[number], Exclude<WorkflowEvent["type"], "SET">> = {
   new: { QUOTE_PROPOSED: "queue" },
