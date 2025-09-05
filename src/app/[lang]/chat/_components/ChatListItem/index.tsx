@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {ProfileImage} from "@/constants/images";
 import {formatMessageTime} from "@/utils/formatMessageTime";
+import { formatLastMessagePreview } from "@/utils/formatLastMessagePreview";
 
 const ChatListItem = React.memo(
     ({
@@ -60,7 +61,7 @@ const ChatListItem = React.memo(
                         {chatMessage && (
                             <p className="text-xs md:text-sm text-gray-600 mt-1 line-clamp-1 break-all max-w-[180px] md:max-w-[220px]">
                                 {isUser && <span className="font-medium">You: </span>}
-                                {chatMessage.content}
+                                {formatLastMessagePreview(chatMessage.content)}
                             </p>
                         )}
                     </div>
