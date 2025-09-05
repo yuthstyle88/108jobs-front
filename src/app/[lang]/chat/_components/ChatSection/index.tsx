@@ -23,9 +23,11 @@ type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
 
 interface ChatSectionProps {
     roomId: string;
+    partnerName: string;
+    partnerAvatar: string;
 }
 
-const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
+const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerAvatar }) => {
     const { bumpRoomToTop, updateRoomLastMessage } = useChatRooms();
     const [activeStep, setActiveStep] = useState<number>(0);
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
@@ -149,8 +151,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
 
     const currentRoom = {
         roomId,
-        partnerAvatar: ProfileImage.avatar,
-        partnerDisplayName: "User",
+        partnerAvatar: partnerAvatar,
+        partnerDisplayName: partnerName,
         job: { id: roomId, title: "Sample Job", coverImage: CategoriesImage.seoJob, description: "Sample job description" },
         messages: [],
     };
@@ -165,63 +167,20 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
         }
     };
 
-    const generateQuotationPDF = async (data: {
-        price: number;
-        description: string;
-        terms?: string;
-    }) => {
-        const latexTemplate = `
-\\documentclass[a4paper,12pt]{article}
-\\usepackage{geometry}
-\\usepackage{amsmath}
-\\usepackage{parskip}
-\\usepackage{xcolor}
-\\usepackage{enumitem}
-\\usepackage{titling}
-\\usepackage{datetime}
-\\usepackage{noto}
-\\setmainfont{Noto Serif}
-\\geometry{margin=1in}
-\\definecolor{titleblue}{RGB}{37,99,235}
-\\setlength{\\parindent}{0pt}
-\\title{\\textbf{\\textcolor{titleblue}{Quotation}}}
-\\author{}
-\\date{\\today}
-\\begin{document}
-\\maketitle
-\\section*{Quotation Details}
-\\textbf{To:} ${currentRoom.partnerDisplayName || "Client"} \\
-\\textbf{From:} ${localUser?.displayName || "Freelancer"} \\
-\\textbf{Date:} \\today \\
-\\textbf{Quotation ID:} \\the\\day\\the\\month\\the\\year-\\thepage
-\\section*{Service Details}
-\\begin{description}[font=\\normalfont\\bfseries]
-    \\item[Description:] ${data.description || "No description provided"}
-    \\item[Price:] \\$${data.price.toFixed(2)}
-    \\item[Terms:] ${data.terms || "No additional terms"}
-\\end{description}
-\\vspace{2cm}
-\\hrule
-\\vspace{0.5cm}
-\\textit{This quotation is valid for 30 days from the date of issue. Please contact the freelancer for any clarifications.}
-\\end{document}
-`;
-
-        const blob = new Blob([latexTemplate], { type: "application/x-latex" });
-        return new File([blob], `quotation-${uuidv4()}.tex`, {
-            type: "application/x-latex",
-        });
-    };
 
     const handleQuotationSubmit = async (data: {
         price: number;
         description: string;
         terms?: string;
+        file: File | null;
     }) => {
         try {
-            const pdfFile = await generateQuotationPDF(data);
+            if (!data.file) {
+                alert(t("profileChat.noFile") || "Please upload a PDF quotation.");
+                return;
+            }
             const formData = new FormData();
-            formData.append("file", pdfFile);
+            formData.append("file", data.file);
 
             const result = (await uploadFile(formData)) as UploadedFile;
             setSelectedFile(result);
@@ -537,13 +496,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId }) => {
                                     isUploading={isUploading}
                                 />
                             </div>
-                            <button
-                                className="md:hidden p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200"
-                                onClick={() => setIsFlowOpen(!isFlowOpen)}
-                                aria-label={isFlowOpen ? "Hide job flow" : "Show job flow"}
-                            >
-                                {isFlowOpen ? "Hide" : "Flow"}
-                            </button>
                         </div>
                     </div>
                 </div>

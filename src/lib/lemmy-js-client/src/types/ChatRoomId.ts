@@ -3,4 +3,4 @@
 /**
  * The chat room id.
  */
-export type ChatRoomId = number;
+export type ChatRoomId = string;

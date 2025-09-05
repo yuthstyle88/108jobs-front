@@ -239,6 +239,8 @@ import {WorkExperiencesResponse} from "./types/WorkExperience";
 import {VisitProfileResponse} from "./types/VisitProfileResponse";
 import {ListUserChatRoomsQuery} from "./types/ListUserChatRoomsQuery";
 import {ListUserChatRoomsResponse} from "./types/ListUserChatRoomsResponse";
+import type { ChatRoomId } from "./types/ChatRoomId";
+import type { ChatRoomWithParticipants } from "./types/ChatRoomWithParticipants";
 
 enum HttpType {
     Get = "GET",
@@ -3071,6 +3073,24 @@ export class LemmyHttp extends Controller {
             HttpType.Get,
             "/chat/rooms",
             form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Get a chat room by ID.
+     */
+    @Security("bearerAuth")
+    @Get("/chat/rooms/{id}")
+    @Tags("Chat", "Room")
+    async getChatRoom(
+        @Path() id: ChatRoomId,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<object, ChatRoomWithParticipants>(
+            HttpType.Get,
+            `/chat/rooms/${id}`,
+            {},
             options,
         );
     }

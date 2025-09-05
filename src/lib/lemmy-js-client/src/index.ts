@@ -2,6 +2,11 @@ import {Budget} from "./types/Budget";
 
 export * from "./http";
 export type {UploadImage} from "./other_types";
+export type { ChatRoom } from "./types/ChatRoom";
+export type { ChatRoomId } from "./types/ChatRoomId";
+export type { ChatParticipant } from "./types/ChatParticipant";
+export type { LastMessage } from "./types/LastMessage";
+export type { ChatRoomWithParticipants } from "./types/ChatRoomWithParticipants";
 export type {ActivityId} from "./types/ActivityId";
 export type {AddAdmin} from "./types/AddAdmin";
 export type {AddAdminResponse} from "./types/AddAdminResponse";
