@@ -1,22 +1,23 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { v4 as uuidv4 } from "uuid";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { API_ROUTES } from "@/api/endpoints";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {v4 as uuidv4} from "uuid";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {API_ROUTES} from "@/api/endpoints";
 import LoadingBlur from "@/components/LoadingBlur";
-import { CategoriesImage, ProfileImage } from "@/constants/images";
-import { ChatMessage } from "@/types/chat";
+import {CategoriesImage, ProfileImage} from "@/constants/images";
+import {ChatMessage} from "@/types/chat";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
-import { useWebSocket } from "@/contexts/RealtimeChatContext";
-import { useChatRooms } from "@/contexts/ChatRoomsContext";
-import FreelanceChatFlow, { FlowActions, StatusKey } from "@/components/FreelanceChatFlow";
-import QuotationModal from "@/components/QuotationModal";
-import { usePrivateImagePost } from "@/hooks/api-hooks";
+import {useWebSocket} from "@/contexts/RealtimeChatContext";
+import {useChatRooms} from "@/contexts/ChatRoomsContext";
+import FreelanceChatFlow, {FlowActions, StatusKey} from "@/components/FreelanceChatFlow";
+import QuotationModal, {ProposedQuotePayload} from "@/components/QuotationModal";
+import {usePrivateImagePost} from "@/hooks/api-hooks";
+import {useWorkflowMachine} from "@/hooks/useWorkflowMachine";
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -27,21 +28,21 @@ interface ChatSectionProps {
     partnerAvatar: string;
 }
 
-const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerAvatar }) => {
-    const { bumpRoomToTop, updateRoomLastMessage } = useChatRooms();
-    const [activeStep, setActiveStep] = useState<number>(0);
+const ChatSection: React.FC<ChatSectionProps> = ({roomId, partnerName, partnerAvatar}) => {
+    const {updateRoomLastMessage} = useChatRooms();
+    const { state: workflowState, stepIndex: activeStep, setState: setWorkflowState, setStepIndex } = useWorkflowMachine();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
-    const [isInitialLoading, setIsInitialLoading] = useState(true);
+    const [, setIsInitialLoading] = useState(true);
     const endRef = useRef<HTMLDivElement>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const topSentinelRef = useRef<HTMLDivElement>(null);
     const isSubmittingRef = useRef(false);
-    const { localUser } = useMyUser();
+    const {localUser} = useMyUser();
 
     useEffect(() => {
         const handleResize = () => {
@@ -54,7 +55,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    const { sendMessage, fetchHistory, isConnected, hasMoreMessages, isFetching } = useWebSocket(
+    const {sendMessage, fetchHistory, isConnected, hasMoreMessages, isFetching} = useWebSocket(
         `chat_${roomId}`,
         (event: MessageEvent<ChatMessage | ChatMessage[]>) => {
             if (process.env.NODE_ENV !== "production")
@@ -72,7 +73,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             if (!items.length) return;
 
             setMessages((prev) => {
-                const beforeLen = prev.length;
                 const copy = [...prev];
                 let added = 0;
                 let replaced = 0;
@@ -97,10 +97,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     const idx = copy.findIndex((m) => m.id === msg.id && m.status === 0);
                     if (idx >= 0) {
                         replaced++;
-                        copy[idx] = { ...msg, status: 1 };
+                        copy[idx] = {...msg, status: 1};
                     } else {
                         added++;
-                        copy.push({ ...msg, status: 1 });
+                        copy.push({...msg, status: 1});
                     }
                     const ts = new Date(msg.createdAt).getTime();
                     if (ts > latestTs) {
@@ -113,20 +113,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     (a, b) =>
                         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 );
-                console.log("[CHAT][STATE] apply incoming", {
-                    incoming: items.length,
-                    added,
-                    replaced,
-                    skippedDup,
-                    beforeLen,
-                    afterLen: sorted.length,
-                    isHistoryBatch,
-                });
+
                 if (!isHistoryBatch && latestTs > 0 && latestContent != null && latestSenderId != null) {
                     const tsIso = new Date(latestTs).toISOString();
                     try {
                         updateRoomLastMessage(roomId, latestContent, latestSenderId, tsIso);
-                    } catch {}
+                    } catch {
+                    }
                     try {
                         window.dispatchEvent(
                             new CustomEvent("chat:new-message", {
@@ -138,14 +131,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 },
                             })
                         );
-                    } catch {}
+                    } catch {
+                    }
                 }
                 return sorted;
             });
         }
     );
 
-    const { trigger: uploadFile, isMutating: isUploading } = usePrivateImagePost(
+    const {trigger: uploadFile, isMutating: isUploading} = usePrivateImagePost(
         API_ROUTES.chat.uploadFile + `?roomId=${roomId}`
     );
 
@@ -153,46 +147,33 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         roomId,
         partnerAvatar: partnerAvatar,
         partnerDisplayName: partnerName,
-        job: { id: roomId, title: "Sample Job", coverImage: CategoriesImage.seoJob, description: "Sample job description" },
+        job: {
+            id: roomId,
+            title: "Sample Job",
+            coverImage: CategoriesImage.seoJob,
+            description: "Sample job description"
+        },
         messages: [],
     };
 
-    const statusMap: StatusKey[] = ["new", "queue", "assign", "accept", "chat", "review", "pay"];
-    const currentStatus: StatusKey = statusMap[activeStep] || "new";
+    const currentStatus: StatusKey = (workflowState as StatusKey);
 
     const handleChangeStatus = (key: StatusKey) => {
-        const newIndex = statusMap.indexOf(key);
-        if (newIndex !== -1) {
-            setActiveStep(newIndex);
-        }
+        setWorkflowState(key as any);
     };
 
 
-    const handleQuotationSubmit = async (data: {
-        price: number;
-        description: string;
-        terms?: string;
-        file: File | null;
-    }) => {
+    const handleQuotationSubmit = async (data: ProposedQuotePayload) => {
         try {
-            if (!data.file) {
-                alert(t("profileChat.noFile") || "Please upload a PDF quotation.");
-                return;
-            }
-            const formData = new FormData();
-            formData.append("file", data.file);
-
-            const result = (await uploadFile(formData)) as UploadedFile;
-            setSelectedFile(result);
-
             const messageId = uuidv4();
+            const readable = t("profileChat.proposeQuoteMsg") || `Proposed quotation: ${data.projectName} - $${(data.amount.toFixed(2))}`;
+            const payload = {type: "proposed-quote", quote: data};
+
             setMessages((prev) => [
                 {
                     id: messageId,
                     roomId: currentRoom?.roomId || roomId,
-                    content:
-                        t("profileChat.proposeQuoteMsg") ||
-                        `Proposed quotation: $${data.price.toFixed(2)}`,
+                    content: readable,
                     createdAt: new Date().toISOString(),
                     senderId: Number(localUser?.id) || 0,
                     receiverId: roomId.includes(":")
@@ -205,34 +186,38 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             ]);
 
             sendMessage({
-                message: `Proposed quotation: $${data.price.toFixed(2)}`,
+                message: JSON.stringify(payload),
                 id: messageId,
             });
+            // After sending a quotation, move freelancer to step 3: assign (index 2)
+            setStepIndex(2);
             try {
                 const tsIso = new Date().toISOString();
                 window.dispatchEvent(
                     new CustomEvent("chat:new-message", {
                         detail: {
                             roomId,
-                            content: `Proposed quotation: $${data.price.toFixed(2)}`,
+                            content: readable,
                             senderId: Number(localUser?.id) || 0,
                             timestamp: tsIso,
                         },
                     })
                 );
-            } catch {}
+            } catch {
+            }
         } catch (err) {
             console.error("Failed to send quotation:", err);
             alert(t("profileChat.quotationError") || "Failed to send quotation.");
         }
     };
 
+
     const flowActions: FlowActions = {
         onProposeQuote: () => {
             setShowQuotationModal(true);
         },
         onAcceptJob: () => {
-            setActiveStep(4);
+            setStepIndex(4);
             sendMessage({
                 message: t("profileChat.acceptJobMsg") || "I have accepted the job.",
                 id: uuidv4(),
@@ -242,10 +227,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 const tsIso = new Date().toISOString();
                 window.dispatchEvent(
                     new CustomEvent("chat:new-message", {
-                        detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                        detail: {roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso},
                     })
                 );
-            } catch {}
+            } catch {
+            }
         },
         onUploadAsset: () => {
             const input = document.createElement("input");
@@ -258,11 +244,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             if (input) input.focus();
         },
         onSubmitDelivery: () => {
-            setActiveStep(5);
+            setStepIndex(5);
             setShowReviewModal(true);
         },
         onRequestRevision: () => {
-            setActiveStep(4);
+            setStepIndex(4);
             setShowReviewModal(false);
             sendMessage({
                 message:
@@ -274,13 +260,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 const tsIso = new Date().toISOString();
                 window.dispatchEvent(
                     new CustomEvent("chat:new-message", {
-                        detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                        detail: {roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso},
                     })
                 );
-            } catch {}
+            } catch {
+            }
         },
         onReleasePayment: () => {
-            setActiveStep(6);
+            setStepIndex(6);
             setShowReviewModal(false);
             sendMessage({
                 message:
@@ -293,10 +280,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 const tsIso = new Date().toISOString();
                 window.dispatchEvent(
                     new CustomEvent("chat:new-message", {
-                        detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                        detail: {roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso},
                     })
                 );
-            } catch {}
+            } catch {
+            }
         },
     };
 
@@ -332,13 +320,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 try {
                     window.dispatchEvent(
                         new CustomEvent("chat:new-message", {
-                            detail: { roomId, content: message, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                            detail: {roomId, content: message, senderId: Number(localUser?.id) || 0, timestamp: tsIso},
                         })
                     );
-                } catch {}
-            } catch {}
+                } catch {
+                }
+            } catch {
+            }
 
-            sendMessage({ message, id: messageId });
+            sendMessage({message, id: messageId});
 
             setSelectedFile(null);
             isSubmittingRef.current = false;
@@ -374,7 +364,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             return;
         }
 
-        console.log("[CHAT][OBS] Setting up observer");
         const observer = new IntersectionObserver(
             (entries) => {
                 const e = entries[0];
@@ -382,7 +371,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     isIntersecting: e.isIntersecting,
                     ratio: e.intersectionRatio,
                     rootBounds: e.rootBounds
-                        ? { height: e.rootBounds.height, top: e.rootBounds.top }
+                        ? {height: e.rootBounds.height, top: e.rootBounds.top}
                         : null,
                     boundingClientRect: {
                         top: e.boundingClientRect.top,
@@ -409,7 +398,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     });
                 }
             },
-            { root: rootEl, threshold: [0, 0.1], margin: "10px" }
+            {root: rootEl, threshold: [0, 0.1], margin: "10px"}
         );
 
         observer.observe(topSentinelRef.current);
@@ -455,8 +444,29 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         }
     }, [messages]);
 
+    // Update workflow automatically based on latest quotation message
+    useEffect(() => {
+        if (!messages.length) return;
+        const latest = messages[0];
+        const content = latest.content?.trim() || '';
+        if (!content.startsWith('{')) return;
+        try {
+            const parsed = JSON.parse(content);
+            if (parsed && parsed.type === 'proposed-quote') {
+                if (latest.isOwner) {
+                    // Sender (freelancer) moves to step 3: assign
+                    setStepIndex(2);
+                } else {
+                    // Receiver (employer) stays/goes to step 2: queue
+                    setStepIndex(1);
+                }
+            }
+        } catch {/* ignore parse errors */
+        }
+    }, [messages]);
+
     if (!roomId) {
-        return <LoadingBlur text="No room selected" />;
+        return <LoadingBlur text="No room selected"/>;
     }
 
     return (
@@ -476,13 +486,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                         className="flex-1 overflow-y-auto p-3 md:p-4 bg-gray-50 flex flex-col-reverse"
                         aria-live="polite"
                     >
-                        <div ref={endRef} />
+                        <div ref={endRef}/>
                         <ChatMessages
                             messages={messages}
                             partnerAvatar={currentRoom?.partnerAvatar || ProfileImage.avatar}
                         />
                         {hasMoreMessages && (
-                            <div ref={topSentinelRef} style={{ height: "20px", background: "transparent" }} aria-hidden="true" />
+                            <div ref={topSentinelRef} style={{height: "20px", background: "transparent"}}
+                                 aria-hidden="true"/>
                         )}
                     </div>
                     <div className="border-t px-3 py-2 md:px-4 md:py-3 bg-white">
@@ -552,7 +563,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             className="flex items-center bg-white rounded-lg shadow-sm p-3 hover:shadow-md transition-all duration-200 hover:transform hover:scale-105"
                             aria-label="Job details"
                         >
-                            <div className="w-12 h-12 md:w-16 md:h-16 rounded-md bg-gray-200 overflow-hidden mr-3 md:mr-4 flex-shrink-0">
+                            <div
+                                className="w-12 h-12 md:w-16 md:h-16 rounded-md bg-gray-200 overflow-hidden mr-3 md:mr-4 flex-shrink-0">
                                 <Image
                                     src={currentRoom?.job?.coverImage || CategoriesImage.seoJob}
                                     alt={currentRoom?.job?.title || "Job Cover"}
@@ -573,7 +585,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     </div>
                 </div>
                 {isFlowOpen && (
-                    <div className="md:hidden fixed top-16 sm:top-20 right-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[85vw] sm:w-[75vw] max-w-md bg-white border-l shadow-xl z-40 flex flex-col">
+                    <div
+                        className="md:hidden fixed top-16 sm:top-20 right-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[85vw] sm:w-[75vw] max-w-md bg-white border-l shadow-xl z-40 flex flex-col">
                         <div className="p-4 bg-blue-50 border-b border-blue-100 flex items-center justify-between">
                             <h2 className="text-lg font-semibold text-blue-800">
                                 {t("profileChat.jobFlow") || "Job Flow"}
@@ -590,7 +603,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                     viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                          d="M6 18L18 6M6 6l12 12"/>
                                 </svg>
                             </button>
                         </div>
@@ -611,7 +625,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             />
                         </div>
                         <div className="p-4 bg-white">
-                            <div className="flex items-center bg-white rounded-lg shadow-sm p-3" aria-label="Job details">
+                            <div className="flex items-center bg-white rounded-lg shadow-sm p-3"
+                                 aria-label="Job details">
                                 <div className="w-12 h-12 rounded-md bg-gray-200 overflow-hidden mr-3 flex-shrink-0">
                                     <Image
                                         src={currentRoom?.job?.coverImage || CategoriesImage.seoJob}
@@ -656,7 +671,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 className="rounded-md bg-green-600 hover:bg-green-700 text-white px-3 py-1 md:px-4 md:py-2 text-sm transition-all duration-200"
                                 onClick={() => {
                                     setShowReviewModal(false);
-                                    setActiveStep(6);
+                                    setStepIndex(6);
                                     setMessages((prev) => [
                                         {
                                             id: uuidv4(),
@@ -682,7 +697,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 className="rounded-md bg-red-600 hover:bg-red-700 text-white px-3 py-1 md:px-4 md:py-2 text-sm transition-all duration-200"
                                 onClick={() => {
                                     setShowReviewModal(false);
-                                    setActiveStep(4);
+                                    setStepIndex(4);
                                     setMessages((prev) => [
                                         {
                                             id: uuidv4(),

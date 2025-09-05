@@ -1,97 +1,359 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
+
+export interface WorkStep {
+    seq: number;
+    description: string;
+    amount: number;
+    workingDays: number;
+    status: string;
+    startingDay: string;
+    deliveryDay: string;
+}
+
+export interface ProposedQuotePayload {
+    employerId: number;
+    postId: number;
+    commentId: number;
+    amount: number;
+    proposal: string;
+    projectName: string;
+    projectDetails: string;
+    workSteps: WorkStep[];
+    workingDays: number;
+    deliverables: string[];
+    note?: string;
+    startingDay: string;
+    deliveryDay: string;
+}
 
 interface QuotationModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (data: { price: number; description: string; terms?: string; file: File | null }) => void;
+    onSubmit: (data: ProposedQuotePayload) => void;
 }
 
-const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubmit }) => {
-    const { t } = useTranslation();
-    const [price, setPrice] = useState('');
-    const [description, setDescription] = useState('');
-    const [terms, setTerms] = useState('');
-    const [file, setFile] = useState<File | null>(null);
+const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmit}) => {
+    const {t} = useTranslation();
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFile = e.target.files?.[0];
-        if (selectedFile && selectedFile.type === 'application/pdf') {
-            setFile(selectedFile);
-        } else {
-            alert(t('profileChat.invalidFile') || 'Please select a valid PDF file.');
-            setFile(null);
-            e.target.value = '';
-        }
+    // Initialize with sensible defaults
+    const [form, setForm] = useState<ProposedQuotePayload>({
+        employerId: 1,
+        postId: 1,
+        commentId: 1,
+        amount: 2500,
+        proposal: 'Build a landing page for the new product.',
+        projectName: 'FastJob Landing Page',
+        projectDetails: 'This project involves designing and implementing a responsive landing page with React + Tailwind.',
+        workSteps: [
+            {
+                seq: 1,
+                description: 'Design mockups for all sections',
+                amount: 800,
+                workingDays: 3,
+                status: 'QuotationPending',
+                startingDay: '2025-08-20',
+                deliveryDay: '2025-08-23'
+            },
+            {
+                seq: 2,
+                description: 'Implement responsive frontend',
+                amount: 1200,
+                workingDays: 5,
+                status: 'InProgress',
+                startingDay: '2025-08-24',
+                deliveryDay: '2025-08-29'
+            },
+            {
+                seq: 3,
+                description: 'Final QA, bug fixes, and deployment',
+                amount: 500,
+                workingDays: 2,
+                status: 'WorkSubmitted',
+                startingDay: '2025-08-30',
+                deliveryDay: '2025-08-31'
+            },
+        ],
+        workingDays: 10,
+        deliverables: ['Responsive landing page', 'Source code in GitHub repo', 'Deployment instructions'],
+        note: 'Please prioritize mobile optimization.',
+        startingDay: '2025-08-20',
+        deliveryDay: '2025-08-31',
+    });
+
+    const [error, setError] = useState<string | null>(null);
+
+    const updateField = <K extends keyof ProposedQuotePayload>(key: K, value: ProposedQuotePayload[K]) => {
+        setForm((prev) => ({...prev, [key]: value}));
+    };
+
+    const updateWorkStep = (index: number, key: keyof WorkStep, value: any) => {
+        setForm((prev) => {
+            const copy = [...prev.workSteps];
+            copy[index] = {...copy[index], [key]: value} as WorkStep;
+            return {...prev, workSteps: copy};
+        });
+    };
+
+    const addWorkStep = () => {
+        setForm((prev) => ({
+            ...prev,
+            workSteps: [
+                ...prev.workSteps,
+                {
+                    seq: prev.workSteps.length + 1,
+                    description: '',
+                    amount: 0,
+                    workingDays: 1,
+                    status: 'QuotationPending',
+                    startingDay: '',
+                    deliveryDay: '',
+                },
+            ],
+        }));
+    };
+
+    const removeWorkStep = (index: number) => {
+        setForm((prev) => {
+            const copy = prev.workSteps.filter((_, i) => i !== index).map((w, i) => ({...w, seq: i + 1}));
+            return {...prev, workSteps: copy};
+        });
+    };
+
+    const updateDeliverable = (index: number, value: string) => {
+        setForm((prev) => {
+            const copy = [...prev.deliverables];
+            copy[index] = value;
+            return {...prev, deliverables: copy};
+        });
+    };
+
+    const addDeliverable = () => {
+        setForm((prev) => ({...prev, deliverables: [...prev.deliverables, '']}));
+    };
+
+    const removeDeliverable = (index: number) => {
+        setForm((prev) => ({...prev, deliverables: prev.deliverables.filter((_, i) => i !== index)}));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const priceValue = parseFloat(price);
-        if (isNaN(priceValue) || priceValue <= 0) {
-            alert(t('profileChat.invalidPrice') || 'Please enter a valid price.');
-            return;
+        setError(null);
+        try {
+            const required: Array<keyof ProposedQuotePayload> = [
+                'employerId', 'postId', 'commentId', 'amount', 'proposal', 'projectName', 'projectDetails', 'workSteps', 'workingDays', 'deliverables', 'startingDay', 'deliveryDay'
+            ];
+            for (const key of required) {
+                const val = (form as any)[key];
+                if (val === undefined || val === null || (typeof val === 'string' && val.trim() === '')) {
+                    throw new Error(`Missing field: ${String(key)}`);
+                }
+            }
+            if (!Array.isArray(form.workSteps) || form.workSteps.length === 0) {
+                throw new Error('workSteps must be a non-empty array');
+            }
+            if (!Array.isArray(form.deliverables) || form.deliverables.length === 0) {
+                throw new Error('deliverables must be a non-empty array');
+            }
+            onSubmit(form);
+            onClose();
+        } catch (e: any) {
+            setError(e?.message || 'Invalid form');
         }
-        if (!file) {
-            alert(t('profileChat.noFile') || 'Please upload a PDF quotation.');
-            return;
-        }
-        onSubmit({ price: priceValue, description, terms, file });
-        setPrice('');
-        setDescription('');
-        setTerms('');
-        setFile(null);
-        onClose();
     };
 
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-            <div className="bg-white rounded-lg p-6 w-[90%] max-w-md shadow-lg">
-                <h3 className="text-lg text-gray-600Í font-semibold mb-4">{t('profileChat.quotationTitle') || 'Create Quotation'}</h3>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                            {t('profileChat.price')}
-                        </label>
-                        <input
-                            type="number"
-                            step="0.01"
-                            value={price}
-                            onChange={(e) => setPrice(e.target.value)}
-                            className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Enter price"
-                            required
-                        />
+            <div className="bg-white rounded-lg p-6 w-[95%] max-w-3xl shadow-lg">
+                <h3 className="text-lg font-semibold mb-2">{t('profileChat.quotationTitle') || 'Create Quotation'}</h3>
+                <p className="text-sm text-gray-600 mb-4">Fill in the quotation details below.</p>
+                <form onSubmit={handleSubmit} className="space-y-5 max-h-[80vh] overflow-y-auto pr-1 text-gray-700">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Employer ID</label>
+                            <input type="number" value={form.employerId}
+                                   onChange={(e) => updateField('employerId', Number(e.target.value))}
+                                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                                   required/>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Post ID</label>
+                            <input type="number" value={form.postId}
+                                   onChange={(e) => updateField('postId', Number(e.target.value))}
+                                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                                   required/>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Comment ID</label>
+                            <input type="number" value={form.commentId}
+                                   onChange={(e) => updateField('commentId', Number(e.target.value))}
+                                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                                   required/>
+                        </div>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                            {t('profileChat.quotationFile') || 'Quotation PDF'}
-                        </label>
-                        <input
-                            type="file"
-                            accept="application/pdf"
-                            onChange={handleFileChange}
-                            className="mt-1 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border file:border-gray-300 file:bg-gray-50 file:text-sm file:font-medium file:text-gray-700 hover:file:bg-gray-100"
-                            required
-                        />
-                        {file && <p className="mt-2 text-sm text-gray-600">{file.name}</p>}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Project Name</label>
+                            <input type="text" value={form.projectName}
+                                   onChange={(e) => updateField('projectName', e.target.value)}
+                                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                                   required/>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Amount (Total)</label>
+                            <input type="number" step="0.01" value={form.amount}
+                                   onChange={(e) => updateField('amount', Number(e.target.value))}
+                                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                                   required/>
+                        </div>
                     </div>
-                    <div className="flex justify-end gap-3">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Proposal</label>
+                        <textarea value={form.proposal} onChange={(e) => updateField('proposal', e.target.value)}
+                                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm" rows={3}
+                                  required/>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Project Details</label>
+                        <textarea value={form.projectDetails}
+                                  onChange={(e) => updateField('projectDetails', e.target.value)}
+                                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm" rows={4}
+                                  required/>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Working Days (Total)</label>
+                            <input type="number" value={form.workingDays}
+                                   onChange={(e) => updateField('workingDays', Number(e.target.value))}
+                                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                                   required/>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Starting Day</label>
+                            <input type="date" value={form.startingDay}
+                                   onChange={(e) => updateField('startingDay', e.target.value)}
+                                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                                   required/>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Delivery Day</label>
+                            <input type="date" value={form.deliveryDay}
+                                   onChange={(e) => updateField('deliveryDay', e.target.value)}
+                                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                                   required/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Deliverables</label>
+                        <div className="space-y-2">
+                            {form.deliverables.map((d, idx) => (
+                                <div key={idx} className="flex gap-2 items-center">
+                                    <input type="text" value={d}
+                                           onChange={(e) => updateDeliverable(idx, e.target.value)}
+                                           className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm"
+                                           required/>
+                                    <button type="button" onClick={() => removeDeliverable(idx)}
+                                            className="px-2 py-2 text-sm rounded-md border border-gray-300 text-red-500 hover:bg-gray-100">Remove
+                                    </button>
+                                </div>
+                            ))}
+                            <button type="button" onClick={addDeliverable}
+                                    className="mt-1 px-3 py-2 rounded-md bg-blue-600 text-sm hover:bg-blue-700 text-white">+ Add
+                                deliverable
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Work Steps</label>
+                        <div className="space-y-3">
+                            {form.workSteps.map((ws, idx) => (
+                                <div key={idx} className="border rounded-md p-3 space-y-2 bg-gray-50">
+                                    <div className="grid grid-cols-1 md:grid-cols-6 gap-2">
+                                        <div>
+                                            <label className="block text-xs text-gray-600">Seq</label>
+                                            <input type="number" value={ws.seq}
+                                                   onChange={(e) => updateWorkStep(idx, 'seq', Number(e.target.value))}
+                                                   className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm"/>
+                                        </div>
+                                        <div className="md:col-span-2">
+                                            <label className="block text-xs text-gray-600">Description</label>
+                                            <input type="text" value={ws.description}
+                                                   onChange={(e) => updateWorkStep(idx, 'description', e.target.value)}
+                                                   className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm"/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs text-gray-600">Amount</label>
+                                            <input type="number" step="0.01" value={ws.amount}
+                                                   onChange={(e) => updateWorkStep(idx, 'amount', Number(e.target.value))}
+                                                   className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm"/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs text-gray-600">Working Days</label>
+                                            <input type="number" value={ws.workingDays}
+                                                   onChange={(e) => updateWorkStep(idx, 'workingDays', Number(e.target.value))}
+                                                   className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm"/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs text-gray-600">Status</label>
+                                            <input type="text" value={ws.status}
+                                                   onChange={(e) => updateWorkStep(idx, 'status', e.target.value)}
+                                                   className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm"/>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                        <div>
+                                            <label className="block text-xs text-gray-600">Starting Day</label>
+                                            <input type="date" value={ws.startingDay}
+                                                   onChange={(e) => updateWorkStep(idx, 'startingDay', e.target.value)}
+                                                   className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm"/>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs text-gray-600">Delivery Day</label>
+                                            <input type="date" value={ws.deliveryDay}
+                                                   onChange={(e) => updateWorkStep(idx, 'deliveryDay', e.target.value)}
+                                                   className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-sm"/>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <button type="button" onClick={() => removeWorkStep(idx)}
+                                                className="px-3 py-1 text-sm text-red-500 rounded-md border border-gray-300 hover:bg-gray-100">Remove
+                                            Step
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                            <button type="button" onClick={addWorkStep}
+                                    className="mt-1 px-3 py-2 rounded-md bg-blue-600 text-sm hover:bg-blue-700 text-white">+ Add
+                                work step
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Note (optional)</label>
+                        <textarea value={form.note || ''} onChange={(e) => updateField('note', e.target.value)}
+                                  className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm" rows={2}/>
+                    </div>
+
+                    {error && <p className="text-sm text-red-600">{error}</p>}
+
+                    <div className="flex justify-end gap-3 sticky bottom-0 bg-white pt-2">
+                        <button type="button" onClick={onClose}
+                                className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             {t('profileChat.cancel') || 'Cancel'}
                         </button>
-                        <button
-                            type="submit"
-                            className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
-                        >
+                        <button type="submit"
+                                className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700">
                             {t('profileChat.sendQuotation') || 'Send Quotation'}
                         </button>
                     </div>
