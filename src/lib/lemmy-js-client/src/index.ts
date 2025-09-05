@@ -388,3 +388,6 @@ export type { BillingId } from "./types/BillingId";
 export type { BillingStatus } from "./types/BillingStatus";
 export type { CreateInvoiceForm } from "./types/CreateInvoiceForm";
 export type { CreateInvoiceResponse } from "./types/CreateInvoiceResponse";
+export type { ApproveQuotation } from "./types/ApproveQuotation";
+export type { BillingOperationResponse } from "./types/BillingOperationResponse";
+export type { WorkflowId } from "./types/WorkflowId";

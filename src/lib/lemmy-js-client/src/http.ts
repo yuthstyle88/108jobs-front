@@ -243,6 +243,8 @@ import type { ChatRoomId } from "./types/ChatRoomId";
 import type { ChatRoomWithParticipants } from "./types/ChatRoomWithParticipants";
 import type { CreateInvoiceForm } from "./types/CreateInvoiceForm";
 import type { CreateInvoiceResponse } from "./types/CreateInvoiceResponse";
+import type { ApproveQuotation } from "./types/ApproveQuotation";
+import type { BillingOperationResponse } from "./types/BillingOperationResponse";
 
 enum HttpType {
     Get = "GET",
@@ -3074,6 +3076,24 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<CreateInvoiceForm, CreateInvoiceResponse>(
             HttpType.Post,
             "/account/services/create-invoice",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Approve quotation and convert to order.
+     */
+    @Security("bearerAuth")
+    @Post("/account/services/approve-quotation")
+    @Tags("Billing")
+    async approveQuotation(
+        @Body() form: ApproveQuotation,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<ApproveQuotation, BillingOperationResponse>(
+            HttpType.Post,
+            "/account/services/approve-quotation",
             form,
             options,
         );
