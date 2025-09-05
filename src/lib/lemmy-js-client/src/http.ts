@@ -241,6 +241,8 @@ import {ListUserChatRoomsQuery} from "./types/ListUserChatRoomsQuery";
 import {ListUserChatRoomsResponse} from "./types/ListUserChatRoomsResponse";
 import type { ChatRoomId } from "./types/ChatRoomId";
 import type { ChatRoomWithParticipants } from "./types/ChatRoomWithParticipants";
+import type { CreateInvoiceForm } from "./types/CreateInvoiceForm";
+import type { CreateInvoiceResponse } from "./types/CreateInvoiceResponse";
 
 enum HttpType {
     Get = "GET",
@@ -3055,6 +3057,24 @@ export class LemmyHttp extends Controller {
             HttpType.Post,
             "/profile/donation-dialog-shown",
             {},
+            options,
+        );
+    }
+
+    /**
+     * @summary Create an invoice / quotation for a job.
+     */
+    @Security("bearerAuth")
+    @Post("/account/services/create-invoice")
+    @Tags("Billing")
+    async createInvoice(
+        @Body() form: CreateInvoiceForm,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<CreateInvoiceForm, CreateInvoiceResponse>(
+            HttpType.Post,
+            "/account/services/create-invoice",
+            form,
             options,
         );
     }

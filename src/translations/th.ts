@@ -1634,6 +1634,10 @@ export const th = {
             cancel: 'ยกเลิก',
             sendQuotation: 'ส่งใบเสนอราคา',
             jobFlow: "ขั้นตอนการทำงาน",
+            acceptJobMsg: "ฉันได้ยอมรับงานนี้แล้ว",
+            requestRevisionMsg: "กรุณาแก้ไขและส่งมาใหม่",
+            deliveryAccepted: "ยอมรับการส่งงานแล้ว ดำเนินการชำระเงิน",
+            uploadAsset: "อัปโหลดไฟล์",
         },
         profileCoins: {
             buttonProceedPayment: "ดำเนินการชำระเงิน",

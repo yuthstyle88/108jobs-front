@@ -1694,6 +1694,10 @@ export const vi = {
             cancel: 'Hủy',
             sendQuotation: 'Gửi Báo giá',
             jobFlow: "Quy trình làm việc",
+            acceptJobMsg: "Tôi đã chấp nhận công việc.",
+            requestRevisionMsg: "Vui lòng chỉnh sửa và gửi lại.",
+            deliveryAccepted: "Đã chấp nhận sản phẩm bàn giao. Tiến hành thanh toán.",
+            uploadAsset: "Tải tệp lên",
         },
         profileCoins: {
             buttonProceedPayment: "Tiến hành thanh toán",

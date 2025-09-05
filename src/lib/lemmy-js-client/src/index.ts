@@ -384,3 +384,7 @@ export type {BankAccountForm} from "./types/BankAccountForm";
 export type {ListBankAccounts} from "./types/ListBankAccounts";
 export type {ListBankAccountsResponse} from "./types/ListBankAccountsResponse";
 export type {VisitProfileResponse} from "./types/VisitProfileResponse";
+export type { BillingId } from "./types/BillingId";
+export type { BillingStatus } from "./types/BillingStatus";
+export type { CreateInvoiceForm } from "./types/CreateInvoiceForm";
+export type { CreateInvoiceResponse } from "./types/CreateInvoiceResponse";

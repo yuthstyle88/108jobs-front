@@ -1678,6 +1678,10 @@ export const en = {
             cancel: 'Cancel',
             sendQuotation: 'Send Quotation',
             jobFlow: "Work Flow",
+            acceptJobMsg: "I have accepted the job.",
+            requestRevisionMsg: "Please revise and resubmit.",
+            deliveryAccepted: "Delivery accepted. Proceed to payment.",
+            uploadAsset: "Upload Asset",
         },
         profileCoins: {
             buttonProceedPayment: "Proceed to payment",
