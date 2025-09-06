@@ -60,7 +60,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
     const [isFetching, setIsFetching] = useState(false);
-    const pageSize = 10;
+    const pageSize = 20;
     const [afterId, setAfterId] = useState<number | null>(null);
     const router = useRouter();
     const { localUser } = useMyUser();
@@ -72,6 +72,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     const sentMessagesRef = useRef<Set<string>>(new Set());
     const receivedMessagesRef = useRef<Set<string>>(new Set());
     const fetchResolveRef = useRef<((value?: void) => void) | null>(null);
+    const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     // TODO: remove temporary receiver fallback when backend provides proper mapping
     const tempReceiverId = 3;
@@ -107,11 +108,17 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 page_size: pageSize,
             };
 
+            if (fetchTimeoutRef.current) {
+                clearTimeout(fetchTimeoutRef.current);
+                fetchTimeoutRef.current = null;
+            }
             const timeout = setTimeout(() => {
                 setIsFetching(false);
                 fetchResolveRef.current = null;
+                fetchTimeoutRef.current = null;
                 reject(new Error('Fetch history timeout after 5s'));
             }, 5000);
+            fetchTimeoutRef.current = timeout;
 
             try {
                 if (socket?.readyState === WebSocket.OPEN) {
@@ -120,193 +127,19 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 } else {
                     setIsFetching(false);
                     clearTimeout(timeout);
+                    fetchTimeoutRef.current = null;
                     reject(new Error('WebSocket not open'));
                 }
             } catch (e) {
                 setIsFetching(false);
                 clearTimeout(timeout);
+                fetchTimeoutRef.current = null;
                 reject(e);
             }
         });
     }, [socket, isE2EMock, roomId, localUser?.id, currentPage, hasMoreMessages, isFetching, afterId, isConnected]);
 
-    useEffect(() => {
-        if (isE2EMock) {
-            console.debug(`WebSocketProvider: Mock mode enabled, setting isConnected to true`);
-            setIsConnected(true);
-            return;
-        }
-        if (!token || !roomId || !localUser) {
-            console.debug(`WebSocketProvider: Missing prerequisites - token: ${!!token}, roomId: ${!!roomId}, localUser: ${!!localUser}`);
-            return;
-        }
-
-        let cancelled = false;
-        isManuallyClosingRef.current = false;
-
-        (async () => {
-            try {
-                await ensureSharedKeyForRoom(roomId);
-            } catch (e) {
-                console.warn(`WebSocketProvider: Pre-WS key derivation error for room ${roomId}`, e);
-            }
-            if (cancelled) {
-                return;
-            }
-
-            const newSocket = new WebSocket(wsUrl);
-            setSocket(newSocket);
-
-            newSocket.onopen = () => {
-                setIsConnected(true);
-                setConnectionError(false);
-                isManuallyClosingRef.current = false;
-                setAfterId(null);
-                setHasMoreMessages(true);
-                setIsFetching(false);
-                setCurrentPage(1);
-                if (reconnectTimeoutRef.current) {
-                    clearTimeout(reconnectTimeoutRef.current);
-                    reconnectTimeoutRef.current = null;
-                }
-                console.log(`[WS] WebSocket connected for room ${roomId}`);
-            };
-
-            newSocket.onmessage = async (event) => {
-                try {
-                    const token = UserService.Instance.auth();
-                    const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
-
-                    let parsed: any = safeParse(event.data);
-                    if (parsed === 'pong' || parsed === 'ping' || parsed?.op === 'Ping') {
-                        return;
-                    }
-                    if (typeof parsed === "string") parsed = safeParse(parsed);
-
-                    const items: any[] = Array.isArray(parsed) ? parsed : parsed && typeof parsed === "object" ? [parsed] : [];
-                    logDebug(`[WS][MSG] Parsed ${items.length} items from event data`, { parsed });
-
-                    const transformedItems: ChatMessage[] = [];
-
-                    if (parsed?.op === "FetchHistory" && Array.isArray(parsed.messages)) {
-                        if (parsed.room_id !== roomId) {
-                            return;
-                        }
-
-                        setIsFetching(false);
-                        if (parsed.messages.length < pageSize) {
-                            setHasMoreMessages(false);
-                        }
-
-                        for (const msg of parsed.messages) {
-                            const createdAtVal = msg.created_at || msg.createdAt || new Date().toISOString();
-                            const messageSignature = `${msg.content}:${createdAtVal}`;
-                            if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                                continue;
-                            }
-
-                            let content = msg.content;
-                            if (token && sharedKeyHex && isBase64Like(msg.content)) {
-                                try {
-                                    const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-                                    const plain = await decrypt(msg.content, token, aesKey);
-                                    if (plain.length > 0) {
-                                        content = plain;
-                                    }
-                                } catch (e) {
-                                    console.warn(`[WS][MSG] Decryption failed for FetchHistory message`, e);
-                                }
-                            }
-
-                            transformedItems.push({
-                                id: msg.id || `msg_${uuidv4()}`,
-                                senderId: Number(msg.sender_id) || 0,
-                                receiverId: Number(msg.receiver_id) || getReceiverIdFromRoom(roomId),
-                                roomId: msg.room_id || roomId,
-                                content,
-                                status: typeof msg.status === "number" ? msg.status : 1,
-                                createdAt: createdAtVal,
-                                isOwner: Number(msg.sender_id) === Number(localUser?.id),
-                            });
-                        }
-                        if (fetchResolveRef.current) {
-                            fetchResolveRef.current();
-                            fetchResolveRef.current = null;
-                            console.log('[WS][MSG] Resolved fetchHistory Promise');
-                        }
-                    } else {
-                        console.warn('[WS][MSG] Unhandled message format', { parsed });
-                    }
-
-                    if (transformedItems.length) {
-                        let toBroadcast: any = transformedItems[0];
-                        if (parsed?.op === "FetchHistory") {
-                            toBroadcast = transformedItems;
-                            const ids = parsed.messages
-                                .map((m: any) => (typeof m.id === 'number' ? m.id : Number(m.id)))
-                                .filter((n: any) => typeof n === 'number' && !isNaN(n));
-                            if (ids.length) {
-                                setAfterId(Math.min(...ids));
-                                console.log('[WS][MSG] Updated afterId', { afterId: Math.min(...ids) });
-                            }
-                        } else if (Array.isArray(parsed)) {
-                            toBroadcast = transformedItems;
-                        }
-                        logDebug(`[WS][MSG] Broadcasting ${transformedItems.length} transformed items`);
-                        broadcastToListeners(toBroadcast);
-                    } else {
-                        console.warn(`[WS][MSG] No valid items to transform`, { parsed });
-                        if (fetchResolveRef.current) {
-                            setIsFetching(false);
-                            fetchResolveRef.current();
-                            fetchResolveRef.current = null;
-                        }
-                    }
-                } catch (e) {
-                    console.error(`[WS][MSG] Error processing WebSocket message`, e, { rawData: event.data });
-                    setIsFetching(false); // Reset isFetching on error
-                    if (fetchResolveRef.current) {
-                        fetchResolveRef.current();
-                        fetchResolveRef.current = null;
-                    }
-                    for (const fn of listeners.values()) fn(event);
-                }
-            };
-
-            newSocket.onclose = (event) => {
-                setIsConnected(false);
-                setIsFetching(false);
-            };
-
-            newSocket.onerror = (err) => {
-                if (isManuallyClosingRef.current) {
-                    return;
-                }
-                console.error(`[WS] WebSocket error for room ${roomId}`, err);
-                setIsFetching(false); // Reset isFetching on error
-                if (fetchResolveRef.current) {
-                    fetchResolveRef.current();
-                    fetchResolveRef.current = null;
-                }
-            };
-        })();
-
-        return () => {
-            cancelled = true;
-            isManuallyClosingRef.current = true;
-            try {
-                socket?.close();
-            } catch {
-                console.warn(`WebSocketProvider cleanup: Error closing WebSocket for room ${roomId}`);
-            }
-            if (fetchResolveRef.current) {
-                fetchResolveRef.current();
-                fetchResolveRef.current = null;
-                setIsFetching(false);
-            }
-        };
-    }, [wsUrl, connectionAttemptKey, localUser, roomId, token]);
-
+    // Unified WebSocket connection effect (duplicates removed)
     useEffect(() => {
         if (isE2EMock) {
             setIsConnected(true);
@@ -325,9 +158,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             } catch (e) {
                 console.warn(`WebSocketProvider: Pre-WS key derivation error for room ${roomId}`, e);
             }
-            if (cancelled) {
-                return;
-            }
+            if (cancelled) return;
 
             const newSocket = new WebSocket(wsUrl);
             setSocket(newSocket);
@@ -344,11 +175,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     clearTimeout(reconnectTimeoutRef.current);
                     reconnectTimeoutRef.current = null;
                 }
-                console.log(`WebSocket connected for room ${roomId}`);
+                if (__DEV__) console.debug(`WebSocket connected for room ${roomId}`);
             };
 
             newSocket.onmessage = async (event) => {
-                if (process.env.NODE_ENV !== "production") {
+                if (__DEV__) {
                     try {
                         const preview = typeof event.data === 'string' ? event.data.slice(0, 200) : String(event.data);
                         logDebug(`onmessage: raw event`, { type: typeof event.data, preview });
@@ -360,34 +191,35 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
                     let parsed: any = safeParse(event.data);
                     if (parsed === 'pong' || parsed === 'ping' || parsed?.op === 'Ping') {
-                        console.debug('onmessage: heartbeat received');
                         return;
                     }
                     if (typeof parsed === "string") parsed = safeParse(parsed);
 
                     const items: any[] = Array.isArray(parsed) ? parsed : parsed && typeof parsed === "object" ? [parsed] : [];
-                    console.debug(`onmessage: Parsed ${items.length} items from event data`);
+                    if (__DEV__) console.debug(`onmessage: Parsed ${items.length} items from event data`);
 
                     const transformedItems: ChatMessage[] = [];
 
                     if (parsed?.op === "FetchHistory" && Array.isArray(parsed.messages)) {
                         if (parsed.room_id !== roomId) {
-                            console.log('[WS][MSG] Ignored FetchHistory for other room', { got: parsed.room_id, expected: roomId });
+                            if (__DEV__) console.debug('[WS][MSG] Ignored FetchHistory for other room', { got: parsed.room_id, expected: roomId });
                             return;
                         }
 
-                        console.log('[WS][MSG] FetchHistory response', { count: parsed.messages.length, limit: pageSize });
+                        // Clear any pending fetch timeout for FetchHistory
+                        if (fetchTimeoutRef.current) {
+                            clearTimeout(fetchTimeoutRef.current);
+                            fetchTimeoutRef.current = null;
+                        }
                         setIsFetching(false);
                         if (parsed.messages.length < pageSize) {
                             setHasMoreMessages(false);
-                            console.log('[WS][MSG] No more messages to fetch');
                         }
 
                         for (const msg of parsed.messages) {
                             const createdAtVal = msg.created_at || msg.createdAt || new Date().toISOString();
                             const messageSignature = `${msg.content}:${createdAtVal}`;
                             if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                                console.debug(`onmessage: Ignored duplicate FetchHistory message`);
                                 continue;
                             }
 
@@ -398,7 +230,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                                     const plain = await decrypt(msg.content, token, aesKey);
                                     if (plain.length > 0) {
                                         content = plain;
-                                        console.log(`onmessage: Decrypted FetchHistory message content`);
                                     }
                                 } catch (e) {
                                     console.warn(`onmessage: Decryption failed for FetchHistory message`, e);
@@ -417,6 +248,10 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                             });
                         }
                         if (fetchResolveRef.current) {
+                            if (fetchTimeoutRef.current) {
+                                clearTimeout(fetchTimeoutRef.current);
+                                fetchTimeoutRef.current = null;
+                            }
                             fetchResolveRef.current();
                             fetchResolveRef.current = null;
                         }
@@ -478,12 +313,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                         }
                     } else if (parsed?.room_id && parsed?.sender_id && parsed?.content) {
                         if (parsed.room_id !== roomId) {
-                            console.debug(`onmessage: Ignored message for other room ${parsed.room_id}`);
+                            if (__DEV__) console.debug(`onmessage: Ignored message for other room ${parsed.room_id}`);
                         } else {
                             const createdAtVal = parsed.created_at || parsed.createdAt || new Date().toISOString();
                             const messageSignature = `${parsed.content}:${createdAtVal}`;
                             if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                                console.debug(`onmessage: Ignored duplicate new-format message`);
+                                if (__DEV__) console.debug(`onmessage: Ignored duplicate new-format message`);
                             } else {
                                 let contentOut: string = parsed.content;
 
@@ -557,46 +392,70 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                         } else if (Array.isArray(parsed)) {
                             toBroadcast = transformedItems;
                         }
-                        console.debug(`onmessage: Broadcasting ${transformedItems.length} transformed items`);
+                        if (__DEV__) console.debug(`onmessage: Broadcasting ${transformedItems.length} transformed items`);
                         broadcastToListeners(toBroadcast);
                     } else {
-                        console.warn(`onmessage: No valid items to transform`);
+                        if (__DEV__) console.warn(`onmessage: No valid items to transform`);
+                        if (fetchResolveRef.current) {
+                            if (fetchTimeoutRef.current) {
+                                clearTimeout(fetchTimeoutRef.current);
+                                fetchTimeoutRef.current = null;
+                            }
+                            setIsFetching(false);
+                            fetchResolveRef.current();
+                            fetchResolveRef.current = null;
+                        }
                     }
                 } catch (e) {
                     console.error(`onmessage: Error processing WebSocket message`, e);
+                    setIsFetching(false);
+                    if (fetchTimeoutRef.current) {
+                        clearTimeout(fetchTimeoutRef.current);
+                        fetchTimeoutRef.current = null;
+                    }
+                    if (fetchResolveRef.current) {
+                        fetchResolveRef.current();
+                        fetchResolveRef.current = null;
+                    }
                     for (const fn of listeners.values()) fn(event);
                 }
             };
 
             newSocket.onclose = (event) => {
                 setIsConnected(false);
-                console.log(`WebSocket closed for room ${roomId}. Code: ${event.code}, Reason: ${event.reason || "unknown"}`);
+                if (__DEV__) console.log(`WebSocket closed for room ${roomId}. Code: ${event.code}, Reason: ${event.reason || "unknown"}`);
 
                 if (isManuallyClosingRef.current) {
-                    console.debug(`onclose: WebSocket closed manually`);
                     return;
+                }
+
+                if (fetchTimeoutRef.current) {
+                    clearTimeout(fetchTimeoutRef.current);
+                    fetchTimeoutRef.current = null;
                 }
 
                 if ([1008, 4000, 4400].includes(event.code)) {
                     setConnectionError(true);
-                    console.warn(`onclose: Connection error with code ${event.code}, setting connectionError`);
                     return;
                 }
 
                 reconnectTimeoutRef.current = setTimeout(() => {
                     setSocket(null);
                     setConnectionAttemptKey((prev) => prev + 1);
-                    console.debug(`onclose: Scheduled reconnect attempt ${connectionAttemptKey + 1}`);
                 }, 3000);
             };
 
             newSocket.onerror = (err) => {
                 if (isManuallyClosingRef.current) {
-                    console.debug(`onerror: WebSocket error ignored due to manual close`);
                     return;
                 }
                 console.error(`WebSocket error for room ${roomId}`, err);
+                if (fetchTimeoutRef.current) {
+                    clearTimeout(fetchTimeoutRef.current);
+                    fetchTimeoutRef.current = null;
+                }
                 if (fetchResolveRef.current) {
+                    fetchResolveRef.current();
                     fetchResolveRef.current = null;
                     setIsFetching(false);
                 }
@@ -608,9 +467,10 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             isManuallyClosingRef.current = true;
             try {
                 socket?.close();
-                console.debug(`WebSocketProvider cleanup: Closed WebSocket for room ${roomId}`);
-            } catch {
-                console.debug(`WebSocketProvider cleanup: Error closing WebSocket for room ${roomId}`);
+            } catch {}
+            if (fetchTimeoutRef.current) {
+                clearTimeout(fetchTimeoutRef.current);
+                fetchTimeoutRef.current = null;
             }
             if (fetchResolveRef.current) {
                 fetchResolveRef.current();
@@ -619,6 +479,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             }
         };
     }, [wsUrl, connectionAttemptKey, localUser, roomId, token]);
+
 
     useEffect(() => {
         if (connectionError) {

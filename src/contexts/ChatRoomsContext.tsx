@@ -68,7 +68,8 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     const mapToRooms = useCallback(async (input?: ListUserChatRoomsResponse): Promise<RoomsState> => {
         const items = input?.rooms || [];
         const totalLoaded = items.length;
-        const hasMore = totalLoaded >= page * pageSize;
+        // Prefer cursor-based hasMore if provided by API, otherwise fall back to count-based heuristic
+        const hasMore = typeof (input as any)?.nextPage !== 'undefined' ? !!(input as any).nextPage : totalLoaded >= page * pageSize;
         const mapped: AppChatRoom[] = [];
         for (const it of items as any[]) {
             const other = it.participants.find(
