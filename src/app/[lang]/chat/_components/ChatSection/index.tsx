@@ -1,28 +1,28 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { v4 as uuidv4 } from "uuid";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { API_ROUTES } from "@/api/endpoints";
+import {useCallback, useEffect, useRef, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {v4 as uuidv4} from "uuid";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {API_ROUTES} from "@/api/endpoints";
 import LoadingBlur from "@/components/LoadingBlur";
-import { CategoriesImage, ProfileImage } from "@/constants/images";
-import { ChatMessage } from "@/types/chat";
+import {CategoriesImage, ProfileImage} from "@/constants/images";
+import {ChatMessage} from "@/types/chat";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
-import { useWebSocket } from "@/contexts/RealtimeChatContext";
-import { useChatRooms } from "@/contexts/ChatRoomsContext";
-import FreelanceChatFlow, { FlowActions, StatusKey } from "@/components/FreelanceChatFlow";
-import QuotationModal, { ProposedQuotePayload } from "@/components/QuotationModal";
-import { usePrivateImagePost } from "@/hooks/api-hooks";
-import { useWorkflowStepper } from "@/hooks/useWorkflowMachine";
-import type { CreateInvoiceForm } from "lemmy-js-client";
-import { useHttpPost } from "@/hooks/useHttpPost";
-import { useHttpGet } from "@/hooks/useHttpGet";
-import { useStateMachineStore, apiToUiStatus } from "@/stores/stateMachineStore";
-import { REQUEST_STATE } from "@/services/HttpService";
+import {useWebSocket} from "@/contexts/RealtimeChatContext";
+import {useChatRooms} from "@/contexts/ChatRoomsContext";
+import FreelanceChatFlow, {FlowActions, StatusKey} from "@/components/FreelanceChatFlow";
+import QuotationModal, {ProposedQuotePayload} from "@/components/QuotationModal";
+import {usePrivateImagePost} from "@/hooks/api-hooks";
+import {useWorkflowStepper} from "@/hooks/useWorkflowMachine";
+import type {CreateInvoiceForm} from "lemmy-js-client";
+import {useHttpPost} from "@/hooks/useHttpPost";
+import {useHttpGet} from "@/hooks/useHttpGet";
+import {apiToUiStatus, useStateMachineStore} from "@/stores/stateMachineStore";
+import {REQUEST_STATE} from "@/services/HttpService";
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -63,17 +63,18 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
 
     const { sendMessage, fetchHistory, isConnected, hasMoreMessages, isFetching } = useWebSocket(
         `chat_${roomId}`,
-        (event: MessageEvent<ChatMessage | ChatMessage[]>) => {
+        (event: MessageEvent<string | ChatMessage | ChatMessage[]>) => {
             let parsed: ChatMessage | ChatMessage[];
             try {
-                parsed = JSON.parse(event.data);
+                const raw = event.data as unknown;
+                parsed = typeof raw === 'string' ? JSON.parse(raw) : (raw as ChatMessage | ChatMessage[]);
             } catch (e) {
                 console.error("Failed to parse WebSocket message:", e);
                 return;
             }
 
             const isHistoryBatch = Array.isArray(parsed);
-            const items: ChatMessage[] = isHistoryBatch ? parsed : [parsed];
+            const items: ChatMessage[] = isHistoryBatch ? (parsed as ChatMessage[]) : [parsed as ChatMessage];
             if (!items.length) return;
 
             setMessages((prev) => {
@@ -380,7 +381,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             }
         },
         onReleasePayment: () => {
-            goToStatus("pay");
+            goToStatus("Completed");
             setShowReviewModal(false);
             sendMessage({
                 message: t("profileChat.deliveryAccepted") || "Delivery accepted. Proceed to payment.",
@@ -506,7 +507,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                         });
                 }
             },
-            { root: rootEl, threshold: [0, 0.1], margin: "10px" }
+            { root: rootEl, threshold: [0, 0.1], rootMargin: "10px" }
         );
 
         observer.observe(topSentinelRef.current);

@@ -5,7 +5,14 @@ import {useLanguage} from "@/contexts/LanguageContext";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {UserService} from "@/services";
 import {faHeart} from "@fortawesome/free-regular-svg-icons";
-import {faBriefcase, faCoins, faGift, faMoneyBill1, faMoneyBillTrendUp, faTicket,} from "@fortawesome/free-solid-svg-icons";
+import {
+    faBriefcase,
+    faCoins,
+    faGift,
+    faMoneyBill1,
+    faMoneyBillTrendUp,
+    faTicket,
+} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {ChevronRight} from "lucide-react";
 import Image from "next/image";

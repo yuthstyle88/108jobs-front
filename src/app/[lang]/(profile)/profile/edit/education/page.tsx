@@ -1,16 +1,16 @@
 "use client";
 import LoadingCircle from "@/components/LoadingCircle";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
-import { LanguageFile } from "@/constants/language";
-import { getNamespace } from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
+import {getNamespace} from "@/utils/i18nHelper";
 import useNotification from "@/hooks/useNotification";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
-import { useHttpGet } from "@/hooks/useHttpGet";
-import { useHttpPost } from "@/hooks/useHttpPost";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Plus, Trash2} from "lucide-react";
+import {useEffect, useState} from "react";
+import {useFieldArray, useForm} from "react-hook-form";
+import {z} from "zod";
+import {useHttpGet} from "@/hooks/useHttpGet";
+import {useHttpPost} from "@/hooks/useHttpPost";
 
 const EditEducation = () => {
   const userEditLanguage = getNamespace(LanguageFile.PROFILE_USER_EDIT);

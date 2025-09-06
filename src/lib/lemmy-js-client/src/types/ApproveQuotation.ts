@@ -1,6 +1,6 @@
-import type { BillingId } from "./BillingId";
-import type { WalletId } from "./WalletId";
-import type { WorkflowId } from "./WorkflowId";
+import type {BillingId} from "./BillingId";
+import type {WalletId} from "./WalletId";
+import type {WorkflowId} from "./WorkflowId";
 
 // Matches backend ApproveQuotation with camelCase
 export type ApproveQuotation = {

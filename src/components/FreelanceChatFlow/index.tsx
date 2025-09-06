@@ -2,8 +2,8 @@
 
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import { useWorkflowStepper } from '@/hooks/useWorkflowMachine';
-import type { UiFlowStatus } from '@/stores/stateMachineStore';
+import {useWorkflowStepper} from '@/hooks/useWorkflowMachine';
+import type {UiFlowStatus} from '@/stores/stateMachineStore';
 
 export type StatusKey = UiFlowStatus;
 

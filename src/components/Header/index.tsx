@@ -1,16 +1,16 @@
 "use client";
-import { AssetIcon } from "@/constants/icons";
-import { useAuthInfo } from "@/hooks/authenticate-api/useAuthInfo";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {AssetIcon} from "@/constants/icons";
+import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
+import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 import LanguageDropdown from "../LanguageDropDown";
 import UserProfileSection from "./components/UserProfileSection";
 import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
-import { useScrollHandler } from "./hooks/useScrollHandler";
+import {useScrollHandler} from "./hooks/useScrollHandler";
 
 const TYPES: Record<string, { bg: string }> = {
   transparent: {

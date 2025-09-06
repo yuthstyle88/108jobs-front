@@ -235,7 +235,7 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
                                 </div>
                                 <div className="relative bg-white p-4 rounded-lg shadow-sm border border-gray-100">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 relative">
-                                        {portfolioItems.slice(currentImageIndex, currentImageIndex + imagesPerPage).map((item) => (
+                                        {portfolioItems.slice(currentImageIndex, currentImageIndex + imagesPerPage).map((item: any) => (
                                             <div key={item.id}
                                                  className="h-48 rounded-lg flex flex-col items-center justify-center transition-transform duration-300 hover:scale-105">
                                                 <div
@@ -288,7 +288,7 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
                                 </div>
                                 <div className="relative bg-white p-4 rounded-lg shadow-sm border border-gray-100">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative">
-                                        {workSamples.slice(currentSampleIndex, currentSampleIndex + samplesPerPage).map((sample) => (
+                                        {workSamples.slice(currentSampleIndex, currentSampleIndex + samplesPerPage).map((sample: any) => (
                                             <div key={sample.id}
                                                  className="p-4 rounded-lg border border-gray-200 transition-transform duration-300 hover:scale-105">
                                                 <h4 className="font-medium text-gray-800">{sample.title}</h4>

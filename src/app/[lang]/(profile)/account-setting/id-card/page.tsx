@@ -9,11 +9,9 @@ import {useImagePreviewOnly} from "../hooks/useImagePreviewOnly";
 import {usePersonalInfoForm} from "../hooks/usePersonalInfoForm";
 import {InputError} from "@/components/ui/InputError";
 import ErrorModal from "@/components/ui/ErrorModal";
-import {LanguageFile} from "@/constants/language";
-import {getNamespace} from "@/utils/i18nHelper";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 const IdCard = () => {
 
@@ -32,14 +30,14 @@ const IdCard = () => {
     previewUrl: frontPreview,
     handleSelectImage: handleSelectFront,
     setPreviewUrl: setSelectedFront,
-  } = useImagePreviewOnly(profileState === "success" ? card?.frontCard : undefined);
+  } = useImagePreviewOnly(profileState === "success" ? (card as any)?.frontCard : undefined);
 
   const {
     file: backFile,
     previewUrl: backPreview,
     handleSelectImage: handleSelectBack,
     setPreviewUrl: setSelectedBack,
-  } = useImagePreviewOnly(profileState === "success" ? card?.backCard : undefined);
+  } = useImagePreviewOnly(profileState === "success" ? (card as any)?.backCard : undefined);
 
   const {
     register,
@@ -49,7 +47,7 @@ const IdCard = () => {
     isUpdateMuting,
     onSubmit,
   } = usePersonalInfoForm(
-    card,
+    card as any,
     frontFile,
     backFile,
     frontPreview,

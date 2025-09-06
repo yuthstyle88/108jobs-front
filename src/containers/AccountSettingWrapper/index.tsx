@@ -1,17 +1,9 @@
 "use client";
-import { useTranslation } from "react-i18next";
-import { usePathname } from "next/navigation";
-import { useLanguage } from "@/contexts/LanguageContext";
+import {useTranslation} from "react-i18next";
+import {usePathname} from "next/navigation";
+import {useLanguage} from "@/contexts/LanguageContext";
 import Link from "next/link";
-import {
-    User,
-    Mail,
-    ShieldCheck,
-    MapPin,
-    IdCard,
-    CreditCard,
-    Briefcase
-} from "lucide-react";
+import {Briefcase, CreditCard, IdCard, MapPin, ShieldCheck, User} from "lucide-react";
 
 const AccountSettingWrapper = () => {
     const { t } = useTranslation();

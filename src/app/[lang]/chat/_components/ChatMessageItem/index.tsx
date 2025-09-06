@@ -3,7 +3,6 @@
 import Image, {StaticImageData} from "next/image";
 import {ChatMessage} from "@/types/chat";
 import {MessageImage} from "@/constants/images";
-import FilePreview from "../FilePreview";
 
 interface ChatMessageItemProps {
   message: ChatMessage;

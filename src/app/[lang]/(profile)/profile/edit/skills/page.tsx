@@ -12,7 +12,7 @@ import useNotification from "@/hooks/useNotification";
 import {useTranslation} from "react-i18next";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {useHttpPost} from "@/hooks/useHttpPost";
-import { SkillsResponse } from "lemmy-js-client/dist/types/Skill";
+import {SkillsResponse} from "lemmy-js-client/dist/types/Skill";
 
 type SkillLevel = {
   id: string;

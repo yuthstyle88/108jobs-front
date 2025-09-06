@@ -18,9 +18,9 @@ export function amMod(
   communityId: CommunityId,
   myUserInfo?: MyUserInfo,
 ): boolean {
-  return myUserInfo
-    ? myUserInfo.moderates.some(cmv => cmv.community.id === communityId)
-    : false;
+  // MyUserInfo in our client does not include a list of moderated communities.
+  // Until this data is wired, only admins are considered as having mod privileges site-wide.
+  return amAdmin(myUserInfo);
 }
 
 export function amSiteCreator(
@@ -53,7 +53,9 @@ export function canAdmin(
 }
 
 export function moderatesSomething(myUserInfo?: MyUserInfo): boolean {
-  return amAdmin(myUserInfo) || (myUserInfo?.moderates?.length ?? 0) > 0;
+  // Our MyUserInfo type does not expose a moderated communities list.
+  // Treat only admins as moderators until user moderates are provided elsewhere.
+  return amAdmin(myUserInfo);
 }
 
 export function canCreateCommunity(

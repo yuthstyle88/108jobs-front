@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import type { WorkflowStatus } from "lemmy-js-client";
+import {create} from "zustand";
+import type {WorkflowStatus} from "lemmy-js-client";
 
 // Generic, reusable finite state machine store with typed states and events
 export type StateKey = string | number | symbol;
@@ -73,6 +73,7 @@ export const ORDER = [
   "InProgress",
   "PendingEmployerReview",
   "Completed",
+  "Cancelled",
 ] as const satisfies readonly UiFlowStatus[];
 export type OrderTuple = typeof ORDER;
 
@@ -105,5 +106,5 @@ export const useStateMachineStore = createMachineStore<UiFlowStatus, Exclude<Wor
 // Helper mapping functions bridging API <-> UI (identity mapping)
 export const apiToUiStatus = (s: WorkflowStatus | null | undefined): UiFlowStatus =>
   (s as UiFlowStatus) ?? "QuotationPending";
-export const statusToIndex = (s: WorkflowStatus): number => Math.max(0, ORDER.indexOf(apiToUiStatus(s)));
+export const statusToIndex = (s: WorkflowStatus | null | undefined): number => Math.max(0, ORDER.indexOf(apiToUiStatus(s)));
 export const indexToStatus = (i: number): UiFlowStatus => ORDER[i] ?? "QuotationPending";

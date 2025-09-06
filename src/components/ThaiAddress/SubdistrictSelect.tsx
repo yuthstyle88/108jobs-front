@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import type { Option } from "./ProvinceSelect";
+import type {Option} from "./ProvinceSelect";
 
 type Props = Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "onChange" | "value"> & {
     value?: string;

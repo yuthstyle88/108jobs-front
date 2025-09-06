@@ -5,7 +5,6 @@ import * as TabsPrimitive from "@radix-ui/react-tabs";
 import {cn} from "@/lib/utils";
 import BusinessHeader from "@/components/BusinessHeader";
 import Link from "next/link";
-import {useTranslation} from "react-i18next";
 import {LanguageFile} from "@/constants/language";
 import {getNamespace} from "@/utils/i18nHelper";
 

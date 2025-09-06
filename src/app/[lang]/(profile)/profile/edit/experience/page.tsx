@@ -1,18 +1,18 @@
 "use client";
-import { Plus, Trash2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {Plus, Trash2} from "lucide-react";
+import {useEffect, useMemo, useState} from "react";
+import {useFieldArray, useForm} from "react-hook-form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import LoadingCircle from "@/components/LoadingCircle";
 import useNotification from "@/hooks/useNotification";
-import { getNamespace } from "@/utils/i18nHelper";
-import { LanguageFile } from "@/constants/language";
-import { useHttpGet } from "@/hooks/useHttpGet";
-import { useHttpPost } from "@/hooks/useHttpPost";
-import { WorkExperiencesResponse } from "lemmy-js-client/dist/types/WorkExperience";
-import { WorkExperience } from "@/lib/lemmy-js-client/dist";
+import {getNamespace} from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
+import {useHttpGet} from "@/hooks/useHttpGet";
+import {useHttpPost} from "@/hooks/useHttpPost";
+import {WorkExperiencesResponse} from "lemmy-js-client/dist/types/WorkExperience";
+import {WorkExperience} from "@/lib/lemmy-js-client/dist";
 
 const months = [
   "January","February","March","April","May","June",

@@ -1,11 +1,11 @@
 "use client";
 
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { getNamespace } from "@/utils/i18nHelper";
-import { LanguageFile } from "@/constants/language";
-import React, { useEffect } from "react";
+import {z} from "zod";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {getNamespace} from "@/utils/i18nHelper";
+import {LanguageFile} from "@/constants/language";
+import React, {useEffect} from "react";
 import Modal from "@/components/ui/Modal";
 
 const schema = z.object({

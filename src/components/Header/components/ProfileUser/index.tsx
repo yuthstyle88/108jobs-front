@@ -1,19 +1,13 @@
 import {ProfileImage} from "@/constants/images";
 import {useLanguage} from "@/contexts/LanguageContext";
-import {interpolateElement} from "@/utils/interpolateElement";
-import {faMoneyBill1} from "@fortawesome/free-regular-svg-icons";
 import {
     faBarsProgress,
     faBriefcase,
     faBullhorn,
-    faChevronRight,
     faGear,
-    faGift,
     faHeart,
     faMessage,
-    faMoneyBillTrendUp,
     faSignOut,
-    faTicket,
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Person} from "lemmy-js-client";
@@ -21,7 +15,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {UserService} from "@/services";
 import {useTranslation} from "react-i18next";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 type ProfileUserProps = {
     profile: Person;

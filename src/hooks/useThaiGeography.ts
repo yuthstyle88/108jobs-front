@@ -1,7 +1,7 @@
 // Lightweight hooks to load Thai geography datasets from public/thai-geo/*
 // Keep it UI-agnostic so you can place selects anywhere.
 
-import { useEffect, useMemo, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 
 type Province = { code: string | number; nameTh?: string; nameEn?: string; provinceCode?: string | number };

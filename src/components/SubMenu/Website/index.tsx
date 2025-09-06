@@ -1,9 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import {usePublicFetch} from "@/hooks/api-hooks";
-import {API_ROUTES} from "@/api/endpoints";
-import {ServiceCatalogData} from "@/types/catalog";
 import CategoryList from "@/components/CategoryDetail/components/CategoryList";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import Loading from "@/components/Loading";

@@ -1,9 +1,9 @@
 "use client";
 
-import { ChatMessage } from "@/types/chat";
+import {ChatMessage} from "@/types/chat";
 import ChatMessageItem from "../ChatMessageItem";
-import { StaticImageData } from "next/image";
-import { Virtuoso } from "react-virtuoso";
+import {StaticImageData} from "next/image";
+import {Virtuoso} from "react-virtuoso";
 import React from "react";
 
 interface ChatMessagesProps {

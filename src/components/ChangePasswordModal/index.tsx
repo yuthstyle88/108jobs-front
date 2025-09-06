@@ -1,15 +1,15 @@
 "use client";
-import { ERROR_CONSTANTS } from "@/constants/error";
+import {ERROR_CONSTANTS} from "@/constants/error";
 import useNotification from "@/hooks/useNotification";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useMemo, useState} from "react";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
 import LoadingCircle from "../LoadingCircle";
-import { CustomInput } from "../ui/InputField";
+import {CustomInput} from "../ui/InputField";
 import Modal from "../ui/Modal";
-import { useTranslation } from "react-i18next";
-import { useHttpPost } from "@/hooks/useHttpPost";
+import {useTranslation} from "react-i18next";
+import {useHttpPost} from "@/hooks/useHttpPost";
 
 interface PasswordChangeModalProps {
   isOpen: boolean;

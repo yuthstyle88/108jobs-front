@@ -96,7 +96,7 @@ const UserProfileSection = () => {
             className="w-[14px] h-[14px] text-white"
           />
         </button>
-        {isOpen && <ProfileUser profile={person}/>}
+        {isOpen && person && <ProfileUser profile={person}/>}
         {isOpen && (
           <div className="fixed inset-0 z-40" onClick={() => close()}/>
         )}

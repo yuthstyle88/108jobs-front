@@ -185,7 +185,7 @@ const UserProfile = () => {
                               className="text-[14px] leading-[1.65] p-0 font-sans font-medium"
                             >
                               <p className="text-text-primary break-words line-clamp-2">
-                                {education?.schoolName}
+                                {education?.school}
                               </p>
                               <p className="text-text-secondary break-words line-clamp-2">
                                 {education?.major}
@@ -262,7 +262,7 @@ const UserProfile = () => {
                               </p>
                               <p
                                 className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
-                                {skill?.levelName}
+                                {skill?.levelId}
                               </p>
                             </div>
                           );

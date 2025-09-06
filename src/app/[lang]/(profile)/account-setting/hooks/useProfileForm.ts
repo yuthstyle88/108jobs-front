@@ -1,17 +1,7 @@
 import useNotification from "@/hooks/useNotification";
 import {HttpService} from "@/services";
-import {
-    LOADING_REQUEST,
-    RequestState
-} from "@/services/HttpService";
-import {uploadSelectedImage} from "@/utils/helpers";
-import {
-    MyUserInfo,
-    Person,
-    SaveUserProfile, SaveUserSettings,
-    UploadImage,
-    UploadImageResponse
-} from "lemmy-js-client";
+import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
+import {MyUserInfo, Person, SaveUserSettings, UploadImage, UploadImageResponse} from "lemmy-js-client";
 import {IdentityCard} from "lemmy-js-client/dist/types/IdentityCard";
 import {RequestOptions} from "node:http";
 import {useEffect, useState} from "react";

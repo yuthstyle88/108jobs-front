@@ -3,14 +3,13 @@ import ImageUploadModal from "@/components/AvatarUploadModal";
 import PasswordChangeModal from "@/components/ChangePasswordModal";
 import {ProfileImage} from "@/constants/images";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {useDateOptions} from "@/hooks/useDateOptions";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {useImagePicker} from "@/hooks/useImagePicker";
 import Image from "next/image";
-import {useState, useRef} from "react";
+import {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {useProfileForm} from "../hooks/useProfileForm";
-import {Plus, Edit, Trash, ChevronLeft, ChevronRight} from "lucide-react";
+import {ChevronLeft, ChevronRight, Edit, Plus, Trash} from "lucide-react";
 
 interface PortfolioItem {
     id: number;

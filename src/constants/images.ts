@@ -1,19 +1,19 @@
 import {
-  AssetsImageType,
-  BannerImageType,
-  BusinessImageType,
-  CategoriesImageType,
-  CompareImageType,
-  CustomerImageType,
-  FreelancerImageType,
-  JobDetailImageType,
-  LandingImageType,
-  MegaMenuImageType,
-  MessageImageType,
-  ProfileImageType,
-  RewardImageType,
-  SellerImageType,
-  StartSellingImageType
+    AssetsImageType,
+    BannerImageType,
+    BusinessImageType,
+    CategoriesImageType,
+    CompareImageType,
+    CustomerImageType,
+    FreelancerImageType,
+    JobDetailImageType,
+    LandingImageType,
+    MegaMenuImageType,
+    MessageImageType,
+    ProfileImageType,
+    RewardImageType,
+    SellerImageType,
+    StartSellingImageType
 } from "../types/images";
 
 // Compare images - moved up to fix import order

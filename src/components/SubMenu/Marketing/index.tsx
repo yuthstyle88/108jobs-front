@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-;
 import CategoryList from "@/components/CategoryDetail/components/CategoryList";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {useState} from "react";
+
+;
 
 const Marketing: React.FC = () => {
 

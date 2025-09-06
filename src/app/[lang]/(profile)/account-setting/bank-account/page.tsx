@@ -1,14 +1,14 @@
 "use client";
 
-import { LanguageFile } from "@/constants/language";
-import { useHttpDelete } from "@/hooks/useHttpDelete";
-import { useHttpGet } from "@/hooks/useHttpGet";
-import { useHttpPost } from "@/hooks/useHttpPost";
-import { useHttpPut } from "@/hooks/useHttpPut";
-import { getNamespace } from "@/utils/i18nHelper";
-import { Pencil, Plus, Star, Trash2 } from "lucide-react";
-import { useState } from "react";
-import BankAccountModal, { BankAccountFormValues } from "../_components/AddBankAccountModal";
+import {LanguageFile} from "@/constants/language";
+import {useHttpDelete} from "@/hooks/useHttpDelete";
+import {useHttpGet} from "@/hooks/useHttpGet";
+import {useHttpPost} from "@/hooks/useHttpPost";
+import {useHttpPut} from "@/hooks/useHttpPut";
+import {getNamespace} from "@/utils/i18nHelper";
+import {Pencil, Plus, Star, Trash2} from "lucide-react";
+import {useState} from "react";
+import BankAccountModal, {BankAccountFormValues} from "../_components/AddBankAccountModal";
 import ConfirmDeleteModal from "../_components/DeleteBankModal";
 import LoadingBlur from "@/components/LoadingBlur";
 

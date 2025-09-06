@@ -1,7 +1,7 @@
-import { hexToUint8Array, encrypt, decrypt } from "@/lib/web-crypto";
-import { exchange } from "@/lib/api/auth";
-import { UserService } from "@/services";
-import { logDebug } from "./realtime";
+import {hexToUint8Array} from "@/lib/web-crypto";
+import {exchange} from "@/lib/api/auth";
+import {UserService} from "@/services";
+import {logDebug} from "./realtime";
 
 export type AESKey = CryptoKey;
 

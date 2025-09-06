@@ -3,15 +3,15 @@ import {ProfileImage} from "@/constants/images";
 import {useLanguage} from "@/contexts/LanguageContext";
 import {faMessage} from "@fortawesome/free-regular-svg-icons";
 import {
-  faCalendar,
-  faFileContract,
-  faGear,
-  faGift,
-  faIdCard,
-  faListCheck,
-  faMoneyBill1Wave,
-  faRightFromBracket,
-  faUserPen,
+    faCalendar,
+    faFileContract,
+    faGear,
+    faGift,
+    faIdCard,
+    faListCheck,
+    faMoneyBill1Wave,
+    faRightFromBracket,
+    faUserPen,
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";

@@ -1,13 +1,12 @@
 "use client";
 
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useParams } from "next/navigation";
-import { useMemo, useState, useCallback } from "react";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { useChatRooms } from "@/contexts/ChatRoomsContext";
-import type { ChatRoom } from "@/types/chat";
-import { debounce } from "lodash";
-import React from "react";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {useParams} from "next/navigation";
+import React, {useCallback, useMemo, useState} from "react";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {useChatRooms} from "@/contexts/ChatRoomsContext";
+import type {ChatRoom} from "@/types/chat";
+import {debounce} from "lodash";
 import ChatListItem from "@/app/[lang]/chat/_components/ChatListItem";
 
 const ChatWrapper = () => {

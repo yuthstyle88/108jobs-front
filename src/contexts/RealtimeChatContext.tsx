@@ -1,12 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { encrypt, decrypt } from "@/lib/web-crypto";
-import { UserService } from "@/services";
-import { ChatMessage } from "@/types/chat";
-import { v4 as uuidv4 } from "uuid";
+import {useRouter} from "next/navigation";
+import React, {createContext, useCallback, useContext, useEffect, useRef, useState} from "react";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {decrypt, encrypt} from "@/lib/web-crypto";
+import {UserService} from "@/services";
+import {ChatMessage} from "@/types/chat";
+import {v4 as uuidv4} from "uuid";
+import {__DEV__, addOnce, buildWsUrl, getReceiverIdFromRoom, isBase64Like, logDebug, safeParse} from "@/utils/realtime";
+import {ensureSharedKeyForRoom, importAesKey} from "@/utils/crypto";
 
 interface MessagePayload {
     message: string;
@@ -39,9 +41,6 @@ interface WebSocketProviderProps {
     roomId: string;
     children: React.ReactNode;
 }
-
-import { buildWsUrl, isBase64Like, __DEV__, logDebug, logWarn, safeParse, getReceiverIdFromRoom, addOnce } from "@/utils/realtime";
-import { ensureSharedKeyForRoom, importAesKey } from "@/utils/crypto";
 
 function broadcastToListeners(payload: unknown): void {
     const event = { data: JSON.stringify(payload) } as MessageEvent;
@@ -581,7 +580,7 @@ const listeners = new Map<string, (event: MessageEvent) => void>();
 
 export const useWebSocket = (
     key: string,
-    onMessage: (event: MessageEvent<ChatMessage | ChatMessage[]>) => void
+    onMessage: (event: MessageEvent<string | ChatMessage | ChatMessage[]>) => void
 ): WebSocketContextValue => {
     const context = useContext(WebSocketContext);
     if (!context) {

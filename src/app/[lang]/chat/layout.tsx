@@ -3,9 +3,9 @@
 import Header from "@/components/Header";
 import ChatWrapper from "@/containers/ChatWrapper";
 import SpHeader from "@/containers/SpHeader";
-import { ChatLanguageProvider } from "@/contexts/ChatLanguage";
-import { LayoutProps } from "@/types/layout";
-import { ChatRoomsProvider } from "@/contexts/ChatRoomsContext";
+import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
+import {LayoutProps} from "@/types/layout";
+import {ChatRoomsProvider} from "@/contexts/ChatRoomsContext";
 
 export default function ProfileLayout({ children }: LayoutProps) {
     return (

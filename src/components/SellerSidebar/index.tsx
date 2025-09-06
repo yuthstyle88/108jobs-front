@@ -3,7 +3,15 @@
 import {AssetIcon} from "@/constants/icons";
 import {LanguageFile} from "@/constants/language";
 import {getNamespace} from "@/utils/i18nHelper";
-import {faArrowRightToBracket, faCalendar, faFileContract, faGift, faIdCard, faListCheck, faMoneyBill1Wave,} from "@fortawesome/free-solid-svg-icons";
+import {
+    faArrowRightToBracket,
+    faCalendar,
+    faFileContract,
+    faGift,
+    faIdCard,
+    faListCheck,
+    faMoneyBill1Wave,
+} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";

@@ -11,7 +11,7 @@ import {GlobalLoaderProvider} from "@/contexts/GlobalLoaderContext";
 import {GlobalErrorProvider} from "@/contexts/GlobalErrorContext";
 import GlobalError from "@/components/GlobalError";
 import GlobalLoader from "@/components/Loading";
-import { cookies } from "next/headers";
+import {cookies} from "next/headers";
 // Optimize font loading with display swap and preload
 const kanit = Kanit({
   subsets: ["latin", "vietnamese", "thai"],

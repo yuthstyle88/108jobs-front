@@ -1,6 +1,6 @@
-import type { LocalUserId } from "./LocalUserId";
-import type { PostId } from "./PostId";
-import type { CommentId } from "./CommentId";
+import type {LocalUserId} from "./LocalUserId";
+import type {PostId} from "./PostId";
+import type {CommentId} from "./CommentId";
 
 // Matches backend form with camelCase via serde(rename_all = "camelCase")
 export type CreateInvoiceForm = {

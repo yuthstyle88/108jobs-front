@@ -1,4 +1,4 @@
-import { useStateMachineStore, ORDER, UiFlowStatus } from "@/stores/stateMachineStore";
+import {ORDER, UiFlowStatus, useStateMachineStore} from "@/stores/stateMachineStore";
 
 // A stepper-friendly hook that mirrors the issue description API
 export type StepperEvents = { type: 'NEXT' } | { type: 'BACK' } | { type: 'RESET' };
@@ -22,7 +22,8 @@ export const useWorkflowStepper = (): UseWorkflowStepper => {
   const canNext = idx < ORDER.length - 1;
   const canBack = idx > 0;
   const canGo = (to: UiFlowStatus) => {
-    const toIdx = ORDER.indexOf(to);
+    const toIdx = ORDER.indexOf(to as typeof ORDER[number]);
+    if (toIdx < 0) return false;
     return toIdx === idx || Math.abs(toIdx - idx) === 1;
   };
   const send = (e: StepperEvents) => {

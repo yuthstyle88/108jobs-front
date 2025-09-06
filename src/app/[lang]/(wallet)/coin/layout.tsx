@@ -1,6 +1,5 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import SubMenu from "@/components/SubMenu";
 import SpHeader from "@/containers/SpHeader";
 import {generateLocalizedMetadata} from "@/lib/metadata";
 import {LayoutProps} from "@/types/layout";

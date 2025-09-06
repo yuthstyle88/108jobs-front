@@ -5,7 +5,14 @@
  * to ensure that the e2ee implementation is working correctly.
  */
 
-import {arrayBufferToHex, decrypt, encrypt, exportPublicKey, generateEcKeyPair, importEcPublicKeyHex} from './lib/web-crypto';
+import {
+    arrayBufferToHex,
+    decrypt,
+    encrypt,
+    exportPublicKey,
+    generateEcKeyPair,
+    importEcPublicKeyHex
+} from './lib/web-crypto';
 
 async function testKeyExchange() {
   console.log('Testing key exchange process...');

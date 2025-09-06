@@ -5,8 +5,6 @@ import ImageEditor from "../AvatarEditor";
 import Modal from "../ui/Modal";
 import {uploadSelectedImage} from "@/utils/helpers";
 import Loading from "@/components/Loading"; // นำเข้า helper ฟังก์ชัน upload
-import {getNamespace} from "@/utils/i18nHelper";
-import {LanguageFile} from "@/constants/language";
 import {useTranslation} from "react-i18next";
 
 interface ImageUploadModalProps {

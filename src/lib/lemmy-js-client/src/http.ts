@@ -1,10 +1,10 @@
 import {
-    Path,
     Body,
     Controller,
     Delete,
     Get,
     Inject,
+    Path,
     Post,
     Put,
     Queries,
@@ -43,7 +43,8 @@ import type {
     ListPostLikesI,
     ListRegistrationApplicationsI,
     ListReportsI,
-    ListTaglinesI, ListUserChatRoomsQueryI,
+    ListTaglinesI,
+    ListUserChatRoomsQueryI,
     ResolveObjectI,
     SearchI,
     UploadImage,
@@ -70,17 +71,17 @@ import type {BlockCommunity} from "./types/BlockCommunity";
 import type {BlockCommunityResponse} from "./types/BlockCommunityResponse";
 import type {BlockPerson} from "./types/BlockPerson";
 import type {BlockPersonResponse} from "./types/BlockPersonResponse";
-import {CertificatesResponse} from "./types/Certificate";
+import type {CertificatesResponse} from "./types/Certificate";
 import type {ChangePassword} from "./types/ChangePassword";
 import type {CommentReportResponse} from "./types/CommentReportResponse";
 import type {CommentResponse} from "./types/CommentResponse";
 import type {CommunityIdQuery} from "./types/CommunityIdQuery";
 import type {CommunityReportResponse} from "./types/CommunityReportResponse";
 import type {CommunityResponse} from "./types/CommunityResponse";
-import {ContactForm} from "./types/ContactForm";
+import type {ContactForm} from "./types/ContactForm";
 import {ContactResponse} from "./types/ContactResponse";
 import type {CountriesResponse} from "./types/CountriesResponse";
-import {CreateBankAccount} from "./types/CreateBankAccount";
+import type {CreateBankAccount} from "./types/CreateBankAccount";
 import type {CreateComment} from "./types/CreateComment";
 import type {CreateCommentLike} from "./types/CreateCommentLike";
 import type {CreateCommentReport} from "./types/CreateCommentReport";
@@ -89,7 +90,7 @@ import type {CreateCommunityReport} from "./types/CreateCommunityReport";
 import type {CreateCommunityTag} from "./types/CreateCommunityTag";
 import type {CreateCustomEmoji} from "./types/CreateCustomEmoji";
 import type {CreateOAuthProvider} from "./types/CreateOAuthProvider";
-import {CreateOrUpdateAddress} from "./types/CreateOrUpdateAddress";
+import type {CreateOrUpdateAddress} from "./types/CreateOrUpdateAddress";
 import type {CreatePost} from "./types/CreatePost";
 import type {CreatePostLike} from "./types/CreatePostLike";
 import type {CreatePostReport} from "./types/CreatePostReport";
@@ -97,7 +98,7 @@ import type {CreateSite} from "./types/CreateSite";
 import type {CreateTagline} from "./types/CreateTagline";
 import type {CustomEmojiResponse} from "./types/CustomEmojiResponse";
 import type {DeleteAccount} from "./types/DeleteAccount";
-import {DeleteBankAccount} from "./types/DeleteBankAccount";
+import type {DeleteBankAccount} from "./types/DeleteBankAccount";
 import type {DeleteComment} from "./types/DeleteComment";
 import type {DeleteCommunity} from "./types/DeleteCommunity";
 import type {DeleteCommunityTag} from "./types/DeleteCommunityTag";
@@ -113,7 +114,7 @@ import type {EditCustomEmoji} from "./types/EditCustomEmoji";
 import type {EditOAuthProvider} from "./types/EditOAuthProvider";
 import type {EditPost} from "./types/EditPost";
 import type {EditSite} from "./types/EditSite";
-import {EducationResponse} from "./types/Education";
+import type {EducationResponse} from "./types/Education";
 import type {ExchangeKey} from "./types/ExchangeKey";
 import type {ExchangeKeyResponse} from "./types/ExchangeKeyResponse";
 import type {FeaturePost} from "./types/FeaturePost";
@@ -151,9 +152,9 @@ import type {
 } from "./types/GetUnreadRegistrationApplicationCountResponse";
 import type {HideCommunity} from "./types/HideCommunity";
 import type {HidePost} from "./types/HidePost";
-import {IdentityCardForm} from "./types/IdentityCardForm";
+import type {IdentityCardForm} from "./types/IdentityCardForm";
 import {IdentityCardResponse} from "./types/IdentityCardResponse";
-import {LanguageProfilesResponse} from "./types/LanguageProfile";
+import type {LanguageProfilesResponse} from "./types/LanguageProfile";
 import type {ListCommentLikes} from "./types/ListCommentLikes";
 import type {ListCommentLikesResponse} from "./types/ListCommentLikesResponse";
 import type {ListCommunities} from "./types/ListCommunities";
@@ -218,9 +219,9 @@ import type {SaveUserProfile} from "./types/SaveUserProfile";
 import type {SaveUserSettings} from "./types/SaveUserSettings";
 import type {Search} from "./types/Search";
 import type {SearchResponse} from "./types/SearchResponse";
-import {SetDefaultBankAccount} from "./types/SetDefaultBankAccount";
+import type {SetDefaultBankAccount} from "./types/SetDefaultBankAccount";
 import type {SiteResponse} from "./types/SiteResponse";
-import {SkillsResponse} from "./types/Skill";
+import type {SkillsResponse} from "./types/Skill";
 import type {SuccessResponse} from "./types/SuccessResponse";
 import type {Tag} from "./types/Tag";
 import type {TaglineResponse} from "./types/TaglineResponse";
@@ -235,16 +236,16 @@ import type {UploadImageResponse} from "./types/UploadImageResponse";
 import type {UpsertCard} from "./types/UpsertCard";
 import type {UserBlockInstanceParams} from "./types/UserBlockInstanceParams";
 import type {VerifyEmail} from "./types/VerifyEmail";
-import {WorkExperiencesResponse} from "./types/WorkExperience";
+import type {WorkExperiencesResponse} from "./types/WorkExperience";
 import {VisitProfileResponse} from "./types/VisitProfileResponse";
-import {ListUserChatRoomsQuery} from "./types/ListUserChatRoomsQuery";
+import type {ListUserChatRoomsQuery} from "./types/ListUserChatRoomsQuery";
 import {ListUserChatRoomsResponse} from "./types/ListUserChatRoomsResponse";
-import type { ChatRoomId } from "./types/ChatRoomId";
-import type { ChatRoomResponse } from "./types/ChatRoomResponse";
-import type { CreateInvoiceForm } from "./types/CreateInvoiceForm";
-import type { CreateInvoiceResponse } from "./types/CreateInvoiceResponse";
-import type { ApproveQuotation } from "./types/ApproveQuotation";
-import type { BillingOperationResponse } from "./types/BillingOperationResponse";
+import type {ChatRoomId} from "./types/ChatRoomId";
+import type {ChatRoomResponse} from "./types/ChatRoomResponse";
+import type {CreateInvoiceForm} from "./types/CreateInvoiceForm";
+import type {CreateInvoiceResponse} from "./types/CreateInvoiceResponse";
+import type {ApproveQuotation} from "./types/ApproveQuotation";
+import type {BillingOperationResponse} from "./types/BillingOperationResponse";
 
 enum HttpType {
     Get = "GET",

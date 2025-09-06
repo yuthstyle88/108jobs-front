@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { WebSocketProvider } from "@/contexts/RealtimeChatContext";
+import {useEffect, useState} from "react";
+import {WebSocketProvider} from "@/contexts/RealtimeChatContext";
 import ChatSection from "../../_components/ChatSection";
-import { HttpService, UserService } from "@/services";
+import {HttpService, UserService} from "@/services";
 import LoadingBlur from "@/components/LoadingBlur";
-import { REQUEST_STATE } from "@/services/HttpService";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
+import {REQUEST_STATE} from "@/services/HttpService";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
 
 export default function MessageClient({ roomId }: { roomId: string }) {
     const accessToken = UserService.Instance.auth();

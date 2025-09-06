@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import {useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
 import TotpModal from "@/components/Common/Modal/TotpModal";
-import { toast } from "react-toastify";
-import { HttpService, UserService } from "@/services";
+import {toast} from "react-toastify";
+import {HttpService, UserService} from "@/services";
 
 export default function AccountManagePage() {
   const { t } = useTranslation();

@@ -452,7 +452,7 @@ async function toBlob(src: string | File | Blob): Promise<Blob> {
  */
 export async function uploadSelectedImage(
     selectedImage: File | string,
-    uploadImage: (payload: { image: File }) => Promise<any>
+    uploadImage: (payload: { image: File }) => Promise<RequestState<import("@/lib/lemmy-js-client/src/types/UploadImageResponse").UploadImageResponse>>
 ): Promise<string> {
     let file: File;
 
@@ -467,8 +467,9 @@ export async function uploadSelectedImage(
 
     const result = await uploadImage({image: file});
 
-    if (isSuccess(result) && result.data?.imageUrl) {
-        return result.data.imageUrl;
+    if (isSuccess(result)) {
+        const imageUrl = result.data?.images?.[0]?.imageUrl;
+        if (imageUrl) return imageUrl;
     }
 
     console.error("Upload failed response:", result);

@@ -4,7 +4,6 @@ import Link from "next/link";
 import CategoryList from "@/components/CategoryDetail/components/CategoryList";
 import {useState} from "react";
 import {useHttpGet} from "@/hooks/useHttpGet";
-import {CommunityNodeView} from "@/lib/lemmy-js-client/src";
 
 const Advise: React.FC = () => {
   const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);

@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useState } from 'react';
-import { UserService } from "@/services";
+import {useEffect, useState} from 'react';
+import {UserService} from "@/services";
 import Link from "next/link";
 import LanguageDropdown from "@/components/LanguageDropDown";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import MegaMenu from "@/components/Header/components/MegaMenu";
 
 

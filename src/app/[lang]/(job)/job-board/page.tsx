@@ -4,15 +4,9 @@ import {ProfileImage} from "@/constants/images";
 import Image from "next/image";
 import Link from "next/link";
 import {useRouter, useSearchParams} from "next/navigation";
-import {useState, useEffect, useMemo, useCallback} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {debounce} from "lodash";
-import {
-    PostSortType,
-    JobType,
-    IntendedUse,
-    SearchCombinedView,
-    CommunityId,
-} from "lemmy-js-client";
+import {CommunityId, IntendedUse, JobType, PostSortType, SearchCombinedView,} from "lemmy-js-client";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import JobBoardTab from "@/app/[lang]/(job)/job-board/_components/JobBoardTab";
 import {useTranslation} from "react-i18next";

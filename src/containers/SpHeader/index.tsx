@@ -1,18 +1,18 @@
 "use client";
 
-import { LANGUAGES } from "@/constants/language";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { CircleUserRound, Grip, House, Search, ArrowLeft } from "lucide-react";
+import {LANGUAGES} from "@/constants/language";
+import {useLanguage} from "@/contexts/LanguageContext";
+import {faBullhorn} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {ArrowLeft, CircleUserRound, Grip, House, Search} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import {usePathname, useRouter} from "next/navigation";
+import {useEffect, useState} from "react";
 import LanguageBottomSheet from "../SpBottomTab";
 import SPSearch from "./components/SPSearch";
 import SpUserAvatar from "./components/SpUserProfile";
-import { UserService } from "@/services";
+import {UserService} from "@/services";
 
 type SpHeaderProps = {
     showSearch?: boolean;

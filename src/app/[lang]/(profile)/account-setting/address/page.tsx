@@ -1,5 +1,5 @@
 "use client";
-import {useState, useCallback, useEffect} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
@@ -7,7 +7,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import ProvinceSelect from "@/components/ThaiAddress/ProvinceSelect";
 import DistrictSelect from "@/components/ThaiAddress/DistrictSelect";
 import SubdistrictSelect from "@/components/ThaiAddress/SubdistrictSelect";
-import {useProvinces, useDistricts, useSubdistricts} from "@/hooks/useThaiGeography";
+import {useDistricts, useProvinces, useSubdistricts} from "@/hooks/useThaiGeography";
 import useNotification from "@/hooks/useNotification";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {HttpService, REQUEST_STATE} from "@/services/HttpService";

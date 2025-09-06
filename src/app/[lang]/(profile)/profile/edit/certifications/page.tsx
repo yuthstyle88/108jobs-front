@@ -10,7 +10,7 @@ import useNotification from "@/hooks/useNotification";
 import {useTranslation} from "react-i18next";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {useHttpPost} from "@/hooks/useHttpPost";
-import { CertificatesResponse } from "lemmy-js-client/dist/types/Certificate";
+import {CertificatesResponse} from "lemmy-js-client/dist/types/Certificate";
 
 const EditCertifications = () => {
   const {t} = useTranslation();

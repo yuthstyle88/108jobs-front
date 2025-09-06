@@ -1,19 +1,19 @@
 "use client";
-import { API_ROUTES_SELLER } from "@/api/endpoints";
+import {API_ROUTES_SELLER} from "@/api/endpoints";
 import LoadingCircle from "@/components/LoadingCircle";
 import LoadingMultiCircle from "@/components/LoadingMultiCircle";
-import { LanguageFile } from "@/constants/language";
-import { usePrivateFetch } from "@/hooks/api-hooks";
-import { useHttpGet } from "@/hooks/useHttpGet";
-import { useHttpPost } from "@/hooks/useHttpPost";
+import {LanguageFile} from "@/constants/language";
+import {usePrivateFetch} from "@/hooks/api-hooks";
+import {useHttpGet} from "@/hooks/useHttpGet";
+import {useHttpPost} from "@/hooks/useHttpPost";
 import useNotification from "@/hooks/useNotification";
-import { LanguageProfilesResponse } from "@/lib/lemmy-js-client/dist/types/LanguageProfile";
-import { getNamespace } from "@/utils/i18nHelper";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
+import {LanguageProfilesResponse} from "@/lib/lemmy-js-client/dist/types/LanguageProfile";
+import {getNamespace} from "@/utils/i18nHelper";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {Plus, Trash2} from "lucide-react";
+import {useEffect, useState} from "react";
+import {useFieldArray, useForm} from "react-hook-form";
+import {z} from "zod";
 
 type LevelItem = {
   id: string;
