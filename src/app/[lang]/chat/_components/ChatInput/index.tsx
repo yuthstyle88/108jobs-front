@@ -63,7 +63,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
         <form
             data-testid="chat-form"
             onSubmit={handleSubmit(internalSubmit)}
-            className="flex flex-col gap-2"
+            className="flex flex-col gap-2 mt-2"
         >
             <div className="flex items-center w-full">
                 <input

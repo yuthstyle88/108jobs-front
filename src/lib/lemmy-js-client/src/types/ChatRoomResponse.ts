@@ -8,6 +8,5 @@ export type ChatRoomResponse = {
     participants: ChatParticipant[],
     lastMessage?: LastMessage,
     // Workflow state can also be present at the wrapper level depending on API
-    status?: WorkflowStatus;
     workflowStatus?: WorkflowStatus;
 }

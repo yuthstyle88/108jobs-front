@@ -3136,6 +3136,7 @@ export class LemmyHttp extends Controller {
         );
     }
 
+
     /**
      * Set the headers (can be used to set the auth header)
      */

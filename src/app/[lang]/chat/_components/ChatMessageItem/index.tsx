@@ -1,11 +1,13 @@
 "use client";
 
 import Image, {StaticImageData} from "next/image";
-import {ChatMessage} from "@/types/chat";
+import type { ChatMessage } from "lemmy-js-client";
 import {MessageImage} from "@/constants/images";
 
+type UIChatMessage = ChatMessage & { isOwner?: boolean };
+
 interface ChatMessageItemProps {
-  message: ChatMessage;
+  message: UIChatMessage;
   partnerAvatar?: string | StaticImageData;
 }
 
@@ -42,11 +44,38 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   partnerAvatar,
 }) => {
   const isIncoming = !message.isOwner;
-  const time = new Date(message.createdAt).toLocaleTimeString("th-TH",
-    {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+
+  const toLocalTime = (iso: string, locale: string) => {
+    const format = (d: Date) => d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
+    let d = new Date(iso);
+    if (!isNaN(d.getTime())) return format(d);
+    // Attempt to normalize fractional seconds to 3 digits (e.g., 2025-09-03T03:38:35.079201Z -> .079Z)
+    if (iso && iso.includes(".")) {
+      try {
+        const [head, rest] = iso.split(".");
+        // find timezone part
+        let tz = "";
+        let frac = rest;
+        const tzMarkers = ["Z", "+", "-"] as const;
+        let idx = -1;
+        for (const m of tzMarkers) {
+          const i = rest.indexOf(m);
+          if (i > 0) { idx = i; break; }
+        }
+        if (idx >= 0) {
+          tz = rest.slice(idx);
+          frac = rest.slice(0, idx);
+        }
+        const frac3 = (frac + "000").slice(0, 3);
+        const norm = `${head}.${frac3}${tz || "Z"}`;
+        d = new Date(norm);
+        if (!isNaN(d.getTime())) return format(d);
+      } catch {/* ignore */}
+    }
+    return "";
+  };
+
+  const time = toLocalTime(message.createdAt, "th-TH");
 
   // Try to parse message.content as JSON for special rendering
   let parsed: ProposedQuoteMessage | null = null;

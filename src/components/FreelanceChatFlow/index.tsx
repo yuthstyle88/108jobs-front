@@ -16,6 +16,7 @@ export type FlowActions = {
     onSubmitDelivery?: () => void;
     onRequestRevision?: () => void;
     onReleasePayment?: () => void;
+    onCancel?: () => void;
 };
 
 export type FreelanceChatFlowProps = {
@@ -27,11 +28,12 @@ export type FreelanceChatFlowProps = {
 } & FlowActions;
 
 const STEPS: Array<{ key: StatusKey; title: string; sub: string }> = [
-    { key: 'QuotationPending', title: 'รอเสนอ/ยืนยันราคา', sub: 'กำลังพิจารณาใบเสนอราคา' },
-    { key: 'OrderApproved', title: 'นายจ้างอนุมัติ', sub: 'ตกลงร่วมงาน' },
-    { key: 'InProgress', title: 'กำลังทำงาน', sub: 'แชทได้ตลอด (ไม่ใช่สถานะ)' },
-    { key: 'PendingEmployerReview', title: 'รอตรวจงาน', sub: 'ส่งงาน / รอรีวิว' },
-    { key: 'Completed', title: 'เสร็จสิ้น', sub: 'ปล่อยเงิน' },
+    { key: 'QuotationPending', title: 'Quotation Pending', sub: 'Quotation created by freelancer, waiting for employer review' },
+    { key: 'OrderApproved', title: 'Order Approved', sub: 'Employer approved quotation, became an order, ready for invoice payment' },
+    { key: 'InProgress', title: 'In Progress', sub: 'Employer paid invoice, money in escrow, waiting for work submission' },
+    { key: 'PendingEmployerReview', title: 'Pending Employer Review', sub: 'Work submitted to employer; pending employer review before payment release' },
+    { key: 'Completed', title: 'Completed', sub: 'Employer approved work, money released to freelancer' },
+    { key: 'Cancelled', title: 'Cancelled', sub: 'Quotation/order cancelled before payment' },
 ];
 
 const DOT_COLORS: Record<StatusKey, string> = {
@@ -57,6 +59,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  onSubmitDelivery,
                                                                  onRequestRevision,
                                                                  onReleasePayment,
+                                                                 onCancel,
                                                              }) => {
     const {t} = useTranslation();
     const stepper = useWorkflowStepper();
@@ -65,7 +68,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
     const currentStatus: StatusKey = (isControlled ? controlledStatus! : (derivedStatus || 'QuotationPending')) as StatusKey;
     const currentIndex = Math.max(0, STEPS.findIndex((s) => s.key === currentStatus));
 
-    const ORDER: StatusKey[] = (stepper?.ORDER as StatusKey[]) || ['QuotationPending','OrderApproved','InProgress','PendingEmployerReview','Completed'];
+    const ORDER: StatusKey[] = (stepper?.ORDER as StatusKey[]) || ['QuotationPending','OrderApproved','InProgress','PendingEmployerReview','Completed','Cancelled'];
 
     const handleActivateStep = (toIndex: number, targetKey: StatusKey) => {
         const curIdx = currentIndex;
@@ -99,26 +102,34 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
             </button>
         );
 
+        const cancelBtn = stepper?.canCancel && key !== 'Completed' && key !== 'Cancelled'
+            ? btn(t('profileChat.cancelJob') || 'ยกเลิกงาน', onCancel || stepper?.cancel, 'ghost')
+            : null;
+
         switch (key) {
             case 'QuotationPending':
                 return [
-                    btn(t('profileChat.proposeQuote') || 'เสนอราคา', onProposeQuote),
+                    btn(t('profileChat.proposeQuote') || 'Send quotation', onProposeQuote),
                     btn(t('profileChat.sendBriefMessage') || 'ส่งข้อความหาไฟล์บรีฟ', onSendMessage, 'ghost'),
+                    ...(cancelBtn ? [cancelBtn] : []),
                 ];
             case 'OrderApproved':
                 return [
                     btn(t('profileChat.uploadDraft') || 'แนบไฟล์ต้นฉบับ', onUploadAsset),
                     btn(t('profileChat.sendMessage') || 'ส่งข้อความ', onSendMessage, 'ghost'),
+                    ...(cancelBtn ? [cancelBtn] : []),
                 ];
             case 'InProgress':
                 return [
                     btn(t('profileChat.uploadFileLink') || 'แนบไฟล์/ลิงก์', onUploadAsset),
                     btn(t('profileChat.submitDelivery') || 'ส่งงาน', onSubmitDelivery, 'ghost'),
+                    ...(cancelBtn ? [cancelBtn] : []),
                 ];
             case 'PendingEmployerReview':
                 return [
                     btn(t('profileChat.requestRevision') || 'ขอแก้ไขรอบใหม่', onRequestRevision),
                     btn(t('profileChat.releasePayment') || 'ปล่อยเงิน/ปิดงาน', onReleasePayment, 'ghost'),
+                    ...(cancelBtn ? [cancelBtn] : []),
                 ];
             case 'Completed':
                 return [];
@@ -143,7 +154,6 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
             >
                 {STEPS.map((step, index) => {
                     const isActive = step.key === currentStatus;
-                    const isPast = index <= currentIndex;
                     const isFuture = index > currentIndex;
 
                     return (

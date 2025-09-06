@@ -8,7 +8,7 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {API_ROUTES} from "@/api/endpoints";
 import LoadingBlur from "@/components/LoadingBlur";
 import {CategoriesImage, ProfileImage} from "@/constants/images";
-import {ChatMessage} from "@/types/chat";
+import type { ChatMessage as WsChatMessage } from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
@@ -35,20 +35,25 @@ interface ChatSectionProps {
 
 const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerAvatar }) => {
     const { updateRoomLastMessage } = useChatRooms();
-    const { state: stepperState, idx: activeStep, send, canGo, ORDER } = useWorkflowStepper();
+    const { state: stepperState, idx: activeStep, send, canGo, ORDER, cancel } = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
     const { t } = useTranslation();
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    type UIChatMessage = WsChatMessage & { isOwner?: boolean };
+        const [messages, setMessages] = useState<UIChatMessage[]>([]);
     const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null); // New error state for API failures
-    const endRef = useRef<HTMLDivElement>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const topSentinelRef = useRef<HTMLDivElement>(null);
+    const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
+    const setScrollRef = useCallback((el: HTMLDivElement | null) => {
+        scrollContainerRef.current = el;
+        if (el) setScrollParentEl(el);
+    }, []);
     const isSubmittingRef = useRef(false);
     const { localUser } = useMyUser();
+    const latestIncomingRef = useRef<{ roomId: string; content: string; senderId: number; timestamp: string } | null>(null);
 
     useEffect(() => {
         const handleResize = () => {
@@ -63,18 +68,23 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
 
     const { sendMessage, fetchHistory, isConnected, hasMoreMessages, isFetching } = useWebSocket(
         `chat_${roomId}`,
-        (event: MessageEvent<string | ChatMessage | ChatMessage[]>) => {
-            let parsed: ChatMessage | ChatMessage[];
+        (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) => {
+            let parsed: WsChatMessage | WsChatMessage[];
             try {
                 const raw = event.data as unknown;
-                parsed = typeof raw === 'string' ? JSON.parse(raw) : (raw as ChatMessage | ChatMessage[]);
+                parsed = typeof raw === 'string' ? JSON.parse(raw as string) : (raw as any);
             } catch (e) {
                 console.error("Failed to parse WebSocket message:", e);
                 return;
             }
 
-            const isHistoryBatch = Array.isArray(parsed);
-            const items: ChatMessage[] = isHistoryBatch ? (parsed as ChatMessage[]) : [parsed as ChatMessage];
+            // New protocol: provider broadcasts UI-ready ChatMessage objects (single or array)
+            let items: WsChatMessage[] = [];
+            if (Array.isArray(parsed)) {
+                items = parsed as WsChatMessage[];
+            } else if (parsed && typeof parsed === 'object') {
+                items = [parsed as WsChatMessage];
+            }
             if (!items.length) return;
 
             setMessages((prev) => {
@@ -119,30 +129,34 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 );
 
-                if (!isHistoryBatch && latestTs > 0 && latestContent != null && latestSenderId != null) {
+                // Defer room preview updates only for new single-message events (not history batches)
+                if (items.length === 1 && latestTs > 0 && latestContent != null && latestSenderId != null) {
                     const tsIso = new Date(latestTs).toISOString();
-                    try {
-                        updateRoomLastMessage(roomId, latestContent, latestSenderId, tsIso);
-                    } catch {
-                    }
-                    try {
-                        window.dispatchEvent(
-                            new CustomEvent("chat:new-message", {
-                                detail: {
-                                    roomId,
-                                    content: latestContent,
-                                    senderId: latestSenderId,
-                                    timestamp: tsIso,
-                                },
-                            })
-                        );
-                    } catch {
-                    }
+                    latestIncomingRef.current = {
+                        roomId,
+                        content: latestContent,
+                        senderId: latestSenderId,
+                        timestamp: tsIso,
+                    };
                 }
                 return sorted;
             });
         }
     );
+
+    // After commit, propagate last incoming message to ChatRooms context
+    useEffect(() => {
+        const d = latestIncomingRef.current;
+        if (!d) return;
+        try {
+            updateRoomLastMessage(d.roomId, d.content, d.senderId, d.timestamp);
+            try {
+                window.dispatchEvent(new CustomEvent("chat:new-message", { detail: d }));
+            } catch {}
+        } finally {
+            latestIncomingRef.current = null;
+        }
+    }, [messages]);
 
     const { trigger: uploadFile, isMutating: isUploading } = usePrivateImagePost(
         API_ROUTES.chat.uploadFile + `?roomId=${roomId}`
@@ -248,7 +262,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
                     status: 0,
                     isOwner: true,
-                } as ChatMessage,
+                } as WsChatMessage,
                 ...prev,
             ]);
 
@@ -308,7 +322,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
                     status: 0,
                     isOwner: true,
-                } as ChatMessage,
+                } as WsChatMessage,
                 ...prev,
             ]);
 
@@ -398,6 +412,37 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             } catch {
             }
         },
+        onCancel: () => {
+            // move to Cancelled via state machine
+            try {
+                cancel();
+            } catch {}
+            // Send a human-readable cancel message
+            const messageId = uuidv4();
+            const content = t("profileChat.cancelJobMsg") || "The job has been cancelled.";
+            setMessages((prev) => [
+                {
+                    id: messageId,
+                    roomId: currentRoom?.roomId || roomId,
+                    content,
+                    createdAt: new Date().toISOString(),
+                    senderId: Number(localUser?.id) || 0,
+                    receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
+                    status: 0,
+                    isOwner: true,
+                } as WsChatMessage,
+                ...prev,
+            ]);
+            sendMessage({ message: content, id: messageId });
+            try {
+                const tsIso = new Date().toISOString();
+                window.dispatchEvent(
+                    new CustomEvent("chat:new-message", {
+                        detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                    })
+                );
+            } catch {}
+        },
     };
 
     const onSubmit = useCallback(
@@ -422,7 +467,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
                     status: 0,
                     isOwner: true,
-                } as ChatMessage,
+                } as WsChatMessage,
                 ...prev,
             ]);
             try {
@@ -464,63 +509,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         }
     };
 
+    const didInitialFetchRef = useRef(false);
     useEffect(() => {
-        const rootEl = scrollContainerRef.current;
-        if (!topSentinelRef.current || !rootEl || !hasMoreMessages || !isConnected) {
-            console.log("[CHAT][OBS] Skipping observer setup", {
-                hasTopSentinel: !!topSentinelRef.current,
-                hasRoot: !!rootEl,
-                hasMoreMessages,
-                isConnected,
-            });
-            return;
-        }
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                const e = entries[0];
-                console.log("[CHAT][OBS] Intersection change", {
-                    isIntersecting: e.isIntersecting,
-                    ratio: e.intersectionRatio,
-                    rootBounds: e.rootBounds ? { height: e.rootBounds.height, top: e.rootBounds.top } : null,
-                    boundingClientRect: { top: e.boundingClientRect.top, height: e.boundingClientRect.height },
-                });
-                if (e.isIntersecting && e.intersectionRatio > 0) {
-                    if (isFetching) {
-                        console.log("[CHAT][OBS] Visible but skip, already fetching");
-                        return;
-                    }
-                    console.log("[CHAT][OBS] Top sentinel visible -> fetchHistory()");
-                    const scrollHeight = rootEl.scrollHeight;
-                    fetchHistory()
-                        .then(() => {
-                            const newScrollHeight = rootEl.scrollHeight;
-                            console.log("[CHAT][OBS] Scroll adjustment", {
-                                oldHeight: scrollHeight,
-                                newHeight: newScrollHeight,
-                                scrollTop: rootEl.scrollTop,
-                            });
-                            rootEl.scrollTop += newScrollHeight - scrollHeight;
-                        })
-                        .catch((err) => {
-                            console.error("[CHAT][OBS] Failed to fetch history:", err);
-                        });
-                }
-            },
-            { root: rootEl, threshold: [0, 0.1], rootMargin: "10px" }
-        );
-
-        observer.observe(topSentinelRef.current);
-
-        return () => {
-            console.log("[CHAT][OBS] Disconnecting observer");
-            observer.disconnect();
-        };
-    }, [fetchHistory, hasMoreMessages, isConnected]);
-
-    useEffect(() => {
-        if (isConnected) {
-            console.log("[CHAT][INIT] Connected -> initial fetchHistory()");
+        if (isConnected && !didInitialFetchRef.current) {
+            didInitialFetchRef.current = true;
+            console.log("[CHAT][INIT] Connected -> initial fetchHistory() (once per connection)");
             fetchHistory()
                 .then(() => {
                     setIsInitialLoading(false);
@@ -529,10 +522,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     console.error("[CHAT][INIT] Failed to fetch initial history:", err);
                     setIsInitialLoading(false);
                 });
-        } else {
+        } else if (!isConnected) {
+            // Reset for next connection attempt
+            didInitialFetchRef.current = false;
             console.log("[CHAT][INIT] Not connected yet");
         }
-    }, [isConnected, fetchHistory]);
+    }, [isConnected]);
 
     const prevLatestTsRef = useRef<number>(0);
     useEffect(() => {
@@ -591,17 +586,20 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                         isFlowOpen={isFlowOpen}
                     />
                     <div
-                        ref={scrollContainerRef}
+                        ref={setScrollRef}
                         data-testid="chat-list"
-                        className="flex-1 overflow-y-auto p-3 sm:p-4 bg-gray-50 flex"
+                        className="flex-1 px-3 sm:px-4 pt-3 sm:pt-4 pb-0 bg-gray-50 flex"
                         aria-live="polite"
                     >
-                        <div ref={endRef} />
                         <ChatMessages
                             messages={messages}
                             partnerAvatar={currentRoom?.partnerAvatar || ProfileImage.avatar}
-                            customScrollParent={scrollContainerRef.current}
+                            customScrollParent={scrollParentEl}
                             onTopReached={() => {
+                                console.log('[CHAT][SCROLL] Top reached -> attempt fetchHistory', {
+                                    hasMoreMessages,
+                                    isFetching,
+                                });
                                 if (!hasMoreMessages || isFetching) return;
                                 const rootEl = scrollContainerRef.current;
                                 const oldHeight = rootEl?.scrollHeight || 0;
@@ -666,6 +664,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             onSubmitDelivery={flowActions.onSubmitDelivery}
                             onRequestRevision={flowActions.onRequestRevision}
                             onReleasePayment={flowActions.onReleasePayment}
+                            onCancel={flowActions.onCancel}
                         />
                     </div>
                     <div className="p-3 sm:p-4 md:p-6 bg-white border-t border-gray-200">
@@ -722,6 +721,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 onSubmitDelivery={flowActions.onSubmitDelivery}
                                 onRequestRevision={flowActions.onRequestRevision}
                                 onReleasePayment={flowActions.onReleasePayment}
+                                onCancel={flowActions.onCancel}
                             />
                         </div>
                         <div className="p-3 sm:p-4 bg-white">

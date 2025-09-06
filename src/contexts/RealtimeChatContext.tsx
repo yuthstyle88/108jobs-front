@@ -5,7 +5,7 @@ import React, {createContext, useCallback, useContext, useEffect, useRef, useSta
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {decrypt, encrypt} from "@/lib/web-crypto";
 import {UserService} from "@/services";
-import {ChatMessage} from "@/types/chat";
+import type {ChatMessage} from "lemmy-js-client";
 import {v4 as uuidv4} from "uuid";
 import {__DEV__, addOnce, buildWsUrl, getReceiverIdFromRoom, isBase64Like, logDebug, safeParse} from "@/utils/realtime";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils/crypto";
@@ -43,7 +43,7 @@ interface WebSocketProviderProps {
 }
 
 function broadcastToListeners(payload: unknown): void {
-    const event = { data: JSON.stringify(payload) } as MessageEvent;
+    const event = {data: JSON.stringify(payload)} as MessageEvent;
     logDebug(`broadcastToListeners: Broadcasting payload`, payload);
     for (const fn of listeners.values()) fn(event);
 }
@@ -56,13 +56,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     const [isConnected, setIsConnected] = useState(false);
     const [socket, setSocket] = useState<WebSocket | null>(null);
     const [connectionError, setConnectionError] = useState(false);
-    const [currentPage, setCurrentPage] = useState(1);
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
     const [isFetching, setIsFetching] = useState(false);
     const pageSize = 20;
-    const [afterId, setAfterId] = useState<number | null>(null);
+    const [pageCursor, setPageCursor] = useState<string | null>(null);
     const router = useRouter();
-    const { localUser } = useMyUser();
+    const {localUser} = useMyUser();
     const isE2EMock = process.env.NEXT_PUBLIC_E2E_MODE === "mock";
 
     const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -85,6 +84,9 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             }
 
             if (!hasMoreMessages || isFetching || !isConnected) {
+                if (!isConnected) console.log('[WS][FETCH] Early return: not connected');
+                else if (isFetching) console.log('[WS][FETCH] Early return: already fetching');
+                else if (!hasMoreMessages) console.log('[WS][FETCH] Early return: no more messages');
                 resolve();
                 return;
             }
@@ -92,51 +94,57 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             setIsFetching(true);
             fetchResolveRef.current = resolve;
 
-            const cursorPayload: any = {
+            const payload: any = {
                 op: "FetchHistory",
                 sender_id: Number(localUser?.id) || 0,
                 receiver_id: tempReceiverId,
                 room_id: roomId,
                 content: "",
-                after_id: afterId ?? undefined,
+                page_cursor: pageCursor ?? undefined,
+                page_back: true,
                 limit: pageSize,
-            };
-            const payload = {
-                ...cursorPayload,
-                page: currentPage,
-                page_size: pageSize,
             };
 
             if (fetchTimeoutRef.current) {
                 clearTimeout(fetchTimeoutRef.current);
                 fetchTimeoutRef.current = null;
             }
-            const timeout = setTimeout(() => {
+            fetchTimeoutRef.current = setTimeout(() => {
                 setIsFetching(false);
                 fetchResolveRef.current = null;
                 fetchTimeoutRef.current = null;
+                console.warn('[WS][FETCH] Fetch history timeout after 5s');
                 reject(new Error('Fetch history timeout after 5s'));
             }, 5000);
-            fetchTimeoutRef.current = timeout;
 
             try {
                 if (socket?.readyState === WebSocket.OPEN) {
+                    console.log('[WS][FETCH] Sending FetchHistory', {
+                        page_cursor: payload.page_cursor,
+                        page_back: payload.page_back,
+                        limit: payload.limit
+                    });
                     socket.send(JSON.stringify(payload));
-                    setCurrentPage((prev) => prev + 1);
                 } else {
+                    console.warn('[WS][FETCH] WebSocket not open');
                     setIsFetching(false);
-                    clearTimeout(timeout);
-                    fetchTimeoutRef.current = null;
+                    if (fetchTimeoutRef.current) {
+                        clearTimeout(fetchTimeoutRef.current);
+                        fetchTimeoutRef.current = null;
+                    }
                     reject(new Error('WebSocket not open'));
                 }
             } catch (e) {
+                console.error('[WS][FETCH] Error sending FetchHistory', e);
                 setIsFetching(false);
-                clearTimeout(timeout);
-                fetchTimeoutRef.current = null;
+                if (fetchTimeoutRef.current) {
+                    clearTimeout(fetchTimeoutRef.current);
+                    fetchTimeoutRef.current = null;
+                }
                 reject(e);
             }
         });
-    }, [socket, isE2EMock, roomId, localUser?.id, currentPage, hasMoreMessages, isFetching, afterId, isConnected]);
+    }, [socket, isE2EMock, roomId, localUser?.id, hasMoreMessages, isFetching, isConnected, pageCursor, pageSize]);
 
     // Unified WebSocket connection effect (duplicates removed)
     useEffect(() => {
@@ -166,10 +174,9 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 setIsConnected(true);
                 setConnectionError(false);
                 isManuallyClosingRef.current = false;
-                setAfterId(null);
+                setPageCursor(null);
                 setHasMoreMessages(true);
                 setIsFetching(false);
-                setCurrentPage(1);
                 if (reconnectTimeoutRef.current) {
                     clearTimeout(reconnectTimeoutRef.current);
                     reconnectTimeoutRef.current = null;
@@ -188,225 +195,80 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     const token = UserService.Instance.auth();
                     const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
 
-                    let parsed: any = safeParse(event.data);
-                    if (parsed === 'pong' || parsed === 'ping' || parsed?.op === 'Ping') {
+                    let payload: any = safeParse(event.data);
+                    if (payload === 'pong' || payload === 'ping' || payload?.op === 'Ping') {
                         return;
                     }
-                    if (typeof parsed === "string") parsed = safeParse(parsed);
-
-                    const items: any[] = Array.isArray(parsed) ? parsed : parsed && typeof parsed === "object" ? [parsed] : [];
-                    if (__DEV__) console.debug(`onmessage: Parsed ${items.length} items from event data`);
+                    if (typeof payload === 'string') payload = safeParse(payload);
 
                     const transformedItems: ChatMessage[] = [];
 
-                    if (parsed?.op === "FetchHistory" && Array.isArray(parsed.messages)) {
-                        if (parsed.room_id !== roomId) {
-                            if (__DEV__) console.debug('[WS][MSG] Ignored FetchHistory for other room', { got: parsed.room_id, expected: roomId });
-                            return;
+                    // Plain ChatMessageView line: { message, sender, room }
+                    if (payload && typeof payload === 'object' && payload.message) {
+                        const msgView = payload;
+                        const m = { ...msgView.message, room_id: msgView.room?.id || msgView.message?.room_id };
+                        const createdAtVal = m.created_at || m.createdAt || new Date().toISOString();
+                        const messageSignature = `${m.content}:${createdAtVal}`;
+                        if (addOnce(receivedMessagesRef.current, messageSignature)) {
+                            let content = m.content;
+                            if (token && sharedKeyHex && isBase64Like(m.content)) {
+                                try {
+                                    const aesKey = await importAesKey(sharedKeyHex, 'decrypt');
+                                    const plain = await decrypt(m.content, token, aesKey);
+                                    if (plain.length > 0) content = plain;
+                                } catch (e) {
+                                    console.warn('onmessage: Decryption failed for message line', e);
+                                }
+                            }
+                            const roomIdMapped = m.room_id || m.roomId || roomId;
+                            const senderIdMapped = Number(m.sender_id ?? m.senderId) || 0;
+                            const receiverIdMapped = Number(m.receiver_id ?? m.receiverId) || getReceiverIdFromRoom(roomIdMapped);
+                            const createdAtMapped = m.created_at || m.createdAt || createdAtVal;
+                            transformedItems.push({
+                                id: m.id || `msg_${uuidv4()}`,
+                                senderId: senderIdMapped,
+                                receiverId: receiverIdMapped,
+                                roomId: roomIdMapped,
+                                content,
+                                status: typeof m.status === 'number' ? m.status : 1,
+                                createdAt: createdAtMapped,
+                                isOwner: senderIdMapped === Number(localUser?.id),
+                            });
                         }
-
-                        // Clear any pending fetch timeout for FetchHistory
+                    }
+                    // Plain pagination line: { prevPage/prev_page, nextPage/next_page }
+                    else if (payload && typeof payload === 'object' && (payload.prevPage || payload.prev_page || payload.nextPage || payload.next_page)) {
+                        const prev = payload.prev_page ?? payload.prevPage ?? null;
+                        const next = payload.next_page ?? payload.nextPage ?? null;
+                        if (typeof prev === 'string' && prev.length > 0) {
+                            setPageCursor(prev);
+                            setHasMoreMessages(true);
+                        } else {
+                            setPageCursor(null);
+                            setHasMoreMessages(false);
+                        }
                         if (fetchTimeoutRef.current) {
                             clearTimeout(fetchTimeoutRef.current);
                             fetchTimeoutRef.current = null;
                         }
                         setIsFetching(false);
-                        if (parsed.messages.length < pageSize) {
-                            setHasMoreMessages(false);
-                        }
-
-                        for (const msg of parsed.messages) {
-                            const createdAtVal = msg.created_at || msg.createdAt || new Date().toISOString();
-                            const messageSignature = `${msg.content}:${createdAtVal}`;
-                            if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                                continue;
-                            }
-
-                            let content = msg.content;
-                            if (token && sharedKeyHex && isBase64Like(msg.content)) {
-                                try {
-                                    const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-                                    const plain = await decrypt(msg.content, token, aesKey);
-                                    if (plain.length > 0) {
-                                        content = plain;
-                                    }
-                                } catch (e) {
-                                    console.warn(`onmessage: Decryption failed for FetchHistory message`, e);
-                                }
-                            }
-
-                            transformedItems.push({
-                                id: msg.id || `msg_${uuidv4()}`,
-                                senderId: Number(msg.sender_id) || 0,
-                                receiverId: Number(msg.receiver_id) || getReceiverIdFromRoom(roomId),
-                                roomId: msg.room_id || roomId,
-                                content,
-                                status: typeof msg.status === "number" ? msg.status : 1,
-                                createdAt: createdAtVal,
-                                isOwner: Number(msg.sender_id) === Number(localUser?.id),
-                            });
-                        }
                         if (fetchResolveRef.current) {
-                            if (fetchTimeoutRef.current) {
-                                clearTimeout(fetchTimeoutRef.current);
-                                fetchTimeoutRef.current = null;
-                            }
                             fetchResolveRef.current();
                             fetchResolveRef.current = null;
                         }
-                    } else if (Array.isArray(parsed) && parsed.length && typeof parsed[0] === 'object') {
-                        for (const msg of parsed) {
-                            if (!msg?.content) continue;
-                            const createdAtVal = msg.created_at || msg.createdAt || new Date().toISOString();
-                            const messageSignature = `${msg.content}:${createdAtVal}`;
-                            if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                                continue;
-                            }
-                            let content = msg.content;
-                            if (token && sharedKeyHex && isBase64Like(msg.content)) {
-                                try {
-                                    const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-                                    const plain = await decrypt(msg.content, token, aesKey);
-                                    if (plain.length > 0) {
-                                        content = plain;
-                                    }
-                                } catch {}
-                            }
-                            transformedItems.push({
-                                id: msg.id || `msg_${uuidv4()}`,
-                                senderId: Number(msg.sender_id) || 0,
-                                receiverId: Number(msg.receiver_id) || getReceiverIdFromRoom(roomId),
-                                roomId: msg.room_id || roomId,
-                                content,
-                                status: typeof msg.status === "number" ? msg.status : 1,
-                                createdAt: createdAtVal,
-                                isOwner: Number(msg.sender_id) === Number(localUser?.id),
-                            });
-                        }
-                    } else if (typeof parsed === "string" && isBase64Like(parsed)) {
-                        const messageSignature = `${parsed}:${new Date().toISOString().slice(0, 19)}`;
-                        if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                            return;
-                        }
-
-                        if (token && sharedKeyHex) {
-                            try {
-                                const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-                                const plain = await decrypt(parsed, token, aesKey);
-                                if (plain.length > 0) {
-                                    transformedItems.push({
-                                        id: sentMessagesRef.current.has(parsed) ? Array.from(sentMessagesRef.current).find((id) => id.includes(parsed)) || `msg_${uuidv4()}` : `msg_${uuidv4()}`,
-                                        senderId: localUser?.id,
-                                        roomId,
-                                        content: plain,
-                                        status: 1,
-                                        createdAt: new Date().toISOString(),
-                                        isOwner: false,
-                                    });
-                                }
-                            } catch (e) {
-                                console.warn(`onmessage: Failed to decrypt raw base64 message: ${parsed}`, e);
-                            }
-                        } else {
-                            console.warn(`onmessage: No sharedKey for raw base64 message: ${parsed}`);
-                        }
-                    } else if (parsed?.room_id && parsed?.sender_id && parsed?.content) {
-                        if (parsed.room_id !== roomId) {
-                            if (__DEV__) console.debug(`onmessage: Ignored message for other room ${parsed.room_id}`);
-                        } else {
-                            const createdAtVal = parsed.created_at || parsed.createdAt || new Date().toISOString();
-                            const messageSignature = `${parsed.content}:${createdAtVal}`;
-                            if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                                if (__DEV__) console.debug(`onmessage: Ignored duplicate new-format message`);
-                            } else {
-                                let contentOut: string = parsed.content;
-
-                                if (token && sharedKeyHex) {
-                                    try {
-                                        const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-                                        const plain = await decrypt(contentOut, token, aesKey);
-                                        if (plain && plain.length > 0) {
-                                            contentOut = plain;
-                                        }
-                                    } catch (e) {
-                                        console.warn(`onmessage: Decryption failed for new-format payload, using original content`, e);
-                                    }
-                                }
-
-                                transformedItems.push({
-                                    id: parsed.id || `msg_${uuidv4()}`,
-                                    senderId: Number(parsed.sender_id) || 0,
-                                    roomId: parsed.room_id,
-                                    content: contentOut,
-                                    status: typeof parsed.status === "number" ? parsed.status : 1,
-                                    createdAt: createdAtVal,
-                                    isOwner: Number(parsed.sender_id) === Number(localUser?.id),
-                                });
-                            }
-                        }
-                    } else if (parsed?.op === "SendMessage" && parsed?.content) {
-                        const messageSignature = `${parsed.content}:${parsed.createdAt || new Date().toISOString()}`;
-                        if (!addOnce(receivedMessagesRef.current, messageSignature)) {
-                            return;
-                        }
-
-                        let content = parsed.content;
-                        if (token && sharedKeyHex) {
-                            try {
-                                const aesKey = await importAesKey(sharedKeyHex, "decrypt");
-                                const plain = await decrypt(parsed.content, token, aesKey);
-                                if (plain.length > 0) {
-                                    content = plain;
-                                }
-                            } catch (e) {
-                                console.warn(`onmessage: Decryption failed for SendMessage`, e);
-                            }
-                        }
-
-                        transformedItems.push({
-                            id: parsed.id || `msg_${uuidv4()}`,
-                            senderId: parsed.sender_id,
-                            receiverId: parsed.receiver_id,
-                            roomId: parsed.room_id,
-                            content,
-                            status: 1,
-                            createdAt: parsed.createdAt || new Date().toISOString(),
-                            isOwner: parsed.sender_id === Number(localUser?.id),
-                        });
+                        console.log('[WS][FETCH] Applied cursors after pagination line', { prev, next });
                     }
 
                     if (transformedItems.length) {
-                        let toBroadcast: any = transformedItems[0];
-                        if (parsed?.op === "FetchHistory") {
-                            toBroadcast = transformedItems;
-                            const ids = Array.isArray(parsed.messages)
-                                ? parsed.messages
-                                    .map((m: any) => (typeof m.id === 'number' ? m.id : Number(m.id)))
-                                    .filter((n: any) => typeof n === 'number' && !isNaN(n))
-                                : [];
-                            if (ids.length) {
-                                const minId = Math.min(...ids);
-                                setAfterId(minId);
-                            }
-                        } else if (Array.isArray(parsed)) {
-                            toBroadcast = transformedItems;
-                        }
                         if (__DEV__) console.debug(`onmessage: Broadcasting ${transformedItems.length} transformed items`);
-                        broadcastToListeners(toBroadcast);
+                        broadcastToListeners(transformedItems[0]);
+                    } else if (payload && typeof payload === 'object' && (payload.prevPage || payload.prev_page || payload.nextPage || payload.next_page)) {
+                        // Already handled pagination above; nothing to broadcast
                     } else {
-                        if (__DEV__) console.warn(`onmessage: No valid items to transform`);
-                        if (fetchResolveRef.current) {
-                            if (fetchTimeoutRef.current) {
-                                clearTimeout(fetchTimeoutRef.current);
-                                fetchTimeoutRef.current = null;
-                            }
-                            setIsFetching(false);
-                            fetchResolveRef.current();
-                            fetchResolveRef.current = null;
-                        }
+                        if (__DEV__) console.warn('onmessage: Ignored unsupported payload format');
                     }
                 } catch (e) {
-                    console.error(`onmessage: Error processing WebSocket message`, e);
+                    console.error('onmessage: Error processing WebSocket message', e);
                     setIsFetching(false);
                     if (fetchTimeoutRef.current) {
                         clearTimeout(fetchTimeoutRef.current);
@@ -466,7 +328,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             isManuallyClosingRef.current = true;
             try {
                 socket?.close();
-            } catch {}
+            } catch {
+            }
             if (fetchTimeoutRef.current) {
                 clearTimeout(fetchTimeoutRef.current);
                 fetchTimeoutRef.current = null;
@@ -552,7 +415,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 if (shouldEncrypt) {
                     const aesKey = await importAesKey(sharedKeyHex!, "encrypt");
                     const encrypted = await encrypt(data.message, aesKey, token);
-                    payload = { ...apiPayload, content: encrypted };
+                    payload = {...apiPayload, content: encrypted};
                     console.debug(`sendMessage: Encrypted message for sending`);
                 }
             } catch (e) {
@@ -570,7 +433,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     );
 
     return (
-        <WebSocketContext.Provider value={{ sendMessage, fetchHistory, isConnected, roomId, hasMoreMessages, isFetching }}>
+        <WebSocketContext.Provider
+            value={{sendMessage, fetchHistory, isConnected, roomId, hasMoreMessages, isFetching}}>
             {children}
         </WebSocketContext.Provider>
     );
