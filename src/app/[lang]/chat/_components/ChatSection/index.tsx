@@ -592,17 +592,28 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     <div
                         ref={scrollContainerRef}
                         data-testid="chat-list"
-                        className="flex-1 overflow-y-auto p-3 sm:p-4 bg-gray-50 flex flex-col-reverse"
+                        className="flex-1 overflow-y-auto p-3 sm:p-4 bg-gray-50 flex"
                         aria-live="polite"
                     >
                         <div ref={endRef} />
                         <ChatMessages
                             messages={messages}
                             partnerAvatar={currentRoom?.partnerAvatar || ProfileImage.avatar}
+                            customScrollParent={scrollContainerRef.current}
+                            onTopReached={() => {
+                                if (!hasMoreMessages || isFetching) return;
+                                const rootEl = scrollContainerRef.current;
+                                const oldHeight = rootEl?.scrollHeight || 0;
+                                fetchHistory()
+                                    .then(() => {
+                                        const newHeight = rootEl?.scrollHeight || 0;
+                                        if (rootEl) rootEl.scrollTop += newHeight - oldHeight;
+                                    })
+                                    .catch(() => {});
+                            }}
+                            hasMore={hasMoreMessages}
+                            isFetching={isFetching}
                         />
-                        {hasMoreMessages && (
-                            <div ref={topSentinelRef} style={{ height: "20px", background: "transparent" }} aria-hidden="true" />
-                        )}
                     </div>
                     <div className="border-t px-3 py-2 sm:px-4 sm:py-3 bg-white">
                         <div className="flex items-center gap-2">
