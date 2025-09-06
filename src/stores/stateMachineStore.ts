@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { WorkflowStatus } from "lemmy-js-client";
 
 // Generic, reusable finite state machine store with typed states and events
 export type StateKey = string | number | symbol;
@@ -57,38 +58,52 @@ export const createMachineStore = <S extends StateKey, E extends string>(
   }));
 };
 
-// Concrete workflow implementation using the generic machine
-export type WorkflowState = "new" | "queue" | "assign" | "accept" | "chat" | "review" | "pay";
+// Concrete workflow implementation using the generic machine per issue description
+export type UiFlowStatus =
+  | "QuotationPending"
+  | "OrderApproved"
+  | "InProgress"
+  | "PendingEmployerReview"
+  | "Completed"
+  | "Cancelled";
+
+export const ORDER = [
+  "QuotationPending",
+  "OrderApproved",
+  "InProgress",
+  "PendingEmployerReview",
+  "Completed",
+] as const satisfies readonly UiFlowStatus[];
+export type OrderTuple = typeof ORDER;
+
+// Events reflect real transitions; no "chat" state
 export type WorkflowEvent =
-  | { type: "QUOTE_PROPOSED"; by: "freelancer" | "employer" }
-  | { type: "MOVE_TO_QUEUE" }
-  | { type: "EMPLOYER_DECISION"; decision: "accept" | "reject" }
-  | { type: "START_CHAT" }
+  | { type: "QUOTE_PROPOSED" }
+  | { type: "APPROVE_ORDER" }
+  | { type: "START_WORK" }
   | { type: "SUBMIT_DELIVERY" }
   | { type: "REQUEST_REVISION" }
   | { type: "RELEASE_PAYMENT" }
-  | { type: "SET"; state: WorkflowState };
+  | { type: "CANCEL" }
+  | { type: "SET"; state: UiFlowStatus };
 
-// New required sequence based on issue description:
-// 1. Freelancer creates quotation (new -> queue)
-// 2. Queue (waiting)
-// 3. Employer accepts or rejects (queue -> accept | new)
-// 4. Freelancer path from queue to step 4 (assign)
-// 5. After employer accepts they go to step 5 work discussion (accept -> chat)
-export const ORDER = ["new", "queue", "assign", "accept", "chat", "review", "pay"] as const;
-
-const WORKFLOW_TRANSITIONS: TransitionMap<typeof ORDER[number], Exclude<WorkflowEvent["type"], "SET">> = {
-  new: { QUOTE_PROPOSED: "queue" },
-  queue: { MOVE_TO_QUEUE: "assign", EMPLOYER_DECISION: "accept" },
-  assign: {},
-  accept: { START_CHAT: "chat" },
-  chat: { SUBMIT_DELIVERY: "review" },
-  review: { RELEASE_PAYMENT: "pay", REQUEST_REVISION: "chat" },
-  pay: {},
+const WORKFLOW_TRANSITIONS: TransitionMap<UiFlowStatus, Exclude<WorkflowEvent["type"], "SET">> = {
+  QuotationPending: { APPROVE_ORDER: "OrderApproved", CANCEL: "Cancelled" },
+  OrderApproved: { START_WORK: "InProgress", CANCEL: "Cancelled" },
+  InProgress: { SUBMIT_DELIVERY: "PendingEmployerReview", CANCEL: "Cancelled" },
+  PendingEmployerReview: { REQUEST_REVISION: "InProgress", RELEASE_PAYMENT: "Completed", CANCEL: "Cancelled" },
+  Completed: {},
+  Cancelled: {},
 };
 
-export const useStateMachineStore = createMachineStore(ORDER, WORKFLOW_TRANSITIONS, "new");
+export const useStateMachineStore = createMachineStore<UiFlowStatus, Exclude<WorkflowEvent["type"], "SET">>(
+  ORDER,
+  WORKFLOW_TRANSITIONS,
+  "QuotationPending"
+);
 
-// Helper mapping functions for existing UI
-export const statusToIndex = (s: WorkflowState): number => Math.max(0, ORDER.indexOf(s));
-export const indexToStatus = (i: number): WorkflowState => ORDER[i] ?? "new";
+// Helper mapping functions bridging API <-> UI (identity mapping)
+export const apiToUiStatus = (s: WorkflowStatus | null | undefined): UiFlowStatus =>
+  (s as UiFlowStatus) ?? "QuotationPending";
+export const statusToIndex = (s: WorkflowStatus): number => Math.max(0, ORDER.indexOf(apiToUiStatus(s)));
+export const indexToStatus = (i: number): UiFlowStatus => ORDER[i] ?? "QuotationPending";

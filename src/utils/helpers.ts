@@ -12,7 +12,7 @@ import * as cookie from "cookie";
 import {authCookieName} from "@/utils/config";
 import {Match} from "@/utils/router";
 import {ErrorPageData} from "@/utils/types";
-import {createHash} from "node:crypto";
+import {createHash} from "crypto";
 
 export function capitalizeFirstLetter(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);

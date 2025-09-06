@@ -240,7 +240,7 @@ import {VisitProfileResponse} from "./types/VisitProfileResponse";
 import {ListUserChatRoomsQuery} from "./types/ListUserChatRoomsQuery";
 import {ListUserChatRoomsResponse} from "./types/ListUserChatRoomsResponse";
 import type { ChatRoomId } from "./types/ChatRoomId";
-import type { ChatRoomWithParticipants } from "./types/ChatRoomWithParticipants";
+import type { ChatRoomResponse } from "./types/ChatRoomResponse";
 import type { CreateInvoiceForm } from "./types/CreateInvoiceForm";
 import type { CreateInvoiceResponse } from "./types/CreateInvoiceResponse";
 import type { ApproveQuotation } from "./types/ApproveQuotation";
@@ -3127,7 +3127,7 @@ export class LemmyHttp extends Controller {
         @Path() id: ChatRoomId,
         @Inject() options?: RequestOptions,
     ) {
-        return this.#wrapper<object, ChatRoomWithParticipants>(
+        return this.#wrapper<object, ChatRoomResponse>(
             HttpType.Get,
             `/chat/rooms/${id}`,
             {},

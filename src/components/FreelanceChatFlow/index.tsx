@@ -3,8 +3,9 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import { useWorkflowStepper } from '@/hooks/useWorkflowMachine';
+import type { UiFlowStatus } from '@/stores/stateMachineStore';
 
-export type StatusKey = 'new' | 'queue' | 'assign' | 'accept' | 'chat' | 'review' | 'pay';
+export type StatusKey = UiFlowStatus;
 
 export type FlowActions = {
     onProposeQuote?: () => void;
@@ -26,23 +27,20 @@ export type FreelanceChatFlowProps = {
 } & FlowActions;
 
 const STEPS: Array<{ key: StatusKey; title: string; sub: string }> = [
-    {key: 'new', title: 'ลูกค้าทัก', sub: 'เริ่มแชท / ฟอร์มบรีฟ'},
-    {key: 'queue', title: 'เข้า Queue', sub: 'รอคนรับงาน / เสนอราคา'},
-    {key: 'assign', title: 'ขั้นที่ 4 (ฟรีแลนซ์)', sub: 'ไปยังขั้นตอนของฟรีแลนซ์'},
-    {key: 'accept', title: 'นายจ้างตัดสินใจ', sub: 'ยอมรับ/ปฏิเสธ (ถ้ายอมรับไปขั้นที่ 5)'},
-    {key: 'chat', title: 'คุยงาน (ขั้นที่ 5)', sub: 'เริ่มคุยงานหลังยอมรับ'},
-    {key: 'review', title: 'ส่งงาน & รีวิว', sub: 'อัปโหลดไฟล์ส่งงาน'},
-    {key: 'pay', title: 'จ่ายเงิน', sub: 'Escrow → ปล่อยเงิน'},
+    { key: 'QuotationPending', title: 'รอเสนอ/ยืนยันราคา', sub: 'กำลังพิจารณาใบเสนอราคา' },
+    { key: 'OrderApproved', title: 'นายจ้างอนุมัติ', sub: 'ตกลงร่วมงาน' },
+    { key: 'InProgress', title: 'กำลังทำงาน', sub: 'แชทได้ตลอด (ไม่ใช่สถานะ)' },
+    { key: 'PendingEmployerReview', title: 'รอตรวจงาน', sub: 'ส่งงาน / รอรีวิว' },
+    { key: 'Completed', title: 'เสร็จสิ้น', sub: 'ปล่อยเงิน' },
 ];
 
 const DOT_COLORS: Record<StatusKey, string> = {
-    new: 'bg-blue-600 border-blue-600',
-    queue: 'bg-yellow-500 border-yellow-500',
-    assign: 'bg-blue-500 border-blue-500',
-    accept: 'bg-emerald-500 border-emerald-500',
-    chat: 'bg-purple-500 border-purple-500',
-    review: 'bg-pink-500 border-pink-500',
-    pay: 'bg-green-500 border-green-500',
+    QuotationPending: 'bg-yellow-500 border-yellow-500',
+    OrderApproved: 'bg-emerald-500 border-emerald-500',
+    InProgress: 'bg-blue-600 border-blue-600',
+    PendingEmployerReview: 'bg-pink-500 border-pink-500',
+    Completed: 'bg-green-600 border-green-600',
+    Cancelled: 'bg-gray-400 border-gray-400',
 };
 
 const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
@@ -64,10 +62,10 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
     const stepper = useWorkflowStepper();
     const derivedStatus = stepper?.state?.name as StatusKey | undefined;
     const isControlled = controlledStatus != null && onChangeStatus != null;
-    const currentStatus: StatusKey = (isControlled ? controlledStatus! : (derivedStatus || 'new')) as StatusKey;
+    const currentStatus: StatusKey = (isControlled ? controlledStatus! : (derivedStatus || 'QuotationPending')) as StatusKey;
     const currentIndex = Math.max(0, STEPS.findIndex((s) => s.key === currentStatus));
 
-    const ORDER: StatusKey[] = ['new','queue','assign','accept','chat','review','pay'];
+    const ORDER: StatusKey[] = (stepper?.ORDER as StatusKey[]) || ['QuotationPending','OrderApproved','InProgress','PendingEmployerReview','Completed'];
 
     const handleActivateStep = (toIndex: number, targetKey: StatusKey) => {
         const curIdx = currentIndex;
@@ -102,41 +100,33 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
         );
 
         switch (key) {
-            case 'new':
+            case 'QuotationPending':
                 return [
                     btn(t('profileChat.proposeQuote') || 'เสนอราคา', onProposeQuote),
                     btn(t('profileChat.sendBriefMessage') || 'ส่งข้อความหาไฟล์บรีฟ', onSendMessage, 'ghost'),
                 ];
-            case 'queue':
+            case 'OrderApproved':
                 return [
-                    btn(t('profileChat.proposeQuote') || 'เสนอราคา', onProposeQuote),
-                    btn(t('profileChat.uploadReference') || 'แนบไฟล์อ้างอิง', onUploadAsset, 'ghost'),
-                ];
-            case 'assign':
-                return [
-                    btn(t('profileChat.confirmAssign') || 'ยืนยันมอบหมาย (นายจ้าง)', onConfirmAssign),
-                    btn(t('profileChat.askDetails') || 'ถามรายละเอียด', onSendMessage, 'ghost'),
-                ];
-            case 'accept':
-                return [
-                    btn(t('profileChat.startChat') || 'เริ่มคุยงาน', onSendMessage),
-                    btn(t('profileChat.uploadDraft') || 'แนบไฟล์ต้นฉบับ', onUploadAsset, 'ghost'),
-                ];
-            case 'chat':
-                return [
-                    btn(t('profileChat.uploadFileLink') || 'แนบไฟล์/ลิงก์', onUploadAsset),
+                    btn(t('profileChat.uploadDraft') || 'แนบไฟล์ต้นฉบับ', onUploadAsset),
                     btn(t('profileChat.sendMessage') || 'ส่งข้อความ', onSendMessage, 'ghost'),
                 ];
-            case 'review':
+            case 'InProgress':
                 return [
-                    btn(t('profileChat.submitDelivery') || 'ส่งงาน', onSubmitDelivery),
-                    btn(t('profileChat.requestRevision') || 'ขอแก้ไขรอบใหม่', onRequestRevision, 'ghost'),
+                    btn(t('profileChat.uploadFileLink') || 'แนบไฟล์/ลิงก์', onUploadAsset),
+                    btn(t('profileChat.submitDelivery') || 'ส่งงาน', onSubmitDelivery, 'ghost'),
                 ];
-            case 'pay':
-                return [btn(t('profileChat.releasePayment') || 'ปล่อยเงิน/ปิดงาน', onReleasePayment)];
+            case 'PendingEmployerReview':
+                return [
+                    btn(t('profileChat.requestRevision') || 'ขอแก้ไขรอบใหม่', onRequestRevision),
+                    btn(t('profileChat.releasePayment') || 'ปล่อยเงิน/ปิดงาน', onReleasePayment, 'ghost'),
+                ];
+            case 'Completed':
+                return [];
+            case 'Cancelled':
+                return [];
             default:
                 return [];
-        }
+            }
     };
 
     return (

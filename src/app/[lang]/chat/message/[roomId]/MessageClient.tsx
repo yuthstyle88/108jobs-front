@@ -16,12 +16,13 @@ export default function MessageClient({ roomId }: { roomId: string }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        let cancelled = false;
         if (!accessToken || !roomId || !localUser?.id) return;
 
         (async () => {
             const chatRoomRes = await HttpService.client.getChatRoom(roomId);
 
-            if (chatRoomRes.state === REQUEST_STATE.SUCCESS) {
+            if (!cancelled && chatRoomRes.state === REQUEST_STATE.SUCCESS) {
                 const participants = chatRoomRes.data.participants as any[];
 
                 const other = participants.find(
@@ -34,13 +35,17 @@ export default function MessageClient({ roomId }: { roomId: string }) {
                     const profileName =
                         res.state === REQUEST_STATE.SUCCESS
                             ? res.data.profile.name
-                            : { name: "Unknown" };
-                    setPartnerName(profileName.toString());
+                            : "Unknown";
+                    if (!cancelled) setPartnerName(String(profileName));
                 }
             }
-            setLoading(false);
+            if (!cancelled) setLoading(false);
         })();
-    }, [accessToken, roomId, localUser]);
+
+        return () => {
+            cancelled = true;
+        };
+    }, [accessToken, roomId, localUser?.id]);
 
     if (!accessToken || !roomId) {
         return <LoadingBlur text="Missing authentication or room ID" />;

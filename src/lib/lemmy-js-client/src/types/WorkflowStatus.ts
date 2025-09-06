@@ -1,0 +1,1 @@
+export type WorkflowStatus = "QuotationPending" | "OrderApproved" |"InProgress" | "PendingEmployerReview" | "Completed" | "Cancelled";

@@ -20,6 +20,8 @@ import { usePrivateImagePost } from "@/hooks/api-hooks";
 import { useWorkflowStepper } from "@/hooks/useWorkflowMachine";
 import type { CreateInvoiceForm } from "lemmy-js-client";
 import { useHttpPost } from "@/hooks/useHttpPost";
+import { useHttpGet } from "@/hooks/useHttpGet";
+import { useStateMachineStore, apiToUiStatus } from "@/stores/stateMachineStore";
 import { REQUEST_STATE } from "@/services/HttpService";
 
 type MessageForm = { message: string };
@@ -33,7 +35,7 @@ interface ChatSectionProps {
 
 const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerAvatar }) => {
     const { updateRoomLastMessage } = useChatRooms();
-    const { state: stepperState, idx: activeStep, send, canGo } = useWorkflowStepper();
+    const { state: stepperState, idx: activeStep, send, canGo, ORDER } = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
@@ -160,7 +162,20 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
 
     const currentStatus: StatusKey = stepperState.name as StatusKey;
 
-    const ORDER: StatusKey[] = ["new", "queue", "assign", "accept", "chat", "review", "pay"];
+        // Load status from API server when available
+        const { data: roomData } = useHttpGet("getChatRoom", [roomId as any]);
+        const setWorkflowState = useStateMachineStore((s) => s.set);
+        useEffect(() => {
+            const rd: any = roomData as any;
+            if (!rd) return;
+            const apiStatusRaw = rd?.room?.status ?? rd?.status ?? rd?.room?.workflowStatus ?? rd?.workflowStatus;
+            if (typeof apiStatusRaw !== 'string') return;
+            const uiStatus = apiToUiStatus(apiStatusRaw as any);
+            if (uiStatus && uiStatus !== currentStatus) {
+                setWorkflowState(uiStatus as StatusKey);
+            }
+        }, [roomData, setWorkflowState, currentStatus]);
+
 
     const goToStatus = (target: StatusKey) => {
         const targetIdx = ORDER.indexOf(target);
@@ -260,8 +275,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 console.warn("Failed to dispatch chat:new-message event");
             }
 
-            // Upon sending a quotation, freelancer should remain at step 2 (queue)
-            goToStatus("queue");
+            // Upon sending a quotation, keep status at QuotationPending
+            goToStatus("QuotationPending");
 
             // Close modal
             setShowQuotationModal(false);
@@ -312,11 +327,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 );
             } catch {
             }
-            // Move employer directly to 'chat' (Work Discussion) after confirming assign
-            goToStatus("chat");
+            // After approval/assignment, move to OrderApproved
+            goToStatus("OrderApproved");
         },
         onAcceptJob: () => {
-            goToStatus("chat");
+            goToStatus("OrderApproved");
             sendMessage({
                 message: t("profileChat.acceptJobMsg") || "I have accepted the job.",
                 id: uuidv4(),
@@ -343,11 +358,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             if (input) input.focus();
         },
         onSubmitDelivery: () => {
-            goToStatus("review");
+            goToStatus("PendingEmployerReview");
             setShowReviewModal(true);
         },
         onRequestRevision: () => {
-            goToStatus("chat");
+            goToStatus("InProgress");
             setShowReviewModal(false);
             sendMessage({
                 message: t("profileChat.requestRevisionMsg") || "Please revise and resubmit.",
@@ -548,18 +563,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         try {
             const parsed = JSON.parse(content);
             if (parsed && parsed.type === "proposed-quote") {
-                if (latest.isOwner) {
-                    // Freelancer created quotation -> should be at step 2 (queue)
-                    goToStatus("queue");
-                } else {
-                    // Employer received a quotation -> go to step 'assign'
-                    goToStatus("assign");
-                }
+                // When a quote is proposed, stay in QuotationPending
+                goToStatus("QuotationPending");
             } else if (parsed && parsed.type === "employer-assigned") {
-                if (!latest.isOwner) {
-                    // Employer finished assign -> both sides proceed to 'chat' (Work Discussion)
-                    goToStatus("chat");
-                }
+                // When employer confirms/assigns, move to OrderApproved
+                goToStatus("OrderApproved");
             }
         } catch {
             /* ignore parse errors */
@@ -640,7 +648,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             compact={false}
                             className="space-y-4"
                             onProposeQuote={flowActions.onProposeQuote}
-                            onConfirmAssign={flowActions.onConfirmAssign}
                             onAcceptJob={flowActions.onAcceptJob}
                             onUploadAsset={flowActions.onUploadAsset}
                             onSendMessage={flowActions.onSendMessage}
@@ -697,7 +704,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 compact={false}
                                 className="space-y-4"
                                 onProposeQuote={flowActions.onProposeQuote}
-                                onConfirmAssign={flowActions.onConfirmAssign}
                                 onAcceptJob={flowActions.onAcceptJob}
                                 onUploadAsset={flowActions.onUploadAsset}
                                 onSendMessage={flowActions.onSendMessage}
@@ -752,7 +758,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 className="rounded-md bg-green-600 hover:bg-green-700 text-white px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm transition-all duration-200"
                                 onClick={() => {
                                     setShowReviewModal(false);
-                                    goToStatus("pay");
+                                    goToStatus("Completed");
                                     sendMessage({
                                         message: t("profileChat.deliveryAccepted") || "Delivery accepted. Proceed to payment.",
                                         id: uuidv4(),
@@ -775,7 +781,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 className="rounded-md bg-red-600 hover:bg-red-700 text-white px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm transition-all duration-200"
                                 onClick={() => {
                                     setShowReviewModal(false);
-                                    goToStatus("chat");
+                                    goToStatus("InProgress");
                                     sendMessage({
                                         message: t("profileChat.requestRevisionMsg") || "Please revise and resubmit.",
                                         id: uuidv4(),
