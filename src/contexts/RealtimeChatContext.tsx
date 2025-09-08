@@ -73,7 +73,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     // TODO: remove temporary receiver fallback when backend provides proper mapping
-    const tempReceiverId = 3;
     const wsUrl = buildWsUrl(token, roomId);
 
     const fetchHistory = useCallback(() => {
@@ -97,7 +96,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             const payload: any = {
                 op: "FetchHistory",
                 sender_id: Number(localUser?.id) || 0,
-                receiver_id: tempReceiverId,
                 room_id: roomId,
                 content: "",
                 page_cursor: pageCursor ?? undefined,
@@ -241,7 +239,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                         const prev = payload.prev_page ?? payload.prevPage ?? null;
                         const next = payload.next_page ?? payload.nextPage ?? null;
                         if (typeof prev === 'string' && prev.length > 0) {
-                            setPageCursor(prev);
+                            setPageCursor(next);
                             setHasMoreMessages(true);
                         } else {
                             setPageCursor(null);
@@ -391,7 +389,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             const apiPayload = {
                 op: "SendMessage",
                 sender_id: Number(localUser?.id) || 0,
-                receiver_id: tempReceiverId,
                 room_id: roomId,
                 content: data.message,
                 id: messageId,
