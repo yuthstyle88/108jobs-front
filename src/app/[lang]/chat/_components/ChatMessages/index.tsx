@@ -2,8 +2,8 @@
 
 import type { ChatMessage } from "lemmy-js-client";
 import ChatMessageItem from "../ChatMessageItem";
-import {StaticImageData} from "next/image";
-import {Virtuoso} from "react-virtuoso";
+import { StaticImageData } from "next/image";
+import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import React from "react";
 
 type UIChatMessage = ChatMessage & { isOwner?: boolean };
@@ -28,27 +28,54 @@ const formatDate = (dateStr: string, locale?: string) => {
 };
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
-                                                       messages,
-                                                       partnerAvatar,
-                                                       customScrollParent,
-                                                       onTopReached,
-                                                       hasMore,
-                                                       isFetching,
-                                                   }) => {
+    messages,
+    partnerAvatar,
+    customScrollParent,
+    onTopReached,
+    hasMore,
+    isFetching,
+}) => {
     const userLocale = typeof navigator !== "undefined" ? navigator.language : undefined;
 
     // Virtuoso expects items in oldest-first order for chat use cases.
     // Incoming messages are newest-first, so reverse for display.
     const displayedMessages = React.useMemo(() => [...messages].reverse(), [messages]);
 
+    // Track whether the user is at the bottom to emulate auto-scroll behavior like VirtuosoMessageList
+    const virtuosoRef = React.useRef<VirtuosoHandle | null>(null);
+    const [atBottom, setAtBottom] = React.useState(true);
+
+    // When messages change and the user is at the bottom, scroll smoothly to the last item.
+    React.useEffect(() => {
+        if (!virtuosoRef.current) return;
+        if (!displayedMessages.length) return;
+        if (!atBottom) return;
+        // Scroll to the end when new data arrives or item sizes change while at bottom
+        virtuosoRef.current.scrollToIndex({ index: displayedMessages.length - 1, align: "end", behavior: "smooth" });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [displayedMessages, atBottom]);
+
     return (
         <Virtuoso
+            ref={virtuosoRef}
             data={displayedMessages}
-            computeItemKey={(index, msg) => String(msg.id ?? index)}
-            followOutput="auto"
-            atTopStateChange={(atTop) => {
-              if (atTop && onTopReached) onTopReached();
+            customScrollParent={customScrollParent ?? undefined}
+            computeItemKey={(index, msg) => {
+                const anyMsg: any = msg as any;
+                if (anyMsg && anyMsg.id != null) return String(anyMsg.id);
+                const created = anyMsg?.createdAt || "";
+                const sender = anyMsg?.senderId ?? "";
+                const content: string = anyMsg?.content || "";
+                return `${created}|${sender}|${content.length}:${content.slice(0, 16)}`;
             }}
+            // Only follow new output when the user is at the bottom
+            followOutput="auto"
+            initialTopMostItemIndex={displayedMessages.length - 1}
+            alignToBottom
+            atTopStateChange={(atTop) => {
+                if (atTop && onTopReached) onTopReached();
+            }}
+            atBottomStateChange={(isAtBottom) => setAtBottom(isAtBottom)}
             components={{
                 Header: hasMore
                     ? () => (
@@ -60,7 +87,14 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                     )
                     : undefined,
                 Scroller: React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>((props, ref) => (
-                    <div {...props} ref={ref} style={{ ...(props.style || {}), overflow: "auto" }} />
+                    <div
+                        {...props}
+                        ref={ref}
+                        style={{
+                            ...(props.style || {}),
+                            overflow: customScrollParent ? "visible" : "auto",
+                        }}
+                    />
                 )),
             }}
             itemContent={(index, msg) => {
@@ -81,7 +115,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                     </div>
                 );
             }}
-            style={{ overflowX: "hidden", width: "100%" }}
+            style={{ overflowX: "hidden", width: "100%", height: "100%" }}
         />
     );
 };

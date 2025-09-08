@@ -529,26 +529,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         }
     }, [isConnected]);
 
-    const prevLatestTsRef = useRef<number>(0);
-    useEffect(() => {
-        if (!messages.length || !scrollContainerRef.current) return;
-        const latestTs = new Date(messages[0].createdAt).getTime();
-        if (latestTs > prevLatestTsRef.current || prevLatestTsRef.current === 0) {
-            console.log("[CHAT][SCROLL] Scrolling to bottom", {
-                from: prevLatestTsRef.current,
-                to: latestTs,
-                count: messages.length,
-            });
-            scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
-            prevLatestTsRef.current = latestTs;
-        } else {
-            console.log("[CHAT][SCROLL] Not scrolling (likely prepended history)", {
-                latestTs,
-                prev: prevLatestTsRef.current,
-                count: messages.length,
-            });
-        }
-    }, [messages]);
 
     // Update workflow automatically based on latest special messages
     useEffect(() => {
@@ -588,7 +568,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     <div
                         ref={setScrollRef}
                         data-testid="chat-list"
-                        className="flex-1 px-3 sm:px-4 pt-3 sm:pt-4 pb-0 bg-gray-50 flex"
+                        className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-4 pt-3 sm:pt-4 pb-0 bg-gray-50 flex"
                         aria-live="polite"
                     >
                         <ChatMessages
