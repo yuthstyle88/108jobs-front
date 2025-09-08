@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import type {ChatRoom} from "@/types/chat";
 import type {LocalUser} from "@/lib/lemmy-js-client/src/types/LocalUser";
@@ -6,6 +7,7 @@ import Image from "next/image";
 import {ProfileImage} from "@/constants/images";
 import {formatMessageTime} from "@/utils/formatMessageTime";
 import {formatLastMessagePreview} from "@/utils/formatLastMessagePreview";
+import {useChatRooms} from "@/contexts/ChatRoomsContext";
 
 interface ChatListItemProps {
   room: ChatRoom;
@@ -17,6 +19,14 @@ interface ChatListItemProps {
 function ChatListItemComponent({ room, isActive, currentLang, localUser }: ChatListItemProps) {
   const chatMessage = room.lastMessage;
   const isUser = chatMessage ? (localUser?.id ?? -1) === Number(chatMessage.senderId) : false;
+  const { markRoomRead } = useChatRooms();
+
+  const handleClick = () => {
+    try {
+      // Only mark as read when user selects the room; do not reorder the list on click
+      markRoomRead(String(room.id));
+    } catch {}
+  };
 
   return (
     <Link
@@ -25,6 +35,7 @@ function ChatListItemComponent({ room, isActive, currentLang, localUser }: ChatL
       href={`/${currentLang || "th"}/chat/message/${room.id}`}
       className="block focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md mx-2"
       aria-label={`Open chat with ${room.name}`}
+      onClick={handleClick}
     >
       <div
         className={`p-3 md:p-4 flex items-start transition-colors border-b ${

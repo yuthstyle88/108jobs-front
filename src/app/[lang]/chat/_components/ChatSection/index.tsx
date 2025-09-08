@@ -157,7 +157,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         const d = latestIncomingRef.current;
         if (!d) return;
         try {
-            updateRoomLastMessage(d.roomId, d.content, d.senderId, d.timestamp);
+            // Only update preview; rely on global event for conditional reordering
+            updateRoomLastMessage(d.roomId, d.content, d.senderId, d.timestamp, false);
             try {
                 const isUnread = d.senderId !== Number(localUser?.id) && !atBottomRef.current;
                 window.dispatchEvent(new CustomEvent("chat:new-message", { detail: { ...d, unread: isUnread } }));
@@ -284,7 +285,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             // Update room last message
             const tsIso = new Date().toISOString();
             try {
-                updateRoomLastMessage(roomId, readable, Number(localUser?.id) || 0, tsIso);
+                // Update preview locally; rely on global event to decide reordering
+                updateRoomLastMessage(roomId, readable, Number(localUser?.id) || 0, tsIso, false);
                 window.dispatchEvent(
                     new CustomEvent("chat:new-message", {
                         detail: {
@@ -343,7 +345,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
 
             try {
                 const tsIso = new Date().toISOString();
-                updateRoomLastMessage(roomId, readable, Number(localUser?.id) || 0, tsIso);
+                // Update preview locally; rely on global event to decide reordering
+                updateRoomLastMessage(roomId, readable, Number(localUser?.id) || 0, tsIso, false);
                 window.dispatchEvent(
                     new CustomEvent("chat:new-message", {
                         detail: { roomId, content: readable, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
@@ -481,7 +484,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             ]);
             try {
                 const tsIso = new Date().toISOString();
-                updateRoomLastMessage(roomId, message, Number(localUser?.id) || 0, tsIso);
+                // Update preview locally; rely on global event to decide reordering
+                updateRoomLastMessage(roomId, message, Number(localUser?.id) || 0, tsIso, false);
                 try {
                     window.dispatchEvent(
                         new CustomEvent("chat:new-message", {

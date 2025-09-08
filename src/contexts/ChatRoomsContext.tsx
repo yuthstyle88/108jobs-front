@@ -26,7 +26,7 @@ interface ChatRoomsContextValue extends RoomsState {
     loadMore: () => void;
     markRoomRead: (roomId: string) => Promise<void>;
     bumpRoomToTop: (roomId: string, updatedAt?: string) => void;
-    updateRoomLastMessage: (roomId: string, content: string, senderId: number, timestamp?: string) => void;
+    updateRoomLastMessage: (roomId: string, content: string, senderId: number, timestamp?: string, reorder?: boolean) => void;
 }
 
 const ChatRoomsContext = createContext<ChatRoomsContextValue | undefined>(undefined);
@@ -194,7 +194,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         });
     }, []);
 
-    const updateRoomLastMessage = useCallback((roomId: string, content: string, senderId: number, timestamp?: string) => {
+    const updateRoomLastMessage = useCallback((roomId: string, content: string, senderId: number, timestamp?: string, reorder: boolean = false) => {
         setState(prev => {
             const idx = prev.rooms.findIndex(r => r.id === roomId);
             if (idx === -1) return prev;
@@ -208,9 +208,15 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                     senderId,
                 },
             };
-            const remaining = prev.rooms.filter((_, i) => i !== idx);
-            const nextRooms = [updatedRoom as any, ...remaining];
-            return { ...prev, rooms: nextRooms } as any;
+            if (reorder) {
+                const remaining = prev.rooms.filter((_, i) => i !== idx);
+                const nextRooms = [updatedRoom as any, ...remaining];
+                return { ...prev, rooms: nextRooms } as any;
+            } else {
+                const nextRooms = prev.rooms.slice();
+                nextRooms[idx] = updatedRoom as any;
+                return { ...prev, rooms: nextRooms } as any;
+            }
         });
     }, []);
 
@@ -219,13 +225,43 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         const handler = (e: Event) => {
             const detail = (e as CustomEvent).detail as { roomId: string; content: string; senderId: number; timestamp?: string; unread?: boolean };
             if (!detail || !detail.roomId) return;
-            updateRoomLastMessage(detail.roomId, detail.content, detail.senderId, detail.timestamp);
-            if (detail.unread === true) {
-                setState(prev => ({
-                    ...prev,
-                    rooms: prev.rooms.map(r => r.id === detail.roomId ? { ...r, unreadCount: (r.unreadCount || 0) + 1 } : r)
-                }));
-            }
+            // Only reorder if the incoming message is newer than what we already have for the room
+            setState(prev => {
+                const idx = prev.rooms.findIndex(r => r.id === detail.roomId);
+                if (idx === -1) return prev;
+                const room = prev.rooms[idx] as any;
+                const prevTs = room?.lastMessage?.timestamp ? new Date(room.lastMessage.timestamp).getTime() : 0;
+                const nextTs = detail.timestamp ? new Date(detail.timestamp).getTime() : Date.now();
+                const isNewer = nextTs > prevTs;
+
+                // Update the preview
+                const updatedRoom = {
+                    ...room,
+                    lastMessage: {
+                        content: detail.content,
+                        timestamp: detail.timestamp || new Date().toISOString(),
+                        senderId: detail.senderId,
+                    },
+                };
+
+                let nextRooms: any[];
+                if (isNewer) {
+                    // Reorder to top only when newer
+                    const remaining = prev.rooms.filter((_, i) => i !== idx);
+                    nextRooms = [updatedRoom, ...remaining];
+                } else {
+                    // Do not reorder on duplicate/older messages
+                    nextRooms = prev.rooms.slice();
+                    nextRooms[idx] = updatedRoom;
+                }
+
+                // Update unread count if needed
+                if (detail.unread === true) {
+                    nextRooms = nextRooms.map(r => r.id === detail.roomId ? { ...r, unreadCount: (r.unreadCount || 0) + 1 } : r);
+                }
+
+                return { ...prev, rooms: nextRooms } as any;
+            });
         };
         window.addEventListener('chat:new-message' as any, handler as any);
         return () => window.removeEventListener('chat:new-message' as any, handler as any);
