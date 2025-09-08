@@ -1,14 +1,14 @@
 export const __DEV__ = process.env.NODE_ENV !== "production";
 
-export function logDebug(...args: any[]) {
+export function logDebug(...args: unknown[]) {
   if (__DEV__) console.debug(...args);
 }
 
-export function logWarn(...args: any[]) {
+export function logWarn(...args: unknown[]) {
   console.warn(...args);
 }
 
-export function safeParse(val: unknown): any {
+export function safeParse(val: unknown): unknown {
   try {
     const result = typeof val === "string" ? JSON.parse(val as string) : val;
     logDebug(`safeParse: Parsed value`, result);

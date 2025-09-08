@@ -18,7 +18,7 @@ export function capitalizeFirstLetter(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
     func: T,
     wait = 1000,
     immediate = false
@@ -84,18 +84,18 @@ export function getPageCursorFromString(
 
 type Empty = NonNullable<unknown>;
 
-type QueryMapping<PropsT, FallbacksT extends Empty> = {
+type QueryMapping<PropsT> = {
     [K in keyof PropsT]-?: (
         input: string | undefined,
-        fallback: K extends keyof FallbacksT ? FallbacksT[K] : undefined,
+        fallback: PropsT[K] | undefined,
     ) => PropsT[K];
 };
 
 export default function getQueryParams<
-    PropsT extends Record<string, any>,
+    PropsT extends object,
     FallbacksT extends Partial<PropsT> = Empty
 >(
-    processors: QueryMapping<PropsT, FallbacksT>,
+    processors: QueryMapping<PropsT>,
     source?: string,
     fallbacks: FallbacksT = {} as FallbacksT,
 ): PropsT {
@@ -185,7 +185,7 @@ export function sleep(millis: number): Promise<void> {
 /**
  * Polls / repeatedly runs a promise, every X milliseconds
  */
-export async function poll(promiseFn: any, millis: number) {
+export async function poll(promiseFn: () => unknown | Promise<unknown>, millis: number) {
     if (window.document.visibilityState !== "hidden") {
         await promiseFn();
     }
@@ -212,7 +212,7 @@ export function randomStr(
         .join("");
 }
 
-export function resourcesSettled(resources: RequestState<any>[]) {
+export function resourcesSettled(resources: RequestState<unknown>[]) {
     return resources.every(r => r.state === "success" || r.state === "failed");
 }
 
@@ -253,7 +253,7 @@ export function validURL(str: string) {
 }
 
 export function dedupByProperty<
-    T extends Record<string, any>,
+    T extends Record<string, unknown>,
     R extends number | string | boolean,
 >(collection: T[], keyFn: (obj: T) => R) {
     return collection.reduce(
@@ -282,13 +282,13 @@ export function getApubName({name, ap_id}: { name: string; ap_id: string }) {
  * Optimized with memoization to improve performance for repeated route matching
  */
 // Cache for storing the results of matchPath
-const matchPathCache = new Map<string, Match<any> | null>();
+const matchPathCache = new Map<string, Match | null>();
 const CACHE_SIZE_LIMIT = 100;
 
 export function matchPath(
     pathPattern?: string,
     urlPath?: string
-): Match<any> | null {
+): Match | null {
     // Early return for invalid inputs
     if (!pathPattern || !urlPath) return null;
 
@@ -355,7 +355,7 @@ export function matchPath(
         path: urlPath,
         url: urlPath,
         isExact: urlParts.length === patternParts.length,
-    } as Match<any>;
+    } as Match;
 
     // Cache the result
     matchPathCache.set(cacheKey,

@@ -94,14 +94,13 @@ export function trackMetric(metricName: string, value: number): void {
   console.log(`[Metric] ${metricName}: ${value}`);
 
   // If available, send to analytics
-  if (typeof (window as any).gtag !== 'undefined') {
-    (window as any).gtag('event',
-      'performance_metric',
-      {
-        'metric_name': metricName,
-        'metric_value': value
-      });
-  }
+  const w = window as unknown as { gtag?: (...args: unknown[]) => void };
+  w.gtag?.('event',
+    'performance_metric',
+    {
+      metric_name: metricName,
+      metric_value: value
+    });
 }
 
 /**
@@ -116,8 +115,8 @@ export function measureRenderTime(
   phase: string,
   actualDuration: number,
   baseDuration: number,
-  startTime: number,
-  commitTime: number
+  _startTime: number,
+  _commitTime: number
 ): void {
   console.log(`[Render] ${id} took ${actualDuration.toFixed(2)}ms (Base: ${baseDuration.toFixed(2)}ms)`);
 
@@ -193,9 +192,10 @@ export function monitorCLS(callback: (value: number) => void): () => void {
   return createPerformanceObserver(['layout-shift'],
     (list) => {
       for (const entry of list.getEntries()) {
-        // Only count layout shifts without recent profile input
-        if (!(entry as any).hadRecentInput) {
-          clsValue += (entry as any).value;
+        // Only count layout shifts without recent user input
+        const e = entry as PerformanceEntry & { hadRecentInput?: boolean; value?: number };
+        if (!e.hadRecentInput) {
+          clsValue += e.value ?? 0;
           clsEntries.push(entry);
           callback(clsValue);
         }
@@ -212,7 +212,8 @@ export function monitorFID(callback: (value: number) => void): () => void {
   return createPerformanceObserver(['first-input'],
     (list) => {
       for (const entry of list.getEntries()) {
-        const delay = (entry as any).processingStart - entry.startTime;
+        const e = entry as PerformanceEntry & { processingStart?: number };
+        const delay = (e.processingStart ?? entry.startTime) - entry.startTime;
         callback(delay);
       }
     });

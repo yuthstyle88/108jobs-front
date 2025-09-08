@@ -511,8 +511,8 @@ export function selectableLanguages(
 export function setIsoData<T extends RouteData>(context: any): IsoData<T> {
   // If its the browser, you need to deserialize the data from the window
   if (isBrowser()) {
-    return window.isoData;
-  } else return context.router.staticContext;
+    return window.isoData as IsoData<T>;
+  } else return context.router.staticContext as IsoData<T>;
 }
 
 export function showAvatars(myUserInfo?: MyUserInfo): boolean {

@@ -14,7 +14,7 @@ const defaultIsoData: IsoData = {
   errorPageData: undefined,
 };
 
-export default async function isoDataInitializer(): Promise<IsoData<any> | null> {
+export default async function isoDataInitializer(): Promise<IsoData | null> {
   const hdr = await headers();
   const url = hdr.get("x-url") || "/";
   const incomingHttpHeaders: IncomingHttpHeaders = Object.fromEntries(hdr.entries());

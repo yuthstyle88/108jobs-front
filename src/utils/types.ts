@@ -14,7 +14,7 @@ import {RequestState} from "@/services/HttpService";
 import {Match} from "@/utils/router"
 
 
-export interface IsoData<T extends RouteData = any> {
+export interface IsoData<T extends RouteData = RouteData> {
   path: string;
   routeData: T;
   siteRes?: GetSiteResponse;
@@ -33,7 +33,7 @@ declare global {
 
 export interface InitialFetchRequest<
   P extends Record<string, string> = Record<string, never>,
-  T extends Record<string, any> = Record<string, never>,
+  T extends object = Record<string, never>,
 > {
   path: string;
   query: T;
@@ -43,7 +43,7 @@ export interface InitialFetchRequest<
 }
 
 export interface IRouteProps {
-  computedMatch?: Match<any> | null;
+  computedMatch?: Match | null;
   path?: string;
   exact?: boolean;
   strict?: boolean;
@@ -112,7 +112,7 @@ export interface CommentNodeI {
   depth: number;
 }
 
-export type RouteData = Record<string, RequestState<any>>;
+export type RouteData = Record<string, RequestState<unknown>>;
 
 export interface Choice {
   value: string;
@@ -135,11 +135,11 @@ export interface PersonTribute {
   view: PersonView;
 }
 
-export type QueryParams<T extends Record<string, any>> = {
+export type QueryParams<T extends Record<string, unknown>> = {
   [key in keyof T]?: string;
 };
 
-export type RouteDataResponse<T extends Record<string, any>> = {
+export type RouteDataResponse<T extends Record<string, unknown>> = {
   [K in keyof T]: RequestState<T[K]>;
 };
 

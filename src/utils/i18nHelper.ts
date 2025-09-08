@@ -8,7 +8,7 @@ import {LanguageFile} from "@/constants/language";
  * @param options Optional parameters for the translation
  * @returns The translated string
  */
-export const t = (namespace: LanguageFile, key: string, options?: any): string => {
+export const t = (namespace: LanguageFile, key: string, options?: Record<string, unknown>): string => {
   const result = I18NextService.i18n.t(`${namespace}.${key}`,
     options);
 
@@ -36,7 +36,7 @@ export const t = (namespace: LanguageFile, key: string, options?: any): string =
  */
 export const getNamespace = (
   namespace: LanguageFile,
-  options?: any
+  options?: Record<string, unknown>
 ): Record<string, string> => {
   if (!namespace) {
     console.error("getNamespace called with undefined or null namespace");

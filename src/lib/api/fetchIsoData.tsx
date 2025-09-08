@@ -191,7 +191,7 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
             // Fetch route-specific data if available
             if (siteRes && activeRoute?.fetchInitialData && match) {
                 const {search} = parsePath(url);
-                const initialFetchReq: InitialFetchRequest<Record<string, any>> = {
+                const initialFetchReq = {
                     path: url,
                     query: activeRoute.getQueryParams?.(search,
                         siteRes) ?? {},

@@ -15,7 +15,7 @@ type RouteComponentProps<PathPropsT> = {
 export interface IRoutePropsWithFetch<
   DataT extends RouteData,
   PathPropsT extends Record<string, string>,
-  QueryPropsT extends Record<string, any>,
+  QueryPropsT extends object,
 > extends IRouteProps {
   component: React.ComponentType<RouteComponentProps<PathPropsT> & QueryPropsT>;
   mountedSameRouteNavKey?: string;
@@ -31,7 +31,7 @@ export interface IRoutePropsWithFetch<
   ): QueryPropsT;
 }
 
-export const routes: IRoutePropsWithFetch<RouteData, any, any>[] = [
+export const routes: LoginFetchConfig[] = [
   {
     path: `/login/:id`,
     component: LoginForm,
