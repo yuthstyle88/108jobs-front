@@ -641,7 +641,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 onClick={() => {
                                     const rootEl = scrollContainerRef.current;
                                     if (rootEl) {
-                                        rootEl.scrollTop = rootEl.scrollHeight;
+                                        rootEl.scrollTop = rootEl.scrollHeight - rootEl.clientHeight;
                                     }
                                     setNewSinceCount(0);
                                 }}

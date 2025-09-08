@@ -1524,6 +1524,7 @@ export const vi = {
             reviews: "Đánh giá",
             viewWorkSample: "Xem mẫu công việc",
             enlargedPortfolioImage: "Hình ảnh danh mục được phóng to",
+            startChat: "Bắt đầu trò chuyện",
         },
 
         profileApply: {

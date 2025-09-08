@@ -5,13 +5,16 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {formatDateToLong} from "@/utils/formatDateToLong";
 import {faEdit} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {ChevronLeft, ChevronRight, X} from "lucide-react";
+import {ChevronLeft, ChevronRight, X, MessageCircle} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, {useEffect, useRef, useState} from "react";
 import {Person} from "lemmy-js-client";
 import {useTranslation} from "react-i18next";
 import NotFound from "@/app/[lang]/not-found";
+import {useRouter} from "next/navigation";
+import {dmRoomId} from "@/utils/helpers";
+import {HttpService} from "@/services";
 
 interface ProfileProps {
     profile: Person | null;
@@ -19,6 +22,8 @@ interface ProfileProps {
 
 const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
     const {t} = useTranslation();
+
+    const router = useRouter();
 
     const {person: currentUserProfile} = useMyUser();
     const [activeTab, setActiveTab] = useState<"reviews" | "clients">("reviews");
@@ -124,9 +129,33 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
         NotFound();
     }
 
-    console.log("profile: ", profile?.contacts)
-
     const isOwnProfile = currentUserProfile?.id === profile?.id;
+
+    const handleChatClick = async () => {
+        try {
+            if (!currentUserProfile?.id || !profile?.id) return;
+            if (currentUserProfile.id === profile.id) return; // no DM with self
+            const roomId = dmRoomId(currentUserProfile.id, profile.id);
+            // Best-effort: create or ensure chat room exists on backend
+            try {
+                await HttpService.client.createChatRoom({ partnerPersonId: profile.id, roomId });
+            } catch (e) {
+                // If room already exists or API fails, proceed to navigate anyway
+                // console.warn('createChatRoom failed, navigating anyway', e);
+            }
+            router.push(`/chat/message/${roomId}`);
+        } catch (err) {
+            // As a fallback, try to compute and navigate
+            try {
+                const fallbackId = dmRoomId(
+                    currentUserProfile?.id as any,
+                    profile?.id as any
+                );
+                router.push(`/chat/message/${fallbackId}`);
+            } catch {}
+        }
+    };
+
 
     return (
         <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
@@ -217,8 +246,20 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
                                         {profile?.contacts}
                                     </p>
                                 </div>
-
                             </div>
+
+                            {/* Chat Button */}
+                            {!isOwnProfile && (
+                                <div className="mt-6">
+                                    <button
+                                        onClick={handleChatClick}
+                                        className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+                                    >
+                                        <MessageCircle className="w-5 h-5" />
+                                        <span>{t("profile.startChat") || "Start Chat"}</span>
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </aside>
 

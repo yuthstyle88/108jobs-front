@@ -1468,6 +1468,7 @@ export const th = {
             reviews: "รีวิว",
             viewWorkSample: "ดูตัวอย่างงาน",
             enlargedPortfolioImage: "ภาพผลงานที่ขยายใหญ่",
+            startChat: "เริ่มแชท",
         },
         profileApply: {
             advantagesTitle: "เป็นฟรีแลนซ์ Fastwork ดียังไง?",

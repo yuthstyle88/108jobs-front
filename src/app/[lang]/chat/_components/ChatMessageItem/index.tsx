@@ -89,7 +89,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   return (
     <div
       data-testid="chat-message"
-      className={`flex mb-2 ${isIncoming ? "justify-start" : "justify-end"}`}
+      className={`flex ${isIncoming ? "justify-start" : "justify-end"}`}
     >
       {isIncoming && (
         <Image

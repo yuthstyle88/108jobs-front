@@ -118,7 +118,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 const prevDate = prev ? formatDate(prev.createdAt, userLocale) : null;
                 const showDate = currentDate !== prevDate;
                 return (
-                    <div key={msg.id || index}>
+                    <div key={msg.id || index} className="mb-2 last:mb-0">
                         {showDate && (
                             <div className="w-full flex justify-center my-4">
                                 <div className="inline-block rounded-[10px] bg-border-secondary p-1 min-w-[120px] text-[#728197] text-[12.8px] text-center">

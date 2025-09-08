@@ -1507,6 +1507,7 @@ export const en = {
             reviews: "Reviews",
             viewWorkSample: "View Work Sample",
             enlargedPortfolioImage: "Enlarged portfolio image",
+            startChat: "Start chat",
         },
         profileApply: {
             advantagesTitle:

@@ -38,6 +38,41 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     const [page, setPage] = useState(1);
     const sharedKeyReadyRef = useRef(false);
     const { localUser } = useMyUser();
+    // Persist client-known last-activity timestamps to keep room order stable across reloads
+    const LOCAL_ACTIVITY_KEY = 'chat_last_activity_overrides';
+    const activityOverridesRef = useRef<Record<string, string>>({});
+    const saveOverrides = useCallback(() => {
+        try {
+            if (typeof window !== 'undefined') {
+                localStorage.setItem(LOCAL_ACTIVITY_KEY, JSON.stringify(activityOverridesRef.current));
+            }
+        } catch {}
+    }, []);
+    // Load persisted overrides once
+    useEffect(() => {
+        try {
+            if (typeof window !== 'undefined') {
+                const raw = localStorage.getItem(LOCAL_ACTIVITY_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed && typeof parsed === 'object') activityOverridesRef.current = parsed;
+                }
+            }
+        } catch {}
+        // After loading, re-sort current rooms using effective timestamps
+        setState(prev => {
+            const sorted = [...prev.rooms].sort((a: any, b: any) => {
+                const ao = activityOverridesRef.current[a.id];
+                const bo = activityOverridesRef.current[b.id];
+                const at = a?.lastMessage?.timestamp ? new Date(a.lastMessage.timestamp).getTime() : 0;
+                const bt = b?.lastMessage?.timestamp ? new Date(b.lastMessage.timestamp).getTime() : 0;
+                const aet = Math.max(at, ao ? new Date(ao).getTime() : 0);
+                const bet = Math.max(bt, bo ? new Date(bo).getTime() : 0);
+                return bet - aet;
+            });
+            return { ...prev, rooms: sorted } as any;
+        });
+    }, []);
 
     const { state: reqState, data, isMutating: isLoading, execute } = useHttpGet("listChatRooms", { limit: page * pageSize });
     const error = reqState.state === "failed" ? (reqState as any).err : null;
@@ -155,9 +190,13 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                     return { ...prev, isLoading: isLoading, error } as any;
                 }
                 const sortedRooms = [...mergedRooms].sort((a: any, b: any) => {
+                    const ao = activityOverridesRef.current[a.id];
+                    const bo = activityOverridesRef.current[b.id];
                     const at = a?.lastMessage?.timestamp ? new Date(a.lastMessage.timestamp).getTime() : 0;
                     const bt = b?.lastMessage?.timestamp ? new Date(b.lastMessage.timestamp).getTime() : 0;
-                    return bt - at;
+                    const aet = Math.max(at, ao ? new Date(ao).getTime() : 0);
+                    const bet = Math.max(bt, bo ? new Date(bo).getTime() : 0);
+                    return bet - aet;
                 });
                 return {
                     ...prev,
@@ -214,12 +253,15 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
             if (idx === -1) return prev;
             const room = prev.rooms[idx] as any;
             const newUpdatedAt = updatedAt || new Date().toISOString();
+            // persist override for stability across reloads
+            activityOverridesRef.current[roomId] = newUpdatedAt;
+            saveOverrides();
             const updatedRoom = { ...room, lastMessage: { ...(room.lastMessage || {}), timestamp: newUpdatedAt } };
             const remaining = prev.rooms.filter((_, i) => i !== idx);
             const nextRooms = [updatedRoom as any, ...remaining];
             return { ...prev, rooms: nextRooms } as any;
         });
-    }, []);
+    }, [saveOverrides]);
 
     const updateRoomLastMessage = useCallback((roomId: string, content: string, senderId: number, timestamp?: string, reorder: boolean = false) => {
         setState(prev => {
@@ -227,6 +269,11 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
             if (idx === -1) return prev;
             const room = prev.rooms[idx] as any;
             const ts = timestamp || new Date().toISOString();
+            // Optionally persist override for stability when we intend to reorder
+            if (reorder) {
+                activityOverridesRef.current[roomId] = ts;
+                saveOverrides();
+            }
             const updatedRoom = {
                 ...room,
                 lastMessage: {
@@ -235,17 +282,23 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                     senderId,
                 },
             };
+            let nextRooms = prev.rooms.slice();
+            nextRooms[idx] = updatedRoom as any;
+            // Sort using effective timestamps when reorder requested
             if (reorder) {
-                const remaining = prev.rooms.filter((_, i) => i !== idx);
-                const nextRooms = [updatedRoom as any, ...remaining];
-                return { ...prev, rooms: nextRooms } as any;
-            } else {
-                const nextRooms = prev.rooms.slice();
-                nextRooms[idx] = updatedRoom as any;
-                return { ...prev, rooms: nextRooms } as any;
+                nextRooms = [...nextRooms].sort((a: any, b: any) => {
+                    const ao = activityOverridesRef.current[a.id];
+                    const bo = activityOverridesRef.current[b.id];
+                    const at = a?.lastMessage?.timestamp ? new Date(a.lastMessage.timestamp).getTime() : 0;
+                    const bt = b?.lastMessage?.timestamp ? new Date(b.lastMessage.timestamp).getTime() : 0;
+                    const aet = Math.max(at, ao ? new Date(ao).getTime() : 0);
+                    const bet = Math.max(bt, bo ? new Date(bo).getTime() : 0);
+                    return bet - aet;
+                });
             }
+            return { ...prev, rooms: nextRooms } as any;
         });
-    }, []);
+    }, [saveOverrides]);
 
     // Listen for global chat:new-message events to immediately update the left list
     useEffect(() => {
@@ -287,11 +340,22 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                     nextRooms = nextRooms.map(r => r.id === detail.roomId ? { ...r, unreadCount: (r.unreadCount || 0) + 1 } : r);
                 }
 
-                // Sort by lastActivity (lastMessage.timestamp) desc
+                // Persist override if we have a newer activity timestamp
+                if (isNewer) {
+                    const tsStr = detail.timestamp || new Date().toISOString();
+                    activityOverridesRef.current[detail.roomId] = tsStr;
+                    try { saveOverrides(); } catch {}
+                }
+
+                // Sort by effective lastActivity (max of server ts and override)
                 nextRooms = [...nextRooms].sort((a: any, b: any) => {
+                    const ao = activityOverridesRef.current[a.id];
+                    const bo = activityOverridesRef.current[b.id];
                     const at = a?.lastMessage?.timestamp ? new Date(a.lastMessage.timestamp).getTime() : 0;
                     const bt = b?.lastMessage?.timestamp ? new Date(b.lastMessage.timestamp).getTime() : 0;
-                    return bt - at;
+                    const aet = Math.max(at, ao ? new Date(ao).getTime() : 0);
+                    const bet = Math.max(bt, bo ? new Date(bo).getTime() : 0);
+                    return bet - aet;
                 });
 
                 return { ...prev, rooms: nextRooms } as any;

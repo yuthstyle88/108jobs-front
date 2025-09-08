@@ -5,7 +5,7 @@ import {
     GetSiteResponse,
     JobType,
     ListCommunitiesResponse,
-    PaginationCursor
+    PaginationCursor, PersonId
 } from "lemmy-js-client";
 import {IncomingHttpHeaders} from "http";
 import * as cookie from "cookie";
@@ -580,9 +580,14 @@ export function getCommunitiesAtLevel(catalogData: ListCommunitiesResponse | und
  * Generate deterministic roomId for a DM between 2 users.
  * Always the same string for the same pair.
  */
-export function dmRoomId(userA: number, userB: number): string {
+export function dmRoomId(userA: PersonId | undefined, userB: PersonId | undefined): string {
+    if (userA === undefined || userB === undefined) {
+        throw new Error("Both userA and userB must be defined to generate a DM room ID");
+    }
+
     // normalize order (smaller id first)
-    const [low, high] = userA < userB ? [userA, userB] : [userB, userA];
+    const low = Math.min(userA, userB);
+    const high = Math.max(userA, userB);
     const input = `dm:${low}:${high}`;
 
     // SHA-256 hash -> take first 16 hex chars

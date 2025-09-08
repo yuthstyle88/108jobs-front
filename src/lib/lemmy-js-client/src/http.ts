@@ -242,6 +242,7 @@ import type {ListUserChatRoomsQuery} from "./types/ListUserChatRoomsQuery";
 import {ListUserChatRoomsResponse} from "./types/ListUserChatRoomsResponse";
 import type {ChatRoomId} from "./types/ChatRoomId";
 import type {ChatRoomResponse} from "./types/ChatRoomResponse";
+import type {CreateChatRoomRequest} from "./types/CreateChatRoomRequest";
 import type {CreateInvoiceForm} from "./types/CreateInvoiceForm";
 import type {CreateInvoiceResponse} from "./types/CreateInvoiceResponse";
 import type {ApproveQuotation} from "./types/ApproveQuotation";
@@ -3095,6 +3096,24 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<ApproveQuotation, BillingOperationResponse>(
             HttpType.Post,
             "/account/services/approve-quotation",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Create a chat room.
+     */
+    @Security("bearerAuth")
+    @Post("/chat/rooms")
+    @Tags("Chat", "Room")
+    async createChatRoom(
+        @Body() form: CreateChatRoomRequest,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<CreateChatRoomRequest, ChatRoomResponse>(
+            HttpType.Post,
+            "/chat/rooms",
             form,
             options,
         );
