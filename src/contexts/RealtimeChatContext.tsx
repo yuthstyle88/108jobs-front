@@ -229,6 +229,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     clearTimeout(reconnectTimeoutRef.current);
                     reconnectTimeoutRef.current = null;
                 }
+                try { window.dispatchEvent(new Event('ws:reconnected')); } catch {}
                 if (__DEV__) console.debug(`WebSocket connected for room ${roomId}`);
             };
 

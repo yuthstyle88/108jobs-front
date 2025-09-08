@@ -34,7 +34,7 @@ interface ChatSectionProps {
 }
 
 const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerAvatar }) => {
-    const { updateRoomLastMessage, markRoomRead } = useChatRooms();
+    const { updateRoomLastMessage, markRoomRead, setActiveRoomId } = useChatRooms();
     const { state: stepperState, idx: activeStep, send, canGo, ORDER, cancel } = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
@@ -46,6 +46,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
     const atBottomRef = useRef<boolean>(true);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null); // New error state for API failures
+    const [newSinceCount, setNewSinceCount] = useState<number>(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
     const setScrollRef = useCallback((el: HTMLDivElement | null) => {
@@ -98,6 +99,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 let latestSenderId: number | null = null;
                 // Consider current batch as history if fetching or if this is the very first inflow (prev empty)
                 const isHistoryBatch = isFetching || prev.length === 0;
+                let inc = 0;
                 for (const msg of items) {
                     const isDuplicate = copy.some(
                         (m) =>
@@ -117,6 +119,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     const newStatus = isIncoming
                         ? ((!!atBottomRef.current || isHistoryBatch) ? 1 : 0)
                         : (typeof (msg as any).status === 'number' ? (msg as any).status : 0);
+                    if (!isHistoryBatch && !atBottomRef.current && isIncoming) {
+                        inc++;
+                    }
                     if (idx >= 0) {
                         replaced++;
                         copy[idx] = { ...(msg as any), status: newStatus } as UIChatMessage;
@@ -137,6 +142,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 );
 
                 // Defer room preview updates only for live, single-message events (skip during history)
+                if (!isHistoryBatch && inc > 0) {
+                    try { setNewSinceCount(prev => prev + inc); } catch {}
+                }
                 if (!isHistoryBatch && items.length === 1 && latestTs > 0 && latestContent != null && latestSenderId != null) {
                     const tsIso = new Date(latestTs).toISOString();
                     latestIncomingRef.current = {
@@ -171,6 +179,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
     const { trigger: uploadFile, isMutating: isUploading } = usePrivateImagePost(
         API_ROUTES.chat.uploadFile + `?roomId=${roomId}`
     );
+
+    // Mark this room as active and mark as read on mount
+    useEffect(() => {
+        try {
+            setActiveRoomId(roomId);
+            markRoomRead(roomId);
+        } catch {}
+        return () => {
+            try { setActiveRoomId(null); } catch {}
+        };
+    }, [roomId, setActiveRoomId, markRoomRead]);
 
     const currentRoom = {
         roomId,
@@ -608,12 +627,30 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             onAtBottomChange={(isAtBottom) => {
                                 atBottomRef.current = isAtBottom;
                                 if (isAtBottom) {
+                                    setNewSinceCount(0);
                                     setMessages(prev => prev.map(m => (!m.isOwner && m.status === 0 ? { ...m, status: 1 } : m)));
                                     try { markRoomRead(roomId); } catch {}
                                 }
                             }}
                         />
                     </div>
+                    {!atBottomRef.current && newSinceCount > 0 && (
+                        <div className="absolute bottom-20 left-0 right-0 flex justify-center pointer-events-none">
+                            <button
+                                className="pointer-events-auto bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm px-3 py-1.5 rounded-full shadow-md"
+                                onClick={() => {
+                                    const rootEl = scrollContainerRef.current;
+                                    if (rootEl) {
+                                        rootEl.scrollTop = rootEl.scrollHeight;
+                                    }
+                                    setNewSinceCount(0);
+                                }}
+                                aria-label={`Jump to latest messages (${newSinceCount} new)`}
+                            >
+                                {newSinceCount} new message{newSinceCount > 1 ? 's' : ''} — Jump to latest
+                            </button>
+                        </div>
+                    )}
                     <div className="border-t px-3 py-2 sm:px-4 sm:py-3 bg-white">
                         <div className="flex items-center gap-2">
                             <div className="flex-1">

@@ -27,6 +27,8 @@ interface ChatRoomsContextValue extends RoomsState {
     markRoomRead: (roomId: string) => Promise<void>;
     bumpRoomToTop: (roomId: string, updatedAt?: string) => void;
     updateRoomLastMessage: (roomId: string, content: string, senderId: number, timestamp?: string, reorder?: boolean) => void;
+    activeRoomId: string | null;
+    setActiveRoomId: (roomId: string | null) => void;
 }
 
 const ChatRoomsContext = createContext<ChatRoomsContextValue | undefined>(undefined);
@@ -111,6 +113,9 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         hasMore: true
     } as any);
 
+    // Track which room is currently open/active in the UI
+    const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
+
     useEffect(() => {
         let alive = true;
         (async () => {
@@ -149,6 +154,11 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                 if (isSame) {
                     return { ...prev, isLoading: isLoading, error } as any;
                 }
+                const sortedRooms = [...mergedRooms].sort((a: any, b: any) => {
+                    const at = a?.lastMessage?.timestamp ? new Date(a.lastMessage.timestamp).getTime() : 0;
+                    const bt = b?.lastMessage?.timestamp ? new Date(b.lastMessage.timestamp).getTime() : 0;
+                    return bt - at;
+                });
                 return {
                     ...prev,
                     isLoading: isLoading,
@@ -156,7 +166,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                     page: result.page,
                     pageSize: result.pageSize,
                     hasMore: result.hasMore,
-                    rooms: mergedRooms as any,
+                    rooms: sortedRooms as any,
                 } as any;
             });
         })();
@@ -167,6 +177,23 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
 
     const refresh = useCallback(() => {
         execute();
+    }, [execute]);
+
+    // Periodic polling every 3 minutes to recover from missed WS updates
+    useEffect(() => {
+        const id = setInterval(() => {
+            try { execute(); } catch {}
+        }, 180000);
+        return () => clearInterval(id);
+    }, [execute]);
+
+    // Refetch when WS reconnects (event dispatched from RealtimeChatContext)
+    useEffect(() => {
+        const onReconnected = () => {
+            try { execute(); } catch {}
+        };
+        window.addEventListener('ws:reconnected', onReconnected as any);
+        return () => window.removeEventListener('ws:reconnected', onReconnected as any);
     }, [execute]);
 
     const loadMore = useCallback(() => {
@@ -246,26 +273,33 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
 
                 let nextRooms: any[];
                 if (isNewer) {
-                    // Reorder to top only when newer
-                    const remaining = prev.rooms.filter((_, i) => i !== idx);
-                    nextRooms = [updatedRoom, ...remaining];
+                    // Reorder later by sorting; for now just upsert
+                    nextRooms = prev.rooms.slice();
+                    nextRooms[idx] = updatedRoom;
                 } else {
                     // Do not reorder on duplicate/older messages
                     nextRooms = prev.rooms.slice();
                     nextRooms[idx] = updatedRoom;
                 }
 
-                // Update unread count if needed
-                if (detail.unread === true) {
+                // Update unread count if needed and room is not active
+                if (detail.unread === true && detail.roomId !== activeRoomId) {
                     nextRooms = nextRooms.map(r => r.id === detail.roomId ? { ...r, unreadCount: (r.unreadCount || 0) + 1 } : r);
                 }
+
+                // Sort by lastActivity (lastMessage.timestamp) desc
+                nextRooms = [...nextRooms].sort((a: any, b: any) => {
+                    const at = a?.lastMessage?.timestamp ? new Date(a.lastMessage.timestamp).getTime() : 0;
+                    const bt = b?.lastMessage?.timestamp ? new Date(b.lastMessage.timestamp).getTime() : 0;
+                    return bt - at;
+                });
 
                 return { ...prev, rooms: nextRooms } as any;
             });
         };
         window.addEventListener('chat:new-message' as any, handler as any);
         return () => window.removeEventListener('chat:new-message' as any, handler as any);
-    }, [updateRoomLastMessage]);
+    }, [updateRoomLastMessage, activeRoomId]);
 
     const value = useMemo<ChatRoomsContextValue>(() => ({
         ...state,
@@ -274,7 +308,9 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         markRoomRead,
         bumpRoomToTop,
         updateRoomLastMessage,
-    }), [state, refresh, loadMore, markRoomRead, bumpRoomToTop, updateRoomLastMessage]);
+        activeRoomId,
+        setActiveRoomId,
+    }), [state, refresh, loadMore, markRoomRead, bumpRoomToTop, updateRoomLastMessage, activeRoomId]);
 
     return (
         <ChatRoomsContext.Provider value={value}>
