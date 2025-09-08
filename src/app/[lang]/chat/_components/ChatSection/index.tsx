@@ -34,7 +34,7 @@ interface ChatSectionProps {
 }
 
 const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerAvatar }) => {
-    const { updateRoomLastMessage } = useChatRooms();
+    const { updateRoomLastMessage, markRoomRead } = useChatRooms();
     const { state: stepperState, idx: activeStep, send, canGo, ORDER, cancel } = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
@@ -43,6 +43,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
     type UIChatMessage = WsChatMessage & { isOwner?: boolean };
         const [messages, setMessages] = useState<UIChatMessage[]>([]);
     const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
+    const atBottomRef = useRef<boolean>(true);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null); // New error state for API failures
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -95,6 +96,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 let latestTs = 0;
                 let latestContent: string | null = null;
                 let latestSenderId: number | null = null;
+                // Consider current batch as history if fetching or if this is the very first inflow (prev empty)
+                const isHistoryBatch = isFetching || prev.length === 0;
                 for (const msg of items) {
                     const isDuplicate = copy.some(
                         (m) =>
@@ -109,13 +112,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                         continue;
                     }
 
-                    const idx = copy.findIndex((m) => m.id === msg.id && m.status === 0);
+                    const idx = copy.findIndex((m) => m.id === msg.id);
+                    const isIncoming = !(msg as any).isOwner;
+                    const newStatus = isIncoming
+                        ? ((!!atBottomRef.current || isHistoryBatch) ? 1 : 0)
+                        : (typeof (msg as any).status === 'number' ? (msg as any).status : 0);
                     if (idx >= 0) {
                         replaced++;
-                        copy[idx] = { ...msg, status: 1 };
+                        copy[idx] = { ...(msg as any), status: newStatus } as UIChatMessage;
                     } else {
                         added++;
-                        copy.push({ ...msg, status: 1 });
+                        copy.push({ ...(msg as any), status: newStatus } as UIChatMessage);
                     }
                     const ts = new Date(msg.createdAt).getTime();
                     if (ts > latestTs) {
@@ -129,8 +136,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 );
 
-                // Defer room preview updates only for new single-message events (not history batches)
-                if (items.length === 1 && latestTs > 0 && latestContent != null && latestSenderId != null) {
+                // Defer room preview updates only for live, single-message events (skip during history)
+                if (!isHistoryBatch && items.length === 1 && latestTs > 0 && latestContent != null && latestSenderId != null) {
                     const tsIso = new Date(latestTs).toISOString();
                     latestIncomingRef.current = {
                         roomId,
@@ -146,17 +153,19 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
 
     // After commit, propagate last incoming message to ChatRooms context
     useEffect(() => {
+        if (isFetching) return; // suppress global updates while fetching history
         const d = latestIncomingRef.current;
         if (!d) return;
         try {
             updateRoomLastMessage(d.roomId, d.content, d.senderId, d.timestamp);
             try {
-                window.dispatchEvent(new CustomEvent("chat:new-message", { detail: d }));
+                const isUnread = d.senderId !== Number(localUser?.id) && !atBottomRef.current;
+                window.dispatchEvent(new CustomEvent("chat:new-message", { detail: { ...d, unread: isUnread } }));
             } catch {}
         } finally {
             latestIncomingRef.current = null;
         }
-    }, [messages]);
+    }, [messages, isFetching]);
 
     const { trigger: uploadFile, isMutating: isUploading } = usePrivateImagePost(
         API_ROUTES.chat.uploadFile + `?roomId=${roomId}`
@@ -250,7 +259,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 t("profileChat.proposeQuoteMsg") ||
                 `Proposed quotation: ${data.projectName} - $${data.amount.toFixed(2)}`;
             const payload = { type: "proposed-quote", quote: data };
-
+            
             // Add message to local state
             setMessages((prev) => [
                 {
@@ -260,7 +269,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     createdAt: new Date().toISOString(),
                     senderId: Number(localUser?.id) || 0,
                     receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
-                    status: 0,
+                    status: 1,
                     isOwner: true,
                 } as WsChatMessage,
                 ...prev,
@@ -320,7 +329,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     createdAt: new Date().toISOString(),
                     senderId: Number(localUser?.id) || 0,
                     receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
-                    status: 0,
+                    status: 1,
                     isOwner: true,
                 } as WsChatMessage,
                 ...prev,
@@ -428,7 +437,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     createdAt: new Date().toISOString(),
                     senderId: Number(localUser?.id) || 0,
                     receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
-                    status: 0,
+                    status: 1,
                     isOwner: true,
                 } as WsChatMessage,
                 ...prev,
@@ -465,7 +474,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     createdAt: new Date().toISOString(),
                     senderId: Number(localUser?.id) || 0,
                     receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
-                    status: 0,
+                    status: 1,
                     isOwner: true,
                 } as WsChatMessage,
                 ...prev,
@@ -592,6 +601,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             }}
                             hasMore={hasMoreMessages}
                             isFetching={isFetching}
+                            onAtBottomChange={(isAtBottom) => {
+                                atBottomRef.current = isAtBottom;
+                                if (isAtBottom) {
+                                    setMessages(prev => prev.map(m => (!m.isOwner && m.status === 0 ? { ...m, status: 1 } : m)));
+                                    try { markRoomRead(roomId); } catch {}
+                                }
+                            }}
                         />
                     </div>
                     <div className="border-t px-3 py-2 sm:px-4 sm:py-3 bg-white">

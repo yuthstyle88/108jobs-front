@@ -217,9 +217,15 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     // Listen for global chat:new-message events to immediately update the left list
     useEffect(() => {
         const handler = (e: Event) => {
-            const detail = (e as CustomEvent).detail as { roomId: string; content: string; senderId: number; timestamp?: string };
+            const detail = (e as CustomEvent).detail as { roomId: string; content: string; senderId: number; timestamp?: string; unread?: boolean };
             if (!detail || !detail.roomId) return;
             updateRoomLastMessage(detail.roomId, detail.content, detail.senderId, detail.timestamp);
+            if (detail.unread === true) {
+                setState(prev => ({
+                    ...prev,
+                    rooms: prev.rooms.map(r => r.id === detail.roomId ? { ...r, unreadCount: (r.unreadCount || 0) + 1 } : r)
+                }));
+            }
         };
         window.addEventListener('chat:new-message' as any, handler as any);
         return () => window.removeEventListener('chat:new-message' as any, handler as any);

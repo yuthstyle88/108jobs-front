@@ -105,7 +105,22 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
           isIncoming ? "items-start" : "items-end"
         }`}
       >
-        <p className="text-[11px] text-gray-400">{time}</p>
+        <p className="text-[11px] text-gray-400 flex items-center gap-1">
+          {time}
+          {!isIncoming && (
+            message.status === 0 ? (
+              <span className="ml-1 inline-flex items-center gap-1 text-blue-600">
+                <span className="inline-block w-2 h-2 rounded-full bg-blue-500" />
+                Unread
+              </span>
+            ) : (
+              <span className="ml-1 inline-flex items-center gap-1 text-green-600">
+                <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
+                Read
+              </span>
+            )
+          )}
+        </p>
 
         {/* Render quotation card if detected */}
         {isProposedQuote ? (

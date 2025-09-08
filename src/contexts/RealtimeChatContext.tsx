@@ -10,6 +10,56 @@ import {v4 as uuidv4} from "uuid";
 import {__DEV__, addOnce, buildWsUrl, getReceiverIdFromRoom, isBase64Like, logDebug, safeParse} from "@/utils/realtime";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils/crypto";
 
+async function mapIncomingToChatMessage(
+    m: any,
+    opts: {
+        token?: string | null;
+        sharedKeyHex?: string;
+        fallbackRoomId: string;
+        localUserId: number;
+        receivedSet: Set<string>;
+        decryptLabel: string;
+    }
+): Promise<ChatMessage | null> {
+    try {
+        const createdAtVal = m.created_at || m.createdAt || new Date().toISOString();
+        const messageSignature = `${m.content}:${createdAtVal}`;
+        if (!addOnce(opts.receivedSet, messageSignature)) {
+            return null;
+        }
+
+        let content = m.content;
+        if (opts.token && opts.sharedKeyHex && isBase64Like(m.content)) {
+            try {
+                const aesKey = await importAesKey(opts.sharedKeyHex, 'decrypt');
+                const plain = await decrypt(m.content, opts.token, aesKey);
+                if (plain.length > 0) content = plain;
+            } catch (e) {
+                console.warn(`onmessage: Decryption failed for ${opts.decryptLabel}`, e);
+            }
+        }
+
+        const roomIdMapped = m.room_id || m.roomId || opts.fallbackRoomId;
+        const senderIdMapped = Number(m.sender_id ?? m.senderId) || 0;
+        const receiverIdMapped = Number(m.receiver_id ?? m.receiverId) || getReceiverIdFromRoom(roomIdMapped);
+        const createdAtMapped = m.created_at || m.createdAt || createdAtVal;
+
+        return {
+            id: m.id || `msg_${uuidv4()}`,
+            senderId: senderIdMapped,
+            receiverId: receiverIdMapped,
+            roomId: roomIdMapped,
+            content,
+            status: typeof m.status === 'number' ? m.status : 1,
+            createdAt: createdAtMapped,
+            isOwner: senderIdMapped === opts.localUserId,
+        };
+    } catch (e) {
+        console.error('onmessage: error mapping payload', e);
+        return null;
+    }
+}
+
 interface MessagePayload {
     message: string;
     id?: string;
@@ -186,7 +236,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 if (__DEV__) {
                     try {
                         const preview = typeof event.data === 'string' ? event.data.slice(0, 200) : String(event.data);
-                        logDebug(`onmessage: raw event`, { type: typeof event.data, preview });
+                        console.log(`onmessage: raw event`, { type: typeof event.data, preview });
                     } catch {}
                 }
                 try {
@@ -205,34 +255,28 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     if (payload && typeof payload === 'object' && payload.message) {
                         const msgView = payload;
                         const m = { ...msgView.message, room_id: msgView.room?.id || msgView.message?.room_id };
-                        const createdAtVal = m.created_at || m.createdAt || new Date().toISOString();
-                        const messageSignature = `${m.content}:${createdAtVal}`;
-                        if (addOnce(receivedMessagesRef.current, messageSignature)) {
-                            let content = m.content;
-                            if (token && sharedKeyHex && isBase64Like(m.content)) {
-                                try {
-                                    const aesKey = await importAesKey(sharedKeyHex, 'decrypt');
-                                    const plain = await decrypt(m.content, token, aesKey);
-                                    if (plain.length > 0) content = plain;
-                                } catch (e) {
-                                    console.warn('onmessage: Decryption failed for message line', e);
-                                }
-                            }
-                            const roomIdMapped = m.room_id || m.roomId || roomId;
-                            const senderIdMapped = Number(m.sender_id ?? m.senderId) || 0;
-                            const receiverIdMapped = Number(m.receiver_id ?? m.receiverId) || getReceiverIdFromRoom(roomIdMapped);
-                            const createdAtMapped = m.created_at || m.createdAt || createdAtVal;
-                            transformedItems.push({
-                                id: m.id || `msg_${uuidv4()}`,
-                                senderId: senderIdMapped,
-                                receiverId: receiverIdMapped,
-                                roomId: roomIdMapped,
-                                content,
-                                status: typeof m.status === 'number' ? m.status : 1,
-                                createdAt: createdAtMapped,
-                                isOwner: senderIdMapped === Number(localUser?.id),
-                            });
-                        }
+                        const mapped = await mapIncomingToChatMessage(m, {
+                            token,
+                            sharedKeyHex,
+                            fallbackRoomId: roomId,
+                            localUserId: Number(localUser?.id),
+                            receivedSet: receivedMessagesRef.current,
+                            decryptLabel: 'message line',
+                        });
+                        if (mapped) transformedItems.push(mapped);
+                    }
+                    // Flat ChatMessage line: { id?, room_id, sender_id, content, created_at?, status? }
+                    else if (payload && typeof payload === 'object' && (payload.content && (payload.room_id || payload.roomId))) {
+                        const m = payload as any;
+                        const mapped = await mapIncomingToChatMessage(m, {
+                            token,
+                            sharedKeyHex,
+                            fallbackRoomId: roomId,
+                            localUserId: Number(localUser?.id),
+                            receivedSet: receivedMessagesRef.current,
+                            decryptLabel: 'flat message line',
+                        });
+                        if (mapped) transformedItems.push(mapped);
                     }
                     // Plain pagination line: { prevPage/prev_page, nextPage/next_page }
                     else if (payload && typeof payload === 'object' && (payload.prevPage || payload.prev_page || payload.nextPage || payload.next_page)) {
@@ -258,10 +302,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     }
 
                     if (transformedItems.length) {
-                        if (__DEV__) console.debug(`onmessage: Broadcasting ${transformedItems.length} transformed items`);
                         broadcastToListeners(transformedItems[0]);
-                    } else if (payload && typeof payload === 'object' && (payload.prevPage || payload.prev_page || payload.nextPage || payload.next_page)) {
-                        // Already handled pagination above; nothing to broadcast
                     } else {
                         if (__DEV__) console.warn('onmessage: Ignored unsupported payload format');
                     }
@@ -379,6 +420,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 console.warn(`sendMessage: Cannot send empty message`);
                 return;
             }
+
+            console.log("sendMessage: Sending message", data.message, "to room", roomId, "from user", localUser?.id,)
 
             const messageId = data.id || uuidv4();
             if (!addOnce(sentMessagesRef.current, messageId)) {

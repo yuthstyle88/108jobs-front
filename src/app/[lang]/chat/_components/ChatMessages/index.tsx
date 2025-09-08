@@ -15,6 +15,7 @@ interface ChatMessagesProps {
     onTopReached?: () => void;
     hasMore?: boolean;
     isFetching?: boolean;
+    onAtBottomChange?: (isAtBottom: boolean) => void;
 }
 
 const formatDate = (dateStr: string, locale?: string) => {
@@ -34,6 +35,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     onTopReached,
     hasMore,
     isFetching,
+    onAtBottomChange,
 }) => {
     const userLocale = typeof navigator !== "undefined" ? navigator.language : undefined;
 
@@ -55,6 +57,16 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [displayedMessages, atBottom]);
 
+    // Force-follow when the current user sends a new message (ensure the view follows own messages).
+    React.useEffect(() => {
+        const latest = messages && messages.length > 0 ? messages[0] : null; // messages are newest-first
+        if (!latest || !latest.isOwner) return;
+        if (!virtuosoRef.current) return;
+        // Always scroll to bottom for own messages to avoid having to manually scroll
+        virtuosoRef.current.scrollToIndex({ index: displayedMessages.length - 1, align: "end", behavior: "smooth" });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [messages]);
+
     return (
         <Virtuoso
             ref={virtuosoRef}
@@ -75,7 +87,10 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
             atTopStateChange={(atTop) => {
                 if (atTop && onTopReached) onTopReached();
             }}
-            atBottomStateChange={(isAtBottom) => setAtBottom(isAtBottom)}
+            atBottomStateChange={(isAtBottom) => {
+                            setAtBottom(isAtBottom);
+                            if (onAtBottomChange) onAtBottomChange(isAtBottom);
+                        }}
             components={{
                 Header: hasMore
                     ? () => (
