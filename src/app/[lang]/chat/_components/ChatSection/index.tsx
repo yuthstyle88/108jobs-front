@@ -14,6 +14,7 @@ import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
 import {useWebSocket} from "@/contexts/RealtimeChatContext";
 import {useChatRooms} from "@/contexts/ChatRoomsContext";
+import { useUnreadStore } from "@/stores/unreadStore";
 import FreelanceChatFlow, {FlowActions, StatusKey} from "@/components/FreelanceChatFlow";
 import QuotationModal, {ProposedQuotePayload} from "@/components/QuotationModal";
 import {usePrivateImagePost} from "@/hooks/api-hooks";
@@ -44,6 +45,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         const [messages, setMessages] = useState<UIChatMessage[]>([]);
     const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
     const atBottomRef = useRef<boolean>(true);
+    const incUnread = useUnreadStore((s) => s.inc);
+    const markSeen = useUnreadStore((s) => s.markSeen);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null); // New error state for API failures
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
@@ -144,6 +147,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 // Defer room preview updates only for live, single-message events (skip during history)
                 if (!isHistoryBatch && inc > 0) {
                     try { setNewSinceCount(prev => prev + inc); } catch {}
+                    try { incUnread(roomId, inc); } catch {}
                 }
                 if (!isHistoryBatch && items.length === 1 && latestTs > 0 && latestContent != null && latestSenderId != null) {
                     const tsIso = new Date(latestTs).toISOString();
@@ -185,6 +189,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         try {
             setActiveRoomId(roomId);
             markRoomRead(roomId);
+            markSeen(roomId);
         } catch {}
         return () => {
             try { setActiveRoomId(null); } catch {}
@@ -630,6 +635,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                     setNewSinceCount(0);
                                     setMessages(prev => prev.map(m => (!m.isOwner && m.status === 0 ? { ...m, status: 1 } : m)));
                                     try { markRoomRead(roomId); } catch {}
+                                    try { markSeen(roomId); } catch {}
                                 }
                             }}
                         />

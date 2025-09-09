@@ -8,9 +8,6 @@ export type AESKey = CryptoKey;
 export async function ensureSharedKeyForRoom(roomId: string): Promise<void> {
   const token = UserService.Instance.auth();
   if (!token) {
-    if (process.env.NODE_ENV !== "production") {
-      console.debug(`ensureSharedKeyForRoom: Skipped - no token`);
-    }
     return;
   }
 
