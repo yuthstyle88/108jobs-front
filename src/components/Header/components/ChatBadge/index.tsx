@@ -17,36 +17,15 @@ const ChatBadge = () => {
     dedupingInterval: 10000,
   });
 
-  // Compute unread rooms where the last message is from the partner and marked unread (status === 0)
+  // Compute unread count from store only; last message is no longer used
   const myId = Number(localUser?.id) || 0;
   const totalUnread = useUnreadStore((s) => s.total);
-  // Fallback compute from API if store has not yet hydrated anything
-  const computedFromApi = (chatData || []).reduce((acc, room) => {
-    const lm = (room as any)?.lastMessage;
-    if (!lm) return acc;
-    const isFromPartner = Number(lm.senderId) !== myId;
-    const isUnread = Number(lm.status) === 0;
-    return acc + (isFromPartner && isUnread ? 1 : 0);
-  }, 0);
-  const unreadCount = totalUnread > 0 ? totalUnread : computedFromApi;
+  const unreadCount = totalUnread;
 
-  // Hydrate unread snapshot from API once if store is empty
+  // Hydrate unread snapshot from API once if store is empty (no longer possible without lastMessage) -> noop
   const hydrate = useUnreadStore((s) => s.hydrate);
   useEffect(() => {
-    if (isChatLoading) return;
-    if (!chatData || chatData.length === 0) return;
-    if (totalUnread > 0) return;
-    const snap: Record<string, number> = {};
-    for (const room of chatData || []) {
-      const lm: any = (room as any).lastMessage;
-      if (!lm) continue;
-      const fromPartner = Number(lm.senderId) !== myId;
-      const unread = Number(lm.status) === 0;
-      const rid = String((room as any).roomId || (room as any).id || "");
-      if (!rid) continue;
-      snap[rid] = fromPartner && unread ? 1 : 0;
-    }
-    try { hydrate(snap); } catch {}
+    // Without lastMessage data from API, we cannot infer unread from header; rely on store events
   }, [isChatLoading, chatData, hydrate, myId, totalUnread]);
 
   // In header, avoid rendering spinners or error blocks; just show the icon and badge when available

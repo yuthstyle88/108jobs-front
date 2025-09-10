@@ -31,8 +31,7 @@ const ChatWrapper = () => {
         return q
             ? list.filter(
                 (r) =>
-                    r.name.toLowerCase().includes(q) ||
-                    (r.lastMessage?.content || "").toLowerCase().includes(q)
+                    r.name.toLowerCase().includes(q)
             )
             : list;
     }, [rooms, searchQuery]);
@@ -90,9 +89,18 @@ const ChatWrapper = () => {
                 {/* Chat List */}
                 <div className="flex-1 overflow-y-auto">
                     {isLoading && filteredRooms.length === 0 && (
-                        <p className="p-3 sm:p-4 text-xs sm:text-sm text-gray-500 text-center">
-                            Loading chats…
-                        </p>
+                        <div className="p-3 sm:p-4 space-y-3" aria-live="polite" aria-busy="true">
+                            {Array.from({ length: 6 }).map((_, i) => (
+                                <div key={i} className="mx-2 p-3 flex items-center gap-3 animate-pulse">
+                                    <div className="w-9 h-9 rounded-full bg-gray-200" />
+                                    <div className="flex-1">
+                                        <div className="h-3 bg-gray-200 rounded w-2/3 mb-2" />
+                                        <div className="h-3 bg-gray-100 rounded w-1/3" />
+                                    </div>
+                                    <div className="w-8 h-5 bg-gray-200 rounded-full" />
+                                </div>
+                            ))}
+                        </div>
                     )}
                     {filteredRooms.map((room: ChatRoom) => (
                         <ChatListItem
@@ -104,9 +112,15 @@ const ChatWrapper = () => {
                         />
                     ))}
                     {filteredRooms.length === 0 && !isLoading && !error && (
-                        <p className="p-3 sm:p-4 text-xs sm:text-sm text-gray-500 text-center">
-                            No chats found
-                        </p>
+                        <div className="p-6 text-center text-gray-500">
+                            <div className="mx-auto mb-3 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                                <svg className="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
+                                </svg>
+                            </div>
+                            <p className="text-sm">No chats found</p>
+                            <p className="text-xs mt-1">Start a conversation to see it here.</p>
+                        </div>
                     )}
                 </div>
             </div>

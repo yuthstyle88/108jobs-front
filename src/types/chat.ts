@@ -13,11 +13,6 @@ export interface ChatRoom {
     id: string;
     name: string;
     participants: { id: number; name: string }[];
-    lastMessage?: {
-        content: string;
-        timestamp: string;
-        senderId: number;
-    };
     unreadCount: number;
 }
 
@@ -53,7 +48,6 @@ export type ChatResponse = {
     partnerAvatar: string;
     partnerUsername: string;
     partnerDisplayName: string;
-    lastMessage: ChatMessage;
     job: Job;
     jobCoverImage: string;
 };

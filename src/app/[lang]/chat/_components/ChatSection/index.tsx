@@ -35,7 +35,7 @@ interface ChatSectionProps {
 }
 
 const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerAvatar }) => {
-    const { updateRoomLastMessage, markRoomRead, setActiveRoomId } = useChatRooms();
+    const { markRoomRead, setActiveRoomId } = useChatRooms();
     const { state: stepperState, idx: activeStep, send, canGo, ORDER, cancel } = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
@@ -170,7 +170,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         if (!d) return;
         try {
             // Only update preview; rely on global event for conditional reordering
-            updateRoomLastMessage(d.roomId, d.content, d.senderId, d.timestamp, false);
+            // no-op: last message previews removed
             try {
                 const isUnread = d.senderId !== Number(localUser?.id) && !atBottomRef.current;
                 window.dispatchEvent(new CustomEvent("chat:new-message", { detail: { ...d, unread: isUnread } }));
@@ -306,11 +306,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 id: messageId,
             });
 
-            // Update room last message
+            // Notify room activity (preview removed)
             const tsIso = new Date().toISOString();
             try {
-                // Update preview locally; rely on global event to decide reordering
-                updateRoomLastMessage(roomId, readable, Number(localUser?.id) || 0, tsIso, false);
                 window.dispatchEvent(
                     new CustomEvent("chat:new-message", {
                         detail: {
@@ -369,8 +367,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
 
             try {
                 const tsIso = new Date().toISOString();
-                // Update preview locally; rely on global event to decide reordering
-                updateRoomLastMessage(roomId, readable, Number(localUser?.id) || 0, tsIso, false);
                 window.dispatchEvent(
                     new CustomEvent("chat:new-message", {
                         detail: { roomId, content: readable, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
@@ -508,8 +504,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             ]);
             try {
                 const tsIso = new Date().toISOString();
-                // Update preview locally; rely on global event to decide reordering
-                updateRoomLastMessage(roomId, message, Number(localUser?.id) || 0, tsIso, false);
                 try {
                     window.dispatchEvent(
                         new CustomEvent("chat:new-message", {
@@ -526,7 +520,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             setSelectedFile(null);
             isSubmittingRef.current = false;
         },
-        [sendMessage, currentRoom, roomId, selectedFile, localUser?.id, updateRoomLastMessage]
+        [sendMessage, currentRoom, roomId, selectedFile, localUser?.id]
     );
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
