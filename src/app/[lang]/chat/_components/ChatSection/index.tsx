@@ -56,6 +56,24 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         scrollContainerRef.current = el;
         if (el) setScrollParentEl(el);
     }, []);
+    // Measure chat input height to prevent last message being obscured
+    const inputContainerRef = useRef<HTMLDivElement>(null);
+    const [bottomPad, setBottomPad] = useState<number>(0);
+    useEffect(() => {
+        const el = inputContainerRef.current;
+        if (!el || typeof ResizeObserver === "undefined") return;
+        const ro = new ResizeObserver((entries) => {
+            const rect = entries[0]?.contentRect;
+            if (rect) {
+                // Add small gap (8px) for visual breathing room
+                setBottomPad(Math.ceil(rect.height + 8));
+            }
+        });
+        ro.observe(el);
+        return () => {
+            try { ro.disconnect(); } catch {}
+        };
+    }, []);
     const isSubmittingRef = useRef(false);
     const { localUser } = useMyUser();
     const latestIncomingRef = useRef<{ roomId: string; content: string; senderId: number; timestamp: string } | null>(null);
@@ -599,7 +617,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     <div
                         ref={setScrollRef}
                         data-testid="chat-list"
-                        className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-4 pt-3 sm:pt-4 pb-0 bg-gray-50 flex"
+                        className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-4 pt-3 sm:pt-4 bg-gray-50 flex"
+                        style={{ paddingBottom: `calc(${bottomPad}px + env(safe-area-inset-bottom))` }}
                         aria-live="polite"
                     >
                         <ChatMessages
@@ -651,7 +670,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             </button>
                         </div>
                     )}
-                    <div className="border-t px-3 py-2 sm:px-4 sm:py-3 bg-white">
+                    <div ref={inputContainerRef} className="border-t px-3 py-2 sm:px-4 sm:py-3 bg-white">
                         <div className="flex items-center gap-2">
                             <div className="flex-1">
                                 {error && <p className="text-sm text-red-600 mb-2">{error}</p>}

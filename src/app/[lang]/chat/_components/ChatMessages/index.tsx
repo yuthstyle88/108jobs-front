@@ -20,7 +20,7 @@ interface ChatMessagesProps {
 
 const formatDate = (dateStr: string, locale?: string) => {
     const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return ""; // fail-safe for unexpected values
+    if (isNaN(date.getTime())) return ""; // Fail-safe for invalid dates
     return date.toLocaleDateString(locale || undefined, {
         day: "numeric",
         month: "long",
@@ -29,43 +29,22 @@ const formatDate = (dateStr: string, locale?: string) => {
 };
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
-    messages,
-    partnerAvatar,
-    customScrollParent,
-    onTopReached,
-    hasMore,
-    isFetching,
-    onAtBottomChange,
-}) => {
+                                                       messages,
+                                                       partnerAvatar,
+                                                       customScrollParent,
+                                                       onTopReached,
+                                                       hasMore,
+                                                       isFetching,
+                                                       onAtBottomChange,
+                                                   }) => {
     const userLocale = typeof navigator !== "undefined" ? navigator.language : undefined;
 
-    // Virtuoso expects items in oldest-first order for chat use cases.
-    // Incoming messages are newest-first, so reverse for display.
+    // Reverse messages to display newest-first (API provides oldest-first)
     const displayedMessages = React.useMemo(() => [...messages].reverse(), [messages]);
 
-    // Track whether the user is at the bottom to emulate auto-scroll behavior like VirtuosoMessageList
+    // Track whether the user is at the bottom for auto-scroll
     const virtuosoRef = React.useRef<VirtuosoHandle | null>(null);
     const [atBottom, setAtBottom] = React.useState(true);
-
-    // When messages change and the user is at the bottom, scroll smoothly to the last item.
-    React.useEffect(() => {
-        if (!virtuosoRef.current) return;
-        if (!displayedMessages.length) return;
-        if (!atBottom) return;
-        // Scroll to the end when new data arrives or item sizes change while at bottom
-        virtuosoRef.current.scrollToIndex({ index: displayedMessages.length - 1, align: "end", behavior: "smooth" });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [displayedMessages, atBottom]);
-
-    // Force-follow when the current user sends a new message (ensure the view follows own messages).
-    React.useEffect(() => {
-        const latest = messages && messages.length > 0 ? messages[0] : null; // messages are newest-first
-        if (!latest || !latest.isOwner) return;
-        if (!virtuosoRef.current) return;
-        // Always scroll to bottom for own messages to avoid having to manually scroll
-        virtuosoRef.current.scrollToIndex({ index: displayedMessages.length - 1, align: "end", behavior: "smooth" });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [messages]);
 
     return (
         <Virtuoso
@@ -80,17 +59,16 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 const content: string = anyMsg?.content || "";
                 return `${created}|${sender}|${content.length}:${content.slice(0, 16)}`;
             }}
-            // Only follow new output when the user is at the bottom
-            followOutput="auto"
-            initialTopMostItemIndex={displayedMessages.length - 1}
-            alignToBottom
+            followOutput="auto" // Auto-scroll to new messages when at bottom
+            initialTopMostItemIndex={displayedMessages.length - 1} // Start at newest message
+            alignToBottom // Align viewport to bottom for newest messages
             atTopStateChange={(atTop) => {
-                if (atTop && onTopReached) onTopReached();
+                if (atTop && onTopReached) onTopReached(); // Fetch older messages
             }}
             atBottomStateChange={(isAtBottom) => {
-                            setAtBottom(isAtBottom);
-                            if (onAtBottomChange) onAtBottomChange(isAtBottom);
-                        }}
+                setAtBottom(isAtBottom);
+                if (onAtBottomChange) onAtBottomChange(isAtBottom);
+            }}
             components={{
                 Header: hasMore
                     ? () => (
@@ -101,19 +79,24 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                         </div>
                     )
                     : undefined,
-                Scroller: React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>((props, ref) => (
-                    <div
-                        {...props}
-                        ref={ref}
-                        style={{
-                            ...(props.style || {}),
-                            overflow: customScrollParent ? "visible" : "auto",
-                        }}
-                    />
-                )),
+                Scroller: React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+                    (props, ref) => (
+                        <div
+                            {...props}
+                            ref={ref}
+                            style={{
+                                ...(props.style || {}),
+                                overflow: customScrollParent ? "visible" : "auto",
+                                display: "flex",
+                                flexDirection: "column-reverse", // Render messages bottom-to-top
+                            }}
+                        />
+                    )
+                ),
             }}
             itemContent={(index, msg) => {
                 const currentDate = formatDate(msg.createdAt, userLocale);
+                // Compare with previous message (older) for date boundary in newest-first order
                 const prev = index > 0 ? displayedMessages[index - 1] : null;
                 const prevDate = prev ? formatDate(prev.createdAt, userLocale) : null;
                 const showDate = currentDate !== prevDate;
