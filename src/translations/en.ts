@@ -18,7 +18,7 @@ export const en = {
         price_note_2: "**Prices may change according to job appropriateness.",
         contact_section_title: "What would you like us to help with",
         copyright: "Copyright © 2024 108jobs for Business.",
-        hero_title: "fastwork for business",
+        hero_title: "108Jobs for Business",
         hero_subtitle: "Freelance sourcing assistant for businesses",
         contact_us: "Contact us",
     },
@@ -306,7 +306,7 @@ export const en = {
             verificationForgotMessage:
                 "The verification code has been sent to your email/phone number.",
             verificationMessage:
-                "Fastwork will send a verification code to your email/phone number to confirm account ownership.",
+                "108Jobs will send a verification code to your email/phone number to confirm account ownership.",
             notFound: "Incorrect OTP. Please re-enter the correct code.",
             incorrectLogin: "Wrong password. Please try again!",
             pleaseEnterEmailOrUsernameMin6:
@@ -400,7 +400,7 @@ export const en = {
                 "SEO for WordPress, Facebook, On-page, Off-page, and Backlinks",
             seoConclusionPart2:
                 ". Results are trackable, and reaching top rankings is easier.",
-            howToHireTitle: "How to Hire SEO Freelancers on Fastwork",
+            howToHireTitle: "How to Hire SEO Freelancers on 108Jobs",
             howToHireSteps0:
                 "Find the right freelancer by reviewing their portfolio, skills, and reviews.",
             howToHireSteps1:
@@ -412,7 +412,7 @@ export const en = {
         },
         commission: {
             header: "Service fee based on accumulated income",
-            subheader: "Fastwork service fee by tier",
+            subheader: "108Jobs service fee by tier",
             allContentTitle: "All content",
             allContentWhatIsFeeBasedOnAccumulatedIncome:
                 "What is the service fee based on accumulated income?",
@@ -422,11 +422,11 @@ export const en = {
             allContentExample2Title:
                 "Example 2: Projects approved this month up to the present date",
             allContentExample3Title: "Example 3: Beginning of a new month",
-            allContentWhatIsFeeUsedFor: "What is the Fastwork service fee used for?",
+            allContentWhatIsFeeUsedFor: "What is the 108Jobs service fee used for?",
             whatIsAccumulatedIncomeFeeTitle:
                 "What is the service fee based on accumulated income?",
             whatIsAccumulatedIncomeFeeDescription:
-                "This is a pre-declared service fee based on the total amount each time for a freelancer, calculated according to the Fastwork member tier. The member tier is determined based on the accumulated income over the last 3 months, calculated up to the project report creation and completion date.",
+                "This is a pre-declared service fee based on the total amount each time for a freelancer, calculated according to the 108Jobs member tier. The member tier is determined based on the accumulated income over the last 3 months, calculated up to the project report creation and completion date.",
             checkYourTier: "Check your tier",
             tierTableHeaderName: "Details of service fee calculation are as follows:",
             tierTableHeadersMemberLevel: "Member tier",
@@ -530,7 +530,7 @@ export const en = {
                 "If a freelancer creates a quote on July 1, 2024, the service fee for that project will be 10%.",
             example3AdditionalNote:
                 "Note: If there is a quote policy, the service fee percentage will be recalculated based on the revision source.",
-            fastlaneFeePurposeQuest: "What is the Fastwork service fee used for?",
+            fastlaneFeePurposeQuest: "What is the 108Jobs service fee used for?",
             fastlaneFeePurpose:
                 "The service fee on our system will be used to maintain and improve the platform to meet the needs of both freelancers and employers. This includes enhancing the profile experience on the platform, boosting revenue, promoting the brand to attract more users, and creating more job opportunities.",
             title: "Translation fee and payment information",
@@ -687,7 +687,7 @@ export const en = {
             payLaterVerification:
                 "You can pay later to confirm becoming a freelancer.",
             fastworkUsageTip:
-                "Using Fastwork correctly reduces the risk of account suspension.",
+                "Using 108Jobs correctly reduces the risk of account suspension.",
             complianceTip:
                 "Compliance with regulations helps you avoid bans and earn income securely.",
             contactInfoUsage: "Using contact information forms",
@@ -748,12 +748,12 @@ export const en = {
             adsComingTitle: "Promote your services through ads (Coming soon...)",
             adsFeedbackLink: "Send your feedback on the ad feature",
             adsSectionDescription:
-                "Boost your visibility and chances of getting hired by advertising with Fastwork",
+                "Boost your visibility and chances of getting hired by advertising with 108Jobs",
             bankInfo: "Bank Information",
             businessServiceDescription:
-                "Freelancer sourcing service for business (Fastwork for Business)",
+                "Freelancer sourcing service for business (108Jobs for Business)",
             businessServiceTitle:
-                "Freelancer sourcing service for business (Fastwork for Business)",
+                "Freelancer sourcing service for business (108Jobs for Business)",
             buttonCancel: "Cancel",
             buttonChange: "Change",
             buttonConfirm: "Confirm",
@@ -764,7 +764,7 @@ export const en = {
             buttonReset: "Reset",
             buttonSubmit: "Submit",
             buttonVerify: "Verify",
-            chatToHireButton: "Add LINE @fastwork",
+            chatToHireButton: "Add LINE @108jobs",
             chatToHireDescription:
                 "Chat to Hire or assistant via LINE – just share your needs, and our admin will find a freelancer for you",
             chatToHireTitle: "Chat to Hire service or freelancer assistant",
@@ -778,7 +778,7 @@ export const en = {
             companyRegistrationTitle:
                 "Log in, provide company info, and assign freelancers instantly!",
             contactInfo: "Contact Information",
-            fastworkRewardsButton: "Fastwork Rewards",
+            fastworkRewardsButton: "108Jobs Rewards",
             fastworkRewardsSubtext: "Earn points to redeem rewards",
             forBusinessCustomers: "For business customers",
             freelancerAccountInfo: "Freelancer Account Information",
@@ -788,7 +788,7 @@ export const en = {
                 "Browse freelancers by category, view portfolios, read reviews, and chat to hire directly",
             freelancerSelectionTitle:
                 "Choose a freelancer and start chatting instantly",
-            goToFastworkBusiness: "Go to fastwork for business",
+            goToFastworkBusiness: "Go to 108Jobs for Business",
             greetingUser: "Hello, {username}",
             hintFreelanceSearchAssistant:
                 "Chat to hire service or freelance search assistant.",
@@ -815,7 +815,7 @@ export const en = {
                 "Show your services under client posts to increase your chances of getting hired.",
             jobBoardSideTitle: "View job posts from clients & propose your service",
             jobBoardTitle: "Find freelancers via job board",
-            labelAboutFastworkTitle: "About Fastwork",
+            labelAboutFastworkTitle: "About 108Jobs",
             labelApplyFreelancer: "Apply to be a freelancer",
             labelApplyToBeFreelancerButton: "Apply to be a freelancer",
             labelContactUsTitle: "Contact Information",
@@ -834,7 +834,7 @@ export const en = {
             labelMenuOption13: "Freelance search assistant, just add Line",
             labelMenuOption21: "Hire on behalf of the company and issue documents",
             labelMenuOption22:
-                "Freelance services for business (fastwork for business)",
+                "Freelance services for business (108Jobs for Business)",
             labelNavBarItem1: "Popular job types",
             labelNavBarItem10: "Popular job types",
             labelNavBarItem2: "Graphic design",
@@ -848,14 +848,14 @@ export const en = {
             labelNotification: "Notifications",
             labelPaymentWages: "Payment of wages",
             labelPrivacyPolicy: "Privacy Policy",
-            labelProductFastwork: "Fastwork",
-            labelProductFastworkBusiness: "Fastwork for Business",
+            labelProductFastwork: "108Jobs",
+            labelProductFastworkBusiness: "108Jobs for Business",
             labelProductTitle: "Trung tâm việc làm",
             labelJobBoardCenter: "Job board center",
             labelStartSellingWork: "How to start selling your work",
             labelTermsOfService: "Terms of Service",
             labelViewProfile: "View Profile",
-            labelWorkWithFastwork: "Work with Fastwork",
+            labelWorkWithFastwork: "Work with 108Jobs",
             labelWorkingHoursTitle: "Working Hours",
             labelWorkingHoursWeekdays: "Mon-Fri 9.30-22.00 hrs.",
             labelWorkingHoursWeekends: "Sat-Sun, public holidays 10.00-19.00 hrs.",
@@ -875,7 +875,7 @@ export const en = {
             recruitment: "Recruitment",
             saveSuccess: "Saved successfully",
             sidebarAccountStatistics: "Account Statistics",
-            sidebarFastworkRewards: "Fastwork Rewards",
+            sidebarFastworkRewards: "108Jobs Rewards",
             sidebarFeedback: "Send Feedback",
             sidebarMyServices: "My Services",
             sidebarOverview: "Overview",
@@ -886,7 +886,7 @@ export const en = {
             tittleFooter1: "Job Category",
             tittleFooter2: "How to use",
             tittleFooter3: "product",
-            tittleFooter4: "About Fastwork",
+            tittleFooter4: "About 108Jobs",
             tittleFooter5: "Contact us",
             tittleHeaderMenuSection1: "Employment",
             tittleHeaderMenuSection2: "For corporate clients",
@@ -897,13 +897,13 @@ export const en = {
             labelContinue: "Continue"
         },
         guarantee: {
-            fastworkGuaranteeTitle: "Fastwork Guarantee",
+            fastworkGuaranteeTitle: "108Jobs Guarantee",
             fastworkGuaranteeSubtitle:
-                "Hiring freelancer through Fastwork platform gain every steps protection.",
+                "Hiring freelancer through 108Jobs platform gains protection at every step.",
             fastworkGuaranteeSubsubtitle:
                 "End to end from starting to quality work delivery.",
             fastworkGuaranteeStepsTitle:
-                '"Fastwork Guarantee" every steps hiring protection',
+                '"108Jobs Guarantee" every steps hiring protection',
             verifiedFreelancersTitle: "Verified freelancers",
             verifiedFreelancersDescription:
                 "Standard verification for ID card, contact information, and portfolio",
@@ -922,20 +922,20 @@ export const en = {
                 "The final work doesn't qualify as freelancer advertised in the product or by agreement",
             protectionCase3: "Freelancer disappear or cannot be contact",
             protectionCase4:
-                "Final has not been manually approved or auto approved in the Fastwork Platform",
+                "Final has not been manually approved or auto approved in the 108Jobs Platform",
             endProtectionTitle: "End of Protection",
             endProtectionCase1:
                 "Customer violate hiring contract described in quotation",
             endProtectionCase2:
-                "Customer didn't hire and payment through the Fastwork Platform",
+                "Customer didn't hire and payment through the 108Jobs Platform",
             endProtectionCase3:
-                "Final has been manually approved or auto approved in the Fastwork Platform",
+                "Final has been manually approved or auto approved in the 108Jobs Platform",
             tellUsMoreTitle: "Tell us more!",
             tellUsMoreDescription:
                 "Additional feedback can be done after the final work has been approved. Contact customer support when you found the hiring problem or would like to give suggestion for improvement.",
             contactCustomerSupport: "Contact Customer Support",
             confidentHiringTitle:
-                "Confident in hiring with Fastwork. Freedom to choose to accept final work or request money back.",
+                "Confident in hiring with 108Jobs. Freedom to choose to accept final work or request money back.",
             reviewProcessQuestion:
                 "How to give review after approved the final work?",
             disputeProcessQuestion:
@@ -949,17 +949,17 @@ export const en = {
                 "Evaluate skill, quality, satisfaction, and comments to freelancer's work. This will be valuable information to other customer. The information in the first review page will be accumulative and display to freelance profile and product.",
             step3Title: "3. More confident with secret review",
             step3Description:
-                "Let us know your expectation with freelancer's work and service quality. No one will be able to access this secret review except key person at Fastwork. This is critical for us to improve quality of our freelancer to serve you to the most satisfaction.",
+                "Let us know your expectation with freelancer's work and service quality. No one will be able to access this secret review except key person at 108Jobs. This is critical for us to improve quality of our freelancer to serve you to the most satisfaction.",
             step4Title:
-                "4. Give a score of how much would you like to recommend Fastwork to others",
+                "4. Give a score of how much would you like to recommend 108Jobs to others",
             step4Description:
-                "You can share us the issue or problem you found while using the platform. You can also give comments and suggestions to the Fastwork team. We value all of your feedback and take it seriously for improvement.",
+                "You can share us the issue or problem you found while using the platform. You can also give comments and suggestions to the 108Jobs team. We value all of your feedback and take it seriously for improvement.",
             customerSupportTitle: "Contact Customer Support",
             customerSupportDescription:
                 "Your problem is our priority. You can contact our customer support by the following channels.",
             facebook: "Facebook",
             messenger: "Messenger",
-            supportEmail: "support@fastwork.co",
+            supportEmail: "support@108jobs.com",
             customerSupportWorkingHours:
                 "Our team is ready to serve you every day, Monday-Friday from 9:30 - 22:00",
             customerSupportWeekendHours:
@@ -978,25 +978,25 @@ export const en = {
             buttonDownloadApp: "Download Application",
             buttonJobCategoriesViewMore: "View More",
             contentFastwork1:
-                "Fastwork.co is a platform that gathers professional freelancers from various fields, including logo design, advertising banners, content writing, translation, online marketing, website development, and over 90 other categories to meet the diverse needs of businesses and users. Our team focuses on simplicity and ease of use to save time for both freelancers and clients. Fastwork.co also supports business growth for enterprises of all sizes and helps freelancers find jobs easily, increase income, and improve service quality.",
+                "108Jobs is a platform that gathers professional freelancers from various fields, including logo design, advertising banners, content writing, translation, online marketing, website development, and over 90 other categories to meet the diverse needs of businesses and users. Our team focuses on simplicity and ease of use to save time for both freelancers and clients. 108Jobs also supports business growth for enterprises of all sizes and helps freelancers find jobs easily, increase income, and improve service quality.",
             contentFastwork2:
-                "Fastwork.co serves as an online marketplace connecting freelancers with clients anytime, anywhere. Freelancers can list their services on Fastwork.co, while clients can browse and hire freelancers based on their needs. The secure payment system ensures that freelancers receive payment upon job completion while also protecting clients by guaranteeing that they receive the work as agreed.",
+                "108Jobs serves as an online marketplace connecting freelancers with clients anytime, anywhere. Freelancers can list their services on 108Jobs, while clients can browse and hire freelancers based on their needs. The secure payment system ensures that freelancers receive payment upon job completion while also protecting clients by guaranteeing that they receive the work as agreed.",
             contentFastwork3:
-                "Currently, Fastwork.co has over 50,000 pre-screened freelancers offering more than 15,000 services across 90 different categories. Our platform caters to a wide range of customers, including business owners, SMEs, online sellers, and individuals looking for high-quality services at affordable prices. Trusted by over 700,000 customers, Fastwork.co is the go-to platform for professional freelancers.",
+                "Currently, 108Jobs has over 50,000 pre-screened freelancers offering more than 15,000 services across 90 different categories. Our platform caters to a wide range of customers, including business owners, SMEs, online sellers, and individuals looking for high-quality services at affordable prices. Trusted by over 700,000 customers, 108Jobs is the go-to platform for professional freelancers.",
             contentFreelancerVerification:
-                "Freelancers selected and verified by Fastwork can be checked.",
+                "Freelancers selected and verified by 108Jobs can be checked.",
             contentPaymentProtection:
                 "Your money is protected from the moment the freelancer starts working until you are satisfied with the final result.",
             contentQualityFreelancers:
                 "Meet a team of quality freelancers ready to cater to all businesses across various industries.",
             contentQualityOfferFreelancerCard1: "Verified identity in the system",
             contentQualityOfferFreelancerCard2:
-                "Portfolio reviewed according to Fastwork's basic standards",
+                "Portfolio reviewed according to 108Jobs' basic standards",
             contentQualityOfferProfessionalCard1: "Verified identity in the system",
             contentQualityOfferProfessionalCard2:
-                "Selected and tested for knowledge, skills, and expertise in their field by Fastwork",
+                "Selected and tested for knowledge, skills, and expertise in their field by 108Jobs",
             contentQualityOfferProfessionalCard3:
-                "Completed special training on skills and customer service provided by Fastwork",
+                "Completed special training on skills and customer service provided by 108Jobs",
             contentQualityOfferProfessionalCard4:
                 "Holds necessary professional licenses as required by the field",
             contentQualityOfferProfessionalCard5:
@@ -1005,20 +1005,20 @@ export const en = {
                 "Capable of handling highly complex and large-scale projects",
             contentQualityOfferSpecialistCard1: "Verified identity in the system",
             contentQualityOfferSpecialistCard2:
-                "Selected and tested for knowledge, skills, and expertise in their field by Fastwork",
+                "Selected and tested for knowledge, skills, and expertise in their field by 108Jobs",
             contentQualityOfferSpecialistCard3:
-                "Completed special training on skills and customer service provided by Fastwork",
+                "Completed special training on skills and customer service provided by 108Jobs",
             contentQualityOfferSpecialistCard4:
                 "Holds necessary professional licenses as required by the field",
             contentStartHiringSection1:
                 "Find the right freelancer based on portfolios, working process, steps, reviews and comments",
             contentStartHiringSection2: "Discuss project details and get a quote.",
             contentStartHiringSection3:
-                "Fastwork Guarantee ensures you get the work done.",
+                "108Jobs Guarantee ensures you get the work done.",
             contentStartHiringSection4:
                 "Review the submitted work, approve it, and leave a review.",
             freelancerStatistics:
-                "Currently, Fastwork.co has over 50,000 quality freelancers offering services in more than 90 categories. More than 15,000 jobs have been successfully completed, with freelancers carefully selected based on skills and experience to meet clients' needs—whether they are business owners, SMEs, online merchants, or individuals seeking expert-level services. Fastwork has gained the trust of over 70,000 clients.",
+                "Currently, 108Jobs has over 50,000 quality freelancers offering services in more than 90 categories. More than 15,000 jobs have been successfully completed, with freelancers carefully selected based on skills and experience to meet clients' needs—whether they are business owners, SMEs, online merchants, or individuals seeking expert-level services. 108Jobs has gained the trust of over 70,000 clients.",
             graphicDesign: "Graphic Design",
             graphicDesignServices:
                 "Banner design, business card design, poster design, infographic creation, resume design, tattoo design, packaging design, corporate identity (CI) design, and more.",
@@ -1029,7 +1029,7 @@ export const en = {
             labelSeeMoreTittle: "See more",
             labelStartHiringSection1: "1. Find Your Ideal Freelancer",
             labelStartHiringSection2: "2. Discuss Details",
-            labelStartHiringSection3: "3. Pay Securely via Fastwork",
+            labelStartHiringSection3: "3. Pay Securely via 108Jobs",
             labelStartHiringSection4: "4. Approve Work and Leave a Review",
             lifestyle: "Lifestyle",
             lifestyleServices:
@@ -1041,30 +1041,30 @@ export const en = {
             mediaAudioServices:
                 "Photography, event photography, podcast creation, song editing, video editing, website motion graphics, motion graphics, live streaming services, model hiring, voice-over services, and more.",
             platformDescription:
-                "Fastwork.co is a platform that gathers freelancers from various professions in one place, whether in graphic design, banner ads, writing, translation, online marketing, web development, and many more—covering over 90 categories to meet the diverse needs of businesses and users. Our development team has designed Fastwork.co with simplicity and ease of use in mind, aiming to create a platform that saves time for both freelancers and clients. Additionally, we strive to support new businesses, enhance entrepreneurship, and help freelancers work more efficiently, earn stable income, and continuously elevate the standard of Thai freelancers.",
+                "108Jobs is a platform that gathers freelancers from various professions in one place, whether in graphic design, banner ads, writing, translation, online marketing, web development, and many more—covering over 90 categories to meet the diverse needs of businesses and users. Our development team has designed 108Jobs with simplicity and ease of use in mind, aiming to create a platform that saves time for both freelancers and clients. Additionally, we strive to support new businesses, enhance entrepreneurship, and help freelancers work more efficiently, earn stable income, and continuously elevate the standard of Thai freelancers.",
             platformPurpose:
-                "Fastwork.co acts as an online intermediary between freelancers and clients, enabling them to connect and collaborate at any time. Freelancers can use Fastwork.co to post job listings in a convenient and centralized location, allowing clients to easily search for services. The platform also provides a seamless process for hiring, price comparison, and evaluating freelancers’ work quality to ensure the best match. Fastwork.co’s secure payment system guarantees work completion before funds are transferred to freelancers, providing assurance for both parties.",
+                "108Jobs acts as an online intermediary between freelancers and clients, enabling them to connect and collaborate at any time. Freelancers can use 108Jobs to post job listings in a convenient and centralized location, allowing clients to easily search for services. The platform also provides a seamless process for hiring, price comparison, and evaluating freelancers’ work quality to ensure the best match. 108Jobs’ secure payment system guarantees work completion before funds are transferred to freelancers, providing assurance for both parties.",
             subtitleBanner:
                 "Accelerate your business growth with the right freelancers",
             subtitleDownloadApp:
-                "Simplify your hiring process with the Fastwork app. Search, brief, pay, and receive work seamlessly—all in one app.",
+                "Simplify your hiring process with the 108Jobs app. Search, brief, pay, and receive work seamlessly—all in one app.",
             titleAstrologyFreelancers:
                 "Popular freelancers in astrology, fortune telling, and beliefs category",
-            titleBanner: "Fastwork for Business",
+            titleBanner: "108Jobs for Business",
             titleBannerHomePage1: "We Have Experts in...",
             titleBannerHomePage2: "Ready to turn your ideas into reality",
-            titleFeaturedWorks: "Recommended works from Fastwork’s top freelancer",
-            titleJobCategories: "Job Categories on Fastwork",
+            titleFeaturedWorks: "Recommended works from 108Jobs’ top freelancer",
+            titleJobCategories: "Job Categories on 108Jobs",
             titleLogoDesignFreelancers:
                 "Popular freelancers in the logo design category",
-            titlePlatform: "Fastwork: The Premier Platform for Quality Freelancers",
+            titlePlatform: "108Jobs: The Premier Platform for Quality Freelancers",
             titlePopularFreelancers:
                 "Popular freelancers in the flower arrangement category",
-            titleStartHiringSection: "Start Hiring Freelancers with Fastwork",
+            titleStartHiringSection: "Start Hiring Freelancers with 108Jobs",
             titleTrustedCompanies:
-                "Over 150,000 successful projects completed by leading companies trusting Fastwork",
+                "Over 150,000 successful projects completed by leading companies trusting 108Jobs",
             tittleFirstSlogan: "Top quality freelancer",
-            tittlePrimaryWhySection: "Why Fastwork?",
+            tittlePrimaryWhySection: "Why 108Jobs?",
             tittleQualityOfferProfessionalCard: "Professional",
             tittleQualityOfferSection:
                 "We proposals a wide range of quality freelancers and specialists in the system ready to serve you.",
@@ -1072,7 +1072,7 @@ export const en = {
             tittleSecondSlogan: "Job Guarantee",
             tittleSecondaryWhySection:
                 "Turning Your Ideas into Reality with Professional Freelancers",
-            tittleThirdSlogan: "Every Job Covered, Choose Fastwork with Confidence",
+            tittleThirdSlogan: "Every Job Covered, Choose 108Jobs with Confidence",
             websiteProgramming: "Website & Programming",
             websiteProgrammingServices:
                 "Website design, e-commerce website creation, ready-made website setup, programming services, Facebook chatbot development, online booking system, website scraping, software development, and more.",
@@ -1081,9 +1081,9 @@ export const en = {
                 "Translation, subtitle translation, audio transcription, content writing, SEO article writing, English writing services, report writing, calligraphy, manuscript editing, and more.",
         },
         how: {
-            howToBuySellTitle: "How to buy/sell on Fastwork?",
+            howToBuySellTitle: "How to buy/sell on 108Jobs?",
             howToBuySellSubtitle: "Number one, freelance market-place website.",
-            easyStepsTitle: "Easy steps to get started with Fastwork",
+            easyStepsTitle: "Easy steps to get started with 108Jobs",
             chooseServiceButton: "Choose a service that you want.",
             registerFreelancerButton: "Register to be a Freelancer.",
             employerStep1Title: "Choose a service that you want.",
@@ -1109,10 +1109,10 @@ export const en = {
                 "The system works as a mediator holding your money until a freelance completes his job.",
             employerStep3List1: "Verify hiring detail in quotation",
             employerStep3List2:
-                "You can make payment via Fastwork by the following methods:",
+                "You can make payment via 108Jobs by the following methods:",
             employerStep3List3: "Scan promptpay QR code",
             employerStep3List4: "Credit Card",
-            employerStep3List5: "Fastwork Coin",
+            employerStep3List5: "108Jobs Coin",
             employerStep3List6: "TrueMoney Wallet",
             employerStep3List7:
                 "After payment successfully, you can exchange the personal contact info.",
@@ -1130,13 +1130,13 @@ export const en = {
             employerStep4List5:
                 "You can sue for the work. If the freelancer is not working as promised.",
             employerStep5Title: "Rate and Review",
-            employerStep5Description: "To develop fastwork's community",
+            employerStep5Description: "To develop 108Jobs' community",
             employerStep5List1:
                 "Rate and Review buyer for the benefit of other freelancers",
             employerStep5List2:
-                "Rate and review your satisfaction with Fastwork system to improve the service even further",
+                "Rate and review your satisfaction with 108Jobs system to improve the service even further",
             sellerStep1Title:
-                "Post your work on Fastwork to present your ability to buyer",
+                "Post your work on 108Jobs to present your ability to buyer",
             sellerStep1Description:
                 "Post your service under the following categories:",
             sellerStep1List1: "Graphic & Design",
@@ -1180,7 +1180,7 @@ export const en = {
             mostClient:
                 "Most clients choose freelancers based on work history and portfolio samples",
             warning:
-                "Warning: Inviting clients to make payments outside the Fastwork system is against the terms of use and will result in account suspension.",
+                "Warning: Inviting clients to make payments outside the 108Jobs system is against the terms of use and will result in account suspension.",
             allInfo:
                 "All information will be publicly visible (except 'Proposed Price')",
             whyClient: "Why Clients Should Hire You",
@@ -1221,7 +1221,7 @@ export const en = {
             interestFreelance:
                 "Interested Freelancers for mobile game character design (0 proposals)",
             recommendation:
-                "We recommend communicating and paying through Fastwork - guaranteed no scams! We protect your payment until you receive work from the freelancer",
+                "We recommend communicating and paying through 108Jobs - guaranteed no scams! We protect your payment until you receive work from the freelancer",
             wantToFind:
                 "Want to get find freelancer on Fastlance, find for excellent freelancer now!",
             generate: "Generate income through job boards and platforms",
@@ -1292,7 +1292,7 @@ export const en = {
             allJobTypes: "All job types",
             marketingAdvertising: "Marketing & Advertising",
             doSeo: "Do SEO",
-            fastworkGuarantee: "Fastwork Guarantee",
+            fastworkGuarantee: "108Jobs Guarantee",
             fastworkGuaranteeDescription:
                 "Take care throughout the employment, safe, not cheated, the middlemen protects the money until the job is approved. Read additional terms and conditions and protection rights.",
             chatWithFreelancers: "Chat with freelancers",
@@ -1353,7 +1353,7 @@ export const en = {
             confirmationCheck1: "I am the rightful owner of this service",
             confirmationCheck2: "I can deliver all work as described",
             confirmationCheck3:
-                "I have read and agree to the Fastwork Terms of Service",
+                "I have read and agree to the 108Jobs Terms of Service",
             confirmationError: "Please accept terms and conditions to proceed",
             confirmationNotice1:
                 "The system will begin checking job information after the freelancer profile is approved",
@@ -1361,7 +1361,7 @@ export const en = {
                 "Service review and approval may take around 2 business days",
             confirmationTitle: "Service Confirmation",
             confirmationWarning:
-                "If you do not confirm the terms, you will not be able to publish services on Fastwork.",
+                "If you do not confirm the terms, you will not be able to publish services on 108Jobs.",
             coverImageNote:
                 "Select a cover image that clearly represents your field and expertise. A good cover image helps attract potential clients.",
             coverImageNote2:
@@ -1511,34 +1511,34 @@ export const en = {
         },
         profileApply: {
             advantagesTitle:
-                "What are the advantages of being a Fastwork freelancer?",
+                "What are the advantages of being a 108Jobs freelancer?",
             applyButton: "Apply to be a freelancer",
             careerGrowth: "Grow your career with Specialist",
             careerGrowthDescription:
-                "Join Fastwork's testing and selection program to increase credibility and visibility on the system.",
+                "Join 108Jobs's testing and selection program to increase credibility and visibility on the system.",
             ctaButton: "Apply to be a freelancer",
-            ctaTitle: "Apply to be a freelancer on Fastwork now",
-            freelanceTypesTitle: "What types of freelancers does Fastwork have?",
+            ctaTitle: "Apply to be a freelancer on 108Jobs now",
+            freelanceTypesTitle: "What types of freelancers does 108Jobs have?",
             freelancer1:
                 "Apply today, provide your details, and become a freelancer within 48 hours.",
             freelancer2: "Work based on your expertise.",
             freelancer3:
                 "You can set your own price range based on the job suitability.",
-            freelancer4: "Fastwork support",
+            freelancer4: "108Jobs support",
             freelancer5: "Quotation system, create quotes and forms.",
             freelancer6: "Special receipt for Freelancer",
             freelancerLabel: "Freelancer",
-            freelancerProfessional: "Fastwork Professional",
+            freelancerProfessional: "108Jobs Professional",
             freelancerProfessionalDescription:
-                "Multi-functional experts selected by Fastwork based on skills and portfolio.",
-            freelancerSpecialist: "Fastwork Specialist",
+                "Multi-functional experts selected by 108Jobs based on skills and portfolio.",
+            freelancerSpecialist: "108Jobs Specialist",
             freelancerSpecialistDescription:
-                "Experts who pass competency tests based on Fastwork’s professional standards.",
-            freelancerStandard: "Fastwork Freelancer",
+                "Experts who pass competency tests based on 108Jobs’s professional standards.",
+            freelancerStandard: "108Jobs Freelancer",
             freelancerStandardDescription:
                 "Apply today. Show your details. Become a freelancer within 48 hours.",
-            freelancerTitle: "Fastwork Freelancer",
-            freelancerTypesTitle: "What types of freelancers does Fastwork have?",
+            freelancerTitle: "108Jobs Freelancer",
+            freelancerTypesTitle: "What types of freelancers does 108Jobs have?",
             increaseHiring: "Increase your chances of getting hired",
             increaseHiringDescription:
                 "We help make your job easier to find, whether on Google, Facebook, or other channels, increasing your chances of getting hired.",
@@ -1552,16 +1552,16 @@ export const en = {
             popularCategoriesTitle: "Popular categories",
             privileges: "Privileges and activities",
             privilegesDescription:
-                "The more jobs you sell, the more access you will have to Fastwork's privileges and activities.",
-            professional1: "Multi-disciplinary professionals selected by Fastwork.",
+                "The more jobs you sell, the more access you will have to 108Jobs's privileges and activities.",
+            professional1: "Multi-disciplinary professionals selected by 108Jobs.",
             professional2: "Right to consult directly with professionals.",
             professional3:
-                "Badge for Professionals, helping clients hire confidently through Fastwork.",
+                "Badge for Professionals, helping clients hire confidently through 108Jobs.",
             professional4:
-                "More opportunities from leading corporate clients through Fastwork.",
+                "More opportunities from leading corporate clients through 108Jobs.",
             professional5: "Exclusive ticket for Professionals.",
             professionalLabel: "Professional Specialist",
-            professionalTitle: "Fastwork Professional",
+            professionalTitle: "108Jobs Professional",
             sellStep1DescPrefix:
                 "Register with your ID and bank account ready for payment verification. Then you can start posting your service listings. Learn more with the",
             sellStep1LinkText: "guide to becoming a freelancer",
@@ -1576,29 +1576,29 @@ export const en = {
             sellStep3Link2: "Freelancer Center",
             sellStep3Title: "3. Start selling now",
             sellStep4Desc:
-                "With Fastwork’s secure payment protection, you don’t need to worry about not getting paid. Work confidently and stress-free.",
+                "With 108Jobs’s secure payment protection, you don’t need to worry about not getting paid. Work confidently and stress-free.",
             sellStep4Title: "4. Work worry-free",
             sellStep5Desc:
                 "Submit your completed work for approval. Great work earns great reviews, increasing your credibility and chances of future sales.",
             sellStep5Title: "5. Deliver and get reviewed",
             sellStep6DescPrefix:
-                "Fastwork will transfer money to your bank account according to the",
+                "108Jobs will transfer money to your bank account according to the",
             sellStep6DescSuffix:
                 ". The more you sell, the more benefits and exclusive opportunities you get.",
             sellStep6LinkText: "Payment Policy",
             sellStep6Title: "6. Get paid and enjoy benefits",
-            sellStepsTitle: "6 Easy Steps to Sell on Fastwork",
+            sellStepsTitle: "6 Easy Steps to Sell on 108Jobs",
             specialist1:
-                "Specialists who passed skill tests according to Fastwork standards.",
+                "Specialists who passed skill tests according to 108Jobs standards.",
             specialist2: "Right to consult directly with the admin team.",
             specialist3: "Special opportunity to receive jobs from our partners.",
             specialist4:
-                "Badge that identifies you as a specialist, helping customers hire with confidence through Fastwork.",
+                "Badge that identifies you as a specialist, helping customers hire with confidence through 108Jobs.",
             specialist5: "Exclusive ticket for Specialists.",
             specialist6: "Exclusive events for Top Specialists.",
             specialist7: "Personal Assistant for Specialists.",
             specialistLabel: "Specialist",
-            specialistTitle: "Fastwork Specialist",
+            specialistTitle: "108Jobs Specialist",
             step1: "Apply to be a freelancer",
             step1Description:
                 "Register with your ID card and bank book ready to verify your identity. Then you can post your job ad. See how to use it.",
@@ -1610,20 +1610,20 @@ export const en = {
                 "Study freelance pricing techniques or use the Freelancer Center to learn how to increase your chances of getting hired.",
             step4: "Work across the screen",
             step4Description:
-                "Be confident in every job! Fastwork guarantees to take care of your money. No need to worry about the employer not paying.",
+                "Be confident in every job! 108Jobs guarantees to take care of your money. No need to worry about the employer not paying.",
             step5: "Submit work and review",
             step5Description:
                 "Submit completed work for employer approval. The better the work, the more credibility it builds, increasing the chance of a sale.",
             step6: "Get money and privileges",
             step6Description:
-                "Fastwork transfers money to your bank account based on the payment terms. The more you sell, the more you earn.",
-            stepsTitle: "6 easy steps to sell your work on Fastwork",
+                "108Jobs transfers money to your bank account based on the payment terms. The more you sell, the more you earn.",
+            stepsTitle: "6 easy steps to sell your work on 108Jobs",
             subtitle: "Freedom to work in the way you choose.",
             supportTeam: "There is a support team",
             supportTeamDescription:
                 "We are ready to help you immediately if there is a problem and will continue to develop the system to provide the best experience for you.",
-            whyChooseTitle: "Why do freelancers choose Fastwork?",
-            whyTitle: "Why freelancers choose Fastwork",
+            whyChooseTitle: "Why do freelancers choose 108Jobs?",
+            whyTitle: "Why freelancers choose 108Jobs",
         },
         profileChat: {
             chatHistory: "Chat History",
@@ -1641,7 +1641,7 @@ export const en = {
                 "Please select an order from the left to start a conversation",
             searchPlaceholder: "Search for something",
             sectionChat: "Chat",
-            securePaymentNote: "Safer with payment through fastwork",
+            securePaymentNote: "Safer with payment through 108Jobs",
             selectedHere: "Selected here",
             timeAgo: "Yesterday",
             typeMessageHere: "Type your message here",
@@ -1697,11 +1697,11 @@ export const en = {
             buttonTopUp5000: "Top up 5,000 baht",
             labelChooseAmount: "Or choose the amount you want immediately",
             labelSpecifyAmount: "Specify the amount you want to top up.",
-            labelYourCoin: "Your Fastwork Coin",
+            labelYourCoin: "Your 108Jobs Coin",
             noteBalanceUpdate:
                 "In some cases, it may take up to 5 minutes for the balance to be updated. Please wait a moment.",
             noteCoinTerms:
-                "- Fastwork Coin can be used without expiration date and can be used together with other account Coupons.- Fastwork Coin cannot be redeemed for cash or transferred to other Fastwork accounts.- When you top up Fastwork Coin into the system, it will be considered as acceptance of its terms and conditions.- If you encounter any problems in topping up Fastwork Coin or making payments, please contact the Support Center.",
+                "- 108Jobs Coin can be used without expiration date and can be used together with other account Coupons.- 108Jobs Coin cannot be redeemed for cash or transferred to other 108Jobs accounts.- When you top up 108Jobs Coin into the system, it will be considered as acceptance of its terms and conditions.- If you encounter any problems in topping up 108Jobs Coin or making payments, please contact the Support Center.",
             noteMinMax: "Minimum 100 baht and maximum 500,000 baht.",
             placeholderSpecifyAmount: "Specify the amount 100-500,000 baht",
             sectionTopUpHistory: "Top-up history",
@@ -1715,7 +1715,7 @@ export const en = {
             tableStatus: "Status",
             tableTopUpAmount: "Top-up amount (baht)",
             tableTotalCoins: "Total coins received",
-            titleFastworkCoin: "Fastwork Coin",
+            titleFastworkCoin: "108Jobs Coin",
         },
         profileCompany: {
             buttonSearchCompany: "Search Company Information",
@@ -1783,37 +1783,37 @@ export const en = {
             messageNoOffers: "No special proposals available",
             sectionDiscountsPromotions: "Discounts and Promotions",
             sectionSpecialOffers: "Special Offers",
-            subtitleDiscountsPromotions: "From Fastwork and partnered services",
+            subtitleDiscountsPromotions: "From 108Jobs and partnered services",
             tabForFreelancers: "For Freelancers",
             tabForHiring: "For Hiring",
         },
         profileData: {
             concent:
-                "Consent to receive news and special promotions through all channels from Fastwork.",
+                "Consent to receive news and special promotions through all channels from 108Jobs.",
             privacy: "Privacy Policy",
             cookieUse:
-                "Fastwork uses cookies to help improve and enhance your profile experience when you visit our website. You can choose to consent to each type of cookie (except for essential cookies).",
+                "108Jobs uses cookies to help improve and enhance your profile experience when you visit our website. You can choose to consent to each type of cookie (except for essential cookies).",
             cookiePrivacy: "Cookie Policy",
             always: "Always Enabled",
             noPrivacy: "No preferred freelancers found",
             analyticsCookies: "Analytics and Performance Cookies",
             analyticsCookiesDescription:
-                "Allow Fastwork to collect usage data for analysis to improve platform performance.",
+                "Allow 108Jobs to collect usage data for analysis to improve platform performance.",
             cookiesManagement: "Cookies Management",
             dataManagement: "Data Management",
-            dataUsageFastwork: "Data Usage for Fastwork",
+            dataUsageFastwork: "Data Usage for 108Jobs",
             functionalCookies: "Necessary Cookies",
             functionalCookiesDescription:
-                "Fastwork must use these cookies to allow you to access pages and store session details for efficient browsing. These cookies do not store identifiable profile data.",
+                "108Jobs must use these cookies to allow you to access pages and store session details for efficient browsing. These cookies do not store identifiable profile data.",
             mandatoryCookies:
                 "These cookies are required for site functionality and cannot be disabled.",
             marketingCookies: "Marketing and Advertisement Cookies",
             marketingCookiesDescription:
-                "Allow Fastwork to collect advertising data to provide relevant suggestions.",
+                "Allow 108Jobs to collect advertising data to provide relevant suggestions.",
             newsletterAccept: "Accept",
             newsletterDecline: "Decline",
             newsletterPromotions:
-                "Receive news, discounts, and promotions from Fastwork",
+                "Receive news, discounts, and promotions from 108Jobs",
             noFreelancerFavorites: "No favorited freelancers",
             saveData: "Save Data",
             termsConditions: "Read the Terms of Service and Privacy Policy",
@@ -1972,20 +1972,20 @@ export const en = {
             columnDateReceived: "Date Received",
             columnDetails: "Details",
             columnPointsAmount: "Points Amount",
-            faqBenefits: "What are the benefits of the Fastwork rewards program?",
+            faqBenefits: "What are the benefits of the 108Jobs rewards program?",
             faqBenefitsAnswer:
-                "Examples of benefits from the Fastwork rewards program include cashback for freelancers, special discounts for hiring, exclusive partner discounts, and many more privileges. Note: The benefits may change over time to align with profile needs.",
+                "Examples of benefits from the 108Jobs rewards program include cashback for freelancers, special discounts for hiring, exclusive partner discounts, and many more privileges. Note: The benefits may change over time to align with profile needs.",
             faqExpiration:
-                "Do points in the Fastwork rewards program have an expiration date?",
+                "Do points in the 108Jobs rewards program have an expiration date?",
             faqExpirationAnswer:
-                "Fastwork Points have a validity of 6 months and expire at the end of the 3rd month. Example: If you earn points in January, they will expire on April 30. When you redeem rewards, the points that are closest to expiration will be used first automatically.",
+                "108Jobs Points have a validity of 6 months and expire at the end of the 3rd month. Example: If you earn points in January, they will expire on April 30. When you redeem rewards, the points that are closest to expiration will be used first automatically.",
             faqJoinRewards:
-                "How do I join the Fastwork rewards program to receive benefits?",
+                "How do I join the 108Jobs rewards program to receive benefits?",
             faqJoinRewardsAnswer:
-                "Simply log in to Fastwork and go to the 'Missions' page to start earning points and redeem exclusive rewards instantly. If you have any issues accessing the system, please contact our support center.",
-            faqMorePoints: "How can I get more points in Fastwork rewards?",
+                "Simply log in to 108Jobs and go to the 'Missions' page to start earning points and redeem exclusive rewards instantly. If you have any issues accessing the system, please contact our support center.",
+            faqMorePoints: "How can I get more points in 108Jobs rewards?",
             faqMorePointsAnswer:
-                "Complete various activities listed on the missions page, such as logging in and checking in daily. Special for freelancers! Receive work through the Fastwork system every 320 baht and earn 1 point automatically.",
+                "Complete various activities listed on the missions page, such as logging in and checking in daily. Special for freelancers! Receive work through the 108Jobs system every 320 baht and earn 1 point automatically.",
             filterAll: "All",
             filterEmployment: "For Employment",
             filterGeneral: "General",
@@ -2010,15 +2010,15 @@ export const en = {
             tabUsageHistory: "Usage History",
             taskDailyPoints: "[Special] Get free points daily",
             taskFirstJobPost: "First successful post on the job board",
-            taskFirstPayment: "First payment on Fastwork",
+            taskFirstPayment: "First payment on 108Jobs",
             taskRepeatHire: "Successfully hired the same freelancer more than once",
             taskSuccessfulHire: "First successful hire",
             terms1:
                 "Any exchange of discounts, prizes or privileges is final once exchanged and cannot be refunded or exchanged.",
             terms2:
-                "To ensure that you get the most benefit from the Fastwork Rewards program, please check the expiration date of your accumulated points regularly and redeem your reward points within the specified time.",
+                "To ensure that you get the most benefit from the 108Jobs Rewards program, please check the expiration date of your accumulated points regularly and redeem your reward points within the specified time.",
             terms3:
-                "Fastwork reserves the right to determine and change the conditions of the Fastwork Rewards program, including reward redemption, without prior notice.",
+                "108Jobs reserves the right to determine and change the conditions of the 108Jobs Rewards program, including reward redemption, without prior notice.",
         },
         proposal: {
             whyHireYouLabel: "Why should we hire you?",
@@ -2033,7 +2033,7 @@ export const en = {
             accumulateMore: "Accumulate {{n}} more",
             accumulatedIncome: "Income accumulated in {{n}} months",
             detailsTitle: "Detailed Data",
-            freelancerSetupSteps: "3 steps to start earning on fastwork",
+            freelancerSetupSteps: "3 steps to start earning on 108Jobs",
             freelancerSetupTitle: "Start freelancing",
             hiringNote: "Note: Data will be updated within 24 hours",
             hiringOverviewTitle: "Hiring Overview",
@@ -2054,7 +2054,7 @@ export const en = {
             step1Title: "Register as freelancer: Verified",
             step2Action: "Add service",
             step2Desc:
-                "Create appealing services to attract clients and earn on fastwork",
+                "Create appealing services to attract clients and earn on 108Jobs",
             step2Title: "List your service",
             step3Action: "Add info",
             step3Desc: "Add your work experience, education, and skills",
@@ -2091,7 +2091,7 @@ export const en = {
         },
         sellerCommitmentLetter: {
             incomeTaxDescription:
-                "To receive payments via the Fastwork system, freelancers must verify and agree to provide their income information for tax authorities to review compliance with legal requirements.",
+                "To receive payments via the 108Jobs system, freelancers must verify and agree to provide their income information for tax authorities to review compliance with legal requirements.",
             step1Note:
                 "Once verified, this information cannot be changed (please contact support)",
             step1Placeholder: "Please enter information",
@@ -2104,7 +2104,7 @@ export const en = {
             step3Title: "Read and Sign the Document",
             step4Note:
                 "You can upload files in .pdf, .png, or .jpg format up to 10MB",
-            step4Title: "Take a Photo and Upload via Fastwork",
+            step4Title: "Take a Photo and Upload via 108Jobs",
             taxInfoTitle: "Tax Declaration Information",
             uploadButton: "Upload Document",
         },
@@ -2254,7 +2254,7 @@ export const en = {
             faqTitle: "Frequently Asked Questions",
             faqSubtitle: "Get answers to common questions",
             faqHeader: "Frequently Asked Questions",
-            faqQuestion1: "How do I hire a freelancer through Fastwork?",
+            faqQuestion1: "How do I hire a freelancer through 108Jobs?",
             faqQuestion1Step1:
                 "1. Discuss with the freelancer about job details (You will not be charged at this step)",
             faqQuestion1Step2: "2. Request the freelancer to send a quotation",
@@ -2262,7 +2262,7 @@ export const en = {
                 "3. Make a payment through the system to confirm job commencement (Your payment is protected by the system)",
             faqQuestion1Step4: "4. Review and approve the work",
             faqQuestion1Note:
-                "Note: Payments made in the system are protected by Fastwork. See more at Fastwork Guarantee.",
+                "Note: Payments made in the system are protected by 108Jobs. See more at 108Jobs Guarantee.",
             faqQuestion2: "How do I hire on behalf of a company?",
             faqQuestion2Step1:
                 "1. Provide company information for issuing documents on the 'Hire on behalf of company' page",
@@ -2270,7 +2270,7 @@ export const en = {
             faqQuestion2Step3:
                 "3. After approval, immediately inform the freelancer to issue documents via chat",
             faqQuestion3: "How do I find freelancers?",
-            faqQuestion3Step1: "1. Add @fastwork via Line",
+            faqQuestion3Step1: "1. Add @108jobs via Line",
             faqQuestion3Step2:
                 "2. Select chat service to hire (freelancer assistant service)",
             faqQuestion3Step3: "3. Provide details to the admin immediately",
@@ -2291,51 +2291,51 @@ export const en = {
             callUsClosed: "Closed on Saturday - Sunday and public holidays",
             addLineTitle: "Let us help you find a freelancer by simply adding Line",
             addLineDescription: "Chat service to hire or freelancer assistant",
-            addLineButton: "Add @fastwork",
+            addLineButton: "Add @108jobs",
         },
         terms: {
             homepageTitle:
-                "Fastwork.co - The #1 Platform for Quality Freelancers Chosen by Businesses Across Thailand",
-            homepageSubtitle: "Hire Freelancers on Fastwork",
+                "108Jobs - The #1 Platform for Quality Freelancers Chosen by Businesses Across Thailand",
+            homepageSubtitle: "Hire Freelancers on 108Jobs",
             homepageAppPrompt: "Open via the app for the full experience",
             homepageFreelancerSectionTitle:
                 "We have a diverse range of high-quality freelancers and specialists ready to serve you",
             freelancerCategoryTitle: "Freelancer",
             freelancerCategory1: "Verified identity and portfolio in the system",
             freelancerCategory2: "Verified identity in the system",
-            freelancerCategory3: "Portfolio meets Fastwork's basic standards",
+            freelancerCategory3: "Portfolio meets 108Jobs's basic standards",
             freelancerCategoryCta: "View All Work",
-            specialistCategoryTitle: "Fastwork Specialist",
+            specialistCategoryTitle: "108Jobs Specialist",
             specialistCategory1:
                 "Confident in skills and services verified through testing",
             specialistCategory2: "Verified identity in the system",
             specialistCategory3:
-                "Selected and tested for job-specific knowledge and skills by Fastwork",
+                "Selected and tested for job-specific knowledge and skills by 108Jobs",
             specialistCategory4:
-                "Completed special training on skills and service delivery from Fastwork",
+                "Completed special training on skills and service delivery from 108Jobs",
             specialistCategory5:
                 "Holds necessary professional certifications for their field",
-            professionalCategoryTitle: "Fastwork Professional",
+            professionalCategoryTitle: "108Jobs Professional",
             professionalCategory1: "Experts in complex and large-scale projects",
             professionalCategory2: "Verified identity in the system",
             professionalCategory3:
-                "Selected and tested for job-specific knowledge and skills by Fastwork",
+                "Selected and tested for job-specific knowledge and skills by 108Jobs",
             professionalCategory4:
-                "Completed special training on skills and service delivery from Fastwork",
+                "Completed special training on skills and service delivery from 108Jobs",
             professionalCategory5:
                 "Holds necessary professional certifications for their field",
             professionalCategory6:
                 "Screened for advanced expertise with special criteria",
             professionalCategory7:
                 "Capable of handling highly complex and large-scale projects",
-            howToUseTitle: "How to Use Fastwork?",
+            howToUseTitle: "How to Use 108Jobs?",
             howToUseStep1Title: "Search for Your Ideal Freelancer",
             howToUseStep1Description:
                 "Search using the search bar or select from over 70 job categories.",
             howToUseStep2Title: "Discuss Details",
             howToUseStep2Description:
                 "Click “Chat Now” to discuss job details and receive a quote from the freelancer.",
-            howToUseStep3Title: "Pay Through Fastwork",
+            howToUseStep3Title: "Pay Through 108Jobs",
             howToUseStep3Description:
                 "Pay securely through multiple channels, with confidence in every hire as we safeguard your payment.",
             howToUseStep4Title: "Approve Work and Review",
@@ -2344,18 +2344,18 @@ export const en = {
             trustedClientsTitle: "Some of Our Trusted Clients",
             trustedClientsCta: "View More",
             termsAndConditionsTitle:
-                "Terms and Conditions for Using the Fastwork.co Platform for Freelancers",
+                "Terms and Conditions for Using the 108Jobs.co Platform for Freelancers",
             section1Title: "Definitions",
             definition1:
-                "Platform refers to the website (https://fastwork.co) and the Fastwork app.",
+                "Platform refers to the website (https://108jobs.com) and the 108Jobs app.",
             definition2:
                 "The platform acts as an intermediary for users to create and share services.",
             definition3: "Users can buy and sell services through the platform.",
             definition4: "Payments are made based on the value of services.",
             definition5:
                 "Work refers to products or services provided by clients and freelancers.",
-            definition6: "Company refers to the entity operating Fastwork.co.",
-            definition7: "Fastwork provides the platform for third-party services.",
+            definition6: "Company refers to the entity operating 108Jobs.co.",
+            definition7: "108Jobs provides the platform for third-party services.",
             definition8:
                 "The company facilitates interactions between clients and freelancers.",
             definition9: "User refers to individuals using the platform’s services.",
@@ -2388,7 +2388,7 @@ export const en = {
             definition28: "Freelancer Platform Usage Fee is charged to freelancers.",
             definition29: "Client Platform Usage Fee is charged to clients.",
             definition30:
-                "Fastwork Coins are points earned by clients after payments.",
+                "108Jobs Coins are points earned by clients after payments.",
             definition31: "Bonus Coins are points gifted by the company.",
             definition32:
                 "Personal Data identifies an individual directly or indirectly.",
@@ -2479,8 +2479,8 @@ export const en = {
             fees9: "Fees are transferred per bank schedules.",
             fees10: "Withdrawals are limited by account balance.",
             fees11: "Fees exclude personal income tax.",
-            section8Title: "Fastwork Coins and Bonus Coins",
-            coins1: "Clients top up Fastwork Coins for fees.",
+            section8Title: "108Jobs Coins and Bonus Coins",
+            coins1: "Clients top up 108Jobs Coins for fees.",
             coins2: "Coins must be used within 2 years.",
             coins3: "Unused Coins incur a $1 monthly fee.",
             coins4: "Coin refunds incur a $1 transaction fee.",
@@ -2570,16 +2570,16 @@ export const en = {
                 "Violators compensate intellectual property owners.",
             section18Title: "Privacy Policy",
             privacyPolicy1:
-                "Read our privacy policy at https://fastwork.co/seller-privacy.",
+                "Read our privacy policy at https://108jobs.com/seller-privacy.",
             privacyPolicy2: "Personal data is treated as confidential.",
             privacyPolicy3: "The company may access chats for monitoring.",
             privacyPolicy4: "Users agree to content use for marketing.",
             section19Title: "Contact",
             contact1: "Contact the company during business hours.",
-            contact2: "Company Name: Fastwork",
-            contact3: "Address: Fastwork Headquarters",
-            contact4: "Email: support@fastwork.co",
-            contact5: "Website: https://static.fastwork.co/contents/support-center",
+            contact2: "Company Name: 108Jobs",
+            contact3: "Address: 108Jobs Headquarters",
+            contact4: "Email: support@108jobs.com",
+            contact5: "Website: https://static.108jobs.com/contents/support-center",
             note1: "These terms are subject to change without prior notice.",
             note2: "Users are responsible for reviewing updates to the Terms of Use.",
             note3: "The company reserves the right to modify platform features.",
@@ -2593,24 +2593,24 @@ export const en = {
             note10: "The platform promotes fair and transparent hiring practices.",
             note11: "Users agree to receive platform notifications.",
             note12: "The company is not liable for profile-generated content.",
-            termsTitle: "Terms and Conditions of Fastwork",
+            termsTitle: "Terms and Conditions of 108Jobs",
             termsAcceptance:
-                "I have read and accept the Terms and Conditions of use of Fastwork",
+                "I have read and accept the Terms and Conditions of use of 108Jobs",
             privacyAcceptance: "I have read and accept the Privacy Policy",
             marketingOptIn:
-                "I am interested in receiving information, proposals, and promotions from Fastwork",
+                "I am interested in receiving information, proposals, and promotions from 108Jobs",
             freelancerSignup: "Register as a freelancer",
         },
         termsEmployer: {
             pageTitle: "Terms & Conditions",
             heading:
-                "Platform Terms & Conditions for Employers of Fastwork Technologies Co., Ltd.",
+                "Platform Terms & Conditions for Employers of 108Jobs Technologies Co., Ltd.",
             definitionTitle: "Definitions",
             definitionPlatform:
-                "“Platform” means the Company's website (https://fastwork.co/) or Fastwork application, which serves as a channel and central space enabling users to create, share, sell, and purchase work or services in the form of payments based on the defined value of such work or services.",
+                "“Platform” means the Company's website (https://108jobs.com/) or 108Jobs application, which serves as a channel and central space enabling users to create, share, sell, and purchase work or services in the form of payments based on the defined value of such work or services.",
             definitionWork:
                 "“Work” means the deliverables and/or various services that an Employer commissions and a Freelancer delivers via the Platform.",
-            definitionCompany: "“Company” means Fastwork Technologies Co., Ltd.",
+            definitionCompany: "“Company” means 108Jobs Technologies Co., Ltd.",
             definitionFastwork:
                 "“Fastwork” means the technology company providing the Platform for users to receive services offered by third-party service providers. The Company's role is to act as an intermediary for communication between Employers and Freelancers.",
             definitionUser: "“User” means both Employer and Freelancer.",
@@ -2639,7 +2639,7 @@ export const en = {
             definitionPaymentFee:
                 "“Payment Processing Fee” means the fee collected by the Company from an Employer for commissioning work through the Platform.",
             definitionFastworkCoin:
-                "“In-system Currency (Fastwork Coin)” means credits that an Employer adds to their profile account to pay for Service Fees or Payment Processing Fees.",
+                "“In-system Currency (108Jobs Coin)” means credits that an Employer adds to their profile account to pay for Service Fees or Payment Processing Fees.",
             definitionBonusCoin:
                 "“Bonus Coin” means credits that the Company transfers to Users as an incentive for using the Platform services, subject to the Company's specified conditions.",
             definitionPersonalData:
@@ -2724,9 +2724,9 @@ export const en = {
                 "For the Company to transfer Service Fees to Freelancers, Freelancers are required to provide bank account information, such as bank passbook pages, etc., to the Platform. The Company will hold the Service Fee until the Freelancer provides such bank account information to the Company. In the event that a Freelancer's profile account fails to provide such information within 12 months from the date of approval by the Employer, the Company may charge an account maintenance fee at a rate of 50 Baht per month.",
             "fee.6":
                 "Service Fees, Payment Processing Fees, and Platform Service Fees, which Users must pay for using the Platform services, do not include withholding tax or any other taxes or fees that Users are legally obligated to pay.",
-            "coinAndBonus.title": "Fastwork Coin and Bonus Coin",
+            "coinAndBonus.title": "108Jobs Coin and Bonus Coin",
             "coinAndBonus.detail1":
-                "Employers have the right to add Fastwork Coins to their profile accounts to pay for Service Fees or Payment Processing Fees for any work commissioned through the Platform. Fastwork Coins must be used within 2 years from the date of top-up. In the event that an Employer does not use Fastwork Coins within 2 years from the top-up date, the Company may charge an account maintenance fee at a rate of 50 Baht per month. However, this does not waive the Employer's right to request the Company to transfer Fastwork Coins to the bank account provided by the Employer for Fastwork Coin refunds. The Company reserves the right to charge a transaction processing fee for Fastwork Coin refunds at a rate of 50 Baht per transaction.",
+                "Employers have the right to add 108Jobs Coins to their profile accounts to pay for Service Fees or Payment Processing Fees for any work commissioned through the Platform. 108Jobs Coins must be used within 2 years from the date of top-up. In the event that an Employer does not use 108Jobs Coins within 2 years from the top-up date, the Company may charge an account maintenance fee at a rate of 50 Baht per month. However, this does not waive the Employer's right to request the Company to transfer 108Jobs Coins to the bank account provided by the Employer for 108Jobs Coin refunds. The Company reserves the right to charge a transaction processing fee for 108Jobs Coin refunds at a rate of 50 Baht per transaction.",
             "coinAndBonus.detail2":
                 "Users who use the Platform services according to the Company's specified conditions are eligible to receive Bonus Coins from the Company as an incentive to pay for Service Fees or Payment Processing Fees that may arise from using the Platform services. However, Users must use all received Bonus Coins within 1 year from the date of receipt. In the event that a User does not use Bonus Coins within the specified period, the Company reserves the right to reclaim the Bonus Coins.",
             "work.title": "Work",
@@ -2761,7 +2761,7 @@ export const en = {
             "orderChange.method2":
                 "If the Employer paid the Service Fee via credit card, the Service Fee will be refunded to the credit card used for payment. The Company will submit a refund request to the credit card issuing bank. The refund processing time will depend on the policies of each bank.",
             "orderChange.method3":
-                "If the Employer paid the Service Fee using Fastwork Coin, the Service Fee will be refunded in the form of Fastwork Coin to the account from which the payment was made.",
+                "If the Employer paid the Service Fee using 108Jobs Coin, the Service Fee will be refunded in the form of 108Jobs Coin to the account from which the payment was made.",
             "orderChange.method4":
                 "If the Employer paid the Service Fee via TrueMoney Wallet, the Service Fee will be refunded to the bank account provided by the Employer for the refund.",
             orderCancelRefundTitle: "Order Cancellation and Refund Restrictions",
@@ -2874,7 +2874,7 @@ export const en = {
             privacyPolicyTitle: "Privacy Policy",
             privacyPolicyContent1:
                 "The Company prioritizes and acknowledges the protection and security of your personal data in accordance with the law. You can review the Privacy Policy at",
-            privacyPolicyLinkText: "https://fastwork.co/privacy",
+            privacyPolicyLinkText: "https://108jobs.com/privacy",
             privacyPolicyContent2:
                 "which this Privacy Policy is an integral part of these Terms of Use.",
             privacyPolicyContent3:
@@ -2886,13 +2886,13 @@ export const en = {
             contactInfoTitle: "Contact Information",
             contactInfoContent1:
                 "In case you need to inquire about these Terms of Use, including exercising your rights under the terms to the Company, you can contact the Company during business hours (Monday-Friday 9:30 AM-11:30 AM and 1:00 PM-4:00 PM, closed on Saturdays, Sundays, and public holidays) via the following details:",
-            contactInfoCompanyName: "Company Name: Fastwork Technologies Co., Ltd.",
+            contactInfoCompanyName: "Company Name: 108Jobs Technologies Co., Ltd.",
             contactInfoAddress:
                 "Address: 622 Emporium Tower, 24/1-3,8 Sukhumvit Road, Khlong Tan, Khlong Toei, Bangkok 10110",
             contactInfoEmail: "support@ibrowe.com",
             contactInfoPhone: "Phone Number: 02-114-7008",
             contactInfoWebsiteLinkText:
-                "https://static.fastwork.co/contents/support-center",
+                "https://static.108jobs.com/contents/support-center",
         },
         userEdit: {
             addInfo: "Add information",
