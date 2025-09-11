@@ -89,6 +89,7 @@ const WebSocketContext = createContext<WebSocketContextValue | undefined>(undefi
 interface WebSocketProviderProps {
     token: string;
     roomId: string;
+    peerPublicKeyHex?: string;
     children: React.ReactNode;
 }
 
@@ -101,6 +102,7 @@ function broadcastToListeners(payload: unknown): void {
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                                                                         token,
                                                                         roomId,
+                                                                        peerPublicKeyHex,
                                                                         children,
                                                                     }) => {
     const [isConnected, setIsConnected] = useState(false);
@@ -209,7 +211,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
         (async () => {
             try {
-                await ensureSharedKeyForRoom(roomId);
+                await ensureSharedKeyForRoom(roomId, peerPublicKeyHex);
             } catch (e) {
                 console.warn(`WebSocketProvider: Pre-WS key derivation error for room ${roomId}`, e);
             }
@@ -444,7 +446,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 const token = UserService.Instance.auth();
                 if (token && !UserService.Instance.authInfo?.sharedKey) {
                     try {
-                        await ensureSharedKeyForRoom(roomId);
+                        await ensureSharedKeyForRoom(roomId, peerPublicKeyHex);
                         console.debug(`sendMessage: Ensured shared key for room ${roomId}`);
                     } catch (ex) {
                         console.warn(`sendMessage: Could not derive shared key for room, sending plaintext`, ex);

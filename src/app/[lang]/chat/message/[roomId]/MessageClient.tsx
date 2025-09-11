@@ -14,6 +14,7 @@ export default function MessageClient({ roomId }: { roomId: string }) {
 
     const [partnerName, setPartnerName] = useState<string>("Unknown");
     const [loading, setLoading] = useState(true);
+    const [peerPublicKeyHex, setPeerPublicKeyHex] = useState<string | undefined>(undefined);
 
     useEffect(() => {
         let cancelled = false;
@@ -37,6 +38,22 @@ export default function MessageClient({ roomId }: { roomId: string }) {
                             ? res.data.profile.name
                             : "Unknown";
                     if (!cancelled) setPartnerName(String(profileName));
+
+                    // Fetch peer's published public keys for E2EE
+                    try {
+                        const keysRes = await (HttpService.client as any).getUserKeys(Number(other.memberId));
+                        if (!cancelled && keysRes?.state === REQUEST_STATE.SUCCESS) {
+                            const keys = (keysRes.data as any)?.publicKeys as string[] | undefined;
+                            if (Array.isArray(keys) && keys.length > 0) {
+                                setPeerPublicKeyHex(keys[0]);
+                            }
+                        }
+                    } catch (e) {
+                        // non-fatal: fall back to plaintext until key available
+                        if (process.env.NODE_ENV !== 'production') {
+                            console.warn('Failed to fetch peer public keys for E2EE', e);
+                        }
+                    }
                 }
             }
             if (!cancelled) setLoading(false);
@@ -56,7 +73,7 @@ export default function MessageClient({ roomId }: { roomId: string }) {
     }
 
     return (
-        <WebSocketProvider token={accessToken} roomId={roomId}>
+        <WebSocketProvider token={accessToken} roomId={roomId} peerPublicKeyHex={peerPublicKeyHex}>
             <ChatSection roomId={roomId} partnerName={partnerName} partnerAvatar={""} />
         </WebSocketProvider>
     );

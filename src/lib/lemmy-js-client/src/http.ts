@@ -247,6 +247,7 @@ import type {CreateInvoiceForm} from "./types/CreateInvoiceForm";
 import type {CreateInvoiceResponse} from "./types/CreateInvoiceResponse";
 import type {ApproveQuotation} from "./types/ApproveQuotation";
 import type {BillingOperationResponse} from "./types/BillingOperationResponse";
+import type {UserKeysResponse} from "./types/UserKeysResponse";
 
 enum HttpType {
     Get = "GET",
@@ -3155,6 +3156,23 @@ export class LemmyHttp extends Controller {
         );
     }
 
+    /**
+     * @summary Get a user's published public keys.
+     */
+    @Security("bearerAuth")
+    @Get("/users/{id}/keys")
+    @Tags("User")
+    async getUserKeys(
+        @Path() id: number,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<object, UserKeysResponse>(
+            HttpType.Get,
+            `/users/${id}/keys`,
+            {},
+            options,
+        );
+    }
 
     /**
      * Set the headers (can be used to set the auth header)

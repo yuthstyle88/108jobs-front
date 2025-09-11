@@ -74,26 +74,18 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     const { state: reqState, data, isMutating: isLoading, execute } = useHttpGet("listChatRooms", { limit: page * pageSize });
     const error = reqState.state === "failed" ? (reqState as any).err : null;
 
-    // Ensure shared key once for decrypting previews
+    // Publish identity public key once (idempotent). No global shared key.
     useEffect(() => {
         (async () => {
             if (sharedKeyReadyRef.current) return;
             try {
                 const token = UserService.Instance.auth();
                 if (!token) return;
-                const stored = UserService.Instance.authInfo?.sharedKey || (typeof window !== 'undefined' ? localStorage.getItem('sharedKey_global') : null);
-                if (!stored) {
-                    const derived = await exchange();
-                    UserService.Instance.authInfo = {
-                        ...(UserService.Instance.authInfo || {auth: token}),
-                        sharedKey: derived,
-                        claims: UserService.Instance.authInfo?.claims,
-                    };
-                    if (typeof window !== 'undefined') localStorage.setItem('sharedKey_global', derived);
-                }
-                sharedKeyReadyRef.current = true;
+                await exchange();
             } catch {
-                // best-effort, previews may remain encrypted
+                // best-effort; not fatal for room list
+            } finally {
+                sharedKeyReadyRef.current = true;
             }
         })();
     }, []);
