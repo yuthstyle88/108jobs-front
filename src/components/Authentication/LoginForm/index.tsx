@@ -205,7 +205,7 @@ export class LoginFormClass extends Component<
                             {isSubmitting ? <LoadingCircle/> : t("authen.buttonProceed")}
                         </button>
 
-                        <div className="flex justify-between text-sm text-blue-600 mt-4">
+                        <div className="flex justify-between text-sm text-primary mt-4">
                             <button
                                 type="button"
                                 onClick={switchToRegister}

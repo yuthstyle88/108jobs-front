@@ -45,7 +45,7 @@ const SpHeader = ({ showSearch = true, showBackButton = false }: SpHeaderProps) 
                     {showBackButton && (
                         <button
                             onClick={() => router.back()}
-                            className="p-2 text-white hover:bg-blue-700 rounded-full"
+                            className="p-2 text-white hover:bg-[#063a68] rounded-full"
                             aria-label="Go back"
                         >
                             <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />

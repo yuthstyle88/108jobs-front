@@ -41,7 +41,7 @@ const FreelancerTypes = ({data}: Props) => {
         sub: data?.specialistLabel,
       },
       image: StartSellingImage.compare2,
-      badgeClass: "bg-blue-100 text-blue-600",
+      badgeClass: "bg-blue-100 text-primary",
       description: data?.freelancerSpecialistDescription,
       benefits: [
         data?.specialist2 ?? "",
@@ -58,7 +58,7 @@ const FreelancerTypes = ({data}: Props) => {
         sub: data?.professionalLabel,
       },
       image: StartSellingImage.compare3,
-      badgeClass: "bg-blue-600 text-white",
+      badgeClass: "bg-primary text-white",
       description:
       data?.freelancerProfessionalDescription,
       benefits: [
@@ -127,7 +127,7 @@ const FreelancerTypes = ({data}: Props) => {
             {data?.ctaTitle}
           </h2>
           <Link prefetch={false} href="/apply-freelance">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
+            <button className="bg-primary hover:bg-[#063a68] text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
               {data?.ctaButton}
             </button>
           </Link>

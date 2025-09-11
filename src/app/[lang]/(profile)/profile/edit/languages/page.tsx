@@ -111,7 +111,7 @@ const EditLanguages = () => {
   return (
     <div className="flex-1">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-semibold text-blue-600 mb-8">
+        <h1 className="text-2xl font-semibold text-primary mb-8">
           {userEditLanguage.languages}
         </h1>
 
@@ -130,7 +130,7 @@ const EditLanguages = () => {
                   level: levelOptions[0]?.title || "",
                 })
               }
-              className="flex items-center justify-center text-blue-600 mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
+              className="flex items-center justify-center text-primary mx-auto py-3 px-6 border border-dashed border-blue-300 rounded-lg hover:bg-blue-50"
             >
               <Plus className="w-5 h-5 mr-2" /> {userEditLanguage.addMoreButton}
             </button>
@@ -215,7 +215,7 @@ const EditLanguages = () => {
                   level: levelOptions[0]?.title || "",
                 })
               }
-              className="flex items-center justify-center text-blue-600 w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
+              className="flex items-center justify-center text-primary w-full py-3 border border-dashed border-blue-300 rounded-lg mb-8 hover:bg-blue-50"
             >
               <Plus className="w-5 h-5 mr-2" /> {userEditLanguage.addInfo}
             </button>
@@ -224,7 +224,7 @@ const EditLanguages = () => {
               <button
                 type="submit"
                 disabled={isMutating}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-[#063a68]"
               >
                 {isMutating ? <LoadingCircle /> : userEditLanguage.saveInfo}
               </button>

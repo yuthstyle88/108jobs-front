@@ -172,7 +172,7 @@ const UserProfile = () => {
                   {/* Education Section */}
                   <div className="bg-white rounded-lg pb-6">
                     <div className="mb-2">
-                      <h2 className="text-blue-600 font-medium">
+                      <h2 className="text-primary font-medium">
                         {goToProfileLanguage?.educationTitle}
                       </h2>
                     </div>
@@ -204,7 +204,7 @@ const UserProfile = () => {
                   {/* Work Experience Section */}
                   <div className="bg-white rounded-lg py-6">
                     <div className="mb-2">
-                      <h2 className="text-blue-600 font-medium">
+                      <h2 className="text-primary font-medium">
                         {goToProfileLanguage?.experienceTitle}
                       </h2>
                     </div>
@@ -245,7 +245,7 @@ const UserProfile = () => {
                   {/* Skills Section */}
                   <div className="bg-white rounded-lg py-6">
                     <div className="mb-2">
-                      <h2 className="text-blue-600 font-medium">
+                      <h2 className="text-primary font-medium">
                         {goToProfileLanguage?.skillTitle}
                       </h2>
                     </div>
@@ -261,7 +261,7 @@ const UserProfile = () => {
                                 {skill?.skillName}
                               </p>
                               <p
-                                className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
+                                className="text-[#042b4a] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
                                 {skill?.levelId}
                               </p>
                             </div>
@@ -279,7 +279,7 @@ const UserProfile = () => {
                   {/* Languages Section */}
                   <div className="bg-white rounded-lg py-6">
                     <div className="mb-2">
-                      <h2 className="text-blue-600 font-medium">
+                      <h2 className="text-primary font-medium">
                         {goToProfileLanguage?.languageTitle}
                       </h2>
                     </div>
@@ -296,7 +296,7 @@ const UserProfile = () => {
                                   {language?.lang}
                                 </p>
                                 <p
-                                  className="text-[#08439B] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
+                                  className="text-[#042b4a] px-[0.625rem] py-[0.25rem] rounded-[0.375rem] leading-[16.1px] font-sans bg-secondary break-words line-clamp-2">
                                   {language?.levelName}
                                 </p>
                               </div>
@@ -315,7 +315,7 @@ const UserProfile = () => {
                   {/* Certifications Section */}
                   <div className="bg-white rounded-lg py-6">
                     <div className="mb-2">
-                      <h2 className="text-blue-600 font-medium">
+                      <h2 className="text-primary font-medium">
                         {goToProfileLanguage?.certificationTitle}
                       </h2>
                     </div>

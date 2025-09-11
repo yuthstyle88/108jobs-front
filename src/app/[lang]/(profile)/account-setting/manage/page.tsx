@@ -142,7 +142,7 @@ export default function AccountManagePage() {
             <p className="text-xs text-gray-500 max-w-md">
               {t("accountManage.passwordDescription")}
             </p>
-            <button className="text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 border border-blue-200 text-sm font-medium">
+            <button className="text-primary px-4 py-2 rounded-lg hover:bg-blue-50 border border-blue-200 text-sm font-medium">
               {t("accountManage.passwordButton")}
             </button>
           </div>

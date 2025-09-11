@@ -238,7 +238,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
         <button
           onClick={handleResend}
           disabled={isResendDisabled}
-          className={`text-gray-500 text-sm hover:text-blue-600 transition-colors ${
+          className={`text-gray-500 text-sm hover:text-primary transition-colors ${
             isResendDisabled ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
@@ -247,7 +247,7 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
         </button>
         <button
           onClick={handleVerify}
-          className={`w-fit px-4 py-2 bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 ${
+          className={`w-fit px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-lg hover:bg-[#063a68] transition duration-300 ${
             isSubmitting || code.join("").length !== 6
               ? "opacity-50 cursor-not-allowed"
               : ""

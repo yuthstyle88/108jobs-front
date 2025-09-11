@@ -230,7 +230,7 @@ const LocationSelectionModal: React.FC<LocationSelectionModalProps> = ({
         <button
           onClick={handleConfirm}
           disabled={!isButtonEnabled || isUpdateMutating}
-          className="px-6 py-[10px] cursor-pointer w-[160px] bg-blue-600 text-white font-normal rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
+          className="px-6 py-[10px] cursor-pointer w-[160px] bg-primary text-white font-normal rounded-md shadow-lg hover:bg-[#063a68] transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
         >
           Submit
         </button>

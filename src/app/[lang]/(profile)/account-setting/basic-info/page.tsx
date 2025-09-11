@@ -234,7 +234,7 @@ export default function BasicInformation() {
                         <button
                             type="button"
                             onClick={handleSelectAvatarFile}
-                            className="absolute bottom-0 right-0 bg-blue-600 rounded-full p-2"
+                            className="absolute bottom-0 right-0 bg-primary rounded-full p-2"
                         >
                             <svg
                                 className="w-4 h-4 text-white"
@@ -312,7 +312,7 @@ export default function BasicInformation() {
                                     {...register("skills")}
                                     type="text"
                                     placeholder={t("profileInfo.coreSkillPlaceholder")}
-                                    className="text-text-primary flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                    className="text-text-primary flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                                 />
                             </div>
                         </div>
@@ -347,7 +347,7 @@ export default function BasicInformation() {
                                             <button
                                                 type="button"
                                                 onClick={handleSelectPortfolioFile}
-                                                className="flex items-center justify-center bg-blue-600 rounded-full p-2 hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="flex items-center justify-center bg-primary rounded-full p-2 hover:bg-[#063a68] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                                                 disabled={isUploadMuting}
                                             >
                                                 <svg
@@ -379,7 +379,7 @@ export default function BasicInformation() {
                                 <button
                                     type="button"
                                     onClick={editingImage ? handleUpdateImage : handleAddImage}
-                                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
+                                    className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#063a68] transition-colors duration-200 flex items-center"
                                     disabled={isUploadMuting || !newImage.title || !selectedPortfolioImage}
                                 >
                                     <Plus className="w-5 h-5 mr-2"/>
@@ -417,7 +417,7 @@ export default function BasicInformation() {
                                                     <button
                                                         type="button"
                                                         onClick={() => handleEditImage(item)}
-                                                        className="p-1 text-blue-600 hover:text-blue-800"
+                                                        className="p-1 text-primary hover:text-blue-800"
                                                     >
                                                         <Edit className="w-5 h-5"/>
                                                     </button>
@@ -438,8 +438,8 @@ export default function BasicInformation() {
                                                 type="button"
                                                 onClick={handlePrevImage}
                                                 disabled={currentImageIndex === 0}
-                                                className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${
-                                                    currentImageIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"
+                                                className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-primary text-white backdrop-blur-sm transition-all duration-200 ${
+                                                    currentImageIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-[#063a68]"
                                                 }`}
                                             >
                                                 <ChevronLeft className="w-6 h-6"/>
@@ -448,10 +448,10 @@ export default function BasicInformation() {
                                                 type="button"
                                                 onClick={handleNextImage}
                                                 disabled={currentImageIndex + imagesPerPage >= portfolioItems.length}
-                                                className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${
+                                                className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-primary text-white backdrop-blur-sm transition-all duration-200 ${
                                                     currentImageIndex + imagesPerPage >= portfolioItems.length
                                                         ? "opacity-50 cursor-not-allowed"
-                                                        : "hover:backdrop-blur-none hover:bg-blue-700"
+                                                        : "hover:backdrop-blur-none hover:bg-[#063a68]"
                                                 }`}
                                             >
                                                 <ChevronRight className="w-6 h-6"/>
@@ -479,27 +479,27 @@ export default function BasicInformation() {
                                         placeholder={t("profileInfo.sampleTitle")}
                                         value={newSample.title}
                                         onChange={(e) => setNewSample({...newSample, title: e.target.value})}
-                                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                                     />
                                     <input
                                         type="text"
                                         placeholder={t("profileInfo.sampleUrl")}
                                         value={newSample.sampleUrl}
                                         onChange={(e) => setNewSample({...newSample, sampleUrl: e.target.value})}
-                                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                                     />
                                     <textarea
                                         placeholder={t("profileInfo.sampleDescription")}
                                         value={newSample.description}
                                         onChange={(e) => setNewSample({...newSample, description: e.target.value})}
-                                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 col-span-1 sm:col-span-2"
+                                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary col-span-1 sm:col-span-2"
                                         rows={4}
                                     />
                                 </div>
                                 <button
                                     type="button"
                                     onClick={editingSample ? handleUpdateSample : handleAddSample}
-                                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center"
+                                    className="mt-4 px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#063a68] transition-colors duration-200 flex items-center"
                                 >
                                     <Plus className="w-5 h-5 mr-2"/>
                                     {editingSample ? t("profileInfo.updateWorkSample") : t("profileInfo.addWorkSample")}
@@ -525,14 +525,14 @@ export default function BasicInformation() {
                                             <h4 className="font-medium text-gray-800">{sample.title}</h4>
                                             <p className="text-gray-600 text-sm mt-1">{sample.description}</p>
                                             <a href={sample.sampleUrl} target="_blank" rel="noopener noreferrer"
-                                               className="text-blue-600 text-sm hover:underline">
+                                               className="text-primary text-sm hover:underline">
                                                 {t("profileInfo.viewWorkSample")}
                                             </a>
                                             <div className="flex justify-start gap-2 mt-2">
                                                 <button
                                                     type="button"
                                                     onClick={() => handleEditSample(sample)}
-                                                    className="p-1 text-blue-600 hover:text-blue-800"
+                                                    className="p-1 text-primary hover:text-blue-800"
                                                 >
                                                     <Edit className="w-5 h-5"/>
                                                 </button>
@@ -552,8 +552,8 @@ export default function BasicInformation() {
                                                 type="button"
                                                 onClick={handlePrevSample}
                                                 disabled={currentSampleIndex === 0}
-                                                className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${
-                                                    currentSampleIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"
+                                                className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-primary text-white backdrop-blur-sm transition-all duration-200 ${
+                                                    currentSampleIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-[#063a68]"
                                                 }`}
                                             >
                                                 <ChevronLeft className="w-6 h-6"/>
@@ -562,10 +562,10 @@ export default function BasicInformation() {
                                                 type="button"
                                                 onClick={handleNextSample}
                                                 disabled={currentSampleIndex + samplesPerPage >= workSamples.length}
-                                                className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${
+                                                className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-primary text-white backdrop-blur-sm transition-all duration-200 ${
                                                     currentSampleIndex + samplesPerPage >= workSamples.length
                                                         ? "opacity-50 cursor-not-allowed"
-                                                        : "hover:backdrop-blur-none hover:bg-blue-700"
+                                                        : "hover:backdrop-blur-none hover:bg-[#063a68]"
                                                 }`}
                                             >
                                                 <ChevronRight className="w-6 h-6"/>
@@ -591,7 +591,7 @@ export default function BasicInformation() {
                                 <textarea
                                     {...register("contacts")}
                                     placeholder={t("profileInfo.customContactPlaceholder")}
-                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 resize-y"
+                                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-y"
                                     rows={3}
                                 />
                                 {errors.contacts && (
@@ -607,7 +607,7 @@ export default function BasicInformation() {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="submit-button px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                            className="submit-button px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#063a68] transition-colors duration-200"
                         >
                             {isSubmitting || isUploadMuting ? (
                                 <span>{t("profileInfo.saving")}...</span>
@@ -630,7 +630,7 @@ export default function BasicInformation() {
                 <div className="self-end w-full sm:w-fit">
                     <button
                         onClick={openModal}
-                        className="w-full bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+                        className="w-full bg-primary text-white font-medium py-2.5 px-4 rounded-lg hover:bg-[#063a68] transition-colors"
                     >
                         {t("profileInfo.buttonSetPassword")}
                     </button>

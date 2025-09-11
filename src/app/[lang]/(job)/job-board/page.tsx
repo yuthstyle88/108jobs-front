@@ -190,8 +190,21 @@ const JobBoard = () => {
             <div className="max-w-[1283px] mx-auto py-8 px-4 md:px-6 lg:px-8 rounded-lg shadow-sm">
                 <div className="mb-6 flex items-center justify-between space-x-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-blue-600 mb-1">{t("profileJob.sectionJobBoard")}</h1>
+                        <h1 className="text-2xl font-bold text-primary mb-1">{t("profileJob.sectionJobBoard")}</h1>
                         <p className="text-gray-600">{t("profileJob.subtitleJobBoard")}</p>
+                    </div>
+                    <div className="flex-shrink-0">
+                        <Link
+                            prefetch={false}
+                            href="/job-board/create-job"
+                            className="inline-flex items-center bg-primary text-white py-3 px-6 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 shadow-md hover:shadow-lg"
+                        >
+                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                      d="M12 4v16m8-8H4"/>
+                            </svg>
+                            {t("profileJob.buttonPostJob")} (0/3)
+                        </Link>
                     </div>
                 </div>
 
@@ -206,7 +219,7 @@ const JobBoard = () => {
                             <div className="relative group">
                                 <label
                                     htmlFor="category-filter"
-                                    className="block text-sm font-semibold text-gray-700 mb-1.5 transition-colors group-hover:text-blue-600"
+                                    className="block text-sm font-semibold text-gray-700 mb-1.5 transition-colors group-hover:text-primary"
                                 >
                                     {t("profileJob.dropdownSearchCategory")}
                                 </label>
@@ -236,7 +249,7 @@ const JobBoard = () => {
                             <div className="relative group">
                                 <label
                                     htmlFor="job-type-filter"
-                                    className="block text-sm font-semibold text-gray-700 mb-1.5 transition-colors group-hover:text-blue-600"
+                                    className="block text-sm font-semibold text-gray-700 mb-1.5 transition-colors group-hover:text-primary"
                                 >
                                     {t("profileJob.dropdownSearchType")}
                                 </label>
@@ -265,7 +278,7 @@ const JobBoard = () => {
                             <div className="relative group">
                                 <label
                                     htmlFor="intended-use-filter"
-                                    className="block text-sm font-semibold text-gray-700 mb-1.5 transition-colors group-hover:text-blue-600"
+                                    className="block text-sm font-semibold text-gray-700 mb-1.5 transition-colors group-hover:text-primary"
                                 >
                                     {t("profileJob.dropdownSearchIntendedUse")}
                                 </label>
@@ -323,19 +336,6 @@ const JobBoard = () => {
                             </div>
                         </div>
 
-                        <div className="w-full md:w-auto text-right">
-                            <Link
-                                prefetch={false}
-                                href="/job-board/create-job"
-                                className="inline-flex items-center bg-blue-600 text-white py-3 px-6 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 shadow-md hover:shadow-lg"
-                            >
-                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                          d="M12 4v16m8-8H4"/>
-                                </svg>
-                                {t("profileJob.buttonPostJob")} (0/3)
-                            </Link>
-                        </div>
                     </div>
 
                     {!isLoading && totalJobs > 0 && (
@@ -438,7 +438,7 @@ const JobBoard = () => {
                                                             <Link
                                                                 prefetch={false}
                                                                 href={`/job-board/${job.post.id}`}
-                                                                className="hover:text-blue-600 font-medium text-base text-text-primary font-sans block truncate"
+                                                                className="hover:text-primary font-medium text-base text-text-primary font-sans block truncate"
                                                                 onClick={(e) => e.stopPropagation()}
                                                             >
                                                                 {job.post.name || job.post.embedTitle || "Untitled"}
@@ -493,7 +493,7 @@ const JobBoard = () => {
                                                 {(hasActiveFilters || sanitizedQuery) && (
                                                     <button
                                                         onClick={clearFilters}
-                                                        className="mt-4 text-blue-600 hover:text-blue-800 font-medium"
+                                                        className="mt-4 text-primary hover:text-blue-800 font-medium"
                                                     >
                                                         {t("profileJob.clearAllFilters")}
                                                     </button>
@@ -512,7 +512,7 @@ const JobBoard = () => {
                             {hasPreviousPage && (
                                 <button
                                     onClick={handlePrevPage}
-                                    className="py-2 px-4 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                    className="py-2 px-4 rounded-lg font-medium bg-primary text-white hover:bg-[#063a68] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                                     disabled={isLoading}
                                     aria-label="Go to previous page"
                                 >
@@ -522,7 +522,7 @@ const JobBoard = () => {
                             {hasNextPage && (
                                 <button
                                     onClick={handleNextPage}
-                                    className="py-2 px-4 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+                                    className="py-2 px-4 rounded-lg font-medium bg-primary text-white hover:bg-[#063a68] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
                                     disabled={isLoading}
                                     aria-label="Go to next page"
                                 >

@@ -65,7 +65,7 @@ const AccountStats = () => {
 
             <div className="mt-6 flex justify-center">
               <Link prefetch={false}
-                    className="bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-md"
+                    className="bg-primary text-white text-sm font-medium py-2 px-4 rounded-md"
                     href="/job-board"
               >
                 {sellerAccStatsLanguage?.findJobsButton}

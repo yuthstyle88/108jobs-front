@@ -96,7 +96,7 @@ const SupportCenter = () => {
               </Accordion>
 
               <div className="text-center mt-8">
-                <button className="text-gray-600 hover:text-blue-600 flex items-center mx-auto">
+                <button className="text-gray-600 hover:text-primary flex items-center mx-auto">
                   ดูคำถามทั้งหมด →
                 </button>
               </div>
@@ -123,7 +123,7 @@ const SupportCenter = () => {
                     <p className="text-gray-600 mb-6">
                       ต้องการความช่วยเหลือ? เรายินดีให้บริการคุณ
                     </p>
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md mb-6">
+                    <Button className="bg-primary hover:bg-[#063a68] text-white px-6 py-2 rounded-md mb-6">
                       💬 แชทกับเรา
                     </Button>
                     <p className="text-sm text-gray-500">
@@ -140,7 +140,7 @@ const SupportCenter = () => {
                     </h3>
                     <p className="text-gray-600 mb-6">
                       ทีมงานจะตอบกลับภายใน{" "}
-                      <span className="text-blue-600">24 ชั่วโมง</span>
+                      <span className="text-primary">24 ชั่วโมง</span>
                     </p>
                     <Button className="text-third bg-white border-1 border-gray-300 hover:bg-blue-50 px-6 py-2 rounded-md">
                       ส่งอีเมลถึงเรา
@@ -151,7 +151,7 @@ const SupportCenter = () => {
                     <h3 className="text-xl font-semibold text-gray-900 mb-3">
                       โทรหาเรา
                     </h3>
-                    <p className="text-blue-600 font-semibold text-lg mb-4">
+                    <p className="text-primary font-semibold text-lg mb-4">
                       02-114-7008
                     </p>
                     <p className="text-sm text-gray-500 mb-2">

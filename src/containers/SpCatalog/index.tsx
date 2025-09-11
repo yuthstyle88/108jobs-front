@@ -8,7 +8,7 @@ type Props = {
 const SpCatalog = ({ activeCatalog }: Props) => {
     return (
         <div className="mb-3">
-            <h6 className="text-[1.125rem] text-blue-600 font-semibold leading-[1.15]">
+            <h6 className="text-[1.125rem] text-primary font-semibold leading-[1.15]">
                 Popular Catalog
             </h6>
             <div className="mb-3 pt-3">
@@ -48,7 +48,7 @@ const SpCatalog = ({ activeCatalog }: Props) => {
             <Link
                 prefetch={false}
                 href="/categories/popular-service"
-                className="w-full flex justify-center items-center text-blue-600 font-semibold text-[1rem] leading-[1.15] hover:text-blue-800 transition-all duration-150"
+                className="w-full flex justify-center items-center text-primary font-semibold text-[1rem] leading-[1.15] hover:text-blue-800 transition-all duration-150"
             >
                 <span className="pt-3">View more categories</span>
             </Link>

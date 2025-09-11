@@ -35,15 +35,15 @@ const PointCard = ({
         </div>
         <button
           onClick={onCheckPoints}
-          className="bg-blue-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors w-full sm:w-auto text-center"
+          className="bg-primary text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-[#063a68] transition-colors w-full sm:w-auto text-center"
         >
           {buttonLabel}
         </button>
       </div>
       <div className="w-32 bg-gray-50 flex flex-col items-center justify-center p-3">
         <PointIcon/>
-        <p className="text-blue-600 font-bold text-2xl mt-2">{displayPoints}</p>
-        <div className="flex items-center text-sm text-gray-500 mt-2 hover:text-blue-600 cursor-pointer transition-colors">
+        <p className="text-primary font-bold text-2xl mt-2">{displayPoints}</p>
+        <div className="flex items-center text-sm text-gray-500 mt-2 hover:text-primary cursor-pointer transition-colors">
           <span>{viewLabel}</span>
           <ArrowRight className="w-4 h-4 ml-1"/>
         </div>

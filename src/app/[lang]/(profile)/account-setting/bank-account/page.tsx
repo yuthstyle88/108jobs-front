@@ -91,7 +91,7 @@ const BankAccount = () => {
         </div>
         <button
           onClick={handleAdd}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-[#063a68]"
         >
           <Plus className="w-5 h-5" />
           {sellerBankAccountLanguage?.buttonAddBank}
@@ -117,7 +117,7 @@ const BankAccount = () => {
                 {acc.user_bank_account.accountNumber} — {acc.user_bank_account.accountName}
               </p>
               {acc.user_bank_account.isDefault && (
-                <span className="text-xs text-blue-600 font-medium">✅ Default</span>
+                <span className="text-xs text-primary font-medium">✅ Default</span>
               )}
             </div>
 
@@ -125,7 +125,7 @@ const BankAccount = () => {
               {!acc.user_bank_account.isDefault && (
                 <button
                   onClick={() => handleSetDefault(acc.user_bank_account.id)}
-                  className="text-sm text-blue-600 border border-blue-600 rounded-md px-3 py-1 hover:bg-blue-50"
+                  className="text-sm text-primary border border-primary rounded-md px-3 py-1 hover:bg-blue-50"
                 >
                   <Star className="w-4 h-4 inline mr-1" />
                   Set as Default

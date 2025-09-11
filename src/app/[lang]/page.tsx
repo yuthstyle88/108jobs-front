@@ -18,7 +18,6 @@ import "../styles.css";
 
 import {Navigation} from "swiper/modules";
 
-import CategoryCardMock from "@/components/CategoryCardMock";
 import CatalogBanner from "@/components/Home/Catalog";
 import HiringSection from "@/components/Home/HiringSection";
 import IntroductionSection from "@/components/Home/IntroductionSection";
@@ -152,114 +151,6 @@ export default function Home() {
                 </div>
 
                 <OfferSection/>
-
-                <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
-                    <div
-                        className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-                        {t("global.titlePopularFreelancers")}
-                    </div>
-                </section>
-
-                <div className="max-w-[1280px] mx-auto px-[26px] xl:px-[42px] pt-6 pb-7">
-                    <Swiper
-                        navigation={{
-                            nextEl: ".swiper-button-next",
-                            prevEl: ".swiper-button-prev",
-                        }}
-                        slidesPerView={5}
-                        cssMode={true}
-                        mousewheel
-                        keyboard
-                        modules={[Navigation]}
-                        className="mySwiper"
-                        breakpoints={{
-                            0: {slidesPerView: 1},
-                            640: {slidesPerView: 2, spaceBetween: 20},
-                            768: {slidesPerView: 4, spaceBetween: 20},
-                            1024: {slidesPerView: 5, spaceBetween: 20},
-                        }}
-                    >
-                        <CustomNavigation/>
-                        {Array.from({length: 16},
-                            (_, index) => (
-                                <SwiperSlide key={index}>
-                                    <CategoryCardMock/>
-                                </SwiperSlide>
-                            ))}
-                    </Swiper>
-                </div>
-
-                <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
-                    <div
-                        className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-                        {t("global.titleAstrologyFreelancers")}
-                    </div>
-                </section>
-
-                <div className="max-w-[1280px] mx-auto px-[26px] xl:px-[42px] pt-6 pb-7">
-                    <Swiper
-                        navigation={{
-                            nextEl: ".swiper-button-next",
-                            prevEl: ".swiper-button-prev",
-                        }}
-                        slidesPerView={5}
-                        cssMode={true}
-                        mousewheel
-                        keyboard
-                        modules={[Navigation]}
-                        className="mySwiper"
-                        breakpoints={{
-                            0: {slidesPerView: 1},
-                            640: {slidesPerView: 2, spaceBetween: 20},
-                            768: {slidesPerView: 4, spaceBetween: 10},
-                            1024: {slidesPerView: 5, spaceBetween: 20},
-                        }}
-                    >
-                        <CustomNavigation/>
-                        {Array.from({length: 16},
-                            (_, index) => (
-                                <SwiperSlide key={index}>
-                                    <CategoryCardMock/>
-                                </SwiperSlide>
-                            ))}
-                    </Swiper>
-                </div>
-
-                <section className="bg-white pt-4 sm:pt-12 grid grid-container-desktop-banner">
-                    <div
-                        className="col-start-2 col-end-3 text-[rgb(8,67,155)] font-[500] text-[18px] sm:text-[2.25rem] leading-[41.4px]">
-                        {t("global.titleLogoDesignFreelancers")}
-                    </div>
-                </section>
-
-                <div className="max-w-[1280px] mx-auto px-[26px] xl:px-[42px] pt-6 pb-7">
-                    <Swiper
-                        navigation={{
-                            nextEl: ".swiper-button-next",
-                            prevEl: ".swiper-button-prev",
-                        }}
-                        slidesPerView={5}
-                        cssMode={true}
-                        mousewheel
-                        keyboard
-                        modules={[Navigation]}
-                        className="mySwiper"
-                        breakpoints={{
-                            0: {slidesPerView: 1},
-                            640: {slidesPerView: 2, spaceBetween: 20},
-                            768: {slidesPerView: 4, spaceBetween: 10},
-                            1024: {slidesPerView: 5, spaceBetween: 20},
-                        }}
-                    >
-                        <CustomNavigation/>
-                        {Array.from({length: 16},
-                            (_, index) => (
-                                <SwiperSlide key={index}>
-                                    <CategoryCardMock/>
-                                </SwiperSlide>
-                            ))}
-                    </Swiper>
-                </div>
 
                 <RecommendAndReview/>
 

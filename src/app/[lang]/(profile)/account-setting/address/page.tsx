@@ -284,7 +284,7 @@ export default function Address() {
                             <input
                                 type="checkbox"
                                 {...register("isDefault")}
-                                className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                className="h-5 w-5 text-primary border-gray-300 rounded focus:ring-blue-500"
                             />
                             <span className="text-sm text-gray-700">{t("address.setDefaultAddress")}</span>
                         </label>
@@ -298,7 +298,7 @@ export default function Address() {
                         className={`px-6 py-3 rounded-lg text-white font-medium transition-all duration-200 ${
                             isSubmitting || !isFormValid
                                 ? "bg-gray-400 cursor-not-allowed"
-                                : "bg-blue-600 hover:bg-blue-700 active:bg-blue-800 shadow-md hover:shadow-lg"
+                                : "bg-primary hover:bg-[#063a68] active:bg-blue-800 shadow-md hover:shadow-lg"
                         }`}
                     >
                         {isSubmitting ? t("address.isSavingButtonLabel") : t("address.saveAddressButtonLabel")}

@@ -65,7 +65,7 @@ const RejectJobCreateModal: React.FC<RejectJobCreateModalProps> = ({
       <div className="flex flex-row gap-2 pt-4 w-full border-t mt-4">
         <button
           onClick={handleConfirmChange}
-          className="px-10 py-2 cursor-pointer w-full bg-blue-600 text-white font-normal rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
+          className="px-10 py-2 cursor-pointer w-full bg-primary text-white font-normal rounded-md shadow-lg hover:bg-[#063a68] transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
         >
           Đã hiểu
         </button>

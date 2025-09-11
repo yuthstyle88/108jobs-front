@@ -43,7 +43,7 @@ const ReviewCard = ({language, data}: Props) => {
         <div className="flex items-center gap-8 justify-between mb-6">
           <div className="flex flex-col gap-2 items-center">
             <div className="bg-blue-100 rounded-full w-16 h-16 md:w-24 md:h-24 flex items-center justify-center">
-              <span className="text-[24px] md:text-4xl font-bold text-blue-600">
+              <span className="text-[24px] md:text-4xl font-bold text-primary">
                 {Number(data.rating).toFixed(1)}
               </span>
             </div>

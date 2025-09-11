@@ -40,7 +40,7 @@ const CouponCard = ({
         animate={{rotate: isHovered ? 15 : 12}}
         transition={{duration: 0.2}}
       >
-        <div className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-sm shadow">
+        <div className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-sm shadow">
           {data?.labelDiscount}
         </div>
       </motion.div>

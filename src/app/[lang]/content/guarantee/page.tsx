@@ -41,14 +41,14 @@ const Guarantee = () => {
 
       <section className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center text-blue-600 mb-16">
+          <h2 className="text-4xl font-bold text-center text-primary mb-16">
             &quot;108jobs Guarantee&quot; every steps hiring protection
           </h2>
 
           <div className="grid md:grid-cols-3 gap-8 text-text-primary">
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-blue-600"/>
+                <Users className="w-8 h-8 text-primary"/>
               </div>
               <h3 className="text-xl font-semibold mb-4 text-text-primary">
                 Verified freelancers
@@ -61,7 +61,7 @@ const Guarantee = () => {
 
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <DollarSign className="w-8 h-8 text-blue-600"/>
+                <DollarSign className="w-8 h-8 text-primary"/>
               </div>
               <h3 className="text-xl font-semibold mb-4 text-text-primary">
                 Guarantee money back in case no delivery
@@ -75,7 +75,7 @@ const Guarantee = () => {
 
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <HeadphonesIcon className="w-8 h-8 text-blue-600"/>
+                <HeadphonesIcon className="w-8 h-8 text-primary"/>
               </div>
               <h3 className="text-xl font-semibold mb-4 text-text-primary">
                 Support team ready to serve customer and freelancer
@@ -92,7 +92,7 @@ const Guarantee = () => {
 
       <section className="py-16">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-blue-600 mb-12">
+          <h2 className="text-3xl font-bold text-center text-primary mb-12">
             Terms and condition for Guarantee program. More confident in hiring.
           </h2>
 
@@ -179,7 +179,7 @@ const Guarantee = () => {
                   approved. Contact customer support when you found the hiring
                   problem or would like to give suggestion for improvement.
                 </p>
-                <a href="#" className="text-blue-600 underline">
+                <a href="#" className="text-primary underline">
                   Contact Customer Support
                 </a>
               </div>
@@ -190,14 +190,14 @@ const Guarantee = () => {
 
       <section className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-blue-600 mb-4">
+          <h2 className="text-3xl font-bold text-center text-primary mb-4">
             Confident in hiring with 108jobs. Freedom to choose to accept final
             work or request money back.
           </h2>
 
           <div className="flex justify-center mb-12">
             <div className="flex items-center space-x-4 text-sm">
-              <span className="text-blue-600">
+              <span className="text-primary">
                 How to give review after approved the final work?
               </span>
               <div className="flex-1 h-1 bg-gray-300"></div>
@@ -257,7 +257,7 @@ const Guarantee = () => {
 
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-blue-600 mb-4">
+          <h2 className="text-3xl font-bold text-primary mb-4">
             Contact Customer Support
           </h2>
           <p className="text-gray-600 mb-8">
@@ -268,7 +268,7 @@ const Guarantee = () => {
           <div className="flex justify-center space-x-8 mb-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Facebook className="w-8 h-8 text-blue-600"/>
+                <Facebook className="w-8 h-8 text-primary"/>
               </div>
               <div className="text-sm font-medium text-text-primary">
                 Facebook
@@ -279,7 +279,7 @@ const Guarantee = () => {
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Mail className="w-8 h-8 text-blue-600"/>
+                <Mail className="w-8 h-8 text-primary"/>
               </div>
               <div className="text-sm font-medium text-text-primary">
                 support@fastwork.co
@@ -299,10 +299,10 @@ const Guarantee = () => {
 
       <section className="py-16 bg-gray-50 text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-blue-600 mb-8">
+          <h2 className="text-3xl font-bold text-primary mb-8">
             Start hiring today with ultimate protection
           </h2>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+          <Button className="bg-primary hover:bg-[#063a68] text-white px-8 py-3">
             Search for freelancer
           </Button>
         </div>

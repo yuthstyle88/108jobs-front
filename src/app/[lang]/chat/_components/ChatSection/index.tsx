@@ -637,7 +637,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     {!atBottomRef.current && newSinceCount > 0 && (
                         <div className="absolute bottom-20 left-0 right-0 flex justify-center pointer-events-none">
                             <button
-                                className="pointer-events-auto bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm px-3 py-1.5 rounded-full shadow-md"
+                                className="pointer-events-auto bg-primary hover:bg-[#063a68] text-white text-xs sm:text-sm px-3 py-1.5 rounded-full shadow-md"
                                 onClick={() => {
                                     const rootEl = scrollContainerRef.current;
                                     if (rootEl) {
@@ -678,7 +678,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             {t("profileChat.jobFlow") || "Job Flow"}
                         </h2>
                         <button
-                            className="md:hidden p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all duration-200"
+                            className="md:hidden p-2 bg-primary text-white rounded-full hover:bg-[#063a68] transition-all duration-200"
                             onClick={() => setIsFlowOpen(false)}
                             aria-label="Close job flow sidebar"
                         >
@@ -735,7 +735,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 {t("profileChat.jobFlow") || "Job Flow"}
                             </h2>
                             <button
-                                className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-all duration-200"
+                                className="p-2 bg-primary text-white rounded-full hover:bg-[#063a68] transition-all duration-200"
                                 onClick={() => setIsFlowOpen(false)}
                                 aria-label="Close job flow drawer"
                             >

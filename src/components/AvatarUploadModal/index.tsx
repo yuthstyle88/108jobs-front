@@ -118,7 +118,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({
                         />
                         <button
                             onClick={handleSelectFile}
-                            className="flex items-center space-x-2 bg-third hover:bg-blue-700"
+                            className="flex items-center space-x-2 bg-third hover:bg-[#063a68]"
                         >
                             <Upload className="h-4 w-4"/>
                             <span>{t("uploadInstruction.selectImage")}</span>

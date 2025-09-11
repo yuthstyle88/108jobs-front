@@ -37,7 +37,7 @@ const PopularSubCat = ({name}: Props) => {
                 <div className="sticky top-[110px] sm:top-[100px]">
                     <button
                         onClick={() => setIsOpen((prev) => !prev)}
-                        className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 focus:outline-none"
+                        className="flex items-center space-x-2 text-primary hover:text-blue-700 focus:outline-none"
                     >
                         <span className="text-lg">{popularServices?.community.name}</span>
                         <svg

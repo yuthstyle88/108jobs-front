@@ -50,7 +50,7 @@ const ChatWrapper = () => {
         <>
             {/* Toggle Button for Mobile */}
             <button
-                className="md:hidden fixed top-16 sm:top-20 left-3 sm:left-4 z-50 p-2 sm:p-2.5 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors min-w-[40px] min-h-[40px]"
+                className="md:hidden fixed top-16 sm:top-20 left-3 sm:left-4 z-50 p-2 sm:p-2.5 bg-primary text-white rounded-full shadow-lg hover:bg-[#063a68] transition-colors min-w-[40px] min-h-[40px]"
                 onClick={toggleSidebar}
                 aria-label={isSidebarOpen ? "Close chat sidebar" : "Open chat sidebar"}
             >

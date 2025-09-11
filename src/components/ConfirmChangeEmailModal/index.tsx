@@ -77,7 +77,7 @@ const ConfirmChangeEmailModal: React.FC<ConfirmChangeEmailModalProps> = ({
         <button
           onClick={handleConfirmChange}
           disabled={isSubmitting}
-          className="px-3 py-2 cursor-pointer w-fit bg-blue-600 text-white font-normal rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
+          className="px-3 py-2 cursor-pointer w-fit bg-primary text-white font-normal rounded-md shadow-lg hover:bg-[#063a68] transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed"
         >
           {isSubmitting ? <LoadingCircle/> : t("global.buttonConfirm")}
         </button>

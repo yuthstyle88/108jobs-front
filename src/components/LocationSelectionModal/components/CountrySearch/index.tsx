@@ -181,7 +181,7 @@ export default function CountrySearch({
                     }}
                     className={`px-3 py-2 text-sm cursor-pointer transition-colors ${
                       isSelected
-                        ? "bg-blue-600 text-white font-semibold"
+                        ? "bg-primary text-white font-semibold"
                         : "hover:bg-gray-100 text-black"
                     }`}
                   >

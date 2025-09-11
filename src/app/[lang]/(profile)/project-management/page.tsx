@@ -19,7 +19,7 @@ const ProjectManagement = () => {
             <button
               className={`px-6 py-3 font-medium ${
                 activeTab === "inProgress"
-                  ? "text-blue-600 border-b-2 border-blue-600"
+                  ? "text-primary border-b-2 border-primary"
                   : "text-gray-500 hover:text-gray-700"
               }`}
               onClick={() => setActiveTab("inProgress")}
@@ -32,7 +32,7 @@ const ProjectManagement = () => {
             <button
               className={`px-6 py-3 font-medium ${
                 activeTab === "pending"
-                  ? "text-blue-600 border-b-2 border-blue-600"
+                  ? "text-primary border-b-2 border-primary"
                   : "text-gray-500 hover:text-gray-700"
               }`}
               onClick={() => setActiveTab("pending")}
@@ -51,7 +51,7 @@ const ProjectManagement = () => {
             <div className="bg-blue-50 p-4 rounded-lg flex items-start gap-4 mb-4">
               <div className="bg-white p-2 rounded-lg">
                 <svg
-                  className="w-6 h-6 text-blue-600"
+                  className="w-6 h-6 text-primary"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -132,7 +132,7 @@ const ProjectManagement = () => {
             <div className="bg-blue-50 p-4 rounded-lg flex items-start gap-4 mb-4">
               <div className="bg-white p-2 rounded-lg">
                 <svg
-                  className="w-6 h-6 text-blue-600"
+                  className="w-6 h-6 text-primary"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"

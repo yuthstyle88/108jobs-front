@@ -160,7 +160,7 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
     return (
         <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
             {/* Header Banner */}
-            <div className="relative bg-gradient-to-r from-blue-600 to-indigo-600 h-48 sm:h-64 overflow-hidden">
+            <div className="relative bg-gradient-to-r from-primary to-indigo-600 h-48 sm:h-64 overflow-hidden">
                 <div className="absolute inset-0 bg-opacity-50 bg-black flex items-center justify-center">
                     <Image
                         src={AssetIcon.logoIcon}
@@ -216,7 +216,7 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
                                     {isClamped && !showFullBio && (
                                         <button
                                             onClick={() => setShowFullBio(true)}
-                                            className="mt-2 text-blue-600 text-sm font-medium hover:underline"
+                                            className="mt-2 text-primary text-sm font-medium hover:underline"
                                         >
                                             See More
                                         </button>
@@ -226,7 +226,7 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
 
                             {/* Core Skills */}
                             <div className="mt-6">
-                                <h3 className="text-blue-600 font-semibold mb-3">{t("profile.coreSkills")}</h3>
+                                <h3 className="text-primary font-semibold mb-3">{t("profile.coreSkills")}</h3>
                                 <div className="flex flex-wrap gap-2">
                                             <span
                                                 className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"
@@ -238,7 +238,7 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
 
                             {/* Contact Info */}
                             <div className="mt-6">
-                                <h3 className="text-blue-600 font-semibold mb-3">
+                                <h3 className="text-primary font-semibold mb-3">
                                     {t("profileInfo.sectionContactInfo")}
                                 </h3>
                                 <div className="flex flex-wrap gap-2">
@@ -253,7 +253,7 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
                                 <div className="mt-6">
                                     <button
                                         onClick={handleChatClick}
-                                        className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+                                        className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
                                     >
                                         <MessageCircle className="w-5 h-5" />
                                         <span>{t("profile.startChat") || "Start Chat"}</span>
@@ -301,14 +301,14 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
                                                 <button
                                                     onClick={handlePrevImage}
                                                     disabled={currentImageIndex === 0}
-                                                    className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${currentImageIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"}`}
+                                                    className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-primary text-white backdrop-blur-sm transition-all duration-200 ${currentImageIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-[#063a68]"}`}
                                                 >
                                                     <ChevronLeft className="w-6 h-6"/>
                                                 </button>
                                                 <button
                                                     onClick={handleNextImage}
                                                     disabled={currentImageIndex + imagesPerPage >= portfolioItems.length}
-                                                    className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${currentImageIndex + imagesPerPage >= portfolioItems.length ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"}`}
+                                                    className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-primary text-white backdrop-blur-sm transition-all duration-200 ${currentImageIndex + imagesPerPage >= portfolioItems.length ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-[#063a68]"}`}
                                                 >
                                                     <ChevronRight className="w-6 h-6"/>
                                                 </button>
@@ -335,7 +335,7 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
                                                 <h4 className="font-medium text-gray-800">{sample.title}</h4>
                                                 <p className="text-gray-600 text-sm mt-1">{sample.description}</p>
                                                 <Link href={sample.sampleUrl} target="_blank"
-                                                      className="text-blue-600 text-sm hover:underline">
+                                                      className="text-primary text-sm hover:underline">
                                                     {t("profile.viewWorkSample")}
                                                 </Link>
                                             </div>
@@ -345,14 +345,14 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
                                                 <button
                                                     onClick={handlePrevSample}
                                                     disabled={currentSampleIndex === 0}
-                                                    className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${currentSampleIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"}`}
+                                                    className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-primary text-white backdrop-blur-sm transition-all duration-200 ${currentSampleIndex === 0 ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-[#063a68]"}`}
                                                 >
                                                     <ChevronLeft className="w-6 h-6"/>
                                                 </button>
                                                 <button
                                                     onClick={handleNextSample}
                                                     disabled={currentSampleIndex + samplesPerPage >= workSamples.length}
-                                                    className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-blue-600 text-white backdrop-blur-sm transition-all duration-200 ${currentSampleIndex + samplesPerPage >= workSamples.length ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-blue-700"}`}
+                                                    className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full bg-primary text-white backdrop-blur-sm transition-all duration-200 ${currentSampleIndex + samplesPerPage >= workSamples.length ? "opacity-50 cursor-not-allowed" : "hover:backdrop-blur-none hover:bg-[#063a68]"}`}
                                                 >
                                                     <ChevronRight className="w-6 h-6"/>
                                                 </button>
@@ -390,7 +390,7 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
                                 <div className="flex space-x-6">
                                     <button
                                         className={`pb-2 text-sm font-medium transition-colors ${activeTab === "reviews"
-                                            ? "text-blue-600 border-b-2 border-blue-600"
+                                            ? "text-primary border-b-2 border-primary"
                                             : "text-gray-500 hover:text-gray-700"
                                         }`}
                                         onClick={() => setActiveTab("reviews")}
@@ -399,7 +399,7 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
                                     </button>
                                     <button
                                         className={`pb-2 text-sm font-medium transition-colors ${activeTab === "clients"
-                                            ? "text-blue-600 border-b-2 border-blue-600"
+                                            ? "text-primary border-b-2 border-primary"
                                             : "text-gray-500 hover:text-gray-700"
                                         }`}
                                         onClick={() => setActiveTab("clients")}

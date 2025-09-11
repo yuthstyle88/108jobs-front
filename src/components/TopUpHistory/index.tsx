@@ -79,7 +79,7 @@ const TopUpHistory = ({data}: Props) => {
             <td className="py-4 px-4">
               <Link prefetch={false}
                     href="#"
-                    className="text-blue-600 hover:underline text-sm"
+                    className="text-primary hover:underline text-sm"
               >
                 {data?.statusWaiting}
               </Link>
@@ -101,7 +101,7 @@ const TopUpHistory = ({data}: Props) => {
               className="text-5 text-primary "
             />
           </button>
-          <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-blue-600 text-white">
+          <button className="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-white">
             1
           </button>
           <button

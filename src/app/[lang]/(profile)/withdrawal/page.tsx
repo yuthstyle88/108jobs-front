@@ -34,7 +34,7 @@ const Withdrawal = () => {
           {t("sellerWithdrawal.myIncome")}
         </h1>
         <div className="flex items-center space-x-2">
-          <button className="text-blue-600 flex items-center text-sm font-medium">
+          <button className="text-primary flex items-center text-sm font-medium">
             <Info className="w-4 h-4 mr-1"/>
             {t("sellerWithdrawal.paymentSteps")}
           </button>
@@ -42,7 +42,7 @@ const Withdrawal = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {/* Balance Card */}
-        <div className="bg-blue-600 text-white rounded-lg shadow p-6 lg:col-span-2">
+        <div className="bg-primary text-white rounded-lg shadow p-6 lg:col-span-2">
           <div className="flex items-center space-x-2 mb-4">
             <h2 className="text-lg font-medium">
               {t("sellerWithdrawal.accumulatedBalance")}
@@ -62,7 +62,7 @@ const Withdrawal = () => {
                 <span className="text-gray-700">
                   {t("sellerWithdrawal.verificationId")}: {""}
                 </span>
-                <Link prefetch={false} href="#" className="text-blue-600 hover:underline">
+                <Link prefetch={false} href="#" className="text-primary hover:underline">
                   {t("sellerWithdrawal.checkYourInfo")}
                 </Link>
               </div>
@@ -73,7 +73,7 @@ const Withdrawal = () => {
                 <span className="text-gray-700">
                   {t("sellerWithdrawal.verificationTax")}: {""}
                 </span>
-                <Link prefetch={false} href="#" className="text-blue-600 hover:underline">
+                <Link prefetch={false} href="#" className="text-primary hover:underline">
                   {t("sellerWithdrawal.addData")} →
                 </Link>
               </div>
@@ -84,7 +84,7 @@ const Withdrawal = () => {
                 <span className="text-gray-700">
                   {t("sellerWithdrawal.verificationBank")}: {""}
                 </span>
-                <Link prefetch={false} href="#" className="text-blue-600 hover:underline">
+                <Link prefetch={false} href="#" className="text-primary hover:underline">
                   {t("sellerWithdrawal.addData")} →
                 </Link>
               </div>
@@ -95,7 +95,7 @@ const Withdrawal = () => {
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         <div className="p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
           <div className="flex items-center">
-            <MessageSquare className="w-5 h-5 text-blue-600 mr-2"/>
+            <MessageSquare className="w-5 h-5 text-primary mr-2"/>
             <h2 className="text-lg font-medium text-gray-800">
               {t("sellerWithdrawal.transactionHistory")}
             </h2>
@@ -134,7 +134,7 @@ const Withdrawal = () => {
         <div className="bg-blue-50 p-4 border-b border-blue-100">
           <div className="flex items-start">
             <div className="flex-shrink-0 mt-0.5">
-              <Info className="w-5 h-5 text-blue-600"/>
+              <Info className="w-5 h-5 text-primary"/>
             </div>
             <p className="ml-3 text-sm text-blue-700">
               {t("sellerWithdrawal.transferNote")}

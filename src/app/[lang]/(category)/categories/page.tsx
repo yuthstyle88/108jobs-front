@@ -514,7 +514,7 @@ const Services = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-blue-600 mb-4">
+          <h1 className="text-4xl font-bold text-primary mb-4">
             Tất cả danh mục công việc
           </h1>
           <p className="text-gray-600 text-lg">
@@ -537,7 +537,7 @@ const Services = () => {
                     height={40}
                     className=""
                   />
-                  <span className="text-blue-600">{category.title}</span>
+                  <span className="text-primary">{category.title}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -555,7 +555,7 @@ const Services = () => {
                           {subcategory.items.map((item, itemIndex) => (
                             <button
                               key={itemIndex}
-                              className="block text-left text-sm text-text-primary hover:text-blue-600 py-1"
+                              className="block text-left text-sm text-text-primary hover:text-primary py-1"
                             >
                               ∟ {item}
                             </button>

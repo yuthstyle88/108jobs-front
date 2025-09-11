@@ -68,7 +68,7 @@ const StartSelling = () => {
             {applyFreelancerData?.subtitle}
           </p>
           <Link prefetch={false} href="/apply-freelance">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
+            <button className="bg-primary hover:bg-[#063a68] text-white font-medium py-3 px-8 rounded-lg transition-colors duration-200">
               {applyFreelancerData?.applyButton}
             </button>
           </Link>

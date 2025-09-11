@@ -48,7 +48,7 @@ export default function BusinessPage() {
               placeholder={companyInfoLanguageData?.placeholderTaxId}
               defaultValue=""
             />
-            <button className="sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 whitespace-nowrap">
+            <button className="sm:w-auto bg-primary text-white px-6 py-2 rounded-lg hover:bg-[#063a68] whitespace-nowrap">
               {companyInfoLanguageData?.buttonSearchCompany}
             </button>
           </div>

@@ -30,7 +30,7 @@ const ChatBadge = () => {
 
   // In header, avoid rendering spinners or error blocks; just show the icon and badge when available
   if (isChatLoading) return (
-    <Link prefetch={false} href="/chat" className="relative text-white text-sm hover:bg-blue-800 hover:text-white px-3">
+    <Link prefetch={false} href="/chat" className="relative text-white text-sm px-3">
       <FontAwesomeIcon icon={faComment} className="w-[24px] h-[24px] text-white" />
     </Link>
   );
@@ -38,7 +38,7 @@ const ChatBadge = () => {
   return (
     <Link prefetch={false}
           href="/chat"
-          className="relative text-white text-sm hover:bg-blue-800 hover:text-white px-3"
+          className="relative text-white text-sm hover:text-white px-3"
     >
       <FontAwesomeIcon
         icon={faComment}

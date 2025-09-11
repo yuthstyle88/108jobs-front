@@ -128,7 +128,7 @@ const BankAccountModal: React.FC<BankAccountModalProps> = ({
         <div className="flex justify-end pt-2">
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-[#063a68]"
           >
             {global?.buttonSave || "Save"}
           </button>

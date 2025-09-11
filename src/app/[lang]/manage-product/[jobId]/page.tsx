@@ -146,7 +146,7 @@ const ServiceOnboardingPage = () => {
         <div className="max-w-4xl mx-auto flex justify-between mb-8 relative">
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
           <div
-            className="absolute top-1/2 left-0 h-1 bg-blue-600 -translate-y-1/2 z-0"
+            className="absolute top-1/2 left-0 h-1 bg-primary -translate-y-1/2 z-0"
             style={{width: `${(currentStep - 1) * 25}%`}}
           ></div>
           {[1, 2, 3, 4, 5].map((step) => {
@@ -165,7 +165,7 @@ const ServiceOnboardingPage = () => {
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold
         ${isCompleted && !isActive ? "bg-green-500 text-white" : ""}
-        ${isActive ? "bg-blue-600 text-white" : ""}
+        ${isActive ? "bg-primary text-white" : ""}
         ${
                     isPending && !isActive
                       ? "bg-white border-2 border-gray-300 text-gray-400"
@@ -181,7 +181,7 @@ const ServiceOnboardingPage = () => {
                 </div>
                 <span
                   className={`text-xs mt-2 font-medium
-        ${isActive ? "text-blue-600" : ""}
+        ${isActive ? "text-primary" : ""}
         ${isCompleted && !isActive ? "text-green-600" : ""}
         ${isPending && !isActive ? "text-gray-500" : ""}
       `}

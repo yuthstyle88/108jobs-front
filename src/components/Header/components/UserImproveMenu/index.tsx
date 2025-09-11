@@ -77,7 +77,7 @@ const FreelanceImproveMenu = () => {
                 }`}
               >
                 <Link prefetch={false}
-                      href="#"
+                      href="/job-board"
                       className="w-[450px] rounded-md gap-[1.5rem] flex items-center p-4"
                 >
                   <Image src={freelancer.icon} alt="search" className="w-9"/>

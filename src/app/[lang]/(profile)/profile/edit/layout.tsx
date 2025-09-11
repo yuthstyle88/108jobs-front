@@ -53,7 +53,7 @@ export default function StartSellingLayout({
                             href={item.href}
                             className={`flex items-center px-4 py-2 ${
                               pathname === `/${lang}${item.href}`
-                                ? "text-blue-600 bg-blue-50 border-l-4 border-blue-500"
+                                ? "text-primary bg-blue-50 border-l-4 border-blue-500"
                                 : "text-gray-700 hover:bg-gray-50"
                             }`}
                       >
@@ -67,7 +67,7 @@ export default function StartSellingLayout({
               <div className="px-4 py-2 mt-4 border-1 border-border-primary rounded-lg">
                 <Link prefetch={false}
                       href={`/profile/${person?.name}`}
-                      className="text-blue-600 flex justify-center items-center gap-2"
+                      className="text-primary flex justify-center items-center gap-2"
                 >
                   <p className="font-medium">
                     {userEditLanguage?.viewProfile}

@@ -67,7 +67,7 @@ const Coins108Jobs = () => {
                       <span className="text-gray-500">baht</span>
                     </div>
                   </div>
-                  <button className="bg-blue-100 text-blue-600 px-6 py-2.5 rounded-lg hover:bg-blue-200 transition-colors font-medium">
+                  <button className="bg-blue-100 text-primary px-6 py-2.5 rounded-lg hover:bg-blue-200 transition-colors font-medium">
                     {coinLanguageData?.buttonTopUp}
                   </button>
                 </div>
@@ -86,7 +86,7 @@ const Coins108Jobs = () => {
                       />
                       <span className="text-gray-700">5,000 Coins</span>
                     </div>
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-[#063a68] transition-colors">
                       {coinLanguageData?.buttonTopUp} 5,000 baht
                     </button>
                   </div>
@@ -99,7 +99,7 @@ const Coins108Jobs = () => {
                       />
                       <span className="text-gray-700">10,000 Coins</span>
                     </div>
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-[#063a68] transition-colors">
                       {coinLanguageData?.buttonTopUp} 10,000 baht
                     </button>
                   </div>

@@ -161,13 +161,13 @@ const FilterSidebar = ({
           {/* Footer */}
           <div className="p-4 border-t flex justify-between">
             <button
-              className="px-4 py-2 text-blue-600 font-medium hover:bg-blue-50 rounded-md"
+              className="px-4 py-2 text-primary font-medium hover:bg-blue-50 rounded-md"
               onClick={handleClear}
             >
               {t("filter.cleanTheFilters")}
             </button>
             <button
-              className="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700"
+              className="px-6 py-2 bg-primary text-white font-medium rounded-md hover:bg-[#063a68]"
               onClick={handleApply}
             >
               {t("filter.confirm")}

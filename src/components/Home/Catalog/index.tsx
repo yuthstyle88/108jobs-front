@@ -43,7 +43,7 @@ const CatalogBanner = (props: Props) => {
                                         activeCatalogIndex === index
                                             ? "bg-blue-50"
                                             : "hover:bg-gray-50"
-                                    } after:absolute after:bottom-2 after:block after:w-4/5 after:h-1 after:rounded-full after:bg-blue-600 after:origin-center after:transition-all after:duration-150 ${
+                                    } after:absolute after:bottom-2 after:block after:w-4/5 after:h-1 after:rounded-full after:bg-primary after:origin-center after:transition-all after:duration-150 ${
                                         activeCatalogIndex === index
                                             ? "after:scale-100"
                                             : "after:scale-0"
@@ -116,7 +116,7 @@ const CatalogBanner = (props: Props) => {
                             <Link
                                 prefetch={false}
                                 href="/categories/popular-service"
-                                className="text-blue-600 py-3 relative no-underline cursor-pointer outline-none transition-all duration-150 hover:text-blue-800 font-medium"
+                                className="text-primary py-3 relative no-underline cursor-pointer outline-none transition-all duration-150 hover:text-blue-800 font-medium"
                             >
                                 {t("home.labelSeeMoreTittle")}
                                 <FontAwesomeIcon icon={faArrowRight} className="pl-2"/>

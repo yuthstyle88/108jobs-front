@@ -74,7 +74,7 @@ const JobApplication = () => {
             <div className="max-w-[1280px] w-[88vw] mx-auto px-6 py-8">
                 <div className="flex items-center gap-6 mb-8">
                     <button onClick={() => route.back()}
-                            className="text-gray-700 hover:text-blue-600 transition-colors">
+                            className="text-gray-700 hover:text-primary transition-colors">
                         <ArrowLeft className="w-6 h-6"/>
                     </button>
                 </div>
@@ -109,7 +109,7 @@ const JobApplication = () => {
                         <div className="bg-white p-6 rounded-xl shadow-lg">
                             <div
                                 className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-start gap-3">
-                                <Info className="w-5 h-5 text-blue-600 mt-0.5"/>
+                                <Info className="w-5 h-5 text-primary mt-0.5"/>
                                 <p className="text-sm text-blue-800">
                                     {t("jobApplication.publicInfoMessage")}
                                 </p>
@@ -143,7 +143,7 @@ const JobApplication = () => {
                                     </Button>
                                     <Button
                                         type="submit"
-                                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200"
+                                        className="bg-primary hover:bg-[#063a68] text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200"
                                     >
                                         {t("jobApplication.buttons.submit")}
                                     </Button>

@@ -65,7 +65,7 @@ const Freelance = ({language, data}: Props) => {
                 <h2 className="text-lg text-text-primary font-semibold">
                   {data.user.displayName}
                 </h2>
-                <button className="px-3 py-1 text-blue-600 border border-blue-600 rounded-lg text-sm hover:bg-blue-50">
+                <button className="px-3 py-1 text-primary border border-primary rounded-lg text-sm hover:bg-blue-50">
                   {language?.viewProfile}
                 </button>
               </div>
@@ -87,7 +87,7 @@ const Freelance = ({language, data}: Props) => {
                 <div className="text-text-secondary font-sans">
                   {item.title}
                 </div>
-                <div className="text-blue-600 font-semibold">
+                <div className="text-primary font-semibold">
                   {item.percentage}
                 </div>
               </div>

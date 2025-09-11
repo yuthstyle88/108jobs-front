@@ -183,14 +183,14 @@ export const PostForm: React.FC<PostFormProps> = ({
         <div className="bg-[#F6F9FE] min-h-screen py-8">
             <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-8">
                 <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-10 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                    <h1 className="text-4xl font-bold text-gray-900 mb-10 bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent">
                         {title}
                     </h1>
 
                     <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start">
                         <FontAwesomeIcon
                             icon={faInfoCircle}
-                            className="text-blue-600 mt-1 mr-3"
+                            className="text-primary mt-1 mr-3"
                         />
                         <p className="text-blue-800">
                             {t("createJob.jobPostingNotice")}
@@ -241,7 +241,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                                         id="freelance"
                                         value={JobType.Freelance}
                                         {...register("workingFrom")}
-                                        className="h-4 w-4 text-blue-600"
+                                        className="h-4 w-4 text-primary"
                                     />
                                     <label htmlFor="freelance" className="ml-2 text-gray-700">
                                         {t("createJob.employmentTypeFreelance")}
@@ -254,7 +254,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                                         id="contract"
                                         value={JobType.Contract}
                                         {...register("workingFrom")}
-                                        className="h-4 w-4 text-blue-600"
+                                        className="h-4 w-4 text-primary"
                                     />
                                     <label htmlFor="contract" className="ml-2 text-gray-700">
                                         {t("createJob.employmentTypeContract")}
@@ -267,7 +267,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                                         id="parttime"
                                         value={JobType.PartTime}
                                         {...register("workingFrom")}
-                                        className="h-4 w-4 text-blue-600"
+                                        className="h-4 w-4 text-primary"
                                     />
                                     <label htmlFor="parttime" className="ml-2 text-gray-700">
                                         {t("createJob.employmentTypePartTime")}
@@ -280,7 +280,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                                         id="fulltime"
                                         value={JobType.FullTime}
                                         {...register("workingFrom")}
-                                        className="h-4 w-4 text-blue-600"
+                                        className="h-4 w-4 text-primary"
                                     />
                                     <label htmlFor="fulltime" className="ml-2 text-gray-700">
                                         {t("createJob.employmentTypeFullTime")}
@@ -329,7 +329,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                                     type="checkbox"
                                     id="isEnglishRequired"
                                     {...register("isEnglishRequired")}
-                                    className="h-4 w-4 text-blue-600"
+                                    className="h-4 w-4 text-primary"
                                 />
                                 <label
                                     htmlFor="isEnglishRequired"
@@ -474,7 +474,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                                     onClick={() => setValue("intendedUse",
                                         IntendedUse.Business)}
                                 >
-                                    <div className="text-blue-600 mb-2">
+                                    <div className="text-primary mb-2">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             className="h-8 w-8"
@@ -504,7 +504,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                                     onClick={() => setValue("intendedUse",
                                         IntendedUse.Personal)}
                                 >
-                                    <div className="text-blue-600 mb-2">
+                                    <div className="text-primary mb-2">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             className="h-8 w-8"
@@ -533,7 +533,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                                     onClick={() => setValue("intendedUse",
                                         IntendedUse.Unknown)}
                                 >
-                                    <div className="text-blue-600 mb-2">
+                                    <div className="text-primary mb-2">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             className="h-8 w-8"
@@ -566,7 +566,7 @@ export const PostForm: React.FC<PostFormProps> = ({
                             </button>
                             <button
                                 type="submit"
-                                className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
+                                className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-[#063a68] disabled:bg-blue-400 disabled:cursor-not-allowed"
                             >
                                 {t("createJob.submitButton")}
                             </button>

@@ -15,7 +15,7 @@ const CreateService = () => {
         <div className="max-w-4xl mx-auto flex justify-between mb-8 relative">
           <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2 z-0"></div>
           <div
-            className="absolute top-1/2 left-0 h-1 bg-blue-600 -translate-y-1/2 z-0"
+            className="absolute top-1/2 left-0 h-1 bg-primary -translate-y-1/2 z-0"
             style={{width: `0%`}}
           ></div>
 
@@ -24,7 +24,7 @@ const CreateService = () => {
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
                   step === 1
-                    ? "bg-blue-600 text-white"
+                    ? "bg-primary text-white"
                     : "bg-white border-2 border-gray-300 text-gray-400 opacity-60"
                 }`}
               >

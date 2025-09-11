@@ -1,7 +1,6 @@
 "use client";
 import LanguageDropdown from "@/components/LanguageDropDown";
 import NotificationDropdown from "@/components/NotificationDropdown";
-import {ProfileIcon} from "@/constants/icons";
 import {ProfileImage} from "@/constants/images";
 import {useToggle} from "@/hooks/useToggle";
 import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
@@ -39,7 +38,7 @@ const UserProfileSection = () => {
       </div>
       <Link prefetch={false}
             href="/job-board"
-            className="text-white text-sm hover:bg-blue-800 hover:text-white px-3"
+            className="text-white text-sm  hover:text-white px-3"
       >
         {t("global.labelJobBoardCenter")}
       </Link>
@@ -59,19 +58,6 @@ const UserProfileSection = () => {
       </div>
       <ChatBadge/>
       <NotificationDropdown/>
-      <Link prefetch={false}
-            href="/reward/earn"
-            className="text-white text-sm hover:bg-blue-800 hover:text-white"
-      >
-        <div className="flex items-center gap-2 bg-white rounded-full h-[2rem]">
-          <p className="text-third text-[12px] pl-2">0.00</p>
-          <Image
-            src={ProfileIcon.coins}
-            alt="avatar"
-            className="w-full h-full"
-          />
-        </div>
-      </Link>
       <div className="px-1">
         <LanguageDropdown/>
       </div>

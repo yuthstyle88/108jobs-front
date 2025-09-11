@@ -114,7 +114,7 @@ const EarnPage = () => {
       <section className="bg-[hsl(216,85%,94%)] py-24 grid grid-container-desktop-banner gap-y-12 pt-0 sm:pt-[4rem]">
         <div className="col-start-2 col-end-3">
           <div className="flex">
-            <div className="h-[40px] w-[5px] bg-blue-600 mr-2 "/>
+            <div className="h-[40px] w-[5px] bg-primary mr-2 "/>
             <div className="text-[31px] font-semibold text-black">
               {t("profilePoint.sectionFreePointsMission")}
             </div>
@@ -123,8 +123,8 @@ const EarnPage = () => {
             <button
               className={`py-1 px-3 sm:py-2 sm:px-6 rounded-full ${
                 activeButton === 0
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-blue-600 border border-blue-600"
+                  ? "bg-primary text-white"
+                  : "bg-white text-primary border border-primary"
               }`}
               onClick={() => setActiveButton(0)}
             >
@@ -133,8 +133,8 @@ const EarnPage = () => {
             <button
               className={`py-1 px-3 sm:py-2 sm:px-6 rounded-full ${
                 activeButton === 1
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-blue-600 border border-blue-600"
+                  ? "bg-primary text-white"
+                  : "bg-white text-primary border border-primary"
               }`}
               onClick={() => setActiveButton(1)}
             >
@@ -143,8 +143,8 @@ const EarnPage = () => {
             <button
               className={`py-1 px-3 sm:py-2 sm:px-6 rounded-full ${
                 activeButton === 2
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-blue-600 border border-blue-600"
+                  ? "bg-primary text-white"
+                  : "bg-white text-primary border border-primary"
               }`}
               onClick={() => setActiveButton(2)}
             >

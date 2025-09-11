@@ -44,7 +44,7 @@ const JobAvailable = () => {
             onCheckedChange={handleToggle}
             disabled={isMutating}
             className={`w-[42px] h-[24px] rounded-full relative transition-colors ${
-              isAvailable ? "bg-blue-600" : "bg-gray-300"
+              isAvailable ? "bg-primary" : "bg-gray-300"
             } ${isMutating ? "opacity-50 pointer-events-none" : "cursor-pointer"}`}
           >
             <Switch.Thumb

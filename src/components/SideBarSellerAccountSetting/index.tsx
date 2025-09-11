@@ -60,11 +60,11 @@ const SideBarSellerAccountSetting = () => {
                         href={href}
                         className={`flex items-center w-full px-4 py-3 text-left ${
                           isActive
-                            ? "bg-blue-50 border-l-4 border-blue-500 text-blue-600"
+                            ? "bg-blue-50 border-l-4 border-blue-500 text-primary"
                             : "text-gray-700 hover:bg-gray-100"
                         }`}
                   >
-                    <Icon className={`w-5 h-5 mr-3 ${isActive ? "text-blue-600" : "text-gray-500"}`}/>
+                    <Icon className={`w-5 h-5 mr-3 ${isActive ? "text-primary" : "text-gray-500"}`}/>
                     {label}
                   </Link>
                 </li>
@@ -83,7 +83,7 @@ const SideBarSellerAccountSetting = () => {
                     href="/seller-account-setting/document-info"
                     className={`flex items-center gap-3 w-full text-left ${
                       pathname === "/seller-account-setting/document-info"
-                        ? "bg-blue-50 border-l-4 border-blue-500 text-blue-600"
+                        ? "bg-blue-50 border-l-4 border-blue-500 text-primary"
                         : "text-gray-700 hover:bg-gray-100"
                     }`}
               >

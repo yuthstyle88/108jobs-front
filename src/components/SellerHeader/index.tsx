@@ -54,7 +54,7 @@ const SellerHeader = () => {
             })}
         </h1>
         <div className="flex items-center space-x-4">
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center">
+          <button className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center">
             <span>{t("global.fastworkRewardsButton")}</span>
             <span className="ml-2 bg-blue-500 px-2 py-0.5 rounded text-xs">
               {t("global.fastworkRewardsSubtext")}

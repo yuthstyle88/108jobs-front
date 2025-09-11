@@ -57,7 +57,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
           {!isLoggedIn && (
             <div className="group">
               <div className="relative">
-                <div className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
+                <div className="text-[14px] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
                   <p className="">
                     {t("global.labelEmploymentButton")}
                   </p>
@@ -74,7 +74,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
           {!isLoggedIn && (
             <Link prefetch={false}
               href="/job-board"
-              className="text-white text-sm hover:text-white px-3"
+              className="text-white text-sm hover:text-white"
             >
               {t("global.labelJobBoardCenter")}
             </Link>

@@ -115,7 +115,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
                 <button
                     type="submit"
-                    className="ml-3 text-blue-500 hover:text-blue-600"
+                    className="ml-3 text-blue-500 hover:text-primary"
                 >
                     <Send size={20}/>
                 </button>

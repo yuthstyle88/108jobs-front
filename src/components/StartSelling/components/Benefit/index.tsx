@@ -15,7 +15,7 @@ const Benefit = ({data}: Props) => {
     {
       icon: (
         <svg
-          className="w-8 h-8 text-blue-600"
+          className="w-8 h-8 text-primary"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -34,7 +34,7 @@ const Benefit = ({data}: Props) => {
     {
       icon: (
         <svg
-          className="w-8 h-8 text-blue-600"
+          className="w-8 h-8 text-primary"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -53,7 +53,7 @@ const Benefit = ({data}: Props) => {
     {
       icon: (
         <svg
-          className="w-8 h-8 text-blue-600"
+          className="w-8 h-8 text-primary"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -72,7 +72,7 @@ const Benefit = ({data}: Props) => {
     {
       icon: (
         <svg
-          className="w-8 h-8 text-blue-600"
+          className="w-8 h-8 text-primary"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -91,7 +91,7 @@ const Benefit = ({data}: Props) => {
     {
       icon: (
         <svg
-          className="w-8 h-8 text-blue-600"
+          className="w-8 h-8 text-primary"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -110,7 +110,7 @@ const Benefit = ({data}: Props) => {
     {
       icon: (
         <svg
-          className="w-8 h-8 text-blue-600"
+          className="w-8 h-8 text-primary"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

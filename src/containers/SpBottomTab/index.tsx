@@ -56,7 +56,7 @@ export default function LanguageBottomSheet({open, onClose}: Props) {
               </div>
 
               {isSelected && (
-                <span className="text-blue-600 text-lg font-bold ml-auto">
+                <span className="text-primary text-lg font-bold ml-auto">
                   ✔
                 </span>
               )}

@@ -55,11 +55,11 @@ const AccountSettingWrapper = () => {
                         prefetch={false}
                         href={href}
                         className={`flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-4 ${isActive
-                                ? "text-blue-600 border-l-4 border-third bg-blue-50"
+                                ? "text-primary border-l-4 border-third bg-blue-50"
                                 : "text-gray-600 hover:text-gray-800 border-l-transparent hover:bg-gray-50"
                             }`}
                     >
-                        <Icon className={`w-5 h-5 ${isActive ? "text-blue-600" : ""}`} />
+                        <Icon className={`w-5 h-5 ${isActive ? "text-primary" : ""}`} />
                         {label}
                     </Link>
                 </li>

@@ -363,7 +363,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                             <button
                                 type="button"
                                 onClick={addDeliverable}
-                                className="mt-1 px-2 sm:px-3 py-1 sm:py-2 rounded-md bg-blue-600 text-xs sm:text-sm hover:bg-blue-700 text-white"
+                                className="mt-1 px-2 sm:px-3 py-1 sm:py-2 rounded-md bg-primary text-xs sm:text-sm hover:bg-[#063a68] text-white"
                             >
                                 {t('profileChat.addDeliverable') || '+ Add deliverable'}
                             </button>
@@ -464,7 +464,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                             <button
                                 type="button"
                                 onClick={addWorkStep}
-                                className="mt-1 px-2 sm:px-3 py-1 sm:py-2 rounded-md bg-blue-600 text-xs sm:text-sm hover:bg-blue-700 text-white"
+                                className="mt-1 px-2 sm:px-3 py-1 sm:py-2 rounded-md bg-primary text-xs sm:text-sm hover:bg-[#063a68] text-white"
                             >
                                 {t('profileChat.addWorkStep') || '+ Add work step'}
                             </button>
@@ -494,7 +494,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                         </button>
                         <button
                             type="submit"
-                            className="rounded-md bg-blue-600 px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm text-white hover:bg-blue-700"
+                            className="rounded-md bg-primary px-3 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm text-white hover:bg-[#063a68]"
                         >
                             {t('profileChat.sendQuotation') || 'Send Quotation'}
                         </button>

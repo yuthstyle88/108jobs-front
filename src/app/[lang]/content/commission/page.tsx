@@ -101,7 +101,7 @@ const MyServices = () => {
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="block sm:hidden w-full lg:w-1/3 relative">
           <div className="sticky top-20 bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-blue-600 text-white p-4 text-center">
+            <div className="bg-primary text-white p-4 text-center">
               <h3 className="font-medium">{commissionLanguage?.header}</h3>
             </div>
             <div className="p-4 space-y-6">
@@ -149,7 +149,7 @@ const MyServices = () => {
                 <div className="mt-2">
                   <Link prefetch={false}
                         href="#"
-                        className="text-blue-600 hover:underline text-xs"
+                        className="text-primary hover:underline text-xs"
                   >
                     {commissionLanguage?.translatorTypeAdditionalInfo}
                   </Link>
@@ -183,7 +183,7 @@ const MyServices = () => {
                   <span className="text-gray-700">
                     {commissionLanguage?.translationFeeLabel}
                   </span>
-                  <span className="text-blue-600 font-medium">
+                  <span className="text-primary font-medium">
                     {projectPrice
                       ? formatNumber(
                         calculateFee(
@@ -202,7 +202,7 @@ const MyServices = () => {
                       {commissionLanguage?.additionalFeeLabel}
                     </div>
                   </div>
-                  <div className="text-blue-600 font-bold">
+                  <div className="text-primary font-bold">
                     {projectPrice
                       ? formatNumber(
                         calculateNetAmount(
@@ -364,7 +364,7 @@ const MyServices = () => {
             <div className="mt-4 mb-6">
               <Link prefetch={false}
                     href="/seller"
-                    className="text-blue-600 underline text-sm"
+                    className="text-primary underline text-sm"
               >
                 {commissionLanguage?.checkYourTier}
               </Link>
@@ -601,7 +601,7 @@ const MyServices = () => {
                   <div className="font-bold">1.000.000 VND</div>
                 </div>
               </div>
-              <div className="bg-blue-600 text-white rounded-lg p-3 text-center">
+              <div className="bg-primary text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
                   {commissionLanguage?.example1DetailsMonths3Month}
                 </div>
@@ -616,7 +616,7 @@ const MyServices = () => {
 
             <div className="flex flex-col items-center py-4 mb-4">
               <div className="h-1 w-full bg-gray-300 mb-4 relative">
-                <div className="absolute inset-0 bg-blue-600 w-3/4"></div>
+                <div className="absolute inset-0 bg-primary w-3/4"></div>
               </div>
               <div className="text-gray-700">
                 {commissionLanguage?.example1DetailsTotal} 8.000.000 + 0 ={" "}
@@ -702,7 +702,7 @@ const MyServices = () => {
                   <div className="font-bold">1.000.000 VND</div>
                 </div>
               </div>
-              <div className="bg-blue-600 text-white rounded-lg p-3 text-center">
+              <div className="bg-primary text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
                   {commissionLanguage?.example2DetailsMonths3Month}
                 </div>
@@ -717,7 +717,7 @@ const MyServices = () => {
 
             <div className="flex flex-col items-center py-4 mb-4">
               <div className="h-1 w-full bg-gray-300 mb-4 relative">
-                <div className="absolute inset-0 bg-blue-600 w-5/6"></div>
+                <div className="absolute inset-0 bg-primary w-5/6"></div>
               </div>
               <div className="text-gray-700">
                 {commissionLanguage?.example2DetailsTotal} 8.000.000 +
@@ -805,7 +805,7 @@ const MyServices = () => {
                   <div className="font-bold">7.000.000 VND</div>
                 </div>
               </div>
-              <div className="bg-blue-600 text-white rounded-lg p-3 text-center">
+              <div className="bg-primary text-white rounded-lg p-3 text-center">
                 <div className="font-medium">
                   {commissionLanguage?.example3DetailsMonths3Month}
                 </div>
@@ -818,7 +818,7 @@ const MyServices = () => {
 
             <div className="flex flex-col items-center py-4 mb-4">
               <div className="h-1 w-full bg-gray-300 mb-4 relative">
-                <div className="absolute inset-0 bg-blue-600 w-1/2"></div>
+                <div className="absolute inset-0 bg-primary w-1/2"></div>
               </div>
               <div className="text-gray-700">
                 {commissionLanguage?.example3DetailsTotal} 1.000.000 +
@@ -855,7 +855,7 @@ const MyServices = () => {
         {/* Right Calculator Panel - Sticky */}
         <div className="hidden sm:block w-full lg:w-1/3 relative">
           <div className="sticky top-20 bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="bg-blue-600 text-white p-4 text-center">
+            <div className="bg-primary text-white p-4 text-center">
               <h3 className="font-medium">{commissionLanguage?.title}</h3>
             </div>
             <div className="p-4 space-y-6">
@@ -903,7 +903,7 @@ const MyServices = () => {
                 <div className="mt-2">
                   <Link prefetch={false}
                         href="#"
-                        className="text-blue-600 hover:underline text-xs"
+                        className="text-primary hover:underline text-xs"
                   >
                     {commissionLanguage?.translatorTypeAdditionalInfo}
                   </Link>
@@ -938,7 +938,7 @@ const MyServices = () => {
                   <span className="text-gray-700">
                     {commissionLanguage?.translationFeeLabel}
                   </span>
-                  <span className="text-blue-600 font-medium">
+                  <span className="text-primary font-medium">
                     {projectPrice
                       ? formatNumber(
                         calculateFee(
@@ -957,7 +957,7 @@ const MyServices = () => {
                       {commissionLanguage?.additionalFeeLabel}
                     </div>
                   </div>
-                  <div className="text-blue-600 font-bold">
+                  <div className="text-primary font-bold">
                     {projectPrice
                       ? formatNumber(
                         calculateNetAmount(

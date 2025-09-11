@@ -39,7 +39,7 @@ const STEPS: Array<{ key: StatusKey; title: string; sub: string }> = [
 const DOT_COLORS: Record<StatusKey, string> = {
     QuotationPending: 'bg-yellow-500 border-yellow-500',
     OrderApproved: 'bg-emerald-500 border-emerald-500',
-    InProgress: 'bg-blue-600 border-blue-600',
+    InProgress: 'bg-primary border-primary',
     PendingEmployerReview: 'bg-pink-500 border-pink-500',
     Completed: 'bg-green-600 border-green-600',
     Cancelled: 'bg-gray-400 border-gray-400',
@@ -92,7 +92,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 key={label}
                 className={`w-full rounded-md px-4 py-2 text-sm font-medium transition-colors ${
                     kind === 'primary'
-                        ? 'bg-blue-600 text-white hover:bg-blue-700'
+                        ? 'bg-primary text-white hover:bg-[#063a68]'
                         : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
                 } ${!onClick ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onClick={onClick}
@@ -162,7 +162,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                             className={`flex items-center text-gray-600 ${
                                 orientation === 'horizontal' ? 'w-auto' : 'w-full'
                             } ${compact ? 'py-1' : 'py-2'} ${
-                                isActive ? 'font-semibold text-blue-600' : isFuture ? 'opacity-50 pointer-events-none' : ''
+                                isActive ? 'font-semibold text-primary' : isFuture ? 'opacity-50 pointer-events-none' : ''
                             } hover:bg-gray-50 cursor-pointer transition-colors`}
                             onClick={() => {
                                 handleActivateStep(index, step.key);

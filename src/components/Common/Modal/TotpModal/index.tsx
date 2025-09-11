@@ -96,7 +96,7 @@ export default function TotpModal({
               href={secretUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 text-sm underline hover:text-blue-800"
+              className="text-primary text-sm underline hover:text-blue-800"
             >
               Open TOTP Setup Link
             </a>

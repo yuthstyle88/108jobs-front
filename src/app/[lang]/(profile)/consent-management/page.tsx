@@ -34,7 +34,7 @@ const ConsentManagement = () => {
               <p className="text-text-primary mb-4 font-sans">
                 ยินยอมการรับข่าวสารและโปรโมชันที่พิเศษต่าง ๆ ผ่านทุกช่องทางจาก
                 108jobs{" "}
-                <Link prefetch={false} href="#" className="text-blue-600 underline">
+                <Link prefetch={false} href="#" className="text-primary underline">
                   นโยบายคุ้มครองความเป็นส่วนตัว
                 </Link>
               </p>
@@ -43,7 +43,7 @@ const ConsentManagement = () => {
                   <input
                     type="radio"
                     name="preference"
-                    className="w-4 h-4 text-blue-600"
+                    className="w-4 h-4 text-primary"
                     checked={preferences.marketing}
                     onChange={() => handleToggle("marketing")}
                   />
@@ -55,7 +55,7 @@ const ConsentManagement = () => {
                   <input
                     type="radio"
                     name="preference"
-                    className="w-4 h-4 text-blue-600"
+                    className="w-4 h-4 text-primary"
                     checked={!preferences.marketing}
                     onChange={() => handleToggle("marketing")}
                   />
@@ -76,7 +76,7 @@ const ConsentManagement = () => {
                 มีการเก็บและใช้งานคุกกี้เพื่อช่วยปรับปรุงพัฒนาประสบการณ์การใช้งานให้ดียิ่งขึ้นเมื่อคุณเข้าเยี่ยมชมเว็บไซต์ของเรา
                 คุณสามารถเลือกให้ความยินยอมคุกกี้แต่ละประเภทได้
                 (ยกเว้นคุกกี้ที่จำเป็น){" "}
-                <Link prefetch={false} href="#" className="text-blue-600 hover:underline">
+                <Link prefetch={false} href="#" className="text-primary hover:underline">
                   นโยบายคุกกี้
                 </Link>
               </p>
@@ -115,7 +115,7 @@ const ConsentManagement = () => {
                         <input
                           type="radio"
                           name="marketingCookie"
-                          className="w-4 h-4 text-blue-600"
+                          className="w-4 h-4 text-primary"
                           checked={preferences.marketing}
                           onChange={() => handleToggle("marketing")}
                         />
@@ -125,7 +125,7 @@ const ConsentManagement = () => {
                         <input
                           type="radio"
                           name="marketingCookie"
-                          className="w-4 h-4 text-blue-600"
+                          className="w-4 h-4 text-primary"
                           checked={!preferences.marketing}
                           onChange={() => handleToggle("marketing")}
                         />
@@ -150,7 +150,7 @@ const ConsentManagement = () => {
                         <input
                           type="radio"
                           name="analyticsCookie"
-                          className="w-4 h-4 text-blue-600"
+                          className="w-4 h-4 text-primary"
                           checked={preferences.analytics}
                           onChange={() => handleToggle("analytics")}
                         />
@@ -160,7 +160,7 @@ const ConsentManagement = () => {
                         <input
                           type="radio"
                           name="analyticsCookie"
-                          className="w-4 h-4 text-blue-600"
+                          className="w-4 h-4 text-primary"
                           checked={!preferences.analytics}
                           onChange={() => handleToggle("analytics")}
                         />
@@ -217,7 +217,7 @@ const ConsentManagement = () => {
                 <button
                   className={`px-6 py-4 font-medium text-sm ${
                     activeTab === "fastwork"
-                      ? "text-blue-600 border-b-2 border-blue-600"
+                      ? "text-primary border-b-2 border-primary"
                       : "text-gray-600 hover:text-gray-800"
                   }`}
                   onClick={() => setActiveTab("fastwork")}
@@ -227,7 +227,7 @@ const ConsentManagement = () => {
                 <button
                   className={`px-6 py-4 font-medium text-sm ${
                     activeTab === "all"
-                      ? "text-blue-600 border-b-2 border-blue-600"
+                      ? "text-primary border-b-2 border-primary"
                       : "text-gray-600 hover:text-gray-800"
                   }`}
                   onClick={() => setActiveTab("all")}
@@ -237,7 +237,7 @@ const ConsentManagement = () => {
                 <button
                   className={`px-6 py-4 font-medium text-sm ${
                     activeTab === "thirdParty"
-                      ? "text-blue-600 border-b-2 border-blue-600"
+                      ? "text-primary border-b-2 border-primary"
                       : "text-gray-600 hover:text-gray-800"
                   }`}
                   onClick={() => setActiveTab("thirdParty")}
@@ -250,7 +250,7 @@ const ConsentManagement = () => {
             {renderTabContent()}
 
             <div className="p-6 border-t bg-gray-50">
-              <button className="w-full bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+              <button className="w-full bg-primary text-white font-medium py-2.5 px-4 rounded-lg hover:bg-[#063a68] transition-colors">
                 {concentLanguageData?.saveData}
               </button>
             </div>

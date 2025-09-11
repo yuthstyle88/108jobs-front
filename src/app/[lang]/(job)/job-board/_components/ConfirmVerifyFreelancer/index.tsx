@@ -42,7 +42,7 @@ const ConfirmVerifyFreelancer: React.FC<ConfirmVerifyFreelancerProps> = ({
         </button>
         <button
           onClick={handleConfirmChange}
-          className="px-10 py-3 cursor-pointer w-fit bg-blue-500 text-white font-normal rounded-md shadow hover:bg-blue-600 transition duration-300"
+          className="px-10 py-3 cursor-pointer w-fit bg-blue-500 text-white font-normal rounded-md shadow hover:bg-primary transition duration-300"
         >
           Check Your Services
         </button>

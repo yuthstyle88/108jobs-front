@@ -109,7 +109,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
           {time}
           {!isIncoming && (
             message.status === 0 ? (
-              <span className="ml-1 inline-flex items-center gap-1 text-blue-600">
+              <span className="ml-1 inline-flex items-center gap-1 text-primary">
                 <span className="inline-block w-2 h-2 rounded-full bg-blue-500" />
                 Unread
               </span>
@@ -197,7 +197,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
               className={`max-w-[80vw] sm:max-w-xs px-3 py-2 rounded-2xl text-[15px] leading-relaxed font-sans break-words whitespace-pre-line shadow-sm ${
                 isIncoming
                   ? "bg-white text-gray-800 rounded-bl-sm ring-1 ring-gray-200"
-                  : "bg-blue-600 text-white rounded-br-sm"
+                  : "bg-primary text-white rounded-br-sm"
               }`}
             >
               {message.content}

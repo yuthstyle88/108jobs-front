@@ -131,7 +131,7 @@ const MyJobs = () => {
                                         <Link
                                             prefetch={false}
                                             href={`/job-board/${job.post.id}`}
-                                            className="text-blue-600 hover:text-blue-800 font-medium text-base transition-colors duration-200 max-w-[300px] line-clamp-1"
+                                            className="text-primary hover:text-blue-800 font-medium text-base transition-colors duration-200 max-w-[300px] line-clamp-1"
                                         >
                                           {job.post.name}
                                         </Link>
@@ -158,7 +158,7 @@ const MyJobs = () => {
                                           e.stopPropagation();
                                           route.push(`/job-board/edit/${job.post.id}`);
                                         }}
-                                        className="text-blue-600 hover:text-blue-800 font-medium mr-4 transition-colors duration-200"
+                                        className="text-primary hover:text-blue-800 font-medium mr-4 transition-colors duration-200"
                                     >
                                       {t("profileJob.tableHeaderActionEdit")}
                                     </button>

@@ -85,7 +85,7 @@ const IntroductionSection = ({expanded, setExpanded}: Props) => {
             </div>
             {!expanded && (
               <div
-                className="text-blue-600 cursor-pointer text-center mt-4"
+                className="text-primary cursor-pointer text-center mt-4"
                 onClick={() => setExpanded(true)}
               >
                 {t("home.buttonJobCategoriesViewMore")} ▼

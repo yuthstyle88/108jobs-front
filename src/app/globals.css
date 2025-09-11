@@ -31,15 +31,15 @@
 }
 
 .submit-button {
-    @apply cursor-pointer w-full bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed
+    @apply cursor-pointer w-full bg-primary text-white font-semibold rounded-md shadow-lg hover:bg-[#063a68] transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed
 }
 
 .submit-button-skip {
-    @apply cursor-pointer w-full bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300
+    @apply cursor-pointer w-full bg-primary text-white font-semibold rounded-md shadow-lg hover:bg-[#063a68] transition duration-300
 }
 
 .submit-button-custom {
-    @apply cursor-pointer bg-blue-600 text-white font-semibold rounded-md shadow-lg hover:bg-blue-700 transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed
+    @apply cursor-pointer bg-primary text-white font-semibold rounded-md shadow-lg hover:bg-[#063a68] transition duration-300 disabled:bg-blue-300 disabled:cursor-not-allowed
 }
 
 .checkbox-button {
@@ -67,8 +67,13 @@
 
 
 .header-gradient {
-    background-image: linear-gradient(180deg, hsl(216 90% 32%) 4.5rem, hsl(216 77% 50%) 100%)
+    background-image: linear-gradient(
+            180deg,
+            hsl(202 87% 10%) 4.5rem,
+            hsl(202 77% 25%) 100%
+    );
 }
+
 
 .coin-gradient {
     background: linear-gradient(326.33deg, #27c8f8 2.42%, #1850c2 106.48%), #c4c4c4;
@@ -225,7 +230,7 @@
 :root {
     --background: #ffffff;
     --foreground: #171717;
-    --primary: #08439B;
+    --primary: #042b4a;
     --secondary: #e3edfd;
     --third: #1d6ce2;
     --fourth: #f6f7f8;

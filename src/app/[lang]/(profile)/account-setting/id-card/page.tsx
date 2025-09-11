@@ -120,7 +120,7 @@ const IdCard = () => {
             <button
               type="button"
               onClick={() => frontInputRef.current?.click()}
-              className="w-full py-2 text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="w-full py-2 text-primary border border-blue-300 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               {frontPreview ? t("sellerPersonalInfo.changeImage") : t("sellerPersonalInfo.changeImage")}
             </button>
@@ -172,7 +172,7 @@ const IdCard = () => {
             <button
               type="button"
               onClick={() => backInputRef.current?.click()}
-              className="w-full py-2 text-blue-600 border border-blue-300 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              className="w-full py-2 text-primary border border-blue-300 rounded-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               {backPreview ? t("sellerPersonalInfo.changeImage") :  t("sellerPersonalInfo.changeImage")}
             </button>
@@ -271,7 +271,7 @@ const IdCard = () => {
           <button
             type="submit"
             disabled={isSubmitting || isUpdateMuting || isUploadMuting}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="px-4 py-2 bg-primary text-white rounded-md hover:bg-[#063a68] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             {isSubmitting || isUpdateMuting || isUploadMuting ? (
               <span>{t("global.buttonSave")}...</span>
