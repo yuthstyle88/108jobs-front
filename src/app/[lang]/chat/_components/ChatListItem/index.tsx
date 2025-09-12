@@ -51,7 +51,6 @@ function ChatListItemComponent({ room, isActive, currentLang, localUser }: ChatL
       >
         <div className="relative w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center flex-shrink-0 ring-2 ring-blue-100 shadow-sm">
           <span className="text-xs md:text-sm font-semibold select-none">{initials}</span>
-           // TODO: Presence per user is not available; hide misleading dot
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-2">

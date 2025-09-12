@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import {useTranslation} from 'react-i18next';
-import {useWorkflowStepper} from '@/hooks/useWorkflowMachine';
-import type {UiFlowStatus} from '@/stores/stateMachineStore';
+import { useTranslation } from 'react-i18next';
+import { useWorkflowStepper } from '@/hooks/useWorkflowMachine';
+import type { UiFlowStatus } from '@/stores/stateMachineStore';
 
 export type StatusKey = UiFlowStatus;
 
@@ -61,14 +61,14 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  onReleasePayment,
                                                                  onCancel,
                                                              }) => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const stepper = useWorkflowStepper();
     const derivedStatus = stepper?.state?.name as StatusKey | undefined;
     const isControlled = controlledStatus != null && onChangeStatus != null;
     const currentStatus: StatusKey = (isControlled ? controlledStatus! : (derivedStatus || 'QuotationPending')) as StatusKey;
     const currentIndex = Math.max(0, STEPS.findIndex((s) => s.key === currentStatus));
 
-    const ORDER: StatusKey[] = (stepper?.ORDER as StatusKey[]) || ['QuotationPending','OrderApproved','InProgress','PendingEmployerReview','Completed','Cancelled'];
+    const ORDER: StatusKey[] = (stepper?.ORDER as StatusKey[]) || ['QuotationPending', 'OrderApproved', 'InProgress', 'PendingEmployerReview', 'Completed', 'Cancelled'];
 
     const handleActivateStep = (toIndex: number, targetKey: StatusKey) => {
         const curIdx = currentIndex;
@@ -90,11 +90,11 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
         const btn = (label: string, onClick?: () => void, kind: 'primary' | 'ghost' = 'primary') => (
             <button
                 key={label}
-                className={`w-full rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                className={`w-full rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 ${
                     kind === 'primary'
-                        ? 'bg-primary text-white hover:bg-[#063a68]'
-                        : 'border border-gray-300 text-gray-700 hover:bg-gray-100'
-                } ${!onClick ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        ? 'bg-primary text-white hover:bg-[#063a68] focus:ring-2 focus:ring-primary/50'
+                        : 'border border-gray-300 text-gray-700 hover:bg-gray-100 focus:ring-2 focus:ring-gray-200'
+                } ${!onClick ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-sm'}`}
                 onClick={onClick}
                 disabled={!onClick}
             >
@@ -137,12 +137,12 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 return [];
             default:
                 return [];
-            }
+        }
     };
 
     return (
         <aside
-            className={`flex w-full h-full bg-white ${
+            className={`flex w-full h-full bg-white shadow-sm rounded-lg overflow-hidden ${
                 orientation === 'horizontal' ? 'flex-row flex-wrap' : 'flex-col'
             } ${compact ? 'space-y-2' : 'space-y-4'} ${className}`}
             aria-label="สถานะปัจจุบัน"
@@ -160,13 +160,11 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                         <li
                             key={step.key}
                             className={`flex items-center text-gray-600 ${
-                                orientation === 'horizontal' ? 'w-auto' : 'w-full'
+                                orientation === 'horizontal' ? 'min-w-[200px] max-w-[250px]' : 'w-full'
                             } ${compact ? 'py-1' : 'py-2'} ${
                                 isActive ? 'font-semibold text-primary' : isFuture ? 'opacity-50 pointer-events-none' : ''
-                            } hover:bg-gray-50 cursor-pointer transition-colors`}
-                            onClick={() => {
-                                handleActivateStep(index, step.key);
-                              }}
+                            } hover:bg-gray-50 cursor-pointer transition-colors rounded-md px-2`}
+                            onClick={() => handleActivateStep(index, step.key)}
                             role="button"
                             aria-current={isActive ? 'step' : undefined}
                             tabIndex={0}
@@ -177,20 +175,20 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                             }}
                         >
                             <div
-                                className={`w-[22px] h-[22px] rounded-full border-2 flex items-center justify-center text-xs font-medium text-white ${
+                                className={`min-w-[24px] max-w-[24px] w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-medium text-white ${
                                     DOT_COLORS[step.key]
-                                } ${isActive ? 'ring-2 ring-blue-200' : ''} mr-2`}
+                                } ${isActive ? 'ring-2 ring-blue-200' : ''} mr-3 shrink-0`}
                             >
                                 {index + 1}
                             </div>
-                            <div className="flex flex-col">
-                <span className="text-sm font-medium">
-                  {t(`profileChat.step${index + 1}`) || step.title}
-                </span>
+                            <div className="flex flex-col min-w-0">
+                                <span className="text-sm font-medium truncate">
+                                    {t(`profileChat.step${index + 1}`) || step.title}
+                                </span>
                                 {!compact && (
-                                    <span className="text-xs text-gray-500">
-                    {t(`profileChat.step${index + 1}Sub`) || step.sub}
-                  </span>
+                                    <span className="text-xs text-gray-500 line-clamp-2">
+                                        {t(`profileChat.step${index + 1}Sub`) || step.sub}
+                                    </span>
                                 )}
                             </div>
                         </li>

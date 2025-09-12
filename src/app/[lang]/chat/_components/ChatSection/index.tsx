@@ -16,6 +16,7 @@ import {useWebSocket} from "@/contexts/RealtimeChatContext";
 import {useChatRooms} from "@/contexts/ChatRoomsContext";
 import { useUnreadStore } from "@/stores/unreadStore";
 import FreelanceChatFlow, {FlowActions, StatusKey} from "@/components/FreelanceChatFlow";
+import { createFlowActions } from "@/utils/chat/flowActions";
 import QuotationModal, {ProposedQuotePayload} from "@/components/QuotationModal";
 import {usePrivateImagePost} from "@/hooks/api-hooks";
 import {useWorkflowStepper} from "@/hooks/useWorkflowMachine";
@@ -47,7 +48,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
     const atBottomRef = useRef<boolean>(true);
     const incUnread = useUnreadStore((s) => s.inc);
     const markSeen = useUnreadStore((s) => s.markSeen);
-    const [isInitialLoading, setIsInitialLoading] = useState(true);
+    const [, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null); // New error state for API failures
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -352,148 +353,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         }
     };
 
-    const flowActions: FlowActions = {
-        onProposeQuote: () => {
-            setShowQuotationModal(true);
-        },
-        onConfirmAssign: () => {
-            // Employer confirms assignment -> notify freelancer to move to 'accept'
-            const messageId = uuidv4();
-            const readable = t("profileChat.confirmAssignMsg") || "Assignment confirmed. Waiting for freelancer to accept.";
-            const payload = { type: "employer-assigned" };
-
-            // Add local human-readable message
-            setMessages((prev) => [
-                {
-                    id: messageId,
-                    roomId: currentRoom?.roomId || roomId,
-                    content: readable,
-                    createdAt: new Date().toISOString(),
-                    senderId: Number(localUser?.id) || 0,
-                    receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
-                    status: 1,
-                    isOwner: true,
-                } as WsChatMessage,
-                ...prev,
-            ]);
-
-            // Send structured event to the other side
-            sendMessage({
-                message: JSON.stringify(payload),
-                id: messageId,
-            });
-
-            try {
-                const tsIso = new Date().toISOString();
-                window.dispatchEvent(
-                    new CustomEvent("chat:new-message", {
-                        detail: { roomId, content: readable, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
-                    })
-                );
-            } catch {
-            }
-            // After approval/assignment, move to OrderApproved
-            goToStatus("OrderApproved");
-        },
-        onAcceptJob: () => {
-            goToStatus("OrderApproved");
-            sendMessage({
-                message: t("profileChat.acceptJobMsg") || "I have accepted the job.",
-                id: uuidv4(),
-            });
-            try {
-                const content = t("profileChat.acceptJobMsg") || "I have accepted the job.";
-                const tsIso = new Date().toISOString();
-                window.dispatchEvent(
-                    new CustomEvent("chat:new-message", {
-                        detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
-                    })
-                );
-            } catch {
-            }
-        },
-        onUploadAsset: () => {
-            const input = document.createElement("input");
-            input.type = "file";
-            input.onchange = (e) => handleFileUpload(e as any);
-            input.click();
-        },
-        onSendMessage: () => {
-            const input = scrollContainerRef.current?.querySelector("input");
-            if (input) input.focus();
-        },
-        onSubmitDelivery: () => {
-            goToStatus("PendingEmployerReview");
-            setShowReviewModal(true);
-        },
-        onRequestRevision: () => {
-            goToStatus("InProgress");
-            setShowReviewModal(false);
-            sendMessage({
-                message: t("profileChat.requestRevisionMsg") || "Please revise and resubmit.",
-                id: uuidv4(),
-            });
-            try {
-                const content = t("profileChat.requestRevisionMsg") || "Please revise and resubmit.";
-                const tsIso = new Date().toISOString();
-                window.dispatchEvent(
-                    new CustomEvent("chat:new-message", {
-                        detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
-                    })
-                );
-            } catch {
-            }
-        },
-        onReleasePayment: () => {
-            goToStatus("Completed");
-            setShowReviewModal(false);
-            sendMessage({
-                message: t("profileChat.deliveryAccepted") || "Delivery accepted. Proceed to payment.",
-                id: uuidv4(),
-            });
-            try {
-                const content = t("profileChat.deliveryAccepted") || "Delivery accepted. Proceed to payment.";
-                const tsIso = new Date().toISOString();
-                window.dispatchEvent(
-                    new CustomEvent("chat:new-message", {
-                        detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
-                    })
-                );
-            } catch {
-            }
-        },
-        onCancel: () => {
-            // move to Cancelled via state machine
-            try {
-                cancel();
-            } catch {}
-            // Send a human-readable cancel message
-            const messageId = uuidv4();
-            const content = t("profileChat.cancelJobMsg") || "The job has been cancelled.";
-            setMessages((prev) => [
-                {
-                    id: messageId,
-                    roomId: currentRoom?.roomId || roomId,
-                    content,
-                    createdAt: new Date().toISOString(),
-                    senderId: Number(localUser?.id) || 0,
-                    receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
-                    status: 1,
-                    isOwner: true,
-                } as WsChatMessage,
-                ...prev,
-            ]);
-            sendMessage({ message: content, id: messageId });
-            try {
-                const tsIso = new Date().toISOString();
-                window.dispatchEvent(
-                    new CustomEvent("chat:new-message", {
-                        detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
-                    })
-                );
-            } catch {}
-        },
-    };
 
     const onSubmit = useCallback(
         (data: MessageForm) => {
@@ -557,6 +416,21 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             setError(t("profileChat.uploadError") || "Failed to upload file. Please try again.");
         }
     };
+
+    const flowActions: FlowActions = createFlowActions({
+        t,
+        goToStatus,
+        setShowQuotationModal,
+        setShowReviewModal,
+        setMessages,
+        sendMessage,
+        handleFileUpload: (ev: any) => handleFileUpload(ev as any),
+        scrollContainerRef,
+        currentRoom,
+        roomId,
+        localUser,
+        setError,
+    });
 
     const didInitialFetchRef = useRef(false);
     useEffect(() => {
@@ -693,7 +567,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                     aria-label="Job Flow Sidebar"
                 >
                     <div className="p-3 sm:p-4 bg-blue-50 border-b border-blue-100 flex items-center justify-between">
-                        <h2 className="text-base sm:text-lg font-semibold text-blue-800">
+                        <h2 className="text-base sm:text-lg font-semibold text-primary">
                             {t("profileChat.jobFlow") || "Job Flow"}
                         </h2>
                         <button
