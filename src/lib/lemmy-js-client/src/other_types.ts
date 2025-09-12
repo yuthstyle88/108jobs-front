@@ -109,3 +109,6 @@ export interface AdminListUsersI extends AdminListUsers {}
 export interface CommunityIdQueryI extends CommunityIdQuery {}
 
 export interface ListUserChatRoomsQueryI extends ListUserChatRoomsQuery {}
+
+import { ChatHistoryQuery } from "./types/ChatHistoryQuery";
+export interface ChatHistoryQueryI extends ChatHistoryQuery {}

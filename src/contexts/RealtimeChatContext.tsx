@@ -4,11 +4,12 @@ import {useRouter} from "next/navigation";
 import React, {createContext, useCallback, useContext, useEffect, useRef, useState} from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {decrypt, encrypt} from "@/lib/web-crypto";
-import {UserService} from "@/services";
+import {HttpService, UserService} from "@/services";
 import type {ChatMessage} from "lemmy-js-client";
 import {v4 as uuidv4} from "uuid";
 import {__DEV__, addOnce, buildWsUrl, getReceiverIdFromRoom, isBase64Like, logDebug, safeParse} from "@/utils/realtime";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils/crypto";
+import {REQUEST_STATE} from "@/services/HttpService";
 
 async function mapIncomingToChatMessage(
     m: any,
@@ -128,73 +129,86 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     const wsUrl = buildWsUrl(token, roomId);
 
     const fetchHistory = useCallback(() => {
-        return new Promise<void>((resolve, reject) => {
+         return new Promise<void>(async (resolve, reject) => {
             if (isE2EMock) {
                 resolve();
                 return;
             }
 
-            if (!hasMoreMessages || isFetching || !isConnected) {
-                if (!isConnected) console.log('[WS][FETCH] Early return: not connected');
-                else if (isFetching) console.log('[WS][FETCH] Early return: already fetching');
-                else if (!hasMoreMessages) console.log('[WS][FETCH] Early return: no more messages');
+            if (!hasMoreMessages || isFetching) {
+                if (isFetching) console.log('[API][FETCH] Early return: already fetching');
+                else if (!hasMoreMessages) console.log('[API][FETCH] Early return: no more messages');
                 resolve();
                 return;
             }
 
-            setIsFetching(true);
-            fetchResolveRef.current = resolve;
-
-            const payload: any = {
-                op: "FetchHistory",
-                sender_id: Number(localUser?.id) || 0,
-                room_id: roomId,
-                content: "",
-                page_cursor: pageCursor ?? undefined,
-                page_back: true,
-                limit: pageSize,
-            };
-
-            if (fetchTimeoutRef.current) {
-                clearTimeout(fetchTimeoutRef.current);
-                fetchTimeoutRef.current = null;
-            }
-            fetchTimeoutRef.current = setTimeout(() => {
-                setIsFetching(false);
-                fetchResolveRef.current = null;
-                fetchTimeoutRef.current = null;
-                console.warn('[WS][FETCH] Fetch history timeout after 5s');
-                reject(new Error('Fetch history timeout after 5s'));
-            }, 5000);
-
             try {
-                if (socket?.readyState === WebSocket.OPEN) {
-                    console.log('[WS][FETCH] Sending FetchHistory', {
-                        page_cursor: payload.page_cursor,
-                        page_back: payload.page_back,
-                        limit: payload.limit
-                    });
-                    socket.send(JSON.stringify(payload));
-                } else {
-                    console.warn('[WS][FETCH] WebSocket not open');
+                setIsFetching(true);
+                fetchResolveRef.current = resolve;
+
+                // Build query for API
+                const query = {
+                    roomId: roomId as any,
+                    cursor: pageCursor ?? undefined,
+                    limit: pageSize,
+                    back: true,
+                } as any;
+
+                // Call HTTP API through wrapped client
+                const res = await HttpService.client.getChatHistory(query as any);
+                if (res.state !== REQUEST_STATE.SUCCESS) {
+                    console.warn('[API][FETCH] getChatHistory failed', res);
                     setIsFetching(false);
-                    if (fetchTimeoutRef.current) {
-                        clearTimeout(fetchTimeoutRef.current);
-                        fetchTimeoutRef.current = null;
-                    }
-                    reject(new Error('WebSocket not open'));
+                    fetchResolveRef.current?.();
+                    fetchResolveRef.current = null;
+                    resolve();
+                    return;
                 }
-            } catch (e) {
-                console.error('[WS][FETCH] Error sending FetchHistory', e);
+
+                const resp = res.data as any;
+                const items = Array.isArray(resp?.results) ? resp.results : [];
+
+                // Decrypt/map each message and broadcast to listeners one by one (preserves existing consumer logic)
+                const token = import("@/services").then(m => m.UserService.Instance.auth());
+                const sharedKeyHex = import("@/services").then(m => m.UserService.Instance.authInfo?.sharedKey);
+                const realToken = (await token) as any;
+                const realShared = (await sharedKeyHex) as any;
+
+                for (const view of items) {
+                    const m = { ...view.message, room_id: view.room?.id || view.message?.room_id };
+                    const mapped = await mapIncomingToChatMessage(m, {
+                        token: realToken,
+                        sharedKeyHex: realShared,
+                        fallbackRoomId: roomId,
+                        localUserId: Number(localUser?.id),
+                        receivedSet: receivedMessagesRef.current,
+                        decryptLabel: 'history line',
+                    });
+                    if (mapped) broadcastToListeners(mapped);
+                }
+
+                const prev = resp.prevPage ?? resp.prev_page ?? null;
+                const next = resp.nextPage ?? resp.next_page ?? null;
+                if (typeof prev === 'string' && prev.length > 0) {
+                    setPageCursor(next);
+                    setHasMoreMessages(true);
+                } else {
+                    setPageCursor(null);
+                    setHasMoreMessages(false);
+                }
+
                 setIsFetching(false);
-                if (fetchTimeoutRef.current) {
-                    clearTimeout(fetchTimeoutRef.current);
-                    fetchTimeoutRef.current = null;
-                }
+                fetchResolveRef.current?.();
+                fetchResolveRef.current = null;
+            } catch (e) {
+                console.error('[API][FETCH] Error fetching history', e);
+                setIsFetching(false);
+                fetchResolveRef.current?.();
+                fetchResolveRef.current = null;
                 reject(e);
             }
         });
-    }, [socket, isE2EMock, roomId, localUser?.id, hasMoreMessages, isFetching, isConnected, pageCursor, pageSize]);
+    }, [isE2EMock, roomId, localUser?.id, hasMoreMessages, isFetching, pageCursor, pageSize]);
 
     // Unified WebSocket connection effect (duplicates removed)
     useEffect(() => {
@@ -232,16 +246,9 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     reconnectTimeoutRef.current = null;
                 }
                 try { window.dispatchEvent(new Event('ws:reconnected')); } catch {}
-                if (__DEV__) console.debug(`WebSocket connected for room ${roomId}`);
             };
 
             newSocket.onmessage = async (event) => {
-                if (__DEV__) {
-                    try {
-                        const preview = typeof event.data === 'string' ? event.data.slice(0, 200) : String(event.data);
-                        console.log(`onmessage: raw event`, { type: typeof event.data, preview });
-                    } catch {}
-                }
                 try {
                     const token = UserService.Instance.auth();
                     const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
@@ -326,7 +333,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
             newSocket.onclose = (event) => {
                 setIsConnected(false);
-                if (__DEV__) console.log(`WebSocket closed for room ${roomId}. Code: ${event.code}, Reason: ${event.reason || "unknown"}`);
 
                 if (isManuallyClosingRef.current) {
                     return;
@@ -387,17 +393,14 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
     useEffect(() => {
         if (connectionError) {
-            logDebug(`WebSocketProvider: Connection error detected, redirecting to /not-found`);
             router.replace("/not-found");
         }
     }, [connectionError, router]);
 
     useEffect(() => {
         if (!socket) {
-            logDebug(`WebSocketProvider: Socket is null`);
             return;
         }
-        logDebug(`WebSocketProvider: Socket state changed, readyState: ${socket.readyState}`);
     }, [socket]);
 
     const sendMessage = useCallback(
@@ -414,7 +417,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     status: 1,
                     isOwner: true,
                 };
-                console.debug(`sendMessage: Emitting mock message`, mockMessage);
                 broadcastToListeners(mockMessage);
                 return;
             }
@@ -428,7 +430,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
 
             const messageId = data.id || uuidv4();
             if (!addOnce(sentMessagesRef.current, messageId)) {
-                console.debug(`sendMessage: Ignored duplicate message ID ${messageId}`);
                 return;
             }
 
@@ -447,7 +448,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 if (token && !UserService.Instance.authInfo?.sharedKey) {
                     try {
                         await ensureSharedKeyForRoom(roomId, peerPublicKeyHex);
-                        console.debug(`sendMessage: Ensured shared key for room ${roomId}`);
                     } catch (ex) {
                         console.warn(`sendMessage: Could not derive shared key for room, sending plaintext`, ex);
                     }
@@ -459,14 +459,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     const aesKey = await importAesKey(sharedKeyHex!, "encrypt");
                     const encrypted = await encrypt(data.message, aesKey, token);
                     payload = {...apiPayload, content: encrypted};
-                    console.debug(`sendMessage: Encrypted message for sending`);
                 }
             } catch (e) {
                 console.warn(`sendMessage: E2EE encryption failed, sending plaintext`, e);
             }
 
             if (socket?.readyState === WebSocket.OPEN) {
-                console.debug(`sendMessage: Sending WebSocket message`, payload);
                 socket.send(JSON.stringify(payload));
             } else {
                 console.warn(`sendMessage: WebSocket not ready, state: ${socket?.readyState}`);
@@ -495,10 +493,8 @@ export const useWebSocket = (
     }
 
     useEffect(() => {
-        logDebug(`useWebSocket: Registered listener for key ${key}`);
         listeners.set(key, onMessage);
         return () => {
-            logDebug(`useWebSocket: Unregistered listener for key ${key}`);
             listeners.delete(key);
         };
     }, [key, onMessage]);

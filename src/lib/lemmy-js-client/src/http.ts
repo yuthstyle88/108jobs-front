@@ -248,6 +248,9 @@ import type {CreateInvoiceResponse} from "./types/CreateInvoiceResponse";
 import type {ApproveQuotation} from "./types/ApproveQuotation";
 import type {BillingOperationResponse} from "./types/BillingOperationResponse";
 import type {UserKeysResponse} from "./types/UserKeysResponse";
+import type {ChatHistoryQuery} from "./types/ChatHistoryQuery";
+import type {ChatMessagesResponse} from "./types/ChatMessagesResponse";
+import type { ChatHistoryQueryI } from "./other_types";
 
 enum HttpType {
     Get = "GET",
@@ -3133,6 +3136,24 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<ListUserChatRoomsQuery, ListUserChatRoomsResponse>(
             HttpType.Get,
             "/chat/rooms",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Fetch chat history for a room.
+     */
+    @Security("bearerAuth")
+    @Get("/chat/history")
+    @Tags("Chat")
+    async getChatHistory(
+        @Queries() form: ChatHistoryQueryI,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<ChatHistoryQuery, ChatMessagesResponse>(
+            HttpType.Get,
+            "/chat/history",
             form,
             options,
         );
