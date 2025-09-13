@@ -69,7 +69,8 @@ export class UserService {
 
       if (!VALID_LANGUAGES.includes(this.currentLanguage)) return;
       document.cookie = `${LANGUAGE_COOKIE}=${this.currentLanguage}; path=/`;
-      const cleanPath = window.location.pathname.replace(/^\/(vi|en|th)/, "");
+      const langsPattern = `(?:${VALID_LANGUAGES.join('|')})`;
+      const cleanPath = window.location.pathname.replace(new RegExp(`^/` + langsPattern + `\\b`), "");
       window.location.pathname = `/${this.currentLanguage}${cleanPath}`;
 
     } else {
