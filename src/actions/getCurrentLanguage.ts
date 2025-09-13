@@ -4,11 +4,11 @@ import {cookies} from "next/headers";
 import {VALID_LANGUAGES, LANGUAGE_COOKIE} from "@/constants/language";
 import {SupportedLang} from "@/lib/metadata";
 
-export async function getCurrentLanguage(): Promise<SupportedLang | null> {
+export async function getCurrentLanguage(): Promise<SupportedLang> {
   // ฝั่ง Server
   const cookieStore = cookies(); // API ของ Next.js สำหรับ Server-side
   const cookieData = await cookieStore;
   const lang = cookieData.get(LANGUAGE_COOKIE)?.value;
 
-  return lang && VALID_LANGUAGES.includes(lang) ? (lang as SupportedLang) : null;
+  return lang && VALID_LANGUAGES.includes(lang) ? (lang as SupportedLang) : 'th';
 }

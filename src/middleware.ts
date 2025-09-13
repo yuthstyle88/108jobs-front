@@ -36,7 +36,7 @@ const publicRoutes = [
 export async function middleware(req: NextRequest) {
   const rawCookie = req.cookies.get(authCookieName)?.value ?? "";
   const applicationPending = getApplicationPending(rawCookie);
-  const langRedirect = langMiddleware(req);
+  const langRedirect = await langMiddleware(req);
   if (langRedirect) return langRedirect;
 
   const { pathname, origin } = req.nextUrl;
