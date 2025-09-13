@@ -36,17 +36,18 @@ const publicRoutes = [
 export async function middleware(req: NextRequest) {
   const rawCookie = req.cookies.get(authCookieName)?.value ?? "";
   const applicationPending = getApplicationPending(rawCookie);
-  const {pathname, origin} = req.nextUrl;
-
   const langRedirect = langMiddleware(req);
   if (langRedirect) return langRedirect;
 
+  const { pathname, origin } = req.nextUrl;
+
   const pathSegments = pathname.split("/");
-  const firstSegment = pathSegments[1];
-  const langPrefix = VALID_LANGUAGES.includes(firstSegment)
-    ? `/${firstSegment}`
-    : "";
-  const cleanPathname = pathname.replace(langPrefix, "") || "/";
+  const firstSegment = pathSegments[1] ?? "";
+  const hasLangPrefix = VALID_LANGUAGES.includes(firstSegment);
+  const langPrefix = hasLangPrefix ? `/${firstSegment}` : "";
+  const cleanPathname = hasLangPrefix
+    ? (pathname.slice(langPrefix.length) || "/")
+    : (pathname || "/");
 
   if (applicationPending === true && cleanPathname !== "/update-term") {
     return NextResponse.redirect(new URL(`${langPrefix}/update-term`, origin));
