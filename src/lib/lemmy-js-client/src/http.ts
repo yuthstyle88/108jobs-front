@@ -247,6 +247,7 @@ import type {CreateInvoiceForm} from "./types/CreateInvoiceForm";
 import type {CreateInvoiceResponse} from "./types/CreateInvoiceResponse";
 import type {ApproveQuotation} from "./types/ApproveQuotation";
 import type {WorkFlowOperationResponse} from "./types/WorkFlowOperationResponse";
+import type { StartWorkflow } from "./types/StartWorkflow";
 import type {UserKeysResponse} from "./types/UserKeysResponse";
 import type {ChatHistoryQuery} from "./types/ChatHistoryQuery";
 import type {ChatMessagesResponse} from "./types/ChatMessagesResponse";
@@ -3091,7 +3092,7 @@ export class LemmyHttp extends Controller {
      * @summary Approve quotation and convert to order.
      */
     @Security("bearerAuth")
-    @Post("/services/approve-quotation")
+    @Post("/account/services/approve-quotation")
     @Tags("Billing")
     async approveQuotation(
         @Body() form: ApproveQuotation,
@@ -3099,7 +3100,25 @@ export class LemmyHttp extends Controller {
     ) {
         return this.#wrapper<ApproveQuotation, WorkFlowOperationResponse>(
             HttpType.Post,
-            "/services/approve-quotation",
+            "/account/services/approve-quotation",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Start or initialize a workflow for a post/sequence in a chat room.
+     */
+    @Security("bearerAuth")
+    @Post("/account/services/start-workflow")
+    @Tags("Services")
+    async startWorkflow(
+        @Body() form: StartWorkflow,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<StartWorkflow, WorkFlowOperationResponse>(
+            HttpType.Post,
+            "/account/services/start-workflow",
             form,
             options,
         );

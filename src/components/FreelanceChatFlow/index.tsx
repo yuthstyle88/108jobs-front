@@ -146,7 +146,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
 
     if (!started) {
         return (
-            <aside className={`flex w-full h-full bg-white shadow-sm rounded-lg overflow-hidden ${className}`}>
+            <aside className={`flex w-full h-full bg-white shadow-sm rounded-lg overflow-auto ${className}`}>
                 <div className="flex-1 p-4 flex flex-col gap-3">
                     <p className="text-sm text-gray-600">
                         {t('profileChat.startWorkflowHint') || 'The workflow will be shown after the employer starts it.'}
@@ -174,7 +174,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
 
     return (
         <aside
-            className={`flex w-full h-full bg-white shadow-sm rounded-lg overflow-hidden ${
+            className={`flex w-full h-full bg-white shadow-sm rounded-lg overflow-auto ${
                 orientation === 'horizontal' ? 'flex-row flex-wrap' : 'flex-col'
             } ${compact ? 'space-y-2' : 'space-y-4'} ${className}`}
             aria-label="สถานะปัจจุบัน"

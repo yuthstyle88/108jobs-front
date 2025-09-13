@@ -398,3 +398,4 @@ export type { BillingOperationResponse } from "./types/BillingOperationResponse"
 export type { WorkflowId } from "./types/WorkflowId";
 export type { WorkflowStatus } from "./types/WorkflowStatus";
 export type { WorkFlowOperationResponse } from "./types/WorkFlowOperationResponse";
+export type { StartWorkflow } from "./types/StartWorkflow";
