@@ -1,4 +1,5 @@
 import {LanguageProvider} from "@/contexts/LanguageContext";
+import {LANGUAGE_COOKIE} from "@/constants/language";
 import {Kanit} from "next/font/google";
 import {Toaster} from "sonner";
 import FontAwesomeConfig from "../fontawesome";
@@ -39,7 +40,7 @@ export default async function RootLayout({
   const lang = resolvedParams.lang;
   const isoData = await isoDataInitializer();
   const cookieStore = await cookies();
-  const cookieLang = cookieStore.get("current-language")?.value;
+  const cookieLang = cookieStore.get(LANGUAGE_COOKIE)?.value;
   const userLang = isoData?.myUserInfo?.localUserView?.localUser?.interfaceLanguage;
   const initialLang = lang || userLang || cookieLang;
   return (

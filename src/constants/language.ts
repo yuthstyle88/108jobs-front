@@ -60,3 +60,4 @@ export const LANGUAGES = {
 };
 
 export const VALID_LANGUAGES = ["th", "vi", "en"];
+export const LANGUAGE_COOKIE = "current-language";

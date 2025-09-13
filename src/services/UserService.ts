@@ -5,7 +5,7 @@ import {LoginResponse, MyUserInfo} from "lemmy-js-client";
 import {HttpService} from "./index";
 import {toast} from "sonner";
 import {authCookieName} from "@/utils/config";
-import {VALID_LANGUAGES} from "@/constants/language";
+import {VALID_LANGUAGES, LANGUAGE_COOKIE} from "@/constants/language";
 
 export interface Claims {
   sub: number;
@@ -68,7 +68,7 @@ export class UserService {
       setAuthCookie(res.jwt);
 
       if (!VALID_LANGUAGES.includes(this.currentLanguage)) return;
-      document.cookie = `current-language=${this.currentLanguage}; path=/`;
+      document.cookie = `${LANGUAGE_COOKIE}=${this.currentLanguage}; path=/`;
       const cleanPath = window.location.pathname.replace(/^\/(vi|en|th)/, "");
       window.location.pathname = `/${this.currentLanguage}${cleanPath}`;
 

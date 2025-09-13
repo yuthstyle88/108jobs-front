@@ -1,5 +1,5 @@
 'use client'
-import {LANGUAGES, VALID_LANGUAGES} from "@/constants/language";
+import {LANGUAGES, VALID_LANGUAGES, LANGUAGE_COOKIE} from "@/constants/language";
 import {SupportedLang} from "@/lib/metadata";
 
 export async function getClientCurrentLanguage(): Promise<SupportedLang | null> {
@@ -12,7 +12,7 @@ export async function getClientCurrentLanguage(): Promise<SupportedLang | null> 
         return [key, decodeURIComponent(value)];
       })
     );
-    const lang = cookieObj["current-language"]; // ดึงค่าคุกกี้ 'current-language'
+    const lang = cookieObj[LANGUAGE_COOKIE]; // ดึงค่าคุกกี้ language
     return lang && VALID_LANGUAGES.includes(lang) ? (lang as SupportedLang) : null;
   }
   return null;

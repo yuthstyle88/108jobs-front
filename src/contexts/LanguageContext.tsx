@@ -1,6 +1,6 @@
 "use client";
 import {createContext, useContext, useEffect, useState} from "react";
-import {VALID_LANGUAGES} from "@/constants/language";
+import {LANGUAGE_COOKIE, VALID_LANGUAGES} from "@/constants/language";
 import {I18NextService} from "@/services/I18NextService";
 import {I18nextProvider} from "react-i18next";
 
@@ -22,24 +22,40 @@ export function LanguageProvider({
   children,
   initialLang,
 }: LanguageProviderProps) {
-  const [lang, setLangState] = useState<string>(initialLang); // ใช้ค่าที่ส่งมา
+  const safeInitial = VALID_LANGUAGES.includes(initialLang) ? initialLang : 'th';
+  const [lang, setLangState] = useState<string>(safeInitial);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
     const initI18n = async () => {
       await I18NextService.init();
-      await I18NextService.i18n.changeLanguage(lang);
-      setReady(true);
+      if (!cancelled) {
+        await I18NextService.i18n.changeLanguage(lang);
+        setReady(true);
+      }
     };
     initI18n();
+    return () => {
+      cancelled = true;
+    };
   }, [lang]);
 
   const setLang = (newLang: string) => {
     if (!VALID_LANGUAGES.includes(newLang)) return;
-    document.cookie = `current-language=${newLang}; path=/`;
+    if (typeof document !== 'undefined') {
+      document.cookie = `${LANGUAGE_COOKIE}=${newLang}; path=/`;
+    }
+    setLangState(newLang);
 
-    const cleanPath = window.location.pathname.replace(/^\/(vi|en|th)/, "");
-    window.location.pathname = `/${newLang}${cleanPath}`;
+    if (typeof window !== 'undefined') {
+      const langsPattern = `(?:${VALID_LANGUAGES.join('|')})`;
+      const langPrefixRe = new RegExp(`^/` + langsPattern + `\\b`);
+      const currentPath = window.location.pathname;
+      const pathWithoutLang = currentPath.replace(langPrefixRe, '') || '/';
+      const { search, hash } = window.location;
+      window.location.assign(`/${newLang}${pathWithoutLang}${search}${hash}`);
+    }
   };
 
   if (!ready) return null;

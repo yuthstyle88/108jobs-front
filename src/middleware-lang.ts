@@ -1,8 +1,12 @@
 import {NextRequest, NextResponse} from "next/server";
-import {VALID_LANGUAGES} from "@/constants/language";
+import {VALID_LANGUAGES, LANGUAGE_COOKIE} from "@/constants/language";
 
 const PUBLIC_FILE = /\.(.*)$/;
 
+// Server-side language routing middleware.
+// - Ensures every route has a /{lang} prefix.
+// - Detects language from cookie (LANGUAGE_COOKIE) or Accept-Language; defaults to 'th'.
+// - Skips static and API routes.
 export function middleware(request: NextRequest) {
   const {pathname} = request.nextUrl;
 
@@ -21,7 +25,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Determine language: cookie > Accept-Language header > default 'th'
-  let lang = request.cookies.get("current-language")?.value || "";
+  let lang = request.cookies.get(LANGUAGE_COOKIE)?.value || "";
 
   if (!lang) {
     const acceptLang = request.headers.get("accept-language") || "";
