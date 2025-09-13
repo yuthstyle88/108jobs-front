@@ -3,10 +3,10 @@
 import {Pagination} from "@/components/Pagination";
 import {Badge} from "@/components/ui/Badge";
 import {ProfileImage} from "@/constants/images";
-import {formatDateTime} from "@/utils/formatDate";
+import {formatDateTime} from "@/utils";
 import Image from "next/image";
-import {useRouter} from "next/navigation";
-import {useState} from "react";
+import {useRouter, useSearchParams} from "next/navigation";
+import {useState, useMemo} from "react";
 import ConfirmDeleteOffer from "../_components/ConfirmDeleteOffer";
 import JobBoardTab from "../_components/JobBoardTab";
 import {useHttpGet} from "@/hooks/useHttpGet";
@@ -15,6 +15,9 @@ const Proposal = () => {
   const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined);
 
   const route = useRouter();
+  const searchParams = useSearchParams();
+  const postIdParam = searchParams.get("postId");
+  const postId = useMemo(() => (postIdParam ? Number(postIdParam) : undefined), [postIdParam]);
 
   const {
     data: proposals,
@@ -22,6 +25,7 @@ const Proposal = () => {
     isMutating: isLoading,
   } = useHttpGet("getComments", {
     pageCursor: currentCursor,
+    ...(postId ? { postId } : {}),
   });
 
   const [selectedJob, setSelectedJob] = useState<{

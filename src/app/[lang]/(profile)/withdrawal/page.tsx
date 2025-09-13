@@ -2,7 +2,7 @@
 import {useState} from "react";
 import {Info, MessageSquare} from "lucide-react";
 import Link from "next/link";
-import {interpolateDouble} from "@/utils/interpolate";
+import {interpolateDouble} from "@/utils";
 import {useTranslation} from "react-i18next";
 
 // Define the interface for a single transaction

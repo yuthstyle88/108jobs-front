@@ -6,7 +6,7 @@ import {HttpService, UserService} from "@/services";
 // E2EE exchange is ensured for future needs
 import {exchange} from "@/lib/api/auth";
 import {useHttpGet} from "@/hooks/useHttpGet";
-import type {ListUserChatRoomsResponse} from "@/lib/lemmy-js-client/src/types/ListUserChatRoomsResponse";
+import type {ListUserChatRoomsResponse} from "lemmy-js-client";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {REQUEST_STATE} from "@/services/HttpService";
 

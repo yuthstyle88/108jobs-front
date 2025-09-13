@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ConfirmActionModal from '@/components/ConfirmActionModal';
 import { useWorkflowStepper } from '@/hooks/useWorkflowMachine';
 import type { UiFlowStatus } from '@/stores/stateMachineStore';
 
@@ -9,8 +10,7 @@ export type StatusKey = UiFlowStatus;
 
 export type FlowActions = {
     onProposeQuote?: () => void;
-    onConfirmAssign?: () => void;
-    onAcceptJob?: () => void;
+    onApproveQuotation?: () => void;
     onUploadAsset?: () => void;
     onSendMessage?: () => void;
     onSubmitDelivery?: () => void;
@@ -25,6 +25,8 @@ export type FreelanceChatFlowProps = {
     orientation?: 'vertical' | 'horizontal';
     compact?: boolean;
     className?: string;
+    started?: boolean;
+    onStart?: () => void;
 } & FlowActions;
 
 const STEPS: Array<{ key: StatusKey; title: string; sub: string }> = [
@@ -51,9 +53,10 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  orientation = 'vertical',
                                                                  compact = false,
                                                                  className = '',
+                                                                 started = true,
+                                                                 onStart,
                                                                  onProposeQuote,
-                                                                 onConfirmAssign,
-                                                                 onAcceptJob,
+                                                                 onApproveQuotation,
                                                                  onUploadAsset,
                                                                  onSendMessage,
                                                                  onSubmitDelivery,
@@ -61,6 +64,8 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  onReleasePayment,
                                                                  onCancel,
                                                              }) => {
+    const [showStartConfirm, setShowStartConfirm] = useState(false);
+    const [showApproveConfirm, setShowApproveConfirm] = useState(false);
     const { t } = useTranslation();
     const stepper = useWorkflowStepper();
     const derivedStatus = stepper?.state?.name as StatusKey | undefined;
@@ -110,13 +115,12 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
             case 'QuotationPending':
                 return [
                     btn(t('profileChat.proposeQuote') || 'Send quotation', onProposeQuote),
-                    btn(t('profileChat.sendBriefMessage') || 'ส่งข้อความหาไฟล์บรีฟ', onSendMessage, 'ghost'),
+                    btn(t('profileChat.approveQuotation') || 'Approve quotation', () => setShowApproveConfirm(true)),
                     ...(cancelBtn ? [cancelBtn] : []),
                 ];
             case 'OrderApproved':
                 return [
                     btn(t('profileChat.uploadDraft') || 'แนบไฟล์ต้นฉบับ', onUploadAsset),
-                    btn(t('profileChat.sendMessage') || 'ส่งข้อความ', onSendMessage, 'ghost'),
                     ...(cancelBtn ? [cancelBtn] : []),
                 ];
             case 'InProgress':
@@ -139,6 +143,34 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 return [];
         }
     };
+
+    if (!started) {
+        return (
+            <aside className={`flex w-full h-full bg-white shadow-sm rounded-lg overflow-hidden ${className}`}>
+                <div className="flex-1 p-4 flex flex-col gap-3">
+                    <p className="text-sm text-gray-600">
+                        {t('profileChat.startWorkflowHint') || 'The workflow will be shown after the employer starts it.'}
+                    </p>
+                    <button
+                        className="rounded-md bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-[#063a68]"
+                        onClick={() => setShowStartConfirm(true)}
+                    >
+                        {t('profileChat.startWorkflow') || 'Start workflow'}
+                    </button>
+                </div>
+                <ConfirmActionModal
+                  isOpen={showStartConfirm}
+                  onClose={() => setShowStartConfirm(false)}
+                  onConfirm={() => {
+                    setShowStartConfirm(false);
+                    (onStart || onApproveQuotation)?.();
+                  }}
+                  title={t('profileChat.confirmStartWorkflowTitle') || 'Start workflow?'}
+                  message={t('profileChat.confirmStartWorkflowMessage') || 'This will initialize the job flow for this chat.'}
+                />
+            </aside>
+        );
+    }
 
     return (
         <aside

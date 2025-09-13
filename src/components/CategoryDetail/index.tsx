@@ -15,7 +15,7 @@ import {Category} from "@/types/category";
 import {JobList, Tags} from "@/types/jobSearch";
 import buildQueryParams from "@/utils/buildJobQueryParams";
 import {getNamespace} from "@/utils/i18nHelper";
-import {interpolateDouble} from "@/utils/interpolate";
+import {interpolateDouble} from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
 import {useRouter, useSearchParams} from "next/navigation";

@@ -1,5 +1,5 @@
 "use client";
-import {interpolateDouble} from "@/utils/interpolate";
+import {interpolateDouble} from "@/utils";
 import {Info} from "lucide-react";
 import {useState} from "react";
 import {useTranslation} from "react-i18next";

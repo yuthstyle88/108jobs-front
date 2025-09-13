@@ -246,7 +246,7 @@ import type {CreateChatRoomRequest} from "./types/CreateChatRoomRequest";
 import type {CreateInvoiceForm} from "./types/CreateInvoiceForm";
 import type {CreateInvoiceResponse} from "./types/CreateInvoiceResponse";
 import type {ApproveQuotation} from "./types/ApproveQuotation";
-import type {BillingOperationResponse} from "./types/BillingOperationResponse";
+import type {WorkFlowOperationResponse} from "./types/WorkFlowOperationResponse";
 import type {UserKeysResponse} from "./types/UserKeysResponse";
 import type {ChatHistoryQuery} from "./types/ChatHistoryQuery";
 import type {ChatMessagesResponse} from "./types/ChatMessagesResponse";
@@ -3091,15 +3091,15 @@ export class LemmyHttp extends Controller {
      * @summary Approve quotation and convert to order.
      */
     @Security("bearerAuth")
-    @Post("/account/services/approve-quotation")
+    @Post("/services/approve-quotation")
     @Tags("Billing")
     async approveQuotation(
         @Body() form: ApproveQuotation,
         @Inject() options?: RequestOptions,
     ) {
-        return this.#wrapper<ApproveQuotation, BillingOperationResponse>(
+        return this.#wrapper<ApproveQuotation, WorkFlowOperationResponse>(
             HttpType.Post,
-            "/account/services/approve-quotation",
+            "/services/approve-quotation",
             form,
             options,
         );

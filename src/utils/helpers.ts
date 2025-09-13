@@ -452,7 +452,7 @@ async function toBlob(src: string | File | Blob): Promise<Blob> {
  */
 export async function uploadSelectedImage(
     selectedImage: File | string,
-    uploadImage: (payload: { image: File }) => Promise<RequestState<import("@/lib/lemmy-js-client/src/types/UploadImageResponse").UploadImageResponse>>
+    uploadImage: (payload: { image: File }) => Promise<RequestState<import("lemmy-js-client").UploadImageResponse>>
 ): Promise<string> {
     let file: File;
 

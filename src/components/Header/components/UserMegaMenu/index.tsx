@@ -24,10 +24,6 @@ const FreelanceMegaMenu = () => {
     string,
     {component: JSX.Element; image: StaticImageData}
   > = {
-    find: {
-      component: <Find/>,
-      image: MegaMenuImage.jobBg,
-    },
     post: {
       component: <Post/>,
       image: MegaMenuImage.buyerJob,
@@ -35,12 +31,6 @@ const FreelanceMegaMenu = () => {
   };
 
   const megaFreelancer: FreelanceMegaMenuItem[] = [
-    {
-      key: "find",
-      icon: MegaMenuImage.search,
-      title: global?.labelMenuOption11,
-      description: global?.hintLabelMenuOptionFindHire,
-    },
     {
       key: "post",
       icon: MegaMenuImage.job,
@@ -51,7 +41,7 @@ const FreelanceMegaMenu = () => {
 
   const [hoveredItem, setHoveredItem] = useState<
     keyof typeof DESCRIPTION | null
-  >("find");
+  >("post");
 
   return (
     <div className="grid-container-desktop w-full">

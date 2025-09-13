@@ -36,12 +36,6 @@ const UserProfileSection = () => {
           <UserImproveMenu/>
         </div>
       </div>
-      <Link prefetch={false}
-            href="/job-board"
-            className="text-white text-sm  hover:text-white px-3"
-      >
-        {t("global.labelJobBoardCenter")}
-      </Link>
       <div className="group hidden md:block">
         <div className="relative">
           <div

@@ -7,7 +7,7 @@ import {usePrivateFetch} from "@/hooks/api-hooks";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import useNotification from "@/hooks/useNotification";
-import {LanguageProfilesResponse} from "@/lib/lemmy-js-client/dist/types/LanguageProfile";
+import {LanguageProfilesResponse} from "lemmy-js-client";
 import {getNamespace} from "@/utils/i18nHelper";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Plus, Trash2} from "lucide-react";

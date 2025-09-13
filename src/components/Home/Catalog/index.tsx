@@ -1,5 +1,5 @@
 import {CategoriesIcon} from "@/constants/icons";
-import {CommunityNodeView} from "@/lib/lemmy-js-client/src";
+import {CommunityNodeView} from "lemmy-js-client";
 import {catalogIcons} from "@/types/catalogIcon";
 import {faArrowRight} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";

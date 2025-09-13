@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import type {ChatRoom} from "@/types/chat";
-import type {LocalUser} from "@/lib/lemmy-js-client/src/types/LocalUser";
+import type {LocalUser} from "lemmy-js-client";
 import Link from "next/link";
 import Image from "next/image";
 // last message preview removed

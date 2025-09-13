@@ -8,7 +8,7 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import useNotification from "@/hooks/useNotification";
 import {JobListResponse} from "@/types/job";
 import {getNamespace} from "@/utils/i18nHelper";
-import {interpolateDouble} from "@/utils/interpolate";
+import {interpolateDouble} from "@/utils";
 import {ClockAlert, Eye, EyeOff, Info, Pencil, Plus, Trash2,} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

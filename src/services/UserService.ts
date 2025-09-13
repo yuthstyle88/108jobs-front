@@ -53,7 +53,7 @@ export class UserService {
 
   public login({
     res,
-    showToast = true,
+    showToast = false,
     sharedKey,
   }: {
     res: LoginResponse | string;
@@ -120,7 +120,7 @@ export class UserService {
     if (!auth) {
       HttpService.client.removeHeader?.("Authorization");
       this.authInfo = undefined;
-      this.currentLanguage = "th";
+      this.currentLanguage = "en";
       return;
     }
     HttpService.client.setHeaders({Authorization: `Bearer ${auth}`});

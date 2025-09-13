@@ -1,7 +1,7 @@
 "use client";
 import {LanguageFile} from "@/constants/language";
 import {getNamespace} from "@/utils/i18nHelper";
-import {scrollToElementById} from "@/utils/scrollSmooth";
+import {scrollToElementById} from "@/utils";
 import {ChevronDown} from "lucide-react";
 import Link from "next/link";
 import {useState} from "react";

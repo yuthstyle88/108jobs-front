@@ -15,6 +15,7 @@ export type CreateFlowActionsDeps = {
   roomId: string;
   localUser?: { id?: string | number | null } | null;
   setError: (msg: string) => void;
+  approveQuotation?: () => Promise<boolean>;
 };
 
 export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
@@ -36,7 +37,17 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
     onProposeQuote: () => {
       setShowQuotationModal(true);
     },
-    onConfirmAssign: () => {
+    onApproveQuotation: async () => {
+      // If provided, call the API to approve quotation first
+      if (deps.approveQuotation) {
+        try {
+          const ok = await deps.approveQuotation();
+          if (!ok) return; // Abort if API failed
+        } catch {
+          return;
+        }
+      }
+
       const messageId = uuidv4();
       const readable = t('profileChat.confirmAssignMsg') || 'Assignment confirmed. Waiting for freelancer to accept.';
       const payload = { type: 'employer-assigned' } as any;
@@ -67,19 +78,6 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
       } catch {}
 
       goToStatus('OrderApproved');
-    },
-    onAcceptJob: () => {
-      goToStatus('OrderApproved');
-      const content = t('profileChat.acceptJobMsg') || 'I have accepted the job.';
-      sendMessage({ message: content, id: uuidv4() });
-      try {
-        const tsIso = new Date().toISOString();
-        window.dispatchEvent(
-          new CustomEvent('chat:new-message', {
-            detail: { roomId, content, senderId: Number((localUser as any)?.id) || 0, timestamp: tsIso },
-          })
-        );
-      } catch {}
     },
     onUploadAsset: () => {
       const input = document.createElement('input');

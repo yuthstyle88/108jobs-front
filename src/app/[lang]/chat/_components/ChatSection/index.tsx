@@ -40,6 +40,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
     const { state: stepperState, idx: activeStep, send, canGo, ORDER, cancel } = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
+    const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
     const { t } = useTranslation();
     type UIChatMessage = WsChatMessage & { isOwner?: boolean };
@@ -587,8 +588,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             orientation="vertical"
                             compact={false}
                             className="space-y-4"
+                            started={hasStarted || currentStatus !== 'QuotationPending'}
+                            onStart={() => setHasStarted(true)}
                             onProposeQuote={flowActions.onProposeQuote}
-                            onAcceptJob={flowActions.onAcceptJob}
+                            onApproveQuotation={flowActions.onApproveQuotation}
                             onUploadAsset={flowActions.onUploadAsset}
                             onSendMessage={flowActions.onSendMessage}
                             onSubmitDelivery={flowActions.onSubmitDelivery}
@@ -644,8 +647,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 orientation="vertical"
                                 compact={false}
                                 className="space-y-4"
+                                started={hasStarted || currentStatus !== 'QuotationPending'}
+                                onStart={() => setHasStarted(true)}
                                 onProposeQuote={flowActions.onProposeQuote}
-                                onAcceptJob={flowActions.onAcceptJob}
+                                onApproveQuotation={flowActions.onApproveQuotation}
                                 onUploadAsset={flowActions.onUploadAsset}
                                 onSendMessage={flowActions.onSendMessage}
                                 onSubmitDelivery={flowActions.onSubmitDelivery}
