@@ -5,6 +5,7 @@ import {Metadata} from "next";
 // import { auth } from "@/auth";
 import {API_ROUTES} from "@/api/endpoints";
 import {axiosPrivate} from "@/lib/axios";
+import {getAppName} from "@/utils/appConfig";
 
 export async function generateMetadata({
   params,
@@ -12,13 +13,12 @@ export async function generateMetadata({
   params: Promise<{slug: string; username: string}>;
 }): Promise<Metadata> {
   const {username, slug} = await params;
-  const lang = await getCurrentLanguage();
-  const locale = isSupportedLang(lang) ? lang : "th";
-
+  const locale =  await getCurrentLanguage();
+  const appName = getAppName();
   const defaultDescriptions: Record<string, string> = {
-    th: "จ้างฟรีแลนซ์มืออาชีพสำหรับโปรเจกต์ของคุณที่ 108jobs ธุรกิจและสตาร์ทอัปชั้นนำไว้วางใจเรา",
-    en: "Find professional freelancers for your project on 108jobs. Trusted by businesses and startups across Southeast Asia.",
-    vi: "Tìm freelancer chuyên nghiệp cho dự án của bạn tại 108jobs. Được các doanh nghiệp và startup trên toàn Đông Nam Á tin tưởng.",
+    th: `จ้างฟรีแลนซ์มืออาชีพสำหรับโปรเจกต์ของคุณที่ ${appName} ธุรกิจและสตาร์ทอัปชั้นนำไว้วางใจเรา`,
+    en: `Find professional freelancers for your project on ${appName}. Trusted by businesses and startups across Southeast Asia.`,
+    vi: `Tìm freelancer chuyên nghiệp cho dự án của bạn tại ${appName}. Được các doanh nghiệp và startup trên toàn Đông Nam Á tin tưởng.`,
   };
 
   try {
@@ -31,16 +31,16 @@ export async function generateMetadata({
     }
 
     const jobDetail = await res.data.json();
-    const title = jobDetail?.title || "108jobs";
+    const title = jobDetail?.title || appName;
     const description = defaultDescriptions[locale] || defaultDescriptions.th;
 
     return generateLocalizedMetadata({
-      title: `${title} - 108jobs`,
+      title: `${title} - ${appName}`,
       description,
     });
   } catch {
     return generateLocalizedMetadata({
-      title: "108jobs - Hire Freelancers for Any Job",
+      title: `${appName} - Hire Freelancers for Any Job`,
       description: defaultDescriptions[locale] || defaultDescriptions.th,
     });
   }

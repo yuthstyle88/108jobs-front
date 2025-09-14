@@ -32,8 +32,7 @@ const ConsentManagement = () => {
                 {concentLanguageData?.newsletterPromotions}
               </h3>
               <p className="text-text-primary mb-4 font-sans">
-                ยินยอมการรับข่าวสารและโปรโมชันที่พิเศษต่าง ๆ ผ่านทุกช่องทางจาก
-                108jobs{" "}
+                ยินยอมการรับข่าวสารและโปรโมชันที่พิเศษต่าง ๆ ผ่านทุกช่องทางจากเว็บไซต์นี้{" "}
                 <Link prefetch={false} href="#" className="text-primary underline">
                   นโยบายคุ้มครองความเป็นส่วนตัว
                 </Link>
@@ -72,8 +71,7 @@ const ConsentManagement = () => {
           <div className="p-6">
             <div className="mb-8">
               <p className="text-gray-600 mb-4">
-                108jobs
-                มีการเก็บและใช้งานคุกกี้เพื่อช่วยปรับปรุงพัฒนาประสบการณ์การใช้งานให้ดียิ่งขึ้นเมื่อคุณเข้าเยี่ยมชมเว็บไซต์ของเรา
+                เว็บไซต์นี้มีการเก็บและใช้งานคุกกี้เพื่อช่วยปรับปรุงพัฒนาประสบการณ์การใช้งานให้ดียิ่งขึ้นเมื่อคุณเข้าเยี่ยมชมเว็บไซต์ของเรา
                 คุณสามารถเลือกให้ความยินยอมคุกกี้แต่ละประเภทได้
                 (ยกเว้นคุกกี้ที่จำเป็น){" "}
                 <Link prefetch={false} href="#" className="text-primary hover:underline">

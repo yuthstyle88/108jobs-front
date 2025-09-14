@@ -3,6 +3,7 @@ import {createContext, useContext, useEffect, useState} from "react";
 import {LANGUAGE_COOKIE, VALID_LANGUAGES} from "@/constants/language";
 import {I18NextService} from "@/services/I18NextService";
 import {I18nextProvider} from "react-i18next";
+import {getClientCurrentLanguage} from "@/actions/getClientCurrentLanguage";
 
 interface LanguageContextType {
   lang: string;
@@ -23,7 +24,14 @@ export function LanguageProvider({
   initialLang,
 }: LanguageProviderProps) {
   const safeInitial = VALID_LANGUAGES.includes(initialLang) ? initialLang : 'th';
-  const [lang, setLangState] = useState<string>(safeInitial);
+  // Initialize from client-side language resolver to ensure client consistency
+  const [lang, setLangState] = useState<string>(() => {
+    try {
+      return getClientCurrentLanguage() || safeInitial;
+    } catch {
+      return safeInitial;
+    }
+  });
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -54,7 +62,11 @@ export function LanguageProvider({
       const currentPath = window.location.pathname;
       const pathWithoutLang = currentPath.replace(langPrefixRe, '') || '/';
       const { search, hash } = window.location;
-      window.location.assign(`/${newLang}${pathWithoutLang}${search}${hash}`);
+      const target = `/${newLang}${pathWithoutLang}${search}${hash}`;
+      const currentFull = `${currentPath}${search}${hash}`;
+      if (currentFull !== target) {
+        window.location.assign(target);
+      }
     }
   };
 

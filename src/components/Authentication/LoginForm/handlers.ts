@@ -6,6 +6,7 @@ import {toast} from "@/toast";
 import {LoginProps} from "@/components/Authentication/LoginForm/interface";
 import getQueryParams from "@/utils/helpers";
 import {isSuccess, REQUEST_STATE} from "@/services/HttpService";
+import { getAppName } from "@/utils/appConfig";
 
 export const handleUseOAuthProvider = async(params: {
   oauthProvider: OAuthProvider;
@@ -36,7 +37,7 @@ export const handleUseOAuthProvider = async(params: {
       redirectUri: redirectUri,
       prev: params.prev ?? "/",
       username: params.username,
-      answer: "108jobs",
+      answer: getAppName(),
       expiresAt: Date.now() + 5 * 60_000,
     }),
   );

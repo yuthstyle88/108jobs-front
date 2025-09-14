@@ -1,9 +1,10 @@
 import React from 'react'
 
 
+import { getAppName } from "@/utils/appConfig";
 const Rewards108Jobs = () => {
   return (
-    <div>108jobsReward</div>
+    <div>{`${getAppName()} Reward`}</div>
   )
 }
 

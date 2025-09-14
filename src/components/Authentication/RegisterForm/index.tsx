@@ -12,6 +12,7 @@ import {useIsoData} from "@/hooks/profile-api/useIsoData";
 import {OAuthProvider} from "@/lib/lemmy-js-client/src";
 import {handleUseOAuthProvider} from "@/components/Authentication/LoginForm/handlers";
 import {useSearchParams} from "next/navigation";
+import { getAppName } from "@/utils/appConfig";
 
 // Form schema definition
 const createRegisterSchema = (t: any) => z
@@ -69,7 +70,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
             const registerRes = await HttpService.client.register({
                 email: data.email,
-                answer: "108jobs",
+                answer: getAppName(),
             });
             switch (registerRes.state) {
                 case REQUEST_STATE.FAILED: {

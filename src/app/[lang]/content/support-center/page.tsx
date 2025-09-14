@@ -3,18 +3,19 @@ import {Accordion, AccordionContent, AccordionItem, AccordionTrigger,} from "@/c
 import {Button} from "@/components/ui/Button";
 import {AssetIcon, ContentIcon} from "@/constants/icons";
 import Image from "next/image";
+import { getAppName } from "@/utils/appConfig";
 
 const SupportCenter = () => {
   const faqData = [
     {
-      question: "ฉันจะจ้างฟรีแลนซ์ผ่าน 108jobs ได้อย่างไร?",
+      question: "ฉันจะจ้างฟรีแลนซ์ผ่าน "+getAppName()+" ได้อย่างไร?",
       answer: [
         "1. พูดคุยกับฟรีแลนซ์และหารือเกี่ยวกับรายละเอียดงาน (ในขั้นตอนนี้คุณยังไม่ถูกเรียกเก็บเงิน)",
         "2. แจ้งให้ฟรีแลนซ์ออกใบเสนอราคา",
         "3. ชำระเงินผ่านระบบเพื่อยืนยันการเริ่มต้นงาน (ระบบจะคุ้มครองการชำระเงินของคุณ)",
         "4. ตรวจสอบและอนุมัติงาน",
       ],
-      note: "หมายเหตุ: การชำระเงินในระบบจะได้รับการคุ้มครองโดย 108jobs ดูเพิ่มเติมที่ 108jobs Guarantee",
+      note: `หมายเหตุ: การชำระเงินในระบบจะได้รับการคุ้มครองโดย ${getAppName()} ดูเพิ่มเติมที่ ${getAppName()} Guarantee`,
     },
     {
       question: "ฉันจะจ้างงานในนามบริษัทได้อย่างไร?",

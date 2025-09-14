@@ -1,3 +1,4 @@
+import { getAppName } from "@/utils/appConfig";
 export const vi = {
     business: {
         price_list_title: "Giá gói và dịch vụ",
@@ -17,8 +18,8 @@ export const vi = {
             "*Giá niêm yết là giá khởi điểm. Giá có thể thay đổi tùy thuộc vào chi tiết công việc.",
         price_note_2: "**Giá có thể thay đổi theo sự phù hợp của công việc.",
         contact_section_title: "Bạn muốn chúng tôi giúp gì",
-        copyright: "Bản quyền © 2024 108jobs for Business.",
-        hero_title: "108Jobs for Business",
+        copyright: `Bản quyền © 2024 ${getAppName()} for Business.`,
+        hero_title: `${getAppName()} for Business`,
         hero_subtitle: "Trợ lý tìm kiếm freelancer cho doanh nghiệp",
         contact_us: "Liên hệ với chúng tôi",
     },
@@ -306,7 +307,7 @@ export const vi = {
             verificationForgotMessage:
                 "Mã xác nhận đã được gửi đến email/số điện thoại của bạn.",
             verificationMessage:
-                "108Jobs sẽ gửi mã xác nhận đến email/số điện thoại của bạn để xác minh quyền sở hữu tài khoản.",
+                `${getAppName()} sẽ gửi mã xác nhận đến email/số điện thoại của bạn để xác minh quyền sở hữu tài khoản.`, 
             pleaseEnterEmailOrUsernameMin6:
                 "Vui lòng nhập email hoặc tên người dùng có ít nhất 6 ký tự",
             usernameMax32: "Tên người dùng không được vượt quá 32 ký tự",
@@ -361,8 +362,7 @@ export const vi = {
             seoLinksFacebook: "SEO Facebook",
             seoLinksAudit: "SEO Audit",
             seoLinksMonthly: "SEO hàng tháng",
-            seoDescription2Part1:
-                "Chất lượng giúp website của bạn hiển thị ở vị trí hàng đầu trên Google, tăng cơ hội được truy cập và nhận diện thương hiệu. Tại 108jobs.com, chúng tôi có các freelancer chuyên môn cao trong việc ",
+            seoDescription2Part1: `Chất lượng giúp website của bạn hiển thị ở vị trí hàng đầu trên Google, tăng cơ hội được truy cập và nhận diện thương hiệu. Tại ${getAppName()}.com, chúng tôi có các freelancer chuyên môn cao trong việc `,
             seoDescription2Strong1: "cung cấp dịch vụ SEO mũ trắng",
             seoDescription2Middle:
                 " giúp website của bạn lên top Google một cách ổn định và hiệu quả, bao gồm ",
@@ -387,8 +387,7 @@ export const vi = {
                 "Tối ưu thẻ Meta (Từ khóa, Mô tả, Tiêu đề) tương ứng với nội dung.",
             seoPrinciples4:
                 "Tăng số lượng backlink chất lượng để nâng cao uy tín nội dung.",
-            seoConclusionPart1:
-                "Chi tiết về SEO không cố định và thay đổi thường xuyên. Do đó, bạn cần cập nhật nguyên tắc SEO liên tục. Nếu bạn chưa có kinh nghiệm, kỹ năng hay kiến thức, có thể thuê freelancer chuyên SEO để bắt đầu dễ dàng hơn. 108jobs.com đã tập hợp các freelancer SEO chuyên nghiệp với ",
+            seoConclusionPart1: `Chi tiết về SEO không cố định và thay đổi thường xuyên. Do đó, bạn cần cập nhật nguyên tắc SEO liên tục. Nếu bạn chưa có kinh nghiệm, kỹ năng hay kiến thức, có thể thuê freelancer chuyên SEO để bắt đầu dễ dàng hơn. ${getAppName()}.com đã tập hợp các freelancer SEO chuyên nghiệp với `,
             seoConclusionStrong1: "dịch vụ SEO thuê ngoài, SEO mũ trắng",
             seoConclusionMiddle:
                 " theo mọi yêu cầu của khách hàng. Dịch vụ SEO giá rẻ, giúp tiết kiệm chi phí kinh doanh nhưng vẫn đảm bảo hiệu quả theo mục tiêu mong muốn ",
@@ -396,19 +395,19 @@ export const vi = {
                 "SEO WordPress, SEO Facebook, SEO On-page, SEO Off-page, Backlink",
             seoConclusionPart2:
                 " và các loại khác. Có thể kiểm tra kết quả, dễ dàng lên top.",
-            howToHireTitle: "Cách thuê freelancer SEO trên 108Jobs",
+            howToHireTitle: `Cách thuê freelancer SEO trên ${getAppName()}`,
             howToHireSteps0:
                 "Tìm freelancer phù hợp dựa trên hồ sơ, kỹ năng và đánh giá.",
             howToHireSteps1:
                 "Trao đổi chi tiết dự án, freelancer sẽ gửi báo giá để bạn xem xét.",
             howToHireSteps2:
-                "Thanh toán qua 108jobs bằng thẻ tín dụng, ngân hàng di động hoặc 108jobs coin.",
+                `Thanh toán qua ${getAppName()} bằng thẻ tín dụng, ngân hàng di động hoặc ${getAppName()} coin.`,
             howToHireSteps3:
                 "Xem xét và duyệt kết quả cuối cùng. Nếu chưa hài lòng, bạn có thể yêu cầu chỉnh sửa.",
         },
         commission: {
             header: "Phí dịch vụ dựa trên thu nhập tích lũy",
-            subheader: "Phí dịch vụ 108Jobs theo cấp độ",
+            subheader: `Phí dịch vụ ${getAppName()} theo cấp độ`,
             allContentTitle: "Tất cả nội dung",
             allContentWhatIsFeeBasedOnAccumulatedIncome:
                 "Phí dịch vụ dựa trên thu nhập tích lũy là gì?",
@@ -418,12 +417,10 @@ export const vi = {
             allContentExample2Title:
                 "Ví dụ 2: Có dự án được phê duyệt trong tháng này cho đến ngày hiện tại",
             allContentExample3Title: "Ví dụ 3: Đầu tháng mới",
-            allContentWhatIsFeeUsedFor:
-                "Phí dịch vụ 108Jobs được sử dụng cho mục đích gì?",
+            allContentWhatIsFeeUsedFor: `Phí dịch vụ ${getAppName()} được sử dụng cho mục đích gì?`,
             whatIsAccumulatedIncomeFeeTitle:
                 "Phí dịch vụ dựa trên thu nhập tích lũy là gì?",
-            whatIsAccumulatedIncomeFeeDescription:
-                "Đây là phí dịch vụ được khai trước trên tổng tiền mỗi lần của freelancer được tính theo cấp bậc thành viên 108Jobs . Trong đó, cấp bậc thành viên được xác định dự vào thu nhập tích lũy trong 3 tháng gần nhất tính đến ngày tạo báo cáo dự án và hoàn thành.",
+            whatIsAccumulatedIncomeFeeDescription: `Đây là phí dịch vụ được khai trước trên tổng tiền mỗi lần của freelancer được tính theo cấp bậc thành viên ${getAppName()} . Trong đó, cấp bậc thành viên được xác định dự vào thu nhập tích lũy trong 3 tháng gần nhất tính đến ngày tạo báo cáo dự án và hoàn thành.`,
             checkYourTier: "Kiểm tra cấp bậc của bạn",
             tierTableHeaderName: "Chi tiết cách tính phí dịch vụ như sau:",
             tierTableHeadersMemberLevel: "Cấp bậc thành viên",
@@ -528,8 +525,7 @@ export const vi = {
                 'Nếu có dự án mà Freelancer "tạo báo giá" vào ngày 1 tháng 7 năm 2024, phí dịch vụ cho dự án đó sẽ là 10%.',
             example3AdditionalNote:
                 "Lưu ý: Nếu có chính sách bảo giá, % phí dịch vụ sẽ được tính toàn lại dựa trên nguồn chính sửa.",
-            fastlaneFeePurposeQuest:
-                "Phí dịch vụ 108Jobs được sử dụng cho mục đích gì?",
+            fastlaneFeePurposeQuest: `Phí dịch vụ ${getAppName()} được sử dụng cho mục đích gì?`,
             fastlaneFeePurpose:
                 "Phí dịch vụ trên hệ thống của chúng tôi sẽ được sử dụng để bảo trì, cải thiện nền tảng nhằm đáp ứng nhu cầu sử dụng của cả hai bên: freelancer và người thuê. Điều này bao gồm việc nâng cao trải nghiệm người dùng trên nền tảng, thúc đẩy doanh thu, quảng bá thương hiệu để thu hút thêm người dùng và tạo ra nhiều cơ hội việc làm hơn.",
             title: "Tình toán phí dịch vụ và giá dự án",
@@ -688,8 +684,7 @@ export const vi = {
                 "Chuyển bất kỳ số tiền nào vào tài khoản này để hoàn tất xác minh.",
             payLaterVerification:
                 "Bạn có thể thanh toán sau để xác nhận trở thành freelancer",
-            fastworkUsageTip:
-                "Việc sử dụng 108Jobs đúng cách giúp giảm rủi ro bị khóa tài khoản",
+            fastworkUsageTip: `Việc sử dụng ${getAppName()} đúng cách giúp giảm rủi ro bị khóa tài khoản`,
             complianceTip:
                 "Tuân thủ quy định sẽ giúp bạn tránh bị cấm và kiếm thu nhập một cách an tâm.",
             contactInfoUsage: "Việc sử dụng phiếu thông tin liên hệ",
@@ -749,13 +744,10 @@ export const vi = {
             acptJob: "Đang nhận việc",
             adsComingTitle: "Quảng bá dịch vụ của bạn qua quảng cáo (Coming soon...)",
             adsFeedbackLink: "Gửi phản hồi của bạn về tính năng quảng cáo",
-            adsSectionDescription:
-                "Nâng cao cơ hội được thuê bằng cách quảng cáo với 108Jobs",
+            adsSectionDescription: `Nâng cao cơ hội được thuê bằng cách quảng cáo với ${getAppName()}`,
             bankInfo: "Thông tin ngân hàng",
-            businessServiceDescription:
-                "Dịch vụ thuê freelancer cho doanh nghiệp (108Jobs for Business)",
-            businessServiceTitle:
-                "Dịch vụ thuê freelancer cho doanh nghiệp (108Jobs for Business)",
+            businessServiceDescription: `Dịch vụ thuê freelancer cho doanh nghiệp (${getAppName()} for Business)`,
+            businessServiceTitle: `Dịch vụ thuê freelancer cho doanh nghiệp (${getAppName()} for Business)`,
             buttonCancel: "Hủy",
             buttonChange: "Cập nhật",
             buttonConfirm: "Xác nhận",
@@ -765,7 +757,7 @@ export const vi = {
             buttonSave: "Lưu",
             buttonSubmit: "Lưu",
             buttonVerify: "Xác minh",
-            chatToHireButton: "Thêm Line @108jobs",
+            chatToHireButton: `Thêm Line @${getAppName()}`,
             chatToHireDescription:
                 "Chat to Hire hoặc tìm trợ lý freelancer qua Line. Chỉ cần cung cấp thông tin, quản trị viên sẽ giúp bạn tìm freelancer phù hợp.",
             chatToHireTitle: "Dịch vụ Chat to hire hoặc trợ lý tìm freelancer",
@@ -778,7 +770,7 @@ export const vi = {
             companyRegistrationTitle:
                 "Đăng nhập, nhập thông tin công ty và thông báo freelancer ngay!",
             contactInfo: "Thông tin liên lạc",
-            fastworkRewardsButton: "108Jobs Rewards",
+            fastworkRewardsButton: `${getAppName()} Rewards`,
             fastworkRewardsSubtext: "Tích điểm để đổi thưởng",
             forBusinessCustomers: "Dành cho khách hàng doanh nghiệp",
             freelancerAccountInfo: "Thông tin tài khoản freelancer",
@@ -787,7 +779,7 @@ export const vi = {
             freelancerSelectionDescription:
                 "Tìm kiếm freelancer theo danh mục, xem mẫu công việc, đánh giá và trò chuyện để thuê freelancer trực tiếp.",
             freelancerSelectionTitle: "Chọn freelancer bạn cần và trò chuyện ngay",
-            goToFastworkBusiness: "Đi đến 108Jobs for Business",
+            goToFastworkBusiness: `Đi đến ${getAppName()} for Business`,
             greetingUser: "Xin chào, {username}",
             hintFreelanceSearchAssistant:
                 "Trò chuyện để thuê dịch vụ hoặc trợ lý tìm kiếm freelancer.",
@@ -816,7 +808,7 @@ export const vi = {
             jobBoardSideTitle:
                 "Xem bài đăng tuyển dụng của người thuê & đề xuất dịch vụ của bạn",
             jobBoardTitle: "Tìm freelancer qua bảng tin tuyển dụng",
-            labelAboutFastworkTitle: "Giới thiệu về 108Jobs",
+            labelAboutFastworkTitle: `Giới thiệu về ${getAppName()}`,
             labelApplyFreelancer: "Ứng tuyển làm freelancer",
             labelApplyToBeFreelancerButton: "Ứng tuyển làm freelancer",
             labelContactUsTitle: "Thông tin liên hệ",
@@ -834,8 +826,7 @@ export const vi = {
             labelMenuOption12: "Đăng tin tìm kiếm qua bảng việc làm",
             labelMenuOption13: "Trợ lý tìm freelancer, chỉ cần thêm Line",
             labelMenuOption21: "Thuê thay mặt công ty và phát hành tài liệu",
-            labelMenuOption22:
-                "Dịch vụ freelancer cho doanh nghiệp (108Jobs for Business)",
+            labelMenuOption22: `Dịch vụ freelancer cho doanh nghiệp (${getAppName()} for Business)`,
             labelNavBarItem1: "Loại công việc phổ biến",
             labelNavBarItem10: "Loại công việc phổ biến",
             labelNavBarItem2: "Thiết kế đồ họa",
@@ -849,14 +840,14 @@ export const vi = {
             labelNotification: "Thông báo",
             labelPaymentWages: "Thanh toán lương",
             labelPrivacyPolicy: "Chính sách bảo mật",
-            labelProductFastwork: "108Jobs",
-            labelProductFastworkBusiness: "108Jobs for Business",
+            labelProductFastwork: `${getAppName()}`,
+            labelProductFastworkBusiness: `${getAppName()} for Business`,
             labelProductTitle: "Thông tin sản phẩm",
             labelJobBoardCenter: "Trung tâm việc làm",
             labelStartSellingWork: "Cách bắt đầu bán công việc của bạn",
             labelTermsOfService: "Điều khoản dịch vụ",
             labelViewProfile: "Xem hồ sơ",
-            labelWorkWithFastwork: "Làm việc với 108Jobs",
+            labelWorkWithFastwork: `Làm việc với ${getAppName()}`,
             labelWorkingHoursTitle: "Giờ làm việc",
             labelWorkingHoursWeekdays: "Thứ Hai - Thứ Sáu 9:30 - 22:00",
             labelWorkingHoursWeekends: "Thứ Bảy - Chủ Nhật, ngày lễ 10:00 - 19:00",
@@ -876,7 +867,7 @@ export const vi = {
             recruitment: "Tuyển dụng",
             saveSuccess: "Lưu thành công",
             sidebarAccountStatistics: "Thống kê tài khoản",
-            sidebarFastworkRewards: "Phần thưởng 108Jobs",
+            sidebarFastworkRewards: `Phần thưởng ${getAppName()}`,
             sidebarFeedback: "Gửi phản hồi",
             sidebarMyServices: "Dịch vụ của tôi",
             sidebarOverview: "Tổng quan",
@@ -887,7 +878,7 @@ export const vi = {
             tittleFooter1: "Danh mục công việc",
             tittleFooter2: "Cách sử dụng",
             tittleFooter3: "Sản phẩm",
-            tittleFooter4: "Giới thiệu về 108Jobs",
+            tittleFooter4: `Giới thiệu về ${getAppName()}`,
             tittleFooter5: "Liên hệ với chúng tôi",
             tittleHeaderMenuSection1: "Việc làm",
             tittleHeaderMenuSection2: "Dành cho khách hàng doanh nghiệp",
@@ -897,13 +888,12 @@ export const vi = {
             failedToLoad: "Tải không thành công",
         },
         guarantee: {
-            fastworkGuaranteeTitle: "Đảm bảo của 108Jobs",
-            fastworkGuaranteeSubtitle:
-                "Thuê freelancer thông qua nền tảng 108Jobs được bảo vệ một cách toàn diện ở mọi bước.",
+            fastworkGuaranteeTitle: `Đảm bảo của ${getAppName()}`,
+            fastworkGuaranteeSubtitle: `Thuê freelancer thông qua nền tảng ${getAppName()} được bảo vệ một cách toàn diện ở mọi bước.`,
             fastworkGuaranteeSubsubtitle:
                 "Từ đầu đến cuối, từ khi bắt đầu đến khi bàn giao công việc đạt chất lượng yêu cầu.",
             fastworkGuaranteeStepsTitle:
-                '"Đảm bảo của 108Jobs" Bảo vệ toàn diện mọi bước trong quy trình tuyển dụng',
+                '"Đảm bảo của ${getAppName()}" Bảo vệ toàn diện mọi bước trong quy trình tuyển dụng',
             verifiedFreelancersTitle: "Freelancer đã xác minh",
             verifiedFreelancersDescription:
                 "Xác minh tiêu chuẩn đối với giấy tờ tùy thân, thông tin liên hệ và hồ sơ năng lực.",
@@ -923,21 +913,17 @@ export const vi = {
             protectionCase2:
                 "Sản phẩm cuối cùng không đạt chất lượng như freelancer đã quảng cáo trong sản phẩm hoặc theo thỏa thuận",
             protectionCase3: "Freelancer biến mất hoặc không thể liên lạc được",
-            protectionCase4:
-                "Bản cuối cùng chưa được phê duyệt thủ công hoặc tự động trên nền tảng 108Jobs",
+            protectionCase4: `Bản cuối cùng chưa được phê duyệt thủ công hoặc tự động trên nền tảng ${getAppName()}`,
             endProtectionTitle: "Chấm dứt bảo vệ",
             endProtectionCase1:
                 "Khách hàng vi phạm hợp đồng thuê được mô tả trong báo giá",
-            endProtectionCase2:
-                "Khách hàng không thực hiện việc thuê và thanh toán qua nền tảng 108Jobs",
-            endProtectionCase3:
-                "Bản cuối cùng đã được phê duyệt thủ công hoặc tự động trên nền tảng 108Jobs",
+            endProtectionCase2: `Khách hàng không thực hiện việc thuê và thanh toán qua nền tảng ${getAppName()}`,
+            endProtectionCase3: `Bản cuối cùng đã được phê duyệt thủ công hoặc tự động trên nền tảng ${getAppName()}`,
             tellUsMoreTitle: "Hãy cho chúng tôi biết thêm!",
             tellUsMoreDescription:
                 "Phản hồi bổ sung có thể được thực hiện sau khi sản phẩm cuối cùng đã được phê duyệt. Liên hệ với bộ phận hỗ trợ khách hàng khi bạn gặp vấn đề khi tuyển dụng hoặc muốn đóng góp ý kiến cải thiện.",
             contactCustomerSupport: "Liên hệ bộ phận hỗ trợ khách hàng",
-            confidentHiringTitle:
-                "An tâm khi tuyển dụng với 108Jobs. Bạn được tự do lựa chọn chấp nhận sản phẩm cuối cùng hoặc yêu cầu hoàn tiền.",
+            confidentHiringTitle: `An tâm khi tuyển dụng với ${getAppName()}. Bạn được tự do lựa chọn chấp nhận sản phẩm cuối cùng hoặc yêu cầu hoàn tiền.`,
             reviewProcessQuestion:
                 "Làm thế nào để đưa ra đánh giá sau khi đã phê duyệt sản phẩm cuối cùng?",
             disputeProcessQuestion:
@@ -950,18 +936,15 @@ export const vi = {
             step2Description:
                 "Đánh giá kỹ năng, chất lượng, sự hài lòng và nhận xét về sản phẩm của freelancer. Điều này sẽ là thông tin quý giá cho khách hàng khác. Thông tin trên trang đánh giá đầu tiên sẽ được tích lũy và hiển thị trên hồ sơ và sản phẩm của freelancer.",
             step3Title: "3. Tự tin hơn với đánh giá ẩn danh",
-            step3Description:
-                "Hãy cho chúng tôi biết kỳ vọng của bạn về sản phẩm và chất lượng dịch vụ của freelancer. Không ai có thể truy cập đánh giá ẩn danh này ngoại trừ những người chủ chốt tại 108Jobs. Điều này rất quan trọng để chúng tôi cải thiện chất lượng freelancer của mình nhằm phục vụ bạn một cách hài lòng nhất.",
-            step4Title:
-                "4. Cho điểm đánh giá mức độ bạn muốn giới thiệu 108Jobs cho người khác",
-            step4Description:
-                "Bạn có thể chia sẻ cho chúng tôi vấn đề hoặc khó khăn bạn gặp phải trong quá trình sử dụng nền tảng. Ngoài ra, bạn cũng có thể đưa ra nhận xét và đề xuất cho đội ngũ 108Jobs . Mọi phản hồi của bạn đều được chúng tôi trân trọng và xem xét nghiêm túc nhằm cải thiện chất lượng dịch vụ.",
+            step3Description: `Hãy cho chúng tôi biết kỳ vọng của bạn về sản phẩm và chất lượng dịch vụ của freelancer. Không ai có thể truy cập đánh giá ẩn danh này ngoại trừ những người chủ chốt tại ${getAppName()}. Điều này rất quan trọng để chúng tôi cải thiện chất lượng freelancer của mình nhằm phục vụ bạn một cách hài lòng nhất.`,
+            step4Title: `4. Cho điểm đánh giá mức độ bạn muốn giới thiệu ${getAppName()} cho người khác`,
+            step4Description: `Bạn có thể chia sẻ cho chúng tôi vấn đề hoặc khó khăn bạn gặp phải trong quá trình sử dụng nền tảng. Ngoài ra, bạn cũng có thể đưa ra nhận xét và đề xuất cho đội ngũ ${getAppName()} . Mọi phản hồi của bạn đều được chúng tôi trân trọng và xem xét nghiêm túc nhằm cải thiện chất lượng dịch vụ.`,
             customerSupportTitle: "Liên hệ bộ phận hỗ trợ khách hàng",
             customerSupportDescription:
                 "Vấn đề của bạn là ưu tiên hàng đầu của chúng tôi. Bạn có thể liên hệ bộ phận hỗ trợ khách hàng của chúng tôi qua các kênh sau.",
             facebook: "Facebook",
             messenger: "Messenger",
-            supportEmail: "support@108jobs.com",
+            supportEmail: `support@${getAppName()}.com`,
             customerSupportWorkingHours:
                 "Đội ngũ của chúng tôi sẵn sàng phục vụ bạn mỗi ngày, Thứ Hai-Thứ Sáu từ 9:30 - 22:00",
             customerSupportWeekendHours: "Thứ Bảy-Chủ Nhật, ngày lễ từ 10:00 - 19:00",
@@ -980,28 +963,21 @@ export const vi = {
             buttonJobCategoriesViewMore: "Xem thêm",
             confidenceInFastwork:
                 "Gặp gỡ đội ngũ freelancer chất lượng, sẵn sàng đáp ứng mọi nhu cầu của mọi doanh nghiệp, bao gồm mọi lĩnh vực, ngành nghề.",
-            contentFastwork1:
-                "108jobs.com là nền tảng tập hợp các freelancer chuyên nghiệp từ nhiều lĩnh vực khác nhau, bao gồm thiết kế logo, làm banner quảng cáo, viết bài, dịch thuật, tiếp thị trực tuyến, phát triển website và hơn 90 danh mục khác nhằm đáp ứng nhu cầu đa dạng của doanh nghiệp và người dùng. Đội ngũ 108jobs.com tập trung vào sự đơn giản và tiện lợi, giúp freelancer và khách hàng tiết kiệm thời gian, đồng thời hỗ trợ phát triển và mở rộng kinh doanh cho các doanh nghiệp lớn, nhỏ cũng như giúp freelancer dễ dàng tìm việc, tăng thu nhập và nâng cao chất lượng dịch vụ.",
-            contentFastwork2:
-                "108jobs.com hoạt động như một nền tảng trung gian trực tuyến giữa freelancer và khách hàng, giúp họ kết nối mọi lúc, mọi nơi. Freelancer có thể đăng tải dịch vụ trên 108jobs.com, trong khi khách hàng có thể tìm kiếm và thuê freelancer phù hợp. Hệ thống thanh toán an toàn của 108jobs.com đảm bảo freelancer nhận được tiền công khi hoàn thành công việc, đồng thời bảo vệ quyền lợi của khách hàng khi nhận sản phẩm đúng yêu cầu.",
-            contentFastwork3:
-                "Hiện tại, 108jobs.com có hơn 50.000 freelancer đã qua kiểm duyệt chất lượng, cung cấp hơn 15.000 dịch vụ trong 90 danh mục khác nhau. Dịch vụ phù hợp với nhiều đối tượng khách hàng, từ chủ doanh nghiệp, SME, freelancer hàng online đến cá nhân đang tìm kiếm dịch vụ chuyên nghiệp với chi phí hợp lý. 108jobs.com là nền tảng freelancer chuyên nghiệp được hơn 700.000 khách hàng tin tưởng.",
-            contentFreelancerVerification:
-                "Freelancer được tuyển chọn và xác minh bởi 108Jobs có thể được kiểm tra.",
+            contentFastwork1: `${getAppName()}.com là nền tảng tập hợp các freelancer chuyên nghiệp từ nhiều lĩnh vực khác nhau, bao gồm thiết kế logo, làm banner quảng cáo, viết bài, dịch thuật, tiếp thị trực tuyến, phát triển website và hơn 90 danh mục khác nhằm đáp ứng nhu cầu đa dạng của doanh nghiệp và người dùng. Đội ngũ ${getAppName()}.com tập trung vào sự đơn giản và tiện lợi, giúp freelancer và khách hàng tiết kiệm thời gian, đồng thời hỗ trợ phát triển và mở rộng kinh doanh cho các doanh nghiệp lớn, nhỏ cũng như giúp freelancer dễ dàng tìm việc, tăng thu nhập và nâng cao chất lượng dịch vụ.`,
+            contentFastwork2: `${getAppName()}.com hoạt động như một nền tảng trung gian trực tuyến giữa freelancer và khách hàng, giúp họ kết nối mọi lúc, mọi nơi. Freelancer có thể đăng tải dịch vụ trên ${getAppName()}.com, trong khi khách hàng có thể tìm kiếm và thuê freelancer phù hợp. Hệ thống thanh toán an toàn của ${getAppName()}.com đảm bảo freelancer nhận được tiền công khi hoàn thành công việc, đồng thời bảo vệ quyền lợi của khách hàng khi nhận sản phẩm đúng yêu cầu.`,
+            contentFastwork3: `Hiện tại, ${getAppName()}.com có hơn 50.000 freelancer đã qua kiểm duyệt chất lượng, cung cấp hơn 15.000 dịch vụ trong 90 danh mục khác nhau. Dịch vụ phù hợp với nhiều đối tượng khách hàng, từ chủ doanh nghiệp, SME, freelancer hàng online đến cá nhân đang tìm kiếm dịch vụ chuyên nghiệp với chi phí hợp lý. ${getAppName()}.com là nền tảng freelancer chuyên nghiệp được hơn 700.000 khách hàng tin tưởng.`,
+            contentFreelancerVerification: `Freelancer được tuyển chọn và xác minh bởi ${getAppName()} có thể được kiểm tra.`,
             contentPaymentProtection:
                 "Tiền của bạn được bảo vệ từ khi freelancer bắt đầu làm việc cho đến khi bạn hài lòng với kết quả cuối cùng.",
             contentQualityFreelancers:
                 "Gặp gỡ đội ngũ freelancer chất lượng, sẵn sàng đáp ứng mọi nhu cầu kinh doanh trên nhiều lĩnh vực.",
             contentQualityOfferFreelancerCard1:
                 "Đã xác minh danh tính trong hệ thống",
-            contentQualityOfferFreelancerCard2:
-                "Danh mục công việc được đánh giá theo tiêu chuẩn cơ bản của 108Jobs ",
+            contentQualityOfferFreelancerCard2: `Danh mục công việc được đánh giá theo tiêu chuẩn cơ bản của ${getAppName()} `,
             contentQualityOfferProfessionalCard1:
                 "Đã xác minh danh tính trong hệ thống",
-            contentQualityOfferProfessionalCard2:
-                "Được lựa chọn và kiểm tra kiến thức, kỹ năng, và chuyên môn bởi 108Jobs ",
-            contentQualityOfferProfessionalCard3:
-                "Hoàn thành khóa đào tạo đặc biệt về kỹ năng và dịch vụ khách hàng do 108Jobs cung cấp",
+            contentQualityOfferProfessionalCard2: `Được lựa chọn và kiểm tra kiến thức, kỹ năng, và chuyên môn bởi ${getAppName()} `,
+            contentQualityOfferProfessionalCard3: `Hoàn thành khóa đào tạo đặc biệt về kỹ năng và dịch vụ khách hàng do ${getAppName()} cung cấp`,
             contentQualityOfferProfessionalCard4:
                 "Có các chứng chỉ chuyên môn cần thiết theo yêu cầu của lĩnh vực",
             contentQualityOfferProfessionalCard5:
@@ -1010,23 +986,18 @@ export const vi = {
                 "Có khả năng xử lý các dự án có độ phức tạp cao và quy mô lớn",
             contentQualityOfferSpecialistCard1:
                 "Đã xác minh danh tính trong hệ thống",
-            contentQualityOfferSpecialistCard2:
-                "Được lựa chọn và kiểm tra kiến thức, kỹ năng, và chuyên môn bởi 108Jobs ",
-            contentQualityOfferSpecialistCard3:
-                "Hoàn thành khóa đào tạo đặc biệt về kỹ năng và dịch vụ khách hàng do 108Jobs cung cấp",
+            contentQualityOfferSpecialistCard2: `Được lựa chọn và kiểm tra kiến thức, kỹ năng, và chuyên môn bởi ${getAppName()} `,
+            contentQualityOfferSpecialistCard3: `Hoàn thành khóa đào tạo đặc biệt về kỹ năng và dịch vụ khách hàng do ${getAppName()} cung cấp`,
             contentQualityOfferSpecialistCard4:
                 "Có các chứng chỉ chuyên môn cần thiết theo yêu cầu của lĩnh vực",
             contentStartHiringSection1:
                 "Tìm freelancer phù hợp dựa trên danh mục công việc, quy trình làm việc, bước thực hiện, đánh giá và nhận xét",
             contentStartHiringSection2: "Trao đổi chi tiết dự án và nhận báo giá.",
-            contentStartHiringSection3:
-                "108Jobs đảm bảo bạn sẽ nhận được công việc hoàn thành đúng yêu cầu.",
+            contentStartHiringSection3: `${getAppName()} đảm bảo bạn sẽ nhận được công việc hoàn thành đúng yêu cầu.`,
             contentStartHiringSection4:
                 "Xem xét công việc được gửi, xác nhận và để lại đánh giá.",
-            freelancerQuality:
-                "Freelancer đã qua tuyển chọn và xác minh danh tính bởi 108Jobs và bạn có thể kiểm tra thông tin này.",
-            freelancerStatistics:
-                "Hiện tại, 108jobs.com có hơn 50.000 freelancer chất lượng, cung cấp dịch vụ trong hơn 90 danh mục khác nhau. Hơn 15.000 công việc đã được hoàn thành thành công, với các freelancer được lựa chọn kỹ lưỡng theo kỹ năng và kinh nghiệm để đáp ứng tốt nhất nhu cầu của khách hàng—bao gồm chủ doanh nghiệp, SME, người kinh doanh trực tuyến hoặc cá nhân đang tìm kiếm dịch vụ chuyên nghiệp. 108Jobs hiện đang được hơn 70.000 khách hàng tin tưởng sử dụng.",
+            freelancerQuality: `Freelancer đã qua tuyển chọn và xác minh danh tính bởi ${getAppName()} và bạn có thể kiểm tra thông tin này.`,
+            freelancerStatistics: `Hiện tại, ${getAppName()}.com có hơn 50.000 freelancer chất lượng, cung cấp dịch vụ trong hơn 90 danh mục khác nhau. Hơn 15.000 công việc đã được hoàn thành thành công, với các freelancer được lựa chọn kỹ lưỡng theo kỹ năng và kinh nghiệm để đáp ứng tốt nhất nhu cầu của khách hàng—bao gồm chủ doanh nghiệp, SME, người kinh doanh trực tuyến hoặc cá nhân đang tìm kiếm dịch vụ chuyên nghiệp. ${getAppName()} hiện đang được hơn 70.000 khách hàng tin tưởng sử dụng.`,
             graphicDesign: "Thiết kế đồ họa",
             graphicDesignServices:
                 "Thiết kế banner, danh thiếp, áp phích, đồ họa thông tin (infographic), hồ sơ xin việc (resume), thiết kế hình xăm, bao bì sản phẩm, nhận diện thương hiệu (CI), và nhiều hơn nữa.",
@@ -1038,7 +1009,7 @@ export const vi = {
             labelSeeMoreTittle: "Xem thêm",
             labelStartHiringSection1: "1. Tìm Freelancer phù hợp",
             labelStartHiringSection2: "2. Thảo luận chi tiết",
-            labelStartHiringSection3: "3. Thanh toán an toàn qua 108Jobs",
+            labelStartHiringSection3: `3. Thanh toán an toàn qua ${getAppName()}`,
             labelStartHiringSection4: "4. Xác nhận công việc và đánh giá",
             lifestyle: "Phong cách sống",
             lifestyleServices:
@@ -1049,31 +1020,27 @@ export const vi = {
             mediaAudio: "Truyền thông & Âm thanh",
             mediaAudioServices:
                 "Nhiếp ảnh, chụp ảnh sự kiện, tạo podcast, chỉnh sửa bài hát, biên tập video, thiết kế website động, đồ họa chuyển động, phát trực tiếp, thuê người mẫu, lồng tiếng, và nhiều hơn nữa.",
-            platformDescription:
-                "108jobs.com là nền tảng kết nối các freelancer chuyên nghiệp từ nhiều lĩnh vực khác nhau tại một nơi, bao gồm thiết kế đồ họa, quảng cáo banner, viết bài, dịch thuật, tiếp thị trực tuyến, phát triển website và hơn 90 danh mục khác để đáp ứng nhu cầu đa dạng của doanh nghiệp và người dùng. Đội ngũ phát triển của chúng tôi đã thiết kế 108jobs.com với sự đơn giản và tiện lợi, tạo ra một nền tảng giúp freelancer và khách hàng tiết kiệm thời gian. Ngoài ra, chúng tôi còn hỗ trợ các doanh nghiệp mới khởi nghiệp, thúc đẩy tinh thần kinh doanh và giúp freelancer làm việc hiệu quả hơn, tạo thu nhập ổn định và nâng cao tiêu chuẩn của freelancer tại Thái Lan.",
-            platformPurpose:
-                "108jobs.com đóng vai trò là nền tảng trung gian trực tuyến kết nối freelancer với khách hàng, giúp họ dễ dàng tìm thấy và hợp tác với nhau mọi lúc. Freelancer có thể đăng tin tìm việc trên 108jobs.com một cách thuận tiện tại một nơi duy nhất, đồng thời khách hàng có thể dễ dàng tìm kiếm, so sánh giá cả và đánh giá chất lượng freelancer để lựa chọn dịch vụ phù hợp nhất. Hệ thống thanh toán an toàn của 108jobs.com đảm bảo freelancer chỉ nhận được tiền sau khi công việc đã hoàn thành, mang lại sự an tâm cho cả hai bên.",
+            platformDescription: `${getAppName()}.com là nền tảng kết nối các freelancer chuyên nghiệp từ nhiều lĩnh vực khác nhau tại một nơi, bao gồm thiết kế đồ họa, quảng cáo banner, viết bài, dịch thuật, tiếp thị trực tuyến, phát triển website và hơn 90 danh mục khác để đáp ứng nhu cầu đa dạng của doanh nghiệp và người dùng. Đội ngũ phát triển của chúng tôi đã thiết kế ${getAppName()}.com với sự đơn giản và tiện lợi, tạo ra một nền tảng giúp freelancer và khách hàng tiết kiệm thời gian. Ngoài ra, chúng tôi còn hỗ trợ các doanh nghiệp mới khởi nghiệp, thúc đẩy tinh thần kinh doanh và giúp freelancer làm việc hiệu quả hơn, tạo thu nhập ổn định và nâng cao tiêu chuẩn của freelancer tại Thái Lan.`,
+            platformPurpose: `${getAppName()}.com đóng vai trò là nền tảng trung gian trực tuyến kết nối freelancer với khách hàng, giúp họ dễ dàng tìm thấy và hợp tác với nhau mọi lúc. Freelancer có thể đăng tin tìm việc trên ${getAppName()}.com một cách thuận tiện tại một nơi duy nhất, đồng thời khách hàng có thể dễ dàng tìm kiếm, so sánh giá cả và đánh giá chất lượng freelancer để lựa chọn dịch vụ phù hợp nhất. Hệ thống thanh toán an toàn của ${getAppName()}.com đảm bảo freelancer chỉ nhận được tiền sau khi công việc đã hoàn thành, mang lại sự an tâm cho cả hai bên.`,
             subtitleBanner:
                 "Tăng trưởng doanh nghiệp nhanh chóng với freelancer phù hợp",
-            subtitleDownloadApp:
-                "Đơn giản hóa quy trình tuyển dụng của bạn với ứng dụng 108Jobs . Tìm kiếm, tóm tắt, thanh toán và nhận công việc liền mạch—all in one app.",
+            subtitleDownloadApp: `Đơn giản hóa quy trình tuyển dụng của bạn với ứng dụng ${getAppName()} . Tìm kiếm, tóm tắt, thanh toán và nhận công việc liền mạch—all in one app.`,
             titleAstrologyFreelancers:
                 "Những freelancer phổ biến trong lĩnh vực tử vi, chiêm tinh và tín ngưỡng",
-            titleBanner: "108Jobs for Business",
+            titleBanner: `${getAppName()} for Business`,
             titleBannerHomePage1: "Chúng tôi có các chuyên gia trong ...",
             titleBannerHomePage2: "Sẵn sàng biến ý tưởng của bạn thành hiện thực",
-            titleFeaturedWorks: "Tác phẩm nổi bật từ freelancer trên 108Jobs ",
-            titleJobCategories: "Danh mục công việc trên 108Jobs ",
+            titleFeaturedWorks: `Tác phẩm nổi bật từ freelancer trên ${getAppName()} `,
+            titleJobCategories: `Danh mục công việc trên ${getAppName()} `,
             titleLogoDesignFreelancers:
                 "Những freelancer phổ biến trong lĩnh vực thiết kế logo",
-            titlePlatform: "108Jobs: Nền tảng hàng đầu cho Freelancer chất lượng",
+            titlePlatform: `${getAppName()}: Nền tảng hàng đầu cho Freelancer chất lượng`,
             titlePopularFreelancers:
                 "Những freelancer phổ biến trong lĩnh vực cắm hoa",
-            titleStartHiringSection: "Bắt đầu thuê Freelancer với 108Jobs",
-            titleTrustedCompanies:
-                "Hơn 150.000 dự án thành công được hoàn thành bởi các công ty hàng đầu tin tưởng 108Jobs ",
+            titleStartHiringSection: `Bắt đầu thuê Freelancer với ${getAppName()}`,
+            titleTrustedCompanies: `Hơn 150.000 dự án thành công được hoàn thành bởi các công ty hàng đầu tin tưởng ${getAppName()} `,
             tittleFirstSlogan: "Freelancer chất lượng hàng đầu",
-            tittlePrimaryWhySection: "Tại sao chọn 108Jobs ?",
+            tittlePrimaryWhySection: `Tại sao chọn ${getAppName()} ?`,
             tittleQualityOfferProfessionalCard: "Chuyên nghiệp",
             tittleQualityOfferSection:
                 "Chúng tôi cung cấp nhiều freelancer và chuyên gia chất lượng sẵn sàng phục vụ bạn.",
@@ -1081,8 +1048,7 @@ export const vi = {
             tittleSecondSlogan: "Đảm bảo công việc",
             tittleSecondaryWhySection:
                 "Biến ý tưởng của bạn thành hiện thực với các freelancer chuyên nghiệp",
-            tittleThirdSlogan:
-                "Mọi công việc đều được đảm bảo, hãy chọn 108Jobs với sự tự tin",
+            tittleThirdSlogan: `Mọi công việc đều được đảm bảo, hãy chọn ${getAppName()} với sự tự tin`,
             websiteProgramming: "Website & Lập trình",
             websiteProgrammingServices:
                 "Thiết kế website, tạo website bán hàng, website có sẵn, lập trình phần mềm, chatbot Facebook, hệ thống đặt lịch online, quét dữ liệu website, phát triển phần mềm, và nhiều hơn nữa.",
@@ -1091,9 +1057,9 @@ export const vi = {
                 "Dịch thuật, phiên dịch, chuyển đổi âm thanh thành văn bản, viết nội dung, viết bài chuẩn SEO, viết tiếng Anh, viết báo cáo, hiệu đính văn bản, sáng tác thơ, và nhiều hơn nữa.",
         },
         how: {
-            howToBuySellTitle: "Làm thế nào để giao dịch dịch vụ trên 108Jobs ?",
+            howToBuySellTitle: `Làm thế nào để giao dịch dịch vụ trên ${getAppName()} ?`,
             howToBuySellSubtitle: "Trang web đứng đầu trên thị trường freelancer.",
-            easyStepsTitle: "Bắt đầu 108Jobs bằng các bước thật dễ dàng",
+            easyStepsTitle: `Bắt đầu ${getAppName()} bằng các bước thật dễ dàng`,
             chooseServiceButton: "Chọn dịch vụ bạn muốn.",
             registerFreelancerButton: "Đăng ký để trở thành Freelancer.",
             employerStep1Title: "Chọn dịch vụ bạn muốn.",
@@ -1118,11 +1084,10 @@ export const vi = {
             employerStep3Description:
                 "Hệ thống hoạt động như một bên trung gian giữ tiền của bạn cho đến khi freelancer hoàn thành công việc của mình.",
             employerStep3List1: "Xác minh chi tiết tuyển dụng trong báo giá",
-            employerStep3List2:
-                "Bạn có thể thanh toán qua 108Jobs bằng các phương thức sau:",
+            employerStep3List2: `Bạn có thể thanh toán qua ${getAppName()} bằng các phương thức sau:`,
             employerStep3List3: "Quét mã QR PromptPay",
             employerStep3List4: "Thẻ tín dụng",
-            employerStep3List5: "108Jobs Coin",
+            employerStep3List5: `${getAppName()} Coin`,
             employerStep3List6: "Ví TrueMoney",
             employerStep3List7:
                 "Sau khi thanh toán thành công, bạn có thể trao đổi thông tin liên hệ cá nhân.",
@@ -1140,13 +1105,11 @@ export const vi = {
             employerStep4List5:
                 "Bạn có thể khởi kiện nếu công việc không được thực hiện đúng như cam kết của freelancer.",
             employerStep5Title: "Đánh giá và Nhận xét",
-            employerStep5Description: "Để phát triển cộng đồng 108Jobs ",
+            employerStep5Description: `Để phát triển cộng đồng ${getAppName()} `,
             employerStep5List1:
                 "Đánh giá và nhận xét khách hàng để hỗ trợ mang lại lợi ích cho các freelancer khác",
-            employerStep5List2:
-                "Đưa ra nhận xét về mức độ hài lòng của bạn đối với hệ thống 108Jobs nhằm giúp nâng cao chất lượng dịch vụ",
-            sellerStep1Title:
-                "Đăng sản phẩm/dự án của bạn lên 108Jobs để giới thiệu năng lực chuyên môn đến với khách hàng tiềm năng",
+            employerStep5List2: `Đưa ra nhận xét về mức độ hài lòng của bạn đối với hệ thống ${getAppName()} nhằm giúp nâng cao chất lượng dịch vụ`,
+            sellerStep1Title: `Đăng sản phẩm/dự án của bạn lên ${getAppName()} để giới thiệu năng lực chuyên môn đến với khách hàng tiềm năng`,
             sellerStep1Description: "Đăng dịch vụ của bạn trong các danh mục sau:",
             sellerStep1List1: "Đồ họa & Thiết kế",
             sellerStep1List2: "Tiếp thị và Quảng cáo",
@@ -1190,8 +1153,7 @@ export const vi = {
                 "Tăng cơ hội được tuyển dụng! Với kinh nghiệm và hồ sơ dự án chất lượng có liên quan",
             mostClient:
                 "Phần lớn khách hàng lựa chọn freelancer dựa trên lịch sử làm việc và các minh chứng công việc",
-            warning:
-                "Cảnh báo: Mời khách hàng thanh toán ngoài hệ thống 108Jobs là vi phạm điều khoản sử dụng và có thể dẫn đến khóa tài khoản.",
+            warning: `Cảnh báo: Mời khách hàng thanh toán ngoài hệ thống ${getAppName()} là vi phạm điều khoản sử dụng và có thể dẫn đến khóa tài khoản.`,
             allInfo:
                 "Tất cả thông tin sẽ được hiển thị công khai (ngoại trừ 'Giá đề xuất')",
             whyClient: "Tại sao khách hàng nên thuê bạn",
@@ -1231,8 +1193,7 @@ export const vi = {
             submit: "Gửi đề xuất",
             interestFreelance:
                 "Freelancer quan tâm thiết kế nhân vật game mobile (0 đề xuất)",
-            recommendation:
-                "Chúng tôi khuyến nghị bạn nên trao đổi và thanh toán qua 108Jobs để đảm bảo không có sự lừa đảo! Chúng tôi sẽ bảo vệ khoản thanh toán của bạn cho đến khi bạn nhận được sản phẩm từ freelancer.",
+            recommendation: `Chúng tôi khuyến nghị bạn nên trao đổi và thanh toán qua ${getAppName()} để đảm bảo không có sự lừa đảo! Chúng tôi sẽ bảo vệ khoản thanh toán của bạn cho đến khi bạn nhận được sản phẩm từ freelancer.`,
             wantToFind:
                 "Bạn đang tìm kiếm freelancer trên Fastlance? Hãy tìm kiếm và kết nối với những freelancer xuất sắc ngay hôm nay!",
             generate: "Tạo thu nhập qua các nền tảng và bảng thông báo công việc",
@@ -1305,7 +1266,7 @@ export const vi = {
         },
         jobDetail: {
             allJobTypes: "Tất cả loại công việc",
-            fastworkGuarantee: "Bảo đảm 108Jobs",
+            fastworkGuarantee: `Bảo đảm ${getAppName()}`,
             fastworkGuaranteeDescription:
                 "Chăm sóc suốt quá trình làm việc, an toàn, không bị lừa, trung gian bảo vệ tiền cho đến khi công việc được phê duyệt. Đọc thêm điều khoản và quyền bảo vệ.",
             chatWithFreelancers: "Trò chuyện với freelancer",
@@ -1362,8 +1323,7 @@ export const vi = {
             backButton: "Quay lại",
             confirmationCheck1: "Tôi là chủ sở hữu thực sự của dịch vụ",
             confirmationCheck2: "Tôi có thể hoàn thành tất cả công việc như đã mô tả",
-            confirmationCheck3:
-                "Tôi đã đọc và đồng ý với các gợi ý Điều khoản sử dụng dịch vụ của 108Jobs ",
+            confirmationCheck3: `Tôi đã đọc và đồng ý với các gợi ý Điều khoản sử dụng dịch vụ của ${getAppName()} `,
             confirmationError:
                 "Vui lòng chấp nhận điều khoản và điều kiện để tiếp tục",
             confirmationNotice1:
@@ -1371,8 +1331,7 @@ export const vi = {
             confirmationNotice2:
                 "Việc kiểm tra và phê duyệt hồ sơ dịch vụ sẽ mất khoảng 2 ngày làm việc",
             confirmationTitle: "Xác nhận dịch vụ",
-            confirmationWarning:
-                "Nếu không xác nhận đồng ý với các điều khoản, bạn sẽ không thể đăng bán dịch vụ trên 108Jobs .",
+            confirmationWarning: `Nếu không xác nhận đồng ý với các điều khoản, bạn sẽ không thể đăng bán dịch vụ trên ${getAppName()} .`,
             coverImageNote:
                 "Chọn ảnh bìa thể hiện rõ lĩnh vực và chuyên môn của bạn. Ảnh bìa giúp thu hút khách hàng tiềm năng.",
             coverImageNote2:
@@ -1528,33 +1487,30 @@ export const vi = {
         },
 
         profileApply: {
-            advantagesTitle: "Lợi ích khi trở thành freelancer trên 108Jobs ?",
+            advantagesTitle: `Lợi ích khi trở thành freelancer trên ${getAppName()} ?`,
             applyButton: "Đăng ký làm freelancer",
             careerGrowth: "Phát triển sự nghiệp với Specialist",
-            careerGrowthDescription:
-                "Tham gia chương trình đánh giá và kiểm tra chuyên môn của 108Jobs để tăng độ tin cậy và cơ hội xuất hiện trên hệ thống.",
+            careerGrowthDescription: `Tham gia chương trình đánh giá và kiểm tra chuyên môn của ${getAppName()} để tăng độ tin cậy và cơ hội xuất hiện trên hệ thống.`,
             ctaButton: "Đăng ký freelancer",
-            ctaTitle: "Đăng ký làm freelancer trên 108Jobs ngay",
-            freelanceTypesTitle: "108Jobs có những loại Freelancer nào?",
+            ctaTitle: `Đăng ký làm freelancer trên ${getAppName()} ngay`,
+            freelanceTypesTitle: `${getAppName()} có những loại Freelancer nào?`,
             freelancer1:
                 "Đăng ký ngay hôm nay, điền thông tin chi tiết và trở thành freelancer trong vòng 48 giờ.",
             freelancer2: "Làm việc theo chuyên môn của bạn.",
             freelancer3: "Tự đặt khoảng giá phù hợp với công việc.",
-            freelancer4: "Hỗ trợ từ 108Jobs ",
+            freelancer4: `Hỗ trợ từ ${getAppName()} `,
             freelancer5: "Hệ thống báo giá, tạo báo giá và biểu mẫu.",
             freelancer6: "Hóa đơn đặc biệt dành cho Freelancer",
             freelancerLabel: "Freelancer",
-            freelancerProfessional: "108Jobs Professional",
-            freelancerProfessionalDescription:
-                "Những chuyên gia đa năng được 108Jobs tuyển chọn dựa trên kỹ năng và hồ sơ công việc.",
-            freelancerSpecialist: "108Jobs Specialist",
-            freelancerSpecialistDescription:
-                "Chuyên gia đã vượt qua bài kiểm tra đánh giá theo tiêu chuẩn chuyên môn của 108Jobs .",
-            freelancerStandard: "Freelancer 108Jobs ",
+            freelancerProfessional: `${getAppName()} Professional`,
+            freelancerProfessionalDescription: `Những chuyên gia đa năng được ${getAppName()} tuyển chọn dựa trên kỹ năng và hồ sơ công việc.`,
+            freelancerSpecialist: `${getAppName()} Specialist`,
+            freelancerSpecialistDescription: `Chuyên gia đã vượt qua bài kiểm tra đánh giá theo tiêu chuẩn chuyên môn của ${getAppName()} .`,
+            freelancerStandard: `Freelancer ${getAppName()} `,
             freelancerStandardDescription:
                 "Đăng ký ngay hôm nay, hiển thị hồ sơ của bạn và trở thành freelancer trong vòng 48 giờ.",
-            freelancerTitle: "108Jobs Freelancer",
-            freelancerTypesTitle: "Các loại Freelancer trên 108Jobs ?",
+            freelancerTitle: `${getAppName()} Freelancer`,
+            freelancerTypesTitle: `Các loại Freelancer trên ${getAppName()} ?`,
             increaseHiring: "Tăng cơ hội được thuê",
             increaseHiringDescription:
                 "Chúng tôi giúp công việc của bạn dễ dàng tìm thấy trên Google, Facebook hoặc các kênh khác, tăng cơ hội được tuyển dụng.",
@@ -1562,28 +1518,23 @@ export const vi = {
             paperworkDescription:
                 "Chỉ cần nhập thông tin công việc, thời gian thực hiện, phạm vi giá cả và hệ thống sẽ tự động tạo hóa đơn.",
             paymentSecurity: "Không lo bị quỵt tiền",
-            paymentSecurityDescription:
-                "108Jobs đóng vai trò trung gian để đảm bảo thanh toán khi công việc hoàn thành. Không cần lo lắng về việc khách hàng không trả tiền.",
+            paymentSecurityDescription: `${getAppName()} đóng vai trò trung gian để đảm bảo thanh toán khi công việc hoàn thành. Không cần lo lắng về việc khách hàng không trả tiền.`,
             popularCategories: "Danh mục phổ biến",
             popularCategoriesTitle: "Danh mục phổ biến",
             privileges: "Đặc quyền và hoạt động",
-            privilegesDescription:
-                "Bạn càng bán nhiều công việc, bạn càng có nhiều quyền truy cập vào các đặc quyền và hoạt động của 108Jobs.",
-            professional1: "Chuyên gia đa lĩnh vực được 108Jobs tuyển chọn.",
+            privilegesDescription: `Bạn càng bán nhiều công việc, bạn càng có nhiều quyền truy cập vào các đặc quyền và hoạt động của ${getAppName()}.`,
+            professional1: `Chuyên gia đa lĩnh vực được ${getAppName()} tuyển chọn.`,
             professional2: "Quyền tư vấn trực tiếp với chuyên gia.",
-            professional3:
-                "Huy hiệu dành cho Professional giúp khách hàng thuê dễ dàng qua 108Jobs.",
-            professional4:
-                "Cơ hội nhận thêm dự án từ các khách hàng doanh nghiệp lớn của 108Jobs.",
+            professional3: `Huy hiệu dành cho Professional giúp khách hàng thuê dễ dàng qua ${getAppName()}.`,
+            professional4: `Cơ hội nhận thêm dự án từ các khách hàng doanh nghiệp lớn của ${getAppName()}.`,
             professional5: "Vé đặc biệt dành cho Professional.",
             professionalLabel: "Chuyên gia cấp cao",
-            professionalTitle: "108Jobs Professional",
+            professionalTitle: `${getAppName()} Professional`,
             sellStep1DescPrefix:
                 "Đăng ký tài khoản với thông tin cá nhân và tài khoản ngân hàng để xác minh thanh toán. Sau đó bạn có thể đăng tin bán dịch vụ ngay. Xem",
             sellStep1LinkText: "hướng dẫn trở thành freelancer",
             sellStep1Title: "1. Đăng ký trở thành freelancer",
-            sellStep2Desc:
-                "Chuẩn bị hồ sơ và mô tả dịch vụ của bạn để thể hiện kỹ năng. Đội ngũ 108Jobs sẽ kiểm duyệt và phê duyệt bài đăng trong vòng 48 giờ.",
+            sellStep2Desc: `Chuẩn bị hồ sơ và mô tả dịch vụ của bạn để thể hiện kỹ năng. Đội ngũ ${getAppName()} sẽ kiểm duyệt và phê duyệt bài đăng trong vòng 48 giờ.`,
             sellStep2Title: "2. Đăng bài bán dịch vụ",
             sellStep3DescMiddle: "hoặc sử dụng",
             sellStep3DescPrefix: "Tham khảo",
@@ -1591,30 +1542,26 @@ export const vi = {
             sellStep3Link1: "Mẹo hay cho freelancer",
             sellStep3Link2: "Freelancer Center",
             sellStep3Title: "3. Bắt đầu bán ngay",
-            sellStep4Desc:
-                "108Jobs đảm bảo thanh toán an toàn, giúp bạn yên tâm làm việc mà không lo bị quỵt tiền.",
+            sellStep4Desc: `${getAppName()} đảm bảo thanh toán an toàn, giúp bạn yên tâm làm việc mà không lo bị quỵt tiền.`,
             sellStep4Title: "4. Làm việc an tâm",
             sellStep5Desc:
                 "Gửi bài hoàn thành cho khách duyệt. Làm tốt sẽ nhận được đánh giá tích cực, tăng độ uy tín và khả năng bán hàng.",
             sellStep5Title: "5. Gửi bài và nhận đánh giá",
-            sellStep6DescPrefix:
-                "108Jobs sẽ chuyển tiền vào tài khoản ngân hàng của bạn theo",
+            sellStep6DescPrefix: `${getAppName()} sẽ chuyển tiền vào tài khoản ngân hàng của bạn theo`,
             sellStep6DescSuffix:
                 ". Bán càng nhiều, bạn càng có nhiều quyền lợi và ưu đãi.",
             sellStep6LinkText: "Chính sách thanh toán",
             sellStep6Title: "6. Nhận tiền và quyền lợi đặc biệt",
-            sellStepsTitle: "6 bước đơn giản để bán dịch vụ trên 108Jobs ",
-            specialist1:
-                "Chuyên gia đã vượt qua bài kiểm tra kỹ năng theo tiêu chuẩn 108Jobs.",
+            sellStepsTitle: `6 bước đơn giản để bán dịch vụ trên ${getAppName()} `,
+            specialist1: `Chuyên gia đã vượt qua bài kiểm tra kỹ năng theo tiêu chuẩn ${getAppName()}.`,
             specialist2: "Quyền tư vấn trực tiếp với đội ngũ admin.",
             specialist3: "Cơ hội đặc biệt nhận dự án từ đối tác của chúng tôi.",
-            specialist4:
-                "Huy hiệu xác nhận bạn là chuyên gia giúp khách hàng tin tưởng khi thuê qua 108Jobs.",
+            specialist4: `Huy hiệu xác nhận bạn là chuyên gia giúp khách hàng tin tưởng khi thuê qua ${getAppName()}.`,
             specialist5: "Vé đặc biệt dành cho Chuyên gia.",
             specialist6: "Sự kiện riêng dành cho Chuyên gia cấp cao.",
             specialist7: "Trợ lý cá nhân cho Chuyên gia.",
             specialistLabel: "Chuyên gia",
-            specialistTitle: "108Jobs Specialist",
+            specialistTitle: `${getAppName()} Specialist`,
             step1: "Đăng ký làm freelancer",
             step1Description:
                 "Đăng ký bằng thẻ căn cước và sổ ngân hàng của bạn để xác minh danh tính. Sau đó, bạn có thể đăng tin tuyển dụng.",
@@ -1625,21 +1572,19 @@ export const vi = {
             step3Description:
                 "Hãy nghiên cứu kỹ thuật định giá freelancer hoặc sử dụng Freelancer Center để tăng cơ hội được tuyển dụng.",
             step4: "Làm việc từ xa",
-            step4Description:
-                "Yên tâm làm việc với mọi dự án! 108Jobs đảm bảo thanh toán, không cần lo lắng về việc khách hàng không trả tiền.",
+            step4Description: `Yên tâm làm việc với mọi dự án! ${getAppName()} đảm bảo thanh toán, không cần lo lắng về việc khách hàng không trả tiền.`,
             step5: "Nộp bài và nhận xét",
             step5Description:
                 "Gửi công việc đã hoàn thành để khách hàng phê duyệt. Công việc càng tốt, độ tin cậy của bạn càng cao.",
             step6: "Nhận tiền và đặc quyền",
-            step6Description:
-                "108Jobs sẽ chuyển tiền vào tài khoản ngân hàng của bạn theo điều khoản thanh toán. Bạn bán càng nhiều, bạn kiếm được càng nhiều.",
-            stepsTitle: "6 bước đơn giản để bán công việc trên 108Jobs ",
+            step6Description: `${getAppName()} sẽ chuyển tiền vào tài khoản ngân hàng của bạn theo điều khoản thanh toán. Bạn bán càng nhiều, bạn kiếm được càng nhiều.`,
+            stepsTitle: `6 bước đơn giản để bán công việc trên ${getAppName()} `,
             subtitle: "Tự do làm việc theo cách bạn chọn.",
             supportTeam: "Có đội ngũ hỗ trợ",
             supportTeamDescription:
                 "Chúng tôi sẵn sàng hỗ trợ bạn ngay lập tức nếu có vấn đề phát sinh và liên tục phát triển hệ thống để mang lại trải nghiệm tốt nhất.",
-            whyChooseTitle: "Tại sao freelancer chọn 108Jobs ?",
-            whyTitle: "Tại sao freelancer chọn 108Jobs ",
+            whyChooseTitle: `Tại sao freelancer chọn ${getAppName()} ?`,
+            whyTitle: `Tại sao freelancer chọn ${getAppName()} `,
         },
         profileChat: {
             chatHistory: "Lịch sử trò chuyện",
@@ -1658,7 +1603,7 @@ export const vi = {
                 "Vui lòng chọn đơn hàng ở bên trái để bắt đầu trò chuyện",
             searchPlaceholder: "Tìm kiếm gì đó",
             sectionChat: "Trò chuyện",
-            securePaymentNote: "An toàn hơn khi thanh toán qua 108Jobs",
+            securePaymentNote: `An toàn hơn khi thanh toán qua ${getAppName()}`,
             selectedHere: "Đã chọn ở đây",
             timeAgo: "Hôm qua",
             typeMessageHere: "Nhập tin nhắn tại đây",
@@ -1713,11 +1658,10 @@ export const vi = {
             buttonTopUp5000: "Nạp 5.000 baht",
             labelChooseAmount: "Hoặc chọn số tiền bạn muốn ngay lập tức",
             labelSpecifyAmount: "Chỉ định số tiền bạn muốn nạp",
-            labelYourCoin: "108Jobs Coin của bạn",
+            labelYourCoin: `${getAppName()} Coin của bạn`,
             noteBalanceUpdate:
                 "Trong một số trường hợp, có thể mất đến 5 phút để cập nhật số dư. Vui lòng đợi trong giây lát.",
-            noteCoinTerms:
-                "• 108Jobs Coin có thể được sử dụng mà không có ngày hết hạn và có thể được sử dụng cùng với các Coupon tài khoản khác.• 108Jobs Coin không thể quy đổi thành tiền mặt hoặc chuyển sang tài khoản 108Jobs khác.• Khi bạn nạp 108Jobs Coin vào hệ thống, điều đó có nghĩa là bạn chấp nhận các điều khoản và điều kiện.• Nếu bạn gặp bất kỳ vấn đề nào khi nạp 108Jobs Coin hoặc thanh toán, vui lòng liên hệ Trung tâm hỗ trợ.",
+            noteCoinTerms: `• ${getAppName()} Coin có thể được sử dụng mà không có ngày hết hạn và có thể được sử dụng cùng với các Coupon tài khoản khác.• ${getAppName()} Coin không thể quy đổi thành tiền mặt hoặc chuyển sang tài khoản ${getAppName()} khác.• Khi bạn nạp ${getAppName()} Coin vào hệ thống, điều đó có nghĩa là bạn chấp nhận các điều khoản và điều kiện.• Nếu bạn gặp bất kỳ vấn đề nào khi nạp ${getAppName()} Coin hoặc thanh toán, vui lòng liên hệ Trung tâm hỗ trợ.`,
             noteMinMax: "Tối thiểu 100 baht và tối đa 500.000 baht.",
             placeholderSpecifyAmount: "Nhập số tiền 100-500.000 baht",
             sectionTopUpHistory: "Lịch sử nạp tiền",
@@ -1731,7 +1675,7 @@ export const vi = {
             tableStatus: "Trạng thái",
             tableTopUpAmount: "Số tiền nạp (baht)",
             tableTotalCoins: "Tổng số coins nhận được",
-            titleFastworkCoin: "108Jobs Coin",
+            titleFastworkCoin: `${getAppName()} Coin`,
         },
         profileCompany: {
             buttonSearchCompany: "Tìm kiếm thông tin công ty",
@@ -1800,36 +1744,31 @@ export const vi = {
             messageNoOffers: "Hiện chưa có ưu đãi nào",
             sectionDiscountsPromotions: "Ưu đãi và khuyến mãi",
             sectionSpecialOffers: "Ưu đãi đặc biệt",
-            subtitleDiscountsPromotions: "Từ 108Jobs và các dịch vụ đối tác",
+            subtitleDiscountsPromotions: `Từ ${getAppName()} và các dịch vụ đối tác`,
             tabForFreelancers: "Dành cho Freelancer",
             tabForHiring: "Dành cho tuyển dụng",
         },
         profileData: {
-            concent:
-                "Đồng ý nhận tin tức và các chương trình khuyến mãi đặc biệt qua tất cả các kênh từ 108Jobs .",
+            consent: `Đồng ý nhận tin tức và các chương trình khuyến mãi đặc biệt qua tất cả các kênh từ ${getAppName()}.`,
             privacy: "Chính sách quyền riêng tư",
-            cookieUse:
-                "108Jobs sử dụng cookie để giúp cải thiện và nâng cao trải nghiệm người dùng của bạn khi bạn truy cập trang web của chúng tôi. Bạn có thể chọn đồng ý với từng loại cookie (ngoại trừ cookie thiết yếu).",
+            cookieUse: `${getAppName()} sử dụng cookie để giúp cải thiện và nâng cao trải nghiệm người dùng của bạn khi bạn truy cập trang web của chúng tôi. Bạn có thể chọn đồng ý với từng loại cookie (ngoại trừ cookie thiết yếu).`,
             cookiePrivacy: "Chính sách Cookie",
             always: "Luôn bật",
             noPrivacy: "Không tìm thấy freelancer ưu tiên",
             analyticsCookies: "Cookie phân tích và hiệu suất",
-            analyticsCookiesDescription:
-                "Cho phép 108Jobs thu thập dữ liệu sử dụng để phân tích và cải thiện hiệu suất nền tảng.",
+            analyticsCookiesDescription: `Cho phép ${getAppName()} thu thập dữ liệu sử dụng để phân tích và cải thiện hiệu suất nền tảng.`,
             cookiesManagement: "Quản lý Cookie",
             dataManagement: "Quản lý dữ liệu",
-            dataUsageFastwork: "Sử dụng dữ liệu cho 108Jobs ",
+            dataUsageFastwork: `Sử dụng dữ liệu cho ${getAppName()} `,
             functionalCookies: "Cookie cần thiết",
-            functionalCookiesDescription:
-                "108Jobs cần sử dụng các cookie này để cho phép bạn truy cập trang web và lưu chi tiết phiên làm việc để duyệt web hiệu quả. Những cookie này không lưu trữ dữ liệu người dùng có thể nhận dạng.",
+            functionalCookiesDescription: `${getAppName()} cần sử dụng các cookie này để cho phép bạn truy cập trang web và lưu chi tiết phiên làm việc để duyệt web hiệu quả. Những cookie này không lưu trữ dữ liệu người dùng có thể nhận dạng.`,
             mandatoryCookies:
                 "Những cookie này là bắt buộc để trang web hoạt động và không thể bị vô hiệu hóa.",
             marketingCookies: "Cookie tiếp thị và quảng cáo",
-            marketingCookiesDescription:
-                "Cho phép 108Jobs thu thập dữ liệu quảng cáo để đề xuất phù hợp.",
+            marketingCookiesDescription: `Cho phép ${getAppName()} thu thập dữ liệu quảng cáo để đề xuất phù hợp.`,
             newsletterAccept: "Chấp nhận",
             newsletterDecline: "Từ chối",
-            newsletterPromotions: "Nhận tin tức, giảm giá và khuyến mãi từ 108Jobs ",
+            newsletterPromotions: `Nhận tin tức, giảm giá và khuyến mãi từ ${getAppName()} `,
             noFreelancerFavorites: "Không có freelancer yêu thích",
             saveData: "Lưu dữ liệu",
             termsConditions: "Đọc Điều khoản dịch vụ và Chính sách quyền riêng tư",
@@ -1988,21 +1927,14 @@ export const vi = {
             columnDateReceived: "Ngày nhận điểm",
             columnDetails: "Chi tiết",
             columnPointsAmount: "Số điểm",
-            faqBenefits: "Lợi ích của chương trình tích điểm 108Jobs là gì?",
-            faqBenefitsAnswer:
-                "Các ví dụ về lợi ích từ chương trình tích điểm 108Jobs bao gồm hoàn tiền cho freelancer, giảm giá đặc biệt khi thuê dịch vụ, phiếu giảm giá đối tác độc quyền, và nhiều quyền lợi khác. Lưu ý: Các quyền lợi có thể thay đổi theo thời gian để phù hợp với nhu cầu của người dùng.",
-            faqExpiration:
-                "Điểm trong chương trình tích điểm 108Jobs có hết hạn không?",
-            faqExpirationAnswer:
-                "Điểm 108Jobs có thời hạn sử dụng 6 tháng và sẽ hết hạn vào cuối tháng thứ 3. Ví dụ: Nếu bạn nhận điểm vào tháng 1, chúng sẽ hết hạn vào ngày 30 tháng 4. Khi bạn đổi thưởng, hệ thống sẽ tự động sử dụng các điểm gần hết hạn trước.",
-            faqJoinRewards:
-                "Làm thế nào để tham gia chương trình tích điểm 108Jobs ?",
-            faqJoinRewardsAnswer:
-                "Chỉ cần đăng nhập vào 108Jobs và vào trang 'Nhiệm vụ' để bắt đầu tích điểm và đổi thưởng ngay lập tức. Nếu bạn gặp vấn đề khi truy cập hệ thống, vui lòng liên hệ với trung tâm hỗ trợ của chúng tôi.",
-            faqMorePoints:
-                "Làm thế nào để nhận thêm điểm trong chương trình tích điểm 108Jobs ?",
-            faqMorePointsAnswer:
-                "Hoàn thành các nhiệm vụ được liệt kê trên trang nhiệm vụ, chẳng hạn như đăng nhập và check-in hàng ngày. Đặc biệt dành cho freelancer! Nhận công việc thông qua hệ thống 108Jobs mỗi 320 baht và tự động nhận 1 điểm.",
+            faqBenefits: `Lợi ích của chương trình tích điểm ${getAppName()} là gì?`,
+            faqBenefitsAnswer: `Các ví dụ về lợi ích từ chương trình tích điểm ${getAppName()} bao gồm hoàn tiền cho freelancer, giảm giá đặc biệt khi thuê dịch vụ, phiếu giảm giá đối tác độc quyền, và nhiều quyền lợi khác. Lưu ý: Các quyền lợi có thể thay đổi theo thời gian để phù hợp với nhu cầu của người dùng.`,
+            faqExpiration: `Điểm trong chương trình tích điểm ${getAppName()} có hết hạn không?`,
+            faqExpirationAnswer: `Điểm ${getAppName()} có thời hạn sử dụng 6 tháng và sẽ hết hạn vào cuối tháng thứ 3. Ví dụ: Nếu bạn nhận điểm vào tháng 1, chúng sẽ hết hạn vào ngày 30 tháng 4. Khi bạn đổi thưởng, hệ thống sẽ tự động sử dụng các điểm gần hết hạn trước.`,
+            faqJoinRewards: `Làm thế nào để tham gia chương trình tích điểm ${getAppName()} ?`,
+            faqJoinRewardsAnswer: `Chỉ cần đăng nhập vào ${getAppName()} và vào trang 'Nhiệm vụ' để bắt đầu tích điểm và đổi thưởng ngay lập tức. Nếu bạn gặp vấn đề khi truy cập hệ thống, vui lòng liên hệ với trung tâm hỗ trợ của chúng tôi.`,
+            faqMorePoints: `Làm thế nào để nhận thêm điểm trong chương trình tích điểm ${getAppName()} ?`,
+            faqMorePointsAnswer: `Hoàn thành các nhiệm vụ được liệt kê trên trang nhiệm vụ, chẳng hạn như đăng nhập và check-in hàng ngày. Đặc biệt dành cho freelancer! Nhận công việc thông qua hệ thống ${getAppName()} mỗi 320 baht và tự động nhận 1 điểm.`,
             filterAll: "Tất cả",
             filterEmployment: "Dành cho tuyển dụng",
             filterGeneral: "Chung",
@@ -2027,15 +1959,13 @@ export const vi = {
             tabUsageHistory: "Lịch sử sử dụng",
             taskDailyPoints: "[Đặc biệt] Nhận điểm miễn phí hàng ngày",
             taskFirstJobPost: "Đăng tin tuyển dụng thành công lần đầu tiên",
-            taskFirstPayment: "Thanh toán đầu tiên trên 108Jobs ",
+            taskFirstPayment: `Thanh toán đầu tiên trên ${getAppName()} `,
             taskRepeatHire: "Thuê freelancer cùng một người nhiều lần",
             taskSuccessfulHire: "Thuê thành công lần đầu tiên",
             terms1:
                 "Mọi giao dịch đổi thưởng, giảm giá hoặc đặc quyền sau khi đổi đều không thể hoàn lại hoặc đổi lại.",
-            terms2:
-                "Để đảm bảo bạn nhận được lợi ích tối đa từ chương trình tích điểm 108Jobs , vui lòng kiểm tra ngày hết hạn của điểm tích lũy thường xuyên và đổi thưởng trong thời gian quy định.",
-            terms3:
-                "108Jobs có quyền quyết định và thay đổi điều kiện của chương trình tích điểm, bao gồm đổi thưởng, mà không cần thông báo trước.",
+            terms2: `Để đảm bảo bạn nhận được lợi ích tối đa từ chương trình tích điểm ${getAppName()} , vui lòng kiểm tra ngày hết hạn của điểm tích lũy thường xuyên và đổi thưởng trong thời gian quy định.`,
+            terms3: `${getAppName()} có quyền quyết định và thay đổi điều kiện của chương trình tích điểm, bao gồm đổi thưởng, mà không cần thông báo trước.`,
         },
         proposal: {
             whyHireYouLabel: "Tại sao chúng tôi nên chọn bạn?",
@@ -2050,7 +1980,7 @@ export const vi = {
             accumulateMore: "Tích lũy thêm {{n}}",
             accumulatedIncome: "Thu nhập tích lũy trong {{n}} tháng",
             detailsTitle: "Dữ liệu chi tiết",
-            freelancerSetupSteps: "3 bước để tạo thu nhập trên 108Jobs ",
+            freelancerSetupSteps: `3 bước để tạo thu nhập trên ${getAppName()} `,
             freelancerSetupTitle: "Bắt đầu làm freelancer",
             hiringNote: "Lưu ý: Dữ liệu sẽ được cập nhật trong vòng 24 giờ",
             hiringOverviewTitle: "Tổng quan về việc thuê",
@@ -2070,8 +2000,7 @@ export const vi = {
             step1Status: "Hoàn tất",
             step1Title: "Đăng ký làm freelancer: Freelance đã được xác minh",
             step2Action: "Đăng dịch vụ",
-            step2Desc:
-                "Tạo các dịch vụ hấp dẫn để thu hút người thuê và tạo ra thu nhập trên 108Jobs ",
+            step2Desc: `Tạo các dịch vụ hấp dẫn để thu hút người thuê và tạo ra thu nhập trên ${getAppName()} `,
             step2Title: "Đăng dịch vụ của bạn",
             step3Action: "Thêm thông tin",
             step3Desc:
@@ -2110,8 +2039,7 @@ export const vi = {
             buttonEditBank: "Chỉnh sửa ngân hàng"
         },
         sellerCommitmentLetter: {
-            incomeTaxDescription:
-                "Để nhận thanh toán thông qua hệ thống 108Jobs , freelancer phải xác nhận và đồng ý tự cung cấp thông tin thu nhập của mình để cơ quan thuế xem xét tuân thủ các yêu cầu pháp lý.",
+            incomeTaxDescription: `Để nhận thanh toán thông qua hệ thống ${getAppName()} , freelancer phải xác nhận và đồng ý tự cung cấp thông tin thu nhập của mình để cơ quan thuế xem xét tuân thủ các yêu cầu pháp lý.`,
             step1Note:
                 "Sau khi được xác minh, thông tin này không thể thay đổi (vui lòng liên hệ đội ngũ hỗ trợ)",
             step1Placeholder: "Vui lòng nhập thông tin",
@@ -2124,7 +2052,7 @@ export const vi = {
             step3Title: "Đọc kỹ và ký tài liệu",
             step4Note:
                 "Bạn có thể tải lên các tệp có định dạng .pdf, .png hoặc .jpg với dung lượng tối đa 10MB",
-            step4Title: "Chụp hình tài liệu và tải lên thông qua 108Jobs ",
+            step4Title: `Chụp hình tài liệu và tải lên thông qua ${getAppName()} `,
             taxInfoTitle: "Thông tin khai báo thuế",
             uploadButton: "Tải lên tài liệu",
         },
@@ -2284,15 +2212,14 @@ export const vi = {
             faqTitle: "Các câu hỏi thường gặp",
             faqSubtitle: "Nhận câu trả lời cho các câu hỏi phổ biến",
             faqHeader: "Các câu hỏi thường gặp",
-            faqQuestion1: "Làm cách nào để tuyển dụng freelancer qua 108Jobs ?",
+            faqQuestion1: `Làm cách nào để tuyển dụng freelancer qua ${getAppName()} ?`,
             faqQuestion1Step1:
                 "1. Thảo luận với freelancer về chi tiết công việc (Bạn sẽ không bị tính phí ở bước này)",
             faqQuestion1Step2: "2. Yêu cầu freelancer gửi báo giá",
             faqQuestion1Step3:
                 "3. Thực hiện thanh toán qua hệ thống để xác nhận bắt đầu công việc (Thanh toán của bạn được hệ thống bảo vệ)",
             faqQuestion1Step4: "4. Xem xét và phê duyệt công việc",
-            faqQuestion1Note:
-                "Lưu ý: Các khoản thanh toán được thực hiện trong hệ thống được 108Jobs bảo vệ. Xem thêm tại Đảm bảo của 108Jobs .",
+            faqQuestion1Note: `Lưu ý: Các khoản thanh toán được thực hiện trong hệ thống được ${getAppName()} bảo vệ. Xem thêm tại Đảm bảo của ${getAppName()} .`,
             faqQuestion2: "Làm cách nào để tuyển dụng thay mặt một công ty?",
             faqQuestion2Step1:
                 "1. Cung cấp thông tin công ty để xuất tài liệu trên trang 'Tuyển dụng thay mặt công ty'",
@@ -2300,7 +2227,7 @@ export const vi = {
             faqQuestion2Step3:
                 "3. Sau khi được phê duyệt, thông báo ngay cho freelancer để xuất tài liệu qua trò chuyện",
             faqQuestion3: "Làm cách nào để tìm freelancer?",
-            faqQuestion3Step1: "1. Thêm @108Jobs qua Line",
+            faqQuestion3Step1: `1. Thêm @${getAppName()} qua Line`,
             faqQuestion3Step2:
                 "2. Chọn dịch vụ trò chuyện để thuê (dịch vụ hỗ trợ freelancer)",
             faqQuestion3Step3:
@@ -2328,9 +2255,8 @@ export const vi = {
             addLineButton: "Thêm @fastwork",
         },
         terms: {
-            homepageTitle:
-                "108jobs.com - Nền tảng số 1 cung cấp freelancer chất lượng được doanh nghiệp trên khắp Thái Lan lựa chọn",
-            homepageSubtitle: "Thuê Freelancer trên 108Jobs ",
+            homepageTitle: `${getAppName()}.com - Nền tảng số 1 cung cấp freelancer chất lượng được doanh nghiệp trên khắp Thái Lan lựa chọn`,
+            homepageSubtitle: `Thuê Freelancer trên ${getAppName()} `,
             homepageAppPrompt: "Mở ứng dụng để trải nghiệm đầy đủ",
             homepageFreelancerSectionTitle:
                 "Chúng tôi có đội ngũ freelancer và chuyên gia chất lượng cao, đa dạng, sẵn sàng phục vụ bạn",
@@ -2338,40 +2264,35 @@ export const vi = {
             freelancerCategory1:
                 "Đã xác minh danh tính và có danh mục công việc trong hệ thống",
             freelancerCategory2: "Đã xác minh danh tính trong hệ thống",
-            freelancerCategory3:
-                "Danh mục công việc đạt tiêu chuẩn cơ bản của 108Jobs ",
+            freelancerCategory3: `Danh mục công việc đạt tiêu chuẩn cơ bản của ${getAppName()} `,
             freelancerCategoryCta: "Xem tất cả công việc",
-            specialistCategoryTitle: "Chuyên gia 108Jobs ",
+            specialistCategoryTitle: `Chuyên gia ${getAppName()} `,
             specialistCategory1: "Tự tin với kỹ năng và dịch vụ đã được kiểm tra",
             specialistCategory2: "Đã xác minh danh tính trong hệ thống",
-            specialistCategory3:
-                "Được 108Jobs lựa chọn và kiểm tra kiến thức, kỹ năng chuyên môn",
-            specialistCategory4:
-                "Hoàn thành khóa đào tạo đặc biệt về kỹ năng và cung cấp dịch vụ từ 108Jobs ",
+            specialistCategory3: `Được ${getAppName()} lựa chọn và kiểm tra kiến thức, kỹ năng chuyên môn`,
+            specialistCategory4: `Hoàn thành khóa đào tạo đặc biệt về kỹ năng và cung cấp dịch vụ từ ${getAppName()} `,
             specialistCategory5:
                 "Sở hữu chứng chỉ nghề nghiệp cần thiết trong lĩnh vực",
-            professionalCategoryTitle: "Chuyên gia cao cấp 108Jobs ",
+            professionalCategoryTitle: `Chuyên gia cao cấp ${getAppName()} `,
             professionalCategory1:
                 "Chuyên gia trong các dự án phức tạp và quy mô lớn",
             professionalCategory2: "Đã xác minh danh tính trong hệ thống",
-            professionalCategory3:
-                "Được 108Jobs lựa chọn và kiểm tra kiến thức, kỹ năng chuyên môn",
-            professionalCategory4:
-                "Hoàn thành khóa đào tạo đặc biệt về kỹ năng và cung cấp dịch vụ từ 108Jobs ",
+            professionalCategory3: `Được ${getAppName()} lựa chọn và kiểm tra kiến thức, kỹ năng chuyên môn`,
+            professionalCategory4: `Hoàn thành khóa đào tạo đặc biệt về kỹ năng và cung cấp dịch vụ từ ${getAppName()} `,
             professionalCategory5:
                 "Sở hữu chứng chỉ nghề nghiệp cần thiết trong lĩnh vực",
             professionalCategory6:
                 "Được sàng lọc với các tiêu chí chuyên môn nâng cao",
             professionalCategory7:
                 "Có khả năng xử lý các dự án phức tạp và quy mô lớn",
-            howToUseTitle: "Cách sử dụng 108Jobs ?",
+            howToUseTitle: `Cách sử dụng ${getAppName()} ?`,
             howToUseStep1Title: "Tìm kiếm Freelancer lý tưởng",
             howToUseStep1Description:
                 "Tìm kiếm bằng thanh tìm kiếm hoặc chọn từ hơn 70 danh mục công việc.",
             howToUseStep2Title: "Thảo luận chi tiết",
             howToUseStep2Description:
                 "Nhấp vào “Chat ngay” để trao đổi chi tiết công việc và nhận báo giá từ freelancer.",
-            howToUseStep3Title: "Thanh toán qua 108Jobs ",
+            howToUseStep3Title: `Thanh toán qua ${getAppName()} `,
             howToUseStep3Description:
                 "Thanh toán an toàn qua nhiều kênh, yên tâm với mỗi lần thuê vì chúng tôi bảo vệ khoản thanh toán của bạn.",
             howToUseStep4Title: "Phê duyệt công việc và đánh giá",
@@ -2379,19 +2300,17 @@ export const vi = {
                 "Đánh giá freelancer để cung cấp phản hồi và hỗ trợ họ cải thiện.",
             trustedClientsTitle: "Một số khách hàng tiêu biểu",
             trustedClientsCta: "Xem thêm",
-            termsAndConditionsTitle:
-                "Điều khoản và Điều kiện sử dụng nền tảng 108jobs.com dành cho Freelancer",
+            termsAndConditionsTitle: `Điều khoản và Điều kiện sử dụng nền tảng ${getAppName()}.com dành cho Freelancer`,
             section1Title: "Định nghĩa",
-            definition1:
-                "Nền tảng là website (https://108jobs.com) và ứng dụng 108Jobs .",
+            definition1: `Nền tảng là website (https://${getAppName()}.com) và ứng dụng ${getAppName()} .`,
             definition2:
                 "Nền tảng đóng vai trò trung gian để người dùng tạo và chia sẻ dịch vụ.",
             definition3: "Người dùng có thể mua và bán dịch vụ qua nền tảng.",
             definition4: "Thanh toán được thực hiện dựa trên giá trị dịch vụ.",
             definition5:
                 "Công việc là sản phẩm hoặc dịch vụ do khách hàng và freelancer cung cấp.",
-            definition6: "Công ty là tổ chức điều hành 108jobs.com.",
-            definition7: "108Jobs cung cấp nền tảng cho các dịch vụ bên thứ ba.",
+            definition6: `Công ty là tổ chức điều hành ${getAppName()}.com.`,
+            definition7: `${getAppName()} cung cấp nền tảng cho các dịch vụ bên thứ ba.`,
             definition8: "Công ty hỗ trợ tương tác giữa khách hàng và freelancer.",
             definition9: "Người dùng là cá nhân sử dụng dịch vụ của nền tảng.",
             definition10: "Khách hàng là người dùng thuê sản phẩm hoặc dịch vụ.",
@@ -2425,8 +2344,7 @@ export const vi = {
                 "Phí sử dụng nền tảng của Freelancer là phí áp dụng cho freelancer.",
             definition29:
                 "Phí sử dụng nền tảng của Khách hàng là phí áp dụng cho khách hàng.",
-            definition30:
-                "108Jobs Coins là điểm tích lũy của khách hàng sau khi thanh toán.",
+            definition30: `${getAppName()} Coins là điểm tích lũy của khách hàng sau khi thanh toán.`,
             definition31: "Bonus Coins là điểm tặng bởi công ty.",
             definition32:
                 "Dữ liệu cá nhân là thông tin xác định cá nhân trực tiếp hoặc gián tiếp.",
@@ -2521,8 +2439,8 @@ export const vi = {
             fees9: "Phí được chuyển theo lịch ngân hàng.",
             fees10: "Rút tiền bị giới hạn bởi số dư tài khoản.",
             fees11: "Phí không bao gồm thuế thu nhập cá nhân.",
-            section8Title: "108Jobs Coins và Bonus Coins",
-            coins1: "Khách hàng nạp 108Jobs Coins để trả phí.",
+            section8Title: `${getAppName()} Coins và Bonus Coins`,
+            coins1: `Khách hàng nạp ${getAppName()} Coins để trả phí.`,
             coins2: "Coins phải được sử dụng trong 2 năm.",
             coins3: "Coins không sử dụng chịu phí 1 USD/tháng.",
             coins4: "Hoàn tiền Coins chịu phí giao dịch 1 USD.",
@@ -2621,18 +2539,17 @@ export const vi = {
             intellectualProperty3:
                 "Người vi phạm bồi thường cho chủ sở hữu quyền sở hữu trí tuệ.",
             section18Title: "Chính sách bảo mật",
-            privacyPolicy1:
-                "Xem chính sách bảo mật tại https://108jobs.com/seller-privacy.",
+            privacyPolicy1: `Xem chính sách bảo mật tại https://${getAppName()}.com/seller-privacy.`,
             privacyPolicy2: "Dữ liệu cá nhân được xử lý bí mật.",
             privacyPolicy3: "Công ty có thể truy cập trò chuyện để giám sát.",
             privacyPolicy4:
                 "Người dùng đồng ý sử dụng nội dung cho mục đích tiếp thị.",
             section19Title: "Liên hệ",
             contact1: "Liên hệ công ty trong giờ làm việc.",
-            contact2: "Tên công ty: 108Jobs ",
-            contact3: "Địa chỉ: Trụ sở 108Jobs ",
-            contact4: "Email: support@108jobs.com",
-            contact5: "Website: https://static.108jobs.com/contents/support-center",
+            contact2: `Tên công ty: ${getAppName()} `,
+            contact3: `Địa chỉ: Trụ sở ${getAppName()} `,
+            contact4: `Email: support@${getAppName()}.com`,
+            contact5: `Website: https://static.${getAppName()}.com/contents/support-center`,
             note1: "Các điều khoản này có thể thay đổi mà không cần thông báo trước.",
             note2: "Người dùng chịu trách nhiệm xem xét cập nhật Điều khoản sử dụng.",
             note3: "Công ty có quyền sửa đổi tính năng nền tảng.",
@@ -2646,25 +2563,20 @@ export const vi = {
             note11: "Người dùng đồng ý nhận thông báo từ nền tảng.",
             note12:
                 "Công ty không chịu trách nhiệm cho nội dung do người dùng tạo ra.",
-            termsTitle: "Điều khoản và điều kiện của 108Jobs ",
-            termsAcceptance:
-                "Tôi đã đọc và chấp nhận Điều khoản và Điều kiện sử dụng của 108Jobs ",
+            termsTitle: `Điều khoản và điều kiện của ${getAppName()} `,
+            termsAcceptance: `Tôi đã đọc và chấp nhận Điều khoản và Điều kiện sử dụng của ${getAppName()} `,
             privacyAcceptance: "Tôi đã đọc và chấp nhận Chính sách bảo mật",
-            marketingOptIn:
-                "Tôi quan tâm đến việc nhận thông tin, ưu đãi, và khuyến mãi từ 108Jobs ",
+            marketingOptIn: `Tôi quan tâm đến việc nhận thông tin, ưu đãi, và khuyến mãi từ ${getAppName()} `,
             freelancerSignup: "Đăng ký làm freelancer",
         },
         termsEmployer: {
             pageTitle: "Điều khoản & Điều kiện",
-            heading:
-                "Điều khoản & Điều kiện sử dụng nền tảng dành cho nhà tuyển dụng của Công ty 108Jobs Technologies Co., Ltd.",
+            heading: `Điều khoản & Điều kiện sử dụng nền tảng dành cho nhà tuyển dụng của Công ty ${getAppName()} Technologies Co., Ltd.`,
             definitionTitle: "Định nghĩa",
-            definitionPlatform:
-                "“Nền tảng” đề cập đến trang web (https://108jobs.com/) hoặc ứng dụng 108Jobs của công ty. Đây là một kênh, không gian trung gian cho phép người dùng tạo, chia sẻ, bán và mua công việc hoặc dịch vụ với hình thức thanh toán theo giá trị đã được xác định trước cho từng công việc hoặc dịch vụ đó.",
+            definitionPlatform: `“Nền tảng” đề cập đến trang web (https://${getAppName()}.com/) hoặc ứng dụng ${getAppName()} của công ty. Đây là một kênh, không gian trung gian cho phép người dùng tạo, chia sẻ, bán và mua công việc hoặc dịch vụ với hình thức thanh toán theo giá trị đã được xác định trước cho từng công việc hoặc dịch vụ đó.`,
             definitionWork:
                 "“Công việc” đề cập đến các sản phẩm và/hoặc dịch vụ mà nhà tuyển dụng đã thuê và freelancer đã bàn giao thông qua nền tảng.",
-            definitionCompany:
-                "“Công ty” đề cập đến Công ty 108Jobs Technologies Co., Ltd.",
+            definitionCompany: `“Công ty” đề cập đến Công ty ${getAppName()} Technologies Co., Ltd.`,
             definitionFastwork:
                 "“Fastwork” đề cập đến công ty công nghệ cung cấp nền tảng cho người dùng để nhận dịch vụ do các nhà cung cấp bên thứ ba cung cấp. Vai trò của công ty là đóng vai trò trung gian giao tiếp giữa nhà tuyển dụng và freelancer.",
             definitionUser: "“Người dùng” đề cập đến nhà tuyển dụng và freelancer.",
@@ -2693,8 +2605,7 @@ export const vi = {
                 "Dịch vụ nền tảng” để nhận công việc thông qua nền tảng.",
             definitionPaymentFee:
                 "“Phí thanh toán” đề cập đến phí mà Công ty thu từ nhà tuyển dụng để đổi lấy việc thuê công việc thông qua nền tảng.",
-            definitionFastworkCoin:
-                "“Tiền trong hệ thống (108Jobs Coin)” đề cập đến điểm mà nhà tuyển dụng nạp vào tài khoản người dùng để thanh toán phí dịch vụ hoặc phí thanh toán.",
+            definitionFastworkCoin: `“Tiền trong hệ thống (${getAppName()} Coin)” đề cập đến điểm mà nhà tuyển dụng nạp vào tài khoản người dùng để thanh toán phí dịch vụ hoặc phí thanh toán.`,
             definitionBonusCoin:
                 "“Điểm thưởng (Bonus Coin)” đề cập đến điểm mà Công ty sẽ chuyển cho người dùng để đổi lấy việc sử dụng dịch vụ nền tảng theo các điều kiện do Công ty quy định.",
             definitionPersonalData:
@@ -2780,9 +2691,8 @@ export const vi = {
                 "Để Công ty có thể chuyển phí dịch vụ cho freelancer, freelancer cần cung cấp thông tin tài khoản ngân hàng, ví dụ: ảnh chụp sổ tiết kiệm ngân hàng, v.v., vào nền tảng. Công ty sẽ giữ phí dịch vụ cho đến khi freelancer cung cấp thông tin tài khoản ngân hàng cho Công ty. Trong trường hợp tài khoản người dùng của bất kỳ freelancer nào không cung cấp thông tin đó trong vòng 12 tháng kể từ ngày được nhà tuyển dụng phê duyệt, Công ty có thể thu phí duy trì trạng thái tài khoản người dùng với mức 50 baht mỗi tháng.",
             "fee.6":
                 "Phí dịch vụ, phí thanh toán và phí sử dụng dịch vụ nền tảng mà người dùng phải thanh toán khi sử dụng dịch vụ nền tảng không bao gồm thuế khấu trừ tại nguồn hoặc bất kỳ khoản thuế hoặc phí nào khác mà người dùng có nghĩa vụ phải thanh toán theo luật pháp.",
-            "coinAndBonus.title": "108Jobs Coin và Bonus Coin",
-            "coinAndBonus.detail1":
-                "Nhà tuyển dụng có quyền nạp 108Jobs Coin vào tài khoản người dùng của mình để thanh toán phí dịch vụ hoặc phí thanh toán cho bất kỳ công việc nào sử dụng thông qua nền tảng. 108Jobs Coin phải được sử dụng trong vòng 2 năm kể từ ngày nạp 108Jobs Coin. Trong trường hợp nhà tuyển dụng không sử dụng 108Jobs Coin trong vòng 2 năm kể từ ngày nạp, Công ty có thể thu phí duy trì trạng thái tài khoản người dùng với mức 50 baht mỗi tháng. Tuy nhiên, điều này không tước quyền của nhà tuyển dụng yêu cầu Công ty chuyển 108Jobs Coin vào tài khoản ngân hàng mà nhà tuyển dụng đã cung cấp thông tin để hoàn trả 108Jobs Coin. Công ty có quyền thu phí xử lý giao dịch hoàn trả 108Jobs Coin với mức 50 baht mỗi giao dịch.",
+            "coinAndBonus.title": `${getAppName()} Coin và Bonus Coin`,
+            "coinAndBonus.detail1": `Nhà tuyển dụng có quyền nạp ${getAppName()} Coin vào tài khoản người dùng của mình để thanh toán phí dịch vụ hoặc phí thanh toán cho bất kỳ công việc nào sử dụng thông qua nền tảng. ${getAppName()} Coin phải được sử dụng trong vòng 2 năm kể từ ngày nạp ${getAppName()} Coin. Trong trường hợp nhà tuyển dụng không sử dụng ${getAppName()} Coin trong vòng 2 năm kể từ ngày nạp, Công ty có thể thu phí duy trì trạng thái tài khoản người dùng với mức 50 baht mỗi tháng. Tuy nhiên, điều này không tước quyền của nhà tuyển dụng yêu cầu Công ty chuyển ${getAppName()} Coin vào tài khoản ngân hàng mà nhà tuyển dụng đã cung cấp thông tin để hoàn trả ${getAppName()} Coin. Công ty có quyền thu phí xử lý giao dịch hoàn trả ${getAppName()} Coin với mức 50 baht mỗi giao dịch.`,
             "coinAndBonus.detail2":
                 "Người dùng sử dụng dịch vụ nền tảng theo các điều kiện do Công ty quy định có quyền nhận Bonus Coin từ Công ty để đổi lấy việc sử dụng dịch vụ nền tảng để thanh toán phí dịch vụ hoặc phí thanh toán có thể phát sinh từ việc sử dụng dịch vụ nền tảng. Tuy nhiên, người dùng cần phải sử dụng tất cả Bonus Coin đã nhận trong vòng 1 năm kể từ ngày nhận Bonus Coin. Trong trường hợp người dùng không sử dụng Bonus Coin trong thời gian quy định, Công ty có quyền thu hồi Bonus Coin.",
             "work.title": "Công việc",
@@ -2816,8 +2726,7 @@ export const vi = {
                 "Trong trường hợp nhà tuyển dụng thanh toán phí dịch vụ qua tài khoản ngân hàng hoặc mobile banking, phí dịch vụ sẽ được hoàn trả vào tài khoản ngân hàng mà nhà tuyển dụng đã cung cấp thông tin để hoàn trả phí dịch vụ.",
             "orderChange.method2":
                 "Trong trường hợp nhà tuyển dụng thanh toán phí dịch vụ qua thẻ tín dụng, phí dịch vụ sẽ được hoàn trả vào thẻ tín dụng đã được sử dụng để thanh toán dịch vụ. Công ty sẽ gửi yêu cầu hoàn tiền đến ngân hàng cung cấp thẻ tín dụng. Thời gian hoàn tiền sẽ tùy thuộc vào chính sách của từng ngân hàng.",
-            "orderChange.method3":
-                "Trong trường hợp nhà tuyển dụng thanh toán phí dịch vụ bằng 108Jobs Coin, phí dịch vụ sẽ được hoàn trả dưới dạng 108Jobs Coin vào tài khoản đã thực hiện thanh toán phí dịch vụ.",
+            "orderChange.method3": `Trong trường hợp nhà tuyển dụng thanh toán phí dịch vụ bằng ${getAppName()} Coin, phí dịch vụ sẽ được hoàn trả dưới dạng ${getAppName()} Coin vào tài khoản đã thực hiện thanh toán phí dịch vụ.`,
             "orderChange.method4":
                 "Trong trường hợp nhà tuyển dụng thanh toán phí dịch vụ qua TrueMoney Wallet, phí dịch vụ sẽ được hoàn trả vào tài khoản ngân hàng mà nhà tuyển dụng đã cung cấp thông tin để hoàn trả phí dịch vụ.",
             orderCancelRefundTitle: "Hạn chế hủy đơn đặt hàng và hoàn tiền",
@@ -2933,7 +2842,7 @@ export const vi = {
             privacyPolicyTitle: "Chính sách bảo mật",
             privacyPolicyContent1:
                 "Công ty coi trọng và nhận thức được việc bảo vệ an toàn dữ liệu cá nhân của bạn theo pháp luật. Bạn có thể tìm hiểu chính sách bảo mật tại",
-            privacyPolicyLinkText: "https://108jobs.com/privacy",
+            privacyPolicyLinkText: `https://${getAppName()}.com/privacy`,
             privacyPolicyContent2:
                 "Chính sách bảo mật này là một phần của thỏa thuận sử dụng này.",
             privacyPolicyContent3:
@@ -2945,14 +2854,12 @@ export const vi = {
             contactInfoTitle: "Chi tiết liên hệ",
             contactInfoContent1:
                 "Trong trường hợp bạn muốn hỏi thông tin về thỏa thuận sử dụng này, bao gồm cả việc yêu cầu thực hiện các quyền theo quy định đối với Công ty, bạn có thể liên hệ với Công ty trong giờ làm việc (Thứ Hai - Thứ Sáu, 9:30 - 11:30 và 13:00 - 16:00, nghỉ Thứ Bảy, Chủ Nhật và các ngày lễ) thông qua các chi tiết sau:",
-            contactInfoCompanyName:
-                "Tên công ty: Công ty 108Jobs Technologies Co., Ltd.",
+            contactInfoCompanyName: `Tên công ty: Công ty ${getAppName()} Technologies Co., Ltd.`,
             contactInfoAddress:
                 "Địa chỉ: Số 622, Tòa nhà Emporium Tower, Tầng 24/1-3,8, Đường Sukhumvit, Phường Khlong Tan, Quận Khlong Toei, Bangkok 10110",
             contactInfoEmail: "support@ibrowe.com",
             contactInfoPhone: "Số điện thoại: 02-114-7008",
-            contactInfoWebsiteLinkText:
-                "https://static.108jobs.com/contents/support-center",
+            contactInfoWebsiteLinkText: `https://static.${getAppName()}.com/contents/support-center`,
         },
         userEdit: {
             addInfo: "Thêm thông tin",
@@ -3121,7 +3028,7 @@ export const vi = {
         jobApplication: {
             pageTitle: "Tăng Cơ Hội Tuyển Dụng Của Bạn! Với Kinh Nghiệm Liên Quan và Hồ Sơ",
             pageSubheading: "Hầu hết khách hàng chọn freelancer dựa trên lịch sử làm việc và mẫu hồ sơ",
-            warningMessage: "Cảnh báo: Mời khách hàng thanh toán ngoài hệ thống 108jobs là vi phạm điều khoản sử dụng và có thể dẫn đến việc đình chỉ tài khoản.",
+            warningMessage: `Cảnh báo: Mời khách hàng thanh toán ngoài hệ thống ${getAppName()} là vi phạm điều khoản sử dụng và có thể dẫn đến việc đình chỉ tài khoản.`,
             publicInfoMessage: "Tất cả thông tin sẽ được công khai (trừ 'Giá Đề Xuất')",
             whyHireYou: {
                 label: "Tại Sao Khách Hàng Nên Thuê Bạn",

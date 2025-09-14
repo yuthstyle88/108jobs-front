@@ -6,7 +6,7 @@ import {ArrowRight} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {useState} from "react";
-
+import { getAppName } from "@/utils/appConfig";
 
 const EMPLOYERS = [
   {
@@ -41,10 +41,10 @@ const EMPLOYERS = [
       "The system works as a mediator holding your money until a freelance completes his job.",
     list: [
       "Verify hiring detail in quotation",
-      "You can make payment via 108jobs by the following methods:",
+      "You can make payment via "+getAppName()+" by the following methods:",
       "Scan promptpay QR code",
       "Credit Card",
-      "108jobs Coin",
+      getAppName()+" Coin",
       "TrueMoney Wallet",
       "After payment successfully, you can exchange the personal contact info.",
     ],
@@ -67,7 +67,7 @@ const EMPLOYERS = [
     description: "To develop fastwork's community",
     list: [
       "Rate and Review buyer for the benefit of other freelancers",
-      "Rate and review your satisfaction with 108jobs system to improve the service even further",
+      "Rate and review your satisfaction with "+getAppName()+" system to improve the service even further",
     ],
   },
 ];
@@ -75,7 +75,7 @@ const EMPLOYERS = [
 const SELLERS = [
   {
     id: 1,
-    title: "Post your work on 108jobs to present your ability to buyer",
+    title: "Post your work on "+getAppName()+" to present your ability to buyer",
     description: "Post your service under the following categories:",
     list: [
       "Graphic & Design",
@@ -152,7 +152,7 @@ const HowSellAndBuy = () => {
         >
           <div className="px-[1.5rem] relative">
             <div className="text-center text-white">
-              <h1 className="text-[28px]">How to buy/sell on 108jobs?</h1>
+              <h1 className="text-[28px]">How to buy/sell on {getAppName()}?</h1>
               <p className="text-[16px]">
                 Number one, freelance market-place website.
               </p>
@@ -171,7 +171,7 @@ const HowSellAndBuy = () => {
           <div className="col-start-2 col-end-3">
             <div className="text-center w-full">
               <h1 className="font-sans text-[1.5rem] text-text-primary font-semibold mb-12">
-                Easy steps to get started with 108jobs
+                Easy steps to get started with {getAppName()}
               </h1>
             </div>
           </div>

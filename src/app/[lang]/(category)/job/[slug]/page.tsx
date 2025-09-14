@@ -4,6 +4,7 @@ import {getCurrentLanguage} from "@/actions/getCurrentLanguage";
 import type {Metadata} from "next";
 import {API_ROUTES} from "@/api/endpoints";
 import {axiosPrivate} from "@/lib/axios";
+import {getAppName} from "@/utils/appConfig";
 
 export async function generateMetadata({
   params,
@@ -12,12 +13,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const lang = await getCurrentLanguage();
   const {slug} = await params;
-  const locale = isSupportedLang(lang) ? lang : "th";
-
+  const locale = lang;
+  const appName = getAppName();
   const defaultDescriptions: Record<string, string> = {
-    th: "จ้างฟรีแลนซ์มืออาชีพสำหรับโปรเจกต์ของคุณที่ 108jobs ธุรกิจและสตาร์ทอัปชั้นนำไว้วางใจเรา",
-    en: "Find professional freelancers for your project on 108jobs. Trusted by businesses and startups across Southeast Asia.",
-    vi: "Tìm freelancer chuyên nghiệp cho dự án của bạn tại 108jobs. Được các doanh nghiệp và startup trên toàn Đông Nam Á tin tưởng.",
+    th: `จ้างฟรีแลนซ์มืออาชีพสำหรับโปรเจกต์ของคุณที่ ${appName} ธุรกิจและสตาร์ทอัปชั้นนำไว้วางใจเรา`,
+    en: `Find professional freelancers for your project on ${appName}. Trusted by businesses and startups across Southeast Asia.`,
+    vi: `Tìm freelancer chuyên nghiệp cho dự án của bạn tại ${appName}. Được các doanh nghiệp và startup trên toàn Đông Nam Á tin tưởng.`,
   };
 
   try {
@@ -30,16 +31,16 @@ export async function generateMetadata({
     const categoryList = await res.data.json();
     const raw = categoryList?.[0];
 
-    const title = raw?.title || "108jobs";
+    const title = raw?.title || appName;
     const description = defaultDescriptions[locale] || defaultDescriptions.th;
 
     return generateLocalizedMetadata({
-      title: `${title} - 108jobs`,
+      title: `${title} - ${appName}`,
       description,
     });
   } catch {
     return generateLocalizedMetadata({
-      title: "108jobs - Freelance Marketplace",
+      title: `${appName} - Freelance Marketplace`,
       description: defaultDescriptions[locale] || defaultDescriptions.th,
     });
   }

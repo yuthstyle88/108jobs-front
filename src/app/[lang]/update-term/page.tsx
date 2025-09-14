@@ -8,6 +8,7 @@ import {getNamespace} from "@/utils/i18nHelper";
 import Image from "next/image";
 import {useState} from "react";
 import {AcceptForm} from "@/components/Authentication/AcceptForm";
+import { getAppName } from "@/utils/appConfig";
 
 
 type ViewState = "update-term";
@@ -104,7 +105,7 @@ export default function RegisterTermPage() {
           />
           {currentView === "update-term" && (
             <AuthFormContainer
-              title={`Sign up 108jobs`}
+              title={`Sign up ${getAppName()}`}
               onBack={() => setCurrentView("update-term")}
             >
               <AcceptForm/>

@@ -18,6 +18,7 @@ import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { UserService } from "@/services";
 import { useHttpGet } from "@/hooks/useHttpGet";
 import { useTranslation } from "react-i18next";
+import { getAppName } from "@/utils/appConfig";
 
 type Props = {
     jobId: PostId;
@@ -203,7 +204,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">Interested Freelancers (0 proposals)</h3>
                 <InfoMessage
-                    message="We recommend communicating and paying through 108jobs - guaranteed no scams! We protect your payment until you receive work from the freelancer"
+                    message={`We recommend communicating and paying through ${getAppName()} - guaranteed no scams! We protect your payment until you receive work from the freelancer`}
                     className="bg-blue-50 text-blue-800 p-4 rounded-lg"
                 />
                 <JobBoardProposal />

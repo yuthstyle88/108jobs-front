@@ -8,6 +8,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import {getNamespace} from "@/utils/i18nHelper";
+import { getAppName } from "@/utils/appConfig";
 
 const Footer = () => {
   const global = getNamespace(LanguageFile.GLOBAL);
@@ -94,15 +95,15 @@ const Footer = () => {
           <h3 className="font-bold mb-3">{global.tittleFooter3}</h3>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link prefetch={false} href="/">108jobs</Link>
+              <Link prefetch={false} href="/">{getAppName()}</Link>
             </li>
             <li>
-              <Link prefetch={false} href="/business">108jobs for Business</Link>
+              <Link prefetch={false} href="/business">{getAppName()} for Business</Link>
             </li>
           </ul>
         </div>
 
-        {/* About 108jobs */}
+        {/* About 
         <div>
           <h3 className="font-bold mb-3">{global.tittleFooter4}</h3>
           <ul className="space-y-2 text-sm">
@@ -171,7 +172,7 @@ const Footer = () => {
 
             {/* Copyright */}
             <p className="text-sm font-sans text-white mt-3 md:mt-0">
-              © 2025 108jobs
+              © {new Date().getFullYear()} {getAppName()}
             </p>
           </div>
         </div>

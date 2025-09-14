@@ -12,6 +12,7 @@ import "../../../app/styles.css";
 import {Navigation} from "swiper/modules";
 import {LandingImage, ProfileImage} from "@/constants/images";
 import {useTranslation} from "react-i18next";
+import { getAppName } from "@/utils/appConfig";
 
 const CustomNavigation = () => {
   const swiper = useSwiper();
@@ -48,7 +49,7 @@ const RecommendAndReview = () => {
     (_, index) => ({
       id: index,
       quote:
-        "108jobs ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ",
+        getAppName()+" ทำให้ การทำงาน สะดวก และ ง่ายขึ้นมากครับ เราสามารถ เลือกฟรีแลนซ์ได้ตามสไตล์ที่เราต้องการ",
       company: "บริษัท อีสานพลาสแพ็ค 1999 จำกัด",
       description: "โรงงานอุตสาหกรรมพลาสติก",
       avatar: ProfileImage.avatar,

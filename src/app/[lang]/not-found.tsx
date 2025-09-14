@@ -5,6 +5,7 @@ import {Home} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {useTranslation} from "react-i18next";
+import { getAppName } from "@/utils/appConfig";
 
 const categoryImages = [
   {
@@ -125,7 +126,7 @@ export default function NotFound() {
       {/* Footer */}
       <footer className="bg-gray-100 py-8">
         <div className="container mx-auto px-4 text-center text-gray-600 text-sm">
-          <p>© {new Date().getFullYear()} 108jobs. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {getAppName()}. All rights reserved.</p>
         </div>
       </footer>
     </div>

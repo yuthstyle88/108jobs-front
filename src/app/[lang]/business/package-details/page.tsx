@@ -4,6 +4,7 @@ import ContactForm from "@/components/ContractForm";
 import {CheckCircle} from "lucide-react";
 import BusinessHeader from "@/components/BusinessHeader";
 import Link from "next/link";
+import { getAppName } from "@/utils/appConfig";
 
 const PackageDetailsPage = () => {
   // Package data
@@ -197,7 +198,7 @@ const PackageDetailsPage = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
-              <p className="text-sm">Copyright © 2024 108jobs for Business.</p>
+              <p className="text-sm">Copyright © 2024 {getAppName()} for Business.</p>
             </div>
             <div className="flex space-x-4">
               <Link prefetch={false} href="#" className="text-gray-400 hover:text-white">

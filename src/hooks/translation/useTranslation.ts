@@ -1,6 +1,7 @@
 import {useTranslation as useI18NextTranslation} from "react-i18next";
 import {useEffect} from "react";
 import {useLanguage} from "@/contexts/LanguageContext";
+import { getAppName } from "@/utils/appConfig";
 
 export const useTranslation = () => {
   const {t, i18n} = useI18NextTranslation(); // ใช้ Hook ของ i18next
@@ -21,7 +22,7 @@ export const useTranslation = () => {
       const before = text.slice(Math.max(0, offset - 12), offset);
       const after = text.slice(offset + match.length, offset + match.length + 12);
       if (/-fastwork/i.test(before + match) || /fastwork-/i.test(match + after)) return match;
-      return "108Jobs";
+      return getAppName();
     });
   };
 

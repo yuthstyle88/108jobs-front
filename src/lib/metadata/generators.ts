@@ -1,6 +1,7 @@
 import type {Metadata} from "next";
 import {getCurrentLanguage} from "@/actions/getCurrentLanguage";
-import {isSupportedLang, seoTranslations, SupportedLang} from "./translations";
+import {seoTranslations, SupportedLang} from "./translations";
+import {getAppName} from "@/utils/appConfig";
 
 type PageContent = {title: string; description: string};
 type PageKey = {
@@ -11,11 +12,9 @@ type PageKey = {
 
 export async function generateLocalizedMetadata(
   pageKeyOrContent: PageKey | PageContent,
-  options?: {lang?: string},
   overrides?: Partial<Metadata>
 ): Promise<Metadata> {
-  const lang = options?.lang || (await getCurrentLanguage());
-  const locale: SupportedLang = isSupportedLang(lang) ? lang : "th";
+  const locale: SupportedLang = await getCurrentLanguage();
   const t = seoTranslations[locale];
 
   const page =
@@ -27,11 +26,13 @@ export async function generateLocalizedMetadata(
     throw new Error(`Page content missing or invalid for key: ${pageKeyOrContent}`);
   }
 
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://fastwork.co";
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || `https://${getAppName()}`;
+
+  const APP_NAME = getAppName();
 
   return {
     metadataBase: new URL(BASE_URL),
-    applicationName: "108jobs.com",
+    applicationName: APP_NAME,
     title: page.title,
     description: page.description,
     openGraph: {
@@ -39,7 +40,7 @@ export async function generateLocalizedMetadata(
       title: page.title,
       description: page.description,
       url: overrides?.openGraph?.url ?? BASE_URL,
-      siteName: "108jobs.com",
+      siteName: APP_NAME,
       images: [
         {
           url: t.ogImage,
