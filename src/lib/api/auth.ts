@@ -12,7 +12,7 @@ export async function exchange(publicKeyHex?: string) {
             if (!local) {
                 // Lazy-generate identity keypair to obtain public key
                 try {
-                    const mod = await import("@/utils/crypto");
+                    const mod = await import("@/utils/security/crypto");
                     const pair = await (mod as any)["ensureIdentityKeyPair"]?.();
                     if (pair?.publicKeyHex) local = pair.publicKeyHex;
                 } catch {}
