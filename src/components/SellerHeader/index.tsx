@@ -1,7 +1,7 @@
 "use client";
 import {LanguageFile} from "@/constants/language";
 import {useClickOutside} from "@/hooks/useClickOutside";
-import {interpolate} from "@/utils/interpolate";
+import {interpolate} from "@/utils";
 import {faBell, faComment} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {LogOut, Settings, User} from "lucide-react";

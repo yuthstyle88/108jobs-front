@@ -8,8 +8,7 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import useNotification from "@/hooks/useNotification";
 import {JobListResponse} from "@/types/job";
 import {getNamespace} from "@/utils/i18nHelper";
-import {interpolateDouble} from "@/utils/interpolate";
-import { getAppName } from "@/utils/appConfig";
+import {interpolateDouble} from "@/utils";
 import {ClockAlert, Eye, EyeOff, Info, Pencil, Plus, Trash2,} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -133,7 +132,8 @@ const MyServices = () => {
           <Info className="w-5 h-5 text-orange-600 mr-3 mt-0.5 flex-shrink-0"/>
           <div className="text-sm">
             <span className="text-gray-700">
-              {`You are currently pending approval by ${getAppName()}. You will be able to post jobs once you are approved.`}
+              You are currently pending approval by 108jobs. You will be able
+              to post jobs once you are approved.
             </span>
           </div>
         </div>

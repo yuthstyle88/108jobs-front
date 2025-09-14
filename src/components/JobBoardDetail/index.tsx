@@ -4,7 +4,7 @@ import ConfirmVerifyFreelancer from "@/app/[lang]/(job)/job-board/_components/Co
 import JobBoardTab from "@/app/[lang]/(job)/job-board/_components/JobBoardTab";
 import { LandingImage, ProfileImage } from "@/constants/images";
 import { PostId } from "lemmy-js-client";
-import { formatDateToLong } from "@/utils/formatDateToLong";
+import { formatDateToLong } from "@/utils";
 import { MoveRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

@@ -8,8 +8,8 @@ import {HttpService, UserService} from "@/services";
 import type {ChatMessage} from "lemmy-js-client";
 import {v4 as uuidv4} from "uuid";
 import {__DEV__, addOnce, buildWsUrl, getReceiverIdFromRoom, isBase64Like, logDebug, safeParse} from "@/utils/realtime";
-import {ensureSharedKeyForRoom, importAesKey} from "@/utils/crypto";
 import {REQUEST_STATE} from "@/services/HttpService";
+import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 
 async function mapIncomingToChatMessage(
     m: any,

@@ -40,6 +40,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
     const { state: stepperState, idx: activeStep, send, canGo, ORDER, cancel } = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
+    const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
     const { t } = useTranslation();
     type UIChatMessage = WsChatMessage & { isOwner?: boolean };
@@ -237,12 +238,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             const rd: any = roomData as any;
             if (!rd) return;
             const apiStatusRaw = rd?.room?.status ?? rd?.status ?? rd?.room?.workflowStatus ?? rd?.workflowStatus;
-            if (typeof apiStatusRaw !== 'string') return;
-            const uiStatus = apiToUiStatus(apiStatusRaw as any);
-            if (uiStatus && uiStatus !== currentStatus) {
-                setWorkflowState(uiStatus as StatusKey);
+            // If server reports a workflow status, mark as started and sync UI state
+            if (typeof apiStatusRaw === 'string') {
+                if (!hasStarted) setHasStarted(true);
+                const uiStatus = apiToUiStatus(apiStatusRaw as any);
+                if (uiStatus && uiStatus !== currentStatus) {
+                    setWorkflowState(uiStatus as StatusKey);
+                }
             }
-        }, [roomData, setWorkflowState, currentStatus]);
+        }, [roomData, setWorkflowState, currentStatus, hasStarted]);
 
 
     const goToStatus = (target: StatusKey) => {
@@ -269,6 +273,31 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
     };
 
     const { execute: createInvoice } = useHttpPost("createInvoice");
+    const { execute: startWorkflowApi } = useHttpPost("startWorkflow");
+
+    const handleStartWorkflow = async () => {
+        setError(null);
+        try {
+            // Find latest proposed-quote message to extract postId and seq
+            let postId = 1;
+            let seqNumber = 1;
+
+            const res = await startWorkflowApi({ postId, seqNumber, roomId: roomId});
+            if (res?.state === REQUEST_STATE.SUCCESS && (res as any).data?.success) {
+                setHasStarted(true);
+                // Ensure UI shows the flow at the initial step
+                goToStatus("QuotationPending");
+            } else {
+                setError(
+                    t("profileChat.startWorkflowFailed") ||
+                        ((res as any)?.err?.message || "Failed to start workflow. Please try again.")
+                );
+            }
+        } catch (e) {
+            const msg = e instanceof Error ? e.message : "Unknown error";
+            setError(t("profileChat.startWorkflowFailed") || `Failed to start workflow: ${msg}`);
+        }
+    };
 
     const handleQuotationSubmit = async (data: ProposedQuotePayload) => {
         setError(null); // Reset error state before attempting submission
@@ -587,8 +616,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             orientation="vertical"
                             compact={false}
                             className="space-y-4"
+                            started={hasStarted || currentStatus !== 'QuotationPending'}
+                            onStart={handleStartWorkflow}
                             onProposeQuote={flowActions.onProposeQuote}
-                            onAcceptJob={flowActions.onAcceptJob}
+                            onApproveQuotation={flowActions.onApproveQuotation}
                             onUploadAsset={flowActions.onUploadAsset}
                             onSendMessage={flowActions.onSendMessage}
                             onSubmitDelivery={flowActions.onSubmitDelivery}
@@ -644,8 +675,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 orientation="vertical"
                                 compact={false}
                                 className="space-y-4"
+                                started={hasStarted || currentStatus !== 'QuotationPending'}
+                                onStart={handleStartWorkflow}
                                 onProposeQuote={flowActions.onProposeQuote}
-                                onAcceptJob={flowActions.onAcceptJob}
+                                onApproveQuotation={flowActions.onApproveQuotation}
                                 onUploadAsset={flowActions.onUploadAsset}
                                 onSendMessage={flowActions.onSendMessage}
                                 onSubmitDelivery={flowActions.onSubmitDelivery}

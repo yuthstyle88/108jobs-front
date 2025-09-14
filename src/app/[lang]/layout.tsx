@@ -6,7 +6,7 @@ import FontAwesomeConfig from "../fontawesome";
 import "../globals.css";
 import {generateLocalizedMetadata} from "@/lib/metadata";
 import React from "react";
-import isoDataInitializer from "@/utils/iso-data-Initializer";
+import { isoDataInitializer } from "@/utils";
 import {ClientSWRProvider} from "@/components/ClientSWRProvider";
 import {GlobalLoaderProvider} from "@/contexts/GlobalLoaderContext";
 import {GlobalErrorProvider} from "@/contexts/GlobalErrorContext";

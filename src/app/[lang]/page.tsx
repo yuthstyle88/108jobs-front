@@ -152,78 +152,7 @@ export default function Home() {
 
                 <OfferSection/>
 
-                <RecommendAndReview/>
-
-                <IntroductionSection
-                    expanded={expanded}
-                    setExpanded={setExpanded}
-                />
             </main>
-            <div className="bg-[#E3EDFD]  hidden lg:block">
-                <div
-                    className=" bg-no-repeat w-4/6 bg-[105%30px] grid place-self-start gap-x-8 grid-cols-[minmax(1rem,1fr)Minmax(calc(var(--breakpoint-lg)-4rem),Calc(var(--breakpoint-lg)-4rem))Minmax(1rem,1fr)] mx-auto grid-rows-auto">
-                    <div className="grid grid-cols-[7fr_5fr] min-w-0 min-h-0 ">
-                        <Image
-                            alt="Download Application"
-                            loading="lazy"
-                            decoding="async"
-                            data-nimg="1"
-                            className="justify-self-end h-auto max-w-[80%]"
-                            src={imgapp}
-                        />
-
-                        <div className="flex items-center pl-[2rem]">
-                            <div>
-                                <h4
-                                    className="text-black text-[1.125rem] font-[500] leading-[20.7px] flex items-center font-[Kanit, -apple-system, system-ui, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', sans-serif]">
-                                    {t("global.buttonDownloadApp")}
-                                </h4>
-                                <p
-                                    className="mt-[0.5rem] text-[1rem] text-black font-[Kanit, -apple-system, system-ui, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', sans-serif] leading-[1.65] m-0 p-0 block mb-[1em] mt-[1em] mx-0">
-                                    {t("global.subtitleDownloadApp")}
-                                </p>
-                                <div className="mt-[1.5rem] flex">
-                                    <div className="grid grid-cols-1 min-w-0 min-h-0 gap-4">
-                                        <Link
-                                            prefetch={false}
-                                            href="https://apps.apple.com/us/app/fastwork-hire-freelancers/id1154830520?ls=1"
-                                        >
-                                            <Image
-                                                src={apple}
-                                                alt="Apple Store"
-                                                width={135}
-                                                height={40}
-                                                className="max-w-full h-auto"
-                                            />
-                                        </Link>
-                                        <Link
-                                            prefetch={false}
-                                            href="https://play.google.com/store/apps/details?id=com.fastwork.app&hl=en"
-                                        >
-                                            <Image
-                                                src={google}
-                                                alt="Google Play"
-                                                width={135}
-                                                height={40}
-                                                className="max-w-full h-auto"
-                                            />
-                                        </Link>
-                                    </div>
-                                    <div className="ml-[1rem]">
-                                        <Image
-                                            src={fastwork}
-                                            alt="QR Code"
-                                            width={96}
-                                            height={96}
-                                            className="max-w-full h-auto"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <Footer/>
         </div>
     );

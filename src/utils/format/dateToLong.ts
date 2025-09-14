@@ -8,4 +8,3 @@ export function formatDateToLong(input?: string): string {
       day: "numeric",
     });
 }
-  

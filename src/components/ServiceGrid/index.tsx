@@ -5,7 +5,7 @@ import {Search} from "lucide-react";
 import Image, {StaticImageData} from "next/image";
 import {BusinessImage} from "@/constants/images";
 import {usePathname} from "next/navigation";
-import {scrollToElementById} from "@/utils/scrollSmooth";
+import {scrollToElementById} from "@/utils";
 
 interface ServiceItemProps {
   title: string;

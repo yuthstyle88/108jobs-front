@@ -11,8 +11,7 @@ import {getNamespace} from "@/utils/i18nHelper";
 import {LanguageFile} from "@/constants/language";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {useHttpPost} from "@/hooks/useHttpPost";
-import {WorkExperiencesResponse} from "lemmy-js-client/dist/types/WorkExperience";
-import {WorkExperience} from "@/lib/lemmy-js-client/dist";
+import {WorkExperience, WorkExperiencesResponse} from "lemmy-js-client";
 
 const months = [
   "January","February","March","April","May","June",

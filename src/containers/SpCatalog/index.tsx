@@ -1,4 +1,4 @@
-import {CommunityNodeView} from "@/lib/lemmy-js-client/src";
+import {CommunityNodeView} from "lemmy-js-client";
 import Link from "next/link";
 
 type Props = {

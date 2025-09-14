@@ -7,7 +7,7 @@ import {toast} from "sonner"; // หรือไลบรารีที่ค�
 import {UserService} from "@/services";
 import {HttpService} from "@/services/HttpService";
 import {useTranslation} from "react-i18next";
-import {LoginResponse} from "@/lib/lemmy-js-client/src";
+import {LoginResponse} from "lemmy-js-client";
 
 // ฟังก์ชันสำหรับดึงค่า query parameters
 function useOAuthCallbackQueryParams() {

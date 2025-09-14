@@ -3,7 +3,6 @@ import {HttpService, isSuccess, RequestState} from "@/services/HttpService";
 import {uploadSelectedImage} from "@/utils/helpers";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Card, UploadImage, UploadImageResponse, UpsertCard} from "lemmy-js-client";
-import {RequestOptions} from "node:http";
 import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
@@ -40,7 +39,7 @@ export const usePersonalInfoForm = (
   backFile: File | string | null,
   frontPreview: string | null,
   backPreview: string | null,
-  uploadImage: (image: UploadImage, options?: RequestOptions) => Promise<RequestState<UploadImageResponse>>,
+  uploadImage: (image: UploadImage) => Promise<RequestState<UploadImageResponse>>,
   setSelectedFront: (imageUrl: string) => void,
   setSelectedBack: (imageUrl: string) => void
 ) => {

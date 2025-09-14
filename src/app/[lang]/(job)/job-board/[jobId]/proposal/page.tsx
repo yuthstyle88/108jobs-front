@@ -10,7 +10,7 @@ import * as z from "zod";
 import {useTranslation} from "react-i18next";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {useCallback} from "react";
-import {CreateComment, PostId} from "@/lib/lemmy-js-client/src";
+import {CreateComment, PostId} from "lemmy-js-client";
 import {REQUEST_STATE} from "@/services/HttpService";
 import useNotification from "@/hooks/useNotification";
 import {router} from "next/client";
@@ -40,7 +40,7 @@ const JobApplication = () => {
 
     const {execute: createComment} = useHttpPost("createComment");
     const handleCreateSuccess = useCallback(async () => {
-            router.replace("/jobs");
+            await router.replace("/jobs");
         },
         [router]);
     const onSubmit = useCallback(

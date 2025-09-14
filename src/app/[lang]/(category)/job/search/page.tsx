@@ -15,7 +15,7 @@ import {CategoriesImage} from "@/constants/images";
 import {usePrivateFetchParams} from "@/hooks/api-hooks";
 import {JobList, Tags} from "@/types/jobSearch";
 import buildQueryParams from "@/utils/buildJobQueryParams";
-import {interpolateDouble} from "@/utils/interpolate";
+import {interpolateDouble} from "@/utils";
 import Image from "next/image";
 import Link from "next/link";
 import {useRouter, useSearchParams} from "next/navigation";
