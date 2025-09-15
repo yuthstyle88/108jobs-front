@@ -642,7 +642,7 @@ export const vi = {
             jobDescriptionPlaceholder: "Mô tả công việc của bạn tại đây...",
             englishSpeakerLabel: "Yêu cầu freelancer nói tiếng Anh",
             serviceCategoryLabel: "Danh mục dịch vụ",
-            exampleUrl: "Ví dụ URL(tuỳ chọn)",
+            exampleUrl: "Ví dụ URL",
             serviceCategoryPlaceholderUrl: "ví dụ: https://example.com",
             serviceCategoryPlaceholderSelect: "Chọn danh mục dịch vụ...",
             budgetLabel: "Ngân sách",
