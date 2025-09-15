@@ -3174,6 +3174,9 @@ export const en = {
             thaiCountryLabel: "Thailand",
             vietnamCountryLabel: "Vietnam",
         },
+        errors: {
+            alreadyCommented: "You have already submitted a proposal for this job."
+        },
         jobApplication: {
             pageTitle: "Increase Your Hiring Chances! With Relevant Experience and Portfolio",
             pageSubheading: "Most clients choose freelancers based on work history and portfolio samples",

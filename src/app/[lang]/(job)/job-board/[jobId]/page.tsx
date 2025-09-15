@@ -8,11 +8,12 @@ export async function generateMetadata() {
 export default async function Categories({
   params,
 }: {
-  params: any;
+  params: Promise<{jobId: number}>;
 }) {
+  const resolvedParams = await params;
   return (
     <main className="w-full min-h-screen bg-[#F6F9FE] pt-16">
-      <JobBoardDetail jobId={Number(params.jobId)}/>
+      <JobBoardDetail jobId={resolvedParams.jobId}/>
     </main>
   );
 }

@@ -3,9 +3,10 @@ import MessageClient from "./MessageClient";
 export default async function ChatMessage({
   params,
 }: {
-  params: any;
+  params: Promise<{roomId: string}>;
 }) {
+  const {roomId} = await params;
   return (
-    <MessageClient roomId={params.roomId}/>
+    <MessageClient roomId={roomId}/>
   );
 }

@@ -32,9 +32,9 @@ export default async function RootLayout({
                                              params,
                                          }: Readonly<{
     children: React.ReactNode;
-    params: any;
+    params: Promise<{ lang: string }>;
 }>) {
-    const lang = params.lang;
+    const { lang } = await params;
     const isoData = await isoDataInitializer();
     const cookieLang = await getCurrentLanguage();
     const userLang = isoData?.myUserInfo?.localUserView?.localUser?.interfaceLanguage as string | undefined;

@@ -8,11 +8,12 @@ export async function generateMetadata() {
 export default async function Categories({
   params,
 }: {
-  params: any;
+  params: Promise<{name: string}>;
 }) {
+  const resolvedParams = await params;
   return (
     <main className="grid-container-desktop-banner w-full min-h-screen">
-      <PopularSubCat name={params.name}/>
+      <PopularSubCat name={resolvedParams.name}/>
     </main>
   );
 }

@@ -3,7 +3,8 @@ import {VerifyEmailRegister} from "@/components/Authentication/VerifyEmailRegist
 export default async function Page({
   params,
 }: {
-  params: any;
+  params: Promise<{token: string}>;
 }) {
-  return <VerifyEmailRegister code={params.token}/>;
+  const resolvedParams = await params;
+  return <VerifyEmailRegister code={resolvedParams.token}/>;
 }

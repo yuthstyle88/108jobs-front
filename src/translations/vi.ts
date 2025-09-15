@@ -3219,6 +3219,9 @@ export const vi = {
             thaiCountryLabel: "Thái Lan",
             vietnamCountryLabel: "Việt Nam",
         },
+        errors: {
+            alreadyCommented: "Bạn đã gửi đề xuất cho công việc này rồi."
+        },
         jobApplication: {
             pageTitle: "Tăng Cơ Hội Tuyển Dụng Của Bạn! Với Kinh Nghiệm Liên Quan và Hồ Sơ",
             pageSubheading: "Hầu hết khách hàng chọn freelancer dựa trên lịch sử làm việc và mẫu hồ sơ",

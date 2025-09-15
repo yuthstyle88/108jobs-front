@@ -3,7 +3,8 @@ import ChangePasswordLayout from "@/components/Authentication/ChangePasswordLayo
 export default async function Page({
   params,
 }: {
-  params: any;
+  params: Promise<{token: string}>;
 }) {
-  return <ChangePasswordLayout token={params.token}/>;
+  const resolvedParams = await params;
+  return <ChangePasswordLayout token={resolvedParams.token}/>;
 }

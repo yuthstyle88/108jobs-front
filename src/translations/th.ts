@@ -3111,6 +3111,9 @@ export const th = {
             thaiCountryLabel: "ประเทศไทย",
             vietnamCountryLabel: "เวียดนาม",
         },
+        errors: {
+            alreadyCommented: "คุณได้ส่งข้อเสนอสำหรับงานนี้ไปแล้ว"
+        },
         jobApplication: {
             pageTitle: "เพิ่มโอกาสในการจ้างงานของคุณ! ด้วยประสบการณ์ที่เกี่ยวข้องและพอร์ตโฟลิโอ",
             pageSubheading: "ลูกค้าส่วนใหญ่เลือกฟรีแลนซ์โดยอิงจากประวัติการทำงานและตัวอย่างพอร์ตโฟลิโอ",

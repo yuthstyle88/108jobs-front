@@ -5,12 +5,13 @@ import {REQUEST_STATE} from "@/services/HttpService";
 export default async function editPost({
                                            params,
                                        }: {
-    params: any;
+    params: Promise<{ jobId: number; commentId: number }>;
 }) {
+    const resolvedParams = await params;
 
     const resp = await HttpService.client.getPost({
-        id: Number(params.jobId),
-        commentId: Number(params.commentId),
+        id: resolvedParams.jobId,
+        commentId: resolvedParams.commentId,
     });
 
     return (
