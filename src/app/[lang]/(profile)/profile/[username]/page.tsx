@@ -5,11 +5,10 @@ import CurrentProfileUser from "@/app/[lang]/(profile)/profile/components/Curren
 export default async function Page({
                                        params,
                                    }: {
-    params: Promise<{ username: string }>;
+    params: any;
 }) {
-    const resolvedParams = await params;
 
-    const res = await HttpService.client.visitProfile(resolvedParams.username)
+    const res = await HttpService.client.visitProfile(params.username)
 
     return <CurrentProfileUser profile={res.state === REQUEST_STATE.SUCCESS ? res?.data.profile : null}/>;
 }

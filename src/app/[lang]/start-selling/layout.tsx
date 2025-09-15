@@ -1,6 +1,5 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import SubMenu from "@/components/SubMenu";
 import SpHeader from "@/containers/SpHeader";
 import {generateLocalizedMetadata} from "@/lib/metadata";
 import {LayoutProps} from "@/types/layout";
@@ -22,9 +21,6 @@ export default function StartSellingLayout({
       </div>
 
       <section className="pt-[3rem] md:pt-[4.5rem] bg-white">
-        <div className="hidden md:block">
-          <SubMenu/>
-        </div>
         {children}
       </section>
       <Footer/>

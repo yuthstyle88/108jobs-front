@@ -1,6 +1,5 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import SubMenu from "@/components/SubMenu";
 import SpHeader from "@/containers/SpHeader";
 import {generateLocalizedMetadata} from "@/lib/metadata";
 import {ReactNode} from "react";
@@ -23,9 +22,6 @@ export default function PromotionLayout({children}: PromotionLayoutProps) {
         <SpHeader showSearch={false}/>
       </div>
       <section className="pt-[3rem] sm:pt-[4.5rem] bg-white">
-        <div className="hidden sm:block">
-          <SubMenu/>
-        </div>
         {children}
       </section>
       <Footer/>

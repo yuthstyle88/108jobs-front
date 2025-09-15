@@ -423,6 +423,39 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         [sendMessage, currentRoom, roomId, selectedFile, localUser?.id]
     );
 
+    // Temporary file upload handler: accept a single file, validate, and store minimal info in state
+    const handleFileUpload = useCallback((e: Event) => {
+        try {
+            const input = e.target as HTMLInputElement | null;
+            const file = (input?.files && input.files[0]) || (e as any).dataTransfer?.files?.[0];
+            if (!file) return;
+
+            // Basic validation
+            const maxSizeMb = 25; // temporary cap
+            if (file.size > maxSizeMb * 1024 * 1024) {
+                setError(`File too large. Max ${maxSizeMb}MB`);
+                return;
+            }
+            const fileType = file.type || "application/octet-stream";
+
+            // Create a temporary object URL for preview if needed (not persisted)
+            const tempUrl = typeof window !== 'undefined' ? URL.createObjectURL(file) : "";
+
+            const uploaded: UploadedFile = {
+                fileUrl: tempUrl,
+                fileType,
+                fileName: file.name || "file",
+            };
+            setSelectedFile(uploaded);
+
+            // Clear input value to allow re-selecting the same file
+            if (input) input.value = "";
+        } catch (err) {
+            console.error("handleFileUpload failed", err);
+            setError("Failed to attach file. Please try again.");
+        }
+    }, []);
+
     const flowActions: FlowActions = createFlowActions({
         t,
         goToStatus,

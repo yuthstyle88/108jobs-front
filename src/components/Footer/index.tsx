@@ -63,8 +63,6 @@ const Footer = () => {
                                     className="text-white/80 hover:text-white hover:translate-x-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
                                     prefetch={false}
                                     href={item.href}
-                                    target={item.external ? "_blank" : undefined}
-                                    rel={item.external ? "noopener noreferrer" : undefined}
                                     aria-label={item.label}
                                 >
                                     {item.label}
