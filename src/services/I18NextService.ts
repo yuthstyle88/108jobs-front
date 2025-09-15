@@ -187,7 +187,7 @@ export class I18NextService {
   }
   public static get i18n() {
     if (!this.#instance) throw new Error("I18NextService not initialized");
-    return this.#Instance.#i18n;
+    return this.#instance.#i18n;
   }
 
   static get #Instance() {

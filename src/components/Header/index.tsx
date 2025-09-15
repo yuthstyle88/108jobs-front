@@ -55,23 +55,6 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
 
         <section className="flex items-center gap-4 w-full md:w-auto mt-4 md:mt-0 justify-end">
           {!isLoggedIn && (
-            <div className="group">
-              <div className="relative">
-                <div className="text-[14px] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
-                  <p className="">
-                    {t("global.labelEmploymentButton")}
-                  </p>
-                  <FontAwesomeIcon icon={faChevronDown} />
-                </div>
-                <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
-              </div>
-              <div
-                className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
-                <MegaMenu />
-              </div>
-            </div>
-          )}
-          {!isLoggedIn && (
             <Link prefetch={false}
               href="/job-board"
               className="text-white text-sm hover:text-white"

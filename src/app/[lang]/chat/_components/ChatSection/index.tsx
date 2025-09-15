@@ -5,7 +5,6 @@ import {useCallback, useEffect, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {API_ROUTES} from "@/api/endpoints";
 import LoadingBlur from "@/components/LoadingBlur";
 import {CategoriesImage, ProfileImage} from "@/constants/images";
 import type { ChatMessage as WsChatMessage } from "lemmy-js-client";
@@ -18,7 +17,6 @@ import { useUnreadStore } from "@/stores/unreadStore";
 import FreelanceChatFlow, {FlowActions, StatusKey} from "@/components/FreelanceChatFlow";
 import { createFlowActions } from "@/utils/chat/flowActions";
 import QuotationModal, {ProposedQuotePayload} from "@/components/QuotationModal";
-import {usePrivateImagePost} from "@/hooks/api-hooks";
 import {useWorkflowStepper} from "@/hooks/useWorkflowMachine";
 import type {CreateInvoiceForm} from "lemmy-js-client";
 import {useHttpPost} from "@/hooks/useHttpPost";
@@ -37,7 +35,7 @@ interface ChatSectionProps {
 
 const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerAvatar }) => {
     const { markRoomRead, setActiveRoomId } = useChatRooms();
-    const { state: stepperState, idx: activeStep, send, canGo, ORDER, cancel } = useWorkflowStepper();
+    const { state: stepperState, send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
     const [hasStarted, setHasStarted] = useState<boolean>(false);
@@ -200,10 +198,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         }
     }, [messages, isFetching]);
 
-    const { trigger: uploadFile, isMutating: isUploading } = usePrivateImagePost(
-        API_ROUTES.chat.uploadFile + `?roomId=${roomId}`
-    );
-
     // Mark this room as active and mark as read on mount
     useEffect(() => {
         try {
@@ -273,7 +267,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
     };
 
     const { execute: createInvoice } = useHttpPost("createInvoice");
-    const { execute: startWorkflowApi } = useHttpPost("startWorkflow");
+    const { execute: startWorkflow } = useHttpPost("startWorkflow");
 
     const handleStartWorkflow = async () => {
         setError(null);
@@ -282,7 +276,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             let postId = 1;
             let seqNumber = 1;
 
-            const res = await startWorkflowApi({ postId, seqNumber, roomId: roomId});
+            const res = await startWorkflow({ postId, seqNumber, roomId: roomId});
             if (res?.state === REQUEST_STATE.SUCCESS && (res as any).data?.success) {
                 setHasStarted(true);
                 // Ensure UI shows the flow at the initial step
@@ -429,23 +423,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         [sendMessage, currentRoom, roomId, selectedFile, localUser?.id]
     );
 
-    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        const formData = new FormData();
-        formData.append("file", file);
-
-        try {
-            const result = (await uploadFile(formData)) as UploadedFile;
-            setSelectedFile(result);
-            e.target.value = "";
-        } catch (err) {
-            console.error("Upload file failed", err);
-            setError(t("profileChat.uploadError") || "Failed to upload file. Please try again.");
-        }
-    };
-
     const flowActions: FlowActions = createFlowActions({
         t,
         goToStatus,
@@ -579,10 +556,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
                                 <ChatInput
                                     onSubmit={onSubmit}
-                                    onFileUpload={handleFileUpload}
-                                    selectedFile={selectedFile}
-                                    setSelectedFile={setSelectedFile}
-                                    isUploading={isUploading}
                                 />
                             </div>
                         </div>

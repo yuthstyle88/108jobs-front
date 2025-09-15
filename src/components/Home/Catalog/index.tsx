@@ -1,13 +1,13 @@
-import {CategoriesIcon} from "@/constants/icons";
-import {CommunityNodeView} from "lemmy-js-client";
-import {catalogIcons} from "@/types/catalogIcon";
-import {faArrowRight} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { CategoriesIcon } from "@/constants/icons";
+import { CommunityNodeView } from "lemmy-js-client";
+import { catalogIcons } from "@/types/catalogIcon";
+import { faArrowRight, faBars } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import {useTranslation} from "react-i18next";
-import {toCamelCaseLastSegment} from "@/utils/helpers";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toCamelCaseLastSegment } from "@/utils/helpers";
 
 type Props = {
     serviceCatalogs: CommunityNodeView[];
@@ -23,64 +23,107 @@ const CatalogBanner = (props: Props) => {
         activeCatalogIndex,
         setActiveCatalogIndex,
     } = props;
-    const {t} = useTranslation();
+    const { t } = useTranslation();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
-        <section className="hidden sm:block">
+        <section className="py-8 bg-gradient-to-b from-gray-50 to-white">
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div
-                    className="min-h-[144px] mt-[-4rem] px-6 py-8 rounded-2xl bg-white shadow-xl border border-gray-100">
-                    <div className="flex items-center justify-start flex-wrap gap-4 overflow-x-auto">
-                        {serviceCatalogs.map((catalog, index) => {
-                            const matchedIcon = catalogIcons.find(
-                                (c) => c.name === catalog.community.name
-                            )?.icon;
+                <div className="relative min-h-[160px] mt-[-3rem] rounded-3xl bg-white/80 backdrop-blur-lg shadow-2xl border border-gray-100/50 transition-all duration-300 flex flex-col lg:flex-row gap-6 p-6">
+                    {/* Mobile Toggle Button */}
+                    <button
+                        className="lg:hidden flex items-center justify-center p-2 text-gray-600 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                        aria-label={isSidebarOpen ? "Close catalog menu" : "Open catalog menu"}
+                    >
+                        <FontAwesomeIcon icon={faBars} className="w-6 h-6" />
+                    </button>
 
-                            return (
-                                <div
-                                    key={catalog.community.id}
-                                    className={`group relative flex justify-center w-32 h-32 p-4 rounded-xl cursor-pointer transition-all duration-200 ${
-                                        activeCatalogIndex === index
-                                            ? "bg-blue-50"
-                                            : "hover:bg-gray-50"
-                                    } after:absolute after:bottom-2 after:block after:w-4/5 after:h-1 after:rounded-full after:bg-primary after:origin-center after:transition-all after:duration-150 ${
-                                        activeCatalogIndex === index
-                                            ? "after:scale-100"
-                                            : "after:scale-0"
-                                    }`}
-                                    onClick={() => setActiveCatalogIndex(index)}
-                                >
-                                    <div className="flex flex-col items-center gap-y-3 text-center">
+                    {/* Catalog Sidebar */}
+                    <div
+                        className={`${
+                            isSidebarOpen ? "block" : "hidden"
+                        } lg:block w-full lg:w-64 flex-shrink-0 transition-all duration-300`}
+                    >
+                        <div className="flex flex-col gap-3 p-4 bg-gray-50/50 rounded-2xl max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-50">
+                            {serviceCatalogs.map((catalog, index) => {
+                                const matchedIcon = catalogIcons.find(
+                                    (c) => c.name === catalog.community.name
+                                )?.icon;
+
+                                return (
+                                    <div
+                                        key={catalog.community.id}
+                                        role="button"
+                                        tabIndex={0}
+                                        aria-label={`Select ${catalog.community.name} catalog`}
+                                        className={`group relative flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-300 ease-in-out ${
+                                            activeCatalogIndex === index
+                                                ? "bg-gradient-to-r from-blue-100 to-blue-50 shadow-inner"
+                                                : "hover:bg-gray-100/70"
+                                        } after:absolute after:left-2 after:right-2 after:bottom-1 after:h-0.5 after:rounded-full after:bg-gradient-to-r after:from-blue-400 after:to-blue-600 after:transition-transform after:duration-300 ${
+                                            activeCatalogIndex === index
+                                                ? "after:scale-100"
+                                                : "after:scale-0 group-hover:after:scale-75"
+                                        }`}
+                                        onClick={() => {
+                                            setActiveCatalogIndex(index);
+                                            setIsSidebarOpen(false);
+                                        }}
+                                        onKeyDown={(e) => e.key === "Enter" && setActiveCatalogIndex(index)}
+                                    >
                                         <div
-                                            className={`relative transform before:absolute before:bottom-[-8px] before:left-0 before:right-0 before:mx-auto before:w-10 before:h-2 before:bg-blue-200 before:rounded-full before:transition-all before:duration-150 before:[backface-visibility:hidden] ${
+                                            className={`relative transform transition-all duration-300 ease-out ${
                                                 activeCatalogIndex === index
-                                                    ? "before:opacity-100 before:translate-y-1"
-                                                    : "before:opacity-0 group-hover:before:opacity-100 group-hover:before:translate-y-1"
+                                                    ? "scale-110"
+                                                    : "group-hover:scale-105 group-hover:grayscale-0 grayscale"
                                             }`}
                                         >
                                             <Image
                                                 src={matchedIcon || CategoriesIcon.industry}
                                                 alt={catalog.community.name}
-                                                width={56}
-                                                height={56}
-                                                className={`transition-all duration-150 group-hover:translate-y-[-4px] group-hover:grayscale-0 ${
+                                                width={32}
+                                                height={32}
+                                                className="object-contain drop-shadow-md"
+                                            />
+                                            <div
+                                                className={`absolute inset-0 rounded-full bg-blue-200/20 transition-opacity duration-300 ${
                                                     activeCatalogIndex === index
-                                                        ? "grayscale-0 translate-y-[-4px]"
-                                                        : "grayscale"
+                                                        ? "opacity-100"
+                                                        : "opacity-0 group-hover:opacity-50"
                                                 }`}
                                             />
                                         </div>
-                                        <p className="text-sm font-medium text-gray-800 leading-tight">
-                                            {t(`catalogs.${toCamelCaseLastSegment(catalog.community.path)}`)}
+                                        <p className="text-sm font-semibold text-gray-900 leading-tight tracking-tight">
+                                            {t(`catalogs.${toCamelCaseLastSegment(catalog.community.path)}`, { defaultValue: catalog.community.name })}
                                         </p>
                                     </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
+                        </div>
                     </div>
-                    <div className="mt-8">
-                        <div className="grid min-h-0 min-w-0 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {activeCatalog?.children?.slice(0, 8).map(({community}) => {
+
+                    {/* Subcatalog Section */}
+                    <div className="flex-1">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-lg font-bold text-gray-900">
+                                {t("catalogs.subcatalogs")}
+                            </h2>
+                            <Link
+                                prefetch={false}
+                                href="/categories/popular-service"
+                                className="group flex items-center text-blue-600 font-semibold text-sm hover:text-blue-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                aria-label={t("home.labelSeeMoreTittle")}
+                            >
+                                {t("home.labelSeeMoreTittle")}
+                                <FontAwesomeIcon
+                                    icon={faArrowRight}
+                                    className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200"
+                                />
+                            </Link>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {activeCatalog?.children?.slice(0, 12).map(({ community }) => {
                                 const backgroundImage = community.icon
                                     ? `url(${community.icon})`
                                     : `url("/categories-image/web-development-02032022.jpg")`;
@@ -90,37 +133,26 @@ const CatalogBanner = (props: Props) => {
                                         prefetch={false}
                                         key={community.id}
                                         href={`/job-board?community=${community.id}`}
-                                        className="group"
+                                        className="group relative block rounded-2xl overflow-hidden h-20 transition-all duration-300 hover:shadow-xl hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                        aria-label={`View ${community.name} jobs`}
                                     >
                                         <div
-                                            style={{backgroundImage}}
-                                            className="relative rounded-xl overflow-hidden bg-cover bg-center h-24 transition-all duration-150 ease-in-out cursor-pointer hover:shadow-lg"
-                                        >
-                                            <div
-                                                className="relative flex items-end h-full px-4 py-3 text-white bg-[rgba(0,0,0,0.6)] font-semibold transition-all duration-150">
-                        <span className="group-hover:-translate-y-1">
-                          {t(`catalogs.${toCamelCaseLastSegment(community.path)}`)}
-                        </span>
-                                            </div>
+                                            style={{ backgroundImage }}
+                                            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                                        />
+                                        <div className="relative flex items-end h-full px-3 py-2 bg-gradient-to-t from-black/70 to-transparent text-white font-semibold transition-all duration-300">
+                      <span className="group-hover:-translate-y-0.5 text-xs tracking-wide">
+                        {t(`catalogs.${toCamelCaseLastSegment(community.path)}`, { defaultValue: community.name })}
+                      </span>
                                         </div>
                                     </Link>
                                 );
                             })}
                             {(!activeCatalog?.children || activeCatalog.children.length === 0) && (
-                                <div className="col-span-full text-center text-gray-500 py-4">
-                                    No subcatalogs available
+                                <div className="col-span-full text-center text-gray-500 py-6 font-medium">
+                                    {t("catalogs.noSubcatalogs")}
                                 </div>
                             )}
-                        </div>
-                        <div className="my-6 flex justify-end">
-                            <Link
-                                prefetch={false}
-                                href="/categories/popular-service"
-                                className="text-primary py-3 relative no-underline cursor-pointer outline-none transition-all duration-150 hover:text-blue-800 font-medium"
-                            >
-                                {t("home.labelSeeMoreTittle")}
-                                <FontAwesomeIcon icon={faArrowRight} className="pl-2"/>
-                            </Link>
                         </div>
                     </div>
                 </div>

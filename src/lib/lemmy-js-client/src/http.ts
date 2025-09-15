@@ -245,9 +245,9 @@ import type {ChatRoomResponse} from "./types/ChatRoomResponse";
 import type {CreateChatRoomRequest} from "./types/CreateChatRoomRequest";
 import type {CreateInvoiceForm} from "./types/CreateInvoiceForm";
 import type {CreateInvoiceResponse} from "./types/CreateInvoiceResponse";
-import type {ApproveQuotation} from "./types/ApproveQuotation";
+import type { ApproveQuotationForm } from "./types/ApproveQuotationForm";
 import type {WorkFlowOperationResponse} from "./types/WorkFlowOperationResponse";
-import type { StartWorkflow } from "./types/StartWorkflow";
+import type { StartWorkflowForm } from "./types/StartWorkflowForm";
 import type {UserKeysResponse} from "./types/UserKeysResponse";
 import type {ChatHistoryQuery} from "./types/ChatHistoryQuery";
 import type {ChatMessagesResponse} from "./types/ChatMessagesResponse";
@@ -3095,10 +3095,10 @@ export class LemmyHttp extends Controller {
     @Post("/account/services/approve-quotation")
     @Tags("Billing")
     async approveQuotation(
-        @Body() form: ApproveQuotation,
+        @Body() form: ApproveQuotationForm,
         @Inject() options?: RequestOptions,
     ) {
-        return this.#wrapper<ApproveQuotation, WorkFlowOperationResponse>(
+        return this.#wrapper<ApproveQuotationForm, WorkFlowOperationResponse>(
             HttpType.Post,
             "/account/services/approve-quotation",
             form,
@@ -3113,10 +3113,10 @@ export class LemmyHttp extends Controller {
     @Post("/account/services/start-workflow")
     @Tags("Services")
     async startWorkflow(
-        @Body() form: StartWorkflow,
+        @Body() form: StartWorkflowForm,
         @Inject() options?: RequestOptions,
     ) {
-        return this.#wrapper<StartWorkflow, WorkFlowOperationResponse>(
+        return this.#wrapper<StartWorkflowForm, WorkFlowOperationResponse>(
             HttpType.Post,
             "/account/services/start-workflow",
             form,

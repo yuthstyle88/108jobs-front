@@ -45,7 +45,7 @@ const ConfirmTermsFreelancerModal: React.FC<
       isOpen={isOpen}
       onClose={onClose}
       className="max-w-[520px] p-0 w-full"
-      title="ยืนยันการลงทะเบียนเป็นฟรีแลนซ์"
+      title={termLanguage?.confirmFreelancerRegistrationTitle}
       closeOnOutsideClick={false}
     >
       <section className="px-[12px] w-full flex flex-col gap-3 justify-center">

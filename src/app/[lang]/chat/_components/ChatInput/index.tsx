@@ -1,9 +1,8 @@
 "use client";
 
-import {Paperclip, Send, Smile} from "lucide-react";
+import {Send, Smile} from "lucide-react";
 import {useEffect, useRef} from "react";
 import {useForm} from "react-hook-form";
-import FilePreview from "../FilePreview";
 import {useTranslation} from "react-i18next";
 
 type MessageForm = {
@@ -12,25 +11,10 @@ type MessageForm = {
 
 interface ChatInputProps {
     onSubmit: (data: MessageForm) => void;
-    onFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    selectedFile: {
-        fileUrl: string;
-        fileType: string;
-        fileName: string;
-    } | null;
-    setSelectedFile: (file: {
-        fileUrl: string;
-        fileType: string;
-        fileName: string;
-    } | null) => void;
-    isUploading: boolean;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({
                                                  onSubmit,
-                                                 onFileUpload,
-                                                 selectedFile,
-                                                 isUploading,
                                              }) => {
     const {t} = useTranslation();
     const {register, handleSubmit, reset, watch} = useForm<MessageForm>();
@@ -66,24 +50,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
             className="flex flex-col gap-2 mt-2"
         >
             <div className="flex items-center w-full">
-                <input
-                    type="file"
-                    id="fileInput"
-                    className="hidden"
-                    onChange={onFileUpload}
-                />
-                <label
-                    htmlFor="fileInput"
-                    className="text-gray-400 hover:text-gray-600 mr-3 cursor-pointer"
-                >
-                    {isUploading ? (
-                        <div
-                            className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
-                    ) : (
-                        <Paperclip size={20}/>
-                    )}
-                </label>
-
                 <div className="flex-1 border rounded-lg overflow-hidden flex">
           <textarea
               data-testid="chat-input"
@@ -93,7 +59,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
                   messageRef.current = e;
               }}
               placeholder={
-                  t("profileChat.typeMessageHere")|| "Type a message..."
+                  t("profileChat.typeMessageHere") || "Type a message..."
               }
               className="text-text-primary flex-1 px-3 py-2 resize-none focus:outline-none min-h-[40px] max-h-[150px] overflow-y-auto break-words whitespace-pre-wrap"
               rows={1}
@@ -120,15 +86,6 @@ const ChatInput: React.FC<ChatInputProps> = ({
                     <Send size={20}/>
                 </button>
             </div>
-
-            {selectedFile && (
-                <FilePreview
-                    fileUrl={selectedFile.fileUrl}
-                    fileType={selectedFile.fileType}
-                    fileName={selectedFile.fileName}
-                    showDownloadLink={false}
-                />
-            )}
         </form>
     );
 };

@@ -75,7 +75,7 @@ const PriceListPage = () => {
       <section className="pt-24 pb-10 md:pt-32 md:pb-12 bg-blue-50 relative">
         <div className="container mx-auto px-4 md:px-6 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-4 text-black">
-            {business.price_list_title}
+            {business.priceListTitle}
           </h1>
           <div className="flex justify-center gap-2 mt-8">
             <div className="bg-white rounded-lg shadow-md w-60 md:w-72 p-1">
@@ -83,7 +83,7 @@ const PriceListPage = () => {
                     href="#"
                     className="block w-full py-2 px-4 rounded-lg bg-fastwork-blue text-white"
               >
-                {business.graphic_design_tab}
+                {business.graphicDesignTab}
               </Link>
             </div>
             <div className="bg-white rounded-lg shadow-md w-60 md:w-72 p-1">
@@ -91,7 +91,7 @@ const PriceListPage = () => {
                     href="/bussiness/package-details"
                     className="block w-full py-2 px-4 rounded-lg bg-white text-gray-700"
               >
-                {business.social_content_tab}
+                {business.socialContentTab}
               </Link>
             </div>
           </div>
@@ -107,19 +107,19 @@ const PriceListPage = () => {
                 value="online"
                 className="data-[state=active]:bg-fastwork-blue data-[state=active]:text-white"
               >
-                {business.online_tab}
+                {business.onlineTab}
               </TabsTrigger>
               <TabsTrigger
                 value="offline"
                 className="data-[state=active]:bg-fastwork-blue data-[state=active]:text-white"
               >
-                {business.offline_tab}
+                {business.offlineTab}
               </TabsTrigger>
               <TabsTrigger
                 value="branding"
                 className="data-[state=active]:bg-fastwork-blue data-[state=active]:text-white"
               >
-                {business.branding_tab}
+                {business.brandingTab}
               </TabsTrigger>
             </TabsList>
 

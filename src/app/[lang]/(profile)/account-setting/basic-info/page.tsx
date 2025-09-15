@@ -257,7 +257,7 @@ export default function BasicInformation() {
                             {t("profileInfo.labelUsername")}
                         </label>
                         <div className="flex items-center">
-                            <span className="text-gray-500 mr-2">fastwork.co/user/</span>
+                            <span className="text-gray-500 mr-2">108jobs.com/user/</span>
                             <input
                                 {...register("username")}
                                 className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-text-primary font-sans outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"

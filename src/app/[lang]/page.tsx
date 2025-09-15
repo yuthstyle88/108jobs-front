@@ -1,38 +1,27 @@
 "use client";
 
-import apple from "@/assets/icons/apple.svg";
-import google from "@/assets/icons/google-play.svg";
-import fastwork from "@/assets/images/fastwork-app-qr.webp";
-import imgapp from "@/assets/images/img-app.webp";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import TypingText from "@/components/TypingText";
 import Image from "next/image";
-
-import {Swiper, SwiperSlide, useSwiper} from "swiper/react";
-
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "../styles.css";
-
-import {Navigation} from "swiper/modules";
-
+import { Navigation } from "swiper/modules";
 import CatalogBanner from "@/components/Home/Catalog";
 import HiringSection from "@/components/Home/HiringSection";
-import IntroductionSection from "@/components/Home/IntroductionSection";
 import OfferSection from "@/components/Home/OfferSection";
-import RecommendAndReview from "@/components/Home/RecommendAndReview";
 import SearchInput from "@/components/SearchInput";
-import {LandingImage} from "@/constants/images";
+import { LandingImage } from "@/constants/images";
 import SpAdsSlider from "@/containers/SpAdsSlider";
 import SpCatalog from "@/containers/SpCatalog";
 import SpHeader from "@/containers/SpHeader";
-import Link from "next/link";
-import {useState} from "react";
-import {useTranslation} from "react-i18next";
-import {buildCommunitiesTree} from "@/utils/helpers";
-import {useCommunities} from "@/hooks/communites-api/useCommunities";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { buildCommunitiesTree } from "@/utils/helpers";
+import { useCommunities } from "@/hooks/communites-api/useCommunities";
 
 const interestImages = [
     LandingImage.interest1,
@@ -48,13 +37,13 @@ const CustomNavigation = () => {
     return (
         <div>
             <button
-                className="absolute top-1/2 -translate-y-1/2 left-0 bg-transparent pl-2 border-[none] text-[24px] rounded-tr-[10px] rounded-br-[10px] cursor-pointer z-50"
+                className="absolute top-1/2 -translate-y-1/2 left-4 bg-white/80 hover:bg-white text-gray-800 text-2xl w-12 h-12 rounded-full shadow-lg transition-all duration-300 ease-in-out z-50"
                 onClick={() => swiper.slidePrev()}
             >
                 ❮
             </button>
             <button
-                className="absolute top-1/2 -translate-y-1/2 right-0 bg-transparent pr-2 border-[none] text-[24px] rounded-tl-[10px] rounded-bl-[10px] cursor-pointer z-50"
+                className="absolute top-1/2 -translate-y-1/2 right-4 bg-white/80 hover:bg-white text-gray-800 text-2xl w-12 h-12 rounded-full shadow-lg transition-all duration-300 ease-in-out z-50"
                 onClick={() => swiper.slideNext()}
             >
                 ❯
@@ -64,34 +53,83 @@ const CustomNavigation = () => {
 };
 
 export default function Home() {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
-    const [expanded, setExpanded] = useState(false);
     const catalogData = useCommunities();
     const serviceCatalogs = buildCommunitiesTree(catalogData.communities) || [];
     const activeCatalog = serviceCatalogs[activeCatalogIndex];
 
     return (
-        <div className="min-h-[100vh] bg-white">
+        <div className="min-h-[100vh] bg-gray-50">
             <div className="hidden sm:block">
-                <Header type="transparent"/>
+                <Header type="transparent" />
             </div>
             <div className="block sm:hidden">
-                <SpHeader/>
+                <SpHeader />
             </div>
-            <main className="">
-                <section className="hidden sm:block h-auto header-gradient pt-[6.5rem] md:pt-[4.5rem]">
-                    <div className="pt-[3rem] pb-[8rem] flex justify-center flex-col gap-4 text-center">
-                        <h1 className="text-[24px] font-medium text-white">
+            <main>
+                <section
+                    className="hidden sm:block h-auto bg-cover bg-center relative pt-[6.5rem] md:pt-[4.5rem]"
+                    style={{
+                        backgroundImage: `url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')`,
+                    }}
+                >
+                    <div className="absolute inset-0 bg-black/50" />
+                    <div className="relative pt-16 pb-24 flex justify-center flex-col gap-6 text-center items-center max-w-4xl mx-auto px-4">
+                        <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight animate-fade-in">
                             {t("home.titleBannerHomePage1")}
                         </h1>
-                        <TypingText/>
-                        <p className="text-[18px] font-medium">
+                        <TypingText />
+                        <p className="text-lg md:text-xl font-medium text-white/90 max-w-2xl">
                             {t("home.titleBannerHomePage2")}
                         </p>
-                        <SearchInput/>
+                        <SearchInput />
+                        <a
+                            href="#explore"
+                            className="mt-6 inline-block bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+                        >
+                            {t("home.exploreNow")}
+                        </a>
                     </div>
                 </section>
+
+                <section className="py-16 bg-white">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+                            {t("home.featuresTitle") || "Discover Our Features"}
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div className="p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                                    {t("home.feature1Title") || "Community Connection"}
+                                </h3>
+                                <p className="text-gray-600">
+                                    {t("home.feature1Desc") ||
+                                        "Connect with vibrant communities tailored to your interests."}
+                                </p>
+                            </div>
+                            <div className="p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                                    {t("home.feature2Title") || "Personalized Experience"}
+                                </h3>
+                                <p className="text-gray-600">
+                                    {t("home.feature2Desc") ||
+                                        "Enjoy a customized journey with recommendations just for you."}
+                                </p>
+                            </div>
+                            <div className="p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                                    {t("home.feature3Title") || "Seamless Navigation"}
+                                </h3>
+                                <p className="text-gray-600">
+                                    {t("home.feature3Desc") ||
+                                        "Explore effortlessly with our intuitive and user-friendly interface."}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <CatalogBanner
                     serviceCatalogs={serviceCatalogs}
                     activeCatalog={activeCatalog}
@@ -99,61 +137,16 @@ export default function Home() {
                     setActiveCatalogIndex={setActiveCatalogIndex}
                 />
 
-                <section className="block sm:hidden pt-[4.5rem]">
-                    <SpAdsSlider/>
+                <section className="block sm:hidden pt-[4.5rem] bg-gray-50">
+                    <SpAdsSlider />
                 </section>
-                <section className="block sm:hidden p-[0.75rem] border-b-[0.25rem] border-border-primary ">
-                    <SpCatalog activeCatalog={activeCatalog}/>
-                </section>
-
-                <HiringSection/>
-
-                <section className="hidden sm:block">
-                    <SpAdsSlider/>
+                <section className="block sm:hidden p-3 border-b-4 border-blue-200">
+                    <SpCatalog activeCatalog={activeCatalog} />
                 </section>
 
-                <section className="grid grid-container-desktop-banner">
-                    <div className="col-start-2 col-end-3">
-                        <h2 className="home-title-head text-[18px] sm:text-[2.25rem] pb-4">
-                            {t("global.labelRecommendSection")}
-                        </h2>
-                    </div>
-                </section>
-
-                <div className="max-w-[1280px] mx-auto px-4 xl:px-8">
-                    <Swiper
-                        navigation={{
-                            nextEl: ".swiper-button-next",
-                            prevEl: ".swiper-button-prev",
-                        }}
-                        mousewheel
-                        keyboard
-                        modules={[Navigation]}
-                        breakpoints={{
-                            0: {slidesPerView: 1},
-                            640: {slidesPerView: 2},
-                            1024: {slidesPerView: 3},
-                        }}
-                        spaceBetween={20}
-                        className="mySwiper"
-                    >
-                        <CustomNavigation/>
-                        {interestImages.map((img, i) => (
-                            <SwiperSlide key={i}>
-                                <Image
-                                    src={img}
-                                    alt={`Picture ${i + 1}`}
-                                    className="rounded-lg w-full h-auto"
-                                />
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                </div>
-
-                <OfferSection/>
-
+                <OfferSection />
             </main>
-            <Footer/>
+            <Footer />
         </div>
     );
 }

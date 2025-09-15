@@ -20,27 +20,27 @@ const CategoryFooter = () => {
           <p>
             <strong>
               {categoryFooterLanguage?.seoDescription1}{" "}
-              <Link prefetch={false} href="https://fastwork.co/seo/backlink">
+              <Link prefetch={false} href="https://108jobs.com/seo/backlink">
                 {categoryFooterLanguage?.seoLinksBacklink}&nbsp;
               </Link>
             </strong>
-            <Link prefetch={false} href="https://fastwork.co/seo/wordpress">
+            <Link prefetch={false} href="https://108jobs.com/seo/wordpress">
               <strong>{categoryFooterLanguage?.seoLinksWordpress}</strong>
             </Link>
             <strong>&nbsp;</strong>
-            <Link prefetch={false} href="https://fastwork.co/seo/youtube">
+            <Link prefetch={false} href="https://108jobs.com/seo/youtube">
               <strong>{categoryFooterLanguage?.seoLinksYoutube}</strong>
             </Link>
             <strong>&nbsp;</strong>
-            <Link prefetch={false} href="https://fastwork.co/seo/youtube">
+            <Link prefetch={false} href="https://108jobs.com/seo/youtube">
               <strong>{categoryFooterLanguage?.seoLinksFacebook}</strong>
             </Link>
             <strong>&nbsp;</strong>
-            <Link prefetch={false} href="https://fastwork.co/seo/audit">
+            <Link prefetch={false} href="https://108jobs.com/seo/audit">
               <strong>{categoryFooterLanguage?.seoLinksYoutube}</strong>
             </Link>
             <strong>&nbsp;</strong>
-            <Link prefetch={false} href="https://fastwork.co/seo/full-service">
+            <Link prefetch={false} href="https://108jobs.com/seo/full-service">
               <strong>{categoryFooterLanguage?.seoLinksMonthly}</strong>
             </Link>
             <strong>&nbsp;</strong>

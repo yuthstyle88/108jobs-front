@@ -196,14 +196,14 @@ const ConsentManagement = () => {
             {concentLanguageData?.termsConditions}
             {/* อ่าน{" "}
             <Link prefetch={false}
-              href="https://static.fastwork.co/contents/terms"
+              href="https://static.108jobs.com/contents/terms"
               className="text-third underline"
             >
               เงื่อนไขข้อตกลงการใช้บริการ
             </Link>{" "}
             และ{" "}
             <Link prefetch={false}
-              href="https://static.fastwork.co/contents/privacy"
+              href="https://static.108jobs.com/contents/privacy"
               className="text-third underline"
             >
               นโยบายคุ้มครองความเป็นส่วนตัว

@@ -283,7 +283,7 @@ const Guarantee = () => {
                 <Mail className="w-8 h-8 text-primary"/>
               </div>
               <div className="text-sm font-medium text-text-primary">
-                support@fastwork.co
+                support@108jobs.com
               </div>
             </div>
           </div>

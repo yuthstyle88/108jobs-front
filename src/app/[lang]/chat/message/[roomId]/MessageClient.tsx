@@ -7,10 +7,13 @@ import {HttpService, UserService} from "@/services";
 import LoadingBlur from "@/components/LoadingBlur";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faComment} from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
-export default function MessageClient({ roomId }: { roomId: string }) {
+export default function MessageClient({roomId}: { roomId: string }) {
     const accessToken = UserService.Instance.auth();
-    const { localUser } = useMyUser();
+    const {localUser} = useMyUser();
 
     const [partnerName, setPartnerName] = useState<string>("Unknown");
     const [loading, setLoading] = useState(true);
@@ -65,16 +68,18 @@ export default function MessageClient({ roomId }: { roomId: string }) {
     }, [accessToken, roomId, localUser?.id]);
 
     if (!accessToken || !roomId) {
-        return <LoadingBlur text="Missing authentication or room ID" />;
+        return <LoadingBlur text="Missing authentication or room ID"/>;
     }
 
     if (loading) {
-        return <LoadingBlur text="Loading chat…" />;
+        return <Link prefetch={false} href="/chat" className="relative text-white text-sm px-3">
+            <FontAwesomeIcon icon={faComment} className="w-[24px] h-[24px] text-white"/>
+        </Link>
     }
 
     return (
         <WebSocketProvider token={accessToken} roomId={roomId} peerPublicKeyHex={peerPublicKeyHex}>
-            <ChatSection roomId={roomId} partnerName={partnerName} partnerAvatar={""} />
+            <ChatSection roomId={roomId} partnerName={partnerName} partnerAvatar={""}/>
         </WebSocketProvider>
     );
 }
