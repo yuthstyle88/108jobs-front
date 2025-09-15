@@ -18,8 +18,8 @@ const SPSearch = () => {
   const onSubmit = (data: SearchForm) => {
     const trimmed = data.query.trim();
     if (trimmed) {
-      const encoded = encodeURIComponent(trimmed);
-      router.push(`/job/search?titleSearch=${encoded}`);
+      // Avoid pre-encoding to prevent double-encoding
+      router.push(`/job/search?titleSearch=${trimmed}`);
     }
   };
   return (

@@ -29,8 +29,7 @@ const Search = ({showSearch}: Props) => {
 
   useEffect(() => {
       if (titleSearch) {
-        setValue("query",
-          decodeURIComponent(titleSearch));
+        setValue("query", titleSearch);
       }
     },
     [titleSearch, setValue]);
@@ -38,8 +37,8 @@ const Search = ({showSearch}: Props) => {
   const onSubmit = (data: SearchForm) => {
     const trimmed = data.query.trim();
     if (trimmed) {
-      const encoded = encodeURIComponent(trimmed);
-      router.push(`/job-board?q=${encoded}`);
+      // Let router/URLSearchParams handle encoding; avoid pre-encoding to prevent double-encoding
+      router.push(`/job-board?q=${trimmed}`);
     }
   };
 

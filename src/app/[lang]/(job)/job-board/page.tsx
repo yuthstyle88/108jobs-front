@@ -38,7 +38,9 @@ const JobBoard = () => {
     const searchParams = useSearchParams();
 
     const encoded = searchParams.get("q");
-    const sanitizedQuery = encoded ? encodeURIComponent(encoded.trim()) : "";
+    // Avoid double-encoding: values from URLSearchParams are already decoded once by Next.js
+    // So use the raw value (trimmed) directly when sending to backend; backend/client will encode as needed.
+    const sanitizedQuery = encoded ? encoded.trim() : "";
 
     const [filters, setFilters] = useState<FilterState>({
         community: undefined,

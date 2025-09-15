@@ -21,8 +21,8 @@ const SearchInput = () => {
   const onSubmit = (data: SearchForm) => {
     const trimmed = data.query.trim();
     if (trimmed) {
-      const encoded = encodeURIComponent(trimmed);
-      router.push(`/job-board?q=${encoded}`);
+      // Avoid pre-encoding, Next.js will encode the URL automatically
+      router.push(`/job-board?q=${trimmed}`);
     }
   };
   return (
