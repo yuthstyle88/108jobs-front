@@ -12,7 +12,7 @@
     "build": "tsc",
     "docs": "typedoc src/index.ts",
     "lint": "tsc --noEmit && eslint --report-unused-disable-directives && prettier --check src",
-    "prepare": "pnpm run build && husky",
+    "prepare": "pnpm run build",
     "tsoa": "tsoa spec-and-routes && tsc && redocly build-docs tsoa_build/swagger.json"
   },
   "repository": {
