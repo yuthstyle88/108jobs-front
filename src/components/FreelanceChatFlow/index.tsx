@@ -27,6 +27,8 @@ export type FreelanceChatFlowProps = {
     className?: string;
     started?: boolean;
     onStart?: () => void;
+    canStartWorkflow?: boolean;
+    canProposeQuote?: boolean;
 } & FlowActions;
 
 const STEPS: Array<{ key: StatusKey; title: string; sub: string }> = [
@@ -55,6 +57,8 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  className = '',
                                                                  started = true,
                                                                  onStart,
+                                                                 canStartWorkflow = true,
+                                                                 canProposeQuote = true,
                                                                  onProposeQuote,
                                                                  onApproveQuotation,
                                                                  onUploadAsset,
@@ -114,7 +118,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
         switch (key) {
             case 'QuotationPending':
                 return [
-                    btn(t('profileChat.proposeQuote') || 'Send quotation', onProposeQuote),
+                    btn(t('profileChat.proposeQuote') || 'Send quotation', canProposeQuote ? onProposeQuote : undefined),
                     btn(t('profileChat.approveQuotation') || 'Approve quotation', () => setShowApproveConfirm(true)),
                     ...(cancelBtn ? [cancelBtn] : []),
                 ];
@@ -152,8 +156,11 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                         {t('profileChat.startWorkflowHint') || 'The workflow will be shown after the employer starts it.'}
                     </p>
                     <button
-                        className="rounded-md bg-primary text-white px-4 py-2 text-sm font-medium hover:bg-[#063a68]"
-                        onClick={() => setShowStartConfirm(true)}
+                        className={`rounded-md px-4 py-2 text-sm font-medium ${canStartWorkflow ? 'bg-primary text-white hover:bg-[#063a68]' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
+                        onClick={canStartWorkflow ? (() => setShowStartConfirm(true)) : undefined}
+                        aria-disabled={!canStartWorkflow}
+                        disabled={!canStartWorkflow}
+                        title={!canStartWorkflow ? (t('profileChat.missingPostIdForQuotation') || 'Link a job to start the workflow') : undefined}
                     >
                         {t('profileChat.startWorkflow') || 'Start workflow'}
                     </button>

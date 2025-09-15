@@ -108,6 +108,7 @@ export const en = {
             startWorkflowFailed: "Failed to start workflow. Please try again.",
             confirmStartWorkflowTitle: "Start workflow?",
             confirmStartWorkflowMessage: "This will initialize the job flow for this room. Continue?",
+            missingPostIdForQuotation: "This chat is not linked to a job post. Link a job to this room to create a quotation or start the workflow.",
         },
         allCategories: {
             allJobCategories: "All Job Categories",

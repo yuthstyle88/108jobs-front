@@ -14,6 +14,7 @@ export interface ChatRoom {
     name: string;
     participants: { id: number; name: string }[];
     unreadCount: number;
+    postId?: number | string;
 }
 
 export type Job = {

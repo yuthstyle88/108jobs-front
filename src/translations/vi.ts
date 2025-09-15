@@ -108,6 +108,7 @@ export const vi = {
             startWorkflowFailed: "Bắt đầu quy trình không thành công. Vui lòng thử lại.",
             confirmStartWorkflowTitle: "Bắt đầu quy trình?",
             confirmStartWorkflowMessage: "Thao tác này sẽ khởi tạo quy trình công việc cho phòng này. Tiếp tục?",
+            missingPostIdForQuotation: "Phòng chat này chưa được liên kết với bài đăng công việc. Hãy liên kết bài đăng để tạo báo giá hoặc bắt đầu quy trình.",
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",

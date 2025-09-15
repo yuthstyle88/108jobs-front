@@ -18,6 +18,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     const [partnerName, setPartnerName] = useState<string>("Unknown");
     const [loading, setLoading] = useState(true);
     const [peerPublicKeyHex, setPeerPublicKeyHex] = useState<string | undefined>(undefined);
+    const [postId, setPostId] = useState<number | string | undefined>(undefined);
 
     useEffect(() => {
         let cancelled = false;
@@ -28,6 +29,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
 
             if (!cancelled && chatRoomRes.state === REQUEST_STATE.SUCCESS) {
                 const participants = chatRoomRes.data.participants as any[];
+                try { setPostId((chatRoomRes.data as any)?.postId ?? (chatRoomRes.data as any)?.room?.postId); } catch {}
 
                 const other = participants.find(
                     (p: any) => String(p.memberId) !== String(localUser.id)

@@ -108,6 +108,7 @@ export const th = {
             startWorkflowFailed: "เริ่มลำดับงานไม่สำเร็จ โปรดลองอีกครั้ง",
             confirmStartWorkflowTitle: "เริ่มลำดับงาน?",
             confirmStartWorkflowMessage: "การดำเนินการนี้จะเริ่มลำดับงานของห้องนี้ ต้องการดำเนินการต่อหรือไม่?",
+            missingPostIdForQuotation: "ห้องแชทนี้ยังไม่เชื่อมกับงาน โปรดเชื่อมโยงงานกับห้องนี้ก่อน จึงจะสามารถสร้างใบเสนอราคา หรือเริ่มลำดับงานได้",
         },
         allCategories: {
             allJobCategories: "หมวดหมู่งานทั้งหมด",
