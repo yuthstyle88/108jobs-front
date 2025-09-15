@@ -3,15 +3,11 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import TypingText from "@/components/TypingText";
-import Image from "next/image";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "../styles.css";
-import { Navigation } from "swiper/modules";
 import CatalogBanner from "@/components/Home/Catalog";
-import HiringSection from "@/components/Home/HiringSection";
 import OfferSection from "@/components/Home/OfferSection";
 import SearchInput from "@/components/SearchInput";
 import { LandingImage } from "@/constants/images";
@@ -31,27 +27,6 @@ const interestImages = [
     LandingImage.interest5,
     LandingImage.interest6,
 ];
-
-const CustomNavigation = () => {
-    const swiper = useSwiper();
-    return (
-        <div>
-            <button
-                className="absolute top-1/2 -translate-y-1/2 left-4 bg-white/80 hover:bg-white text-gray-800 text-2xl w-12 h-12 rounded-full shadow-lg transition-all duration-300 ease-in-out z-50"
-                onClick={() => swiper.slidePrev()}
-            >
-                ❮
-            </button>
-            <button
-                className="absolute top-1/2 -translate-y-1/2 right-4 bg-white/80 hover:bg-white text-gray-800 text-2xl w-12 h-12 rounded-full shadow-lg transition-all duration-300 ease-in-out z-50"
-                onClick={() => swiper.slideNext()}
-            >
-                ❯
-            </button>
-        </div>
-    );
-};
-
 export default function Home() {
     const { t } = useTranslation();
     const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
@@ -85,7 +60,7 @@ export default function Home() {
                         </p>
                         <SearchInput />
                         <a
-                            href="#explore"
+                            href="/job-board"
                             className="mt-6 inline-block bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
                         >
                             {t("home.exploreNow")}

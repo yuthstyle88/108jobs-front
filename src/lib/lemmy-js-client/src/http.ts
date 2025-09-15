@@ -39,6 +39,7 @@ import type {
     ListPersonHiddenI,
     ListPersonLikedI,
     ListPersonReadI,
+    ListPersonCreatedI,
     ListPersonSavedI,
     ListPostLikesI,
     ListRegistrationApplicationsI,
@@ -176,6 +177,8 @@ import type {ListPersonLiked} from "./types/ListPersonLiked";
 import type {ListPersonLikedResponse} from "./types/ListPersonLikedResponse";
 import type {ListPersonRead} from "./types/ListPersonRead";
 import type {ListPersonReadResponse} from "./types/ListPersonReadResponse";
+import type {ListPersonCreated} from "./types/ListPersonCreated";
+import type {ListPersonCreatedResponse} from "./types/ListPersonCreatedResponse";
 import type {ListPersonSaved} from "./types/ListPersonSaved";
 import type {ListPersonSavedResponse} from "./types/ListPersonSavedResponse";
 import type {ListPostLikes} from "./types/ListPostLikes";
@@ -2262,6 +2265,24 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<ListPersonSaved, ListPersonSavedResponse>(
             HttpType.Get,
             "/account/saved",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary List your created content.
+     */
+    @Security("bearerAuth")
+    @Get("/account/created")
+    @Tags("Account")
+    async listPersonCreated(
+        @Queries() form: ListPersonCreatedI,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<ListPersonCreated, ListPersonCreatedResponse>(
+            HttpType.Get,
+            "/account/created",
             form,
             options,
         );

@@ -28,7 +28,7 @@ import logobusiness from "../assets/images/compare/logo-business.png";
 // Profile images
 import avatar from "../assets/images/profile/avatar.jpg";
 import coinBg from "../assets/images/profile/coin-desktop-banner.webp";
-import jobBoard from "../assets/images/profile/banner.webp";
+import jobBoard from "../assets/images/profile/banner.jpg";
 import decal from "../assets/images/profile/decal.svg";
 import backCard from "../assets/images/profile/back-vn.jpg";
 import frontCard from "../assets/images/profile/front-vn.jpg";

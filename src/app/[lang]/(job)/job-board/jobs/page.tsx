@@ -46,9 +46,9 @@ const MyJobs = () => {
         setCurrentCursor(pageCursor || undefined);
     };
 
-    const getStatusBadge = (status: string) => {
+    const getStatusBadge = (status: boolean) => {
         switch (status) {
-            case "opening":
+            case true:
                 return (
                     <Badge className="bg-green-100 text-green-800 hover:bg-green-200 transition-colors duration-200">
                         Open
@@ -134,7 +134,7 @@ const MyJobs = () => {
                                                     {job.post.budget.toLocaleString()}
                                                 </td>
                                                 <td className="px-6 py-5 whitespace-nowrap">
-                                                    {getStatusBadge("closed")}
+                                                    {getStatusBadge(job.post.pending)}
                                                 </td>
                                                 <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
                                                     {formatDateTime(job.post.publishedAt, "datetime")}

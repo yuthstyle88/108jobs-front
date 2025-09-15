@@ -194,6 +194,8 @@ export type {ListPersonLiked} from "./types/ListPersonLiked";
 export type {ListPersonLikedResponse} from "./types/ListPersonLikedResponse";
 export type {ListPersonRead} from "./types/ListPersonRead";
 export type {ListPersonReadResponse} from "./types/ListPersonReadResponse";
+export type {ListPersonCreated} from "./types/ListPersonCreated";
+export type {ListPersonCreatedResponse} from "./types/ListPersonCreatedResponse";
 export type {ListPersonSaved} from "./types/ListPersonSaved";
 export type {ListPersonSavedResponse} from "./types/ListPersonSavedResponse";
 export type {ListPostLikes} from "./types/ListPostLikes";

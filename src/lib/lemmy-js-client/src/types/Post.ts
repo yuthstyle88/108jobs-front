@@ -98,6 +98,7 @@ export type Post = {
    * accepted by the community (by receiving it back via federation).
    */
   federationPending: boolean;
+  pending: boolean;
   intendedUse: IntendedUse;
   jobType: JobType;
   budget: number;

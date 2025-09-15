@@ -1863,7 +1863,7 @@ export const vi = {
             labelPhoneNumber: "Số điện thoại",
             phoneNumberPlaceholder: "Nhập số điện thoại của bạn",
             invalidPhoneNumber: "Định dạng số điện thoại không hợp lệ",
-
+            customContactPlaceholder: "Nhập kênh liên hệ (ví dụ: Line ID, WhatsApp, Telegram)",
         },
         profileJob: {
             noJob: "Không tìm thấy bài đăng công việc nào",

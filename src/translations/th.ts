@@ -1812,6 +1812,7 @@ export const th = {
             labelPhoneNumber: "เบอร์โทรศัพท์",
             phoneNumberPlaceholder: "กรอกเบอร์โทรศัพท์ของคุณ",
             invalidPhoneNumber: "รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง",
+            customContactPlaceholder: "กรอกช่องทางติดต่อ (เช่น Line ID, WhatsApp, Telegram)",
         },
         profileJob: {
             noJob: "ไม่พบประกาศงาน",

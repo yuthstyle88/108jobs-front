@@ -23,6 +23,7 @@ import {ListPersonContent} from "./types/ListPersonContent";
 import {ListPersonHidden} from "./types/ListPersonHidden";
 import {ListPersonLiked} from "./types/ListPersonLiked";
 import {ListPersonRead} from "./types/ListPersonRead";
+import {ListPersonCreated} from "./types/ListPersonCreated";
 import {ListPersonSaved} from "./types/ListPersonSaved";
 import {ListPostLikes} from "./types/ListPostLikes";
 import {ListRegistrationApplications} from "./types/ListRegistrationApplications";
@@ -85,7 +86,7 @@ export interface ListNotificationsI extends ListNotifications {}
 export interface ListPersonSavedI extends ListPersonSaved {}
 
 export interface ListPersonReadI extends ListPersonRead {}
-
+export interface ListPersonCreatedI extends ListPersonCreated {}
 export interface ListPersonHiddenI extends ListPersonHidden {}
 
 export interface ListPersonLikedI extends ListPersonLiked {}

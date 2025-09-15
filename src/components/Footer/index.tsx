@@ -54,7 +54,7 @@ const Footer = () => {
                     <h3 className="font-semibold text-lg mb-4 text-white/95 tracking-tight">{global.tittleFooter4}</h3>
                     <ul className="space-y-3 text-sm">
                         {[
-                            { href: "https://form.jotform.com/251484529705059", label: global.labelFeedbackUs, external: true },
+                            // { href: "https://form.jotform.com/251484529705059", label: global.labelFeedbackUs, external: true },
                             { href: "/content/terms", label: global.labelTermsOfService },
                             { href: "/content/privacy", label: global.labelPrivacyPolicy },
                         ].map((item) => (

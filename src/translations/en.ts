@@ -1854,7 +1854,8 @@ export const en = {
             invalidEmail: "Invalid email format",
             labelPhoneNumber: "Phone Number",
             phoneNumberPlaceholder: "Enter your phone number",
-            invalidPhoneNumber: "Invalid phone number format"
+            invalidPhoneNumber: "Invalid phone number format",
+            customContactPlaceholder: "Enter your contact (e.g., Line ID, WhatsApp, Telegram)"
         },
         profileJob: {
             noJob: "No job posts found",
