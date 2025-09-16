@@ -33,57 +33,35 @@ interface QuotationModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (data: ProposedQuotePayload) => Promise<void>; // Updated to return Promise for async error handling
+    postId?: number; // derive from chat room instead of hardcoding
 }
 
-const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubmit }) => {
+const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubmit, postId }) => {
     const { t } = useTranslation();
 
-    // Initialize with sensible defaults
+    // Initialize without hardcoded demo content; postId comes from props
     const [form, setForm] = useState<ProposedQuotePayload>({
-        employerId: 1,
-        postId: 1,
-        commentId: 1,
-        amount: 2500,
-        proposal: 'Build a landing page for the new product.',
-        projectName: 'FastJob Landing Page',
-        projectDetails: 'This project involves designing and implementing a responsive landing page with React + Tailwind.',
-        workSteps: [
-            {
-                seq: 1,
-                description: 'Design mockups for all sections',
-                amount: 800,
-                workingDays: 3,
-                status: 'QuotationPending',
-                startingDay: '2025-08-20',
-                deliveryDay: '2025-08-23',
-            },
-            {
-                seq: 2,
-                description: 'Implement responsive frontend',
-                amount: 1200,
-                workingDays: 5,
-                status: 'InProgress',
-                startingDay: '2025-08-24',
-                deliveryDay: '2025-08-29',
-            },
-            {
-                seq: 3,
-                description: 'Final QA, bug fixes, and deployment',
-                amount: 500,
-                workingDays: 2,
-                status: 'WorkSubmitted',
-                startingDay: '2025-08-30',
-                deliveryDay: '2025-08-31',
-            },
-        ],
-        workingDays: 10,
-        deliverables: ['Responsive landing page', 'Source code in GitHub repo', 'Deployment instructions'],
-        note: 'Please prioritize mobile optimization.',
-        startingDay: '2025-08-20',
-        deliveryDay: '2025-08-31',
+        employerId: 0,
+        postId: postId ?? 0,
+        commentId: 0,
+        amount: 0,
+        proposal: '',
+        projectName: '',
+        projectDetails: '',
+        workSteps: [],
+        workingDays: 0,
+        deliverables: [''],
+        note: '',
+        startingDay: '',
+        deliveryDay: '',
     });
 
     const [error, setError] = useState<string | null>(null);
+
+    // Keep postId in sync with prop changes (room data is async)
+    React.useEffect(() => {
+        setForm((prev) => ({ ...prev, postId: postId ?? 0 }));
+    }, [postId]);
 
     const updateField = <K extends keyof ProposedQuotePayload>(key: K, value: ProposedQuotePayload[K]) => {
         setForm((prev) => ({ ...prev, [key]: value }));
@@ -216,42 +194,6 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                 <h3 className="text-base sm:text-lg font-semibold mb-2">{t('profileChat.quotationTitle') || 'Create Quotation'}</h3>
                 <p className="text-xs sm:text-sm text-gray-600 mb-4">{t('profileChat.quotationDesc') || 'Fill in the quotation details below.'}</p>
                 <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 max-h-[80vh] overflow-y-auto pr-1 text-gray-700">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3">
-                        <div>
-                            <label className="block text-xs sm:text-sm font-medium text-gray-700">{t('profileChat.employerId') || 'Employer ID'}</label>
-                            <input
-                                type="number"
-                                value={form.employerId}
-                                onChange={(e) => updateField('employerId', Number(e.target.value))}
-                                className="mt-1 w-full rounded-md border border-gray-300 px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm"
-                                required
-                                aria-describedby="employerId-error"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs sm:text-sm font-medium text-gray-700">{t('profileChat.postId') || 'Post ID'}</label>
-                            <input
-                                type="number"
-                                value={form.postId}
-                                onChange={(e) => updateField('postId', Number(e.target.value))}
-                                className="mt-1 w-full rounded-md border border-gray-300 px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm"
-                                required
-                                aria-describedby="postId-error"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-xs sm:text-sm font-medium text-gray-700">{t('profileChat.commentId') || 'Comment ID'}</label>
-                            <input
-                                type="number"
-                                value={form.commentId}
-                                onChange={(e) => updateField('commentId', Number(e.target.value))}
-                                className="mt-1 w-full rounded-md border border-gray-300 px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm"
-                                required
-                                aria-describedby="commentId-error"
-                            />
-                        </div>
-                    </div>
-
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                         <div>
                             <label className="block text-xs sm:text-sm font-medium text-gray-700">{t('profileChat.projectName') || 'Project Name'}</label>
@@ -348,6 +290,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                                         value={d}
                                         onChange={(e) => updateDeliverable(idx, e.target.value)}
                                         className="flex-1 rounded-md border border-gray-300 px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm"
+                                        placeholder={t('profileChat.exampleDeliverable') || ''}
                                         required
                                         aria-describedby={`deliverable-${idx}-error`}
                                     />
@@ -393,6 +336,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                                                 value={ws.description}
                                                 onChange={(e) => updateWorkStep(idx, 'description', e.target.value)}
                                                 className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-xs sm:text-sm"
+                                                placeholder={t('profileChat.exampleWorkStep') || ''}
                                                 aria-describedby={`workStep-${idx}-description-error`}
                                             />
                                         </div>

@@ -361,7 +361,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 {
                     id: messageId,
                     roomId: currentRoom?.roomId || roomId,
-                    content: readable,
+                    content: JSON.stringify(payload),
                     createdAt: new Date().toISOString(),
                     senderId: Number(localUser?.id) || 0,
                     receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
@@ -491,6 +491,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
     const approveQuotation = useCallback(async () => {
         try {
             setError(null);
+
             // Resolve billingId from latest proposed-quote message
             let latestPayload: any | null = null;
             for (const m of messages) {
@@ -509,6 +510,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 setError(t('profileChat.quotationError') || 'Missing billing information for approval.');
                 return false;
             }
+            console.log("[CHAT][APPROVE QUOTATION] Approving quotation");
+
 
             // Resolve workflowId (from state or room response if provided)
             const workflowIdCandidate = workflowIdState
@@ -532,7 +535,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             const seqNumber = Number(latestPayload?.quote?.workSteps?.[0]?.seq) || 1;
 
             const form: ApproveQuotationForm = { seqNumber, billingId, walletId, workflowId } as any;
-            console.log("[CHAT][APPROVE QUOTATION] Approving quotation", form);
             const res = await approveQuotationApi(form as any);
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
             if (!ok) {
@@ -967,6 +969,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 isOpen={showQuotationModal}
                 onClose={() => setShowQuotationModal(false)}
                 onSubmit={handleQuotationSubmit}
+                postId={roomPostId as number}
             />
         </>
     );

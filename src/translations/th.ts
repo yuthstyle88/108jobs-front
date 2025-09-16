@@ -96,6 +96,8 @@ export const th = {
             startingDay: "วันเริ่มต้น",
             deliveryDay: "วันส่งมอบ",
             deliverables: "สิ่งที่จะส่งมอบ",
+            exampleDeliverable: "เช่น หน้า Landing Page รองรับมือถือ",
+            exampleWorkStep: "เช่น ออกแบบ mockup สำหรับทุกส่วน",
             remove: "ลบ",
             addDeliverable: "+ เพิ่มสิ่งที่จะส่งมอบ",
             workSteps: "ขั้นตอนการทำงาน",

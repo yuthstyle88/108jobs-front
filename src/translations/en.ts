@@ -96,6 +96,8 @@ export const en = {
             startingDay: "Starting Day",
             deliveryDay: "Delivery Day",
             deliverables: "Deliverables",
+            exampleDeliverable: "e.g., Responsive landing page",
+            exampleWorkStep: "e.g., Design mockups for all sections",
             remove: "Remove",
             addDeliverable: "+ Add deliverable",
             workSteps: "Work Steps",

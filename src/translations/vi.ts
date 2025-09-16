@@ -96,6 +96,8 @@ export const vi = {
             startingDay: "Ngày bắt đầu",
             deliveryDay: "Ngày giao",
             deliverables: "Hạng mục bàn giao",
+            exampleDeliverable: "vd., Trang đích đáp ứng (Responsive)",
+            exampleWorkStep: "vd., Thiết kế mockup cho tất cả các phần",
             remove: "Xóa",
             addDeliverable: "+ Thêm hạng mục bàn giao",
             workSteps: "Các bước công việc",
