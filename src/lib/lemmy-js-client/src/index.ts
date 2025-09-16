@@ -3,6 +3,7 @@ import {Budget} from "./types/Budget";
 export * from "./http";
 export type {UploadImage} from "./other_types";
 export type { ChatRoom } from "./types/ChatRoom";
+export type { ChatRoomView } from "./types/ChatRoomView";
 export type { ChatRoomId } from "./types/ChatRoomId";
 export type { ChatParticipant } from "./types/ChatParticipant";
 export type { LastMessage } from "./types/LastMessage";

@@ -1,14 +1,10 @@
-import {ChatRoom} from "./ChatRoom";
-import {ChatParticipant} from "./ChatParticipant";
-import {LastMessage} from "./LastMessage";
-import {WorkflowStatus} from "./WorkflowStatus";
-import { PostId } from "./PostId";
+import type { ChatRoomView } from "./ChatRoomView";
+import type { LastMessage } from "./LastMessage";
+import type { WorkflowStatus } from "./WorkflowStatus";
 
+// Matches backend ChatRoomResponse with camelCase fields
 export type ChatRoomResponse = {
-    room: ChatRoom,
-    participants: ChatParticipant[],
-    lastMessage?: LastMessage,
-    // Workflow state can also be present at the wrapper level depending on API
+    room: ChatRoomView;
+    lastMessage?: LastMessage;
     workflowStatus?: WorkflowStatus;
-    postId?: PostId;
-}
+};

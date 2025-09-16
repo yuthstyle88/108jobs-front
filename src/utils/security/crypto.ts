@@ -86,8 +86,9 @@ async function deriveRoomAesGcmKey(privateKey: CryptoKey, peerPubHex: string, ro
   const peerPub = await importPeerPublicKeyHex(peerPubHex);
   const shared = await crypto.subtle.deriveBits({ name: "ECDH", public: peerPub }, privateKey, 256);
   const ikm = await crypto.subtle.importKey("raw", shared, "HKDF", false, ["deriveKey"]);
+  // Derive an AES-GCM key. It must be extractable to export raw bytes for in-memory caching/base64.
   return crypto.subtle.deriveKey(
-    { name: "HKDF", hash: "SHA-256", salt: utf8(roomId), info: utf8("fastwork-chat") },
+    { name: "HKDF", hash: "SHA-256", salt: utf8(roomId), info: utf8("108jobs-chat") },
     ikm,
     { name: "AES-GCM", length: 256 },
     false,

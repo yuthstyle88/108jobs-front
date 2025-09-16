@@ -10,6 +10,7 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faComment} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import {Post} from "@/lib/lemmy-js-client";
 
 export default function MessageClient({roomId}: { roomId: string }) {
     const accessToken = UserService.Instance.auth();
@@ -18,7 +19,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     const [partnerName, setPartnerName] = useState<string>("Unknown");
     const [loading, setLoading] = useState(true);
     const [peerPublicKeyHex, setPeerPublicKeyHex] = useState<string | undefined>(undefined);
-    const [postId, setPostId] = useState<number | string | undefined>(undefined);
+    const [post, setPost] = useState<Post>();
 
     useEffect(() => {
         let cancelled = false;
@@ -28,8 +29,8 @@ export default function MessageClient({roomId}: { roomId: string }) {
             const chatRoomRes = await HttpService.client.getChatRoom(roomId);
 
             if (!cancelled && chatRoomRes.state === REQUEST_STATE.SUCCESS) {
-                const participants = chatRoomRes.data.participants as any[];
-                try { setPostId((chatRoomRes.data as any)?.postId ?? (chatRoomRes.data as any)?.room?.postId); } catch {}
+                const participants = ((chatRoomRes.data as any)?.room?.participants as any[]) ?? [];
+                try { setPost(((chatRoomRes.data as any)?.room?.post) ?? ((chatRoomRes.data as any)?.post)); } catch {}
 
                 const other = participants.find(
                     (p: any) => String(p.memberId) !== String(localUser.id)
@@ -81,7 +82,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
 
     return (
         <WebSocketProvider token={accessToken} roomId={roomId} peerPublicKeyHex={peerPublicKeyHex}>
-            <ChatSection roomId={roomId} partnerName={partnerName} partnerAvatar={""}/>
+            <ChatSection roomId={roomId} post={post} partnerName={partnerName} partnerAvatar={""}/>
         </WebSocketProvider>
     );
 }

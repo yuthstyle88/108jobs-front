@@ -98,19 +98,33 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         const hasMore = typeof (input as any)?.nextPage !== 'undefined' ? !!(input as any).nextPage : totalLoaded >= page * pageSize;
         const mapped: AppChatRoom[] = [];
         for (const it of items as any[]) {
-            const other = it.participants.find(
+            // Normalize item shape to ChatRoomView whether input is ChatRoomResponse or ChatRoomView
+            const roomView = (it as any)?.room?.room ? (it as any).room : (it as any);
+            const rawId = roomView?.room?.id ?? roomView?.id ?? (it as any)?.roomId ?? (it as any)?.id;
+            if (!rawId) {
+                // Skip invalid entries with no id to avoid "undefined"
+                continue;
+            }
+
+            const participantsArr = (roomView?.participants ?? (it as any)?.participants ?? []) as any[];
+            const other = participantsArr.find(
                 (p: any) => String(p.memberId) !== String(localUser?.id)
             );
 
-            const res = await HttpService.client.visitProfile(String(other.memberId));
-            const profile = res.state === REQUEST_STATE.SUCCESS ? res?.data.profile : { name: "Unknown" };
+            let profileName = "Unknown";
+            if (other?.memberId != null) {
+                try {
+                    const res = await HttpService.client.visitProfile(String(other.memberId));
+                    profileName = res.state === REQUEST_STATE.SUCCESS ? (res as any)?.data?.profile?.name ?? "Unknown" : "Unknown";
+                } catch {}
+            }
 
             mapped.push({
-                id: String(it.room.id),
-                name: profile.name,
-                participants: it.participants.map((p: any) => String(p.memberId)) as any,
+                id: String(rawId),
+                name: profileName,
+                participants: participantsArr.map((p: any) => String(p.memberId)) as any,
                 unreadCount: 0,
-                postId: (it as any).postId ?? (it.room?.postId as any),
+                postId: roomView?.room?.postId ?? roomView?.post?.id ?? (it as any)?.postId,
             } as any);
         }
 

@@ -1,13 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import LoadingBlur from "@/components/LoadingBlur";
-import {CategoriesImage, ProfileImage} from "@/constants/images";
-import type { ChatMessage as WsChatMessage } from "lemmy-js-client";
+import {ProfileImage} from "@/constants/images";
+import type {ChatMessage as WsChatMessage, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
@@ -29,15 +28,17 @@ type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
 
 interface ChatSectionProps {
     roomId: string;
+    post?: Post;
     partnerName: string;
     partnerAvatar: string;
 }
 
-const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerAvatar }) => {
+const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, partnerAvatar }) => {
     const { markRoomRead, setActiveRoomId } = useChatRooms();
     const { state: stepperState, send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
+    const [showJobDetailModal, setShowJobDetailModal] = useState<boolean>(false);
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
     const { t } = useTranslation();
@@ -215,10 +216,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         partnerAvatar: partnerAvatar,
         partnerDisplayName: partnerName,
         job: {
-            id: roomId,
-            title: "Sample Job",
-            coverImage: CategoriesImage.seoJob,
-            description: "Sample job description",
+            id: post?.id,
+            title: post?.name,
+            description: post?.body,
         },
         messages: [],
     };
@@ -227,7 +227,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
 
         // Load status from API server when available
         const { data: roomData } = useHttpGet("getChatRoom", [roomId as any]);
-        const roomPostId = (roomData as any)?.postId ?? (roomData as any)?.room?.postId;
+        const roomPostId = (roomData as any)?.room?.room?.postId ?? (roomData as any)?.room?.post?.id ?? (roomData as any)?.postId ?? (roomData as any)?.room?.postId;
         const setWorkflowState = useStateMachineStore((s) => s.set);
         useEffect(() => {
             const rd: any = roomData as any;
@@ -649,16 +649,19 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                         />
                     </div>
                     <div className="p-3 sm:p-4 md:p-6 bg-white border-t border-gray-200">
-                        <div className="flex items-center bg-white rounded-lg shadow-sm p-2 sm:p-3 hover:shadow-md transition-all duration-200 hover:transform hover:scale-105" aria-label="Job details">
-                            <div className="w-10 sm:w-12 md:w-16 h-10 sm:h-12 md:h-16 rounded-md bg-gray-200 overflow-hidden mr-2 sm:mr-3 md:mr-4 flex-shrink-0">
-                                <Image
-                                    src={currentRoom?.job?.coverImage || CategoriesImage.seoJob}
-                                    alt={currentRoom?.job?.title || "Job Cover"}
-                                    width={64}
-                                    height={64}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
+                        <div
+                            className="flex items-center bg-white rounded-lg shadow-sm p-2 sm:p-3 hover:shadow-md transition-all duration-200 hover:transform hover:scale-105 cursor-pointer"
+                            aria-label="Job details"
+                            role="button"
+                            tabIndex={0}
+                            onClick={() => setShowJobDetailModal(true)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    setShowJobDetailModal(true);
+                                }
+                            }}
+                        >
                             <div className="flex-1">
                                 <h3 className="text-xs sm:text-sm md:text-base font-semibold text-gray-900 line-clamp-1">
                                     {currentRoom?.job?.title || "No Job Title"}
@@ -715,16 +718,19 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             />
                         </div>
                         <div className="p-3 sm:p-4 bg-white">
-                            <div className="flex items-center bg-white rounded-lg shadow-sm p-2 sm:p-3" aria-label="Job details">
-                                <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-md bg-gray-200 overflow-hidden mr-2 sm:mr-3 flex-shrink-0">
-                                    <Image
-                                        src={currentRoom?.job?.coverImage || CategoriesImage.seoJob}
-                                        alt={currentRoom?.job?.title || "Job Cover"}
-                                        width={48}
-                                        height={48}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
+                            <div
+                                className="flex items-center bg-white rounded-lg shadow-sm p-2 sm:p-3 cursor-pointer"
+                                aria-label="Job details"
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => setShowJobDetailModal(true)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        setShowJobDetailModal(true);
+                                    }
+                                }}
+                            >
                                 <div className="flex-1">
                                     <h3 className="text-xs sm:text-sm font-semibold text-gray-900 line-clamp-1">
                                         {currentRoom?.job?.title || "No Job Title"}
@@ -801,6 +807,55 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 }}
                             >
                                 {t("profileChat.requestRevision") || "Request Revision"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showJobDetailModal && (
+                <div
+                    className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center"
+                    onClick={() => setShowJobDetailModal(false)}
+                >
+                    <div
+                        className="bg-white rounded-lg p-4 sm:p-6 w-[95%] sm:w-[90%] max-w-2xl shadow-lg"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="job-details-title"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-start justify-between gap-4 mb-3">
+                            <h3 id="job-details-title" className="text-base sm:text-lg font-semibold text-gray-900">
+                                {t("profileChat.jobDetails") || "Job Details"}
+                            </h3>
+                            <button
+                                className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600"
+                                aria-label="Close job details"
+                                onClick={() => setShowJobDetailModal(false)}
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div className="space-y-3">
+                            <div>
+                                <h4 className="text-sm sm:text-base font-medium text-gray-800">
+                                    {currentRoom?.job?.title || (t("profileChat.noJobTitle") || "No Job Title")}
+                                </h4>
+                            </div>
+                            <div className="max-h-[60vh] overflow-auto">
+                                <p className="text-sm sm:text-base text-gray-700 whitespace-pre-wrap">
+                                    {currentRoom?.job?.description || (t("profileChat.noJobDescription") || "No description available")}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="mt-4 flex justify-end">
+                            <button
+                                className="rounded-md bg-primary hover:bg-[#063a68] text-white px-4 py-2 text-sm transition-all duration-200"
+                                onClick={() => setShowJobDetailModal(false)}
+                            >
+                                {t("profileChat.cancel") || "Close"}
                             </button>
                         </div>
                     </div>

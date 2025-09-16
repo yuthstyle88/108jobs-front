@@ -7,6 +7,7 @@ import JobBoardTab from "../_components/JobBoardTab";
 import {Pagination} from "@/components/Pagination";
 import {formatDateTime} from "@/utils";
 import Image from "next/image";
+import Link from "next/link";
 import {ProfileImage} from "@/constants/images";
 import Modal from "@/components/ui/Modal";
 import { HttpService } from "@/services/HttpService";
@@ -83,19 +84,35 @@ const OffersPage = () => {
                   proposals.comments.map((p: any) => (
                     <tr key={p.comment.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <div className="h-10 w-10 rounded-full bg-gray-200 overflow-hidden mr-3">
-                            {p.creator?.avatar ? (
-                              <Image src={p.creator.avatar} alt={p.creator.name || "avatar"} width={40} height={40} className="h-10 w-10 object-cover" />
-                            ) : (
-                              <Image src={ProfileImage.jobBoard} alt="avatar" width={40} height={40} className="h-10 w-10 object-cover" />
-                            )}
+                        {p.creator?.name ? (
+                          <Link href={`/${currentLang}/profile/${p.creator.name}`} aria-label={`View ${p.creator.name} profile`} className="flex items-center group">
+                            <div className="h-10 w-10 rounded-full bg-gray-200 overflow-hidden mr-3">
+                              {p.creator?.avatar ? (
+                                <Image src={p.creator.avatar} alt={p.creator.name || "avatar"} width={40} height={40} className="h-10 w-10 object-cover" />
+                              ) : (
+                                <Image src={ProfileImage.jobBoard} alt="avatar" width={40} height={40} className="h-10 w-10 object-cover" />
+                              )}
+                            </div>
+                            <div className="flex flex-col cursor-pointer">
+                              <span className="font-medium text-gray-900 group-hover:underline">{p.creator?.name || p.creator?.displayName || "Unknown"}</span>
+                              {p.creator?.name && (<span className="text-xs text-gray-500">@{p.creator.name}</span>)}
+                            </div>
+                          </Link>
+                        ) : (
+                          <div className="flex items-center">
+                            <div className="h-10 w-10 rounded-full bg-gray-200 overflow-hidden mr-3">
+                              {p.creator?.avatar ? (
+                                <Image src={p.creator.avatar} alt={p.creator.name || "avatar"} width={40} height={40} className="h-10 w-10 object-cover" />
+                              ) : (
+                                <Image src={ProfileImage.jobBoard} alt="avatar" width={40} height={40} className="h-10 w-10 object-cover" />
+                              )}
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="font-medium text-gray-900">{p.creator?.name || p.creator?.displayName || "Unknown"}</span>
+                              {p.creator?.name && (<span className="text-xs text-gray-500">@{p.creator.name}</span>)}
+                            </div>
                           </div>
-                          <div className="flex flex-col">
-                            <span className="font-medium text-gray-900">{p.creator?.name || p.creator?.displayName || "Unknown"}</span>
-                            {p.creator?.name && (<span className="text-xs text-gray-500">@{p.creator.name}</span>)}
-                          </div>
-                        </div>
+                        )}
                       </td>
                       <td className="px-6 py-4 text-gray-700 max-w-[420px]">
                         <div className="line-clamp-2 whitespace-pre-wrap">{p.comment.content}</div>
@@ -104,17 +121,6 @@ const OffersPage = () => {
                         {formatDateTime(p.comment.publishedAt, "datetime")}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm space-x-3">
-                        <button
-                          className="text-blue-600 hover:text-blue-800 px-3 py-1 rounded-md hover:bg-blue-50"
-                          onClick={() => {
-                            const username = p.creator?.name || p.creator?.displayName;
-                            if (username) {
-                              route.push(`/${currentLang}/profile/${username}`);
-                            }
-                          }}
-                        >
-                          View profile
-                        </button>
                         <button
                           className="text-gray-700 hover:text-gray-900 px-3 py-1 rounded-md hover:bg-gray-50"
                           onClick={() => setSelectedProposal(p)}
@@ -148,7 +154,7 @@ const OffersPage = () => {
           )}
         </div>
         <div className="mt-12 h-[148px] bg-[#D0E1FB] rounded-lg overflow-hidden flex justify-center items-center">
-          <Image src={ProfileImage.jobBoard} alt="Job Board" className="w-auto h-full object-contain" />
+          <Image src={ProfileImage.jobBoard} alt="Job Board" />
         </div>
       </div>
 
@@ -156,19 +162,35 @@ const OffersPage = () => {
       {selectedProposal && (
         <Modal isOpen={!!selectedProposal} onClose={() => setSelectedProposal(null)} title="Proposal Details" closeOnOutsideClick>
           <div className="space-y-4">
-            <div className="flex items-center">
-              <div className="h-12 w-12 rounded-full bg-gray-200 overflow-hidden mr-3">
-                {selectedProposal.creator?.avatar ? (
-                  <Image src={selectedProposal.creator.avatar} alt={selectedProposal.creator.name || "avatar"} width={48} height={48} className="h-12 w-12 object-cover" />
-                ) : (
-                  <Image src={ProfileImage.jobBoard} alt="avatar" width={48} height={48} className="h-12 w-12 object-cover" />
-                )}
+            {selectedProposal.creator?.name ? (
+              <Link href={`/${currentLang}/profile/${selectedProposal.creator.name}`} aria-label={`View ${selectedProposal.creator.name} profile`} className="flex items-center group">
+                <div className="h-12 w-12 rounded-full bg-gray-200 overflow-hidden mr-3">
+                  {selectedProposal.creator?.avatar ? (
+                    <Image src={selectedProposal.creator.avatar} alt={selectedProposal.creator.name || "avatar"} width={48} height={48} className="h-12 w-12 object-cover" />
+                  ) : (
+                    <Image src={ProfileImage.jobBoard} alt="avatar" width={48} height={48} className="h-12 w-12 object-cover" />
+                  )}
+                </div>
+                <div className="cursor-pointer">
+                  <div className="font-medium text-gray-900 group-hover:underline">{selectedProposal.creator?.name || selectedProposal.creator?.displayName || "Unknown"}</div>
+                  <div className="text-xs text-gray-500">Submitted {formatDateTime(selectedProposal.comment.publishedAt, "datetime")}</div>
+                </div>
+              </Link>
+            ) : (
+              <div className="flex items-center">
+                <div className="h-12 w-12 rounded-full bg-gray-200 overflow-hidden mr-3">
+                  {selectedProposal.creator?.avatar ? (
+                    <Image src={selectedProposal.creator.avatar} alt={selectedProposal.creator.name || "avatar"} width={48} height={48} className="h-12 w-12 object-cover" />
+                  ) : (
+                    <Image src={ProfileImage.jobBoard} alt="avatar" width={48} height={48} className="h-12 w-12 object-cover" />
+                  )}
+                </div>
+                <div>
+                  <div className="font-medium text-gray-900">{selectedProposal.creator?.name || selectedProposal.creator?.displayName || "Unknown"}</div>
+                  <div className="text-xs text-gray-500">Submitted {formatDateTime(selectedProposal.comment.publishedAt, "datetime")}</div>
+                </div>
               </div>
-              <div>
-                <div className="font-medium text-gray-900">{selectedProposal.creator?.name || selectedProposal.creator?.displayName || "Unknown"}</div>
-                <div className="text-xs text-gray-500">Submitted {formatDateTime(selectedProposal.comment.publishedAt, "datetime")}</div>
-              </div>
-            </div>
+            )}
             <div className="p-3 bg-gray-50 rounded whitespace-pre-wrap text-gray-800">
               {selectedProposal.comment.content}
             </div>
@@ -178,17 +200,6 @@ const OffersPage = () => {
                 onClick={() => setSelectedProposal(null)}
               >
                 Close
-              </button>
-              <button
-                className="px-4 py-2 text-blue-600 hover:text-blue-800 rounded-md hover:bg-blue-50"
-                onClick={() => {
-                  const username = selectedProposal.creator?.name || selectedProposal.creator?.displayName;
-                  if (username) {
-                    route.push(`/${currentLang}/profile/${username}`);
-                  }
-                }}
-              >
-                View profile
               </button>
               <button
                 className="px-4 py-2 text-green-600 hover:text-green-800 rounded-md hover:bg-green-50 disabled:opacity-60"

@@ -14,7 +14,7 @@ const ChatWrapper = () => {
     const activeRoomId = params?.roomId as string | undefined;
     const { lang: currentLang } = useLanguage();
     const { localUser } = useMyUser();
-    const { rooms, isLoading, error, refresh } = useChatRooms();
+    const { rooms, isLoading, error} = useChatRooms();
     const [searchQuery, setSearchQuery] = useState("");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 

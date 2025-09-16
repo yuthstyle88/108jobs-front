@@ -18,7 +18,6 @@ function ChatListItemComponent({ room, isActive, currentLang, localUser }: ChatL
   // last message removed; no preview or timestamp
   const { markRoomRead } = useChatRooms();
 
-
   const handleClick = () => {
     try {
       // Only mark as read when user selects the room; do not reorder the list on click

@@ -7,7 +7,7 @@ import {decrypt, encrypt} from "@/lib/web-crypto";
 import {HttpService, UserService} from "@/services";
 import type {ChatMessage} from "lemmy-js-client";
 import {v4 as uuidv4} from "uuid";
-import {__DEV__, addOnce, buildWsUrl, getReceiverIdFromRoom, isBase64Like, logDebug, safeParse} from "@/utils/realtime";
+import {addOnce, buildWsUrl, getReceiverIdFromRoom, isBase64Like, safeParse} from "@/utils/realtime";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 
@@ -96,7 +96,6 @@ interface WebSocketProviderProps {
 
 function broadcastToListeners(payload: unknown): void {
     const event = {data: JSON.stringify(payload)} as MessageEvent;
-    logDebug(`broadcastToListeners: Broadcasting payload`, payload);
     for (const fn of listeners.values()) fn(event);
 }
 
@@ -136,8 +135,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             }
 
             if (!hasMoreMessages || isFetching) {
-                if (isFetching) console.log('[API][FETCH] Early return: already fetching');
-                else if (!hasMoreMessages) console.log('[API][FETCH] Early return: no more messages');
                 resolve();
                 return;
             }
@@ -157,7 +154,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 // Call HTTP API through wrapped client
                 const res = await HttpService.client.getChatHistory(query as any);
                 if (res.state !== REQUEST_STATE.SUCCESS) {
-                    console.warn('[API][FETCH] getChatHistory failed', res);
                     setIsFetching(false);
                     fetchResolveRef.current?.();
                     fetchResolveRef.current = null;
@@ -201,7 +197,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 fetchResolveRef.current?.();
                 fetchResolveRef.current = null;
             } catch (e) {
-                console.error('[API][FETCH] Error fetching history', e);
                 setIsFetching(false);
                 fetchResolveRef.current?.();
                 fetchResolveRef.current = null;
@@ -308,16 +303,12 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                             fetchResolveRef.current();
                             fetchResolveRef.current = null;
                         }
-                        console.log('[WS][FETCH] Applied cursors after pagination line', { prev, next });
                     }
 
                     if (transformedItems.length) {
                         broadcastToListeners(transformedItems[0]);
-                    } else {
-                        if (__DEV__) console.warn('onmessage: Ignored unsupported payload format');
                     }
                 } catch (e) {
-                    console.error('onmessage: Error processing WebSocket message', e);
                     setIsFetching(false);
                     if (fetchTimeoutRef.current) {
                         clearTimeout(fetchTimeoutRef.current);
@@ -354,11 +345,10 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 }, 3000);
             };
 
-            newSocket.onerror = (err) => {
+            newSocket.onerror = () => {
                 if (isManuallyClosingRef.current) {
                     return;
                 }
-                console.error(`WebSocket error for room ${roomId}`, err);
                 if (fetchTimeoutRef.current) {
                     clearTimeout(fetchTimeoutRef.current);
                     fetchTimeoutRef.current = null;
@@ -422,11 +412,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             }
 
             if (!data.message?.trim()) {
-                console.warn(`sendMessage: Cannot send empty message`);
                 return;
             }
-
-            console.log("sendMessage: Sending message", data.message, "to room", roomId, "from user", localUser?.id,)
 
             const messageId = data.id || uuidv4();
             if (!addOnce(sentMessagesRef.current, messageId)) {
