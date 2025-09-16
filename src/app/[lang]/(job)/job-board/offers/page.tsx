@@ -13,6 +13,7 @@ import Modal from "@/components/ui/Modal";
 import { HttpService } from "@/services/HttpService";
 import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { dmRoomId } from "@/utils/helpers";
+import {Ellipsis, Eye, MessageCircleMore, X} from "lucide-react";
 
 const OffersPage = () => {
   const route = useRouter();
@@ -67,7 +68,7 @@ const OffersPage = () => {
             <JobBoardTab />
           </div>
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-semibold">Proposals</h1>
+            <h1 className="text-xl text-primary font-semibold">Proposals</h1>
           </div>
           <div className="overflow-x-auto border-1 border-border-primary rounded-lg">
             <table className="min-w-full divide-y divide-gray-200">
@@ -125,14 +126,14 @@ const OffersPage = () => {
                           className="text-gray-700 hover:text-gray-900 px-3 py-1 rounded-md hover:bg-gray-50"
                           onClick={() => setSelectedProposal(p)}
                         >
-                          View details
+                            <Eye />
                         </button>
                         <button
                           className="text-green-600 hover:text-green-800 px-3 py-1 rounded-md hover:bg-green-50 disabled:opacity-60"
                           disabled={startingChatFor === (p.creator?.id ?? null)}
                           onClick={() => handleStartChat(p)}
                         >
-                          {startingChatFor === (p.creator?.id ?? null) ? "Starting..." : "Start chat"}
+                          {startingChatFor === (p.creator?.id ?? null) ? <Ellipsis /> : <MessageCircleMore />}
                         </button>
                       </td>
                     </tr>
@@ -140,7 +141,7 @@ const OffersPage = () => {
                 ) : (
                   <tr>
                     <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
-                      {isLoading ? "Loading..." : "No proposals found"}
+                      {isLoading ? <Ellipsis /> : "No proposals found"}
                     </td>
                   </tr>
                 )}
@@ -199,14 +200,14 @@ const OffersPage = () => {
                 className="px-4 py-2 text-gray-700 hover:text-gray-900 rounded-md hover:bg-gray-100"
                 onClick={() => setSelectedProposal(null)}
               >
-                Close
+                  <X />
               </button>
               <button
                 className="px-4 py-2 text-green-600 hover:text-green-800 rounded-md hover:bg-green-50 disabled:opacity-60"
                 disabled={startingChatFor === (selectedProposal.creator?.id ?? null)}
                 onClick={() => handleStartChat(selectedProposal)}
               >
-                {startingChatFor === (selectedProposal.creator?.id ?? null) ? "Starting..." : "Start chat"}
+                {startingChatFor === (selectedProposal.creator?.id ?? null) ? <Ellipsis /> : <MessageCircleMore />}
               </button>
             </div>
           </div>

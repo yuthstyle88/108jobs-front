@@ -91,7 +91,7 @@ async function deriveRoomAesGcmKey(privateKey: CryptoKey, peerPubHex: string, ro
     { name: "HKDF", hash: "SHA-256", salt: utf8(roomId), info: utf8("108jobs-chat") },
     ikm,
     { name: "AES-GCM", length: 256 },
-    false,
+    true,
     ["encrypt", "decrypt"]
   );
 }
@@ -134,7 +134,7 @@ export async function ensureSharedKeyForRoom(roomId: string, peerPublicSec1Hex?:
       claims: UserService.Instance.authInfo?.claims,
     };
   } catch (ex) {
-    console.warn(`ensureSharedKeyForRoom: Key derivation failed for room ${roomId}`, ex);
+    // console.warn(`ensureSharedKeyForRoom: Key derivation failed for room ${roomId}`, ex);
   }
 }
 

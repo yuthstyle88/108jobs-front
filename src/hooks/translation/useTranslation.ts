@@ -5,7 +5,6 @@ import {useLanguage} from "@/contexts/LanguageContext";
 export const useTranslation = () => {
   const {t, i18n} = useI18NextTranslation(); // ใช้ Hook ของ i18next
   const {lang} = useLanguage(); // ดึงภาษาจาก Context ของแอปพลิเคชัน
-  console.log("i18n object:", i18n);
 
   // ซิงค์ภาษาใน i18next กับ Context
   useEffect(() => {

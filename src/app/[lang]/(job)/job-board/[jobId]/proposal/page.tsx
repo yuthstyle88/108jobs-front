@@ -16,7 +16,7 @@ import useNotification from "@/hooks/useNotification";
 
 const createJobApplicationSchema = (t: (key: string, options?: any) => string) =>
     z.object({
-        whyHireYou: z.string().min(300, t("jobApplication.whyHireYou.required")),
+        whyHireYou: z.string().min(100, t("jobApplication.whyHireYou.required")),
     });
 
 type JobApplicationFormData = z.infer<ReturnType<typeof createJobApplicationSchema>>;
@@ -61,9 +61,6 @@ const JobApplication = () => {
                     }
                 }
 
-
-
-                successMessage(null, null, t("notification.jobCreateJobBoardSuccess") ?? "Success!");
                 await handleCreateSuccess();
             } catch (error) {
                 errorMessage(null, null, t("global.submissionFailed") ?? "Submission failed!");

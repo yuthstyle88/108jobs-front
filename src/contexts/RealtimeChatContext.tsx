@@ -36,7 +36,7 @@ async function mapIncomingToChatMessage(
                 const plain = await decrypt(m.content, opts.token, aesKey);
                 if (plain.length > 0) content = plain;
             } catch (e) {
-                console.warn(`onmessage: Decryption failed for ${opts.decryptLabel}`, e);
+                // console.warn(`onmessage: Decryption failed for ${opts.decryptLabel}`, e);
             }
         }
 
@@ -448,7 +448,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     payload = {...apiPayload, content: encrypted};
                 }
             } catch (e) {
-                console.warn(`sendMessage: E2EE encryption failed, sending plaintext`, e);
+                // console.warn(`sendMessage: E2EE encryption failed, sending plaintext`, e);
             }
 
             if (socket?.readyState === WebSocket.OPEN) {

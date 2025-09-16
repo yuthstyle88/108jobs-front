@@ -213,7 +213,7 @@ const MyJobs = () => {
                     <Image
                         src={ProfileImage.jobBoard}
                         alt="Job Board"
-                        className="w-auto h-full object-contain transition-transform duration-500 hover:scale-110"
+                        className="transition-transform duration-500 hover:scale-110"
                         priority
                     />
                 </div>

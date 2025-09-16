@@ -29,6 +29,8 @@ export type FreelanceChatFlowProps = {
     onStart?: () => void;
     canStartWorkflow?: boolean;
     canProposeQuote?: boolean;
+    canApproveQuotation?: boolean;
+    showStartButton?: boolean;
 } & FlowActions;
 
 const STEPS: Array<{ key: StatusKey; title: string; sub: string }> = [
@@ -59,6 +61,8 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  onStart,
                                                                  canStartWorkflow = true,
                                                                  canProposeQuote = true,
+                                                                 canApproveQuotation = true,
+                                                                 showStartButton = true,
                                                                  onProposeQuote,
                                                                  onApproveQuotation,
                                                                  onUploadAsset,
@@ -117,11 +121,15 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
 
         switch (key) {
             case 'QuotationPending':
-                return [
-                    btn(t('profileChat.proposeQuote') || 'Send quotation', canProposeQuote ? onProposeQuote : undefined),
-                    btn(t('profileChat.approveQuotation') || 'Approve quotation', () => setShowApproveConfirm(true)),
-                    ...(cancelBtn ? [cancelBtn] : []),
-                ];
+                const actionsQP: React.ReactElement[] = [];
+                if (canProposeQuote) {
+                    actionsQP.push(btn(t('profileChat.proposeQuote') || 'Send quotation', onProposeQuote));
+                }
+                if (canApproveQuotation) {
+                    actionsQP.push(btn(t('profileChat.approveQuotation') || 'Approve quotation', () => setShowApproveConfirm(true)));
+                }
+                if (cancelBtn) actionsQP.push(cancelBtn);
+                return actionsQP;
             case 'OrderApproved':
                 return [
                     btn(t('profileChat.uploadDraft') || 'แนบไฟล์ต้นฉบับ', onUploadAsset),
@@ -155,15 +163,17 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     <p className="text-sm text-gray-600">
                         {t('profileChat.startWorkflowHint') || 'The workflow will be shown after the employer starts it.'}
                     </p>
-                    <button
-                        className={`rounded-md px-4 py-2 text-sm font-medium ${canStartWorkflow ? 'bg-primary text-white hover:bg-[#063a68]' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
-                        onClick={canStartWorkflow ? (() => setShowStartConfirm(true)) : undefined}
-                        aria-disabled={!canStartWorkflow}
-                        disabled={!canStartWorkflow}
-                        title={!canStartWorkflow ? (t('profileChat.missingPostIdForQuotation') || 'Link a job to start the workflow') : undefined}
-                    >
-                        {t('profileChat.startWorkflow') || 'Start workflow'}
-                    </button>
+                    {showStartButton && (
+                        <button
+                            className={`rounded-md px-4 py-2 text-sm font-medium ${canStartWorkflow ? 'bg-primary text-white hover:bg-[#063a68]' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
+                            onClick={canStartWorkflow ? (() => setShowStartConfirm(true)) : undefined}
+                            aria-disabled={!canStartWorkflow}
+                            disabled={!canStartWorkflow}
+                            title={!canStartWorkflow ? (t('profileChat.missingPostIdForQuotation') || 'Link a job to start the workflow') : undefined}
+                        >
+                            {t('profileChat.startWorkflow') || 'Start workflow'}
+                        </button>
+                    )}
                 </div>
                 <ConfirmActionModal
                   isOpen={showStartConfirm}
@@ -234,6 +244,11 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     );
                 })}
             </ul>
+            {currentStatus === 'QuotationPending' && !canProposeQuote && !canApproveQuotation && (
+                <div className="mx-4 -mt-2 mb-2 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
+                    {t('profileChat.waitForFreelancerQuotation') || 'Waiting for freelancer to send a quotation.'}
+                </div>
+            )}
             <div className={`flex flex-col gap-2 px-4 ${compact ? 'pb-2' : 'pb-4'}`}>
                 {actionsForStep(currentStatus).map((action, idx) => (
                     <div key={idx} className="w-full">
@@ -241,6 +256,17 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     </div>
                 ))}
             </div>
+            <ConfirmActionModal
+              isOpen={showApproveConfirm}
+              onClose={() => setShowApproveConfirm(false)}
+              onConfirm={async () => {
+                setShowApproveConfirm(false);
+                await onApproveQuotation?.();
+              }}
+              title={t('profileChat.confirmApproveQuotationTitle') || 'Approve quotation?'}
+              message={t('profileChat.confirmApproveQuotationMessage') || 'This will approve the freelancer\'s quotation and convert it into an order.'}
+              confirmText={t('profileChat.approveQuotation') || 'Approve quotation'}
+            />
         </aside>
     );
 };

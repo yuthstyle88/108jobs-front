@@ -1,6 +1,6 @@
 "use client";
 
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
@@ -17,7 +17,7 @@ import FreelanceChatFlow, {FlowActions, StatusKey} from "@/components/FreelanceC
 import { createFlowActions } from "@/utils/chat/flowActions";
 import QuotationModal, {ProposedQuotePayload} from "@/components/QuotationModal";
 import {useWorkflowStepper} from "@/hooks/useWorkflowMachine";
-import type {CreateInvoiceForm} from "lemmy-js-client";
+import type {CreateInvoiceForm, ApproveQuotationForm} from "lemmy-js-client";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {apiToUiStatus, useStateMachineStore} from "@/stores/stateMachineStore";
@@ -42,6 +42,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
     const { t } = useTranslation();
+    const [workflowIdState, setWorkflowIdState] = useState<number | null>(null);
     type UIChatMessage = WsChatMessage & { isOwner?: boolean };
         const [messages, setMessages] = useState<UIChatMessage[]>([]);
     const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
@@ -57,6 +58,20 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         scrollContainerRef.current = el;
         if (el) setScrollParentEl(el);
     }, []);
+    const scrollToLatest = () => {
+        const rootEl = scrollContainerRef.current;
+        if (rootEl) {
+            rootEl.scrollTop = rootEl.scrollHeight - rootEl.clientHeight;
+        }
+    };
+    const scrollToLatestSoon = () => {
+        if (typeof window === 'undefined') return;
+        try {
+            requestAnimationFrame(() => requestAnimationFrame(scrollToLatest));
+        } catch {
+            setTimeout(scrollToLatest, 0);
+        }
+    };
     // Measure chat input height to prevent last message being obscured
     const inputContainerRef = useRef<HTMLDivElement>(null);
     const [bottomPad, setBottomPad] = useState<number>(0);
@@ -76,7 +91,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         };
     }, []);
     const isSubmittingRef = useRef(false);
-    const { localUser } = useMyUser();
+    const { localUser, person } = useMyUser();
     const latestIncomingRef = useRef<{ roomId: string; content: string; senderId: number; timestamp: string } | null>(null);
 
     useEffect(() => {
@@ -228,6 +243,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         // Load status from API server when available
         const { data: roomData } = useHttpGet("getChatRoom", [roomId as any]);
         const roomPostId = (roomData as any)?.room?.room?.postId ?? (roomData as any)?.room?.post?.id ?? (roomData as any)?.postId ?? (roomData as any)?.room?.postId;
+        // Determine if current user is the employer (job poster). Creator id is personId.
+        const postCreatorId = (post as any)?.creatorId ?? (roomData as any)?.room?.post?.creatorId ?? (roomData as any)?.post?.creatorId;
+        const isEmployer = postCreatorId != null && String(postCreatorId) === String(person?.id);
         const setWorkflowState = useStateMachineStore((s) => s.set);
         useEffect(() => {
             const rd: any = roomData as any;
@@ -269,6 +287,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
 
     const { execute: createInvoice } = useHttpPost("createInvoice");
     const { execute: startWorkflow } = useHttpPost("startWorkflow");
+    const { execute: approveQuotationApi } = useHttpPost("approveQuotation");
 
     const handleStartWorkflow = async () => {
         setError(null);
@@ -285,6 +304,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             const res = await startWorkflow({ postId, seqNumber, roomId: roomId});
             if (res?.state === REQUEST_STATE.SUCCESS && (res as any).data?.success) {
                 setHasStarted(true);
+                const wfId = (res as any)?.data?.workflowId;
+                if (wfId) setWorkflowIdState(Number(wfId));
                 // Ensure UI shows the flow at the initial step
                 goToStatus("QuotationPending");
             } else {
@@ -326,12 +347,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 return;
             }
 
+            const createdBillingId = (res as any)?.data?.billingId;
+
             // Proceed with chat message and state updates only if invoice creation succeeds
             const messageId = uuidv4();
             const readable =
                 t("profileChat.proposeQuoteMsg") ||
                 `Proposed quotation: ${data.projectName} - $${data.amount.toFixed(2)}`;
-            const payload = { type: "proposed-quote", quote: data };
+            const payload = { type: "proposed-quote", quote: data, billingId: createdBillingId } as any;
             
             // Add message to local state
             setMessages((prev) => [
@@ -347,6 +370,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 } as WsChatMessage,
                 ...prev,
             ]);
+            scrollToLatestSoon();
 
             // Send message via WebSocket
             sendMessage({
@@ -408,6 +432,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 } as WsChatMessage,
                 ...prev,
             ]);
+            scrollToLatestSoon();
             try {
                 const tsIso = new Date().toISOString();
                 try {
@@ -462,6 +487,65 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         }
     }, []);
 
+    // Approve quotation implementation
+    const approveQuotation = useCallback(async () => {
+        try {
+            setError(null);
+            // Resolve billingId from latest proposed-quote message
+            let latestPayload: any | null = null;
+            for (const m of messages) {
+                const content = (m.content || '').trim();
+                if (!content.startsWith('{')) continue;
+                try {
+                    const parsed = JSON.parse(content);
+                    if (parsed && parsed.type === 'proposed-quote') {
+                        latestPayload = parsed;
+                        break; // messages are newest-first
+                    }
+                } catch {}
+            }
+            const billingId = Number(latestPayload?.billingId);
+            if (!billingId || Number.isNaN(billingId)) {
+                setError(t('profileChat.quotationError') || 'Missing billing information for approval.');
+                return false;
+            }
+
+            // Resolve workflowId (from state or room response if provided)
+            const workflowIdCandidate = workflowIdState
+                ?? Number((roomData as any)?.room?.workflowId)
+                ?? Number((roomData as any)?.workflowId);
+            const workflowId = workflowIdCandidate && !Number.isNaN(workflowIdCandidate) ? Number(workflowIdCandidate) : undefined;
+            if (!workflowId) {
+                setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before approval.');
+                return false;
+            }
+
+            // Wallet id from current employer profile
+            const walletIdStr = (person as any)?.walletId;
+            const walletId = walletIdStr ? Number(walletIdStr) : undefined;
+            if (!walletId || Number.isNaN(walletId)) {
+                setError('Missing wallet ID for approval.');
+                return false;
+            }
+
+            // Seq number from proposed quote if available
+            const seqNumber = Number(latestPayload?.quote?.workSteps?.[0]?.seq) || 1;
+
+            const form: ApproveQuotationForm = { seqNumber, billingId, walletId, workflowId } as any;
+            console.log("[CHAT][APPROVE QUOTATION] Approving quotation", form);
+            const res = await approveQuotationApi(form as any);
+            const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
+            if (!ok) {
+                setError(((res as any)?.err?.message) || 'Failed to approve quotation.');
+            }
+            return !!ok;
+        } catch (e) {
+            const msg = e instanceof Error ? e.message : 'Unknown error';
+            setError(msg);
+            return false;
+        }
+    }, [messages, roomData, workflowIdState, person, approveQuotationApi, t]);
+
     const flowActions: FlowActions = createFlowActions({
         t,
         goToStatus,
@@ -475,6 +559,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         roomId,
         localUser,
         setError,
+        approveQuotation,
         getPostId: () => roomPostId,
     });
 
@@ -517,6 +602,19 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         } catch {
             /* ignore parse errors */
         }
+    }, [messages]);
+
+    const hasProposedQuote = useMemo(() => {
+        return messages.some((m) => {
+            const content = (m.content || '').trim();
+            if (!content.startsWith('{')) return false;
+            try {
+                const parsed = JSON.parse(content);
+                return parsed && parsed.type === 'proposed-quote';
+            } catch {
+                return false;
+            }
+        });
     }, [messages]);
 
     if (!roomId) {
@@ -636,8 +734,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                             className="space-y-4"
                             started={hasStarted || currentStatus !== 'QuotationPending'}
                             onStart={handleStartWorkflow}
-                            canStartWorkflow={Boolean(roomPostId)}
-                            canProposeQuote={Boolean(roomPostId)}
+                            canStartWorkflow={isEmployer && Boolean(roomPostId)}
+                            showStartButton={isEmployer}
+                            canProposeQuote={!isEmployer && Boolean(roomPostId)}
+                            canApproveQuotation={isEmployer && hasProposedQuote}
                             onProposeQuote={flowActions.onProposeQuote}
                             onApproveQuotation={flowActions.onApproveQuotation}
                             onUploadAsset={flowActions.onUploadAsset}
@@ -705,8 +805,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                 className="space-y-4"
                                 started={hasStarted || currentStatus !== 'QuotationPending'}
                                 onStart={handleStartWorkflow}
-                                canStartWorkflow={Boolean(roomPostId)}
-                                canProposeQuote={Boolean(roomPostId)}
+                                canStartWorkflow={isEmployer && Boolean(roomPostId)}
+                                showStartButton={isEmployer}
+                                canProposeQuote={!isEmployer && Boolean(roomPostId)}
+                                canApproveQuotation={isEmployer && hasProposedQuote}
                                 onProposeQuote={flowActions.onProposeQuote}
                                 onApproveQuotation={flowActions.onApproveQuotation}
                                 onUploadAsset={flowActions.onUploadAsset}

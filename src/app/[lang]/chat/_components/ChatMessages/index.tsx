@@ -59,7 +59,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 const content: string = anyMsg?.content || "";
                 return `${created}|${sender}|${content.length}:${content.slice(0, 16)}`;
             }}
-            followOutput="auto" // Auto-scroll to new messages when at bottom
+            followOutput={isFetching ? false : "auto"} // Auto-scroll to new messages when at bottom; disabled during history fetch
             initialTopMostItemIndex={displayedMessages.length - 1} // Start at newest message
             alignToBottom // Align viewport to bottom for newest messages
             atTopStateChange={(atTop) => {

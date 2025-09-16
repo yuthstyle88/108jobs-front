@@ -35,6 +35,7 @@ export const en = {
         },
         profileChat: {
             jobFlow: "Job Flow",
+            jobDetails: "Job Details",
             guide: "Usage Guide",
             startWorkflow: "Start workflow",
             startWorkflowHint: "The workflow will be shown after the employer starts it.",
@@ -58,6 +59,7 @@ export const en = {
             quotationError: "Failed to create invoice. Please try again.",
             uploadError: "Failed to upload file. Please try again.",
             confirmAssignMsg: "Assignment confirmed. Waiting for freelancer to accept.",
+            waitForFreelancerQuotation: "Waiting for freelancer to send a quotation.",
             step1: "Quotation Pending",
             step1Sub: "Quotation created by freelancer, waiting for employer review",
             step2: "Order Approved",
@@ -108,6 +110,8 @@ export const en = {
             startWorkflowFailed: "Failed to start workflow. Please try again.",
             confirmStartWorkflowTitle: "Start workflow?",
             confirmStartWorkflowMessage: "This will initialize the job flow for this room. Continue?",
+            confirmApproveQuotationTitle: "Approve quotation?",
+            confirmApproveQuotationMessage: "This will approve the freelancer's quotation and convert it into an order.",
             missingPostIdForQuotation: "This chat is not linked to a job post. Link a job to this room to create a quotation or start the workflow.",
         },
         allCategories: {
@@ -3186,8 +3190,8 @@ export const en = {
             whyHireYou: {
                 label: "Why Clients Should Hire You",
                 placeholder: "e.g. Relevant portfolio / Work history / Work process details",
-                required: "Minimum 300 characters required",
-                characterCount: "{{count}} / Minimum 300 characters"
+                required: "Minimum 100 characters required",
+                characterCount: "{{count}} / Minimum 100 characters"
             },
             portfolioUrl: {
                 label: "Portfolio URL (Optional)",

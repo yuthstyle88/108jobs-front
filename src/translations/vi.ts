@@ -35,6 +35,7 @@ export const vi = {
         },
         profileChat: {
             jobFlow: "Quy trình công việc",
+            jobDetails: "Chi tiết công việc",
             guide: "Hướng dẫn sử dụng",
             startWorkflow: "Bắt đầu quy trình",
             startWorkflowHint: "Quy trình sẽ hiển thị sau khi nhà tuyển dụng bắt đầu.",
@@ -58,6 +59,7 @@ export const vi = {
             quotationError: "Tạo hóa đơn không thành công. Vui lòng thử lại.",
             uploadError: "Tải tệp lên không thành công. Vui lòng thử lại.",
             confirmAssignMsg: "Đã xác nhận giao việc. Đợi freelancer chấp nhận.",
+            waitForFreelancerQuotation: "Vui lòng đợi freelancer gửi báo giá.",
             step1: "Chờ duyệt báo giá",
             step1Sub: "Freelancer tạo báo giá, chờ nhà tuyển dụng xem xét",
             step2: "Đơn hàng đã duyệt",
@@ -108,6 +110,8 @@ export const vi = {
             startWorkflowFailed: "Bắt đầu quy trình không thành công. Vui lòng thử lại.",
             confirmStartWorkflowTitle: "Bắt đầu quy trình?",
             confirmStartWorkflowMessage: "Thao tác này sẽ khởi tạo quy trình công việc cho phòng này. Tiếp tục?",
+            confirmApproveQuotationTitle: "Duyệt báo giá?",
+            confirmApproveQuotationMessage: "Thao tác này sẽ duyệt báo giá của freelancer và chuyển thành đơn hàng.",
             missingPostIdForQuotation: "Phòng chat này chưa được liên kết với bài đăng công việc. Hãy liên kết bài đăng để tạo báo giá hoặc bắt đầu quy trình.",
         },
         allCategories: {
@@ -3231,8 +3235,8 @@ export const vi = {
             whyHireYou: {
                 label: "Tại Sao Khách Hàng Nên Thuê Bạn",
                 placeholder: "Ví dụ: Hồ sơ liên quan / Lịch sử làm việc / Chi tiết quy trình làm việc",
-                required: "Yêu cầu tối thiểu 300 ký tự",
-                characterCount: "{{count}} / Tối thiểu 300 ký tự"
+                required: "Yêu cầu tối thiểu 100 ký tự",
+                characterCount: "{{count}} / Tối thiểu 100 ký tự"
             },
             portfolioUrl: {
                 label: "URL Hồ Sơ (Tùy Chọn)",

@@ -35,6 +35,7 @@ export const th = {
         },
         profileChat: {
             jobFlow: "ลำดับงาน",
+            jobDetails: "รายละเอียดงาน",
             guide: "คู่มือการใช้งาน",
             startWorkflow: "เริ่มลำดับงาน",
             startWorkflowHint: "จะแสดงลำดับงานหลังจากผู้ว่าจ้างกดเริ่มใช้งาน",
@@ -58,6 +59,7 @@ export const th = {
             quotationError: "ไม่สามารถสร้างใบแจ้งหนี้ได้ โปรดลองอีกครั้ง",
             uploadError: "อัปโหลดไฟล์ไม่สำเร็จ โปรดลองอีกครั้ง",
             confirmAssignMsg: "ยืนยันการมอบหมายแล้ว รอฟรีแลนซ์ยืนยัน",
+            waitForFreelancerQuotation: "โปรดรอให้ฟรีแลนซ์ส่งใบเสนอราคา",
             step1: "รอพิจารณาใบเสนอราคา",
             step1Sub: "ฟรีแลนซ์สร้างใบเสนอราคา รอผู้ว่าจ้างตรวจสอบ",
             step2: "อนุมัติงาน",
@@ -108,6 +110,8 @@ export const th = {
             startWorkflowFailed: "เริ่มลำดับงานไม่สำเร็จ โปรดลองอีกครั้ง",
             confirmStartWorkflowTitle: "เริ่มลำดับงาน?",
             confirmStartWorkflowMessage: "การดำเนินการนี้จะเริ่มลำดับงานของห้องนี้ ต้องการดำเนินการต่อหรือไม่?",
+            confirmApproveQuotationTitle: "อนุมัติใบเสนอราคา?",
+            confirmApproveQuotationMessage: "การดำเนินการนี้จะอนุมัติใบเสนอราคาของฟรีแลนซ์และแปลงเป็นออเดอร์",
             missingPostIdForQuotation: "ห้องแชทนี้ยังไม่เชื่อมกับงาน โปรดเชื่อมโยงงานกับห้องนี้ก่อน จึงจะสามารถสร้างใบเสนอราคา หรือเริ่มลำดับงานได้",
         },
         allCategories: {
@@ -3123,8 +3127,8 @@ export const th = {
             whyHireYou: {
                 label: "เหตุผลที่ลูกค้าควรจ้างคุณ",
                 placeholder: "เช่น พอร์ตโฟลิโอที่เกี่ยวข้อง / ประวัติการทำงาน / รายละเอียดกระบวนการทำงาน",
-                required: "ต้องมีอย่างน้อย 300 ตัวอักษร",
-                characterCount: "{{count}} / ต้องมีอย่างน้อย 300 ตัวอักษร"
+                required: "ต้องมีอย่างน้อย 100 ตัวอักษร",
+                characterCount: "{{count}} / ต้องมีอย่างน้อย 100 ตัวอักษร"
             },
             portfolioUrl: {
                 label: "URL พอร์ตโฟลิโอ (ไม่บังคับ)",
