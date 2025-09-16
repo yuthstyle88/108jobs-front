@@ -1821,15 +1821,15 @@ export class LemmyHttp extends Controller {
      * @summary List user bank accounts (admin only).
      */
     @Security("bearerAuth")
-    @Get("/admin/bank-account/list")
-    @Tags("Admin")
+    @Get("/bank-account")
+    @Tags("Account")
     async listUserBankAccounts(
         @Queries() form: GetBankAccountsI = {},
         @Inject() options?: RequestOptions,
     ) {
         return this.#wrapper<GetBankAccounts, ListBankAccountsResponse>(
             HttpType.Get,
-            "/admin/bank-account/list",
+            "/bank-account/list",
             form,
             options,
         );

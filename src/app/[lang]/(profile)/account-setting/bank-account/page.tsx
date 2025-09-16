@@ -19,7 +19,7 @@ const BankAccount = () => {
   const {
     data: bankListRes,
     isMutating: isBankListLoading,
-  } = useHttpGet("getBankList");
+  } = useHttpGet("listUserBankAccounts");
 
   const {
     data: bankAccountsRes,
@@ -31,7 +31,7 @@ const BankAccount = () => {
   const { execute: deleteBankAccount, isMutating: isDeleting } =
     useHttpDelete("deleteBankAccount");
 
-  const bankList = bankListRes?.banks || [];
+  const bankList = bankListRes?.bankAccounts || [];
   const bankAccounts = (bankAccountsRes?.bankAccounts ?? []) as any[];
 
   const [modalOpen, setModalOpen] = useState(false);
