@@ -9,16 +9,21 @@ import {formatDateTime} from "@/utils";
 import Image from "next/image";
 import {ProfileImage} from "@/constants/images";
 import Modal from "@/components/ui/Modal";
+import { HttpService } from "@/services/HttpService";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
+import { dmRoomId } from "@/utils/helpers";
 
 const OffersPage = () => {
   const route = useRouter();
   const params = useParams();
   const currentLang = (params?.lang as string) || 'th';
   const searchParams = useSearchParams();
+  const { person: currentUser } = useMyUser();
   const postIdParam = searchParams.get("postId");
   const postId = useMemo(() => (postIdParam ? Number(postIdParam) : undefined), [postIdParam]);
   const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined);
   const [selectedProposal, setSelectedProposal] = useState<any | null>(null);
+  const [startingChatFor, setStartingChatFor] = useState<number | null>(null);
 
   const { data: proposals, pagination, isMutating: isLoading } = useHttpGet("getComments", {
     pageCursor: currentCursor,
@@ -27,6 +32,30 @@ const OffersPage = () => {
 
   const handlePageChange = (pageCursor: string | null) => {
     setCurrentCursor(pageCursor || undefined);
+  };
+
+  const handleStartChat = async (proposal: any) => {
+    const partnerPersonId = proposal?.creator?.id;
+    const currentUserId = currentUser?.id;
+    if (!partnerPersonId || !currentUserId) return;
+    if (partnerPersonId === currentUserId) return;
+
+    const roomId = dmRoomId(currentUserId, partnerPersonId);
+    try {
+      setStartingChatFor(partnerPersonId);
+      try {
+        await HttpService.client.createChatRoom({
+          partnerPersonId,
+          roomId,
+          ...(postId ? { postId } : {}),
+        });
+      } catch (e) {
+        // If room already exists or API fails, proceed to navigate anyway
+      }
+      route.push(`/${currentLang}/chat/message/${roomId}`);
+    } finally {
+      setStartingChatFor(null);
+    }
   };
 
   return (
@@ -92,6 +121,13 @@ const OffersPage = () => {
                         >
                           View details
                         </button>
+                        <button
+                          className="text-green-600 hover:text-green-800 px-3 py-1 rounded-md hover:bg-green-50 disabled:opacity-60"
+                          disabled={startingChatFor === (p.creator?.id ?? null)}
+                          onClick={() => handleStartChat(p)}
+                        >
+                          {startingChatFor === (p.creator?.id ?? null) ? "Starting..." : "Start chat"}
+                        </button>
                       </td>
                     </tr>
                   ))
@@ -153,6 +189,13 @@ const OffersPage = () => {
                 }}
               >
                 View profile
+              </button>
+              <button
+                className="px-4 py-2 text-green-600 hover:text-green-800 rounded-md hover:bg-green-50 disabled:opacity-60"
+                disabled={startingChatFor === (selectedProposal.creator?.id ?? null)}
+                onClick={() => handleStartChat(selectedProposal)}
+              >
+                {startingChatFor === (selectedProposal.creator?.id ?? null) ? "Starting..." : "Start chat"}
               </button>
             </div>
           </div>

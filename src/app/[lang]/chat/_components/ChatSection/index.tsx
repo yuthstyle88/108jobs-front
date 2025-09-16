@@ -89,8 +89,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    const lastUpdateWasHistoryRef = useRef(false);
-
     const { sendMessage, fetchHistory, isConnected, hasMoreMessages, isFetching } = useWebSocket(
         `chat_${roomId}`,
         (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) => {
@@ -122,8 +120,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                 let latestSenderId: number | null = null;
                 // Consider current batch as history if fetching or if this is the very first inflow (prev empty)
                 const isHistoryBatch = isFetching || prev.length === 0;
-                // Flag so auto-scroll effect can skip when loading history
-                try { lastUpdateWasHistoryRef.current = isHistoryBatch; } catch {}
                 let inc = 0;
                 for (const msg of items) {
                     const isDuplicate = copy.some(
@@ -521,27 +517,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         } catch {
             /* ignore parse errors */
         }
-    }, [messages]);
-
-    // Auto-scroll behavior: only when user is at (or near) bottom, or on initial load/history
-    useEffect(() => {
-        const rootEl = scrollContainerRef.current;
-        if (!rootEl) return;
-        // Skip auto-scroll if the latest update was history pagination
-        if (lastUpdateWasHistoryRef.current) {
-            lastUpdateWasHistoryRef.current = false; // reset flag for next updates
-            return;
-        }
-        // Do not auto-scroll if user is viewing history (scrolled up)
-        // Allow auto-scroll only when the viewport is already at bottom
-        if (!atBottomRef.current) {
-            return;
-        }
-        // Defer to next frame to allow DOM to render new messages.
-        const id = window.requestAnimationFrame(() => {
-            rootEl.scrollTop = rootEl.scrollHeight - rootEl.clientHeight;
-        });
-        return () => window.cancelAnimationFrame(id);
     }, [messages]);
 
     if (!roomId) {

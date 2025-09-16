@@ -15,7 +15,7 @@ export function safeParse(val: unknown): unknown {
 }
 
 export function buildWsUrl(token: string, roomId: string): string {
-    const base = "wss://api-fastwork-stg.ibrowe.com";
+  const base = process.env.NEXT_PUBLIC_WS_BASE_URL || "ws://localhost:8532";
   return `${base}/ws?token=${encodeURIComponent(token)}&room_id=${encodeURIComponent(roomId)}`;
 }
 
