@@ -4,4 +4,10 @@ import type {BankId} from "./BankId";
 /**
  * Create a new bank account for user.
  */
-export type CreateBankAccount = { bankId: BankId, accountNumber: string, accountName: string, isDefault?: boolean, verificationImage?: string, };
+export type CreateBankAccount = {
+    bankId: BankId,
+    accountNumber: string,
+    accountName: string,
+    isDefault?: boolean,
+    verificationImage?: string,
+};

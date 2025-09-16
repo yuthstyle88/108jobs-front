@@ -32,6 +32,7 @@ import {ListTaglines} from "./types/ListTaglines";
 import {ResolveObject} from "./types/ResolveObject";
 import {Search} from "./types/Search";
 import {ListUserChatRoomsQuery} from "./types/ListUserChatRoomsQuery";
+import { GetBankAccounts } from "./types/GetBankAccounts";
 
 export const VERSION = "v4";
 
@@ -113,3 +114,6 @@ export interface ListUserChatRoomsQueryI extends ListUserChatRoomsQuery {}
 
 import { ChatHistoryQuery } from "./types/ChatHistoryQuery";
 export interface ChatHistoryQueryI extends ChatHistoryQuery {}
+
+// Bank Accounts (admin list)
+export interface GetBankAccountsI extends GetBankAccounts {}

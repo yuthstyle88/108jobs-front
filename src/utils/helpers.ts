@@ -437,8 +437,41 @@ export function getErrorPageData(error: Error, site?: GetSiteResponse): ErrorPag
  */
 async function toBlob(src: string | File | Blob): Promise<Blob> {
     if (typeof src === "string") {
+        // Handle data URLs without using fetch to avoid CSP violations (e.g., connect-src disallowing data:)
+        if (src.startsWith("data:")) {
+            // Format: data:[<mediatype>][;base64],<data>
+            const firstComma = src.indexOf(',');
+            const header = src.substring(5, firstComma); // exclude 'data:'
+            const dataPart = src.substring(firstComma + 1);
+
+            const parts = header.split(';');
+            const mime = parts[0] || 'application/octet-stream';
+            const isBase64 = parts.includes('base64');
+
+            let byteString: string;
+            if (isBase64) {
+                if (typeof atob === 'function') {
+                    byteString = atob(dataPart);
+                } else {
+                    // Node.js fallback
+                    byteString = Buffer.from(dataPart, 'base64').toString('binary');
+                }
+            } else {
+                // Percent-encoded data
+                byteString = decodeURIComponent(dataPart);
+            }
+
+            const len = byteString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([bytes], { type: mime });
+        }
+        // For http/https or other supported protocols, fall back to fetch
         return fetch(src).then((r) => r.blob());
     }
+    // If already a File or Blob, return as-is
     return src;
 }
 

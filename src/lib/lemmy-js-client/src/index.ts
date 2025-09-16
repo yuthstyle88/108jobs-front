@@ -390,6 +390,7 @@ export type {CreateBankAccount} from "./types/CreateBankAccount";
 export type {BankAccountForm} from "./types/BankAccountForm";
 export type {ListBankAccounts} from "./types/ListBankAccounts";
 export type {ListBankAccountsResponse} from "./types/ListBankAccountsResponse";
+export type {GetBankAccounts} from "./types/GetBankAccounts";
 export type {VisitProfileResponse} from "./types/VisitProfileResponse";
 export type { BillingId } from "./types/BillingId";
 export type { BillingStatus } from "./types/BillingStatus";
