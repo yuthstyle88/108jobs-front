@@ -22,11 +22,6 @@ const AccountSettingWrapper = () => {
             icon: IdCard
         },
         {
-            href: "/account-setting/address",
-            label: t("profileContact.sectionAddressInfo"),
-            icon: MapPin
-        },
-        {
             href: "/account-setting/bank-account",
             label: t("profileNavbar.bankInfo"),
             icon: CreditCard

@@ -2,9 +2,9 @@ import useNotification from "@/hooks/useNotification";
 import {HttpService} from "@/services";
 import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
 import {MyUserInfo, Person, SaveUserSettings, UploadImage, UploadImageResponse} from "lemmy-js-client";
-import {IdentityCard} from "lemmy-js-client";
 import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
+import {IdentityCard} from "@/lib/lemmy-js-client/src/types/IdentityCard";
 
 interface FormValues {
     displayName: string;

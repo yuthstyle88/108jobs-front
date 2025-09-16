@@ -38,7 +38,9 @@ const JobBoard = () => {
     const searchParams = useSearchParams();
 
     const encoded = searchParams.get("q");
-    const sanitizedQuery = encoded ? encodeURIComponent(encoded.trim()) : "";
+    // Avoid double-encoding: values from URLSearchParams are already decoded once by Next.js
+    // So use the raw value (trimmed) directly when sending to backend; backend/client will encode as needed.
+    const sanitizedQuery = encoded ? encoded.trim() : "";
 
     const [filters, setFilters] = useState<FilterState>({
         community: undefined,
@@ -203,7 +205,7 @@ const JobBoard = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                                       d="M12 4v16m8-8H4"/>
                             </svg>
-                            {t("profileJob.buttonPostJob")} (0/3)
+                            {t("profileJob.buttonPostJob")}
                         </Link>
                     </div>
                 </div>
@@ -534,7 +536,7 @@ const JobBoard = () => {
 
                     <div
                         className="mt-12 h-[148px] bg-[#D0E1FB] rounded-lg overflow-hidden flex justify-center items-center">
-                        <Image src={ProfileImage.jobBoard} alt="Job Board" className="w-auto h-full object-contain"
+                        <Image src={ProfileImage.jobBoard} alt="Job Board"
                                priority={false}/>
                     </div>
                 </div>

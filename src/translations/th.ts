@@ -108,6 +108,7 @@ export const th = {
             startWorkflowFailed: "เริ่มลำดับงานไม่สำเร็จ โปรดลองอีกครั้ง",
             confirmStartWorkflowTitle: "เริ่มลำดับงาน?",
             confirmStartWorkflowMessage: "การดำเนินการนี้จะเริ่มลำดับงานของห้องนี้ ต้องการดำเนินการต่อหรือไม่?",
+            missingPostIdForQuotation: "ห้องแชทนี้ยังไม่เชื่อมกับงาน โปรดเชื่อมโยงงานกับห้องนี้ก่อน จึงจะสามารถสร้างใบเสนอราคา หรือเริ่มลำดับงานได้",
         },
         allCategories: {
             allJobCategories: "หมวดหมู่งานทั้งหมด",
@@ -641,7 +642,7 @@ export const th = {
             serviceCategoryLabel: "หมวดหมู่บริการ",
             serviceCategoryPlaceholderUrl: "เช่น https://example.com",
             serviceCategoryPlaceholderSelect: "เลือกหมวดหมู่บริการ...",
-            exampleUrl: "ตัวอย่าง URL (ไม่จำเป็น)",
+            exampleUrl: "ตัวอย่าง URL",
             budgetLabel: "งบประมาณ",
             budgetPlaceholder: "บาท",
             deadlineLabel: "กำหนดเส้นตาย (ไม่บังคับ)",
@@ -1812,6 +1813,7 @@ export const th = {
             labelPhoneNumber: "เบอร์โทรศัพท์",
             phoneNumberPlaceholder: "กรอกเบอร์โทรศัพท์ของคุณ",
             invalidPhoneNumber: "รูปแบบเบอร์โทรศัพท์ไม่ถูกต้อง",
+            customContactPlaceholder: "กรอกช่องทางติดต่อ (เช่น Line ID, WhatsApp, Telegram)",
         },
         profileJob: {
             noJob: "ไม่พบประกาศงาน",
@@ -3109,6 +3111,9 @@ export const th = {
             updateFailed: "ไม่สามารถอัปเดตที่อยู่ได้",
             thaiCountryLabel: "ประเทศไทย",
             vietnamCountryLabel: "เวียดนาม",
+        },
+        errors: {
+            alreadyCommented: "คุณได้ส่งข้อเสนอสำหรับงานนี้ไปแล้ว"
         },
         jobApplication: {
             pageTitle: "เพิ่มโอกาสในการจ้างงานของคุณ! ด้วยประสบการณ์ที่เกี่ยวข้องและพอร์ตโฟลิโอ",

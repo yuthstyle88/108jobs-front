@@ -24,8 +24,7 @@ const kanit = Kanit({
 });
 
 export async function generateMetadata() {
-    return generateLocalizedMetadata("home",
-        {lang: "th"});
+    return generateLocalizedMetadata("home");
 }
 
 export default async function RootLayout({
@@ -35,8 +34,7 @@ export default async function RootLayout({
     children: React.ReactNode;
     params: Promise<{ lang: string }>;
 }>) {
-    const resolvedParams = await params;
-    const lang = resolvedParams.lang;
+    const { lang } = await params;
     const isoData = await isoDataInitializer();
     const cookieLang = await getCurrentLanguage();
     const userLang = isoData?.myUserInfo?.localUserView?.localUser?.interfaceLanguage as string | undefined;

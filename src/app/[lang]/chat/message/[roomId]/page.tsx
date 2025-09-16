@@ -6,7 +6,6 @@ export default async function ChatMessage({
   params: Promise<{roomId: string}>;
 }) {
   const {roomId} = await params;
-
   return (
     <MessageClient roomId={roomId}/>
   );

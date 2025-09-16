@@ -13,7 +13,6 @@ import {useCallback} from "react";
 import {CreateComment, PostId} from "lemmy-js-client";
 import {REQUEST_STATE} from "@/services/HttpService";
 import useNotification from "@/hooks/useNotification";
-import {router} from "next/client";
 
 const createJobApplicationSchema = (t: (key: string, options?: any) => string) =>
     z.object({
@@ -40,9 +39,9 @@ const JobApplication = () => {
 
     const {execute: createComment} = useHttpPost("createComment");
     const handleCreateSuccess = useCallback(async () => {
-            await router.replace("/jobs");
+            route.replace("/job-board");
         },
-        [router]);
+        [route]);
     const onSubmit = useCallback(
         async (data: JobApplicationFormData) => {
             try {
@@ -55,10 +54,14 @@ const JobApplication = () => {
                 const response = await createComment(payload);
 
                 if (response.state === REQUEST_STATE.FAILED) {
-                    const messageError = t("global.serverError");
-                    errorMessage(null, null, messageError);
-                    return;
+                    if (response.err.name === 'alreadyCommented') {
+                        const messageError = t("errors.alreadyCommented", { defaultValue: t("global.submissionFailed") || "You have already submitted proposal on this job." });
+                        errorMessage(null, null, messageError);
+                        return;
+                    }
                 }
+
+
 
                 successMessage(null, null, t("notification.jobCreateJobBoardSuccess") ?? "Success!");
                 await handleCreateSuccess();

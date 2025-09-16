@@ -2,7 +2,7 @@ import {isBrowser} from "@/utils/browser";
 import {testHost} from "@/utils/config";
 
 export function getBaseLocal(s = "") {
-  return `http${s}://${getHost()}`;
+  return `https://api-fastwork-stg.ibrowe.com`;
 }
 
 export function getExternalHost() {

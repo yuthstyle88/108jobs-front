@@ -23,6 +23,7 @@ import {ListPersonContent} from "./types/ListPersonContent";
 import {ListPersonHidden} from "./types/ListPersonHidden";
 import {ListPersonLiked} from "./types/ListPersonLiked";
 import {ListPersonRead} from "./types/ListPersonRead";
+import {ListPersonCreated} from "./types/ListPersonCreated";
 import {ListPersonSaved} from "./types/ListPersonSaved";
 import {ListPostLikes} from "./types/ListPostLikes";
 import {ListRegistrationApplications} from "./types/ListRegistrationApplications";
@@ -31,6 +32,7 @@ import {ListTaglines} from "./types/ListTaglines";
 import {ResolveObject} from "./types/ResolveObject";
 import {Search} from "./types/Search";
 import {ListUserChatRoomsQuery} from "./types/ListUserChatRoomsQuery";
+import { GetBankAccounts } from "./types/GetBankAccounts";
 
 export const VERSION = "v4";
 
@@ -85,7 +87,7 @@ export interface ListNotificationsI extends ListNotifications {}
 export interface ListPersonSavedI extends ListPersonSaved {}
 
 export interface ListPersonReadI extends ListPersonRead {}
-
+export interface ListPersonCreatedI extends ListPersonCreated {}
 export interface ListPersonHiddenI extends ListPersonHidden {}
 
 export interface ListPersonLikedI extends ListPersonLiked {}
@@ -112,3 +114,6 @@ export interface ListUserChatRoomsQueryI extends ListUserChatRoomsQuery {}
 
 import { ChatHistoryQuery } from "./types/ChatHistoryQuery";
 export interface ChatHistoryQueryI extends ChatHistoryQuery {}
+
+// Bank Accounts (admin list)
+export interface GetBankAccountsI extends GetBankAccounts {}

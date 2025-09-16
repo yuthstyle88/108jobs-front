@@ -39,6 +39,7 @@ import type {
     ListPersonHiddenI,
     ListPersonLikedI,
     ListPersonReadI,
+    ListPersonCreatedI,
     ListPersonSavedI,
     ListPostLikesI,
     ListRegistrationApplicationsI,
@@ -50,6 +51,7 @@ import type {
     UploadImage,
 } from "./other_types";
 import {VERSION} from "./other_types";
+import type { GetBankAccountsI } from "./other_types";
 import type {AddAdmin} from "./types/AddAdmin";
 import type {AddAdminResponse} from "./types/AddAdminResponse";
 import type {AddModToCommunity} from "./types/AddModToCommunity";
@@ -176,6 +178,8 @@ import type {ListPersonLiked} from "./types/ListPersonLiked";
 import type {ListPersonLikedResponse} from "./types/ListPersonLikedResponse";
 import type {ListPersonRead} from "./types/ListPersonRead";
 import type {ListPersonReadResponse} from "./types/ListPersonReadResponse";
+import type {ListPersonCreated} from "./types/ListPersonCreated";
+import type {ListPersonCreatedResponse} from "./types/ListPersonCreatedResponse";
 import type {ListPersonSaved} from "./types/ListPersonSaved";
 import type {ListPersonSavedResponse} from "./types/ListPersonSavedResponse";
 import type {ListPostLikes} from "./types/ListPostLikes";
@@ -186,6 +190,8 @@ import type {ListReports} from "./types/ListReports";
 import type {ListReportsResponse} from "./types/ListReportsResponse";
 import type {ListTaglines} from "./types/ListTaglines";
 import type {ListTaglinesResponse} from "./types/ListTaglinesResponse";
+import type {ListBankAccountsResponse} from "./types/ListBankAccountsResponse";
+import type {GetBankAccounts} from "./types/GetBankAccounts";
 import type {LockPost} from "./types/LockPost";
 import type {Login} from "./types/Login";
 import type {LoginResponse} from "./types/LoginResponse";
@@ -1744,24 +1750,10 @@ export class LemmyHttp extends Controller {
     }
 
     /**
-     * @summary Get bank list.
-     */
-    @Get("/account/banks")
-    @Tags("Bank List")
-    async getBankList(@Inject() options?: RequestOptions) {
-        return this.#wrapper<object, BanksResponse>(
-            HttpType.Get,
-            "/account/banks",
-            {},
-            options,
-        );
-    }
-
-    /**
      * @summary Get bank account.
      */
     @Get("/account/bank-account")
-    @Tags("Bank Account")
+    @Tags("Account")
     async getBankAccount(@Inject() options?: RequestOptions) {
         return this.#wrapper<object, BankAccountsResponse>(
             HttpType.Get,
@@ -1776,7 +1768,7 @@ export class LemmyHttp extends Controller {
      */
     @Security("bearerAuth")
     @Put("/account/bank-account/default")
-    @Tags("Default Bank")
+    @Tags("Bank")
     async setDefaultBankAccount(
         @Body() form: SetDefaultBankAccount,
         @Inject() options?: RequestOptions,
@@ -1794,7 +1786,7 @@ export class LemmyHttp extends Controller {
      */
     @Security("bearerAuth")
     @Post("/account/bank-account")
-    @Tags("Create Bank Account")
+    @Tags("Account")
     async createBankAccount(
         @Body() form: CreateBankAccount,
         @Inject() options?: RequestOptions,
@@ -1812,7 +1804,7 @@ export class LemmyHttp extends Controller {
      */
     @Security("bearerAuth")
     @Post("/account/bank-account/delete")
-    @Tags("Delete Bank Account")
+    @Tags("Account")
     async deleteBankAccount(
         @Body() form: DeleteBankAccount,
         @Inject() options?: RequestOptions,
@@ -1826,162 +1818,18 @@ export class LemmyHttp extends Controller {
     }
 
     /**
-     * @summary Get education.
-     */
-    @Get("/account/education")
-    @Tags("User Education")
-    async getUserEducation(@Inject() options?: RequestOptions) {
-        return this.#wrapper<object, EducationResponse>(
-            HttpType.Get,
-            "/account/education",
-            {},
-            options,
-        );
-    }
-
-    /**
-     * @summary Upcert User Education
+     * @summary List user bank accounts (admin only).
      */
     @Security("bearerAuth")
-    @Post("/account/education")
-    @Tags("Upcert User Education")
-    async upsertUserEducation(
-        @Body() form: EducationResponse,
+    @Get("/bank-account")
+    @Tags("Account")
+    async listUserBankAccounts(
+        @Queries() form: GetBankAccountsI = {},
         @Inject() options?: RequestOptions,
     ) {
-        return this.#wrapper<EducationResponse, EducationResponse>(
-            HttpType.Post,
-            "/account/education",
-            form,
-            options,
-        );
-    }
-
-    /**
-     * @summary Get work experience.
-     */
-    @Get("/account/work-experience")
-    @Tags("User work experience")
-    async getUserExperience(@Inject() options?: RequestOptions) {
-        return this.#wrapper<object, WorkExperiencesResponse>(
+        return this.#wrapper<GetBankAccounts, ListBankAccountsResponse>(
             HttpType.Get,
-            "/account/work-experience",
-            {},
-            options,
-        );
-    }
-
-    /**
-     * @summary Upcert User experience
-     */
-    @Security("bearerAuth")
-    @Post("/account/work-experience")
-    @Tags("Upcert User experience")
-    async upsertUserExperience(
-        @Body() form: WorkExperiencesResponse,
-        @Inject() options?: RequestOptions,
-    ) {
-        return this.#wrapper<WorkExperiencesResponse, WorkExperiencesResponse>(
-            HttpType.Post,
-            "/account/work-experience",
-            form,
-            options,
-        );
-    }
-
-    /**
-     * @summary Get language profile.
-     */
-    @Get("/account/language-profiles")
-    @Tags("User language profile")
-    async getUserLanguages(@Inject() options?: RequestOptions) {
-        return this.#wrapper<object, LanguageProfilesResponse>(
-            HttpType.Get,
-            "/account/language-profiles",
-            {},
-            options,
-        );
-    }
-
-    /**
-     * @summary Upcert User language profile
-     */
-    @Security("bearerAuth")
-    @Post("/account/language-profiles")
-    @Tags("Upcert User language profile")
-    async upsertUserLanguages(
-        @Body() form: LanguageProfilesResponse,
-        @Inject() options?: RequestOptions,
-    ) {
-        return this.#wrapper<LanguageProfilesResponse, LanguageProfilesResponse>(
-            HttpType.Post,
-            "/account/language-profiles",
-            form,
-            options,
-        );
-    }
-
-    /**
-     * @summary Get skills.
-     */
-    @Get("/account/skills")
-    @Tags("User skills")
-    async getUserSkills(@Inject() options?: RequestOptions) {
-        return this.#wrapper<object, SkillsResponse>(
-            HttpType.Get,
-            "/account/skills",
-            {},
-            options,
-        );
-    }
-
-
-    /**
-     * @summary Upcert User skills
-     */
-    @Security("bearerAuth")
-    @Post("/account/skills")
-    @Tags("Upcert User skills")
-    async upsertUserSkills(
-        @Body() form: SkillsResponse,
-        @Inject() options?: RequestOptions,
-    ) {
-        return this.#wrapper<SkillsResponse, SkillsResponse>(
-            HttpType.Post,
-            "/account/skills",
-            form,
-            options,
-        );
-    }
-
-    /**
-     * @summary Get certificates.
-     */
-    @Get("/account/certificates")
-    @Tags("User certificates")
-    async getUserCertificates(@Inject() options?: RequestOptions) {
-        return this.#wrapper<object, CertificatesResponse>(
-            HttpType.Get,
-            "/account/certificates",
-            {},
-            options,
-        );
-    }
-
-
-    /**
-     * @summary Upcert User certificates
-     */
-    @Security("bearerAuth")
-    @Post("/account/certificates")
-    @Tags("Upcert User certificates")
-    async upsertUserCertificates(
-        @Body() form: CertificatesResponse,
-        @Inject() options?: RequestOptions,
-    ) {
-        return this.#wrapper<CertificatesResponse, CertificatesResponse>(
-            HttpType.Post,
-            "/account/certificates",
+            "/bank-account/list",
             form,
             options,
         );
@@ -2262,6 +2110,24 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<ListPersonSaved, ListPersonSavedResponse>(
             HttpType.Get,
             "/account/saved",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary List your created content.
+     */
+    @Security("bearerAuth")
+    @Get("/account/created")
+    @Tags("Account")
+    async listPersonCreated(
+        @Queries() form: ListPersonCreatedI,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<ListPersonCreated, ListPersonCreatedResponse>(
+            HttpType.Get,
+            "/account/created",
             form,
             options,
         );

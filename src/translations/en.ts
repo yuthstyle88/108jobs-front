@@ -108,6 +108,7 @@ export const en = {
             startWorkflowFailed: "Failed to start workflow. Please try again.",
             confirmStartWorkflowTitle: "Start workflow?",
             confirmStartWorkflowMessage: "This will initialize the job flow for this room. Continue?",
+            missingPostIdForQuotation: "This chat is not linked to a job post. Link a job to this room to create a quotation or start the workflow.",
         },
         allCategories: {
             allJobCategories: "All Job Categories",
@@ -651,7 +652,7 @@ export const en = {
             serviceCategoryLabel: "Service Category",
             serviceCategoryPlaceholderUrl: "e.g. https://example.com",
             serviceCategoryPlaceholderSelect: "Select a service category...",
-            exampleUrl: "Example URL (optional)",
+            exampleUrl: "Example URL",
             budgetLabel: "Budget",
             budgetPlaceholder: "THB",
             deadlineLabel: "Deadline (Optional)",
@@ -1854,7 +1855,8 @@ export const en = {
             invalidEmail: "Invalid email format",
             labelPhoneNumber: "Phone Number",
             phoneNumberPlaceholder: "Enter your phone number",
-            invalidPhoneNumber: "Invalid phone number format"
+            invalidPhoneNumber: "Invalid phone number format",
+            customContactPlaceholder: "Enter your contact (e.g., Line ID, WhatsApp, Telegram)"
         },
         profileJob: {
             noJob: "No job posts found",
@@ -3172,6 +3174,9 @@ export const en = {
             updateFailed: "Failed to update address",
             thaiCountryLabel: "Thailand",
             vietnamCountryLabel: "Vietnam",
+        },
+        errors: {
+            alreadyCommented: "You have already submitted a proposal for this job."
         },
         jobApplication: {
             pageTitle: "Increase Your Hiring Chances! With Relevant Experience and Portfolio",

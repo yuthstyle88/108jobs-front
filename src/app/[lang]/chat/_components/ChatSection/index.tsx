@@ -231,6 +231,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
 
         // Load status from API server when available
         const { data: roomData } = useHttpGet("getChatRoom", [roomId as any]);
+        const roomPostId = (roomData as any)?.postId ?? (roomData as any)?.room?.postId;
         const setWorkflowState = useStateMachineStore((s) => s.set);
         useEffect(() => {
             const rd: any = roomData as any;
@@ -276,8 +277,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
     const handleStartWorkflow = async () => {
         setError(null);
         try {
-            // Find latest proposed-quote message to extract postId and seq
-            let postId = 1;
+            // Require postId to start workflow
+            const postId = roomPostId as any;
+            if (!postId) {
+                setError(t("profileChat.missingPostIdForQuotation") || "This chat is not linked to a post. You cannot create a quotation.");
+                return;
+            }
+            // For now, default to first step
             let seqNumber = 1;
 
             const res = await startWorkflow({ postId, seqNumber, roomId: roomId});
@@ -427,6 +433,39 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         [sendMessage, currentRoom, roomId, selectedFile, localUser?.id]
     );
 
+    // Temporary file upload handler: accept a single file, validate, and store minimal info in state
+    const handleFileUpload = useCallback((e: Event) => {
+        try {
+            const input = e.target as HTMLInputElement | null;
+            const file = (input?.files && input.files[0]) || (e as any).dataTransfer?.files?.[0];
+            if (!file) return;
+
+            // Basic validation
+            const maxSizeMb = 25; // temporary cap
+            if (file.size > maxSizeMb * 1024 * 1024) {
+                setError(`File too large. Max ${maxSizeMb}MB`);
+                return;
+            }
+            const fileType = file.type || "application/octet-stream";
+
+            // Create a temporary object URL for preview if needed (not persisted)
+            const tempUrl = typeof window !== 'undefined' ? URL.createObjectURL(file) : "";
+
+            const uploaded: UploadedFile = {
+                fileUrl: tempUrl,
+                fileType,
+                fileName: file.name || "file",
+            };
+            setSelectedFile(uploaded);
+
+            // Clear input value to allow re-selecting the same file
+            if (input) input.value = "";
+        } catch (err) {
+            console.error("handleFileUpload failed", err);
+            setError("Failed to attach file. Please try again.");
+        }
+    }, []);
+
     const flowActions: FlowActions = createFlowActions({
         t,
         goToStatus,
@@ -440,6 +479,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         roomId,
         localUser,
         setError,
+        getPostId: () => roomPostId,
     });
 
     const didInitialFetchRef = useRef(false);
@@ -604,6 +644,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                         </button>
                     </div>
                     <div className="flex-1 p-3 sm:p-4 md:p-6 overflow-y-auto border-b border-gray-200">
+                        {!roomPostId && (
+                            <div className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
+                                {t("profileChat.missingPostIdForQuotation") || "This chat is not linked to a post. You cannot create a quotation."}
+                            </div>
+                        )}
                         <FreelanceChatFlow
                             currentStatus={currentStatus}
                             onChangeStatus={handleChangeStatus}
@@ -612,6 +657,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             className="space-y-4"
                             started={hasStarted || currentStatus !== 'QuotationPending'}
                             onStart={handleStartWorkflow}
+                            canStartWorkflow={Boolean(roomPostId)}
+                            canProposeQuote={Boolean(roomPostId)}
                             onProposeQuote={flowActions.onProposeQuote}
                             onApproveQuotation={flowActions.onApproveQuotation}
                             onUploadAsset={flowActions.onUploadAsset}
@@ -663,6 +710,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                             </button>
                         </div>
                         <div className="flex-1 p-3 sm:p-4 overflow-y-auto border-b border-gray-200">
+                            {!roomPostId && (
+                                <div className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
+                                    {t("profileChat.missingPostIdForQuotation") || "This chat is not linked to a post. You cannot create a quotation."}
+                                </div>
+                            )}
                             <FreelanceChatFlow
                                 currentStatus={currentStatus}
                                 onChangeStatus={handleChangeStatus}
@@ -671,6 +723,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
                                 className="space-y-4"
                                 started={hasStarted || currentStatus !== 'QuotationPending'}
                                 onStart={handleStartWorkflow}
+                                canStartWorkflow={Boolean(roomPostId)}
+                                canProposeQuote={Boolean(roomPostId)}
                                 onProposeQuote={flowActions.onProposeQuote}
                                 onApproveQuotation={flowActions.onApproveQuotation}
                                 onUploadAsset={flowActions.onUploadAsset}

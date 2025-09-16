@@ -108,9 +108,10 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
             mapped.push({
                 id: String(it.room.id),
                 name: profile.name,
-                participants: it.participants.map((p: any) => String(p.memberId)),
+                participants: it.participants.map((p: any) => String(p.memberId)) as any,
                 unreadCount: 0,
-            });
+                postId: (it as any).postId ?? (it.room?.postId as any),
+            } as any);
         }
 
         return {

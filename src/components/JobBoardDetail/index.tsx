@@ -32,10 +32,11 @@ const JobBoardDetail = ({ jobId }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const route = useRouter();
     const { data: jobDetailData } = useHttpGet("getPost", { id: jobId });
-    const { person } = useMyUser();
+    const { localUser, person } = useMyUser();
 
     const isVerify = person?.isVerified;
-    const canShowProposalButton = !isGuest;
+    // Show proposal button only for logged-in users who are NOT the job creator
+    const canShowProposalButton = !isGuest && (!!person?.id && person?.id !== jobDetailData?.postView?.creator?.id);
 
     const calculateDaysUntil = (dateString: string) => {
         const targetDate = new Date(dateString);

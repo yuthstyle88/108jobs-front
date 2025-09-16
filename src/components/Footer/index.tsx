@@ -54,7 +54,7 @@ const Footer = () => {
                     <h3 className="font-semibold text-lg mb-4 text-white/95 tracking-tight">{global.tittleFooter4}</h3>
                     <ul className="space-y-3 text-sm">
                         {[
-                            { href: "https://form.jotform.com/251484529705059", label: global.labelFeedbackUs, external: true },
+                            // { href: "https://form.jotform.com/251484529705059", label: global.labelFeedbackUs, external: true },
                             { href: "/content/terms", label: global.labelTermsOfService },
                             { href: "/content/privacy", label: global.labelPrivacyPolicy },
                         ].map((item) => (
@@ -63,8 +63,6 @@ const Footer = () => {
                                     className="text-white/80 hover:text-white hover:translate-x-1 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
                                     prefetch={false}
                                     href={item.href}
-                                    target={item.external ? "_blank" : undefined}
-                                    rel={item.external ? "noopener noreferrer" : undefined}
                                     aria-label={item.label}
                                 >
                                     {item.label}

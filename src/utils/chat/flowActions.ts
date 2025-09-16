@@ -16,6 +16,7 @@ export type CreateFlowActionsDeps = {
   localUser?: { id?: string | number | null } | null;
   setError: (msg: string) => void;
   approveQuotation?: () => Promise<boolean>;
+  getPostId?: () => string | number | undefined;
 };
 
 export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
@@ -35,6 +36,13 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
 
   return {
     onProposeQuote: () => {
+      if (deps.getPostId && !deps.getPostId()) {
+        deps.setError(
+          t('profileChat.missingPostIdForQuotation') ||
+            'This chat room is not linked to a post. You cannot create a quotation.'
+        );
+        return;
+      }
       setShowQuotationModal(true);
     },
     onApproveQuotation: async () => {

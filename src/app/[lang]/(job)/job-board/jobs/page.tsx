@@ -22,7 +22,7 @@ const MyJobs = () => {
         data: jobPosts,
         pagination,
         isMutating: isJobsLoading,
-    } = useHttpGet("listPersonRead", {
+    } = useHttpGet("listPersonCreated", {
         pageCursor: currentCursor,
     });
 
@@ -46,9 +46,9 @@ const MyJobs = () => {
         setCurrentCursor(pageCursor || undefined);
     };
 
-    const getStatusBadge = (status: string) => {
+    const getStatusBadge = (status: boolean) => {
         switch (status) {
-            case "opening":
+            case false:
                 return (
                     <Badge className="bg-green-100 text-green-800 hover:bg-green-200 transition-colors duration-200">
                         Open
@@ -100,9 +100,9 @@ const MyJobs = () => {
                                 </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
-                                {jobPosts?.read ? (
-                                    jobPosts.read.length > 0 ? (
-                                        jobPosts.read.map((job) => (
+                                {(jobPosts as any)?.created ? (
+                                    (jobPosts as any).created.length > 0 ? (
+                                        (jobPosts as any).created.map((job: any) => (
                                             <tr
                                                 key={job.post.id}
                                                 onClick={() => router.push(`/job-board/${job.post.id}`)}
@@ -134,7 +134,7 @@ const MyJobs = () => {
                                                     {job.post.budget.toLocaleString()}
                                                 </td>
                                                 <td className="px-6 py-5 whitespace-nowrap">
-                                                    {getStatusBadge("closed")}
+                                                    {getStatusBadge(job.post.pending)}
                                                 </td>
                                                 <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
                                                     {formatDateTime(job.post.publishedAt, "datetime")}
@@ -161,15 +161,15 @@ const MyJobs = () => {
                                                     >
                                                         {t("profileJob.tableHeaderActionEdit")}
                                                     </button>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleOpenModal(job.post.id.toString());
-                                                        }}
-                                                        className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200 px-3 py-1 rounded-md hover:bg-red-50"
-                                                    >
-                                                        {t("profileJob.tableHeaderActionCloseJob")}
-                                                    </button>
+                                                    {/*<button*/}
+                                                    {/*    onClick={(e) => {*/}
+                                                    {/*        e.stopPropagation();*/}
+                                                    {/*        handleOpenModal(job.post.id.toString());*/}
+                                                    {/*    }}*/}
+                                                    {/*    className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200 px-3 py-1 rounded-md hover:bg-red-50"*/}
+                                                    {/*>*/}
+                                                    {/*    {t("profileJob.tableHeaderActionCloseJob")}*/}
+                                                    {/*</button>*/}
                                                 </td>
                                             </tr>
                                         ))

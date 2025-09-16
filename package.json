@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start --turbo",
+    "start": "next start",
     "lint": "next lint",
     "setup:lemmy": "cd src/lib/lemmy-js-client && pnpm i"
   },
