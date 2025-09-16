@@ -523,7 +523,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
         }
     }, [messages]);
 
-    // Auto-scroll to bottom when new messages arrive or on initial load
+    // Auto-scroll behavior: only when user is at (or near) bottom, or on initial load/history
     useEffect(() => {
         const rootEl = scrollContainerRef.current;
         if (!rootEl) return;
@@ -532,7 +532,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, partnerName, partnerA
             lastUpdateWasHistoryRef.current = false; // reset flag for next updates
             return;
         }
-        // Requirement: always scroll to the last message when there is a new update
+        // Do not auto-scroll if user is viewing history (scrolled up)
+        // Allow auto-scroll only when the viewport is already at bottom
+        if (!atBottomRef.current) {
+            return;
+        }
         // Defer to next frame to allow DOM to render new messages.
         const id = window.requestAnimationFrame(() => {
             rootEl.scrollTop = rootEl.scrollHeight - rootEl.clientHeight;

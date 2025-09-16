@@ -400,10 +400,10 @@ const JobBoard = () => {
                                 <tbody className="bg-white divide-y divide-gray-200">
                                 {jobPostsPagination?.results?.length ? (
                                     jobPostsPagination?.results
-                                        ?.filter((job): job is Extract<SearchCombinedView, {
+                                        ?.filter((job: SearchCombinedView): job is Extract<SearchCombinedView, {
                                             type_: "Post"
                                         }> => job.type_ === "Post")
-                                        .map((job) => (
+                                        .map((job: Extract<SearchCombinedView, { type_: "Post" }>) => (
                                             <tr
                                                 key={job.post.id}
                                                 onClick={() => handleJobClick(job.post.id)}

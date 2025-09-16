@@ -10,6 +10,7 @@ import {useState, useMemo} from "react";
 import ConfirmDeleteOffer from "../_components/ConfirmDeleteOffer";
 import JobBoardTab from "../_components/JobBoardTab";
 import {useHttpGet} from "@/hooks/useHttpGet";
+import type { CommentView } from "lemmy-js-client";
 
 const Proposal = () => {
   const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined);
@@ -97,10 +98,10 @@ const Proposal = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {proposals?.comments ? (
                   proposals.comments.length > 0 ? (
-                    proposals.comments.map((proposals) => (
+                    proposals.comments.map((cv: CommentView) => (
                       <tr
-                        key={proposals.comment.id}
-                        onClick={() => route.push(`/job-board/${proposals.comment.id}`)}
+                        key={cv.comment.id}
+                        onClick={() => route.push(`/job-board/${cv.comment.id}`)}
                         className="hover:bg-gray-50 cursor-pointer"
                       >
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -120,14 +121,14 @@ const Proposal = () => {
                                 />
                               </svg>
                             </div>
-                            <div>{proposals.comment.content}</div>
+                            <div>{cv.comment.content}</div>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-base text-gray-500">
                           {getStatusBadge("closed")}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary visible">
-                          {formatDateTime(proposals.comment.publishedAt, "datetime")}
+                          {formatDateTime(cv.comment.publishedAt, "datetime")}
                         </td>
                       </tr>
                     ))
