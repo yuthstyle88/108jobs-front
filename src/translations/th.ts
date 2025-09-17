@@ -39,6 +39,8 @@ export const th = {
             guide: "คู่มือการใช้งาน",
             startWorkflow: "เริ่มลำดับงาน",
             startWorkflowHint: "จะแสดงลำดับงานหลังจากผู้ว่าจ้างกดเริ่มใช้งาน",
+            startWork: "เริ่มทำงาน",
+            startWorkMsg: "ฟรีแลนซ์เริ่มทำงานแล้ว",
             proposeQuote: "ส่งใบเสนอราคา",
             approveQuotation: "อนุมัติใบเสนอราคา",
             sendBriefMessage: "ส่งข้อความขอไฟล์บรีฟ",

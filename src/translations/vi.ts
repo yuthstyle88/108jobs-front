@@ -39,6 +39,8 @@ export const vi = {
             guide: "Hướng dẫn sử dụng",
             startWorkflow: "Bắt đầu quy trình",
             startWorkflowHint: "Quy trình sẽ hiển thị sau khi nhà tuyển dụng bắt đầu.",
+            startWork: "Bắt đầu làm việc",
+            startWorkMsg: "Freelancer đã bắt đầu làm việc.",
             proposeQuote: "Gửi báo giá",
             approveQuotation: "Duyệt báo giá",
             sendBriefMessage: "Gửi tin nhắn yêu cầu brief",

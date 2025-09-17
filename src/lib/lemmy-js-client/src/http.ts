@@ -254,6 +254,7 @@ import type {CreateInvoiceResponse} from "./types/CreateInvoiceResponse";
 import type { ApproveQuotationForm } from "./types/ApproveQuotationForm";
 import type {WorkFlowOperationResponse} from "./types/WorkFlowOperationResponse";
 import type { StartWorkflowForm } from "./types/StartWorkflowForm";
+import type { SubmitStartWorkForm } from "./types/SubmitStartWorkForm";
 import type {UserKeysResponse} from "./types/UserKeysResponse";
 import type {ChatHistoryQuery} from "./types/ChatHistoryQuery";
 import type {ChatMessagesResponse} from "./types/ChatMessagesResponse";
@@ -3006,6 +3007,24 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<StartWorkflowForm, WorkFlowOperationResponse>(
             HttpType.Post,
             "/account/services/start-workflow",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Submit completed work (freelancer starts work).
+     */
+    @Security("bearerAuth")
+    @Post("/account/services/start-work")
+    @Tags("Services")
+    async submitStartWork(
+        @Body() form: SubmitStartWorkForm,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<SubmitStartWorkForm, WorkFlowOperationResponse>(
+            HttpType.Post,
+            "/account/services/start-work",
             form,
             options,
         );

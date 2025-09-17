@@ -23,6 +23,7 @@ import {useHttpGet} from "@/hooks/useHttpGet";
 import {apiToUiStatus, useStateMachineStore} from "@/stores/stateMachineStore";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {HttpService} from "@/services/HttpService";
+import { resolveWorkflowId } from "@/utils/chat/workflow";
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -32,6 +33,7 @@ interface ChatSectionProps {
     post?: Post;
     partnerName: string;
     partnerAvatar: string;
+    partnerId?: number;
 }
 
 const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, partnerAvatar }) => {
@@ -308,6 +310,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
     const { execute: createInvoice } = useHttpPost("createInvoice");
     const { execute: startWorkflow } = useHttpPost("startWorkflow");
     const { execute: approveQuotationApi } = useHttpPost("approveQuotation");
+        const { execute: submitStartWorkApi } = useHttpPost("submitStartWork");
 
     const handleStartWorkflow = async () => {
         setError(null);
@@ -556,14 +559,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 return false;
             }
 
-            // Resolve workflowId (from state or room response if provided). Prefer nested room.workflow.id
-            const workflowIdCandidate = (workflowIdState as any)
-                ?? (roomData as any)?.room?.workflow?.id
-                ?? (roomData as any)?.workflow?.id
-                ?? (roomData as any)?.room?.workflowId
-                ?? (roomData as any)?.workflowId;
-            const workflowIdNum = Number(workflowIdCandidate);
-            const workflowId = workflowIdNum && !Number.isNaN(workflowIdNum) ? workflowIdNum : undefined;
+            const workflowId = resolveWorkflowId(roomData as any, workflowIdState as any);
 
             if (!workflowId) {
                 setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before approval.');
@@ -587,6 +583,51 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         }
     }, [messages, roomData, workflowIdState, person, approveQuotationApi, t]);
 
+    const handleStartWorkAction = useCallback(async (): Promise<boolean> => {
+        try {
+            setError(null);
+
+            const workflowId = resolveWorkflowId(roomData as any, workflowIdState as any);
+
+            if (!workflowId) {
+                setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before starting work.');
+                return false;
+            }
+
+            // resolve seq from latest proposed-quote message if exists
+            let latestPayload: any | null = null;
+            for (const m of messages) {
+                const content = (m.content || '').trim();
+                if (!content.startsWith('{')) continue;
+                try {
+                    const parsed = JSON.parse(content);
+                    if (parsed && parsed.type === 'proposed-quote') {
+                        latestPayload = parsed;
+                        break;
+                    }
+                } catch {}
+            }
+            const seqNumber = Number(latestPayload?.quote?.workSteps?.[0]?.seq) || 1;
+
+            const form: any = {
+                seqNumber,
+                workflowId,
+                workDescription: t('profileChat.startWorkMsg') || 'Freelancer started work.',
+            };
+
+            const res = await submitStartWorkApi(form as any);
+            const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
+            if (!ok) {
+                setError(((res as any)?.err?.message) || 'Failed to start work.');
+            }
+            return !!ok;
+        } catch (e) {
+            const msg = e instanceof Error ? e.message : 'Unknown error';
+            setError(msg);
+            return false;
+        }
+    }, [messages, roomData, workflowIdState, submitStartWorkApi, t]);
+
     const flowActions: FlowActions = createFlowActions({
         t,
         goToStatus,
@@ -601,6 +642,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         localUser,
         setError,
         approveQuotation,
+        startWork: async () => await handleStartWorkAction(),
         getPostId: () => roomPostId,
     });
 
@@ -639,6 +681,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             } else if (parsed && parsed.type === "employer-assigned") {
                 // When employer confirms/assigns, move to OrderApproved
                 goToStatus("OrderApproved");
+            } else if (parsed && parsed.type === "start-work") {
+                // When freelancer starts work, move to InProgress
+                goToStatus("InProgress");
             }
         } catch {
             /* ignore parse errors */
@@ -778,6 +823,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                             canApproveQuotation={isEmployer && hasProposedQuote}
                             onProposeQuote={flowActions.onProposeQuote}
                             onApproveQuotation={flowActions.onApproveQuotation}
+                            onStartWork={!isEmployer ? flowActions.onStartWork : undefined}
                             onUploadAsset={flowActions.onUploadAsset}
                             onSendMessage={flowActions.onSendMessage}
                             onSubmitDelivery={flowActions.onSubmitDelivery}
@@ -849,6 +895,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                 canApproveQuotation={isEmployer && hasProposedQuote}
                                 onProposeQuote={flowActions.onProposeQuote}
                                 onApproveQuotation={flowActions.onApproveQuotation}
+                                onStartWork={!isEmployer ? flowActions.onStartWork : undefined}
                                 onUploadAsset={flowActions.onUploadAsset}
                                 onSendMessage={flowActions.onSendMessage}
                                 onSubmitDelivery={flowActions.onSubmitDelivery}

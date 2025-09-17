@@ -16,6 +16,7 @@ export type CreateFlowActionsDeps = {
   localUser?: { id?: string | number | null } | null;
   setError: (msg: string) => void;
   approveQuotation?: () => Promise<boolean>;
+  startWork?: () => Promise<boolean>;
   getPostId?: () => string | number | undefined;
 };
 
@@ -86,6 +87,44 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
       } catch {}
 
       goToStatus('OrderApproved');
+    },
+    onStartWork: async () => {
+      if (!deps.startWork) return;
+      try {
+        const ok = await deps.startWork();
+        if (!ok) return;
+      } catch {
+        return;
+      }
+      const messageId = uuidv4();
+      const readable = t('profileChat.startWorkMsg') || 'Freelancer started work.';
+      const payload = { type: 'start-work' } as any;
+
+      setMessages((prev) => [
+        {
+          id: messageId,
+          roomId: (currentRoom?.roomId as any) || roomId,
+          content: readable,
+          createdAt: new Date().toISOString(),
+          senderId: Number((localUser as any)?.id) || 0,
+          receiverId: roomId.includes(':') ? Number(roomId.split(':')[1]) || 0 : 0,
+          status: 1,
+          isOwner: true,
+        } as unknown as WsChatMessage,
+        ...prev,
+      ]);
+      sendMessage({ message: JSON.stringify(payload), id: messageId });
+
+      try {
+        const tsIso = new Date().toISOString();
+        window.dispatchEvent(
+          new CustomEvent('chat:new-message', {
+            detail: { roomId, content: readable, senderId: Number((localUser as any)?.id) || 0, timestamp: tsIso },
+          })
+        );
+      } catch {}
+
+      goToStatus('InProgress');
     },
     onUploadAsset: () => {
       const input = document.createElement('input');

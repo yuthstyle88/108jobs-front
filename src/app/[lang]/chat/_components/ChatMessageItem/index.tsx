@@ -88,6 +88,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   }
   const isProposedQuote = parsed && parsed.type === "proposed-quote" && parsed.quote;
   const isEmployerAssigned = parsed && (parsed as any).type === "employer-assigned";
+  const isStartWork = parsed && (parsed as any).type === "start-work";
 
   return (
     <div
@@ -205,6 +206,19 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                 </div>
                 <div className="mt-0.5 text-xs text-green-700">
                   The order has been approved. You can proceed to payment when invoice is ready.
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : isStartWork ? (
+          <div className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ring-blue-200 bg-blue-50 px-4 py-3">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path d="M6 4l10 6-10 6V4z" />
+              </svg>
+              <div>
+                <div className="text-sm font-medium text-blue-800">
+                  {t('profileChat.startWorkMsg') || 'Freelancer started work.'}
                 </div>
               </div>
             </div>

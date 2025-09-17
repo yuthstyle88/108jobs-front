@@ -11,6 +11,7 @@ export type StatusKey = UiFlowStatus;
 export type FlowActions = {
     onProposeQuote?: () => void;
     onApproveQuotation?: () => void;
+    onStartWork?: () => void;
     onUploadAsset?: () => void;
     onSendMessage?: () => void;
     onSubmitDelivery?: () => void;
@@ -65,6 +66,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  showStartButton = true,
                                                                  onProposeQuote,
                                                                  onApproveQuotation,
+                                                                 onStartWork,
                                                                  onUploadAsset,
                                                                  onSendMessage,
                                                                  onSubmitDelivery,
@@ -132,9 +134,10 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 return actionsQP;
             case 'OrderApproved':
                 return [
+                    onStartWork ? btn(t('profileChat.startWork') || 'Start work', onStartWork) : null,
                     btn(t('profileChat.uploadDraft') || 'แนบไฟล์ต้นฉบับ', onUploadAsset),
                     ...(cancelBtn ? [cancelBtn] : []),
-                ];
+                ].filter(Boolean) as React.ReactElement[];
             case 'InProgress':
                 return [
                     btn(t('profileChat.uploadFileLink') || 'แนบไฟล์/ลิงก์', onUploadAsset),

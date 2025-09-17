@@ -39,6 +39,8 @@ export const en = {
             guide: "Usage Guide",
             startWorkflow: "Start workflow",
             startWorkflowHint: "The workflow will be shown after the employer starts it.",
+            startWork: "Start work",
+            startWorkMsg: "Freelancer started work.",
             proposeQuote: "Send quotation",
             approveQuotation: "Approve quotation",
             sendBriefMessage: "Send brief message",

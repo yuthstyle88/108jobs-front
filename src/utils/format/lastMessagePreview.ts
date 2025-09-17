@@ -48,6 +48,9 @@ export function formatLastMessagePreview(content?: string): string {
       if (parsed && (parsed as any).type === "employer-assigned") {
         return "Assignment confirmed";
       }
+      if (parsed && (parsed as any).type === "start-work") {
+        return "Started work";
+      }
     } catch {
       // fallthrough
     }
