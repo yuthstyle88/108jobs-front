@@ -45,11 +45,13 @@ const OffersPage = () => {
     const roomId = dmRoomId(currentUserId, partnerPersonId);
     try {
       setStartingChatFor(partnerPersonId);
+        console.log("proposal.comment.id: ", proposal.comment.id)
       try {
         await HttpService.client.createChatRoom({
           partnerPersonId,
           roomId,
           ...(postId ? { postId } : {}),
+          ...(proposal?.comment?.id ? { currentCommentId: proposal.comment.id } : {}),
         });
       } catch (e) {
         // If room already exists or API fails, proceed to navigate anyway

@@ -47,6 +47,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         const [messages, setMessages] = useState<UIChatMessage[]>([]);
     const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
     const atBottomRef = useRef<boolean>(true);
+    const [isAtBottom, setIsAtBottom] = useState(true);
     const incUnread = useUnreadStore((s) => s.inc);
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [, setIsInitialLoading] = useState(true);
@@ -243,6 +244,24 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         // Load status from API server when available
         const { data: roomData } = useHttpGet("getChatRoom", [roomId as any]);
         const roomPostId = (roomData as any)?.room?.room?.postId ?? (roomData as any)?.room?.post?.id ?? (roomData as any)?.postId ?? (roomData as any)?.room?.postId;
+                const roomCommentId = (roomData as any)?.room?.currentComment?.id ?? (roomData as any)?.currentCommentId ?? (roomData as any)?.room?.currentCommentId;
+        const isInvalidRoom = useMemo(() => {
+            const rd: any = roomData as any;
+            if (!rd) return false; // wait for data load
+            const errField = String(rd?.error ?? rd?.err ?? rd?.message ?? "").toLowerCase();
+            const hasRoom = !!rd?.room && typeof rd.room === "object" && !!rd.room.room && typeof rd.room.room === "object";
+            return errField.includes("notfound") || !hasRoom;
+        }, [roomData]);
+        if (isInvalidRoom) {
+            return (
+                <div className="flex items-center justify-center w-full h-[calc(100vh-80px)]">
+                    <div className="text-center p-6">
+                        <h2 className="text-xl font-semibold text-gray-800 mb-2">{t("profileChat.roomNotFound") || "Room not found"}</h2>
+                        <p className="text-gray-600">{t("profileChat.roomNotFoundDesc") || "The chat room you are trying to access does not exist or may have been deleted."}</p>
+                    </div>
+                </div>
+            );
+        }
         // Determine if current user is the employer (job poster). Creator id is personId.
         const postCreatorId = (post as any)?.creatorId ?? (roomData as any)?.room?.post?.creatorId ?? (roomData as any)?.post?.creatorId;
         const isEmployer = postCreatorId != null && String(postCreatorId) === String(person?.id);
@@ -646,10 +665,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                             partnerAvatar={currentRoom?.partnerAvatar || ProfileImage.avatar}
                             customScrollParent={scrollParentEl}
                             onTopReached={() => {
-                                console.log('[CHAT][SCROLL] Top reached -> attempt fetchHistory', {
-                                    hasMoreMessages,
-                                    isFetching,
-                                });
                                 if (!hasMoreMessages || isFetching) return;
                                 const rootEl = scrollContainerRef.current;
                                 const oldHeight = rootEl?.scrollHeight || 0;
@@ -664,6 +679,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                             isFetching={isFetching}
                             onAtBottomChange={(isAtBottom) => {
                                 atBottomRef.current = isAtBottom;
+                                setIsAtBottom(isAtBottom);
                                 if (isAtBottom) {
                                     setNewSinceCount(0);
                                     setMessages(prev => prev.map(m => (!m.isOwner && m.status === 0 ? { ...m, status: 1 } : m)));
@@ -673,7 +689,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                             }}
                         />
                     </div>
-                    {!atBottomRef.current && newSinceCount > 0 && (
+                    {!isAtBottom && newSinceCount > 0 && (
                         <div className="absolute bottom-20 left-0 right-0 flex justify-center pointer-events-none">
                             <button
                                 className="pointer-events-auto bg-primary hover:bg-[#063a68] text-white text-xs sm:text-sm px-3 py-1.5 rounded-full shadow-md"
@@ -970,6 +986,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 onClose={() => setShowQuotationModal(false)}
                 onSubmit={handleQuotationSubmit}
                 postId={roomPostId as number}
+                commentId={roomCommentId as number}
             />
         </>
     );

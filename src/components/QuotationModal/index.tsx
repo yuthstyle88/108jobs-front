@@ -34,9 +34,10 @@ interface QuotationModalProps {
     onClose: () => void;
     onSubmit: (data: ProposedQuotePayload) => Promise<void>; // Updated to return Promise for async error handling
     postId?: number; // derive from chat room instead of hardcoding
+    commentId?: number; // derive from chat room current comment
 }
 
-const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubmit, postId }) => {
+const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubmit, postId, commentId }) => {
     const { t } = useTranslation();
 
     // Initialize without hardcoded demo content; postId comes from props
@@ -62,6 +63,11 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
     React.useEffect(() => {
         setForm((prev) => ({ ...prev, postId: postId ?? 0 }));
     }, [postId]);
+
+    // Keep commentId in sync with prop changes
+    React.useEffect(() => {
+        setForm((prev) => ({ ...prev, commentId: commentId ?? 0 }));
+    }, [commentId]);
 
     const updateField = <K extends keyof ProposedQuotePayload>(key: K, value: ProposedQuotePayload[K]) => {
         setForm((prev) => ({ ...prev, [key]: value }));
