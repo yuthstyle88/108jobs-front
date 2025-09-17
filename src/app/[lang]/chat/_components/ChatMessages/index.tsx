@@ -1,9 +1,9 @@
 "use client";
 
-import type { ChatMessage } from "lemmy-js-client";
+import type {ChatMessage} from "lemmy-js-client";
 import ChatMessageItem from "../ChatMessageItem";
-import { StaticImageData } from "next/image";
-import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
+import {StaticImageData} from "next/image";
+import {Virtuoso, VirtuosoHandle} from "react-virtuoso";
 import React from "react";
 
 type UIChatMessage = ChatMessage & { isOwner?: boolean };
@@ -44,14 +44,14 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
     // Track whether the user is at the bottom for auto-scroll
     const virtuosoRef = React.useRef<VirtuosoHandle | null>(null);
-    const [atBottom, setAtBottom] = React.useState(true);
+    const [, setAtBottom] = React.useState(true);
 
     return (
         <Virtuoso
             ref={virtuosoRef}
             data={displayedMessages}
             customScrollParent={customScrollParent ?? undefined}
-            computeItemKey={(index, msg) => {
+            computeItemKey={(_index, msg) => {
                 const anyMsg: any = msg as any;
                 if (anyMsg && anyMsg.id != null) return String(anyMsg.id);
                 const created = anyMsg?.createdAt || "";
@@ -104,16 +104,17 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                     <div key={msg.id || index} className="mb-2 last:mb-0">
                         {showDate && (
                             <div className="w-full flex justify-center my-4">
-                                <div className="inline-block rounded-[10px] bg-border-secondary p-1 min-w-[120px] text-[#728197] text-[12.8px] text-center">
+                                <div
+                                    className="inline-block rounded-[10px] bg-border-secondary p-1 min-w-[120px] text-[#728197] text-[12.8px] text-center">
                                     {currentDate}
                                 </div>
                             </div>
                         )}
-                        <ChatMessageItem message={msg} partnerAvatar={partnerAvatar} />
+                        <ChatMessageItem message={msg} partnerAvatar={partnerAvatar}/>
                     </div>
                 );
             }}
-            style={{ overflowX: "hidden", width: "100%", height: "100%" }}
+            style={{overflowX: "hidden", width: "100%", height: "100%"}}
         />
     );
 };

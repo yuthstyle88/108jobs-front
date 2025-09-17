@@ -258,6 +258,9 @@ import type {UserKeysResponse} from "./types/UserKeysResponse";
 import type {ChatHistoryQuery} from "./types/ChatHistoryQuery";
 import type {ChatMessagesResponse} from "./types/ChatMessagesResponse";
 import type { ChatHistoryQueryI } from "./other_types";
+import type { Billing } from "./types/Billing";
+import type { GetBillingByCommentQuery } from "./types/GetBillingByCommentQuery";
+import type { GetBillingByCommentQueryI } from "./other_types";
 
 enum HttpType {
     Get = "GET",
@@ -2967,6 +2970,24 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<ApproveQuotationForm, WorkFlowOperationResponse>(
             HttpType.Post,
             "/account/services/approve-quotation",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Get billing by comment id.
+     */
+    @Security("bearerAuth")
+    @Get("/account/services/billing/by-comment")
+    @Tags("Billing")
+    async getBillingByComment(
+        @Queries() form: GetBillingByCommentQueryI,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<GetBillingByCommentQuery, Billing>(
+            HttpType.Get,
+            "/account/services/billing/by-comment",
             form,
             options,
         );

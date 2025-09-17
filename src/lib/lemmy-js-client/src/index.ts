@@ -403,3 +403,5 @@ export type { WorkflowId } from "./types/WorkflowId";
 export type { WorkflowStatus } from "./types/WorkflowStatus";
 export type { WorkFlowOperationResponse } from "./types/WorkFlowOperationResponse";
 export type { StartWorkflowForm } from "./types/StartWorkflowForm";
+export type { Billing } from "./types/Billing";
+export type { GetBillingByCommentQuery } from "./types/GetBillingByCommentQuery";

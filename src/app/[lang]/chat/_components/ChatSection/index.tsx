@@ -22,6 +22,7 @@ import {useHttpPost} from "@/hooks/useHttpPost";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {apiToUiStatus, useStateMachineStore} from "@/stores/stateMachineStore";
 import {REQUEST_STATE} from "@/services/HttpService";
+import {HttpService} from "@/services/HttpService";
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -524,37 +525,42 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                     }
                 } catch {}
             }
-            const billingId = Number(latestPayload?.billingId);
+
+            // Force: get billingId only from API by commentId (from roomData)
+            const commentId = Number((roomData as any)?.room?.currentComment?.id ?? (roomData as any)?.currentCommentId ?? undefined);
+            if (!commentId || Number.isNaN(commentId)) {
+                setError(t('profileChat.quotationError') || 'Missing billing information for approval.');
+                return false;
+            }
+            let billingId: number | undefined;
+            try {
+                const res = await HttpService.client.getBillingByComment({ commentId });
+                if (res?.state === REQUEST_STATE.SUCCESS && (res as any)?.data) {
+                    const billing = (res as any).data as any;
+                    billingId = Number(billing?.id);
+                }
+            } catch {}
             if (!billingId || Number.isNaN(billingId)) {
                 setError(t('profileChat.quotationError') || 'Missing billing information for approval.');
                 return false;
             }
-            console.log("[CHAT][APPROVE QUOTATION] Approving quotation");
 
-
-            // Resolve workflowId (from state or room response if provided)
-            const workflowIdCandidate = workflowIdState
-                ?? Number((roomData as any)?.room?.workflowId)
+            // Force: get workflowId only from roomData response
+            const workflowIdCandidate = Number((roomData as any)?.room?.workflowId)
                 ?? Number((roomData as any)?.workflowId);
             const workflowId = workflowIdCandidate && !Number.isNaN(workflowIdCandidate) ? Number(workflowIdCandidate) : undefined;
+            console.log("[CHAT][APPROVE QUOTATION] Form: ", workflowId);
+
             if (!workflowId) {
                 setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before approval.');
                 return false;
             }
-
-            // Wallet id from current employer profile
-            const walletIdStr = (person as any)?.walletId;
-            const walletId = walletIdStr ? Number(walletIdStr) : undefined;
-            if (!walletId || Number.isNaN(walletId)) {
-                setError('Missing wallet ID for approval.');
-                return false;
-            }
-
             // Seq number from proposed quote if available
             const seqNumber = Number(latestPayload?.quote?.workSteps?.[0]?.seq) || 1;
 
-            const form: ApproveQuotationForm = { seqNumber, billingId, walletId, workflowId } as any;
+            const form: ApproveQuotationForm = { seqNumber, billingId, walletId: person?.walletId , workflowId } as any;
             const res = await approveQuotationApi(form as any);
+            console.log("[CHAT][APPROVE QUOTATION] API response: ", res);
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
             if (!ok) {
                 setError(((res as any)?.err?.message) || 'Failed to approve quotation.');
@@ -987,6 +993,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 onSubmit={handleQuotationSubmit}
                 postId={roomPostId as number}
                 commentId={roomCommentId as number}
+                employerId={localUser?.id as number}
             />
         </>
     );
