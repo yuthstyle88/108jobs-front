@@ -3,6 +3,7 @@
 import Image, {StaticImageData} from "next/image";
 import type { ChatMessage } from "lemmy-js-client";
 import {MessageImage} from "@/constants/images";
+import { useTranslation } from "react-i18next";
 
 type UIChatMessage = ChatMessage & { isOwner?: boolean };
 
@@ -43,6 +44,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   message,
   partnerAvatar,
 }) => {
+  const { t } = useTranslation();
   const isIncoming = !message.isOwner;
 
   const toLocalTime = (iso: string, locale: string) => {
@@ -85,6 +87,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     } catch {}
   }
   const isProposedQuote = parsed && parsed.type === "proposed-quote" && parsed.quote;
+  const isEmployerAssigned = parsed && (parsed as any).type === "employer-assigned";
 
   return (
     <div
@@ -188,6 +191,22 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                   {parsed!.quote!.note}
                 </div>
               )}
+            </div>
+          </div>
+        ) : isEmployerAssigned ? (
+          <div className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ring-green-200 bg-green-50 px-4 py-3">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293A1 1 0 106.293 10.707l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <div className="text-sm font-medium text-green-800">
+                  {t('profileChat.confirmAssignMsg') || 'Assignment confirmed. Waiting for freelancer to accept.'}
+                </div>
+                <div className="mt-0.5 text-xs text-green-700">
+                  The order has been approved. You can proceed to payment when invoice is ready.
+                </div>
+              </div>
             </div>
           </div>
         ) : (

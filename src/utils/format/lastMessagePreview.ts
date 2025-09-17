@@ -45,6 +45,9 @@ export function formatLastMessagePreview(content?: string): string {
         }
         return parts.join(" • ");
       }
+      if (parsed && (parsed as any).type === "employer-assigned") {
+        return "Assignment confirmed";
+      }
     } catch {
       // fallthrough
     }

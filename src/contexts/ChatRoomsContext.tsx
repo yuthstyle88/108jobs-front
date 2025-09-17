@@ -212,14 +212,6 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         execute();
     }, [execute]);
 
-    // Periodic polling every 3 minutes to recover from missed WS updates
-    useEffect(() => {
-        const id = setInterval(() => {
-            try { execute(); } catch {}
-        }, 180000);
-        return () => clearInterval(id);
-    }, [execute]);
-
     // Refetch when WS reconnects (event dispatched from RealtimeChatContext)
     useEffect(() => {
         const onReconnected = () => {

@@ -270,7 +270,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         useEffect(() => {
             const rd: any = roomData as any;
             if (!rd) return;
-            const apiStatusRaw = rd?.room?.status ?? rd?.status ?? rd?.room?.workflowStatus ?? rd?.workflowStatus;
+            const apiStatusRaw = rd?.room?.workflow?.status ?? rd?.workflow?.status ?? rd?.room?.status ?? rd?.status ?? rd?.room?.workflowStatus ?? rd?.workflowStatus;
             // If server reports a workflow status, mark as started and sync UI state
             if (typeof apiStatusRaw === 'string') {
                 if (!hasStarted) setHasStarted(true);
@@ -526,30 +526,44 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 } catch {}
             }
 
-            // Force: get billingId only from API by commentId (from roomData)
-            const commentId = Number((roomData as any)?.room?.currentComment?.id ?? (roomData as any)?.currentCommentId ?? undefined);
-            if (!commentId || Number.isNaN(commentId)) {
-                setError(t('profileChat.quotationError') || 'Missing billing information for approval.');
-                return false;
-            }
-            let billingId: number | undefined;
-            try {
-                const res = await HttpService.client.getBillingByComment({ commentId });
-                if (res?.state === REQUEST_STATE.SUCCESS && (res as any)?.data) {
-                    const billing = (res as any).data as any;
-                    billingId = Number(billing?.id);
+            // Try billingId from payload first
+            let billingId = Number(latestPayload?.billingId);
+            // If missing / invalid, fetch billing by comment id using new API
+            if (!billingId || Number.isNaN(billingId)) {
+                const commentIdFromPayload = Number(latestPayload?.quote?.commentId);
+                const commentId = !Number.isNaN(commentIdFromPayload) && commentIdFromPayload
+                    ? commentIdFromPayload
+                    : Number((roomData as any)?.room?.currentComment?.id ?? (roomData as any)?.currentCommentId ?? undefined);
+
+                if (!commentId || Number.isNaN(commentId)) {
+                    setError(t('profileChat.quotationError') || 'Missing billing information for approval.');
+                    return false;
                 }
-            } catch {}
+
+                try {
+                    const res = await HttpService.client.getBillingByComment({ commentId });
+                    if (res?.state === REQUEST_STATE.SUCCESS && (res as any)?.data) {
+                        const billing = (res as any).data as any;
+                        billingId = Number(billing?.id);
+                    }
+                } catch (err) {
+                    // fallthrough to error below
+                }
+            }
+
             if (!billingId || Number.isNaN(billingId)) {
                 setError(t('profileChat.quotationError') || 'Missing billing information for approval.');
                 return false;
             }
 
-            // Force: get workflowId only from roomData response
-            const workflowIdCandidate = Number((roomData as any)?.room?.workflowId)
-                ?? Number((roomData as any)?.workflowId);
-            const workflowId = workflowIdCandidate && !Number.isNaN(workflowIdCandidate) ? Number(workflowIdCandidate) : undefined;
-            console.log("[CHAT][APPROVE QUOTATION] Form: ", workflowId);
+            // Resolve workflowId (from state or room response if provided). Prefer nested room.workflow.id
+            const workflowIdCandidate = (workflowIdState as any)
+                ?? (roomData as any)?.room?.workflow?.id
+                ?? (roomData as any)?.workflow?.id
+                ?? (roomData as any)?.room?.workflowId
+                ?? (roomData as any)?.workflowId;
+            const workflowIdNum = Number(workflowIdCandidate);
+            const workflowId = workflowIdNum && !Number.isNaN(workflowIdNum) ? workflowIdNum : undefined;
 
             if (!workflowId) {
                 setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before approval.');

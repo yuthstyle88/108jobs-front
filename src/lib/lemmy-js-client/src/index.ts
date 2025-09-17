@@ -401,6 +401,7 @@ export type { ApproveQuotationForm } from "./types/ApproveQuotationForm";
 export type { BillingOperationResponse } from "./types/BillingOperationResponse";
 export type { WorkflowId } from "./types/WorkflowId";
 export type { WorkflowStatus } from "./types/WorkflowStatus";
+export type { Workflow } from "./types/Workflow";
 export type { WorkFlowOperationResponse } from "./types/WorkFlowOperationResponse";
 export type { StartWorkflowForm } from "./types/StartWorkflowForm";
 export type { Billing } from "./types/Billing";

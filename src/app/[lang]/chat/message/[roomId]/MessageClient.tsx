@@ -17,6 +17,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     const {localUser} = useMyUser();
 
     const [partnerName, setPartnerName] = useState<string>("Unknown");
+    const [partnerId, setPartnerId] = useState<any>({});
     const [loading, setLoading] = useState(true);
     const [peerPublicKeyHex, setPeerPublicKeyHex] = useState<string | undefined>(undefined);
     const [post, setPost] = useState<Post>();
@@ -75,11 +76,14 @@ export default function MessageClient({roomId}: { roomId: string }) {
                         res.state === REQUEST_STATE.SUCCESS
                             ? res.data.profile.name
                             : "Unknown";
+                    setPartnerId(res.state === REQUEST_STATE.SUCCESS ? res.data.profile.id : null);
+
                     if (!cancelled) setPartnerName(String(profileName));
+
 
                     // Fetch peer's published public keys for E2EE
                     try {
-                        const keysRes = await (HttpService.client as any).getUserKeys(Number(other.memberId));
+                        const keysRes = await HttpService.client.getUserKeys(Number(other.memberId));
                         if (!cancelled && keysRes?.state === REQUEST_STATE.SUCCESS) {
                             const keys = (keysRes.data as any)?.publicKeys as string[] | undefined;
                             if (Array.isArray(keys) && keys.length > 0) {
@@ -124,9 +128,11 @@ export default function MessageClient({roomId}: { roomId: string }) {
         );
     }
 
+
+
     return (
         <WebSocketProvider token={accessToken} roomId={roomId} peerPublicKeyHex={peerPublicKeyHex}>
-            <ChatSection roomId={roomId} post={post} partnerName={partnerName} partnerAvatar={""}/>
+            <ChatSection roomId={roomId} post={post} partnerName={partnerName} partnerAvatar={""} partnerId={partnerId as number}/>
         </WebSocketProvider>
     );
 }
