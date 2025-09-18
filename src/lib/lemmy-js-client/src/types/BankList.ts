@@ -1,11 +1,5 @@
-export type Bank = {
-  id: number;
-  name: string;
-  country: string;
-  bankCode: string;
-  swiftCode: string;
-};
+import type { Bank } from "./Bank";
 
 export type BanksResponse = {
-  banks: Bank[];
+  banks: Array<Bank>;
 };

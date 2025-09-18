@@ -5,7 +5,7 @@ import JobBoardTab from "@/app/[lang]/(job)/job-board/_components/JobBoardTab";
 import { LandingImage, ProfileImage } from "@/constants/images";
 import { PostId } from "lemmy-js-client";
 import { formatDateToLong } from "@/utils";
-import { MoveRight } from "lucide-react";
+import {ArrowLeft, MoveRight} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -62,13 +62,19 @@ const JobBoardDetail = ({ jobId }: Props) => {
 
     return (
         <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            {/* Job Board Tabs */}
-            <div className="mb-8 bg-white rounded-xl shadow-sm p-6">
-                <JobBoardTab />
-            </div>
-
             {/* Header Section */}
             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+                <div className="flex items-center justify-between mb-4">
+                    <button
+                        type="button"
+                        onClick={() => route.back()}
+                        className="inline-flex items-center text-sm text-gray-700 hover:text-gray-900 px-3 py-1 rounded-md hover:bg-gray-50"
+                        aria-label="Go back"
+                    >
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Back
+                    </button>
+                </div>
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                     <div className="flex-1">
                         <div className="flex items-center gap-3 mb-3">
@@ -207,7 +213,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
                     message={`We recommend communicating and paying through ${getAppName()} - guaranteed no scams! We protect your payment until you receive work from the freelancer`}
                     className="bg-blue-50 text-blue-800 p-4 rounded-lg"
                 />
-                <JobBoardProposal postId={jobId} />
+                <JobBoardProposal postId={jobDetailData?.postView?.post.id} jobCreatorId={jobDetailData?.postView?.creator?.id} />
             </div>
 
 

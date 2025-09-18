@@ -146,30 +146,12 @@ const MyJobs = () => {
                                                     <button
                                                         onClick={(e) => {
                                                             e.stopPropagation();
-                                                            router.push(`/job-board/offers?postId=${job.post.id}`);
-                                                        }}
-                                                        className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 px-3 py-1 rounded-md hover:bg-blue-50"
-                                                    >
-                                                        {t("profileJob.tableHeaderActionViewProposals")}
-                                                    </button>
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
                                                             router.push(`/job-board/edit/${job.post.id}`);
                                                         }}
                                                         className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 px-3 py-1 rounded-md hover:bg-blue-50"
                                                     >
                                                         {t("profileJob.tableHeaderActionEdit")}
                                                     </button>
-                                                    {/*<button*/}
-                                                    {/*    onClick={(e) => {*/}
-                                                    {/*        e.stopPropagation();*/}
-                                                    {/*        handleOpenModal(job.post.id.toString());*/}
-                                                    {/*    }}*/}
-                                                    {/*    className="text-red-600 hover:text-red-800 font-medium transition-colors duration-200 px-3 py-1 rounded-md hover:bg-red-50"*/}
-                                                    {/*>*/}
-                                                    {/*    {t("profileJob.tableHeaderActionCloseJob")}*/}
-                                                    {/*</button>*/}
                                                 </td>
                                             </tr>
                                         ))

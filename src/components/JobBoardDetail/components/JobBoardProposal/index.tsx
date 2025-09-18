@@ -3,24 +3,61 @@
 import { ProfileImage } from "@/constants/images";
 import { Pagination } from "@/components/Pagination";
 import { useHttpGet } from "@/hooks/useHttpGet";
-import type { CommentView, PostId } from "lemmy-js-client";
+import type { CommentView } from "lemmy-js-client";
 import Image from "next/image";
 import React, { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
+import { dmRoomId } from "@/utils/helpers";
+import { HttpService } from "@/services/HttpService";
+import { MessageCircleMore } from "lucide-react";
 
 type JobBoardProposalProps = {
-    postId?: PostId;
+    postId?: number;
+    jobCreatorId?: number;
 };
 
-const JobBoardProposal = ({ postId }: JobBoardProposalProps) => {
+const JobBoardProposal = ({ postId, jobCreatorId }: JobBoardProposalProps) => {
     const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined);
+    const [startingChatFor, setStartingChatFor] = useState<number | null>(null);
 
     const { data: proposals, pagination, isMutating: isLoading } = useHttpGet("getComments", {
         pageCursor: currentCursor,
         ...(postId ? { postId } : {}),
     });
 
+    const { person: currentUser } = useMyUser();
+    const route = useRouter();
+    const params = useParams();
+    const currentLang = (params?.lang as string) || 'th';
+
     const handlePageChange = (pageCursor: string | null) => {
         setCurrentCursor(pageCursor || undefined);
+    };
+
+    const handleStartChat = async (cv: CommentView) => {
+        const partnerPersonId = (cv as any)?.creator?.id as number | undefined;
+        const currentUserId = currentUser?.id;
+        if (!partnerPersonId || !currentUserId) return;
+        if (partnerPersonId === currentUserId) return;
+
+        const roomId = dmRoomId(currentUserId, partnerPersonId);
+        try {
+            setStartingChatFor(partnerPersonId);
+            try {
+                await HttpService.client.createChatRoom({
+                    partnerPersonId,
+                    roomId,
+                    ...(postId ? { postId } : {}),
+                    ...(cv?.comment?.id ? { currentCommentId: cv.comment.id } : {}),
+                });
+            } catch (e) {
+                // If room already exists or API fails, proceed to navigate anyway
+            }
+            route.push(`/${currentLang}/chat/message/${roomId}`);
+        } finally {
+            setStartingChatFor(null);
+        }
     };
 
     return (
@@ -84,6 +121,19 @@ const JobBoardProposal = ({ postId }: JobBoardProposalProps) => {
                                             })}
                                         </p>
                                     </div>
+                                    {currentUser?.id === jobCreatorId && (cv as any)?.creator?.id !== currentUser?.id && (
+                                        <button
+                                            type="button"
+                                            onClick={() => handleStartChat(cv)}
+                                            disabled={startingChatFor === (cv as any)?.creator?.id}
+                                            className="self-end inline-flex items-center bg-primary text-white text-sm font-medium px-3 py-2 rounded-md hover:bg-[#063a68] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                                            aria-label="Start chat with proposer"
+                                            title="Start chat"
+                                        >
+                                            <MessageCircleMore className="w-4 h-4 mr-2" />
+                                            {startingChatFor === (cv as any)?.creator?.id ? "Starting..." : "Start Chat"}
+                                        </button>
+                                    )}
                                 </div>
                             </section>
                         </div>

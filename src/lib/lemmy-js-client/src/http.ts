@@ -83,7 +83,7 @@ import type {CommunityResponse} from "./types/CommunityResponse";
 import type {ContactForm} from "./types/ContactForm";
 import {ContactResponse} from "./types/ContactResponse";
 import type {CountriesResponse} from "./types/CountriesResponse";
-import type {CreateBankAccount} from "./types/CreateBankAccount";
+import type {BankAccountForm} from "./types/BankAccountForm";
 import type {CreateComment} from "./types/CreateComment";
 import type {CreateCommentLike} from "./types/CreateCommentLike";
 import type {CreateCommentReport} from "./types/CreateCommentReport";
@@ -426,6 +426,21 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<object, CountriesResponse>(
             HttpType.Get,
             "/account/profile/countries",
+            {},
+            options,
+        );
+    }
+
+    /**
+     * @summary List banks.
+     */
+    @Security("bearerAuth")
+    @Get("/account/banks")
+    @Tags("Account")
+    async listBanks(@Inject() options?: RequestOptions) {
+        return this.#wrapper<object, BanksResponse>(
+            HttpType.Get,
+            "/account/banks",
             {},
             options,
         );
@@ -1792,10 +1807,10 @@ export class LemmyHttp extends Controller {
     @Post("/account/bank-account")
     @Tags("Account")
     async createBankAccount(
-        @Body() form: CreateBankAccount,
+        @Body() form: BankAccountForm,
         @Inject() options?: RequestOptions,
     ) {
-        return this.#wrapper<CreateBankAccount, SuccessResponse>(
+        return this.#wrapper<BankAccountForm, SuccessResponse>(
             HttpType.Post,
             "/account/bank-account",
             form,
@@ -3153,8 +3168,9 @@ export class LemmyHttp extends Controller {
         {image}: UploadImage,
         options?: RequestOptions,
     ): Promise<ResponseType> {
+        const qs = encodeGetParams(query);
         return this.#upload<ResponseType>(
-            `${path}?${encodeGetParams(query)}`,
+            qs ? `${path}?${qs}` : path,
             {image},
             options,
         );
@@ -3168,7 +3184,8 @@ export class LemmyHttp extends Controller {
     ): Promise<ResponseType> {
         let response: Response;
         if (type_ === HttpType.Get) {
-            const getUrl = `${this.#buildFullUrl(endpoint)}?${encodeGetParams(form)}`;
+            const qs = encodeGetParams(form as object);
+            const getUrl = qs ? `${this.#buildFullUrl(endpoint)}?${qs}` : this.#buildFullUrl(endpoint);
             response = await this.#fetchFunction(getUrl, {
                 ...options,
                 method: HttpType.Get,

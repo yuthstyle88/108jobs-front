@@ -19,20 +19,30 @@ const BankAccount = () => {
   const {
     data: bankListRes,
     isMutating: isBankListLoading,
-  } = useHttpGet("listUserBankAccounts");
+  } = useHttpGet("listBanks");
 
   const {
     data: bankAccountsRes,
     isMutating: isBankAccountsLoading,
-  } = useHttpGet("getBankAccount");
+    execute: reloadBankAccounts,
+  } = useHttpGet("listUserBankAccounts");
 
   const { execute: createBankAccount } = useHttpPost("createBankAccount");
   const { execute: setDefaultBankAccount } = useHttpPut("setDefaultBankAccount");
   const { execute: deleteBankAccount, isMutating: isDeleting } =
     useHttpDelete("deleteBankAccount");
 
-  const bankList = bankListRes?.bankAccounts || [];
+  const bankList = bankListRes?.banks || [];
   const bankAccounts = (bankAccountsRes?.bankAccounts ?? []) as any[];
+  // Normalize API response keys to support both snake_case and camelCase from backend
+  const normalizedAccounts = bankAccounts
+    .map((acc: any) => {
+      const userBank = acc?.user_bank_account ?? acc?.userBankAccount;
+      const bank = acc?.bank ?? acc?.Bank ?? undefined;
+      if (!userBank) return null;
+      return { user_bank_account: userBank, bank };
+    })
+    .filter(Boolean) as any[];
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<BankAccountFormValues | null>(null);
@@ -55,15 +65,22 @@ const BankAccount = () => {
   };
 
   const handleSubmit = async (data: BankAccountFormValues & { id?: string }) => {
+    const bank = bankList.find((b: any) => String(b.id) === data.bankId);
+    if (!bank) {
+      return;
+    }
     await createBankAccount({
       bankId: Number(data.bankId),
       accountNumber: data.accountNumber,
       accountName: data.accountName,
+      countryId: bank.countryId,
     });
+    await reloadBankAccounts();
   };
 
   const handleSetDefault = async (id: number) => {
     await setDefaultBankAccount({ bankAccountId: id });
+    await reloadBankAccounts();
   };
 
   const handleConfirmDelete = (id: number) => {
@@ -74,6 +91,7 @@ const BankAccount = () => {
   const handleDelete = async () => {
     if (deletingAccountId == null) return;
     await deleteBankAccount({ bankAccountId: deletingAccountId });
+    await reloadBankAccounts();
     setConfirmDeleteOpen(false);
     setDeletingAccountId(null);
   };
@@ -101,10 +119,10 @@ const BankAccount = () => {
       <div className="p-6 space-y-4">
         {isBankAccountsLoading && <p>Loading accounts...</p>}
         {(isBankListLoading || isBankAccountsLoading) && <LoadingBlur text="" />}
-        {!isBankAccountsLoading && bankAccounts.length === 0 && (
+        {!isBankAccountsLoading && normalizedAccounts.length === 0 && (
           <p className="text-text-primary">{sellerBankAccountLanguage?.noBankFound}</p>
         )}
-        {bankAccounts.map((acc) => (
+        {normalizedAccounts.map((acc) => (
           <div
             key={acc.user_bank_account.id}
             className={`border rounded-md p-4 flex justify-between items-center ${
@@ -112,7 +130,7 @@ const BankAccount = () => {
             }`}
           >
             <div>
-              <p className="font-medium text-gray-800">{acc.bank.name}</p>
+              <p className="font-medium text-gray-800">{acc.bank?.name ?? "Unknown Bank"}</p>
               <p className="text-gray-500">
                 {acc.user_bank_account.accountNumber} — {acc.user_bank_account.accountName}
               </p>

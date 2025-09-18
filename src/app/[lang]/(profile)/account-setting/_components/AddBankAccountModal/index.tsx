@@ -7,7 +7,7 @@ import {getNamespace} from "@/utils/i18nHelper";
 import {LanguageFile} from "@/constants/language";
 import React, {useEffect} from "react";
 import Modal from "@/components/ui/Modal";
-import {BankAccountView} from "@/lib/lemmy-js-client/src";
+import { Bank } from "@/lib/lemmy-js-client/src";
 
 const schema = z.object({
   bankId: z.string().min(1, "Bank is required"),
@@ -17,18 +17,12 @@ const schema = z.object({
 
 export type BankAccountFormValues = z.infer<typeof schema>;
 
-interface Bank {
-  id: number;
-  name: string;
-  bankCode: string;
-}
-
 interface BankAccountModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: BankAccountFormValues & { id?: string }) => void;
   initialData?: BankAccountFormValues & { id?: string } | null;
-  bankList?: BankAccountView[];
+  bankList?: Bank[];
 }
 
 const BankAccountModal: React.FC<BankAccountModalProps> = ({
@@ -85,11 +79,10 @@ const BankAccountModal: React.FC<BankAccountModalProps> = ({
           >
             <option value="">{sellerBankAccountLanguage?.bankNamePlaceholder}</option>
             {bankList.map((bank) => (
-              <option key={bank.bank.id} value={bank.bank.id}>
-                {bank.bank.name} {bank.bank.bankCode && `(${bank.bank.bankCode})`}
+              <option key={String(bank.id)} value={String(bank.id)}>
+                {bank.name} {bank.bankCode && `(${bank.bankCode})`}
               </option>
             ))}
-            <option value="1">ABC</option>
           </select>
           {errors.bankId && (
             <p className="text-red-500 text-sm mt-1">{errors.bankId.message}</p>

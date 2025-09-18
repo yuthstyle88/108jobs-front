@@ -387,7 +387,6 @@ export type {Budget} from "./types/Budget";
 export type {BankAccount} from "./types/BankAccount";
 export type {BankAccountView} from "./types/BankAccountView";
 export type {Bank} from "./types/Bank";
-export type {CreateBankAccount} from "./types/CreateBankAccount";
 export type {BankAccountForm} from "./types/BankAccountForm";
 export type {ListBankAccounts} from "./types/ListBankAccounts";
 export type {ListBankAccountsResponse} from "./types/ListBankAccountsResponse";
