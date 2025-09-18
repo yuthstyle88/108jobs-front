@@ -91,15 +91,21 @@ class WrappedLemmyHttpClient {
           let patchedArgs: any[] = args as any[];
           const jwt = UserService.Instance?.authInfo?.auth;
           if (jwt) {
+            const mergeAuth = (obj: any) => ({ ...(obj || {}), auth: jwt });
+            const isPlainObject = (v: any) => v && typeof v === 'object' && !Array.isArray(v) && !(v instanceof Blob) && !(v instanceof File);
+
             if (patchedArgs.length === 0) {
+              // No args -> just pass options with auth
               patchedArgs = [{ auth: jwt }];
+            } else if (isPlainObject(patchedArgs[0])) {
+              // First arg is an options/form object -> merge auth into it
+              patchedArgs = [mergeAuth(patchedArgs[0]), ...patchedArgs.slice(1)];
+            } else if (isPlainObject(patchedArgs[1])) {
+              // Second arg is options -> merge there
+              patchedArgs = [patchedArgs[0], mergeAuth(patchedArgs[1]), ...patchedArgs.slice(2)];
             } else {
-              const first = patchedArgs[0];
-              if (first && typeof first === 'object' && !Array.isArray(first)) {
-                patchedArgs = [{ ...first, auth: jwt }, ...patchedArgs.slice(1)];
-              } else {
-                patchedArgs = [{ auth: jwt }, ...patchedArgs];
-              }
+              // Otherwise, append options at the end to avoid shifting positional params
+              patchedArgs = [...patchedArgs, { auth: jwt }];
             }
           }
 
@@ -294,16 +300,17 @@ export function callHttp<
   const jwt = UserService.Instance?.authInfo?.auth;
   let patchedArgs: any[] = args as any[];
   if (jwt) {
+    const mergeAuth = (obj: any) => ({ ...(obj || {}), auth: jwt });
+    const isPlainObject = (v: any) => v && typeof v === 'object' && !Array.isArray(v) && !(v instanceof Blob) && !(v instanceof File);
+
     if (patchedArgs.length === 0) {
       patchedArgs = [{ auth: jwt }];
+    } else if (isPlainObject(patchedArgs[0])) {
+      patchedArgs = [mergeAuth(patchedArgs[0]), ...patchedArgs.slice(1)];
+    } else if (isPlainObject(patchedArgs[1])) {
+      patchedArgs = [patchedArgs[0], mergeAuth(patchedArgs[1]), ...patchedArgs.slice(2)];
     } else {
-      const first = patchedArgs[0];
-      if (first && typeof first === 'object' && !Array.isArray(first)) {
-        patchedArgs = [{ ...first, auth: jwt }, ...patchedArgs.slice(1)];
-      } else {
-        // If the first arg isn't an object (unexpected for lemmy-js-client), prepend an options object
-        patchedArgs = [{ auth: jwt }, ...patchedArgs];
-      }
+      patchedArgs = [...patchedArgs, { auth: jwt }];
     }
   }
   return HttpService.client[method](...patchedArgs) as ReturnType<
