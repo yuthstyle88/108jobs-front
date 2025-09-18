@@ -46,7 +46,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
     const todayYMD = getTodayYMD();
 
     // Zod schemas (t-aware)
-    const { WorkStepSchema, ProposedQuoteSchema } = useMemo(() => {
+    const {ProposedQuoteSchema } = useMemo(() => {
         const WorkStepSchema = z.object({
             seq: z.number().int().min(1),
             description: z.string().min(1, t('profileChat.validation.workStepDescription') || 'Work step description is required'),
@@ -149,7 +149,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
 
             const start = (key === 'startingDay' ? value : next.startingDay) as string;
             const days = (key === 'workingDays' ? value : next.workingDays) as number;
-            if (start && typeof days === 'number' && days > 0) {
+            if (start && days > 0) {
                 next.deliveryDay = addDaysYMD(start, days);
             }
             copy[index] = next;

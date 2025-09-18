@@ -3,34 +3,35 @@ import {Accordion, AccordionContent, AccordionItem, AccordionTrigger,} from "@/c
 import {Button} from "@/components/ui/Button";
 import {AssetIcon, ContentIcon} from "@/constants/icons";
 import Image from "next/image";
-import { getAppName } from "@/utils/appConfig";
+import { useTranslation } from "react-i18next";
 
 const SupportCenter = () => {
+  const { t } = useTranslation();
   const faqData = [
     {
-      question: "ฉันจะจ้างฟรีแลนซ์ผ่าน "+getAppName()+" ได้อย่างไร?",
+      question: t("supportCenter.faqQuestion1"),
       answer: [
-        "1. พูดคุยกับฟรีแลนซ์และหารือเกี่ยวกับรายละเอียดงาน (ในขั้นตอนนี้คุณยังไม่ถูกเรียกเก็บเงิน)",
-        "2. แจ้งให้ฟรีแลนซ์ออกใบเสนอราคา",
-        "3. ชำระเงินผ่านระบบเพื่อยืนยันการเริ่มต้นงาน (ระบบจะคุ้มครองการชำระเงินของคุณ)",
-        "4. ตรวจสอบและอนุมัติงาน",
+        t("supportCenter.faqQuestion1Step1"),
+        t("supportCenter.faqQuestion1Step2"),
+        t("supportCenter.faqQuestion1Step3"),
+        t("supportCenter.faqQuestion1Step4"),
       ],
-      note: `หมายเหตุ: การชำระเงินในระบบจะได้รับการคุ้มครองโดย ${getAppName()} ดูเพิ่มเติมที่ ${getAppName()} Guarantee`,
+      note: t("supportCenter.faqQuestion1Note"),
     },
     {
-      question: "ฉันจะจ้างงานในนามบริษัทได้อย่างไร?",
+      question: t("supportCenter.faqQuestion2"),
       answer: [
-        "1. ให้ข้อมูลบริษัทเพื่อออกเอกสารที่หน้า จ้างงานในนามบริษัท",
-        "2. รอการอนุมัติภายใน 2 ชั่วโมง",
-        "3. หลังได้รับการอนุมัติ แจ้งให้ฟรีแลนซ์ออกเอกสารผ่านแชททันที",
+        t("supportCenter.faqQuestion2Step1"),
+        t("supportCenter.faqQuestion2Step2"),
+        t("supportCenter.faqQuestion2Step3"),
       ],
     },
     {
-      question: "ฉันจะหาฟรีแลนซ์ได้อย่างไร?",
+      question: t("supportCenter.faqQuestion3"),
       answer: [
-        "1. เพิ่ม @fastwork คลิกเพื่อเพิ่มไลน์",
-        "2. เลือกบริการแชทเพื่อจ้างงาน (ผู้ช่วยหาฟรีแลนซ์)",
-        "3. แจ้งรายละเอียดให้แอดมินทันที",
+        t("supportCenter.faqQuestion3Step1"),
+        t("supportCenter.faqQuestion3Step2"),
+        t("supportCenter.faqQuestion3Step3"),
       ],
     },
   ];
@@ -43,8 +44,8 @@ const SupportCenter = () => {
         >
           <div className="px-[1.5rem] relative">
             <div className="text-center text-white">
-              <h1 className="text-[28px]">Frequently Asked Questions</h1>
-              <p className="text-[16px]">Get answers to common questions</p>
+              <h1 className="text-[28px]">{t("supportCenter.faqTitle")}</h1>
+              <p className="text-[16px]">{t("supportCenter.faqSubtitle")}</p>
             </div>
           </div>
           <div className="absolute right-[-100px] bottom-[150px] h-[150px] ml-auto opacity-30 pointer-events-none">
@@ -61,7 +62,7 @@ const SupportCenter = () => {
             <div className="px-6 w-full">
               <div className="text-center mb-12">
                 <h1 className="font-sans text-[1.5rem] text-text-primary font-semibold mb-4">
-                  คำถามที่พบบ่อย
+                  {t("supportCenter.faqHeader")}
                 </h1>
                 <div className="w-20 h-[2px] rounded-full bg-blue-500 mx-auto"></div>
               </div>
@@ -95,12 +96,6 @@ const SupportCenter = () => {
                   </AccordionItem>
                 ))}
               </Accordion>
-
-              <div className="text-center mt-8">
-                <button className="text-gray-600 hover:text-primary flex items-center mx-auto">
-                  ดูคำถามทั้งหมด →
-                </button>
-              </div>
             </div>
           </div>
         </section>
@@ -110,7 +105,7 @@ const SupportCenter = () => {
               <div className="max-w-6xl mx-auto px-6">
                 <div className="text-center mb-12">
                   <h1 className="font-sans text-[1.5rem] text-text-primary font-semibold mb-4">
-                    ติดต่อเรา
+                    {t("supportCenter.contactUsHeader")}
                   </h1>
                   <div className="w-20 h-[2px] rounded-full bg-blue-500 mx-auto"></div>
                 </div>
@@ -119,17 +114,16 @@ const SupportCenter = () => {
                   {/* Support Center */}
                   <div className="bg-white rounded-lg p-8 shadow-sm">
                     <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                      ศูนย์ช่วยเหลือ
+                      {t("supportCenter.supportCenterTitle")}
                     </h3>
                     <p className="text-gray-600 mb-6">
-                      ต้องการความช่วยเหลือ? เรายินดีให้บริการคุณ
+                      {t("supportCenter.supportCenterDescription")}
                     </p>
                     <Button className="bg-primary hover:bg-[#063a68] text-white px-6 py-2 rounded-md mb-6">
-                      💬 แชทกับเรา
+                      {t("supportCenter.chatWithUsButton")}
                     </Button>
                     <p className="text-sm text-gray-500">
-                      วันจันทร์-ศุกร์ 9:30-22:00 / เสาร์-อาทิตย์
-                      และวันหยุดนักขัตฤกษ์ 10:00-19:00
+                      {t("supportCenter.supportCenterHours")}
                     </p>
                   </div>
                 </div>
@@ -137,29 +131,29 @@ const SupportCenter = () => {
                   {/* Contact via Email */}
                   <div className="bg-white rounded-lg p-8 shadow-sm">
                     <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                      ติดต่อทางอีเมล
+                      {t("supportCenter.contactEmailTitle")}
                     </h3>
                     <p className="text-gray-600 mb-6">
-                      ทีมงานจะตอบกลับภายใน{" "}
-                      <span className="text-primary">24 ชั่วโมง</span>
+                      {t("supportCenter.contactEmailResponseTime")} {" "}
+                      <span className="text-primary">{t("supportCenter.contactEmailResponseTimeHighlight")}</span>
                     </p>
                     <Button className="text-third bg-white border-1 border-gray-300 hover:bg-blue-50 px-6 py-2 rounded-md">
-                      ส่งอีเมลถึงเรา
+                      {t("supportCenter.sendEmailButton")}
                     </Button>
                   </div>
                   {/* Call */}
                   <div className="bg-white rounded-lg p-8 shadow-sm">
                     <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                      โทรหาเรา
+                      {t("supportCenter.callUsTitle")}
                     </h3>
                     <p className="text-primary font-semibold text-lg mb-4">
-                      02-114-7008
+                      {t("supportCenter.callUsPhone")}
                     </p>
                     <p className="text-sm text-gray-500 mb-2">
-                      วันจันทร์-ศุกร์ เวลา 9:30-11:30 และ 13:00-16:00
+                      {t("supportCenter.callUsHours")}
                     </p>
                     <p className="text-sm text-gray-500">
-                      ปิดให้บริการวันเสาร์-อาทิตย์ และวันหยุดนักขัตฤกษ์
+                      {t("supportCenter.callUsClosed")}
                     </p>
                   </div>
                 </div>
@@ -168,13 +162,13 @@ const SupportCenter = () => {
                 <div className="bg-white rounded-lg p-8 shadow-sm mt-8 flex items-center justify-between">
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      ให้เราช่วยหาฟรีแลนซ์ เพียงแค่เพิ่มไลน์
+                      {t("supportCenter.addLineTitle")}
                     </h3>
                     <p className="text-gray-600 mb-4">
-                      บริการแชทเพื่อจ้างงาน หรือผู้ช่วยหาฟรีแลนซ์
+                      {t("supportCenter.addLineDescription")}
                     </p>
                     <Button className="text-third bg-white border-1 border-gray-300 px-6 py-2 rounded-md">
-                      เพิ่ม @fastwork
+                      {t("supportCenter.addLineButton")}
                     </Button>
                   </div>
                   <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center">

@@ -27,7 +27,7 @@ const NotificationDropdown = ({
     <div ref={dropdownRef} className={`relative ${className}`}>
       <div
         onClick={toggleDropdown}
-        className="text-white text-sm hover:bg-blue-800 hover:text-white pr-3 cursor-pointer"
+        className="text-white text-sm hover:text-white pr-3 cursor-pointer"
       >
         <FontAwesomeIcon
           icon={faBell}
