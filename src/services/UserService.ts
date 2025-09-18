@@ -122,7 +122,6 @@ export class UserService {
       this.currentLanguage = "en";
       return;
     }
-    // Authorization header is handled by HttpService's per-token client pool
     const claims = jwtDecode<Claims>(auth);
     this.authInfo = {auth, claims, sharedKey};
     this.currentLanguage = claims?.lang;

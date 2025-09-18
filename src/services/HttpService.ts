@@ -86,7 +86,25 @@ class WrappedLemmyHttpClient {
 
           // Check if this is a GET request that can be cached
           const isGetMethod = key.startsWith('get') && args.length <= 1;
-          const cacheKey = isGetMethod ? `${key}:${JSON.stringify(args)}` : '';
+
+          // Inject per-request auth into args (without mutating the shared client headers)
+          let patchedArgs: any[] = args as any[];
+          const jwt = UserService.Instance?.authInfo?.auth;
+          if (jwt) {
+            if (patchedArgs.length === 0) {
+              patchedArgs = [{ auth: jwt }];
+            } else {
+              const first = patchedArgs[0];
+              if (first && typeof first === 'object' && !Array.isArray(first)) {
+                patchedArgs = [{ ...first, auth: jwt }, ...patchedArgs.slice(1)];
+              } else {
+                patchedArgs = [{ auth: jwt }, ...patchedArgs];
+              }
+            }
+          }
+
+          // Build cache key after auth injection so auth-sensitive responses are isolated
+          const cacheKey = isGetMethod ? `${key}:${JSON.stringify(patchedArgs)}` : '';
 
           // Try to get from cache for GET requests
           if (isGetMethod && process.env.NODE_ENV === 'production') {
@@ -103,7 +121,7 @@ class WrappedLemmyHttpClient {
           // Perform the actual request
           const resultPromise = (async() => {
             try {
-              const res = await (this.rawClient as any)[key](...args);
+              const res = await (this.rawClient as any)[key](...patchedArgs);
 
               // Cache successful GET responses in production
               if (isGetMethod && res && process.env.NODE_ENV === 'production') {
@@ -158,20 +176,22 @@ export function wrapClient(client: LemmyHttp) {
  */
 export class HttpService {
   static #_instance: HttpService;
-  // Pool of clients keyed by JWT (use 'anon' for no token)
-  #clientPool: Map<string, WrappedLemmyHttp> = new Map();
+  #client: WrappedLemmyHttp;
   #requestTimeout: number = 30000; // Default timeout: 30 seconds
 
   private constructor() {
-    // No default client; clients are created per-token on demand
+    const lemmyHttp = new LemmyHttp(getHttpBase());
+    this.#client = wrapClient(lemmyHttp);
+
+    // Add request timeout handling to all methods
+    this.#addTimeoutToMethods();
   }
 
   /**
-   * Get the HTTP client for the current user's JWT (or anonymous if none).
+   * Get the HTTP client
    */
   public static get client() {
-    const jwt = UserService.Instance?.authInfo?.auth;
-    return this.#Instance.#getClientForToken(jwt);
+    return this.#Instance.#client;
   }
 
   /**
@@ -182,20 +202,23 @@ export class HttpService {
   }
 
   /**
-   * Clear the entire request cache for all clients
+   * Clear the entire request cache
    */
   public static clearCache(): void {
-    for (const client of this.#Instance.#clientPool.values()) {
-      (client as any).clearCache?.();
+    const client = this.#Instance.#client as any;
+    if (client.clearCache) {
+      client.clearCache();
     }
   }
 
   /**
-   * Clear a specific cache entry for all clients
+   * Clear a specific cache entry
    */
   public static clearCacheEntry(methodName: string, args: any[] = []): void {
-    for (const client of this.#Instance.#clientPool.values()) {
-      (client as any).clearCacheEntry?.(methodName, args);
+    const client = this.#Instance.#client as any;
+    if (client.clearCacheEntry) {
+      client.clearCacheEntry(methodName,
+        args);
     }
   }
 
@@ -207,63 +230,42 @@ export class HttpService {
   }
 
   /**
-   * Get or create a client for a given JWT token.
+   * Adds timeout handling to all client methods
    */
-  #getClientForToken(jwt?: string): WrappedLemmyHttp {
-    const key = jwt || 'anon';
-    const existing = this.#clientPool.get(key);
-    if (existing) return existing;
-
-    // Create a new LemmyHttp for this token
-    const lemmyHttp = new LemmyHttp(getHttpBase());
-    if (jwt) {
-      // Set the Authorization header only for this client's lifetime
-      (lemmyHttp as any).setHeaders?.({ Authorization: `Bearer ${jwt}` });
-    }
-
-    // Wrap with our RequestState and caching wrapper
-    const wrapped = wrapClient(lemmyHttp);
-
-    // Add timeout handling to all methods of this wrapped client
-    this.#addTimeoutToMethods(wrapped);
-
-    this.#clientPool.set(key, wrapped);
-    return wrapped;
-  }
-
-  /**
-   * Adds timeout handling to all client methods for a specific wrapped client
-   */
-  #addTimeoutToMethods(client: WrappedLemmyHttp): void {
-    const originalClient = client as any;
+  #addTimeoutToMethods(): void {
+    const originalClient = this.#client;
     const timeout = this.#requestTimeout;
 
     // Get all method names
     const methodNames = Object.keys(originalClient).filter(
-      (k) => typeof originalClient[k] === 'function' && k !== 'setHeaders'
+      key => typeof originalClient[key] === 'function' && key !== 'setHeaders'
     );
 
     // Wrap each method with timeout handling
     for (const methodName of methodNames) {
-      const originalMethod = originalClient[methodName].bind(originalClient);
+      const originalMethod = originalClient[methodName];
 
       // Replace the method with a timeout-aware version
-      (client as any)[methodName] = async (...args: any[]) => {
+      (this.#client as any)[methodName] = async(...args: any[]) => {
         // Create a timeout promise
         const timeoutPromise = new Promise<RequestState<any>>((_, reject) => {
           setTimeout(() => {
-            reject(new Error(`Request timeout after ${timeout}ms`));
-          }, timeout);
+              reject(new Error(`Request timeout after ${timeout}ms`));
+            },
+            timeout);
         });
 
         try {
           // Race between the original request and the timeout
-          return await Promise.race([originalMethod(...args), timeoutPromise]);
+          return await Promise.race([
+            originalMethod(...args),
+            timeoutPromise
+          ]);
         } catch (error) {
           return {
             state: REQUEST_STATE.FAILED,
-            err: error as Error,
-          } as FailedRequestState;
+            err: error as Error
+          };
         }
       };
     }
@@ -277,7 +279,23 @@ export function callHttp<
   method: K,
   ...args: Parameters<WrappedLemmyHttp[K]>
 ): ReturnType<WrappedLemmyHttp[K]> {
-  return HttpService.client[method](...args) as ReturnType<
+  // Inject per-request auth into args instead of setting headers on a shared client
+  const jwt = UserService.Instance?.authInfo?.auth;
+  let patchedArgs: any[] = args as any[];
+  if (jwt) {
+    if (patchedArgs.length === 0) {
+      patchedArgs = [{ auth: jwt }];
+    } else {
+      const first = patchedArgs[0];
+      if (first && typeof first === 'object' && !Array.isArray(first)) {
+        patchedArgs = [{ ...first, auth: jwt }, ...patchedArgs.slice(1)];
+      } else {
+        // If the first arg isn't an object (unexpected for lemmy-js-client), prepend an options object
+        patchedArgs = [{ auth: jwt }, ...patchedArgs];
+      }
+    }
+  }
+  return HttpService.client[method](...patchedArgs) as ReturnType<
     WrappedLemmyHttp[K]
   >;
 }

@@ -10,7 +10,7 @@
  * @param incomingHeaders HTTP headers from the incoming request
  * @returns An IsoData object containing all necessary data for rendering, or null if an error occurred
  */
-import {FailedRequestState, HttpService, RequestState} from "@/services/HttpService";
+import {FailedRequestState, HttpService, RequestState, wrapClient} from "@/services/HttpService";
 import {isAuthPath} from "@/utils/app";
 import {getErrorPageData, getJwtCookie, matchPath, setForwardedHeaders} from "@/utils/helpers";
 import {Match} from "@/utils/router";
@@ -18,9 +18,10 @@ import {routes} from "@/utils/routes";
 import {ErrorPageData, InitialFetchRequest, IsoData, RouteData} from "@/utils/types";
 import {parsePath} from "history";
 import {IncomingHttpHeaders} from "http";
-import {GetSiteResponse, ListCommunitiesResponse, MyUserInfo} from "lemmy-js-client";
+import {GetSiteResponse, LemmyHttp, ListCommunitiesResponse, MyUserInfo} from "lemmy-js-client";
 import {NextResponse} from "next/server";
 import {testHost} from "@/utils/config";
+import {getHttpBase} from "@/utils/env";
 
 /**
  * Optimized logger that conditionally logs based on environment
@@ -86,7 +87,9 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
         // Set up headers and authentication
         const headers = setForwardedHeaders(incomingHeaders);
         const auth = getJwtCookie(incomingHeaders);
-        await HttpService.client.setHeaders(headers);
+        // Create a per-request client and set headers without mutating the shared client
+        const tempClient = wrapClient(new LemmyHttp(getHttpBase()));
+        await (tempClient as any).setHeaders(headers);
 
         // Check authentication for protected routes
         if (!auth && isAuthPath(url)) {
@@ -97,9 +100,9 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
 
         // Fetch site data and profile info in parallel for better performance
         const [trySite, tryUser, tryCommunities] = await Promise.all([
-            HttpService.client.getSite(),
-            HttpService.client.getMyUser(),
-            HttpService.client.listCommunities()
+            (tempClient as any).getSite(),
+            (tempClient as any).getMyUser(),
+            (tempClient as any).listCommunities()
         ]);
 
         // Process profile data with improved error handling
