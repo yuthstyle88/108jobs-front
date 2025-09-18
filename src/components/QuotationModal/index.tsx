@@ -1,7 +1,10 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
+import {z} from 'zod';
+import { getTodayYMD, addDaysYMD, isBeforeToday } from '@/utils/helpers';
+
 
 export interface WorkStep {
     seq: number;
@@ -40,6 +43,62 @@ interface QuotationModalProps {
 
 const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubmit, postId, commentId, partnerId }) => {
     const { t } = useTranslation();
+    const todayYMD = getTodayYMD();
+
+    // Zod schemas (t-aware)
+    const { WorkStepSchema, ProposedQuoteSchema } = useMemo(() => {
+        const WorkStepSchema = z.object({
+            seq: z.number().int().min(1),
+            description: z.string().min(1, t('profileChat.validation.workStepDescription') || 'Work step description is required'),
+            amount: z.number().positive({ message: t('profileChat.validation.workStepAmount') || 'Work step amount must be greater than 0' }),
+            workingDays: z.number().int().positive({ message: t('profileChat.validation.workStepWorkingDays') || 'Work step working days must be greater than 0' }),
+            status: z.string(),
+            startingDay: z.string().min(1, t('profileChat.validation.workStepDates') || 'Both starting and delivery days are required'),
+            deliveryDay: z.string().min(1, t('profileChat.validation.workStepDates') || 'Both starting and delivery days are required'),
+        }).superRefine((s, ctx) => {
+            if (s.startingDay && isBeforeToday(s.startingDay)) {
+                ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('profileChat.validation.startDateNotPast') || 'Start date cannot be earlier than today', path: ['startingDay'] });
+            }
+            if (s.startingDay && s.workingDays > 0) {
+                const expected = addDaysYMD(s.startingDay, s.workingDays);
+                if (s.deliveryDay !== expected) {
+                    ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('profileChat.validation.invalidForm') || 'Delivery date must equal start date plus working days', path: ['deliveryDay'] });
+                }
+            }
+        });
+
+        const ProposedQuoteSchema = z.object({
+            partnerId: z.number().int().nonnegative(),
+            postId: z.number().int().nonnegative(),
+            commentId: z.number().int().nonnegative(),
+            amount: z.number().positive(),
+            proposal: z.string().min(1, t('profileChat.validation.invalidForm') || 'Proposal is required'),
+            projectName: z.string().min(1, t('profileChat.validation.invalidForm') || 'Project name is required'),
+            projectDetails: z.string().min(1, t('profileChat.validation.invalidForm') || 'Project details are required'),
+            workSteps: z.array(WorkStepSchema).min(1, t('profileChat.validation.workSteps') || 'At least one work step is required'),
+            workingDays: z.number().int().positive(),
+            deliverables: z.array(z.string().min(1, t('profileChat.validation.deliverable') || 'Deliverable description is required')).min(1, t('profileChat.validation.deliverables') || 'At least one deliverable is required'),
+            note: z.string().optional(),
+            startingDay: z.string().min(1, t('profileChat.validation.workStepDates') || 'Both starting and delivery days are required'),
+            deliveryDay: z.string().min(1, t('profileChat.validation.workStepDates') || 'Both starting and delivery days are required'),
+        }).superRefine((data, ctx) => {
+            const totalWorkStepAmount = data.workSteps.reduce((sum, s) => sum + s.amount, 0);
+            if (totalWorkStepAmount !== data.amount) {
+                ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('profileChat.validation.totalAmount') || 'Total amount must match the sum of work steps', path: ['amount'] });
+            }
+            if (data.startingDay && isBeforeToday(data.startingDay)) {
+                ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('profileChat.validation.startDateNotPast') || 'Start date cannot be earlier than today', path: ['startingDay'] });
+            }
+            if (data.startingDay && data.workingDays > 0) {
+                const expected = addDaysYMD(data.startingDay, data.workingDays);
+                if (data.deliveryDay !== expected) {
+                    ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('profileChat.validation.invalidForm') || 'Delivery date must equal start date plus working days', path: ['deliveryDay'] });
+                }
+            }
+        });
+
+        return { WorkStepSchema, ProposedQuoteSchema };
+    }, [t]);
 
     // Initialize without hardcoded demo content; postId comes from props
     const [form, setForm] = useState<ProposedQuotePayload>({
@@ -77,7 +136,23 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
     const updateWorkStep = (index: number, key: keyof WorkStep, value: any) => {
         setForm((prev) => {
             const copy = [...prev.workSteps];
-            copy[index] = { ...copy[index], [key]: value } as WorkStep;
+            const current = copy[index] as WorkStep;
+            const next: WorkStep = { ...(current || {
+                seq: index + 1,
+                description: '',
+                amount: 0,
+                workingDays: 1,
+                status: 'QuotationPending',
+                startingDay: '',
+                deliveryDay: '',
+            }), [key]: value };
+
+            const start = (key === 'startingDay' ? value : next.startingDay) as string;
+            const days = (key === 'workingDays' ? value : next.workingDays) as number;
+            if (start && typeof days === 'number' && days > 0) {
+                next.deliveryDay = addDaysYMD(start, days);
+            }
+            copy[index] = next;
             return { ...prev, workSteps: copy };
         });
     };
@@ -127,66 +202,16 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
         e.preventDefault();
         setError(null);
 
+        // Zod validation
+        const result = ProposedQuoteSchema.safeParse(form);
+        if (!result.success) {
+            const first = result.error.issues[0];
+            setError(first?.message || t('profileChat.validation.invalidForm') || 'Invalid form data');
+            return;
+        }
+
         try {
-            // Validate required fields
-            const required: Array<keyof ProposedQuotePayload> = [
-                'partnerId',
-                'postId',
-                'commentId',
-                'amount',
-                'proposal',
-                'projectName',
-                'projectDetails',
-                'workSteps',
-                'workingDays',
-                'deliverables',
-                'startingDay',
-                'deliveryDay',
-            ];
-            for (const key of required) {
-                const val = (form as any)[key];
-                if (val === undefined || val === null || (typeof val === 'string' && val.trim() === '')) {
-                    throw new Error(t(`profileChat.validation.${key}`) || `Please provide a valid ${key}`);
-                }
-            }
-            if (!Array.isArray(form.workSteps) || form.workSteps.length === 0) {
-                throw new Error(t('profileChat.validation.workSteps') || 'At least one work step is required');
-            }
-            if (!Array.isArray(form.deliverables) || form.deliverables.length === 0) {
-                throw new Error(t('profileChat.validation.deliverables') || 'At least one deliverable is required');
-            }
-
-            // Validate work steps
-            for (const [index, step] of form.workSteps.entries()) {
-                if (!step.description.trim()) {
-                    throw new Error(t('profileChat.validation.workStepDescription') || `Work step ${index + 1}: Description is required`);
-                }
-                if (step.amount <= 0) {
-                    throw new Error(t('profileChat.validation.workStepAmount') || `Work step ${index + 1}: Amount must be greater than 0`);
-                }
-                if (step.workingDays <= 0) {
-                    throw new Error(t('profileChat.validation.workStepWorkingDays') || `Work step ${index + 1}: Working days must be greater than 0`);
-                }
-                if (!step.startingDay || !step.deliveryDay) {
-                    throw new Error(t('profileChat.validation.workStepDates') || `Work step ${index + 1}: Both start and delivery dates are required`);
-                }
-            }
-
-            // Validate deliverables
-            for (const [index, deliverable] of form.deliverables.entries()) {
-                if (!deliverable.trim()) {
-                    throw new Error(t('profileChat.validation.deliverable') || `Deliverable ${index + 1}: Description is required`);
-                }
-            }
-
-            // Validate total amount against work steps
-            const totalWorkStepAmount = form.workSteps.reduce((sum, step) => sum + step.amount, 0);
-            if (totalWorkStepAmount !== form.amount) {
-                throw new Error(t('profileChat.validation.totalAmount') || 'Total amount must match the sum of work step amounts');
-            }
-
-            // Submit form and await API response
-            await onSubmit(form);
+            await onSubmit(result.data);
             onClose();
         } catch (e: any) {
             setError(e?.message || t('profileChat.validation.invalidForm') || 'Invalid form data');
@@ -218,9 +243,10 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                             <input
                                 type="number"
                                 step="0.01"
-                                value={form.amount}
+                                value={form.amount === 0 ? '' : form.amount}
                                 onChange={(e) => updateField('amount', Number(e.target.value))}
                                 className="mt-1 w-full rounded-md border border-gray-300 px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm"
+                                placeholder="0"
                                 required
                                 aria-describedby="amount-error"
                             />
@@ -256,9 +282,15 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                             <label className="block text-xs sm:text-sm font-medium text-gray-700">{t('profileChat.workingDays') || 'Working Days (Total)'}</label>
                             <input
                                 type="number"
-                                value={form.workingDays}
-                                onChange={(e) => updateField('workingDays', Number(e.target.value))}
+                                value={form.workingDays === 0 ? '' : form.workingDays}
+                                onChange={(e) => setForm(prev => {
+                                    const workingDays = Number(e.target.value);
+                                    const startingDay = prev.startingDay;
+                                    const deliveryDay = startingDay && workingDays > 0 ? addDaysYMD(startingDay, workingDays) : prev.deliveryDay;
+                                    return { ...prev, workingDays, deliveryDay };
+                                })}
                                 className="mt-1 w-full rounded-md border border-gray-300 px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm"
+                                placeholder="0"
                                 required
                                 aria-describedby="workingDays-error"
                             />
@@ -268,7 +300,13 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                             <input
                                 type="date"
                                 value={form.startingDay}
-                                onChange={(e) => updateField('startingDay', e.target.value)}
+                                min={todayYMD}
+                                onChange={(e) => setForm(prev => {
+                                    const startingDay = e.target.value;
+                                    const workingDays = prev.workingDays;
+                                    const deliveryDay = startingDay && workingDays > 0 ? addDaysYMD(startingDay, workingDays) : prev.deliveryDay;
+                                    return { ...prev, startingDay, deliveryDay };
+                                })}
                                 className="mt-1 w-full rounded-md border border-gray-300 px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm"
                                 required
                                 aria-describedby="startingDay-error"
@@ -279,10 +317,12 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                             <input
                                 type="date"
                                 value={form.deliveryDay}
-                                onChange={(e) => updateField('deliveryDay', e.target.value)}
-                                className="mt-1 w-full rounded-md border border-gray-300 px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm"
+                                className="mt-1 w-full rounded-md border border-gray-300 px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm bg-gray-100"
                                 required
                                 aria-describedby="deliveryDay-error"
+                                readOnly
+                                disabled
+                                title="Auto-calculated from start date and working days"
                             />
                         </div>
                     </div>
@@ -352,9 +392,10 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                                             <input
                                                 type="number"
                                                 step="0.01"
-                                                value={ws.amount}
+                                                value={ws.amount === 0 ? '' : ws.amount}
                                                 onChange={(e) => updateWorkStep(idx, 'amount', Number(e.target.value))}
                                                 className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-xs sm:text-sm"
+                                                placeholder="0"
                                                 aria-describedby={`workStep-${idx}-amount-error`}
                                             />
                                         </div>
@@ -362,9 +403,10 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                                             <label className="block text-xs text-gray-600">{t('profileChat.workingDays') || 'Working Days'}</label>
                                             <input
                                                 type="number"
-                                                value={ws.workingDays}
+                                                value={ws.workingDays === 0 ? '' : ws.workingDays}
                                                 onChange={(e) => updateWorkStep(idx, 'workingDays', Number(e.target.value))}
                                                 className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-xs sm:text-sm"
+                                                placeholder="0"
                                                 aria-describedby={`workStep-${idx}-workingDays-error`}
                                             />
                                         </div>
@@ -385,6 +427,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                                             <input
                                                 type="date"
                                                 value={ws.startingDay}
+                                                min={todayYMD}
                                                 onChange={(e) => updateWorkStep(idx, 'startingDay', e.target.value)}
                                                 className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-xs sm:text-sm"
                                                 aria-describedby={`workStep-${idx}-startingDay-error`}
@@ -395,9 +438,11 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                                             <input
                                                 type="date"
                                                 value={ws.deliveryDay}
-                                                onChange={(e) => updateWorkStep(idx, 'deliveryDay', e.target.value)}
-                                                className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-xs sm:text-sm"
+                                                className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1 text-xs sm:text-sm bg-gray-100"
                                                 aria-describedby={`workStep-${idx}-deliveryDay-error`}
+                                                readOnly
+                                                disabled
+                                                title="Auto-calculated from start date and working days"
                                             />
                                         </div>
                                     </div>

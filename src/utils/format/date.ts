@@ -23,3 +23,4 @@ export const formatDateTime = (dateString: string, option: DateFormatOption = 'd
   return date.toLocaleString('th-TH-u-ca-gregory',
     baseOptions);
 };
+

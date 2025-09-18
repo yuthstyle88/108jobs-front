@@ -85,6 +85,7 @@ export const vi = {
                 deliverable: "Cần mô tả hạng mục bàn giao",
                 totalAmount: "Tổng tiền phải khớp với tổng các bước",
                 invalidForm: "Dữ liệu biểu mẫu không hợp lệ",
+                startDateNotPast: "Ngày bắt đầu không thể sớm hơn hôm nay",
             },
             quotationTitle: "Tạo báo giá",
             quotationDesc: "Điền thông tin để gửi báo giá cho nhà tuyển dụng",

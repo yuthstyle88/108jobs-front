@@ -85,6 +85,7 @@ export const en = {
                 deliverable: "Deliverable description is required",
                 totalAmount: "Total amount must match the sum of work steps",
                 invalidForm: "Invalid form data",
+                startDateNotPast: "Start date cannot be earlier than today",
             },
             quotationTitle: "Create Quotation",
             quotationDesc: "Fill in the details to send a quotation to the employer",
