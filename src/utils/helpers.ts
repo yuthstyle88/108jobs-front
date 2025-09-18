@@ -630,3 +630,39 @@ export function dmRoomId(userA: PersonId | undefined, userB: PersonId | undefine
     return hash.slice(0, 16);
 }
 
+// Date helpers (timezone-safe for yyyy-MM-dd strings)
+// Exported as named functions for reuse across the app.
+
+/**
+ * Convert a Date to a timezone-safe yyyy-MM-dd string.
+ * Adjusts for local timezone so that formatting is consistent across clients.
+ */
+export const toYMD = (d: Date): string => {
+    const tzAdjusted = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+    return tzAdjusted.toISOString().slice(0, 10);
+};
+
+/** Get today's date as yyyy-MM-dd (timezone-safe). */
+export const getTodayYMD = (): string => toYMD(new Date());
+
+/**
+ * Add a number of days to a yyyy-MM-dd date string and return the resulting yyyy-MM-dd.
+ * Returns an empty string on invalid input.
+ */
+export const addDaysYMD = (ymd: string, days: number): string => {
+    if (!ymd || Number.isNaN(days)) return '';
+    const base = new Date(ymd + 'T00:00:00');
+    if (isNaN(base.getTime())) return '';
+    const next = new Date(base);
+    next.setDate(base.getDate() + Number(days));
+    return toYMD(next);
+};
+
+/**
+ * Determine if a yyyy-MM-dd date string is before today (timezone-safe string compare).
+ */
+export const isBeforeToday = (ymd: string): boolean => {
+    if (!ymd) return false;
+    const today = getTodayYMD();
+    return ymd < today;
+};
