@@ -32,11 +32,7 @@ const Proposal = () => {
   const [selectedJob, setSelectedJob] = useState<{
     id: string;
   } | null>(null);
-
-  const handleOpenModal = (jobId: string) => {
-    setSelectedJob({id: jobId});
-  };
-  const handleCloseModal = () => {
+    const handleCloseModal = () => {
     setSelectedJob(null);
   };
 

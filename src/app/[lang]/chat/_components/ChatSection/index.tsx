@@ -201,12 +201,16 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         }
     );
 
-    // After commit, propagate last incoming message to ChatRooms context
+    // After commit, propagate last incoming message to ChatRooms context and auto-scroll for receiver
     useEffect(() => {
         if (isFetching) return; // suppress global updates while fetching history
         const d = latestIncomingRef.current;
         if (!d) return;
         try {
+            // Auto-scroll to latest when receiving a new message (receiver experience)
+            if (d.senderId !== Number(localUser?.id)) {
+                scrollToLatestSoon();
+            }
             // Only update preview; rely on global event for conditional reordering
             // no-op: last message previews removed
             try {
@@ -754,23 +758,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                             }}
                         />
                     </div>
-                    {!isAtBottom && newSinceCount > 0 && (
-                        <div className="absolute bottom-20 left-0 right-0 flex justify-center pointer-events-none">
-                            <button
-                                className="pointer-events-auto bg-primary hover:bg-[#063a68] text-white text-xs sm:text-sm px-3 py-1.5 rounded-full shadow-md"
-                                onClick={() => {
-                                    const rootEl = scrollContainerRef.current;
-                                    if (rootEl) {
-                                        rootEl.scrollTop = rootEl.scrollHeight - rootEl.clientHeight;
-                                    }
-                                    setNewSinceCount(0);
-                                }}
-                                aria-label={`Jump to latest messages (${newSinceCount} new)`}
-                            >
-                                {newSinceCount} new message{newSinceCount > 1 ? 's' : ''} — Jump to latest
-                            </button>
-                        </div>
-                    )}
                     <div ref={inputContainerRef} className="border-t px-3 py-2 sm:px-4 sm:py-3 bg-white">
                         <div className="flex items-center gap-2">
                             <div className="flex-1">
