@@ -10,7 +10,6 @@ import "../styles.css";
 import CatalogBanner from "@/components/Home/Catalog";
 import OfferSection from "@/components/Home/OfferSection";
 import SearchInput from "@/components/SearchInput";
-import { LandingImage } from "@/constants/images";
 import SpAdsSlider from "@/containers/SpAdsSlider";
 import SpCatalog from "@/containers/SpCatalog";
 import SpHeader from "@/containers/SpHeader";
@@ -19,14 +18,6 @@ import { useTranslation } from "react-i18next";
 import { buildCommunitiesTree } from "@/utils/helpers";
 import { useCommunities } from "@/hooks/communites-api/useCommunities";
 
-const interestImages = [
-    LandingImage.interest1,
-    LandingImage.interest2,
-    LandingImage.interest3,
-    LandingImage.interest4,
-    LandingImage.interest5,
-    LandingImage.interest6,
-];
 export default function Home() {
     const { t } = useTranslation();
     const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);

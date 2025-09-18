@@ -320,6 +320,7 @@ export const th = {
             cPlusPlus: "C++",
         },
         authen: {
+            continueWith: "เข้าสู่ระบบด้วย {{provider}}",
             labelOrSignInWith: "เข้าสู่ระบบด้วยบัญชีโชเชียล",
             buttonCreateAccount: "สร้างบัญชี",
             buttonLoginFacebook: "เข้าสู่ระบบด้วยบัญชี Facebook",
@@ -1459,11 +1460,10 @@ export const th = {
             jobCreateJobBoardFail: "ล้มเหลวในการสร้างบอร์ดงานใหม่",
             profileUpdateFavoriteSuccess: "บันทึกงานลงในรายการโปรดเรียบร้อยแล้ว",
             profileDeleteFavoriteSuccess: "ลบงานออกจากรายการโปรดเรียบร้อยแล้ว",
-            profileUpdateAvailableSuccess: "ตอนนี้คุณกำลังรับงานใหม่",
-            profileUpdateNotAvailableSuccess: "คุณไม่ได้กำลังรับงานใหม่อีกต่อไป",
+            profileUpdateAvailableSuccess: "กำลังเปิดรับงานใหม่",
+            profileUpdateNotAvailableSuccess: "กำลังปิดรับงาน",
             profileSetDefaultFail: "ล้มเหลวในการตั้งค่าที่อยู่เริ่มต้น",
-            profileUpdateAvailableFail:
-                "ล้มเหลวในการอัปเดตความพร้อมงาน โปรดลองอีกครั้ง",
+            profileUpdateAvailableFail: "ไม่สามารถอัปเดตสถานะได้",
             oauthVerificationFailed: "การตรวจสอบ OAuth ไม่ถูกต้อง",
             verificationEmailSent: "อีเมลยืนยันตัวตนถูกส่งแล้ว",
             registrationRequestSubmitted: "ส่งคำขอลงทะเบียนแล้ว",

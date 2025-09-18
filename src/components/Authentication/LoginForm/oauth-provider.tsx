@@ -1,4 +1,5 @@
 import {OAuthProvider, PublicOAuthProvider,} from "lemmy-js-client";
+import { useTranslation } from "react-i18next";
 
 function getProviderKey(p: PublicOAuthProvider): string {
     const name = (p.displayName || "").toLowerCase();
@@ -113,6 +114,7 @@ export const OAuthButtons: React.FC<{
     onLogin: (provider: OAuthProvider) => void;
     label: string;
 }> = ({providers, onLogin, label}) => {
+    const { t } = useTranslation();
     return (
         <>
             <hr className="my-6"/>
@@ -120,22 +122,30 @@ export const OAuthButtons: React.FC<{
                 {label}
             </p>
             <div className="flex flex-col gap-3">
-                {providers.map((p) => (
-                    <button
-                        key={p.id}
-                        type="button"
-                        onClick={() => onLogin(p)}
-                        className="oauth-button relative py-3 px-6 border border-gray-300 rounded-lg flex justify-center items-center text-gray-800 font-medium text-sm bg-white shadow-sm hover:shadow-md hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300"
-                    >
-                      <span className="flex items-center space-x-2">
-                          <span className="inline-flex items-center justify-center w-5 h-5 rounded-sm bg-white/0">
-                            <ProviderIcon provider={p} />
+                {providers.map((p) => {
+                    const providerName = p.displayName
+                        ? p.displayName.charAt(0).toUpperCase() + p.displayName.slice(1)
+                        : "";
+                    const buttonLabel = t("authen.continueWith", { provider: providerName });
+                    return (
+                        <button
+                            key={p.id}
+                            type="button"
+                            aria-label={buttonLabel}
+                            onClick={() => onLogin(p)}
+                            className="oauth-button relative py-3 px-6 border border-gray-300 rounded-lg flex justify-center items-center text-gray-800 font-medium text-sm bg-white shadow-sm hover:shadow-md hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300"
+                        >
+                          <span className="flex items-center space-x-2">
+                              <span className="inline-flex items-center justify-center w-5 h-5 rounded-sm bg-white/0">
+                                <ProviderIcon provider={p} />
+                              </span>
+                              <span>
+                                  {buttonLabel}
+                              </span>
                           </span>
-                          <span>
-                              Continue with {p.displayName.charAt(0).toUpperCase() + p.displayName.slice(1)}</span>
-                      </span>
-                    </button>
-                ))}
+                        </button>
+                    );
+                })}
             </div>
         </>
     );

@@ -61,4 +61,8 @@ export type Person = {
     skills?: string;
     portfolioPics?: any;
     workSamples?: any;
+    /**
+     * Whether you are currently available for new jobs
+     */
+    available?: boolean;
 };

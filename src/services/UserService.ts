@@ -118,12 +118,11 @@ export class UserService {
     const {rawCookie = "", sharedKey = ""} = opts;
     const auth = isBrowser() ? cookie.parse(document.cookie)[authCookieName] : rawCookie;
     if (!auth) {
-      HttpService.client.removeHeader?.("Authorization");
       this.authInfo = undefined;
       this.currentLanguage = "en";
       return;
     }
-    HttpService.client.setHeaders({Authorization: `Bearer ${auth}`});
+    // Authorization header is handled by HttpService's per-token client pool
     const claims = jwtDecode<Claims>(auth);
     this.authInfo = {auth, claims, sharedKey};
     this.currentLanguage = claims?.lang;

@@ -150,4 +150,8 @@ export type SaveUserSettings = {
      * Your work samples to prove your quality
      */
     workSamples?: Array<any>,
+    /**
+     * Whether you are currently available for new jobs
+     */
+    available?: boolean,
 };
