@@ -62,6 +62,7 @@ export const en = {
             uploadError: "Failed to upload file. Please try again.",
             confirmAssignMsg: "Assignment confirmed. Waiting for freelancer to accept.",
             waitForFreelancerQuotation: "Waiting for freelancer to send a quotation.",
+            waitEmployerApproval: "Waiting for employer to approve your quotation.",
             step1: "Quotation Pending",
             step1Sub: "Quotation created by freelancer, waiting for employer review",
             step2: "Order Approved",

@@ -62,6 +62,7 @@ export const vi = {
             uploadError: "Tải tệp lên không thành công. Vui lòng thử lại.",
             confirmAssignMsg: "Đã xác nhận giao việc. Đợi freelancer chấp nhận.",
             waitForFreelancerQuotation: "Vui lòng đợi freelancer gửi báo giá.",
+            waitEmployerApproval: "Đang chờ nhà tuyển dụng duyệt báo giá của bạn.",
             step1: "Chờ duyệt báo giá",
             step1Sub: "Freelancer tạo báo giá, chờ nhà tuyển dụng xem xét",
             step2: "Đơn hàng đã duyệt",

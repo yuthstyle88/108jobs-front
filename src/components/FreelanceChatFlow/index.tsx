@@ -32,6 +32,7 @@ export type FreelanceChatFlowProps = {
     canProposeQuote?: boolean;
     canApproveQuotation?: boolean;
     showStartButton?: boolean;
+    isEmployer?: boolean;
 } & FlowActions;
 
 const STEPS: Array<{ key: StatusKey; title: string; sub: string }> = [
@@ -64,6 +65,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  canProposeQuote = true,
                                                                  canApproveQuotation = true,
                                                                  showStartButton = true,
+                                                                 isEmployer = false,
                                                                  onProposeQuote,
                                                                  onApproveQuotation,
                                                                  onStartWork,
@@ -129,6 +131,13 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 }
                 if (canApproveQuotation) {
                     actionsQP.push(btn(t('profileChat.approveQuotation') || 'Approve quotation', () => setShowApproveConfirm(true)));
+                }
+                if (!canProposeQuote && !canApproveQuotation) {
+                    actionsQP.push(
+                        <div key="wait-approval" className="w-full text-xs text-gray-600 bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2">
+                            {t('profileChat.waitEmployerApproval') || 'Waiting for employer to approve your quotation'}
+                        </div>
+                    );
                 }
                 if (cancelBtn) actionsQP.push(cancelBtn);
                 return actionsQP;
@@ -247,7 +256,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     );
                 })}
             </ul>
-            {currentStatus === 'QuotationPending' && !canProposeQuote && !canApproveQuotation && (
+            {currentStatus === 'QuotationPending' && isEmployer && !canProposeQuote && !canApproveQuotation && (
                 <div className="mx-4 -mt-2 mb-2 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
                     {t('profileChat.waitForFreelancerQuotation') || 'Waiting for freelancer to send a quotation.'}
                 </div>

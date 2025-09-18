@@ -36,7 +36,7 @@ interface ChatSectionProps {
     partnerId?: number;
 }
 
-const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, partnerAvatar }) => {
+const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, partnerAvatar, partnerId }) => {
     const { markRoomRead, setActiveRoomId } = useChatRooms();
     const { state: stepperState, send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
@@ -348,11 +348,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
     };
 
     const handleQuotationSubmit = async (data: ProposedQuotePayload) => {
+            // Prevent duplicate quotations: disallow if a quotation has already been proposed
+            if (hasProposedQuote) {
+                setError(t('profileChat.quotationAlreadySent') || 'You have already sent a quotation for this chat.');
+                setShowQuotationModal(false);
+                return;
+            }
         setError(null); // Reset error state before attempting submission
         try {
             // Create invoice via API
             const form: CreateInvoiceForm = {
-                employerId: data.employerId,
+                employerId: data.partnerId,
                 postId: data.postId,
                 commentId: data.commentId,
                 seqNumber: data.workSteps?.[0]?.seq ?? 1,
@@ -806,7 +812,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                             onStart={handleStartWorkflow}
                             canStartWorkflow={isEmployer && Boolean(roomPostId)}
                             showStartButton={isEmployer}
-                            canProposeQuote={!isEmployer && Boolean(roomPostId)}
+                            canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
                             canApproveQuotation={isEmployer && hasProposedQuote}
                             onProposeQuote={flowActions.onProposeQuote}
                             onApproveQuotation={flowActions.onApproveQuotation}
@@ -878,7 +884,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                 onStart={handleStartWorkflow}
                                 canStartWorkflow={isEmployer && Boolean(roomPostId)}
                                 showStartButton={isEmployer}
-                                canProposeQuote={!isEmployer && Boolean(roomPostId)}
+                                canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
                                 canApproveQuotation={isEmployer && hasProposedQuote}
                                 onProposeQuote={flowActions.onProposeQuote}
                                 onApproveQuotation={flowActions.onApproveQuotation}
@@ -1041,7 +1047,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 onSubmit={handleQuotationSubmit}
                 postId={roomPostId as number}
                 commentId={roomCommentId as number}
-                employerId={localUser?.id as number}
+                partnerId={partnerId as number}
             />
         </>
     );

@@ -87,29 +87,9 @@ class WrappedLemmyHttpClient {
           // Check if this is a GET request that can be cached
           const isGetMethod = key.startsWith('get') && args.length <= 1;
 
-          // Inject per-request auth into args (without mutating the shared client headers)
-          let patchedArgs: any[] = args as any[];
-          const jwt = UserService.Instance?.authInfo?.auth;
-          if (jwt) {
-            const mergeAuth = (obj: any) => ({ ...(obj || {}), auth: jwt });
-            const isPlainObject = (v: any) => v && typeof v === 'object' && !Array.isArray(v) && !(v instanceof Blob) && !(v instanceof File);
-
-            if (patchedArgs.length === 0) {
-              // No args -> just pass options with auth
-              patchedArgs = [{ auth: jwt }];
-            } else if (isPlainObject(patchedArgs[0])) {
-              // First arg is an options/form object -> merge auth into it
-              patchedArgs = [mergeAuth(patchedArgs[0]), ...patchedArgs.slice(1)];
-            } else if (isPlainObject(patchedArgs[1])) {
-              // Second arg is options -> merge there
-              patchedArgs = [patchedArgs[0], mergeAuth(patchedArgs[1]), ...patchedArgs.slice(2)];
-            } else {
-              // Otherwise, append options at the end to avoid shifting positional params
-              patchedArgs = [...patchedArgs, { auth: jwt }];
-            }
-          }
-
-          // Build cache key after auth injection so auth-sensitive responses are isolated
+          // Do not inject auth into payload; rely on Authorization header
+          const patchedArgs: any[] = args as any[];
+          // Build cache key based on original args
           const cacheKey = isGetMethod ? `${key}:${JSON.stringify(patchedArgs)}` : '';
 
           // Try to get from cache for GET requests
@@ -296,24 +276,8 @@ export function callHttp<
   ...args: Parameters<WrappedLemmyHttp[K]>
 ): ReturnType<WrappedLemmyHttp[K]> {
   ensureAuthHeader();
-  // Inject per-request auth into args instead of setting headers on a shared client
-  const jwt = UserService.Instance?.authInfo?.auth;
-  let patchedArgs: any[] = args as any[];
-  if (jwt) {
-    const mergeAuth = (obj: any) => ({ ...(obj || {}), auth: jwt });
-    const isPlainObject = (v: any) => v && typeof v === 'object' && !Array.isArray(v) && !(v instanceof Blob) && !(v instanceof File);
-
-    if (patchedArgs.length === 0) {
-      patchedArgs = [{ auth: jwt }];
-    } else if (isPlainObject(patchedArgs[0])) {
-      patchedArgs = [mergeAuth(patchedArgs[0]), ...patchedArgs.slice(1)];
-    } else if (isPlainObject(patchedArgs[1])) {
-      patchedArgs = [patchedArgs[0], mergeAuth(patchedArgs[1]), ...patchedArgs.slice(2)];
-    } else {
-      patchedArgs = [...patchedArgs, { auth: jwt }];
-    }
-  }
-  return HttpService.client[method](...patchedArgs) as ReturnType<
+  // Do not inject auth into payload; rely on Authorization header
+  return HttpService.client[method](...args) as ReturnType<
     WrappedLemmyHttp[K]
   >;
 }

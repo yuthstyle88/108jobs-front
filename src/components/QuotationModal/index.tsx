@@ -14,7 +14,7 @@ export interface WorkStep {
 }
 
 export interface ProposedQuotePayload {
-    employerId: number;
+    partnerId: number;
     postId: number;
     commentId: number;
     amount: number;
@@ -35,15 +35,15 @@ interface QuotationModalProps {
     onSubmit: (data: ProposedQuotePayload) => Promise<void>; // Updated to return Promise for async error handling
     postId?: number; // derive from chat room instead of hardcoding
     commentId?: number; // derive from chat room current comment
-    employerId: number;
+    partnerId: number;
 }
 
-const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubmit, postId, commentId, employerId }) => {
+const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubmit, postId, commentId, partnerId }) => {
     const { t } = useTranslation();
 
     // Initialize without hardcoded demo content; postId comes from props
     const [form, setForm] = useState<ProposedQuotePayload>({
-        employerId: employerId,
+        partnerId,
         postId: postId ?? 0,
         commentId: 0,
         amount: 0,
@@ -130,7 +130,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
         try {
             // Validate required fields
             const required: Array<keyof ProposedQuotePayload> = [
-                'employerId',
+                'partnerId',
                 'postId',
                 'commentId',
                 'amount',
