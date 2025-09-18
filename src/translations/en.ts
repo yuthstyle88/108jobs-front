@@ -118,6 +118,8 @@ export const en = {
             confirmStartWorkflowMessage: "This will initialize the job flow for this room. Continue?",
             confirmApproveQuotationTitle: "Approve quotation?",
             confirmApproveQuotationMessage: "This will approve the freelancer's quotation and convert it into an order.",
+            youAreNotAvailable: "You are currently unavailable. Turn on your availability in your profile to send messages.",
+            userNotAvailable: "This user is currently unavailable. You can read the chat history but cannot send new messages.",
             missingPostIdForQuotation: "This chat is not linked to a job post. Link a job to this room to create a quotation or start the workflow.",
         },
         allCategories: {

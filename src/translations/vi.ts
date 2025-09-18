@@ -119,6 +119,8 @@ export const vi = {
             confirmApproveQuotationTitle: "Duyệt báo giá?",
             confirmApproveQuotationMessage: "Thao tác này sẽ duyệt báo giá của freelancer và chuyển thành đơn hàng.",
             missingPostIdForQuotation: "Phòng chat này chưa được liên kết với bài đăng công việc. Hãy liên kết bài đăng để tạo báo giá hoặc bắt đầu quy trình.",
+            youAreNotAvailable: "Bạn hiện đang tắt trạng thái sẵn sàng. Hãy bật sẵn sàng trong hồ sơ để gửi tin nhắn.",
+            userNotAvailable: "Người dùng này hiện không sẵn sàng. Bạn có thể xem lịch sử chat nhưng không thể gửi tin nhắn mới.",
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",

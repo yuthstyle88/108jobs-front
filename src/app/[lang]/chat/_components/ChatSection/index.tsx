@@ -34,9 +34,10 @@ interface ChatSectionProps {
     partnerName: string;
     partnerAvatar: string;
     partnerId?: number;
+    partnerAvailable?: boolean;
 }
 
-const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, partnerAvatar, partnerId }) => {
+const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, partnerAvatar, partnerId, partnerAvailable }) => {
     const { markRoomRead, setActiveRoomId } = useChatRooms();
     const { state: stepperState, send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
@@ -96,6 +97,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
     }, []);
     const isSubmittingRef = useRef(false);
     const { localUser, person } = useMyUser();
+    const myAvailable = person?.available !== false; // treat undefined as available
+    const canSend = (partnerAvailable !== false) && myAvailable;
+    const disabledReason = !myAvailable
+        ? (t("profileChat.youAreNotAvailable") || "You are currently unavailable. Enable availability in your profile to send messages.")
+        : (t("profileChat.userNotAvailable") || "This user is currently not accepting messages. You can read history but cannot send new messages.");
     const latestIncomingRef = useRef<{ roomId: string; content: string; senderId: number; timestamp: string } | null>(null);
 
     useEffect(() => {
@@ -348,6 +354,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
     };
 
     const handleQuotationSubmit = async (data: ProposedQuotePayload) => {
+            if (!canSend) {
+                setError(disabledReason);
+                setShowQuotationModal(false);
+                return;
+            }
             // Prevent duplicate quotations: disallow if a quotation has already been proposed
             if (hasProposedQuote) {
                 setError(t('profileChat.quotationAlreadySent') || 'You have already sent a quotation for this chat.');
@@ -442,6 +453,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
 
     const onSubmit = useCallback(
         (data: MessageForm) => {
+            if (!canSend) {
+                setError(disabledReason);
+                return;
+            }
             if (isSubmittingRef.current) {
                 if (process.env.NODE_ENV !== "production") console.debug("Duplicate submit ignored");
                 return;
@@ -768,8 +783,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                         <div className="flex items-center gap-2">
                             <div className="flex-1">
                                 {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
+                                {!canSend && (
+                                    <div className="mb-2 p-2 rounded bg-yellow-50 text-yellow-800 text-xs border border-yellow-200">
+                                        {(!myAvailable ? (t("profileChat.youAreNotAvailable") || "You are currently unavailable. Enable availability in your profile to send messages.") : (t("profileChat.userNotAvailable") || "This user is currently not accepting messages. You can read history but cannot send new messages."))}
+                                    </div>
+                                )}
                                 <ChatInput
                                     onSubmit={onSubmit}
+                                    disabled={!canSend}
+                                    disabledHint=""
                                 />
                             </div>
                         </div>
@@ -947,6 +969,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                 onClick={() => {
                                     setShowReviewModal(false);
                                     goToStatus("Completed");
+                                    if (!canSend) { setError(disabledReason); return; }
                                     sendMessage({
                                         message: t("profileChat.deliveryAccepted") || "Delivery accepted. Proceed to payment.",
                                         id: uuidv4(),
@@ -970,6 +993,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                 onClick={() => {
                                     setShowReviewModal(false);
                                     goToStatus("InProgress");
+                                    if (!canSend) { setError(disabledReason); return; }
                                     sendMessage({
                                         message: t("profileChat.requestRevisionMsg") || "Please revise and resubmit.",
                                         id: uuidv4(),

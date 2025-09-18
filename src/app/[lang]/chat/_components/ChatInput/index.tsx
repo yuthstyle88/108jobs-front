@@ -11,10 +11,14 @@ type MessageForm = {
 
 interface ChatInputProps {
     onSubmit: (data: MessageForm) => void;
+    disabled?: boolean;
+    disabledHint?: string;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({
                                                  onSubmit,
+                                                 disabled = false,
+                                                 disabledHint,
                                              }) => {
     const {t} = useTranslation();
     const {register, handleSubmit, reset, watch} = useForm<MessageForm>();
@@ -37,6 +41,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
         [watch("message")]);
 
     const internalSubmit = (data: MessageForm) => {
+        if (disabled) return;
         onSubmit(data);
         reset();
         setTimeout(() => resizeTextarea(),
@@ -48,6 +53,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
             data-testid="chat-form"
             onSubmit={handleSubmit(internalSubmit)}
             className="flex flex-col gap-2"
+            aria-disabled={disabled}
         >
             <div className="flex items-center w-full">
                 <div className="flex-1 border rounded-lg overflow-hidden flex">
@@ -59,11 +65,15 @@ const ChatInput: React.FC<ChatInputProps> = ({
                   messageRef.current = e;
               }}
               placeholder={
-                  t("profileChat.typeMessageHere") || "Type a message..."
+                  disabled
+                      ? (disabledHint !== undefined ? disabledHint : (t("profileChat.userNotAvailable") || "This user is not available for messages."))
+                      : (t("profileChat.typeMessageHere") || "Type a message...")
               }
-              className="text-text-primary flex-1 px-3 py-2 resize-none focus:outline-none min-h-[40px] max-h-[150px] overflow-y-auto break-words whitespace-pre-wrap"
+              className={`text-text-primary flex-1 px-3 py-2 resize-none focus:outline-none min-h-[40px] max-h-[150px] overflow-y-auto break-words whitespace-pre-wrap ${disabled ? 'bg-gray-100 cursor-not-allowed text-gray-500' : ''}`}
               rows={1}
+              disabled={disabled}
               onKeyDown={(e) => {
+                  if (disabled) { e.preventDefault(); return; }
                   if (e.key === "Enter" && !e.shiftKey) {
                       e.preventDefault();
                       const form = e.currentTarget.closest("form");
@@ -73,7 +83,9 @@ const ChatInput: React.FC<ChatInputProps> = ({
           />
                     <button
                         type="button"
-                        className="bg-white px-3 text-gray-400 hover:text-gray-600"
+                        className={`bg-white px-3 ${disabled ? 'text-gray-300 cursor-not-allowed' : 'text-gray-400 hover:text-gray-600'}`}
+                        disabled={disabled}
+                        aria-disabled={disabled}
                     >
                         <Smile size={20}/>
                     </button>
@@ -81,7 +93,9 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
                 <button
                     type="submit"
-                    className="ml-3 text-blue-500 hover:text-primary"
+                    className={`ml-3 ${disabled ? 'text-gray-300 cursor-not-allowed' : 'text-blue-500 hover:text-primary'}`}
+                    disabled={disabled}
+                    aria-disabled={disabled}
                 >
                     <Send size={20}/>
                 </button>

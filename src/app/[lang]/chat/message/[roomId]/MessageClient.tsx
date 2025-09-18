@@ -22,6 +22,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     const [peerPublicKeyHex, setPeerPublicKeyHex] = useState<string | undefined>(undefined);
     const [post, setPost] = useState<Post>();
     const [notFound, setNotFound] = useState<boolean>(false);
+    const [partnerAvailable, setPartnerAvailable] = useState<boolean | undefined>(undefined);
 
     useEffect(() => {
         let cancelled = false;
@@ -77,6 +78,9 @@ export default function MessageClient({roomId}: { roomId: string }) {
                             ? res.data.profile.name
                             : "Unknown";
                     setPartnerId(res.state === REQUEST_STATE.SUCCESS ? res.data.profile.id : null);
+                    if (res.state === REQUEST_STATE.SUCCESS) {
+                        setPartnerAvailable(Boolean((res.data as any)?.profile?.available));
+                    }
 
                     if (!cancelled) setPartnerName(String(profileName));
 
@@ -132,7 +136,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
 
     return (
         <WebSocketProvider token={accessToken} roomId={roomId} peerPublicKeyHex={peerPublicKeyHex}>
-            <ChatSection roomId={roomId} post={post} partnerName={partnerName} partnerAvatar={""} partnerId={partnerId as number}/>
+            <ChatSection roomId={roomId} post={post} partnerName={partnerName} partnerAvatar={""} partnerId={partnerId as number} partnerAvailable={partnerAvailable}/>
         </WebSocketProvider>
     );
 }

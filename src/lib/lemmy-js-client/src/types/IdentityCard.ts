@@ -2,4 +2,15 @@
 import type {AddressId} from "./AddressId";
 import type {IdentityCardId} from "./IdentityCardId";
 
-export type IdentityCard = { id: IdentityCardId, addressId: AddressId, idNumber: string, issuedDate: string, expiryDate: string, fullName: string, dateOfBirth: string, nationality: string, isVerified: boolean, createdAt: string, };
+export type IdentityCard = {
+    id: IdentityCardId,
+    addressId: AddressId,
+    idNumber: string,
+    issuedDate: string,
+    expiryDate: string,
+    fullName: string,
+    dateOfBirth: string,
+    nationality: string,
+    isVerified: boolean,
+    createdAt: string,
+};
