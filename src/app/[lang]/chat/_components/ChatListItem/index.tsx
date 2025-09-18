@@ -59,11 +59,11 @@ function ChatListItemComponent({ room, isActive, currentLang, localUser }: ChatL
             <span className="text-[10px] md:text-xs text-gray-400 flex-shrink-0">•</span>
           </div>
         </div>
-        {room.unreadCount > 0 && (
-          <span className="ml-auto text-[10px] md:text-xs bg-primary group-hover:bg-[#063a68] text-white rounded-full px-2 py-0.5 font-medium shadow-sm">
-            {room.unreadCount}
-          </span>
-        )}
+        {/*{room.unreadCount > 0 && (*/}
+        {/*  <span className="ml-auto text-[10px] md:text-xs bg-primary group-hover:bg-[#063a68] text-white rounded-full px-2 py-0.5 font-medium shadow-sm">*/}
+        {/*    {room.unreadCount}*/}
+        {/*  </span>*/}
+        {/*)}*/}
       </div>
     </Link>
   );
