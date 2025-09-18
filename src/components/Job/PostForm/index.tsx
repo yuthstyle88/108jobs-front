@@ -41,7 +41,7 @@ const postJobSchema = (t: (key: string) => string) => z.object({
         .transform((val) => Number(val)),
     workingFrom: z.nativeEnum(JobType),
     intendedUse: z.nativeEnum(IntendedUse),
-    url: z.string().url(t("validation.urlInvalid")).optional(),
+    url: z.preprocess((v) => (typeof v === "string" && v.trim() === "" ? undefined : v), z.string().url(t("validation.urlInvalid")).optional()),
     isEnglishRequired: z.boolean().optional(),
     deadline: z
         .string()

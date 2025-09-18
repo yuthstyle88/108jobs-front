@@ -32,7 +32,7 @@ const JobBoardDetail = ({ jobId }: Props) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const route = useRouter();
     const { data: jobDetailData } = useHttpGet("getPost", { id: jobId });
-    const { localUser, person } = useMyUser();
+    const {person } = useMyUser();
 
     const isVerify = person?.isVerified;
     // Show proposal button only for logged-in users who are NOT the job creator
@@ -203,65 +203,13 @@ const JobBoardDetail = ({ jobId }: Props) => {
 
             {/* Interested Freelancers */}
             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Interested Freelancers (0 proposals)</h3>
                 <InfoMessage
                     message={`We recommend communicating and paying through ${getAppName()} - guaranteed no scams! We protect your payment until you receive work from the freelancer`}
                     className="bg-blue-50 text-blue-800 p-4 rounded-lg"
                 />
-                <JobBoardProposal />
+                <JobBoardProposal postId={jobId} />
             </div>
 
-            {/* Promotional Links */}
-            <div className="space-y-4">
-                <Link prefetch={false} href={"/job-board"} className="group">
-                    <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow duration-300">
-                        <div className="flex items-center gap-4">
-                            <div className="w-16 h-16 relative rounded-lg overflow-hidden">
-                                <Image
-                                    src={LandingImage.error}
-                                    alt="banner apply"
-                                    width={64}
-                                    height={64}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                            <div className="flex-1">
-                                <p className="text-base font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                                    Find excellent freelancers on Fastlance now!
-                                </p>
-                                <p className="text-sm text-gray-600">
-                                    Generate income through job boards and platforms
-                                </p>
-                            </div>
-                            <MoveRight className="text-blue-600 w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                    </div>
-                </Link>
-                <Link prefetch={false} href={"/start-selling"} className="group">
-                    <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl shadow-sm p-4 hover:shadow-md transition-shadow duration-300">
-                        <div className="flex items-center gap-4">
-                            <div className="w-16 h-16 relative rounded-lg overflow-hidden">
-                                <Image
-                                    src={ProfileImage.bannerApply}
-                                    alt="banner apply"
-                                    width={64}
-                                    height={64}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                            <div className="flex-1">
-                                <p className="text-base font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
-                                    Register as a freelancer on Fastlance now!
-                                </p>
-                                <p className="text-sm text-gray-600">
-                                    Generate income through job boards and platforms
-                                </p>
-                            </div>
-                            <MoveRight className="text-green-600 w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                    </div>
-                </Link>
-            </div>
 
             <ConfirmVerifyFreelancer
                 isOpen={isModalOpen}

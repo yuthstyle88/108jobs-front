@@ -660,7 +660,7 @@ export const en = {
             serviceCategoryLabel: "Service Category",
             serviceCategoryPlaceholderUrl: "e.g. https://example.com",
             serviceCategoryPlaceholderSelect: "Select a service category...",
-            exampleUrl: "Example URL",
+            exampleUrl: "Example URL (optional)",
             budgetLabel: "Budget",
             budgetPlaceholder: "THB",
             deadlineLabel: "Deadline (Optional)",

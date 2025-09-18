@@ -650,7 +650,7 @@ export const th = {
             serviceCategoryLabel: "หมวดหมู่บริการ",
             serviceCategoryPlaceholderUrl: "เช่น https://example.com",
             serviceCategoryPlaceholderSelect: "เลือกหมวดหมู่บริการ...",
-            exampleUrl: "ตัวอย่าง URL",
+            exampleUrl: "ตัวอย่าง URL (ไม่จำเป็น)",
             budgetLabel: "งบประมาณ",
             budgetPlaceholder: "บาท",
             deadlineLabel: "กำหนดเส้นตาย (ไม่บังคับ)",
