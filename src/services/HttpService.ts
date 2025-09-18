@@ -272,6 +272,16 @@ export class HttpService {
   }
 }
 
+let cachedJwt: string | undefined;
+
+function ensureAuthHeader() {
+  const jwt = UserService.Instance?.authInfo?.auth;
+  if (jwt && jwt !== cachedJwt) {
+    cachedJwt = jwt;
+    (HttpService.client as any).setHeaders?.({Authorization: `Bearer ${jwt}`});
+  }
+}
+
 /* ===== Generic helper ======================================= */
 export function callHttp<
   K extends keyof WrappedLemmyHttp,
@@ -279,6 +289,7 @@ export function callHttp<
   method: K,
   ...args: Parameters<WrappedLemmyHttp[K]>
 ): ReturnType<WrappedLemmyHttp[K]> {
+  ensureAuthHeader();
   // Inject per-request auth into args instead of setting headers on a shared client
   const jwt = UserService.Instance?.authInfo?.auth;
   let patchedArgs: any[] = args as any[];
