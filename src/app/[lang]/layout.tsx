@@ -10,6 +10,8 @@ import { isoDataInitializer } from "@/utils";
 import {ClientSWRProvider} from "@/components/ClientSWRProvider";
 import {GlobalLoaderProvider} from "@/contexts/GlobalLoaderContext";
 import {GlobalErrorProvider} from "@/contexts/GlobalErrorContext";
+import {AnnouncementProvider} from "@/contexts/AnnouncementContext";
+import AccessibleAnnouncements from "@/components/AccessibleAnnouncements";
 import GlobalError from "@/components/GlobalError";
 import GlobalLoader from "@/components/Loading";
 // Optimize font loading with display swap and preload
@@ -56,12 +58,15 @@ export default async function RootLayout({
         <LanguageProvider initialLang={initialLang!}>
             <GlobalErrorProvider>
                 <GlobalLoaderProvider>
-                    <ClientSWRProvider>
-                        <Toaster richColors closeButton position="top-right"/>
-                        <GlobalError/>
-                        <GlobalLoader/>
-                        {children}
-                    </ClientSWRProvider>
+                    <AnnouncementProvider>
+                        <ClientSWRProvider>
+                            <Toaster richColors closeButton position="bottom-right"/>
+                            <AccessibleAnnouncements/>
+                            <GlobalError/>
+                            <GlobalLoader/>
+                            {children}
+                        </ClientSWRProvider>
+                    </AnnouncementProvider>
                 </GlobalLoaderProvider>
             </GlobalErrorProvider>
         </LanguageProvider>

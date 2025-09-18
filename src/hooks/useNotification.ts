@@ -1,7 +1,7 @@
 "use client";
 
-import {toast} from "sonner";
 import {useTranslation} from "react-i18next";
+import {useAnnouncements} from "@/contexts/AnnouncementContext";
 
 type NotificationGroup = {
   success?: Record<string, string | undefined>;
@@ -12,6 +12,7 @@ type NotificationType = Record<"profile" | "job" | "review" | "service", Notific
 
 function useNotification() {
   const {t} = useTranslation();
+  const {announce} = useAnnouncements();
 
   const type: NotificationType = {
     profile: {
@@ -66,14 +67,14 @@ function useNotification() {
     custom?: string
   ) => {
     if (custom) {
-      toast.success(custom);
+      announce(custom, "success");
       return;
     }
 
     if (group && action) {
       const message = type[group]?.success?.[action];
       if (message) {
-        toast.success(message);
+        announce(message, "success");
       } else {
         console.warn(`Missing success message for ${group}.${action}`);
       }
@@ -86,14 +87,14 @@ function useNotification() {
     custom?: string
   ) => {
     if (custom) {
-      toast.error(custom);
+      announce(custom, "error");
       return;
     }
 
     if (group && action) {
       const message = type[group]?.fail?.[action];
       if (message) {
-        toast.error(message);
+        announce(message, "error");
       } else {
         console.warn(`Missing error message for ${group}.${action}`);
       }
