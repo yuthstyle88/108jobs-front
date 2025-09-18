@@ -164,7 +164,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                     const idx = copy.findIndex((m) => m.id === msg.id);
                     const isIncoming = !(msg as any).isOwner;
                     const newStatus = isIncoming
-                        ? ((!!atBottomRef.current || isHistoryBatch) ? 1 : 0)
+                        ? ((atBottomRef.current || isHistoryBatch) ? 1 : 0)
                         : (typeof (msg as any).status === 'number' ? (msg as any).status : 0);
                     if (!isHistoryBatch && !atBottomRef.current && isIncoming) {
                         inc++;
@@ -464,6 +464,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             const message = data.message?.trim() || "";
             if (!message && !selectedFile) return;
 
+            // Build content (file payload or plain text)
+            const contentToSend = selectedFile
+                ? JSON.stringify({
+                    type: "file",
+                    url: selectedFile.fileUrl,
+                    name: selectedFile.fileName,
+                    mime: selectedFile.fileType,
+                    caption: message || undefined,
+                })
+                : message;
+
             isSubmittingRef.current = true;
             const messageId = uuidv4();
 
@@ -471,7 +482,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 {
                     id: messageId,
                     roomId: currentRoom?.roomId || roomId,
-                    content: message || "",
+                    content: contentToSend || "",
                     createdAt: new Date().toISOString(),
                     senderId: Number(localUser?.id) || 0,
                     receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
@@ -483,10 +494,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             scrollToLatestSoon();
             try {
                 const tsIso = new Date().toISOString();
+                const preview = selectedFile
+                    ? (message || `[File] ${selectedFile.fileName}`)
+                    : message;
                 try {
                     window.dispatchEvent(
                         new CustomEvent("chat:new-message", {
-                            detail: { roomId, content: message, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                            detail: { roomId, content: preview, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
                         })
                     );
                 } catch {
@@ -494,7 +508,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             } catch {
             }
 
-            sendMessage({ message, id: messageId });
+            sendMessage({ message: contentToSend, id: messageId });
 
             setSelectedFile(null);
             isSubmittingRef.current = false;
@@ -502,36 +516,46 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         [sendMessage, currentRoom, roomId, selectedFile, localUser?.id]
     );
 
-    // Temporary file upload handler: accept a single file, validate, and store minimal info in state
-    const handleFileUpload = useCallback((e: Event) => {
+    // File upload handler: uploads to API and stores returned URL/name in state
+    const handleFileUpload = useCallback(async (e: Event) => {
         try {
             const input = e.target as HTMLInputElement | null;
             const file = (input?.files && input.files[0]) || (e as any).dataTransfer?.files?.[0];
             if (!file) return;
 
             // Basic validation
-            const maxSizeMb = 25; // temporary cap
+            const maxSizeMb = 25; // server-side limit may differ
             if (file.size > maxSizeMb * 1024 * 1024) {
                 setError(`File too large. Max ${maxSizeMb}MB`);
                 return;
             }
             const fileType = file.type || "application/octet-stream";
 
-            // Create a temporary object URL for preview if needed (not persisted)
-            const tempUrl = typeof window !== 'undefined' ? URL.createObjectURL(file) : "";
-
+            // Call chat file upload API
+            setError(null);
+            const res = await HttpService.client.uploadFile({ image: file } as any);
+            if (res.state !== REQUEST_STATE.SUCCESS) {
+                const msg = (res as any)?.err?.message || "Failed to upload file.";
+                setError(msg);
+                return;
+            }
+            const data: any = (res as any).data;
             const uploaded: UploadedFile = {
-                fileUrl: tempUrl,
+                fileUrl: String(data?.url || ""),
                 fileType,
-                fileName: file.name || "file",
+                fileName: String(data?.filename || file.name || "file"),
             };
+            if (!uploaded.fileUrl) {
+                setError("Upload succeeded but no file URL returned.");
+                return;
+            }
             setSelectedFile(uploaded);
 
             // Clear input value to allow re-selecting the same file
             if (input) input.value = "";
         } catch (err) {
             console.error("handleFileUpload failed", err);
-            setError("Failed to attach file. Please try again.");
+            setError("Failed to upload file. Please try again.");
         }
     }, []);
 
