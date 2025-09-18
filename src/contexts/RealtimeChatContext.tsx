@@ -95,8 +95,19 @@ interface WebSocketProviderProps {
 }
 
 function broadcastToListeners(payload: unknown): void {
-    const event = {data: JSON.stringify(payload)} as MessageEvent;
-    for (const fn of listeners.values()) fn(event);
+    const event = { data: JSON.stringify(payload) } as MessageEvent;
+    try {
+        const p: any = typeof payload === 'string' ? JSON.parse(payload as any) : payload;
+        const pid = p?.roomId ?? p?.room_id ?? p?.room?.id ?? p?.message?.room_id ?? null;
+        if (pid) {
+            for (const { roomId, fn } of listeners.values()) {
+                if (roomId === String(pid)) fn(event);
+            }
+            return;
+        }
+    } catch {}
+    // Fallback: no identifiable room, broadcast to all
+    for (const { fn } of listeners.values()) fn(event);
 }
 
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
@@ -306,7 +317,20 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     }
 
                     if (transformedItems.length) {
-                        broadcastToListeners(transformedItems[0]);
+                        const first = transformedItems[0];
+                        broadcastToListeners(first);
+                        try {
+                            const detail = {
+                                roomId: (first as any).roomId,
+                                content: (first as any).content,
+                                senderId: Number((first as any).senderId) || 0,
+                                timestamp: (first as any).createdAt || new Date().toISOString(),
+                                unread: Number((first as any).senderId) !== Number(localUser?.id),
+                            };
+                            if (typeof window !== 'undefined') {
+                                window.dispatchEvent(new CustomEvent('chat:new-message', { detail }));
+                            }
+                        } catch {}
                     }
                 } catch (e) {
                     setIsFetching(false);
@@ -318,7 +342,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                         fetchResolveRef.current();
                         fetchResolveRef.current = null;
                     }
-                    for (const fn of listeners.values()) fn(event);
+                    for (const { fn } of listeners.values()) fn(event);
                 }
             };
 
@@ -408,6 +432,18 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     isOwner: true,
                 };
                 broadcastToListeners(mockMessage);
+                try {
+                    const detail = {
+                        roomId: roomId,
+                        content: data.message,
+                        senderId: Number(localUser?.id) || 0,
+                        timestamp: (mockMessage as any).createdAt,
+                        unread: false,
+                    };
+                    if (typeof window !== 'undefined') {
+                        window.dispatchEvent(new CustomEvent('chat:new-message', { detail }));
+                    }
+                } catch {}
                 return;
             }
 
@@ -468,7 +504,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     );
 };
 
-const listeners = new Map<string, (event: MessageEvent) => void>();
+type Listener = { roomId: string; fn: (event: MessageEvent) => void };
+const listeners = new Map<string, Listener>();
 
 export const useWebSocket = (
     key: string,
@@ -480,11 +517,11 @@ export const useWebSocket = (
     }
 
     useEffect(() => {
-        listeners.set(key, onMessage);
+        listeners.set(key, { roomId: context.roomId, fn: onMessage as any });
         return () => {
             listeners.delete(key);
         };
-    }, [key, onMessage]);
+    }, [key, onMessage, context.roomId]);
 
     return context;
 };

@@ -254,38 +254,26 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         const handler = (e: Event) => {
             const detail = (e as CustomEvent).detail as { roomId: string; content: string; senderId: number; timestamp?: string; unread?: boolean };
             if (!detail || !detail.roomId) return;
-            // Only reorder if the incoming message is newer than what we already have for the room
+            // Unconditionally bump room to top for immediate UX feedback
             setState(prev => {
                 const idx = prev.rooms.findIndex(r => r.id === detail.roomId);
                 if (idx === -1) return prev;
-                const prevOverride = activityOverridesRef.current[detail.roomId];
-                const prevTs = prevOverride ? new Date(prevOverride).getTime() : 0;
-                const nextTs = detail.timestamp ? new Date(detail.timestamp).getTime() : Date.now();
-                const isNewer = nextTs > prevTs;
 
-                // No last-message preview updates anymore
+                // Persist/refresh activity timestamp override
+                const tsStr = detail.timestamp || new Date().toISOString();
+                activityOverridesRef.current[detail.roomId] = tsStr;
+                try { saveOverrides(); } catch {}
+
+                // Clone rooms and optionally update unread count
                 let nextRooms: any[] = prev.rooms.slice();
-
-                // Update unread count if needed and room is not active
+                let updatedRoom = nextRooms[idx];
                 if (detail.unread === true && detail.roomId !== activeRoomId) {
-                    nextRooms = nextRooms.map(r => r.id === detail.roomId ? { ...r, unreadCount: (r.unreadCount || 0) + 1 } : r);
+                    updatedRoom = { ...updatedRoom, unreadCount: (updatedRoom.unreadCount || 0) + 1 };
                 }
 
-                // Persist override if we have a newer activity timestamp
-                if (isNewer) {
-                    const tsStr = detail.timestamp || new Date().toISOString();
-                    activityOverridesRef.current[detail.roomId] = tsStr;
-                    try { saveOverrides(); } catch {}
-                }
-
-                // Sort by effective lastActivity based on overrides only
-                nextRooms = [...nextRooms].sort((a: any, b: any) => {
-                    const ao = activityOverridesRef.current[a.id];
-                    const bo = activityOverridesRef.current[b.id];
-                    const aet = ao ? new Date(ao).getTime() : 0;
-                    const bet = bo ? new Date(bo).getTime() : 0;
-                    return bet - aet;
-                });
+                // Remove from current position and insert at front
+                nextRooms.splice(idx, 1);
+                nextRooms = [updatedRoom, ...nextRooms];
 
                 return { ...prev, rooms: nextRooms } as any;
             });
