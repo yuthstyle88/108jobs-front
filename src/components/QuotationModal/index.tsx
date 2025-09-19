@@ -297,9 +297,9 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 pt-10 bg-black/50 flex items-center justify-center">
             <div className="bg-white rounded-lg p-4 sm:p-6 w-[95%] sm:w-[90%] max-w-3xl shadow-lg">
-                <h3 className="text-base sm:text-lg font-semibold mb-2">{t('profileChat.quotationTitle') || 'Create Quotation'}</h3>
+                <h3 className="text-primary sm:text-lg font-semibold mb-2">{t('profileChat.quotationTitle') || 'Create Quotation'}</h3>
                 <p className="text-xs sm:text-sm text-gray-600 mb-4">{t('profileChat.quotationDesc') || 'Fill in the quotation details below.'}</p>
                 <form
                     onSubmit={handleSubmit}
