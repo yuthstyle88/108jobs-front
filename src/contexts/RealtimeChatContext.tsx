@@ -317,15 +317,19 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     }
 
                     if (transformedItems.length) {
-                        const first = transformedItems[0];
-                        broadcastToListeners(first);
+                        // Broadcast every incoming message so consumers (ChatSection) can react to structured types
+                        for (const item of transformedItems) {
+                            broadcastToListeners(item);
+                        }
+                        // For previews, dispatch based on the latest item in this batch
                         try {
+                            const last = transformedItems[transformedItems.length - 1];
                             const detail = {
-                                roomId: (first as any).roomId,
-                                content: (first as any).content,
-                                senderId: Number((first as any).senderId) || 0,
-                                timestamp: (first as any).createdAt || new Date().toISOString(),
-                                unread: Number((first as any).senderId) !== Number(localUser?.id),
+                                roomId: (last as any).roomId,
+                                content: (last as any).content,
+                                senderId: Number((last as any).senderId) || 0,
+                                timestamp: (last as any).createdAt || new Date().toISOString(),
+                                unread: Number((last as any).senderId) !== Number(localUser?.id),
                             };
                             if (typeof window !== 'undefined') {
                                 window.dispatchEvent(new CustomEvent('chat:new-message', { detail }));

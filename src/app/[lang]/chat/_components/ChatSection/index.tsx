@@ -345,15 +345,25 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
 
     const goToStatus = (target: StatusKey) => {
-        const targetIdx = ORDER.indexOf(target);
-        let curIdx = ORDER.indexOf(currentStatus);
-        while (curIdx < targetIdx) {
-            send({type: "NEXT"});
-            curIdx++;
-        }
-        while (curIdx > targetIdx) {
-            send({type: "BACK"});
-            curIdx--;
+        // Set the workflow state directly to ensure immediate UI update without requiring page reload
+        try {
+            setWorkflowState(target);
+            // Ensure the flow panel is considered started on both sides once any status change is applied
+            if (!hasStarted) setHasStarted(true);
+        } catch {
+            // Fallback to step-by-step transitions if direct set fails for any reason
+            const targetIdx = ORDER.indexOf(target);
+            let curIdx = ORDER.indexOf(currentStatus);
+            while (curIdx < targetIdx) {
+                send({ type: "NEXT" });
+                curIdx++;
+            }
+            while (curIdx > targetIdx) {
+                send({ type: "BACK" });
+                curIdx--;
+            }
+            // Also mark as started after fallback transitions
+            if (!hasStarted) setHasStarted(true);
         }
     };
 
@@ -648,13 +658,24 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 return false;
             }
             // Seq number from proposed quote if available
-            const seqNumber = Number(latestPayload?.quote?.workSteps?.[0]?.seq) || 1;
+            const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
 
             const form: ApproveQuotationForm = {seqNumber, billingId, walletId: person?.walletId, workflowId} as any;
             const res = await approveQuotationApi(form as any);
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
             if (!ok) {
                 setError(((res as any)?.err?.message) || 'Failed to approve quotation.');
+            } else {
+                // Immediately update local UI and notify partner
+                try {
+                    const messageId = uuidv4();
+                    addOwnMessage(JSON.stringify({ type: 'employer-assigned' }), messageId);
+                    sendMessage({ message: JSON.stringify({ type: 'employer-assigned' }), id: messageId });
+                    const tsIso = new Date().toISOString();
+                    const readable = t('profileChat.approveQuotation') || 'Approve quotation';
+                    window.dispatchEvent(new CustomEvent('chat:new-message', { detail: { roomId, content: readable, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+                } catch {}
+                goToStatus('OrderApproved');
             }
             return ok;
         } catch (e) {
@@ -688,6 +709,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
             if (!ok) {
                 setError(((res as any)?.err?.message) || 'Failed to start work.');
+            } else {
+                // Immediately notify and update status for both sides
+                try {
+                    const messageId = uuidv4();
+                    addOwnMessage(JSON.stringify({ type: 'start-work' }), messageId);
+                    sendMessage({ message: JSON.stringify({ type: 'start-work' }), id: messageId });
+                    const tsIso = new Date().toISOString();
+                    const readable = t('profileChat.startWork') || 'Start work';
+                    window.dispatchEvent(new CustomEvent('chat:new-message', { detail: { roomId, content: readable, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+                } catch {}
+                goToStatus('InProgress');
             }
             return ok;
         } catch (e) {
@@ -756,6 +788,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
             // Clear selected file after successful submit
             setSelectedFile(null);
+            // Immediately reflect status change locally
+            goToStatus('PendingEmployerReview');
             return true;
         } catch (e) {
             const msg = e instanceof Error ? e.message : 'Unknown error';
@@ -838,6 +872,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 const content = t('profileChat.deliveryAccepted') || 'Delivery accepted. Proceed to payment.';
                 window.dispatchEvent(new CustomEvent('chat:new-message', { detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
             } catch {}
+            // Immediately reflect status as completed
+            goToStatus('Completed');
             return true;
         } catch (e) {
             const msg = e instanceof Error ? e.message : 'Unknown error';
@@ -963,16 +999,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }, [messages]);
 
     const hasProposedQuote = useMemo(() => {
-        return messages.some((m) => {
-            const content = (m.content || '').trim();
-            if (!content.startsWith('{')) return false;
-            try {
-                const parsed = JSON.parse(content);
-                return parsed && parsed.type === 'proposed-quote';
-            } catch {
-                return false;
-            }
-        });
+        return Boolean(getLatestProposedQuotePayload(messages as any));
     }, [messages]);
 
     const renderFlowContent = () => (
