@@ -38,12 +38,11 @@ const JobBoardProposal = ({ postId, jobCreatorId }: JobBoardProposalProps) => {
     const handleStartChat = async (cv: CommentView) => {
         const partnerPersonId = (cv as any)?.creator?.id as number | undefined;
         const currentUserId = currentUser?.id;
-        const partnerUserName = (cv as any)?.creator?.name || "Unknown Partner";
         if (!partnerPersonId || !currentUserId) return;
         if (partnerPersonId === currentUserId) return;
 
         const roomId = dmRoomId(currentUserId, partnerPersonId, cv.post.id.toString());
-        const roomName = `${partnerUserName}:Job ${cv.post.id}`;
+        const roomName = `${cv.post.id}`;
 
         try {
             setStartingChatFor(partnerPersonId);

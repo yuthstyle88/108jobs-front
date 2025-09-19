@@ -122,6 +122,8 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
             let roomName = roomView?.room?.roomName;
             if (rawId === roomName) {
                 roomName = profileName;
+            } else {
+                roomName = `${profileName}:Job ${roomName}`;
             }
 
             mapped.push({

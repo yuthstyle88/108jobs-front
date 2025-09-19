@@ -50,7 +50,7 @@ function ChatListItemComponent({room, isActive, currentLang}: ChatListItemProps)
             prefetch={false}
             key={room.id}
             href={`/${currentLang || "th"}/chat/message/${room.id}`}
-            className="block focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-1 rounded-lg mx-1.5 my-1 transition-all duration-200 hover:scale-[1.01] border border-black"
+            className="block focus:ring-2 mx-1.5 my-1 transition-all duration-200 hover:scale-[1.01]"
             aria-label={`Open chat with ${partnerName} about Job ${jobId}`}
             onClick={handleClick}
         >
@@ -72,7 +72,7 @@ function ChatListItemComponent({room, isActive, currentLang}: ChatListItemProps)
                 <div className="min-w-0 flex-1">
                     <div className="flex flex-col gap-0.5">
                         <h4
-                            className="font-semibold text-sm sm:text-base text-gray-900 truncate max-w-[160px] sm:max-w-[220px] group-hover:text-blue-600 transition-colors duration-200"
+                            className="font-semibold text-sm sm:text-base text-gray-900 truncate max-w-[160px] sm:max-w-[220px] transition-colors duration-200"
                             title={partnerName}
                         >
                             {partnerName}
