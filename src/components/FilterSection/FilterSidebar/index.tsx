@@ -4,6 +4,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {X} from "lucide-react";
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
+import {useOptionalChatRooms} from "@/contexts/ChatRoomsContext";
 
 interface FilterSidebarProps {
   isOpen: boolean;
@@ -67,6 +68,10 @@ const FilterSidebar = ({
     });
     onClose();
   };
+
+  // Optional chat rooms context for showing unread indicators in the sidebar
+  const chatRoomsCtx = useOptionalChatRooms();
+  const roomsWithUnread = (chatRoomsCtx?.rooms || []).filter((r: any) => (r?.unreadCount || 0) > 0);
 
   const handleClear = () => {
     setMin(undefined);
@@ -156,6 +161,23 @@ const FilterSidebar = ({
                 })}
               </div>
             </div>
+
+            {/* Chats with new messages */}
+            {roomsWithUnread.length > 0 && (
+              <div className="mb-4">
+                <h3 className="text-lg font-medium mb-2 text-text-primary">Chats</h3>
+                <ul className="divide-y divide-gray-100">
+                  {roomsWithUnread.map((r: any) => (
+                    <li key={r.id} className="flex items-center justify-between py-2">
+                      <span className="text-text-primary truncate max-w-[70%]" title={r.name}>{r.name}</span>
+                      <span className="ml-2 inline-flex items-center justify-center min-w-[20px] h-[20px] px-2 text-xs text-white bg-red-500 rounded-full">
+                        {r.unreadCount > 9 ? "9+" : r.unreadCount}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
           {/* Footer */}

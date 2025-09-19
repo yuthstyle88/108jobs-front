@@ -327,3 +327,12 @@ export const useChatRooms = (): ChatRoomsContextValue => {
     if (!ctx) throw new Error('useChatRooms must be used within ChatRoomsProvider');
     return ctx;
 };
+
+// Optional hook variant for components that may render outside provider (returns undefined instead of throwing)
+export const useOptionalChatRooms = (): ChatRoomsContextValue | undefined => {
+    try {
+        return useContext(ChatRoomsContext);
+    } catch {
+        return undefined;
+    }
+};
