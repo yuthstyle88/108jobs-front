@@ -148,6 +148,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 return;
             }
 
+            console.log("parsed: ", parsed)
+
             // New protocol: provider broadcasts UI-ready ChatMessage objects (single or array)
             let items: WsChatMessage[] = [];
             if (Array.isArray(parsed)) {
@@ -234,7 +236,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             // no-op: last message previews removed
             try {
                 const isUnread = d.senderId !== Number(localUser?.id) && !atBottomRef.current;
-                window.dispatchEvent(new CustomEvent("chat:new-message", {detail: {...d, unread: isUnread}}));
+                // window.dispatchEvent(new CustomEvent("chat:new-message", {detail: {...d, unread: isUnread}}));
             } catch {
             }
         } finally {
@@ -1024,14 +1026,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                         ...m,
                                         status: 1
                                     } : m)));
-                                    try {
-                                        markRoomRead(roomId);
-                                    } catch {
-                                    }
-                                    try {
-                                        markSeen(roomId);
-                                    } catch {
-                                    }
                                 }
                             }}
                         />
