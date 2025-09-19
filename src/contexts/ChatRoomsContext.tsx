@@ -221,11 +221,16 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
 
     // Refetch when WS reconnects (event dispatched from RealtimeChatContext)
     useEffect(() => {
-        const onReconnected = () => {
-            try { execute(); } catch {}
-        };
-        window.addEventListener('ws:reconnected', onReconnected as any);
-        return () => window.removeEventListener('ws:reconnected', onReconnected as any);
+        const off = (async () => {
+            const { onWsReconnected } = await import("@/chat");
+            const unsubscribe = onWsReconnected(() => {
+                try { execute(); } catch {}
+            });
+            return unsubscribe;
+        })();
+        let unsub: (() => void) | null = null;
+        off.then((u) => { unsub = u as any; }).catch(() => {});
+        return () => { try { unsub?.(); } catch {} };
     }, [execute]);
 
     const loadMore = useCallback(() => {
@@ -263,43 +268,42 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
 
     // Listen for global chat:new-message events to immediately update the left list
     useEffect(() => {
-        const handler = (e: Event) => {
-            const detail = (e as CustomEvent).detail as { roomId: string; content: string; senderId: number; timestamp?: string; unread?: boolean };
-            if (!detail || !detail.roomId) return;
-            // Unconditionally bump room to top for immediate UX feedback
-            setState(prev => {
-                const idx = prev.rooms.findIndex(r => r.id === detail.roomId);
-                if (idx === -1) return prev;
+        let unsubscribe: (() => void) | null = null;
+        (async () => {
+            const { onChatNewMessage, useUnreadActions } = await import("@/chat");
+            const { inc } = useUnreadActions();
+            unsubscribe = onChatNewMessage((detail) => {
+                if (!detail || !detail.roomId) return;
+                // Unconditionally bump room to top for immediate UX feedback
+                setState(prev => {
+                    const idx = prev.rooms.findIndex(r => r.id === detail.roomId);
+                    if (idx === -1) return prev;
 
-                // Persist/refresh activity timestamp override
-                const tsStr = detail.timestamp || new Date().toISOString();
-                activityOverridesRef.current[detail.roomId] = tsStr;
-                try { saveOverrides(); } catch {}
+                    // Persist/refresh activity timestamp override
+                    const tsStr = detail.timestamp || new Date().toISOString();
+                    activityOverridesRef.current[detail.roomId] = tsStr;
+                    try { saveOverrides(); } catch {}
 
-                // Clone rooms and optionally update unread count
-                let nextRooms: any[] = prev.rooms.slice();
-                let updatedRoom = nextRooms[idx];
-                if (detail.unread === true && detail.roomId !== activeRoomId) {
-                    const nextCount = (updatedRoom.unreadCount || 0) + 1;
-                    updatedRoom = { ...updatedRoom, unreadCount: nextCount };
-                    // Also update the global unread store so the header badge stays in sync even when the room is not open
-                    try {
-                        import("@/stores/unreadStore").then((mod) => {
-                            try { mod.useUnreadStore.getState().inc(detail.roomId, 1); } catch {}
-                        });
-                    } catch {}
-                }
+                    // Clone rooms and optionally update unread count
+                    let nextRooms: any[] = prev.rooms.slice();
+                    let updatedRoom = nextRooms[idx];
+                    if (detail.unread === true && detail.roomId !== activeRoomId) {
+                        const nextCount = (updatedRoom.unreadCount || 0) + 1;
+                        updatedRoom = { ...updatedRoom, unreadCount: nextCount };
+                        // Also update the global unread store so the header badge stays in sync even when the room is not open
+                        try { inc(detail.roomId, 1); } catch {}
+                    }
 
-                // Remove from current position and insert at front
-                nextRooms.splice(idx, 1);
-                nextRooms = [updatedRoom, ...nextRooms];
+                    // Remove from current position and insert at front
+                    nextRooms.splice(idx, 1);
+                    nextRooms = [updatedRoom, ...nextRooms];
 
-                return { ...prev, rooms: nextRooms } as any;
+                    return { ...prev, rooms: nextRooms } as any;
+                });
             });
-        };
-        window.addEventListener('chat:new-message' as any, handler as any);
-        return () => window.removeEventListener('chat:new-message' as any, handler as any);
-    }, [activeRoomId]);
+        })();
+        return () => { try { unsubscribe?.(); } catch {} };
+    }, [activeRoomId, saveOverrides]);
 
     const value = useMemo<ChatRoomsContextValue>(() => ({
         ...state,

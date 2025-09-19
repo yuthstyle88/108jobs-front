@@ -251,7 +251,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     clearTimeout(reconnectTimeoutRef.current);
                     reconnectTimeoutRef.current = null;
                 }
-                try { window.dispatchEvent(new Event('ws:reconnected')); } catch {}
+                try { import("@/chat").then(m => m.emitWsReconnected()).catch(() => { try { window.dispatchEvent(new Event('ws:reconnected')); } catch {} }); } catch { try { window.dispatchEvent(new Event('ws:reconnected')); } catch {} }
             };
 
             newSocket.onmessage = async (event) => {
@@ -332,7 +332,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                                 unread: Number((last as any).senderId) !== Number(localUser?.id),
                             };
                             if (typeof window !== 'undefined') {
-                                window.dispatchEvent(new CustomEvent('chat:new-message', { detail }));
+                                try { import("@/chat").then(m => m.emitChatNewMessage(detail as any)).catch(() => window.dispatchEvent(new CustomEvent('chat:new-message', { detail })) ); } catch { window.dispatchEvent(new CustomEvent('chat:new-message', { detail })); }
                             }
                         } catch {}
                     }
@@ -445,7 +445,9 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                         unread: false,
                     };
                     if (typeof window !== 'undefined') {
-                        window.dispatchEvent(new CustomEvent('chat:new-message', { detail }));
+                        try { import("@/chat").then(m => m.emitChatNewMessage(detail as any)).catch(() => { try { window.dispatchEvent(new CustomEvent('chat:new-message', { detail })); } catch {} }); }
+                        catch { try { window.dispatchEvent(new CustomEvent('chat:new-message', { detail })); } catch {}
+                        }
                     }
                 } catch {}
                 return;
