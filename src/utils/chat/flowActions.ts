@@ -68,20 +68,6 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
       const readable = t('profileChat.confirmAssignMsg') || 'Assignment confirmed. Waiting for freelancer to accept.';
       const payload = { type: 'employer-assigned' } as any;
 
-      setMessages((prev) => [
-        {
-          id: messageId,
-          roomId: (currentRoom?.roomId as any) || roomId,
-          content: readable,
-          createdAt: new Date().toISOString(),
-          senderId: Number((localUser as any)?.id) || 0,
-          receiverId: roomId.includes(':') ? Number(roomId.split(':')[1]) || 0 : 0,
-          status: 1,
-          isOwner: true,
-        } as unknown as WsChatMessage,
-        ...prev,
-      ]);
-
       sendMessage({ message: JSON.stringify(payload), id: messageId });
 
       try {
@@ -107,19 +93,6 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
       const readable = t('profileChat.startWorkMsg') || 'Freelancer started work.';
       const payload = { type: 'start-work' } as any;
 
-      setMessages((prev) => [
-        {
-          id: messageId,
-          roomId: (currentRoom?.roomId as any) || roomId,
-          content: readable,
-          createdAt: new Date().toISOString(),
-          senderId: Number((localUser as any)?.id) || 0,
-          receiverId: roomId.includes(':') ? Number(roomId.split(':')[1]) || 0 : 0,
-          status: 1,
-          isOwner: true,
-        } as unknown as WsChatMessage,
-        ...prev,
-      ]);
       sendMessage({ message: JSON.stringify(payload), id: messageId });
 
       try {

@@ -3,7 +3,7 @@
 import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {z} from 'zod';
-import {getTodayYMD, addDaysYMD, isBeforeToday} from '@/utils/helpers';
+import {addDaysYMD, isBeforeToday} from '@/utils/helpers';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {CustomInput} from "@/components/ui/InputField";
@@ -12,10 +12,7 @@ export interface WorkStep {
     seq: number;
     description: string;
     amount: number;
-    workingDays: number;
     status: string;
-    startingDay: string;
-    deliveryDay: string;
 }
 
 export interface ProposedQuotePayload {
@@ -52,28 +49,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
             seq: z.number().int().min(1, t('profileChat.validation.workStepSeq') || 'Sequence must be at least 1'),
             description: z.string().min(1, t('profileChat.validation.workStepDescription') || 'Work step description is required'),
             amount: z.number().positive({message: t('profileChat.validation.workStepAmount') || 'Work step amount must be greater than 0'}),
-            workingDays: z.number().int().positive({message: t('profileChat.validation.workStepWorkingDays') || 'Work step working days must be greater than 0'}),
             status: z.string(),
-            startingDay: z.string().min(1, t('profileChat.validation.workStepDates') || 'Both starting and delivery days are required'),
-            deliveryDay: z.string().min(1, t('profileChat.validation.workStepDates') || 'Both starting and delivery days are required'),
-        }).superRefine((s, ctx) => {
-            if (s.startingDay && isBeforeToday(s.startingDay)) {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: t('profileChat.validation.startDateNotPast') || 'Start date cannot be earlier than today',
-                    path: ['startingDay']
-                });
-            }
-            if (s.startingDay && s.workingDays > 0) {
-                const expected = addDaysYMD(s.startingDay, s.workingDays);
-                if (s.deliveryDay !== expected) {
-                    ctx.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        message: t('profileChat.validation.invalidForm') || 'Delivery date must equal start date plus working days',
-                        path: ['deliveryDay']
-                    });
-                }
-            }
         });
 
         const ProposedQuoteSchema = z.object({
@@ -125,10 +101,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
             seq: 1,
             description: '',
             amount: 0,
-            workingDays: 1,
             status: 'QuotationPending',
-            startingDay: '',
-            deliveryDay: '',
         }],
         workingDays: 0,
         deliverables: [''],
@@ -166,16 +139,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
         setForm((prev) => {
             const copy = [...prev.workSteps];
             const current = copy[index] as WorkStep;
-            const next: WorkStep = {...current, [key]: value};
-
-            if (key === 'startingDay' || key === 'workingDays') {
-                const start = key === 'startingDay' ? value as string : next.startingDay;
-                const days = key === 'workingDays' ? value as number : next.workingDays;
-                if (start && days > 0) {
-                    next.deliveryDay = addDaysYMD(start, days);
-                }
-            }
-            copy[index] = next;
+            copy[index] = {...current, [key]: value};
             return {...prev, workSteps: copy};
         });
         validateWorkStep(index);
@@ -462,42 +426,12 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
                                             required
                                         />
                                         <CustomInput
-                                            label={t('profileChat.workingDays') || 'Working Days'}
-                                            name={`workSteps[${idx}].workingDays`}
-                                            type="number"
-                                            value={ws.workingDays === 0 ? '' : ws.workingDays.toString()}
-                                            onChange={(e) => updateWorkStep(idx, 'workingDays', Number(e.target.value))}
-                                            error={errors[`workSteps[${idx}].workingDays`]}
-                                            placeholder="0"
-                                            required
-                                        />
-                                        <CustomInput
                                             label={t('profileChat.status') || 'Status'}
                                             name={`workSteps[${idx}].status`}
                                             value={ws.status}
                                             onChange={(e) => updateWorkStep(idx, 'status', e.target.value)}
                                             error={errors[`workSteps[${idx}].status`]}
                                             readonly
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                        <CustomInput
-                                            label={t('profileChat.startingDay') || 'Starting Day'}
-                                            name={`workSteps[${idx}].startingDay`}
-                                            type="date"
-                                            value={ws.startingDay}
-                                            onChange={(e) => updateWorkStep(idx, 'startingDay', e.target.value)}
-                                            error={errors[`workSteps[${idx}].startingDay`]}
-                                            required
-                                        />
-                                        <CustomInput
-                                            label={t('profileChat.deliveryDay') || 'Delivery Day'}
-                                            name={`workSteps[${idx}].deliveryDay`}
-                                            type="date"
-                                            value={ws.deliveryDay}
-                                            error={errors[`workSteps[${idx}].deliveryDay`]}
-                                            readonly
-                                            required
                                         />
                                     </div>
                                     {idx !== 0 && (

@@ -1,6 +1,6 @@
 "use client";
 
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
@@ -111,24 +111,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     // Measure chat input height to prevent last message being obscured
     const inputContainerRef = useRef<HTMLDivElement>(null);
     const [bottomPad, setBottomPad] = useState<number>(0);
-    useEffect(() => {
-        const el = inputContainerRef.current;
-        if (!el || typeof ResizeObserver === "undefined") return;
-        const ro = new ResizeObserver((entries) => {
-            const rect = entries[0]?.contentRect;
-            if (rect) {
-                // Add small gap (8px) for visual breathing room
-                setBottomPad(Math.ceil(rect.height + 8));
-            }
-        });
-        ro.observe(el);
-        return () => {
-            try {
-                ro.disconnect();
-            } catch {
-            }
-        };
-    }, []);
     const isSubmittingRef = useRef(false);
     const {localUser, person} = useMyUser();
     const myAvailable = person?.available !== false; // treat undefined as available
@@ -179,7 +161,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 const copy = [...prev];
                 let added = 0;
                 let replaced = 0;
-                let skippedDup = 0;
                 let latestTs = 0;
                 let latestContent: string | null = null;
                 let latestSenderId: number | null = null;
@@ -187,19 +168,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 const isHistoryBatch = isFetching || prev.length === 0;
                 let inc = 0;
                 for (const msg of items) {
-                    const isDuplicate = copy.some(
-                        (m) =>
-                            m.content === msg.content &&
-                            m.senderId === msg.senderId &&
-                            Math.abs(
-                                new Date(m.createdAt).getTime() - new Date(msg.createdAt).getTime()
-                            ) < 2000
-                    );
-                    if (isDuplicate) {
-                        skippedDup++;
-                        continue;
-                    }
-
                     const idx = copy.findIndex((m) => m.id === msg.id);
                     const isIncoming = !(msg as any).isOwner;
                     const newStatus = isIncoming
@@ -273,22 +241,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             latestIncomingRef.current = null;
         }
     }, [messages, isFetching]);
-
-    // Mark this room as active and mark as read on mount
-    useEffect(() => {
-        try {
-            setActiveRoomId(roomId);
-            markRoomRead(roomId);
-            markSeen(roomId);
-        } catch {
-        }
-        return () => {
-            try {
-                setActiveRoomId(null);
-            } catch {
-            }
-        };
-    }, [roomId, setActiveRoomId, markRoomRead]);
 
     const currentRoom = {
         roomId,
@@ -502,19 +454,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     // Helper to add a local (owner) message to the list and scroll
     const addOwnMessage = useCallback((content: string, id?: string) => {
         const messageId = id ?? uuidv4();
-        setMessages((prev) => [
-            {
-                id: messageId,
-                roomId: currentRoom?.roomId || roomId,
-                content,
-                createdAt: new Date().toISOString(),
-                senderId: Number(localUser?.id) || 0,
-                receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
-                status: 1,
-                isOwner: true,
-            } as WsChatMessage,
-            ...prev,
-        ]);
         scrollToLatestSoon();
         return messageId;
     }, [currentRoom, roomId, localUser?.id]);
