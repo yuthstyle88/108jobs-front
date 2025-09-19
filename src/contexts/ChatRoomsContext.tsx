@@ -9,6 +9,7 @@ import {useHttpGet} from "@/hooks/useHttpGet";
 import type {ListUserChatRoomsResponse} from "lemmy-js-client";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {REQUEST_STATE} from "@/services/HttpService";
+import { isBrowser } from "@/utils/browser";
 
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 
@@ -42,7 +43,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     const activityOverridesRef = useRef<Record<string, string>>({});
     const saveOverrides = useCallback(() => {
         try {
-            if (typeof window !== 'undefined') {
+            if (isBrowser()) {
                 localStorage.setItem(LOCAL_ACTIVITY_KEY, JSON.stringify(activityOverridesRef.current));
             }
         } catch {}
@@ -50,7 +51,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     // Load persisted overrides once
     useEffect(() => {
         try {
-            if (typeof window !== 'undefined') {
+            if (isBrowser()) {
                 const raw = localStorage.getItem(LOCAL_ACTIVITY_KEY);
                 if (raw) {
                     const parsed = JSON.parse(raw);
@@ -270,8 +271,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     useEffect(() => {
         let unsubscribe: (() => void) | null = null;
         (async () => {
-            const { onChatNewMessage, getUnreadActions } = await import("@/chat");
-            const { inc } = getUnreadActions();
+            const { onChatNewMessage } = await import("@/chat");
             unsubscribe = onChatNewMessage((detail) => {
                 if (!detail || !detail.roomId) return;
                 // Unconditionally bump room to top for immediate UX feedback
@@ -284,14 +284,12 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                     activityOverridesRef.current[detail.roomId] = tsStr;
                     try { saveOverrides(); } catch {}
 
-                    // Clone rooms and optionally update unread count
+                    // Clone rooms and optionally update unread count (store will handle global badge)
                     let nextRooms: any[] = prev.rooms.slice();
                     let updatedRoom = nextRooms[idx];
                     if (detail.unread === true && detail.roomId !== activeRoomId) {
                         const nextCount = (updatedRoom.unreadCount || 0) + 1;
                         updatedRoom = { ...updatedRoom, unreadCount: nextCount };
-                        // Also update the global unread store so the header badge stays in sync even when the room is not open
-                        try { inc(detail.roomId, 1); } catch {}
                     }
 
                     // Remove from current position and insert at front
@@ -304,6 +302,56 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         })();
         return () => { try { unsubscribe?.(); } catch {} };
     }, [activeRoomId, saveOverrides]);
+
+    // Sync activeRoomId to global unread store so global listener can avoid double-counting
+    useEffect(() => {
+        (async () => {
+            try {
+                const { useUnreadStore } = await import("@/stores/unreadStore");
+                useUnreadStore.getState().setActiveRoomId(activeRoomId);
+            } catch {}
+        })();
+        return () => {
+            // On unmount, clear the active room
+            (async () => {
+                try {
+                    const { useUnreadStore } = await import("@/stores/unreadStore");
+                    useUnreadStore.getState().setActiveRoomId(null);
+                } catch {}
+            })();
+        };
+    }, [activeRoomId]);
+
+    // Hydrate and sync unread counts per room from the global unread store
+    useEffect(() => {
+        let unsub: undefined | (() => void);
+        let cancelled = false;
+        (async () => {
+            try {
+                const { useUnreadStore } = await import("@/stores/unreadStore");
+                const applyPerRoom = (perRoom: Record<string, number>) => {
+                    if (cancelled) return;
+                    setState(prev => {
+                        if (!prev.rooms || prev.rooms.length === 0) return prev as any;
+                        const nextRooms = prev.rooms.map((r: any) => {
+                            const cnt = perRoom?.[r.id] || 0;
+                            return cnt === r.unreadCount ? r : { ...r, unreadCount: cnt };
+                        });
+                        return { ...prev, rooms: nextRooms } as any;
+                    });
+                };
+                // initial apply
+                applyPerRoom(useUnreadStore.getState().perRoom);
+                // subscribe for future changes
+                // store doesn't use subscribeWithSelector; listen to full state and react when perRoom reference changes
+                unsub = useUnreadStore.subscribe((s, prev) => {
+                    if (s.perRoom !== prev?.perRoom) applyPerRoom(s.perRoom);
+                });
+            } catch {}
+        })();
+        return () => { cancelled = true; try { unsub?.(); } catch {} };
+        // Re-run when room list identity changes (ids), so unread can be applied to new rooms
+    }, [state.rooms.map?.(r => r.id).join("|")]);
 
     const value = useMemo<ChatRoomsContextValue>(() => ({
         ...state,

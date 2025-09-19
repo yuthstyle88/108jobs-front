@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
@@ -24,6 +24,7 @@ import {apiToUiStatus, useStateMachineStore} from "@/stores/stateMachineStore";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {HttpService} from "@/services/HttpService";
 import {resolveWorkflowId} from "@/utils/chat/workflow";
+import { isBrowser } from "@/utils/browser";
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -49,8 +50,7 @@ function getLatestProposedQuotePayload(msgs: Array<{ content?: string | null }>)
             if (parsed && parsed.type === 'proposed-quote') {
                 return parsed;
             }
-        } catch {
-        }
+        } catch {}
     }
     return null;
 }
@@ -70,6 +70,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                                      partnerId,
                                                      partnerAvailable
                                                  }) => {
+    const {markRoomRead, setActiveRoomId} = useChatRooms();
     const {state: stepperState, send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
@@ -83,8 +84,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
-    const incUnread = useUnreadStore((s) => s.inc);
-    useUnreadStore((s) => s.markSeen);
+    const markSeen = useUnreadStore((s) => s.markSeen);
     const [, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null); // New error state for API failures
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
@@ -96,15 +96,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }, []);
     const scrollToLatest = () => {
         const rootEl = scrollContainerRef.current;
-        if (!rootEl) return;
-
-        // Wait for the next frame to ensure DOM updates
-        requestAnimationFrame(() => {
+        if (rootEl) {
             rootEl.scrollTop = rootEl.scrollHeight - rootEl.clientHeight;
-        });
+        }
     };
     const scrollToLatestSoon = () => {
-        if (typeof window === 'undefined') return;
+        if (!isBrowser()) return;
         try {
             requestAnimationFrame(() => requestAnimationFrame(scrollToLatest));
         } catch {
@@ -120,7 +117,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         const ro = new ResizeObserver((entries) => {
             const rect = entries[0]?.contentRect;
             if (rect) {
-                setBottomPad(Math.ceil(rect.height));
+                // Add small gap (8px) for visual breathing room
+                setBottomPad(Math.ceil(rect.height + 8));
             }
         });
         ro.observe(el);
@@ -177,12 +175,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             }
             if (!items.length) return;
 
-            console.log("items: ", items)
-
             setMessages((prev) => {
                 const copy = [...prev];
                 let added = 0;
                 let replaced = 0;
+                let skippedDup = 0;
                 let latestTs = 0;
                 let latestContent: string | null = null;
                 let latestSenderId: number | null = null;
@@ -190,6 +187,19 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 const isHistoryBatch = isFetching || prev.length === 0;
                 let inc = 0;
                 for (const msg of items) {
+                    const isDuplicate = copy.some(
+                        (m) =>
+                            m.content === msg.content &&
+                            m.senderId === msg.senderId &&
+                            Math.abs(
+                                new Date(m.createdAt).getTime() - new Date(msg.createdAt).getTime()
+                            ) < 2000
+                    );
+                    if (isDuplicate) {
+                        skippedDup++;
+                        continue;
+                    }
+
                     const idx = copy.findIndex((m) => m.id === msg.id);
                     const isIncoming = !(msg as any).isOwner;
                     const newStatus = isIncoming
@@ -211,7 +221,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         latestContent = msg.content;
                         latestSenderId = msg.senderId;
                     }
-                    if (typeof msg.id !== 'number') scrollToLatest();
                 }
                 const sorted = copy.sort(
                     (a, b) =>
@@ -224,10 +233,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         setNewSinceCount(prev => prev + inc);
                     } catch {
                     }
-                    try {
-                        incUnread(roomId, inc);
-                    } catch {
-                    }
+                    // Unread store is updated globally via ChatRoomsContext/ChatBadge listening to chat:new-message events.
+                    // Avoid direct increments here to prevent double counting.
                 }
                 if (!isHistoryBatch && items.length === 1 && latestTs > 0 && latestContent != null && latestSenderId != null) {
                     const tsIso = new Date(latestTs).toISOString();
@@ -257,13 +264,29 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             // no-op: last message previews removed
             try {
                 const isUnread = d.senderId !== Number(localUser?.id) && !atBottomRef.current;
-                // window.dispatchEvent(new CustomEvent("chat:new-message", {detail: {...d, unread: isUnread}}));
+                window.dispatchEvent(new CustomEvent("chat:new-message", {detail: {...d, unread: isUnread}}));
             } catch {
             }
         } finally {
             latestIncomingRef.current = null;
         }
     }, [messages, isFetching]);
+
+    // Mark this room as active and mark as read on mount
+    useEffect(() => {
+        try {
+            setActiveRoomId(roomId);
+            markRoomRead(roomId);
+            markSeen(roomId);
+        } catch {
+        }
+        return () => {
+            try {
+                setActiveRoomId(null);
+            } catch {
+            }
+        };
+    }, [roomId, setActiveRoomId, markRoomRead]);
 
     const currentRoom = {
         roomId,
@@ -330,11 +353,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             const targetIdx = ORDER.indexOf(target);
             let curIdx = ORDER.indexOf(currentStatus);
             while (curIdx < targetIdx) {
-                send({type: "NEXT"});
+                send({ type: "NEXT" });
                 curIdx++;
             }
             while (curIdx > targetIdx) {
-                send({type: "BACK"});
+                send({ type: "BACK" });
                 curIdx--;
             }
             // Also mark as started after fallback transitions
@@ -436,6 +459,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 `Proposed quotation: ${data.projectName} - $${data.amount.toFixed(2)}`;
             const payload = {type: "proposed-quote", quote: data, billingId: createdBillingId} as any;
 
+            // Add message to local state
+            addOwnMessage(JSON.stringify(payload), messageId);
+
             // Send message via WebSocket
             sendMessage({
                 message: JSON.stringify(payload),
@@ -470,6 +496,27 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         }
     };
 
+
+    // Helper to add a local (owner) message to the list and scroll
+    const addOwnMessage = useCallback((content: string, id?: string) => {
+        const messageId = id ?? uuidv4();
+        setMessages((prev) => [
+            {
+                id: messageId,
+                roomId: currentRoom?.roomId || roomId,
+                content,
+                createdAt: new Date().toISOString(),
+                senderId: Number(localUser?.id) || 0,
+                receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
+                status: 1,
+                isOwner: true,
+            } as WsChatMessage,
+            ...prev,
+        ]);
+        scrollToLatestSoon();
+        return messageId;
+    }, [currentRoom, roomId, localUser?.id]);
+
     const onSubmit = useCallback(
         (data: MessageForm) => {
             if (!canSend) {
@@ -496,6 +543,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             isSubmittingRef.current = true;
             const messageId = uuidv4();
 
+            addOwnMessage(contentToSend || "", messageId);
             try {
                 const tsIso = new Date().toISOString();
                 const preview = selectedFile
@@ -619,19 +667,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 // Immediately update local UI and notify partner
                 try {
                     const messageId = uuidv4();
-                    sendMessage({message: JSON.stringify({type: 'employer-assigned'}), id: messageId});
+                    addOwnMessage(JSON.stringify({ type: 'employer-assigned' }), messageId);
+                    sendMessage({ message: JSON.stringify({ type: 'employer-assigned' }), id: messageId });
                     const tsIso = new Date().toISOString();
                     const readable = t('profileChat.approveQuotation') || 'Approve quotation';
-                    window.dispatchEvent(new CustomEvent('chat:new-message', {
-                        detail: {
-                            roomId,
-                            content: readable,
-                            senderId: Number(localUser?.id) || 0,
-                            timestamp: tsIso
-                        }
-                    }));
-                } catch {
-                }
+                    window.dispatchEvent(new CustomEvent('chat:new-message', { detail: { roomId, content: readable, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+                } catch {}
                 goToStatus('OrderApproved');
             }
             return ok;
@@ -670,19 +711,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 // Immediately notify and update status for both sides
                 try {
                     const messageId = uuidv4();
-                    sendMessage({message: JSON.stringify({type: 'start-work'}), id: messageId});
+                    addOwnMessage(JSON.stringify({ type: 'start-work' }), messageId);
+                    sendMessage({ message: JSON.stringify({ type: 'start-work' }), id: messageId });
                     const tsIso = new Date().toISOString();
                     const readable = t('profileChat.startWork') || 'Start work';
-                    window.dispatchEvent(new CustomEvent('chat:new-message', {
-                        detail: {
-                            roomId,
-                            content: readable,
-                            senderId: Number(localUser?.id) || 0,
-                            timestamp: tsIso
-                        }
-                    }));
-                } catch {
-                }
+                    window.dispatchEvent(new CustomEvent('chat:new-message', { detail: { roomId, content: readable, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+                } catch {}
                 goToStatus('InProgress');
             }
             return ok;
@@ -736,6 +770,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 mime: selectedFile.fileType,
             } as any;
 
+            addOwnMessage(JSON.stringify(payload), messageId);
+
             sendMessage({message: JSON.stringify(payload), id: messageId});
             try {
                 const preview = `[Delivery] ${selectedFile.fileName}`;
@@ -774,7 +810,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             }
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
             const reason = t('profileChat.requestRevisionMsg') || 'Please revise and resubmit.';
-            const form: any = {seqNumber, workflowId, reason};
+            const form: any = { seqNumber, workflowId, reason };
             const res = await HttpService.client.requestRevision(form as any);
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
             if (!ok) {
@@ -784,19 +820,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             // Notify chat and move status
             try {
                 const messageId = uuidv4();
-                const payload = {type: 'request-revision', reason} as any;
-                sendMessage({message: JSON.stringify(payload), id: messageId});
+                const payload = { type: 'request-revision', reason } as any;
+                addOwnMessage(JSON.stringify(payload), messageId);
+                sendMessage({ message: JSON.stringify(payload), id: messageId });
                 const tsIso = new Date().toISOString();
-                window.dispatchEvent(new CustomEvent('chat:new-message', {
-                    detail: {
-                        roomId,
-                        content: reason,
-                        senderId: Number(localUser?.id) || 0,
-                        timestamp: tsIso
-                    }
-                }));
-            } catch {
-            }
+                window.dispatchEvent(new CustomEvent('chat:new-message', { detail: { roomId, content: reason, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+            } catch {}
             goToStatus('InProgress');
             return true;
         } catch (e) {
@@ -825,7 +854,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 setError('Missing delivery reference for approval.');
                 return false;
             }
-            const form: any = {seqNumber, workflowId, commentId};
+            const form: any = { seqNumber, workflowId, commentId };
             const res = await approveWorkApi(form as any);
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
             if (!ok) {
@@ -835,19 +864,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             // Notify chat that delivery accepted
             try {
                 const messageId = uuidv4();
-                sendMessage({message: JSON.stringify({type: 'delivery-accepted'}), id: messageId});
+                addOwnMessage(JSON.stringify({ type: 'delivery-accepted' }), messageId);
+                sendMessage({ message: JSON.stringify({ type: 'delivery-accepted' }), id: messageId });
                 const tsIso = new Date().toISOString();
                 const content = t('profileChat.deliveryAccepted') || 'Delivery accepted. Proceed to payment.';
-                window.dispatchEvent(new CustomEvent('chat:new-message', {
-                    detail: {
-                        roomId,
-                        content,
-                        senderId: Number(localUser?.id) || 0,
-                        timestamp: tsIso
-                    }
-                }));
-            } catch {
-            }
+                window.dispatchEvent(new CustomEvent('chat:new-message', { detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+            } catch {}
             // Immediately reflect status as completed
             goToStatus('Completed');
             return true;
@@ -872,7 +894,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             }
             // Resolve seq number similar to other actions
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
-            const form: any = {seqNumber, workflowId};
+            const form: any = { seqNumber, workflowId };
             const res = await HttpService.client.cancelJob(form as any);
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
             if (!ok) {
@@ -883,18 +905,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             try {
                 const messageId = uuidv4();
                 const readable = t('profileChat.cancelledJobMsg') || 'The job has been cancelled.';
-                sendMessage({message: JSON.stringify({type: 'cancel-job'}), id: messageId});
+                addOwnMessage(readable, messageId);
+                sendMessage({ message: JSON.stringify({ type: 'cancel-job' }), id: messageId });
                 const tsIso = new Date().toISOString();
-                window.dispatchEvent(new CustomEvent('chat:new-message', {
-                    detail: {
-                        roomId,
-                        content: readable,
-                        senderId: Number(localUser?.id) || 0,
-                        timestamp: tsIso
-                    }
-                }));
-            } catch {
-            }
+                window.dispatchEvent(new CustomEvent('chat:new-message', { detail: { roomId, content: readable, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+            } catch {}
             goToStatus('Cancelled');
             return true;
         } catch (e) {
@@ -930,6 +945,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     useEffect(() => {
         if (isConnected && !didInitialFetchRef.current) {
             didInitialFetchRef.current = true;
+            console.log("[CHAT][INIT] Connected -> initial fetchHistory() (once per connection)");
             fetchHistory()
                 .then(() => {
                     setIsInitialLoading(false);
@@ -941,6 +957,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         } else if (!isConnected) {
             // Reset for next connection attempt
             didInitialFetchRef.current = false;
+            console.log("[CHAT][INIT] Not connected yet");
         }
     }, [isConnected]);
 
@@ -986,8 +1003,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const renderFlowContent = () => (
         <>
             {!roomPostId && (
-                <div
-                    className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
+                <div className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
                     {t("profileChat.missingPostIdForQuotation") || "This chat is not linked to a post. You cannot create a quotation."}
                 </div>
             )}
@@ -1013,9 +1029,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 onSubmitDelivery={!isEmployer ? flowActions.onSubmitDelivery : undefined}
                 onRequestRevision={isEmployer ? flowActions.onRequestRevision : undefined}
                 onReleasePayment={isEmployer ? flowActions.onReleasePayment : undefined}
-                onCancel={() => {
-                    void cancelJobAction();
-                }}
+                onCancel={() => { void cancelJobAction(); }}
             />
         </>
     );
@@ -1069,6 +1083,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                         ...m,
                                         status: 1
                                     } : m)));
+                                    try {
+                                        markRoomRead(roomId);
+                                    } catch {
+                                    }
+                                    try {
+                                        markSeen(roomId);
+                                    } catch {
+                                    }
                                 }
                             }}
                         />
@@ -1084,13 +1106,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                     </div>
                                 )}
                                 {selectedFile && (
-                                    <div
-                                        className="mb-2 flex items-center justify-between rounded-md border border-blue-200 bg-blue-50 px-3 py-2">
+                                    <div className="mb-2 flex items-center justify-between rounded-md border border-blue-200 bg-blue-50 px-3 py-2">
                                         <div className="flex items-center gap-2 min-w-0">
                                             <span aria-hidden className="text-blue-600">📎</span>
                                             <div className="min-w-0">
-                                                <p className="text-sm font-medium text-blue-900 truncate"
-                                                   title={selectedFile.fileName}>
+                                                <p className="text-sm font-medium text-blue-900 truncate" title={selectedFile.fileName}>
                                                     {selectedFile.fileName}
                                                 </p>
                                             </div>
@@ -1244,7 +1264,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                         return;
                                     }
                                     sendMessage({
-                                        message: JSON.stringify({type: 'delivery-accepted'}),
+                                        message: JSON.stringify({ type: 'delivery-accepted' }),
                                         id: uuidv4(),
                                     });
                                     try {

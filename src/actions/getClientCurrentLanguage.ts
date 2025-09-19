@@ -1,6 +1,7 @@
 'use client'
 import {LANGUAGES, VALID_LANGUAGES, LANGUAGE_COOKIE} from "@/constants/language";
 import {SupportedLang} from "@/lib/metadata";
+import { isBrowser } from "@/utils/browser";
 
 // Micro-cache with an invalidation key to avoid stale values when cookies, localStorage, or URL change
 let cachedClientLang: SupportedLang | undefined;
@@ -8,7 +9,7 @@ let cachedKey: string | undefined;
 
 export function getClientCurrentLanguage(): SupportedLang {
   // SSR-safe guard
-  if (typeof window === "undefined" || typeof document === "undefined") {
+  if (!isBrowser()) {
     return 'th';
   }
 

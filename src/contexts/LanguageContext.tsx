@@ -4,6 +4,7 @@ import {LANGUAGE_COOKIE, VALID_LANGUAGES} from "@/constants/language";
 import {I18NextService} from "@/services/I18NextService";
 import {I18nextProvider} from "react-i18next";
 import {getClientCurrentLanguage} from "@/actions/getClientCurrentLanguage";
+import { isBrowser } from "@/utils/browser";
 
 interface LanguageContextType {
   lang: string;
@@ -56,7 +57,7 @@ export function LanguageProvider({
     }
     setLangState(newLang);
 
-    if (typeof window !== 'undefined') {
+    if (isBrowser()) {
       const langsPattern = `(?:${VALID_LANGUAGES.join('|')})`;
       const langPrefixRe = new RegExp(`^/` + langsPattern + `\\b`);
       const currentPath = window.location.pathname;

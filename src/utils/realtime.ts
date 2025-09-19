@@ -19,6 +19,13 @@ export function buildWsUrl(token: string, roomId: string): string {
   return `${base}/ws?token=${encodeURIComponent(token)}&room_id=${encodeURIComponent(roomId)}`;
 }
 
+// Phoenix Socket URL helper
+export function buildPhoenixUrl(): string {
+  // Allow override via env; default to same host at /socket
+  const base = process.env.NEXT_PUBLIC_PHOENIX_WS_URL || "wss://api-fastwork-stg.ibrowe.com/socket";
+  return base;
+}
+
 export function isBase64Like(s: string): boolean {
   return /^[A-Za-z0-9+/=]+$/.test(s);
 }

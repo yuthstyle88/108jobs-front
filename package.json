@@ -60,7 +60,6 @@
     "react-toastify": "^11.0.5",
     "react-type-animation": "^3.2.0",
     "recharts": "^2.15.1",
-    "socket.io-client": "^4.8.1",
     "sonner": "^2.0.1",
     "swiper": "^11.2.4",
     "swr": "^2.3.2",
@@ -69,7 +68,8 @@
     "uuid": "^11.1.0",
     "zod": "^3.24.2",
     "zustand": "^5.0.3",
-    "react-virtuoso": "^4.7.11"
+    "react-virtuoso": "^4.7.11",
+    "phoenix": "^1.8.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.52.0",

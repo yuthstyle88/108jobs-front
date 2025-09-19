@@ -7,9 +7,10 @@ import {decrypt, encrypt} from "@/lib/web-crypto";
 import {HttpService, UserService} from "@/services";
 import type {ChatMessage} from "lemmy-js-client";
 import {v4 as uuidv4} from "uuid";
-import {addOnce, buildWsUrl, getReceiverIdFromRoom, isBase64Like, safeParse} from "@/utils/realtime";
+import {addOnce, getReceiverIdFromRoom, isBase64Like, safeParse} from "@/utils/realtime";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
+import { isBrowser } from "@/utils/browser";
 
 async function mapIncomingToChatMessage(
     m: any,
@@ -24,7 +25,12 @@ async function mapIncomingToChatMessage(
 ): Promise<ChatMessage | null> {
     try {
         const createdAtVal = m.created_at || m.createdAt || new Date().toISOString();
-        const messageSignature = `${m.content}:${createdAtVal}`;
+        const roomIdForKey = m.room_id || m.roomId || opts.fallbackRoomId || '';
+        const senderIdForKey = String(m.sender_id ?? m.senderId ?? '');
+        // Prefer stable server id when present; otherwise use a composite key to avoid duplicates across sources
+        const messageSignature = m.id
+            ? `id:${m.id}`
+            : `room:${roomIdForKey}|sender:${senderIdForKey}|ts:${createdAtVal}|content:${m.content}`;
         if (!addOnce(opts.receivedSet, messageSignature)) {
             return null;
         }
@@ -110,6 +116,9 @@ function broadcastToListeners(payload: unknown): void {
     for (const { fn } of listeners.values()) fn(event);
 }
 
+
+function timeoutMs(ms: number) { return ms; }
+
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                                                                         token,
                                                                         roomId,
@@ -117,7 +126,9 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                                                                         children,
                                                                     }) => {
     const [isConnected, setIsConnected] = useState(false);
-    const [socket, setSocket] = useState<WebSocket | null>(null);
+    // Generic socket holder: can be native WebSocket or Phoenix adapter
+    const [socket, setSocket] = useState<any>(null);
+    const currentSocketRef = useRef<any>(null);
     const [connectionError, setConnectionError] = useState(false);
     const [hasMoreMessages, setHasMoreMessages] = useState(true);
     const [isFetching, setIsFetching] = useState(false);
@@ -135,8 +146,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     const fetchResolveRef = useRef<((value?: void) => void) | null>(null);
     const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+    // Always use Phoenix transport for chat realtime
     // TODO: remove temporary receiver fallback when backend provides proper mapping
-    const wsUrl = buildWsUrl(token, roomId);
 
     const fetchHistory = useCallback(() => {
          return new Promise<void>(async (resolve, reject) => {
@@ -237,7 +248,9 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             }
             if (cancelled) return;
 
-            const newSocket = new WebSocket(wsUrl);
+            const { getPhoenixChannelSocket } = await import("@/utils/phoenix-socket");
+            const newSocket = getPhoenixChannelSocket(token, roomId) as any;
+            currentSocketRef.current = newSocket;
             setSocket(newSocket);
 
             newSocket.onopen = () => {
@@ -254,7 +267,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 try { import("@/chat").then(m => m.emitWsReconnected()).catch(() => { try { window.dispatchEvent(new Event('ws:reconnected')); } catch {} }); } catch { try { window.dispatchEvent(new Event('ws:reconnected')); } catch {} }
             };
 
-            newSocket.onmessage = async (event) => {
+            newSocket.onmessage = async (event: any) => {
                 try {
                     const token = UserService.Instance.auth();
                     const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
@@ -316,7 +329,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                         }
                     }
 
-                    if (transformedItems.length) {
+                    if (transformedItems.length === 1) {
                         // Broadcast every incoming message so consumers (ChatSection) can react to structured types
                         for (const item of transformedItems) {
                             broadcastToListeners(item);
@@ -331,7 +344,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                                 timestamp: (last as any).createdAt || new Date().toISOString(),
                                 unread: Number((last as any).senderId) !== Number(localUser?.id),
                             };
-                            if (typeof window !== 'undefined') {
+                            if (isBrowser()) {
                                 try { import("@/chat").then(m => m.emitChatNewMessage(detail as any)).catch(() => window.dispatchEvent(new CustomEvent('chat:new-message', { detail })) ); } catch { window.dispatchEvent(new CustomEvent('chat:new-message', { detail })); }
                             }
                         } catch {}
@@ -350,7 +363,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 }
             };
 
-            newSocket.onclose = (event) => {
+            newSocket.onclose = (event: any) => {
                 setIsConnected(false);
 
                 if (isManuallyClosingRef.current) {
@@ -368,6 +381,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 }
 
                 reconnectTimeoutRef.current = setTimeout(() => {
+                    try { currentSocketRef.current?.close?.(); } catch {}
+                    currentSocketRef.current = null;
                     setSocket(null);
                     setConnectionAttemptKey((prev) => prev + 1);
                 }, 3000);
@@ -393,7 +408,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             cancelled = true;
             isManuallyClosingRef.current = true;
             try {
-                socket?.close();
+                currentSocketRef.current?.close?.();
             } catch {
             }
             if (fetchTimeoutRef.current) {
@@ -406,7 +421,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 setIsFetching(false);
             }
         };
-    }, [wsUrl, connectionAttemptKey, localUser, roomId, token]);
+    }, [connectionAttemptKey, localUser, roomId, token]);
 
 
     useEffect(() => {
@@ -444,7 +459,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                         timestamp: (mockMessage as any).createdAt,
                         unread: false,
                     };
-                    if (typeof window !== 'undefined') {
+                    if (isBrowser()) {
                         try { import("@/chat").then(m => m.emitChatNewMessage(detail as any)).catch(() => { try { window.dispatchEvent(new CustomEvent('chat:new-message', { detail })); } catch {} }); }
                         catch { try { window.dispatchEvent(new CustomEvent('chat:new-message', { detail })); } catch {}
                         }

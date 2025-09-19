@@ -1,3 +1,4 @@
+import { isBrowser } from "@/utils/browser";
 /**
  * Utility functions for measuring and monitoring performance
  */
@@ -53,7 +54,7 @@ export async function measureAsyncExecutionTime<T>(
  */
 export function measureImageLoadTime(src: string, label: string): Promise<void> {
   return new Promise((resolve) => {
-    if (typeof window === 'undefined') {
+    if (!isBrowser()) {
       resolve();
       return;
     }
@@ -83,7 +84,7 @@ export function measureImageLoadTime(src: string, label: string): Promise<void> 
  * @param value The value of the metric
  */
 export function trackMetric(metricName: string, value: number): void {
-  if (typeof window === 'undefined' || !window.performance || !window.performance.mark) {
+  if (!isBrowser() || !window.performance || !window.performance.mark) {
     return;
   }
 

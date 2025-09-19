@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { isBrowser } from "@/utils/browser";
 
 // Lightweight unread store with persistence and batching
 export type UnreadState = {
@@ -7,18 +8,21 @@ export type UnreadState = {
   lastFlushAt?: number;
   // selectors
   total: number;
+  // UI context
+  activeRoomId?: string | null;
   // actions
   inc: (roomId: string, by?: number) => void;
   reset: (roomId: string) => void;
   hydrate: (snapshot: Record<string, number>) => void;
   clearAll: () => void;
   markSeen: (roomId: string) => void;
+  setActiveRoomId: (roomId: string | null) => void;
 };
 
 const STORAGE_KEY = "chat_unread_v1";
 
 function loadPersisted(): Pick<UnreadState, "perRoom" | "pending" | "lastFlushAt"> {
-  if (typeof window === "undefined") return { perRoom: {}, pending: {}, lastFlushAt: undefined };
+  if (!isBrowser()) return { perRoom: {}, pending: {}, lastFlushAt: undefined };
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { perRoom: {}, pending: {}, lastFlushAt: undefined };
@@ -35,7 +39,7 @@ function loadPersisted(): Pick<UnreadState, "perRoom" | "pending" | "lastFlushAt
 }
 
 function persist(state: Pick<UnreadState, "perRoom" | "pending" | "lastFlushAt">) {
-  if (typeof window === "undefined") return;
+  if (!isBrowser()) return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {}
@@ -49,6 +53,7 @@ export const useUnreadStore = create<UnreadState>((set, get) => {
     pending: initial.pending,
     lastFlushAt: initial.lastFlushAt,
     total: totalInitial,
+    activeRoomId: null,
     inc: (roomId: string, by: number = 1) => {
       set((s) => {
         const cur = s.perRoom[roomId] || 0;
@@ -92,11 +97,65 @@ export const useUnreadStore = create<UnreadState>((set, get) => {
       set(() => {
         const ns = { perRoom: {}, pending: {}, lastFlushAt: Date.now() } as const;
         persist(ns);
-        return { perRoom: {}, pending: {}, lastFlushAt: Date.now(), total: 0 } as any;
+        return { perRoom: {}, pending: {}, lastFlushAt: Date.now(), total: 0, activeRoomId: null } as any;
       });
     },
     markSeen: (roomId: string) => {
       get().reset(roomId);
     },
+    setActiveRoomId: (roomId: string | null) => {
+      set((s) => ({ ...s, activeRoomId: roomId }));
+    },
   };
 });
+
+// Background flusher: best-effort demo using window timers and online events
+let flushTimer: number | null = null;
+async function flushPending() {
+  try {
+    const { pending } = useUnreadStore.getState();
+    const entries = Object.entries(pending).filter(([, d]) => d !== 0);
+    if (entries.length === 0) return;
+    // TODO: replace with real API endpoint if available
+    // For now, we just simulate success and clear pending deltas
+    // await axiosPrivate.post('/messages/unread/flush', { deltas: pending })
+    useUnreadStore.setState((s) => {
+      const cleared = { ...s.pending };
+      for (const [k] of entries) cleared[k] = 0;
+      const ns = { perRoom: s.perRoom, pending: cleared, lastFlushAt: Date.now() } as const;
+      persist(ns);
+      return { ...s, pending: cleared, lastFlushAt: Date.now() };
+    });
+  } catch (e) {
+    // keep pending for retry
+    // exponential backoff could be implemented if needed
+  }
+}
+
+function ensureFlushLoop() {
+  if (!isBrowser()) return;
+  if (flushTimer != null) return;
+  // every 5 minutes
+  flushTimer = window.setInterval(() => {
+    if (navigator.onLine) flushPending();
+  }, 5 * 60 * 1000);
+  window.addEventListener("online", () => flushPending());
+  window.addEventListener("ws:reconnected" as any, () => flushPending());
+}
+
+if (isBrowser()) {
+  ensureFlushLoop();
+  try {
+    window.addEventListener('chat:new-message' as any, (e: any) => {
+      try {
+        const detail = (e as CustomEvent)?.detail as any;
+        if (!detail || !detail.roomId) return;
+        // Increment only when marked unread and not the currently active room
+        const { inc, activeRoomId } = useUnreadStore.getState();
+        if (detail.unread === true && detail.roomId !== activeRoomId) {
+          inc(detail.roomId, 1);
+        }
+      } catch {}
+    });
+  } catch {}
+}

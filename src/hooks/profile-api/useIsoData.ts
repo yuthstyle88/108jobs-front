@@ -7,7 +7,7 @@ import {assertExists} from "@/utils/helpers";
  * หากรันบน SSR ให้คืนค่า null
  */
 function getIsoData(): IsoData | null {
-  if (isBrowser() && typeof window !== "undefined" && "isoData" in window) {
+  if (isBrowser() && "isoData" in window) {
     return (window as { isoData: IsoData }).isoData;
   }
   return null;
