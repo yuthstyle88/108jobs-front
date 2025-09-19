@@ -139,7 +139,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 if (canApproveQuotation) {
                     actionsQP.push(btn(t('profileChat.approveQuotation') || 'Approve quotation', () => setShowApproveConfirm(true)));
                 }
-                if (!canProposeQuote && !canApproveQuotation) {
+                if (!canProposeQuote && !canApproveQuotation && !isEmployer) {
                     actionsQP.push(
                         <div key="wait-approval" className="w-full text-xs text-gray-600 bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2">
                             {t('profileChat.waitEmployerApproval') || 'Waiting for employer to approve your quotation'}

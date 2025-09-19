@@ -11,4 +11,5 @@ export type CreateChatRoomRequest = {
   postId?: PostId;
   // Optional: id of the current comment used to start the chat
   currentCommentId?: CommentId;
+  roomName?: string;
 };

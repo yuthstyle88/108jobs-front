@@ -613,7 +613,7 @@ export function getCommunitiesAtLevel(catalogData: ListCommunitiesResponse | und
  * Generate deterministic roomId for a DM between 2 users.
  * Always the same string for the same pair.
  */
-export function dmRoomId(userA: PersonId | undefined, userB: PersonId | undefined): string {
+export function dmRoomId(userA: PersonId | undefined, userB: PersonId | undefined, postId: string | undefined): string {
     if (userA === undefined || userB === undefined) {
         throw new Error("Both userA and userB must be defined to generate a DM room ID");
     }
@@ -621,7 +621,7 @@ export function dmRoomId(userA: PersonId | undefined, userB: PersonId | undefine
     // normalize order (smaller id first)
     const low = Math.min(userA, userB);
     const high = Math.max(userA, userB);
-    const input = `dm:${low}:${high}`;
+    const input = `dm:${low}:${high}:${postId || ''}`;
 
     // SHA-256 hash -> take first 16 hex chars
     const hash = createHash("sha256").update(input).digest("hex");

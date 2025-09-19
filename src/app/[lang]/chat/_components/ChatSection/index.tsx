@@ -1358,6 +1358,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 postId={roomPostId as number}
                 commentId={roomCommentId as number}
                 partnerId={partnerId as number}
+                projectName={currentRoom?.job?.title || "No Job Title"}
             />
         </>
     );

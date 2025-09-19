@@ -135,7 +135,7 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
         try {
             if (!currentUserProfile?.id || !profile?.id) return;
             if (currentUserProfile.id === profile.id) return; // no DM with self
-            const roomId = dmRoomId(currentUserProfile.id, profile.id);
+            const roomId = dmRoomId(currentUserProfile.id, profile.id, undefined);
             // Best-effort: create or ensure chat room exists on backend
             try {
                 await HttpService.client.createChatRoom({ partnerPersonId: profile.id, roomId });
@@ -149,7 +149,8 @@ const CurrentProfileUser: React.FC<ProfileProps> = ({profile}) => {
             try {
                 const fallbackId = dmRoomId(
                     currentUserProfile?.id as any,
-                    profile?.id as any
+                    profile?.id as any,
+                    undefined
                 );
                 router.push(`/chat/message/${fallbackId}`);
             } catch {}

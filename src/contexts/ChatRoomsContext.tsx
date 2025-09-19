@@ -119,9 +119,14 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                 } catch {}
             }
 
+            let roomName = roomView?.room?.roomName;
+            if (rawId === roomName) {
+                roomName = profileName;
+            }
+
             mapped.push({
                 id: String(rawId),
-                name: profileName,
+                name: roomName,
                 participants: participantsArr.map((p: any) => String(p.memberId)) as any,
                 unreadCount: 0,
                 postId: roomView?.room?.postId ?? roomView?.post?.id ?? (it as any)?.postId,

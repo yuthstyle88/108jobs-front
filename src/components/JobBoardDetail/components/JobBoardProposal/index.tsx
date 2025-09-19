@@ -38,18 +38,22 @@ const JobBoardProposal = ({ postId, jobCreatorId }: JobBoardProposalProps) => {
     const handleStartChat = async (cv: CommentView) => {
         const partnerPersonId = (cv as any)?.creator?.id as number | undefined;
         const currentUserId = currentUser?.id;
+        const partnerUserName = (cv as any)?.creator?.name || "Unknown Partner";
         if (!partnerPersonId || !currentUserId) return;
         if (partnerPersonId === currentUserId) return;
 
-        const roomId = dmRoomId(currentUserId, partnerPersonId);
+        const roomId = dmRoomId(currentUserId, partnerPersonId, cv.post.id.toString());
+        const roomName = `${partnerUserName}:Job ${cv.post.id}`;
+
         try {
             setStartingChatFor(partnerPersonId);
             try {
                 await HttpService.client.createChatRoom({
                     partnerPersonId,
                     roomId,
-                    ...(postId ? { postId } : {}),
+                    ...(cv.post.id ? { postId: cv.post.id } : {}),
                     ...(cv?.comment?.id ? { currentCommentId: cv.comment.id } : {}),
+                    roomName,
                 });
             } catch (e) {
                 // If room already exists or API fails, proceed to navigate anyway

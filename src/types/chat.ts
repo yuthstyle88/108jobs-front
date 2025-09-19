@@ -1,14 +1,3 @@
-export type ChatMessage = {
-    id: string;
-    senderId: number;
-    receiverId?: number;
-    content: string;
-    status: number;
-    createdAt: string;
-    roomId: string;
-    isOwner: boolean;
-};
-
 export interface ChatRoom {
     id: string;
     name: string;

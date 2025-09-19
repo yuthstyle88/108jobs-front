@@ -1,75 +1,103 @@
-// components/ui/CustomInput.tsx
 "use client";
-import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {UseFormRegisterReturn} from "react-hook-form";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 type InputProps = {
-  type?: string;
-  label?: string;
-  name: string;
-  register?: UseFormRegisterReturn;
-  error?: string;
-  showPassword?: boolean;
-  toggleShowPassword?: () => void;
-  placeholder?: string;
-  readonly?: boolean;
-  required?: boolean;
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    tag?: "input" | "textarea"; // Added to support textarea
+    type?: string;
+    label?: string;
+    name: string;
+    register?: UseFormRegisterReturn;
+    error?: string;
+    showPassword?: boolean;
+    toggleShowPassword?: () => void;
+    placeholder?: string;
+    readonly?: boolean;
+    required?: boolean;
+    value?: string | number;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    rows?: number; // For textarea
 };
 
 export const CustomInput = ({
-  type = "text",
-  label,
-  name,
-  register,
-  error,
-  showPassword,
-  toggleShowPassword,
-  placeholder,
-  readonly = false,
-  required = false,
-  value,
-  onChange,
-}: InputProps) => (
-  <div className="mb-4">
-    <label className="block text-sm font-medium text-gray-700 mb-2">
-      {label} {required && <span className="text-red-500">*</span>}
-    </label>
-    <div className="relative">
-      <input
-        id={name}
-        {...(register ?? {
-          name,
-          value,
-          onChange,
-        })}
-        className={`text-text-primary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 ${
-          error
-            ? "border-red-500 focus:ring-red-500 focus:shadow-input-shadow"
-            : "border-gray-300 focus:ring-blue-500"
-        }`}
-        type={showPassword ? "text" : type}
-        placeholder={placeholder}
-        readOnly={readonly}
-      />
-
-      {type === "password" && (
-        <button
-          type="button"
-          onClick={toggleShowPassword}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2"
-        >
-          <FontAwesomeIcon
-            icon={showPassword ? faEyeSlash : faEye}
-            className="text-text-secondary"
-          />
-        </button>
-      )}
+                                tag = "input",
+                                type = "text",
+                                label,
+                                name,
+                                register,
+                                error,
+                                showPassword,
+                                toggleShowPassword,
+                                placeholder,
+                                readonly = false,
+                                required = false,
+                                value,
+                                onChange,
+                                rows,
+                            }: InputProps) => (
+    <div className="mb-4">
+        {label && (
+            <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-2">
+                {label} {required && <span className="text-red-500">*</span>}
+            </label>
+        )}
+        <div className="relative">
+            {tag === "input" ? (
+                <input
+                    id={name}
+                    {...(register ?? {
+                        name,
+                        value,
+                        onChange,
+                    })}
+                    className={`text-text-primary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 ${
+                        error
+                            ? "border-red-500 focus:ring-red-500 focus:shadow-input-shadow"
+                            : "border-gray-300 focus:ring-blue-500"
+                    }`}
+                    type={showPassword ? "text" : type}
+                    placeholder={placeholder}
+                    readOnly={readonly}
+                    aria-describedby={error ? `${name}-error` : undefined}
+                />
+            ) : (
+                <textarea
+                    id={name}
+                    {...(register ?? {
+                        name,
+                        value,
+                        onChange,
+                    })}
+                    className={`text-text-primary w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 ${
+                        error
+                            ? "border-red-500 focus:ring-red-500 focus:shadow-input-shadow"
+                            : "border-gray-300 focus:ring-blue-500"
+                    }`}
+                    placeholder={placeholder}
+                    readOnly={readonly}
+                    rows={rows || 3}
+                    aria-describedby={error ? `${name}-error` : undefined}
+                />
+            )}
+            {type === "password" && (
+                <button
+                    type="button"
+                    onClick={toggleShowPassword}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                    <FontAwesomeIcon
+                        icon={showPassword ? faEyeSlash : faEye}
+                        className="text-text-secondary"
+                    />
+                </button>
+            )}
+        </div>
+        {error && (
+            <p id={`${name}-error`} className="text-red-500 font-sans text-[13px] mt-1">
+                {error}
+            </p>
+        )}
     </div>
-    {error && (
-      <p className="text-red-500 font-sans text-[13px] mt-1">{error}</p>
-    )}
-  </div>
 );
