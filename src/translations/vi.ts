@@ -55,6 +55,7 @@ export const vi = {
             confirmCancelJobTitle: "Hủy công việc này?",
             confirmCancelJobMessage: "Thao tác này sẽ hủy quy trình hiện tại và không thể hoàn tác.",
             cancelledJobMsg: "Công việc đã được hủy.", 
+            cancelledJobHint: "Tất cả hoạt động hiện tại đã dừng. Bạn có thể mở cuộc trò chuyện mới để trao đổi lại.", 
             reviewDeliveryTitle: "Xem xét sản phẩm",
             reviewDeliveryDesc: "Freelancer đã gửi sản phẩm. Bạn muốn chấp nhận hay yêu cầu chỉnh sửa?",
             deliveryAccepted: "Đã chấp nhận sản phẩm. Tiến hành thanh toán.",

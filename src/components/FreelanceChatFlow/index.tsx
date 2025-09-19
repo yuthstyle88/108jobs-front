@@ -145,7 +145,6 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
             case 'OrderApproved':
                 return [
                     onStartWork ? btn(t('profileChat.startWork') || 'Start work', onStartWork) : null,
-                    btn(t('profileChat.uploadDraft') || 'แนบไฟล์ต้นฉบับ', onUploadAsset),
                     ...(cancelBtn ? [cancelBtn] : []),
                 ].filter(Boolean) as React.ReactElement[];
             case 'InProgress':

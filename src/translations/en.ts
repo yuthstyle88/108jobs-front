@@ -55,6 +55,7 @@ export const en = {
             confirmCancelJobTitle: "Cancel this job?",
             confirmCancelJobMessage: "This will cancel the current workflow. This action cannot be undone.",
             cancelledJobMsg: "The job has been cancelled.", 
+            cancelledJobHint: "All ongoing actions are stopped. You can start a new chat to discuss again.", 
             reviewDeliveryTitle: "Review Delivery",
             reviewDeliveryDesc: "The freelancer submitted work. Do you want to accept or request revision?",
             deliveryAccepted: "Delivery accepted. Proceed to payment.",

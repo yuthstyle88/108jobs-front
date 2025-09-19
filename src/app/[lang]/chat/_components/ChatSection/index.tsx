@@ -843,26 +843,37 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }, [isConnected]);
 
 
-    // Update workflow automatically based on latest special messages
+    // Update workflow automatically based on the most recent structured workflow message
+    // Scan a small window of newest messages to be robust against interleaved plain texts
     useEffect(() => {
         if (!messages.length) return;
-        const latest = messages[0];
-        const content = latest.content?.trim() || "";
-        if (!content.startsWith("{")) return;
-        try {
-            const parsed = JSON.parse(content);
-            if (parsed && parsed.type === "proposed-quote") {
-                // When a quote is proposed, stay in QuotationPending
-                goToStatus("QuotationPending");
-            } else if (parsed && parsed.type === "employer-assigned") {
-                // When employer confirms/assigns, move to OrderApproved
-                goToStatus("OrderApproved");
-            } else if (parsed && parsed.type === "start-work") {
-                // When freelancer starts work, move to InProgress
-                goToStatus("InProgress");
+        const typesToStatus: Record<string, StatusKey> = {
+            "proposed-quote": "QuotationPending",
+            "employer-assigned": "OrderApproved",
+            "start-work": "InProgress",
+            "submit-delivery": "PendingEmployerReview",
+            "cancel-job": "Cancelled",
+            "delivery-accepted": "Completed",
+            "request-revision": "InProgress",
+        } as const;
+
+        const N = 20; // scan up to the latest 20 messages
+        const len = Math.min(messages.length, N);
+        for (let i = 0; i < len; i++) {
+            const m = messages[i];
+            const content = (m.content || '').trim();
+            if (!content.startsWith('{')) continue;
+            try {
+                const parsed = JSON.parse(content);
+                const type = parsed?.type as string | undefined;
+                const target = type ? (typesToStatus as any)[type] as StatusKey | undefined : undefined;
+                if (target) {
+                    goToStatus(target);
+                    break;
+                }
+            } catch {
+                // ignore parse errors and continue scanning
             }
-        } catch {
-            /* ignore parse errors */
         }
     }, [messages]);
 
@@ -1122,7 +1133,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                         return;
                                     }
                                     sendMessage({
-                                        message: t("profileChat.deliveryAccepted") || "Delivery accepted. Proceed to payment.",
+                                        message: JSON.stringify({ type: 'delivery-accepted' }),
                                         id: uuidv4(),
                                     });
                                     try {
@@ -1154,7 +1165,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                         return;
                                     }
                                     sendMessage({
-                                        message: t("profileChat.requestRevisionMsg") || "Please revise and resubmit.",
+                                        message: JSON.stringify({ type: 'request-revision' }),
                                         id: uuidv4(),
                                     });
                                     try {
