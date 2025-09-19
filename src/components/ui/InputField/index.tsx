@@ -14,6 +14,7 @@ type InputProps = {
   toggleShowPassword?: () => void;
   placeholder?: string;
   readonly?: boolean;
+  required?: boolean;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
@@ -28,12 +29,13 @@ export const CustomInput = ({
   toggleShowPassword,
   placeholder,
   readonly = false,
+  required = false,
   value,
   onChange,
 }: InputProps) => (
   <div className="mb-4">
     <label className="block text-sm font-medium text-gray-700 mb-2">
-      {label}
+      {label} {required && <span className="text-red-500">*</span>}
     </label>
     <div className="relative">
       <input
