@@ -270,8 +270,8 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     useEffect(() => {
         let unsubscribe: (() => void) | null = null;
         (async () => {
-            const { onChatNewMessage, useUnreadActions } = await import("@/chat");
-            const { inc } = useUnreadActions();
+            const { onChatNewMessage, getUnreadActions } = await import("@/chat");
+            const { inc } = getUnreadActions();
             unsubscribe = onChatNewMessage((detail) => {
                 if (!detail || !detail.roomId) return;
                 // Unconditionally bump room to top for immediate UX feedback
