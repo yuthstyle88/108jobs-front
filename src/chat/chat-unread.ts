@@ -9,6 +9,7 @@ export function useTotalUnread(): number {
   return baseStore((s) => s.total);
 }
 
+// React hook variant — only use at top level of a component or custom hook
 export function useUnreadActions() {
   return {
     inc: baseStore((s) => s.inc),
@@ -16,4 +17,10 @@ export function useUnreadActions() {
     clearAll: baseStore((s) => s.clearAll),
     markSeen: baseStore((s) => s.markSeen),
   };
+}
+
+// Non-hook accessor — safe to call anywhere (effects, event handlers, non-React modules)
+export function getUnreadActions() {
+  const { inc, reset, clearAll, markSeen } = baseStore.getState();
+  return { inc, reset, clearAll, markSeen };
 }
