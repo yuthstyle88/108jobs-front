@@ -13,9 +13,6 @@ export * from "./security/keystore";
 // validation
 export * from "./validation/addressSchema";
 
-// data helpers
-export * from "./getProfileData";
-
 // grouped subfolders
 export * from "./string/interpolate";
 export * from "./dom/scrollSmooth";

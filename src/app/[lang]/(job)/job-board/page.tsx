@@ -382,6 +382,12 @@ const JobBoard = () => {
                                     </th>
                                     <th
                                         scope="col"
+                                        className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
+                                    >
+                                        {t("profileJob.tableHeaderProposals")}
+                                    </th>
+                                    <th
+                                        scope="col"
                                         className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider min-w-[120px]"
                                     >
                                         {t("profileJob.tableHeaderPostDate")}
@@ -458,19 +464,19 @@ const JobBoard = () => {
                                                     {formatBudget(job.post.budget)}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary">
+                                                    {job.post.comments}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary">
                                                     {formatDate(job.post.publishedAt)}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary">
                                                     {job.post.deadline ? formatDate(job.post.deadline) : "-"}
                                                 </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    <span className="sr-only">View job details</span>
-                                                </td>
                                             </tr>
                                         ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={7} className="col-span-full text-center text-gray-500 py-8">
+                                        <td colSpan={8} className="col-span-full text-center text-gray-500 py-8">
                                             <div className="flex flex-col items-center">
                                                 <svg className="w-12 h-12 text-gray-300 mb-4" fill="none"
                                                      stroke="currentColor" viewBox="0 0 24 24">

@@ -18,6 +18,13 @@ export type CreateFlowActionsDeps = {
   approveQuotation?: () => Promise<boolean>;
   startWork?: () => Promise<boolean>;
   getPostId?: () => string | number | undefined;
+  // New: delivery submission support
+  submitDelivery?: () => Promise<boolean>;
+  hasSelectedFile?: () => boolean;
+  // New: employer request revision support
+  requestRevision?: () => Promise<boolean>;
+  // New: employer approve work & release payment
+  approveWork?: () => Promise<boolean>;
 };
 
 export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
@@ -136,14 +143,42 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
       const input = (scrollContainerRef.current as any)?.querySelector('input');
       if (input) input.focus();
     },
-    onSubmitDelivery: () => {
-      goToStatus('PendingEmployerReview');
-      setShowReviewModal(true);
+    onSubmitDelivery: deps.hasSelectedFile && deps.hasSelectedFile()
+      ? async () => {
+          if (deps.submitDelivery) {
+            try {
+              const ok = await deps.submitDelivery();
+              if (!ok) return;
+            } catch {
+              return;
+            }
+          }
+          // Move to review pending; employer will get review modal on their side
+          goToStatus('PendingEmployerReview');
+        }
+      : undefined,
+    onRequestRevision: async () => {
+      if (deps.requestRevision) {
+        try {
+          const ok = await deps.requestRevision();
+          if (!ok) return;
+        } catch {
+          return;
+        }
+      } else {
+        // fallback: just move status if no impl provided
+        goToStatus('InProgress');
+      }
     },
-    onRequestRevision: () => {
-      goToStatus('InProgress');
-    },
-    onReleasePayment: () => {
+    onReleasePayment: async () => {
+      if (deps.approveWork) {
+        try {
+          const ok = await deps.approveWork();
+          if (!ok) return; // Abort if API failed
+        } catch {
+          return;
+        }
+      }
       goToStatus('Completed');
     },
     onCancel: () => {

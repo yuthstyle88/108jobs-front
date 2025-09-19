@@ -89,6 +89,20 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   const isProposedQuote = parsed && parsed.type === "proposed-quote" && parsed.quote;
   const isEmployerAssigned = parsed && (parsed as any).type === "employer-assigned";
   const isStartWork = parsed && (parsed as any).type === "start-work";
+  const isCancelJob = parsed && (parsed as any).type === "cancel-job";
+  const isSubmitDelivery = parsed && (parsed as any).type === "submit-delivery";
+  const isRequestRevision = parsed && (parsed as any).type === "request-revision";
+  const isDeliveryAccepted = parsed && (parsed as any).type === "delivery-accepted";
+
+  // Build a public URL for assets using NEXT_PUBLIC_API_HOST_NAME when href is relative
+  const buildPublicUrl = (u?: string) => {
+    if (!u) return "";
+    if (/^https?:\/\//i.test(u)) return u;
+    const host = process.env.NEXT_PUBLIC_API_HOST_NAME || "localhost:8532";
+    const base = host.startsWith("http") ? host : `http://${host}`;
+    const sep = u.startsWith("/") ? "" : "/";
+    return `${base}${sep}${u}`;
+  };
 
   return (
     <div
@@ -223,6 +237,85 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
               </div>
             </div>
           </div>
+        ) : isCancelJob ? (
+          <div className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ring-red-200 bg-red-50 px-4 py-3">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3-9a1 1 0 00-1-1H8a1 1 0 100 2h4a1 1 0 001-1z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <div className="text-sm font-medium text-red-800">
+                  {t('profileChat.cancelledJobMsg') || 'The job has been cancelled.'}
+                </div>
+                <div className="mt-0.5 text-xs text-red-700">
+                  {t('profileChat.cancelledJobHint') || 'All ongoing actions are stopped. You can start a new chat to discuss again.'}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : isRequestRevision ? (
+          <div className={`max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ${isIncoming ? 'ring-amber-200 bg-amber-50' : 'ring-amber-200 bg-amber-50'} px-4 py-3`}>
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5a1 1 0 10-2 0v6a1 1 0 001 1h4a1 1 0 100-2h-3V7z" />
+              </svg>
+              <div className="min-w-0">
+                <div className={`text-sm font-semibold text-amber-800`}>
+                  {t('profileChat.requestRevision') || 'Request revision'}
+                </div>
+                <div className="mt-1 text-xs text-amber-900 whitespace-pre-line break-words">
+                  {((parsed as any)?.reason && String((parsed as any).reason)) || t('profileChat.requestRevisionMsg') || 'Please revise and resubmit.'}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : isSubmitDelivery ? (
+          <div className={`max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ${isIncoming ? 'ring-amber-200 bg-amber-50' : 'ring-blue-200 bg-blue-50'} px-4 py-3`}>
+            <div className="flex items-start gap-3">
+              <svg className={`w-5 h-5 flex-shrink-0 mt-0.5 ${isIncoming ? 'text-amber-600' : 'text-blue-600'}`} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M3 7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+              </svg>
+              <div className="min-w-0">
+                <div className={`text-sm font-medium ${isIncoming ? 'text-amber-800' : 'text-blue-800'}`}>
+                  {t('profileChat.submitDeliveryMsg') || 'Freelancer submitted a delivery.'}
+                </div>
+                <div className="mt-1 text-xs text-gray-700 break-words">
+                  {(parsed as any)?.name || (parsed as any)?.url || ''}
+                </div>
+                {(parsed as any)?.url && (
+                  <div className="mt-2">
+                    <a
+                      href={buildPublicUrl((parsed as any).url)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`inline-flex items-center gap-2 text-xs font-medium px-2.5 py-1.5 rounded-md transition-colors ${isIncoming ? 'bg-amber-600 hover:bg-amber-700 text-white' : 'bg-primary hover:bg-[#063a68] text-white'}`}
+                    >
+                      <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path d="M12.293 2.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414L9.414 16H5v-4.414l8.293-8.293z" />
+                      </svg>
+                      <span>Open file</span>
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ) : isDeliveryAccepted ? (
+          <div className="max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ring-emerald-200 bg-emerald-50 px-4 py-3">
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293A1 1 0 106.293 10.707l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <div>
+                <div className="text-sm font-medium text-emerald-800">
+                  {t('profileChat.deliveryAccepted') || 'Delivery accepted. Proceed to payment.'}
+                </div>
+                <div className="mt-0.5 text-xs text-emerald-700">
+                  {t('profileChat.deliveryAcceptedHint') || 'Payment will be released to the freelancer.'}
+                </div>
+              </div>
+            </div>
+          </div>
         ) : (
           // Default text message bubble
           message.content?.trim() && (
@@ -237,16 +330,6 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
             </div>
           )
         )}
-
-        {/*{message.fileUrl && (*/}
-        {/*  <div className="mt-1 max-w-[80vw] sm:max-w-xs">*/}
-        {/*    <FilePreview*/}
-        {/*      fileUrl={message.fileUrl}*/}
-        {/*      fileType={message.fileType || "application/octet-stream"}*/}
-        {/*      fileName={message?.fileName || "Attach file"}*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*)}*/}
       </div>
     </div>
   );

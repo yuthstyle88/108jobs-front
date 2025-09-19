@@ -33,6 +33,8 @@ export type FreelanceChatFlowProps = {
     canApproveQuotation?: boolean;
     showStartButton?: boolean;
     isEmployer?: boolean;
+    // Control whether Submit Delivery can be clicked (requires an attached file)
+    canSubmitDelivery?: boolean;
 } & FlowActions;
 
 const STEPS: Array<{ key: StatusKey; title: string; sub: string }> = [
@@ -66,6 +68,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  canApproveQuotation = true,
                                                                  showStartButton = true,
                                                                  isEmployer = false,
+                                                                 canSubmitDelivery = false,
                                                                  onProposeQuote,
                                                                  onApproveQuotation,
                                                                  onStartWork,
@@ -78,6 +81,10 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                              }) => {
     const [showStartConfirm, setShowStartConfirm] = useState(false);
     const [showApproveConfirm, setShowApproveConfirm] = useState(false);
+    const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+    const [showRevisionConfirm, setShowRevisionConfirm] = useState(false);
+    const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
+    const [showReleaseConfirm, setShowReleaseConfirm] = useState(false);
     const { t } = useTranslation();
     const stepper = useWorkflowStepper();
     const derivedStatus = stepper?.state?.name as StatusKey | undefined;
@@ -120,7 +127,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
         );
 
         const cancelBtn = stepper?.canCancel && key !== 'Completed' && key !== 'Cancelled'
-            ? btn(t('profileChat.cancelJob') || 'ยกเลิกงาน', onCancel || stepper?.cancel, 'ghost')
+            ? btn(t('profileChat.cancelJob') || 'ยกเลิกงาน', () => setShowCancelConfirm(true), 'ghost')
             : null;
 
         switch (key) {
@@ -144,19 +151,38 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
             case 'OrderApproved':
                 return [
                     onStartWork ? btn(t('profileChat.startWork') || 'Start work', onStartWork) : null,
-                    btn(t('profileChat.uploadDraft') || 'แนบไฟล์ต้นฉบับ', onUploadAsset),
                     ...(cancelBtn ? [cancelBtn] : []),
                 ].filter(Boolean) as React.ReactElement[];
             case 'InProgress':
+                if (isEmployer) {
+                    return [
+                        <div key="wait-freelancer" className="w-full text-xs text-gray-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2">
+                            {t('profileChat.waitForFreelancerSubmit') || 'Waiting for the freelancer to submit their work.'}
+                        </div>,
+                        ...(cancelBtn ? [cancelBtn] : []),
+                    ];
+                }
                 return [
                     btn(t('profileChat.uploadFileLink') || 'แนบไฟล์/ลิงก์', onUploadAsset),
-                    btn(t('profileChat.submitDelivery') || 'ส่งงาน', onSubmitDelivery, 'ghost'),
+                    btn(
+                        t('profileChat.submitDelivery') || 'ส่งงาน',
+                        canSubmitDelivery ? (() => setShowSubmitConfirm(true)) : undefined,
+                        'ghost'
+                    ),
                     ...(cancelBtn ? [cancelBtn] : []),
                 ];
             case 'PendingEmployerReview':
+                if (isEmployer) {
+                    return [
+                        btn(t('profileChat.requestRevision') || 'ขอแก้ไขรอบใหม่', () => setShowRevisionConfirm(true)),
+                        btn(t('profileChat.releasePayment') || 'ปล่อยเงิน/ปิดงาน', () => setShowReleaseConfirm(true), 'ghost'),
+                        ...(cancelBtn ? [cancelBtn] : []),
+                    ];
+                }
                 return [
-                    btn(t('profileChat.requestRevision') || 'ขอแก้ไขรอบใหม่', onRequestRevision),
-                    btn(t('profileChat.releasePayment') || 'ปล่อยเงิน/ปิดงาน', onReleasePayment, 'ghost'),
+                    <div key="wait-employer" className="w-full text-xs text-gray-600 bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2">
+                        {t('profileChat.waitForEmployerReview') || 'Your delivery was submitted. Waiting for employer review.'}
+                    </div>,
                     ...(cancelBtn ? [cancelBtn] : []),
                 ];
             case 'Completed':
@@ -273,11 +299,59 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
               onClose={() => setShowApproveConfirm(false)}
               onConfirm={async () => {
                 setShowApproveConfirm(false);
-                await onApproveQuotation?.();
+                  onApproveQuotation?.();
               }}
               title={t('profileChat.confirmApproveQuotationTitle') || 'Approve quotation?'}
               message={t('profileChat.confirmApproveQuotationMessage') || 'This will approve the freelancer\'s quotation and convert it into an order.'}
               confirmText={t('profileChat.approveQuotation') || 'Approve quotation'}
+            />
+            <ConfirmActionModal
+              isOpen={showRevisionConfirm}
+              onClose={() => setShowRevisionConfirm(false)}
+              onConfirm={async () => {
+                setShowRevisionConfirm(false);
+                  onRequestRevision?.();
+              }}
+              title={t('profileChat.confirmRequestRevisionTitle') || 'Request a revision?'}
+              message={t('profileChat.confirmRequestRevisionMessage') || 'This will move the job back to In Progress and notify the freelancer to revise and resubmit.'}
+              confirmText={t('profileChat.requestRevision') || 'Request revision'}
+            />
+            <ConfirmActionModal
+              isOpen={showSubmitConfirm}
+              onClose={() => setShowSubmitConfirm(false)}
+              onConfirm={async () => {
+                setShowSubmitConfirm(false);
+                  onSubmitDelivery?.();
+              }}
+              title={t('profileChat.confirmSubmitDeliveryTitle') || 'Submit this delivery?'}
+              message={t('profileChat.confirmSubmitDeliveryMessage') || 'This will notify the employer and move the job to Pending Employer Review.'}
+              confirmText={t('profileChat.submitDelivery') || 'Submit delivery'}
+            />
+            <ConfirmActionModal
+              isOpen={showCancelConfirm}
+              onClose={() => setShowCancelConfirm(false)}
+              onConfirm={async () => {
+                setShowCancelConfirm(false);
+                if (onCancel) {
+                    onCancel();
+                } else if (stepper?.cancel) {
+                  stepper.cancel();
+                }
+              }}
+              title={t('profileChat.confirmCancelJobTitle') || 'Cancel this job?'}
+              message={t('profileChat.confirmCancelJobMessage') || 'This will cancel the current workflow. This action cannot be undone.'}
+              confirmText={t('profileChat.cancelJob') || 'Cancel job'}
+            />
+            <ConfirmActionModal
+              isOpen={showReleaseConfirm}
+              onClose={() => setShowReleaseConfirm(false)}
+              onConfirm={async () => {
+                setShowReleaseConfirm(false);
+                onReleasePayment?.();
+              }}
+              title={t('profileChat.confirmReleasePaymentTitle') || 'Release payment and close job?'}
+              message={t('profileChat.confirmReleasePaymentMessage') || 'This will approve the submitted work, release funds to the freelancer, and close the job.'}
+              confirmText={t('profileChat.releasePayment') || 'Release payment / Close job'}
             />
         </aside>
     );

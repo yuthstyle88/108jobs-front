@@ -51,7 +51,7 @@ import type {
     UploadImage,
 } from "./other_types";
 import {VERSION} from "./other_types";
-import type { GetBankAccountsI } from "./other_types";
+import type {GetBankAccountsI} from "./other_types";
 import type {AddAdmin} from "./types/AddAdmin";
 import type {AddAdminResponse} from "./types/AddAdminResponse";
 import type {AddModToCommunity} from "./types/AddModToCommunity";
@@ -239,6 +239,7 @@ import type {UpdateTerm} from "./types/UpdateTerm";
 import type {UpdateTotp} from "./types/UpdateTotp";
 import type {UpdateTotpResponse} from "./types/UpdateTotpResponse";
 import type {UploadImageResponse} from "./types/UploadImageResponse";
+import type {FileUploadResponse} from "./types/FileUploadResponse";
 import type {UpsertCard} from "./types/UpsertCard";
 import type {UserBlockInstanceParams} from "./types/UserBlockInstanceParams";
 import type {VerifyEmail} from "./types/VerifyEmail";
@@ -251,17 +252,20 @@ import type {ChatRoomResponse} from "./types/ChatRoomResponse";
 import type {CreateChatRoomRequest} from "./types/CreateChatRoomRequest";
 import type {CreateInvoiceForm} from "./types/CreateInvoiceForm";
 import type {CreateInvoiceResponse} from "./types/CreateInvoiceResponse";
-import type { ApproveQuotationForm } from "./types/ApproveQuotationForm";
+import type {ApproveQuotationForm} from "./types/ApproveQuotationForm";
 import type {WorkFlowOperationResponse} from "./types/WorkFlowOperationResponse";
-import type { StartWorkflowForm } from "./types/StartWorkflowForm";
-import type { SubmitStartWorkForm } from "./types/SubmitStartWorkForm";
+import type {StartWorkflowForm} from "./types/StartWorkflowForm";
+import type {SubmitStartWorkForm} from "./types/SubmitStartWorkForm";
+import type {CancelJobForm} from "./types/CancelJobForm";
+import type {RequestRevisionForm} from "./types/RequestRevisionForm";
+import type {ApproveWorkForm} from "./types/ApproveWorkForm";
 import type {UserKeysResponse} from "./types/UserKeysResponse";
 import type {ChatHistoryQuery} from "./types/ChatHistoryQuery";
 import type {ChatMessagesResponse} from "./types/ChatMessagesResponse";
-import type { ChatHistoryQueryI } from "./other_types";
-import type { Billing } from "./types/Billing";
-import type { GetBillingByCommentQuery } from "./types/GetBillingByCommentQuery";
-import type { GetBillingByCommentQueryI } from "./other_types";
+import type {ChatHistoryQueryI} from "./other_types";
+import type {Billing} from "./types/Billing";
+import type {GetBillingByCommentQuery} from "./types/GetBillingByCommentQuery";
+import type {GetBillingByCommentQueryI} from "./other_types";
 
 enum HttpType {
     Get = "GET",
@@ -2720,8 +2724,8 @@ export class LemmyHttp extends Controller {
     @Get("/account/profile")
     @Tags("Account")
     async visitProfile(
-            @Path() username: string,
-            @Inject() options?: RequestOptions
+        @Path() username: string,
+        @Inject() options?: RequestOptions
     ) {
         return this.#wrapper<object, VisitProfileResponse>(
             HttpType.Get,
@@ -2772,6 +2776,19 @@ export class LemmyHttp extends Controller {
         @Inject() options?: RequestOptions,
     ): Promise<UploadImageResponse> {
         return this.#upload("/account/banner", image, options);
+    }
+
+    /**
+     * @summary Upload a file to user account.
+     */
+    @Security("bearerAuth")
+    @Post("/account/files")
+    @Tags("Account", "Media")
+    async uploadFile(
+        @UploadedFile() image: UploadImage,
+        @Inject() options?: RequestOptions,
+    ): Promise<FileUploadResponse> {
+        return this.#upload<FileUploadResponse>("/account/files", image, options);
     }
 
     /**
@@ -3046,6 +3063,78 @@ export class LemmyHttp extends Controller {
     }
 
     /**
+     * @summary Submit work (freelancer finishes work by submitting their project).
+     */
+    @Security("bearerAuth")
+    @Post("/account/services/submit-work")
+    @Tags("Services")
+    async submitWork(
+        @Body() form: SubmitStartWorkForm,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<SubmitStartWorkForm, WorkFlowOperationResponse>(
+            HttpType.Post,
+            "/account/services/submit-work",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Request revision on a submitted work (employer requests changes from freelancer).
+     */
+    @Security("bearerAuth")
+    @Post("/account/services/request-revision")
+    @Tags("Services")
+    async requestRevision(
+        @Body() form: RequestRevisionForm,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<RequestRevisionForm, WorkFlowOperationResponse>(
+            HttpType.Post,
+            "/account/services/request-revision",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Approve work and release payment (employer approves).
+     */
+    @Security("bearerAuth")
+    @Post("/account/services/approve-work")
+    @Tags("Services")
+    async approveWork(
+        @Body() form: ApproveWorkForm,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<ApproveWorkForm, WorkFlowOperationResponse>(
+            HttpType.Post,
+            "/account/services/approve-work",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Cancel a workflow job.
+     */
+    @Security("bearerAuth")
+    @Post("/account/services/cancel-job")
+    @Tags("Services")
+    async cancelJob(
+        @Body() form: CancelJobForm,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<CancelJobForm, WorkFlowOperationResponse>(
+            HttpType.Post,
+            "/account/services/cancel-job",
+            form,
+            options,
+        );
+    }
+
+    /**
      * @summary Create a chat room.
      */
     @Security("bearerAuth")
@@ -3151,7 +3240,9 @@ export class LemmyHttp extends Controller {
         {image}: UploadImage,
         options?: RequestOptions,
     ): Promise<ResponseType> {
-        const formData = createFormData(image);
+        const isFileUpload = path.includes("/account/files") || path.includes("/chat/files");
+        const fieldName = isFileUpload ? "file" : "images[]";
+        const formData = createFormData(image, fieldName);
 
         const response = await this.#fetchFunction(this.#buildFullUrl(path), {
             ...options,
@@ -3226,18 +3317,16 @@ function encodeGetParams<BodyType extends object>(p: BodyType): string {
         .join("&");
 }
 
-function createFormData(image: File | Buffer): FormData {
+function createFormData(image: File | Buffer, fieldName: string = "images[]"): FormData {
     const formData = new FormData();
 
     if (image instanceof File) {
-        formData.append("images[]", image);
+        formData.append(fieldName, image);
     } else {
-        // The filename doesn't affect the file type or file name that ends up in pictrs
-        formData.append(
-            "images[]",
-            new Blob([image], {type: "image/jpeg"}),
-            "image.jpg",
-        );
+        const isUploadFile = fieldName === "uploadfile";
+        const blob = new Blob([image], {type: isUploadFile ? "application/octet-stream" : "image/jpeg"});
+        const filename = isUploadFile ? "file.bin" : "image.jpg";
+        formData.append(fieldName, blob, filename);
     }
 
     return formData;
