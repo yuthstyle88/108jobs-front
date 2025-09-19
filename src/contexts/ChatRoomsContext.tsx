@@ -235,6 +235,11 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     const markRoomRead = useCallback(async (roomId: string) => {
         // Optimistically zero out unread count for UX; integrate API when available
         setState(prev => ({...prev, rooms: prev.rooms.map(r => r.id === roomId ? {...r, unreadCount: 0} : r)}));
+        try {
+            // Keep global unread badge in sync
+            const { markSeen } = (await import("@/stores/unreadStore")).useUnreadStore.getState();
+            markSeen(roomId);
+        } catch {}
         // If server endpoint exists, call it here
         // await axiosPrivate.post(`/messages/rooms/${roomId}/read`)
     }, []);
@@ -275,7 +280,14 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                 let nextRooms: any[] = prev.rooms.slice();
                 let updatedRoom = nextRooms[idx];
                 if (detail.unread === true && detail.roomId !== activeRoomId) {
-                    updatedRoom = { ...updatedRoom, unreadCount: (updatedRoom.unreadCount || 0) + 1 };
+                    const nextCount = (updatedRoom.unreadCount || 0) + 1;
+                    updatedRoom = { ...updatedRoom, unreadCount: nextCount };
+                    // Also update the global unread store so the header badge stays in sync even when the room is not open
+                    try {
+                        import("@/stores/unreadStore").then((mod) => {
+                            try { mod.useUnreadStore.getState().inc(detail.roomId, 1); } catch {}
+                        });
+                    } catch {}
                 }
 
                 // Remove from current position and insert at front
