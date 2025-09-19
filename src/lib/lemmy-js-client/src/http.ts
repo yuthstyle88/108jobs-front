@@ -257,6 +257,7 @@ import type {WorkFlowOperationResponse} from "./types/WorkFlowOperationResponse"
 import type {StartWorkflowForm} from "./types/StartWorkflowForm";
 import type {SubmitStartWorkForm} from "./types/SubmitStartWorkForm";
 import type {CancelJobForm} from "./types/CancelJobForm";
+import type {RequestRevisionForm} from "./types/RequestRevisionForm";
 import type {UserKeysResponse} from "./types/UserKeysResponse";
 import type {ChatHistoryQuery} from "./types/ChatHistoryQuery";
 import type {ChatMessagesResponse} from "./types/ChatMessagesResponse";
@@ -3073,6 +3074,24 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<SubmitStartWorkForm, WorkFlowOperationResponse>(
             HttpType.Post,
             "/account/services/submit-work",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Request revision on a submitted work (employer requests changes from freelancer).
+     */
+    @Security("bearerAuth")
+    @Post("/account/services/request-revision")
+    @Tags("Services")
+    async requestRevision(
+        @Body() form: RequestRevisionForm,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<RequestRevisionForm, WorkFlowOperationResponse>(
+            HttpType.Post,
+            "/account/services/request-revision",
             form,
             options,
         );

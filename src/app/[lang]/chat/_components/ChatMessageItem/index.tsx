@@ -91,6 +91,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   const isStartWork = parsed && (parsed as any).type === "start-work";
   const isCancelJob = parsed && (parsed as any).type === "cancel-job";
   const isSubmitDelivery = parsed && (parsed as any).type === "submit-delivery";
+  const isRequestRevision = parsed && (parsed as any).type === "request-revision";
 
   // Build a public URL for assets using NEXT_PUBLIC_API_HOST_NAME when href is relative
   const buildPublicUrl = (u?: string) => {
@@ -247,6 +248,22 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                 </div>
                 <div className="mt-0.5 text-xs text-red-700">
                   {t('profileChat.cancelledJobHint') || 'All ongoing actions are stopped. You can start a new chat to discuss again.'}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : isRequestRevision ? (
+          <div className={`max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 ${isIncoming ? 'ring-amber-200 bg-amber-50' : 'ring-amber-200 bg-amber-50'} px-4 py-3`}>
+            <div className="flex items-start gap-3">
+              <svg className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5a1 1 0 10-2 0v6a1 1 0 001 1h4a1 1 0 100-2h-3V7z" />
+              </svg>
+              <div className="min-w-0">
+                <div className={`text-sm font-semibold text-amber-800`}>
+                  {t('profileChat.requestRevision') || 'Request revision'}
+                </div>
+                <div className="mt-1 text-xs text-amber-900 whitespace-pre-line break-words">
+                  {((parsed as any)?.reason && String((parsed as any).reason)) || t('profileChat.requestRevisionMsg') || 'Please revise and resubmit.'}
                 </div>
               </div>
             </div>

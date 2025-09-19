@@ -21,6 +21,8 @@ export type CreateFlowActionsDeps = {
   // New: delivery submission support
   submitDelivery?: () => Promise<boolean>;
   hasSelectedFile?: () => boolean;
+  // New: employer request revision support
+  requestRevision?: () => Promise<boolean>;
 };
 
 export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
@@ -141,11 +143,6 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
     },
     onSubmitDelivery: deps.hasSelectedFile && deps.hasSelectedFile()
       ? async () => {
-          const confirmMsg =
-            t('profileChat.confirmSubmitDeliveryMessage') ||
-            'Are you sure you want to submit your delivery? You cannot edit it after submitting.';
-          const confirmed = typeof window !== 'undefined' ? window.confirm(confirmMsg) : true;
-          if (!confirmed) return;
           if (deps.submitDelivery) {
             try {
               const ok = await deps.submitDelivery();
@@ -158,8 +155,18 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
           goToStatus('PendingEmployerReview');
         }
       : undefined,
-    onRequestRevision: () => {
-      goToStatus('InProgress');
+    onRequestRevision: async () => {
+      if (deps.requestRevision) {
+        try {
+          const ok = await deps.requestRevision();
+          if (!ok) return;
+        } catch {
+          return;
+        }
+      } else {
+        // fallback: just move status if no impl provided
+        goToStatus('InProgress');
+      }
     },
     onReleasePayment: () => {
       goToStatus('Completed');

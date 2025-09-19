@@ -763,6 +763,45 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         }
     }, [messages, roomData, workflowIdState, selectedFile, localUser?.id, canSend, disabledReason, t]);
 
+    const requestRevisionAction = useCallback(async (): Promise<boolean> => {
+        try {
+            setError(null);
+            if (!canSend) {
+                setError(disabledReason || t('profileChat.cannotPerformAction') || 'You cannot perform this action right now.');
+                return false;
+            }
+            const workflowId = resolveWorkflowId(roomData as any, workflowIdState as any);
+            if (!workflowId) {
+                setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before requesting revision.');
+                return false;
+            }
+            const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
+            const reason = t('profileChat.requestRevisionMsg') || 'Please revise and resubmit.';
+            const form: any = { seqNumber, workflowId, reason };
+            const res = await HttpService.client.requestRevision(form as any);
+            const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
+            if (!ok) {
+                setError(((res as any)?.err?.message) || 'Failed to request revision.');
+                return false;
+            }
+            // Notify chat and move status
+            try {
+                const messageId = uuidv4();
+                const payload = { type: 'request-revision', reason } as any;
+                addOwnMessage(JSON.stringify(payload), messageId);
+                sendMessage({ message: JSON.stringify(payload), id: messageId });
+                const tsIso = new Date().toISOString();
+                window.dispatchEvent(new CustomEvent('chat:new-message', { detail: { roomId, content: reason, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+            } catch {}
+            goToStatus('InProgress');
+            return true;
+        } catch (e) {
+            const msg = e instanceof Error ? e.message : 'Unknown error';
+            setError(msg);
+            return false;
+        }
+    }, [canSend, disabledReason, t, roomData, workflowIdState, messages, roomId, localUser?.id]);
+
     const cancelJobAction = useCallback(async () => {
         try {
             // Block if cannot send or disabled
@@ -820,6 +859,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         getPostId: () => roomPostId,
         submitDelivery: async () => await submitDeliveryAction(),
         hasSelectedFile: () => !!selectedFile,
+        requestRevision: async () => await requestRevisionAction(),
     });
 
     const didInitialFetchRef = useRef(false);
@@ -910,6 +950,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
                 canApproveQuotation={isEmployer && hasProposedQuote}
                 isEmployer={isEmployer}
+                canSubmitDelivery={!!selectedFile}
                 onProposeQuote={flowActions.onProposeQuote}
                 onApproveQuotation={flowActions.onApproveQuotation}
                 onStartWork={!isEmployer ? flowActions.onStartWork : undefined}
@@ -992,6 +1033,34 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                     <div
                                         className="mb-2 p-2 rounded bg-yellow-50 text-yellow-800 text-xs border border-yellow-200">
                                         {(!myAvailable ? (t("profileChat.youAreNotAvailable") || "You are currently unavailable. Enable availability in your profile to send messages.") : (t("profileChat.userNotAvailable") || "This user is currently not accepting messages. You can read history but cannot send new messages."))}
+                                    </div>
+                                )}
+                                {selectedFile && (
+                                    <div className="mb-2 flex items-center justify-between rounded-md border border-blue-200 bg-blue-50 px-3 py-2">
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <span aria-hidden className="text-blue-600">📎</span>
+                                            <div className="min-w-0">
+                                                <p className="text-sm font-medium text-blue-900 truncate" title={selectedFile.fileName}>
+                                                    {selectedFile.fileName}
+                                                </p>
+                                                <a
+                                                    href={selectedFile.fileUrl}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="text-xs text-blue-700 hover:underline"
+                                                >
+                                                    Preview
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => setSelectedFile(null)}
+                                            className="text-xs text-blue-700 hover:text-blue-900"
+                                            aria-label="Remove attached file"
+                                        >
+                                            Remove
+                                        </button>
                                     </div>
                                 )}
                                 <ChatInput
@@ -1157,32 +1226,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                             </button>
                             <button
                                 className="rounded-md bg-red-600 hover:bg-red-700 text-white px-3 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm transition-all duration-200"
-                                onClick={() => {
+                                onClick={async () => {
                                     setShowReviewModal(false);
-                                    goToStatus("InProgress");
-                                    if (!canSend) {
-                                        setError(disabledReason);
-                                        return;
-                                    }
-                                    sendMessage({
-                                        message: JSON.stringify({ type: 'request-revision' }),
-                                        id: uuidv4(),
-                                    });
-                                    try {
-                                        const content = t("profileChat.requestRevisionMsg") || "Please revise and resubmit.";
-                                        const tsIso = new Date().toISOString();
-                                        window.dispatchEvent(
-                                            new CustomEvent("chat:new-message", {
-                                                detail: {
-                                                    roomId,
-                                                    content,
-                                                    senderId: Number(localUser?.id) || 0,
-                                                    timestamp: tsIso
-                                                },
-                                            })
-                                        );
-                                    } catch {
-                                    }
+                                    await requestRevisionAction();
                                 }}
                             >
                                 {t("profileChat.requestRevision") || "Request Revision"}

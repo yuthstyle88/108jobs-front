@@ -33,6 +33,8 @@ export type FreelanceChatFlowProps = {
     canApproveQuotation?: boolean;
     showStartButton?: boolean;
     isEmployer?: boolean;
+    // Control whether Submit Delivery can be clicked (requires an attached file)
+    canSubmitDelivery?: boolean;
 } & FlowActions;
 
 const STEPS: Array<{ key: StatusKey; title: string; sub: string }> = [
@@ -66,6 +68,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  canApproveQuotation = true,
                                                                  showStartButton = true,
                                                                  isEmployer = false,
+                                                                 canSubmitDelivery = false,
                                                                  onProposeQuote,
                                                                  onApproveQuotation,
                                                                  onStartWork,
@@ -79,6 +82,8 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
     const [showStartConfirm, setShowStartConfirm] = useState(false);
     const [showApproveConfirm, setShowApproveConfirm] = useState(false);
     const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+    const [showRevisionConfirm, setShowRevisionConfirm] = useState(false);
+    const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
     const { t } = useTranslation();
     const stepper = useWorkflowStepper();
     const derivedStatus = stepper?.state?.name as StatusKey | undefined;
@@ -158,13 +163,17 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 }
                 return [
                     btn(t('profileChat.uploadFileLink') || 'แนบไฟล์/ลิงก์', onUploadAsset),
-                    btn(t('profileChat.submitDelivery') || 'ส่งงาน', onSubmitDelivery, 'ghost'),
+                    btn(
+                        t('profileChat.submitDelivery') || 'ส่งงาน',
+                        canSubmitDelivery ? (() => setShowSubmitConfirm(true)) : undefined,
+                        'ghost'
+                    ),
                     ...(cancelBtn ? [cancelBtn] : []),
                 ];
             case 'PendingEmployerReview':
                 if (isEmployer) {
                     return [
-                        btn(t('profileChat.requestRevision') || 'ขอแก้ไขรอบใหม่', onRequestRevision),
+                        btn(t('profileChat.requestRevision') || 'ขอแก้ไขรอบใหม่', () => setShowRevisionConfirm(true)),
                         btn(t('profileChat.releasePayment') || 'ปล่อยเงิน/ปิดงาน', onReleasePayment, 'ghost'),
                         ...(cancelBtn ? [cancelBtn] : []),
                     ];
@@ -289,11 +298,33 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
               onClose={() => setShowApproveConfirm(false)}
               onConfirm={async () => {
                 setShowApproveConfirm(false);
-                await onApproveQuotation?.();
+                  onApproveQuotation?.();
               }}
               title={t('profileChat.confirmApproveQuotationTitle') || 'Approve quotation?'}
               message={t('profileChat.confirmApproveQuotationMessage') || 'This will approve the freelancer\'s quotation and convert it into an order.'}
               confirmText={t('profileChat.approveQuotation') || 'Approve quotation'}
+            />
+            <ConfirmActionModal
+              isOpen={showRevisionConfirm}
+              onClose={() => setShowRevisionConfirm(false)}
+              onConfirm={async () => {
+                setShowRevisionConfirm(false);
+                  onRequestRevision?.();
+              }}
+              title={t('profileChat.confirmRequestRevisionTitle') || 'Request a revision?'}
+              message={t('profileChat.confirmRequestRevisionMessage') || 'This will move the job back to In Progress and notify the freelancer to revise and resubmit.'}
+              confirmText={t('profileChat.requestRevision') || 'Request revision'}
+            />
+            <ConfirmActionModal
+              isOpen={showSubmitConfirm}
+              onClose={() => setShowSubmitConfirm(false)}
+              onConfirm={async () => {
+                setShowSubmitConfirm(false);
+                  onSubmitDelivery?.();
+              }}
+              title={t('profileChat.confirmSubmitDeliveryTitle') || 'Submit this delivery?'}
+              message={t('profileChat.confirmSubmitDeliveryMessage') || 'This will notify the employer and move the job to Pending Employer Review.'}
+              confirmText={t('profileChat.submitDelivery') || 'Submit delivery'}
             />
             <ConfirmActionModal
               isOpen={showCancelConfirm}
@@ -301,7 +332,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
               onConfirm={async () => {
                 setShowCancelConfirm(false);
                 if (onCancel) {
-                  await onCancel();
+                    onCancel();
                 } else if (stepper?.cancel) {
                   stepper.cancel();
                 }
