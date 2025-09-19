@@ -20,4 +20,5 @@ export type Workflow = {
   updatedAt?: string; // ISO datetime
   roomId: ChatRoomId;
   deliverableUrl?: string;
+  active: boolean;
 };

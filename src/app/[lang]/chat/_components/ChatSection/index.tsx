@@ -879,6 +879,39 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         });
     }, [messages]);
 
+    const renderFlowContent = () => (
+        <>
+            {!roomPostId && (
+                <div className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
+                    {t("profileChat.missingPostIdForQuotation") || "This chat is not linked to a post. You cannot create a quotation."}
+                </div>
+            )}
+            <FreelanceChatFlow
+                currentStatus={currentStatus}
+                onChangeStatus={handleChangeStatus}
+                orientation="vertical"
+                compact={false}
+                className="space-y-4"
+                started={hasStarted || currentStatus !== 'QuotationPending'}
+                onStart={handleStartWorkflow}
+                canStartWorkflow={isEmployer && Boolean(roomPostId)}
+                showStartButton={isEmployer}
+                canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
+                canApproveQuotation={isEmployer && hasProposedQuote}
+                isEmployer={isEmployer}
+                onProposeQuote={flowActions.onProposeQuote}
+                onApproveQuotation={flowActions.onApproveQuotation}
+                onStartWork={!isEmployer ? flowActions.onStartWork : undefined}
+                onUploadAsset={!isEmployer ? flowActions.onUploadAsset : undefined}
+                onSendMessage={flowActions.onSendMessage}
+                onSubmitDelivery={!isEmployer ? flowActions.onSubmitDelivery : undefined}
+                onRequestRevision={isEmployer ? flowActions.onRequestRevision : undefined}
+                onReleasePayment={isEmployer ? flowActions.onReleasePayment : undefined}
+                onCancel={() => { void cancelJobAction(); }}
+            />
+        </>
+    );
+
     if (!roomId) {
         return <LoadingBlur text="No room selected"/>;
     }
@@ -983,35 +1016,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         </button>
                     </div>
                     <div className="flex-1 p-3 sm:p-4 md:p-6 overflow-y-auto border-b border-gray-200">
-                        {!roomPostId && (
-                            <div
-                                className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
-                                {t("profileChat.missingPostIdForQuotation") || "This chat is not linked to a post. You cannot create a quotation."}
-                            </div>
-                        )}
-                        <FreelanceChatFlow
-                            currentStatus={currentStatus}
-                            onChangeStatus={handleChangeStatus}
-                            orientation="vertical"
-                            compact={false}
-                            className="space-y-4"
-                            started={hasStarted || currentStatus !== 'QuotationPending'}
-                            onStart={handleStartWorkflow}
-                            canStartWorkflow={isEmployer && Boolean(roomPostId)}
-                            showStartButton={isEmployer}
-                            canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
-                            canApproveQuotation={isEmployer && hasProposedQuote}
-                            isEmployer={isEmployer}
-                            onProposeQuote={flowActions.onProposeQuote}
-                            onApproveQuotation={flowActions.onApproveQuotation}
-                            onStartWork={!isEmployer ? flowActions.onStartWork : undefined}
-                            onUploadAsset={!isEmployer ? flowActions.onUploadAsset : undefined}
-                            onSendMessage={flowActions.onSendMessage}
-                            onSubmitDelivery={!isEmployer ? flowActions.onSubmitDelivery : undefined}
-                            onRequestRevision={isEmployer ? flowActions.onRequestRevision : undefined}
-                            onReleasePayment={isEmployer ? flowActions.onReleasePayment : undefined}
-                            onCancel={() => { void cancelJobAction(); }}
-                        />
+                        {renderFlowContent()}
                     </div>
                     <div className="p-3 sm:p-4 md:p-6 bg-white border-t border-gray-200">
                         <div
@@ -1060,35 +1065,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                             </button>
                         </div>
                         <div className="flex-1 p-3 sm:p-4 overflow-y-auto border-b border-gray-200">
-                            {!roomPostId && (
-                                <div
-                                    className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
-                                    {t("profileChat.missingPostIdForQuotation") || "This chat is not linked to a post. You cannot create a quotation."}
-                                </div>
-                            )}
-                            <FreelanceChatFlow
-                                currentStatus={currentStatus}
-                                onChangeStatus={handleChangeStatus}
-                                orientation="vertical"
-                                compact={false}
-                                className="space-y-4"
-                                started={hasStarted || currentStatus !== 'QuotationPending'}
-                                onStart={handleStartWorkflow}
-                                canStartWorkflow={isEmployer && Boolean(roomPostId)}
-                                showStartButton={isEmployer}
-                                canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
-                                canApproveQuotation={isEmployer && hasProposedQuote}
-                                isEmployer={isEmployer}
-                                onProposeQuote={flowActions.onProposeQuote}
-                                onApproveQuotation={flowActions.onApproveQuotation}
-                                onStartWork={!isEmployer ? flowActions.onStartWork : undefined}
-                                onUploadAsset={!isEmployer ? flowActions.onUploadAsset : undefined}
-                                onSendMessage={flowActions.onSendMessage}
-                                onSubmitDelivery={!isEmployer ? flowActions.onSubmitDelivery : undefined}
-                                onRequestRevision={isEmployer ? flowActions.onRequestRevision : undefined}
-                                onReleasePayment={isEmployer ? flowActions.onReleasePayment : undefined}
-                                onCancel={() => { void cancelJobAction(); }}
-                            />
+                            {renderFlowContent()}
                         </div>
                         <div className="p-3 sm:p-4 bg-white">
                             <div
