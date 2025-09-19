@@ -1,7 +1,7 @@
 // Centralized chat event helpers for consistent usage across the app
 // This provides typed helpers to emit and subscribe to chat CustomEvents
 // keeping window and event-name details in one place.
-
+import {isBrowser} from "@/utils/browser";
 export const CHAT_EVENT = {
   NEW_MESSAGE: 'chat:new-message',
   WS_RECONNECTED: 'ws:reconnected',
@@ -18,10 +18,6 @@ export type ChatNewMessageDetail = {
 };
 
 export type ChatNewMessageHandler = (detail: ChatNewMessageDetail) => void;
-
-function isBrowser(): boolean {
-  return typeof window !== 'undefined' && typeof window.addEventListener === 'function';
-}
 
 export function emitChatNewMessage(detail: ChatNewMessageDetail): void {
   if (!isBrowser()) return;
