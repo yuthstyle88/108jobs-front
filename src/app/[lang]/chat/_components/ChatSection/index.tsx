@@ -12,9 +12,9 @@ import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
 import {useWebSocket} from "@/contexts/RealtimeChatContext";
 import {useChatRooms} from "@/contexts/ChatRoomsContext";
-import { useUnreadStore } from "@/stores/unreadStore";
+import {useUnreadStore} from "@/stores/unreadStore";
 import FreelanceChatFlow, {FlowActions, StatusKey} from "@/components/FreelanceChatFlow";
-import { createFlowActions } from "@/utils/chat/flowActions";
+import {createFlowActions} from "@/utils/chat/flowActions";
 import QuotationModal, {ProposedQuotePayload} from "@/components/QuotationModal";
 import {useWorkflowStepper} from "@/hooks/useWorkflowMachine";
 import type {CreateInvoiceForm, ApproveQuotationForm} from "lemmy-js-client";
@@ -23,7 +23,7 @@ import {useHttpGet} from "@/hooks/useHttpGet";
 import {apiToUiStatus, useStateMachineStore} from "@/stores/stateMachineStore";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {HttpService} from "@/services/HttpService";
-import { resolveWorkflowId } from "@/utils/chat/workflow";
+import {resolveWorkflowId} from "@/utils/chat/workflow";
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -37,18 +37,49 @@ interface ChatSectionProps {
     partnerAvailable?: boolean;
 }
 
-const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, partnerAvatar, partnerId, partnerAvailable }) => {
-    const { markRoomRead, setActiveRoomId } = useChatRooms();
-    const { state: stepperState, send, canGo, ORDER} = useWorkflowStepper();
+// Helper to parse latest 'proposed-quote' payload from messages (expects newest-first ordering)
+// Returns the parsed JSON payload or null if none found.
+function getLatestProposedQuotePayload(msgs: Array<{ content?: string | null }>): any | null {
+    if (!Array.isArray(msgs)) return null;
+    for (const m of msgs) {
+        const content = (m?.content || '').trim();
+        if (!content.startsWith('{')) continue;
+        try {
+            const parsed = JSON.parse(content);
+            if (parsed && parsed.type === 'proposed-quote') {
+                return parsed;
+            }
+        } catch {}
+    }
+    return null;
+}
+
+// Convenience helper to retrieve the seq number from the latest proposed-quote payload
+function getLatestProposedQuoteSeq(msgs: Array<{ content?: string | null }>, defaultSeq: number = 1): number {
+    const latest = getLatestProposedQuotePayload(msgs);
+    const seq = Number((latest as any)?.quote?.workSteps?.[0]?.seq);
+    return Number.isFinite(seq) && seq > 0 ? seq : defaultSeq;
+}
+
+const ChatSection: React.FC<ChatSectionProps> = ({
+                                                     roomId,
+                                                     post,
+                                                     partnerName,
+                                                     partnerAvatar,
+                                                     partnerId,
+                                                     partnerAvailable
+                                                 }) => {
+    const {markRoomRead, setActiveRoomId} = useChatRooms();
+    const {state: stepperState, send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
     const [showJobDetailModal, setShowJobDetailModal] = useState<boolean>(false);
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const [workflowIdState, setWorkflowIdState] = useState<number | null>(null);
     type UIChatMessage = WsChatMessage & { isOwner?: boolean };
-        const [messages, setMessages] = useState<UIChatMessage[]>([]);
+    const [messages, setMessages] = useState<UIChatMessage[]>([]);
     const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
@@ -92,17 +123,25 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         });
         ro.observe(el);
         return () => {
-            try { ro.disconnect(); } catch {}
+            try {
+                ro.disconnect();
+            } catch {
+            }
         };
     }, []);
     const isSubmittingRef = useRef(false);
-    const { localUser, person } = useMyUser();
+    const {localUser, person} = useMyUser();
     const myAvailable = person?.available !== false; // treat undefined as available
     const canSend = (partnerAvailable !== false) && myAvailable;
     const disabledReason = !myAvailable
         ? (t("profileChat.youAreNotAvailable") || "You are currently unavailable. Enable availability in your profile to send messages.")
         : (t("profileChat.userNotAvailable") || "This user is currently not accepting messages. You can read history but cannot send new messages.");
-    const latestIncomingRef = useRef<{ roomId: string; content: string; senderId: number; timestamp: string } | null>(null);
+    const latestIncomingRef = useRef<{
+        roomId: string;
+        content: string;
+        senderId: number;
+        timestamp: string
+    } | null>(null);
 
     useEffect(() => {
         const handleResize = () => {
@@ -115,7 +154,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    const { sendMessage, fetchHistory, isConnected, hasMoreMessages, isFetching } = useWebSocket(
+    const {sendMessage, fetchHistory, isConnected, hasMoreMessages, isFetching} = useWebSocket(
         `chat_${roomId}`,
         (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) => {
             let parsed: WsChatMessage | WsChatMessage[];
@@ -171,10 +210,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                     }
                     if (idx >= 0) {
                         replaced++;
-                        copy[idx] = { ...(msg as any), status: newStatus } as UIChatMessage;
+                        copy[idx] = {...(msg as any), status: newStatus} as UIChatMessage;
                     } else {
                         added++;
-                        copy.push({ ...(msg as any), status: newStatus } as UIChatMessage);
+                        copy.push({...(msg as any), status: newStatus} as UIChatMessage);
                     }
                     const ts = new Date(msg.createdAt).getTime();
                     if (ts > latestTs) {
@@ -190,8 +229,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
 
                 // Defer room preview updates only for live, single-message events (skip during history)
                 if (!isHistoryBatch && inc > 0) {
-                    try { setNewSinceCount(prev => prev + inc); } catch {}
-                    try { incUnread(roomId, inc); } catch {}
+                    try {
+                        setNewSinceCount(prev => prev + inc);
+                    } catch {
+                    }
+                    try {
+                        incUnread(roomId, inc);
+                    } catch {
+                    }
                 }
                 if (!isHistoryBatch && items.length === 1 && latestTs > 0 && latestContent != null && latestSenderId != null) {
                     const tsIso = new Date(latestTs).toISOString();
@@ -207,13 +252,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         }
     );
 
-    // After commit, propagate last incoming message to ChatRooms context and auto-scroll for receiver
+    // After commit, propagate the last incoming message to ChatRooms context and auto-scroll for receiver
     useEffect(() => {
         if (isFetching) return; // suppress global updates while fetching history
         const d = latestIncomingRef.current;
         if (!d) return;
         try {
-            // Auto-scroll to latest when receiving a new message (receiver experience)
+            // Auto-scroll to the latest when receiving a new message (receiver experience)
             if (d.senderId !== Number(localUser?.id)) {
                 scrollToLatestSoon();
             }
@@ -221,8 +266,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             // no-op: last message previews removed
             try {
                 const isUnread = d.senderId !== Number(localUser?.id) && !atBottomRef.current;
-                window.dispatchEvent(new CustomEvent("chat:new-message", { detail: { ...d, unread: isUnread } }));
-            } catch {}
+                window.dispatchEvent(new CustomEvent("chat:new-message", {detail: {...d, unread: isUnread}}));
+            } catch {
+            }
         } finally {
             latestIncomingRef.current = null;
         }
@@ -234,9 +280,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             setActiveRoomId(roomId);
             markRoomRead(roomId);
             markSeen(roomId);
-        } catch {}
+        } catch {
+        }
         return () => {
-            try { setActiveRoomId(null); } catch {}
+            try {
+                setActiveRoomId(null);
+            } catch {
+            }
         };
     }, [roomId, setActiveRoomId, markRoomRead]);
 
@@ -254,55 +304,55 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
 
     const currentStatus: StatusKey = stepperState.name as StatusKey;
 
-        // Load status from API server when available
-        const { data: roomData } = useHttpGet("getChatRoom", [roomId as any]);
-        const roomPostId = (roomData as any)?.room?.room?.postId ?? (roomData as any)?.room?.post?.id ?? (roomData as any)?.postId ?? (roomData as any)?.room?.postId;
-                const roomCommentId = (roomData as any)?.room?.currentComment?.id ?? (roomData as any)?.currentCommentId ?? (roomData as any)?.room?.currentCommentId;
-        const isInvalidRoom = useMemo(() => {
-            const rd: any = roomData as any;
-            if (!rd) return false; // wait for data load
-            const errField = String(rd?.error ?? rd?.err ?? rd?.message ?? "").toLowerCase();
-            const hasRoom = !!rd?.room && typeof rd.room === "object" && !!rd.room.room && typeof rd.room.room === "object";
-            return errField.includes("notfound") || !hasRoom;
-        }, [roomData]);
-        if (isInvalidRoom) {
-            return (
-                <div className="flex items-center justify-center w-full h-[calc(100vh-80px)]">
-                    <div className="text-center p-6">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-2">{t("profileChat.roomNotFound") || "Room not found"}</h2>
-                        <p className="text-gray-600">{t("profileChat.roomNotFoundDesc") || "The chat room you are trying to access does not exist or may have been deleted."}</p>
-                    </div>
+    // Load status from API server when available
+    const {data: roomData} = useHttpGet("getChatRoom", [roomId as any]);
+    const roomPostId = (roomData as any)?.room?.room?.postId ?? (roomData as any)?.room?.post?.id ?? (roomData as any)?.postId ?? (roomData as any)?.room?.postId;
+    const roomCommentId = (roomData as any)?.room?.currentComment?.id ?? (roomData as any)?.currentCommentId ?? (roomData as any)?.room?.currentCommentId;
+    const isInvalidRoom = useMemo(() => {
+        const rd: any = roomData as any;
+        if (!rd) return false; // wait for data load
+        const errField = String(rd?.error ?? rd?.err ?? rd?.message ?? "").toLowerCase();
+        const hasRoom = !!rd?.room && typeof rd.room === "object" && !!rd.room.room && typeof rd.room.room === "object";
+        return errField.includes("notfound") || !hasRoom;
+    }, [roomData]);
+    if (isInvalidRoom) {
+        return (
+            <div className="flex items-center justify-center w-full h-[calc(100vh-80px)]">
+                <div className="text-center p-6">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-2">{t("profileChat.roomNotFound") || "Room not found"}</h2>
+                    <p className="text-gray-600">{t("profileChat.roomNotFoundDesc") || "The chat room you are trying to access does not exist or may have been deleted."}</p>
                 </div>
-            );
-        }
-        // Determine if current user is the employer (job poster). Creator id is personId.
-        const postCreatorId = (post as any)?.creatorId ?? (roomData as any)?.room?.post?.creatorId ?? (roomData as any)?.post?.creatorId;
-        const isEmployer = postCreatorId != null && String(postCreatorId) === String(person?.id);
-        const setWorkflowState = useStateMachineStore((s) => s.set);
-        useEffect(() => {
-            const rd: any = roomData as any;
-            if (!rd) return;
-            const apiStatusRaw = rd?.room?.workflow?.status ?? rd?.workflow?.status ?? rd?.room?.status ?? rd?.status ?? rd?.room?.workflowStatus ?? rd?.workflowStatus;
-            // If server reports a workflow status, mark as started and sync UI state
-            if (typeof apiStatusRaw === 'string') {
-                if (!hasStarted) setHasStarted(true);
-                const uiStatus = apiToUiStatus(apiStatusRaw as any);
-                if (uiStatus && uiStatus !== currentStatus) {
-                    setWorkflowState(uiStatus as StatusKey);
-                }
+            </div>
+        );
+    }
+    // Determine if current user is the employer (job poster). Creator id is personId.
+    const postCreatorId = (post as any)?.creatorId ?? (roomData as any)?.room?.post?.creatorId ?? (roomData as any)?.post?.creatorId;
+    const isEmployer = postCreatorId != null && String(postCreatorId) === String(person?.id);
+    const setWorkflowState = useStateMachineStore((s) => s.set);
+    useEffect(() => {
+        const rd: any = roomData as any;
+        if (!rd) return;
+        const apiStatusRaw = rd?.room?.workflow?.status ?? rd?.workflow?.status ?? rd?.room?.status ?? rd?.status ?? rd?.room?.workflowStatus ?? rd?.workflowStatus;
+        // If server reports a workflow status, mark as started and sync UI state
+        if (typeof apiStatusRaw === 'string') {
+            if (!hasStarted) setHasStarted(true);
+            const uiStatus = apiToUiStatus(apiStatusRaw as any);
+            if (uiStatus && uiStatus !== currentStatus) {
+                setWorkflowState(uiStatus as StatusKey);
             }
-        }, [roomData, setWorkflowState, currentStatus, hasStarted]);
+        }
+    }, [roomData, setWorkflowState, currentStatus, hasStarted]);
 
 
     const goToStatus = (target: StatusKey) => {
         const targetIdx = ORDER.indexOf(target);
         let curIdx = ORDER.indexOf(currentStatus);
         while (curIdx < targetIdx) {
-            send({ type: "NEXT" });
+            send({type: "NEXT"});
             curIdx++;
         }
         while (curIdx > targetIdx) {
-            send({ type: "BACK" });
+            send({type: "BACK"});
             curIdx--;
         }
     };
@@ -313,14 +363,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         const toIdx = ORDER.indexOf(key);
         if (toIdx === curIdx) return;
         if (Math.abs(toIdx - curIdx) === 1) {
-            return toIdx > curIdx ? send({ type: "NEXT" }) : send({ type: "BACK" });
+            return toIdx > curIdx ? send({type: "NEXT"}) : send({type: "BACK"});
         }
     };
 
-    const { execute: createInvoice } = useHttpPost("createInvoice");
-    const { execute: startWorkflow } = useHttpPost("startWorkflow");
-    const { execute: approveQuotationApi } = useHttpPost("approveQuotation");
-        const { execute: submitStartWorkApi } = useHttpPost("submitStartWork");
+    const {execute: createInvoice} = useHttpPost("createInvoice");
+    const {execute: startWorkflow} = useHttpPost("startWorkflow");
+    const {execute: approveQuotationApi} = useHttpPost("approveQuotation");
+    const {execute: submitStartWorkApi} = useHttpPost("submitStartWork");
 
     const handleStartWorkflow = async () => {
         setError(null);
@@ -334,7 +384,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             // For now, default to first step
             let seqNumber = 1;
 
-            const res = await startWorkflow({ postId, seqNumber, roomId: roomId});
+            const res = await startWorkflow({postId, seqNumber, roomId: roomId});
             if (res?.state === REQUEST_STATE.SUCCESS && (res as any).data?.success) {
                 setHasStarted(true);
                 const wfId = (res as any)?.data?.workflowId;
@@ -344,7 +394,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             } else {
                 setError(
                     t("profileChat.startWorkflowFailed") ||
-                        ((res as any)?.err?.message || "Failed to start workflow. Please try again.")
+                    ((res as any)?.err?.message || "Failed to start workflow. Please try again.")
                 );
             }
         } catch (e) {
@@ -354,17 +404,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
     };
 
     const handleQuotationSubmit = async (data: ProposedQuotePayload) => {
-            if (!canSend) {
-                setError(disabledReason);
-                setShowQuotationModal(false);
-                return;
-            }
-            // Prevent duplicate quotations: disallow if a quotation has already been proposed
-            if (hasProposedQuote) {
-                setError(t('profileChat.quotationAlreadySent') || 'You have already sent a quotation for this chat.');
-                setShowQuotationModal(false);
-                return;
-            }
+        if (!canSend) {
+            setError(disabledReason);
+            setShowQuotationModal(false);
+            return;
+        }
+        // Prevent duplicate quotations: disallow if a quotation has already been proposed
+        if (hasProposedQuote) {
+            setError(t('profileChat.quotationAlreadySent') || 'You have already sent a quotation for this chat.');
+            setShowQuotationModal(false);
+            return;
+        }
         setError(null); // Reset error state before attempting submission
         try {
             // Create invoice via API
@@ -398,23 +448,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             const readable =
                 t("profileChat.proposeQuoteMsg") ||
                 `Proposed quotation: ${data.projectName} - $${data.amount.toFixed(2)}`;
-            const payload = { type: "proposed-quote", quote: data, billingId: createdBillingId } as any;
-            
+            const payload = {type: "proposed-quote", quote: data, billingId: createdBillingId} as any;
+
             // Add message to local state
-            setMessages((prev) => [
-                {
-                    id: messageId,
-                    roomId: currentRoom?.roomId || roomId,
-                    content: JSON.stringify(payload),
-                    createdAt: new Date().toISOString(),
-                    senderId: Number(localUser?.id) || 0,
-                    receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
-                    status: 1,
-                    isOwner: true,
-                } as WsChatMessage,
-                ...prev,
-            ]);
-            scrollToLatestSoon();
+            addOwnMessage(JSON.stringify(payload), messageId);
 
             // Send message via WebSocket
             sendMessage({
@@ -451,6 +488,26 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
     };
 
 
+    // Helper to add a local (owner) message to the list and scroll
+    const addOwnMessage = useCallback((content: string, id?: string) => {
+        const messageId = id ?? uuidv4();
+        setMessages((prev) => [
+            {
+                id: messageId,
+                roomId: currentRoom?.roomId || roomId,
+                content,
+                createdAt: new Date().toISOString(),
+                senderId: Number(localUser?.id) || 0,
+                receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
+                status: 1,
+                isOwner: true,
+            } as WsChatMessage,
+            ...prev,
+        ]);
+        scrollToLatestSoon();
+        return messageId;
+    }, [currentRoom, roomId, localUser?.id]);
+
     const onSubmit = useCallback(
         (data: MessageForm) => {
             if (!canSend) {
@@ -458,7 +515,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 return;
             }
             if (isSubmittingRef.current) {
-                if (process.env.NODE_ENV !== "production") console.debug("Duplicate submit ignored");
                 return;
             }
             const message = data.message?.trim() || "";
@@ -478,20 +534,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             isSubmittingRef.current = true;
             const messageId = uuidv4();
 
-            setMessages((prev) => [
-                {
-                    id: messageId,
-                    roomId: currentRoom?.roomId || roomId,
-                    content: contentToSend || "",
-                    createdAt: new Date().toISOString(),
-                    senderId: Number(localUser?.id) || 0,
-                    receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
-                    status: 1,
-                    isOwner: true,
-                } as WsChatMessage,
-                ...prev,
-            ]);
-            scrollToLatestSoon();
+            addOwnMessage(contentToSend || "", messageId);
             try {
                 const tsIso = new Date().toISOString();
                 const preview = selectedFile
@@ -500,7 +543,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 try {
                     window.dispatchEvent(
                         new CustomEvent("chat:new-message", {
-                            detail: { roomId, content: preview, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                            detail: {roomId, content: preview, senderId: Number(localUser?.id) || 0, timestamp: tsIso},
                         })
                     );
                 } catch {
@@ -508,7 +551,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             } catch {
             }
 
-            sendMessage({ message: contentToSend, id: messageId });
+            sendMessage({message: contentToSend, id: messageId});
 
             setSelectedFile(null);
             isSubmittingRef.current = false;
@@ -533,7 +576,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
 
             // Call chat file upload API
             setError(null);
-            const res = await HttpService.client.uploadFile({ image: file } as any);
+            const res = await HttpService.client.uploadFile({image: file} as any);
             if (res.state !== REQUEST_STATE.SUCCESS) {
                 const msg = (res as any)?.err?.message || "Failed to upload file.";
                 setError(msg);
@@ -565,18 +608,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             setError(null);
 
             // Resolve billingId from latest proposed-quote message
-            let latestPayload: any | null = null;
-            for (const m of messages) {
-                const content = (m.content || '').trim();
-                if (!content.startsWith('{')) continue;
-                try {
-                    const parsed = JSON.parse(content);
-                    if (parsed && parsed.type === 'proposed-quote') {
-                        latestPayload = parsed;
-                        break; // messages are newest-first
-                    }
-                } catch {}
-            }
+            const latestPayload: any | null = getLatestProposedQuotePayload(messages as any);
 
             // Try billingId from payload first
             let billingId = Number(latestPayload?.billingId);
@@ -593,7 +625,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                 }
 
                 try {
-                    const res = await HttpService.client.getBillingByComment({ commentId });
+                    const res = await HttpService.client.getBillingByComment({commentId});
                     if (res?.state === REQUEST_STATE.SUCCESS && (res as any)?.data) {
                         const billing = (res as any).data as any;
                         billingId = Number(billing?.id);
@@ -617,14 +649,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             // Seq number from proposed quote if available
             const seqNumber = Number(latestPayload?.quote?.workSteps?.[0]?.seq) || 1;
 
-            const form: ApproveQuotationForm = { seqNumber, billingId, walletId: person?.walletId , workflowId } as any;
+            const form: ApproveQuotationForm = {seqNumber, billingId, walletId: person?.walletId, workflowId} as any;
             const res = await approveQuotationApi(form as any);
-            console.log("[CHAT][APPROVE QUOTATION] API response: ", res);
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
             if (!ok) {
                 setError(((res as any)?.err?.message) || 'Failed to approve quotation.');
             }
-            return !!ok;
+            return ok;
         } catch (e) {
             const msg = e instanceof Error ? e.message : 'Unknown error';
             setError(msg);
@@ -644,19 +675,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             }
 
             // resolve seq from latest proposed-quote message if exists
-            let latestPayload: any | null = null;
-            for (const m of messages) {
-                const content = (m.content || '').trim();
-                if (!content.startsWith('{')) continue;
-                try {
-                    const parsed = JSON.parse(content);
-                    if (parsed && parsed.type === 'proposed-quote') {
-                        latestPayload = parsed;
-                        break;
-                    }
-                } catch {}
-            }
-            const seqNumber = Number(latestPayload?.quote?.workSteps?.[0]?.seq) || 1;
+            const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
 
             const form: any = {
                 seqNumber,
@@ -669,13 +688,119 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
             if (!ok) {
                 setError(((res as any)?.err?.message) || 'Failed to start work.');
             }
-            return !!ok;
+            return ok;
         } catch (e) {
             const msg = e instanceof Error ? e.message : 'Unknown error';
             setError(msg);
             return false;
         }
     }, [messages, roomData, workflowIdState, submitStartWorkApi, t]);
+
+    const submitDeliveryAction = useCallback(async (): Promise<boolean> => {
+        try {
+            setError(null);
+            if (!canSend) {
+                setError(disabledReason);
+                return false;
+            }
+            if (!selectedFile || !selectedFile.fileUrl) {
+                setError(t('profileChat.attachFileFirst') || 'Please attach a file before submitting delivery.');
+                return false;
+            }
+            const workflowId = resolveWorkflowId(roomData as any, workflowIdState as any);
+            if (!workflowId) {
+                setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before submitting delivery.');
+                return false;
+            }
+
+            // Resolve seq number from latest proposed-quote if available
+            const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
+
+            const form: any = {
+                seqNumber,
+                workflowId,
+                workDescription: t('profileChat.submitDeliveryMsg') || 'Freelancer submitted a delivery.',
+                deliverableUrl: selectedFile.fileUrl,
+            };
+
+            const res = await HttpService.client.submitWork(form as any);
+            const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
+            if (!ok) {
+                setError(((res as any)?.err?.message) || 'Failed to submit delivery.');
+                return false;
+            }
+
+            // Send a structured chat message to notify and show the file
+            const messageId = uuidv4();
+            const payload = {
+                type: 'submit-delivery',
+                url: selectedFile.fileUrl,
+                name: selectedFile.fileName,
+                mime: selectedFile.fileType,
+            } as any;
+
+            addOwnMessage(JSON.stringify(payload), messageId);
+
+            sendMessage({message: JSON.stringify(payload), id: messageId});
+            try {
+                const preview = `[Delivery] ${selectedFile.fileName}`;
+                const tsIso = new Date().toISOString();
+                window.dispatchEvent(
+                    new CustomEvent("chat:new-message", {
+                        detail: {roomId, content: preview, senderId: Number(localUser?.id) || 0, timestamp: tsIso},
+                    })
+                );
+            } catch {
+            }
+
+            // Clear selected file after successful submit
+            setSelectedFile(null);
+            return true;
+        } catch (e) {
+            const msg = e instanceof Error ? e.message : 'Unknown error';
+            setError(msg);
+            return false;
+        }
+    }, [messages, roomData, workflowIdState, selectedFile, localUser?.id, canSend, disabledReason, t]);
+
+    const cancelJobAction = useCallback(async () => {
+        try {
+            // Block if cannot send or disabled
+            if (!canSend) {
+                setError(disabledReason || t('profileChat.cannotPerformAction') || 'You cannot perform this action right now.');
+                return false;
+            }
+            const workflowId = resolveWorkflowId(roomData as any, workflowIdState as any);
+            if (!workflowId) {
+                setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before cancelling.');
+                return false;
+            }
+            // Resolve seq number similar to other actions
+            const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
+            const form: any = { seqNumber, workflowId };
+            const res = await HttpService.client.cancelJob(form as any);
+            const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
+            if (!ok) {
+                setError(((res as any)?.err?.message) || 'Failed to cancel job.');
+                return false;
+            }
+            // Optionally notify chat
+            try {
+                const messageId = uuidv4();
+                const readable = t('profileChat.cancelledJobMsg') || 'The job has been cancelled.';
+                addOwnMessage(readable, messageId);
+                sendMessage({ message: JSON.stringify({ type: 'cancel-job' }), id: messageId });
+                const tsIso = new Date().toISOString();
+                window.dispatchEvent(new CustomEvent('chat:new-message', { detail: { roomId, content: readable, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+            } catch {}
+            goToStatus('Cancelled');
+            return true;
+        } catch (e) {
+            const msg = e instanceof Error ? e.message : 'Unknown error';
+            setError(msg);
+            return false;
+        }
+    }, [canSend, disabledReason, t, roomData, workflowIdState, messages, roomId, localUser?.id]);
 
     const flowActions: FlowActions = createFlowActions({
         t,
@@ -693,6 +818,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
         approveQuotation,
         startWork: async () => await handleStartWorkAction(),
         getPostId: () => roomPostId,
+        submitDelivery: async () => await submitDeliveryAction(),
+        hasSelectedFile: () => !!selectedFile,
     });
 
     const didInitialFetchRef = useRef(false);
@@ -753,7 +880,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
     }, [messages]);
 
     if (!roomId) {
-        return <LoadingBlur text="No room selected" />;
+        return <LoadingBlur text="No room selected"/>;
     }
 
     return (
@@ -771,7 +898,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                         ref={setScrollRef}
                         data-testid="chat-list"
                         className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-4 pt-3 sm:pt-4 bg-gray-50 flex"
-                        style={{ paddingBottom: `calc(${bottomPad}px + env(safe-area-inset-bottom))` }}
+                        style={{paddingBottom: `calc(${bottomPad}px + env(safe-area-inset-bottom))`}}
                         aria-live="polite"
                     >
                         <ChatMessages
@@ -787,7 +914,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                         const newHeight = rootEl?.scrollHeight || 0;
                                         if (rootEl) rootEl.scrollTop += newHeight - oldHeight;
                                     })
-                                    .catch(() => {});
+                                    .catch(() => {
+                                    });
                             }}
                             hasMore={hasMoreMessages}
                             isFetching={isFetching}
@@ -796,9 +924,18 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                 setIsAtBottom(isAtBottom);
                                 if (isAtBottom) {
                                     setNewSinceCount(0);
-                                    setMessages(prev => prev.map(m => (!m.isOwner && m.status === 0 ? { ...m, status: 1 } : m)));
-                                    try { markRoomRead(roomId); } catch {}
-                                    try { markSeen(roomId); } catch {}
+                                    setMessages(prev => prev.map(m => (!m.isOwner && m.status === 0 ? {
+                                        ...m,
+                                        status: 1
+                                    } : m)));
+                                    try {
+                                        markRoomRead(roomId);
+                                    } catch {
+                                    }
+                                    try {
+                                        markSeen(roomId);
+                                    } catch {
+                                    }
                                 }
                             }}
                         />
@@ -808,7 +945,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                             <div className="flex-1">
                                 {error && <p className="text-sm text-red-600 mb-2">{error}</p>}
                                 {!canSend && (
-                                    <div className="mb-2 p-2 rounded bg-yellow-50 text-yellow-800 text-xs border border-yellow-200">
+                                    <div
+                                        className="mb-2 p-2 rounded bg-yellow-50 text-yellow-800 text-xs border border-yellow-200">
                                         {(!myAvailable ? (t("profileChat.youAreNotAvailable") || "You are currently unavailable. Enable availability in your profile to send messages.") : (t("profileChat.userNotAvailable") || "This user is currently not accepting messages. You can read history but cannot send new messages."))}
                                     </div>
                                 )}
@@ -837,14 +975,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                             onClick={() => setIsFlowOpen(false)}
                             aria-label="Close job flow sidebar"
                         >
-                            <svg className="w-4 sm:w-5 h-4 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            <svg className="w-4 sm:w-5 h-4 sm:h-5" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                      d="M6 18L18 6M6 6l12 12"/>
                             </svg>
                         </button>
                     </div>
                     <div className="flex-1 p-3 sm:p-4 md:p-6 overflow-y-auto border-b border-gray-200">
                         {!roomPostId && (
-                            <div className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
+                            <div
+                                className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
                                 {t("profileChat.missingPostIdForQuotation") || "This chat is not linked to a post. You cannot create a quotation."}
                             </div>
                         )}
@@ -860,15 +1001,16 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                             showStartButton={isEmployer}
                             canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
                             canApproveQuotation={isEmployer && hasProposedQuote}
+                            isEmployer={isEmployer}
                             onProposeQuote={flowActions.onProposeQuote}
                             onApproveQuotation={flowActions.onApproveQuotation}
                             onStartWork={!isEmployer ? flowActions.onStartWork : undefined}
-                            onUploadAsset={flowActions.onUploadAsset}
+                            onUploadAsset={!isEmployer ? flowActions.onUploadAsset : undefined}
                             onSendMessage={flowActions.onSendMessage}
-                            onSubmitDelivery={flowActions.onSubmitDelivery}
-                            onRequestRevision={flowActions.onRequestRevision}
-                            onReleasePayment={flowActions.onReleasePayment}
-                            onCancel={flowActions.onCancel}
+                            onSubmitDelivery={!isEmployer ? flowActions.onSubmitDelivery : undefined}
+                            onRequestRevision={isEmployer ? flowActions.onRequestRevision : undefined}
+                            onReleasePayment={isEmployer ? flowActions.onReleasePayment : undefined}
+                            onCancel={() => { void cancelJobAction(); }}
                         />
                     </div>
                     <div className="p-3 sm:p-4 md:p-6 bg-white border-t border-gray-200">
@@ -900,7 +1042,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                     <div
                         className="md:hidden fixed top-16 sm:top-20 right-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] w-[80vw] sm:w-[70vw] max-w-[360px] bg-white border-l shadow-xl z-40 flex flex-col"
                     >
-                        <div className="p-3 sm:p-4 bg-blue-50 border-b border-blue-100 flex items-center justify-between">
+                        <div
+                            className="p-3 sm:p-4 bg-blue-50 border-b border-blue-100 flex items-center justify-between">
                             <h2 className="text-base sm:text-lg font-semibold text-blue-800">
                                 {t("profileChat.jobFlow") || "Job Flow"}
                             </h2>
@@ -909,14 +1052,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                 onClick={() => setIsFlowOpen(false)}
                                 aria-label="Close job flow drawer"
                             >
-                                <svg className="w-4 sm:w-5 h-4 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                <svg className="w-4 sm:w-5 h-4 sm:h-5" fill="none" stroke="currentColor"
+                                     viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                          d="M6 18L18 6M6 6l12 12"/>
                                 </svg>
                             </button>
                         </div>
                         <div className="flex-1 p-3 sm:p-4 overflow-y-auto border-b border-gray-200">
                             {!roomPostId && (
-                                <div className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
+                                <div
+                                    className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
                                     {t("profileChat.missingPostIdForQuotation") || "This chat is not linked to a post. You cannot create a quotation."}
                                 </div>
                             )}
@@ -932,15 +1078,16 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                 showStartButton={isEmployer}
                                 canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
                                 canApproveQuotation={isEmployer && hasProposedQuote}
+                                isEmployer={isEmployer}
                                 onProposeQuote={flowActions.onProposeQuote}
                                 onApproveQuotation={flowActions.onApproveQuotation}
                                 onStartWork={!isEmployer ? flowActions.onStartWork : undefined}
-                                onUploadAsset={flowActions.onUploadAsset}
+                                onUploadAsset={!isEmployer ? flowActions.onUploadAsset : undefined}
                                 onSendMessage={flowActions.onSendMessage}
-                                onSubmitDelivery={flowActions.onSubmitDelivery}
-                                onRequestRevision={flowActions.onRequestRevision}
-                                onReleasePayment={flowActions.onReleasePayment}
-                                onCancel={flowActions.onCancel}
+                                onSubmitDelivery={!isEmployer ? flowActions.onSubmitDelivery : undefined}
+                                onRequestRevision={isEmployer ? flowActions.onRequestRevision : undefined}
+                                onReleasePayment={isEmployer ? flowActions.onReleasePayment : undefined}
+                                onCancel={() => { void cancelJobAction(); }}
                             />
                         </div>
                         <div className="p-3 sm:p-4 bg-white">
@@ -993,7 +1140,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                 onClick={() => {
                                     setShowReviewModal(false);
                                     goToStatus("Completed");
-                                    if (!canSend) { setError(disabledReason); return; }
+                                    if (!canSend) {
+                                        setError(disabledReason);
+                                        return;
+                                    }
                                     sendMessage({
                                         message: t("profileChat.deliveryAccepted") || "Delivery accepted. Proceed to payment.",
                                         id: uuidv4(),
@@ -1003,7 +1153,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                         const tsIso = new Date().toISOString();
                                         window.dispatchEvent(
                                             new CustomEvent("chat:new-message", {
-                                                detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                                                detail: {
+                                                    roomId,
+                                                    content,
+                                                    senderId: Number(localUser?.id) || 0,
+                                                    timestamp: tsIso
+                                                },
                                             })
                                         );
                                     } catch {
@@ -1017,7 +1172,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                 onClick={() => {
                                     setShowReviewModal(false);
                                     goToStatus("InProgress");
-                                    if (!canSend) { setError(disabledReason); return; }
+                                    if (!canSend) {
+                                        setError(disabledReason);
+                                        return;
+                                    }
                                     sendMessage({
                                         message: t("profileChat.requestRevisionMsg") || "Please revise and resubmit.",
                                         id: uuidv4(),
@@ -1027,7 +1185,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                         const tsIso = new Date().toISOString();
                                         window.dispatchEvent(
                                             new CustomEvent("chat:new-message", {
-                                                detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso },
+                                                detail: {
+                                                    roomId,
+                                                    content,
+                                                    senderId: Number(localUser?.id) || 0,
+                                                    timestamp: tsIso
+                                                },
                                             })
                                         );
                                     } catch {
@@ -1062,7 +1225,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({ roomId, post, partnerName, pa
                                 onClick={() => setShowJobDetailModal(false)}
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                          d="M6 18L18 6M6 6l12 12"/>
                                 </svg>
                             </button>
                         </div>

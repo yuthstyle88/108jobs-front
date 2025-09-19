@@ -91,6 +91,12 @@ const MyJobs = () => {
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                         {t("profileJob.tableHeaderPostDate")}
                                     </th>
+                                    <th
+                                        scope="col"
+                                        className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider"
+                                    >
+                                        {t("profileJob.tableHeaderProposals")}
+                                    </th>
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider min-w-[120px]">
                                         {t("profileJob.tableHeaderDeadline")}
                                     </th>
@@ -138,6 +144,9 @@ const MyJobs = () => {
                                                 </td>
                                                 <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
                                                     {formatDateTime(job.post.publishedAt, "datetime")}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-base text-text-primary">
+                                                    {job.post.comments}
                                                 </td>
                                                 <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-600">
                                                     {formatDateTime(job.post.deadline || "", "date")}

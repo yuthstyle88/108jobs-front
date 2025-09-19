@@ -256,6 +256,7 @@ import type {ApproveQuotationForm} from "./types/ApproveQuotationForm";
 import type {WorkFlowOperationResponse} from "./types/WorkFlowOperationResponse";
 import type {StartWorkflowForm} from "./types/StartWorkflowForm";
 import type {SubmitStartWorkForm} from "./types/SubmitStartWorkForm";
+import type {CancelJobForm} from "./types/CancelJobForm";
 import type {UserKeysResponse} from "./types/UserKeysResponse";
 import type {ChatHistoryQuery} from "./types/ChatHistoryQuery";
 import type {ChatMessagesResponse} from "./types/ChatMessagesResponse";
@@ -3054,6 +3055,42 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<SubmitStartWorkForm, WorkFlowOperationResponse>(
             HttpType.Post,
             "/account/services/start-work",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Submit work (freelancer finishes work by submitting their project).
+     */
+    @Security("bearerAuth")
+    @Post("/account/services/submit-work")
+    @Tags("Services")
+    async submitWork(
+        @Body() form: SubmitStartWorkForm,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<SubmitStartWorkForm, WorkFlowOperationResponse>(
+            HttpType.Post,
+            "/account/services/submit-work",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Cancel a workflow job.
+     */
+    @Security("bearerAuth")
+    @Post("/account/services/cancel-job")
+    @Tags("Services")
+    async cancelJob(
+        @Body() form: CancelJobForm,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<CancelJobForm, WorkFlowOperationResponse>(
+            HttpType.Post,
+            "/account/services/cancel-job",
             form,
             options,
         );

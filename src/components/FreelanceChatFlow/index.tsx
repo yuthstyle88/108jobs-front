@@ -78,6 +78,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                              }) => {
     const [showStartConfirm, setShowStartConfirm] = useState(false);
     const [showApproveConfirm, setShowApproveConfirm] = useState(false);
+    const [showCancelConfirm, setShowCancelConfirm] = useState(false);
     const { t } = useTranslation();
     const stepper = useWorkflowStepper();
     const derivedStatus = stepper?.state?.name as StatusKey | undefined;
@@ -120,7 +121,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
         );
 
         const cancelBtn = stepper?.canCancel && key !== 'Completed' && key !== 'Cancelled'
-            ? btn(t('profileChat.cancelJob') || 'ยกเลิกงาน', onCancel || stepper?.cancel, 'ghost')
+            ? btn(t('profileChat.cancelJob') || 'ยกเลิกงาน', () => setShowCancelConfirm(true), 'ghost')
             : null;
 
         switch (key) {
@@ -148,15 +149,31 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     ...(cancelBtn ? [cancelBtn] : []),
                 ].filter(Boolean) as React.ReactElement[];
             case 'InProgress':
+                if (isEmployer) {
+                    return [
+                        <div key="wait-freelancer" className="w-full text-xs text-gray-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2">
+                            {t('profileChat.waitForFreelancerSubmit') || 'Waiting for the freelancer to submit their work.'}
+                        </div>,
+                        ...(cancelBtn ? [cancelBtn] : []),
+                    ];
+                }
                 return [
                     btn(t('profileChat.uploadFileLink') || 'แนบไฟล์/ลิงก์', onUploadAsset),
                     btn(t('profileChat.submitDelivery') || 'ส่งงาน', onSubmitDelivery, 'ghost'),
                     ...(cancelBtn ? [cancelBtn] : []),
                 ];
             case 'PendingEmployerReview':
+                if (isEmployer) {
+                    return [
+                        btn(t('profileChat.requestRevision') || 'ขอแก้ไขรอบใหม่', onRequestRevision),
+                        btn(t('profileChat.releasePayment') || 'ปล่อยเงิน/ปิดงาน', onReleasePayment, 'ghost'),
+                        ...(cancelBtn ? [cancelBtn] : []),
+                    ];
+                }
                 return [
-                    btn(t('profileChat.requestRevision') || 'ขอแก้ไขรอบใหม่', onRequestRevision),
-                    btn(t('profileChat.releasePayment') || 'ปล่อยเงิน/ปิดงาน', onReleasePayment, 'ghost'),
+                    <div key="wait-employer" className="w-full text-xs text-gray-600 bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2">
+                        {t('profileChat.waitForEmployerReview') || 'Your delivery was submitted. Waiting for employer review.'}
+                    </div>,
                     ...(cancelBtn ? [cancelBtn] : []),
                 ];
             case 'Completed':
@@ -278,6 +295,21 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
               title={t('profileChat.confirmApproveQuotationTitle') || 'Approve quotation?'}
               message={t('profileChat.confirmApproveQuotationMessage') || 'This will approve the freelancer\'s quotation and convert it into an order.'}
               confirmText={t('profileChat.approveQuotation') || 'Approve quotation'}
+            />
+            <ConfirmActionModal
+              isOpen={showCancelConfirm}
+              onClose={() => setShowCancelConfirm(false)}
+              onConfirm={async () => {
+                setShowCancelConfirm(false);
+                if (onCancel) {
+                  await onCancel();
+                } else if (stepper?.cancel) {
+                  stepper.cancel();
+                }
+              }}
+              title={t('profileChat.confirmCancelJobTitle') || 'Cancel this job?'}
+              message={t('profileChat.confirmCancelJobMessage') || 'This will cancel the current workflow. This action cannot be undone.'}
+              confirmText={t('profileChat.cancelJob') || 'Cancel job'}
             />
         </aside>
     );

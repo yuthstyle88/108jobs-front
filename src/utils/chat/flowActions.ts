@@ -18,6 +18,9 @@ export type CreateFlowActionsDeps = {
   approveQuotation?: () => Promise<boolean>;
   startWork?: () => Promise<boolean>;
   getPostId?: () => string | number | undefined;
+  // New: delivery submission support
+  submitDelivery?: () => Promise<boolean>;
+  hasSelectedFile?: () => boolean;
 };
 
 export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
@@ -136,10 +139,25 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
       const input = (scrollContainerRef.current as any)?.querySelector('input');
       if (input) input.focus();
     },
-    onSubmitDelivery: () => {
-      goToStatus('PendingEmployerReview');
-      setShowReviewModal(true);
-    },
+    onSubmitDelivery: deps.hasSelectedFile && deps.hasSelectedFile()
+      ? async () => {
+          const confirmMsg =
+            t('profileChat.confirmSubmitDeliveryMessage') ||
+            'Are you sure you want to submit your delivery? You cannot edit it after submitting.';
+          const confirmed = typeof window !== 'undefined' ? window.confirm(confirmMsg) : true;
+          if (!confirmed) return;
+          if (deps.submitDelivery) {
+            try {
+              const ok = await deps.submitDelivery();
+              if (!ok) return;
+            } catch {
+              return;
+            }
+          }
+          // Move to review pending; employer will get review modal on their side
+          goToStatus('PendingEmployerReview');
+        }
+      : undefined,
     onRequestRevision: () => {
       goToStatus('InProgress');
     },
