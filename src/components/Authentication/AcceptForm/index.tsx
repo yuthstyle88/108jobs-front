@@ -102,6 +102,7 @@ export const AcceptForm = ({ title }
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <CustomInput
         label={authen?.labelEmail}
+        required={true}
         name="email"
         register={register("email")}
         error={errors.email?.message}
@@ -112,6 +113,7 @@ export const AcceptForm = ({ title }
 
       <CustomInput
         label={authen?.labelPassword}
+        required={true}
         name="password"
         type="password"
         register={register("password")}
@@ -123,6 +125,7 @@ export const AcceptForm = ({ title }
 
       <CustomInput
         label={authen?.labelConfirmPassword}
+        required={true}
         name="confirmPassword"
         type="password"
         register={register("confirmPassword")}
