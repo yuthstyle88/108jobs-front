@@ -23,6 +23,8 @@ export type CreateFlowActionsDeps = {
   hasSelectedFile?: () => boolean;
   // New: employer request revision support
   requestRevision?: () => Promise<boolean>;
+  // New: employer approve work & release payment
+  approveWork?: () => Promise<boolean>;
 };
 
 export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
@@ -168,7 +170,15 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
         goToStatus('InProgress');
       }
     },
-    onReleasePayment: () => {
+    onReleasePayment: async () => {
+      if (deps.approveWork) {
+        try {
+          const ok = await deps.approveWork();
+          if (!ok) return; // Abort if API failed
+        } catch {
+          return;
+        }
+      }
       goToStatus('Completed');
     },
     onCancel: () => {

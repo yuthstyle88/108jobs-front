@@ -407,3 +407,4 @@ export type { Billing } from "./types/Billing";
 export type { GetBillingByCommentQuery } from "./types/GetBillingByCommentQuery";
 export type { SubmitStartWorkForm } from "./types/SubmitStartWorkForm";
 export type { RequestRevisionForm } from "./types/RequestRevisionForm";
+export type { ApproveWorkForm } from "./types/ApproveWorkForm";

@@ -258,6 +258,7 @@ import type {StartWorkflowForm} from "./types/StartWorkflowForm";
 import type {SubmitStartWorkForm} from "./types/SubmitStartWorkForm";
 import type {CancelJobForm} from "./types/CancelJobForm";
 import type {RequestRevisionForm} from "./types/RequestRevisionForm";
+import type {ApproveWorkForm} from "./types/ApproveWorkForm";
 import type {UserKeysResponse} from "./types/UserKeysResponse";
 import type {ChatHistoryQuery} from "./types/ChatHistoryQuery";
 import type {ChatMessagesResponse} from "./types/ChatMessagesResponse";
@@ -3092,6 +3093,24 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<RequestRevisionForm, WorkFlowOperationResponse>(
             HttpType.Post,
             "/account/services/request-revision",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Approve work and release payment (employer approves).
+     */
+    @Security("bearerAuth")
+    @Post("/account/services/approve-work")
+    @Tags("Services")
+    async approveWork(
+        @Body() form: ApproveWorkForm,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<ApproveWorkForm, WorkFlowOperationResponse>(
+            HttpType.Post,
+            "/account/services/approve-work",
             form,
             options,
         );

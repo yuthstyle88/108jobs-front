@@ -371,6 +371,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {execute: startWorkflow} = useHttpPost("startWorkflow");
     const {execute: approveQuotationApi} = useHttpPost("approveQuotation");
     const {execute: submitStartWorkApi} = useHttpPost("submitStartWork");
+    const {execute: approveWorkApi} = useHttpPost("approveWork");
 
     const handleStartWorkflow = async () => {
         setError(null);
@@ -802,6 +803,49 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         }
     }, [canSend, disabledReason, t, roomData, workflowIdState, messages, roomId, localUser?.id]);
 
+    const approveWorkAction = useCallback(async (): Promise<boolean> => {
+        try {
+            setError(null);
+            if (!canSend) {
+                setError(disabledReason || t('profileChat.cannotPerformAction') || 'You cannot perform this action right now.');
+                return false;
+            }
+            const workflowId = resolveWorkflowId(roomData as any, workflowIdState as any);
+            if (!workflowId) {
+                setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before approval.');
+                return false;
+            }
+            const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
+            // Resolve the latest delivery comment id from room data
+            const commentId = Number((roomData as any)?.room?.currentComment?.id ?? (roomData as any)?.currentCommentId ?? undefined);
+            if (!commentId || Number.isNaN(commentId)) {
+                setError('Missing delivery reference for approval.');
+                return false;
+            }
+            const form: any = { seqNumber, workflowId, commentId };
+            const res = await approveWorkApi(form as any);
+            const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
+            if (!ok) {
+                setError(((res as any)?.err?.message) || 'Failed to approve work.');
+                return false;
+            }
+            // Notify chat that delivery accepted
+            try {
+                const messageId = uuidv4();
+                addOwnMessage(JSON.stringify({ type: 'delivery-accepted' }), messageId);
+                sendMessage({ message: JSON.stringify({ type: 'delivery-accepted' }), id: messageId });
+                const tsIso = new Date().toISOString();
+                const content = t('profileChat.deliveryAccepted') || 'Delivery accepted. Proceed to payment.';
+                window.dispatchEvent(new CustomEvent('chat:new-message', { detail: { roomId, content, senderId: Number(localUser?.id) || 0, timestamp: tsIso } }));
+            } catch {}
+            return true;
+        } catch (e) {
+            const msg = e instanceof Error ? e.message : 'Unknown error';
+            setError(msg);
+            return false;
+        }
+    }, [canSend, disabledReason, t, roomData, workflowIdState, messages, roomId, localUser?.id, approveWorkApi]);
+
     const cancelJobAction = useCallback(async () => {
         try {
             // Block if cannot send or disabled
@@ -860,6 +904,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         submitDelivery: async () => await submitDeliveryAction(),
         hasSelectedFile: () => !!selectedFile,
         requestRevision: async () => await requestRevisionAction(),
+        approveWork: async () => await approveWorkAction(),
     });
 
     const didInitialFetchRef = useRef(false);
@@ -1043,14 +1088,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                                 <p className="text-sm font-medium text-blue-900 truncate" title={selectedFile.fileName}>
                                                     {selectedFile.fileName}
                                                 </p>
-                                                <a
-                                                    href={selectedFile.fileUrl}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    className="text-xs text-blue-700 hover:underline"
-                                                >
-                                                    Preview
-                                                </a>
                                             </div>
                                         </div>
                                         <button

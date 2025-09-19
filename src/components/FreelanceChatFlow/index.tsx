@@ -84,6 +84,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
     const [showCancelConfirm, setShowCancelConfirm] = useState(false);
     const [showRevisionConfirm, setShowRevisionConfirm] = useState(false);
     const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
+    const [showReleaseConfirm, setShowReleaseConfirm] = useState(false);
     const { t } = useTranslation();
     const stepper = useWorkflowStepper();
     const derivedStatus = stepper?.state?.name as StatusKey | undefined;
@@ -174,7 +175,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 if (isEmployer) {
                     return [
                         btn(t('profileChat.requestRevision') || 'ขอแก้ไขรอบใหม่', () => setShowRevisionConfirm(true)),
-                        btn(t('profileChat.releasePayment') || 'ปล่อยเงิน/ปิดงาน', onReleasePayment, 'ghost'),
+                        btn(t('profileChat.releasePayment') || 'ปล่อยเงิน/ปิดงาน', () => setShowReleaseConfirm(true), 'ghost'),
                         ...(cancelBtn ? [cancelBtn] : []),
                     ];
                 }
@@ -340,6 +341,17 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
               title={t('profileChat.confirmCancelJobTitle') || 'Cancel this job?'}
               message={t('profileChat.confirmCancelJobMessage') || 'This will cancel the current workflow. This action cannot be undone.'}
               confirmText={t('profileChat.cancelJob') || 'Cancel job'}
+            />
+            <ConfirmActionModal
+              isOpen={showReleaseConfirm}
+              onClose={() => setShowReleaseConfirm(false)}
+              onConfirm={async () => {
+                setShowReleaseConfirm(false);
+                onReleasePayment?.();
+              }}
+              title={t('profileChat.confirmReleasePaymentTitle') || 'Release payment and close job?'}
+              message={t('profileChat.confirmReleasePaymentMessage') || 'This will approve the submitted work, release funds to the freelancer, and close the job.'}
+              confirmText={t('profileChat.releasePayment') || 'Release payment / Close job'}
             />
         </aside>
     );
