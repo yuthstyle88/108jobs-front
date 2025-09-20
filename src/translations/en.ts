@@ -992,6 +992,7 @@ export const en = {
             tittleHeaderMenuSection2: "For corporate clients",
             tittlePopularHeaderSearch: "Popular Searches",
             labelSignInButton: "Login",
+            labelSignUpButton: "Sign Up",
             failedToLoad: "Failed to load",
             tryRefreshingPage: "Please try refreshing the page",
             labelContinue: "Continue"

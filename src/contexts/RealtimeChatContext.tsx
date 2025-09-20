@@ -7,7 +7,7 @@ import {decrypt, encrypt} from "@/lib/web-crypto";
 import {HttpService, UserService} from "@/services";
 import type {ChatMessage} from "lemmy-js-client";
 import {v4 as uuidv4} from "uuid";
-import {addOnce, getReceiverIdFromRoom, isBase64Like, safeParse} from "@/utils/realtime";
+import {addOnce, getReceiverIdFromRoom, isBase64Like, safeParse, unwrapPhoenixFrame, isValidIncomingChatPayload, isValidOutgoingChatPayload} from "@/utils/chat-socket-utils";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import { isBrowser } from "@/utils/browser";
@@ -272,11 +272,18 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                     const token = UserService.Instance.auth();
                     const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
 
-                    let payload: any = safeParse(event.data);
-                    if (payload === 'pong' || payload === 'ping' || payload?.op === 'Ping') {
+                    let payload: any = unwrapPhoenixFrame(event);
+                    // Drop heartbeats / pings and null-ish frames early
+                    if (payload == null || payload === 'pong' || payload === 'ping' || payload?.op === 'Ping') {
+                      return;
+                    }
+
+                    // Validate incoming payload early
+                    if (!isValidIncomingChatPayload(payload)) {
+                        // Drop frames that are not message/pagination shapes
+                        // console.debug('onmessage: invalid payload shape', payload);
                         return;
                     }
-                    if (typeof payload === 'string') payload = safeParse(payload);
 
                     const transformedItems: ChatMessage[] = [];
 
@@ -506,6 +513,11 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 }
             } catch (e) {
                 // console.warn(`sendMessage: E2EE encryption failed, sending plaintext`, e);
+            }
+
+            if (!isValidOutgoingChatPayload(payload)) {
+                console.warn('sendMessage: Invalid outgoing payload. Message not sent.', payload);
+                return;
             }
 
             if (socket?.readyState === WebSocket.OPEN) {

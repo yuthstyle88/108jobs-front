@@ -987,6 +987,7 @@ export const vi = {
             tittleHeaderMenuSection2: "Dành cho khách hàng doanh nghiệp",
             tittlePopularHeaderSearch: "Tìm kiếm phổ biến",
             labelSignInButton: "Đăng nhập",
+            labelSignUpButton: "Sign Up",
             labelContinue: "Tiếp tục",
             failedToLoad: "Tải không thành công",
         },

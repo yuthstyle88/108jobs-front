@@ -2,7 +2,7 @@ import {isBrowser} from "@/utils/browser";
 import {testHost} from "@/utils/config";
 
 export function getBaseLocal(s = "") {
-  return `https://api-fastwork-stg.ibrowe.com`;
+  return `http${s}://${process.env.NEXT_PUBLIC_API_HOST_NAME}`;
 }
 
 export function getExternalHost() {
@@ -34,7 +34,15 @@ export function getInternalHost() {
 }
 
 export function getSecure(): string {
-  return "";
+  if (isBrowser()) {
+    return window.location.protocol === "https:" ? "s" : "";
+  }
+  const raw =
+    (process.env.NEXT_PUBLIC_USE_HTTPS ?? process.env.USE_HTTPS ?? "")
+      .toString()
+      .trim()
+      .toLowerCase();
+  return (raw === "true" || raw === "1" || raw === "yes" || raw === "on") ? "s" : "";
 }
 
 
@@ -57,5 +65,5 @@ export function httpExternalPath(path: string) {
 }
 
 export function isHttps() {
-  return getSecure() === "";
+  return getSecure() === "s";
 }

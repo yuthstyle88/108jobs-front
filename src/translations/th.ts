@@ -970,6 +970,7 @@ export const th = {
             tittleHeaderMenuSection2: "สำหรับลูกค้าองค์กร",
             tittlePopularHeaderSearch: "การค้นหายอดนิยม",
             labelSignInButton: "เข้าสู่ระบบ",
+            labelSignUpButton: "ลงทะเบียน",
             labelContinue: "ดำเนินการต่อ",
             failedToLoad: "โหลดไม่สำเร็จ",
         },
