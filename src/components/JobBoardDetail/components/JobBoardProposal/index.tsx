@@ -30,6 +30,7 @@ const JobBoardProposal = ({ postId, jobCreatorId }: JobBoardProposalProps) => {
     const route = useRouter();
     const params = useParams();
     const currentLang = (params?.lang as string) || 'th';
+    const currentLocale = currentLang === "th" ? "th-TH" : currentLang === "vi" ? "vi-VN" : "en-US";
 
     const handlePageChange = (pageCursor: string | null) => {
         setCurrentCursor(pageCursor || undefined);
@@ -110,11 +111,8 @@ const JobBoardProposal = ({ postId, jobCreatorId }: JobBoardProposalProps) => {
 
                                 <div className="flex flex-col gap-3">
                                     <div className="flex flex-col items-end gap-1">
-                                        <p className="text-sm font-semibold text-text-primary font-sans">
-                                            Submitted
-                                        </p>
                                         <p className="text-sm text-text-secondary font-sans">
-                                            {new Date(cv.comment.publishedAt).toLocaleString("en-US", {
+                                            {new Date(cv.comment.publishedAt).toLocaleString(currentLocale, {
                                                 year: "numeric",
                                                 month: "short",
                                                 day: "numeric",

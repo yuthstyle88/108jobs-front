@@ -1,5 +1,4 @@
 "use client";
-import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import {Pagination} from "@/components/Pagination";
 import {Badge} from "@/components/ui/Badge";
 import {ProfileImage} from "@/constants/images";
@@ -12,6 +11,7 @@ import ConfirmCloseJob from "../_components/ConfirmCloseJobs";
 import JobBoardTab from "../_components/JobBoardTab";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {useTranslation} from "react-i18next";
+import LoadingBlur from "@/components/LoadingBlur";
 
 const MyJobs = () => {
     const {t} = useTranslation();
@@ -27,11 +27,6 @@ const MyJobs = () => {
     });
 
     const [selectedJob, setSelectedJob] = useState<{ id: string } | null>(null);
-
-    const handleOpenModal = (jobId: string) => {
-        setSelectedJob({ id: jobId });
-    };
-
     const handleCloseModal = () => {
         setSelectedJob(null);
     };
@@ -73,7 +68,7 @@ const MyJobs = () => {
                     <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
                         {isJobsLoading ? (
                             <div className="py-20 text-center">
-                                <LoadingMultiCircle />
+                                <LoadingBlur text={t("profileJob.loadingJobs")} />
                             </div>
                         ) : (
                             <table className="min-w-full divide-y divide-gray-200">
@@ -170,7 +165,7 @@ const MyJobs = () => {
                                                 colSpan={6}
                                                 className="px-6 py-16 text-center text-gray-500 text-base"
                                             >
-                                                No job posts found
+                                                {t("profileJob.noJob")}
                                             </td>
                                         </tr>
                                     )
@@ -180,7 +175,7 @@ const MyJobs = () => {
                                             colSpan={6}
                                             className="px-6 py-16 text-center text-gray-500 text-base"
                                         >
-                                            No job posts found
+                                            {t("profileJob.noJob")}
                                         </td>
                                     </tr>
                                 )}

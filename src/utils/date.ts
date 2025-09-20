@@ -75,7 +75,7 @@ export async function verifyDateFnsImports(): Promise<ImportReport> {
   return report;
 }
 
-function bestDateFns(
+export function bestDateFns(
   languages: readonly string[],
   i18n_full_lang: string,
 ): DateFnsDesc {

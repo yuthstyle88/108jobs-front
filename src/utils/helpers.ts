@@ -526,7 +526,8 @@ export function assertExists<T>(value: T | null | undefined, message?: string): 
     return value;
 }
 
-export function toCamelCaseLastSegment(path: string): string {
+export function toCamelCaseLastSegment(path: string | undefined): string {
+    if (!path) return '';
     const last = path.split('.').pop() || '';
     return last
         .replace(/[_-](\w)/g, (_, c) => c.toUpperCase()) // snake_case → camelCase

@@ -8,8 +8,10 @@ import {useChatRooms} from "@/contexts/ChatRoomsContext";
 import type {ChatRoom} from "@/types/chat";
 import {debounce} from "lodash";
 import ChatListItem from "@/app/[lang]/chat/_components/ChatListItem";
+import {useTranslation} from "react-i18next";
 
 const ChatWrapper = () => {
+    const { t } = useTranslation();
     const params = useParams();
     const activeRoomId = params?.roomId as string | undefined;
     const { lang: currentLang } = useLanguage();
@@ -73,12 +75,9 @@ const ChatWrapper = () => {
             >
                 {/* Header with Search */}
                 <div className="p-3 sm:p-4 border-b border-gray-200 bg-gray-50">
-                    <h2 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800 text-center">
-                        Chat History
-                    </h2>
                     <input
                         type="text"
-                        placeholder="Search chats..."
+                        placeholder={t("profileChat.searchChat")}
                         defaultValue={searchQuery}
                         onChange={handleSearchChange}
                         className="w-full mt-2 sm:mt-3 p-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow bg-white"

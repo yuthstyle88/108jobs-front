@@ -1,5 +1,4 @@
 "use client";
-import LoadingMultiCircle from "@/components/LoadingMultiCircle";
 import {ProfileImage} from "@/constants/images";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,6 +19,7 @@ import {
 import ErrorState from "@/components/ErrorState";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {useCommunities} from "@/hooks/communites-api/useCommunities";
+import LoadingBlur from "@/components/LoadingBlur";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -349,7 +349,7 @@ const JobBoard = () => {
                     <div className="overflow-x-auto border-1 border-borderPrimary rounded-lg">
                         {isLoading ? (
                             <div className="py-12 text-center">
-                                <LoadingMultiCircle/>
+                                <LoadingBlur text={""}/>
                             </div>
                         ) : (
                             <table className="min-w-full divide-y divide-gray-200" role="table"

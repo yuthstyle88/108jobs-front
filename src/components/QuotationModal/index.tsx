@@ -1,12 +1,12 @@
 'use client';
 
-import React, {useMemo, useState} from 'react';
-import {useTranslation} from 'react-i18next';
-import {z} from 'zod';
-import {addDaysYMD, isBeforeToday} from '@/utils/helpers';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faTrash} from '@fortawesome/free-solid-svg-icons';
-import {CustomInput} from "@/components/ui/InputField";
+import React, { useMemo, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { z } from 'zod';
+import { addDaysYMD, isBeforeToday } from '@/utils/helpers';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { CustomInput } from "@/components/ui/InputField";
 
 export interface WorkStep {
     seq: number;
@@ -41,14 +41,14 @@ interface QuotationModalProps {
     projectName?: string;
 }
 
-const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmit, postId, commentId, partnerId, projectName}) => {
-    const {t} = useTranslation();
+const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubmit, postId, commentId, partnerId, projectName }) => {
+    const { t } = useTranslation();
 
-    const {ProposedQuoteSchema} = useMemo(() => {
+    const { ProposedQuoteSchema } = useMemo(() => {
         const WorkStepSchema = z.object({
             seq: z.number().int().min(1, t('profileChat.validation.workStepSeq') || 'Sequence must be at least 1'),
             description: z.string().min(1, t('profileChat.validation.workStepDescription') || 'Work step description is required'),
-            amount: z.number().positive({message: t('profileChat.validation.workStepAmount') || 'Work step amount must be greater than 0'}),
+            amount: z.number().positive({ message: t('profileChat.validation.workStepAmount') || 'Work step amount must be greater than 0' }),
             status: z.string(),
         });
 
@@ -56,12 +56,12 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
             partnerId: z.number().int().nonnegative(),
             postId: z.number().int().nonnegative(),
             commentId: z.number().int().nonnegative(),
-            amount: z.number().positive({message: t('profileChat.validation.totalAmount') || 'Total amount must be greater than 0'}),
+            amount: z.number().positive({ message: t('profileChat.validation.totalAmount') || 'Total amount must be greater than 0' }),
             proposal: z.string().min(1, t('profileChat.validation.invalidForm') || 'Proposal is required'),
             projectName: z.string().min(1, t('profileChat.validation.invalidForm') || 'Project name is required'),
             projectDetails: z.string().min(1, t('profileChat.validation.invalidForm') || 'Project details are required'),
             workSteps: z.array(WorkStepSchema).min(1, t('profileChat.validation.workSteps') || 'At least one work step is required'),
-            workingDays: z.number().int().positive({message: t('profileChat.validation.workingDays') || 'Total working days must be greater than 0'}),
+            workingDays: z.number().int().positive({ message: t('profileChat.validation.workingDays') || 'Total working days must be greater than 0' }),
             deliverables: z.array(z.string().min(1, t('profileChat.validation.deliverable') || 'Deliverable description is required')).min(1, t('profileChat.validation.deliverables') || 'At least one deliverable is required'),
             note: z.string().optional(),
             startingDay: z.string().min(1, t('profileChat.validation.workStepDates') || 'Both starting and delivery days are required'),
@@ -71,22 +71,22 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
                 ctx.addIssue({
                     code: z.ZodIssueCode.custom,
                     message: t('profileChat.validation.startDateNotPast') || 'Start date cannot be earlier than today',
-                    path: ['startingDay']
+                    path: ['startingDay'],
                 });
             }
-            if (data.startingDay && data.workingDays > 0) {
+            if (data.startingDay && data.workingDays > 0 && data.deliveryDay) {
                 const expected = addDaysYMD(data.startingDay, data.workingDays);
                 if (data.deliveryDay !== expected) {
                     ctx.addIssue({
                         code: z.ZodIssueCode.custom,
                         message: t('profileChat.validation.invalidForm') || 'Delivery date must equal start date plus working days',
-                        path: ['deliveryDay']
+                        path: ['deliveryDay'],
                     });
                 }
             }
         });
 
-        return {WorkStepSchema, ProposedQuoteSchema};
+        return { WorkStepSchema, ProposedQuoteSchema };
     }, [t]);
 
     const [form, setForm] = useState<ProposedQuotePayload>({
@@ -112,22 +112,31 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
 
     const [errors, setErrors] = useState<Record<string, string>>({});
 
-    React.useEffect(() => {
-        setForm((prev) => ({...prev, postId: postId ?? 0}));
+    useEffect(() => {
+        setForm((prev) => ({ ...prev, postId: postId ?? 0 }));
     }, [postId]);
 
-    React.useEffect(() => {
-        setForm((prev) => ({...prev, commentId: commentId ?? 0}));
+    useEffect(() => {
+        setForm((prev) => ({ ...prev, commentId: commentId ?? 0 }));
     }, [commentId]);
 
     const updateField = <K extends keyof ProposedQuotePayload>(key: K, value: ProposedQuotePayload[K]) => {
         setForm((prev) => {
-            const updatedForm = {...prev, [key]: value};
+            const updatedForm = { ...prev, [key]: value };
             if (key === 'startingDay' || key === 'workingDays') {
                 const startingDay = key === 'startingDay' ? value as string : prev.startingDay;
-                const workingDays = key === 'workingDays' ? value as number : prev.workingDays;
-                if (startingDay && workingDays > 0) {
+                const workingDays = key === 'workingDays' ? Number(value) : prev.workingDays;
+                console.log('Updating deliveryDay:', { startingDay, workingDays }); // Debug log
+                if (startingDay && !isNaN(workingDays) && workingDays >= 0) {
                     updatedForm.deliveryDay = addDaysYMD(startingDay, workingDays);
+                    // Clear deliveryDay error when auto-generated
+                    setErrors((prevErrors) => {
+                        const newErrors = { ...prevErrors };
+                        delete newErrors['deliveryDay'];
+                        return newErrors;
+                    });
+                } else {
+                    updatedForm.deliveryDay = '';
                 }
             }
             return updatedForm;
@@ -139,13 +148,14 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
         setForm((prev) => {
             const copy = [...prev.workSteps];
             const current = copy[index] as WorkStep;
-            copy[index] = {...current, [key]: value};
-            return {...prev, workSteps: copy};
+            copy[index] = { ...current, [key]: value };
+            return { ...prev, workSteps: copy };
         });
         validateWorkStep(index);
     };
 
     const addWorkStep = () => {
+        const newIndex = form.workSteps.length;
         setForm((prev) => ({
             ...prev,
             workSteps: [
@@ -154,69 +164,90 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
                     seq: prev.workSteps.length + 1,
                     description: '',
                     amount: 0,
-                    workingDays: 1,
                     status: 'QuotationPending',
-                    startingDay: '',
-                    deliveryDay: '',
                 },
             ],
         }));
+        setTimeout(() => validateWorkStep(newIndex), 0); // Validate after state update
     };
 
     const removeWorkStep = (index: number) => {
         if (index === 0) return; // Prevent removing the first work step
         setForm((prev) => {
-            const copy = prev.workSteps.filter((_, i) => i !== index).map((w, i) => ({...w, seq: i + 1}));
-            return {...prev, workSteps: copy};
+            const copy = prev.workSteps.filter((_, i) => i !== index).map((w, i) => ({ ...w, seq: i + 1 }));
+            return { ...prev, workSteps: copy };
         });
-        validateWorkStep(index);
+        setErrors((prev) => {
+            const newErrors = { ...prev };
+            Object.keys(newErrors).forEach((key) => {
+                if (key.startsWith(`workSteps.${index}.`)) {
+                    delete newErrors[key];
+                }
+            });
+            return newErrors;
+        });
+        setTimeout(() => validateForm(), 0); // Validate form for array-level errors
     };
 
     const updateDeliverable = (index: number, value: string) => {
         setForm((prev) => {
             const copy = [...prev.deliverables];
             copy[index] = value;
-            return {...prev, deliverables: copy};
+            return { ...prev, deliverables: copy };
         });
         validateDeliverable(index);
     };
 
     const addDeliverable = () => {
-        setForm((prev) => ({...prev, deliverables: [...prev.deliverables, '']}));
+        const newIndex = form.deliverables.length;
+        setForm((prev) => ({ ...prev, deliverables: [...prev.deliverables, ''] }));
+        setTimeout(() => validateDeliverable(newIndex), 0); // Validate after state update
     };
 
     const removeDeliverable = (index: number) => {
         if (form.deliverables.length <= 1) return; // Prevent removing the last deliverable
-        setForm((prev) => ({...prev, deliverables: prev.deliverables.filter((_, i) => i !== index)}));
-        validateDeliverable(index);
+        setForm((prev) => ({ ...prev, deliverables: prev.deliverables.filter((_, i) => i !== index) }));
+        setErrors((prev) => {
+            const newErrors = { ...prev };
+            delete newErrors[`deliverables.${index}`];
+            return newErrors;
+        });
+        setTimeout(() => validateForm(), 0); // Validate form for array-level errors
     };
 
     const validateField = async <K extends keyof ProposedQuotePayload>(key: K, value: ProposedQuotePayload[K]) => {
-        const tempForm = {...form, [key]: value};
+        const tempForm = { ...form, [key]: value };
         const result = await ProposedQuoteSchema.safeParseAsync(tempForm);
         if (!result.success) {
             const error = result.error.issues.find((issue) => issue.path[0] === key);
-            setErrors((prev) => ({...prev, [key]: error?.message || ''}));
+            setErrors((prev) => ({
+                ...prev,
+                [key]: error?.message || '',
+            }));
         } else {
-            setErrors((prev) => ({...prev, [key]: ''}));
+            setErrors((prev) => {
+                const newErrors = { ...prev };
+                delete newErrors[key];
+                return newErrors;
+            });
         }
     };
 
     const validateWorkStep = async (index: number) => {
         const result = await ProposedQuoteSchema.safeParseAsync(form);
         if (!result.success) {
-            const errorsForStep = result.error.issues.filter((issue) => issue.path.join('.').startsWith(`workSteps[${index}]`));
+            const pathPrefix = `workSteps.${index}.`;
+            const errorsForStep = result.error.issues.filter((issue) => issue.path.join('.').startsWith(pathPrefix));
             const newErrors: Record<string, string> = {};
             errorsForStep.forEach((issue) => {
-                const field = issue.path[issue.path.length - 1];
-                newErrors[`workSteps[${index}].${field}`] = issue.message;
+                newErrors[issue.path.join('.')] = issue.message;
             });
-            setErrors((prev) => ({...prev, ...newErrors}));
+            setErrors((prev) => ({ ...prev, ...newErrors }));
         } else {
             setErrors((prev) => {
-                const newErrors = {...prev};
-                Object.keys(prev).forEach((key) => {
-                    if (key.startsWith(`workSteps[${index}]`)) {
+                const newErrors = { ...prev };
+                Object.keys(newErrors).forEach((key) => {
+                    if (key.startsWith(`workSteps.${index}.`)) {
                         delete newErrors[key];
                     }
                 });
@@ -228,10 +259,31 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
     const validateDeliverable = async (index: number) => {
         const result = await ProposedQuoteSchema.safeParseAsync(form);
         if (!result.success) {
-            const error = result.error.issues.find((issue) => issue.path.join('.') === `deliverables[${index}]`);
-            setErrors((prev) => ({...prev, [`deliverables[${index}]`]: error?.message || ''}));
+            const path = `deliverables.${index}`;
+            const error = result.error.issues.find((issue) => issue.path.join('.') === path);
+            setErrors((prev) => ({
+                ...prev,
+                [path]: error?.message || '',
+            }));
         } else {
-            setErrors((prev) => ({...prev, [`deliverables[${index}]`]: ''}));
+            setErrors((prev) => {
+                const newErrors = { ...prev };
+                delete newErrors[`deliverables.${index}`];
+                return newErrors;
+            });
+        }
+    };
+
+    const validateForm = async () => {
+        const result = await ProposedQuoteSchema.safeParseAsync(form);
+        if (!result.success) {
+            const newErrors: Record<string, string> = {};
+            result.error.issues.forEach((issue) => {
+                newErrors[issue.path.join('.')] = issue.message;
+            });
+            setErrors(newErrors);
+        } else {
+            setErrors({});
         }
     };
 
@@ -243,8 +295,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
         if (!result.success) {
             const newErrors: Record<string, string> = {};
             result.error.issues.forEach((issue) => {
-                const path = issue.path.join('.');
-                newErrors[path] = issue.message;
+                newErrors[issue.path.join('.')] = issue.message;
             });
             setErrors(newErrors);
             return;
@@ -254,7 +305,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
             await onSubmit(result.data);
             onClose();
         } catch (e: any) {
-            setErrors({form: e?.message || t('profileChat.validation.invalidForm') || 'Invalid form data'});
+            setErrors({ form: e?.message || t('profileChat.validation.invalidForm') || 'Invalid form data' });
         }
     };
 
@@ -270,7 +321,6 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
                     className="space-y-4 sm:space-y-5 max-h-[80vh] overflow-y-auto pr-1 text-gray-700"
                 >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
-                        {/* Project Name field set to display-only */}
                         <div>
                             <label className="block text-xs sm:text-sm font-medium text-gray-700">
                                 {t('profileChat.projectName') || 'Project Name'}
@@ -352,15 +402,18 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
                             {t('profileChat.deliverables') || 'Deliverables'}{' '}
                             <span className="text-red-500">*</span>
                         </label>
+                        {errors['deliverables'] && (
+                            <p className="mt-1 text-xs text-red-600">{errors['deliverables']}</p>
+                        )}
                         <div className="space-y-2">
                             {form.deliverables.map((d, idx) => (
                                 <div key={idx} className="flex gap-2 items-start">
                                     <div className="flex-1">
                                         <CustomInput
-                                            name={`deliverables[${idx}]`}
+                                            name={`deliverables.${idx}`}
                                             value={d}
                                             onChange={(e) => updateDeliverable(idx, e.target.value)}
-                                            error={errors[`deliverables[${idx}]`]}
+                                            error={errors[`deliverables.${idx}`]}
                                             placeholder={t('profileChat.exampleDeliverable') || 'Enter deliverable'}
                                             required
                                         />
@@ -369,9 +422,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
                                         type="button"
                                         onClick={() => removeDeliverable(idx)}
                                         disabled={form.deliverables.length <= 1}
-                                        className={`px-2 py-2 sm:py-2 text-xs sm:text-sm rounded-md border border-gray-300 text-red-500 hover:bg-gray-100 ${
-                                            form.deliverables.length <= 1 ? 'opacity-50 cursor-not-allowed' : ''
-                                        }`}
+                                        className={`px-2 py-2 sm:py-2 text-xs sm:text-sm rounded-md border border-gray-300 text-red-500 hover:bg-gray-100 ${form.deliverables.length <= 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
                                         aria-label={t('profileChat.remove') || 'Remove deliverable'}
                                     >
                                         <FontAwesomeIcon icon={faTrash} />
@@ -393,44 +444,47 @@ const QuotationModal: React.FC<QuotationModalProps> = ({isOpen, onClose, onSubmi
                             {t('profileChat.workSteps') || 'Work Steps'}
                             <span className="text-red-500">*</span>
                         </label>
+                        {errors['workSteps'] && (
+                            <p className="mt-1 text-xs text-red-600">{errors['workSteps']}</p>
+                        )}
                         <div className="space-y-2 sm:space-y-3">
                             {form.workSteps.map((ws, idx) => (
                                 <div key={idx} className="border rounded-md p-2 sm:p-3 space-y-2 bg-gray-50">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                         <CustomInput
                                             label={t('profileChat.seq') || 'Seq'}
-                                            name={`workSteps[${idx}].seq`}
+                                            name={`workSteps.${idx}.seq`}
                                             type="number"
                                             value={ws.seq.toString()}
                                             onChange={(e) => updateWorkStep(idx, 'seq', Number(e.target.value))}
-                                            error={errors[`workSteps[${idx}].seq`]}
+                                            error={errors[`workSteps.${idx}.seq`]}
                                             readonly
                                         />
                                         <CustomInput
                                             label={t('profileChat.description') || 'Description'}
-                                            name={`workSteps[${idx}].description`}
+                                            name={`workSteps.${idx}.description`}
                                             value={ws.description}
                                             onChange={(e) => updateWorkStep(idx, 'description', e.target.value)}
-                                            error={errors[`workSteps[${idx}].description`]}
+                                            error={errors[`workSteps.${idx}.description`]}
                                             placeholder={t('profileChat.exampleWorkStep') || 'Enter work step description'}
                                             required
                                         />
                                         <CustomInput
                                             label={t('profileChat.amount') || 'Amount'}
-                                            name={`workSteps[${idx}].amount`}
+                                            name={`workSteps.${idx}.amount`}
                                             type="number"
                                             value={ws.amount === 0 ? '' : ws.amount.toString()}
                                             onChange={(e) => updateWorkStep(idx, 'amount', Number(e.target.value))}
-                                            error={errors[`workSteps[${idx}].amount`]}
+                                            error={errors[`workSteps.${idx}.amount`]}
                                             placeholder="0"
                                             required
                                         />
                                         <CustomInput
                                             label={t('profileChat.status') || 'Status'}
-                                            name={`workSteps[${idx}].status`}
+                                            name={`workSteps.${idx}.status`}
                                             value={ws.status}
                                             onChange={(e) => updateWorkStep(idx, 'status', e.target.value)}
-                                            error={errors[`workSteps[${idx}].status`]}
+                                            error={errors[`workSteps.${idx}.status`]}
                                             readonly
                                         />
                                     </div>
