@@ -90,7 +90,7 @@ export const en = {
                 deliverables: "At least one deliverable is required",
                 workStepDescription: "Work step description is required",
                 workStepAmount: "Work step amount must be greater than 0",
-                workStepWorkingDays: "Work step working days must be greater than 0",
+                workingDays: "Work step working days must be greater than 0",
                 workStepDates: "Both starting and delivery days are required",
                 deliverable: "Deliverable description is required",
                 totalAmount: "Total amount must match the sum of work steps",
@@ -135,6 +135,8 @@ export const en = {
             youAreNotAvailable: "You are currently unavailable. Turn on your availability in your profile to send messages.",
             userNotAvailable: "This user is currently unavailable. You can read the chat history but cannot send new messages.",
             missingPostIdForQuotation: "This chat is not linked to a job post. Link a job to this room to create a quotation or start the workflow.",
+            selectConversation: "Select a conversation from the left to start messaging.",
+            searchChat: "Search chat",
         },
         allCategories: {
             allJobCategories: "All Job Categories",
@@ -1282,6 +1284,7 @@ export const en = {
         },
         jobBoardDetail: {
             open: "Open",
+            back: "Back",
             englishRequire: "English Required",
             anonymous: "Anonymous",
             posted: "Posted",
@@ -1307,7 +1310,7 @@ export const en = {
                 "Want to get find freelancer on Fastlance, find for excellent freelancer now!",
             generate: "Generate income through job boards and platforms",
             wantToGet:
-                "Want to get work through Fastlance, register as a freelancer now!",
+                `Want to get work through ${getAppName()}, register as a freelancer now!`,
             cannotSubmit: "Cannot submit proposals",
             noApproved: "No approved services yet",
             needApproved:
@@ -1315,11 +1318,18 @@ export const en = {
             close: "Close",
             checkService: "Check Your Services",
             noProposal: "No freelancer proposals yet",
-            porfolioUrl: "Portfolio URL",
+            portfolioUrl: "Portfolio URL",
             workSample: "Work Samples",
             attachService: "Attached Services",
             timeLine: "Timeline",
             day: "days",
+            Personal: "Personal",
+            Business: "Business",
+            Unknown: "Unknown",
+            Freelance: "Freelance",
+            Contract: "Contract",
+            PartTime: "Part-Time",
+            FullTime: "Full-Time",
         },
         jobCard: {
             expert: "Expert",
@@ -1952,6 +1962,7 @@ export const en = {
             noJobsDescriptionWithFilters: "Try adjusting your search criteria or clear filters",
             noJobsDescriptionNoFilters: "Check back later for new opportunities",
             budgetNegativeError: "Budget cannot be negative.",
+            loadingJobs: "Loading your jobs...",
         },
         profileNavbar: {
             accountInfo: "Account Information",

@@ -89,7 +89,7 @@ export const th = {
                 deliverables: "ต้องมีสิ่งที่จะส่งมอบอย่างน้อย 1 รายการ",
                 workStepDescription: "ต้องระบุรายละเอียดของขั้นตอนงาน",
                 workStepAmount: "จำนวนเงินของขั้นตอนต้องมากกว่า 0",
-                workStepWorkingDays: "จำนวนวันทำงานต้องมากกว่า 0",
+                workingDays: "จำนวนวันทำงานต้องมากกว่า 0",
                 workStepDates: "ต้องระบุวันเริ่มต้นและวันส่งมอบ",
                 deliverable: "ต้องระบุคำอธิบายสิ่งที่จะส่งมอบ",
                 totalAmount: "ยอดรวมต้องตรงกับผลรวมของขั้นตอนงาน",
@@ -134,6 +134,8 @@ export const th = {
             youAreNotAvailable: "ขณะนี้คุณปิดสถานะรับงานอยู่ เปิดสถานะความพร้อมในโปรไฟล์เพื่อส่งข้อความได้",
             userNotAvailable: "ผู้ใช้นี้ยังไม่พร้อมรับข้อความ คุณสามารถอ่านประวัติแชทได้แต่ไม่สามารถส่งข้อความใหม่",
             missingPostIdForQuotation: "ห้องแชทนี้ยังไม่เชื่อมกับงาน โปรดเชื่อมโยงงานกับห้องนี้ก่อน จึงจะสามารถสร้างใบเสนอราคา หรือเริ่มลำดับงานได้",
+            selectConversation: "เลือกการสนทนาจากด้านซ้ายเพื่อเริ่มส่งข้อความ",
+            searchChat: "ค้นหาการสนทนา",
         },
         allCategories: {
             allJobCategories: "หมวดหมู่งานทั้งหมด",
@@ -1244,6 +1246,7 @@ export const th = {
         },
         jobBoardDetail: {
             open: "กำลังเปิดรับ",
+            back: "ย้อนกลับ",
             englishRequire: "ต้องใช้ภาษาอังกฤษ",
             anonymous: "ไม่ระบุชื่อ",
             posted: "ประกาศเมื่อ",
@@ -1281,6 +1284,13 @@ export const th = {
             attachService: "บริการที่แนบมา",
             timeLine: "ระยะเวลาดำเนินการ",
             day: "วัน",
+            Personal: "ส่วนตัว",
+            Business: "ธุรกิจ",
+            Unknown: "ไม่ทราบ",
+            Freelance: "ฟรีแลนซ์",
+            Contract: "สัญญาจ้าง",
+            PartTime: "งานพาร์ทไทม์",
+            FullTime: "งานเต็มเวลา",
         },
         jobCard: {
             sold: "ขายแล้ว",
@@ -1906,7 +1916,8 @@ export const th = {
             noJobsTitleNoFilters: "ยังไม่มีงานในขณะนี้",
             noJobsDescriptionWithFilters: "ลองปรับเกณฑ์การค้นหาหรือล้างตัวกรอง",
             noJobsDescriptionNoFilters: "กลับมาตรวจสอบอีกครั้งในภายหลังเพื่อโอกาสใหม่ ๆ",
-            budgetNegativeError: "งบประมาณต้องไม่เป็นค่าติดลบ"
+            budgetNegativeError: "งบประมาณต้องไม่เป็นค่าติดลบ",
+            loadingJobs: "กำลังโหลดงานของคุณ...",
         },
         profileNavbar: {
             accountInfo: "ข้อมูลบัญชี",

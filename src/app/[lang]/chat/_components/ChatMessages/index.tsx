@@ -5,6 +5,8 @@ import ChatMessageItem from "../ChatMessageItem";
 import {StaticImageData} from "next/image";
 import {Virtuoso, VirtuosoHandle} from "react-virtuoso";
 import React from "react";
+import {useParams} from "next/navigation";
+import {formatDateToLong} from "@/utils";
 
 type UIChatMessage = ChatMessage & { isOwner?: boolean };
 
@@ -17,16 +19,6 @@ interface ChatMessagesProps {
     isFetching?: boolean;
     onAtBottomChange?: (isAtBottom: boolean) => void;
 }
-
-const formatDate = (dateStr: string, locale?: string) => {
-    const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return ""; // Fail-safe for invalid dates
-    return date.toLocaleDateString(locale || undefined, {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-    });
-};
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
                                                        messages,
@@ -41,6 +33,9 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
     // Reverse messages to display newest-first (API provides oldest-first)
     const displayedMessages = React.useMemo(() => [...messages].reverse(), [messages]);
+    const params = useParams();
+    const currentLang = (params?.lang as string) || 'th';
+    const currentLocale = currentLang === "th" ? "th-TH" : currentLang === "vi" ? "vi-VN" : "en-US";
 
     // Track whether the user is at the bottom for auto-scroll
     const virtuosoRef = React.useRef<VirtuosoHandle | null>(null);
@@ -95,10 +90,10 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 ),
             }}
             itemContent={(index, msg) => {
-                const currentDate = formatDate(msg.createdAt, userLocale);
+                const currentDate = formatDateToLong(msg.createdAt, currentLocale);
                 // Compare with previous message (older) for date boundary in newest-first order
                 const prev = index > 0 ? displayedMessages[index - 1] : null;
-                const prevDate = prev ? formatDate(prev.createdAt, userLocale) : null;
+                const prevDate = prev ? formatDateToLong(prev.createdAt, currentLocale) : null;
                 const showDate = currentDate !== prevDate;
                 return (
                     <div key={msg.id || index} className="mb-2 last:mb-0">

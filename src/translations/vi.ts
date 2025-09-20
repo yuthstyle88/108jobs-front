@@ -90,7 +90,7 @@ export const vi = {
                 deliverables: "Cần ít nhất một hạng mục bàn giao",
                 workStepDescription: "Cần mô tả cho bước công việc",
                 workStepAmount: "Số tiền của bước phải lớn hơn 0",
-                workStepWorkingDays: "Số ngày làm việc phải lớn hơn 0",
+                workingDays: "Số ngày làm việc phải lớn hơn 0",
                 workStepDates: "Cần chọn cả ngày bắt đầu và ngày giao",
                 deliverable: "Cần mô tả hạng mục bàn giao",
                 totalAmount: "Tổng tiền phải khớp với tổng các bước",
@@ -135,6 +135,8 @@ export const vi = {
             missingPostIdForQuotation: "Phòng chat này chưa được liên kết với bài đăng công việc. Hãy liên kết bài đăng để tạo báo giá hoặc bắt đầu quy trình.",
             youAreNotAvailable: "Bạn hiện đang tắt trạng thái sẵn sàng. Hãy bật sẵn sàng trong hồ sơ để gửi tin nhắn.",
             userNotAvailable: "Người dùng này hiện không sẵn sàng. Bạn có thể xem lịch sử chat nhưng không thể gửi tin nhắn mới.",
+            selectConversation: "Chọn một cuộc trò chuyện từ bên trái để bắt đầu nhắn tin.",
+            searchChat: "Tìm kiếm cuộc trò chuyện",
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",
@@ -1286,6 +1288,7 @@ export const vi = {
         },
         jobBoardDetail: {
             open: "Đang mở",
+            back: "Quay lại",
             englishRequire: "Yêu cầu tiếng Anh",
             anonymous: "Ẩn danh",
             posted: "Đã đăng",
@@ -1323,6 +1326,13 @@ export const vi = {
             attachService: "Dịch vụ đính kèm",
             timeLine: "Thời gian thực hiện",
             day: "ngày",
+            Personal: "Cá nhân",
+            Business: "Doanh nghiệp",
+            Unknown: "Không xác định",
+            Freelance: "Freelance",
+            Contract: "Hợp đồng",
+            PartTime: "Bán thời gian",
+            FullTime: "Toàn thời gian",
         },
         jobCard: {
             expert: "Chuyên gia",
@@ -1959,7 +1969,8 @@ export const vi = {
             tableHeaderActionViewProposals: "Xem đề xuất",
             tableHeaderActionEdit: "Chỉnh sửa",
             tableHeaderActionCloseJob: "Đóng công việc",
-            budgetNegativeError: "Ngân sách không được âm"
+            budgetNegativeError: "Ngân sách không được âm",
+            loadingJobs: "Đang tải công việc của bạn...",
         },
         profileNavbar: {
             accountInfo: "Thông tin tài khoản",
