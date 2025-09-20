@@ -14,16 +14,10 @@ export function safeParse(val: unknown): unknown {
   }
 }
 
-export function buildWsUrl(token: string, roomId: string): string {
-  const base = "wss://api-fastwork-stg.ibrowe.com";
-  return `${base}/ws?token=${encodeURIComponent(token)}&room_id=${encodeURIComponent(roomId)}`;
-}
-
 // Phoenix Socket URL helper
 export function buildPhoenixUrl(): string {
   // Allow override via env; default to same host at /socket
-  const base = process.env.NEXT_PUBLIC_PHOENIX_WS_URL || "wss://api-fastwork-stg.ibrowe.com/socket";
-  return base;
+    return process.env.NEXT_PUBLIC_PHOENIX_WS_URL || "wss://api-fastwork-stg.ibrowe.com/socket";
 }
 
 export function isBase64Like(s: string): boolean {

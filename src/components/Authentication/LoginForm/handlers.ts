@@ -54,7 +54,6 @@ export const handleLogin = async(i: LoginFormClass, data: any) => {
       password,
     }
   }));
-  console.log(i.state.form);
   try {
     const loginRes = await HttpService.client.login({
       usernameOrEmail,
