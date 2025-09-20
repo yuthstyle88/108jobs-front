@@ -92,16 +92,21 @@ export function isValidOutgoingChatPayload(p: any): boolean {
 }
 
 export function isValidIncomingChatPayload(p: any): boolean {
-  if (!p || typeof p !== 'object') return false;
+  if (!p) return false;
+  // Allow arrays of messages
+  if (Array.isArray(p)) {
+    return p.some((it) => isValidIncomingChatPayload(it));
+  }
+  if (typeof p !== 'object') return false;
   // View style { message: { content, room_id? }, room?: { id } }
   if ((p as any).message && typeof (p as any).message === 'object') {
     const m = (p as any).message;
     const hasContent = typeof m.content === 'string' && m.content.length > 0;
-    const hasRoom = typeof m.room_id === 'string' || typeof (p as any)?.room?.id === 'string';
+    const hasRoom = typeof m.room_id === 'string' || typeof m.room_id === 'number' || typeof (p as any)?.room?.id === 'string' || typeof (p as any)?.room?.id === 'number';
     return hasContent && !!(hasRoom);
   }
   // Flat style
-  const hasRoom = typeof (p as any).room_id === 'string' || typeof (p as any).roomId === 'string';
+  const hasRoom = typeof (p as any).room_id === 'string' || typeof (p as any).room_id === 'number' || typeof (p as any).roomId === 'string' || typeof (p as any).roomId === 'number';
   const hasContent = typeof (p as any).content === 'string' && (p as any).content.length > 0;
   return hasRoom && hasContent;
 }

@@ -3,7 +3,7 @@ import { buildActixWsUrl } from "./chat-socket-utils";
 
 // ---- production hardening constants ----
 const JOIN_TIMEOUT_MS = 10000; // fail join after 10s
-const ALLOWED_PUSH_EVENTS = ['send_message', 'message', 'new_msg'] as const;
+const ALLOWED_PUSH_EVENTS = ['send_message', 'message', 'new_msg', 'new_message', 'chat:message'] as const;
 
 function safeStringify(obj: any) {
   try { return JSON.stringify(obj); } catch { return String(obj); }
@@ -225,14 +225,23 @@ export function getPhoenixChannelSocket(token: string, roomId: string): WsLike {
     });
   } catch {}
 
-  const topic = `room:${roomId}`;
+  const rawTopic = (channel as any).topic ?? `room:${roomId}`;
+  const normalizedTopic = typeof rawTopic === 'string' ? rawTopic.replace(/^room:/, '') : roomId;
   if (!(channel as any).__wired) {
     const refs: Array<{ ev: string; ref: any }> = [];
     const forward = (ev: string) => (payload: any) => {
-      const envelope = { event: ev, payload, topic };
-      adapter.onmessage?.({ data: safeStringify(envelope) });
+      const envelope = { event: ev, payload, topic: normalizedTopic };
+      // Always stash last envelope for easy debugging in DevTools
+      try { (globalThis as any).__phoenixRTLast = envelope; } catch {}
+      // Prefer app handler if present; otherwise emit a helpful debug
+      if (typeof adapter.onmessage === 'function') {
+        adapter.onmessage({ data: safeStringify(envelope) });
+      } else {
+        // Visible breadcrumb so you know UI isn't wired yet
+        try { console.debug('[phoenix-adapter] onmessage handler is not set; latest envelope at window.__phoenixRTLast', envelope); } catch {}
+      }
     };
-    for (const ev of ['new_msg', 'message', 'msg', 'chat:new', 'broadcast']) {
+    for (const ev of ['new_msg', 'new_message', 'message', 'msg', 'chat:new', 'chat:message', 'broadcast', 'send_message', 'history_page', 'system:welcome']) {
       try {
         const ref = (channel as any).on(ev, forward(ev));
         refs.push({ ev, ref });

@@ -101,6 +101,7 @@ interface WebSocketProviderProps {
 }
 
 function broadcastToListeners(payload: unknown): void {
+    console.debug('broadcastToListeners', payload);
     const event = { data: JSON.stringify(payload) } as MessageEvent;
     try {
         const p: any = typeof payload === 'string' ? JSON.parse(payload as any) : payload;

@@ -6,9 +6,13 @@ export function getBaseLocal(s = "") {
 }
 
 export function getExternalHost() {
-  return isBrowser()
-    ? (window.isoData?.lemmyExternalHost ?? "")
-    : (process.env.LEMMY_UI_LEMMY_EXTERNAL_HOST ?? testHost);
+  if (isBrowser()) {
+    // Prefer server-provided external host when available; fallback to current location host
+    const fromIso = (window as any)?.isoData?.lemmyExternalHost;
+    const host = typeof fromIso === 'string' && fromIso.length > 0 ? fromIso : window.location.host;
+    return host;
+  }
+  return process.env.LEMMY_UI_LEMMY_EXTERNAL_HOST ?? testHost;
 }
 
 export function getHost() {

@@ -79,7 +79,8 @@ export default function MessageClient({roomId}: { roomId: string }) {
                             : "Unknown";
                     setPartnerId(res.state === REQUEST_STATE.SUCCESS ? res.data.profile.id : null);
                     if (res.state === REQUEST_STATE.SUCCESS) {
-                        setPartnerAvailable(Boolean((res.data as any)?.profile?.available));
+                        // Preserve undefined as undefined; only block sending if explicitly false
+                        setPartnerAvailable((res.data as any)?.profile?.available);
                     }
 
                     if (!cancelled) setPartnerName(String(profileName));

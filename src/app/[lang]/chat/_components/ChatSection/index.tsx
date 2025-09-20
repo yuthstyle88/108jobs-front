@@ -154,8 +154,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    const {sendMessage, fetchHistory, isConnected, hasMoreMessages, isFetching} = useWebSocket(
-        `chat_${roomId}`,
+   const {sendMessage, fetchHistory, isConnected, hasMoreMessages, isFetching} = useWebSocket(
+        `chat-view:${roomId}`,
         (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) => {
             let parsed: WsChatMessage | WsChatMessage[];
             try {
@@ -165,6 +165,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 console.error("Failed to parse WebSocket message:", e);
                 return;
             }
+
+            // DEBUG: verify realtime delivery into this component
+            try {
+              (globalThis as any).__chatRTLast = parsed;
+              const arrLen = Array.isArray(parsed) ? parsed.length : 1;
+              console.debug('[CHAT][RT] delivered to ChatSection', { roomId, arrLen, sample: Array.isArray(parsed) ? parsed[0] : parsed });
+            } catch {}
 
             // New protocol: provider broadcasts UI-ready ChatMessage objects (single or array)
             let items: WsChatMessage[] = [];
@@ -942,6 +949,28 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     });
 
     const didInitialFetchRef = useRef(false);
+    // Fetch initial history as soon as component mounts (or roomId changes),
+    // without waiting for a websocket connection. This fixes empty chat on page refresh
+    // when WS is slow or blocked; the WS effect below will no-op if we've already fetched.
+    useEffect(() => {
+        if (!didInitialFetchRef.current) {
+            didInitialFetchRef.current = true;
+            console.log("[CHAT][INIT] Initial fetchHistory() on mount/room change");
+            fetchHistory()
+                .then(() => {
+                    setIsInitialLoading(false);
+                })
+                .catch((err) => {
+                    console.error("[CHAT][INIT] Failed to fetch initial history:", err);
+                    setIsInitialLoading(false);
+                });
+        }
+        // Reset the guard if roomId changes (new chat)
+        return () => { /* no-op */ };
+    }, [roomId]);
+
+    // Keep previous behavior: when WS connects later (after slow networks), ensure
+    // we have at least one initial fetch; guarded to avoid duplicates.
     useEffect(() => {
         if (isConnected && !didInitialFetchRef.current) {
             didInitialFetchRef.current = true;
@@ -955,7 +984,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     setIsInitialLoading(false);
                 });
         } else if (!isConnected) {
-            // Reset for next connection attempt
+            // Allow another initial fetch if we fully disconnect and reconnect later
             didInitialFetchRef.current = false;
             console.log("[CHAT][INIT] Not connected yet");
         }
