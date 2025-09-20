@@ -54,7 +54,6 @@ export const handleLogin = async(i: LoginFormClass, data: any) => {
       password,
     }
   }));
-  console.log(i.state.form);
   try {
     const loginRes = await HttpService.client.login({
       usernameOrEmail,
@@ -72,7 +71,7 @@ export const handleLogin = async(i: LoginFormClass, data: any) => {
           i.props.formMethods.setError("password",
             {
               type: "manual",
-              message: i.props.t("invalidPassword"),
+              message: i.props.t("error.invalidPassword"),
             });
         }
         i.setState({loginRes});
