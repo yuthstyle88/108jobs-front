@@ -1,15 +1,15 @@
 import type { BillingId } from "./BillingId";
-import type { PersonId } from "./PersonId";
 import type { PostId } from "./PostId";
 import type { CommentId } from "./CommentId";
 import type { Coin } from "./Coin";
 import type { BillingStatus } from "./BillingStatus";
+import {LocalUserId} from "./LocalUserId";
 
 // Mirrors backend Billing struct with camelCase keys
 export type Billing = {
   id: BillingId;
-  freelancerId: PersonId;
-  employerId: PersonId;
+  freelancerId: LocalUserId;
+  employerId: LocalUserId;
   postId: PostId;
   commentId: CommentId;
   amount: Coin;

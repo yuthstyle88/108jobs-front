@@ -1,12 +1,12 @@
 "use client";
 
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import LoadingBlur from "@/components/LoadingBlur";
 import {ProfileImage} from "@/constants/images";
-import type {BillingStatus, ChatMessage as WsChatMessage, Post} from "lemmy-js-client";
+import type {ChatMessage as WsChatMessage, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";

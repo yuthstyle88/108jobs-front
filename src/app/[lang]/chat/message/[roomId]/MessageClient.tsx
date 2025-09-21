@@ -72,12 +72,12 @@ export default function MessageClient({roomId}: { roomId: string }) {
 
                 if (other) {
                     const res = await HttpService.client.visitProfile(String(other.memberId));
+                    setPartnerId(other.memberId);
 
                     const profileName =
                         res.state === REQUEST_STATE.SUCCESS
                             ? res.data.profile.name
                             : "Unknown";
-                    setPartnerId(res.state === REQUEST_STATE.SUCCESS ? res.data.profile.id : null);
                     if (res.state === REQUEST_STATE.SUCCESS) {
                         // Preserve undefined as undefined; only block sending if explicitly false
                         setPartnerAvailable((res.data as any)?.profile?.available);
