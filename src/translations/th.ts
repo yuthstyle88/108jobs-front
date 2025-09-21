@@ -56,7 +56,7 @@ export const th = {
             confirmReleasePaymentMessage: "การดำเนินการนี้จะอนุมัติงานที่ส่ง ปล่อยเงินให้ฟรีแลนซ์ และปิดงานนี้",
             confirmCancelJobTitle: "ยกเลิกงานนี้หรือไม่?",
             confirmCancelJobMessage: "การกระทำนี้จะยกเลิกขั้นตอนงานปัจจุบัน และไม่สามารถย้อนกลับได้",
-            cancelledJobMsg: "งานนี้ถูกยกเลิกแล้ว", 
+            cancelledJobMsg: "งานนี้ถูกยกเลิกแล้ว",
             reviewDeliveryTitle: "ตรวจสอบงานที่ส่ง",
             reviewDeliveryDesc: "ฟรีแลนซ์ได้ส่งงานแล้ว คุณต้องการรับงานหรือขอแก้ไข?",
             deliveryAccepted: "ยอมรับงานแล้ว ดำเนินการชำระเงิน",
@@ -3201,6 +3201,11 @@ export const th = {
                 cancel: "ยกเลิก",
                 submit: "ส่ง"
             }
+        },
+        roomNotFound: {
+            title: "ไม่พบห้อง",
+            description: "ห้องแชทที่คุณพยายามเข้าถึงไม่มีอยู่หรืออาจถูกลบไปแล้ว",
+            goBack: "กลับไปที่แชท"
         }
     },
 };

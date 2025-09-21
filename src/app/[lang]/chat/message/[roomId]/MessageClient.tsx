@@ -11,8 +11,10 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faComment} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import {Post} from "@/lib/lemmy-js-client";
+import {useTranslation} from "react-i18next";
 
 export default function MessageClient({roomId}: { roomId: string }) {
+    const {t} = useTranslation();
     const accessToken = UserService.Instance.auth();
     const {localUser} = useMyUser();
 
@@ -112,7 +114,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     }, [accessToken, roomId, localUser?.id]);
 
     if (!accessToken || !roomId) {
-        return <LoadingBlur text="Missing authentication or room ID"/>;
+        return <LoadingBlur text=""/>;
     }
 
     if (loading) {
@@ -125,9 +127,9 @@ export default function MessageClient({roomId}: { roomId: string }) {
         return (
             <div className="flex items-center justify-center w-full h-[calc(100vh-80px)]">
                 <div className="text-center p-6">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-2">Room not found</h2>
-                    <p className="text-gray-600 mb-4">The chat room you are trying to access does not exist or may have been deleted.</p>
-                    <Link href="/chat" className="inline-block bg-primary text-white px-4 py-2 rounded-md hover:bg-[#063a68] transition-colors">Go back to Chats</Link>
+                    <h2 className="text-xl font-semibold text-gray-800 mb-2">{t('roomNotFound.title')}</h2>
+                    <p className="text-gray-600 mb-4">{t('roomNotFound.description')}</p>
+                    <Link href="/chat" className="inline-block bg-primary text-white px-4 py-2 rounded-md hover:bg-[#063a68] transition-colors">{t('roomNotFound.goBack')}</Link>
                 </div>
             </div>
         );

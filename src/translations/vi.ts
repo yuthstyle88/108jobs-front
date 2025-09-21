@@ -3311,6 +3311,11 @@ export const vi = {
                 cancel: "Hủy",
                 submit: "Gửi"
             }
+        },
+        roomNotFound: {
+            title: "Không tìm thấy phòng",
+            description: "Phòng trò chuyện bạn đang cố gắng truy cập không tồn tại hoặc có thể đã bị xóa.",
+            goBack: "Quay lại danh sách trò chuyện"
         }
     },
 };

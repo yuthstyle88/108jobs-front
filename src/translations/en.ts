@@ -3266,6 +3266,11 @@ export const en = {
                 cancel: "Cancel",
                 submit: "Submit"
             }
+        },
+        roomNotFound: {
+            title: "Room not found",
+            description: "The chat room you are trying to access does not exist or may have been deleted.",
+            goBack: "Go back to Chats"
         }
     },
 };
