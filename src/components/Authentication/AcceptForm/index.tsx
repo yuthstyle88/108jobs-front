@@ -51,6 +51,7 @@ export const AcceptForm = ({ title }
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   /* —— เรียก useHttpApi ————————————————————————— */
   const {
@@ -92,6 +93,7 @@ export const AcceptForm = ({ title }
 
     if (isSuccess(res)) {
       UserService.Instance.login({res: res.data});
+      setIsRedirecting(true); // แสดงโหลดดิ่งระหว่างรอเปลี่ยนหน้า
       window.location.href = "/";
     } else if (res.state === "failed") {
       setApiError(res.err.message);
@@ -99,7 +101,17 @@ export const AcceptForm = ({ title }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 relative">
+      {/* Overlay loading ระหว่างกำลัง redirect หลัง login สำเร็จ */}
+      {isRedirecting && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-lg flex items-center gap-3">
+            <LoadingCircle />
+            <span className="text-sm text-text-primary">กำลังเข้าสู่ระบบ...</span>
+          </div>
+        </div>
+      )}
+
       <CustomInput
         label={authen?.labelEmail}
         required={true}
