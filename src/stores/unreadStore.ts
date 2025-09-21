@@ -146,16 +146,9 @@ function ensureFlushLoop() {
 if (isBrowser()) {
   ensureFlushLoop();
   try {
-    window.addEventListener('chat:new-message' as any, (e: any) => {
-      try {
-        const detail = (e as CustomEvent)?.detail as any;
-        if (!detail || !detail.roomId) return;
-        // Increment only when marked unread and not the currently active room
-        const { inc, activeRoomId } = useUnreadStore.getState();
-        if (detail.unread === true && detail.roomId !== activeRoomId) {
-          inc(detail.roomId, 1);
-        }
-      } catch {}
+    // chat:new-message increments are now handled within ChatRoomsContext to ensure ordering before UI updates
+    window.addEventListener('chat:new-message' as any, (_e: any) => {
+      // no-op: keep listener to avoid breaking external expectations
     });
   } catch {}
 }

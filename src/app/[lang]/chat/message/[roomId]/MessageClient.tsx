@@ -1,7 +1,7 @@
 "use client";
 
 import {useEffect, useState} from "react";
-import {WebSocketProvider} from "@/contexts/RealtimeChatContext";
+import {PhoenixSocketProvider} from "@/contexts/RealtimeChatContext";
 import ChatSection from "../../_components/ChatSection";
 import {HttpService, UserService} from "@/services";
 import LoadingBlur from "@/components/LoadingBlur";
@@ -136,8 +136,8 @@ export default function MessageClient({roomId}: { roomId: string }) {
 
 
     return (
-        <WebSocketProvider token={accessToken} roomId={roomId} peerPublicKeyHex={peerPublicKeyHex}>
+        <PhoenixSocketProvider token={accessToken} roomId={roomId} peerPublicKeyHex={peerPublicKeyHex}>
             <ChatSection roomId={roomId} post={post} partnerName={partnerName} partnerAvatar={""} partnerId={partnerId as number} partnerAvailable={partnerAvailable}/>
-        </WebSocketProvider>
+        </PhoenixSocketProvider>
     );
 }

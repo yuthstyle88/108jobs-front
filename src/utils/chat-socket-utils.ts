@@ -48,7 +48,13 @@ export function unwrapPhoenixFrame(data: any): any {
     try {
         // If already an envelope-like object: { event, payload, topic }
         if (data && typeof data === 'object' && ('event' in data || 'payload' in data || 'topic' in data)) {
-            return (data as any).payload ?? data;
+            const env: any = data;
+            const payload = env.payload ?? env;
+            if (payload && typeof payload === 'object') {
+                // Preserve topic/event for downstream mapping (e.g., infer room from topic)
+                return { ...payload, topic: payload.topic ?? env.topic, event: payload.event ?? env.event };
+            }
+            return payload;
         }
 
         // Accept either raw string, or MessageEvent-like { data: string }
@@ -70,7 +76,12 @@ export function unwrapPhoenixFrame(data: any): any {
         // JSON envelope case: { event, payload, topic }
         const obj = JSON.parse(raw);
         if (obj && typeof obj === 'object' && ('event' in obj || 'payload' in obj || 'topic' in obj)) {
-            return (obj as any).payload ?? obj;
+            const env: any = obj;
+            const payload = env.payload ?? env;
+            if (payload && typeof payload === 'object') {
+                return { ...payload, topic: payload.topic ?? env.topic, event: payload.event ?? env.event };
+            }
+            return payload;
         }
         return obj;
     } catch {

@@ -11,6 +11,7 @@ import {addOnce, getReceiverIdFromRoom, isBase64Like, safeParse, unwrapPhoenixFr
 import {REQUEST_STATE} from "@/services/HttpService";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import { isBrowser } from "@/utils/browser";
+import {getChannelAdapter} from "@/services/PhoenixSocketService";
 
 async function mapIncomingToChatMessage(
     m: any,
@@ -24,6 +25,7 @@ async function mapIncomingToChatMessage(
     }
 ): Promise<ChatMessage | null> {
     try {
+        try { console.log('[CHAT][MAP] mapIncomingToChatMessage', m); } catch {}
         const createdAtVal = m.created_at || m.createdAt || new Date().toISOString();
         const roomIdForKey = m.room_id || m.roomId || opts.fallbackRoomId || '';
         const senderIdForKey = String(m.sender_id ?? m.senderId ?? '');
@@ -31,9 +33,13 @@ async function mapIncomingToChatMessage(
         const messageSignature = m.id
             ? `id:${m.id}`
             : `room:${roomIdForKey}|sender:${senderIdForKey}|ts:${createdAtVal}|content:${m.content}`;
+        const sig = messageSignature;
+
         if (!addOnce(opts.receivedSet, messageSignature)) {
+            try { console.debug('[CHAT][DROP] duplicate signature', sig, 'payload=', m); } catch {}
             return null;
         }
+        try { console.debug('[CHAT][MAP] accept signature', sig); } catch {}
 
         let content = m.content;
         if (opts.token && opts.sharedKeyHex && isBase64Like(m.content)) {
@@ -101,18 +107,33 @@ interface WebSocketProviderProps {
 }
 
 function broadcastToListeners(payload: unknown): void {
-    console.debug('broadcastToListeners', payload);
     const event = { data: JSON.stringify(payload) } as MessageEvent;
-    try {
-        const p: any = typeof payload === 'string' ? JSON.parse(payload as any) : payload;
-        const pid = p?.roomId ?? p?.room_id ?? p?.room?.id ?? p?.message?.room_id ?? null;
-        if (pid) {
-            for (const { roomId, fn } of listeners.values()) {
-                if (roomId === String(pid)) fn(event);
-            }
-            return;
+    try { (globalThis as any).__rtLast = payload; } catch {}
+
+    const pickRoom = (p: any): string | null => {
+        if (!p) return null;
+        const norm = (v: any) => {
+            if (!v) return null;
+            let s = String(v);
+            if (s.startsWith('room:')) s = s.slice(5);
+            return s || null;
+        };
+        if (Array.isArray(p) && p.length > 0) {
+            const h = p[0];
+            return norm(h?.roomId ?? h?.room_id ?? h?.topic);
         }
-    } catch {}
+        return norm(p?.roomId ?? p?.room_id ?? p?.topic);
+    };
+
+    let pid: string | null = null;
+    try { pid = pickRoom(typeof payload === 'string' ? JSON.parse(payload as any) : payload); } catch { pid = null; }
+
+    if (pid) {
+        for (const { roomId, fn } of listeners.values()) {
+            if (String(roomId) === String(pid)) fn(event);
+        }
+        return;
+    }
     // Fallback: no identifiable room, broadcast to all
     for (const { fn } of listeners.values()) fn(event);
 }
@@ -120,7 +141,180 @@ function broadcastToListeners(payload: unknown): void {
 
 function timeoutMs(ms: number) { return ms; }
 
-export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
+/**
+ * Handle a single incoming Phoenix-unwrapped payload.
+ * Returns an array of mapped ChatMessage to broadcast (usually length 1),
+ * and mutates pagination-related state via the provided setters when it is a history/pagination payload.
+ */
+async function handleIncomingPayload(
+  payload: any,
+  ctx: {
+    roomId: string;
+    localUserId: number;
+    token: string | null | undefined;
+    sharedKeyHex?: string;
+    receivedSet: Set<string>;
+    setPageCursor: (cursor: string | null) => void;
+    setHasMoreMessages: (v: boolean) => void;
+    setIsFetching: (v: boolean) => void;
+    fetchTimeoutRef: React.MutableRefObject<NodeJS.Timeout | null>;
+    fetchResolveRef: React.MutableRefObject<((value?: void) => void) | null>;
+  }
+): Promise<ChatMessage[] | null> {
+    try { console.debug('[RT] handleIncomingPayload →', payload); } catch {}
+  // Drop heartbeats / pings and null-ish frames early
+  if (payload == null || payload === 'pong' || payload === 'ping' || payload?.op === 'Ping') {
+    return null;
+  }
+
+  const transformedItems: ChatMessage[] = [];
+
+  // Normalize Phoenix shapes to a flat message-like object
+  try {
+    // Case 1: raw Phoenix array frame: [joinRef, msgRef, topic, event, payload]
+    if (Array.isArray(payload) && payload.length >= 5 && typeof payload[3] === 'string' && payload[4] && typeof payload[4] === 'object') {
+      const [, , topic, ev, body] = payload as [any, any, string, string, any];
+      payload = { event: ev, topic: typeof topic === 'string' ? topic.replace(/^room:/, '') : topic, ...body };
+      try { console.debug('[RT] normalized from array frame →', payload); } catch {}
+    }
+    // Case 2: envelope shape from adapter: { event, topic, payload }
+    else if (payload && typeof payload === 'object' && 'event' in payload && 'payload' in payload && typeof (payload as any).payload === 'object') {
+      const env = payload as any;
+      const topic = typeof env.topic === 'string' ? env.topic.replace(/^room:/, '') : env.topic;
+      payload = { event: env.event, topic, ...(env.payload || {}) };
+      try { console.debug('[RT] normalized from envelope →', payload); } catch {}
+    }
+  } catch {}
+
+  // system welcome → render as a lightweight system message
+  if (payload && typeof payload === 'object' && (payload.event === 'system:welcome' || payload.op === 'Welcome')) {
+    const roomFromPayload = (payload as any).room_id || (payload as any).roomId || (payload as any).topic || ctx.roomId;
+    const sysText = (payload as any).message
+      || (typeof (payload as any).joined === 'string' ? `joined ${String((payload as any).joined).replace(/^room:/,'')}` : 'connected');
+
+    const sysMsg: ChatMessage = {
+      id: `sys_${uuidv4()}`,
+      senderId: 0,
+      receiverId: getReceiverIdFromRoom(roomFromPayload),
+      roomId: roomFromPayload,
+      content: sysText,
+      status: 1,
+      createdAt: new Date().toISOString(),
+      isOwner: false,
+    } as any;
+
+    transformedItems.push(sysMsg);
+    return transformedItems;
+  }
+
+  // ChatMessageView line: { message, sender, room }
+  if (payload && typeof payload === 'object' && (payload as any).message) {
+    const msgView = payload as any;
+    const m = { ...msgView.message, room_id: msgView.room?.id || msgView.message?.room_id };
+    const mapped = await mapIncomingToChatMessage(m, {
+      token: ctx.token,
+      sharedKeyHex: ctx.sharedKeyHex,
+      fallbackRoomId: ctx.roomId,
+      localUserId: ctx.localUserId,
+      receivedSet: ctx.receivedSet,
+      decryptLabel: 'message line',
+    });
+    if (mapped) transformedItems.push(mapped);
+    return transformedItems;
+  }
+
+  // Flat ChatMessage line: { id?, room_id/roomId/topic, sender_id/senderId, content, created_at?/createdAt? }
+  if (payload && typeof payload === 'object' && Object.prototype.hasOwnProperty.call(payload, 'content')) {
+    try { console.log('[RT] flat message detected', payload); } catch {}
+    const m = (() => {
+      const p: any = payload;
+      const topic = typeof p.topic === 'string' ? p.topic.replace(/^room:/, '') : undefined;
+      return { ...p, room_id: p.room_id ?? p.roomId ?? topic };
+    })();
+    const mapped = await mapIncomingToChatMessage(m, {
+      token: ctx.token,
+      sharedKeyHex: ctx.sharedKeyHex,
+      fallbackRoomId: ctx.roomId,
+      localUserId: ctx.localUserId,
+      receivedSet: ctx.receivedSet,
+      decryptLabel: 'flat message line',
+    });
+    if (mapped) {
+      try { console.log('[RT] mapped flat message', mapped); } catch {}
+      transformedItems.push(mapped);
+    } else {
+      try { console.warn('[RT] flat message dropped (duplicate/invalid)', m); } catch {}
+    }
+    return transformedItems;
+  }
+
+  // Pagination message: prev/next page cursors
+  if (payload && typeof payload === 'object' && ((payload as any).prevPage || (payload as any).prev_page || (payload as any).nextPage || (payload as any).next_page)) {
+    const prev = (payload as any).prev_page ?? (payload as any).prevPage ?? null;
+    const next = (payload as any).next_page ?? (payload as any).nextPage ?? null;
+    if (typeof prev === 'string' && prev.length > 0) {
+      ctx.setPageCursor(next);
+      ctx.setHasMoreMessages(true);
+    } else {
+      ctx.setPageCursor(null);
+      ctx.setHasMoreMessages(false);
+    }
+    if (ctx.fetchTimeoutRef.current) {
+      clearTimeout(ctx.fetchTimeoutRef.current);
+      ctx.fetchTimeoutRef.current = null;
+    }
+    ctx.setIsFetching(false);
+    if (ctx.fetchResolveRef.current) {
+      ctx.fetchResolveRef.current();
+      ctx.fetchResolveRef.current = null;
+    }
+    return [];
+  }
+
+  // Unknown payload shape
+  console.debug('onmessage: dropped unknown payload shape', payload);
+  return null;
+}
+
+/** Fetch one page of history via HTTP and broadcast each mapped message. */
+async function fetchHistoryPage(
+  params: { roomId: string; cursor: string | null; limit: number },
+  deps: {
+    localUserId: number;
+    receivedSet: Set<string>;
+    broadcast: (m: ChatMessage) => void;
+  }
+) {
+  const res = await HttpService.client.getChatHistory({
+    roomId: params.roomId,
+    cursor: params.cursor ?? undefined,
+    limit: params.limit,
+    back: true,
+  } as any);
+  if (res.state !== REQUEST_STATE.SUCCESS) return { prev: null, next: null } as any;
+  const resp = res.data as any;
+  const items = Array.isArray(resp?.results) ? resp.results : [];
+
+  const realToken = UserService.Instance.auth();
+  const realShared = UserService.Instance.authInfo?.sharedKey;
+
+  for (const view of items) {
+    const m = { ...view.message, room_id: view.room?.id || view.message?.room_id };
+    const mapped = await mapIncomingToChatMessage(m, {
+      token: realToken,
+      sharedKeyHex: realShared,
+      fallbackRoomId: params.roomId,
+      localUserId: deps.localUserId,
+      receivedSet: deps.receivedSet,
+      decryptLabel: 'history line',
+    });
+    if (mapped) deps.broadcast(mapped);
+  }
+
+  return { prev: resp.prevPage ?? resp.prev_page ?? null, next: resp.nextPage ?? resp.next_page ?? null } as any;
+}
+
+export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                                                                         token,
                                                                         roomId,
                                                                         peerPublicKeyHex,
@@ -146,6 +340,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
     const receivedMessagesRef = useRef<Set<string>>(new Set());
     const fetchResolveRef = useRef<((value?: void) => void) | null>(null);
     const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const phoenixPollRef = useRef<NodeJS.Timeout | null>(null);
 
     // Always use Phoenix transport for chat realtime
     // TODO: remove temporary receiver fallback when backend provides proper mapping
@@ -163,67 +358,30 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             }
 
             try {
-                setIsFetching(true);
-                fetchResolveRef.current = resolve;
+              setIsFetching(true);
+              fetchResolveRef.current = resolve;
+              const { prev, next } = await fetchHistoryPage({ roomId, cursor: pageCursor, limit: pageSize }, {
+                localUserId: Number(localUser?.id),
+                receivedSet: receivedMessagesRef.current,
+                broadcast: (m) => broadcastToListeners(m),
+              });
 
-                // Build query for API
-                const query = {
-                    roomId: roomId as any,
-                    cursor: pageCursor ?? undefined,
-                    limit: pageSize,
-                    back: true,
-                } as any;
+              if (typeof (prev as any) === 'string' && (prev as any).length > 0) {
+                setPageCursor(next as any);
+                setHasMoreMessages(true);
+              } else {
+                setPageCursor(null);
+                setHasMoreMessages(false);
+              }
 
-                // Call HTTP API through wrapped client
-                const res = await HttpService.client.getChatHistory(query as any);
-                if (res.state !== REQUEST_STATE.SUCCESS) {
-                    setIsFetching(false);
-                    fetchResolveRef.current?.();
-                    fetchResolveRef.current = null;
-                    resolve();
-                    return;
-                }
-
-                const resp = res.data as any;
-                const items = Array.isArray(resp?.results) ? resp.results : [];
-
-                // Decrypt/map each message and broadcast to listeners one by one (preserves existing consumer logic)
-                const token = import("@/services").then(m => m.UserService.Instance.auth());
-                const sharedKeyHex = import("@/services").then(m => m.UserService.Instance.authInfo?.sharedKey);
-                const realToken = (await token) as any;
-                const realShared = (await sharedKeyHex) as any;
-
-                for (const view of items) {
-                    const m = { ...view.message, room_id: view.room?.id || view.message?.room_id };
-                    const mapped = await mapIncomingToChatMessage(m, {
-                        token: realToken,
-                        sharedKeyHex: realShared,
-                        fallbackRoomId: roomId,
-                        localUserId: Number(localUser?.id),
-                        receivedSet: receivedMessagesRef.current,
-                        decryptLabel: 'history line',
-                    });
-                    if (mapped) broadcastToListeners(mapped);
-                }
-
-                const prev = resp.prevPage ?? resp.prev_page ?? null;
-                const next = resp.nextPage ?? resp.next_page ?? null;
-                if (typeof prev === 'string' && prev.length > 0) {
-                    setPageCursor(next);
-                    setHasMoreMessages(true);
-                } else {
-                    setPageCursor(null);
-                    setHasMoreMessages(false);
-                }
-
-                setIsFetching(false);
-                fetchResolveRef.current?.();
-                fetchResolveRef.current = null;
+              setIsFetching(false);
+              fetchResolveRef.current?.();
+              fetchResolveRef.current = null;
             } catch (e) {
-                setIsFetching(false);
-                fetchResolveRef.current?.();
-                fetchResolveRef.current = null;
-                reject(e);
+              setIsFetching(false);
+              fetchResolveRef.current?.();
+              fetchResolveRef.current = null;
+              reject(e);
             }
         });
     }, [isE2EMock, roomId, localUser?.id, hasMoreMessages, isFetching, pageCursor, pageSize]);
@@ -249,8 +407,8 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             }
             if (cancelled) return;
 
-            const { getPhoenixChannelSocket } = await import("@/utils/phoenix-socket");
-            const newSocket = getPhoenixChannelSocket(token, roomId) as any;
+            const { getChannelAdapter } = await import("@/services/PhoenixSocketService");
+            const newSocket = getChannelAdapter(token, roomId) as any;
             currentSocketRef.current = newSocket;
             setSocket(newSocket);
 
@@ -268,110 +426,89 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
                 try { import("@/chat").then(m => m.emitWsReconnected()).catch(() => { try { window.dispatchEvent(new Event('ws:reconnected')); } catch {} }); } catch { try { window.dispatchEvent(new Event('ws:reconnected')); } catch {} }
             };
 
-            newSocket.onmessage = async (event: any) => {
+           const handleWSMessage = async (event: any) => {
+
+             try { console.log('[RT] onmessage ', event); } catch {}
+
                 try {
-                    const token = UserService.Instance.auth();
-                    const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
+                  console.debug('[WS RAW]', event.data);
+                  const token = UserService.Instance.auth();
+                  const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
+                  let payload: any = unwrapPhoenixFrame(event);
+                  console.debug('[WS UNWRAP]', payload);
 
-                    let payload: any = unwrapPhoenixFrame(event);
-                    // Drop heartbeats / pings and null-ish frames early
-                    if (payload == null || payload === 'pong' || payload === 'ping' || payload?.op === 'Ping') {
-                      return;
-                    }
+                  if (!isValidIncomingChatPayload(payload)) {
+                    console.debug('onmessage: payload not passing strict validator, attempting permissive mapping...', payload);
+                  }
 
-                    // Validate incoming payload early
-                    if (!isValidIncomingChatPayload(payload)) {
-                        // Drop frames that are not message/pagination shapes
-                        // console.debug('onmessage: invalid payload shape', payload);
-                        return;
-                    }
+                  const msgs = await handleIncomingPayload(payload, {
+                    roomId,
+                    localUserId: Number(localUser?.id),
+                    token,
+                    sharedKeyHex,
+                    receivedSet: receivedMessagesRef.current,
+                    setPageCursor,
+                    setHasMoreMessages,
+                    setIsFetching,
+                    fetchTimeoutRef,
+                    fetchResolveRef,
+                  });
 
-                    const transformedItems: ChatMessage[] = [];
-
-                    // Plain ChatMessageView line: { message, sender, room }
-                    if (payload && typeof payload === 'object' && payload.message) {
-                        const msgView = payload;
-                        const m = { ...msgView.message, room_id: msgView.room?.id || msgView.message?.room_id };
-                        const mapped = await mapIncomingToChatMessage(m, {
-                            token,
-                            sharedKeyHex,
-                            fallbackRoomId: roomId,
-                            localUserId: Number(localUser?.id),
-                            receivedSet: receivedMessagesRef.current,
-                            decryptLabel: 'message line',
-                        });
-                        if (mapped) transformedItems.push(mapped);
-                    }
-                    // Flat ChatMessage line: { id?, room_id, sender_id, content, created_at?, status? }
-                    else if (payload && typeof payload === 'object' && (payload.content && (payload.room_id || payload.roomId))) {
-                        const m = payload as any;
-                        const mapped = await mapIncomingToChatMessage(m, {
-                            token,
-                            sharedKeyHex,
-                            fallbackRoomId: roomId,
-                            localUserId: Number(localUser?.id),
-                            receivedSet: receivedMessagesRef.current,
-                            decryptLabel: 'flat message line',
-                        });
-                        if (mapped) transformedItems.push(mapped);
-                    }
-                    // Plain pagination line: { prevPage/prev_page, nextPage/next_page }
-                    else if (payload && typeof payload === 'object' && (payload.prevPage || payload.prev_page || payload.nextPage || payload.next_page)) {
-                        const prev = payload.prev_page ?? payload.prevPage ?? null;
-                        const next = payload.next_page ?? payload.nextPage ?? null;
-                        if (typeof prev === 'string' && prev.length > 0) {
-                            setPageCursor(next);
-                            setHasMoreMessages(true);
-                        } else {
-                            setPageCursor(null);
-                            setHasMoreMessages(false);
-                        }
-                        if (fetchTimeoutRef.current) {
-                            clearTimeout(fetchTimeoutRef.current);
-                            fetchTimeoutRef.current = null;
-                        }
-                        setIsFetching(false);
-                        if (fetchResolveRef.current) {
-                            fetchResolveRef.current();
-                            fetchResolveRef.current = null;
-                        }
-                    }
-
-                    if (transformedItems.length === 1) {
-                        // Broadcast every incoming message so consumers (ChatSection) can react to structured types
-                        for (const item of transformedItems) {
-                            broadcastToListeners(item);
-                        }
-                        // For previews, dispatch based on the latest item in this batch
-                        try {
-                            const last = transformedItems[transformedItems.length - 1];
-                            const detail = {
-                                roomId: (last as any).roomId,
-                                content: (last as any).content,
-                                senderId: Number((last as any).senderId) || 0,
-                                timestamp: (last as any).createdAt || new Date().toISOString(),
-                                unread: Number((last as any).senderId) !== Number(localUser?.id),
-                            };
-                            if (isBrowser()) {
-                                try { import("@/chat").then(m => m.emitChatNewMessage(detail as any)).catch(() => window.dispatchEvent(new CustomEvent('chat:new-message', { detail })) ); } catch { window.dispatchEvent(new CustomEvent('chat:new-message', { detail })); }
-                            }
-                        } catch {}
-                    }
+                  if (Array.isArray(msgs) && msgs.length) {
+                    for (const item of msgs) broadcastToListeners(item);
+                    try {
+                      const last = msgs[msgs.length - 1] as any;
+                      const detail = {
+                        roomId: last.roomId,
+                        content: last.content,
+                        senderId: Number(last.senderId) || 0,
+                        timestamp: last.createdAt || new Date().toISOString(),
+                        unread: Number(last.senderId) !== Number(localUser?.id),
+                      };
+                      if (isBrowser()) {
+                        try { import("@/chat").then(m => m.emitChatNewMessage(detail as any)).catch(() => window.dispatchEvent(new CustomEvent('chat:new-message', { detail })) ); } catch { window.dispatchEvent(new CustomEvent('chat:new-message', { detail })); }
+                      }
+                    } catch {}
+                  }
                 } catch (e) {
-                    setIsFetching(false);
-                    if (fetchTimeoutRef.current) {
-                        clearTimeout(fetchTimeoutRef.current);
-                        fetchTimeoutRef.current = null;
-                    }
-                    if (fetchResolveRef.current) {
-                        fetchResolveRef.current();
-                        fetchResolveRef.current = null;
-                    }
-                    for (const { fn } of listeners.values()) fn(event);
+                  setIsFetching(false);
+                  if (fetchTimeoutRef.current) { clearTimeout(fetchTimeoutRef.current); fetchTimeoutRef.current = null; }
+                  if (fetchResolveRef.current) { fetchResolveRef.current(); fetchResolveRef.current = null; }
+                  for (const { fn } of listeners.values()) fn(event);
                 }
             };
+            try { console.log('[WS] installing handlers for onmessage'); } catch {}
+            try { newSocket.onmessage = handleWSMessage; console.log('[WS] onmessage property installed'); } catch (e) { try { console.log('[WS] failed to set onmessage', e); } catch {} }
+
+            if (typeof newSocket?.addEventListener === 'function') {
+              try { newSocket.addEventListener('message', handleWSMessage); console.log('[WS] addEventListener("message") installed'); } catch (e) { try { console.log('[WS] addEventListener install failed', e); } catch {} }
+            }
+
+            if (typeof newSocket?.on === 'function') {
+              try {
+                newSocket.on('message', (payload: any) => handleWSMessage({ data: JSON.stringify(payload) }));
+                console.log('[WS] emitter .on("message") installed');
+              } catch (e) { try { console.log('[WS] emitter .on install failed', e); } catch {} }
+            }
+
+            // Start a safety poller that forwards the last Phoenix envelope if adapters don't fire events
+            if (!phoenixPollRef.current) {
+              console.log('[WS] starting fallback poller');
+              let lastSig: string | null = null;
+              phoenixPollRef.current = setInterval(() => {
+                try {
+                  const env = (globalThis as any).__phoenixRTLast;
+                  if (!env) return;
+                  const sig = JSON.stringify(env);
+                  if (sig === lastSig) return;
+                  lastSig = sig;
+                  handleWSMessage({ data: JSON.stringify(env) });
+                } catch {}
+              }, 700);
+            }
 
             newSocket.onclose = (event: any) => {
+                if (phoenixPollRef.current) { try { clearInterval(phoenixPollRef.current); } catch {} phoenixPollRef.current = null; }
                 setIsConnected(false);
 
                 if (isManuallyClosingRef.current) {
@@ -415,6 +552,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
         return () => {
             cancelled = true;
             isManuallyClosingRef.current = true;
+            if (phoenixPollRef.current) { try { clearInterval(phoenixPollRef.current); } catch {} phoenixPollRef.current = null; }
             try {
                 currentSocketRef.current?.close?.();
             } catch {
@@ -486,7 +624,6 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
             }
 
             const apiPayload = {
-                op: "SendMessage",
                 sender_id: Number(localUser?.id) || 0,
                 room_id: roomId,
                 content: data.message,

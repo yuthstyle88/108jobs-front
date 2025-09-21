@@ -274,7 +274,11 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
             const { onChatNewMessage } = await import("@/chat");
             unsubscribe = onChatNewMessage((detail) => {
                 if (!detail || !detail.roomId) return;
-                // Unconditionally bump room to top for immediate UX feedback
+                // First, update unread counters in the global store to ensure counts are ready before UI updates
+                if (detail.unread === true && detail.roomId !== activeRoomId) {
+                    try { (require as any)("@/stores/unreadStore").useUnreadStore.getState().inc(detail.roomId, 1); } catch {}
+                }
+                // Then bump room to top for immediate UX feedback
                 setState(prev => {
                     const idx = prev.rooms.findIndex(r => r.id === detail.roomId);
                     if (idx === -1) return prev;
@@ -284,13 +288,9 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                     activityOverridesRef.current[detail.roomId] = tsStr;
                     try { saveOverrides(); } catch {}
 
-                    // Clone rooms and optionally update unread count (store will handle global badge)
+                    // Clone rooms (unreadCount will be synced from store via dedicated effect)
                     let nextRooms: any[] = prev.rooms.slice();
-                    let updatedRoom = nextRooms[idx];
-                    if (detail.unread === true && detail.roomId !== activeRoomId) {
-                        const nextCount = (updatedRoom.unreadCount || 0) + 1;
-                        updatedRoom = { ...updatedRoom, unreadCount: nextCount };
-                    }
+                    const updatedRoom = nextRooms[idx];
 
                     // Remove from current position and insert at front
                     nextRooms.splice(idx, 1);

@@ -157,6 +157,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
    const {sendMessage, fetchHistory, isConnected, hasMoreMessages, isFetching} = useWebSocket(
         `chat-view:${roomId}`,
         (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) => {
+            try { console.debug('[CHAT][RT] handler invoked for room', roomId); } catch {}
             let parsed: WsChatMessage | WsChatMessage[];
             try {
                 const raw = event.data as unknown;
@@ -181,6 +182,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 items = [parsed as WsChatMessage];
             }
             if (!items.length) return;
+
+            // Normalize: ensure id is string, createdAt present, senderId numeric
+            items = items.map((m: any) => ({
+              ...m,
+              id: String(m.id ?? m.uuid ?? uuidv4()),
+              createdAt: m.createdAt ?? m.created_at ?? new Date().toISOString(),
+              senderId: typeof m.senderId === 'number' ? m.senderId : Number(m.sender_id ?? m.senderId ?? 0),
+            }));
+            try { console.debug('[CHAT][RT] items normalized:', { count: items.length, sample: items[0] }); } catch {}
 
             setMessages((prev) => {
                 const copy = [...prev];
@@ -234,6 +244,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 );
 
+                try {
+                  console.debug('[CHAT][RT] setMessages summary', {
+                    added, replaced, skippedDup, inc,
+                    prevLen: prev.length,
+                    nextLen: sorted.length,
+                    latest: sorted[0]
+                  });
+                } catch {}
+
                 // Defer room preview updates only for live, single-message events (skip during history)
                 if (!isHistoryBatch && inc > 0) {
                     try {
@@ -256,6 +275,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             });
         }
     );
+
+    // Track render updates for messages and connection/fetch states
+    useEffect(() => {
+      try {
+        console.debug('[CHAT][UI] messages render len=', messages.length, messages[0]);
+      } catch {}
+    }, [messages]);
+
+    useEffect(() => {
+      try { console.debug('[CHAT][WS] isConnected=', isConnected, 'hasMore=', hasMoreMessages, 'isFetching=', isFetching); } catch {}
+    }, [isConnected, hasMoreMessages, isFetching]);
 
     // After commit, propagate the last incoming message to ChatRooms context and auto-scroll for receiver
     useEffect(() => {
@@ -1104,6 +1134,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                             hasMore={hasMoreMessages}
                             isFetching={isFetching}
                             onAtBottomChange={(isAtBottom) => {
+                                console.debug('[CHAT][SCROLL] onAtBottomChange ->', isAtBottom);
                                 atBottomRef.current = isAtBottom;
                                 setIsAtBottom(isAtBottom);
                                 if (isAtBottom) {
@@ -1123,6 +1154,25 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                 }
                             }}
                         />
+                        {/* DEBUG PANEL: remove after verification */}
+                        <div className="hidden sm:block w-full mt-2 p-2 bg-white/70 border border-dashed border-gray-300 text-xs rounded">
+                          <div className="flex flex-wrap gap-2">
+                            <span>WS: <b>{String(isConnected)}</b></span>
+                            <span>Fetching: <b>{String(isFetching)}</b></span>
+                            <span>HasMore: <b>{String(hasMoreMessages)}</b></span>
+                            <span>Msgs: <b>{messages.length}</b></span>
+                          </div>
+                          <div className="mt-1 overflow-auto max-h-40">
+                            <pre className="whitespace-pre-wrap break-all">
+                              {(() => {
+                                try {
+                                  const sample = messages.slice(0, 3).map(m => ({ id: String(m.id), senderId: m.senderId, createdAt: m.createdAt, content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content) }));
+                                  return JSON.stringify(sample, null, 2);
+                                } catch (e) { return String(e); }
+                              })()}
+                            </pre>
+                          </div>
+                        </div>
                     </div>
                     <div ref={inputContainerRef} className="border-t px-3 py-2 sm:px-4 sm:py-3 bg-white">
                         <div className="flex items-center gap-2">
