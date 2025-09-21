@@ -1,6 +1,7 @@
 import type {LocalUserId} from "./LocalUserId";
 import type {PostId} from "./PostId";
 import type {CommentId} from "./CommentId";
+import type {BillingStatus} from "./BillingStatus";
 
 // Matches backend form with camelCase via serde(rename_all = "camelCase")
 export type CreateInvoiceForm = {
@@ -11,6 +12,7 @@ export type CreateInvoiceForm = {
   amount: number; // using number for simplicity; backend may accept numeric
   proposal: string;
   projectName: string;
+  status: BillingStatus;
   projectDetails?: string; // has serde(default) in backend
   workingDays: number;
   deliverables?: string[]; // has serde(default) in backend

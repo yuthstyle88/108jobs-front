@@ -6,7 +6,7 @@ import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import LoadingBlur from "@/components/LoadingBlur";
 import {ProfileImage} from "@/constants/images";
-import type {ChatMessage as WsChatMessage, Post} from "lemmy-js-client";
+import type {BillingStatus, ChatMessage as WsChatMessage, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
@@ -472,6 +472,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 amount: data.amount,
                 proposal: data.proposal,
                 projectName: data.projectName,
+                status: "QuotePendingReview",
                 projectDetails: data.projectDetails,
                 workingDays: data.workingDays,
                 deliverables: data.deliverables,

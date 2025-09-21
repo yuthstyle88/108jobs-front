@@ -23,7 +23,6 @@ export interface ProposedQuotePayload {
     proposal: string;
     projectName: string;
     projectDetails: string;
-    workSteps: WorkStep[];
     workingDays: number;
     deliverables: string[];
     note?: string;
@@ -60,7 +59,6 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
             proposal: z.string().min(1, t('profileChat.validation.invalidForm') || 'Proposal is required'),
             projectName: z.string().min(1, t('profileChat.validation.invalidForm') || 'Project name is required'),
             projectDetails: z.string().min(1, t('profileChat.validation.invalidForm') || 'Project details are required'),
-            workSteps: z.array(WorkStepSchema).min(1, t('profileChat.validation.workSteps') || 'At least one work step is required'),
             workingDays: z.number().int().positive({ message: t('profileChat.validation.workingDays') || 'Total working days must be greater than 0' }),
             deliverables: z.array(z.string().min(1, t('profileChat.validation.deliverable') || 'Deliverable description is required')).min(1, t('profileChat.validation.deliverables') || 'At least one deliverable is required'),
             note: z.string().optional(),
@@ -97,12 +95,6 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
         proposal: '',
         projectName: projectName || '',
         projectDetails: '',
-        workSteps: [{
-            seq: 1,
-            description: '',
-            amount: 0,
-            status: 'QuotationPending',
-        }],
         workingDays: 0,
         deliverables: [''],
         note: '',
@@ -144,39 +136,8 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
         validateField(key, value);
     };
 
-    const updateWorkStep = (index: number, key: keyof WorkStep, value: any) => {
-        setForm((prev) => {
-            const copy = [...prev.workSteps];
-            const current = copy[index] as WorkStep;
-            copy[index] = { ...current, [key]: value };
-            return { ...prev, workSteps: copy };
-        });
-        validateWorkStep(index);
-    };
-
-    const addWorkStep = () => {
-        const newIndex = form.workSteps.length;
-        setForm((prev) => ({
-            ...prev,
-            workSteps: [
-                ...prev.workSteps,
-                {
-                    seq: prev.workSteps.length + 1,
-                    description: '',
-                    amount: 0,
-                    status: 'QuotationPending',
-                },
-            ],
-        }));
-        setTimeout(() => validateWorkStep(newIndex), 0); // Validate after state update
-    };
-
     const removeWorkStep = (index: number) => {
         if (index === 0) return; // Prevent removing the first work step
-        setForm((prev) => {
-            const copy = prev.workSteps.filter((_, i) => i !== index).map((w, i) => ({ ...w, seq: i + 1 }));
-            return { ...prev, workSteps: copy };
-        });
         setErrors((prev) => {
             const newErrors = { ...prev };
             Object.keys(newErrors).forEach((key) => {
@@ -418,97 +379,8 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                                             required
                                         />
                                     </div>
-                                    <button
-                                        type="button"
-                                        onClick={() => removeDeliverable(idx)}
-                                        disabled={form.deliverables.length <= 1}
-                                        className={`px-2 py-2 sm:py-2 text-xs sm:text-sm rounded-md border border-gray-300 text-red-500 hover:bg-gray-100 ${form.deliverables.length <= 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                        aria-label={t('profileChat.remove') || 'Remove deliverable'}
-                                    >
-                                        <FontAwesomeIcon icon={faTrash} />
-                                    </button>
                                 </div>
                             ))}
-                            <button
-                                type="button"
-                                onClick={addDeliverable}
-                                className="mt-1 px-2 sm:px-3 py-1 sm:py-2 rounded-md bg-primary text-xs sm:text-sm hover:bg-[#063a68] text-white"
-                            >
-                                {t('profileChat.addDeliverable') || '+ Add deliverable'}
-                            </button>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-xs sm:text-sm font-medium text-gray-700">
-                            {t('profileChat.workSteps') || 'Work Steps'}
-                            <span className="text-red-500">*</span>
-                        </label>
-                        {errors['workSteps'] && (
-                            <p className="mt-1 text-xs text-red-600">{errors['workSteps']}</p>
-                        )}
-                        <div className="space-y-2 sm:space-y-3">
-                            {form.workSteps.map((ws, idx) => (
-                                <div key={idx} className="border rounded-md p-2 sm:p-3 space-y-2 bg-gray-50">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                        <CustomInput
-                                            label={t('profileChat.seq') || 'Seq'}
-                                            name={`workSteps.${idx}.seq`}
-                                            type="number"
-                                            value={ws.seq.toString()}
-                                            onChange={(e) => updateWorkStep(idx, 'seq', Number(e.target.value))}
-                                            error={errors[`workSteps.${idx}.seq`]}
-                                            readonly
-                                        />
-                                        <CustomInput
-                                            label={t('profileChat.description') || 'Description'}
-                                            name={`workSteps.${idx}.description`}
-                                            value={ws.description}
-                                            onChange={(e) => updateWorkStep(idx, 'description', e.target.value)}
-                                            error={errors[`workSteps.${idx}.description`]}
-                                            placeholder={t('profileChat.exampleWorkStep') || 'Enter work step description'}
-                                            required
-                                        />
-                                        <CustomInput
-                                            label={t('profileChat.amount') || 'Amount'}
-                                            name={`workSteps.${idx}.amount`}
-                                            type="number"
-                                            value={ws.amount === 0 ? '' : ws.amount.toString()}
-                                            onChange={(e) => updateWorkStep(idx, 'amount', Number(e.target.value))}
-                                            error={errors[`workSteps.${idx}.amount`]}
-                                            placeholder="0"
-                                            required
-                                        />
-                                        <CustomInput
-                                            label={t('profileChat.status') || 'Status'}
-                                            name={`workSteps.${idx}.status`}
-                                            value={ws.status}
-                                            onChange={(e) => updateWorkStep(idx, 'status', e.target.value)}
-                                            error={errors[`workSteps.${idx}.status`]}
-                                            readonly
-                                        />
-                                    </div>
-                                    {idx !== 0 && (
-                                        <div className="flex justify-end">
-                                            <button
-                                                type="button"
-                                                onClick={() => removeWorkStep(idx)}
-                                                className="px-2 sm:px-3 py-1 text-xs sm:text-sm text-red-500 rounded-md border border-gray-300 hover:bg-gray-100"
-                                                aria-label={t('profileChat.removeStep') || 'Remove work step'}
-                                            >
-                                                <FontAwesomeIcon icon={faTrash} />
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                            <button
-                                type="button"
-                                onClick={addWorkStep}
-                                className="mt-1 px-2 sm:px-3 py-1 sm:py-2 rounded-md bg-primary text-xs sm:text-sm hover:bg-[#063a68] text-white"
-                            >
-                                {t('profileChat.addWorkStep') || '+ Add work step'}
-                            </button>
                         </div>
                     </div>
 
