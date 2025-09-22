@@ -30,7 +30,6 @@ import {getLatestProposedQuotePayload, getLatestProposedQuoteSeq} from "@/utils/
 import {JobDetailModal} from "@/components/Common/Modal/JobDetailModal";
 import {ReviewDeliveryModal} from "@/components/Common/Modal/ReviewDeliveryModal";
 import {JobFlowContent} from "@/components/JobFlowContent";
-import ConfirmActionModal from "@/components/Common/Modal/ConfirmActionModal";
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -42,6 +41,7 @@ interface ChatSectionProps {
     partnerAvatar: string;
     partnerId?: number;
     partnerAvailable?: boolean;
+    commentId: number;
 }
 
 const ChatSection: React.FC<ChatSectionProps> = ({
@@ -50,7 +50,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                                      partnerName,
                                                      partnerAvatar,
                                                      partnerId,
-                                                     partnerAvailable
+                                                     partnerAvailable,
+                                                     commentId
                                                  }) => {
     const {markRoomRead, setActiveRoomId} = useChatRooms();
     const {state: stepperState, send, canGo, ORDER} = useWorkflowStepper();
@@ -59,7 +60,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [showJobDetailModal, setShowJobDetailModal] = useState<boolean>(false);
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
-    const [showTopUpPrompt, setShowTopUpPrompt] = useState<boolean>(false);
     const {t} = useTranslation();
     const [workflowIdState, setWorkflowIdState] = useState<number | null>(null);
     type UIChatMessage = WsChatMessage & { isOwner?: boolean };
@@ -80,7 +80,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }, [roomId]);
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [, setIsInitialLoading] = useState(true);
-    const [error, setError] = useState<React.ReactNode | null>(null); // New error state for API failures
+    const [error, setError] = useState<string | null>(null); // New error state for API failures
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
     const [isDeletingFile, setIsDeletingFile] = useState<boolean>(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -125,7 +125,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         };
     }, []);
     const isSubmittingRef = useRef(false);
-    const {localUser, person} = useMyUser();
+    const {localUser, person, wallet} = useMyUser();
     const myAvailable = person?.available !== false; // treat undefined as available
     const canSend = (partnerAvailable !== false) && myAvailable;
     const disabledReason = !myAvailable
@@ -476,6 +476,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 return;
             }
 
+
             const createdBillingId = (res as any)?.data?.billingId;
 
             // Proceed with chat message and state updates only if invoice creation succeeds
@@ -521,7 +522,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             setError(t("profileChat.quotationError") || "Failed to send quotation. Please try again.");
         }
     };
-
 
     // Helper to add a local (owner) message to the list and scroll
     const addOwnMessage = useCallback((content: string, id?: string) => {
@@ -661,6 +661,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         try {
             setError(null);
 
+            // Guard: prevent approving if insufficient balance
+            if (insufficientForApprove) {
+                setError(t('profileChat.insufficientBalanceWarning') || 'Insufficient balance to approve the quotation.');
+                return false;
+            }
+
             // Resolve billingId from latest proposed-quote message
             const latestPayload: any | null = getLatestProposedQuotePayload(messages as any);
 
@@ -707,9 +713,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             const res = await approveQuotationApi(form as any);
             if (res.state === REQUEST_STATE.FAILED) {
                 if (res?.err?.name === "insufficientBalanceForTransfer") {
-                    setError(null);
-                    setShowTopUpPrompt(true);
-                    return false;
+                    setError(res?.err?.message);
                 }
             }
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
@@ -1115,6 +1119,22 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         return Boolean(getLatestProposedQuotePayload(messages as any));
     }, [messages]);
 
+    // Determine latest quotation amount and whether employer has sufficient balance to approve
+    const latestQuoteAmount = useMemo(() => {
+        const p: any = getLatestProposedQuotePayload(messages as any);
+        const amt = Number(p?.quote?.amount);
+        return Number.isFinite(amt) ? amt : undefined;
+    }, [messages]);
+
+    const availableBalance: number = useMemo(() => {
+        const total = Number((wallet as any)?.balanceAvailable ?? (wallet as any)?.balanceTotal ?? 0);
+        return Number.isFinite(total) ? total : 0;
+    }, [wallet]);
+
+    const insufficientForApprove = useMemo(() => {
+        return Boolean(isEmployer && hasProposedQuote && latestQuoteAmount != null && availableBalance < (latestQuoteAmount as number));
+    }, [isEmployer, hasProposedQuote, latestQuoteAmount, availableBalance]);
+
     const renderFlowContent = () => (
         <>
             {!roomPostId && (
@@ -1123,6 +1143,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     {t("profileChat.missingPostIdForQuotation") || "This chat is not linked to a post. You cannot create a quotation."}
                 </div>
             )}
+
             <FreelanceChatFlow
                 currentStatus={currentStatus}
                 onChangeStatus={handleChangeStatus}
@@ -1135,6 +1156,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 showStartButton={isEmployer}
                 canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
                 canApproveQuotation={isEmployer && hasProposedQuote}
+                insufficientForApprove={insufficientForApprove}
                 isEmployer={isEmployer}
                 canSubmitDelivery={!!selectedFile}
                 onProposeQuote={flowActions.onProposeQuote}
@@ -1322,15 +1344,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 commentId={roomCommentId as number}
                 partnerId={partnerId as number}
                 projectName={currentRoom?.job?.title || "No Job Title"}
-            />
-            <ConfirmActionModal
-                isOpen={showTopUpPrompt}
-                onClose={() => setShowTopUpPrompt(false)}
-                onConfirm={() => { try { window.open('/coin', '_blank', 'noopener,noreferrer'); } catch {} setShowTopUpPrompt(false); }}
-                title={t('profileChat.insufficientBalanceTitle') || 'Insufficient balance'}
-                message={t('profileChat.insufficientBalanceWarning') || 'Insufficient balance to approve the quotation.'}
-                confirmText={t('profileChat.topUpNow') || 'Top up now'}
-                cancelText={t('global.buttonCancel') || 'Cancel'}
             />
         </>
     );

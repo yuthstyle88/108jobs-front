@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import ConfirmActionModal from '@/components/Common/Modal/ConfirmActionModal';
 import { useWorkflowStepper } from '@/hooks/useWorkflowMachine';
 import type { UiFlowStatus } from '@/stores/stateMachineStore';
+import Link from "next/link";
 
 export type StatusKey = UiFlowStatus;
 
@@ -31,6 +32,7 @@ export type FreelanceChatFlowProps = {
     canStartWorkflow?: boolean;
     canProposeQuote?: boolean;
     canApproveQuotation?: boolean;
+    insufficientForApprove?: boolean;
     showStartButton?: boolean;
     isEmployer?: boolean;
     canSubmitDelivery?: boolean;
@@ -66,6 +68,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  canStartWorkflow = true,
                                                                  canProposeQuote = true,
                                                                  canApproveQuotation = true,
+                                                                 insufficientForApprove = true,
                                                                  showStartButton = true,
                                                                  isEmployer = false,
                                                                  canSubmitDelivery = false,
@@ -136,7 +139,19 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 if (canProposeQuote) {
                     actionsQP.push(btn(t('profileChat.proposeQuote') || 'Send quotation', onProposeQuote));
                 }
-                if (canApproveQuotation) {
+                if (insufficientForApprove) {
+                    actionsQP.push(
+                        <div className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm">
+                            <div className="font-medium">{t("profileChat.insufficientBalanceTitle") || "Insufficient balance"}</div>
+                            <div className="mt-1">
+                                {(t("profileChat.insufficientBalanceWarning") || "Insufficient balance to approve the quotation.")}
+                                {" "}
+                                <Link href="/coin" className="underline font-medium">{t("profileChat.topUpNow") || "Top up now"}</Link>
+                            </div>
+                        </div>
+                    );
+                }
+                if (canApproveQuotation && !insufficientForApprove) {
                     actionsQP.push(btn(t('profileChat.approveQuotation') || 'Approve quotation', () => setShowApproveConfirm(true)));
                 }
                 if (!canProposeQuote && !canApproveQuotation && !isEmployer) {

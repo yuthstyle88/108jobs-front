@@ -16,6 +16,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
 
     const [partnerName, setPartnerName] = useState<string>("Unknown");
     const [partnerId, setPartnerId] = useState<any>({});
+    const [commentId, setCommentId] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [peerPublicKeyHex, setPeerPublicKeyHex] = useState<string | undefined>(undefined);
     const [post, setPost] = useState<Post>();
@@ -56,6 +57,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
                 ) {
                     setNotFound(true);
                     setLoading(false);
+                    setCommentId(chatRoomRes.data.room.currentComment?.id);
                     return;
                 }
             }
@@ -125,7 +127,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     return (
         <PhoenixSocketProvider token={accessToken} roomId={roomId} peerPublicKeyHex={peerPublicKeyHex}>
             <ChatSection roomId={roomId} post={post} partnerName={partnerName} partnerAvatar={""}
-                         partnerId={partnerId as number} partnerAvailable={partnerAvailable}/>
+                         partnerId={partnerId as number} partnerAvailable={partnerAvailable} commentId={commentId}/>
         </PhoenixSocketProvider>
     );
 }
