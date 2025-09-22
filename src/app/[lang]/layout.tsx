@@ -13,7 +13,7 @@ import {GlobalErrorProvider} from "@/contexts/GlobalErrorContext";
 import {AnnouncementProvider} from "@/contexts/AnnouncementContext";
 import AccessibleAnnouncements from "@/components/AccessibleAnnouncements";
 import GlobalError from "@/components/GlobalError";
-import GlobalLoader from "@/components/Loading";
+import GlobalLoader from "@/components/Common/Loading/Loading";
 // Optimize font loading with display swap and preload
 const kanit = Kanit({
     subsets: ["latin", "vietnamese", "thai"],

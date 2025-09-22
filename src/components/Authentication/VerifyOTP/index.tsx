@@ -8,7 +8,7 @@ import {useForm} from "react-hook-form";
 import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {REQUEST_STATE} from "@/services/HttpService";
-import LoadingCircle from "@/components/LoadingCircle";
+import LoadingCircle from "@/components/Common/Loading/LoadingCircle";
 import {RegisterDataProps} from "@/types/register-data";
 
 interface VerifyOTPProps {

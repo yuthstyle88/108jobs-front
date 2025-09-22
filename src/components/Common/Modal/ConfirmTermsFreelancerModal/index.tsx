@@ -4,7 +4,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
 import TermsAndCondition from "./components/TermsAndCondition";
-import LoadingCircle from "../LoadingCircle";
+import LoadingCircle from "../../Loading/LoadingCircle";
 import {getNamespace} from "@/utils/i18nHelper";
 import {LanguageFile} from "@/constants/language";
 import {useEffect} from "react";

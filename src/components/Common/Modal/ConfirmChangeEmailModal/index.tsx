@@ -1,5 +1,5 @@
 "use client";
-import LoadingCircle from "@/components/LoadingCircle";
+import LoadingCircle from "@/components/Common/Loading/LoadingCircle";
 import Modal from "@/components/ui/Modal";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Mail} from "lucide-react";

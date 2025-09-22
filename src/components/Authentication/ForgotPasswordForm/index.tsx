@@ -1,5 +1,5 @@
 "use client";
-import LoadingCircle from "@/components/LoadingCircle";
+import LoadingCircle from "@/components/Common/Loading/LoadingCircle";
 import {CustomInput} from "@/components/ui/InputField";
 import {ERROR_CONSTANTS} from "@/constants/error";
 import {LanguageFile} from "@/constants/language";

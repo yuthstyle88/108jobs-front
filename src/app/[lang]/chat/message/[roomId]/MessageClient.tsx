@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {PhoenixSocketProvider} from "@/contexts/RealtimeChatContext";
 import ChatSection from "../../_components/ChatSection";
 import {HttpService, UserService} from "@/services";
-import LoadingBlur from "@/components/LoadingBlur";
+import LoadingBlur from "@/components/Common/Loading/LoadingBlur";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {Post} from "@/lib/lemmy-js-client";

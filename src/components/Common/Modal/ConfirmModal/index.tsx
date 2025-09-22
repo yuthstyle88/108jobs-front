@@ -4,9 +4,9 @@ import useNotification from "@/hooks/useNotification";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useState} from "react";
 import {useForm} from "react-hook-form";
-import LoadingCircle from "../LoadingCircle";
-import {CustomInput} from "../ui/InputField";
-import Modal from "../ui/Modal";
+import LoadingCircle from "../../Loading/LoadingCircle";
+import {CustomInput} from "../../../ui/InputField";
+import Modal from "../../../ui/Modal";
 import {useTranslation} from "react-i18next";
 import {z} from "zod";
 

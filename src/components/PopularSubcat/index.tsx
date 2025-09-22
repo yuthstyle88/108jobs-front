@@ -5,7 +5,7 @@ import {useClickOutside} from "@/hooks/useClickOutside";
 import Image from "next/image";
 import Link from "next/link";
 import {useState} from "react";
-import Loading from "../Loading";
+import Loading from "../Common/Loading/Loading";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import ErrorState from "@/components/ErrorState";
 

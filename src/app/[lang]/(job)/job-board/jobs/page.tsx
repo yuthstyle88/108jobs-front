@@ -11,7 +11,7 @@ import ConfirmCloseJob from "../_components/ConfirmCloseJobs";
 import JobBoardTab from "../_components/JobBoardTab";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {useTranslation} from "react-i18next";
-import LoadingBlur from "@/components/LoadingBlur";
+import LoadingBlur from "@/components/Common/Loading/LoadingBlur";
 
 const MyJobs = () => {
     const {t} = useTranslation();

@@ -1,10 +1,10 @@
 "use client";
 import {Image, Upload} from "lucide-react";
 import React, {useEffect, useRef, useState} from "react";
-import ImageEditor from "../AvatarEditor";
-import Modal from "../ui/Modal";
+import ImageEditor from "../../../AvatarEditor";
+import Modal from "../../../ui/Modal";
 import {uploadSelectedImage} from "@/utils/helpers";
-import Loading from "@/components/Loading"; // นำเข้า helper ฟังก์ชัน upload
+import Loading from "@/components/Common/Loading/Loading"; // นำเข้า helper ฟังก์ชัน upload
 import {useTranslation} from "react-i18next";
 
 interface ImageUploadModalProps {

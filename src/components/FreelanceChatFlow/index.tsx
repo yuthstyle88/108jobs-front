@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import ConfirmActionModal from '@/components/ConfirmActionModal';
+import ConfirmActionModal from '@/components/Common/Modal/ConfirmActionModal';
 import { useWorkflowStepper } from '@/hooks/useWorkflowMachine';
 import type { UiFlowStatus } from '@/stores/stateMachineStore';
 

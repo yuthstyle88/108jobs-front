@@ -10,7 +10,7 @@ import {Pencil, Plus, Star, Trash2} from "lucide-react";
 import {useState} from "react";
 import BankAccountModal, {BankAccountFormValues} from "../_components/AddBankAccountModal";
 import ConfirmDeleteModal from "../_components/DeleteBankModal";
-import LoadingBlur from "@/components/LoadingBlur";
+import LoadingBlur from "@/components/Common/Loading/LoadingBlur";
 
 
 const BankAccount = () => {

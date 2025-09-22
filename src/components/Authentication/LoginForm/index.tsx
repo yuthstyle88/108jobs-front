@@ -1,5 +1,5 @@
 "use client";
-import LoadingCircle from "@/components/LoadingCircle";
+import LoadingCircle from "@/components/Common/Loading/LoadingCircle";
 import {CustomInput} from "@/components/ui/InputField";
 import {EMPTY_REQUEST, HttpService, isSuccess,} from "@/services/HttpService";
 import {setIsoData} from "@/utils/app";

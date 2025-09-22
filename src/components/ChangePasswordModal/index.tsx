@@ -5,7 +5,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useMemo, useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
-import LoadingCircle from "../LoadingCircle";
+import LoadingCircle from "../Common/Loading/LoadingCircle";
 import {CustomInput} from "../ui/InputField";
 import Modal from "../ui/Modal";
 import {useTranslation} from "react-i18next";

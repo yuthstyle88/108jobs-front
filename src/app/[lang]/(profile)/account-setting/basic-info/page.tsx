@@ -1,5 +1,5 @@
 "use client";
-import ImageUploadModal from "@/components/AvatarUploadModal";
+import ImageUploadModal from "@/components/Common/Modal/AvatarUploadModal";
 import PasswordChangeModal from "@/components/ChangePasswordModal";
 import {ProfileImage} from "@/constants/images";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";

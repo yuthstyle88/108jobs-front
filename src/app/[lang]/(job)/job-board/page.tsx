@@ -19,7 +19,7 @@ import {
 import ErrorState from "@/components/ErrorState";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {useCommunities} from "@/hooks/communites-api/useCommunities";
-import LoadingBlur from "@/components/LoadingBlur";
+import LoadingBlur from "@/components/Common/Loading/LoadingBlur";
 
 const ITEMS_PER_PAGE = 20;
 
