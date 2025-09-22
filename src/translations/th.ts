@@ -138,6 +138,9 @@ export const th = {
             missingPostIdForQuotation: "ห้องแชทนี้ยังไม่เชื่อมกับงาน โปรดเชื่อมโยงงานกับห้องนี้ก่อน จึงจะสามารถสร้างใบเสนอราคา หรือเริ่มลำดับงานได้",
             selectConversation: "เลือกการสนทนาจากด้านซ้ายเพื่อเริ่มส่งข้อความ",
             searchChat: "ค้นหาการสนทนา",
+            insufficientBalanceTitle: "ยอดเงินไม่เพียงพอ",
+            insufficientBalanceWarning: "ยอดเงินไม่เพียงพอที่จะอนุมัติใบเสนอราคา",
+            topUpNow: "เติมเงินตอนนี้"
         },
         allCategories: {
             allJobCategories: "หมวดหมู่งานทั้งหมด",
@@ -1683,6 +1686,12 @@ export const th = {
             tableTopUpAmount: "จำนวนเงินที่เติม (บาท)",
             tableTotalCoins: "เหรียญทั้งหมดที่ได้รับ",
             titleFastworkCoin: `${getAppName()} Coin`,
+            uploadProof: "อัปโหลดหลักฐานการโอน",
+            submitPaymentButton: "ส่งการชำระเงิน",
+            topupModalTitle: "รายละเอียดการเติมเงิน",
+            labelAmountToTopUp: "จำนวนเงินที่จะเติม",
+            imageSelected: "เลือกภาพแล้ว",
+            dragDropClick: "ลากและวางหรือคลิกเพื่ออัปโหลดภาพ"
         },
         profileCompany: {
             buttonSearchCompany: "ค้นหาข้อมูลบริษัท",
@@ -2055,7 +2064,7 @@ export const th = {
             uploadButton: "อัปโหลดรูปภาพ",
             buttonAddBank: "เพิ่มธนาคาร",
             noBankFound: "ไม่พบธนาคารใด ๆ",
-            buttonEditBank: "แก้ไขธนาคาร"
+            buttonEditBank: "แก้ไขธนาคาร",
         },
         sellerCommitmentLetter: {
             incomeTaxDescription: `เพื่อรับชำระเงินผ่านระบบของ ${getAppName()} ฟรีแลนซ์จะต้องยืนยันและยอมรับในการให้ข้อมูลรายได้ของตนเองเพื่อให้หน่วยงานภาษีตรวจสอบการปฏิบัติตามข้อกำหนดทางกฎหมาย`,

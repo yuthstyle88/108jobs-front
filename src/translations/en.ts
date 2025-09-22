@@ -139,6 +139,9 @@ export const en = {
             missingPostIdForQuotation: "This chat is not linked to a job post. Link a job to this room to create a quotation or start the workflow.",
             selectConversation: "Select a conversation from the left to start messaging.",
             searchChat: "Search chat",
+            insufficientBalanceTitle: "Insufficient balance",
+            insufficientBalanceWarning: "Insufficient balance to approve the quotation.",
+            topUpNow: "Top up now"
         },
         allCategories: {
             allJobCategories: "All Job Categories",
@@ -1728,6 +1731,12 @@ export const en = {
             tableTopUpAmount: "Top-up amount (baht)",
             tableTotalCoins: "Total coins received",
             titleFastworkCoin: `${getAppName()} Coin`,
+            uploadProof: "Upload Proof of Transfer",
+            submitPaymentButton: "Submit Payment",
+            topupModalTitle: "Top-Up Payment Details",
+            labelAmountToTopUp: "Amount to Top-Up",
+            imageSelected: "Image selected",
+            dragDropClick: "Drag & drop or click to upload an image"
         },
         profileCompany: {
             buttonSearchCompany: "Search Company Information",

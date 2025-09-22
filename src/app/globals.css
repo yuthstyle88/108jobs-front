@@ -76,7 +76,7 @@
 
 
 .coin-gradient {
-    background: linear-gradient(326.33deg, #27c8f8 2.42%, #1850c2 106.48%), #c4c4c4;
+    background: linear-gradient(326.33deg, var(--primary) 2.42%, #1850c2 106.48%), #c4c4c4;
 }
 
 .coin-popup-gradient {

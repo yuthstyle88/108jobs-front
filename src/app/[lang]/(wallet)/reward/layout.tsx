@@ -9,7 +9,7 @@ interface RewardLayoutProps {
 export default function RewardLayout({children}: RewardLayoutProps) {
   return (
     <>
-      <div className="hidden sm:block">
+      <div className="hidden sm:block bg-primary-">
         <RewardHeader/>
       </div>
       <div className="block sm:hidden">

@@ -15,6 +15,6 @@ export const useMyUser = () => {
     contact: user?.profile?.contact || null,
     address: user?.profile?.address || null,
     card: user?.profile?.identityCard || null,
-    // coin: user?.profile?.coin || null,
+    wallet: user?.wallet || null,
   };
 };

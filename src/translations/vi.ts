@@ -139,6 +139,9 @@ export const vi = {
             userNotAvailable: "Người dùng này hiện không sẵn sàng. Bạn có thể xem lịch sử chat nhưng không thể gửi tin nhắn mới.",
             selectConversation: "Chọn một cuộc trò chuyện từ bên trái để bắt đầu nhắn tin.",
             searchChat: "Tìm kiếm cuộc trò chuyện",
+            insufficientBalanceTitle: "Số dư không đủ",
+            insufficientBalanceWarning: "Số dư không đủ để phê duyệt báo giá.",
+            topUpNow: "Nạp tiền ngay"
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",
@@ -1736,6 +1739,12 @@ export const vi = {
             tableTopUpAmount: "Số tiền nạp (baht)",
             tableTotalCoins: "Tổng số coins nhận được",
             titleFastworkCoin: `${getAppName()} Coin`,
+            uploadProof: "Tải lên Bằng chứng Chuyển khoản",
+            submitPaymentButton: "Gửi Thanh toán",
+            topupModalTitle: "Chi tiết Nạp tiền",
+            labelAmountToTopUp: "Số tiền cần nạp",
+            imageSelected: "Đã chọn hình ảnh",
+            dragDropClick: "Kéo & thả hoặc nhấp để tải lên hình ảnh"
         },
         profileCompany: {
             buttonSearchCompany: "Tìm kiếm thông tin công ty",
@@ -2110,7 +2119,7 @@ export const vi = {
             uploadButton: "Tải ảnh lên",
             buttonAddBank: "Thêm ngân hàng",
             noBankFound: "Không tìm thấy ngân hàng nào.",
-            buttonEditBank: "Chỉnh sửa ngân hàng"
+            buttonEditBank: "Chỉnh sửa ngân hàng",
         },
         sellerCommitmentLetter: {
             incomeTaxDescription: `Để nhận thanh toán thông qua hệ thống ${getAppName()} , freelancer phải xác nhận và đồng ý tự cung cấp thông tin thu nhập của mình để cơ quan thuế xem xét tuân thủ các yêu cầu pháp lý.`,

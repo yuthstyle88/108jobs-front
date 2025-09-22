@@ -33,7 +33,6 @@ export type FreelanceChatFlowProps = {
     canApproveQuotation?: boolean;
     showStartButton?: boolean;
     isEmployer?: boolean;
-    // Control whether Submit Delivery can be clicked (requires an attached file)
     canSubmitDelivery?: boolean;
 } & FlowActions;
 
@@ -46,13 +45,14 @@ const STEPS: Array<{ key: StatusKey; title: string; sub: string }> = [
     { key: 'Cancelled', title: 'Cancelled', sub: 'Quotation/order cancelled before payment' },
 ];
 
+// Updated DOT_COLORS: Grey by default, green for all except Cancelled (red)
 const DOT_COLORS: Record<StatusKey, string> = {
-    QuotationPending: 'bg-yellow-500 border-yellow-500',
-    OrderApproved: 'bg-emerald-500 border-emerald-500',
-    InProgress: 'bg-primary border-primary',
-    PendingEmployerReview: 'bg-pink-500 border-pink-500',
-    Completed: 'bg-green-600 border-green-600',
-    Cancelled: 'bg-gray-400 border-gray-400',
+    QuotationPending: 'bg-green-500 border-green-500',
+    OrderApproved: 'bg-green-500 border-green-500',
+    InProgress: 'bg-green-500 border-green-500',
+    PendingEmployerReview: 'bg-green-500 border-green-500',
+    Completed: 'bg-green-500 border-green-500',
+    Cancelled: 'bg-red-500 border-red-500',
 };
 
 const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
@@ -214,14 +214,14 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     )}
                 </div>
                 <ConfirmActionModal
-                  isOpen={showStartConfirm}
-                  onClose={() => setShowStartConfirm(false)}
-                  onConfirm={() => {
-                    setShowStartConfirm(false);
-                    (onStart || onApproveQuotation)?.();
-                  }}
-                  title={t('profileChat.confirmStartWorkflowTitle') || 'Start workflow?'}
-                  message={t('profileChat.confirmStartWorkflowMessage') || 'This will initialize the job flow for this chat.'}
+                    isOpen={showStartConfirm}
+                    onClose={() => setShowStartConfirm(false)}
+                    onConfirm={() => {
+                        setShowStartConfirm(false);
+                        (onStart || onApproveQuotation)?.();
+                    }}
+                    title={t('profileChat.confirmStartWorkflowTitle') || 'Start workflow?'}
+                    message={t('profileChat.confirmStartWorkflowMessage') || 'This will initialize the job flow for this chat.'}
                 />
             </aside>
         );
@@ -243,6 +243,9 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     const isActive = step.key === currentStatus;
                     const isFuture = index > currentIndex;
 
+                    // Set dot background and text color based on status
+                    const dotColor = isFuture ? 'bg-gray-500 border-gray-500 text-white' : DOT_COLORS[step.key];
+
                     return (
                         <li
                             key={step.key}
@@ -262,9 +265,9 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                             }}
                         >
                             <div
-                                className={`min-w-[24px] max-w-[24px] w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-medium text-white ${
-                                    DOT_COLORS[step.key]
-                                } ${isActive ? 'ring-2 ring-blue-200' : ''} mr-3 shrink-0`}
+                                className={`min-w-[24px] max-w-[24px] w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-medium ${dotColor} ${
+                                    isActive ? 'ring-2 ring-blue-200' : ''
+                                } mr-3 shrink-0`}
                             >
                                 {index + 1}
                             </div>
@@ -295,63 +298,63 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 ))}
             </div>
             <ConfirmActionModal
-              isOpen={showApproveConfirm}
-              onClose={() => setShowApproveConfirm(false)}
-              onConfirm={async () => {
-                setShowApproveConfirm(false);
-                  onApproveQuotation?.();
-              }}
-              title={t('profileChat.confirmApproveQuotationTitle') || 'Approve quotation?'}
-              message={t('profileChat.confirmApproveQuotationMessage') || 'This will approve the freelancer\'s quotation and convert it into an order.'}
-              confirmText={t('profileChat.approveQuotation') || 'Approve quotation'}
+                isOpen={showApproveConfirm}
+                onClose={() => setShowApproveConfirm(false)}
+                onConfirm={async () => {
+                    setShowApproveConfirm(false);
+                    onApproveQuotation?.();
+                }}
+                title={t('profileChat.confirmApproveQuotationTitle') || 'Approve quotation?'}
+                message={t('profileChat.confirmApproveQuotationMessage') || 'This will approve the freelancer\'s quotation and convert it into an order.'}
+                confirmText={t('profileChat.approveQuotation') || 'Approve quotation'}
             />
             <ConfirmActionModal
-              isOpen={showRevisionConfirm}
-              onClose={() => setShowRevisionConfirm(false)}
-              onConfirm={async () => {
-                setShowRevisionConfirm(false);
-                  onRequestRevision?.();
-              }}
-              title={t('profileChat.confirmRequestRevisionTitle') || 'Request a revision?'}
-              message={t('profileChat.confirmRequestRevisionMessage') || 'This will move the job back to In Progress and notify the freelancer to revise and resubmit.'}
-              confirmText={t('profileChat.requestRevision') || 'Request revision'}
+                isOpen={showRevisionConfirm}
+                onClose={() => setShowRevisionConfirm(false)}
+                onConfirm={async () => {
+                    setShowRevisionConfirm(false);
+                    onRequestRevision?.();
+                }}
+                title={t('profileChat.confirmRequestRevisionTitle') || 'Request a revision?'}
+                message={t('profileChat.confirmRequestRevisionMessage') || 'This will move the job back to In Progress and notify the freelancer to revise and resubmit.'}
+                confirmText={t('profileChat.requestRevision') || 'Request revision'}
             />
             <ConfirmActionModal
-              isOpen={showSubmitConfirm}
-              onClose={() => setShowSubmitConfirm(false)}
-              onConfirm={async () => {
-                setShowSubmitConfirm(false);
-                  onSubmitDelivery?.();
-              }}
-              title={t('profileChat.confirmSubmitDeliveryTitle') || 'Submit this delivery?'}
-              message={t('profileChat.confirmSubmitDeliveryMessage') || 'This will notify the employer and move the job to Pending Employer Review.'}
-              confirmText={t('profileChat.submitDelivery') || 'Submit delivery'}
+                isOpen={showSubmitConfirm}
+                onClose={() => setShowSubmitConfirm(false)}
+                onConfirm={async () => {
+                    setShowSubmitConfirm(false);
+                    onSubmitDelivery?.();
+                }}
+                title={t('profileChat.confirmSubmitDeliveryTitle') || 'Submit this delivery?'}
+                message={t('profileChat.confirmSubmitDeliveryMessage') || 'This will notify the employer and move the job to Pending Employer Review.'}
+                confirmText={t('profileChat.submitDelivery') || 'Submit delivery'}
             />
             <ConfirmActionModal
-              isOpen={showCancelConfirm}
-              onClose={() => setShowCancelConfirm(false)}
-              onConfirm={async () => {
-                setShowCancelConfirm(false);
-                if (onCancel) {
-                    onCancel();
-                } else if (stepper?.cancel) {
-                  stepper.cancel();
-                }
-              }}
-              title={t('profileChat.confirmCancelJobTitle') || 'Cancel this job?'}
-              message={t('profileChat.confirmCancelJobMessage') || 'This will cancel the current workflow. This action cannot be undone.'}
-              confirmText={t('profileChat.cancelJob') || 'Cancel job'}
+                isOpen={showCancelConfirm}
+                onClose={() => setShowCancelConfirm(false)}
+                onConfirm={async () => {
+                    setShowCancelConfirm(false);
+                    if (onCancel) {
+                        onCancel();
+                    } else if (stepper?.cancel) {
+                        stepper.cancel();
+                    }
+                }}
+                title={t('profileChat.confirmCancelJobTitle') || 'Cancel this job?'}
+                message={t('profileChat.confirmCancelJobMessage') || 'This will cancel the current workflow. This action cannot be undone.'}
+                confirmText={t('profileChat.cancelJob') || 'Cancel job'}
             />
             <ConfirmActionModal
-              isOpen={showReleaseConfirm}
-              onClose={() => setShowReleaseConfirm(false)}
-              onConfirm={async () => {
-                setShowReleaseConfirm(false);
-                onReleasePayment?.();
-              }}
-              title={t('profileChat.confirmReleasePaymentTitle') || 'Release payment and close job?'}
-              message={t('profileChat.confirmReleasePaymentMessage') || 'This will approve the submitted work, release funds to the freelancer, and close the job.'}
-              confirmText={t('profileChat.releasePayment') || 'Release payment / Close job'}
+                isOpen={showReleaseConfirm}
+                onClose={() => setShowReleaseConfirm(false)}
+                onConfirm={async () => {
+                    setShowReleaseConfirm(false);
+                    onReleasePayment?.();
+                }}
+                title={t('profileChat.confirmReleasePaymentTitle') || 'Release payment and close job?'}
+                message={t('profileChat.confirmReleasePaymentMessage') || 'This will approve the submitted work, release funds to the freelancer, and close the job.'}
+                confirmText={t('profileChat.releasePayment') || 'Release payment / Close job'}
             />
         </aside>
     );

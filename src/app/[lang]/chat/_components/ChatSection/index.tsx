@@ -30,6 +30,7 @@ import {getLatestProposedQuotePayload, getLatestProposedQuoteSeq} from "@/utils/
 import {JobDetailModal} from "@/components/Common/Modal/JobDetailModal";
 import {ReviewDeliveryModal} from "@/components/Common/Modal/ReviewDeliveryModal";
 import {JobFlowContent} from "@/components/JobFlowContent";
+import ConfirmActionModal from "@/components/Common/Modal/ConfirmActionModal";
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -58,6 +59,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [showJobDetailModal, setShowJobDetailModal] = useState<boolean>(false);
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
+    const [showTopUpPrompt, setShowTopUpPrompt] = useState<boolean>(false);
     const {t} = useTranslation();
     const [workflowIdState, setWorkflowIdState] = useState<number | null>(null);
     type UIChatMessage = WsChatMessage & { isOwner?: boolean };
@@ -78,7 +80,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }, [roomId]);
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [, setIsInitialLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null); // New error state for API failures
+    const [error, setError] = useState<React.ReactNode | null>(null); // New error state for API failures
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
     const [isDeletingFile, setIsDeletingFile] = useState<boolean>(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -703,6 +705,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
             const form: ApproveQuotationForm = {seqNumber, billingId, walletId: person?.walletId, workflowId} as any;
             const res = await approveQuotationApi(form as any);
+            if (res.state === REQUEST_STATE.FAILED) {
+                if (res?.err?.name === "insufficientBalanceForTransfer") {
+                    setError(null);
+                    setShowTopUpPrompt(true);
+                    return false;
+                }
+            }
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
             if (!ok) {
                 setError(((res as any)?.err?.message) || 'Failed to approve quotation.');
@@ -1313,6 +1322,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 commentId={roomCommentId as number}
                 partnerId={partnerId as number}
                 projectName={currentRoom?.job?.title || "No Job Title"}
+            />
+            <ConfirmActionModal
+                isOpen={showTopUpPrompt}
+                onClose={() => setShowTopUpPrompt(false)}
+                onConfirm={() => { try { window.open('/coin', '_blank', 'noopener,noreferrer'); } catch {} setShowTopUpPrompt(false); }}
+                title={t('profileChat.insufficientBalanceTitle') || 'Insufficient balance'}
+                message={t('profileChat.insufficientBalanceWarning') || 'Insufficient balance to approve the quotation.'}
+                confirmText={t('profileChat.topUpNow') || 'Top up now'}
+                cancelText={t('global.buttonCancel') || 'Cancel'}
             />
         </>
     );

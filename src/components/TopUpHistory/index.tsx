@@ -1,17 +1,19 @@
 import {faChevronLeft, faChevronRight, faInfo, faRefresh,} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Link from "next/link";
+import {useTranslation} from "react-i18next";
 
 interface Props {
   data: Record<string, string>;
 }
 
-const TopUpHistory = ({data}: Props) => {
+const TopUpHistory = () => {
+    const {t} = useTranslation();
   return (
     <div className="max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-text-primary">
-          {data?.sectionTopUpHistory}
+          {t("profileCoins.sectionTopUpHistory")}
         </h2>
         <div className="flex items-center gap-4">
           <button className="p-2 hover:bg-gray-100 rounded-full">
@@ -32,7 +34,7 @@ const TopUpHistory = ({data}: Props) => {
 
       <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6 flex items-start gap-3">
         <FontAwesomeIcon icon={faInfo} className="text-5 text-primary "/>
-        <p className="text-blue-700">{data?.noteBalanceUpdate}</p>
+        <p className="text-blue-700">{t("profileCoins.noteBalanceUpdate")}</p>
       </div>
 
       <div className="overflow-x-auto rounded-lg border border-gray-200">
@@ -40,25 +42,25 @@ const TopUpHistory = ({data}: Props) => {
           <thead className="bg-[#F6F7F8]">
           <tr className="text-center">
             <th className="py-4 px-4 text-left font-medium text-text-primary">
-              {data?.tablePaymentCode}
+              {t("profileCoins.tablePaymentCode")}
             </th>
             <th className="py-4 px-4 text-left font-medium text-text-primary">
-              {data?.tableDateTransaction}
+              {t("profileCoins.tableDateTransaction")}
             </th>
             <th className="py-4 px-4 text-left font-medium text-text-primary">
-              {data?.tableTopUpAmount}
+              {t("profileCoins.tableTopUpAmount")}
             </th>
             <th className="py-4 px-4 text-left font-medium text-text-primary">
-              {data?.tableSpecialBonus}
+              {t("profileCoins.tableSpecialBonus")}
             </th>
             <th className="py-4 px-4 text-left font-medium text-text-primary">
-              {data?.tableTotalCoins}
+              {t("profileCoins.tableTotalCoins")}
             </th>
             <th className="py-4 px-4 text-left font-medium text-text-primary">
-              {data?.tablePaymentMethod}
+              {t("profileCoins.tablePaymentMethod")}
             </th>
             <th className="py-4 px-4 text-center font-medium text-text-primary">
-              {data?.tableStatus}
+              {t("profileCoins.tableStatus")}
             </th>
             <th className="py-4 px-4 text-left font-medium text-text-primary"></th>
           </tr>
@@ -73,7 +75,7 @@ const TopUpHistory = ({data}: Props) => {
             <td className="py-4 px-4">Promptpay</td>
             <td className="py-4 px-4">
               <div className="bg-[#F9EDC8] text-yellow-800 text-center py-2 px-6 rounded-full text-sm flex justify-center items-center">
-                <span className="leading-[1]">{data?.statusWaiting}</span>
+                <span className="leading-[1]">{t("profileCoins.statusWaiting")}</span>
               </div>
             </td>
             <td className="py-4 px-4">
@@ -81,7 +83,7 @@ const TopUpHistory = ({data}: Props) => {
                     href="#"
                     className="text-primary hover:underline text-sm"
               >
-                {data?.statusWaiting}
+                {t("profileCoins.statusWaiting")}
               </Link>
             </td>
           </tr>

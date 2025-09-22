@@ -33,7 +33,7 @@ const RewardHeader = () => {
         <section className="flex items-center gap-x-4 w-full md:w-auto">
           <Link prefetch={false} href="/" className="shrink-0">
             <Image
-              src={AssetIcon.logoReward}
+              src={AssetIcon.logo}
               alt="logo"
               className="w-full h-full"
             />

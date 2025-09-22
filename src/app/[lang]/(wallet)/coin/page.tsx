@@ -1,151 +1,189 @@
 "use client";
 import TopUpHistory from "@/components/TopUpHistory";
-import {ProfileImage} from "@/constants/images";
-import {LanguageFile} from "@/constants/language";
-import {faCoins} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import Image from "next/image";
-import {useState} from "react";
-import {getNamespace} from "@/utils/i18nHelper";
+import { faCoins } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
+import TopUpModal from "@/components/Common/Modal/TopUpModal";
 
 const Coins108Jobs = () => {
-  const [amount, setAmount] = useState("");
+    const [amount, setAmount] = useState<string>("");
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
+    const [proofImage, setProofImage] = useState<string | null>(null);
+    const { t } = useTranslation();
+    const { wallet } = useMyUser();
 
-  const coinLanguageData = getNamespace(LanguageFile.COINS);
+    // Check if amount is a valid number
+    const isValidAmount = !isNaN(parseFloat(amount)) && amount.trim() !== "";
 
+    const handleTopUpClick = (amt: number | string) => {
+        setSelectedAmount(typeof amt === "string" ? parseFloat(amt) || null : amt);
+        setIsModalOpen(true);
+    };
 
-  return (
-    <div className="w-full">
-      <div className="coin-gradient h-[300px] sm:h-[200px] px-4 flex flex-col justify-center items-center relative overflow-hidden">
-        <h1 className="text-3xl font-bold text-white mb-2">
-          {coinLanguageData?.titleFastworkCoin}
-        </h1>
-        <p className="text-white text-lg text-center">
-          {coinLanguageData?.subtitleFastworkCoin}
-        </p>
-        <Image
-          src={ProfileImage.coinBg}
-          alt="avatar"
-          className="h-full absolute top-0 right-[-130px] sm:right-0"
-        />
-      </div>
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setProofImage(URL.createObjectURL(file));
+        }
+    };
 
-      <div className="grid-container-desktop-banner w-full py-8 sm:py-16 px-4 sm:px-6 lg:px-8">
-        <div className="col-start-2 col-end-3 flex justify-center w-full">
-          <div className="max-w-[528px]">
-            <div className="coin-popup-gradient rounded-lg p-6 text-center shadow-lg w-full">
-              <p className="text-blue-100 mb-2">
-                {coinLanguageData?.labelYourCoin}
-              </p>
-              <p className="text-4xl font-bold text-white">0.00</p>
-            </div>
+    const handleSubmit = () => {
+        // Handle submission logic here (e.g., send proofImage and amount to server)
+        setIsModalOpen(false);
+        setProofImage(null);
+        setAmount("");
+    };
 
-            <div className="mt-8 space-y-6">
-              <div>
-                <h3 className="text-gray-700 font-medium mb-1">
-                  {coinLanguageData?.labelSpecifyAmount}
-                </h3>
-                <p className="text-sm text-gray-500 mb-4">
-                  {coinLanguageData?.noteMinMax}
+    return (
+        <div className="w-full min-h-screen bg-gray-50 font-sans">
+            {/* Header Section */}
+            <div
+                className="relative h-[250px] sm:h-[200px] bg-gradient-to-r coin-gradient px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center overflow-hidden"
+            >
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20"></div>
+                <h1 className="relative text-3xl sm:text-4xl font-extrabold text-white drop-shadow-md">
+                    {t("profileCoins.titleFastworkCoin")}
+                </h1>
+                <p className="relative text-lg sm:text-xl text-white/90 text-center max-w-2xl mt-2">
+                    {t("profileCoins.subtitleFastworkCoin")}
                 </p>
-
-                <div className="flex items-center space-x-2 border-1 border-border-primary rounded-lg py-4 px-4 shadow-md">
-                  <FontAwesomeIcon
-                    icon={faCoins}
-                    className="text-[20px] text-[#EAB84B] pr-2"
-                  />
-                  <div className="relative flex-1">
-                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none"></div>
-                    <input
-                      type="text"
-                      placeholder="Specify the amount 100-500,000"
-                      className="text-text-primary pl-10 pr-16 py-2.5 w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                      value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
-                    />
-                    <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-                      <span className="text-gray-500">baht</span>
-                    </div>
-                  </div>
-                  <button className="bg-blue-100 text-primary px-6 py-2.5 rounded-lg hover:bg-blue-200 transition-colors font-medium">
-                    {coinLanguageData?.buttonTopUp}
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-gray-700 font-medium mb-4">
-                  {coinLanguageData?.labelChooseAmount}
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                    <div className="flex items-center">
-                      <FontAwesomeIcon
-                        icon={faCoins}
-                        className="text-[20px] text-[#EAB84B] "
-                      />
-                      <span className="text-gray-700">5,000 Coins</span>
-                    </div>
-                    <button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-[#063a68] transition-colors">
-                      {coinLanguageData?.buttonTopUp} 5,000 baht
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                    <div className="flex items-center">
-                      <FontAwesomeIcon
-                        icon={faCoins}
-                        className="text-[20px] text-[#EAB84B] "
-                      />
-                      <span className="text-gray-700">10,000 Coins</span>
-                    </div>
-                    <button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-[#063a68] transition-colors">
-                      {coinLanguageData?.buttonTopUp} 10,000 baht
-                    </button>
-                  </div>
-                </div>
-              </div>
             </div>
-            <div className="mt-8 p-4 text-[0.75rem] text-text-secondary border-1 border-border-primary rounded-lg bg-[#F6F7F8] ">
-              <p>note :</p>
-              <ul>
-                {/*{coinLanguageData?.noteCoinTerms?.map((term, index) => {*/}
-                {/*  const keywords = [*/}
-                {/*    "the Support Center",*/}
-                {/*    "Trung tâm hỗ trợ",*/}
-                {/*    "ศูนย์ช่วยเหลือ",*/}
-                {/*  ];*/}
 
-                {/*  const keyword = keywords.find((kw) => term.includes(kw));*/}
+            {/* Main Content */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fadeIn">
+                <div className="grid grid-cols-1 gap-8">
+                    {/* Coin Balance Card */}
+                    <div className="flex justify-center">
+                        <div
+                            className="max-w-lg w-full coin-gradient bg-white/80 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-white/20"
+                        >
+                            <p className="text-indigo-200 text-center text-sm font-medium">
+                                {t("profileCoins.labelYourCoin")}
+                            </p>
+                            <p className="text-5xl font-bold text-center mt-2">
+                                {wallet?.balanceTotal}
+                            </p>
+                        </div>
+                    </div>
 
-                {/*  if (keyword) {*/}
-                {/*    const parts = term.split(keyword);*/}
+                    {/* Top-Up Section */}
+                    <div className="max-w-lg mx-auto w-full space-y-8">
+                        {/* Specify Amount */}
+                        <div>
+                            <h3 className="text-gray-800 text-lg font-semibold">
+                                {t("profileCoins.labelSpecifyAmount")}
+                            </h3>
+                            <p className="text-sm text-gray-500 mt-1">
+                                {t("profileCoins.noteMinMax")}
+                            </p>
+                            <div
+                                className="mt-4 flex items-center space-x-4 bg-white p-4 rounded-xl shadow-md border border-gray-100"
+                            >
+                                <FontAwesomeIcon
+                                    icon={faCoins}
+                                    className="text-2xl text-yellow-500 transition-transform hover:scale-110"
+                                />
+                                <div className="relative flex-1">
+                                    <input
+                                        type="text"
+                                        placeholder="Specify the amount 100-500,000"
+                                        className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-gray-800 placeholder-gray-400"
+                                        value={amount}
+                                        onChange={(e) => setAmount(e.target.value)}
+                                        aria-label="Specify top-up amount"
+                                    />
+                                    <FontAwesomeIcon
+                                        icon={faCoins}
+                                        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                                    />
+                                </div>
+                                <button
+                                    className={`bg-primary text-white px-6 py-3 rounded-lg transition-all font-medium ${
+                                        !isValidAmount ? "opacity-50 cursor-not-allowed" : "hover:scale-105 focus:ring-2"
+                                    }`}
+                                    onClick={() => handleTopUpClick(amount)}
+                                    disabled={!isValidAmount}
+                                    aria-label="Top up custom amount"
+                                >
+                                    {t("profileCoins.buttonTopUp")}
+                                </button>
+                            </div>
+                        </div>
 
-                {/*    return (*/}
-                {/*      <li key={index}>*/}
-                {/*        {parts[0]}*/}
-                {/*        <Link prefetch={false} href="" className="text-third underline">*/}
-                {/*          <span>{keyword}</span>*/}
-                {/*        </Link>*/}
-                {/*        {parts[1]}*/}
-                {/*      </li>*/}
-                {/*    );*/}
-                {/*  }*/}
-
-                {/*  return <li key={index}>{term}</li>;*/}
-                {/*})}*/}
-              </ul>
+                        {/* Predefined Amounts */}
+                        <div>
+                            <h3 className="text-gray-800 text-lg font-semibold mb-4">
+                                {t("profileCoins.labelChooseAmount")}
+                            </h3>
+                            <div className="space-y-4">
+                                {[5000, 10000].map((coin) => (
+                                    <div
+                                        key={coin}
+                                        className="flex items-center justify-between p-4 bg-white rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-shadow"
+                                    >
+                                        <div className="flex items-center space-x-3">
+                                            <FontAwesomeIcon
+                                                icon={faCoins}
+                                                className="text-2xl text-yellow-500 transition-transform hover:scale-110"
+                                            />
+                                            <span className="text-gray-800 font-medium">
+                                                {coin.toLocaleString()} Coins
+                                            </span>
+                                        </div>
+                                        <button
+                                            className="bg-primary text-white px-5 py-2 rounded-lg transition-all hover:scale-105 focus:ring-2"
+                                            onClick={() => handleTopUpClick(coin)}
+                                            aria-label={`Top up ${coin} coins`}
+                                        >
+                                            {t("profileCoins.buttonTopUp")} {coin.toLocaleString()}
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+
+            {/* Top-Up History */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div className="bg-white rounded-2xl shadow-md p-6">
+                    <TopUpHistory />
+                </div>
+            </div>
+
+            {/* Modal for Bank Info and Image Upload */}
+            <TopUpModal
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+                selectedAmount={selectedAmount}
+                proofImage={proofImage}
+                handleImageUpload={handleImageUpload}
+                handleSubmit={handleSubmit}
+            />
+
+            {/* Custom CSS for Animations */}
+            <style jsx>{`
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(10px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                .animate-fadeIn {
+                    animation: fadeIn 0.5s ease-out;
+                }
+            `}</style>
         </div>
-      </div>
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white rounded-lg">
-        <div className="col-start-2 col-end-3 bg-white">
-          <TopUpHistory data={coinLanguageData}/>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default Coins108Jobs;

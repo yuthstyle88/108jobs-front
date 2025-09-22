@@ -14,7 +14,7 @@ import {
     RewardImageType,
     SellerImageType,
     StartSellingImageType
-} from "../types/images";
+} from "@/types/images";
 
 // Compare images - moved up to fix import order
 import compare1 from "../assets/images/compare/compare1.svg";
@@ -27,7 +27,7 @@ import logobusiness from "../assets/images/compare/logo-business.png";
 
 // Profile images
 import avatar from "../assets/images/profile/avatar.jpg";
-import coinBg from "../assets/images/profile/coin-desktop-banner.webp";
+import coinBg from "../assets/images/profile/coin-desktop-banner.jpg";
 import jobBoard from "../assets/images/profile/banner.jpg";
 import decal from "../assets/images/profile/decal.svg";
 import backCard from "../assets/images/profile/back-vn.jpg";
