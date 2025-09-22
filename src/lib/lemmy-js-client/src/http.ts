@@ -2792,6 +2792,24 @@ export class LemmyHttp extends Controller {
     }
 
     /**
+     * @summary Delete a previously uploaded user file by filename.
+     */
+    @Security("bearerAuth")
+    @Delete("/account/files/{filename}")
+    @Tags("Account", "Media")
+    async deleteFile(
+        @Path() filename: string,
+        @Inject() options?: RequestOptions,
+    ): Promise<SuccessResponse> {
+        return this.#wrapper<object, SuccessResponse>(
+            HttpType.Delete,
+            `/account/files/${filename}`,
+            {},
+            options,
+        );
+    }
+
+    /**
      * @summary Delete the profile banner.
      */
     @Security("bearerAuth")

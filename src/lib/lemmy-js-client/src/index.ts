@@ -109,6 +109,7 @@ export type {DeleteCommunity} from "./types/DeleteCommunity";
 export type {DeleteCommunityTag} from "./types/DeleteCommunityTag";
 export type {DeleteCustomEmoji} from "./types/DeleteCustomEmoji";
 export type {DeleteImageParams} from "./types/DeleteImageParams";
+export type {DeleteFileRequest} from "./types/DeleteFileRequest";
 export type {DeleteOAuthProvider} from "./types/DeleteOAuthProvider";
 export type {DeletePost} from "./types/DeletePost";
 export type {DeleteTagline} from "./types/DeleteTagline";

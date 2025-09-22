@@ -48,6 +48,7 @@ export const en = {
             sendMessage: "Send message",
             typeMessageHere: "Type your message here",
             uploadFileLink: "Attach file/link",
+            deleteFileError: "Failed to delete file. Please try again later.",
             submitDelivery: "Submit delivery",
             requestRevision: "Request revision",
             releasePayment: "Release payment / Close job",

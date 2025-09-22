@@ -48,6 +48,7 @@ export const vi = {
             sendMessage: "Gửi tin nhắn",
             typeMessageHere: "Nhập tin nhắn tại đây",
             uploadFileLink: "Đính kèm tệp/liên kết",
+            deleteFileError: "Không xóa được tệp. Vui lòng thử lại sau.",
             submitDelivery: "Gửi sản phẩm",
             requestRevision: "Yêu cầu chỉnh sửa",
             releasePayment: "Giải ngân/Đóng dự án",

@@ -48,6 +48,7 @@ export const th = {
             sendMessage: "ส่งข้อความ",
             typeMessageHere: "พิมพ์ข้อความที่นี่",
             uploadFileLink: "แนบไฟล์/ลิงก์",
+            deleteFileError: "การลบไฟล์ล้มเหลว โปรดลองอีกครั้งในภายหลัง.",
             submitDelivery: "ส่งงาน",
             requestRevision: "ขอแก้ไขงาน",
             releasePayment: "ปล่อยเงิน/ปิดงาน",

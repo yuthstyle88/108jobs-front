@@ -1,7 +1,7 @@
 "use client";
 
-import {Send, Smile} from "lucide-react";
-import {useEffect, useRef} from "react";
+import {Paperclip, Send, Smile} from "lucide-react";
+import React, {useEffect, useRef} from "react";
 import {useForm} from "react-hook-form";
 import {useTranslation} from "react-i18next";
 
@@ -13,12 +13,16 @@ interface ChatInputProps {
     onSubmit: (data: MessageForm) => void;
     disabled?: boolean;
     disabledHint?: string;
+    isUploading?: boolean
+    onFileUpload?: (e: Event) => void;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({
                                                  onSubmit,
                                                  disabled = false,
                                                  disabledHint,
+                                                 isUploading,
+                                                 onFileUpload
                                              }) => {
     const {t} = useTranslation();
     const {register, handleSubmit, reset, watch} = useForm<MessageForm>();
@@ -56,6 +60,22 @@ const ChatInput: React.FC<ChatInputProps> = ({
             aria-disabled={disabled}
         >
             <div className="flex items-center w-full">
+                <input
+                    type="file"
+                    id="fileInput"
+                    className="hidden"
+                    onChange={(e) => onFileUpload?.(e as unknown as Event)}
+                />
+                <label
+                    htmlFor="fileInput"
+                    className="text-gray-400 hover:text-gray-600 mr-3 cursor-pointer"
+                >
+                    {isUploading ? (
+                        <div className="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+                    ) : (
+                        <Paperclip size={20}/>
+                    )}
+                </label>
                 <div className="flex-1 border rounded-lg overflow-hidden flex">
           <textarea
               data-testid="chat-input"

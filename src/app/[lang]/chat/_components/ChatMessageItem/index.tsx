@@ -93,6 +93,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   const isSubmitDelivery = parsed && (parsed as any).type === "submit-delivery";
   const isRequestRevision = parsed && (parsed as any).type === "request-revision";
   const isDeliveryAccepted = parsed && (parsed as any).type === "delivery-accepted";
+  const isFileMsg = parsed && (parsed as any).type === "file";
 
   // Build a public URL for assets using NEXT_PUBLIC_API_HOST_NAME when href is relative
   const buildPublicUrl = (u?: string) => {
@@ -312,6 +313,48 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                 </div>
                 <div className="mt-0.5 text-xs text-emerald-700">
                   {t('profileChat.deliveryAcceptedHint') || 'Payment will be released to the freelancer.'}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : isFileMsg ? (
+          // File attachment bubble
+          <div className={`max-w-[90vw] sm:max-w-md w-full rounded-xl shadow-sm ring-1 overflow-hidden ${isIncoming ? 'bg-white ring-gray-200' : 'bg-blue-50 ring-blue-200'}`}>
+            <div className={`px-4 py-3 ${isIncoming ? 'bg-gray-50' : 'bg-blue-100'}`}>
+              <div className="flex items-start gap-3">
+                {/* Icon/Thumbnail */}
+                {String((parsed as any)?.mime || '').startsWith('image/') && (parsed as any)?.url ? (
+                  <a href={buildPublicUrl((parsed as any).url)} target="_blank" rel="noopener noreferrer" className="block flex-shrink-0">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={buildPublicUrl((parsed as any).url)} alt={(parsed as any)?.name || 'image'} className="w-16 h-16 object-cover rounded-md ring-1 ring-black/5"/>
+                  </a>
+                ) : (
+                  <div className={`w-12 h-12 rounded-md flex items-center justify-center ${isIncoming ? 'bg-white' : 'bg-white'} ring-1 ring-black/5 text-gray-600`} aria-hidden>
+                    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zM8 18h8v2H8v-2zm0-4h8v2H8v-2zm6-7v5h5"/></svg>
+                  </div>
+                )}
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <a href={buildPublicUrl((parsed as any).url)} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-gray-900 truncate max-w-[220px] sm:max-w-[280px]">
+                      {(parsed as any)?.name || (parsed as any)?.url || 'file'}
+                    </a>
+                    {(parsed as any)?.mime && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-white text-gray-700 ring-1 ring-black/5">
+                        {String((parsed as any).mime).split('/').pop()}
+                      </span>
+                    )}
+                  </div>
+                  {(parsed as any)?.caption && (
+                    <div className="mt-1 text-xs text-gray-700 whitespace-pre-line break-words">{String((parsed as any).caption)}</div>
+                  )}
+                  {(parsed as any)?.url && (
+                    <div className="mt-2">
+                      <a href={buildPublicUrl((parsed as any).url)} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center gap-2 text-xs font-medium px-2.5 py-1.5 rounded-md transition-colors ${isIncoming ? 'bg-gray-900 hover:bg-black text-white' : 'bg-primary hover:bg-[#063a68] text-white'}`}>
+                        <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M12.293 2.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414L9.414 16H5v-4.414l8.293-8.293z"/></svg>
+                        <span>Open</span>
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

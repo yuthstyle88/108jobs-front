@@ -25,6 +25,7 @@ import {REQUEST_STATE} from "@/services/HttpService";
 import {HttpService} from "@/services/HttpService";
 import {resolveWorkflowId} from "@/utils/chat/workflow";
 import { isBrowser } from "@/utils/browser";
+import {Trash2} from "lucide-react";
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -88,6 +89,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null); // New error state for API failures
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
+    const [isDeletingFile, setIsDeletingFile] = useState<boolean>(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
     const setScrollRef = useCallback((el: HTMLDivElement | null) => {
@@ -244,15 +246,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 );
 
-                try {
-                  console.debug('[CHAT][RT] setMessages summary', {
-                    added, replaced, skippedDup, inc,
-                    prevLen: prev.length,
-                    nextLen: sorted.length,
-                    latest: sorted[0]
-                  });
-                } catch {}
-
                 // Defer room preview updates only for live, single-message events (skip during history)
                 if (!isHistoryBatch && inc > 0) {
                     try {
@@ -275,17 +268,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             });
         }
     );
-
-    // Track render updates for messages and connection/fetch states
-    useEffect(() => {
-      try {
-        console.debug('[CHAT][UI] messages render len=', messages.length, messages[0]);
-      } catch {}
-    }, [messages]);
-
-    useEffect(() => {
-      try { console.debug('[CHAT][WS] isConnected=', isConnected, 'hasMore=', hasMoreMessages, 'isFetching=', isFetching); } catch {}
-    }, [isConnected, hasMoreMessages, isFetching]);
 
     // After commit, propagate the last incoming message to ChatRooms context and auto-scroll for receiver
     useEffect(() => {
@@ -644,10 +626,29 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             // Clear input value to allow re-selecting the same file
             if (input) input.value = "";
         } catch (err) {
-            console.error("handleFileUpload failed", err);
             setError("Failed to upload file. Please try again.");
         }
     }, []);
+
+    // Remove selected file: call API to delete then clear local state
+    const handleRemoveSelectedFile = useCallback(async () => {
+        if (!selectedFile || isDeletingFile) return;
+        try {
+            setIsDeletingFile(true);
+            setError(null);
+            const res = await HttpService.client.deleteFile(selectedFile.fileName as any);
+            if (res.state !== REQUEST_STATE.SUCCESS) {
+                const msg = (res as any)?.err?.message || t("profileChat.deleteFileError") || "Failed to delete file.";
+                setError(msg);
+                return;
+            }
+            setSelectedFile(null);
+        } catch (err) {
+            setError(t("profileChat.deleteFileError") || "Failed to delete file.");
+        } finally {
+            setIsDeletingFile(false);
+        }
+    }, [selectedFile, isDeletingFile, t]);
 
     // Approve quotation implementation
     const approveQuotation = useCallback(async () => {
@@ -1135,7 +1136,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                             hasMore={hasMoreMessages}
                             isFetching={isFetching}
                             onAtBottomChange={(isAtBottom) => {
-                                console.debug('[CHAT][SCROLL] onAtBottomChange ->', isAtBottom);
                                 atBottomRef.current = isAtBottom;
                                 setIsAtBottom(isAtBottom);
                                 if (isAtBottom) {
@@ -1155,25 +1155,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                 }
                             }}
                         />
-                        {/* DEBUG PANEL: remove after verification */}
-                        <div className="hidden sm:block w-full mt-2 p-2 bg-white/70 border border-dashed border-gray-300 text-xs rounded">
-                          <div className="flex flex-wrap gap-2">
-                            <span>WS: <b>{String(isConnected)}</b></span>
-                            <span>Fetching: <b>{String(isFetching)}</b></span>
-                            <span>HasMore: <b>{String(hasMoreMessages)}</b></span>
-                            <span>Msgs: <b>{messages.length}</b></span>
-                          </div>
-                          <div className="mt-1 overflow-auto max-h-40">
-                            <pre className="whitespace-pre-wrap break-all">
-                              {(() => {
-                                try {
-                                  const sample = messages.slice(0, 3).map(m => ({ id: String(m.id), senderId: m.senderId, createdAt: m.createdAt, content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content) }));
-                                  return JSON.stringify(sample, null, 2);
-                                } catch (e) { return String(e); }
-                              })()}
-                            </pre>
-                          </div>
-                        </div>
                     </div>
                     <div ref={inputContainerRef} className="border-t px-3 py-2 sm:px-4 sm:py-3 bg-white">
                         <div className="flex items-center gap-2">
@@ -1197,11 +1178,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                         </div>
                                         <button
                                             type="button"
-                                            onClick={() => setSelectedFile(null)}
-                                            className="text-xs text-blue-700 hover:text-blue-900"
+                                            onClick={handleRemoveSelectedFile}
+                                            disabled={isDeletingFile}
+                                            className={`text-xs ${isDeletingFile ? 'text-gray-400 cursor-not-allowed' : 'text-red-500 hover:text-red-800'}`}
                                             aria-label="Remove attached file"
+                                            aria-busy={isDeletingFile}
                                         >
-                                            Remove
+                                            <Trash2 />
                                         </button>
                                     </div>
                                 )}
@@ -1209,6 +1192,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                     onSubmit={onSubmit}
                                     disabled={!canSend}
                                     disabledHint=""
+                                    onFileUpload={(ev: any) => handleFileUpload(ev as any)}
                                 />
                             </div>
                         </div>
