@@ -15,6 +15,9 @@ interface ChatInputProps {
     disabledHint?: string;
     isUploading?: boolean
     onFileUpload?: (e: Event) => void;
+    onTyping?: (typing: boolean) => void;
+    /** Optional hint to show when the other participant is typing (e.g., "กำลังพิมพ์...") */
+    typingHint?: string;
 }
 
 const ChatInput: React.FC<ChatInputProps> = ({
@@ -22,13 +25,16 @@ const ChatInput: React.FC<ChatInputProps> = ({
                                                  disabled = false,
                                                  disabledHint,
                                                  isUploading,
-                                                 onFileUpload
+                                                 onFileUpload,
+                                                 onTyping,
+                                                 typingHint,
                                              }) => {
     const {t} = useTranslation();
     const {register, handleSubmit, reset, watch} = useForm<MessageForm>();
     const messageRef = useRef<HTMLTextAreaElement | null>(null);
 
     const {ref, ...rest} = register("message");
+    const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     const resizeTextarea = () => {
         const textarea = messageRef.current;
@@ -47,9 +53,11 @@ const ChatInput: React.FC<ChatInputProps> = ({
     const internalSubmit = (data: MessageForm) => {
         if (disabled) return;
         onSubmit(data);
+        // stop typing on submit
+        try { onTyping?.(false); } catch {}
+        if (typingTimerRef.current) { try { clearTimeout(typingTimerRef.current); } catch {} typingTimerRef.current = null; }
         reset();
-        setTimeout(() => resizeTextarea(),
-            0);
+        setTimeout(() => resizeTextarea(), 0);
     };
 
     return (
@@ -87,7 +95,7 @@ const ChatInput: React.FC<ChatInputProps> = ({
               placeholder={
                   disabled
                       ? (disabledHint !== undefined ? disabledHint : (t("profileChat.userNotAvailable") || "This user is not available for messages."))
-                      : (t("profileChat.typeMessageHere") || "Type a message...")
+                      : (typingHint ? typingHint : (t("profileChat.typeMessageHere") || "Type a message..."))
               }
               className={`text-text-primary flex-1 px-3 py-2 resize-none focus:outline-none min-h-[40px] max-h-[150px] overflow-y-auto break-words whitespace-pre-wrap ${disabled ? 'bg-gray-100 cursor-not-allowed text-gray-500' : ''}`}
               rows={1}
@@ -99,6 +107,27 @@ const ChatInput: React.FC<ChatInputProps> = ({
                       const form = e.currentTarget.closest("form");
                       if (form) form.requestSubmit();
                   }
+              }}
+              onChange={(e) => {
+                  // keep RHF in sync
+                  try { (rest as any).onChange?.(e); } catch {}
+                  resizeTextarea();
+                  if (disabled) return;
+                  const val = (e.target as HTMLTextAreaElement).value;
+                  try {
+                      if (val && val.trim().length > 0) {
+                          onTyping?.(true);
+                      } else {
+                          onTyping?.(false);
+                      }
+                  } catch {}
+                  if (typingTimerRef.current) {
+                      try { clearTimeout(typingTimerRef.current); } catch {}
+                      typingTimerRef.current = null;
+                  }
+                  typingTimerRef.current = setTimeout(() => {
+                      try { onTyping?.(false); } catch {}
+                  }, 1500);
               }}
           />
                     <button

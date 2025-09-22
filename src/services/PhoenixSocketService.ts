@@ -16,6 +16,8 @@ export interface RealtimeChannelAdapter {
   onclose?: (event: { code?: number; reason?: string }) => void;
   onerror?: (event?: any) => void;
   send: (data: string) => void;
+  /** Emit a custom event with payload on the channel (e.g., typing). */
+  emit?: (event: string, payload: any) => void;
   close: () => void;
 }
 
@@ -85,6 +87,13 @@ export function getChannelAdapter(token: string, roomId: string): RealtimeChanne
         (channel as any).push("send_message", payload);
       } catch {
         (channel as any).push("send_message", { room_id: roomId, content: String(data) });
+      }
+    },
+    emit(event: string, payload: any) {
+      try {
+        (channel as any).push(event, payload);
+      } catch (e) {
+        if (DEV) console.warn("[phoenix] emit failed", { event, e });
       }
     },
     close() {

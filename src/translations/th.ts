@@ -47,6 +47,7 @@ export const th = {
             uploadDraft: "แนบไฟล์ต้นฉบับ",
             sendMessage: "ส่งข้อความ",
             typeMessageHere: "พิมพ์ข้อความที่นี่",
+            typing: "กำลังพิมพ์...",
             uploadFileLink: "แนบไฟล์/ลิงก์",
             deleteFileError: "การลบไฟล์ล้มเหลว โปรดลองอีกครั้งในภายหลัง.",
             submitDelivery: "ส่งงาน",

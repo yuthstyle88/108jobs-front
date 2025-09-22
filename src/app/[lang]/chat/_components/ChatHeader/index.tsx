@@ -6,7 +6,7 @@ import Image, {StaticImageData} from "next/image";
 interface ChatHeaderProps {
   avatarUrl: StaticImageData | string;
   displayName: string;
-  guideText: string;
+  typingText?: string;
   onToggleFlow?: () => void; // mobile toggle for right sidebar
   isFlowOpen?: boolean; // state for label
 }
@@ -14,6 +14,7 @@ interface ChatHeaderProps {
 const ChatHeader: React.FC<ChatHeaderProps> = ({
   avatarUrl,
   displayName,
+  typingText,
   onToggleFlow,
   isFlowOpen,
 }) => {
@@ -35,9 +36,12 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
             title={online ? "Online" : "Offline"}
           /> */}
         </div>
-        <span className="text-sm font-medium text-text-primary">
-          {displayName}
-        </span>
+        <div className="flex flex-col">
+          <span className="text-sm font-medium text-text-primary">{displayName}</span>
+          {typingText ? (
+            <span className="text-xs text-gray-500">{typingText}</span>
+          ) : null}
+        </div>
       </div>
       <div className="flex items-center gap-2">
         {/* Mobile: toggle Flow in header; User Guide moved to right sidebar */}

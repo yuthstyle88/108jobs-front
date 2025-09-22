@@ -47,6 +47,7 @@ export const en = {
             uploadDraft: "Upload draft",
             sendMessage: "Send message",
             typeMessageHere: "Type your message here",
+            typing: "Typing...",
             uploadFileLink: "Attach file/link",
             deleteFileError: "Failed to delete file. Please try again later.",
             submitDelivery: "Submit delivery",

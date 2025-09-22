@@ -65,6 +65,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
+    const [isPartnerTyping, setIsPartnerTyping] = useState<boolean>(false);
+    const partnerTypingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    // Clear typing timeout when component unmounts or room changes to avoid leaks
+    useEffect(() => {
+        return () => {
+            if (partnerTypingTimeoutRef.current) {
+                try { clearTimeout(partnerTypingTimeoutRef.current); } catch {}
+                partnerTypingTimeoutRef.current = null;
+            }
+        };
+    }, [roomId]);
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null); // New error state for API failures
@@ -136,7 +147,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    const {sendMessage, fetchHistory, isConnected, hasMoreMessages, isFetching} = useWebSocket(
+    const {sendMessage, sendTyping, fetchHistory, isConnected, hasMoreMessages, isFetching} = useWebSocket(
         `chat-view:${roomId}`,
         (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) => {
             try {
@@ -149,6 +160,24 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 parsed = typeof raw === 'string' ? JSON.parse(raw as string) : (raw as any);
             } catch (e) {
                 console.error("Failed to parse WebSocket message:", e);
+                return;
+            }
+
+            // Typing payloads from provider
+            if (parsed && typeof parsed === 'object' && (parsed as any).type === 'typing') {
+                const info = parsed as any;
+                const senderId = Number(info.senderId) || 0;
+                if (senderId !== Number(localUser?.id)) {
+                    const val = !!info.typing;
+                    setIsPartnerTyping(val);
+                    if (partnerTypingTimeoutRef.current) {
+                        try { clearTimeout(partnerTypingTimeoutRef.current); } catch {}
+                        partnerTypingTimeoutRef.current = null;
+                    }
+                    if (val) {
+                        partnerTypingTimeoutRef.current = setTimeout(() => setIsPartnerTyping(false), 5000);
+                    }
+                }
                 return;
             }
 
@@ -1125,7 +1154,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     <ChatHeader
                         avatarUrl={currentRoom?.partnerAvatar || ProfileImage.avatar}
                         displayName={currentRoom?.partnerDisplayName || "User"}
-                        guideText={t("profileChat.guide") || "Usage Guide"}
+                        typingText={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
                         onToggleFlow={() => setIsFlowOpen((v) => !v)}
                         isFlowOpen={isFlowOpen}
                     />
@@ -1214,6 +1243,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                     disabled={!canSend}
                                     disabledHint=""
                                     onFileUpload={(ev: any) => handleFileUpload(ev as any)}
+                                    onTyping={(v) => { try { sendTyping?.(v); } catch {} }}
+                                    typingHint={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
                                 />
                             </div>
                         </div>
