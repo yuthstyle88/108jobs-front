@@ -7,14 +7,10 @@ import {HttpService, UserService} from "@/services";
 import LoadingBlur from "@/components/LoadingBlur";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faComment} from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
 import {Post} from "@/lib/lemmy-js-client";
-import {useTranslation} from "react-i18next";
+import {RoomNotFound} from "@/components/RoomNotFound";
 
 export default function MessageClient({roomId}: { roomId: string }) {
-    const {t} = useTranslation();
     const accessToken = UserService.Instance.auth();
     const {localUser} = useMyUser();
 
@@ -66,7 +62,10 @@ export default function MessageClient({roomId}: { roomId: string }) {
 
             if (!cancelled && chatRoomRes.state === REQUEST_STATE.SUCCESS) {
                 const participants = ((chatRoomRes.data as any)?.room?.participants as any[]) ?? [];
-                try { setPost(((chatRoomRes.data as any)?.room?.post) ?? ((chatRoomRes.data as any)?.post)); } catch {}
+                try {
+                    setPost(((chatRoomRes.data as any)?.room?.post) ?? ((chatRoomRes.data as any)?.post));
+                } catch {
+                }
 
                 const other = participants.find(
                     (p: any) => String(p.memberId) !== String(localUser.id)
@@ -113,33 +112,20 @@ export default function MessageClient({roomId}: { roomId: string }) {
         };
     }, [accessToken, roomId, localUser?.id]);
 
-    if (!accessToken || !roomId) {
+    if (!accessToken || !roomId || loading) {
         return <LoadingBlur text=""/>;
-    }
-
-    if (loading) {
-        return <Link prefetch={false} href="/chat" className="relative text-white text-sm px-3">
-            <FontAwesomeIcon icon={faComment} className="w-[24px] h-[24px] text-white"/>
-        </Link>
     }
 
     if (notFound) {
         return (
-            <div className="flex items-center justify-center w-full h-[calc(100vh-80px)]">
-                <div className="text-center p-6">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-2">{t('roomNotFound.title')}</h2>
-                    <p className="text-gray-600 mb-4">{t('roomNotFound.description')}</p>
-                    <Link href="/chat" className="inline-block bg-primary text-white px-4 py-2 rounded-md hover:bg-[#063a68] transition-colors">{t('roomNotFound.goBack')}</Link>
-                </div>
-            </div>
+            <RoomNotFound/>
         );
     }
 
-
-
     return (
         <PhoenixSocketProvider token={accessToken} roomId={roomId} peerPublicKeyHex={peerPublicKeyHex}>
-            <ChatSection roomId={roomId} post={post} partnerName={partnerName} partnerAvatar={""} partnerId={partnerId as number} partnerAvailable={partnerAvailable}/>
+            <ChatSection roomId={roomId} post={post} partnerName={partnerName} partnerAvatar={""}
+                         partnerId={partnerId as number} partnerAvailable={partnerAvailable}/>
         </PhoenixSocketProvider>
     );
 }
