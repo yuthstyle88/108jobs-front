@@ -31,6 +31,7 @@ import { useWorkflowStatus } from '@/hooks/chat/useWorkflowStatus';
 import { useTypingIndicator } from '@/hooks/chat/useTypingIndicator';
 import { useFileUpload } from '@/hooks/chat/useFileUpload';
 import { useWorkflowActions } from '@/hooks/chat/useWorkflowActions';
+import { createChatRealtimeHandler } from './createChatRealtimeHandler';
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -144,143 +145,19 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
     const {sendMessage, sendTyping, fetchHistory, isConnected, hasMoreMessages, isFetching} = useWebSocket(
         `chat-view:${roomId}`,
-        (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) => {
-            try {
-                console.debug('[CHAT][RT] handler invoked for room', roomId);
-            } catch {
-            }
-            let parsed: WsChatMessage | WsChatMessage[];
-            try {
-                const raw = event.data as unknown;
-                parsed = typeof raw === 'string' ? JSON.parse(raw as string) : (raw as any);
-            } catch (e) {
-                console.error("Failed to parse WebSocket message:", e);
-                return;
-            }
-
-            // Typing payloads from provider
-            if (parsed && typeof parsed === 'object' && (parsed as any).type === 'typing') {
-                const info = parsed as any;
-                const senderId = Number(info.senderId) || 0;
-                const val = !!info.typing;
-                onRemoteTyping(senderId, Number(localUser?.id) || 0, val);
-                return;
-            }
-
-            // DEBUG: verify realtime delivery into this component
-            try {
-                (globalThis as any).__chatRTLast = parsed;
-                const arrLen = Array.isArray(parsed) ? parsed.length : 1;
-                console.debug('[CHAT][RT] delivered to ChatSection', {
-                    roomId,
-                    arrLen,
-                    sample: Array.isArray(parsed) ? parsed[0] : parsed
-                });
-            } catch {
-            }
-
-            // New protocol: provider broadcasts UI-ready ChatMessage objects (single or array)
-            let items: WsChatMessage[] = [];
-            if (Array.isArray(parsed)) {
-                items = parsed as WsChatMessage[];
-            } else if (parsed && typeof parsed === 'object') {
-                items = [parsed as WsChatMessage];
-            }
-            if (!items.length) return;
-
-            // Normalize: ensure id is string, createdAt present, senderId numeric
-            items = items.map((m: any) => ({
-                ...m,
-                id: String(m.id ?? m.uuid ?? uuidv4()),
-                createdAt: m.createdAt ?? m.created_at ?? new Date().toISOString(),
-                senderId: typeof m.senderId === 'number' ? m.senderId : Number(m.sender_id ?? m.senderId ?? 0),
-            }));
-            try {
-                console.debug('[CHAT][RT] items normalized:', {count: items.length, sample: items[0]});
-            } catch {
-            }
-
-            // Realtime: update workflow status immediately based on structured message type
-            try {
-                if (!isFetching && items.length > 0) {
-                    tryUpdateStatusFromItems(items);
-                }
-            } catch { /* ignore */ }
-
-            setMessages((prev) => {
-                const copy = [...prev];
-                let added = 0;
-                let replaced = 0;
-                let skippedDup = 0;
-                let latestTs = 0;
-                let latestContent: string | null = null;
-                let latestSenderId: number | null = null;
-                // Consider current batch as history if fetching or if this is the very first inflow (prev empty)
-                const isHistoryBatch = isFetching || prev.length === 0;
-                let inc = 0;
-                for (const msg of items) {
-                    const isDuplicate = copy.some(
-                        (m) =>
-                            m.content === msg.content &&
-                            m.senderId === msg.senderId &&
-                            Math.abs(
-                                new Date(m.createdAt).getTime() - new Date(msg.createdAt).getTime()
-                            ) < 2000
-                    );
-                    if (isDuplicate) {
-                        skippedDup++;
-                        continue;
-                    }
-
-                    const idx = copy.findIndex((m) => m.id === msg.id);
-                    const isIncoming = !(msg as any).isOwner;
-                    const newStatus = isIncoming
-                        ? ((atBottomRef.current || isHistoryBatch) ? 1 : 0)
-                        : (typeof (msg as any).status === 'number' ? (msg as any).status : 0);
-                    if (!isHistoryBatch && !atBottomRef.current && isIncoming) {
-                        inc++;
-                    }
-                    if (idx >= 0) {
-                        replaced++;
-                        copy[idx] = {...(msg as any), status: newStatus} as UIChatMessage;
-                    } else {
-                        added++;
-                        copy.push({...(msg as any), status: newStatus} as UIChatMessage);
-                    }
-                    const ts = new Date(msg.createdAt).getTime();
-                    if (ts > latestTs) {
-                        latestTs = ts;
-                        latestContent = msg.content;
-                        latestSenderId = msg.senderId;
-                    }
-                }
-                const sorted = copy.sort(
-                    (a, b) =>
-                        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-                );
-
-                // Defer room preview updates only for live, single-message events (skip during history)
-                if (!isHistoryBatch && inc > 0) {
-                    try {
-                        setNewSinceCount(prev => prev + inc);
-                    } catch {
-                    }
-                    // Unread store is updated globally via ChatRoomsContext/ChatBadge listening to chat:new-message events.
-                    // Avoid direct increments here to prevent double counting.
-                }
-                if (!isHistoryBatch && items.length === 1 && latestTs > 0 && latestContent != null && latestSenderId != null) {
-                    const tsIso = new Date(latestTs).toISOString();
-                    latestIncomingRef.current = {
+        (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) =>
+                    createChatRealtimeHandler({
                         roomId,
-                        content: latestContent,
-                        senderId: latestSenderId,
-                        timestamp: tsIso,
-                    };
-                }
-                return sorted;
-            });
-        }
-    );
+                        localUserId: Number(localUser?.id) || 0,
+                        onRemoteTyping,
+                        getIsFetching: () => isFetching,
+                        tryUpdateStatusFromItems,
+                        setMessages: setMessages as any,
+                        atBottomRef,
+                        setNewSinceCount,
+                        latestIncomingRef,
+                    })(event)
+);
 
     // After commit, propagate the last incoming message to ChatRooms context and auto-scroll for receiver
     useEffect(() => {
