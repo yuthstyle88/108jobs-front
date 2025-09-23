@@ -148,7 +148,8 @@ export const en = {
             submitDeliveryMessage: "Are you sure you want to submit the delivery for review?",
             attachFileHere: "Attach file here",
             orderApprovedMessage: "The order has been approved. You can proceed to payment when invoice is ready.",
-            startHiring: "Employer started hiring."
+            startHiring: "Employer started hiring.",
+            missingWorkflow: "Missing workflow. Start workflow before approval."
         },
         allCategories: {
             allJobCategories: "All Job Categories",

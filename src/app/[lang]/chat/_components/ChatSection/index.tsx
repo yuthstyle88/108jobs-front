@@ -261,26 +261,22 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             if (uiStatus) {
                 const now = Date.now();
                 const recentClientUpdate = lastClientUpdateRef.current;
-                const gracePeriodMs = 5000;  // Adjust based on your API latency (e.g., 10s for slower servers)
-
-                // Skip sync if recent client update and API doesn't match (optimistic precedence)
+                const gracePeriodMs = 5000;
                 if (
                     recentClientUpdate.status &&
                     recentClientUpdate.status !== uiStatus &&
                     now - recentClientUpdate.timestamp < gracePeriodMs
                 ) {
                     console.log(`Skipping API sync: Recent client update to ${recentClientUpdate.status} (API: ${uiStatus})`);
-                    return;  // Or optionally log a warning
+                    return;
                 }
-
-                // Proceed with sync (initial load or converged state)
                 if (!hasStarted) setHasStarted(true);
                 if (uiStatus !== currentStatus) {
-                    setWorkflowState(uiStatus as StatusKey, false);  // Mark as API-driven (not client)
+                    setWorkflowState(uiStatus as StatusKey, false);
                 }
             }
         }
-    }, [roomData, currentStatus, hasStarted]);  // Remove setWorkflowState from deps to avoid loops
+    }, [roomData, currentStatus, hasStarted]);
 
 
     const {execute: createInvoice} = useHttpPost("createInvoice");
@@ -438,23 +434,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             console.log("[CHAT][INIT] Not connected yet");
         }
     }, [isConnected]);
-
-
-    // Update workflow automatically based on the most recent structured workflow message
-    // Scan a small window of newest messages to be robust against interleaved plain texts
-    useEffect(() => {
-        // Fallback scanner: run only when realtime handler may not fire
-        // i.e., during history fetching or when socket is disconnected.
-        if (!messages.length) return;
-        if (!isFetching && isConnected) return;
-        // If realtime just updated status, skip fallback to prevent duplicate transitions
-        if (Date.now() - lastRealtimeStatusAtRef.current < 1000) return;
-
-        const target = scanMessagesForStatus(messages, 20);
-        if (target) {
-            goToStatus(target);
-        }
-    }, [messages, isFetching, isConnected]);
 
     const hasProposedQuote = useMemo(() => {
         return Boolean(getLatestProposedQuotePayload(messages as any));
