@@ -266,6 +266,8 @@ import type {ChatHistoryQueryI} from "./other_types";
 import type {Billing} from "./types/Billing";
 import type {GetBillingByCommentQuery} from "./types/GetBillingByCommentQuery";
 import type {GetBillingByCommentQueryI} from "./other_types";
+import type { ScbTokenResponse } from "./types/ScbTokenResponse";
+import type { ScbQrCodeRequest, ScbQrCodeResponse } from "./types/ScbQrCode";
 
 enum HttpType {
     Get = "GET",
@@ -2986,6 +2988,41 @@ export class LemmyHttp extends Controller {
             HttpType.Post,
             "/profile/donation-dialog-shown",
             {},
+            options,
+        );
+    }
+    
+    /**
+     * @summary Generate SCB access token.
+     */
+    @Security("bearerAuth")
+    @Post("/scb/token")
+    @Tags("SCB")
+    async generateScbToken(
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<object, ScbTokenResponse>(
+            HttpType.Post,
+            "/scb/token",
+            {},
+            options,
+        );
+    }
+
+    /**
+     * @summary Create SCB QR Code.
+     */
+    @Security("bearerAuth")
+    @Post("/scb/qrcode/create")
+    @Tags("SCB")
+    async createScbQrCode(
+        @Body() form: ScbQrCodeRequest,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<ScbQrCodeRequest, ScbQrCodeResponse>(
+            HttpType.Post,
+            "/scb/qrcode/create",
+            form,
             options,
         );
     }

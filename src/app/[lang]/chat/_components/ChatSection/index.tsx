@@ -486,7 +486,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     );
 
     // File upload logic moved into useFileUpload hook
-    
+
     const didInitialFetchRef = useRef(false);
     // Fetch initial history as soon as component mounts (or roomId changes),
     // without waiting for a websocket connection. This fixes empty chat on page refresh

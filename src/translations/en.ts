@@ -1004,7 +1004,8 @@ export const en = {
             labelSignUpButton: "Sign Up",
             failedToLoad: "Failed to load",
             tryRefreshingPage: "Please try refreshing the page",
-            labelContinue: "Continue"
+            labelContinue: "Continue",
+            retry: "Retry"
         },
         guarantee: {
             fastworkGuaranteeTitle: `${getAppName()} Guarantee`,
@@ -1738,7 +1739,8 @@ export const en = {
             topupModalTitle: "Top-Up Payment Details",
             labelAmountToTopUp: "Amount to Top-Up",
             imageSelected: "Image selected",
-            dragDropClick: "Drag & drop or click to upload an image"
+            dragDropClick: "Drag & drop or click to upload an image",
+            scanQrToPay: "Scan this QR code with your banking app to pay {{amount}} Coins"
         },
         profileCompany: {
             buttonSearchCompany: "Search Company Information",
