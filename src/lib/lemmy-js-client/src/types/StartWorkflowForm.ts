@@ -1,9 +1,9 @@
-import type { PostId } from "./PostId";
 import type { ChatRoomId } from "./ChatRoomId";
 
 // Matches backend StartWorkflow with camelCase fields
 export type StartWorkflowForm = {
-  postId: PostId;
+  // Allow number | string to match caller usage and backend flexibility
+  postId: number | string;
   seqNumber: number; // i16 backend
   roomId: ChatRoomId;
 };

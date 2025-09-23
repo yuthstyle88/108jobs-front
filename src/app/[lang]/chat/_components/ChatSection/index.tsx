@@ -15,21 +15,22 @@ import {useChatRooms} from "@/contexts/ChatRoomsContext";
 import {useUnreadStore} from "@/stores/unreadStore";
 import FreelanceChatFlow, {FlowActions, StatusKey} from "@/components/FreelanceChatFlow";
 import {createFlowActions} from "@/utils/chat/flowActions";
-import QuotationModal, {ProposedQuotePayload} from "@/components/Common/Modal/QuotationModal";
+import QuotationModal from "@/components/Common/Modal/QuotationModal";
 import {useWorkflowStepper} from "@/hooks/useWorkflowMachine";
-import type {CreateInvoiceForm, ApproveQuotationForm} from "lemmy-js-client";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {apiToUiStatus, useStateMachineStore} from "@/stores/stateMachineStore";
-import {REQUEST_STATE} from "@/services/HttpService";
-import {HttpService} from "@/services/HttpService";
-import {resolveWorkflowId} from "@/utils/chat/workflow";
 import {isBrowser} from "@/utils/browser";
 import {Trash2} from "lucide-react";
-import {getLatestProposedQuotePayload, getLatestProposedQuoteSeq} from "@/utils/chat/message";
+import {getLatestProposedQuotePayload} from "@/utils/chat/message";
 import {JobDetailModal} from "@/components/Common/Modal/JobDetailModal";
 import {ReviewDeliveryModal} from "@/components/Common/Modal/ReviewDeliveryModal";
 import {JobFlowContent} from "@/components/JobFlowContent";
+import { TYPES_TO_STATUS } from '@/utils/chat/workflowTypes';
+import { useWorkflowStatus } from '@/hooks/chat/useWorkflowStatus';
+import { useTypingIndicator } from '@/hooks/chat/useTypingIndicator';
+import { useFileUpload } from '@/hooks/chat/useFileUpload';
+import { useWorkflowActions } from '@/hooks/chat/useWorkflowActions';
 
 type MessageForm = { message: string };
 type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
@@ -64,25 +65,16 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [workflowIdState, setWorkflowIdState] = useState<number | null>(null);
     type UIChatMessage = WsChatMessage & { isOwner?: boolean };
     const [messages, setMessages] = useState<UIChatMessage[]>([]);
-    const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
+    // File upload handled via hook
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
-    const [isPartnerTyping, setIsPartnerTyping] = useState<boolean>(false);
-    const partnerTypingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    // Clear typing timeout when component unmounts or room changes to avoid leaks
-    useEffect(() => {
-        return () => {
-            if (partnerTypingTimeoutRef.current) {
-                try { clearTimeout(partnerTypingTimeoutRef.current); } catch {}
-                partnerTypingTimeoutRef.current = null;
-            }
-        };
-    }, [roomId]);
+    // Typing indicator logic moved into hook
+    const { isPartnerTyping, onRemoteTyping } = useTypingIndicator({ roomId });
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null); // New error state for API failures
+    const { selectedFile, setSelectedFile, isDeletingFile, handleFileUpload, handleRemoveSelectedFile } = useFileUpload({ setError, t: (k: string) => t(k) });
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
-    const [isDeletingFile, setIsDeletingFile] = useState<boolean>(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
     const setScrollRef = useCallback((el: HTMLDivElement | null) => {
@@ -137,6 +129,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         senderId: number;
         timestamp: string
     } | null>(null);
+    // Workflow status helpers moved into useWorkflowStatus hook
 
     useEffect(() => {
         const handleResize = () => {
@@ -169,17 +162,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             if (parsed && typeof parsed === 'object' && (parsed as any).type === 'typing') {
                 const info = parsed as any;
                 const senderId = Number(info.senderId) || 0;
-                if (senderId !== Number(localUser?.id)) {
-                    const val = !!info.typing;
-                    setIsPartnerTyping(val);
-                    if (partnerTypingTimeoutRef.current) {
-                        try { clearTimeout(partnerTypingTimeoutRef.current); } catch {}
-                        partnerTypingTimeoutRef.current = null;
-                    }
-                    if (val) {
-                        partnerTypingTimeoutRef.current = setTimeout(() => setIsPartnerTyping(false), 5000);
-                    }
-                }
+                const val = !!info.typing;
+                onRemoteTyping(senderId, Number(localUser?.id) || 0, val);
                 return;
             }
 
@@ -215,6 +199,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 console.debug('[CHAT][RT] items normalized:', {count: items.length, sample: items[0]});
             } catch {
             }
+
+            // Realtime: update workflow status immediately based on structured message type
+            try {
+                if (!isFetching && items.length > 0) {
+                    tryUpdateStatusFromItems(items);
+                }
+            } catch { /* ignore */ }
 
             setMessages((prev) => {
                 const copy = [...prev];
@@ -343,6 +334,18 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
     const currentStatus: StatusKey = stepperState.name as StatusKey;
 
+    // Workflow status helpers
+    const setWorkflowState = useStateMachineStore((s) => s.set);
+    const { lastRealtimeStatusAtRef, extractStatusFromContent, tryUpdateStatusFromItems, scanMessagesForStatus, goToStatus, handleChangeStatus } = useWorkflowStatus({
+        currentStatus,
+        setWorkflowState,
+        hasStarted,
+        setHasStarted,
+        ORDER,
+        send,
+        canGo,
+    });
+
     // Load status from API server when available
     const {data: roomData} = useHttpGet("getChatRoom", [roomId as any]);
     const roomPostId = (roomData as any)?.room?.room?.postId ?? (roomData as any)?.room?.post?.id ?? (roomData as any)?.postId ?? (roomData as any)?.room?.postId;
@@ -351,7 +354,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     // Determine if current user is the employer (job poster). Creator id is personId.
     const postCreatorId = (post as any)?.creatorId ?? (roomData as any)?.room?.post?.creatorId ?? (roomData as any)?.post?.creatorId;
     const isEmployer = postCreatorId != null && person?.id != null ? String(postCreatorId) === String(person?.id) : undefined;
-    const setWorkflowState = useStateMachineStore((s) => s.set);
     useEffect(() => {
         const rd: any = roomData as any;
         if (!rd) return;
@@ -367,38 +369,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }, [roomData, setWorkflowState, currentStatus, hasStarted]);
 
 
-    const goToStatus = (target: StatusKey) => {
-        // Set the workflow state directly to ensure immediate UI update without requiring page reload
-        try {
-            setWorkflowState(target);
-            // Ensure the flow panel is considered started on both sides once any status change is applied
-            if (!hasStarted) setHasStarted(true);
-        } catch {
-            // Fallback to step-by-step transitions if direct set fails for any reason
-            const targetIdx = ORDER.indexOf(target);
-            let curIdx = ORDER.indexOf(currentStatus);
-            while (curIdx < targetIdx) {
-                send({type: "NEXT"});
-                curIdx++;
-            }
-            while (curIdx > targetIdx) {
-                send({type: "BACK"});
-                curIdx--;
-            }
-            // Also mark as started after fallback transitions
-            if (!hasStarted) setHasStarted(true);
-        }
-    };
-
-    const handleChangeStatus = (key: StatusKey) => {
-        if (!canGo(key)) return;
-        const curIdx = ORDER.indexOf(currentStatus);
-        const toIdx = ORDER.indexOf(key);
-        if (toIdx === curIdx) return;
-        if (Math.abs(toIdx - curIdx) === 1) {
-            return toIdx > curIdx ? send({type: "NEXT"}) : send({type: "BACK"});
-        }
-    };
 
     const {execute: createInvoice} = useHttpPost("createInvoice");
     const {execute: startWorkflow} = useHttpPost("startWorkflow");
@@ -406,122 +376,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {execute: submitStartWorkApi} = useHttpPost("submitStartWork");
     const {execute: approveWorkApi} = useHttpPost("approveWork");
 
-    const handleStartWorkflow = async () => {
-        setError(null);
-        try {
-            // Require postId to start workflow
-            const postId = roomPostId as any;
-            if (!postId) {
-                setError(t("profileChat.missingPostIdForQuotation") || "This chat is not linked to a post. You cannot create a quotation.");
-                return;
-            }
-            // For now, default to first step
-            let seqNumber = 1;
 
-            const res = await startWorkflow({postId, seqNumber, roomId: roomId});
-            if (res?.state === REQUEST_STATE.SUCCESS && (res as any).data?.success) {
-                setHasStarted(true);
-                const wfId = (res as any)?.data?.workflowId;
-                if (wfId) setWorkflowIdState(Number(wfId));
-                // Ensure UI shows the flow at the initial step
-                goToStatus("QuotationPending");
-            } else {
-                setError(
-                    t("profileChat.startWorkflowFailed") ||
-                    ((res as any)?.err?.message || "Failed to start workflow. Please try again.")
-                );
-            }
-        } catch (e) {
-            const msg = e instanceof Error ? e.message : "Unknown error";
-            setError(t("profileChat.startWorkflowFailed") || `Failed to start workflow: ${msg}`);
-        }
-    };
-
-    const handleQuotationSubmit = async (data: ProposedQuotePayload) => {
-        if (!canSend) {
-            setError(disabledReason);
-            setShowQuotationModal(false);
-            return;
-        }
-        // Prevent duplicate quotations: disallow if a quotation has already been proposed
-        if (hasProposedQuote) {
-            setError(t('profileChat.quotationAlreadySent') || 'You have already sent a quotation for this chat.');
-            setShowQuotationModal(false);
-            return;
-        }
-        setError(null); // Reset error state before attempting submission
-        try {
-            // Create invoice via API
-            const form: CreateInvoiceForm = {
-                employerId: data.partnerId,
-                postId: data.postId,
-                commentId: data.commentId,
-                seqNumber: 1, // TODO: need to change logic here, this is just temporary
-                amount: data.amount,
-                proposal: data.proposal,
-                projectName: data.projectName,
-                status: "QuotePendingReview",
-                projectDetails: data.projectDetails,
-                workingDays: data.workingDays,
-                deliverables: data.deliverables,
-                note: data.note ?? undefined,
-                startingDay: data.startingDay,
-                deliveryDay: data.deliveryDay,
-            };
-
-            // Wait for invoice creation to succeed
-            const res = await createInvoice(form as any);
-            if (res?.state !== REQUEST_STATE.SUCCESS) {
-                setError(t("profileChat.quotationError") || "Failed to create invoice. Please try again.");
-                return;
-            }
-
-
-            const createdBillingId = (res as any)?.data?.billingId;
-
-            // Proceed with chat message and state updates only if invoice creation succeeds
-            const messageId = uuidv4();
-            const readable =
-                t("profileChat.proposeQuoteMsg") ||
-                `Proposed quotation: ${data.projectName} - $${data.amount.toFixed(2)}`;
-            const payload = {type: "proposed-quote", quote: data, billingId: createdBillingId} as any;
-
-            // Add message to local state
-            addOwnMessage(JSON.stringify(payload), messageId);
-
-            // Send message via WebSocket
-            sendMessage({
-                message: JSON.stringify(payload),
-                id: messageId,
-            });
-
-            // Notify room activity (preview removed)
-            const tsIso = new Date().toISOString();
-            try {
-                window.dispatchEvent(
-                    new CustomEvent("chat:new-message", {
-                        detail: {
-                            roomId,
-                            content: readable,
-                            senderId: Number(localUser?.id) || 0,
-                            timestamp: tsIso,
-                        },
-                    })
-                );
-            } catch {
-                console.warn("Failed to dispatch chat:new-message event");
-            }
-
-            // Upon sending a quotation, keep status at QuotationPending
-            goToStatus("QuotationPending");
-
-            // Close modal
-            setShowQuotationModal(false);
-        } catch (err) {
-            console.error("Failed to send quotation:", err);
-            setError(t("profileChat.quotationError") || "Failed to send quotation. Please try again.");
-        }
-    };
 
     // Helper to add a local (owner) message to the list and scroll
     const addOwnMessage = useCallback((content: string, id?: string) => {
@@ -542,6 +397,42 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         scrollToLatestSoon();
         return messageId;
     }, [currentRoom, roomId, localUser?.id]);
+
+    // Centralize all workflow actions into a dedicated hook
+    const {
+        startWorkflowAction,
+        quotationSubmit,
+        approveQuotation: approveQuotationFromHook,
+        startWork,
+        submitDelivery,
+        requestRevision,
+        approveWork,
+        cancelJob,
+    } = useWorkflowActions({
+        messages,
+        roomData,
+        workflowIdState,
+        localUser: localUser || person,
+        roomId,
+        selectedFile,
+        setError,
+        t: (k: string) => t(k) || k,
+        addOwnMessage,
+        sendMessage,
+        goToStatus,
+        setHasStarted,
+        setWorkflowIdState,
+        setShowQuotationModal,
+        setSelectedFile,
+        canSend,
+        disabledReason,
+        createInvoice,
+        startWorkflow,
+        approveQuotationApi,
+        submitStartWorkApi,
+        approveWorkApi,
+        postId: roomPostId,
+    });
 
     const onSubmit = useCallback(
         (data: MessageForm) => {
@@ -594,449 +485,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         [sendMessage, currentRoom, roomId, selectedFile, localUser?.id]
     );
 
-    // File upload handler: uploads to API and stores returned URL/name in state
-    const handleFileUpload = useCallback(async (e: Event) => {
-        try {
-            const input = e.target as HTMLInputElement | null;
-            const file = (input?.files && input.files[0]) || (e as any).dataTransfer?.files?.[0];
-            if (!file) return;
-
-            // Basic validation
-            const maxSizeMb = 25; // server-side limit may differ
-            if (file.size > maxSizeMb * 1024 * 1024) {
-                setError(`File too large. Max ${maxSizeMb}MB`);
-                return;
-            }
-            const fileType = file.type || "application/octet-stream";
-
-            // Call chat file upload API
-            setError(null);
-            const res = await HttpService.client.uploadFile({image: file} as any);
-            if (res.state !== REQUEST_STATE.SUCCESS) {
-                const msg = (res as any)?.err?.message || "Failed to upload file.";
-                setError(msg);
-                return;
-            }
-            const data: any = (res as any).data;
-            const uploaded: UploadedFile = {
-                fileUrl: String(data?.url || ""),
-                fileType,
-                fileName: String(data?.filename || file.name || "file"),
-            };
-            if (!uploaded.fileUrl) {
-                setError("Upload succeeded but no file URL returned.");
-                return;
-            }
-            setSelectedFile(uploaded);
-
-            // Clear input value to allow re-selecting the same file
-            if (input) input.value = "";
-        } catch (err) {
-            setError("Failed to upload file. Please try again.");
-        }
-    }, []);
-
-    // Remove selected file: call API to delete then clear local state
-    const handleRemoveSelectedFile = useCallback(async () => {
-        if (!selectedFile || isDeletingFile) return;
-        try {
-            setIsDeletingFile(true);
-            setError(null);
-            const res = await HttpService.client.deleteFile(selectedFile.fileName as any);
-            if (res.state !== REQUEST_STATE.SUCCESS) {
-                const msg = (res as any)?.err?.message || t("profileChat.deleteFileError") || "Failed to delete file.";
-                setError(msg);
-                return;
-            }
-            setSelectedFile(null);
-        } catch (err) {
-            setError(t("profileChat.deleteFileError") || "Failed to delete file.");
-        } finally {
-            setIsDeletingFile(false);
-        }
-    }, [selectedFile, isDeletingFile, t]);
-
-    // Approve quotation implementation
-    const approveQuotation = useCallback(async () => {
-        try {
-            setError(null);
-
-            // Guard: prevent approving if insufficient balance
-            if (insufficientForApprove) {
-                setError(t('profileChat.insufficientBalanceWarning') || 'Insufficient balance to approve the quotation.');
-                return false;
-            }
-
-            // Resolve billingId from latest proposed-quote message
-            const latestPayload: any | null = getLatestProposedQuotePayload(messages as any);
-
-            // Try billingId from payload first
-            let billingId = Number(latestPayload?.billingId);
-            // If missing / invalid, fetch billing by comment id using new API
-            if (!billingId || Number.isNaN(billingId)) {
-                const commentIdFromPayload = Number(latestPayload?.quote?.commentId);
-                const commentId = !Number.isNaN(commentIdFromPayload) && commentIdFromPayload
-                    ? commentIdFromPayload
-                    : Number((roomData as any)?.room?.currentComment?.id ?? (roomData as any)?.currentCommentId ?? undefined);
-
-                if (!commentId || Number.isNaN(commentId)) {
-                    setError(t('profileChat.quotationError') || 'Missing billing information for approval.');
-                    return false;
-                }
-
-                try {
-                    const res = await HttpService.client.getBillingByComment({commentId});
-                    if (res?.state === REQUEST_STATE.SUCCESS && (res as any)?.data) {
-                        const billing = (res as any).data as any;
-                        billingId = Number(billing?.id);
-                    }
-                } catch (err) {
-                    // fallthrough to error below
-                }
-            }
-
-            if (!billingId || Number.isNaN(billingId)) {
-                setError(t('profileChat.quotationError') || 'Missing billing information for approval.');
-                return false;
-            }
-
-            const workflowId = resolveWorkflowId(roomData as any, workflowIdState as any);
-
-            if (!workflowId) {
-                setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before approval.');
-                return false;
-            }
-            // Seq number from proposed quote if available
-            const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
-
-            const form: ApproveQuotationForm = {seqNumber, billingId, walletId: person?.walletId, workflowId} as any;
-            const res = await approveQuotationApi(form as any);
-            if (res.state === REQUEST_STATE.FAILED) {
-                if (res?.err?.name === "insufficientBalanceForTransfer") {
-                    setError(res?.err?.message);
-                }
-            }
-            const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
-            if (!ok) {
-                setError(((res as any)?.err?.message) || 'Failed to approve quotation.');
-            } else {
-                // Immediately update local UI and notify partner
-                try {
-                    const messageId = uuidv4();
-                    addOwnMessage(JSON.stringify({type: 'employer-assigned'}), messageId);
-                    sendMessage({message: JSON.stringify({type: 'employer-assigned'}), id: messageId});
-                    const tsIso = new Date().toISOString();
-                    const readable = t('profileChat.approveQuotation') || 'Approve quotation';
-                    window.dispatchEvent(new CustomEvent('chat:new-message', {
-                        detail: {
-                            roomId,
-                            content: readable,
-                            senderId: Number(localUser?.id) || 0,
-                            timestamp: tsIso
-                        }
-                    }));
-                } catch {
-                }
-                goToStatus('OrderApproved');
-            }
-            return ok;
-        } catch (e) {
-            const msg = e instanceof Error ? e.message : 'Unknown error';
-            setError(msg);
-            return false;
-        }
-    }, [messages, roomData, workflowIdState, person, approveQuotationApi, t]);
-
-    const handleStartWorkAction = useCallback(async (): Promise<boolean> => {
-        try {
-            setError(null);
-
-            const workflowId = resolveWorkflowId(roomData as any, workflowIdState as any);
-
-            if (!workflowId) {
-                setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before starting work.');
-                return false;
-            }
-
-            // resolve seq from latest proposed-quote message if exists
-            const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
-
-            const form: any = {
-                seqNumber,
-                workflowId,
-                workDescription: t('profileChat.startWorkMsg') || 'Freelancer started work.',
-            };
-
-            const res = await submitStartWorkApi(form as any);
-            const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
-            if (!ok) {
-                setError(((res as any)?.err?.message) || 'Failed to start work.');
-            } else {
-                // Immediately notify and update status for both sides
-                try {
-                    const messageId = uuidv4();
-                    addOwnMessage(JSON.stringify({type: 'start-work'}), messageId);
-                    sendMessage({message: JSON.stringify({type: 'start-work'}), id: messageId});
-                    const tsIso = new Date().toISOString();
-                    const readable = t('profileChat.startWork') || 'Start work';
-                    window.dispatchEvent(new CustomEvent('chat:new-message', {
-                        detail: {
-                            roomId,
-                            content: readable,
-                            senderId: Number(localUser?.id) || 0,
-                            timestamp: tsIso
-                        }
-                    }));
-                } catch {
-                }
-                goToStatus('InProgress');
-            }
-            return ok;
-        } catch (e) {
-            const msg = e instanceof Error ? e.message : 'Unknown error';
-            setError(msg);
-            return false;
-        }
-    }, [messages, roomData, workflowIdState, submitStartWorkApi, t]);
-
-    const submitDeliveryAction = useCallback(async (): Promise<boolean> => {
-        try {
-            setError(null);
-            if (!canSend) {
-                setError(disabledReason);
-                return false;
-            }
-            if (!selectedFile || !selectedFile.fileUrl) {
-                setError(t('profileChat.attachFileFirst') || 'Please attach a file before submitting delivery.');
-                return false;
-            }
-            const workflowId = resolveWorkflowId(roomData as any, workflowIdState as any);
-            if (!workflowId) {
-                setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before submitting delivery.');
-                return false;
-            }
-
-            // Resolve seq number from latest proposed-quote if available
-            const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
-
-            const form: any = {
-                seqNumber,
-                workflowId,
-                workDescription: t('profileChat.submitDeliveryMsg') || 'Freelancer submitted a delivery.',
-                deliverableUrl: selectedFile.fileUrl,
-            };
-
-            const res = await HttpService.client.submitWork(form as any);
-            const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
-            if (!ok) {
-                setError(((res as any)?.err?.message) || 'Failed to submit delivery.');
-                return false;
-            }
-
-            // Send a structured chat message to notify and show the file
-            const messageId = uuidv4();
-            const payload = {
-                type: 'submit-delivery',
-                url: selectedFile.fileUrl,
-                name: selectedFile.fileName,
-                mime: selectedFile.fileType,
-            } as any;
-
-            addOwnMessage(JSON.stringify(payload), messageId);
-
-            sendMessage({message: JSON.stringify(payload), id: messageId});
-            try {
-                const preview = `[Delivery] ${selectedFile.fileName}`;
-                const tsIso = new Date().toISOString();
-                window.dispatchEvent(
-                    new CustomEvent("chat:new-message", {
-                        detail: {roomId, content: preview, senderId: Number(localUser?.id) || 0, timestamp: tsIso},
-                    })
-                );
-            } catch {
-            }
-
-            // Clear selected file after successful submit
-            setSelectedFile(null);
-            // Immediately reflect status change locally
-            goToStatus('PendingEmployerReview');
-            return true;
-        } catch (e) {
-            const msg = e instanceof Error ? e.message : 'Unknown error';
-            setError(msg);
-            return false;
-        }
-    }, [messages, roomData, workflowIdState, selectedFile, localUser?.id, canSend, disabledReason, t]);
-
-    const requestRevisionAction = useCallback(async (): Promise<boolean> => {
-        try {
-            setError(null);
-            if (!canSend) {
-                setError(disabledReason || t('profileChat.cannotPerformAction') || 'You cannot perform this action right now.');
-                return false;
-            }
-            const workflowId = resolveWorkflowId(roomData as any, workflowIdState as any);
-            if (!workflowId) {
-                setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before requesting revision.');
-                return false;
-            }
-            const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
-            const reason = t('profileChat.requestRevisionMsg') || 'Please revise and resubmit.';
-            const form: any = {seqNumber, workflowId, reason};
-            const res = await HttpService.client.requestRevision(form as any);
-            const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
-            if (!ok) {
-                setError(((res as any)?.err?.message) || 'Failed to request revision.');
-                return false;
-            }
-            // Notify chat and move status
-            try {
-                const messageId = uuidv4();
-                const payload = {type: 'request-revision', reason} as any;
-                addOwnMessage(JSON.stringify(payload), messageId);
-                sendMessage({message: JSON.stringify(payload), id: messageId});
-                const tsIso = new Date().toISOString();
-                window.dispatchEvent(new CustomEvent('chat:new-message', {
-                    detail: {
-                        roomId,
-                        content: reason,
-                        senderId: Number(localUser?.id) || 0,
-                        timestamp: tsIso
-                    }
-                }));
-            } catch {
-            }
-            goToStatus('InProgress');
-            return true;
-        } catch (e) {
-            const msg = e instanceof Error ? e.message : 'Unknown error';
-            setError(msg);
-            return false;
-        }
-    }, [canSend, disabledReason, t, roomData, workflowIdState, messages, roomId, localUser?.id]);
-
-    const approveWorkAction = useCallback(async (): Promise<boolean> => {
-        try {
-            setError(null);
-            if (!canSend) {
-                setError(disabledReason || t('profileChat.cannotPerformAction') || 'You cannot perform this action right now.');
-                return false;
-            }
-            const workflowId = resolveWorkflowId(roomData as any, workflowIdState as any);
-            if (!workflowId) {
-                setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before approval.');
-                return false;
-            }
-            const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
-            // Resolve the latest delivery comment id from room data
-            const commentId = Number((roomData as any)?.room?.currentComment?.id ?? (roomData as any)?.currentCommentId ?? undefined);
-            if (!commentId || Number.isNaN(commentId)) {
-                setError('Missing delivery reference for approval.');
-                return false;
-            }
-            const form: any = {seqNumber, workflowId, commentId};
-            const res = await approveWorkApi(form as any);
-            const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
-            if (!ok) {
-                setError(((res as any)?.err?.message) || 'Failed to approve work.');
-                return false;
-            }
-            // Notify chat that delivery accepted
-            try {
-                const messageId = uuidv4();
-                addOwnMessage(JSON.stringify({type: 'delivery-accepted'}), messageId);
-                sendMessage({message: JSON.stringify({type: 'delivery-accepted'}), id: messageId});
-                const tsIso = new Date().toISOString();
-                const content = t('profileChat.deliveryAccepted') || 'Delivery accepted. Proceed to payment.';
-                window.dispatchEvent(new CustomEvent('chat:new-message', {
-                    detail: {
-                        roomId,
-                        content,
-                        senderId: Number(localUser?.id) || 0,
-                        timestamp: tsIso
-                    }
-                }));
-            } catch {
-            }
-            // Immediately reflect status as completed
-            goToStatus('Completed');
-            return true;
-        } catch (e) {
-            const msg = e instanceof Error ? e.message : 'Unknown error';
-            setError(msg);
-            return false;
-        }
-    }, [canSend, disabledReason, t, roomData, workflowIdState, messages, roomId, localUser?.id, approveWorkApi]);
-
-    const cancelJobAction = useCallback(async () => {
-        try {
-            // Block if cannot send or disabled
-            if (!canSend) {
-                setError(disabledReason || t('profileChat.cannotPerformAction') || 'You cannot perform this action right now.');
-                return false;
-            }
-            const workflowId = resolveWorkflowId(roomData as any, workflowIdState as any);
-            if (!workflowId) {
-                setError(t('profileChat.startWorkflowFailed') || 'Missing workflow. Start workflow before cancelling.');
-                return false;
-            }
-            // Resolve seq number similar to other actions
-            const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
-            const form: any = {seqNumber, workflowId};
-            const res = await HttpService.client.cancelJob(form as any);
-            const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean((res as any)?.data?.success);
-            if (!ok) {
-                setError(((res as any)?.err?.message) || 'Failed to cancel job.');
-                return false;
-            }
-            // Optionally notify chat
-            try {
-                const messageId = uuidv4();
-                const readable = t('profileChat.cancelledJobMsg') || 'The job has been cancelled.';
-                addOwnMessage(readable, messageId);
-                sendMessage({message: JSON.stringify({type: 'cancel-job'}), id: messageId});
-                const tsIso = new Date().toISOString();
-                window.dispatchEvent(new CustomEvent('chat:new-message', {
-                    detail: {
-                        roomId,
-                        content: readable,
-                        senderId: Number(localUser?.id) || 0,
-                        timestamp: tsIso
-                    }
-                }));
-            } catch {
-            }
-            goToStatus('Cancelled');
-            return true;
-        } catch (e) {
-            const msg = e instanceof Error ? e.message : 'Unknown error';
-            setError(msg);
-            return false;
-        }
-    }, [canSend, disabledReason, t, roomData, workflowIdState, messages, roomId, localUser?.id]);
-
-    const flowActions: FlowActions = createFlowActions({
-        t,
-        goToStatus,
-        setShowQuotationModal,
-        setShowReviewModal,
-        setMessages,
-        sendMessage,
-        handleFileUpload: (ev: any) => handleFileUpload(ev as any),
-        scrollContainerRef,
-        currentRoom,
-        roomId,
-        localUser,
-        setError,
-        approveQuotation,
-        startWork: async () => await handleStartWorkAction(),
-        getPostId: () => roomPostId,
-        submitDelivery: async () => await submitDeliveryAction(),
-        hasSelectedFile: () => !!selectedFile,
-        requestRevision: async () => await requestRevisionAction(),
-        approveWork: async () => await approveWorkAction(),
-    });
-
+    // File upload logic moved into useFileUpload hook
+    
     const didInitialFetchRef = useRef(false);
     // Fetch initial history as soon as component mounts (or roomId changes),
     // without waiting for a websocket connection. This fixes empty chat on page refresh
@@ -1084,36 +534,18 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     // Update workflow automatically based on the most recent structured workflow message
     // Scan a small window of newest messages to be robust against interleaved plain texts
     useEffect(() => {
+        // Fallback scanner: run only when realtime handler may not fire
+        // i.e., during history fetching or when socket is disconnected.
         if (!messages.length) return;
-        const typesToStatus: Record<string, StatusKey> = {
-            "proposed-quote": "QuotationPending",
-            "employer-assigned": "OrderApproved",
-            "start-work": "InProgress",
-            "submit-delivery": "PendingEmployerReview",
-            "cancel-job": "Cancelled",
-            "delivery-accepted": "Completed",
-            "request-revision": "InProgress",
-        } as const;
+        if (!isFetching && isConnected) return;
+        // If realtime just updated status, skip fallback to prevent duplicate transitions
+        if (Date.now() - lastRealtimeStatusAtRef.current < 1000) return;
 
-        const N = 20; // scan up to the latest 20 messages
-        const len = Math.min(messages.length, N);
-        for (let i = 0; i < len; i++) {
-            const m = messages[i];
-            const content = (m.content || '').trim();
-            if (!content.startsWith('{')) continue;
-            try {
-                const parsed = JSON.parse(content);
-                const type = parsed?.type as string | undefined;
-                const target = type ? (typesToStatus as any)[type] as StatusKey | undefined : undefined;
-                if (target) {
-                    goToStatus(target);
-                    break;
-                }
-            } catch {
-                // ignore parse errors and continue scanning
-            }
+        const target = scanMessagesForStatus(messages, 20);
+        if (target) {
+            goToStatus(target);
         }
-    }, [messages]);
+    }, [messages, isFetching, isConnected]);
 
     const hasProposedQuote = useMemo(() => {
         return Boolean(getLatestProposedQuotePayload(messages as any));
@@ -1135,6 +567,37 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         return Boolean(isEmployer && hasProposedQuote && latestQuoteAmount != null && availableBalance < (latestQuoteAmount as number));
     }, [isEmployer, hasProposedQuote, latestQuoteAmount, availableBalance]);
 
+    // Wrap approveQuotation with additional balance guard to keep identical behavior
+    const approveQuotationWrapped = React.useCallback(async (): Promise<boolean> => {
+        if (insufficientForApprove) {
+            setError(t('profileChat.insufficientBalanceWarning') || 'Insufficient balance to approve the quotation.');
+            return false;
+        }
+        return await approveQuotationFromHook();
+    }, [insufficientForApprove, approveQuotationFromHook, setError, t]);
+
+    const flowActions: FlowActions = createFlowActions({
+        t,
+        goToStatus,
+        setShowQuotationModal,
+        setShowReviewModal,
+        setMessages,
+        sendMessage,
+        handleFileUpload: (ev: any) => handleFileUpload(ev as any),
+        scrollContainerRef,
+        currentRoom,
+        roomId,
+        localUser,
+        setError,
+        approveQuotation: approveQuotationWrapped,
+        startWork: async () => await startWork(),
+        getPostId: () => roomPostId,
+        submitDelivery: async () => await submitDelivery(),
+        hasSelectedFile: () => !!selectedFile,
+        requestRevision: async () => await requestRevision(),
+        approveWork: async () => await approveWork(),
+    });
+
     const renderFlowContent = () => (
         <>
             {isEmployer !== undefined && (
@@ -1145,7 +608,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     compact={false}
                     className="space-y-4"
                     started={hasStarted || currentStatus !== 'QuotationPending'}
-                    onStart={handleStartWorkflow}
+                    onStart={startWorkflowAction}
                     canStartWorkflow={isEmployer && Boolean(roomPostId)}
                     showStartButton={isEmployer}
                     canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
@@ -1162,7 +625,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     onRequestRevision={isEmployer ? flowActions.onRequestRevision : undefined}
                     onReleasePayment={isEmployer ? flowActions.onReleasePayment : undefined}
                     onCancel={() => {
-                        void cancelJobAction();
+                        void cancelJob();
                     }}
                 />
             )}
@@ -1319,7 +782,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     setError={setError}
                     disabledReason={disabledReason}
                     sendMessage={sendMessage}
-                    requestRevisionAction={requestRevisionAction}
+                    requestRevisionAction={requestRevision}
                     roomId={roomId}
                     localUser={localUser}
                 />
@@ -1334,7 +797,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             <QuotationModal
                 isOpen={showQuotationModal}
                 onClose={() => setShowQuotationModal(false)}
-                onSubmit={handleQuotationSubmit}
+                onSubmit={quotationSubmit}
                 postId={roomPostId as number}
                 commentId={roomCommentId as number}
                 partnerId={partnerId as number}

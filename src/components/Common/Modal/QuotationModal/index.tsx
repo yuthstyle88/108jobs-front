@@ -33,7 +33,8 @@ export interface ProposedQuotePayload {
 interface QuotationModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (data: ProposedQuotePayload) => Promise<void>;
+    // Accept any promise return (boolean | void) to be flexible with handlers
+    onSubmit: (data: ProposedQuotePayload) => Promise<boolean | void>;
     postId?: number;
     commentId?: number;
     partnerId: number;
