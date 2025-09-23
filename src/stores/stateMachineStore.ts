@@ -75,8 +75,6 @@ export const ORDER = [
   "Completed",
   "Cancelled",
 ] as const satisfies readonly UiFlowStatus[];
-export type OrderTuple = typeof ORDER;
-
 // Events reflect real transitions; no "chat" state
 export type WorkflowEvent =
   | { type: "QUOTE_PROPOSED" }
@@ -106,5 +104,3 @@ export const useStateMachineStore = createMachineStore<UiFlowStatus, Exclude<Wor
 // Helper mapping functions bridging API <-> UI (identity mapping)
 export const apiToUiStatus = (s: WorkflowStatus | null | undefined): UiFlowStatus =>
   (s as UiFlowStatus) ?? "QuotationPending";
-export const statusToIndex = (s: WorkflowStatus | null | undefined): number => Math.max(0, ORDER.indexOf(apiToUiStatus(s)));
-export const indexToStatus = (i: number): UiFlowStatus => ORDER[i] ?? "QuotationPending";

@@ -147,7 +147,9 @@ export const vi = {
             submitDeliveryTitle: "Gửi Giao hàng",
             submitDeliveryMessage: "Bạn có chắc chắn muốn gửi giao hàng để xem xét không?",
             attachFileHere: "Đính kèm tệp tại đây",
-            topUpSuccessMessage: "Bạn đã nạp tiền thành công, vui lòng chờ quản trị viên phê duyệt thanh toán của bạn"
+            topUpSuccessMessage: "Bạn đã nạp tiền thành công, vui lòng chờ quản trị viên phê duyệt thanh toán của bạn",
+            orderApprovedMessage: "Đơn hàng đã được phê duyệt. Bạn có thể tiến hành thanh toán khi hóa đơn sẵn sàng.",
+            startHiring: "Nhà tuyển dụng đã bắt đầu tuyển dụng."
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",

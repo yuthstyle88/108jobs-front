@@ -101,6 +101,14 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 setHasStarted(true);
                 const wfId = Number(res?.data?.workflowId);
                 if (wfId) setWorkflowIdState(wfId);
+                const readable =
+                    t('profileChat.proposeQuoteMsg');
+                const payload = { type: 'employer-started' } as any;
+                const sentId = await sendStructuredMessage(sendMessage, roomId, payload, {
+                    senderId: Number(localUser?.id) || 0,
+                    previewText: readable
+                });
+                addOwnMessage(JSON.stringify(payload), sentId);
                 goToStatus?.('QuotationPending');
                 return true;
             } else {

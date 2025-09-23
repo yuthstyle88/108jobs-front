@@ -145,7 +145,9 @@ export const th = {
             topUpNow: "เติมเงินตอนนี้",
             submitDeliveryTitle: "ส่งมอบงาน",
             submitDeliveryMessage: "คุณแน่ใจหรือไม่ว่าต้องการส่งงานเพื่อให้ตรวจสอบ?",
-            attachFileHere: "แนบไฟล์ที่นี่"
+            attachFileHere: "แนบไฟล์ที่นี่",
+            orderApprovedMessage: "คำสั่งซื้อได้รับการอนุมัติแล้ว คุณสามารถดำเนินการชำระเงินเมื่อใบแจ้งหนี้พร้อม",
+            startHiring: "นายจ้างเริ่มจ้างงานแล้ว"
         },
         allCategories: {
             allJobCategories: "หมวดหมู่งานทั้งหมด",

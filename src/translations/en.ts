@@ -146,7 +146,9 @@ export const en = {
             topUpNow: "Top up now",
             submitDeliveryTitle: "Submit Delivery",
             submitDeliveryMessage: "Are you sure you want to submit the delivery for review?",
-            attachFileHere: "Attach file here"
+            attachFileHere: "Attach file here",
+            orderApprovedMessage: "The order has been approved. You can proceed to payment when invoice is ready.",
+            startHiring: "Employer started hiring."
         },
         allCategories: {
             allJobCategories: "All Job Categories",

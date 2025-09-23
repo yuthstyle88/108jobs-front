@@ -21,7 +21,7 @@ const TopUpModal = ({
     const [qrImage, setQrImage] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [countdown, setCountdown] = useState<number>(300); // 5 minutes
+    const [countdown, setCountdown] = useState<number>(300);
     const [qrId, setQrId] = useState<string | null>(null);
     const [paymentStatus, setPaymentStatus] = useState<"pending" | "success" | "failed">("pending");
     const lastAmountRef = useRef<number | null>(null);
@@ -128,7 +128,7 @@ const TopUpModal = ({
 
                         // Start API check every 10 seconds
                         apiCheckRef.current = setInterval(async () => {
-                            const inquiry = await callHttp("inquireScbQrCode", { qrId: qrcodeId, token: accessToken });
+                            const inquiry = await callHttp("inquireScbQrCode", { qrId: qrId, token: accessToken });
                             if (inquiry.state === REQUEST_STATE.SUCCESS) {
                                 if (timerRef.current) {
                                     clearInterval(timerRef.current);

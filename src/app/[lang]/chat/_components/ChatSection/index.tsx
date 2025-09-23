@@ -26,13 +26,14 @@ import {getLatestProposedQuotePayload} from "@/utils/chat/message";
 import {JobDetailModal} from "@/components/Common/Modal/JobDetailModal";
 import {ReviewDeliveryModal} from "@/components/Common/Modal/ReviewDeliveryModal";
 import {JobFlowContent} from "@/components/JobFlowContent";
-import { useWorkflowStatus } from '@/hooks/chat/useWorkflowStatus';
-import { useTypingIndicator } from '@/hooks/chat/useTypingIndicator';
-import { useFileUpload } from '@/hooks/chat/useFileUpload';
-import { useWorkflowActions } from '@/hooks/chat/useWorkflowActions';
-import { createChatRealtimeHandler } from './createChatRealtimeHandler';
+import {useWorkflowStatus} from '@/hooks/chat/useWorkflowStatus';
+import {useTypingIndicator} from '@/hooks/chat/useTypingIndicator';
+import {useFileUpload} from '@/hooks/chat/useFileUpload';
+import {useWorkflowActions} from '@/hooks/chat/useWorkflowActions';
+import {createChatRealtimeHandler} from './createChatRealtimeHandler';
 
 type MessageForm = { message: string };
+
 interface ChatSectionProps {
     roomId: string;
     post?: Post;
@@ -66,11 +67,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
     // Typing indicator logic moved into hook
-    const { isPartnerTyping, onRemoteTyping } = useTypingIndicator({ roomId });
+    const {isPartnerTyping, onRemoteTyping} = useTypingIndicator({roomId});
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null); // New error state for API failures
-    const { selectedFile, setSelectedFile, isDeletingFile, handleFileUpload, handleRemoveSelectedFile } = useFileUpload({ setError, t: (k: string) => t(k) });
+    const {
+        selectedFile,
+        setSelectedFile,
+        isDeletingFile,
+        handleFileUpload,
+        handleRemoveSelectedFile
+    } = useFileUpload({setError, t: (k: string) => t(k)});
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
@@ -142,18 +149,18 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {sendMessage, sendTyping, fetchHistory, isConnected, hasMoreMessages, isFetching} = useWebSocket(
         `chat-view:${roomId}`,
         (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) =>
-                    createChatRealtimeHandler({
-                        roomId,
-                        localUserId: Number(localUser?.id) || 0,
-                        onRemoteTyping,
-                        getIsFetching: () => isFetching,
-                        tryUpdateStatusFromItems,
-                        setMessages: setMessages as any,
-                        atBottomRef,
-                        setNewSinceCount,
-                        latestIncomingRef,
-                    })(event)
-);
+            createChatRealtimeHandler({
+                roomId,
+                localUserId: Number(localUser?.id) || 0,
+                onRemoteTyping,
+                getIsFetching: () => isFetching,
+                tryUpdateStatusFromItems,
+                setMessages: setMessages as any,
+                atBottomRef,
+                setNewSinceCount,
+                latestIncomingRef,
+            })(event)
+    );
 
     // After commit, propagate the last incoming message to ChatRooms context and auto-scroll for receiver
     useEffect(() => {
@@ -205,11 +212,27 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         messages: [],
     };
 
-    const currentStatus: StatusKey = stepperState.name as StatusKey;
+    const currentStatus = useStateMachineStore((s) => s.state);
 
-    // Workflow status helpers
-    const setWorkflowState = useStateMachineStore((s) => s.set);
-    const { lastRealtimeStatusAtRef, extractStatusFromContent, tryUpdateStatusFromItems, scanMessagesForStatus, goToStatus, handleChangeStatus } = useWorkflowStatus({
+    // Define setWorkflowState reactively
+    const setWorkflowState = (key: StatusKey, isClientUpdate = true) => {  // Add optional flag
+        console.log('Setting workflow state:', key, { isClientUpdate });
+        useStateMachineStore.setState({
+            state: key,
+            stepIndex: ORDER.indexOf(key),
+        });
+        if (isClientUpdate) {
+            lastClientUpdateRef.current = { status: key, timestamp: Date.now() };
+        }
+    };
+    const {
+        lastRealtimeStatusAtRef,
+        extractStatusFromContent,
+        tryUpdateStatusFromItems,
+        scanMessagesForStatus,
+        goToStatus,
+        handleChangeStatus
+    } = useWorkflowStatus({
         currentStatus,
         setWorkflowState,
         hasStarted,
@@ -227,20 +250,37 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     // Determine if current user is the employer (job poster). Creator id is personId.
     const postCreatorId = (post as any)?.creatorId ?? (roomData as any)?.room?.post?.creatorId ?? (roomData as any)?.post?.creatorId;
     const isEmployer = postCreatorId != null && person?.id != null ? String(postCreatorId) === String(person?.id) : undefined;
+    const lastClientUpdateRef = useRef<{ status: StatusKey | null; timestamp: number }>({ status: null, timestamp: 0 });
+
     useEffect(() => {
         const rd: any = roomData as any;
         if (!rd) return;
         const apiStatusRaw = rd?.room?.workflow?.status ?? rd?.workflow?.status ?? rd?.room?.status ?? rd?.status ?? rd?.room?.workflowStatus ?? rd?.workflowStatus;
-        // If server reports a workflow status, mark as started and sync UI state
         if (typeof apiStatusRaw === 'string') {
-            if (!hasStarted) setHasStarted(true);
             const uiStatus = apiToUiStatus(apiStatusRaw as any);
-            if (uiStatus && uiStatus !== currentStatus) {
-                setWorkflowState(uiStatus as StatusKey);
+            if (uiStatus) {
+                const now = Date.now();
+                const recentClientUpdate = lastClientUpdateRef.current;
+                const gracePeriodMs = 5000;  // Adjust based on your API latency (e.g., 10s for slower servers)
+
+                // Skip sync if recent client update and API doesn't match (optimistic precedence)
+                if (
+                    recentClientUpdate.status &&
+                    recentClientUpdate.status !== uiStatus &&
+                    now - recentClientUpdate.timestamp < gracePeriodMs
+                ) {
+                    console.log(`Skipping API sync: Recent client update to ${recentClientUpdate.status} (API: ${uiStatus})`);
+                    return;  // Or optionally log a warning
+                }
+
+                // Proceed with sync (initial load or converged state)
+                if (!hasStarted) setHasStarted(true);
+                if (uiStatus !== currentStatus) {
+                    setWorkflowState(uiStatus as StatusKey, false);  // Mark as API-driven (not client)
+                }
             }
         }
-    }, [roomData, setWorkflowState, currentStatus, hasStarted]);
-
+    }, [roomData, currentStatus, hasStarted]);  // Remove setWorkflowState from deps to avoid loops
 
 
     const {execute: createInvoice} = useHttpPost("createInvoice");
@@ -248,7 +288,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {execute: approveQuotationApi} = useHttpPost("approveQuotation");
     const {execute: submitStartWorkApi} = useHttpPost("submitStartWork");
     const {execute: approveWorkApi} = useHttpPost("approveWork");
-
 
 
     // Helper to add a local (owner) message to the list and scroll
@@ -359,8 +398,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         [sendMessage, currentRoom, roomId, selectedFile, localUser?.id]
     );
 
-    // File upload logic moved into useFileUpload hook
-
     const didInitialFetchRef = useRef(false);
     // Fetch initial history as soon as component mounts (or roomId changes),
     // without waiting for a websocket connection. This fixes empty chat on page refresh
@@ -387,7 +424,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     useEffect(() => {
         if (isConnected && !didInitialFetchRef.current) {
             didInitialFetchRef.current = true;
-            console.log("[CHAT][INIT] Connected -> initial fetchHistory() (once per connection)");
             fetchHistory()
                 .then(() => {
                     setIsInitialLoading(false);
@@ -600,7 +636,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                             aria-label="Remove attached file"
                                             aria-busy={isDeletingFile}
                                         >
-                                            <Trash2 className={`h-4 w-4 ${isDeletingFile ? 'animate-spin' : ''}`} aria-hidden="true" />
+                                            <Trash2 className={`h-4 w-4 ${isDeletingFile ? 'animate-spin' : ''}`}
+                                                    aria-hidden="true"/>
                                         </button>
                                     </div>
                                 )}
@@ -609,7 +646,12 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                     disabled={!canSend}
                                     disabledHint=""
                                     onFileUpload={(ev: any) => handleFileUpload(ev as any)}
-                                    onTyping={(v) => { try { sendTyping?.(v); } catch {} }}
+                                    onTyping={(v) => {
+                                        try {
+                                            sendTyping?.(v);
+                                        } catch {
+                                        }
+                                    }}
                                     typingHint={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
                                 />
                             </div>
