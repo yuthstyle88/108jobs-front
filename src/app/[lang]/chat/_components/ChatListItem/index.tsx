@@ -82,7 +82,11 @@ function ChatListItemComponent({room, isActive, currentLang}: ChatListItemProps)
                                 className="text-xs font-semibold text-blue-600 bg-blue-100 rounded px-1 py-0.5 truncate max-w-[160px] sm:max-w-[220px]"
                                 title={`Job ${jobId}`}
                             >
-                                Job ID: <span className="text-primary font-bold">{jobId}</span>
+                             <span className="text-primary font-bold">
+                               {(jobId || "").length > 30
+                                   ? (jobId || "").slice(0, 30) + ".."
+                                   : (jobId || "")}
+                             </span>
                             </p>
                         )}
                     </div>

@@ -97,6 +97,12 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
 
     const ORDER: StatusKey[] = (stepper?.ORDER as StatusKey[]) || ['QuotationPending', 'OrderApproved', 'InProgress', 'PendingEmployerReview', 'Completed', 'Cancelled'];
 
+    const roleLabel = isEmployer === undefined
+        ? 'N/A'
+        : (isEmployer
+            ? (t('profileChat.roleEmployer') || 'ผู้ว่าจ้าง')
+            : (t('profileChat.roleFreelancer') || 'ฟรีแลนซ์'));
+
     const handleActivateStep = (toIndex: number, targetKey: StatusKey) => {
         const curIdx = currentIndex;
         const canAdjacent = toIndex === curIdx || Math.abs(toIndex - curIdx) === 1;
@@ -134,41 +140,51 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
             : null;
 
         switch (key) {
-            case 'QuotationPending':
-                const actionsQP: React.ReactElement[] = [];
-                if (canProposeQuote) {
-                    actionsQP.push(btn(t('profileChat.proposeQuote') || 'Send quotation', onProposeQuote));
-                }
-                if (insufficientForApprove) {
-                    actionsQP.push(
-                        <div className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm">
-                            <div className="font-medium">{t("profileChat.insufficientBalanceTitle") || "Insufficient balance"}</div>
-                            <div className="mt-1">
-                                {(t("profileChat.insufficientBalanceWarning") || "Insufficient balance to approve the quotation.")}
-                                {" "}
-                                <Link href="/coin" className="underline font-medium">{t("profileChat.topUpNow") || "Top up now"}</Link>
+            case 'QuotationPending': {
+                const actions: React.ReactElement[] = [];
+
+                if (!isEmployer) {
+                    // Freelancer
+                    if (canProposeQuote) {
+                        actions.push(btn(t('profileChat.proposeQuote') || 'Send quotation', onProposeQuote));
+                    } else {
+                        actions.push(
+                            <div key="wait-approval" className="w-full text-xs text-gray-600 bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2">
+                                {t('profileChat.waitEmployerApproval') || 'Waiting for employer to approve your quotation'}
                             </div>
-                        </div>
-                    );
+                        );
+                    }
+                } else {
+                    // Employer
+                    if (insufficientForApprove) {
+                        actions.push(
+                            <div key="insufficient" className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm">
+                                <div className="font-medium">{t('profileChat.insufficientBalanceTitle') || 'Insufficient balance'}</div>
+                                <div className="mt-1">
+                                    {(t('profileChat.insufficientBalanceWarning') || 'Insufficient balance to approve the quotation.')}{" "}
+                                    <Link href="/coin" className="underline font-medium">{t('profileChat.topUpNow') || 'Top up now'}</Link>
+                                </div>
+                            </div>
+                        );
+                    }
+                    if (canApproveQuotation && !insufficientForApprove) {
+                        actions.push(btn(t('profileChat.approveQuotation') || 'Approve quotation', () => setShowApproveConfirm(true)));
+                    }
                 }
-                if (canApproveQuotation && !insufficientForApprove) {
-                    actionsQP.push(btn(t('profileChat.approveQuotation') || 'Approve quotation', () => setShowApproveConfirm(true)));
-                }
-                if (!canProposeQuote && !canApproveQuotation && !isEmployer) {
-                    actionsQP.push(
-                        <div key="wait-approval" className="w-full text-xs text-gray-600 bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2">
-                            {t('profileChat.waitEmployerApproval') || 'Waiting for employer to approve your quotation'}
-                        </div>
-                    );
-                }
-                if (cancelBtn) actionsQP.push(cancelBtn);
-                return actionsQP;
-            case 'OrderApproved':
-                return [
-                    onStartWork ? btn(t('profileChat.startWork') || 'Start work', onStartWork) : null,
-                    ...(cancelBtn ? [cancelBtn] : []),
-                ].filter(Boolean) as React.ReactElement[];
-            case 'InProgress':
+
+                if (cancelBtn) actions.push(cancelBtn);
+                return actions;
+            }
+
+            case 'OrderApproved': {
+                const actions: React.ReactElement[] = [];
+                // Start work เฉพาะฝั่งฟรีแลนซ์
+                if (!isEmployer && onStartWork) actions.push(btn(t('profileChat.startWork') || 'Start work', onStartWork));
+                if (cancelBtn) actions.push(cancelBtn);
+                return actions;
+            }
+
+            case 'InProgress': {
                 if (isEmployer) {
                     return [
                         <div key="wait-freelancer" className="w-full text-xs text-gray-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2">
@@ -177,16 +193,19 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                         ...(cancelBtn ? [cancelBtn] : []),
                     ];
                 }
-                return [
-                    btn(t('profileChat.uploadFileLink') || 'แนบไฟล์/ลิงก์', onUploadAsset),
+                const actions: React.ReactElement[] = [];
+                actions.push(
                     btn(
                         t('profileChat.submitDelivery') || 'ส่งงาน',
-                        canSubmitDelivery ? (() => setShowSubmitConfirm(true)) : undefined,
+                        () => setShowSubmitConfirm(true),
                         'ghost'
-                    ),
-                    ...(cancelBtn ? [cancelBtn] : []),
-                ];
-            case 'PendingEmployerReview':
+                    )
+                );
+                if (cancelBtn) actions.push(cancelBtn);
+                return actions.filter(Boolean) as React.ReactElement[];
+            }
+
+            case 'PendingEmployerReview': {
                 if (isEmployer) {
                     return [
                         btn(t('profileChat.requestRevision') || 'ขอแก้ไขรอบใหม่', () => setShowRevisionConfirm(true)),
@@ -200,10 +219,10 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     </div>,
                     ...(cancelBtn ? [cancelBtn] : []),
                 ];
+            }
+
             case 'Completed':
-                return [];
             case 'Cancelled':
-                return [];
             default:
                 return [];
         }
@@ -212,6 +231,13 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
     if (!started) {
         return (
             <aside className={`flex w-full h-full bg-white shadow-sm rounded-lg overflow-auto ${className}`}>
+                {roleLabel && (
+                    <div className="w-full px-4 pt-4">
+                        <div className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1">
+                            {roleLabel}
+                        </div>
+                    </div>
+                )}
                 <div className="flex-1 p-4 flex flex-col gap-3">
                     <p className="text-sm text-gray-600">
                         {t('profileChat.startWorkflowHint') || 'The workflow will be shown after the employer starts it.'}
@@ -224,7 +250,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                             disabled={!canStartWorkflow}
                             title={!canStartWorkflow ? (t('profileChat.missingPostIdForQuotation') || 'Link a job to start the workflow') : undefined}
                         >
-                            {t('profileChat.startWorkflow') || 'Start workflow'}
+                            {t('profileChat.startWorkflow') || 'ต้องการจ้างงาน'}
                         </button>
                     )}
                 </div>
@@ -233,10 +259,10 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     onClose={() => setShowStartConfirm(false)}
                     onConfirm={() => {
                         setShowStartConfirm(false);
-                        (onStart || onApproveQuotation)?.();
+                        onStart?.();
                     }}
-                    title={t('profileChat.confirmStartWorkflowTitle') || 'Start workflow?'}
-                    message={t('profileChat.confirmStartWorkflowMessage') || 'This will initialize the job flow for this chat.'}
+                    title={t('profileChat.confirmStartWorkflowTitle') || 'ต้องการจ้างงาน?'}
+                    message={t('profileChat.confirmStartWorkflowMessage') || 'ระบบจะเริ่มขั้นตอนงานสำหรับการสนทนานี้'}
                 />
             </aside>
         );
@@ -249,6 +275,13 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
             } ${compact ? 'space-y-2' : 'space-y-4'} ${className}`}
             aria-label="สถานะปัจจุบัน"
         >
+            {roleLabel && (
+                <div className="w-full px-4 pt-4">
+                    <div className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1">
+                        {roleLabel}
+                    </div>
+                </div>
+            )}
             <ul
                 className={`flex ${
                     orientation === 'horizontal' ? 'flex-row flex-wrap gap-4' : 'flex-col'

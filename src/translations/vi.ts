@@ -137,6 +137,8 @@ export const vi = {
             missingPostIdForQuotation: "Phòng chat này chưa được liên kết với bài đăng công việc. Hãy liên kết bài đăng để tạo báo giá hoặc bắt đầu quy trình.",
             youAreNotAvailable: "Bạn hiện đang tắt trạng thái sẵn sàng. Hãy bật sẵn sàng trong hồ sơ để gửi tin nhắn.",
             userNotAvailable: "Người dùng này hiện không sẵn sàng. Bạn có thể xem lịch sử chat nhưng không thể gửi tin nhắn mới.",
+            roleEmployer: "Bạn là nhà tuyển dụng",
+            roleFreelancer: "Bạn là freelancer",
             selectConversation: "Chọn một cuộc trò chuyện từ bên trái để bắt đầu nhắn tin.",
             searchChat: "Tìm kiếm cuộc trò chuyện",
             insufficientBalanceTitle: "Số dư không đủ",

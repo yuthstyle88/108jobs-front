@@ -137,6 +137,8 @@ export const en = {
             youAreNotAvailable: "You are currently unavailable. Turn on your availability in your profile to send messages.",
             userNotAvailable: "This user is currently unavailable. You can read the chat history but cannot send new messages.",
             missingPostIdForQuotation: "This chat is not linked to a job post. Link a job to this room to create a quotation or start the workflow.",
+            roleEmployer: "You are the employer.",
+            roleFreelancer: "You are the freelancer.",
             selectConversation: "Select a conversation from the left to start messaging.",
             searchChat: "Search chat",
             insufficientBalanceTitle: "Insufficient balance",

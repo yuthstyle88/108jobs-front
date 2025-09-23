@@ -350,7 +350,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
     // Determine if current user is the employer (job poster). Creator id is personId.
     const postCreatorId = (post as any)?.creatorId ?? (roomData as any)?.room?.post?.creatorId ?? (roomData as any)?.post?.creatorId;
-    const isEmployer = postCreatorId != null && String(postCreatorId) === String(person?.id);
+    const isEmployer = postCreatorId != null && person?.id != null ? String(postCreatorId) === String(person?.id) : undefined;
     const setWorkflowState = useStateMachineStore((s) => s.set);
     useEffect(() => {
         const rd: any = roomData as any;
@@ -1137,40 +1137,35 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
     const renderFlowContent = () => (
         <>
-            {!roomPostId && (
-                <div
-                    className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
-                    {t("profileChat.missingPostIdForQuotation") || "This chat is not linked to a post. You cannot create a quotation."}
-                </div>
+            {isEmployer !== undefined && (
+                <FreelanceChatFlow
+                    currentStatus={currentStatus}
+                    onChangeStatus={handleChangeStatus}
+                    orientation="vertical"
+                    compact={false}
+                    className="space-y-4"
+                    started={hasStarted || currentStatus !== 'QuotationPending'}
+                    onStart={handleStartWorkflow}
+                    canStartWorkflow={isEmployer && Boolean(roomPostId)}
+                    showStartButton={isEmployer}
+                    canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
+                    canApproveQuotation={isEmployer && hasProposedQuote}
+                    insufficientForApprove={insufficientForApprove}
+                    isEmployer={isEmployer}
+                    canSubmitDelivery={!!selectedFile}
+                    onProposeQuote={flowActions.onProposeQuote}
+                    onApproveQuotation={flowActions.onApproveQuotation}
+                    onStartWork={!isEmployer ? flowActions.onStartWork : undefined}
+                    onUploadAsset={!isEmployer ? flowActions.onUploadAsset : undefined}
+                    onSendMessage={flowActions.onSendMessage}
+                    onSubmitDelivery={!isEmployer ? flowActions.onSubmitDelivery : undefined}
+                    onRequestRevision={isEmployer ? flowActions.onRequestRevision : undefined}
+                    onReleasePayment={isEmployer ? flowActions.onReleasePayment : undefined}
+                    onCancel={() => {
+                        void cancelJobAction();
+                    }}
+                />
             )}
-
-            <FreelanceChatFlow
-                currentStatus={currentStatus}
-                onChangeStatus={handleChangeStatus}
-                orientation="vertical"
-                compact={false}
-                className="space-y-4"
-                started={hasStarted || currentStatus !== 'QuotationPending'}
-                onStart={handleStartWorkflow}
-                canStartWorkflow={isEmployer && Boolean(roomPostId)}
-                showStartButton={isEmployer}
-                canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
-                canApproveQuotation={isEmployer && hasProposedQuote}
-                insufficientForApprove={insufficientForApprove}
-                isEmployer={isEmployer}
-                canSubmitDelivery={!!selectedFile}
-                onProposeQuote={flowActions.onProposeQuote}
-                onApproveQuotation={flowActions.onApproveQuotation}
-                onStartWork={!isEmployer ? flowActions.onStartWork : undefined}
-                onUploadAsset={!isEmployer ? flowActions.onUploadAsset : undefined}
-                onSendMessage={flowActions.onSendMessage}
-                onSubmitDelivery={!isEmployer ? flowActions.onSubmitDelivery : undefined}
-                onRequestRevision={isEmployer ? flowActions.onRequestRevision : undefined}
-                onReleasePayment={isEmployer ? flowActions.onReleasePayment : undefined}
-                onCancel={() => {
-                    void cancelJobAction();
-                }}
-            />
         </>
     );
 
