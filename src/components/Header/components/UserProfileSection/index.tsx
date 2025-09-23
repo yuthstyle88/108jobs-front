@@ -19,81 +19,74 @@ const UserProfileSection = () => {
     const {wallet, person} = useMyUser();
     const {isOpen, toggle, close} = useToggle();
     const {t} = useTranslation();
+
     return (
-        <section className="flex items-center gap-4 h-full">
-            <div className="group hidden lg:block">
+        <section className="flex items-center gap-1 h-full min-w-0 shrink-0">
+            <div className="group hidden lg:block min-w-0">
                 <div className="relative">
-                    <div
-                        className="text-[14px] text-[#1d6cd2] px-3 py-2 bg-white rounded-md font-medium flex flex-row items-center gap-2 cursor-pointer">
-                        <p className="">
-                            {t("global.increaseHiringOpportunity")}
-                        </p>
-                        <FontAwesomeIcon icon={faChevronDown}/>
+                    <div className="text-[12px] text-[#1d6cd2] px-2 py-1 bg-white rounded-md font-medium flex items-center gap-1 cursor-pointer whitespace-nowrap">
+                        <p className="truncate">{t("global.increaseHiringOpportunity")}</p>
+                        <FontAwesomeIcon icon={faChevronDown} className="w-3 h-3" />
                     </div>
-                    <div className="absolute left-0 right-0 w-[230px] bg-transparent h-4"></div>
                 </div>
-                <div
-                    className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
-                    <UserImproveMenu/>
+                <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[60px] shadow-mega-menu px-[1rem] py-[1rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[400px] transition-all duration-300">
+                    <UserImproveMenu />
                 </div>
             </div>
-            <div className="group hidden md:block">
+            <div className="group hidden lg:block min-w-0">
                 <div className="relative">
-                    <div
-                        className="border-r-[1px] border-[#4f8ce8] pr-8 text-[14px] text-white px-3 py-2 font-medium flex flex-row items-center gap-2 cursor-pointer">
-                        <p className="">{t("global.recruitment")}</p>
-                        <FontAwesomeIcon icon={faChevronDown}/>
+                    <div className="border-r-[1px] border-[#4f8ce8] pr-2 text-[12px] text-white px-2 py-1 font-medium flex items-center gap-1 cursor-pointer whitespace-nowrap">
+                        <p className="truncate max-w-[80px]">{t("global.recruitment")}</p>
+                        <FontAwesomeIcon icon={faChevronDown} className="w-3 h-3" />
                     </div>
-                    <div className="absolute left-0 right-0 w-[110px] bg-transparent h-4"></div>
+                    <div className="absolute left-0 right-0 w-[100px] bg-transparent h-4"></div>
                 </div>
-                <div
-                    className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[70px] shadow-mega-menu px-[2rem] py-[3rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[550px] transition-all duration-300">
-                    <UserMegaMenu/>
+                <div className="absolute left-0 right-0 w-screen opacity-0 scale-y-0 origin-top top-[60px] shadow-mega-menu px-[1rem] py-[1rem] flex text-[rgba(43,50,59,.95)] z-50 bg-white group-hover:opacity-100 group-hover:scale-y-100 group-hover:min-h-[400px] transition-all duration-300">
+                    <UserMegaMenu />
                 </div>
             </div>
-            <ChatBadge/>
-            <NotificationDropdown/>
-            <Link prefetch={false}
-                  href="/coin"
-                  className="text-white text-sm"
-            >
-                <div className="flex items-center gap-2 bg-white rounded-full h-[2rem]">
-                    <p className="text-third text-[12px] pl-2">{wallet?.balanceAvailable || 0}</p>
-                    <Image
-                        src={ProfileIcon.coins}
-                        alt="avatar"
-                        className="w-full h-full"
-                    />
+            <ChatBadge />
+            <NotificationDropdown />
+            <Link prefetch={false} href="/coin" className="text-white text-xs">
+                <div className="flex items-center gap-1 bg-white rounded-full h-[1.5rem] max-w-[60px] min-w-0">
+                    <p className="text-third text-[10px] pl-1 truncate">{wallet?.balanceAvailable || 0}</p>
+                    <div className="w-4 h-4 relative shrink-0">
+                        <Image
+                            src={ProfileIcon.coins}
+                            alt="coin icon"
+                            fill
+                            className="object-contain"
+                        />
+                    </div>
                 </div>
             </Link>
-            <div className="px-1">
-                <LanguageDropdown/>
+            <div className="px-0.5">
+                <LanguageDropdown />
             </div>
-            <div className="relative px-4">
+            <div className="relative px-1 shrink-0">
                 <button
                     onClick={() => toggle()}
-                    className="flex items-center justify-center gap-2 "
+                    className="flex items-center justify-center gap-0.5 min-w-0"
                 >
-                    <div className="flex items-center w-12 h-12 rounded-full overflow-hidden bg-white">
+                    <div className="w-8 h-8 rounded-full overflow-hidden bg-white shrink-0">
                         {person && (
                             <Image
                                 src={ProfileImage.avatar}
                                 alt="avatar"
                                 className="w-full h-full object-cover object-center"
-                                width={48}
-                                height={48}
+                                width={32}
+                                height={32}
                             />
-                        )
-                        }
+                        )}
                     </div>
                     <FontAwesomeIcon
                         icon={faChevronDown}
-                        className="w-[14px] h-[14px] text-white"
+                        className="w-[10px] h-[10px] text-white"
                     />
                 </button>
-                {isOpen && person && <ProfileUser profile={person}/>}
+                {isOpen && person && <ProfileUser profile={person} />}
                 {isOpen && (
-                    <div className="fixed inset-0 z-40" onClick={() => close()}/>
+                    <div className="fixed inset-0 z-40" onClick={() => close()} />
                 )}
             </div>
         </section>
