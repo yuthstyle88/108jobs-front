@@ -11,7 +11,6 @@ const Coins108Jobs = () => {
     const [amount, setAmount] = useState<string>("");
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
-    const [proofImage, setProofImage] = useState<string | null>(null);
     const { t } = useTranslation();
     const { wallet } = useMyUser();
 
@@ -21,20 +20,6 @@ const Coins108Jobs = () => {
     const handleTopUpClick = (amt: number | string) => {
         setSelectedAmount(typeof amt === "string" ? parseFloat(amt) || null : amt);
         setIsModalOpen(true);
-    };
-
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setProofImage(URL.createObjectURL(file));
-        }
-    };
-
-    const handleSubmit = () => {
-        // Handle submission logic here (e.g., send proofImage and amount to server)
-        setIsModalOpen(false);
-        setProofImage(null);
-        setAmount("");
     };
 
     return (
@@ -160,9 +145,6 @@ const Coins108Jobs = () => {
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
                 selectedAmount={selectedAmount}
-                proofImage={proofImage}
-                handleImageUpload={handleImageUpload}
-                handleSubmit={handleSubmit}
             />
 
             {/* Custom CSS for Animations */}

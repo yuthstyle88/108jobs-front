@@ -999,6 +999,7 @@ export const vi = {
             labelSignUpButton: "Sign Up",
             labelContinue: "Tiếp tục",
             failedToLoad: "Tải không thành công",
+            retry: "ลองใหม่"
         },
         guarantee: {
             fastworkGuaranteeTitle: `Đảm bảo của ${getAppName()}`,
@@ -1746,7 +1747,8 @@ export const vi = {
             topupModalTitle: "Chi tiết Nạp tiền",
             labelAmountToTopUp: "Số tiền cần nạp",
             imageSelected: "Đã chọn hình ảnh",
-            dragDropClick: "Kéo & thả hoặc nhấp để tải lên hình ảnh"
+            dragDropClick: "Kéo & thả hoặc nhấp để tải lên hình ảnh",
+            scanQrToPay: "Quét mã QR này bằng ứng dụng ngân hàng để thanh toán {{amount}} Xu"
         },
         profileCompany: {
             buttonSearchCompany: "Tìm kiếm thông tin công ty",

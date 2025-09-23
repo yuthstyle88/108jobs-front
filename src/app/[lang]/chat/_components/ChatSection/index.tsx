@@ -69,7 +69,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [isAtBottom, setIsAtBottom] = useState(true);
     const [isPartnerTyping, setIsPartnerTyping] = useState<boolean>(false);
     const partnerTypingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    // Clear typing timeout when component unmounts or room changes to avoid leaks
+    // Clear typing timeout when a component unmounts or room changes to avoid leaks
     useEffect(() => {
         return () => {
             if (partnerTypingTimeoutRef.current) {

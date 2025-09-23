@@ -231,28 +231,30 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
     if (!started) {
         return (
             <aside className={`flex w-full h-full bg-white shadow-sm rounded-lg overflow-auto ${className}`}>
-                {roleLabel && (
-                    <div className="w-full px-4 pt-4">
-                        <div className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1">
-                            {roleLabel}
+                <div className="w-full flex flex-col">
+                    {roleLabel && (
+                        <div className="w-full px-4 pt-4">
+                            <div className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1">
+                                {roleLabel}
+                            </div>
                         </div>
-                    </div>
-                )}
-                <div className="flex-1 p-4 flex flex-col gap-3">
-                    <p className="text-sm text-gray-600">
-                        {t('profileChat.startWorkflowHint') || 'The workflow will be shown after the employer starts it.'}
-                    </p>
-                    {showStartButton && (
-                        <button
-                            className={`rounded-md px-4 py-2 text-sm font-medium ${canStartWorkflow ? 'bg-primary text-white hover:bg-[#063a68]' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
-                            onClick={canStartWorkflow ? (() => setShowStartConfirm(true)) : undefined}
-                            aria-disabled={!canStartWorkflow}
-                            disabled={!canStartWorkflow}
-                            title={!canStartWorkflow ? (t('profileChat.missingPostIdForQuotation') || 'Link a job to start the workflow') : undefined}
-                        >
-                            {t('profileChat.startWorkflow') || 'ต้องการจ้างงาน'}
-                        </button>
                     )}
+                    <div className="flex-1 p-4 flex flex-col gap-3">
+                        <p className="text-sm text-gray-600">
+                            {t('profileChat.startWorkflowHint') || 'The workflow will be shown after the employer starts it.'}
+                        </p>
+                        {showStartButton && (
+                            <button
+                                className={`rounded-md px-4 py-2 text-sm font-medium ${canStartWorkflow ? 'bg-primary text-white hover:bg-[#063a68]' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
+                                onClick={canStartWorkflow ? (() => setShowStartConfirm(true)) : undefined}
+                                aria-disabled={!canStartWorkflow}
+                                disabled={!canStartWorkflow}
+                                title={!canStartWorkflow ? (t('profileChat.missingPostIdForQuotation') || 'Link a job to start the workflow') : undefined}
+                            >
+                                {t('profileChat.startWorkflow') || 'ต้องการจ้างงาน'}
+                            </button>
+                        )}
+                    </div>
                 </div>
                 <ConfirmActionModal
                     isOpen={showStartConfirm}

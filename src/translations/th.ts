@@ -982,6 +982,7 @@ export const th = {
             labelSignUpButton: "ลงทะเบียน",
             labelContinue: "ดำเนินการต่อ",
             failedToLoad: "โหลดไม่สำเร็จ",
+            retry: "ลองใหม่"
         },
         guarantee: {
             fastworkGuaranteeTitle: `${getAppName()} Guarantee`,
@@ -1693,7 +1694,8 @@ export const th = {
             topupModalTitle: "รายละเอียดการเติมเงิน",
             labelAmountToTopUp: "จำนวนเงินที่จะเติม",
             imageSelected: "เลือกภาพแล้ว",
-            dragDropClick: "ลากและวางหรือคลิกเพื่ออัปโหลดภาพ"
+            dragDropClick: "ลากและวางหรือคลิกเพื่ออัปโหลดภาพ",
+            scanQrToPay: "สแกน QR Code นี้ด้วยแอปธนาคารเพื่อชำระเงิน {{amount}} เหรียญ"
         },
         profileCompany: {
             buttonSearchCompany: "ค้นหาข้อมูลบริษัท",
