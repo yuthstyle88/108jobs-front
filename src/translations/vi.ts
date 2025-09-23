@@ -146,7 +146,8 @@ export const vi = {
             topUpNow: "Nạp tiền ngay",
             submitDeliveryTitle: "Gửi Giao hàng",
             submitDeliveryMessage: "Bạn có chắc chắn muốn gửi giao hàng để xem xét không?",
-            attachFileHere: "Đính kèm tệp tại đây"
+            attachFileHere: "Đính kèm tệp tại đây",
+            topUpSuccessMessage: "Bạn đã nạp tiền thành công, vui lòng chờ quản trị viên phê duyệt thanh toán của bạn"
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",

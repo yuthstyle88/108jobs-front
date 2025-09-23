@@ -1744,7 +1744,8 @@ export const en = {
             labelAmountToTopUp: "Amount to Top-Up",
             imageSelected: "Image selected",
             dragDropClick: "Drag & drop or click to upload an image",
-            scanQrToPay: "Scan this QR code with your banking app to pay {{amount}} Coins"
+            scanQrToPay: "Scan this QR code with your banking app to pay {{amount}} Coins",
+            topUpSuccessMessage: "You top up successfully, please wait for admin to approve your payment"
         },
         profileCompany: {
             buttonSearchCompany: "Search Company Information",

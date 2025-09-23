@@ -1699,7 +1699,8 @@ export const th = {
             labelAmountToTopUp: "จำนวนเงินที่จะเติม",
             imageSelected: "เลือกภาพแล้ว",
             dragDropClick: "ลากและวางหรือคลิกเพื่ออัปโหลดภาพ",
-            scanQrToPay: "สแกน QR Code นี้ด้วยแอปธนาคารเพื่อชำระเงิน {{amount}} เหรียญ"
+            scanQrToPay: "สแกน QR Code นี้ด้วยแอปธนาคารเพื่อชำระเงิน {{amount}} เหรียญ",
+            topUpSuccessMessage: "คุณเติมเงินสำเร็จแล้ว โปรดรอผู้ดูแลระบบอนุมัติการชำระเงินของคุณ"
         },
         profileCompany: {
             buttonSearchCompany: "ค้นหาข้อมูลบริษัท",

@@ -268,6 +268,7 @@ import type {GetBillingByCommentQuery} from "./types/GetBillingByCommentQuery";
 import type {GetBillingByCommentQueryI} from "./other_types";
 import type { ScbTokenResponse } from "./types/ScbTokenResponse";
 import type { ScbQrCodeRequest, ScbQrCodeResponse } from "./types/ScbQrCode";
+import type { ScbQrInquiryRequest, ScbQrInquiryResponse } from "./types/ScbQrInquiry";
 
 enum HttpType {
     Get = "GET",
@@ -3022,6 +3023,24 @@ export class LemmyHttp extends Controller {
         return this.#wrapper<ScbQrCodeRequest, ScbQrCodeResponse>(
             HttpType.Post,
             "/scb/qrcode/create",
+            form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Inquire SCB QR Code transaction status.
+     */
+    @Security("bearerAuth")
+    @Post("/scb/inquire")
+    @Tags("SCB")
+    async inquireScbQrCode(
+        @Body() form: ScbQrInquiryRequest,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<ScbQrInquiryRequest, ScbQrInquiryResponse>(
+            HttpType.Post,
+            "/scb/inquire",
             form,
             options,
         );
