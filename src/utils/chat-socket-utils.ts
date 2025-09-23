@@ -91,15 +91,36 @@ export function unwrapPhoenixFrame(data: any): any {
 
 // ---- Lightweight runtime validators for chat payloads ----
 export function isValidOutgoingChatPayload(p: any): boolean {
+  if (!p || typeof p !== 'object') return false;
+
+  // Reject if this looks like a typing payload (top-level typing field)
+  if (typeof (p as any).typing === 'boolean') return false;
+
+  // Reject if content is clearly not a real message
+  const content = (p as any).content;
+  if (typeof content !== 'string' || content.length === 0) return false;
+
+  const trimmed = content.trim();
+  if (trimmed === '{}') return false;
+
+  try {
+    // If content is a JSON string and represents a typing shape, reject
+    const parsed = JSON.parse(trimmed);
+    if (parsed && typeof parsed === 'object') {
+      const hasTyping = Object.prototype.hasOwnProperty.call(parsed, 'typing');
+      const looksTyping = hasTyping && typeof (parsed as any).typing === 'boolean';
+      const isEmptyObj = Object.keys(parsed as any).length === 0;
+      if (looksTyping || isEmptyObj) return false;
+    }
+  } catch { /* not JSON, ignore */ }
+
   return !!(
-    p && typeof p === 'object' &&
-    (p.op === 'SendMessage' || typeof p.op === 'undefined') &&
-    typeof p.sender_id === 'number' && p.sender_id >= 0 &&
-    typeof p.room_id === 'string' && p.room_id.length > 0 &&
-    typeof p.content === 'string' && p.content.length > 0 &&
-    typeof p.id === 'string' && p.id.length > 0 &&
-    typeof p.createdAt === 'string'
-  );
+    (p as any).op === 'SendMessage' || typeof (p as any).op === 'undefined'
+  ) &&
+  typeof (p as any).sender_id === 'number' && (p as any).sender_id >= 0 &&
+  typeof (p as any).room_id === 'string' && (p as any).room_id.length > 0 &&
+  typeof (p as any).id === 'string' && (p as any).id.length > 0 &&
+  typeof (p as any).createdAt === 'string';
 }
 
 export function isValidIncomingChatPayload(p: any): boolean {

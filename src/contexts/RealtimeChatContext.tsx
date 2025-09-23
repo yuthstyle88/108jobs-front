@@ -779,6 +779,28 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                 return;
             }
 
+            // Skip non-message payloads accidentally funneled into sendMessage
+            try {
+                const trimmed = data.message.trim();
+                if (trimmed === '{}') {
+                    // empty object string, ignore
+                    return;
+                }
+                // If message is a JSON string that represents a typing payload or empty object, skip it
+                if ((trimmed.startsWith('{') && trimmed.endsWith('}'))) {
+                    const parsed: any = safeParse(trimmed);
+                    if (parsed && typeof parsed === 'object') {
+                        const isEmpty = Object.keys(parsed).length === 0;
+                        const hasTyping = Object.prototype.hasOwnProperty.call(parsed, 'typing') && typeof parsed.typing === 'boolean';
+                        if (isEmpty || hasTyping) {
+                            return;
+                        }
+                    }
+                }
+            } catch {
+                // ignore
+            }
+
             const messageId = data.id || uuidv4();
             if (!addOnce(sentMessagesRef.current, messageId)) {
                 return;
