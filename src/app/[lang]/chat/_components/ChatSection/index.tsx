@@ -26,7 +26,6 @@ import {getLatestProposedQuotePayload} from "@/utils/chat/message";
 import {JobDetailModal} from "@/components/Common/Modal/JobDetailModal";
 import {ReviewDeliveryModal} from "@/components/Common/Modal/ReviewDeliveryModal";
 import {JobFlowContent} from "@/components/JobFlowContent";
-import { TYPES_TO_STATUS } from '@/utils/chat/workflowTypes';
 import { useWorkflowStatus } from '@/hooks/chat/useWorkflowStatus';
 import { useTypingIndicator } from '@/hooks/chat/useTypingIndicator';
 import { useFileUpload } from '@/hooks/chat/useFileUpload';
@@ -34,8 +33,6 @@ import { useWorkflowActions } from '@/hooks/chat/useWorkflowActions';
 import { createChatRealtimeHandler } from './createChatRealtimeHandler';
 
 type MessageForm = { message: string };
-type UploadedFile = { fileUrl: string; fileType: string; fileName: string };
-
 interface ChatSectionProps {
     roomId: string;
     post?: Post;
@@ -66,7 +63,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [workflowIdState, setWorkflowIdState] = useState<number | null>(null);
     type UIChatMessage = WsChatMessage & { isOwner?: boolean };
     const [messages, setMessages] = useState<UIChatMessage[]>([]);
-    // File upload handled via hook
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
     // Typing indicator logic moved into hook
@@ -309,6 +305,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         submitStartWorkApi,
         approveWorkApi,
         postId: roomPostId,
+        walletId: wallet?.id
     });
 
     const onSubmit = useCallback(
@@ -371,7 +368,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     useEffect(() => {
         if (!didInitialFetchRef.current) {
             didInitialFetchRef.current = true;
-            console.log("[CHAT][INIT] Initial fetchHistory() on mount/room change");
             fetchHistory()
                 .then(() => {
                     setIsInitialLoading(false);
@@ -504,6 +500,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     onCancel={() => {
                         void cancelJob();
                     }}
+                    onFileUpload={(ev: any) => handleFileUpload(ev as any)}
+                    selectedFile={selectedFile}
+                    isDeletingFile={isDeletingFile}
+                    onFileRemove={handleRemoveSelectedFile}
                 />
             )}
         </>
@@ -600,7 +600,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                             aria-label="Remove attached file"
                                             aria-busy={isDeletingFile}
                                         >
-                                            <Trash2/>
+                                            <Trash2 className={`h-4 w-4 ${isDeletingFile ? 'animate-spin' : ''}`} aria-hidden="true" />
                                         </button>
                                     </div>
                                 )}

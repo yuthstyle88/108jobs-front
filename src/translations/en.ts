@@ -143,7 +143,10 @@ export const en = {
             searchChat: "Search chat",
             insufficientBalanceTitle: "Insufficient balance",
             insufficientBalanceWarning: "Insufficient balance to approve the quotation.",
-            topUpNow: "Top up now"
+            topUpNow: "Top up now",
+            submitDeliveryTitle: "Submit Delivery",
+            submitDeliveryMessage: "Are you sure you want to submit the delivery for review?",
+            attachFileHere: "Attach file here"
         },
         allCategories: {
             allJobCategories: "All Job Categories",
@@ -1005,7 +1008,8 @@ export const en = {
             failedToLoad: "Failed to load",
             tryRefreshingPage: "Please try refreshing the page",
             labelContinue: "Continue",
-            retry: "Retry"
+            retry: "Retry",
+            cancel: "Cancel"
         },
         guarantee: {
             fastworkGuaranteeTitle: `${getAppName()} Guarantee`,

@@ -115,7 +115,7 @@ const Coins108Jobs = () => {
                                                 className="text-2xl text-yellow-500 transition-transform hover:scale-110"
                                             />
                                             <span className="text-gray-800 font-medium">
-                                                {coin.toLocaleString()} Coins
+                                                {coin.toLocaleString()}
                                             </span>
                                         </div>
                                         <button

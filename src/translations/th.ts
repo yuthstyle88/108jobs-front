@@ -142,7 +142,10 @@ export const th = {
             searchChat: "ค้นหาการสนทนา",
             insufficientBalanceTitle: "ยอดเงินไม่เพียงพอ",
             insufficientBalanceWarning: "ยอดเงินไม่เพียงพอที่จะอนุมัติใบเสนอราคา",
-            topUpNow: "เติมเงินตอนนี้"
+            topUpNow: "เติมเงินตอนนี้",
+            submitDeliveryTitle: "ส่งมอบงาน",
+            submitDeliveryMessage: "คุณแน่ใจหรือไม่ว่าต้องการส่งงานเพื่อให้ตรวจสอบ?",
+            attachFileHere: "แนบไฟล์ที่นี่"
         },
         allCategories: {
             allJobCategories: "หมวดหมู่งานทั้งหมด",
@@ -982,7 +985,8 @@ export const th = {
             labelSignUpButton: "ลงทะเบียน",
             labelContinue: "ดำเนินการต่อ",
             failedToLoad: "โหลดไม่สำเร็จ",
-            retry: "ลองใหม่"
+            retry: "ลองใหม่",
+            cancel: "ยกเลิก"
         },
         guarantee: {
             fastworkGuaranteeTitle: `${getAppName()} Guarantee`,

@@ -143,7 +143,10 @@ export const vi = {
             searchChat: "Tìm kiếm cuộc trò chuyện",
             insufficientBalanceTitle: "Số dư không đủ",
             insufficientBalanceWarning: "Số dư không đủ để phê duyệt báo giá.",
-            topUpNow: "Nạp tiền ngay"
+            topUpNow: "Nạp tiền ngay",
+            submitDeliveryTitle: "Gửi Giao hàng",
+            submitDeliveryMessage: "Bạn có chắc chắn muốn gửi giao hàng để xem xét không?",
+            attachFileHere: "Đính kèm tệp tại đây"
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",
@@ -999,7 +1002,8 @@ export const vi = {
             labelSignUpButton: "Sign Up",
             labelContinue: "Tiếp tục",
             failedToLoad: "Tải không thành công",
-            retry: "ลองใหม่"
+            retry: "Tải lại",
+            cancel: "Hủy"
         },
         guarantee: {
             fastworkGuaranteeTitle: `Đảm bảo của ${getAppName()}`,

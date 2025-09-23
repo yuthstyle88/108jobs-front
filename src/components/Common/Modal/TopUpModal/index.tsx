@@ -1,5 +1,5 @@
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTimes} from "@fortawesome/free-solid-svg-icons";
+import {faCoins, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {useEffect, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {callHttp, isSuccess} from "@/services/HttpService";
@@ -114,7 +114,10 @@ const TopUpModal = ({
                     <div className="bg-gray-50 rounded-lg p-4">
                         <p className="text-gray-600 text-sm font-medium">{t("profileCoins.labelAmountToTopUp")}</p>
                         <p className="text-2xl font-bold text-primary">
-                            {selectedAmount?.toLocaleString()} Coins
+                            {selectedAmount?.toLocaleString()} <FontAwesomeIcon
+                            icon={faCoins}
+                            className="text-2xl text-yellow-500 transition-transform hover:scale-110"
+                        />
                         </p>
                     </div>
 
