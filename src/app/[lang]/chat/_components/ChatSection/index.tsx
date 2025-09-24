@@ -50,7 +50,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                                      partnerAvailable,
                                                      currentRoom
                                                  }) => {
-    const roomId = currentRoom.room.id;
+    const roomId = currentRoom.room.room.id;
     const {markRoomRead, setActiveRoomId} = useChatRooms();
     const {send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
