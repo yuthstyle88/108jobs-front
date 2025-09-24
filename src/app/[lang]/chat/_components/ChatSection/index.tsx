@@ -248,7 +248,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 ) {
                     return;
                 }
-                if (!hasStarted) setHasStarted(true);
+                console.log(`[CHAT][STATUS] uiStatus: ${uiStatus}`);
+                // hasStarted should be true for all non-terminal states
+                const shouldBeStarted = uiStatus !== 'Completed' && uiStatus !== 'Cancelled';
+                setHasStarted(shouldBeStarted);
+                console.log(`[CHAT][STATUS] hasStarted (computed) -> ${shouldBeStarted}`);
                 if (uiStatus !== currentStatus) {
                     setWorkflowState(uiStatus as StatusKey, false);
                 }
@@ -472,10 +476,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     orientation="vertical"
                     compact={false}
                     className="space-y-4"
-                    started={hasStarted || currentStatus !== 'QuotationPending'}
+                    started={hasStarted}
                     onStart={startWorkflowAction}
-                    canStartWorkflow={isEmployer && Boolean(roomPostId)}
-                    showStartButton={isEmployer}
                     canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
                     canApproveQuotation={isEmployer && hasProposedQuote}
                     insufficientForApprove={insufficientForApprove}

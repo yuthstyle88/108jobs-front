@@ -33,11 +33,9 @@ export type FreelanceChatFlowProps = {
     className?: string;
     started?: boolean;
     onStart?: () => void;
-    canStartWorkflow?: boolean;
     canProposeQuote?: boolean;
     canApproveQuotation?: boolean;
     insufficientForApprove?: boolean;
-    showStartButton?: boolean;
     isEmployer?: boolean;
     canSubmitDelivery?: boolean;
     selectedFile: UploadedFile;
@@ -87,11 +85,9 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  className = '',
                                                                  started = true,
                                                                  onStart,
-                                                                 canStartWorkflow = true,
                                                                  canProposeQuote = true,
                                                                  canApproveQuotation = true,
                                                                  insufficientForApprove = true,
-                                                                 showStartButton = true,
                                                                  isEmployer = false,
                                                                  canSubmitDelivery = false,
                                                                  selectedFile,
@@ -108,7 +104,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  onFileUpload,
                                                                  onFileRemove
                                                              }) => {
-    const [showStartConfirm, setShowStartConfirm] = useState(false);
+
     const [showApproveConfirm, setShowApproveConfirm] = useState(false);
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [showCancelConfirm, setShowCancelConfirm] = useState(false);
@@ -120,6 +116,16 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
     const isControlled = controlledStatus != null && onChangeStatus != null;
     const currentStatus: StatusKey = (isControlled ? controlledStatus! : (derivedStatus || 'QuotationPending')) as StatusKey;
     const currentIndex = Math.max(0, STEPS.findIndex((s) => s.key === currentStatus));
+
+    // Backward-compatible: if parent passes `started`, use it; otherwise derive from status
+    const startedEffective =
+        currentStatus === 'Completed' || currentStatus === 'Cancelled'
+            ? false
+            : (typeof started === 'boolean' ? started : true);
+
+    const showStartButton = Boolean(isEmployer && !startedEffective);
+    const canStartWorkflow = showStartButton;
+    const [showStartConfirm, setShowStartConfirm] = useState(false);
 
     const ORDER: StatusKey[] = (stepper?.ORDER as StatusKey[]) || ['QuotationPending', 'OrderApproved', 'InProgress', 'PendingEmployerReview', 'Completed', 'Cancelled'];
 
@@ -260,48 +266,6 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
         }
     };
 
-    if (!started) {
-        return (
-            <aside className={`flex w-full h-full bg-white shadow-sm rounded-lg overflow-auto ${className}`}>
-                <div className="w-full flex flex-col">
-                    {roleLabel && (
-                        <div className="w-full px-4 pt-4">
-                            <div
-                                className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1">
-                                {roleLabel}
-                            </div>
-                        </div>
-                    )}
-                    <div className="flex-1 p-4 flex flex-col gap-3">
-                        <p className="text-sm text-gray-600">
-                            {t('profileChat.startWorkflowHint') || 'The workflow will be shown after the employer starts it.'}
-                        </p>
-                        {showStartButton && (
-                            <button
-                                className={`rounded-md px-4 py-2 text-sm font-medium ${canStartWorkflow ? 'bg-primary text-white hover:bg-[#063a68]' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
-                                onClick={canStartWorkflow ? (() => setShowStartConfirm(true)) : undefined}
-                                aria-disabled={!canStartWorkflow}
-                                disabled={!canStartWorkflow}
-                                title={!canStartWorkflow ? (t('profileChat.missingPostIdForQuotation') || 'Link a job to start the workflow') : undefined}
-                            >
-                                {t('profileChat.startWorkflow') || 'ต้องการจ้างงาน'}
-                            </button>
-                        )}
-                    </div>
-                </div>
-                <ConfirmActionModal
-                    isOpen={showStartConfirm}
-                    onClose={() => setShowStartConfirm(false)}
-                    onConfirm={() => {
-                        setShowStartConfirm(false);
-                        onStart?.();
-                    }}
-                    title={t('profileChat.confirmStartWorkflowTitle') || 'ต้องการจ้างงาน?'}
-                    message={t('profileChat.confirmStartWorkflowMessage') || 'ระบบจะเริ่มขั้นตอนงานสำหรับการสนทนานี้'}
-                />
-            </aside>
-        );
-    }
 
     return (
         <aside
@@ -316,6 +280,29 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                         className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1">
                         {roleLabel}
                     </div>
+                </div>
+            )}
+            {currentStatus === 'Completed' && (
+                <div className="w-full px-4">
+                    <div
+                        className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1">
+                        If you want to hire this person again. click
+                    </div>
+                </div>
+            )
+            }
+            {showStartButton && (
+
+                <div className="w-full px-4">
+                  <button
+                    className={`rounded-md px-4 py-2 text-sm font-medium ${canStartWorkflow ? 'bg-primary text-white hover:bg-[#063a68]' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
+                    onClick={canStartWorkflow ? (() => setShowStartConfirm(true)) : undefined}
+                    aria-disabled={!canStartWorkflow}
+                    disabled={!canStartWorkflow}
+                  >
+
+                    {t('profileChat.startWorkflow') || 'Start a new job'}
+                  </button>
                 </div>
             )}
             <ul
@@ -382,6 +369,16 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     </div>
                 ))}
             </div>
+            <ConfirmActionModal
+                isOpen={showStartConfirm}
+                onClose={() => setShowStartConfirm(false)}
+                onConfirm={() => {
+                  setShowStartConfirm(false);
+                  onStart?.();
+                }}
+                title={t('profileChat.confirmStartWorkflowTitle') || 'ต้องการจ้างงาน?'}
+                message={t('profileChat.confirmStartWorkflowMessage') || 'ระบบจะเริ่มขั้นตอนงานสำหรับการสนทนานี้'}
+            />
             <ConfirmActionModal
                 isOpen={showApproveConfirm}
                 onClose={() => setShowApproveConfirm(false)}
