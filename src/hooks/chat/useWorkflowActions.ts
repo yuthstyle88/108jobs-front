@@ -47,6 +47,7 @@ export type UseWorkflowActionsDeps = {
     postId?: number | string | null;
     walletId?: number | null;
     currentStatus: StatusKey;
+    setHasProposedQuote: (v: boolean) => void;
 };
 
 export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
@@ -76,6 +77,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
         postId,
         walletId,
         currentStatus,
+        setHasProposedQuote,
     } = deps;
 
     // Use the new workflow id hook which hydrates from room payload
@@ -159,7 +161,6 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 setError(t('profileChat.quotationError') || 'Failed to create invoice. Please try again.');
                 return false;
             }
-
             const createdBillingId = res?.data?.billingId;
 
             const readable = t('profileChat.proposeQuoteMsg') || `Proposed quotation: ${data.projectName} - $${Number(data.amount).toFixed(2)}`;
@@ -170,7 +171,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 previewText: readable
             });
             addOwnMessage(JSON.stringify(payload), sentId);
-
+            setHasProposedQuote(true);
             goToStatus?.('QuotationPending');
             setShowQuotationModal(false);
             return true;

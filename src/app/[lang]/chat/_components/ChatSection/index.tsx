@@ -245,11 +245,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 ) {
                     return;
                 }
-                console.log(`[CHAT][STATUS] uiStatus: ${uiStatus}`);
-                // hasStarted should be true for all non-terminal states
                 const shouldBeStarted = uiStatus !== 'Completed' && uiStatus !== 'Cancelled';
                 setHasStarted(shouldBeStarted);
-                console.log(`[CHAT][STATUS] hasStarted (computed) -> ${shouldBeStarted}`);
                 if (uiStatus !== currentStatus) {
                     setWorkflowState(uiStatus as StatusKey, false);
                 }
@@ -320,6 +317,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         postId: roomPostId,
         walletId: wallet?.id,
         currentStatus,
+        setHasProposedQuote,
     });
 
     const onSubmit = useCallback(
