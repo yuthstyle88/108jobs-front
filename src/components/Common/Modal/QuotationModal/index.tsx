@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useMemo, useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
-import { addDaysYMD, isBeforeToday } from '@/utils/helpers';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
-import { CustomInput } from "@/components/ui/InputField";
+import React, {useMemo, useState, useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
+import {z} from 'zod';
+import {addDaysYMD, isBeforeToday} from '@/utils/helpers';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import {CustomInput} from "@/components/ui/InputField";
 
 export interface WorkStep {
     seq: number;
@@ -42,14 +42,23 @@ interface QuotationModalProps {
     amount?: number;
 }
 
-const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubmit, postId, commentId, partnerId, projectName, amount }) => {
-    const { t } = useTranslation();
+const QuotationModal: React.FC<QuotationModalProps> = ({
+                                                           isOpen,
+                                                           onClose,
+                                                           onSubmit,
+                                                           postId,
+                                                           commentId,
+                                                           partnerId,
+                                                           projectName,
+                                                           amount
+                                                       }) => {
+    const {t} = useTranslation();
 
-    const { ProposedQuoteSchema } = useMemo(() => {
+    const {ProposedQuoteSchema} = useMemo(() => {
         const WorkStepSchema = z.object({
             seq: z.number().int().min(1, t('profileChat.validation.workStepSeq') || 'Sequence must be at least 1'),
             description: z.string().min(1, t('profileChat.validation.workStepDescription') || 'Work step description is required'),
-            amount: z.number().positive({ message: t('profileChat.validation.workStepAmount') || 'Work step amount must be greater than 0' }),
+            amount: z.number().positive({message: t('profileChat.validation.workStepAmount') || 'Work step amount must be greater than 0'}),
             status: z.string(),
         });
 
@@ -57,11 +66,11 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
             partnerId: z.number().int().nonnegative(),
             postId: z.number().int().nonnegative(),
             commentId: z.number().int().nonnegative(),
-            amount: z.number().positive({ message: t('profileChat.validation.totalAmount') || 'Total amount must be greater than 0' }),
+            amount: z.number().positive({message: t('profileChat.validation.totalAmount') || 'Total amount must be greater than 0'}),
             proposal: z.string().min(1, t('profileChat.validation.invalidForm') || 'Proposal is required'),
             projectName: z.string().min(1, t('profileChat.validation.invalidForm') || 'Project name is required'),
             projectDetails: z.string().min(1, t('profileChat.validation.invalidForm') || 'Project details are required'),
-            workingDays: z.number().int().positive({ message: t('profileChat.validation.workingDays') || 'Total working days must be greater than 0' }),
+            workingDays: z.number().int().positive({message: t('profileChat.validation.workingDays') || 'Total working days must be greater than 0'}),
             deliverables: z.array(z.string().min(1, t('profileChat.validation.deliverable') || 'Deliverable description is required')).min(1, t('profileChat.validation.deliverables') || 'At least one deliverable is required'),
             note: z.string().optional(),
             startingDay: z.string().min(1, t('profileChat.validation.workStepDates') || 'Both starting and delivery days are required'),
@@ -86,14 +95,14 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
             }
         });
 
-        return { WorkStepSchema, ProposedQuoteSchema };
+        return {WorkStepSchema, ProposedQuoteSchema};
     }, [t]);
 
     const [form, setForm] = useState<ProposedQuotePayload>({
         partnerId,
         postId: postId ?? 0,
         commentId: commentId ?? 0,
-        amount: amount ?? 0,
+        amount: amount || 0,
         proposal: '',
         projectName: projectName || '',
         projectDetails: '',
@@ -107,24 +116,25 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        setForm((prev) => ({ ...prev, postId: postId ?? 0 }));
+        setForm((prev) => ({...prev, postId: postId ?? 0}));
     }, [postId]);
 
     useEffect(() => {
-        setForm((prev) => ({ ...prev, commentId: commentId ?? 0 }));
+        setForm((prev) => ({...prev, commentId: commentId ?? 0}));
     }, [commentId]);
 
     const updateField = <K extends keyof ProposedQuotePayload>(key: K, value: ProposedQuotePayload[K]) => {
         setForm((prev) => {
-            const updatedForm = { ...prev, [key]: value };
+            const updatedForm = {...prev, [key]: value};
             if (key === 'startingDay' || key === 'workingDays') {
                 const startingDay = key === 'startingDay' ? value as string : prev.startingDay;
                 const workingDays = key === 'workingDays' ? Number(value) : prev.workingDays;
+                console.log('Updating deliveryDay:', {startingDay, workingDays}); // Debug log
                 if (startingDay && !isNaN(workingDays) && workingDays >= 0) {
                     updatedForm.deliveryDay = addDaysYMD(startingDay, workingDays);
                     // Clear deliveryDay error when auto-generated
                     setErrors((prevErrors) => {
-                        const newErrors = { ...prevErrors };
+                        const newErrors = {...prevErrors};
                         delete newErrors['deliveryDay'];
                         return newErrors;
                     });
@@ -140,7 +150,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
     const removeWorkStep = (index: number) => {
         if (index === 0) return; // Prevent removing the first work step
         setErrors((prev) => {
-            const newErrors = { ...prev };
+            const newErrors = {...prev};
             Object.keys(newErrors).forEach((key) => {
                 if (key.startsWith(`workSteps.${index}.`)) {
                     delete newErrors[key];
@@ -155,22 +165,22 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
         setForm((prev) => {
             const copy = [...prev.deliverables];
             copy[index] = value;
-            return { ...prev, deliverables: copy };
+            return {...prev, deliverables: copy};
         });
         validateDeliverable(index);
     };
 
     const addDeliverable = () => {
         const newIndex = form.deliverables.length;
-        setForm((prev) => ({ ...prev, deliverables: [...prev.deliverables, ''] }));
+        setForm((prev) => ({...prev, deliverables: [...prev.deliverables, '']}));
         setTimeout(() => validateDeliverable(newIndex), 0); // Validate after state update
     };
 
     const removeDeliverable = (index: number) => {
         if (form.deliverables.length <= 1) return; // Prevent removing the last deliverable
-        setForm((prev) => ({ ...prev, deliverables: prev.deliverables.filter((_, i) => i !== index) }));
+        setForm((prev) => ({...prev, deliverables: prev.deliverables.filter((_, i) => i !== index)}));
         setErrors((prev) => {
-            const newErrors = { ...prev };
+            const newErrors = {...prev};
             delete newErrors[`deliverables.${index}`];
             return newErrors;
         });
@@ -178,7 +188,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
     };
 
     const validateField = async <K extends keyof ProposedQuotePayload>(key: K, value: ProposedQuotePayload[K]) => {
-        const tempForm = { ...form, [key]: value };
+        const tempForm = {...form, [key]: value};
         const result = await ProposedQuoteSchema.safeParseAsync(tempForm);
         if (!result.success) {
             const error = result.error.issues.find((issue) => issue.path[0] === key);
@@ -188,12 +198,36 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
             }));
         } else {
             setErrors((prev) => {
-                const newErrors = { ...prev };
+                const newErrors = {...prev};
                 delete newErrors[key];
                 return newErrors;
             });
         }
     };
+
+    const validateWorkStep = async (index: number) => {
+        const result = await ProposedQuoteSchema.safeParseAsync(form);
+        if (!result.success) {
+            const pathPrefix = `workSteps.${index}.`;
+            const errorsForStep = result.error.issues.filter((issue) => issue.path.join('.').startsWith(pathPrefix));
+            const newErrors: Record<string, string> = {};
+            errorsForStep.forEach((issue) => {
+                newErrors[issue.path.join('.')] = issue.message;
+            });
+            setErrors((prev) => ({...prev, ...newErrors}));
+        } else {
+            setErrors((prev) => {
+                const newErrors = {...prev};
+                Object.keys(newErrors).forEach((key) => {
+                    if (key.startsWith(`workSteps.${index}.`)) {
+                        delete newErrors[key];
+                    }
+                });
+                return newErrors;
+            });
+        }
+    };
+
     const validateDeliverable = async (index: number) => {
         const result = await ProposedQuoteSchema.safeParseAsync(form);
         if (!result.success) {
@@ -205,7 +239,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
             }));
         } else {
             setErrors((prev) => {
-                const newErrors = { ...prev };
+                const newErrors = {...prev};
                 delete newErrors[`deliverables.${index}`];
                 return newErrors;
             });
@@ -243,7 +277,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
             await onSubmit(result.data);
             onClose();
         } catch (e: any) {
-            setErrors({ form: e?.message || t('profileChat.validation.invalidForm') || 'Invalid form data' });
+            setErrors({form: e?.message || t('profileChat.validation.invalidForm') || 'Invalid form data'});
         }
     };
 
@@ -263,14 +297,28 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                             <label className="block text-xs sm:text-sm font-medium text-gray-700">
                                 {t('profileChat.projectName') || 'Project Name'}
                             </label>
-                            <div className="mt-2 text-sm text-gray-900 bg-gray-100 p-2.5 rounded-md border border-gray-300">
+                            <div
+                                className="mt-2 text-sm text-gray-900 bg-gray-100 p-2.5 rounded-md border border-gray-300">
                                 {form.projectName || 'N/A'}
                             </div>
                             {errors['projectName'] && (
                                 <p className="mt-1 text-xs text-red-600">{errors['projectName']}</p>
                             )}
                         </div>
-                        <CustomInput
+                        {form.amount !== 0 ? (
+                            <div>
+                                <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                                    {t('profileChat.amount') || 'Amount (Total)'}
+                                </label>
+                                <div
+                                    className="mt-2 text-sm text-gray-900 bg-gray-100 p-2.5 rounded-md border border-gray-300">
+                                    {form.amount || 0}
+                                </div>
+                                {errors['amount'] && (
+                                    <p className="mt-1 text-xs text-red-600">{errors['amount']}</p>
+                                )}
+                            </div>
+                        ) : (<CustomInput
                             label={t('profileChat.amount') || 'Amount (Total)'}
                             name="amount"
                             type="number"
@@ -279,7 +327,9 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                             error={errors['amount']}
                             placeholder="0"
                             required
-                        />
+                        />)}
+
+
                     </div>
 
                     <CustomInput
