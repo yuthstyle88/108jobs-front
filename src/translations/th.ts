@@ -151,6 +151,8 @@ export const th = {
             missingWorkflow: "ไม่มีขั้นตอนงาน เริ่มขั้นตอนงานก่อนการอนุมัติ",
             noJobTitle: "ไม่มีตำแหน่งงานที่ระบุ",
             noJobDescription: "ไม่มีคำอธิบายงานที่ระบุ",
+            unread: "ยังไม่ได้อ่าน",
+            read: "อ่านแล้ว",
         },
         allCategories: {
             allJobCategories: "หมวดหมู่งานทั้งหมด",
@@ -991,7 +993,9 @@ export const th = {
             labelContinue: "ดำเนินการต่อ",
             failedToLoad: "โหลดไม่สำเร็จ",
             retry: "ลองใหม่",
-            cancel: "ยกเลิก"
+            cancel: "ยกเลิก",
+            open: "เปิด",
+            closed: "ปิด",
         },
         guarantee: {
             fastworkGuaranteeTitle: `${getAppName()} Guarantee`,

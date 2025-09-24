@@ -9,4 +9,6 @@ export type ChatMessage = {
   content: string;
   status: number;
   createdAt: string;
+  // UI-only field to help rendering; not required from server
+  isOwner?: boolean;
 };

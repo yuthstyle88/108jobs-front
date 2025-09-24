@@ -46,13 +46,13 @@ const MyJobs = () => {
             case false:
                 return (
                     <Badge className="bg-green-100 text-green-800 hover:bg-green-200 transition-colors duration-200">
-                        Open
+                        {t("global.open")}
                     </Badge>
                 );
             default:
                 return (
                     <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors duration-200">
-                        Closed
+                        {t("global.closed")}
                     </Badge>
                 );
         }

@@ -131,12 +131,12 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
             message.status === 0 ? (
               <span className="ml-1 inline-flex items-center gap-1 text-primary">
                 <span className="inline-block w-2 h-2 rounded-full bg-blue-500" />
-                Unread
+                  {t("profileChat.unread")}
               </span>
             ) : (
               <span className="ml-1 inline-flex items-center gap-1 text-green-600">
                 <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
-                Read
+                  {t("profileChat.read")}
               </span>
             )
           )}
@@ -295,7 +295,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                       <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                         <path d="M12.293 2.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414L9.414 16H5v-4.414l8.293-8.293z" />
                       </svg>
-                      <span>Open file</span>
+                      <span>{t("global.open")}</span>
                     </a>
                   </div>
                 )}
@@ -352,7 +352,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                     <div className="mt-2">
                       <a href={buildPublicUrl((parsed as any).url)} target="_blank" rel="noopener noreferrer" className={`inline-flex items-center gap-2 text-xs font-medium px-2.5 py-1.5 rounded-md transition-colors ${isIncoming ? 'bg-gray-900 hover:bg-black text-white' : 'bg-primary hover:bg-[#063a68] text-white'}`}>
                         <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path d="M12.293 2.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414L9.414 16H5v-4.414l8.293-8.293z"/></svg>
-                        <span>Open</span>
+                        <span>{t("global.open")}</span>
                       </a>
                     </div>
                   )}

@@ -152,6 +152,8 @@ export const en = {
             missingWorkflow: "Missing workflow. Start workflow before approval.",
             noJobTitle: "No job title provided",
             noJobDescription: "No job description provided",
+            unread: "Unread",
+            read: "Read",
         },
         allCategories: {
             allJobCategories: "All Job Categories",
@@ -1014,7 +1016,9 @@ export const en = {
             tryRefreshingPage: "Please try refreshing the page",
             labelContinue: "Continue",
             retry: "Retry",
-            cancel: "Cancel"
+            cancel: "Cancel",
+            open: "Open",
+            closed: "Closed",
         },
         guarantee: {
             fastworkGuaranteeTitle: `${getAppName()} Guarantee`,

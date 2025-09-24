@@ -79,7 +79,7 @@ const JobBoardDetail = ({jobId}: Props) => {
                     <div className="flex-1">
                         <div className="flex items-center gap-3 mb-3">
                             <Badge className="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                                {t("jobBoardDetail.open")}
+                                {t("global.open")}
                             </Badge>
                             <Badge variant="outline"
                                    className="text-xs font-medium px-3 py-1 rounded-full border-gray-300">

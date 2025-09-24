@@ -77,7 +77,6 @@ async function mapIncomingToChatMessage(
         return {
             id: m.id || `msg_${uuidv4()}`,
             senderId: senderIdMapped,
-            receiverId: receiverIdMapped,
             roomId: roomIdMapped,
             content,
             status: typeof m.status === 'number' ? m.status : 1,

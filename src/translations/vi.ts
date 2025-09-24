@@ -153,6 +153,8 @@ export const vi = {
             missingWorkflow: "Thiếu quy trình làm việc. Bắt đầu quy trình trước khi phê duyệt.",
             noJobTitle: "Không có chức danh công việc",
             noJobDescription: "Không có mô tả công việc",
+            unread: "Chưa đọc",
+            read: "Đã đọc",
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",
@@ -1009,7 +1011,9 @@ export const vi = {
             labelContinue: "Tiếp tục",
             failedToLoad: "Tải không thành công",
             retry: "Tải lại",
-            cancel: "Hủy"
+            cancel: "Hủy",
+            open: "Mở",
+            closed: "Đóng",
         },
         guarantee: {
             fastworkGuaranteeTitle: `Đảm bảo của ${getAppName()}`,
