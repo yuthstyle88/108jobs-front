@@ -1,9 +1,4 @@
 import JobBoardDetail from "@/components/JobBoardDetail";
-import {generateLocalizedMetadata} from "@/lib/metadata";
-
-export async function generateMetadata() {
-  return generateLocalizedMetadata("catalog");
-}
 
 export default async function Categories({
   params,

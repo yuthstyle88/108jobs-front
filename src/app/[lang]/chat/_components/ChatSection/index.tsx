@@ -54,7 +54,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                                      commentId
                                                  }) => {
     const {markRoomRead, setActiveRoomId} = useChatRooms();
-    const {state: stepperState, send, canGo, ORDER} = useWorkflowStepper();
+    const {send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
     const [showJobDetailModal, setShowJobDetailModal] = useState<boolean>(false);
@@ -66,7 +66,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [messages, setMessages] = useState<UIChatMessage[]>([]);
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
-    // Typing indicator logic moved into hook
     const {isPartnerTyping, onRemoteTyping} = useTypingIndicator({roomId});
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [, setIsInitialLoading] = useState(true);
@@ -208,6 +207,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             id: post?.id,
             title: post?.name,
             description: post?.body,
+            budget: post?.budget,
         },
         messages: [],
     };
@@ -216,7 +216,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
     // Define setWorkflowState reactively
     const setWorkflowState = (key: StatusKey, isClientUpdate = true) => {  // Add optional flag
-        console.log('Setting workflow state:', key, { isClientUpdate });
         useStateMachineStore.setState({
             state: key,
             stepIndex: ORDER.indexOf(key),
@@ -700,6 +699,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 commentId={roomCommentId as number}
                 partnerId={partnerId as number}
                 projectName={currentRoom?.job?.title || "No Job Title"}
+                amount={currentRoom?.job?.budget}
             />
         </>
     );

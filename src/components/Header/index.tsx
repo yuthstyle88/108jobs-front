@@ -1,14 +1,11 @@
 "use client";
 import {AssetIcon} from "@/constants/icons";
 import {useAuthInfo} from "@/hooks/authenticate-api/useAuthInfo";
-import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import {useTranslation} from "react-i18next";
 import LanguageDropdown from "../LanguageDropDown";
 import UserProfileSection from "./components/UserProfileSection";
-import MegaMenu from "./components/MegaMenu";
 import Search from "./components/Search";
 import {useScrollHandler} from "./hooks/useScrollHandler";
 
@@ -39,7 +36,7 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
     >
       <nav className="mx-[1.5rem] flex flex-wrap items-center justify-center h-auto min-h-[70px] py-4 xl:py-1 xl:justify-between">
         <section className="flex items-center gap-x-4 w-full md:w-auto">
-          <Link prefetch={false} href="/" className="shrink-0">
+          <Link prefetch={true} href="/" className="shrink-0">
             <Image
               src={AssetIcon.logo}
               alt="logo"

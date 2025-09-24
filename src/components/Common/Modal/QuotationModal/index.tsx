@@ -39,9 +39,10 @@ interface QuotationModalProps {
     commentId?: number;
     partnerId: number;
     projectName?: string;
+    amount?: number;
 }
 
-const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubmit, postId, commentId, partnerId, projectName }) => {
+const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubmit, postId, commentId, partnerId, projectName, amount }) => {
     const { t } = useTranslation();
 
     const { ProposedQuoteSchema } = useMemo(() => {
@@ -92,7 +93,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
         partnerId,
         postId: postId ?? 0,
         commentId: commentId ?? 0,
-        amount: 0,
+        amount: amount ?? 0,
         proposal: '',
         projectName: projectName || '',
         projectDetails: '',
@@ -119,7 +120,6 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
             if (key === 'startingDay' || key === 'workingDays') {
                 const startingDay = key === 'startingDay' ? value as string : prev.startingDay;
                 const workingDays = key === 'workingDays' ? Number(value) : prev.workingDays;
-                console.log('Updating deliveryDay:', { startingDay, workingDays }); // Debug log
                 if (startingDay && !isNaN(workingDays) && workingDays >= 0) {
                     updatedForm.deliveryDay = addDaysYMD(startingDay, workingDays);
                     // Clear deliveryDay error when auto-generated
@@ -194,30 +194,6 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
             });
         }
     };
-
-    const validateWorkStep = async (index: number) => {
-        const result = await ProposedQuoteSchema.safeParseAsync(form);
-        if (!result.success) {
-            const pathPrefix = `workSteps.${index}.`;
-            const errorsForStep = result.error.issues.filter((issue) => issue.path.join('.').startsWith(pathPrefix));
-            const newErrors: Record<string, string> = {};
-            errorsForStep.forEach((issue) => {
-                newErrors[issue.path.join('.')] = issue.message;
-            });
-            setErrors((prev) => ({ ...prev, ...newErrors }));
-        } else {
-            setErrors((prev) => {
-                const newErrors = { ...prev };
-                Object.keys(newErrors).forEach((key) => {
-                    if (key.startsWith(`workSteps.${index}.`)) {
-                        delete newErrors[key];
-                    }
-                });
-                return newErrors;
-            });
-        }
-    };
-
     const validateDeliverable = async (index: number) => {
         const result = await ProposedQuoteSchema.safeParseAsync(form);
         if (!result.success) {
@@ -294,16 +270,17 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                                 <p className="mt-1 text-xs text-red-600">{errors['projectName']}</p>
                             )}
                         </div>
-                        <CustomInput
-                            label={t('profileChat.amount') || 'Amount (Total)'}
-                            name="amount"
-                            type="number"
-                            value={form.amount === 0 ? '' : form.amount.toString()}
-                            onChange={(e) => updateField('amount', Number(e.target.value))}
-                            error={errors['amount']}
-                            placeholder="0"
-                            required
-                        />
+                        <div>
+                            <label className="block text-xs sm:text-sm font-medium text-gray-700">
+                                {t('profileChat.amount') || 'Amount (Total)'}
+                            </label>
+                            <div className="mt-2 text-sm text-gray-900 bg-gray-100 p-2.5 rounded-md border border-gray-300">
+                                {form.amount || 0}
+                            </div>
+                            {errors['amount'] && (
+                                <p className="mt-1 text-xs text-red-600">{errors['amount']}</p>
+                            )}
+                        </div>
                     </div>
 
                     <CustomInput

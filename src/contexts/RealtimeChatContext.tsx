@@ -19,7 +19,6 @@ import {
 import {REQUEST_STATE} from "@/services/HttpService";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import {isBrowser} from "@/utils/browser";
-import {getChannelAdapter} from "@/services/PhoenixSocketService";
 
 async function mapIncomingToChatMessage(
     m: any,
@@ -35,6 +34,7 @@ async function mapIncomingToChatMessage(
     try {
         try {
             console.log('[CHAT][MAP] mapIncomingToChatMessage', m);
+            if (m.content == "{}") return null;
         } catch {
         }
         const createdAtVal = m.created_at || m.createdAt || new Date().toISOString();
@@ -147,7 +147,7 @@ function broadcastToListeners(payload: unknown): void {
         return norm(p?.roomId ?? p?.room_id ?? p?.topic);
     };
 
-    let pid: string | null = null;
+    let pid: string | null;
     try {
         pid = pickRoom(typeof payload === 'string' ? JSON.parse(payload as any) : payload);
     } catch {
@@ -194,10 +194,16 @@ async function handleIncomingPayload(
     } catch {
     }
     // Drop heartbeats / pings and null-ish frames early
-    if (payload == null || payload === 'pong' || payload === 'ping' || payload?.op === 'Ping') {
+    if (
+        payload == null ||
+        payload === 'pong' ||
+        payload === 'ping' ||
+        payload?.op === 'Ping' ||
+        payload?.event === 'phx_leave' ||
+        (typeof payload === 'object' && !Array.isArray(payload) && Object.keys(payload).length === 0)
+    ) {
         return null;
     }
-
     const transformedItems: ChatMessage[] = [];
 
     // Normalize Phoenix shapes to a flat message-like object

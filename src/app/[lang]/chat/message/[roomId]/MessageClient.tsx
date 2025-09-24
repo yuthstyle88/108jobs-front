@@ -9,6 +9,7 @@ import {REQUEST_STATE} from "@/services/HttpService";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {Post} from "@/lib/lemmy-js-client";
 import {RoomNotFound} from "@/components/RoomNotFound";
+import {useStateMachineStore} from "@/stores/stateMachineStore";
 
 export default function MessageClient({roomId}: { roomId: string }) {
     const accessToken = UserService.Instance.auth();
@@ -22,6 +23,13 @@ export default function MessageClient({roomId}: { roomId: string }) {
     const [post, setPost] = useState<Post>();
     const [notFound, setNotFound] = useState<boolean>(false);
     const [partnerAvailable, setPartnerAvailable] = useState<boolean | undefined>(undefined);
+    const reset = useStateMachineStore((s) => s.reset);
+
+    useEffect(() => {
+        if (roomId) {
+            reset();
+        }
+    }, [roomId, reset]);
 
     useEffect(() => {
         let cancelled = false;

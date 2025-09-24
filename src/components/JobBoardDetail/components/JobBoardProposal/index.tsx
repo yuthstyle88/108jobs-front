@@ -43,7 +43,7 @@ const JobBoardProposal = ({ postId, jobCreatorId }: JobBoardProposalProps) => {
         if (partnerPersonId === currentUserId) return;
 
         const roomId = dmRoomId(currentUserId, partnerPersonId, cv.post.id.toString());
-        const roomName = `${cv.post.id}`;
+        const roomName = `${cv.post.name}`;
 
         try {
             setStartingChatFor(partnerPersonId);

@@ -31,18 +31,9 @@ function ChatListItemComponent({room, isActive, currentLang}: ChatListItemProps)
         .slice(0, 2)
         .join("") || partnerName.charAt(0) || "?";
 
-    const roomIdNum = parseInt(room.id.slice(0, 8), 16) || 0;
-    const gradientIndex = roomIdNum % 4;
-    // Define gradients as inline styles to avoid Tailwind issues
-    const gradients = [
-        {from: '#3B82F6', to: '#6366F1'}, // blue to indigo
-        {from: '#8B5CF6', to: '#A78BFA'}, // purple to violet
-        {from: '#0D9488', to: '#06B6D4'}, // teal to cyan
-        {from: '#EC4899', to: '#F43F5E'}  // pink to rose
-    ];
-    const selectedGradient = gradients[gradientIndex];
+    // Set avatar background color based on isActive
     const avatarStyle = {
-        background: `linear-gradient(to bottom right, ${selectedGradient.from}, ${selectedGradient.to})`
+        background: isActive ? '#3B82F6' : '#9CA3AF' // Blue for selected, grey for unselected
     };
 
     return (
