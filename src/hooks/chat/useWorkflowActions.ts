@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { REQUEST_STATE, HttpService } from '@/services/HttpService';
-import { resolveWorkflowId } from '@/utils/chat/workflow';
+import { useWorkflowId } from '@/hooks/chat/useWorkflowId';
 import { getLatestProposedQuotePayload, getLatestProposedQuoteSeq } from '@/utils/chat/message';
 import type { ApproveQuotationForm, CreateInvoiceForm } from 'lemmy-js-client';
 import type { WsMessageSender } from '@/utils/chat/types';
@@ -76,15 +76,21 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
         walletId
     } = deps;
 
+    // Use the new workflow id hook which hydrates from room payload
+    const { workflowId } = useWorkflowId(roomId, roomData);
+
     // Helper function to validate workflow ID
-    const validateWorkflowId = useCallback(() => {
-        const workflowId = resolveWorkflowId(roomData as any, workflowIdState as any);
+    const validateWorkflowId = useCallback((caller?: string): number | null => {
         if (!workflowId) {
-            setError(t('profileChat.missingWorkflow') || 'Missing workflow. Start workflow before proceeding.');
+            setError(
+                ((t('profileChat.missingWorkflow') || 'Missing workflow. Start workflow before proceeding.')
+                + ` (workflowId: ${String(workflowId)})`
+                + (caller ? ` Called from: ${caller}` : ''))
+            );
             return null;
         }
         return workflowId;
-    }, [roomData, workflowIdState, setError, t]);
+    }, [workflowId, setError, t]);
 
     const startWorkflowAction = useCallback(async () => {
         setError(null);
@@ -175,10 +181,10 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
         try {
             setError(null);
             // Resolve billing id
-            let billingId: number | undefined = getLatestProposedQuotePayload(messages as any)?.billingId;
+            const latestPayload: any = getLatestProposedQuotePayload(messages as any);
+            let billingId: number | undefined = latestPayload?.billingId;
 
             if (!billingId) {
-                const latestPayload: any = getLatestProposedQuotePayload(messages as any);
                 const commentIdFromPayload = Number(latestPayload?.quote?.commentId);
                 const commentId = !Number.isNaN(commentIdFromPayload) && commentIdFromPayload
                     ? commentIdFromPayload
@@ -203,7 +209,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 return false;
             }
 
-            const workflowId = validateWorkflowId();
+            const workflowId = validateWorkflowId('approveQuotation');
             if (!workflowId) return false;
 
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
@@ -240,7 +246,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
     const startWork = useCallback(async () => {
         try {
             setError(null);
-            const workflowId = validateWorkflowId();
+            const workflowId = validateWorkflowId('startWork');
             if (!workflowId) return false;
 
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
@@ -257,10 +263,11 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             }
             const payload = { type: 'start-work' } as any;
             const readable = t('profileChat.startWork') || 'Start work';
-            const id = uuidv4();
-            addOwnMessage(JSON.stringify(payload), id);
-            await sendMessage({ id, message: JSON.stringify(payload) });
-            dispatchPreview({ roomId, content: readable, senderId: Number(localUser?.id) || 0 });
+            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, {
+                senderId: Number(localUser?.id) || 0,
+                previewText: readable,
+            });
+            addOwnMessage(JSON.stringify(payload), sentId);
             goToStatus?.('InProgress');
             return true;
         } catch (e: any) {
@@ -281,7 +288,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 setError(t('profileChat.attachFileFirst') || 'Please attach a file before submitting delivery.');
                 return false;
             }
-            const workflowId = validateWorkflowId();
+            const workflowId = validateWorkflowId('submitDelivery');
             if (!workflowId) return false;
 
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
@@ -298,17 +305,13 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 return false;
             }
 
-            const payload: any = {
-                type: 'submit-delivery',
-                url: selectedFile.fileUrl,
-                name: selectedFile.fileName,
-                mime: selectedFile.fileType
-            };
-            const id = uuidv4();
-            addOwnMessage(JSON.stringify(payload), id);
-            await sendMessage({ id, message: JSON.stringify(payload) });
+            const payload: any = { type: 'submit-delivery', url: selectedFile.fileUrl, name: selectedFile.fileName, mime: selectedFile.fileType };
             const preview = `[Delivery] ${selectedFile.fileName}`;
-            dispatchPreview({ roomId, content: preview, senderId: Number(localUser?.id) || 0 });
+            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, {
+                senderId: Number(localUser?.id) || 0,
+                previewText: preview,
+            });
+            addOwnMessage(JSON.stringify(payload), sentId);
 
             setSelectedFile(null);
             goToStatus?.('PendingEmployerReview');
@@ -327,7 +330,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 setError(disabledReason || t('profileChat.cannotPerformAction') || 'You cannot perform this action right now.');
                 return false;
             }
-            const workflowId = validateWorkflowId();
+            const workflowId = validateWorkflowId('requestRevision');
             if (!workflowId) return false;
 
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
@@ -340,10 +343,11 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 return false;
             }
             const payload: any = { type: 'request-revision', reason };
-            const id = uuidv4();
-            addOwnMessage(JSON.stringify(payload), id);
-            await sendMessage({ id, message: JSON.stringify(payload) });
-            dispatchPreview({ roomId, content: reason, senderId: Number(localUser?.id) || 0 });
+            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, {
+                senderId: Number(localUser?.id) || 0,
+                previewText: reason,
+            });
+            addOwnMessage(JSON.stringify(payload), sentId);
             goToStatus?.('InProgress');
             return true;
         } catch (e: any) {
@@ -360,7 +364,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 setError(disabledReason || t('profileChat.cannotPerformAction') || 'You cannot perform this action right now.');
                 return false;
             }
-            const workflowId = validateWorkflowId();
+            const workflowId = validateWorkflowId('approveWork');
             if (!workflowId) return false;
 
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
@@ -376,12 +380,13 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 setError(extractErr(res, 'Failed to approve work.'));
                 return false;
             }
-            const id = uuidv4();
             const payload = { type: 'delivery-accepted' } as any;
-            addOwnMessage(JSON.stringify(payload), id);
-            await sendMessage({ id, message: JSON.stringify(payload) });
             const content = t('profileChat.deliveryAccepted') || 'Delivery accepted. Proceed to payment.';
-            dispatchPreview({ roomId, content, senderId: Number(localUser?.id) || 0 });
+            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, {
+                senderId: Number(localUser?.id) || 0,
+                previewText: content,
+            });
+            addOwnMessage(JSON.stringify(payload), sentId);
             goToStatus?.('Completed');
             return true;
         } catch (e: any) {
@@ -397,7 +402,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 setError(disabledReason || t('profileChat.cannotPerformAction') || 'You cannot perform this action right now.');
                 return false;
             }
-            const workflowId = validateWorkflowId();
+            const workflowId = validateWorkflowId('cancelJob');
             if (!workflowId) return false;
 
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
@@ -408,11 +413,12 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 setError(extractErr(res, 'Failed to cancel job.'));
                 return false;
             }
-            const id = uuidv4();
             const readable = t('profileChat.cancelledJobMsg') || 'The job has been cancelled.';
-            addOwnMessage(readable, id);
-            await sendMessage({ id, message: JSON.stringify({ type: 'cancel-job' }) });
-            dispatchPreview({ roomId, content: readable, senderId: Number(localUser?.id) || 0 });
+            addOwnMessage(readable, uuidv4());
+            await sendStructuredMessage(sendMessage, roomId, { type: 'cancel-job' }, {
+                senderId: Number(localUser?.id) || 0,
+                previewText: readable,
+            });
             goToStatus?.('Cancelled');
             return true;
         } catch (e: any) {
