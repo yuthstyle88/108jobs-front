@@ -4,21 +4,12 @@ import React, {useMemo, useState, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {z} from 'zod';
 import {addDaysYMD, isBeforeToday} from '@/utils/helpers';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {CustomInput} from "@/components/ui/InputField";
-
-export interface WorkStep {
-    seq: number;
-    description: string;
-    amount: number;
-    status: string;
-}
 
 export interface ProposedQuotePayload {
     partnerId: number;
     postId: number;
-    commentId: number;
+    commentId?: number;
     amount: number;
     proposal: string;
     projectName: string;
@@ -65,7 +56,6 @@ const QuotationModal: React.FC<QuotationModalProps> = ({
         const ProposedQuoteSchema = z.object({
             partnerId: z.number().int().nonnegative(),
             postId: z.number().int().nonnegative(),
-            commentId: z.number().int().nonnegative(),
             amount: z.number().positive({message: t('profileChat.validation.totalAmount') || 'Total amount must be greater than 0'}),
             proposal: z.string().min(1, t('profileChat.validation.invalidForm') || 'Proposal is required'),
             projectName: z.string().min(1, t('profileChat.validation.invalidForm') || 'Project name is required'),
@@ -101,7 +91,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({
     const [form, setForm] = useState<ProposedQuotePayload>({
         partnerId,
         postId: postId ?? 0,
-        commentId: commentId ?? 0,
+        commentId: commentId,
         amount: amount || 0,
         proposal: '',
         projectName: projectName || '',
@@ -120,7 +110,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({
     }, [postId]);
 
     useEffect(() => {
-        setForm((prev) => ({...prev, commentId: commentId ?? 0}));
+        setForm((prev) => ({...prev, commentId: commentId}));
     }, [commentId]);
 
     const updateField = <K extends keyof ProposedQuotePayload>(key: K, value: ProposedQuotePayload[K]) => {
@@ -147,20 +137,6 @@ const QuotationModal: React.FC<QuotationModalProps> = ({
         validateField(key, value);
     };
 
-    const removeWorkStep = (index: number) => {
-        if (index === 0) return; // Prevent removing the first work step
-        setErrors((prev) => {
-            const newErrors = {...prev};
-            Object.keys(newErrors).forEach((key) => {
-                if (key.startsWith(`workSteps.${index}.`)) {
-                    delete newErrors[key];
-                }
-            });
-            return newErrors;
-        });
-        setTimeout(() => validateForm(), 0); // Validate form for array-level errors
-    };
-
     const updateDeliverable = (index: number, value: string) => {
         setForm((prev) => {
             const copy = [...prev.deliverables];
@@ -168,23 +144,6 @@ const QuotationModal: React.FC<QuotationModalProps> = ({
             return {...prev, deliverables: copy};
         });
         validateDeliverable(index);
-    };
-
-    const addDeliverable = () => {
-        const newIndex = form.deliverables.length;
-        setForm((prev) => ({...prev, deliverables: [...prev.deliverables, '']}));
-        setTimeout(() => validateDeliverable(newIndex), 0); // Validate after state update
-    };
-
-    const removeDeliverable = (index: number) => {
-        if (form.deliverables.length <= 1) return; // Prevent removing the last deliverable
-        setForm((prev) => ({...prev, deliverables: prev.deliverables.filter((_, i) => i !== index)}));
-        setErrors((prev) => {
-            const newErrors = {...prev};
-            delete newErrors[`deliverables.${index}`];
-            return newErrors;
-        });
-        setTimeout(() => validateForm(), 0); // Validate form for array-level errors
     };
 
     const validateField = async <K extends keyof ProposedQuotePayload>(key: K, value: ProposedQuotePayload[K]) => {
@@ -200,29 +159,6 @@ const QuotationModal: React.FC<QuotationModalProps> = ({
             setErrors((prev) => {
                 const newErrors = {...prev};
                 delete newErrors[key];
-                return newErrors;
-            });
-        }
-    };
-
-    const validateWorkStep = async (index: number) => {
-        const result = await ProposedQuoteSchema.safeParseAsync(form);
-        if (!result.success) {
-            const pathPrefix = `workSteps.${index}.`;
-            const errorsForStep = result.error.issues.filter((issue) => issue.path.join('.').startsWith(pathPrefix));
-            const newErrors: Record<string, string> = {};
-            errorsForStep.forEach((issue) => {
-                newErrors[issue.path.join('.')] = issue.message;
-            });
-            setErrors((prev) => ({...prev, ...newErrors}));
-        } else {
-            setErrors((prev) => {
-                const newErrors = {...prev};
-                Object.keys(newErrors).forEach((key) => {
-                    if (key.startsWith(`workSteps.${index}.`)) {
-                        delete newErrors[key];
-                    }
-                });
                 return newErrors;
             });
         }
@@ -322,7 +258,7 @@ const QuotationModal: React.FC<QuotationModalProps> = ({
                             label={t('profileChat.amount') || 'Amount (Total)'}
                             name="amount"
                             type="number"
-                            value={form.amount === 0 ? '' : form.amount.toString()}
+                            value={form.amount === 0 ? '' : form.amount}
                             onChange={(e) => updateField('amount', Number(e.target.value))}
                             error={errors['amount']}
                             placeholder="0"

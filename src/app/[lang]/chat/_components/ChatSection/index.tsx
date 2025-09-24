@@ -50,6 +50,20 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                                      partnerAvailable,
                                                      currentRoom
                                                  }) => {
+    const {t} = useTranslation();
+    const {localUser, person, wallet} = useMyUser();
+    const isSubmittingRef = useRef(false);
+    const myAvailable = person?.available !== false; // treat undefined as available
+    const canSend = (partnerAvailable !== false) && myAvailable;
+    const disabledReason = !myAvailable
+        ? (t("profileChat.youAreNotAvailable") || "You are currently unavailable. Enable availability in your profile to send messages.")
+        : (t("profileChat.userNotAvailable") || "This user is currently not accepting messages. You can read history but cannot send new messages.");
+    const latestIncomingRef = useRef<{
+        roomId: string;
+        content: string;
+        senderId: number;
+        timestamp: string
+    } | null>(null);
     const roomId = currentRoom.room.room.id;
     const {markRoomRead, setActiveRoomId} = useChatRooms();
     const {send, canGo, ORDER} = useWorkflowStepper();
@@ -58,15 +72,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [showJobDetailModal, setShowJobDetailModal] = useState<boolean>(false);
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
-    const {t} = useTranslation();
     const [workflowIdState, setWorkflowIdState] = useState<number | null>(null);
+    const [hasProposedQuote, setHasProposedQuote] = useState<boolean>(currentRoom.workflow?.hasProposedQuote || false);
     const [messages, setMessages] = useState<UIChatMessage[]>([]);
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
     const {isPartnerTyping, onRemoteTyping} = useTypingIndicator({roomId});
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [, setIsInitialLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null); // New error state for API failures
+    const [error, setError] = useState<string | null>(null);
     const {
         selectedFile,
         setSelectedFile,
@@ -77,6 +91,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
+    const roomPostId = currentRoom?.room?.post?.id;
+    const roomCommentId = currentRoom?.room?.currentComment?.id;
+    const postCreatorId = post?.creatorId;
+    const isEmployer = postCreatorId != null && person?.id != null ? String(postCreatorId) === String(person?.id) : undefined;
+    const lastClientUpdateRef = useRef<{ status: StatusKey | null; timestamp: number }>({status: null, timestamp: 0});
     const setScrollRef = useCallback((el: HTMLDivElement | null) => {
         scrollContainerRef.current = el;
         if (el) setScrollParentEl(el);
@@ -117,20 +136,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             }
         };
     }, []);
-    const isSubmittingRef = useRef(false);
-    const {localUser, person, wallet} = useMyUser();
-    const myAvailable = person?.available !== false; // treat undefined as available
-    const canSend = (partnerAvailable !== false) && myAvailable;
-    const disabledReason = !myAvailable
-        ? (t("profileChat.youAreNotAvailable") || "You are currently unavailable. Enable availability in your profile to send messages.")
-        : (t("profileChat.userNotAvailable") || "This user is currently not accepting messages. You can read history but cannot send new messages.");
-    const latestIncomingRef = useRef<{
-        roomId: string;
-        content: string;
-        senderId: number;
-        timestamp: string
-    } | null>(null);
-    // Workflow status helpers moved into useWorkflowStatus hook
 
     useEffect(() => {
         const handleResize = () => {
@@ -206,7 +211,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             stepIndex: ORDER.indexOf(key),
         });
         if (isClientUpdate) {
-            lastClientUpdateRef.current = { status: key, timestamp: Date.now() };
+            lastClientUpdateRef.current = {status: key, timestamp: Date.now()};
         }
     };
     const {
@@ -222,14 +227,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         send,
         canGo,
     });
-
-    const roomPostId = currentRoom?.room?.post?.id;
-    const roomCommentId = currentRoom?.room?.currentComment?.id;
-
-    // Determine if current user is the employer (job poster). Creator id is personId.
-    const postCreatorId = post?.creatorId;
-    const isEmployer = postCreatorId != null && person?.id != null ? String(postCreatorId) === String(person?.id) : undefined;
-    const lastClientUpdateRef = useRef<{ status: StatusKey | null; timestamp: number }>({ status: null, timestamp: 0 });
 
     useEffect(() => {
         const rd: any = currentRoom as any;
@@ -321,7 +318,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         submitStartWorkApi,
         approveWorkApi,
         postId: roomPostId,
-        walletId: wallet?.id
+        walletId: wallet?.id,
+        currentStatus,
     });
 
     const onSubmit = useCallback(
@@ -416,10 +414,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         }
     }, [isConnected]);
 
-    const hasProposedQuote = useMemo(() => {
-        return Boolean(getLatestProposedQuotePayload(messages as any));
-    }, [messages]);
-
     // Determine latest quotation amount and whether employer has sufficient balance to approve
     const latestQuoteAmount = useMemo(() => {
         const p: any = getLatestProposedQuotePayload(messages as any);
@@ -508,7 +502,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             <div className="relative flex-1 min-w-0 flex flex-col md:flex-row h-full">
                 <div className="flex-1 min-w-0 flex flex-col h-full w-full">
                     <ChatHeader
-                        avatarUrl={partnerAvatar|| ProfileImage.avatar}
+                        avatarUrl={partnerAvatar || ProfileImage.avatar}
                         displayName={partnerName || "User"}
                         typingText={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
                         onToggleFlow={() => setIsFlowOpen((v) => !v)}

@@ -21,4 +21,6 @@ export type Workflow = {
   roomId: ChatRoomId;
   deliverableUrl?: string;
   active: boolean;
+  hasProposedQuote: boolean;
+  statusBeforeCancel?: WorkflowStatus;
 };

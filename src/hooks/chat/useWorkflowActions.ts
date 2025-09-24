@@ -6,7 +6,7 @@ import { getLatestProposedQuotePayload, getLatestProposedQuoteSeq } from '@/util
 import type { ApproveQuotationForm, CreateInvoiceForm } from 'lemmy-js-client';
 import type { WsMessageSender } from '@/utils/chat/types';
 import type { StatusKey } from '@/components/FreelanceChatFlow';
-import { dispatchPreview, sendStructuredMessage } from '@/utils/chat/structured';
+import { sendStructuredMessage } from '@/utils/chat/structured';
 
 // Helper to extract meaningful error messages from wrapped HttpService responses
 function extractErr(res: any, fallback: string) {
@@ -46,6 +46,7 @@ export type UseWorkflowActionsDeps = {
     approveWorkApi: (form: any) => Promise<any>;
     postId?: number | string | null;
     walletId?: number | null;
+    currentStatus: StatusKey;
 };
 
 export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
@@ -73,7 +74,8 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
         submitStartWorkApi,
         approveWorkApi,
         postId,
-        walletId
+        walletId,
+        currentStatus,
     } = deps;
 
     // Use the new workflow id hook which hydrates from room payload
@@ -149,6 +151,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 note: data.note ?? undefined,
                 startingDay: data.startingDay,
                 deliveryDay: data.deliveryDay,
+                roomId: roomId
             } as any;
 
             const res = await createInvoice(form as any);
@@ -406,7 +409,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             if (!workflowId) return false;
 
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
-            const form: any = { seqNumber, workflowId };
+            const form: any = { seqNumber, workflowId, currentStatus };
             const res = await HttpService.client.cancelJob(form as any);
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean(res?.data?.success);
             if (!ok) {
@@ -439,5 +442,3 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
         cancelJob,
     } as const;
 };
-
-export type UseWorkflowActionsReturn = ReturnType<typeof useWorkflowActions>;

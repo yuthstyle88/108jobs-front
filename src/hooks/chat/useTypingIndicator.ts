@@ -15,7 +15,7 @@ export const useTypingIndicator = (deps: { roomId: string }) => {
 
   const onRemoteTyping = useCallback((senderId: number, localUserId: number, typing: boolean) => {
     if (senderId === localUserId) return;
-    setIsPartnerTyping(!!typing);
+    setIsPartnerTyping(typing);
     if (partnerTypingTimeoutRef.current) {
       try { clearTimeout(partnerTypingTimeoutRef.current); } catch {}
       partnerTypingTimeoutRef.current = null;
