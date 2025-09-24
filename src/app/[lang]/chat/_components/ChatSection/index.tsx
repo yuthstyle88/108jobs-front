@@ -673,7 +673,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 commentId={roomCommentId as number}
                 partnerId={partnerId as number}
                 projectName={currentRoom?.post?.name || t("profileChat.noJobTitle")}
-                amount={currentRoom?.post?.budget}
+                amount={currentRoom.room.post.budget}
             />
         </>
     );

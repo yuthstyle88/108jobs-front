@@ -270,17 +270,16 @@ const QuotationModal: React.FC<QuotationModalProps> = ({ isOpen, onClose, onSubm
                                 <p className="mt-1 text-xs text-red-600">{errors['projectName']}</p>
                             )}
                         </div>
-                        <div>
-                            <label className="block text-xs sm:text-sm font-medium text-gray-700">
-                                {t('profileChat.amount') || 'Amount (Total)'}
-                            </label>
-                            <div className="mt-2 text-sm text-gray-900 bg-gray-100 p-2.5 rounded-md border border-gray-300">
-                                {form.amount || 0}
-                            </div>
-                            {errors['amount'] && (
-                                <p className="mt-1 text-xs text-red-600">{errors['amount']}</p>
-                            )}
-                        </div>
+                        <CustomInput
+                            label={t('profileChat.amount') || 'Amount (Total)'}
+                            name="amount"
+                            type="number"
+                            value={form.amount === 0 ? '' : form.amount.toString()}
+                            onChange={(e) => updateField('amount', Number(e.target.value))}
+                            error={errors['amount']}
+                            placeholder="0"
+                            required
+                        />
                     </div>
 
                     <CustomInput
