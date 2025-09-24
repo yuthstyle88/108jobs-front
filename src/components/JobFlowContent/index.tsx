@@ -5,12 +5,7 @@ interface JobFlowContentProps {
     setIsFlowOpen: (open: boolean) => void;
     renderFlowContent: () => React.ReactNode;
     setShowJobDetailModal: (show: boolean) => void;
-    currentRoom?: {
-        job?: {
-            title?: string;
-            description?: string;
-        };
-    };
+    currentRoom: any;
 }
 
 export const JobFlowContent: React.FC<JobFlowContentProps> = ({
@@ -56,10 +51,10 @@ export const JobFlowContent: React.FC<JobFlowContentProps> = ({
                 >
                     <div className="flex-1">
                         <h3 className="text-xs sm:text-sm md:text-base font-semibold text-gray-900 line-clamp-1">
-                            {currentRoom?.job?.title || "No Job Title"}
+                            {currentRoom?.post?.name || "No Job Title"}
                         </h3>
                         <p className="text-[0.65rem] sm:text-xs md:text-sm text-gray-600 line-clamp-2">
-                            {currentRoom?.job?.description || "No description available"}
+                            {currentRoom?.post?.body || "No description available"}
                         </p>
                     </div>
                 </div>

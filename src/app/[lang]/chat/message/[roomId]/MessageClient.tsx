@@ -1,141 +1,162 @@
 "use client";
 
-import {useEffect, useState} from "react";
-import {PhoenixSocketProvider} from "@/contexts/RealtimeChatContext";
+import { useEffect, useState } from "react";
+import { PhoenixSocketProvider } from "@/contexts/RealtimeChatContext";
 import ChatSection from "../../_components/ChatSection";
-import {HttpService, UserService} from "@/services";
+import { HttpService, UserService } from "@/services";
 import LoadingBlur from "@/components/Common/Loading/LoadingBlur";
-import {REQUEST_STATE} from "@/services/HttpService";
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {Post} from "@/lib/lemmy-js-client";
-import {RoomNotFound} from "@/components/RoomNotFound";
-import {useStateMachineStore} from "@/stores/stateMachineStore";
+import { REQUEST_STATE } from "@/services/HttpService";
+import { useMyUser } from "@/hooks/profile-api/useMyUser";
+import { Post } from "@/lib/lemmy-js-client";
+import { RoomNotFound } from "@/components/RoomNotFound";
+import { useStateMachineStore } from "@/stores/stateMachineStore";
 
-export default function MessageClient({roomId}: { roomId: string }) {
+export default function MessageClient({ roomId }: { roomId: string }) {
     const accessToken = UserService.Instance.auth();
-    const {localUser} = useMyUser();
-
-    const [partnerName, setPartnerName] = useState<string>("Unknown");
-    const [partnerId, setPartnerId] = useState<any>({});
-    const [commentId, setCommentId] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    const [peerPublicKeyHex, setPeerPublicKeyHex] = useState<string | undefined>(undefined);
-    const [post, setPost] = useState<Post>();
-    const [notFound, setNotFound] = useState<boolean>(false);
-    const [partnerAvailable, setPartnerAvailable] = useState<boolean | undefined>(undefined);
+    const { localUser } = useMyUser();
+    const [state, setState] = useState<{
+        partnerName: string;
+        partnerId?: number;
+        currentRoom?: any;
+        peerPublicKeyHex?: string;
+        post?: Post;
+        notFound: boolean;
+        loading: boolean;
+        partnerAvailable?: boolean;
+    }>({
+        partnerName: "Unknown",
+        notFound: false,
+        loading: true,
+    });
     const reset = useStateMachineStore((s) => s.reset);
 
     useEffect(() => {
-        if (roomId) {
-            reset();
-        }
+        if (roomId) reset();
     }, [roomId, reset]);
 
     useEffect(() => {
+        if (!accessToken || !roomId || !localUser?.id) {
+            setState((prev) => ({ ...prev, loading: false }));
+            return;
+        }
+
         let cancelled = false;
-        if (!accessToken || !roomId || !localUser?.id) return;
 
-        (async () => {
-            const chatRoomRes = await HttpService.client.getChatRoom(roomId);
+        const fetchData = async () => {
+            try {
+                const chatRoomRes = await HttpService.client.getChatRoom(roomId);
+                if (cancelled) return;
 
-            if (!cancelled) {
-                const dataAny: any = (chatRoomRes as any)?.data;
-                const errAny: any = (chatRoomRes as any)?.err;
-                const errName = String(errAny?.name || "").toLowerCase();
-                const errMsg = String(errAny?.message || "").toLowerCase();
-                const dataError = String(dataAny?.error || dataAny?.err || dataAny?.message || "").toLowerCase();
-                const roomView = dataAny?.room;
-                const hasValidRoom = !!roomView && typeof roomView === 'object' && !!roomView.room && typeof roomView.room === 'object';
-                const isNFByError = errName.includes('notfound') || errMsg.includes('notfound') || errMsg.includes('404') || dataError.includes('notfound') || dataError.includes('404');
-
-                if (
-                    chatRoomRes.state === REQUEST_STATE.FAILED && isNFByError
-                ) {
-                    setNotFound(true);
-                    setLoading(false);
-                    return;
-                }
+                // Handle "empty" or "failed" states explicitly
                 if (chatRoomRes.state === REQUEST_STATE.EMPTY) {
-                    setNotFound(true);
-                    setLoading(false);
+                    setState((prev) => ({ ...prev, notFound: true, loading: false }));
                     return;
                 }
-                if (
-                    chatRoomRes.state === REQUEST_STATE.SUCCESS && (!hasValidRoom || isNFByError)
-                ) {
-                    setNotFound(true);
-                    setLoading(false);
-                    setCommentId(chatRoomRes.data.room.currentComment?.id);
+
+                if (chatRoomRes.state === REQUEST_STATE.FAILED) {
+                    const errMsg = String(chatRoomRes.err?.message || "").toLowerCase();
+                    if (errMsg.includes("notfound") || errMsg.includes("404")) {
+                        setState((prev) => ({ ...prev, notFound: true, loading: false }));
+                    }
                     return;
                 }
-            }
 
-            if (!cancelled && chatRoomRes.state === REQUEST_STATE.SUCCESS) {
-                const participants = ((chatRoomRes.data as any)?.room?.participants as any[]) ?? [];
-                try {
-                    setPost(((chatRoomRes.data as any)?.room?.post) ?? ((chatRoomRes.data as any)?.post));
-                } catch {
-                }
+                // Handle "success" state
+                if (chatRoomRes.state === REQUEST_STATE.SUCCESS) {
+                    const room = chatRoomRes.data;
+                    const isNotFound = String(chatRoomRes.data || "")
+                        .toLowerCase()
+                        .includes("notfound");
 
-                const other = participants.find(
-                    (p: any) => String(p.memberId) !== String(localUser.id)
-                );
-
-                if (other) {
-                    const res = await HttpService.client.visitProfile(String(other.memberId));
-                    setPartnerId(other.memberId);
-
-                    const profileName =
-                        res.state === REQUEST_STATE.SUCCESS
-                            ? res.data.profile.name
-                            : "Unknown";
-                    if (res.state === REQUEST_STATE.SUCCESS) {
-                        // Preserve undefined as undefined; only block sending if explicitly false
-                        setPartnerAvailable((res.data as any)?.profile?.available);
+                    if (!room || isNotFound) {
+                        setState((prev) => ({
+                            ...prev,
+                            notFound: true,
+                            loading: false,
+                            currentRoom: room,
+                        }));
+                        return;
                     }
 
-                    if (!cancelled) setPartnerName(String(profileName));
+                    setState((prev) => ({
+                        ...prev,
+                        currentRoom: room,
+                        post: room?.room.post ?? chatRoomRes.data?.room.post,
+                    }));
 
+                    const participants = room?.room.participants ?? [];
+                    const other = participants.find(
+                        (p) => String(p.memberId) !== String(localUser.id)
+                    );
 
-                    // Fetch peer's published public keys for E2EE
-                    try {
-                        const keysRes = await HttpService.client.getUserKeys(Number(other.memberId));
-                        if (!cancelled && keysRes?.state === REQUEST_STATE.SUCCESS) {
-                            const keys = (keysRes.data as any)?.publicKeys as string[] | undefined;
-                            if (Array.isArray(keys) && keys.length > 0) {
-                                setPeerPublicKeyHex(keys[0]);
-                            }
-                        }
-                    } catch (e) {
-                        // non-fatal: fall back to plaintext until key available
-                        if (process.env.NODE_ENV !== 'production') {
-                            console.warn('Failed to fetch peer public keys for E2EE', e);
-                        }
+                    if (other) {
+                        const [profileRes, keysRes] = await Promise.all([
+                            HttpService.client.visitProfile(String(other.memberId)),
+                            HttpService.client.getUserKeys(Number(other.memberId)),
+                        ]);
+
+                        if (cancelled) return;
+
+                        setState((prev) => ({
+                            ...prev,
+                            partnerName:
+                                profileRes.state === REQUEST_STATE.SUCCESS
+                                    ? profileRes.data.profile.name
+                                    : prev.partnerName,
+                            partnerId: Number(other.memberId),
+                            partnerAvailable:
+                                profileRes.state === REQUEST_STATE.SUCCESS
+                                    ? profileRes.data.profile.available
+                                    : undefined,
+                            peerPublicKeyHex:
+                                keysRes.state === REQUEST_STATE.SUCCESS &&
+                                Array.isArray(keysRes.data?.publicKeys) &&
+                                keysRes.data.publicKeys.length > 0
+                                    ? keysRes.data.publicKeys[0]
+                                    : undefined,
+                            loading: false,
+                        }));
+                    } else {
+                        setState((prev) => ({ ...prev, loading: false }));
                     }
                 }
+            } catch (error) {
+                if (!cancelled) {
+                    console.error("Error fetching data:", error);
+                    setState((prev) => ({ ...prev, notFound: true, loading: false }));
+                }
             }
-            if (!cancelled) setLoading(false);
-        })();
+        };
+
+        fetchData();
 
         return () => {
             cancelled = true;
         };
     }, [accessToken, roomId, localUser?.id]);
 
-    if (!accessToken || !roomId || loading) {
-        return <LoadingBlur text=""/>;
+    if (!accessToken || !roomId || state.loading) {
+        return <LoadingBlur text="" />;
     }
 
-    if (notFound) {
-        return (
-            <RoomNotFound/>
-        );
+    if (state.notFound) {
+        return <RoomNotFound />;
     }
 
     return (
-        <PhoenixSocketProvider token={accessToken} roomId={roomId} peerPublicKeyHex={peerPublicKeyHex}>
-            <ChatSection roomId={roomId} post={post} partnerName={partnerName} partnerAvatar={""}
-                         partnerId={partnerId as number} partnerAvailable={partnerAvailable} commentId={commentId}/>
+        <PhoenixSocketProvider
+            token={accessToken}
+            roomId={roomId}
+            peerPublicKeyHex={state.peerPublicKeyHex}
+        >
+            <ChatSection
+                post={state.post}
+                partnerName={state.partnerName}
+                partnerAvatar=""
+                partnerId={state.partnerId}
+                partnerAvailable={state.partnerAvailable}
+                currentRoom={state.currentRoom}
+            />
         </PhoenixSocketProvider>
     );
 }

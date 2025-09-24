@@ -4,12 +4,7 @@ import React from "react";
 interface JobDetailModalProps {
     showJobDetailModal: boolean;
     setShowJobDetailModal: (show: boolean) => void;
-    currentRoom?: {
-        job?: {
-            title?: string;
-            description?: string;
-        };
-    };
+    currentRoom?: any;
 }
 
 export const JobDetailModal: React.FC<JobDetailModalProps> = ({
@@ -50,12 +45,12 @@ export const JobDetailModal: React.FC<JobDetailModalProps> = ({
                 <div className="space-y-3">
                     <div>
                         <h4 className="text-sm sm:text-base font-medium text-gray-800">
-                            {currentRoom?.job?.title || (t("profileChat.noJobTitle") || "No Job Title")}
+                            {currentRoom?.post?.name || t("profileChat.noJobTitle")}
                         </h4>
                     </div>
                     <div className="max-h-[60vh] overflow-auto">
                         <p className="text-sm sm:text-base text-gray-700 whitespace-pre-wrap">
-                            {currentRoom?.job?.description || (t("profileChat.noJobDescription") || "No description available")}
+                            {currentRoom?.post?.body || t("profileChat.noJobDescription")}
                         </p>
                     </div>
                 </div>

@@ -12,7 +12,7 @@ export function useWorkflowId(roomId: string | undefined, roomData?: any) {
             (roomData?.workflow?.id as number) ??
             undefined;
         setWorkflowId(
-            typeof idFromRoom === "number" && !Number.isNaN(idFromRoom)
+            !Number.isNaN(idFromRoom)
                 ? idFromRoom
                 : undefined
         );

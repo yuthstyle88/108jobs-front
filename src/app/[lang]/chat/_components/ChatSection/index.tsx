@@ -4,7 +4,6 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import LoadingBlur from "@/components/Common/Loading/LoadingBlur";
 import {ProfileImage} from "@/constants/images";
 import type {ChatMessage as WsChatMessage, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
@@ -18,7 +17,6 @@ import {createFlowActions} from "@/utils/chat/flowActions";
 import QuotationModal from "@/components/Common/Modal/QuotationModal";
 import {useWorkflowStepper} from "@/hooks/useWorkflowMachine";
 import {useHttpPost} from "@/hooks/useHttpPost";
-import {useHttpGet} from "@/hooks/useHttpGet";
 import {apiToUiStatus, useStateMachineStore} from "@/stores/stateMachineStore";
 import {isBrowser} from "@/utils/browser";
 import {Trash2} from "lucide-react";
@@ -33,26 +31,26 @@ import {useWorkflowActions} from '@/hooks/chat/useWorkflowActions';
 import {createChatRealtimeHandler} from './createChatRealtimeHandler';
 
 type MessageForm = { message: string };
+type UIChatMessage = WsChatMessage & { isOwner?: boolean };
 
 interface ChatSectionProps {
-    roomId: string;
     post?: Post;
     partnerName: string;
     partnerAvatar: string;
     partnerId?: number;
     partnerAvailable?: boolean;
-    commentId: number;
+    currentRoom: any;
 }
 
 const ChatSection: React.FC<ChatSectionProps> = ({
-                                                     roomId,
                                                      post,
                                                      partnerName,
                                                      partnerAvatar,
                                                      partnerId,
                                                      partnerAvailable,
-                                                     commentId
+                                                     currentRoom
                                                  }) => {
+    const roomId = currentRoom.room.id;
     const {markRoomRead, setActiveRoomId} = useChatRooms();
     const {send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
@@ -62,7 +60,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [isFlowOpen, setIsFlowOpen] = useState(false);
     const {t} = useTranslation();
     const [workflowIdState, setWorkflowIdState] = useState<number | null>(null);
-    type UIChatMessage = WsChatMessage & { isOwner?: boolean };
     const [messages, setMessages] = useState<UIChatMessage[]>([]);
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
@@ -98,6 +95,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             setTimeout(scrollToLatest, 0);
         }
     };
+
     // Measure chat input height to prevent last message being obscured
     const inputContainerRef = useRef<HTMLDivElement>(null);
     const [bottomPad, setBottomPad] = useState<number>(0);
@@ -199,19 +197,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         };
     }, [roomId, setActiveRoomId, markRoomRead]);
 
-    const currentRoom = {
-        roomId,
-        partnerAvatar: partnerAvatar,
-        partnerDisplayName: partnerName,
-        job: {
-            id: post?.id,
-            title: post?.name,
-            description: post?.body,
-            budget: post?.budget,
-        },
-        messages: [],
-    };
-
     const currentStatus = useStateMachineStore((s) => s.state);
 
     // Define setWorkflowState reactively
@@ -225,10 +210,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         }
     };
     const {
-        lastRealtimeStatusAtRef,
-        extractStatusFromContent,
         tryUpdateStatusFromItems,
-        scanMessagesForStatus,
         goToStatus,
         handleChangeStatus
     } = useWorkflowStatus({
@@ -241,18 +223,16 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         canGo,
     });
 
-    // Load status from API server when available
-    const {data: roomData} = useHttpGet("getChatRoom", [roomId as any]);
-    const roomPostId = (roomData as any)?.room?.room?.postId ?? (roomData as any)?.room?.post?.id ?? (roomData as any)?.postId ?? (roomData as any)?.room?.postId;
-    const roomCommentId = (roomData as any)?.room?.currentComment?.id ?? (roomData as any)?.currentCommentId ?? (roomData as any)?.room?.currentCommentId;
+    const roomPostId = currentRoom?.room?.post?.id;
+    const roomCommentId = currentRoom?.room?.currentComment?.id;
 
     // Determine if current user is the employer (job poster). Creator id is personId.
-    const postCreatorId = (post as any)?.creatorId ?? (roomData as any)?.room?.post?.creatorId ?? (roomData as any)?.post?.creatorId;
+    const postCreatorId = post?.creatorId;
     const isEmployer = postCreatorId != null && person?.id != null ? String(postCreatorId) === String(person?.id) : undefined;
     const lastClientUpdateRef = useRef<{ status: StatusKey | null; timestamp: number }>({ status: null, timestamp: 0 });
 
     useEffect(() => {
-        const rd: any = roomData as any;
+        const rd: any = currentRoom as any;
         if (!rd) return;
         const apiStatusRaw = rd?.room?.workflow?.status ?? rd?.workflow?.status ?? rd?.room?.status ?? rd?.status ?? rd?.room?.workflowStatus ?? rd?.workflowStatus;
         if (typeof apiStatusRaw === 'string') {
@@ -266,7 +246,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     recentClientUpdate.status !== uiStatus &&
                     now - recentClientUpdate.timestamp < gracePeriodMs
                 ) {
-                    console.log(`Skipping API sync: Recent client update to ${recentClientUpdate.status} (API: ${uiStatus})`);
                     return;
                 }
                 if (!hasStarted) setHasStarted(true);
@@ -275,7 +254,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 }
             }
         }
-    }, [roomData, currentStatus, hasStarted]);
+    }, [currentRoom, currentStatus, hasStarted]);
 
 
     const {execute: createInvoice} = useHttpPost("createInvoice");
@@ -295,7 +274,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 content,
                 createdAt: new Date().toISOString(),
                 senderId: Number(localUser?.id) || 0,
-                receiverId: roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0,
                 status: 1,
                 isOwner: true,
             } as WsChatMessage,
@@ -317,7 +295,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         cancelJob,
     } = useWorkflowActions({
         messages,
-        roomData,
+        roomData: currentRoom,
         workflowIdState,
         localUser: localUser || person,
         roomId,
@@ -523,17 +501,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         </>
     );
 
-    if (!roomId) {
-        return <LoadingBlur text=""/>;
-    }
-
     return (
         <>
             <div className="relative flex-1 min-w-0 flex flex-col md:flex-row h-full">
                 <div className="flex-1 min-w-0 flex flex-col h-full w-full">
                     <ChatHeader
-                        avatarUrl={currentRoom?.partnerAvatar || ProfileImage.avatar}
-                        displayName={currentRoom?.partnerDisplayName || "User"}
+                        avatarUrl={partnerAvatar|| ProfileImage.avatar}
+                        displayName={partnerName || "User"}
                         typingText={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
                         onToggleFlow={() => setIsFlowOpen((v) => !v)}
                         isFlowOpen={isFlowOpen}
@@ -647,7 +621,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         setIsFlowOpen={setIsFlowOpen}
                         renderFlowContent={renderFlowContent}
                         setShowJobDetailModal={setShowJobDetailModal}
-                        currentRoom={currentRoom}
+                        currentRoom={currentRoom.room}
                     />
                 </div>
                 {isFlowOpen && (
@@ -658,7 +632,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                             setIsFlowOpen={setIsFlowOpen}
                             renderFlowContent={renderFlowContent}
                             setShowJobDetailModal={setShowJobDetailModal}
-                            currentRoom={currentRoom}
+                            currentRoom={currentRoom.room}
                         />
                     </div>
                 )}
@@ -688,7 +662,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 <JobDetailModal
                     showJobDetailModal={showJobDetailModal}
                     setShowJobDetailModal={setShowJobDetailModal}
-                    currentRoom={currentRoom}
+                    currentRoom={currentRoom.room}
                 />
             )}
             <QuotationModal
@@ -698,8 +672,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 postId={roomPostId as number}
                 commentId={roomCommentId as number}
                 partnerId={partnerId as number}
-                projectName={currentRoom?.job?.title || "No Job Title"}
-                amount={currentRoom?.job?.budget}
+                projectName={currentRoom?.post?.name || t("profileChat.noJobTitle")}
+                amount={currentRoom?.post?.budget}
             />
         </>
     );

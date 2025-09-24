@@ -150,7 +150,9 @@ export const vi = {
             topUpSuccessMessage: "Bạn đã nạp tiền thành công, vui lòng chờ quản trị viên phê duyệt thanh toán của bạn",
             orderApprovedMessage: "Đơn hàng đã được phê duyệt. Bạn có thể tiến hành thanh toán khi hóa đơn sẵn sàng.",
             startHiring: "Nhà tuyển dụng đã bắt đầu tuyển dụng.",
-            missingWorkflow: "Thiếu quy trình làm việc. Bắt đầu quy trình trước khi phê duyệt."
+            missingWorkflow: "Thiếu quy trình làm việc. Bắt đầu quy trình trước khi phê duyệt.",
+            noJobTitle: "Không có chức danh công việc",
+            noJobDescription: "Không có mô tả công việc",
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",

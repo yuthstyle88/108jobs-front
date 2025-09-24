@@ -149,7 +149,9 @@ export const en = {
             attachFileHere: "Attach file here",
             orderApprovedMessage: "The order has been approved. You can proceed to payment when invoice is ready.",
             startHiring: "Employer started hiring.",
-            missingWorkflow: "Missing workflow. Start workflow before approval."
+            missingWorkflow: "Missing workflow. Start workflow before approval.",
+            noJobTitle: "No job title provided",
+            noJobDescription: "No job description provided",
         },
         allCategories: {
             allJobCategories: "All Job Categories",

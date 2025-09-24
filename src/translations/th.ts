@@ -148,7 +148,9 @@ export const th = {
             attachFileHere: "แนบไฟล์ที่นี่",
             orderApprovedMessage: "คำสั่งซื้อได้รับการอนุมัติแล้ว คุณสามารถดำเนินการชำระเงินเมื่อใบแจ้งหนี้พร้อม",
             startHiring: "นายจ้างเริ่มจ้างงานแล้ว",
-            missingWorkflow: "ไม่มีขั้นตอนงาน เริ่มขั้นตอนงานก่อนการอนุมัติ"
+            missingWorkflow: "ไม่มีขั้นตอนงาน เริ่มขั้นตอนงานก่อนการอนุมัติ",
+            noJobTitle: "ไม่มีตำแหน่งงานที่ระบุ",
+            noJobDescription: "ไม่มีคำอธิบายงานที่ระบุ",
         },
         allCategories: {
             allJobCategories: "หมวดหมู่งานทั้งหมด",
