@@ -479,12 +479,6 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                             );
                         })}
                     </ul>
-                    {'WaitForFreelancerQuotation' === viewStatus && isEmployer && (
-                        <div
-                            className="mx-4 -mt-2 mb-2 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
-                            {t('profileChat.waitForFreelancerQuotation') || 'Waiting for freelancer to send a quotation.'}
-                        </div>
-                    )}
                     <div className={`flex flex-col gap-2 px-4 ${compact ? 'pb-2' : 'pb-4'}`}>
                         {actionsForStep(viewStatus).map((action, idx) => (
                             <div key={idx} className="w-full">

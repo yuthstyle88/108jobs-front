@@ -518,15 +518,9 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
 
                     try {
                         const evName = String((env as any)?.content || '');
-                        console.log("evName: ", evName);
                         if (evName && evName.includes('status-change')) {
-                            const {room_id} = payload as any;
-
-                            console.log("[RT] room update received → fetching fresh room data", room_id);
-
                             try {
                                 const chatRoomRes = await HttpService.client.getChatRoom(roomId);
-                                console.log("event to be chatRoomRes here: ", chatRoomRes)
                                 if (chatRoomRes.state === REQUEST_STATE.SUCCESS) {
                                     setRefreshRoomData(chatRoomRes.data);
                                 }
