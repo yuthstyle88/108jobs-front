@@ -110,6 +110,18 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
         }
     }, [hydrated, workflowId]);
 
+    // hydrate billingId จาก roomData (ส่งมาจาก backend)
+    useEffect(() => {
+        if (billingId != null) return;
+        const fromPayload =
+            Number((roomData as any)?.room?.workflow?.billingId) ||
+            Number((roomData as any)?.workflow?.billingId) ||
+            null;
+        if (fromPayload && !Number.isNaN(fromPayload)) {
+            setBillingId(fromPayload);
+        }
+    }, [billingId, roomData]);
+
     // Helper function to validate workflow ID
     const validateWorkflowId = useCallback((caller?: string): number | null => {
         if (!workflowId) {
@@ -123,35 +135,6 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
         return workflowId;
     }, [workflowId, setError, t]);
 
-    // Resolve billing id from latest structured message or API as fallback
-    const resolveBillingId = useCallback(async (): Promise<number | null> => {
-      // Try state first
-      if (billingId && !Number.isNaN(billingId)) return billingId;
-
-      // Try latest structured payload in messages
-      try {
-        const latestPayload: any = getLatestProposedQuotePayload(messages as any);
-        const fromMsg = Number(latestPayload?.billingId);
-        if (fromMsg && !Number.isNaN(fromMsg)) {
-          setBillingId(fromMsg);
-          return fromMsg;
-        }
-      } catch {}
-
-      // Fallback: ask server by room
-      try {
-        const res = await HttpService.client.getBillingByRoom({ roomId });
-        if (res?.state === REQUEST_STATE.SUCCESS && (res as any)?.data) {
-          const b = Number((res as any).data?.id);
-          if (b && !Number.isNaN(b)) {
-            setBillingId(b);
-            return b;
-          }
-        }
-      } catch {}
-
-      return null;
-    }, [billingId, messages, roomId]);
 
     const startWorkflowAction = useCallback(async () => {
         setError(null);
@@ -189,7 +172,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             setError(t('profileChat.startWorkflowFailed') || `Failed to start workflow: ${msg}`);
             return false;
         }
-    }, [postId, roomData, startWorkflow, roomId, setHasStarted, setWorkflowIdState, goToStatus, t, sendMessage, localUser?.id, addOwnMessage]);
+    }, [postId, roomData, startWorkflow, roomId, setHasStarted, setWorkflowIdState, goToStatusAndBroadcast, t, sendMessage, localUser?.id, addOwnMessage]);
 
     const quotationSubmit = useCallback(async (data: any) => {
         if (!canSend) {
@@ -242,37 +225,23 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             setError(t('profileChat.quotationError') || 'Failed to send quotation. Please try again.');
             return false;
         }
-    }, [canSend, disabledReason, createInvoice, goToStatus, localUser?.id, roomId, setShowQuotationModal, t, sendMessage, addOwnMessage]);
+    }, [canSend, disabledReason, createInvoice, goToStatusAndBroadcast, localUser?.id, roomId, setShowQuotationModal, setHasProposedQuote, t, sendMessage, addOwnMessage]);
 
     const approveQuotation = useCallback(async () => {
         try {
             setError(null);
-            // Resolve billing id
-            const latestPayload: any = getLatestProposedQuotePayload(messages as any);
-            let billingId: number | undefined = latestPayload?.billingId;
-
-            if (!billingId) {
-                try {
-                    const res = await HttpService.client.getBillingByRoom({ roomId });
-                    if (res?.state === REQUEST_STATE.SUCCESS && (res as any)?.data) {
-                        const billing = (res as any).data as any;
-                        billingId = Number(billing?.id);
-                    }
-                } catch {
-                    // fallthrough
-                }
-            }
-
-            if (!billingId || Number.isNaN(billingId)) {
-                setError(t('profileChat.quotationError') || 'Missing billing information for approval.');
-                return false;
+            // Use billingId from local state only
+            const bid = (billingId && !Number.isNaN(billingId)) ? billingId : null;
+            if (!bid) {
+              setError(t('profileChat.missingBillingId') || 'Missing billing id. Create/approve a quotation first.');
+              return false;
             }
 
             const workflowId = validateWorkflowId('approveQuotation');
             if (!workflowId) return false;
 
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
-            const form: ApproveQuotationForm = { seqNumber, billingId, walletId: walletId, workflowId } as any;
+            const form: ApproveQuotationForm = { seqNumber, billingId: bid, walletId: walletId, workflowId } as any;
             const res = await approveQuotationApi(form as any);
             if (res?.state === REQUEST_STATE.FAILED) {
                 if ((res as any)?.err?.name === 'insufficientBalanceForTransfer') {
@@ -300,7 +269,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             setError(msg);
             return false;
         }
-    }, [messages, roomData, workflowIdState, approveQuotationApi, localUser?.id, roomId, t, sendMessage, addOwnMessage, walletId, validateWorkflowId]);
+    }, [approveQuotationApi, localUser?.id, roomId, t, sendMessage, addOwnMessage, walletId, validateWorkflowId, goToStatusAndBroadcast, billingId, messages]);
 
     const startWork = useCallback(async () => {
         try {
@@ -334,7 +303,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             setError(msg);
             return false;
         }
-    }, [messages, roomData, workflowIdState, submitStartWorkApi, t, roomId, localUser?.id, sendMessage, addOwnMessage, goToStatus, validateWorkflowId]);
+    }, [messages, submitStartWorkApi, t, roomId, localUser?.id, sendMessage, addOwnMessage, goToStatusAndBroadcast, validateWorkflowId]);
 
     const submitDelivery = useCallback(async () => {
         try {
@@ -380,7 +349,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             setError(msg);
             return false;
         }
-    }, [canSend, disabledReason, messages, roomData, workflowIdState, selectedFile, localUser?.id, roomId, t, setSelectedFile, sendMessage, addOwnMessage, goToStatus, validateWorkflowId]);
+    }, [canSend, disabledReason, messages, selectedFile, localUser?.id, roomId, t, setSelectedFile, sendMessage, addOwnMessage, goToStatusAndBroadcast, validateWorkflowId]);
 
     const requestRevision = useCallback(async () => {
         try {
@@ -414,7 +383,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             setError(msg);
             return false;
         }
-    }, [canSend, disabledReason, messages, roomData, workflowIdState, t, roomId, localUser?.id, sendMessage, addOwnMessage, goToStatus, validateWorkflowId]);
+    }, [canSend, disabledReason, messages, t, roomId, localUser?.id, sendMessage, addOwnMessage, goToStatusAndBroadcast, validateWorkflowId]);
 
     const approveWork = useCallback(async () => {
         try {
@@ -427,10 +396,10 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             if (!workflowId) return false;
 
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
-            const bid = await resolveBillingId();
+            const bid = (billingId && !Number.isNaN(billingId)) ? billingId : null;
             if (!bid) {
-              setError(t('profileChat.quotationError') || 'Missing billing information for approval.');
-              return false;
+                setError(t('profileChat.missingBillingId') || 'Missing billing id. Create/approve a quotation first.');
+                return false;
             }
             const form: any = { seqNumber, workflowId, roomId, billingId: bid };
             const res = await approveWorkApi(form as any);
@@ -453,7 +422,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             setError(msg);
             return false;
         }
-    }, [canSend, disabledReason, messages, roomData, workflowIdState, approveWorkApi, t, roomId, localUser?.id, sendMessage, addOwnMessage, goToStatus, validateWorkflowId, setHasStarted, billingId, resolveBillingId]);
+    }, [canSend, disabledReason, messages, approveWorkApi, t, roomId, localUser?.id, sendMessage, addOwnMessage, goToStatusAndBroadcast, validateWorkflowId, billingId]);
 
     const cancelJob = useCallback(async () => {
         try {
@@ -485,7 +454,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             setError(msg);
             return false;
         }
-    }, [canSend, disabledReason, messages, roomData, workflowIdState, roomId, localUser?.id, t, sendMessage, addOwnMessage, goToStatus, validateWorkflowId]);
+    }, [canSend, disabledReason, messages, roomId, localUser?.id, t, sendMessage, addOwnMessage, goToStatusAndBroadcast, validateWorkflowId, currentStatus]);
 
     return {
         startWorkflowAction,
