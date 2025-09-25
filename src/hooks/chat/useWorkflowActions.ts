@@ -33,6 +33,7 @@ export type UseWorkflowActionsDeps = {
     addOwnMessage: (content: string, id?: string) => string | void;
     sendMessage: WsMessageSender;
     goToStatus: (target: StatusKey, prevStatus?: StatusKey) => void;
+    sendRoomUpdate: (roomId: string, update: Record<string, any>) => void;
     setHasStarted: (v: boolean) => void;
     setWorkflowIdState: (v: number | null) => void;
     setShowQuotationModal: (v: boolean) => void;
@@ -48,7 +49,6 @@ export type UseWorkflowActionsDeps = {
     walletId?: number | null;
     currentStatus: StatusKey;
     setHasProposedQuote: (v: boolean) => void;
-    handleReload: () => void;
 };
 
 export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
@@ -64,6 +64,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
         addOwnMessage,
         sendMessage,
         goToStatus,
+        sendRoomUpdate,
         setHasStarted,
         setWorkflowIdState,
         setShowQuotationModal,
@@ -79,8 +80,22 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
         walletId,
         currentStatus,
         setHasProposedQuote,
-        handleReload,
     } = deps;
+
+    const goToStatusAndBroadcast = useCallback(
+        (target: StatusKey, prevStatus?: StatusKey) => {
+            // local UI transition
+            goToStatus?.(target, prevStatus);
+
+            // broadcast to partner
+            sendRoomUpdate(roomId, {
+                type: 'status-change',
+                status: target,
+                prevStatus,
+            });
+        },
+        [goToStatus, sendRoomUpdate, roomId]
+    );
 
     // Use the new workflow id hook which hydrates from room payload
     const { workflowId } = useWorkflowId(roomId, roomData);
@@ -109,7 +124,6 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             const seqNumber = 1;
             const res = await startWorkflow({ postId: pid, seqNumber, roomId });
             if (res?.state === REQUEST_STATE.SUCCESS && res?.data?.success) {
-                handleReload();
                 setHasStarted(true);
                 const wfId = Number(res?.data?.workflowId);
                 if (wfId) setWorkflowIdState(wfId);
@@ -120,7 +134,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                     previewText: readable
                 });
                 addOwnMessage(JSON.stringify(payload), sentId);
-                goToStatus?.('QuotationPending');
+                goToStatusAndBroadcast('QuotationPending');
                 return true;
             } else {
                 setError(t('profileChat.startWorkflowFailed') || extractErr(res, 'Failed to start workflow. Please try again.'));
@@ -175,8 +189,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             });
             addOwnMessage(JSON.stringify(payload), sentId);
             setHasProposedQuote(true);
-            handleReload();
-            goToStatus?.('QuotationPending');
+            goToStatusAndBroadcast('QuotationPending');
             setShowQuotationModal(false);
             return true;
         } catch (err) {
@@ -234,7 +247,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             });
             addOwnMessage(JSON.stringify(payload), sentId);
 
-            goToStatus?.('OrderApproved');
+            goToStatusAndBroadcast('OrderApproved');
             return true;
         } catch (e: any) {
             const msg = e instanceof Error ? e.message : 'Unknown error';
@@ -268,7 +281,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 previewText: readable,
             });
             addOwnMessage(JSON.stringify(payload), sentId);
-            goToStatus?.('InProgress');
+            goToStatusAndBroadcast('InProgress');
             return true;
         } catch (e: any) {
             const msg = e instanceof Error ? e.message : 'Unknown error';
@@ -314,7 +327,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             addOwnMessage(JSON.stringify(payload), sentId);
 
             setSelectedFile(null);
-            goToStatus?.('PendingEmployerReview');
+            goToStatusAndBroadcast('PendingEmployerReview');
             return true;
         } catch (e: any) {
             const msg = e instanceof Error ? e.message : 'Unknown error';
@@ -348,7 +361,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 previewText: reason,
             });
             addOwnMessage(JSON.stringify(payload), sentId);
-            goToStatus?.('InProgress');
+            goToStatusAndBroadcast('InProgress');
             return true;
         } catch (e: any) {
             const msg = e instanceof Error ? e.message : 'Unknown error';
@@ -382,7 +395,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 previewText: content,
             });
             addOwnMessage(JSON.stringify(payload), sentId);
-            goToStatus?.('Completed');
+            goToStatusAndBroadcast('Completed');
             return true;
         } catch (e: any) {
             const msg = e instanceof Error ? e.message : 'Unknown error';
@@ -414,8 +427,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 senderId: Number(localUser?.id) || 0,
                 previewText: readable,
             });
-            console.log('cancelJob: Triggering goToStatus', { currentStatus, target: 'Cancelled' });
-            goToStatus('Cancelled', currentStatus);
+            goToStatusAndBroadcast('Cancelled', currentStatus);
             return true;
         } catch (e: any) {
             const msg = e instanceof Error ? e.message : 'Unknown error';
