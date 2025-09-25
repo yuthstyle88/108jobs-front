@@ -424,7 +424,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }, [isConnected]);
 
     const calculatedProposedQuote = useMemo(() => {
-        return Boolean(getLatestProposedQuotePayload(messages[0] as any));
+        return Boolean(getLatestProposedQuotePayload(messages as any));
     }, [messages]);
 
     useEffect(() => {
@@ -455,6 +455,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const insufficientForApprove = useMemo(() => {
         return Boolean(isEmployer && hasProposedQuote && latestQuoteAmount != null && availableBalance < (latestQuoteAmount as number));
     }, [isEmployer, hasProposedQuote, latestQuoteAmount, availableBalance]);
+
+    console.log('insufficientForApprove:', latestQuoteAmount);
 
     // Wrap approveQuotation with additional balance guard to keep identical behavior
     const approveQuotationWrapped = React.useCallback(async (): Promise<boolean> => {

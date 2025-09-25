@@ -252,17 +252,30 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
 
     // Expose a helper to move a room to the top when a new message arrives
     const bumpRoomToTop = useCallback((roomId: string, updatedAt?: string) => {
-        setState(prev => {
-            const idx = prev.rooms.findIndex(r => r.id === roomId);
-            if (idx === -1) return prev;
+        setState((prev) => {
+            // Check if the room exists in the current list
+            const idx = prev.rooms.findIndex((r) => r.id === roomId);
+            if (idx === -1) {
+                // Log for debugging; consider fetching the room if it's new
+                console.warn(`Room ${roomId} not found in current rooms list`);
+                return prev;
+            }
+
             const newUpdatedAt = updatedAt || new Date().toISOString();
-            // persist override for stability across reloads
+            // Persist timestamp override
             activityOverridesRef.current[roomId] = newUpdatedAt;
-            saveOverrides();
-            const remaining = prev.rooms.filter((_, i) => i !== idx);
+            try {
+                saveOverrides();
+            } catch (e) {
+                console.error('Failed to save activity overrides:', e);
+            }
+
+            // Reorder rooms: move the specified room to the top
             const room = prev.rooms[idx];
-            const nextRooms = [room, ...remaining];
-            return { ...prev, rooms: nextRooms } as any;
+            const remaining = prev.rooms.filter((_, i) => i !== idx);
+            const nextRooms = [{ ...room, updatedAt: newUpdatedAt }, ...remaining];
+
+            return { ...prev, rooms: nextRooms };
         });
     }, [saveOverrides]);
 
@@ -271,37 +284,40 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     useEffect(() => {
         let unsubscribe: (() => void) | null = null;
         (async () => {
-            const { onChatNewMessage } = await import("@/chat");
-            unsubscribe = onChatNewMessage((detail) => {
-                if (!detail || !detail.roomId) return;
-                // First, update unread counters in the global store to ensure counts are ready before UI updates
-                if (detail.unread === true && detail.roomId !== activeRoomId) {
-                    try { (require as any)("@/stores/unreadStore").useUnreadStore.getState().inc(detail.roomId, 1); } catch {}
-                }
-                // Then bump room to top for immediate UX feedback
-                setState(prev => {
-                    const idx = prev.rooms.findIndex(r => r.id === detail.roomId);
-                    if (idx === -1) return prev;
+            try {
+                const { onChatNewMessage } = await import("@/chat");
+                unsubscribe = onChatNewMessage((detail) => {
+                    console.log('New message event received:', detail); // Debug log
+                    if (!detail || !detail.roomId) {
+                        console.warn('Invalid chat:new-message event:', detail);
+                        return;
+                    }
 
-                    // Persist/refresh activity timestamp override
-                    const tsStr = detail.timestamp || new Date().toISOString();
-                    activityOverridesRef.current[detail.roomId] = tsStr;
-                    try { saveOverrides(); } catch {}
+                    // Update unread count if not the active room
+                    if (detail.unread && detail.roomId !== activeRoomId) {
+                        try {
+                            const { useUnreadStore } = require("@/stores/unreadStore");
+                            useUnreadStore.getState().inc(detail.roomId, 1);
+                        } catch (e) {
+                            console.error('Failed to update unread store:', e);
+                        }
+                    }
 
-                    // Clone rooms (unreadCount will be synced from store via dedicated effect)
-                    let nextRooms: any[] = prev.rooms.slice();
-                    const updatedRoom = nextRooms[idx];
-
-                    // Remove from current position and insert at front
-                    nextRooms.splice(idx, 1);
-                    nextRooms = [updatedRoom, ...nextRooms];
-
-                    return { ...prev, rooms: nextRooms } as any;
+                    // Bump room to top
+                    bumpRoomToTop(detail.roomId, detail.timestamp);
                 });
-            });
+            } catch (e) {
+                console.error('Failed to set up chat:new-message listener:', e);
+            }
         })();
-        return () => { try { unsubscribe?.(); } catch {} };
-    }, [activeRoomId, saveOverrides]);
+        return () => {
+            try {
+                unsubscribe?.();
+            } catch (e) {
+                console.error('Failed to unsubscribe from chat:new-message:', e);
+            }
+        };
+    }, [activeRoomId, bumpRoomToTop]);
 
     // Sync activeRoomId to global unread store so global listener can avoid double-counting
     useEffect(() => {
