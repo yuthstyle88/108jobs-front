@@ -243,7 +243,6 @@ import type {FileUploadResponse} from "./types/FileUploadResponse";
 import type {UpsertCard} from "./types/UpsertCard";
 import type {UserBlockInstanceParams} from "./types/UserBlockInstanceParams";
 import type {VerifyEmail} from "./types/VerifyEmail";
-import type {WorkExperiencesResponse} from "./types/WorkExperience";
 import {VisitProfileResponse} from "./types/VisitProfileResponse";
 import type {ListUserChatRoomsQuery} from "./types/ListUserChatRoomsQuery";
 import {ListUserChatRoomsResponse} from "./types/ListUserChatRoomsResponse";

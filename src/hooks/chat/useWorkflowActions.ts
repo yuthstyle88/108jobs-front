@@ -32,7 +32,7 @@ export type UseWorkflowActionsDeps = {
     t: (key: string) => string | undefined;
     addOwnMessage: (content: string, id?: string) => string | void;
     sendMessage: WsMessageSender;
-    goToStatus?: (status: StatusKey) => void;
+    goToStatus: (target: StatusKey, prevStatus?: StatusKey) => void;
     setHasStarted: (v: boolean) => void;
     setWorkflowIdState: (v: number | null) => void;
     setShowQuotationModal: (v: boolean) => void;
@@ -372,12 +372,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             if (!workflowId) return false;
 
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
-            const commentId = Number(roomData?.room?.currentComment?.id ?? roomData?.currentCommentId ?? undefined);
-            if (!commentId || Number.isNaN(commentId)) {
-                setError('Missing delivery reference for approval.');
-                return false;
-            }
-            const form: any = { seqNumber, workflowId, commentId };
+            const form: any = { seqNumber, workflowId, roomId };
             const res = await approveWorkApi(form as any);
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean(res?.data?.success);
             if (!ok) {
@@ -423,7 +418,8 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 senderId: Number(localUser?.id) || 0,
                 previewText: readable,
             });
-            goToStatus?.('Cancelled');
+            console.log('cancelJob: Triggering goToStatus', { currentStatus, target: 'Cancelled' });
+            goToStatus('Cancelled', currentStatus);
             return true;
         } catch (e: any) {
             const msg = e instanceof Error ? e.message : 'Unknown error';

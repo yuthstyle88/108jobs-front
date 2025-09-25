@@ -1,13 +1,13 @@
 'use client';
 
-import React, {useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import ConfirmActionModal from '@/components/Common/Modal/ConfirmActionModal';
-import {useWorkflowStepper} from '@/hooks/useWorkflowMachine';
-import type {UiFlowStatus} from '@/stores/stateMachineStore';
-import Link from "next/link";
-import FileUploadModal from "@/components/Common/Modal/FileUploadModal";
-import {UploadedFile} from "@/hooks/chat/useFileUpload";
+import { useWorkflowStepper } from '@/hooks/useWorkflowMachine';
+import type { UiFlowStatus } from '@/stores/stateMachineStore';
+import Link from 'next/link';
+import FileUploadModal from '@/components/Common/Modal/FileUploadModal';
+import { UploadedFile } from '@/hooks/chat/useFileUpload';
 
 export type StatusKey = UiFlowStatus;
 
@@ -20,14 +20,14 @@ export type FlowActions = {
     onSubmitDelivery?: () => void;
     onRequestRevision?: () => void;
     onReleasePayment?: () => void;
-    onCancel?: () => void;
+    onCancel?: (prevStatus?: StatusKey) => void; // Updated to accept prevStatus
     onFileUpload?: (e: Event) => void;
-    onFileRemove?: () => Promise<void>
+    onFileRemove?: () => Promise<void>;
 };
 
 export type FreelanceChatFlowProps = {
     currentStatus?: StatusKey;
-    onChangeStatus?: (key: StatusKey) => void;
+    onChangeStatus?: (key: StatusKey, prevStatus?: StatusKey) => void; // Updated to accept prevStatus
     orientation?: 'vertical' | 'horizontal';
     compact?: boolean;
     className?: string;
@@ -40,42 +40,33 @@ export type FreelanceChatFlowProps = {
     canSubmitDelivery?: boolean;
     selectedFile: UploadedFile;
     isDeletingFile: boolean;
+    statusBeforeCancel?: StatusKey;
 } & FlowActions;
 
 const STEPS: Array<{ key: StatusKey; title: string; sub: string }> = [
     {
         key: 'QuotationPending',
         title: 'Quotation Pending',
-        sub: 'Quotation created by freelancer, waiting for employer review'
+        sub: 'Quotation created by freelancer, waiting for employer review',
     },
     {
         key: 'OrderApproved',
         title: 'Order Approved',
-        sub: 'Employer approved quotation, became an order, ready for invoice payment'
+        sub: 'Employer approved quotation, became an order, ready for invoice payment',
     },
     {
         key: 'InProgress',
         title: 'In Progress',
-        sub: 'Employer paid invoice, money in escrow, waiting for work submission'
+        sub: 'Employer paid invoice, money in escrow, waiting for work submission',
     },
     {
         key: 'PendingEmployerReview',
         title: 'Pending Employer Review',
-        sub: 'Work submitted to employer; pending employer review before payment release'
+        sub: 'Work submitted to employer; pending employer review before payment release',
     },
-    {key: 'Completed', title: 'Completed', sub: 'Employer approved work, money released to freelancer'},
-    {key: 'Cancelled', title: 'Cancelled', sub: 'Quotation/order cancelled before payment'},
+    { key: 'Completed', title: 'Completed', sub: 'Employer approved work, money released to freelancer' },
+    { key: 'Cancelled', title: 'Cancelled', sub: 'Quotation/order cancelled before payment' },
 ];
-
-// Updated DOT_COLORS: Grey by default, green for all except Cancelled (red)
-const DOT_COLORS: Record<StatusKey, string> = {
-    QuotationPending: 'bg-green-500 border-green-500',
-    OrderApproved: 'bg-green-500 border-green-500',
-    InProgress: 'bg-green-500 border-green-500',
-    PendingEmployerReview: 'bg-green-500 border-green-500',
-    Completed: 'bg-green-500 border-green-500',
-    Cancelled: 'bg-red-500 border-red-500',
-};
 
 const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  currentStatus: controlledStatus,
@@ -102,52 +93,81 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                                                  onReleasePayment,
                                                                  onCancel,
                                                                  onFileUpload,
-                                                                 onFileRemove
+                                                                 onFileRemove,
+                                                                 statusBeforeCancel,
                                                              }) => {
-
     const [showApproveConfirm, setShowApproveConfirm] = useState(false);
     const [showUploadModal, setShowUploadModal] = useState(false);
     const [showCancelConfirm, setShowCancelConfirm] = useState(false);
     const [showRevisionConfirm, setShowRevisionConfirm] = useState(false);
     const [showReleaseConfirm, setShowReleaseConfirm] = useState(false);
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const stepper = useWorkflowStepper();
     const derivedStatus = stepper?.state?.name as StatusKey | undefined;
     const isControlled = controlledStatus != null && onChangeStatus != null;
-    const currentStatus: StatusKey = (isControlled ? controlledStatus! : (derivedStatus || 'QuotationPending')) as StatusKey;
+    const currentStatus: StatusKey = (isControlled ? controlledStatus! : derivedStatus || 'QuotationPending') as StatusKey;
+    const derivedStatusBeforeCancel = stepper?.statusBeforeCancel;
+    const currentStatusBeforeCancel = isControlled ? statusBeforeCancel : derivedStatusBeforeCancel;
     const currentIndex = Math.max(0, STEPS.findIndex((s) => s.key === currentStatus));
 
     // Backward-compatible: if parent passes `started`, use it; otherwise derive from status
-    const startedEffective =
-        currentStatus === 'Completed' || currentStatus === 'Cancelled'
-            ? false
-            : (typeof started === 'boolean' ? started : true);
+    const startedEffective = currentStatus === 'Completed' || currentStatus === 'Cancelled' ? false : started;
 
     const showStartButton = Boolean(isEmployer && !startedEffective);
     const canStartWorkflow = showStartButton;
     const [showStartConfirm, setShowStartConfirm] = useState(false);
 
-    const ORDER: StatusKey[] = (stepper?.ORDER as StatusKey[]) || ['QuotationPending', 'OrderApproved', 'InProgress', 'PendingEmployerReview', 'Completed', 'Cancelled'];
+    const ORDER: StatusKey[] = (stepper?.ORDER as StatusKey[]) || [
+        'QuotationPending',
+        'OrderApproved',
+        'InProgress',
+        'PendingEmployerReview',
+        'Completed',
+        'Cancelled',
+    ];
 
-    const roleLabel = isEmployer === undefined
-        ? 'N/A'
-        : (isEmployer
-            ? (t('profileChat.roleEmployer') || 'ผู้ว่าจ้าง')
-            : (t('profileChat.roleFreelancer') || 'ฟรีแลนซ์'));
+    const roleLabel = isEmployer === undefined ? 'N/A' : isEmployer ? t('profileChat.roleEmployer') || 'ผู้ว่าจ้าง' : t('profileChat.roleFreelancer') || 'ฟรีแลนซ์';
+
+    // Log component render
+    useEffect(() => {
+        console.log('FreelanceChatFlow rendered:', { currentStatus, currentStatusBeforeCancel });
+    }, [currentStatus, currentStatusBeforeCancel]);
 
     const handleActivateStep = (toIndex: number, targetKey: StatusKey) => {
         const curIdx = currentIndex;
         const canAdjacent = toIndex === curIdx || Math.abs(toIndex - curIdx) === 1;
         if (canAdjacent) {
+            console.log('handleActivateStep:', { targetKey, fromStatus: currentStatus, canAdjacent });
             if (isControlled) {
                 onChangeStatus?.(targetKey);
             } else if (stepper && stepper.canGo(targetKey)) {
                 const fromOrderIdx = ORDER.indexOf(currentStatus);
                 const toOrderIdx = ORDER.indexOf(targetKey);
-                if (toOrderIdx > fromOrderIdx) stepper.send({type: 'NEXT'});
-                if (toOrderIdx < fromOrderIdx) stepper.send({type: 'BACK'});
+                if (toOrderIdx > fromOrderIdx) stepper.send({ type: 'NEXT' });
+                if (toOrderIdx < fromOrderIdx) stepper.send({ type: 'BACK' });
             }
         }
+    };
+
+    // Determine dot colors based on currentStatus and statusBeforeCancel
+    const getDotColor = (stepKey: StatusKey, index: number) => {
+        if (currentStatus === 'Cancelled' && currentStatusBeforeCancel) {
+            const beforeCancelIndex = STEPS.findIndex((s) => s.key === currentStatusBeforeCancel);
+            if (stepKey === 'Cancelled') {
+                return 'bg-red-500 border-red-500 text-white';
+            }
+            if (index < beforeCancelIndex) {
+                return 'bg-green-500 border-green-500 text-white';
+            }
+            return 'bg-gray-500 border-gray-500 text-white';
+        }
+        // Default behavior for non-cancelled states
+        const isFuture = index > currentIndex;
+        return isFuture
+            ? 'bg-gray-500 border-gray-500 text-white'
+            : stepKey === 'Cancelled'
+                ? 'bg-red-500 border-red-500 text-white'
+                : 'bg-green-500 border-green-500 text-white';
     };
 
     // Action buttons for each step
@@ -167,9 +187,10 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
             </button>
         );
 
-        const cancelBtn = stepper?.canCancel && key !== 'Completed' && key !== 'Cancelled'
-            ? btn(t('profileChat.cancelJob') || 'ยกเลิกงาน', () => setShowCancelConfirm(true), 'ghost')
-            : null;
+        const cancelBtn =
+            stepper?.canCancel && key !== 'Completed' && key !== 'Cancelled'
+                ? btn(t('profileChat.cancelJob') || 'ยกเลิกงาน', () => setShowCancelConfirm(true), 'ghost')
+                : null;
 
         switch (key) {
             case 'QuotationPending': {
@@ -181,8 +202,10 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                         actions.push(btn(t('profileChat.proposeQuote') || 'Send quotation', onProposeQuote));
                     } else {
                         actions.push(
-                            <div key="wait-approval"
-                                 className="w-full text-xs text-gray-600 bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2">
+                            <div
+                                key="wait-approval"
+                                className="w-full text-xs text-gray-600 bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2"
+                            >
                                 {t('profileChat.waitEmployerApproval') || 'Waiting for employer to approve your quotation'}
                             </div>
                         );
@@ -191,14 +214,16 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     // Employer
                     if (insufficientForApprove) {
                         actions.push(
-                            <div key="insufficient"
-                                 className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm">
-                                <div
-                                    className="font-medium">{t('profileChat.insufficientBalanceTitle') || 'Insufficient balance'}</div>
+                            <div
+                                key="insufficient"
+                                className="mb-3 sm:mb-4 p-2 sm:p-3 rounded-md bg-red-50 border border-red-200 text-red-800 text-xs sm:text-sm"
+                            >
+                                <div className="font-medium">{t('profileChat.insufficientBalanceTitle') || 'Insufficient balance'}</div>
                                 <div className="mt-1">
-                                    {(t('profileChat.insufficientBalanceWarning') || 'Insufficient balance to approve the quotation.')}{" "}
-                                    <Link href="/coin"
-                                          className="underline font-medium">{t('profileChat.topUpNow') || 'Top up now'}</Link>
+                                    {(t('profileChat.insufficientBalanceWarning') || 'Insufficient balance to approve the quotation.')}{' '}
+                                    <Link href="/coin" className="underline font-medium">
+                                        {t('profileChat.topUpNow') || 'Top up now'}
+                                    </Link>
                                 </div>
                             </div>
                         );
@@ -223,21 +248,17 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
             case 'InProgress': {
                 if (isEmployer) {
                     return [
-                        <div key="wait-freelancer"
-                             className="w-full text-xs text-gray-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2">
+                        <div
+                            key="wait-freelancer"
+                            className="w-full text-xs text-gray-600 bg-blue-50 border border-blue-200 rounded-md px-3 py-2"
+                        >
                             {t('profileChat.waitForFreelancerSubmit') || 'Waiting for the freelancer to submit their work.'}
                         </div>,
                         ...(cancelBtn ? [cancelBtn] : []),
                     ];
                 }
                 const actions: React.ReactElement[] = [];
-                actions.push(
-                    btn(
-                        t('profileChat.submitDelivery') || 'ส่งงาน',
-                        () => setShowUploadModal(true),
-                        'ghost'
-                    )
-                );
+                actions.push(btn(t('profileChat.submitDelivery') || 'ส่งงาน', () => setShowUploadModal(true), 'ghost'));
                 if (cancelBtn) actions.push(cancelBtn);
                 return actions.filter(Boolean) as React.ReactElement[];
             }
@@ -251,8 +272,10 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     ];
                 }
                 return [
-                    <div key="wait-employer"
-                         className="w-full text-xs text-gray-600 bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2">
+                    <div
+                        key="wait-employer"
+                        className="w-full text-xs text-gray-600 bg-yellow-50 border border-yellow-200 rounded-md px-3 py-2"
+                    >
                         {t('profileChat.waitForEmployerReview') || 'Your delivery was submitted. Waiting for employer review.'}
                     </div>,
                     ...(cancelBtn ? [cancelBtn] : []),
@@ -266,7 +289,6 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
         }
     };
 
-
     return (
         <aside
             className={`flex w-full h-full bg-white shadow-sm rounded-lg overflow-auto ${
@@ -276,46 +298,36 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
         >
             {roleLabel && (
                 <div className="w-full px-4 pt-4">
-                    <div
-                        className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1">
+                    <div className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1">
                         {roleLabel}
                     </div>
                 </div>
             )}
             {currentStatus === 'Completed' && (
                 <div className="w-full px-4">
-                    <div
-                        className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1">
-                        If you want to hire this person again. click
+                    <div className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1">
+                        If you want to hire this person again, click
                     </div>
                 </div>
-            )
-            }
+            )}
             {showStartButton && (
-
                 <div className="w-full px-4">
-                  <button
-                    className={`rounded-md px-4 py-2 text-sm font-medium ${canStartWorkflow ? 'bg-primary text-white hover:bg-[#063a68]' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
-                    onClick={canStartWorkflow ? (() => setShowStartConfirm(true)) : undefined}
-                    aria-disabled={!canStartWorkflow}
-                    disabled={!canStartWorkflow}
-                  >
-
-                    {t('profileChat.startWorkflow') || 'Start a new job'}
-                  </button>
+                    <button
+                        className={`rounded-md px-4 py-2 text-sm font-medium ${
+                            canStartWorkflow ? 'bg-primary text-white hover:bg-[#063a68]' : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                        }`}
+                        onClick={canStartWorkflow ? () => setShowStartConfirm(true) : undefined}
+                        aria-disabled={!canStartWorkflow}
+                        disabled={!canStartWorkflow}
+                    >
+                        {t('profileChat.startWorkflow') || 'Start a new job'}
+                    </button>
                 </div>
             )}
-            <ul
-                className={`flex ${
-                    orientation === 'horizontal' ? 'flex-row flex-wrap gap-4' : 'flex-col'
-                } px-4 ${compact ? 'py-2' : 'py-4'}`}
-            >
+            <ul className={`flex ${orientation === 'horizontal' ? 'flex-row flex-wrap gap-4' : 'flex-col'} px-4 ${compact ? 'py-2' : 'py-4'}`}>
                 {STEPS.map((step, index) => {
                     const isActive = step.key === currentStatus;
-                    const isFuture = index > currentIndex;
-
-                    // Set dot background and text color based on status
-                    const dotColor = isFuture ? 'bg-gray-500 border-gray-500 text-white' : DOT_COLORS[step.key];
+                    const dotColor = getDotColor(step.key, index);
 
                     return (
                         <li
@@ -323,7 +335,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                             className={`flex items-center text-gray-600 ${
                                 orientation === 'horizontal' ? 'min-w-[200px] max-w-[250px]' : 'w-full'
                             } ${compact ? 'py-1' : 'py-2'} ${
-                                isActive ? 'font-semibold text-primary' : isFuture ? 'opacity-50 pointer-events-none' : ''
+                                isActive ? 'font-semibold text-primary' : index > currentIndex ? 'opacity-50 pointer-events-none' : ''
                             } hover:bg-gray-50 cursor-pointer transition-colors rounded-md px-2`}
                             onClick={() => handleActivateStep(index, step.key)}
                             role="button"
@@ -343,13 +355,9 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                                 {index + 1}
                             </div>
                             <div className="flex flex-col min-w-0">
-                                <span className="text-sm font-medium truncate">
-                                    {t(`profileChat.step${index + 1}`) || step.title}
-                                </span>
+                                <span className="text-sm font-medium truncate">{t(`profileChat.step${index + 1}`) || step.title}</span>
                                 {!compact && (
-                                    <span className="text-xs text-gray-500 line-clamp-2">
-                                        {t(`profileChat.step${index + 1}Sub`) || step.sub}
-                                    </span>
+                                    <span className="text-xs text-gray-500 line-clamp-2">{t(`profileChat.step${index + 1}Sub`) || step.sub}</span>
                                 )}
                             </div>
                         </li>
@@ -357,8 +365,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 })}
             </ul>
             {currentStatus === 'QuotationPending' && isEmployer && !canProposeQuote && !canApproveQuotation && (
-                <div
-                    className="mx-4 -mt-2 mb-2 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
+                <div className="mx-4 -mt-2 mb-2 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
                     {t('profileChat.waitForFreelancerQuotation') || 'Waiting for freelancer to send a quotation.'}
                 </div>
             )}
@@ -373,8 +380,8 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 isOpen={showStartConfirm}
                 onClose={() => setShowStartConfirm(false)}
                 onConfirm={() => {
-                  setShowStartConfirm(false);
-                  onStart?.();
+                    setShowStartConfirm(false);
+                    onStart?.();
                 }}
                 title={t('profileChat.confirmStartWorkflowTitle') || 'ต้องการจ้างงาน?'}
                 message={t('profileChat.confirmStartWorkflowMessage') || 'ระบบจะเริ่มขั้นตอนงานสำหรับการสนทนานี้'}
@@ -387,7 +394,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     onApproveQuotation?.();
                 }}
                 title={t('profileChat.confirmApproveQuotationTitle') || 'Approve quotation?'}
-                message={t('profileChat.confirmApproveQuotationMessage') || 'This will approve the freelancer\'s quotation and convert it into an order.'}
+                message={t('profileChat.confirmApproveQuotationMessage') || "This will approve the freelancer's quotation and convert it into an order."}
                 confirmText={t('profileChat.approveQuotation') || 'Approve quotation'}
             />
             <ConfirmActionModal
@@ -406,10 +413,12 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 onClose={() => setShowCancelConfirm(false)}
                 onConfirm={async () => {
                     setShowCancelConfirm(false);
-                    if (onCancel) {
-                        onCancel();
-                    } else if (stepper?.cancel) {
-                        stepper.cancel();
+                    console.log('FreelanceChatFlow onCancel:', { currentStatus, currentStatusBeforeCancel });
+                    if (isControlled) {
+                        onChangeStatus?.('Cancelled', currentStatus);
+                        onCancel?.(currentStatus);
+                    } else {
+                        stepper?.cancel();
                     }
                 }}
                 title={t('profileChat.confirmCancelJobTitle') || 'Cancel this job?'}
@@ -433,7 +442,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     setShowUploadModal(false);
                 }}
                 onSubmit={async () => {
-                    setShowRevisionConfirm(false);
+                    setShowUploadModal(false);
                     onSubmitDelivery?.();
                 }}
                 selectedFile={selectedFile}

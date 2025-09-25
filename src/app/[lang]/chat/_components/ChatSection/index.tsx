@@ -203,22 +203,21 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }, [roomId, setActiveRoomId, markRoomRead]);
 
     const currentStatus = useStateMachineStore((s) => s.state);
+    const statusBeforeCancel = useStateMachineStore((s) => s.statusBeforeCancel);
 
-    // Define setWorkflowState reactively
-    const setWorkflowState = (key: StatusKey, isClientUpdate = true) => {  // Add optional flag
+    const setWorkflowState = (key: StatusKey, statusBeforeCancel?: StatusKey, isClientUpdate = true) => {
+        console.log('setWorkflowState:', { key, statusBeforeCancel, currentStatus, isClientUpdate });
         useStateMachineStore.setState({
             state: key,
             stepIndex: ORDER.indexOf(key),
+            statusBeforeCancel: key === 'Cancelled' ? (statusBeforeCancel ?? currentStatus) : undefined,
         });
         if (isClientUpdate) {
-            lastClientUpdateRef.current = {status: key, timestamp: Date.now()};
+            lastClientUpdateRef.current = { status: key, timestamp: Date.now() };
         }
     };
-    const {
-        tryUpdateStatusFromItems,
-        goToStatus,
-        handleChangeStatus
-    } = useWorkflowStatus({
+
+    const { tryUpdateStatusFromItems, goToStatus, handleChangeStatus } = useWorkflowStatus({
         currentStatus,
         setWorkflowState,
         hasStarted,
@@ -226,33 +225,42 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         ORDER,
         send,
         canGo,
+        statusBeforeCancel,
     });
 
     useEffect(() => {
         const rd: any = currentRoom as any;
         if (!rd) return;
-        const apiStatusRaw = rd?.room?.workflow?.status ?? rd?.workflow?.status ?? rd?.room?.status ?? rd?.status ?? rd?.room?.workflowStatus ?? rd?.workflowStatus;
+        const apiStatusRaw = rd?.workflow?.status;
+        const apiStatusBeforeCancelRaw = rd?.workflow?.statusBeforeCancel;
         if (typeof apiStatusRaw === 'string') {
             const uiStatus = apiToUiStatus(apiStatusRaw as any);
+            const uiStatusBeforeCancel = apiStatusBeforeCancelRaw
+                ? apiToUiStatus(apiStatusBeforeCancelRaw as any)
+                : undefined;
             if (uiStatus) {
                 const now = Date.now();
                 const recentClientUpdate = lastClientUpdateRef.current;
                 const gracePeriodMs = 5000;
                 if (
-                    recentClientUpdate.status &&
+                    recentClientUpdate?.status &&
                     recentClientUpdate.status !== uiStatus &&
                     now - recentClientUpdate.timestamp < gracePeriodMs
                 ) {
+                    console.log('useEffect: Skipping server update due to recent client update', {
+                        uiStatus,
+                        recentClientUpdate,
+                    });
                     return;
                 }
                 const shouldBeStarted = uiStatus !== 'Completed' && uiStatus !== 'Cancelled';
                 setHasStarted(shouldBeStarted);
-                if (uiStatus !== currentStatus) {
-                    setWorkflowState(uiStatus as StatusKey, false);
+                if (uiStatus !== currentStatus || uiStatusBeforeCancel !== statusBeforeCancel) {
+                    setWorkflowState(uiStatus as StatusKey, uiStatusBeforeCancel as StatusKey | undefined, false);
                 }
             }
         }
-    }, [currentRoom, currentStatus, hasStarted]);
+    }, [currentRoom, currentStatus, statusBeforeCancel, setHasStarted]);
 
 
     const {execute: createInvoice} = useHttpPost("createInvoice");
@@ -490,6 +498,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     selectedFile={selectedFile}
                     isDeletingFile={isDeletingFile}
                     onFileRemove={handleRemoveSelectedFile}
+                    statusBeforeCancel={statusBeforeCancel}
                 />
             )}
         </>

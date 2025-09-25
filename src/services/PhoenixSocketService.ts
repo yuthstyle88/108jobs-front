@@ -38,7 +38,6 @@ class PhoenixChannelHub {
       sock = new PhoenixSocket(url, { params: { token } } as any);
       sock.connect();
       this.socketByToken.set(token, sock);
-      if (DEV) console.log("[phoenix] socket.connect", { url });
     }
     return sock;
   }
@@ -113,7 +112,6 @@ export function getChannelAdapter(token: string, roomId: string): RealtimeChanne
     try {
       ch.join()
         .receive("ok", () => {
-          if (DEV) console.log("[phoenix] join ok", { topic: topicLabel });
           if (readyState === 0) { readyState = 1; adapter.onopen?.(); }
         })
         .receive("error", (e: any) => {
@@ -143,7 +141,7 @@ export function getChannelAdapter(token: string, roomId: string): RealtimeChanne
   try {
     const orig = (channel as any).onMessage?.bind(channel);
     (channel as any).onMessage = (event: string, payload: any, ref: any) => {
-      if (DEV) console.log("[phoenix] onMessage", { event, ref });
+      // if (DEV) console.log("[phoenix] onMessage", { event, ref });
       forward(event, primaryTopic, payload);
       return orig ? orig(event, payload, ref) : payload;
     };
@@ -153,7 +151,6 @@ export function getChannelAdapter(token: string, roomId: string): RealtimeChanne
   try {
     const origA = (aliasChannel as any).onMessage?.bind(aliasChannel);
     (aliasChannel as any).onMessage = (event: string, payload: any, ref: any) => {
-      if (DEV) console.log("[phoenix][alias] onMessage", { event, ref });
       forward(event, aliasTopic, payload);
       return origA ? origA(event, payload, ref) : payload;
     };
@@ -174,6 +171,5 @@ export function getChannelAdapter(token: string, roomId: string): RealtimeChanne
   try { ((channel as any).socket as any)?.onError?.((e: any) => { if (DEV) console.log("[phoenix] socket error", e); adapter.onerror?.(e); }); } catch {}
   try { ((channel as any).socket as any)?.onClose?.(() => { if (readyState !== 3) { readyState = 3; adapter.onclose?.({ code: 1006, reason: "socket closed" }); } }); } catch {}
 
-  if (DEV) console.log("[phoenix] adapter ready", { roomId, primaryTopic, aliasTopic });
   return adapter;
 }

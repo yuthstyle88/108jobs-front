@@ -1,9 +1,9 @@
 import type { WorkflowId } from "./WorkflowId";
-import type { CommentId } from "./CommentId";
+import {ChatRoomId} from "./ChatRoomId";
 
 // Matches backend ApproveWorkForm with camelCase fields
 export type ApproveWorkForm = {
-  seqNumber: number; // i16 backend
+  seqNumber: number;
   workflowId: WorkflowId;
-  commentId: CommentId;
+  roomId: ChatRoomId;
 };

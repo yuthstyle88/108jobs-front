@@ -33,7 +33,7 @@ async function mapIncomingToChatMessage(
 ): Promise<ChatMessage | null> {
     try {
         try {
-            console.log('[CHAT][MAP] mapIncomingToChatMessage', m);
+            // console.log('[CHAT][MAP] mapIncomingToChatMessage', m);
             if (m.content == "{}") return null;
         } catch {
         }
@@ -247,10 +247,6 @@ async function handleIncomingPayload(
 
     // Flat ChatMessage line: { id?, room_id/roomId/topic, sender_id/senderId, content, created_at?/createdAt? }
     if (payload && typeof payload === 'object' && Object.prototype.hasOwnProperty.call(payload, 'content')) {
-        try {
-            console.log('[RT] flat message detected', payload);
-        } catch {}
-
         const m = (() => {
             const p: any = payload;
             const topic = typeof p.topic === 'string' ? p.topic.replace(/^room:/, '') : undefined;
@@ -292,7 +288,7 @@ async function handleIncomingPayload(
             try { console.log('[RT] mapped flat message', mapped); } catch {}
             transformedItems.push(mapped);
         } else {
-            try { console.warn('[RT] flat message dropped (duplicate/invalid)', m); } catch {}
+            // try { console.warn('[RT] flat message dropped (duplicate/invalid)', m); } catch {}
         }
         return transformedItems;
     }
@@ -490,12 +486,6 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
             };
 
             const handleWSMessage = async (event: any) => {
-
-                try {
-                    console.log('[RT] onmessage ', event);
-                } catch {
-                }
-
                 try {
                     console.debug('[WS RAW]', event.data);
                     const token = UserService.Instance.auth();
@@ -592,10 +582,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                     for (const {fn} of listeners.values()) fn(event);
                 }
             };
-            try {
-                console.log('[WS] installing handlers for onmessage');
-            } catch {
-            }
+
             try {
                 newSocket.onmessage = handleWSMessage;
                 console.log('[WS] onmessage property installed');
