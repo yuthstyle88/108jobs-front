@@ -268,6 +268,7 @@ import type {GetBillingByRoomQueryI} from "./other_types";
 import type { ScbTokenResponse } from "./types/ScbTokenResponse";
 import type { ScbQrCodeRequest, ScbQrCodeResponse } from "./types/ScbQrCode";
 import type { ScbQrInquiryRequest, ScbQrInquiryResponse } from "./types/ScbQrInquiry";
+import {BillingId} from "./types/BillingId";
 
 enum HttpType {
     Get = "GET",
@@ -3095,6 +3096,24 @@ export class LemmyHttp extends Controller {
             HttpType.Get,
             "/account/services/billing/by-room",
             form,
+            options,
+        );
+    }
+
+    /**
+     * @summary Get a Billing by ID.
+     */
+    @Security("bearerAuth")
+    @Get("/account/services/billing/{id}")
+    @Tags("Chat", "Billing")
+    async getBillingById(
+        @Path() id: BillingId,
+        @Inject() options?: RequestOptions,
+    ) {
+        return this.#wrapper<object, Billing>(
+            HttpType.Get,
+            `/account/services/billing/${id}`,
+            {},
             options,
         );
     }

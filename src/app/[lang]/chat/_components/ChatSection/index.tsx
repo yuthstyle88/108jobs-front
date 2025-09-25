@@ -81,9 +81,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const handleReload = () => {
-        window.location.reload(); // TODO: temporary fix for chat room not refreshing for new
-    };
     const {
         selectedFile,
         setSelectedFile,
@@ -328,7 +325,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         walletId: wallet?.id,
         currentStatus,
         setHasProposedQuote,
-        handleReload,
     });
 
     const onSubmit = useCallback(
@@ -436,7 +432,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             setHasProposedQuote(
                 calculatedProposedQuote
             );
-            handleReload();
         }
     }, [currentRoom.workflow, calculatedProposedQuote]);
 

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { REQUEST_STATE, HttpService } from '@/services/HttpService';
 import { useWorkflowId } from '@/hooks/chat/useWorkflowId';
@@ -48,7 +48,6 @@ export type UseWorkflowActionsDeps = {
     walletId?: number | null;
     currentStatus: StatusKey;
     setHasProposedQuote: (v: boolean) => void;
-    handleReload: () => void;
 };
 
 export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
@@ -79,11 +78,20 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
         walletId,
         currentStatus,
         setHasProposedQuote,
-        handleReload,
     } = deps;
 
     // Use the new workflow id hook which hydrates from room payload
-    const { workflowId } = useWorkflowId(roomId, roomData);
+    const { workflowId: hydrated } = useWorkflowId(roomId, roomData);
+    const [workflowId, setWorkflowId] = useState<number | null>(hydrated ?? null);
+    // billingId is created after quotation; start as null and resolve later
+    const [billingId, setBillingId] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (hydrated && hydrated !== workflowId) {
+            setWorkflowId(hydrated);
+            try { console.debug('[WF][hydrate] set from payload:', hydrated); } catch {}
+        }
+    }, [hydrated, workflowId]);
 
     // Helper function to validate workflow ID
     const validateWorkflowId = useCallback((caller?: string): number | null => {
@@ -98,6 +106,36 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
         return workflowId;
     }, [workflowId, setError, t]);
 
+    // Resolve billing id from latest structured message or API as fallback
+    const resolveBillingId = useCallback(async (): Promise<number | null> => {
+      // Try state first
+      if (billingId && !Number.isNaN(billingId)) return billingId;
+
+      // Try latest structured payload in messages
+      try {
+        const latestPayload: any = getLatestProposedQuotePayload(messages as any);
+        const fromMsg = Number(latestPayload?.billingId);
+        if (fromMsg && !Number.isNaN(fromMsg)) {
+          setBillingId(fromMsg);
+          return fromMsg;
+        }
+      } catch {}
+
+      // Fallback: ask server by room
+      try {
+        const res = await HttpService.client.getBillingByRoom({ roomId });
+        if (res?.state === REQUEST_STATE.SUCCESS && (res as any)?.data) {
+          const b = Number((res as any).data?.id);
+          if (b && !Number.isNaN(b)) {
+            setBillingId(b);
+            return b;
+          }
+        }
+      } catch {}
+
+      return null;
+    }, [billingId, messages, roomId]);
+
     const startWorkflowAction = useCallback(async () => {
         setError(null);
         try {
@@ -109,10 +147,13 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             const seqNumber = 1;
             const res = await startWorkflow({ postId: pid, seqNumber, roomId });
             if (res?.state === REQUEST_STATE.SUCCESS && res?.data?.success) {
-                handleReload();
                 setHasStarted(true);
                 const wfId = Number(res?.data?.workflowId);
-                if (wfId) setWorkflowIdState(wfId);
+                if (wfId) {
+                    setWorkflowIdState(wfId);
+                    setWorkflowId(wfId); // keep local state in sync so validateWorkflowId() succeeds immediately
+                    try { console.debug('[WF][start] server workflowId:', wfId); } catch {}
+                }
                 const readable = t('profileChat.proposeQuoteMsg');
                 const payload = { type: 'employer-started' } as any;
                 const sentId = await sendStructuredMessage(sendMessage, roomId, payload, {
@@ -164,7 +205,9 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 setError(t('profileChat.quotationError') || 'Failed to create invoice. Please try again.');
                 return false;
             }
+
             const createdBillingId = res?.data?.billingId;
+            setBillingId(createdBillingId);
 
             const readable = t('profileChat.proposeQuoteMsg') || `Proposed quotation: ${data.projectName} - $${Number(data.amount).toFixed(2)}`;
             const payload = { type: 'proposed-quote', quote: data, billingId: createdBillingId } as any;
@@ -175,7 +218,6 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             });
             addOwnMessage(JSON.stringify(payload), sentId);
             setHasProposedQuote(true);
-            handleReload();
             goToStatus?.('QuotationPending');
             setShowQuotationModal(false);
             return true;
@@ -191,7 +233,6 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             // Resolve billing id
             const latestPayload: any = getLatestProposedQuotePayload(messages as any);
             let billingId: number | undefined = latestPayload?.billingId;
-
             if (!billingId) {
                 try {
                     const res = await HttpService.client.getBillingByRoom({ roomId });
@@ -368,7 +409,12 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             if (!workflowId) return false;
 
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
-            const form: any = { seqNumber, workflowId, roomId };
+            const bid = await resolveBillingId();
+            if (!bid) {
+              setError(t('profileChat.quotationError') || 'Missing billing information for approval.');
+              return false;
+            }
+            const form: any = { seqNumber, workflowId, roomId, billingId: bid };
             const res = await approveWorkApi(form as any);
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean(res?.data?.success);
             if (!ok) {
@@ -383,13 +429,14 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             });
             addOwnMessage(JSON.stringify(payload), sentId);
             goToStatus?.('Completed');
+            setHasStarted(false);
             return true;
         } catch (e: any) {
             const msg = e instanceof Error ? e.message : 'Unknown error';
             setError(msg);
             return false;
         }
-    }, [canSend, disabledReason, messages, roomData, workflowIdState, approveWorkApi, t, roomId, localUser?.id, sendMessage, addOwnMessage, goToStatus, validateWorkflowId]);
+    }, [canSend, disabledReason, messages, roomData, workflowIdState, approveWorkApi, t, roomId, localUser?.id, sendMessage, addOwnMessage, goToStatus, validateWorkflowId, setHasStarted, billingId, resolveBillingId]);
 
     const cancelJob = useCallback(async () => {
         try {
@@ -414,8 +461,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 senderId: Number(localUser?.id) || 0,
                 previewText: readable,
             });
-            console.log('cancelJob: Triggering goToStatus', { currentStatus, target: 'Cancelled' });
-            goToStatus('Cancelled', currentStatus);
+            goToStatus?.('Cancelled');
             return true;
         } catch (e: any) {
             const msg = e instanceof Error ? e.message : 'Unknown error';
