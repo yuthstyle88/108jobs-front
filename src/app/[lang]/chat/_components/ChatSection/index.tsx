@@ -39,7 +39,7 @@ interface ChatSectionProps {
     partnerAvatar: string;
     partnerId?: number;
     partnerAvailable?: boolean;
-    currentRoom: any;
+    roomData: any;
 }
 
 const ChatSection: React.FC<ChatSectionProps> = ({
@@ -48,7 +48,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                                      partnerAvatar,
                                                      partnerId,
                                                      partnerAvailable,
-                                                     currentRoom
+                                                     roomData
                                                  }) => {
     const {t} = useTranslation();
     const {localUser, person, wallet} = useMyUser();
@@ -64,7 +64,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         senderId: number;
         timestamp: string
     } | null>(null);
-    const roomId = currentRoom.room.room.id;
+    const roomId = roomData.room.room.id;
     const {markRoomRead, setActiveRoomId} = useChatRooms();
     const {send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
@@ -73,7 +73,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
     const [workflowIdState, setWorkflowIdState] = useState<number | null>(null);
-    const [hasProposedQuote, setHasProposedQuote] = useState<boolean>(currentRoom.workflow?.hasProposedQuote || false);
+    const [hasProposedQuote, setHasProposedQuote] = useState<boolean>(roomData.workflow?.hasProposedQuote || false);
+    const [currentRoom, setCurrentRoom] = useState<any>(roomData);
     const [messages, setMessages] = useState<UIChatMessage[]>([]);
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
@@ -148,7 +149,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    const {sendMessage, sendTyping, fetchHistory, isConnected, hasMoreMessages, isFetching} = useWebSocket(
+    const {sendMessage, sendTyping, sendRoomUpdate, fetchHistory, isConnected, hasMoreMessages, isFetching, refreshRoomData} = useWebSocket(
         `chat-view:${roomId}`,
         (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) =>
             createChatRealtimeHandler({
@@ -164,11 +165,16 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             })(event)
     );
 
+    console.log("render: ChatSection", refreshRoomData)
+
     // After commit, propagate the last incoming message to ChatRooms context and auto-scroll for receiver
     useEffect(() => {
         if (isFetching) return; // suppress global updates while fetching history
         const d = latestIncomingRef.current;
         if (!d) return;
+        if (refreshRoomData) {
+            setCurrentRoom(refreshRoomData);
+        }
         try {
             // Auto-scroll to the latest when receiving a new message (receiver experience)
             if (d.senderId !== Number(localUser?.id)) {
@@ -309,6 +315,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         t: (k: string) => t(k) || k,
         addOwnMessage,
         sendMessage,
+        sendRoomUpdate,
         goToStatus,
         setHasStarted,
         setWorkflowIdState,
@@ -450,8 +457,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const insufficientForApprove = useMemo(() => {
         return Boolean(isEmployer && hasProposedQuote && latestQuoteAmount != null && availableBalance < (latestQuoteAmount as number));
     }, [isEmployer, hasProposedQuote, latestQuoteAmount, availableBalance]);
-
-    console.log('insufficientForApprove:', latestQuoteAmount);
 
     // Wrap approveQuotation with additional balance guard to keep identical behavior
     const approveQuotationWrapped = React.useCallback(async (): Promise<boolean> => {

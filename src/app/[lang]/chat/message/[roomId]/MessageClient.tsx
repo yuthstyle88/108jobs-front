@@ -155,7 +155,7 @@ export default function MessageClient({ roomId }: { roomId: string }) {
                 partnerAvatar=""
                 partnerId={state.partnerId}
                 partnerAvailable={state.partnerAvailable}
-                currentRoom={state.currentRoom}
+                roomData={state.currentRoom}
             />
         </PhoenixSocketProvider>
     );

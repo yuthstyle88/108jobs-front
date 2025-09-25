@@ -103,6 +103,8 @@ interface WebSocketContextValue {
     sendMessage: (data: MessagePayload) => void;
     /** Notify others that the local user is typing or stopped typing. */
     sendTyping?: (isTyping: boolean) => void;
+    /** Notify others need room update to fetch new. */
+    sendRoomUpdate: (roomId: string, update: Record<string, any>) => void;
     /** Request next page of history over the socket if supported. */
     fetchHistory: () => Promise<void>;
     /** True if WebSocket is open and ready. */
@@ -113,6 +115,7 @@ interface WebSocketContextValue {
     hasMoreMessages: boolean;
     /** True when a history fetch is in-flight. */
     isFetching: boolean;
+    refreshRoomData: any;
 }
 
 const WebSocketContext = createContext<WebSocketContextValue | undefined>(undefined);
@@ -250,7 +253,7 @@ async function handleIncomingPayload(
         const m = (() => {
             const p: any = payload;
             const topic = typeof p.topic === 'string' ? p.topic.replace(/^room:/, '') : undefined;
-            return { ...p, room_id: p.room_id ?? p.roomId ?? topic };
+            return {...p, room_id: p.room_id ?? p.roomId ?? topic};
         })();
 
         // Guard: some backends send typing as JSON string in content
@@ -268,13 +271,14 @@ async function handleIncomingPayload(
                     // never show typing to the typist
                     if (senderIdNum !== Number(ctx.localUserId)) {
                         if (typeof window !== 'undefined') {
-                            window.dispatchEvent(new CustomEvent('chat:typing', { detail: info }));
+                            window.dispatchEvent(new CustomEvent('chat:typing', {detail: info}));
                         }
                     }
                     return [];
                 }
             }
-        } catch {}
+        } catch {
+        }
 
         const mapped = await mapIncomingToChatMessage(m, {
             token: ctx.token,
@@ -285,7 +289,10 @@ async function handleIncomingPayload(
             decryptLabel: 'flat message line',
         });
         if (mapped) {
-            try { console.log('[RT] mapped flat message', mapped); } catch {}
+            try {
+                console.log('[RT] mapped flat message', mapped);
+            } catch {
+            }
             transformedItems.push(mapped);
         } else {
             // try { console.warn('[RT] flat message dropped (duplicate/invalid)', m); } catch {}
@@ -379,7 +386,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
     const router = useRouter();
     const {localUser} = useMyUser();
     const isE2EMock = process.env.NEXT_PUBLIC_E2E_MODE === "mock";
-
+    const [refreshRoomData, setRefreshRoomData] = useState<any>(null);
     const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const isManuallyClosingRef = useRef(false);
     const [connectionAttemptKey, setConnectionAttemptKey] = useState(0);
@@ -487,14 +494,31 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
 
             const handleWSMessage = async (event: any) => {
                 try {
-                    console.debug('[WS RAW]', event.data);
                     const token = UserService.Instance.auth();
                     const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
                     let payload: any = unwrapPhoenixFrame(event);
-                    console.debug('[WS UNWRAP]', payload);
 
                     if (!isValidIncomingChatPayload(payload)) {
                         console.debug('onmessage: payload not passing strict validator, attempting permissive mapping...', payload);
+                    }
+
+                    console.log("update room outside: ", payload.content)
+                    if (payload && typeof payload === "object" && payload.content.includes("status-change")) {
+                        const {room_id} = payload as any;
+
+                        console.log("[RT] room update received → fetching fresh room data", room_id);
+
+                        try {
+                            const chatRoomRes = await HttpService.client.getChatRoom(roomId);
+                            console.log("event to be chatRoomRes here: ", chatRoomRes)
+                            if (chatRoomRes.state === REQUEST_STATE.SUCCESS) {
+                                setRefreshRoomData(chatRoomRes.data);
+                            }
+                        } catch (err) {
+                            console.error("Error fetching room:", err);
+                        }
+
+                        return [];
                     }
 
                     // Normalize to detect typing events from Phoenix envelopes
@@ -508,7 +532,8 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                             const topic = typeof p.topic === 'string' ? p.topic.replace(/^room:/, '') : p.topic;
                             env = {event: p.event, topic, ...(p.payload || {})};
                         }
-                    } catch {}
+                    } catch {
+                    }
 
                     // Broadcast typing notifications to listeners (but never to the typist themselves)
                     try {
@@ -528,12 +553,14 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                                 // Route typing via a dedicated DOM event so it doesn't render as a message bubble
                                 try {
                                     if (typeof window !== 'undefined') {
-                                        window.dispatchEvent(new CustomEvent('chat:typing', { detail: info }));
+                                        window.dispatchEvent(new CustomEvent('chat:typing', {detail: info}));
                                     }
-                                } catch {}
+                                } catch {
+                                }
                             }
                         }
-                    } catch {}
+                    } catch {
+                    }
 
                     const msgs = await handleIncomingPayload(payload, {
                         roomId,
@@ -815,8 +842,13 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                 socket.send(JSON.stringify(payload));
                 // best-effort: stop typing after sending a message
                 try {
-                    (socket as any)?.emit?.('typing:stop', { room_id: roomId, sender_id: Number(localUser?.id) || 0, typing: false });
-                } catch {}
+                    (socket as any)?.emit?.('typing:stop', {
+                        room_id: roomId,
+                        sender_id: Number(localUser?.id) || 0,
+                        typing: false
+                    });
+                } catch {
+                }
                 lastTypedSentRef.current = false;
             } else {
                 console.warn(`sendMessage: WebSocket not ready, state: ${socket?.readyState}`);
@@ -833,15 +865,49 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                 return;
             }
             lastTypedSentRef.current = isTyping;
-            const payload = { room_id: roomId, sender_id: Number(localUser?.id) || 0, typing: isTyping } as any;
+            const payload = {room_id: roomId, sender_id: Number(localUser?.id) || 0, typing: isTyping} as any;
             (socket as any)?.emit?.('typing', payload);
             (socket as any)?.emit?.(isTyping ? 'typing:start' : 'typing:stop', payload);
-        } catch {}
+        } catch {
+        }
     }, [socket, roomId, localUser?.id, isE2EMock]);
+
+    const sendRoomUpdate = useCallback(
+        (roomId: string, update: Record<string, any>) => {
+            try {
+                if (isE2EMock) {
+                    // In mock mode, do not broadcast over socket
+                    console.debug('Mock room update:', {roomId, ...update});
+                    return;
+                }
+
+                const payload = {
+                    room_id: roomId,
+                    sender_id: Number(localUser?.id) || 0,
+                    ...update,
+                };
+
+                (socket as any)?.emit?.('room:update', payload);
+            } catch (err) {
+                console.error('Failed to send room update', err);
+            }
+        },
+        [socket, localUser?.id, isE2EMock]
+    );
 
     return (
         <WebSocketContext.Provider
-            value={{sendMessage, sendTyping, fetchHistory, isConnected, roomId, hasMoreMessages, isFetching}}>
+            value={{
+                sendMessage,
+                sendTyping,
+                sendRoomUpdate,
+                fetchHistory,
+                isConnected,
+                roomId,
+                hasMoreMessages,
+                isFetching,
+                refreshRoomData
+            }}>
             {children}
         </WebSocketContext.Provider>
     );
@@ -861,27 +927,27 @@ export const useWebSocket = (
 
     useEffect(() => {
         // normal chat message binding
-        listeners.set(key, { roomId: context.roomId, fn: onMessage as any });
+        listeners.set(key, {roomId: context.roomId, fn: onMessage as any});
 
         // also forward typing events for the active room
         const onTyping = (e: Event) => {
-          const detail = (e as CustomEvent).detail as any;
-          if (!detail) return;
-          if (String(detail.roomId) !== String(context.roomId)) return;
-          // deliver a synthetic MessageEvent so existing handlers can branch on data.type === 'typing'
-          const evt = new MessageEvent('message', { data: { type: 'typing', ...detail } });
-          onMessage(evt as any);
+            const detail = (e as CustomEvent).detail as any;
+            if (!detail) return;
+            if (String(detail.roomId) !== String(context.roomId)) return;
+            // deliver a synthetic MessageEvent so existing handlers can branch on data.type === 'typing'
+            const evt = new MessageEvent('message', {data: {type: 'typing', ...detail}});
+            onMessage(evt as any);
         };
 
         if (typeof window !== 'undefined') {
-          window.addEventListener('chat:typing', onTyping);
+            window.addEventListener('chat:typing', onTyping);
         }
 
         return () => {
-          listeners.delete(key);
-          if (typeof window !== 'undefined') {
-            window.removeEventListener('chat:typing', onTyping);
-          }
+            listeners.delete(key);
+            if (typeof window !== 'undefined') {
+                window.removeEventListener('chat:typing', onTyping);
+            }
         };
     }, [key, onMessage, context.roomId]);
 
