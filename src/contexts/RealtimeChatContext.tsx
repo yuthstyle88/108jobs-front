@@ -502,25 +502,6 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                         console.debug('onmessage: payload not passing strict validator, attempting permissive mapping...', payload);
                     }
 
-                    console.log("update room outside: ", payload.content)
-                    if (payload && typeof payload === "object" && payload.content.includes("status-change")) {
-                        const {room_id} = payload as any;
-
-                        console.log("[RT] room update received → fetching fresh room data", room_id);
-
-                        try {
-                            const chatRoomRes = await HttpService.client.getChatRoom(roomId);
-                            console.log("event to be chatRoomRes here: ", chatRoomRes)
-                            if (chatRoomRes.state === REQUEST_STATE.SUCCESS) {
-                                setRefreshRoomData(chatRoomRes.data);
-                            }
-                        } catch (err) {
-                            console.error("Error fetching room:", err);
-                        }
-
-                        return [];
-                    }
-
                     // Normalize to detect typing events from Phoenix envelopes
                     let env: any = payload;
                     try {
@@ -534,6 +515,30 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                         }
                     } catch {
                     }
+
+                    try {
+                        const evName = String((env as any)?.content || '');
+                        console.log("evName: ", evName);
+                        if (evName && evName.includes('status-change')) {
+                            const {room_id} = payload as any;
+
+                            console.log("[RT] room update received → fetching fresh room data", room_id);
+
+                            try {
+                                const chatRoomRes = await HttpService.client.getChatRoom(roomId);
+                                console.log("event to be chatRoomRes here: ", chatRoomRes)
+                                if (chatRoomRes.state === REQUEST_STATE.SUCCESS) {
+                                    setRefreshRoomData(chatRoomRes.data);
+                                }
+                            } catch (err) {
+                                console.error("Error fetching room:", err);
+                            }
+
+                            return null;
+                        }
+                    } catch {
+                    }
+
 
                     // Broadcast typing notifications to listeners (but never to the typist themselves)
                     try {

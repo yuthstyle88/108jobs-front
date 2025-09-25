@@ -164,8 +164,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             })(event)
     );
 
-    console.log("render: ChatSection", refreshRoomData)
-
     // After commit, propagate the last incoming message to ChatRooms context and auto-scroll for receiver
     useEffect(() => {
         if (isFetching) return; // suppress global updates while fetching history
