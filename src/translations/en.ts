@@ -154,6 +154,7 @@ export const en = {
             noJobDescription: "No job description provided",
             unread: "Unread",
             read: "Read",
+            messageHiringAgain: "If you want to hire this person again, click"
         },
         allCategories: {
             allJobCategories: "All Job Categories",

@@ -48,6 +48,7 @@ export type UseWorkflowActionsDeps = {
     walletId?: number | null;
     currentStatus: StatusKey;
     setHasProposedQuote: (v: boolean) => void;
+    handleReload: () => void;
 };
 
 export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
@@ -78,6 +79,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
         walletId,
         currentStatus,
         setHasProposedQuote,
+        handleReload,
     } = deps;
 
     // Use the new workflow id hook which hydrates from room payload
@@ -107,6 +109,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             const seqNumber = 1;
             const res = await startWorkflow({ postId: pid, seqNumber, roomId });
             if (res?.state === REQUEST_STATE.SUCCESS && res?.data?.success) {
+                handleReload();
                 setHasStarted(true);
                 const wfId = Number(res?.data?.workflowId);
                 if (wfId) setWorkflowIdState(wfId);
@@ -172,6 +175,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             });
             addOwnMessage(JSON.stringify(payload), sentId);
             setHasProposedQuote(true);
+            handleReload();
             goToStatus?.('QuotationPending');
             setShowQuotationModal(false);
             return true;
@@ -189,16 +193,8 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             let billingId: number | undefined = latestPayload?.billingId;
 
             if (!billingId) {
-                const commentIdFromPayload = Number(latestPayload?.quote?.commentId);
-                const commentId = !Number.isNaN(commentIdFromPayload) && commentIdFromPayload
-                    ? commentIdFromPayload
-                    : Number(roomData?.room?.currentComment?.id ?? roomData?.currentCommentId ?? undefined);
-                if (!commentId || Number.isNaN(commentId)) {
-                    setError(t('profileChat.quotationError') || 'Missing billing information for approval.');
-                    return false;
-                }
                 try {
-                    const res = await HttpService.client.getBillingByComment({ commentId });
+                    const res = await HttpService.client.getBillingByRoom({ roomId });
                     if (res?.state === REQUEST_STATE.SUCCESS && (res as any)?.data) {
                         const billing = (res as any).data as any;
                         billingId = Number(billing?.id);

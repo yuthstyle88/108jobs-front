@@ -116,6 +116,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
     const showStartButton = Boolean(isEmployer && !startedEffective);
     const canStartWorkflow = showStartButton;
     const [showStartConfirm, setShowStartConfirm] = useState(false);
+    const showMessageHiring = currentStatus === 'Completed' && isEmployer;
 
     const ORDER: StatusKey[] = (stepper?.ORDER as StatusKey[]) || [
         'QuotationPending',
@@ -303,10 +304,10 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     </div>
                 </div>
             )}
-            {currentStatus === 'Completed' && (
+            {showMessageHiring && (
                 <div className="w-full px-4">
                     <div className="inline-flex items-center rounded-full bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1">
-                        If you want to hire this person again, click
+                        {t('profileChat.messageHiringAgain')}
                     </div>
                 </div>
             )}
@@ -324,58 +325,126 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     </button>
                 </div>
             )}
-            <ul className={`flex ${orientation === 'horizontal' ? 'flex-row flex-wrap gap-4' : 'flex-col'} px-4 ${compact ? 'py-2' : 'py-4'}`}>
-                {STEPS.map((step, index) => {
-                    const isActive = step.key === currentStatus;
-                    const dotColor = getDotColor(step.key, index);
+            {startedEffective && (
+                <>
+                    <ul className={`flex ${orientation === 'horizontal' ? 'flex-row flex-wrap gap-4' : 'flex-col'} px-4 ${compact ? 'py-2' : 'py-4'}`}>
+                        {STEPS.map((step, index) => {
+                            const isActive = step.key === currentStatus;
+                            const dotColor = getDotColor(step.key, index);
 
-                    return (
-                        <li
-                            key={step.key}
-                            className={`flex items-center text-gray-600 ${
-                                orientation === 'horizontal' ? 'min-w-[200px] max-w-[250px]' : 'w-full'
-                            } ${compact ? 'py-1' : 'py-2'} ${
-                                isActive ? 'font-semibold text-primary' : index > currentIndex ? 'opacity-50 pointer-events-none' : ''
-                            } hover:bg-gray-50 cursor-pointer transition-colors rounded-md px-2`}
-                            onClick={() => handleActivateStep(index, step.key)}
-                            role="button"
-                            aria-current={isActive ? 'step' : undefined}
-                            tabIndex={0}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    handleActivateStep(index, step.key);
-                                }
-                            }}
-                        >
-                            <div
-                                className={`min-w-[24px] max-w-[24px] w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-medium ${dotColor} ${
-                                    isActive ? 'ring-2 ring-blue-200' : ''
-                                } mr-3 shrink-0`}
-                            >
-                                {index + 1}
+                            return (
+                                <li
+                                    key={step.key}
+                                    className={`flex items-center text-gray-600 ${
+                                        orientation === 'horizontal' ? 'min-w-[200px] max-w-[250px]' : 'w-full'
+                                    } ${compact ? 'py-1' : 'py-2'} ${
+                                        isActive ? 'font-semibold text-primary' : index > currentIndex ? 'opacity-50 pointer-events-none' : ''
+                                    } hover:bg-gray-50 cursor-pointer transition-colors rounded-md px-2`}
+                                    onClick={() => handleActivateStep(index, step.key)}
+                                    role="button"
+                                    aria-current={isActive ? 'step' : undefined}
+                                    tabIndex={0}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            handleActivateStep(index, step.key);
+                                        }
+                                    }}
+                                >
+                                    <div
+                                        className={`min-w-[24px] max-w-[24px] w-6 h-6 rounded-full border-2 flex items-center justify-center text-xs font-medium ${dotColor} ${
+                                            isActive ? 'ring-2 ring-blue-200' : ''
+                                        } mr-3 shrink-0`}
+                                    >
+                                        {index + 1}
+                                    </div>
+                                    <div className="flex flex-col min-w-0">
+                                        <span className="text-sm font-medium truncate">{t(`profileChat.step${index + 1}`) || step.title}</span>
+                                        {!compact && (
+                                            <span className="text-xs text-gray-500 line-clamp-2">{t(`profileChat.step${index + 1}Sub`) || step.sub}</span>
+                                        )}
+                                    </div>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                    {currentStatus === 'QuotationPending' && isEmployer && !canProposeQuote && !canApproveQuotation && (
+                        <div className="mx-4 -mt-2 mb-2 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
+                            {t('profileChat.waitForFreelancerQuotation') || 'Waiting for freelancer to send a quotation.'}
+                        </div>
+                    )}
+                    <div className={`flex flex-col gap-2 px-4 ${compact ? 'pb-2' : 'pb-4'}`}>
+                        {actionsForStep(currentStatus).map((action, idx) => (
+                            <div key={idx} className="w-full">
+                                {action}
                             </div>
-                            <div className="flex flex-col min-w-0">
-                                <span className="text-sm font-medium truncate">{t(`profileChat.step${index + 1}`) || step.title}</span>
-                                {!compact && (
-                                    <span className="text-xs text-gray-500 line-clamp-2">{t(`profileChat.step${index + 1}Sub`) || step.sub}</span>
-                                )}
-                            </div>
-                        </li>
-                    );
-                })}
-            </ul>
-            {currentStatus === 'QuotationPending' && isEmployer && !canProposeQuote && !canApproveQuotation && (
-                <div className="mx-4 -mt-2 mb-2 p-2 sm:p-3 rounded-md bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs sm:text-sm">
-                    {t('profileChat.waitForFreelancerQuotation') || 'Waiting for freelancer to send a quotation.'}
-                </div>
-            )}
-            <div className={`flex flex-col gap-2 px-4 ${compact ? 'pb-2' : 'pb-4'}`}>
-                {actionsForStep(currentStatus).map((action, idx) => (
-                    <div key={idx} className="w-full">
-                        {action}
+                        ))}
                     </div>
-                ))}
-            </div>
+                    <ConfirmActionModal
+                        isOpen={showApproveConfirm}
+                        onClose={() => setShowApproveConfirm(false)}
+                        onConfirm={async () => {
+                            setShowApproveConfirm(false);
+                            onApproveQuotation?.();
+                        }}
+                        title={t('profileChat.confirmApproveQuotationTitle') || 'Approve quotation?'}
+                        message={t('profileChat.confirmApproveQuotationMessage') || "This will approve the freelancer's quotation and convert it into an order."}
+                        confirmText={t('profileChat.approveQuotation') || 'Approve quotation'}
+                    />
+                    <ConfirmActionModal
+                        isOpen={showRevisionConfirm}
+                        onClose={() => setShowRevisionConfirm(false)}
+                        onConfirm={async () => {
+                            setShowRevisionConfirm(false);
+                            onRequestRevision?.();
+                        }}
+                        title={t('profileChat.confirmRequestRevisionTitle') || 'Request a revision?'}
+                        message={t('profileChat.confirmRequestRevisionMessage') || 'This will move the job back to In Progress and notify the freelancer to revise and resubmit.'}
+                        confirmText={t('profileChat.requestRevision') || 'Request revision'}
+                    />
+                    <ConfirmActionModal
+                        isOpen={showCancelConfirm}
+                        onClose={() => setShowCancelConfirm(false)}
+                        onConfirm={async () => {
+                            setShowCancelConfirm(false);
+                            console.log('FreelanceChatFlow onCancel:', { currentStatus, currentStatusBeforeCancel });
+                            if (isControlled) {
+                                onChangeStatus?.('Cancelled', currentStatus);
+                                onCancel?.(currentStatus);
+                            } else {
+                                stepper?.cancel();
+                            }
+                        }}
+                        title={t('profileChat.confirmCancelJobTitle') || 'Cancel this job?'}
+                        message={t('profileChat.confirmCancelJobMessage') || 'This will cancel the current workflow. This action cannot be undone.'}
+                        confirmText={t('profileChat.cancelJob') || 'Cancel job'}
+                    />
+                    <ConfirmActionModal
+                        isOpen={showReleaseConfirm}
+                        onClose={() => setShowReleaseConfirm(false)}
+                        onConfirm={async () => {
+                            setShowReleaseConfirm(false);
+                            onReleasePayment?.();
+                        }}
+                        title={t('profileChat.confirmReleasePaymentTitle') || 'Release payment and close job?'}
+                        message={t('profileChat.confirmReleasePaymentMessage') || 'This will approve the submitted work, release funds to the freelancer, and close the job.'}
+                        confirmText={t('profileChat.releasePayment') || 'Release payment / Close job'}
+                    />
+                    <FileUploadModal
+                        isOpen={showUploadModal}
+                        onClose={() => {
+                            setShowUploadModal(false);
+                        }}
+                        onSubmit={async () => {
+                            setShowUploadModal(false);
+                            onSubmitDelivery?.();
+                        }}
+                        selectedFile={selectedFile}
+                        onFileUpload={onFileUpload}
+                        isDeletingFile={isDeletingFile}
+                        onFileRemove={onFileRemove}
+                    />
+                </>
+            )}
             <ConfirmActionModal
                 isOpen={showStartConfirm}
                 onClose={() => setShowStartConfirm(false)}
@@ -385,70 +454,6 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                 }}
                 title={t('profileChat.confirmStartWorkflowTitle') || 'ต้องการจ้างงาน?'}
                 message={t('profileChat.confirmStartWorkflowMessage') || 'ระบบจะเริ่มขั้นตอนงานสำหรับการสนทนานี้'}
-            />
-            <ConfirmActionModal
-                isOpen={showApproveConfirm}
-                onClose={() => setShowApproveConfirm(false)}
-                onConfirm={async () => {
-                    setShowApproveConfirm(false);
-                    onApproveQuotation?.();
-                }}
-                title={t('profileChat.confirmApproveQuotationTitle') || 'Approve quotation?'}
-                message={t('profileChat.confirmApproveQuotationMessage') || "This will approve the freelancer's quotation and convert it into an order."}
-                confirmText={t('profileChat.approveQuotation') || 'Approve quotation'}
-            />
-            <ConfirmActionModal
-                isOpen={showRevisionConfirm}
-                onClose={() => setShowRevisionConfirm(false)}
-                onConfirm={async () => {
-                    setShowRevisionConfirm(false);
-                    onRequestRevision?.();
-                }}
-                title={t('profileChat.confirmRequestRevisionTitle') || 'Request a revision?'}
-                message={t('profileChat.confirmRequestRevisionMessage') || 'This will move the job back to In Progress and notify the freelancer to revise and resubmit.'}
-                confirmText={t('profileChat.requestRevision') || 'Request revision'}
-            />
-            <ConfirmActionModal
-                isOpen={showCancelConfirm}
-                onClose={() => setShowCancelConfirm(false)}
-                onConfirm={async () => {
-                    setShowCancelConfirm(false);
-                    console.log('FreelanceChatFlow onCancel:', { currentStatus, currentStatusBeforeCancel });
-                    if (isControlled) {
-                        onChangeStatus?.('Cancelled', currentStatus);
-                        onCancel?.(currentStatus);
-                    } else {
-                        stepper?.cancel();
-                    }
-                }}
-                title={t('profileChat.confirmCancelJobTitle') || 'Cancel this job?'}
-                message={t('profileChat.confirmCancelJobMessage') || 'This will cancel the current workflow. This action cannot be undone.'}
-                confirmText={t('profileChat.cancelJob') || 'Cancel job'}
-            />
-            <ConfirmActionModal
-                isOpen={showReleaseConfirm}
-                onClose={() => setShowReleaseConfirm(false)}
-                onConfirm={async () => {
-                    setShowReleaseConfirm(false);
-                    onReleasePayment?.();
-                }}
-                title={t('profileChat.confirmReleasePaymentTitle') || 'Release payment and close job?'}
-                message={t('profileChat.confirmReleasePaymentMessage') || 'This will approve the submitted work, release funds to the freelancer, and close the job.'}
-                confirmText={t('profileChat.releasePayment') || 'Release payment / Close job'}
-            />
-            <FileUploadModal
-                isOpen={showUploadModal}
-                onClose={() => {
-                    setShowUploadModal(false);
-                }}
-                onSubmit={async () => {
-                    setShowUploadModal(false);
-                    onSubmitDelivery?.();
-                }}
-                selectedFile={selectedFile}
-                onFileUpload={onFileUpload}
-                isDeletingFile={isDeletingFile}
-                onFileRemove={onFileRemove}
             />
         </aside>
     );

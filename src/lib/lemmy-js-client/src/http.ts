@@ -263,8 +263,8 @@ import type {ChatHistoryQuery} from "./types/ChatHistoryQuery";
 import type {ChatMessagesResponse} from "./types/ChatMessagesResponse";
 import type {ChatHistoryQueryI} from "./other_types";
 import type {Billing} from "./types/Billing";
-import type {GetBillingByCommentQuery} from "./types/GetBillingByCommentQuery";
-import type {GetBillingByCommentQueryI} from "./other_types";
+import type {GetBillingByRoomQuery} from "./types/GetBillingByRoomQuery";
+import type {GetBillingByRoomQueryI} from "./other_types";
 import type { ScbTokenResponse } from "./types/ScbTokenResponse";
 import type { ScbQrCodeRequest, ScbQrCodeResponse } from "./types/ScbQrCode";
 import type { ScbQrInquiryRequest, ScbQrInquiryResponse } from "./types/ScbQrInquiry";
@@ -3085,15 +3085,15 @@ export class LemmyHttp extends Controller {
      * @summary Get billing by comment id.
      */
     @Security("bearerAuth")
-    @Get("/account/services/billing/by-comment")
+    @Get("/account/services/billing/by-room")
     @Tags("Billing")
-    async getBillingByComment(
-        @Queries() form: GetBillingByCommentQueryI,
+    async getBillingByRoom(
+        @Queries() form: GetBillingByRoomQueryI,
         @Inject() options?: RequestOptions,
     ) {
-        return this.#wrapper<GetBillingByCommentQuery, Billing>(
+        return this.#wrapper<GetBillingByRoomQuery, Billing>(
             HttpType.Get,
-            "/account/services/billing/by-comment",
+            "/account/services/billing/by-room",
             form,
             options,
         );

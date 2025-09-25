@@ -153,6 +153,7 @@ export const th = {
             noJobDescription: "ไม่มีคำอธิบายงานที่ระบุ",
             unread: "ยังไม่ได้อ่าน",
             read: "อ่านแล้ว",
+            messageHiringAgain: "หากคุณต้องการจ้างบุคคลนี้อีกครั้ง คลิก"
         },
         allCategories: {
             allJobCategories: "หมวดหมู่งานทั้งหมด",

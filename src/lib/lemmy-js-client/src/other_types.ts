@@ -115,8 +115,8 @@ export interface ListUserChatRoomsQueryI extends ListUserChatRoomsQuery {}
 import { ChatHistoryQuery } from "./types/ChatHistoryQuery";
 export interface ChatHistoryQueryI extends ChatHistoryQuery {}
 
-import { GetBillingByCommentQuery } from "./types/GetBillingByCommentQuery";
-export interface GetBillingByCommentQueryI extends GetBillingByCommentQuery {}
+import { GetBillingByRoomQuery } from "./types/GetBillingByRoomQuery";
+export interface GetBillingByRoomQueryI extends GetBillingByRoomQuery {}
 
 // Bank Accounts (admin list)
 export interface GetBankAccountsI extends GetBankAccounts {}

@@ -81,6 +81,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const handleReload = () => {
+        window.location.reload(); // TODO: temporary fix for chat room not refreshing for new
+    };
     const {
         selectedFile,
         setSelectedFile,
@@ -269,7 +272,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {execute: submitStartWorkApi} = useHttpPost("submitStartWork");
     const {execute: approveWorkApi} = useHttpPost("approveWork");
 
-
     // Helper to add a local (owner) message to the list and scroll
     const addOwnMessage = useCallback((content: string, id?: string) => {
         const messageId = id ?? uuidv4();
@@ -326,6 +328,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         walletId: wallet?.id,
         currentStatus,
         setHasProposedQuote,
+        handleReload,
     });
 
     const onSubmit = useCallback(
@@ -419,6 +422,23 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             console.log("[CHAT][INIT] Not connected yet");
         }
     }, [isConnected]);
+
+    const calculatedProposedQuote = useMemo(() => {
+        return Boolean(getLatestProposedQuotePayload(messages[0] as any));
+    }, [messages]);
+
+    useEffect(() => {
+        if (currentRoom.workflow?.hasProposedQuote === true) {
+            setHasProposedQuote(
+                currentRoom.workflow?.hasProposedQuote
+            );
+        } else if (calculatedProposedQuote) {
+            setHasProposedQuote(
+                calculatedProposedQuote
+            );
+            handleReload();
+        }
+    }, [currentRoom.workflow, calculatedProposedQuote]);
 
     // Determine latest quotation amount and whether employer has sufficient balance to approve
     const latestQuoteAmount = useMemo(() => {
