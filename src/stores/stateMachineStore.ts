@@ -83,6 +83,7 @@ export const createMachineStore = <S extends StateKey, E extends string>(
 
 // Concrete workflow implementation using the generic machine
 export type UiFlowStatus =
+    | 'WaitForFreelancerQuotation'
     | 'QuotationPending'
     | 'OrderApproved'
     | 'InProgress'
@@ -91,6 +92,7 @@ export type UiFlowStatus =
     | 'Cancelled';
 
 export const ORDER = [
+    'WaitForFreelancerQuotation',
     'QuotationPending',
     'OrderApproved',
     'InProgress',
@@ -111,6 +113,7 @@ export type WorkflowEvent =
     | { type: 'SET'; state: UiFlowStatus; statusBeforeCancel?: UiFlowStatus };
 
 const WORKFLOW_TRANSITIONS: TransitionMap<UiFlowStatus, Exclude<WorkflowEvent['type'], 'SET'>> = {
+    WaitForFreelancerQuotation: { QUOTE_PROPOSED: 'QuotationPending', CANCEL: 'Cancelled' }, // เปลี่ยน event และไปข้างหน้า
     QuotationPending: { APPROVE_ORDER: 'OrderApproved', CANCEL: 'Cancelled' },
     OrderApproved: { START_WORK: 'InProgress', CANCEL: 'Cancelled' },
     InProgress: { SUBMIT_DELIVERY: 'PendingEmployerReview', CANCEL: 'Cancelled' },
@@ -122,9 +125,9 @@ const WORKFLOW_TRANSITIONS: TransitionMap<UiFlowStatus, Exclude<WorkflowEvent['t
 export const useStateMachineStore = createMachineStore<UiFlowStatus, Exclude<WorkflowEvent['type'], 'SET'>>(
     ORDER,
     WORKFLOW_TRANSITIONS,
-    'QuotationPending'
+    'WaitForFreelancerQuotation'
 );
 
 // Helper mapping functions bridging API <-> UI (identity mapping)
 export const apiToUiStatus = (s: WorkflowStatus | null | undefined): UiFlowStatus =>
-    (s as UiFlowStatus) ?? 'QuotationPending';
+    (s as UiFlowStatus) ?? 'WaitForFreelancerQuotation';

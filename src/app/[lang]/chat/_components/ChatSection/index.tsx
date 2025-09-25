@@ -73,7 +73,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
     const [workflowIdState, setWorkflowIdState] = useState<number | null>(null);
-    const [hasProposedQuote, setHasProposedQuote] = useState<boolean>(roomData.workflow?.hasProposedQuote || false);
     const [currentRoom, setCurrentRoom] = useState<any>(roomData);
     const [messages, setMessages] = useState<UIChatMessage[]>([]);
     const atBottomRef = useRef<boolean>(true);
@@ -331,7 +330,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         postId: roomPostId,
         walletId: wallet?.id,
         currentStatus,
-        setHasProposedQuote,
     });
 
     const onSubmit = useCallback(
@@ -430,17 +428,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         return Boolean(getLatestProposedQuotePayload(messages as any));
     }, [messages]);
 
-    useEffect(() => {
-        if (currentRoom.workflow?.hasProposedQuote === true) {
-            setHasProposedQuote(
-                currentRoom.workflow?.hasProposedQuote
-            );
-        } else if (calculatedProposedQuote) {
-            setHasProposedQuote(
-                calculatedProposedQuote
-            );
-        }
-    }, [currentRoom.workflow, calculatedProposedQuote]);
 
     // Determine latest quotation amount and whether employer has sufficient balance to approve
     const latestQuoteAmount = useMemo(() => {
@@ -455,8 +442,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }, [wallet]);
 
     const insufficientForApprove = useMemo(() => {
-        return Boolean(isEmployer && hasProposedQuote && latestQuoteAmount != null && availableBalance < (latestQuoteAmount as number));
-    }, [isEmployer, hasProposedQuote, latestQuoteAmount, availableBalance]);
+        return Boolean(isEmployer && latestQuoteAmount != null && availableBalance < (latestQuoteAmount as number));
+    }, [isEmployer, latestQuoteAmount, availableBalance]);
 
     // Wrap approveQuotation with additional balance guard to keep identical behavior
     const approveQuotationWrapped = React.useCallback(async (): Promise<boolean> => {
@@ -489,40 +476,45 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         approveWork: async () => await approveWork(),
     });
 
+    // Normalize role & capability flags for Flow (avoid undefined branching in JSX)
+    const isEmployerKnown = typeof isEmployer === 'boolean';
+    const canProposeQuoteProp =
+        isEmployerKnown ? (!isEmployer && Boolean(roomPostId) && !calculatedProposedQuote) : false;
+    const canApproveQuotationProp =
+        isEmployerKnown ? (Boolean(isEmployer) && calculatedProposedQuote) : false;
+
     const renderFlowContent = () => (
         <>
-            {isEmployer !== undefined && (
-                <FreelanceChatFlow
-                    currentStatus={currentStatus}
-                    onChangeStatus={handleChangeStatus}
-                    orientation="vertical"
-                    compact={false}
-                    className="space-y-4"
-                    started={hasStarted}
-                    onStart={startWorkflowAction}
-                    canProposeQuote={!isEmployer && Boolean(roomPostId) && !hasProposedQuote}
-                    canApproveQuotation={isEmployer && hasProposedQuote}
-                    insufficientForApprove={insufficientForApprove}
-                    isEmployer={isEmployer}
-                    canSubmitDelivery={!!selectedFile}
-                    onProposeQuote={flowActions.onProposeQuote}
-                    onApproveQuotation={flowActions.onApproveQuotation}
-                    onStartWork={!isEmployer ? flowActions.onStartWork : undefined}
-                    onUploadAsset={!isEmployer ? flowActions.onUploadAsset : undefined}
-                    onSendMessage={flowActions.onSendMessage}
-                    onSubmitDelivery={!isEmployer ? flowActions.onSubmitDelivery : undefined}
-                    onRequestRevision={isEmployer ? flowActions.onRequestRevision : undefined}
-                    onReleasePayment={isEmployer ? flowActions.onReleasePayment : undefined}
-                    onCancel={() => {
-                        void cancelJob();
-                    }}
-                    onFileUpload={(ev: any) => handleFileUpload(ev as any)}
-                    selectedFile={selectedFile}
-                    isDeletingFile={isDeletingFile}
-                    onFileRemove={handleRemoveSelectedFile}
-                    statusBeforeCancel={statusBeforeCancel}
-                />
-            )}
+            <FreelanceChatFlow
+                currentStatus={currentStatus}
+                onChangeStatus={handleChangeStatus}
+                orientation="vertical"
+                compact={false}
+                className="space-y-4"
+                started={hasStarted}
+                onStart={startWorkflowAction}
+                canProposeQuote={canProposeQuoteProp}
+                canApproveQuotation={canApproveQuotationProp}
+                insufficientForApprove={insufficientForApprove}
+                isEmployer={isEmployerKnown ? isEmployer : undefined}
+                canSubmitDelivery={!!selectedFile}
+                onProposeQuote={flowActions.onProposeQuote}
+                onApproveQuotation={flowActions.onApproveQuotation}
+                onStartWork={!isEmployer ? flowActions.onStartWork : undefined}
+                onUploadAsset={!isEmployer ? flowActions.onUploadAsset : undefined}
+                onSendMessage={flowActions.onSendMessage}
+                onSubmitDelivery={!isEmployer ? flowActions.onSubmitDelivery : undefined}
+                onRequestRevision={isEmployer ? flowActions.onRequestRevision : undefined}
+                onReleasePayment={isEmployer ? flowActions.onReleasePayment : undefined}
+                onCancel={() => {
+                    void cancelJob();
+                }}
+                onFileUpload={(ev: any) => handleFileUpload(ev as any)}
+                selectedFile={selectedFile}
+                isDeletingFile={isDeletingFile}
+                onFileRemove={handleRemoveSelectedFile}
+                statusBeforeCancel={statusBeforeCancel}
+            />
         </>
     );
 

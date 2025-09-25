@@ -2,7 +2,7 @@ import type {StatusKey} from '@/components/FreelanceChatFlow';
 
 // Unified mapping for structured message type -> UI workflow status
 export const TYPES_TO_STATUS: Record<string, StatusKey> = {
-    'employer-started': 'QuotationPending',
+    'employer-started': 'WaitForFreelancerQuotation',
     'proposed-quote': 'QuotationPending',
     'employer-assigned': 'OrderApproved',
     'start-work': 'InProgress',

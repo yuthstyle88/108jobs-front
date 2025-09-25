@@ -268,7 +268,7 @@ import type {GetBillingByRoomQueryI} from "./other_types";
 import type { ScbTokenResponse } from "./types/ScbTokenResponse";
 import type { ScbQrCodeRequest, ScbQrCodeResponse } from "./types/ScbQrCode";
 import type { ScbQrInquiryRequest, ScbQrInquiryResponse } from "./types/ScbQrInquiry";
-import {BillingId} from "./types/BillingId";
+import type {BillingId} from "./types/BillingId";
 
 enum HttpType {
     Get = "GET",

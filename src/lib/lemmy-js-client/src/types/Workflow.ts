@@ -2,6 +2,7 @@ import type { WorkflowId } from "./WorkflowId";
 import type { PostId } from "./PostId";
 import type { WorkflowStatus } from "./WorkflowStatus";
 import type { ChatRoomId } from "./ChatRoomId";
+import type { BillingId } from "./BillingId";
 
 // Matches backend Workflow with camelCase fields
 export type Workflow = {
@@ -21,6 +22,6 @@ export type Workflow = {
   roomId: ChatRoomId;
   deliverableUrl?: string;
   active: boolean;
-  hasProposedQuote: boolean;
   statusBeforeCancel?: WorkflowStatus;
+  billingId?: BillingId;
 };
