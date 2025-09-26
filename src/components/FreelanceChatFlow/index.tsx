@@ -191,14 +191,6 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
     const currentIndex = Math.max(0, STEPS.findIndex((s) => s.key === viewStatus));
 
     // Backward-compatible: if parent passes `started`, use it; otherwise derive from status
-    const showWorkflow = currentStatus === 'Completed'
-        || currentStatus === 'Cancelled'
-        || currentStatus === 'PendingEmployerReview'
-        || currentStatus === 'InProgress'
-        || currentStatus === 'OrderApproved'
-        || currentStatus === 'WaitForFreelancerQuotation'
-        || currentStatus === 'QuotationPending'
-
     const startedEffective = currentStatus === 'Completed'
     || currentStatus === 'Cancelled' ? false : started;
     const showStartButton = Boolean(isEmployer && !startedEffective);
@@ -442,7 +434,7 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
                     </button>
                 </div>
             )}
-            {showWorkflow && (
+            {startedEffective && (
                 <>
                     <ul className={`flex ${orientation === 'horizontal' ? 'flex-row flex-wrap gap-4' : 'flex-col'} px-4 ${compact ? 'py-2' : 'py-4'}`}>
                         {STEPS.map((step, index) => {
