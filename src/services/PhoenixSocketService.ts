@@ -26,7 +26,15 @@ const isInternalEvent = (ev?: string) => !!ev && ev.startsWith("phx_");
 
 class PhoenixChannelHub {
   private static instance: PhoenixChannelHub | null = null;
-  static getInstance() { return this.instance ?? (this.instance = new PhoenixChannelHub()); }
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new PhoenixChannelHub();
+      if (DEV) console.log('[PhoenixChannelHub] created singleton instance');
+    } else {
+      if (DEV) console.log('[PhoenixChannelHub] reused existing singleton instance');
+    }
+    return this.instance;
+  }
 
   private socketByToken = new Map<string, PhoenixSocket>();
   private channelsByKey = new Map<string, any>();
@@ -65,11 +73,11 @@ class PhoenixChannelHub {
 export function getChannelAdapter(token: string, roomId: string): RealtimeChannelAdapter {
   const hub = PhoenixChannelHub.getInstance();
   const primaryTopic = `room:${roomId}`;
-  const aliasTopic = `${roomId}`; // compatibility for backends that emit without prefix
+
+  if (DEV) console.log('[phoenix] create adapter', { roomId, primaryTopic});
 
   // Create channels (primary + alias) and join both. If alias is unused, it will be idle.
   let channel = hub.getOrCreateChannel(token, primaryTopic);
-  let aliasChannel = hub.getOrCreateChannel(token, aliasTopic);
 
   let readyState = 0;
   const adapter: RealtimeChannelAdapter = {
@@ -100,9 +108,8 @@ export function getChannelAdapter(token: string, roomId: string): RealtimeChanne
       readyState = 2;
       clearRetry();
       try { (channel as any).leave?.(); } catch {}
-      try { (aliasChannel as any).leave?.(); } catch {}
+
       hub.leaveChannel(token, primaryTopic);
-      hub.leaveChannel(token, aliasTopic);
       // remove network listeners
       cleanups.forEach(fn => { try { fn(); } catch {} });
       readyState = 3;
@@ -119,6 +126,10 @@ export function getChannelAdapter(token: string, roomId: string): RealtimeChanne
 
   // Wire a channel with wildcard forwarding and explicit events
   function wireChannel(ch: any, topicLabel: string) {
+    // idempotent wiring: wire only once per channel instance
+    if ((ch as any).__wired) return;
+    (ch as any).__wired = true;
+    if (DEV) console.log('[phoenix] wire channel', { topic: topicLabel });
     // wildcard forward
     try {
       const orig = ch.onMessage?.bind(ch);
@@ -136,18 +147,14 @@ export function getChannelAdapter(token: string, roomId: string): RealtimeChanne
 
   function recreateChannels() {
     try { (channel as any).leave?.(); } catch {}
-    try { (aliasChannel as any).leave?.(); } catch {}
+
     hub.leaveChannel(token, primaryTopic);
-    hub.leaveChannel(token, aliasTopic);
 
     channel = hub.getOrCreateChannel(token, primaryTopic);
-    aliasChannel = hub.getOrCreateChannel(token, aliasTopic);
 
     wireChannel(channel, primaryTopic);
-    wireChannel(aliasChannel, aliasTopic);
 
     joinChannel(channel, primaryTopic);
-    joinChannel(aliasChannel, aliasTopic);
   }
 
   // --- background resiliency helpers ---
@@ -168,31 +175,62 @@ export function getChannelAdapter(token: string, roomId: string): RealtimeChanne
     }, delay);
   };
 
+  // ⬇️ Add this line
+  const JOIN_TIMEOUT_MS = 5000; // if server never replies to join, recreate
+
   // Join helpers
   function joinChannel(ch: any, topicLabel: string) {
+    // Guard: avoid calling join() twice on the same channel instance
     try {
+      const st = (ch as any).state;
+      if (st === 'joining' || st === 'joined') {
+        if (DEV) console.log('[phoenix] skip join (state)', { topic: topicLabel, state: st });
+        return;
+      }
+    } catch {}
+
+    try {
+      let joinTimer: any = null;
+      const clearJoinTimer = () => { if (joinTimer) { try { clearTimeout(joinTimer); } catch {} joinTimer = null; } };
+
+      // start watchdog in case server never answers
+      joinTimer = setTimeout(() => {
+        try {
+          const st = (ch as any).state;
+          if (st === 'joining') {
+            if (DEV) console.log('[phoenix] join timeout → recreate', { topic: topicLabel });
+            try { (ch as any).leave?.(); } catch {}
+            scheduleRetry('join timeout:' + topicLabel);
+          }
+        } catch {}
+      }, JOIN_TIMEOUT_MS);
+
       ch.join()
-        .receive("ok", () => {
-          // joined (for either primary or alias)
+        .receive('ok', () => {
+          if (DEV) console.log('[phoenix] join ok', { topic: topicLabel });
+          clearJoinTimer();
           retryAttempt = 0; // reset backoff on any success
           clearRetry();
           if (readyState === 0) { readyState = 1; adapter.onopen?.(); }
         })
-        .receive("error", (e: any) => {
-          if (DEV) console.log("[phoenix] join error", { topic: topicLabel, e });
-          // keep adapter open and schedule rejoin in background
-          scheduleRetry("join error:" + topicLabel);
+        .receive('error', (e: any) => {
+          clearJoinTimer();
+          if (DEV) console.log('[phoenix] join error', { topic: topicLabel, e });
+          scheduleRetry('join error:' + topicLabel);
           adapter.onerror?.(e);
         });
     } catch (e) {
-      if (DEV) console.log("[phoenix] join exception", { topic: topicLabel, e });
-      scheduleRetry("join exception:" + topicLabel);
+      if (DEV) console.log('[phoenix] join exception', { topic: topicLabel, e });
+      scheduleRetry('join exception:' + topicLabel);
       adapter.onerror?.(e);
     }
   }
 
+  // Wire before initial join to avoid missing early events
+  wireChannel(channel, primaryTopic);
+
+  // Initial join after wiring
   joinChannel(channel, primaryTopic);
-  joinChannel(aliasChannel, aliasTopic);
 
   // Network-awareness: re-join when back online; pause backoff while offline
   try {
@@ -212,8 +250,29 @@ export function getChannelAdapter(token: string, roomId: string): RealtimeChanne
     cleanups.push(() => { try { window.removeEventListener('offline', onOffline); } catch {} });
   } catch {}
 
-  wireChannel(channel, primaryTopic);
-  wireChannel(aliasChannel, aliasTopic);
+  // Safari / bfcache: when tab becomes visible or page is shown again, rejoin
+  try {
+    const onPageShow = () => {
+      if (DEV) console.log('[phoenix] pageshow → rejoin');
+      retryAttempt = 0;
+      clearRetry();
+      try { recreateChannels(); } catch {}
+    };
+    const onVisibility = () => {
+      try {
+        if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
+          if (DEV) console.log('[phoenix] visibilitychange → rejoin');
+          retryAttempt = 0;
+          clearRetry();
+          try { recreateChannels(); } catch {}
+        }
+      } catch {}
+    };
+    window.addEventListener('pageshow', onPageShow);
+    document.addEventListener('visibilitychange', onVisibility);
+    cleanups.push(() => { try { window.removeEventListener('pageshow', onPageShow); } catch {} });
+    cleanups.push(() => { try { document.removeEventListener('visibilitychange', onVisibility); } catch {} });
+  } catch {}
 
   // Lifecycle propagation (errors/close)
   try { (channel as any).onError?.((e: any) => { if (DEV) console.log('[phoenix] channel error', e); adapter.onerror?.(e); scheduleRetry('channel error'); }); } catch {}
