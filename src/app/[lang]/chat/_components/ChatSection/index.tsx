@@ -72,7 +72,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [showJobDetailModal, setShowJobDetailModal] = useState<boolean>(false);
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
-    const [workflowIdState, setWorkflowIdState] = useState<number | null>(null);
     const [currentRoom, setCurrentRoom] = useState<any>(roomData);
     const [messages, setMessages] = useState<UIChatMessage[]>([]);
     const atBottomRef = useRef<boolean>(true);
@@ -164,30 +163,31 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             })(event)
     );
 
+    useEffect(() => {
+        if (!refreshRoomData) return;
+        setCurrentRoom({ ...refreshRoomData });
+    }, [refreshRoomData]);
+
     // After commit, propagate the last incoming message to ChatRooms context and auto-scroll for receiver
     useEffect(() => {
-        if (isFetching) return; // suppress global updates while fetching history
+        if (isFetching) return;
         const d = latestIncomingRef.current;
         if (!d) return;
-        if (refreshRoomData) {
-            setCurrentRoom(refreshRoomData);
-        }
+
         try {
-            // Auto-scroll to the latest when receiving a new message (receiver experience)
             if (d.senderId !== Number(localUser?.id)) {
                 scrollToLatestSoon();
             }
-            // Only update preview; rely on global event for conditional reordering
-            // no-op: last message previews removed
             try {
                 const isUnread = d.senderId !== Number(localUser?.id) && !atBottomRef.current;
-                window.dispatchEvent(new CustomEvent("chat:new-message", {detail: {...d, unread: isUnread}}));
-            } catch {
-            }
+                window.dispatchEvent(new CustomEvent("chat:new-message", {
+                    detail: { ...d, unread: isUnread }
+                }));
+            } catch {}
         } finally {
             latestIncomingRef.current = null;
         }
-    }, [messages, isFetching]);
+    }, [messages, isFetching, currentRoom]);
 
     // Mark this room as active and mark as read on mount
     useEffect(() => {
@@ -304,7 +304,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     } = useWorkflowActions({
         messages,
         roomData: currentRoom,
-        workflowIdState,
         localUser: localUser || person,
         roomId,
         selectedFile,
@@ -315,7 +314,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         sendRoomUpdate,
         goToStatus,
         setHasStarted,
-        setWorkflowIdState,
         setShowQuotationModal,
         setSelectedFile,
         canSend,
@@ -428,11 +426,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
 
     // Determine latest quotation amount and whether employer has sufficient balance to approve
-    const latestQuoteAmount = useMemo(() => {
-        const p: any = getLatestProposedQuotePayload(messages as any);
-        const amt = Number(p?.quote?.amount);
-        return Number.isFinite(amt) ? amt : undefined;
-    }, [messages]);
+    const latestQuoteAmount = currentRoom.room.post.budget;
 
     const availableBalance: number = useMemo(() => {
         const total = Number((wallet as any)?.balanceAvailable ?? (wallet as any)?.balanceTotal ?? 0);
