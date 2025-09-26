@@ -8,6 +8,8 @@ export type UnreadState = {
   total: number;
   // UI context
   activeRoomId?: string | null;
+  /** Token representing the current owner of the active room claim (for race-free unmount). */
+  activeOwnerToken?: string | null;
   // actions
   inc: (roomId: string, by?: number) => void;
   reset: (roomId: string) => void;
@@ -19,12 +21,20 @@ export type UnreadState = {
   setCount: (roomId: string, count: number) => void;
   /** Remove a room entry entirely and adjust total accordingly. */
   removeRoom: (roomId: string) => void;
+  /** Acquire exclusive ownership of active room; returns a token to release later. */
+  acquireActive: (roomId: string) => string;
+  /** Release active room only if the token still owns it (prevents cross-unmount races). */
+  releaseActive: (token: string) => void;
 };
 
 const STORAGE_KEY = "chat_unread_v1";
 
 // Note: All persistence only runs in the browser (guarded by isBrowser()).
 // On the server/SSR, the store starts empty and will hydrate on the client.
+
+function uid(): string {
+  try { return crypto?.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`; } catch { return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`; }
+}
 
 function loadPersisted(): Pick<UnreadState, "perRoom"> {
   if (!isBrowser()) return { perRoom: {} };
@@ -53,6 +63,7 @@ export const useUnreadStore = create<UnreadState>((set, get) => {
     perRoom: initial.perRoom,
     total: totalInitial,
     activeRoomId: null,
+    activeOwnerToken: null,
     inc: (roomId: string, by: number = 1) => {
       set((s) => {
         const step = Number.isFinite(by) ? Math.floor(by) : 1;
@@ -124,6 +135,20 @@ export const useUnreadStore = create<UnreadState>((set, get) => {
         return { ...s, perRoom: nextPerRoom, total };
       });
     },
+    acquireActive: (roomId: string) => {
+      const token = uid();
+      set((s) => ({ ...s, activeRoomId: roomId, activeOwnerToken: token }));
+      // when a room becomes active, consider it read immediately
+      get().reset(roomId);
+      return token;
+    },
+    releaseActive: (token: string) => {
+      set((s) => {
+        // only clear if the same owner still holds the claim
+        if (!token || s.activeOwnerToken !== token) return s;
+        return { ...s, activeRoomId: null, activeOwnerToken: null };
+      });
+    },
   };
 });
 
@@ -183,6 +208,16 @@ export function setActiveRoom(roomId: string | null) {
   const s = useUnreadStore.getState();
   s.setActiveRoomId(roomId);
   if (roomId) s.reset(roomId);
+}
+
+/**
+ * Scoped activation helper: call at mount to mark a room active and receive a disposer
+ * that safely releases the claim on unmount. Prevents the classic race where Room A unmounts
+ * after Room B has already become active and accidentally clears the active room.
+ */
+export function setActiveRoomScoped(roomId: string) {
+  const token = useUnreadStore.getState().acquireActive(roomId);
+  return () => useUnreadStore.getState().releaseActive(token);
 }
 
 /** Replace current counters with a snapshot (e.g., after fetching from backend). */

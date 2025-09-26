@@ -157,6 +157,8 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
 
     // Track which room is currently open/active in the UI
     const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
+    // Token to enforce single active room ownership across multiple contexts
+    const activeTokenRef = useRef<string | null>(null);
 
     useEffect(() => {
         let alive = true;
@@ -293,14 +295,13 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                         return;
                     }
 
-                    // Update unread count if not the active room
-                    if (detail.unread && detail.roomId !== activeRoomId) {
-                        try {
-                            const { useUnreadStore } = require("@/stores/unreadStore");
-                            useUnreadStore.getState().inc(detail.roomId, 1);
-                        } catch (e) {
-                            console.error('Failed to update unread store:', e);
-                        }
+                    // Delegate unread policy to the store helper (respects active room & window focus)
+                    try {
+                        const { incrementForIncoming } = require("@/stores/unreadStore");
+                        // detail.unread === true implies it's not from self
+                        incrementForIncoming(String(detail.roomId), { fromSelf: !detail.unread });
+                    } catch (e) {
+                        console.error('Failed to update unread store:', e);
                     }
 
                     // Bump room to top
@@ -317,25 +318,26 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                 console.error('Failed to unsubscribe from chat:new-message:', e);
             }
         };
-    }, [activeRoomId, bumpRoomToTop]);
+    }, [bumpRoomToTop]);
 
-    // Sync activeRoomId to global unread store so global listener can avoid double-counting
     useEffect(() => {
+        let cancelled = false;
         (async () => {
             try {
                 const { useUnreadStore } = await import("@/stores/unreadStore");
-                useUnreadStore.getState().setActiveRoomId(activeRoomId);
+                const state = useUnreadStore.getState();
+                // Release previous token if any
+                if (activeTokenRef.current) {
+                    try { state.releaseActive(activeTokenRef.current); } catch {}
+                    activeTokenRef.current = null;
+                }
+                if (activeRoomId) {
+                    const token = state.acquireActive(activeRoomId);
+                    if (!cancelled) activeTokenRef.current = token;
+                }
             } catch {}
         })();
-        return () => {
-            // On unmount, clear the active room
-            (async () => {
-                try {
-                    const { useUnreadStore } = await import("@/stores/unreadStore");
-                    useUnreadStore.getState().setActiveRoomId(null);
-                } catch {}
-            })();
-        };
+        return () => { cancelled = true; };
     }, [activeRoomId]);
 
     // Hydrate and sync unread counts per room from the global unread store
@@ -368,6 +370,16 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         return () => { cancelled = true; try { unsub?.(); } catch {} };
         // Re-run when room list identity changes (ids), so unread can be applied to new rooms
     }, [state.rooms.map?.(r => r.id).join("|")]);
+
+    useEffect(() => {
+        return () => {
+            try {
+                if (activeTokenRef.current) {
+                    import("@/stores/unreadStore").then(m => m.useUnreadStore.getState().releaseActive(activeTokenRef.current!)).catch(() => {});
+                }
+            } catch {}
+        };
+    }, []);
 
     const value = useMemo<ChatRoomsContextValue>(() => ({
         ...state,
