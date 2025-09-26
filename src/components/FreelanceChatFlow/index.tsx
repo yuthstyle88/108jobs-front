@@ -190,13 +190,13 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
 
     const currentIndex = Math.max(0, STEPS.findIndex((s) => s.key === viewStatus));
 
-    // Backward-compatible: if parent passes `started`, use it; otherwise derive from status
-    const startedEffective = currentStatus === 'Completed'
-    || currentStatus === 'Cancelled' ? false : started;
+    // Consolidate final-state logic to avoid overlap
+    const isFinal = currentStatus === 'Completed' || currentStatus === 'Cancelled';
+    const showMessageHiring = isFinal && isEmployer;
+    const startedEffective = isFinal ? false : started;
     const showStartButton = Boolean(isEmployer && !startedEffective);
     const canStartWorkflow = showStartButton;
     const [showStartConfirm, setShowStartConfirm] = useState(false);
-    const showMessageHiring = currentStatus === 'Completed' && isEmployer;
 
     const ORDER: ViewStatus[] = (stepper?.ORDER as StatusKey[]) as ViewStatus[] || [
         'WaitForFreelancerQuotation',
