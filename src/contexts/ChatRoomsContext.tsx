@@ -10,6 +10,9 @@ import type {ListUserChatRoomsResponse} from "lemmy-js-client";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {REQUEST_STATE} from "@/services/HttpService";
 import { isBrowser } from "@/utils/browser";
+import { useUnreadStore } from "@/stores/unreadStore";
+import { useRoomsStore } from "@/stores/roomsStore";
+import { enableBackgroundUnread, disableBackgroundUnread } from "@/chat/BackgroundUnreadWatcher";
 
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 
@@ -155,10 +158,34 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         hasMore: true
     } as any);
 
-    // Track which room is currently open/active in the UI
-    const [activeRoomId, setActiveRoomId] = useState<string | null>(null);
-    // Token to enforce single active room ownership across multiple contexts
-    const activeTokenRef = useRef<string | null>(null);
+    // Use unreadStore as single source of truth for active room
+    const storeActiveRoomId = useUnreadStore(s => s.activeRoomId);
+    const acquireActive = useUnreadStore(s => s.acquireActive);
+    const releaseActive = useUnreadStore(s => s.releaseActive);
+    const directSetActive = useUnreadStore(s => s.setActiveRoomId);
+    const [activeToken, setActiveToken] = useState<string | null>(null);
+    const markSeen = useUnreadStore(s => s.markSeen);
+
+    const activeRoomId = storeActiveRoomId;
+    const setActiveRoomId = useCallback((roomId: string | null) => {
+        const current = storeActiveRoomId == null ? null : String(storeActiveRoomId);
+        const next = roomId == null ? null : String(roomId);
+        // No-op if no change
+        if (current === next) return;
+
+        if (next === null) {
+            try { if (activeToken) releaseActive(activeToken); } catch {}
+            setActiveToken(null);
+            try { directSetActive(null); } catch {}
+            return;
+        }
+        // switch ownership token only when id actually changes
+        try { if (activeToken) releaseActive(activeToken); } catch {}
+        const token = acquireActive(next);
+        setActiveToken(token);
+        // Clear unread immediately at the origin where active is set
+        try { markSeen(next); } catch {}
+    }, [storeActiveRoomId, activeToken, acquireActive, releaseActive, directSetActive, markSeen]);
 
     useEffect(() => {
         let alive = true;
@@ -217,6 +244,21 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
             alive = false;
         };
     }, [data, mapToRooms, page]);
+
+    // Enable background unread counting for non-active rooms ONLY.
+    // This provider DOES NOT perform any unread increments itself.
+    // Incrementing happens via:
+    //   - BackgroundUnreadWatcher (joins non-active rooms) → incrementForIncoming(roomId)
+    //   - (Optional) Realtime layer for rooms not currently active (if present)
+    // Here we only synchronize per-room unread numbers from the store to the UI list.
+    useEffect(() => {
+        const tokenGetter = () => {
+            try { return UserService.Instance.auth() || null; } catch { return null; }
+        };
+        const userIdGetter = () => (localUser?.id ?? null);
+        enableBackgroundUnread(tokenGetter, userIdGetter);
+        return () => { disableBackgroundUnread(); };
+    }, [localUser?.id]);
 
     const refresh = useCallback(() => {
         execute();
@@ -282,7 +324,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     }, [saveOverrides]);
 
 
-    // Listen for global chat:new-message events to immediately update the left list
+    // Listen for global chat:new-message events for UI ordering ONLY (no unread increments here)
     useEffect(() => {
         let unsubscribe: (() => void) | null = null;
         (async () => {
@@ -295,16 +337,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                         return;
                     }
 
-                    // Delegate unread policy to the store helper (respects active room & window focus)
-                    try {
-                        const { incrementForIncoming } = require("@/stores/unreadStore");
-                        // detail.unread === true implies it's not from self
-                        incrementForIncoming(String(detail.roomId), { fromSelf: !detail.unread });
-                    } catch (e) {
-                        console.error('Failed to update unread store:', e);
-                    }
-
-                    // Bump room to top
+                    // Only reorder list here; unread counting handled by realtime + background watcher
                     bumpRoomToTop(detail.roomId, detail.timestamp);
                 });
             } catch (e) {
@@ -320,27 +353,12 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         };
     }, [bumpRoomToTop]);
 
-    useEffect(() => {
-        let cancelled = false;
-        (async () => {
-            try {
-                const { useUnreadStore } = await import("@/stores/unreadStore");
-                const state = useUnreadStore.getState();
-                // Release previous token if any
-                if (activeTokenRef.current) {
-                    try { state.releaseActive(activeTokenRef.current); } catch {}
-                    activeTokenRef.current = null;
-                }
-                if (activeRoomId) {
-                    const token = state.acquireActive(activeRoomId);
-                    if (!cancelled) activeTokenRef.current = token;
-                }
-            } catch {}
-        })();
-        return () => { cancelled = true; };
-    }, [activeRoomId]);
-
-    // Hydrate and sync unread counts per room from the global unread store
+    // === Unread Sync Layer (Display Only) ===
+    // This effect mirrors the global unread store into the left room list.
+    // DO NOT increment unread here. All counting must happen in the store via incrementForIncoming.
+    // Rationale:
+    //   - Single source of truth: useUnreadStore handles active-room policy & dedupe
+    //   - Avoids double counting from multiple listeners/providers
     useEffect(() => {
         let unsub: undefined | (() => void);
         let cancelled = false;
@@ -371,15 +389,32 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         // Re-run when room list identity changes (ids), so unread can be applied to new rooms
     }, [state.rooms.map?.(r => r.id).join("|")]);
 
+    // Sync current rooms into the global rooms store so background watchers can observe them
+    useEffect(() => {
+        try {
+            const setRooms = (useRoomsStore as any).getState?.().setRooms;
+            if (typeof setRooms === 'function') {
+                // Keep only the minimal fields the watchers need; preserve id and name for potential UI use
+                const slim = state.rooms.map(r => ({ id: String(r.id), name: (r as any).name ?? undefined }));
+                setRooms(slim);
+            } else {
+                // Fallback: if no setter, try to mutate a known key carefully
+                const store = (useRoomsStore as any).getState?.();
+                if (store && 'rooms' in store) {
+                    store.rooms = state.rooms.map(r => ({ id: String(r.id), name: (r as any).name ?? undefined }));
+                }
+            }
+        } catch (e) {
+            console.warn('[rooms-store] failed to sync rooms:', e);
+        }
+        // Re-run when the set of room ids changes
+    }, [state.rooms.map?.(r => r.id).join('|')]);
+
     useEffect(() => {
         return () => {
-            try {
-                if (activeTokenRef.current) {
-                    import("@/stores/unreadStore").then(m => m.useUnreadStore.getState().releaseActive(activeTokenRef.current!)).catch(() => {});
-                }
-            } catch {}
+            try { if (activeToken) releaseActive(activeToken); } catch {}
         };
-    }, []);
+    }, [activeToken, releaseActive]);
 
     const value = useMemo<ChatRoomsContextValue>(() => ({
         ...state,
@@ -389,7 +424,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         bumpRoomToTop,
         activeRoomId,
         setActiveRoomId,
-    }), [state, refresh, loadMore, markRoomRead, bumpRoomToTop, activeRoomId]);
+    }), [state, refresh, loadMore, markRoomRead, bumpRoomToTop, activeRoomId, setActiveRoomId]);
 
     return (
         <ChatRoomsContext.Provider value={value}>

@@ -1,30 +1,11 @@
 import {faComment} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import {useEffect} from "react";
-import {usePathname} from "next/navigation";
-import { useTotalUnread, useUnreadActions, onChatNewMessage } from "@/chat";
+import { useTotalUnread } from "@/chat";
 
 const ChatBadge = () => {
     // Compute unread count from store via chat module
     const unreadCount = useTotalUnread();
-    const { inc: incUnread } = useUnreadActions();
-    const pathname = usePathname();
-
-    // Listen globally for chat:new-message when user is outside chat pages, via chat event bus
-    useEffect(() => {
-        const off = onChatNewMessage((detail) => {
-            try {
-                // Avoid double-counting when on chat pages where ChatRoomsContext already updates unread
-                const isOnChatRoute = typeof pathname === 'string' && pathname.startsWith('/chat');
-                if (isOnChatRoute) return;
-                if (detail.unread === true && detail.roomId) {
-                    incUnread(detail.roomId, 1);
-                }
-            } catch {}
-        });
-        return () => off();
-    }, [pathname, incUnread]);
 
     return (
         <Link prefetch={false}

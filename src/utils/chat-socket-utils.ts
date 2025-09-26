@@ -447,3 +447,15 @@ export async function fetchHistoryPage(
     next: resp.nextPage ?? resp.next_page ?? null,
   } as any;
 }
+
+// Type guard: ensure we only treat real chat messages (not typing frames) as messages
+export function isChatMessageLike(m: any): m is { id: string; roomId: string; senderId: number; content: string; createdAt: string } {
+    return !!(
+        m && typeof m === 'object' &&
+        typeof m.id === 'string' &&
+        (typeof m.roomId === 'string' || typeof m.room_id === 'string') &&
+        (typeof m.senderId === 'number' || typeof m.sender_id === 'number') &&
+        typeof m.content === 'string' && m.content.trim() !== '' &&
+        typeof (m.createdAt ?? m.created_at) === 'string'
+    );
+}

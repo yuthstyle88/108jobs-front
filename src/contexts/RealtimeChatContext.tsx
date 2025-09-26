@@ -19,6 +19,7 @@ import {
     handleIncomingPayload,
     addRoomListener,
     removeRoomListener,
+    isChatMessageLike,
     fetchHistoryPage,
 } from "@/utils/chat-socket-utils";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
@@ -53,6 +54,7 @@ interface WebSocketContextValue {
     /** True when a history fetch is in-flight. */
     isFetching: boolean;
     refreshRoomData: any;
+    sendReadReceipt: (roomId: string, lastMessageId: string) => void;
 }
 
 const WebSocketContext = createContext<WebSocketContextValue | undefined>(undefined);
@@ -81,6 +83,19 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
     const [pageCursor, setPageCursor] = useState<string | null>(null);
     const lastTypedSentRef = useRef<boolean>(false);
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    // Track whether the peer (counterpart) is active in THIS room recently
+    const peerActiveRef = useRef<boolean>(false);
+    const peerActiveDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const markPeerActive = useCallback(() => {
+        peerActiveRef.current = true;
+        if (peerActiveDecayRef.current) {
+            try { clearTimeout(peerActiveDecayRef.current); } catch {}
+        }
+        // Consider peer "active" for a short window after signals (typing, presence)
+        peerActiveDecayRef.current = setTimeout(() => {
+            peerActiveRef.current = false;
+        }, 20000); // 20s window; adjust as needed
+    }, []);
     const router = useRouter();
     const {localUser} = useMyUser();
     const isE2EMock = process.env.NEXT_PUBLIC_E2E_MODE === "mock";
@@ -90,6 +105,17 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
     const [connectionAttemptKey, setConnectionAttemptKey] = useState(0);
     const sentMessagesRef = useRef<Set<string>>(new Set());
     const receivedMessagesRef = useRef<Set<string>>(new Set());
+    // Unified dedupe for logical messages (prefers id; falls back to composite signature)
+    const processedMsgRef = useRef<Set<string>>(new Set());
+    const buildMessageSignature = useCallback((item: any) => {
+        const id = item?.id != null ? String(item.id) : '';
+        if (id) return `id:${id}`;
+        const r = String(item?.roomId ?? '');
+        const s = String(item?.senderId ?? '');
+        const t = String(item?.createdAt ?? '');
+        const c = typeof item?.content === 'string' ? item.content : JSON.stringify(item?.content ?? '');
+        return `sig:${r}|${s}|${t}|${c}`;
+    }, []);
     const fetchResolveRef = useRef<((value?: void) => void) | null>(null);
     const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const phoenixPollRef = useRef<NodeJS.Timeout | null>(null);
@@ -184,6 +210,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                                 const chatRoomRes = await HttpService.client.getChatRoom(roomId);
                                 if (chatRoomRes.state === REQUEST_STATE.SUCCESS) {
                                     setRefreshRoomData(chatRoomRes.data);
+                                    try { markPeerActive(); } catch {}
                                 }
                             } catch (err) {
                                 console.error("Error fetching room:", err);
@@ -210,17 +237,36 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                             } as any;
                             // Do not show typing indicator to the person who is typing
                             if (senderIdNum !== Number(localUser?.id)) {
+                                // mark peer as recently active in this room (for read/unread hinting)
+                                try { markPeerActive(); } catch {}
                                 // Route typing via a dedicated DOM event so it doesn't render as a message bubble
                                 try {
                                     if (typeof window !== 'undefined') {
                                         window.dispatchEvent(new CustomEvent('chat:typing', {detail: info}));
                                     }
-                                } catch {
-                                }
+                                } catch {}
                             }
                         }
                     } catch {
                     }
+
+                    // Handle read receipt events → broadcast to UI
+                    try {
+                        const evName = String((env as any)?.event || (env as any)?.content || '');
+                        if (evName === 'chat:read-receipt' || evName === 'chat:read') {
+                            const room_id = (env as any)?.room_id || (env as any)?.roomId || (env as any)?.topic || roomId;
+                            const last_read_message_id = (env as any)?.last_read_message_id || (env as any)?.lastReadMessageId;
+                            const reader_id = Number((env as any)?.reader_id ?? (env as any)?.readerId ?? 0);
+                            if (isBrowser()) {
+                                try {
+                                    window.dispatchEvent(new CustomEvent('chat:read-receipt', {
+                                        detail: { roomId: String(room_id), lastMessageId: String(last_read_message_id || ''), readerId: reader_id }
+                                    }));
+                                } catch {}
+                            }
+                            return;
+                        }
+                    } catch {}
 
                     const msgs = await handleIncomingPayload(payload, {
                         roomId,
@@ -236,24 +282,51 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                     });
 
                     if (Array.isArray(msgs) && msgs.length) {
-                        for (const item of msgs) broadcastToListeners(item);
-                        try {
-                            const last = msgs[msgs.length - 1] as any;
-                            const detail = {
-                                roomId: last.roomId,
-                                content: last.content,
-                                senderId: Number(last.senderId) || 0,
-                                timestamp: last.createdAt || new Date().toISOString(),
-                                unread: Number(last.senderId) !== Number(localUser?.id),
-                            };
-                            if (isBrowser()) {
-                                try {
-                                    import("@/chat").then(m => m.emitChatNewMessage(detail as any)).catch(() => window.dispatchEvent(new CustomEvent('chat:new-message', {detail})));
-                                } catch {
-                                    window.dispatchEvent(new CustomEvent('chat:new-message', {detail}));
+                        for (const item of msgs) {
+                            // Broadcast to in-app listeners
+                            broadcastToListeners(item);
+                            // Only fire chat:new-message for real messages (not typing/partial frames)
+                            try {
+                                if (!isChatMessageLike(item)) continue;
+                                // Unified dedupe (prefer id; fall back to composite signature)
+                                const signature = buildMessageSignature(item as any);
+                                if (processedMsgRef.current.has(signature)) {
+                                    continue;
                                 }
-                            }
-                        } catch {
+                                processedMsgRef.current.add(signature);
+
+                                // Count unread exactly once here; delegate active/focus policy to the store
+                                // try {
+                                //     // Skip counting if this provider is already on the same (active) room and the window is focused
+                                //     const sameRoom = String((item as any).roomId) === String(roomId);
+                                //     const focusedNow = typeof document !== 'undefined' && typeof document.hasFocus === 'function' ? document.hasFocus() : true;
+                                //     if (!sameRoom || !focusedNow) {
+                                //         incrementForIncoming(String((item as any).roomId), {
+                                //             messageId: (item as any).id,
+                                //         });
+                                //     }
+                                // } catch {}
+
+                                const msgId = String((item as any).id || '');
+                                const fromSelf = Number((item as any).senderId) === Number(localUser?.id);
+                                const peerActiveNow = !!peerActiveRef.current;
+                                const detail = {
+                                    id: msgId,
+                                    roomId: (item as any).roomId,
+                                    content: (item as any).content,
+                                    senderId: Number((item as any).senderId) || 0,
+                                    timestamp: (item as any).createdAt || new Date().toISOString(),
+                                    // If message is from self and peer isn't currently active in this room, mark as unread for recipient view
+                                    // Incoming messages to us are considered read (for our side) when they arrive in the active room
+                                    unread: fromSelf ? !peerActiveNow : false,
+                                } as any;
+                                if (isBrowser()) {
+                                    try {
+                                        // Dispatch exactly once via DOM (no secondary emitters)
+                                        window.dispatchEvent(new CustomEvent('chat:new-message', { detail }));
+                                    } catch {}
+                                }
+                            } catch {}
                         }
                     }
                 } catch (e) {
@@ -371,6 +444,11 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                 fetchResolveRef.current = null;
                 setIsFetching(false);
             }
+            if (peerActiveDecayRef.current) {
+                try { clearTimeout(peerActiveDecayRef.current); } catch {}
+                peerActiveDecayRef.current = null;
+            }
+            try { processedMsgRef.current.clear(); } catch {}
         };
     }, [connectionAttemptKey, localUser, roomId, token]);
 
@@ -404,6 +482,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                 broadcastToListeners(mockMessage);
                 try {
                     const detail = {
+                        id: String(messageId),
                         roomId: roomId,
                         content: data.message,
                         senderId: Number(localUser?.id) || 0,
@@ -411,22 +490,9 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                         unread: false,
                     };
                     if (isBrowser()) {
-                        try {
-                            import("@/chat").then(m => m.emitChatNewMessage(detail as any)).catch(() => {
-                                try {
-                                    window.dispatchEvent(new CustomEvent('chat:new-message', {detail}));
-                                } catch {
-                                }
-                            });
-                        } catch {
-                            try {
-                                window.dispatchEvent(new CustomEvent('chat:new-message', {detail}));
-                            } catch {
-                            }
-                        }
+                        try { window.dispatchEvent(new CustomEvent('chat:new-message', { detail })); } catch {}
                     }
-                } catch {
-                }
+                } catch {}
                 return;
             }
 
@@ -492,6 +558,19 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
         },
         [socket, isE2EMock, roomId, localUser?.id]
     );
+
+    const sendReadReceipt = useCallback((roomId: string, lastMessageId: string) => {
+        try {
+            if (isE2EMock) return;
+            (socket as any)?.emit?.("chat:read", {
+                room_id: roomId,
+                last_read_message_id: lastMessageId,
+                reader_id: Number(localUser?.id) || 0,
+            });
+        } catch (err) {
+            console.error("Failed to send read receipt", err);
+        }
+    }, [socket, localUser?.id, isE2EMock]);
 
     const sendTyping = useCallback((isTyping: boolean) => {
         try {
@@ -572,7 +651,8 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                 roomId,
                 hasMoreMessages,
                 isFetching,
-                refreshRoomData
+                refreshRoomData,
+                sendReadReceipt
             }}>
             {children}
         </WebSocketContext.Provider>

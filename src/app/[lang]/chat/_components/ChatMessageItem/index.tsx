@@ -5,7 +5,15 @@ import type { ChatMessage } from "lemmy-js-client";
 import {MessageImage} from "@/constants/images";
 import { useTranslation } from "react-i18next";
 
-type UIChatMessage = ChatMessage & { isOwner?: boolean };
+type UIChatMessage = ChatMessage & {
+  isOwner?: boolean;
+  /** True if peer has read this message (e.g., derived from read-receipt) */
+  readByPeer?: boolean;
+  /** True if peer has NOT read this message (explicit). If both are absent, status is unknown. */
+  unreadByPeer?: boolean;
+  /** Optional timestamp when peer read this message */
+  receiptAt?: string | number | Date;
+};
 
 interface ChatMessageItemProps {
   message: UIChatMessage;
@@ -44,21 +52,47 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   message,
   partnerAvatar,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isIncoming = !message.isOwner;
 
-  const toLocalTime = (iso: string, locale: string) => {
-    const format = (d: Date) => d.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
+  const toLocalTime = (input: string | number | Date, locale: string) => {
+    const formatter = new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' });
+    const format = (d: Date) => formatter.format(d);
+
+    // Guard
+    if (input == null || input === '') return '';
+
+    // Fast paths
+    if (input instanceof Date && !isNaN(input.getTime())) return format(input);
+    if (typeof input === 'number') {
+      const d = new Date(input);
+      return isNaN(d.getTime()) ? '' : format(d);
+    }
+
+    let iso = String(input);
+
+    // Try native parse first
     let d = new Date(iso);
     if (!isNaN(d.getTime())) return format(d);
-    // Attempt to normalize fractional seconds to 3 digits (e.g., 2025-09-03T03:38:35.079201Z -> .079Z)
-    if (iso && iso.includes(".")) {
+
+    // Normalize common variants:
+    // 1) Space-separated: "YYYY-MM-DD HH:mm:ss(.sss)" → replace space with 'T'
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(\.\d+)?$/.test(iso)) {
+      iso = iso.replace(' ', 'T');
+    }
+
+    // 2) Missing timezone: add 'Z' (treat as UTC) if no Z/+/-
+    if (!/[Zz+\-]$/.test(iso) && !/[Zz]|[+\-]\d{2}:?\d{2}$/.test(iso)) {
+      iso = iso + 'Z';
+    }
+
+    // 3) Excess fractional seconds: clamp to 3 digits
+    if (iso.includes('.')) {
       try {
-        const [head, rest] = iso.split(".");
-        // find timezone part
-        let tz = "";
+        const [head, rest] = iso.split('.');
+        let tz = '';
         let frac = rest;
-        const tzMarkers = ["Z", "+", "-"] as const;
+        const tzMarkers = ['Z', 'z', '+', '-'] as const;
         let idx = -1;
         for (const m of tzMarkers) {
           const i = rest.indexOf(m);
@@ -68,16 +102,21 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
           tz = rest.slice(idx);
           frac = rest.slice(0, idx);
         }
-        const frac3 = (frac + "000").slice(0, 3);
-        const norm = `${head}.${frac3}${tz || "Z"}`;
-        d = new Date(norm);
-        if (!isNaN(d.getTime())) return format(d);
-      } catch {/* ignore */}
+        const frac3 = (frac + '000').slice(0, 3);
+        iso = `${head}.${frac3}${tz || 'Z'}`;
+      } catch {}
     }
-    return "";
+
+    d = new Date(iso);
+    return isNaN(d.getTime()) ? '' : format(d);
   };
 
-  const time = toLocalTime(message.createdAt, "th-TH");
+  const time = toLocalTime(message.createdAt as any, i18n?.language || "th-TH");
+  // Derive read/unread strictly from explicit fields provided by upper layers (store/receipts)
+  const readByPeer: boolean = message.readByPeer === true || !!message.receiptAt;
+  const unreadByPeer: boolean = message.unreadByPeer === true;
+  // Only render badge on our own messages and only when state is known
+  const showReceipt: boolean = !isIncoming && (readByPeer || unreadByPeer);
 
   // Try to parse message.content as JSON for special rendering
   let parsed: ProposedQuoteMessage | null = null;
@@ -127,16 +166,16 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
       >
         <p className="text-[11px] text-gray-400 flex items-center gap-1">
           {time}
-          {!isIncoming && (
-            message.status === 0 ? (
-              <span className="ml-1 inline-flex items-center gap-1 text-primary">
-                <span className="inline-block w-2 h-2 rounded-full bg-blue-500" />
-                  {t("profileChat.unread")}
-              </span>
-            ) : (
+          {showReceipt && (
+            readByPeer ? (
               <span className="ml-1 inline-flex items-center gap-1 text-green-600">
                 <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
-                  {t("profileChat.read")}
+                {t("profileChat.read")}
+              </span>
+            ) : (
+              <span className="ml-1 inline-flex items-center gap-1 text-primary">
+                <span className="inline-block w-2 h-2 rounded-full bg-blue-500" />
+                {t("profileChat.unread")}
               </span>
             )
           )}
