@@ -101,6 +101,7 @@ function reconcileRooms(st: BGState) {
 
         // เปิด adapter สำหรับห้องที่ต้องการ
         for (const id of want) {
+            console.log('ID room', id);
             if (String(active ?? '') === id) continue;
             if (st.adapters.has(id)) continue;
 
@@ -116,9 +117,10 @@ function reconcileRooms(st: BGState) {
             adapter.onmessage = (evt) => {
                 try {
                     const env = JSON.parse(evt.data);
-                    const isMsg = env?.event === 'chat:message' || env?.payload?.event === 'chat:message';
+                    const isMsg = env?.event === 'chat:message'
+                        || env?.event === 'new_msg'
+                        || env?.payload?.event === 'chat:message';
                     if (!isMsg) { dbg('skip non-message event', env?.event || env?.payload?.event); return; }
-
                     const payload = env.payload || env;
                     const roomId = String((env.topic ?? payload.topic ?? id) || id);
                     const messageId = String(payload.id ?? payload.message_id ?? '');
