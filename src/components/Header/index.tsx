@@ -71,7 +71,17 @@ const Header = ({ type, forceShowSearch = false }: BgProps) => {
             >
               {t("global.labelSignInButton")}
             </Link>
+
           )}
+            {!isLoggedIn && (
+                <Link prefetch={false}
+                      href="/register"
+                      className="text-white text-sm hover:text-white"
+                >
+                    {t("global.labelSignUpButton")}
+                </Link>
+
+            )}
           {!isLoggedIn && <LanguageDropdown />}
         </section>
       </nav>
