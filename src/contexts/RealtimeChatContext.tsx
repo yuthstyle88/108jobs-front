@@ -22,6 +22,7 @@ import {
     isChatMessageLike,
     fetchHistoryPage,
 } from "@/utils/chat-socket-utils";
+import { makeEmitReadAcker } from "@/utils/chat-socket-utils";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import {isBrowser} from "@/utils/browser";
 import {REQUEST_STATE} from "@/services/HttpService";
@@ -119,6 +120,10 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
     const fetchResolveRef = useRef<((value?: void) => void) | null>(null);
     const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const phoenixPollRef = useRef<NodeJS.Timeout | null>(null);
+    // Cooldown guard to prevent auto-ack feedback loops
+    const ackCooldownRef = useRef<number>(0);
+    // Read-receipt acker (debounced, monotonic)
+    const readAckRef = useRef<((id: number | string) => void) | null>(null);
 
     // Always use Phoenix transport for chat realtime
     // TODO: remove temporary receiver fallback when backend provides proper mapping
@@ -295,17 +300,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                                 }
                                 processedMsgRef.current.add(signature);
 
-                                // Count unread exactly once here; delegate active/focus policy to the store
-                                // try {
-                                //     // Skip counting if this provider is already on the same (active) room and the window is focused
-                                //     const sameRoom = String((item as any).roomId) === String(roomId);
-                                //     const focusedNow = typeof document !== 'undefined' && typeof document.hasFocus === 'function' ? document.hasFocus() : true;
-                                //     if (!sameRoom || !focusedNow) {
-                                //         incrementForIncoming(String((item as any).roomId), {
-                                //             messageId: (item as any).id,
-                                //         });
-                                //     }
-                                // } catch {}
+
 
                                 const msgId = String((item as any).id || '');
                                 const fromSelf = Number((item as any).senderId) === Number(localUser?.id);
@@ -320,6 +315,17 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                                     // Incoming messages to us are considered read (for our side) when they arrive in the active room
                                     unread: fromSelf ? !peerActiveNow : false,
                                 } as any;
+
+                                // Collect the latest id for this batch to avoid spamming the acker (ignore self messages)
+                                try {
+                                    const sameRoom = String((item as any).roomId) === String(roomId);
+                                    const fromSelf = Number((item as any).senderId) === Number(localUser?.id);
+                                    if (sameRoom && !fromSelf && detail.id) {
+                                        try { console.log('[read-ack] candidate:lastId', { roomId, id: String(detail.id) }); } catch {}
+                                        (handleWSMessage as any)._batchAckLastId = String(detail.id);
+                                    }
+                                } catch {}
+
                                 if (isBrowser()) {
                                     try {
                                         // Dispatch exactly once via DOM (no secondary emitters)
@@ -328,6 +334,55 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                                 }
                             } catch {}
                         }
+                        // Flush one auto-ack (safe)
+                        try {
+                            const batchId = (handleWSMessage as any)._batchAckLastId as string | undefined;
+                            (handleWSMessage as any)._batchAckLastId = null;
+
+                            if (batchId) {
+                                const now = Date.now();
+                                const lastAcked = (handleWSMessage as any)._lastAckedId as string | undefined;
+
+                                // Determine if we should require an active, visible tab before sending read-acks.
+                                // Default: require focus (set localStorage `read_ack_require_focus` to "0" to allow background acks).
+                                const requireFocus =
+                                    (() => {
+                                        try { return localStorage.getItem('read_ack_require_focus') !== '0'; }
+                                        catch { return true; }
+                                    })();
+
+                                const isActiveTab =
+                                    typeof document !== 'undefined'
+                                        ? (document.visibilityState === 'visible' &&
+                                            (typeof document.hasFocus === 'function' ? document.hasFocus() : true))
+                                        : true;
+
+                                // If focus is required and the tab isn't active, skip only the ack (don't abort other message handling).
+                                if (requireFocus && !isActiveTab) {
+                                    try {
+                                        if (localStorage.getItem('debug_read_ack') === '1') {
+                                            console.log('[read-ack] skip: tab not active (visibility/focus required)');
+                                        }
+                                    } catch {}
+                                    // skip ack, but do not return from handleWSMessage entirely; just bypass this ack cycle
+                                } else {
+
+                                if (lastAcked === batchId) {
+                                    // skip: duplicated
+                                    return;
+                                }
+                                if (now < ackCooldownRef.current) {
+                                    // skip: cooldown
+                                    return;
+                                }
+
+                                readAckRef.current?.(batchId);
+                                (handleWSMessage as any)._lastAckedId = batchId;
+                                ackCooldownRef.current = now + 900; // 900ms
+                                } // end focus gate else-branch
+                            }
+                        } catch {}
+
                     }
                 } catch (e) {
                     setIsFetching(false);
@@ -452,6 +507,46 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
         };
     }, [connectionAttemptKey, localUser, roomId, token]);
 
+    // Wire read-receipt acker to current socket/room
+    useEffect(() => {
+        if (isE2EMock) { readAckRef.current = null; return; }
+        if (!socket || !roomId) { readAckRef.current = null; return; }
+        const emit = (evt: string, payload: any) => {
+            try {
+                if (localStorage.getItem('debug_read_ack') === '1') {
+                    console.log('[read-ack] emit', { evt, payload });
+                }
+            } catch {}
+            try {
+                (socket as any)?.emit?.(evt, {
+                    ...payload,
+                    reader_id: Number(localUser?.id) || 0,
+                });
+            } catch {}
+        };
+        // Base acker from utils
+        const baseAcker = makeEmitReadAcker(emit, roomId, 0);
+        // Wrap it for extra diagnostics so we know when our provider requests an ack
+        readAckRef.current = (id: number | string) => {
+            try {
+                if (localStorage.getItem('debug_read_ack') === '1') {
+                    console.log('[read-ack] call', { roomId, id });
+                }
+            } catch {}
+            try {
+                baseAcker(id);
+            } catch (e) {
+                try { console.warn('[read-ack] baseAcker failed', e); } catch {}
+            }
+        };
+        try {
+            if (localStorage.getItem('debug_read_ack') === '1') {
+                console.log('[read-ack] wired', { roomId, reader: Number(localUser?.id) || 0 });
+            }
+        } catch {}
+        return () => { readAckRef.current = null; };
+    }, [socket, roomId, localUser?.id, isE2EMock]);
+
 
     useEffect(() => {
         if (connectionError) {
@@ -561,16 +656,17 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
 
     const sendReadReceipt = useCallback((roomId: string, lastMessageId: string) => {
         try {
+            if (localStorage.getItem('debug_read_ack') === '1') {
+                console.log('[read-ack] sendReadReceipt()', { roomId, lastMessageId });
+            }
+        } catch {}
+        try {
             if (isE2EMock) return;
-            (socket as any)?.emit?.("chat:read", {
-                room_id: roomId,
-                last_read_message_id: lastMessageId,
-                reader_id: Number(localUser?.id) || 0,
-            });
+            readAckRef.current?.(lastMessageId);
         } catch (err) {
             console.error("Failed to send read receipt", err);
         }
-    }, [socket, localUser?.id, isE2EMock]);
+    }, [isE2EMock]);
 
     const sendTyping = useCallback((isTyping: boolean) => {
         try {

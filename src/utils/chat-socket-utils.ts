@@ -2,7 +2,7 @@ import  {__DEV__} from "@/utils/appConfig";
 import { HttpService, UserService } from "@/services";
 import { REQUEST_STATE } from "@/services/HttpService";
 import { getHost, isHttps} from "@/utils/env";
-import type { ChatMessage } from "lemmy-js-client";
+import type {ChatMessage, ChatRoomId} from "lemmy-js-client";
 import { v4 as uuidv4 } from "uuid";
 import { decrypt } from "@/lib/web-crypto";
 import { importAesKey } from "@/utils";
@@ -275,6 +275,7 @@ export function broadcastToListeners(payload: unknown): void {
 
 // ===== Payload handler (shared) =====
 import type { MutableRefObject } from 'react';
+import {Channel} from "phoenix";
 
 export async function handleIncomingPayload(
   payload: any,
@@ -458,4 +459,92 @@ export function isChatMessageLike(m: any): m is { id: string; roomId: string; se
         typeof m.content === 'string' && m.content.trim() !== '' &&
         typeof (m.createdAt ?? m.created_at) === 'string'
     );
+}
+
+/**
+ * Emit-based read acker for sockets that expose `.emit(event, payload)` instead of Phoenix Channel `.push(...)`.
+ * - Debounced (50ms) to avoid flooding
+ * - Monotonic for numeric ids, de-dupe for string/UUID ids
+ */
+/**
+ * Emit-based read acker for sockets that expose `.emit(event, payload)`.
+ * เปิดดีบักด้วย: localStorage.setItem('debug_read_ack','1')
+ */
+export function makeEmitReadAcker(
+    emit: (event: string, payload: any) => void,
+    roomId: string,
+    initialPointer: number | string = 0
+) {
+    const DBG =
+        typeof window !== 'undefined' &&
+        typeof window.localStorage !== 'undefined' &&
+        window.localStorage.getItem('debug_read_ack') === '1';
+
+    let maxPointerNum = Number.isFinite(Number(initialPointer)) ? Number(initialPointer) : -Infinity;
+    let lastIdStr: string | null = typeof initialPointer === 'string' ? String(initialPointer) : null;
+
+    let scheduled = false;
+    let pendingIdStr: string | null = null;
+
+    if (DBG) {
+        try {
+            console.log('[read-ack][emit] init', { roomId, initialPointer, maxPointerNum, lastIdStr });
+        } catch {}
+    }
+
+    const schedulePush = () => {
+        if (scheduled || !pendingIdStr) return;
+        scheduled = true;
+        if (DBG) {
+            try { console.log('[read-ack][emit] schedule', { roomId, pendingIdStr }); } catch {}
+        }
+        setTimeout(() => {
+            scheduled = false;
+            if (!pendingIdStr) return;
+            const payload = {
+                room_id: roomId,
+                last_read_message_id: pendingIdStr,
+            };
+            if (DBG) {
+                try { console.log('[read-ack][emit] push', payload); } catch {}
+            }
+            try {
+                emit('chat:read', payload);
+            } catch (e) {
+                try { console.warn('[read-ack][emit] push failed', e); } catch {}
+            } finally {
+                pendingIdStr = null;
+            }
+        }, 50);
+    };
+
+    return function ack(messageId: number | string | null | undefined) {
+        if (messageId == null) {
+            if (DBG) { try { console.log('[read-ack][emit] skip:null'); } catch {} }
+            return;
+        }
+
+        const idStr = String(messageId);
+        const idNum = Number(messageId);
+
+        if (Number.isFinite(idNum)) {
+            if (idNum <= maxPointerNum) {
+                if (DBG) { try { console.log('[read-ack][emit] skip:not-advancing', { roomId, idNum, maxPointerNum }); } catch {} }
+                return;
+            }
+            maxPointerNum = idNum;
+            lastIdStr = idStr;
+            if (DBG) { try { console.log('[read-ack][emit] accept:numeric', { roomId, idNum, maxPointerNum }); } catch {} }
+        } else {
+            if (lastIdStr === idStr) {
+                if (DBG) { try { console.log('[read-ack][emit] skip:dup-uuid', { roomId, idStr }); } catch {} }
+                return;
+            }
+            lastIdStr = idStr;
+            if (DBG) { try { console.log('[read-ack][emit] accept:uuid', { roomId, idStr }); } catch {} }
+        }
+
+        pendingIdStr = idStr;
+        schedulePush();
+    };
 }
