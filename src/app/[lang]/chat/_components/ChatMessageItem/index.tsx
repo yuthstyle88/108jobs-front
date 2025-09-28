@@ -139,7 +139,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
   const buildPublicUrl = (u?: string) => {
     if (!u) return "";
     if (/^https?:\/\//i.test(u)) return u;
-    const host = process.env.NEXT_PUBLIC_API_HOST_NAME || "localhost:8532";
+    const host = process.env.NEXT_PUBLIC_API_HOST_NAME || "192.168.1.70:8532";
     const base = host.startsWith("http") ? host : `http://${host}`;
     const sep = u.startsWith("/") ? "" : "/";
     return `${base}${sep}${u}`;
