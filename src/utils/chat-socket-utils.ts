@@ -2,8 +2,7 @@ import  {__DEV__} from "@/utils/appConfig";
 import { HttpService, UserService } from "@/services";
 import { REQUEST_STATE } from "@/services/HttpService";
 import { getHost, isHttps} from "@/utils/env";
-import type {ChatMessage, ChatRoomId} from "lemmy-js-client";
-import { v4 as uuidv4 } from "uuid";
+import type {ChatMessage} from "lemmy-js-client";
 import { decrypt } from "@/lib/web-crypto";
 import { importAesKey } from "@/utils";
 
@@ -208,7 +207,7 @@ export async function mapIncomingToChatMessage(
     const createdAtMapped = m.created_at || m.createdAt || createdAtVal;
 
     return {
-      id: m.id || `msg_${uuidv4()}`,
+      id: m.id || uuidv4(),
       senderId: senderIdMapped,
       roomId: roomIdMapped,
       content,
@@ -275,7 +274,7 @@ export function broadcastToListeners(payload: unknown): void {
 
 // ===== Payload handler (shared) =====
 import type { MutableRefObject } from 'react';
-import {Channel} from "phoenix";
+import {uuidv4} from "zod/v4";
 
 export async function handleIncomingPayload(
   payload: any,

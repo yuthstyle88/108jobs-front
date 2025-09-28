@@ -1,1 +1,1 @@
-export type WsMessageSender = (data: { message: string; id?: string }) => void | Promise<void>;
+export type WsMessageSender = (data: { message: string; msg_ref_id: string }) => void | Promise<void>;

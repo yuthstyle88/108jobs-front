@@ -38,6 +38,7 @@ export const sendStructured = async (
   opts: { senderId?: number; previewText?: string; attach?: { url: string; name?: string } | null } = {}
 ) => {
   const id = uuidv4();
+  const msg_ref_id: string = id;
   const content = serializeStructured(payload);
   const message = opts.attach
     ? serializeStructured({ ...payload, fileUrl: opts.attach.url, fileName: opts.attach.name })
@@ -46,7 +47,7 @@ export const sendStructured = async (
   // fire preview for optimistic updates in lists
   dispatchPreview({ roomId, content: opts.previewText || content, senderId: Number(opts.senderId || 0) });
 
-  await sendMessage({ id, message });
+  await sendMessage({ message, msg_ref_id });
   return id;
 };
 

@@ -277,7 +277,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         const messageId = id ?? uuidv4();
         setMessages((prev) => [
             {
-                id: messageId,
+                msg_ref_id: messageId,
                 roomId: currentRoom?.roomId || roomId,
                 content,
                 createdAt: new Date().toISOString(),
@@ -371,7 +371,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             } catch {
             }
 
-            sendMessage({message: contentToSend, id: messageId});
+            sendMessage({message: contentToSend, msg_ref_id: messageId});
 
             setSelectedFile(null);
             isSubmittingRef.current = false;
