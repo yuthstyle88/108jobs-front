@@ -11,7 +11,7 @@ interface ReviewDeliveryModalProps {
     canSend: boolean;
     setError: (error: string) => void;
     disabledReason: string;
-    sendMessage: (message: { message: string; msg_ref_id: string }) => void;
+    sendMessage: (message: { message: string; id: string }) => void;
     requestRevisionAction: () => Promise<boolean>;
     roomId: string;
     localUser?: { id: LocalUserId };
@@ -55,7 +55,7 @@ export const ReviewDeliveryModal: React.FC<ReviewDeliveryModalProps> = ({
                             }
                             sendMessage({
                                 message: JSON.stringify({ type: 'delivery-accepted' }),
-                                msg_ref_id: uuidv4(),
+                                id: uuidv4(),
                             });
                             try {
                                 const content = t("profileChat.deliveryAccepted") || "Delivery accepted. Proceed to payment.";

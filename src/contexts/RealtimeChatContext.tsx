@@ -207,36 +207,6 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                         }
                     } catch {
                     }
-
-                    // --- Normalize identifier: use only `id`; accept `msg_ref_id` for backward-compat
-                    try {
-                        // flat/envelope object
-                        if (env && typeof env === 'object' && !Array.isArray(env)) {
-                            const p: any = env as any;
-                            if (!('id' in p) && typeof p?.msg_ref_id === 'string') {
-                                p.id = p.msg_ref_id;
-                            }
-                            if (p && typeof p.payload === 'object' && p.payload) {
-                                const body = p.payload as any;
-                                if (!('id' in body) && typeof body?.msg_ref_id === 'string') {
-                                    body.id = body.msg_ref_id;
-                                }
-                                if ('msg_ref_id' in body) delete body.msg_ref_id;
-                            }
-                            if ('msg_ref_id' in p) delete p.msg_ref_id;
-                        }
-                        // tuple frame fallback
-                        if (Array.isArray(payload) && payload.length >= 5) {
-                            const body = (payload as any)[4];
-                            if (body && typeof body === 'object') {
-                                if (!('id' in body) && typeof (body as any)?.msg_ref_id === 'string') {
-                                    (body as any).id = (body as any).msg_ref_id;
-                                }
-                                if ('msg_ref_id' in (body as any)) delete (body as any).msg_ref_id;
-                            }
-                        }
-                    } catch {}
-
                     try {
                         const evName = String((env as any)?.content || '');
                         if (evName && evName.includes('status-change')) {
@@ -636,10 +606,6 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                 id: messageId,
                 createdAt: new Date().toISOString(),
             };
-            // Ensure no msg_ref_id property (legacy)
-            if ('msg_ref_id' in apiPayload) {
-                delete (apiPayload as any).msg_ref_id;
-            }
 
             let payload = apiPayload;
             try {

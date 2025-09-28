@@ -8,7 +8,7 @@ export type CreateFlowActionsDeps = {
     setShowQuotationModal: (v: boolean) => void;
     setShowReviewModal: (v: boolean) => void;
     setMessages: React.Dispatch<React.SetStateAction<WsChatMessage[]>>;
-    sendMessage: (data: { message: string; msg_ref_id: string }) => void;
+    sendMessage: (data: { message: string; id: string }) => void;
     handleFileUpload: (e: Event) => void;
     scrollContainerRef: React.RefObject<any>;
     currentRoom?: { roomId?: string | number } | null;
@@ -68,7 +68,7 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
             const readable = t('profileChat.confirmAssignMsg') || 'Assignment confirmed. Waiting for freelancer to accept.';
             const payload = {type: 'employer-assigned'} as any;
 
-            sendMessage({message: JSON.stringify(payload), msg_ref_id: messageId});
+            sendMessage({message: JSON.stringify(payload), id: messageId});
 
             try {
                 const tsIso = new Date().toISOString();
@@ -99,7 +99,7 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
             const readable = t('profileChat.startWorkMsg') || 'Freelancer started work.';
             const payload = {type: 'start-work'} as any;
 
-            sendMessage({message: JSON.stringify(payload), msg_ref_id: messageId});
+            sendMessage({message: JSON.stringify(payload), id: messageId});
 
             try {
                 const tsIso = new Date().toISOString();
