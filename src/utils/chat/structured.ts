@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { WsMessageSender } from './types';
 import {emitChatNewMessage} from "@/chat";
+import {getReceiverIdFromRoom} from "@/utils/chat-socket-utils";
 
 export type Structured = Record<string, any>;
 
@@ -26,7 +27,7 @@ export const serializeStructured = (obj: Structured): string => {
 export const dispatchPreview = (detail: { roomId: string; content: string; senderId: number; timestamp?: string }) => {
   try {
     const ts = detail.timestamp || new Date().toISOString();
-    const detail2 = { ...detail, timestamp: ts };
+    const detail2 = { ...detail,receiverId: getReceiverIdFromRoom(detail.roomId), timestamp: ts };
     emitChatNewMessage(detail2);
   } catch {
     // no-op if window/custom event not available

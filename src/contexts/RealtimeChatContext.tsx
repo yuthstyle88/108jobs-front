@@ -310,6 +310,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                                     roomId: (item as any).roomId,
                                     content: (item as any).content,
                                     senderId: Number((item as any).senderId) || 0,
+                                    receiverId: getReceiverIdFromRoom(roomId),
                                     timestamp: (item as any).createdAt || new Date().toISOString(),
                                     // If message is from self and peer isn't currently active in this room, mark as unread for recipient view
                                     // Incoming messages to us are considered read (for our side) when they arrive in the active room
@@ -581,6 +582,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                         roomId: roomId,
                         content: data.message,
                         senderId: Number(localUser?.id) || 0,
+                        receiverId: getReceiverIdFromRoom(roomId),
                         timestamp: (mockMessage as any).createdAt,
                         unread: false,
                     };

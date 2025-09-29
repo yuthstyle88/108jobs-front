@@ -2,6 +2,7 @@ import {FlowActions, StatusKey} from '@/components/FreelanceChatFlow';
 import {v4 as uuidv4} from 'uuid';
 import type {ChatMessage as WsChatMessage} from 'lemmy-js-client';
 import {emitChatNewMessage} from "@/chat";
+import {getReceiverIdFromRoom} from "@/utils/chat-socket-utils";
 
 export type CreateFlowActionsDeps = {
     t: (k: string) => string | undefined;
@@ -77,6 +78,7 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
                         roomId,
                         content: readable,
                         senderId: Number((localUser as any)?.id) || 0,
+                        receiverId: getReceiverIdFromRoom(roomId),
                         timestamp: tsIso
                     };
                emitChatNewMessage(detail);
@@ -105,6 +107,7 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
                     roomId,
                     content: readable,
                     senderId: Number((localUser as any)?.id) || 0,
+                    receiverId: getReceiverIdFromRoom(roomId),
                     timestamp: tsIso
                 }
                 emitChatNewMessage(detail);

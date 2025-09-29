@@ -30,6 +30,7 @@ import {useFileUpload} from '@/hooks/chat/useFileUpload';
 import {useWorkflowActions} from '@/hooks/chat/useWorkflowActions';
 import {createChatRealtimeHandler} from './createChatRealtimeHandler';
 import {emitChatNewMessage} from "@/chat";
+import {getReceiverIdFromRoom} from "@/utils/chat-socket-utils";
 
 type MessageForm = { message: string };
 type UIChatMessage = WsChatMessage & { isOwner?: boolean };
@@ -361,7 +362,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     ? (message || `[File] ${selectedFile.fileName}`)
                     : message;
                 try {
-                    emitChatNewMessage({ roomId, content: preview, senderId: Number(localUser?.id) || 0, timestamp: tsIso });
+                    emitChatNewMessage({ roomId, content: preview, senderId: Number(localUser?.id) || 0, receiverId: getReceiverIdFromRoom(roomId), timestamp: tsIso });
                 } catch {}
             } catch {}
 

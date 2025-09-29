@@ -4,6 +4,7 @@ import {StatusKey} from "@/components/FreelanceChatFlow";
 import {LocalUserId} from "@/lib/lemmy-js-client/src";
 import React from "react";
 import {emitChatNewMessage} from "@/chat";
+import {getReceiverIdFromRoom} from "@/utils/chat-socket-utils";
 
 interface ReviewDeliveryModalProps {
     showReviewModal: boolean;
@@ -65,6 +66,7 @@ export const ReviewDeliveryModal: React.FC<ReviewDeliveryModalProps> = ({
                                     roomId,
                                         content,
                                         senderId: Number(localUser?.id) || 0,
+                                        receiverId: getReceiverIdFromRoom(roomId),
                                         timestamp: tsIso,
                                 };
                                 emitChatNewMessage(detail);

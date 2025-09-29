@@ -394,13 +394,44 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
             const setRooms = (useRoomsStore as any).getState?.().setRooms;
             if (typeof setRooms === 'function') {
                 // Keep only the minimal fields the watchers need; preserve id and name for potential UI use
-                const slim = state.rooms.map(r => ({ id: String(r.id), name: (r as any).name ?? undefined }));
+                const slim = state.rooms.map((r: any) => {
+                    const otherId = Array.isArray(r.participants)
+                        ? r.participants.find((pid: any) => String(pid) !== String(localUser?.id))
+                        : r.participant?.id ?? r.peerId ?? undefined;
+
+                    const participant = {
+                        id: otherId != null ? Number(otherId) : 0,
+                        // Try known fields first; fallback to room name if we don't have a dedicated profile field
+                        name: r.participant?.name ?? r.participantName ?? r.profileName ?? r.peerName ?? r.name ?? 'Unknown',
+                    };
+
+                    return {
+                        id: String(r.id),
+                        name: r.name ?? undefined,
+                        participant,
+                    };
+                });
                 setRooms(slim);
             } else {
                 // Fallback: if no setter, try to mutate a known key carefully
                 const store = (useRoomsStore as any).getState?.();
                 if (store && 'rooms' in store) {
-                    store.rooms = state.rooms.map(r => ({ id: String(r.id), name: (r as any).name ?? undefined }));
+                    store.rooms = state.rooms.map((r: any) => {
+                        const otherId = Array.isArray(r.participants)
+                            ? r.participants.find((pid: any) => String(pid) !== String(localUser?.id))
+                            : r.participant?.id ?? r.peerId ?? undefined;
+
+                        const participant = {
+                            id: otherId != null ? Number(otherId) : 0,
+                            name: r.participant?.name ?? r.participantName ?? r.profileName ?? r.peerName ?? r.name ?? 'Unknown',
+                        };
+
+                        return {
+                            id: String(r.id),
+                            name: r.name ?? undefined,
+                            participant,
+                        };
+                    });
                 }
             }
         } catch (e) {

@@ -1,4 +1,5 @@
 import  {__DEV__} from "@/utils/appConfig";
+import { useRoomsStore } from "@/stores/roomsStore";
 import { HttpService, UserService } from "@/services";
 import { REQUEST_STATE } from "@/services/HttpService";
 import { getHost, isHttps} from "@/utils/env";
@@ -34,8 +35,22 @@ export function isBase64Like(s: string): boolean {
 }
 
 export function getReceiverIdFromRoom(roomId: string): number {
-  const receiverId = roomId.includes(":") ? Number(roomId.split(":")[1]) || 0 : 0;
-  logDebug(`getReceiverIdFromRoom: Extracted receiverId ${receiverId} from roomId ${roomId}`);
+  // 1) Prefer the unified rooms store (1-1 rooms with exactly one participant)
+  try {
+    const { rooms } = useRoomsStore.getState();
+    const room = rooms.find((r) => String(r.id) === String(roomId));
+    const pid = room?.participant?.id;
+    if (typeof pid === 'number' && Number.isFinite(pid) && pid > 0) {
+      logDebug(`getReceiverIdFromRoom(store): ${pid} for roomId ${roomId}`);
+      return pid;
+    }
+  } catch (e) {
+    logDebug('getReceiverIdFromRoom: store lookup failed', e);
+  }
+
+  // 2) Fallback: legacy "roomId:receiverId" format if any
+  const receiverId = roomId.includes(':') ? Number(roomId.split(':')[1]) || 0 : 0;
+  logDebug(`getReceiverIdFromRoom(fallback): ${receiverId} from roomId ${roomId}`);
   return receiverId;
 }
 

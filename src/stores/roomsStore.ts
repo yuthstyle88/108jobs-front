@@ -1,8 +1,10 @@
 import { create } from 'zustand';
 
+// Each Room represents a 1-to-1 conversation, so it has exactly one participant besides the current user.
 export type Room = {
     id: string;
     name: string;
+    participant: { id: number; name: string }; // exactly one participant (the other person in the room)
     // other metadata if needed
 };
 
