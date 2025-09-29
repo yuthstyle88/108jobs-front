@@ -13,7 +13,6 @@ import { isBrowser } from "@/utils/browser";
 import { useUnreadStore } from "@/stores/unreadStore";
 import { useRoomsStore } from "@/stores/roomsStore";
 import { enableBackgroundUnread, disableBackgroundUnread } from "@/chat/BackgroundUnreadWatcher";
-
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 
 type RoomsState = {

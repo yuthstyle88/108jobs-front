@@ -90,7 +90,7 @@ export function getChannelAdapter(token: string, roomId: string): RealtimeChanne
     send(data: string) {
       // Accept either raw string JSON or object-like string
       try {
-        const payload = typeof data === "string" ? JSON.parse(data) : (data as any);
+        const payload = JSON.parse(data);
         (channel as any).push("send_message", payload);
       } catch {
         (channel as any).push("send_message", { room_id: roomId, content: String(data) });

@@ -17,6 +17,7 @@ import {UserService} from "@/services";
 import {useHttpGet} from "@/hooks/useHttpGet";
 import {useTranslation} from "react-i18next";
 import {toCamelCaseLastSegment} from "@/utils/helpers";
+import {getLocale} from "@/utils/date";
 
 type Props = {
     jobId: PostId;
@@ -37,7 +38,7 @@ const JobBoardDetail = ({jobId}: Props) => {
     const canShowProposalButton = !isGuest && (!!person?.id && person?.id !== jobDetailData?.postView?.creator?.id);
     const params = useParams();
     const locale = params.lang as string
-    const currentLocale = locale === "th" ? "th-TH" : locale === "vi" ? "vi-VN" : "en-US";
+    const currentLocale = getLocale(locale);
     const calculateDaysUntil = (dateString: string) => {
         const targetDate = new Date(dateString);
         const today = new Date();

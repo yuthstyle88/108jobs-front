@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import React from "react";
 
 interface JobFlowContentProps {
@@ -14,7 +14,7 @@ export const JobFlowContent: React.FC<JobFlowContentProps> = ({
                                                                   setShowJobDetailModal,
                                                                   currentRoom,
                                                               }) => {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     return (
         <>
@@ -28,7 +28,7 @@ export const JobFlowContent: React.FC<JobFlowContentProps> = ({
                     aria-label="Close job flow drawer"
                 >
                     <svg className="w-4 sm:w-5 h-4 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
             </div>
@@ -51,10 +51,18 @@ export const JobFlowContent: React.FC<JobFlowContentProps> = ({
                 >
                     <div className="flex-1">
                         <h3 className="text-xs sm:text-sm md:text-base font-semibold text-gray-900 line-clamp-1">
-                            {currentRoom?.post?.name || "No Job Title"}
+                            {currentRoom?.post?.name
+                                ? currentRoom.post.name.length > 40
+                                    ? `${currentRoom.post.name.slice(0, 40)}...`
+                                    : currentRoom.post.name
+                                : "No Job Title"}
                         </h3>
                         <p className="text-[0.65rem] sm:text-xs md:text-sm text-gray-600 line-clamp-2">
-                            {currentRoom?.post?.body || "No description available"}
+                            {currentRoom?.post?.body
+                                ? currentRoom.post.body.length > 40
+                                    ? `${currentRoom.post.body.slice(0, 40)}...`
+                                    : currentRoom.post.body
+                                : "No description available"}
                         </p>
                     </div>
                 </div>

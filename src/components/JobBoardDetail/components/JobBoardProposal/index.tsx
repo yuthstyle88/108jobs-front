@@ -11,6 +11,7 @@ import { useMyUser } from "@/hooks/profile-api/useMyUser";
 import { dmRoomId } from "@/utils/helpers";
 import { HttpService } from "@/services/HttpService";
 import { MessageCircleMore } from "lucide-react";
+import {getLocale} from "@/utils/date";
 
 type JobBoardProposalProps = {
     postId?: number;
@@ -30,7 +31,7 @@ const JobBoardProposal = ({ postId, jobCreatorId }: JobBoardProposalProps) => {
     const route = useRouter();
     const params = useParams();
     const currentLang = (params?.lang as string) || 'th';
-    const currentLocale = currentLang === "th" ? "th-TH" : currentLang === "vi" ? "vi-VN" : "en-US";
+    const currentLocale = getLocale(currentLang);
 
     const handlePageChange = (pageCursor: string | null) => {
         setCurrentCursor(pageCursor || undefined);
