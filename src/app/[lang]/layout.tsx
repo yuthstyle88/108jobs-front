@@ -23,11 +23,7 @@ const kanit = Kanit({
     preload: true,
     fallback: ['system-ui', 'arial', 'sans-serif'],
     adjustFontFallback: true,
-});
-
-export async function generateMetadata() {
-    return generateLocalizedMetadata("home");
-}
+})
 
 export default async function RootLayout({
                                              children,
