@@ -50,7 +50,7 @@ export const instanceLinkRegex = new RegExp(
   "g",
 );
 
-export const testHost = "192.168.1.70:8532";
+export const testHost = process.env.NEXT_PUBLIC_API_HOST_NAME;
 
 export const validActorRegexPattern =
   "^\\w+|[\\p{Script=Arabic}\\d_]+|[\\p{Script=Cyrillic}\\d_]+$";
