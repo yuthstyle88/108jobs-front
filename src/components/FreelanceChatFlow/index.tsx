@@ -212,7 +212,6 @@ const FreelanceChatFlow: React.FC<FreelanceChatFlowProps> = ({
 
     // Log component render
     useEffect(() => {
-        console.log('FreelanceChatFlow rendered:', {currentStatus, currentStatusBeforeCancel});
     }, [currentStatus, currentStatusBeforeCancel]);
 
     // -- Step visualization helpers -----------------------------------------------------

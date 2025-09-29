@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { ChatMessage as WsChatMessage } from 'lemmy-js-client';
+import React from "react";
 
 export interface CreateChatRealtimeHandlerDeps {
   roomId: string;

@@ -61,12 +61,10 @@ export const createMachineStore = <S extends StateKey, E extends string>(
             const i = order.indexOf(current);
             if (i > 0) {
                 const ns = order[i - 1];
-                console.log('createMachineStore back:', { current, next: ns });
                 set({ state: ns, stepIndex: idx(ns), statusBeforeCancel: undefined });
             }
         },
         reset: () => {
-            console.log('createMachineStore reset:', { initial });
             set({ state: initial, stepIndex: idx(initial), statusBeforeCancel: undefined });
         },
         cancel: () => {

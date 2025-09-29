@@ -7,6 +7,7 @@ import {Virtuoso, VirtuosoHandle} from "react-virtuoso";
 import React from "react";
 import {useParams} from "next/navigation";
 import {formatDateToLong} from "@/utils";
+import {getLocale} from "@/utils/date";
 
 type UIChatMessage = ChatMessage & { isOwner?: boolean };
 
@@ -29,13 +30,11 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                                                        isFetching,
                                                        onAtBottomChange,
                                                    }) => {
-    const userLocale = typeof navigator !== "undefined" ? navigator.language : undefined;
-
-    // Reverse messages to display newest-first (API provides oldest-first)
+// Reverse messages to display newest-first (API provides oldest-first)
     const displayedMessages = React.useMemo(() => [...messages].reverse(), [messages]);
     const params = useParams();
     const currentLang = (params?.lang as string) || 'th';
-    const currentLocale = currentLang === "th" ? "th-TH" : currentLang === "vi" ? "vi-VN" : "en-US";
+    const currentLocale = getLocale(currentLang);
 
     // Track whether the user is at the bottom for auto-scroll
     const virtuosoRef = React.useRef<VirtuosoHandle | null>(null);
