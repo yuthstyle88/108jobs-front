@@ -26,6 +26,7 @@ import { makeEmitReadAcker } from "@/utils/chat-socket-utils";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import {isBrowser} from "@/utils/browser";
 import {REQUEST_STATE} from "@/services/HttpService";
+import {emitChatNewMessage} from "@/chat";
 
 
 interface MessagePayload {
@@ -328,7 +329,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                                 if (isBrowser()) {
                                     try {
                                         // Dispatch exactly once via DOM (no secondary emitters)
-                                        window.dispatchEvent(new CustomEvent('chat:new-message', { detail }));
+                                        emitChatNewMessage(detail);
                                     } catch {}
                                 }
                             } catch {}
@@ -584,7 +585,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                         unread: false,
                     };
                     if (isBrowser()) {
-                        try { window.dispatchEvent(new CustomEvent('chat:new-message', { detail })); } catch {}
+                        try { emitChatNewMessage(detail); } catch {}
                     }
                 } catch {}
                 return;

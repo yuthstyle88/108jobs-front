@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {StatusKey} from "@/components/FreelanceChatFlow";
 import {LocalUserId} from "@/lib/lemmy-js-client/src";
 import React from "react";
+import {emitChatNewMessage} from "@/chat";
 
 interface ReviewDeliveryModalProps {
     showReviewModal: boolean;
@@ -60,16 +61,13 @@ export const ReviewDeliveryModal: React.FC<ReviewDeliveryModalProps> = ({
                             try {
                                 const content = t("profileChat.deliveryAccepted") || "Delivery accepted. Proceed to payment.";
                                 const tsIso = new Date().toISOString();
-                                window.dispatchEvent(
-                                    new CustomEvent("chat:new-message", {
-                                        detail: {
-                                            roomId,
-                                            content,
-                                            senderId: Number(localUser?.id) || 0,
-                                            timestamp: tsIso,
-                                        },
-                                    })
-                                );
+                                const detail =  {
+                                    roomId,
+                                        content,
+                                        senderId: Number(localUser?.id) || 0,
+                                        timestamp: tsIso,
+                                };
+                                emitChatNewMessage(detail);
                             } catch {
                                 // Handle error silently
                             }

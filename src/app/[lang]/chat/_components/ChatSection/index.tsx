@@ -29,6 +29,7 @@ import {useTypingIndicator} from '@/hooks/chat/useTypingIndicator';
 import {useFileUpload} from '@/hooks/chat/useFileUpload';
 import {useWorkflowActions} from '@/hooks/chat/useWorkflowActions';
 import {createChatRealtimeHandler} from './createChatRealtimeHandler';
+import {emitChatNewMessage} from "@/chat";
 
 type MessageForm = { message: string };
 type UIChatMessage = WsChatMessage & { isOwner?: boolean };
@@ -114,6 +115,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         }
     };
 
+
     // Measure chat input height to prevent last message being obscured
     const inputContainerRef = useRef<HTMLDivElement>(null);
     const [bottomPad, setBottomPad] = useState<number>(0);
@@ -180,9 +182,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             }
             try {
                 const isUnread = d.senderId !== Number(localUser?.id) && !atBottomRef.current;
-                window.dispatchEvent(new CustomEvent("chat:new-message", {
-                    detail: { ...d, unread: isUnread }
-                }));
+                emitChatNewMessage({ ...d, unread: isUnread });
             } catch {}
         } finally {
             latestIncomingRef.current = null;
@@ -361,22 +361,16 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     ? (message || `[File] ${selectedFile.fileName}`)
                     : message;
                 try {
-                    window.dispatchEvent(
-                        new CustomEvent("chat:new-message", {
-                            detail: {roomId, content: preview, senderId: Number(localUser?.id) || 0, timestamp: tsIso},
-                        })
-                    );
-                } catch {
-                }
-            } catch {
-            }
+                    emitChatNewMessage({ roomId, content: preview, senderId: Number(localUser?.id) || 0, timestamp: tsIso });
+                } catch {}
+            } catch {}
 
             sendMessage({message: contentToSend, id: messageId});
 
             setSelectedFile(null);
             isSubmittingRef.current = false;
         },
-        [sendMessage, currentRoom, roomId, selectedFile, localUser?.id]
+        [sendMessage, currentRoom, roomId, selectedFile, localUser?.id, emitChatNewMessage]
     );
 
     const didInitialFetchRef = useRef(false);

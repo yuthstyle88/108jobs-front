@@ -4,7 +4,7 @@ import { REQUEST_STATE } from "@/services/HttpService";
 import { getHost, isHttps} from "@/utils/env";
 import type {ChatMessage} from "lemmy-js-client";
 import { decrypt } from "@/lib/web-crypto";
-import { importAesKey } from "@/utils";
+import {importAesKey, isBrowser} from "@/utils";
 
 export function logDebug(...args: unknown[]) {
   if (__DEV__) console.debug(...args);
@@ -273,7 +273,7 @@ export function broadcastToListeners(payload: unknown): void {
 }
 
 // ===== Payload handler (shared) =====
-import type { MutableRefObject } from 'react';
+import {MutableRefObject, useCallback} from 'react';
 import {uuidv4} from "zod/v4";
 
 export async function handleIncomingPayload(

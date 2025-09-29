@@ -1,6 +1,7 @@
 import {FlowActions, StatusKey} from '@/components/FreelanceChatFlow';
 import {v4 as uuidv4} from 'uuid';
 import type {ChatMessage as WsChatMessage} from 'lemmy-js-client';
+import {emitChatNewMessage} from "@/chat";
 
 export type CreateFlowActionsDeps = {
     t: (k: string) => string | undefined;
@@ -72,16 +73,13 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
 
             try {
                 const tsIso = new Date().toISOString();
-                window.dispatchEvent(
-                    new CustomEvent('chat:new-message', {
-                        detail: {
-                            roomId,
-                            content: readable,
-                            senderId: Number((localUser as any)?.id) || 0,
-                            timestamp: tsIso
-                        },
-                    })
-                );
+                const detail= {
+                        roomId,
+                        content: readable,
+                        senderId: Number((localUser as any)?.id) || 0,
+                        timestamp: tsIso
+                    };
+               emitChatNewMessage(detail);
             } catch {
             }
 
@@ -103,16 +101,13 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
 
             try {
                 const tsIso = new Date().toISOString();
-                window.dispatchEvent(
-                    new CustomEvent('chat:new-message', {
-                        detail: {
-                            roomId,
-                            content: readable,
-                            senderId: Number((localUser as any)?.id) || 0,
-                            timestamp: tsIso
-                        },
-                    })
-                );
+                const detail = {
+                    roomId,
+                    content: readable,
+                    senderId: Number((localUser as any)?.id) || 0,
+                    timestamp: tsIso
+                }
+                emitChatNewMessage(detail);
             } catch {
             }
 
