@@ -516,7 +516,7 @@ export function stripEmpty<T extends object>(obj: T): Partial<T> {
                 v !== "" &&
                 v !== undefined &&
                 v !== null &&
-                !(typeof v === "object" && v !== null && Object.keys(v).length === 0)
+                !(typeof v === "object" && true && Object.keys(v).length === 0)
         )
     ) as Partial<T>;
 }
