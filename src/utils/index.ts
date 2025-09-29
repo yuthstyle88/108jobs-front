@@ -20,7 +20,6 @@ export * from "./user/userDataUtils";
 
 // formatters
 export * from "./format/money";
-export * from "./format/messageTime";
 export * from "./format/lastMessagePreview";
 export * from "./format/date";
 export * from "./format/dateToLong";

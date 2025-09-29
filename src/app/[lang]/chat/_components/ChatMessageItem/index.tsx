@@ -5,7 +5,7 @@ import type { ChatMessage } from "lemmy-js-client";
 import {MessageImage} from "@/constants/images";
 import { useTranslation } from "react-i18next";
 import React from "react";
-import {toLocalTime} from "@/utils";
+import {toLocalTime} from "@/utils/date";
 
 type UIChatMessage = ChatMessage & {
   isOwner?: boolean;
