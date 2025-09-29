@@ -3,9 +3,40 @@ import { useRoomsStore } from "@/stores/roomsStore";
 import { HttpService, UserService } from "@/services";
 import { REQUEST_STATE } from "@/services/HttpService";
 import { getHost, isHttps} from "@/utils/env";
-import type {ChatMessage} from "lemmy-js-client";
+import type {ChatMessage} from "@/lib/lemmy-js-client/src";
 import { decrypt } from "@/lib/web-crypto";
-import {importAesKey} from "@/utils";
+
+import {importAesKey, isBrowser} from "@/utils";
+
+// ---- Centralized browser/event helpers (reduce duplication across contexts) ----
+
+/** Emit a unified typing event */
+export function emitChatTyping(detail: { roomId: string; senderId: number; typing: boolean }) {
+  try { if (isBrowser()) window.dispatchEvent(new CustomEvent('chat:typing', { detail })); } catch {}
+}
+
+/** Emit a unified read-receipt event */
+export function emitReadReceipt(roomId: string, lastMessageId: string, readerId: number) {
+  try { if (isBrowser()) window.dispatchEvent(new CustomEvent('chat:read-receipt', { detail: { roomId, lastMessageId, readerId } })); } catch {}
+}
+
+/** Normalize Phoenix frames/envelopes into a flat object once */
+export function normalizePhoenixEnvelope(payload: any, fallbackRoomId?: string): any {
+  let env: any = payload;
+  try {
+    if (Array.isArray(payload) && payload.length >= 5 && typeof payload[3] === 'string' && payload[4] && typeof payload[4] === 'object') {
+      const [, , topic, ev, body] = payload as [any, any, string, string, any];
+      env = { event: ev, topic: String(topic).replace(/^room:/, ''), ...(body || {}) };
+    } else if (payload && typeof payload === 'object' && 'event' in payload && 'payload' in payload) {
+      const p: any = payload;
+      const topic = typeof p.topic === 'string' ? p.topic.replace(/^room:/, '') : p.topic;
+      env = { event: p.event, topic, ...(p.payload || {}) };
+    }
+  } catch {}
+  if (!env || typeof env !== 'object') env = {};
+  if (fallbackRoomId && !('topic' in env)) (env as any).topic = fallbackRoomId;
+  return env;
+}
 
 export function logDebug(...args: unknown[]) {
   if (__DEV__) console.debug(...args);
@@ -37,8 +68,10 @@ export function isBase64Like(s: string): boolean {
 export function getReceiverIdFromRoom(roomId: string): number {
   // 1) Prefer the unified rooms store (1-1 rooms with exactly one participant)
   try {
-    const { rooms } = useRoomsStore.getState();
-    const room = rooms.find((r) => String(r.id) === String(roomId));
+    const { rooms } = useRoomsStore.getState() as {
+      rooms: Array<{ id: string | number; participant?: { id?: number } }>;
+    };
+    const room = rooms.find((r: { id: string | number; participant?: { id?: number } }) => String(r.id) === String(roomId));
     const pid = room?.participant?.id;
     if (typeof pid === 'number' && Number.isFinite(pid) && pid > 0) {
       logDebug(`getReceiverIdFromRoom(store): ${pid} for roomId ${roomId}`);
@@ -305,7 +338,7 @@ export async function handleIncomingPayload(
     fetchTimeoutRef: MutableRefObject<NodeJS.Timeout | null>;
     fetchResolveRef: MutableRefObject<((value?: void) => void) | null>;
   }
-): Promise<import("lemmy-js-client").ChatMessage[] | null> {
+): Promise<import("@/lib/lemmy-js-client/src").ChatMessage[] | null> {
   try { logDebug('[RT] handleIncomingPayload →', payload); } catch {}
   // Ignore trivial frames
   if (
@@ -331,7 +364,7 @@ export async function handleIncomingPayload(
     }
   } catch {}
 
-  const out: import("lemmy-js-client").ChatMessage[] = [];
+  const out: import("@/lib/lemmy-js-client/src").ChatMessage[] = [];
 
   // ChatMessageView line: { message: {...}, room?: { id } }
   if (payload && typeof payload === 'object' && (payload as any).message) {
@@ -370,9 +403,7 @@ export async function handleIncomingPayload(
             typing: Boolean((parsed as any).typing),
           } as any;
           if (senderIdNum !== Number(ctx.localUserId)) {
-            if (typeof window !== 'undefined') {
-              window.dispatchEvent(new CustomEvent('chat:typing', { detail: info }));
-            }
+            emitChatTyping(info);
           }
           return [];
         }
@@ -427,7 +458,7 @@ export async function fetchHistoryPage(
   deps: {
     localUserId: number;
     receivedSet: Set<string>;
-    broadcast?: (m: import("lemmy-js-client").ChatMessage) => void;
+    broadcast?: (m: import("@/lib/lemmy-js-client/src").ChatMessage) => void;
   }
 ) {
   const res = await HttpService.client.getChatHistory({

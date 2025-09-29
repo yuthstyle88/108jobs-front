@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { WsMessageSender } from './types';
 import {emitChatNewMessage} from "@/chat";
-import {getReceiverIdFromRoom} from "@/utils/chat-socket-utils";
+import {getReceiverIdFromRoom} from "@/utils/chat/chat-socket-utils";
 
 export type Structured = Record<string, any>;
 

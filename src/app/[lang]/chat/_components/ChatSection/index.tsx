@@ -9,7 +9,7 @@ import type {ChatMessage as WsChatMessage, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
-import {useWebSocket} from "@/contexts/RealtimeChatContext";
+import {useWebSocket} from "@/utils/chat";
 import {useChatRooms} from "@/contexts/ChatRoomsContext";
 import {useUnreadStore} from "@/stores/unreadStore";
 import FreelanceChatFlow, {FlowActions, StatusKey} from "@/components/FreelanceChatFlow";
@@ -30,7 +30,7 @@ import {useFileUpload} from '@/hooks/chat/useFileUpload';
 import {useWorkflowActions} from '@/hooks/chat/useWorkflowActions';
 import {createChatRealtimeHandler} from './createChatRealtimeHandler';
 import {emitChatNewMessage} from "@/chat";
-import {getReceiverIdFromRoom} from "@/utils/chat-socket-utils";
+import {getReceiverIdFromRoom} from "@/utils/chat/chat-socket-utils";
 
 type MessageForm = { message: string };
 type UIChatMessage = WsChatMessage & { isOwner?: boolean };
@@ -150,6 +150,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+    // Mirror isFetching in a ref to avoid TDZ when wiring the realtime handler
+    const isFetchingRef = useRef(false);
     const {sendMessage, sendTyping, sendRoomUpdate, fetchHistory, isConnected, hasMoreMessages, isFetching, refreshRoomData} = useWebSocket(
         `chat-view:${roomId}`,
         (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) =>
@@ -157,7 +159,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 roomId,
                 localUserId: Number(localUser?.id) || 0,
                 onRemoteTyping,
-                getIsFetching: () => isFetching,
+                getIsFetching: () => isFetchingRef.current,
                 tryUpdateStatusFromItems,
                 setMessages: setMessages as any,
                 atBottomRef,
@@ -165,6 +167,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 latestIncomingRef,
             })(event)
     );
+    useEffect(() => {
+        isFetchingRef.current = Boolean(isFetching);
+    }, [isFetching]);
 
     useEffect(() => {
         if (!refreshRoomData) return;

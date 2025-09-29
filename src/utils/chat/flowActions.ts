@@ -2,7 +2,7 @@ import {FlowActions, StatusKey} from '@/components/FreelanceChatFlow';
 import {v4 as uuidv4} from 'uuid';
 import type {ChatMessage as WsChatMessage} from 'lemmy-js-client';
 import {emitChatNewMessage} from "@/chat";
-import {getReceiverIdFromRoom} from "@/utils/chat-socket-utils";
+import {getReceiverIdFromRoom} from "@/utils/chat/chat-socket-utils";
 
 export type CreateFlowActionsDeps = {
     t: (k: string) => string | undefined;

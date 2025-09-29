@@ -11,6 +11,7 @@ export type ChatNewMessageDetail = {
   roomId: string;
   content?: string;
   senderId?: number;
+  receiverId?: number;
   timestamp?: string;
   unread?: boolean;
   // allow extra fields without forcing all callers to know the full shape
