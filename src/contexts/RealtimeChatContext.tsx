@@ -342,11 +342,12 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                     onAfterSend: () => {
                         lastTypedSentRef.current = false;
                     },
+                    socket
                 },
                 data
             );
         },
-        [isE2EMock, roomId, localUser?.id, peerPublicKeyHex]
+        [isE2EMock, socket, roomId, localUser?.id, peerPublicKeyHex]
     );
 
     const sendReadReceipt = useCallback((roomId: string, lastMessageId: string) => {

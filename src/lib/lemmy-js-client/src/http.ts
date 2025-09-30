@@ -116,7 +116,6 @@ import type {EditCustomEmoji} from "./types/EditCustomEmoji";
 import type {EditOAuthProvider} from "./types/EditOAuthProvider";
 import type {EditPost} from "./types/EditPost";
 import type {EditSite} from "./types/EditSite";
-import type {EducationResponse} from "./types/Education";
 import type {ExchangeKey} from "./types/ExchangeKey";
 import type {ExchangeKeyResponse} from "./types/ExchangeKeyResponse";
 import type {FeaturePost} from "./types/FeaturePost";

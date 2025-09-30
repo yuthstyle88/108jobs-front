@@ -167,7 +167,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
 
             const msgId = String((item as any).id || "");
             const fromSelf = Number((item as any).senderId) === Number(localUserId);
-            const peerActiveNow = !!peerActiveRef.current;
+            const peerActiveNow = peerActiveRef.current;
             const detail = {
               id: msgId,
               roomId: (item as any).roomId,

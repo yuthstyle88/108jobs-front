@@ -1,19 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { PhoenixSocketProvider } from "@/contexts/RealtimeChatContext";
+import {useEffect, useState} from "react";
+import {PhoenixSocketProvider} from "@/contexts/RealtimeChatContext";
 import ChatSection from "../../_components/ChatSection";
-import { HttpService, UserService } from "@/services";
+import {HttpService, UserService} from "@/services";
 import LoadingBlur from "@/components/Common/Loading/LoadingBlur";
-import { REQUEST_STATE } from "@/services/HttpService";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { Post } from "@/lib/lemmy-js-client";
-import { RoomNotFound } from "@/components/RoomNotFound";
-import { useStateMachineStore } from "@/stores/stateMachineStore";
+import {REQUEST_STATE} from "@/services/HttpService";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {Post} from "@/lib/lemmy-js-client";
+import {RoomNotFound} from "@/components/RoomNotFound";
+import {useStateMachineStore} from "@/stores/stateMachineStore";
+import {ensureIdentityKeyPair} from "@/utils";
 
-export default function MessageClient({ roomId }: { roomId: string }) {
+export default function MessageClient({roomId}: { roomId: string }) {
     const accessToken = UserService.Instance.auth();
-    const { localUser } = useMyUser();
+    const {localUser} = useMyUser();
     const [state, setState] = useState<{
         partnerName: string;
         partnerId?: number;
@@ -36,7 +37,7 @@ export default function MessageClient({ roomId }: { roomId: string }) {
 
     useEffect(() => {
         if (!accessToken || !roomId || !localUser?.id) {
-            setState((prev) => ({ ...prev, loading: false }));
+            setState((prev) => ({...prev, loading: false}));
             return;
         }
 
@@ -44,19 +45,36 @@ export default function MessageClient({ roomId }: { roomId: string }) {
 
         const fetchData = async () => {
             try {
+                // 1. Ensure local user's key pair and send public key to server
+                let publicKeyHex: string | undefined;
+                try {
+                    const {publicKeyHex: localPubKeyHex} = await ensureIdentityKeyPair();
+                    publicKeyHex = localPubKeyHex;
+                    // Send public key to server
+                    const exchangeRes = await HttpService.client.exchangePublicKey({
+                        publicKey: publicKeyHex,
+                    });
+                    if (exchangeRes.state !== REQUEST_STATE.SUCCESS) {
+                        console.warn("Failed to exchange public key:", exchangeRes);
+                    }
+                } catch (error) {
+                    console.warn("Error during public key exchange:", error);
+                }
+
+                // 2. Fetch chat room data
                 const chatRoomRes = await HttpService.client.getChatRoom(roomId);
                 if (cancelled) return;
 
                 // Handle "empty" or "failed" states explicitly
                 if (chatRoomRes.state === REQUEST_STATE.EMPTY) {
-                    setState((prev) => ({ ...prev, notFound: true, loading: false }));
+                    setState((prev) => ({...prev, notFound: true, loading: false}));
                     return;
                 }
 
                 if (chatRoomRes.state === REQUEST_STATE.FAILED) {
                     const errMsg = String(chatRoomRes.err?.message || "").toLowerCase();
                     if (errMsg.includes("notfound") || errMsg.includes("404")) {
-                        setState((prev) => ({ ...prev, notFound: true, loading: false }));
+                        setState((prev) => ({...prev, notFound: true, loading: false}));
                     }
                     return;
                 }
@@ -117,13 +135,13 @@ export default function MessageClient({ roomId }: { roomId: string }) {
                             loading: false,
                         }));
                     } else {
-                        setState((prev) => ({ ...prev, loading: false }));
+                        setState((prev) => ({...prev, loading: false}));
                     }
                 }
             } catch (error) {
                 if (!cancelled) {
                     console.error("Error fetching data:", error);
-                    setState((prev) => ({ ...prev, notFound: true, loading: false }));
+                    setState((prev) => ({...prev, notFound: true, loading: false}));
                 }
             }
         };
@@ -135,12 +153,13 @@ export default function MessageClient({ roomId }: { roomId: string }) {
         };
     }, [accessToken, roomId, localUser?.id]);
 
+
     if (!accessToken || !roomId || state.loading) {
-        return <LoadingBlur text="" />;
+        return <LoadingBlur text=""/>;
     }
 
     if (state.notFound) {
-        return <RoomNotFound />;
+        return <RoomNotFound/>;
     }
 
     return (

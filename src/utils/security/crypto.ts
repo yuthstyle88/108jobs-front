@@ -1,5 +1,5 @@
 import {UserService} from "@/services";
-import {idbGet, idbSet} from "./keystore";
+import {idbGet, idbSet} from "@/utils";
 
 export type AESKey = CryptoKey;
 
@@ -122,7 +122,6 @@ export async function ensureSharedKeyForRoom(roomId: string, peerPublicSec1Hex?:
     }
 
     const aesGcmKey = await deriveRoomAesGcmKey(privateKey, peerPublicSec1Hex, roomId);
-
     const raw = new Uint8Array(await crypto.subtle.exportKey("raw", aesGcmKey));
     const rawB64 = btoa(String.fromCharCode(...raw));
 
@@ -134,7 +133,7 @@ export async function ensureSharedKeyForRoom(roomId: string, peerPublicSec1Hex?:
       claims: UserService.Instance.authInfo?.claims,
     };
   } catch (ex) {
-    // console.warn(`ensureSharedKeyForRoom: Key derivation failed for room ${roomId}`, ex);
+    console.warn(`ensureSharedKeyForRoom: Key derivation failed for room ${roomId}`, ex);
   }
 }
 

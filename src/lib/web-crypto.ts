@@ -66,72 +66,62 @@ export async function importEcPublicKeyHex(
 }
 
 /**
- * AES-CBC-encrypt a UTF-8 string and return Base64 ciphertext.
+ * AES-GCM-encrypt a UTF-8 string and return Base64 ciphertext with prepended nonce.
  *
- * The IV is deterministically derived from `sessionId`
- * (16 bytes taken from characters 5-20, right-padded with `'0'`),
- * therefore it can be recomputed during decryption.
- * Because the IV is **not** random, do **not** reuse the same
- * `sessionId` with the same key for different plaintexts if you
- * require semantic security.
+ * The nonce is randomly generated (12 bytes, recommended for GCM) and prepended to the ciphertext.
+ * The nonce is included in the output to allow decryption without separate storage.
  *
  * @param data       Plaintext string.
- * @param key        Symmetric `CryptoKey` (AES-CBC, 128/192/256-bit).
- * @param sessionId  Session identifier used to derive the IV.
- * @returns          Base64 ciphertext string.
+ * @param key        Symmetric `CryptoKey` (AES-GCM, 128/192/256-bit).
+ * @returns          Base64 string containing nonce (12 bytes) + ciphertext.
  */
 export async function encrypt(
-  data: string,
-  key: CryptoKey,
-  sessionId: string,
+    data: string,
+    key: CryptoKey,
 ): Promise<string> {
-  const iv = new TextEncoder()
-  .encode(sessionId.padEnd(21,
-    "0").slice(5,
-    21))
-  .slice(0,
-    16);
+    const nonce = crypto.getRandomValues(new Uint8Array(12)); // 12 bytes is recommended for GCM
+    const encoded = new TextEncoder().encode(data);
 
-  const encoded = new TextEncoder().encode(data);
+    const ciphertextBuffer = await crypto.subtle.encrypt(
+        { name: "AES-GCM", iv: nonce },
+        key,
+        encoded,
+    );
 
-  const ciphertextBuffer = await crypto.subtle.encrypt(
-    {name: "AES-CBC", iv},
-    key,
-    encoded,
-  );
+    // Prepend nonce to ciphertext
+    const combined = new Uint8Array(nonce.length + ciphertextBuffer.byteLength);
+    combined.set(nonce, 0);
+    combined.set(new Uint8Array(ciphertextBuffer), nonce.length);
 
-  return Buffer.from(ciphertextBuffer).toString("base64");
+    return Buffer.from(combined).toString("base64");
 }
 
 /**
  * Decrypt ciphertext produced by {@link encrypt}.
  *
- * @param ciphertextBase64  Base64 ciphertext string.
- * @param sessionId         Same sessionId that was used to encrypt.
+ * @param ciphertextBase64  Base64 string containing nonce (12 bytes) + ciphertext.
  * @param key               Symmetric `CryptoKey` (same as encryption).
  * @returns                 Decrypted plaintext string (UTF-8).
  */
 export async function decrypt(
-  ciphertextBase64: string,
-  sessionId: string,
-  key: CryptoKey,
+    ciphertextBase64: string,
+    key: CryptoKey,
 ): Promise<string> {
-  const ciphertext = Buffer.from(ciphertextBase64,
-    "base64");
-  const iv = new TextEncoder()
-  .encode(sessionId.padEnd(21,
-    "0").slice(5,
-    21))
-  .slice(0,
-    16);
+    const combined = Buffer.from(ciphertextBase64, "base64");
+    if (combined.length < 12) {
+        throw new Error("Ciphertext too short to contain valid nonce");
+    }
 
-  const decryptedBuffer = await crypto.subtle.decrypt(
-    {name: "AES-CBC", iv},
-    key,
-    ciphertext,
-  );
+    const nonce = combined.slice(0, 12); // Extract first 12 bytes as nonce
+    const ciphertext = combined.slice(12); // Remainder is ciphertext
 
-  return new TextDecoder().decode(decryptedBuffer);
+    const decryptedBuffer = await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: nonce },
+        key,
+        ciphertext,
+    );
+
+    return new TextDecoder().decode(decryptedBuffer);
 }
 
 
