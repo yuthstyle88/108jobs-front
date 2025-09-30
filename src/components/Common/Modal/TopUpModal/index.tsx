@@ -27,6 +27,7 @@ const TopUpModal = ({
     const lastAmountRef = useRef<number | null>(null);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     const apiCheckRef = useRef<NodeJS.Timeout | null>(null);
+    const accessTokenRef = useRef<string | null>(null);
 
     const canRequest = isModalOpen && typeof selectedAmount === "number" && selectedAmount > 0;
 
@@ -37,15 +38,16 @@ const TopUpModal = ({
         return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
     };
 
+    // QR code generation
     useEffect(() => {
         if (!canRequest) {
             setQrImage(null);
             setError(null);
             setLoading(false);
-            setCountdown(300); // Reset to 5 minutes
+            setCountdown(300);
             setPaymentStatus("pending");
             setQrId(null);
-            // Clear timers if they exist
+            accessTokenRef.current = null;
             if (timerRef.current) {
                 clearInterval(timerRef.current);
                 timerRef.current = null;
@@ -57,7 +59,6 @@ const TopUpModal = ({
             return;
         }
 
-        // Avoid refetch if same amount and we already have a QR.
         if (qrImage && lastAmountRef.current === selectedAmount) return;
 
         let cancelled = false;
@@ -68,8 +69,9 @@ const TopUpModal = ({
                 setError(null);
                 setQrImage(null);
                 setPaymentStatus("pending");
-                setCountdown(300); // Initialize to 5 minutes
+                setCountdown(300);
                 setQrId(null);
+                accessTokenRef.current = null;
 
                 // 1) Get SCB access token
                 const tokenRes = await callHttp("generateScbToken");
@@ -80,6 +82,7 @@ const TopUpModal = ({
                 if (!accessToken) {
                     throw new Error("No access token returned");
                 }
+                accessTokenRef.current = accessToken;
 
                 // 2) Create QR code
                 const invoice = String(Math.floor(Date.now() / 1000));
@@ -89,47 +92,33 @@ const TopUpModal = ({
                     invoice,
                 };
                 const qrRes = await callHttp("createScbQrCode", { body, token: accessToken });
+                console.log("QR code API response:", JSON.stringify(qrRes, null, 2));
                 if (!isSuccess<ScbQrCodeResponse>(qrRes)) {
                     throw new Error((qrRes as any).err?.message || "Failed to create QR code");
                 }
-                // Convert undefined to null to match qrId's type (string | null)
+
                 const qrcodeId = qrRes.data?.data?.qrcodeId ?? null;
+                console.log(`qrcodeId from API: ${qrcodeId}`);
+                if (!qrcodeId) {
+                    setError("QR code ID not provided by the server");
+                    setLoading(false);
+                    return;
+                }
                 setQrId(qrcodeId);
+                console.log(`QR code created with ID: ${qrcodeId}`);
 
                 const raw = qrRes.data?.data?.qrImage;
                 const img = typeof raw === "string"
                     ? (raw.startsWith("data:image") ? raw : `data:image/png;base64,${raw}`)
                     : null;
-
                 if (!cancelled) {
                     setQrImage(img);
                     lastAmountRef.current = selectedAmount ?? null;
 
-                    // Start countdown timer (decrements every second)
-                    if (qrcodeId) {
-                        timerRef.current = setInterval(() => {
-                            setCountdown((prev) => {
-                                if (prev <= 1) {
-                                    if (timerRef.current) {
-                                        clearInterval(timerRef.current);
-                                        timerRef.current = null;
-                                    }
-                                    if (apiCheckRef.current) {
-                                        clearInterval(apiCheckRef.current);
-                                        apiCheckRef.current = null;
-                                    }
-                                    setPaymentStatus("failed");
-                                    setError(JSON.stringify({ error: "stillDoNotPayYet" }));
-                                    return 0;
-                                }
-                                return prev - 1;
-                            });
-                        }, 1000);
-
-                        // Start API check every 10 seconds
-                        apiCheckRef.current = setInterval(async () => {
-                            const inquiry = await callHttp("inquireScbQrCode", { qrId: qrId, token: accessToken });
-                            if (inquiry.state === REQUEST_STATE.SUCCESS) {
+                    // Start countdown timer
+                    timerRef.current = setInterval(() => {
+                        setCountdown((prev) => {
+                            if (prev <= 1) {
                                 if (timerRef.current) {
                                     clearInterval(timerRef.current);
                                     timerRef.current = null;
@@ -138,13 +127,13 @@ const TopUpModal = ({
                                     clearInterval(apiCheckRef.current);
                                     apiCheckRef.current = null;
                                 }
-                                setPaymentStatus("success");
+                                setPaymentStatus("failed");
+                                setError(JSON.stringify({ error: "stillDoNotPayYet" }));
+                                return 0;
                             }
-                        }, 10000);
-                    } else {
-                        setError("QR code ID not available");
-                        setLoading(false);
-                    }
+                            return prev - 1;
+                        });
+                    }, 1000);
                 }
             } catch (e: any) {
                 if (!cancelled) setError(e?.message || "Unexpected error");
@@ -165,6 +154,46 @@ const TopUpModal = ({
             }
         };
     }, [canRequest, selectedAmount, isModalOpen]);
+
+    // QR status checking
+    useEffect(() => {
+        if (!qrId || paymentStatus !== "pending" || !accessTokenRef.current) return;
+
+        console.log(`Starting QR status check with qrId: ${qrId}`);
+        apiCheckRef.current = setInterval(async () => {
+            console.log(`Checking QR status with qrId: ${qrId}`);
+            try {
+                const inquiry = await callHttp("inquireScbQrCode", { qrId, token: accessTokenRef.current });
+                if (inquiry.state === REQUEST_STATE.SUCCESS) {
+                    if (timerRef.current) {
+                        clearInterval(timerRef.current);
+                        timerRef.current = null;
+                    }
+                    if (apiCheckRef.current) {
+                        clearInterval(apiCheckRef.current);
+                        apiCheckRef.current = null;
+                    }
+                    setPaymentStatus("success");
+                }
+            } catch (e: any) {
+                console.error(`QR status check failed for qrId ${qrId}:`, e.message);
+            }
+        }, 10000);
+
+        return () => {
+            if (apiCheckRef.current) {
+                clearInterval(apiCheckRef.current);
+                apiCheckRef.current = null;
+            }
+        };
+    }, [qrId, paymentStatus]);
+
+    // Log qrId updates for debugging
+    useEffect(() => {
+        if (qrId !== null) {
+            console.log(`qrId updated to: ${qrId}`);
+        }
+    }, [qrId]);
 
     if (!isModalOpen) return null;
 
