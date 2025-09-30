@@ -337,7 +337,6 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                     isE2EMock,
                     roomId,
                     localUserId: Number(localUser?.id) || 0,
-                    socket,
                     peerPublicKeyHex,
                     sentSet: sentMessagesRef.current,
                     onAfterSend: () => {
@@ -347,7 +346,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                 data
             );
         },
-        [socket, isE2EMock, roomId, localUser?.id, peerPublicKeyHex]
+        [isE2EMock, roomId, localUser?.id, peerPublicKeyHex]
     );
 
     const sendReadReceipt = useCallback((roomId: string, lastMessageId: string) => {
