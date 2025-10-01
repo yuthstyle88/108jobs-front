@@ -133,11 +133,36 @@ export function getChannelAdapter(token: string, roomId: string, senderId: numbe
   } as RealtimeChannelAdapter;
 
   // Unify forward → adapter.onmessage with normalized envelope
-  const forward = (event: string, topic: string, payload: any) => {
-    if (!event || isInternalEvent(event)) return;
-    const env = { event, topic: topic.replace(/^room:/, ""), payload };
-    try { adapter.onmessage?.({ data: JSON.stringify(env) }); } catch {}
-  };
+    const forward = (event: string, topic: string, payload: any) => {
+        if (!event || isInternalEvent(event)) return;
+
+        // --- unwrap server envelope like: {event:"new_message", payload:{...}} ---
+        let outEvent = event;
+        let outPayload = payload;
+
+        if (
+            payload &&
+            typeof payload === "object" &&
+            typeof (payload as any).event === "string"
+        ) {
+            outEvent = String((payload as any).event);
+            outPayload = (payload as any).payload ?? payload;
+        }
+
+        // (optional) normalize inbound status for incoming messages
+        // ถ้าข้อความ “เข้ามาจากอีกฝั่ง” แต่สถานะยังเป็น pending ให้ปรับเป็น sent
+        if (
+            outEvent === "new_message" &&
+            outPayload &&
+            typeof outPayload === "object" &&
+            outPayload.status === "pending"
+        ) {
+            try { outPayload.status = "sent"; } catch {}
+        }
+
+        const env = { event: outEvent, topic: topic.replace(/^room:/, ""), payload: outPayload };
+        try { adapter.onmessage?.({ data: JSON.stringify(env) }); } catch {}
+    };
 
   // Wire a channel with wildcard forwarding and explicit events
   function wireChannel(ch: any, topicLabel: string) {
