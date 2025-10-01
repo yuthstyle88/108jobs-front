@@ -84,7 +84,7 @@ function wsSend(socket: any, obj: any) {
 
 // --- Typing events ---
 export function sendTyping(deps: SendEventDeps, typing: boolean) {
-    const {roomId, localUserId, socket} = deps;
+    const {socket} = deps;
     const packet = createEvent(
         typing ? "typing:start" : "typing:stop",
         {typing},
@@ -97,7 +97,7 @@ export const sendTypingStop = (deps: SendEventDeps) => sendTyping(deps, false);
 
 // --- Read receipt ---
 export function sendReadReceipt(deps: SendEventDeps, lastMessageId: string) {
-    const {roomId, localUserId, socket} = deps;
+    const {socket} = deps;
     const packet = createEvent(
         "chat:read",
         {last_read_message_id: String(lastMessageId || "")},
@@ -110,7 +110,7 @@ export function sendRoomUpdateEvent(
     deps: SendEventDeps,
     update: Record<string, any>
 ) {
-    const {roomId, localUserId, socket} = deps;
+    const {socket} = deps;
     const packet = createEvent(
         "room:update",
         {...update},
