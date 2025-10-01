@@ -25,10 +25,6 @@ export interface PhoenixPacket<T = any> {
 export function createEvent<T>(
     event: PhoenixEvent,
     payload?: T,
-    meta?: {
-        roomId?: string;
-        timestamp?: string;
-    }
 ): PhoenixPacket<T> & {
     room_id?: string;
     timestamp: string;
@@ -36,8 +32,6 @@ export function createEvent<T>(
     const packet: any = {
         event,
         payload,
-        room_id: meta?.roomId,
-        timestamp: meta?.timestamp ?? new Date().toISOString(),
     };
     Object.keys(packet).forEach((k) => {
         if (packet[k] === undefined) delete packet[k];
@@ -49,7 +43,6 @@ export function createEvent<T>(
 export function createMessage(
     content: string,
     id?: string,
-    meta?: { roomId?: string; timestamp?: string }
 ): PhoenixPacket<ChatMessage> {
     if (!content || content.trim().length === 0) {
         throw new Error("Message content is required");
@@ -62,7 +55,7 @@ export function createMessage(
         createdAt: new Date().toISOString(),
     };
 
-    return createEvent("new_message", message, meta);
+    return createEvent("new_message", message);
 }
 
 export interface SendMessageDeps {
@@ -133,8 +126,8 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
 
 // --- Typing events ---
 export function sendTyping(deps: SendEventDeps, typing: boolean) {
-    const { roomId, socket } = deps;
-    const unified = createEvent("chat:typing", { typing }, { roomId });
+    const { socket } = deps;
+    const unified = createEvent("chat:typing", { typing });
     wsSend(socket, unified);
 }
 
@@ -143,11 +136,10 @@ export const sendTypingStop = (deps: SendEventDeps) => sendTyping(deps, false);
 
 // --- Read receipt ---
 export function sendReadReceipt(deps: SendEventDeps, lastMessageId: string) {
-    const { roomId, socket } = deps;
+    const { socket } = deps;
     const packet = createEvent(
         "chat:read",
         { last_read_message_id: String(lastMessageId || "") },
-        { roomId }
     );
     wsSend(socket, packet);
 }
@@ -157,11 +149,10 @@ export function sendRoomUpdateEvent(
     deps: SendEventDeps,
     update: Record<string, any>
 ) {
-    const { roomId, socket } = deps;
+    const { socket } = deps;
     const packet = createEvent(
         "room:update",
         { ...update },
-        { roomId }
     );
     wsSend(socket, packet);
 }
@@ -177,7 +168,6 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
         const packet = createMessage(
             data.message,
             data.id,
-            { roomId }
         );
         const p = packet.payload as ChatMessage;
         if (p) p.status = "pending";
