@@ -1197,6 +1197,7 @@ export const vi = {
         },
 
         how: {
+            label: "Cách sử dụng ứng dụng của chúng tôi",
             howToBuySellTitle: `Làm thế nào để giao dịch dịch vụ trên ${getAppName()} ?`,
             howToBuySellSubtitle: "Trang web đứng đầu trên thị trường freelancer.",
             easyStepsTitle: `Bắt đầu ${getAppName()} bằng các bước thật dễ dàng`,
