@@ -2,8 +2,8 @@
 // This provides typed helpers to emit and subscribe to chat CustomEvents
 // keeping window and event-name details in one place.
 import {isBrowser} from "@/utils/browser";
+import {ChatStatus} from "lemmy-js-client";
 
-export type DeliveryStatus = "pending" | "sent" | "failed";
 
 function stripUndef<T extends Record<string, any>>(obj: T): T {
   Object.keys(obj).forEach((k) => {
@@ -23,9 +23,8 @@ export type ChatNewMessageDetail = {
   roomId: string;          // required: UI context
   id: string;              // required: for de-dup & updates
   content: string;         // required: message text (already decrypted for UI)
-  createdAt?: string;      // ISO string; defaults to now if omitted
-  status?: DeliveryStatus; // pending | sent | failed
-  unread?: boolean;        // default false
+  createdAt: string;      // ISO string; defaults to now if omitted
+  status: ChatStatus; // pending | sent | failed
 };
 
 // Normalize detail for consistent UI handling (no socket dependency)
@@ -34,7 +33,6 @@ export function normalizeChatNewMessageDetail(detail: ChatNewMessageDetail): Cha
   const normalized: ChatNewMessageDetail = stripUndef({
     ...detail,
     createdAt: detail.createdAt ?? now,
-    unread: detail.unread ?? false,
   });
   return normalized;
 }

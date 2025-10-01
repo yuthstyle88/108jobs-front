@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { WsMessageSender } from './types';
 import {emitChatNewMessage} from "@/events/chat";
+import {ChatStatus} from "lemmy-js-client";
 
 export type Structured = Record<string, any>;
 
@@ -23,7 +24,7 @@ export const serializeStructured = (obj: Structured): string => {
   }
 };
 
-export const dispatchPreview = (detail: { roomId: string; id: string; content: string; createdAt?: string; unread?: boolean }) => {
+export const dispatchPreview = (detail: { roomId: string; id: string; content: string; createdAt?: string; status: ChatStatus }) => {
   try {
     const createdAt = detail.createdAt || new Date().toISOString();
     emitChatNewMessage({
@@ -31,7 +32,7 @@ export const dispatchPreview = (detail: { roomId: string; id: string; content: s
       id: detail.id,
       content: detail.content,
       createdAt,
-      unread: detail.unread ?? false,
+      status: detail.status
     });
   } catch {
     // no-op if window/custom event not available
@@ -51,7 +52,7 @@ export const sendStructured = async (
     : content;
 
   // fire preview for optimistic updates in lists
-  dispatchPreview({ roomId, id, content: opts.previewText || content, createdAt: new Date().toISOString(), unread: false });
+  dispatchPreview({ roomId, id, content: opts.previewText || content, createdAt: new Date().toISOString(), status: "sent" });
 
   await sendMessage({ message, id });
   return id;

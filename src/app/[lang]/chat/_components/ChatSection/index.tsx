@@ -192,7 +192,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     id: `${d.timestamp}:${d.senderId}`,
                     content: d.content,
                     createdAt: d.timestamp,
-                    unread: isUnread
+                    status: 'sent'
                 });
             } catch {}
         } finally {
@@ -285,15 +285,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
     // Helper to add a local (owner) message to the list and scroll
     const addOwnMessage = useCallback((content: string, id?: string) => {
-        const messageId = id ?? uuidv4();
+        const messageId = id;
         setMessages((prev) => [
             {
                 id: messageId,
                 roomId: currentRoom?.roomId || roomId,
                 content,
                 createdAt: new Date().toISOString(),
-                senderId: Number(localUser?.id) || 0,
-                status: 1,
+                status: 'pending',
                 isOwner: true,
             } as WsChatMessage,
             ...prev,
@@ -372,13 +371,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     ? (message || `[File] ${selectedFile.fileName}`)
                     : message;
                 try {
-                    emitChatNewMessage({
+                    const detail = {
                         roomId,
                         id: messageId,
                         content: preview,
                         createdAt: tsIso,
-                        unread: false,
-                    });
+                        status: 'pending' as const,
+                    };
+                    emitChatNewMessage(detail);
                 } catch {}
             } catch {}
 
@@ -463,7 +463,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         setShowQuotationModal,
         setShowReviewModal,
         setMessages,
-        sendMessage,
         handleFileUpload: (ev: any) => handleFileUpload(ev as any),
         scrollContainerRef,
         currentRoom,
@@ -562,9 +561,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                 setIsAtBottom(isAtBottom);
                                 if (isAtBottom) {
                                     setNewSinceCount(0);
-                                    setMessages(prev => prev.map(m => (!m.isOwner && m.status === 0 ? {
+                                    setMessages(prev => prev.map(m => (!m.isOwner && m.status !== 'read' ? {
                                         ...m,
-                                        status: 1
+                                        status: 'read'
                                     } : m)));
                                     try {
                                         markRoomRead(roomId);

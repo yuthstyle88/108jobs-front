@@ -1,7 +1,8 @@
+import type { ChatMessage } from "lemmy-js-client";
 import {UserService} from "@/services";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import {encrypt} from "@/lib/web-crypto";
-import { emitChatNewMessage } from "./chat-events"
+import { emitChatNewMessage } from "@/events/chat";
 
 export type PhoenixEvent =
     | "phx_join"
@@ -11,17 +12,8 @@ export type PhoenixEvent =
     | "phx_close"
     | "new_message" // custom
     | "chat:typing" // unified typing
-    | "typing:start" // legacy
-    | "typing:stop"  // legacy
     | "chat:read"
     | "room:update";
-
-export interface ChatMessage {
-    id: string;
-    content: string;
-    createdAt: Date;
-    status?: "pending" | "sent" | "failed";
-}
 
 // generic payload (ChatMessage, error, หรืออื่นๆ)
 export interface PhoenixPacket<T = any> {
@@ -35,22 +27,16 @@ export function createEvent<T>(
     payload?: T,
     meta?: {
         roomId?: string;
-        senderId?: number;
-        refId?: string;
         timestamp?: string;
     }
 ): PhoenixPacket<T> & {
     room_id?: string;
-    sender_id?: number;
-    ref: string;
     timestamp: string;
 } {
     const packet: any = {
         event,
         payload,
         room_id: meta?.roomId,
-        sender_id: typeof meta?.senderId === 'number' ? meta!.senderId : undefined,
-        ref: meta?.refId ?? crypto.randomUUID(),
         timestamp: meta?.timestamp ?? new Date().toISOString(),
     };
     Object.keys(packet).forEach((k) => {
@@ -63,7 +49,7 @@ export function createEvent<T>(
 export function createMessage(
     content: string,
     id?: string,
-    meta?: { roomId?: string; senderId?: number; refId?: string; timestamp?: string }
+    meta?: { roomId?: string; timestamp?: string }
 ): PhoenixPacket<ChatMessage> {
     if (!content || content.trim().length === 0) {
         throw new Error("Message content is required");
@@ -72,7 +58,8 @@ export function createMessage(
     const message: ChatMessage = {
         id: id ?? crypto.randomUUID(),
         content,
-        createdAt: new Date(),
+        status: "pending",
+        createdAt: new Date().toISOString(),
     };
 
     return createEvent("new_message", message, meta);
@@ -96,7 +83,6 @@ export interface SendMessagePayload {
 // --- Generic event-deps for socket sends ---
 export interface SendEventDeps {
     roomId: string;
-    localUserId: number;
     socket: any;
 }
 
@@ -115,10 +101,6 @@ function wsSend(socket: any, obj: any) {
 async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<boolean> {
     return new Promise((resolve) => {
         let done = false;
-        const timer = setTimeout(() => {
-            if (!done) { done = true; resolve(false); }
-        }, timeoutMs);
-
         function onMessage(ev: MessageEvent) {
             try {
                 const data = JSON.parse(ev.data);
@@ -137,6 +119,13 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
                 // ignore non-JSON frames
             }
         }
+        const timer = setTimeout(() => {
+            if (!done) {
+                done = true;
+                socket.removeEventListener?.("message", onMessage as any);
+                resolve(false);
+            }
+        }, timeoutMs);
 
         socket.addEventListener?.("message", onMessage as any);
     });
@@ -144,23 +133,9 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
 
 // --- Typing events ---
 export function sendTyping(deps: SendEventDeps, typing: boolean) {
-    const { roomId, localUserId, socket } = deps;
-
-    // Primary (unified) typing event
-    const unified = createEvent(
-        "chat:typing",
-        { typing },
-        { roomId, senderId: Number(localUserId) || 0 }
-    );
+    const { roomId, socket } = deps;
+    const unified = createEvent("chat:typing", { typing }, { roomId });
     wsSend(socket, unified);
-
-    // Backward compatibility: emit legacy start/stop for receivers still on old protocol
-    const legacy = createEvent(
-        typing ? "typing:start" : "typing:stop",
-        { typing },
-        { roomId, senderId: Number(localUserId) || 0 }
-    );
-    wsSend(socket, legacy);
 }
 
 export const sendTypingStart = (deps: SendEventDeps) => sendTyping(deps, true);
@@ -168,11 +143,11 @@ export const sendTypingStop = (deps: SendEventDeps) => sendTyping(deps, false);
 
 // --- Read receipt ---
 export function sendReadReceipt(deps: SendEventDeps, lastMessageId: string) {
-    const { roomId, localUserId, socket } = deps;
+    const { roomId, socket } = deps;
     const packet = createEvent(
         "chat:read",
         { last_read_message_id: String(lastMessageId || "") },
-        { roomId, senderId: Number(localUserId) || 0 }
+        { roomId }
     );
     wsSend(socket, packet);
 }
@@ -182,11 +157,11 @@ export function sendRoomUpdateEvent(
     deps: SendEventDeps,
     update: Record<string, any>
 ) {
-    const { roomId, localUserId, socket } = deps;
+    const { roomId, socket } = deps;
     const packet = createEvent(
         "room:update",
         { ...update },
-        { roomId, senderId: Number(localUserId) || 0 }
+        { roomId }
     );
     wsSend(socket, packet);
 }
@@ -196,27 +171,24 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
     const {roomId, peerPublicKeyHex, socket} = deps;
 
     try {
-        const messageId = crypto.randomUUID(); // It would take over 100 trillion years to reach even a tiny chance of collision.
         const token = UserService.Instance.auth();
 
         // Create once (plaintext) and optimistically update UI
         const packet = createMessage(
             data.message,
-            String(messageId),
-            { roomId, senderId: Number(deps.localUserId) || 0 }
+            data.id,
+            { roomId }
         );
-        if (packet.payload) (packet.payload as ChatMessage).status = "pending";
-        {
-            const p = packet.payload as ChatMessage;
-            emitChatNewMessage({
-                roomId,
-                id: p.id,
-                content: p.content,
-                createdAt: (p.createdAt instanceof Date ? p.createdAt.toISOString() : String(p.createdAt)),
-                status: p.status,
-                unread: false,
-            });
-        }
+        const p = packet.payload as ChatMessage;
+        if (p) p.status = "pending";
+        emitChatNewMessage({
+            roomId,
+            id: p.id,
+            content: p.content,
+            createdAt: p.createdAt,
+            status: p.status,
+        });
+        const messageId = p.id;
 
         // 1. Ensure we have a shared key for this room
         if (token && peerPublicKeyHex && !UserService.Instance.authInfo?.sharedKey) {
@@ -250,8 +222,8 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
             }
         }
         // If encrypted content differs, mutate the single packet before sending
-        if (finalContent !== data.message && packet.payload) {
-            (packet.payload as ChatMessage).content = finalContent;
+        if (finalContent !== data.message && p) {
+            p.content = finalContent;
         }
         const sent = wsSend(socket, packet);
         let acked = false;
@@ -260,15 +232,14 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
         }
         // Notify UI of final status (sent/failed)
         try {
-            const updated = { ...(packet.payload as ChatMessage) };
+            const updated = { ...p };
             updated.status = sent && acked ? "sent" : "failed";
             emitChatNewMessage({
                 roomId,
                 id: updated.id,
                 content: updated.content,
-                createdAt: (updated.createdAt instanceof Date ? updated.createdAt.toISOString() : String(updated.createdAt)),
+                createdAt: p.createdAt,
                 status: updated.status,
-                unread: false,
             });
         } catch {}
     } catch (ignored) {

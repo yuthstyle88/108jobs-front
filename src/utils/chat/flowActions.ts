@@ -76,7 +76,7 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
                     id: messageId,
                     content: readable,
                     createdAt: tsIso,
-                    unread: false,
+                    status: 'sent',
                 });
             } catch {}
 
@@ -103,7 +103,7 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
                     id: messageId,
                     content: readable,
                     createdAt: tsIso,
-                    unread: false,
+                    status: 'sent',
                 });
             } catch {}
 

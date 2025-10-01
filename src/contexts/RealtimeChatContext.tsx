@@ -360,7 +360,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
         try {
             if(isE2EMock) return;
             // Send a read-receipt event over the socket via centralized helper
-            sendReadReceiptEvent({roomId, localUserId: Number(localUser?.id) || 0, socket}, lastMessageId);
+            sendReadReceiptEvent({roomId, socket}, lastMessageId);
             // Also trigger the monotonic acker for de-dupe/debounce book-keeping
             readAckRef.current?.(lastMessageId);
         } catch (err) {
@@ -376,7 +376,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                 return;
             }
             lastTypedSentRef.current = isTyping;
-            sendTypingEvent({roomId, localUserId: Number(localUser?.id) || 0, socket}, isTyping);
+            sendTypingEvent({roomId, socket}, isTyping);
         } catch {
         }
     }, [socket, roomId, localUser?.id, isE2EMock]);
@@ -389,7 +389,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                     console.debug('Mock room update:', {roomId, ...update});
                     return;
                 }
-                sendRoomUpdateEvent({roomId, localUserId: Number(localUser?.id) || 0, socket}, update);
+                sendRoomUpdateEvent({roomId, socket}, update);
             } catch (err) {
                 console.error('Failed to send room update', err);
             }
