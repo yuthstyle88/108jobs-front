@@ -1,18 +1,17 @@
 "use client";
 import LoadingCircle from "@/components/Common/Loading/LoadingCircle";
 import {CustomInput} from "@/components/ui/InputField";
-import {LanguageFile} from "@/constants/language";
 /* เพิ่ม hook */
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {UserService} from "@/services";
 import {isSuccess} from "@/services/HttpService"; // เพิ่ม import นี้
 import {RegisterOAuthFormData} from "@/types/formTypes/RegisterOAuth";
-import {getNamespace} from "@/utils/i18nHelper";
 import {zodResolver} from "@hookform/resolvers/zod";
 import Link from "next/link";
 import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {z} from "zod";
+import {useTranslation} from "react-i18next";
 
 type UpdateFormProps = {
   title?: string;
@@ -20,19 +19,19 @@ type UpdateFormProps = {
 
 export const AcceptForm = ({ title }
 : UpdateFormProps) => {
-  const authen = getNamespace(LanguageFile.AUTHEN);
+  const {t} = useTranslation();
 
   const UpdateSchema = z
   .object({
-    email: z.string().email(authen?.invalidEmail),
-    password: z.string().min(6, authen?.passwordMin6),
+    email: z.string().email(t("authen.invalidEmail")),
+    password: z.string().min(6, t("authen.passwordMin6")),
     confirmPassword: z.string(),
     termsAccepted: z.boolean().refine((val) => val === true),
     privacyAccepted: z.boolean().refine((val) => val === true),
   })
   .refine((data) => data.password === data.confirmPassword,
     {
-      message: authen?.notMatchPassword,
+      message: t("authen.notMatchPassword"),
       path: ["confirmPassword"],
     });
 
@@ -107,42 +106,42 @@ export const AcceptForm = ({ title }
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow-lg flex items-center gap-3">
             <LoadingCircle />
-            <span className="text-sm text-text-primary">กำลังเข้าสู่ระบบ...</span>
+            <span className="text-sm text-text-primary">{t("global.labelSignInButton")}...</span>
           </div>
         </div>
       )}
 
       <CustomInput
-        label={authen?.labelEmail}
+        label={t("authen.labelEmail")}
         required={true}
         name="email"
         register={register("email")}
         error={errors.email?.message}
-        placeholder={authen?.placeholderEmail}
+        placeholder={t("authen.placeholderEmail")}
         readonly
         type="email"
       />
 
       <CustomInput
-        label={authen?.labelPassword}
+        label={t("authen.labelPassword")}
         required={true}
         name="password"
         type="password"
         register={register("password")}
         error={errors.password?.message}
-        placeholder={authen?.placeholderPassword}
+        placeholder={t("authen.placeholderPassword")}
         showPassword={showPassword}
         toggleShowPassword={() => setShowPassword(!showPassword)}
       />
 
       <CustomInput
-        label={authen?.labelConfirmPassword}
+        label={t("authen.labelConfirmPassword")}
         required={true}
         name="confirmPassword"
         type="password"
         register={register("confirmPassword")}
         error={errors.confirmPassword?.message}
-        placeholder={authen?.placeholderConfirmPassword}
+        placeholder={t("authen.placeholderConfirmPassword")}
         showPassword={showConfirmPassword}
         toggleShowPassword={() => setShowConfirmPassword(!showConfirmPassword)}
       />
@@ -158,13 +157,13 @@ export const AcceptForm = ({ title }
             htmlFor="termsAccepted"
             className="text-sm text-text-primary font-sans"
           >
-            {authen?.checkboxTermsConditions}{" "}
+            {t("authen.checkboxTermsConditions")}{" "}
             <Link
               prefetch={false}
               href="/content/terms"
               className="text-text-primary underline"
             >
-              {authen?.checkboxTermsConditionsRedirect}
+              {t("authen.checkboxTermsConditionsRedirect")}
             </Link>
           </label>
         </div>
@@ -180,13 +179,13 @@ export const AcceptForm = ({ title }
             htmlFor="privacyAccepted"
             className="text-sm text-text-primary font-sans"
           >
-            {authen?.checkboxTermsConditions}{" "}
+            {t("authen.checkboxTermsConditions")}{" "}
             <Link
               prefetch={false}
               href="/content/privacy"
               className="text-text-primary underline"
             >
-              {authen?.checkboxPrivacyPolicyRedirect}
+              {t("authen.checkboxPrivacyPolicyRedirect")}
             </Link>
           </label>
         </div>
@@ -212,7 +211,7 @@ export const AcceptForm = ({ title }
           {updateState.state === "loading" ? (
             <LoadingCircle/>
           ) : (
-            authen?.linkCreateAccount
+            t("authen.linkCreateAccount")
           )}
         </button>
       </div>

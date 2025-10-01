@@ -2,61 +2,54 @@
 import en from "@/assets/icons/en.svg";
 import th from "@/assets/icons/th.svg";
 import vn from "@/assets/icons/vn.svg";
-import { LanguageFile } from "@/constants/language";
-import { faFacebook, faInstagram, faTiktok } from "@fortawesome/free-brands-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faFacebook, faInstagram, faTiktok} from "@fortawesome/free-brands-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import { getNamespace } from "@/utils/i18nHelper";
-import { getAppName } from "@/utils/appConfig";
+import {getAppName} from "@/utils/appConfig";
 import React from "react";
+import {useTranslation} from "react-i18next";
+import {useCommunities} from "@/hooks/communites-api/useCommunities";
+import {getCommunitiesAtLevel, toCamelCaseLastSegment} from "@/utils/helpers";
 
 const Footer = () => {
-    const global = getNamespace(LanguageFile.GLOBAL);
-
-    // Handle loading and error states
-    if (!global)
-        return (
-            <div className="bg-[#042A48] text-white p-6 text-center rounded-t-xl shadow-lg">
-                No translation data available
-            </div>
-        );
-
+    const {t} = useTranslation();
+    const communitiesResponse = useCommunities();
+    const catalogData = getCommunitiesAtLevel(communitiesResponse.communities, 3);
     return (
         <footer className="bg-[#042A48] text-white" role="contentinfo">
             {/* Top Section */}
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div
+                className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {/* Categories */}
                 <div>
-                    <h3 className="font-semibold text-lg mb-4 text-white/95 tracking-tight">{global.tittleFooter1}</h3>
+                    <h3 className="font-semibold text-lg mb-4 text-white/95 tracking-tight">{t("global.tittleFooter1")}</h3>
                     <ul className="space-y-3 text-sm text-white/80">
-                        {[
-                            global.labelNavBarItem2,
-                            global.labelNavBarItem3,
-                            global.labelNavBarItem4,
-                            global.labelNavBarItem5,
-                            global.labelNavBarItem6,
-                            global.labelNavBarItem7,
-                            global.labelNavBarItem8,
-                            global.labelNavBarItem9,
-                        ].map((item, index) => (
-                            <li key={index}>
-                <span className="cursor-default opacity-80 hover:opacity-100 transition-opacity duration-200">
-                  {item}
-                </span>
-                            </li>
+                        {catalogData.slice(0, 10).map((item, index) => (
+                            <Link
+                                prefetch={false}
+                                key={item.community.id}
+                                href={`/job-board?community=${item.community.id}`}
+                                aria-label={`View ${item.community.name} jobs`}
+                            >
+                                <li key={index}>
+                                    <span className="cursor-default opacity-80 hover:opacity-100 transition-opacity duration-200">
+                                        {t(`catalogs.${toCamelCaseLastSegment(item.community.path)}`)}
+                                    </span>
+                                </li>
+                            </Link>
                         ))}
                     </ul>
                 </div>
 
                 {/* About */}
                 <div>
-                    <h3 className="font-semibold text-lg mb-4 text-white/95 tracking-tight">{global.tittleFooter4}</h3>
+                    <h3 className="font-semibold text-lg mb-4 text-white/95 tracking-tight">{t("global.tittleFooter4")}</h3>
                     <ul className="space-y-3 text-sm">
                         {[
-                            // { href: "https://form.jotform.com/251484529705059", label: global.labelFeedbackUs, external: true },
-                            { href: "/content/terms", label: global.labelTermsOfService },
-                            { href: "/content/privacy", label: global.labelPrivacyPolicy },
+                            {href: "/content/terms", label: t("global.labelTermsOfService")},
+                            {href: "/content/privacy", label: t("global.labelPrivacyPolicy")},
+                            {href: "/content/how", label: t("how.label")},
                         ].map((item) => (
                             <li key={item.href}>
                                 <Link
@@ -74,10 +67,9 @@ const Footer = () => {
 
                 {/* Contact */}
                 <div>
-                    <h3 className="font-semibold text-lg mb-4 text-white/95 tracking-tight">{global.tittleFooter5}</h3>
+                    <h3 className="font-semibold text-lg mb-4 text-white/95 tracking-tight">{t("global.tittleFooter5")}</h3>
                     <ul className="space-y-3 text-sm text-white/80">
                         <li>
-                            Email:{" "}
                             <Link
                                 className="hover:text-white transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
                                 prefetch={false}
@@ -102,21 +94,22 @@ const Footer = () => {
                         </li>
                     </ul>
                     <p className="mt-4 text-xs text-white/70 leading-relaxed">
-                        {global.labelWorkingHoursWeekdays} <br />
-                        {global.labelWorkingHoursWeekends}
+                        {t("global.labelWorkingHoursWeekdays")} <br/>
+                        {t("global.labelWorkingHoursWeekends")}
                     </p>
                 </div>
             </div>
 
             {/* Bottom Section */}
             <div className="bg-[#0A3556] border-t border-white/10">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div
+                    className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div className="flex flex-wrap items-center gap-4 text-lg">
                         <div className="flex gap-3">
                             {[
-                                { href: "https://instagram.com", icon: faInstagram, label: "Instagram" },
-                                { href: "https://facebook.com", icon: faFacebook, label: "Facebook" },
-                                { href: "https://tiktok.com", icon: faTiktok, label: "TikTok" },
+                                {href: "https://instagram.com", icon: faInstagram, label: "Instagram"},
+                                {href: "https://facebook.com", icon: faFacebook, label: "Facebook"},
+                                {href: "https://tiktok.com", icon: faTiktok, label: "TikTok"},
                             ].map((social) => (
                                 <Link
                                     key={social.href}
@@ -126,15 +119,15 @@ const Footer = () => {
                                     className="text-white/80 hover:text-white hover:scale-110 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
                                     aria-label={social.label}
                                 >
-                                    <FontAwesomeIcon icon={social.icon} className="w-5 h-5" />
+                                    <FontAwesomeIcon icon={social.icon} className="w-5 h-5"/>
                                 </Link>
                             ))}
                         </div>
                         <span className="h-4 w-px bg-white/20" aria-hidden="true"></span>
                         <div className="flex flex-wrap items-center gap-2 text-sm">
                             {[
-                                { href: "/content/terms", label: global.labelTermsOfService },
-                                { href: "/content/privacy", label: global.labelPrivacyPolicy },
+                                {href: "/content/terms", label: t("global.labelTermsOfService")},
+                                {href: "/content/privacy", label: t("global.labelPrivacyPolicy")},
                             ].map((link, index) => (
                                 <React.Fragment key={link.href}>
                                     <Link
@@ -151,16 +144,16 @@ const Footer = () => {
                         </div>
                         <div className="flex items-center gap-2" aria-label="Languages">
                             {[
-                                { src: th, alt: "TH", title: "Thai" },
-                                { src: en, alt: "EN", title: "English" },
-                                { src: vn, alt: "VN", title: "Vietnamese" },
+                                {src: th, alt: "TH", title: "Thai"},
+                                {src: en, alt: "EN", title: "English"},
+                                {src: vn, alt: "VN", title: "Vietnamese"},
                             ].map((lang) => (
                                 <Image
                                     key={lang.alt}
                                     src={lang.src}
                                     alt={lang.alt}
                                     height={20}
-                                    style={{ height: 20, width: "auto" }}
+                                    style={{height: 20, width: "auto"}}
                                     title={lang.title}
                                     className="hover:scale-110 transition-transform duration-200"
                                 />

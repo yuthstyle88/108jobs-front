@@ -1193,6 +1193,7 @@ export const en = {
                 "Translation, subtitle translation, audio transcription, content writing, SEO article writing, English writing services, report writing, calligraphy, manuscript editing, and more.",
         },
         how: {
+            label: "How to Use Our App",
             howToBuySellTitle: `How to buy/sell on ${getAppName()}?`,
             howToBuySellSubtitle: "Number one, freelance market-place website.",
             easyStepsTitle: `Easy steps to get started with ${getAppName()}`,
