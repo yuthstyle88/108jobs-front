@@ -2,6 +2,7 @@ import type {ChatMessage} from "@/lib/lemmy-js-client/src";
 import {createContext, useContext, useEffect} from "react";
 import {addRoomListener, removeRoomListener} from "@/utils/chat/chat-socket-utils";
 import {WebSocketContextValue} from "@/utils/chat/types";
+import { onChatNewMessage, onChatTyping } from "@/events/chat";
 export const WebSocketContext = createContext<WebSocketContextValue | undefined>(undefined);
 export const useWebSocket = (
     key: string,
@@ -16,25 +17,26 @@ export const useWebSocket = (
         // normal chat message binding
         addRoomListener(key, context.roomId, onMessage as any);
 
-        // also forward typing events for the active room
-        const onTyping = (e: Event) => {
-            const detail = (e as CustomEvent).detail as any;
+        // forward local UI new-message events via event bus (optimistic updates)
+        const unsubscribeLocal = onChatNewMessage((detail) => {
             if (!detail) return;
             if (String(detail.roomId) !== String(context.roomId)) return;
-            // deliver a synthetic MessageEvent so existing handlers can branch on data.type === 'typing'
-            const evt = new MessageEvent('message', {data: {type: 'typing', ...detail}});
+            const evt = new MessageEvent('message', { data: { type: 'local:new_message', ...detail } });
             onMessage(evt as any);
-        };
+        });
 
-        if (typeof window !== 'undefined') {
-            window.addEventListener('chat:typing', onTyping);
-        }
+        // forward typing events via unified event bus (chat:typing)
+        const unsubscribeTyping = onChatTyping((detail) => {
+            if (!detail) return;
+            if (String(detail.roomId) !== String(context.roomId)) return;
+            const evt = new MessageEvent('message', { data: { type: 'local:typing', ...detail } });
+            onMessage(evt as any);
+        });
 
         return () => {
             removeRoomListener(key);
-            if (typeof window !== 'undefined') {
-                window.removeEventListener('chat:typing', onTyping);
-            }
+            unsubscribeLocal();
+            unsubscribeTyping();
         };
     }, [key, onMessage, context.roomId]);
 

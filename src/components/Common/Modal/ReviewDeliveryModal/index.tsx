@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {StatusKey} from "@/components/FreelanceChatFlow";
 import {LocalUserId} from "@/lib/lemmy-js-client/src";
 import React from "react";
-import {emitChatNewMessage} from "@/chat";
+import {emitChatNewMessage} from "@/utils/chat";
 import {getReceiverIdFromRoom} from "@/utils/chat/chat-socket-utils";
 
 interface ReviewDeliveryModalProps {

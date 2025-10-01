@@ -10,27 +10,6 @@ import {importAesKey, isBrowser} from "@/utils";
 
 // ---- Centralized browser/event helpers (reduce duplication across contexts) ----
 
-/** Emit a unified typing event */
-export function emitChatTyping(detail: { roomId: string; senderId: number; typing: boolean }) {
-    try {
-        if (isBrowser()) window.dispatchEvent(new CustomEvent('chat:typing', {detail}));
-    } catch {
-    }
-}
-
-/** Emit a unified read-receipt event */
-export function emitReadReceipt(roomId: string, lastMessageId: string, readerId: number) {
-    try {
-        if (isBrowser()) window.dispatchEvent(new CustomEvent('chat:read-receipt', {
-            detail: {
-                roomId,
-                lastMessageId,
-                readerId
-            }
-        }));
-    } catch {
-    }
-}
 
 /** Normalize Phoenix frames/envelopes into a flat object once */
 export function normalizePhoenixEnvelope(payload: any, fallbackRoomId?: string): any {
@@ -371,6 +350,7 @@ export function broadcastToListeners(payload: unknown): void {
 // ===== Payload handler (shared) =====
 import {MutableRefObject} from 'react';
 import {uuidv4} from "zod/v4";
+import {emitChatTyping} from "@/events/chat";
 
 export async function handleIncomingPayload(
     payload: any,

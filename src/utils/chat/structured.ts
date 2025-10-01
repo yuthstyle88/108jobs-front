@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { WsMessageSender } from './types';
-import {emitChatNewMessage} from "@/chat";
-import {getReceiverIdFromRoom} from "@/utils/chat/chat-socket-utils";
+import {emitChatNewMessage} from "@/events/chat";
 
 export type Structured = Record<string, any>;
 
@@ -24,11 +23,16 @@ export const serializeStructured = (obj: Structured): string => {
   }
 };
 
-export const dispatchPreview = (detail: { roomId: string; content: string; senderId: number; timestamp?: string }) => {
+export const dispatchPreview = (detail: { roomId: string; id: string; content: string; createdAt?: string; unread?: boolean }) => {
   try {
-    const ts = detail.timestamp || new Date().toISOString();
-    const detail2 = { ...detail,receiverId: getReceiverIdFromRoom(detail.roomId), timestamp: ts };
-    emitChatNewMessage(detail2);
+    const createdAt = detail.createdAt || new Date().toISOString();
+    emitChatNewMessage({
+      roomId: detail.roomId,
+      id: detail.id,
+      content: detail.content,
+      createdAt,
+      unread: detail.unread ?? false,
+    });
   } catch {
     // no-op if window/custom event not available
   }
@@ -47,7 +51,7 @@ export const sendStructured = async (
     : content;
 
   // fire preview for optimistic updates in lists
-  dispatchPreview({ roomId, content: opts.previewText || content, senderId: Number(opts.senderId || 0) });
+  dispatchPreview({ roomId, id, content: opts.previewText || content, createdAt: new Date().toISOString(), unread: false });
 
   await sendMessage({ message, id });
   return id;

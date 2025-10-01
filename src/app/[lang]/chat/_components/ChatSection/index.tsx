@@ -29,8 +29,7 @@ import {useTypingIndicator} from '@/hooks/chat/useTypingIndicator';
 import {useFileUpload} from '@/hooks/chat/useFileUpload';
 import {useWorkflowActions} from '@/hooks/chat/useWorkflowActions';
 import {createChatRealtimeHandler} from './createChatRealtimeHandler';
-import {emitChatNewMessage} from "@/chat";
-import {getReceiverIdFromRoom} from "@/utils/chat/chat-socket-utils";
+import { emitChatNewMessage } from "@/events/chat";
 
 type MessageForm = { message: string };
 type UIChatMessage = WsChatMessage & { isOwner?: boolean };
@@ -188,7 +187,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             }
             try {
                 const isUnread = d.senderId !== Number(localUser?.id) && !atBottomRef.current;
-                emitChatNewMessage({ ...d, unread: isUnread });
+                emitChatNewMessage({
+                    roomId: d.roomId,
+                    id: `${d.timestamp}:${d.senderId}`,
+                    content: d.content,
+                    createdAt: d.timestamp,
+                    unread: isUnread
+                });
             } catch {}
         } finally {
             latestIncomingRef.current = null;
@@ -367,7 +372,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     ? (message || `[File] ${selectedFile.fileName}`)
                     : message;
                 try {
-                    emitChatNewMessage({ roomId, content: preview, senderId: Number(localUser?.id) || 0, receiverId: getReceiverIdFromRoom(roomId), timestamp: tsIso });
+                    emitChatNewMessage({
+                        roomId,
+                        id: messageId,
+                        content: preview,
+                        createdAt: tsIso,
+                        unread: false,
+                    });
                 } catch {}
             } catch {}
 

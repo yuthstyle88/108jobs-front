@@ -7,13 +7,13 @@ import {
     fetchHistoryPage,
     installBestMessageListener,
     MessagePayload,
-    sendChatMessage,
 } from "@/utils/chat";
 import {
+    sendChatMessage,
     sendReadReceipt as sendReadReceiptEvent,
     sendRoomUpdateEvent,
     sendTyping as sendTypingEvent
-} from "@/utils/chat/sendEvents";
+} from "@/events/chat/sendEvents";
 import {makeEmitReadAcker} from "@/utils/chat/chat-socket-utils";
 import {ensureSharedKeyForRoom} from "@/utils";
 import {createHandleWSMessage} from "@/utils/chat/handleWSMessage";
@@ -119,7 +119,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                     reconnectTimeoutRef.current = null;
                 }
                 try {
-                    import("@/chat").then(m => m.emitWsReconnected()).catch(() => {
+                    import("@/events/chat").then(m => m.emitWsReconnected()).catch(() => {
                         try {
                             window.dispatchEvent(new Event('ws:reconnected'));
                         } catch {

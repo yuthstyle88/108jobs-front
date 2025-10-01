@@ -1,2 +1,2 @@
 export * from './chat-events';
-export * from './chat-unread';
+export * from './sendEvents';

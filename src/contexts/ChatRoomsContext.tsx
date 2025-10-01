@@ -12,7 +12,7 @@ import {REQUEST_STATE} from "@/services/HttpService";
 import { isBrowser } from "@/utils/browser";
 import { useUnreadStore } from "@/stores/unreadStore";
 import { useRoomsStore } from "@/stores/roomsStore";
-import { enableBackgroundUnread, disableBackgroundUnread } from "@/chat/BackgroundUnreadWatcher";
+import { enableBackgroundUnread, disableBackgroundUnread } from "@/utils/chat/BackgroundUnreadWatcher";
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 
 type RoomsState = {
@@ -266,7 +266,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     // Refetch when WS reconnects (event dispatched from RealtimeChatContext)
     useEffect(() => {
         const off = (async () => {
-            const { onWsReconnected } = await import("@/chat");
+            const { onWsReconnected } = await import("@/events/chat");
             const unsubscribe = onWsReconnected(() => {
                 try { execute(); } catch {}
             });
@@ -328,7 +328,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         let unsubscribe: (() => void) | null = null;
         (async () => {
             try {
-                const { onChatNewMessage } = await import("@/chat");
+                const { onChatNewMessage } = await import("@/events/chat");
                 unsubscribe = onChatNewMessage((detail) => {
                     console.log('New message event received:', detail); // Debug log
                     if (!detail || !detail.roomId) {
@@ -337,7 +337,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
                     }
 
                     // Only reorder list here; unread counting handled by realtime + background watcher
-                    bumpRoomToTop(detail.roomId, detail.timestamp);
+                    bumpRoomToTop(detail.roomId, detail.createdAt);
                 });
             } catch (e) {
                 console.error('Failed to set up chat:new-message listener:', e);

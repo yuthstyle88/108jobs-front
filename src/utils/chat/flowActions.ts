@@ -1,8 +1,7 @@
 import {FlowActions, StatusKey} from '@/components/FreelanceChatFlow';
 import {v4 as uuidv4} from 'uuid';
 import type {ChatMessage as WsChatMessage} from 'lemmy-js-client';
-import {emitChatNewMessage} from "@/chat";
-import {getReceiverIdFromRoom} from "@/utils/chat/chat-socket-utils";
+import {emitChatNewMessage, sendChatMessage, SendMessageDeps} from "@/events/chat";
 
 export type CreateFlowActionsDeps = {
     t: (k: string) => string | undefined;
@@ -10,7 +9,6 @@ export type CreateFlowActionsDeps = {
     setShowQuotationModal: (v: boolean) => void;
     setShowReviewModal: (v: boolean) => void;
     setMessages: React.Dispatch<React.SetStateAction<WsChatMessage[]>>;
-    sendMessage: (data: { message: string; id: string }) => void;
     handleFileUpload: (e: Event) => void;
     scrollContainerRef: React.RefObject<any>;
     currentRoom?: { roomId?: string | number } | null;
@@ -36,7 +34,6 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
         setShowQuotationModal,
         setShowReviewModal,
         setMessages,
-        sendMessage,
         handleFileUpload,
         scrollContainerRef,
         currentRoom,
@@ -70,20 +67,18 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
             const readable = t('profileChat.confirmAssignMsg') || 'Assignment confirmed. Waiting for freelancer to accept.';
             const payload = {type: 'employer-assigned'} as any;
 
-            sendMessage({message: JSON.stringify(payload), id: messageId});
+            await sendChatMessage({roomId} as SendMessageDeps, {message: payload, id: messageId});
 
             try {
                 const tsIso = new Date().toISOString();
-                const detail= {
-                        roomId,
-                        content: readable,
-                        senderId: Number((localUser as any)?.id) || 0,
-                        receiverId: getReceiverIdFromRoom(roomId),
-                        timestamp: tsIso
-                    };
-               emitChatNewMessage(detail);
-            } catch {
-            }
+                emitChatNewMessage({
+                    roomId,
+                    id: messageId,
+                    content: readable,
+                    createdAt: tsIso,
+                    unread: false,
+                });
+            } catch {}
 
             goToStatus('OrderApproved');
         },
@@ -99,20 +94,18 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
             const readable = t('profileChat.startWorkMsg') || 'Freelancer started work.';
             const payload = {type: 'start-work'} as any;
 
-            sendMessage({message: JSON.stringify(payload), id: messageId});
+          await sendChatMessage({ roomId } as SendMessageDeps, { message: payload, id: messageId });
 
             try {
                 const tsIso = new Date().toISOString();
-                const detail = {
+                emitChatNewMessage({
                     roomId,
+                    id: messageId,
                     content: readable,
-                    senderId: Number((localUser as any)?.id) || 0,
-                    receiverId: getReceiverIdFromRoom(roomId),
-                    timestamp: tsIso
-                }
-                emitChatNewMessage(detail);
-            } catch {
-            }
+                    createdAt: tsIso,
+                    unread: false,
+                });
+            } catch {}
 
             goToStatus('InProgress');
         },

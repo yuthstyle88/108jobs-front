@@ -1,17 +1,16 @@
+import * as React from "react";
 import {HttpService, UserService} from "@/services";
 import {
   unwrapPhoenixFrame,
   normalizePhoenixEnvelope,
   isValidIncomingChatPayload,
-  emitChatTyping,
-  emitReadReceipt,
   broadcastToListeners,
   handleIncomingPayload,
   isChatMessageLike,
-  getReceiverIdFromRoom,
 } from "@/utils/chat/chat-socket-utils";
 import {isBrowser} from "@/utils";
 import {REQUEST_STATE} from "@/services/HttpService";
+import { emitChatTyping, emitReadReceipt, type ChatTypingDetail } from "@/events/chat";
 
 export interface HandlerRefs {
   /** set of processed message signatures for dedupe */
@@ -110,13 +109,13 @@ export function createHandleWSMessage(deps: HandlerDeps) {
         const evName = String((env as any)?.event || "");
         if (evName && evName.includes("typing")) {
           const senderIdNum = Number((env as any)?.sender_id ?? (env as any)?.senderId ?? 0);
-          const info = {
-            roomId: (env as any)?.topic || roomId,
+          const info: ChatTypingDetail = {
+            roomId: String((env as any)?.topic || roomId),
             senderId: senderIdNum,
             typing:
               (env as any)?.typing ??
               (evName.includes("start") ? true : evName.includes("stop") ? false : !!(env as any)?.isTyping),
-          } as const;
+          };
           if (senderIdNum !== Number(localUserId)) {
             try {
               markPeerActive();
@@ -170,15 +169,13 @@ export function createHandleWSMessage(deps: HandlerDeps) {
             const peerActiveNow = peerActiveRef.current;
             const detail = {
               id: msgId,
-              roomId: (item as any).roomId,
-              content: (item as any).content,
-              senderId: Number((item as any).senderId) || 0,
-              receiverId: getReceiverIdFromRoom(roomId),
-              timestamp: (item as any).createdAt || new Date().toISOString(),
+              roomId: String((item as any).roomId),
+              content: String((item as any).content ?? ""),
+              createdAt: String((item as any).createdAt || new Date().toISOString()),
               // If message is from self and peer isn't currently active in this room, mark as unread for recipient view
               // Incoming messages to us are considered read (for our side) when they arrive in the active room
               unread: fromSelf ? !peerActiveNow : false,
-            } as any;
+            };
 
             // Collect the latest id for this batch to avoid spamming the acker (ignore self messages)
             try {
