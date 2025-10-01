@@ -24,6 +24,21 @@ export interface RealtimeChannelAdapter {
 const DEV = typeof process !== "undefined" && process.env.NODE_ENV !== "production";
 const isInternalEvent = (ev?: string) => !!ev && ev.startsWith("phx_");
 
+type ChannelMeta = { roomId: string; senderId: number; receiverId: number };
+function parseChannelMeta(topic: string): ChannelMeta | null {
+  try {
+    const cleaned = topic?.startsWith('room:') ? topic.slice(5) : topic;
+    const [roomId, s, r] = String(cleaned || '').split(':');
+    if (!roomId || !s || !r) return null;
+    const senderId = Number(s);
+    const receiverId = Number(r);
+    if (!Number.isFinite(senderId) || !Number.isFinite(receiverId)) return null;
+    return { roomId, senderId, receiverId };
+  } catch {
+    return null;
+  }
+}
+
 class PhoenixChannelHub {
   private static instance: PhoenixChannelHub | null = null;
   static getInstance() {
@@ -70,9 +85,9 @@ class PhoenixChannelHub {
   }
 }
 
-export function getChannelAdapter(token: string, roomId: string): RealtimeChannelAdapter {
+export function getChannelAdapter(token: string, roomId: string, senderId: number, receiverId: number): RealtimeChannelAdapter {
   const hub = PhoenixChannelHub.getInstance();
-  const primaryTopic = `room:${roomId}`;
+  const primaryTopic = `room:${roomId}:${senderId}:${receiverId}`;
 
   if (DEV) console.log('[phoenix] create adapter', { roomId, primaryTopic});
 

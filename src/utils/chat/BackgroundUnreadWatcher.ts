@@ -3,6 +3,7 @@
 import { getChannelAdapter } from "@/services/PhoenixSocketService";
 import { useRoomsStore } from "@/stores/roomsStore";
 import { useUnreadStore, incrementForIncoming } from "@/stores/unreadStore";
+import {getReceiverIdFromRoom} from "@/utils/chat/chat-socket-utils";
 
 // Debug toggle: set window.__DEBUG_BG_UNREAD = true or localStorage.DEBUG_BG_UNREAD = '1' to enable logs
 const DEBUG_KEY = 'DEBUG_BG_UNREAD';
@@ -109,12 +110,15 @@ function reconcileRooms(st: BGState) {
             st.seenByRoom.delete(id);
 
             dbg('open adapter', { roomId: id });
-            const adapter = getChannelAdapter(token, id);
+            const senderId = Number(st.userIdGetter?.()) || 0;
+            const receiverIdRaw = getReceiverIdFromRoom(id);
+            const receiverId = receiverIdRaw != null ? Number(receiverIdRaw) : 0;
+            const adapter = getChannelAdapter(token, id, senderId, receiverId) as any;
 
             if (!st.seenByRoom.has(id)) st.seenByRoom.set(id, new Set<string>());
             const seen = st.seenByRoom.get(id)!;
 
-            adapter.onmessage = (evt) => {
+            adapter.onmessage = (evt: { data: string; }) => {
                 try {
                     const env = JSON.parse(evt.data);
                     const isMsg = env?.event === 'chat:message'

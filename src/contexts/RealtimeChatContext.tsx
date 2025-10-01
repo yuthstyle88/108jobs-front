@@ -4,7 +4,7 @@ import React, {useCallback, useEffect, useRef, useState} from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {
     broadcastToListeners,
-    fetchHistoryPage,
+    fetchHistoryPage, getReceiverIdFromRoom,
     installBestMessageListener,
     MessagePayload,
 } from "@/utils/chat";
@@ -103,7 +103,10 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
             if(cancelled) return;
 
             const {getChannelAdapter} = await import("@/services/PhoenixSocketService");
-            const newSocket = getChannelAdapter(token, roomId) as any;
+            const senderId = Number(localUser?.id) || 0;
+            const receiverIdRaw = getReceiverIdFromRoom(roomId);
+            const receiverId = receiverIdRaw != null ? Number(receiverIdRaw) : 0;
+            const newSocket = getChannelAdapter(token, roomId, senderId, receiverId) as any;
             currentSocketRef.current = newSocket;
             setSocket(newSocket);
 
