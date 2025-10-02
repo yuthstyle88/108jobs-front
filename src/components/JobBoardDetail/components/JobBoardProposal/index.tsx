@@ -1,33 +1,36 @@
 "use client";
 
-import { ProfileImage } from "@/constants/images";
-import { Pagination } from "@/components/Pagination";
-import { useHttpGet } from "@/hooks/useHttpGet";
-import type { CommentView } from "lemmy-js-client";
+import {ProfileImage} from "@/constants/images";
+import {Pagination} from "@/components/Pagination";
+import {useHttpGet} from "@/hooks/useHttpGet";
+import type {CommentView} from "lemmy-js-client";
 import Image from "next/image";
-import React, { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useMyUser } from "@/hooks/profile-api/useMyUser";
-import { dmRoomId } from "@/utils/helpers";
-import { HttpService } from "@/services/HttpService";
-import { MessageCircleMore } from "lucide-react";
+import React, {useState} from "react";
+import {useParams, useRouter} from "next/navigation";
+import {useMyUser} from "@/hooks/profile-api/useMyUser";
+import {dmRoomId} from "@/utils/helpers";
+import {HttpService} from "@/services/HttpService";
+import {MessageCircleMore} from "lucide-react";
 import {getLocale} from "@/utils/date";
+import {useTranslation} from "react-i18next";
+import LoadingMultiCircle from "@/components/Common/Loading/LoadingMultiCircle";
 
 type JobBoardProposalProps = {
     postId?: number;
     jobCreatorId?: number;
 };
 
-const JobBoardProposal = ({ postId, jobCreatorId }: JobBoardProposalProps) => {
+const JobBoardProposal = ({postId, jobCreatorId}: JobBoardProposalProps) => {
+    const {t} = useTranslation();
     const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined);
     const [startingChatFor, setStartingChatFor] = useState<number | null>(null);
 
-    const { data: proposals, pagination, isMutating: isLoading } = useHttpGet("getComments", {
+    const {data: proposals, pagination, isMutating: isLoading} = useHttpGet("getComments", {
         pageCursor: currentCursor,
-        ...(postId ? { postId } : {}),
+        ...(postId ? {postId} : {}),
     });
 
-    const { person: currentUser } = useMyUser();
+    const {person: currentUser} = useMyUser();
     const route = useRouter();
     const params = useParams();
     const currentLang = (params?.lang as string) || 'th';
@@ -52,8 +55,8 @@ const JobBoardProposal = ({ postId, jobCreatorId }: JobBoardProposalProps) => {
                 await HttpService.client.createChatRoom({
                     partnerPersonId,
                     roomId,
-                    ...(cv.post.id ? { postId: cv.post.id } : {}),
-                    ...(cv?.comment?.id ? { currentCommentId: cv.comment.id } : {}),
+                    ...(cv.post.id ? {postId: cv.post.id} : {}),
+                    ...(cv?.comment?.id ? {currentCommentId: cv.comment.id} : {}),
                     roomName,
                 });
             } catch (e) {
@@ -65,17 +68,15 @@ const JobBoardProposal = ({ postId, jobCreatorId }: JobBoardProposalProps) => {
         }
     };
 
+    if (isLoading) {
+        return <LoadingMultiCircle/>
+    }
+
     return (
         <main className="mt-10 text-[18px] text-text-secondary flex flex-col gap-6 max-w-4xl mx-auto">
-            {isLoading && (
-                <div className="text-center text-base font-medium animate-pulse">
-                    Loading proposals...
-                </div>
-            )}
-
             {!isLoading && (!proposals?.comments || proposals.comments.length === 0) && (
                 <div className="text-center text-lg font-medium text-text-secondary bg-gray-50 py-6 rounded-lg">
-                    No freelancer proposals yet
+                    {t("jobBoardDetail.noProposal")}
                 </div>
             )}
 
@@ -132,8 +133,8 @@ const JobBoardProposal = ({ postId, jobCreatorId }: JobBoardProposalProps) => {
                                             aria-label="Start chat with proposer"
                                             title="Start chat"
                                         >
-                                            <MessageCircleMore className="w-4 h-4 mr-2" />
-                                            {startingChatFor === (cv as any)?.creator?.id ? "Starting..." : "Start Chat"}
+                                            <MessageCircleMore className="w-4 h-4 mr-2"/>
+                                            {startingChatFor === (cv as any)?.creator?.id ? "..." : t("profile.startChat")}
                                         </button>
                                     )}
                                 </div>
