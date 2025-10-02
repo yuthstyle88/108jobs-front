@@ -3,7 +3,7 @@ import {v4 as uuidv4} from 'uuid';
 import {REQUEST_STATE, HttpService} from '@/services/HttpService';
 import {useWorkflow} from '@/hooks/chat/useWorkflow';
 import {getLatestProposedQuoteSeq} from '@/utils/chat/message';
-import type {ApproveQuotationForm, CreateInvoiceForm} from 'lemmy-js-client';
+import type {ApproveQuotationForm, CreateInvoiceForm, LocalUser} from 'lemmy-js-client';
 import type {WsMessageSender} from '@/utils/chat/types';
 import type {StatusKey} from '@/components/FreelanceChatFlow';
 import {sendStructuredMessage} from '@/utils/chat/structured';
@@ -24,7 +24,7 @@ function extractErr(res: any, fallback: string) {
 export type UseWorkflowActionsDeps = {
     messages: any[];
     roomData: any;
-    localUser?: { id?: number | string } | null;
+    localUser: LocalUser;
     roomId: string;
     selectedFile: { fileUrl: string; fileType: string; fileName: string } | null;
     setError: (msg: string | null) => void;
@@ -135,8 +135,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 }
                 const readable = t('profileChat.proposeQuoteMsg');
                 const payload = {type: 'employer-started'} as any;
-                const sentId = await sendStructuredMessage(sendMessage, roomId, payload, {
-                    senderId: Number(localUser?.id) || 0,
+                const sentId = await sendStructuredMessage(sendMessage, roomId, payload, localUser.id, {
                     previewText: readable
                 });
                 addOwnMessage(JSON.stringify(payload), sentId);
@@ -151,7 +150,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             setError(t('profileChat.startWorkflowFailed') || `Failed to start workflow: ${msg}`);
             return false;
         }
-    }, [postId, roomData, startWorkflow, roomId, setHasStarted, goToStatusAndBroadcast, t, sendMessage, localUser?.id, addOwnMessage, roomData]);
+    }, [postId, roomData, startWorkflow, roomId, setHasStarted, goToStatusAndBroadcast, t, sendMessage, localUser.id, addOwnMessage, roomData]);
 
     const quotationSubmit = useCallback(async (data: any) => {
         if (!canSend) {
@@ -192,8 +191,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             const readable = t('profileChat.proposeQuoteMsg') || `Proposed quotation: ${data.projectName} - $${Number(data.amount).toFixed(2)}`;
             const payload = {type: 'proposed-quote', quote: data, billingId: createdBillingId} as any;
 
-            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, {
-                senderId: Number(localUser?.id) || 0,
+            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, localUser.id, {
                 previewText: readable
             });
             addOwnMessage(JSON.stringify(payload), sentId);
@@ -204,7 +202,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             setError(t('profileChat.quotationError') || 'Failed to send quotation. Please try again.');
             return false;
         }
-    }, [canSend, disabledReason, createInvoice, goToStatusAndBroadcast, localUser?.id, roomId, setShowQuotationModal, t, sendMessage, addOwnMessage, roomData]);
+    }, [canSend, disabledReason, createInvoice, goToStatusAndBroadcast, localUser.id, roomId, setShowQuotationModal, t, sendMessage, addOwnMessage, roomData]);
 
     const approveQuotation = useCallback(async () => {
         try {
@@ -240,8 +238,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
 
             const payload = {type: 'employer-assigned'} as any;
             const readable = t('profileChat.approveQuotation') || 'Approve quotation';
-            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, {
-                senderId: Number(localUser?.id) || 0,
+            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, localUser.id, {
                 previewText: readable
             });
             addOwnMessage(JSON.stringify(payload), sentId);
@@ -253,7 +250,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             setError(msg);
             return false;
         }
-    }, [approveQuotationApi, localUser?.id, roomId, t, sendMessage, addOwnMessage, walletId, validateWorkflowId, goToStatusAndBroadcast, billingId, messages, roomData]);
+    }, [approveQuotationApi, localUser.id, roomId, t, sendMessage, addOwnMessage, walletId, validateWorkflowId, goToStatusAndBroadcast, billingId, messages, roomData]);
 
     const startWork = useCallback(async () => {
         try {
@@ -275,8 +272,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             }
             const payload = {type: 'start-work'} as any;
             const readable = t('profileChat.startWork') || 'Start work';
-            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, {
-                senderId: Number(localUser?.id) || 0,
+            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, localUser.id, {
                 previewText: readable,
             });
             addOwnMessage(JSON.stringify(payload), sentId);
@@ -287,7 +283,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             setError(msg);
             return false;
         }
-    }, [messages, submitStartWorkApi, t, roomId, localUser?.id, sendMessage, addOwnMessage, goToStatusAndBroadcast, validateWorkflowId, roomData]);
+    }, [messages, submitStartWorkApi, t, roomId, localUser.id, sendMessage, addOwnMessage, goToStatusAndBroadcast, validateWorkflowId, roomData]);
 
     const submitDelivery = useCallback(async () => {
         try {
@@ -324,8 +320,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 mime: selectedFile.fileType
             };
             const preview = `[Delivery] ${selectedFile.fileName}`;
-            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, {
-                senderId: Number(localUser?.id) || 0,
+            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, localUser.id, {
                 previewText: preview,
             });
             addOwnMessage(JSON.stringify(payload), sentId);
@@ -360,8 +355,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 return false;
             }
             const payload: any = {type: 'request-revision', reason};
-            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, {
-                senderId: Number(localUser?.id) || 0,
+            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, localUser.id, {
                 previewText: reason,
             });
             addOwnMessage(JSON.stringify(payload), sentId);
@@ -399,8 +393,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             }
             const payload = {type: 'delivery-accepted'} as any;
             const content = t('profileChat.deliveryAccepted') || 'Delivery accepted. Proceed to payment.';
-            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, {
-                senderId: Number(localUser?.id) || 0,
+            const sentId = await sendStructuredMessage(sendMessage, roomId, payload, localUser.id, {
                 previewText: content,
             });
             addOwnMessage(JSON.stringify(payload), sentId);
@@ -431,8 +424,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 return false;
             }
             const content = t('profileChat.cancelledJobMsg') || 'The job has been cancelled.';
-            await sendStructuredMessage(sendMessage, roomId, {type: 'cancel-job'}, {
-                senderId: Number(localUser?.id) || 0,
+            await sendStructuredMessage(sendMessage, roomId, {type: 'cancel-job'}, localUser.id, {
                 previewText: content,
             });
             goToStatusAndBroadcast('Cancelled', currentStatus);

@@ -79,12 +79,16 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
     // Read-receipt acker (debounced, monotonic)
     const readAckRef = useRef<((id: number | string) => void) | null>(null);
 
+    if(!localUser) {
+        return;
+    }
     // Unified WebSocket connection effect (duplicates removed)
     useEffect(() => {
         if(isE2EMock) {
             setIsConnected(true);
             return;
         }
+
         if(!token || !roomId || !localUser) {
             return;
         }
@@ -103,7 +107,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
             if(cancelled) return;
 
             const {getChannelAdapter} = await import("@/services/PhoenixSocketService");
-            const senderId = Number(localUser?.id) || 0;
+            const senderId = localUser.id;
             const receiverIdRaw = getReceiverIdFromRoom(roomId);
             const receiverId = receiverIdRaw != null ? Number(receiverIdRaw) : 0;
             const newSocket = getChannelAdapter(token, roomId, senderId, receiverId) as any;
@@ -138,7 +142,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
 
             const handleWSMessage = createHandleWSMessage({
                 roomId,
-                localUserId: Number(localUser?.id) || 0,
+                localUserId: localUser.id,
                 setRefreshRoomData,
                 markPeerActive,
                 processedMsgRef,
@@ -286,7 +290,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
             try {
                 (socket as any)?.emit?.(evt, {
                     ...payload,
-                    reader_id: Number(localUser?.id) || 0,
+                    reader_id: Number(localUser.id) || 0,
                 });
             } catch {
             }
@@ -312,14 +316,14 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
         };
         try {
             if(localStorage.getItem('debug_read_ack') === '1') {
-                console.log('[read-ack] wired', {roomId, reader: Number(localUser?.id) || 0});
+                console.log('[read-ack] wired', {roomId, reader: Number(localUser.id) || 0});
             }
         } catch {
         }
         return () => {
             readAckRef.current = null;
         };
-    }, [socket, roomId, localUser?.id, isE2EMock]);
+    }, [socket, roomId, localUser.id, isE2EMock]);
 
     useEffect(() => {
         if(connectionError) {
@@ -339,7 +343,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
                 {
                     isE2EMock,
                     roomId,
-                    localUserId: Number(localUser?.id) || 0,
+                    localUserId: localUser.id,
                     peerPublicKeyHex,
                     sentSet: sentMessagesRef.current,
                     onAfterSend: () => {

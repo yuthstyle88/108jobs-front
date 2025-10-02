@@ -1,10 +1,9 @@
-import { useTranslation } from 'react-i18next';
-import { v4 as uuidv4 } from 'uuid';
+import {useTranslation} from 'react-i18next';
+import {v4 as uuidv4} from 'uuid';
 import {StatusKey} from "@/components/FreelanceChatFlow";
-import {LocalUserId} from "@/lib/lemmy-js-client/src";
+import {LocalUser} from "lemmy-js-client";
 import React from "react";
-import {getReceiverIdFromRoom} from "@/utils/chat/chat-socket-utils";
-import {emitChatNewMessage} from "@/events/chat";
+import {WsMessageSender} from "@/utils/chat";
 
 interface ReviewDeliveryModalProps {
     showReviewModal: boolean;
@@ -13,10 +12,10 @@ interface ReviewDeliveryModalProps {
     canSend: boolean;
     setError: (error: string) => void;
     disabledReason: string;
-    sendMessage: (message: { message: string; id: string }) => void;
+    sendMessage: WsMessageSender;
     requestRevisionAction: () => Promise<boolean>;
     roomId: string;
-    localUser?: { id: LocalUserId };
+    localUser: LocalUser;
 }
 
 export const ReviewDeliveryModal: React.FC<ReviewDeliveryModalProps> = ({
@@ -31,7 +30,7 @@ export const ReviewDeliveryModal: React.FC<ReviewDeliveryModalProps> = ({
                                                                             roomId,
                                                                             localUser,
                                                                         }) => {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     if (!showReviewModal) return null;
 
@@ -56,23 +55,10 @@ export const ReviewDeliveryModal: React.FC<ReviewDeliveryModalProps> = ({
                                 return;
                             }
                             sendMessage({
-                                message: JSON.stringify({ type: 'delivery-accepted' }),
-                                id: uuidv4(),
+                                senderId: localUser.id,
+                                message: JSON.stringify({type: 'delivery-accepted'}),
+                                id: uuidv4()
                             });
-                            try {
-                                const content = t("profileChat.deliveryAccepted") || "Delivery accepted. Proceed to payment.";
-                                const tsIso = new Date().toISOString();
-                                const detail =  {
-                                    roomId,
-                                        content,
-                                        senderId: Number(localUser?.id) || 0,
-                                        receiverId: getReceiverIdFromRoom(roomId),
-                                        timestamp: tsIso,
-                                };
-                                emitChatNewMessage(detail);
-                            } catch {
-                                // Handle error silently
-                            }
                         }}
                     >
                         {t("profileChat.acceptAndRelease") || "Accept & Release Payment"}

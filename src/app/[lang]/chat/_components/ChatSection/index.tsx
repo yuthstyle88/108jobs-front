@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {ProfileImage} from "@/constants/images";
-import type {ChatMessage as WsChatMessage, Post} from "lemmy-js-client";
+import type {ChatMessage as WsChatMessage, LocalUser, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
@@ -41,6 +41,7 @@ interface ChatSectionProps {
     partnerId?: number;
     partnerAvailable?: boolean;
     roomData: any;
+    localUser: LocalUser,
 }
 
 const ChatSection: React.FC<ChatSectionProps> = ({
@@ -49,10 +50,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                                      partnerAvatar,
                                                      partnerId,
                                                      partnerAvailable,
-                                                     roomData
+                                                     roomData,
+                                                     localUser,
                                                  }) => {
     const {t} = useTranslation();
-    const {localUser, person, wallet} = useMyUser();
+    const {person, wallet} = useMyUser();
     const isSubmittingRef = useRef(false);
     const myAvailable = person?.available !== false; // treat undefined as available
     const canSend = (partnerAvailable !== false) && myAvailable;
@@ -115,7 +117,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         }
     };
 
-
     // Measure chat input height to prevent last message being obscured
     const inputContainerRef = useRef<HTMLDivElement>(null);
     const [bottomPad, setBottomPad] = useState<number>(0);
@@ -156,7 +157,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) =>
             createChatRealtimeHandler({
                 roomId,
-                localUserId: Number(localUser?.id) || 0,
+                localUserId: localUser.id,
                 onRemoteTyping,
                 getIsFetching: () => isFetchingRef.current,
                 tryUpdateStatusFromItems,
@@ -182,14 +183,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         if (!d) return;
 
         try {
-            if (d.senderId !== Number(localUser?.id)) {
+            if (d.senderId !== Number(localUser.id)) {
                 scrollToLatestSoon();
             }
             try {
-                const isUnread = d.senderId !== Number(localUser?.id) && !atBottomRef.current;
+                const isUnread = d.senderId !== Number(localUser.id) && !atBottomRef.current;
                 emitChatNewMessage({
                     roomId: d.roomId,
                     id: `${d.timestamp}:${d.senderId}`,
+                    senderId: d.senderId,
                     content: d.content,
                     createdAt: d.timestamp,
                     status: 'sent'
@@ -299,7 +301,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         ]);
         scrollToLatestSoon();
         return messageId;
-    }, [currentRoom, roomId, localUser?.id]);
+    }, [currentRoom, roomId, localUser.id]);
 
     // Centralize all workflow actions into a dedicated hook
     const {
@@ -314,7 +316,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     } = useWorkflowActions({
         messages,
         roomData: currentRoom,
-        localUser: localUser || person,
+        localUser: localUser,
         roomId,
         selectedFile,
         setError,
@@ -375,6 +377,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         roomId,
                         id: messageId,
                         content: preview,
+                        senderId: localUser?.id,
                         createdAt: tsIso,
                         status: 'pending' as const,
                     };
@@ -382,7 +385,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 } catch {}
             } catch {}
 
-            sendMessage({message: contentToSend, id: messageId});
+            sendMessage({message: contentToSend, senderId: localUser?.id, id: messageId});
 
             setSelectedFile(null);
             isSubmittingRef.current = false;

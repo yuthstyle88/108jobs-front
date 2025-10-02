@@ -56,17 +56,6 @@ export function getSecure(): string {
 export function getStaticDir() {
   return `/static/${process.env.COMMIT_HASH}`;
 }
-
-/**
- * This is for html tags, don't include port
- */
-export function httpExternalPath(path: string) {
-  return `http${getSecure()}://${getExternalHost().replace(
-    /:\d+/g,
-    "",
-  )}${path}`;
-}
-
 export function isHttps() {
   return getSecure() === "s";
 }

@@ -1,6 +1,6 @@
 import {FlowActions, StatusKey} from '@/components/FreelanceChatFlow';
 import {v4 as uuidv4} from 'uuid';
-import type {ChatMessage as WsChatMessage} from 'lemmy-js-client';
+import type {ChatMessage as WsChatMessage, LocalUser} from 'lemmy-js-client';
 import {emitChatNewMessage, sendChatMessage, SendMessageDeps} from "@/events/chat";
 
 export type CreateFlowActionsDeps = {
@@ -13,7 +13,7 @@ export type CreateFlowActionsDeps = {
     scrollContainerRef: React.RefObject<any>;
     currentRoom?: { roomId?: string | number } | null;
     roomId: string;
-    localUser?: { id?: string | number | null } | null;
+    localUser: LocalUser;
     setError: (msg: string) => void;
     approveQuotation?: () => Promise<boolean>;
     startWork?: () => Promise<boolean>;
@@ -67,18 +67,24 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
             const readable = t('profileChat.confirmAssignMsg') || 'Assignment confirmed. Waiting for freelancer to accept.';
             const payload = {type: 'employer-assigned'} as any;
 
-            await sendChatMessage({roomId} as SendMessageDeps, {message: payload, id: messageId});
+            await sendChatMessage({roomId} as SendMessageDeps, {
+                message: payload,
+                senderId: localUser.id,
+                id: messageId
+            });
 
             try {
                 const tsIso = new Date().toISOString();
                 emitChatNewMessage({
                     roomId,
                     id: messageId,
+                    senderId: localUser.id,
                     content: readable,
                     createdAt: tsIso,
                     status: 'sent',
                 });
-            } catch {}
+            } catch {
+            }
 
             goToStatus('OrderApproved');
         },
@@ -94,18 +100,24 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
             const readable = t('profileChat.startWorkMsg') || 'Freelancer started work.';
             const payload = {type: 'start-work'} as any;
 
-          await sendChatMessage({ roomId } as SendMessageDeps, { message: payload, id: messageId });
+            await sendChatMessage({roomId} as SendMessageDeps, {
+                message: payload,
+                senderId: localUser.id,
+                id: messageId
+            });
 
             try {
                 const tsIso = new Date().toISOString();
                 emitChatNewMessage({
                     roomId,
                     id: messageId,
+                    senderId: localUser.id,
                     content: readable,
                     createdAt: tsIso,
                     status: 'sent',
                 });
-            } catch {}
+            } catch {
+            }
 
             goToStatus('InProgress');
         },

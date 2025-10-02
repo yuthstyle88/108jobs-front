@@ -1,8 +1,9 @@
-import type { ChatMessage } from "lemmy-js-client";
+import type {ChatMessage} from "lemmy-js-client";
 import {UserService} from "@/services";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import {encrypt} from "@/lib/web-crypto";
-import { emitChatNewMessage } from "@/events/chat";
+import {emitChatNewMessage} from "@/events/chat";
+import {MessagePayload} from "@/utils/chat";
 
 export type PhoenixEvent =
     | "phx_join"
@@ -41,16 +42,16 @@ export function createEvent<T>(
 
 // ฟังก์ชันย่อย สำหรับสร้าง new_message event โดยเฉพาะ
 export function createMessage(
-    content: string,
-    id?: string,
+    data: MessagePayload
 ): PhoenixPacket<ChatMessage> {
-    if (!content || content.trim().length === 0) {
+    if (!data.message || data.message.trim().length === 0) {
         throw new Error("Message content is required");
     }
 
     const message: ChatMessage = {
-        id: id ?? crypto.randomUUID(),
-        content,
+        id: data.id ?? crypto.randomUUID(),
+        content: data.message,
+        senderId: data.senderId,
         status: "pending",
         createdAt: new Date().toISOString(),
     };
@@ -68,11 +69,6 @@ export interface SendMessageDeps {
     socket: any;
 }
 
-export interface SendMessagePayload {
-    message: string;
-    id?: string
-}
-
 // --- Generic event-deps for socket sends ---
 export interface SendEventDeps {
     roomId: string;
@@ -81,7 +77,7 @@ export interface SendEventDeps {
 
 // Safe JSON send over WebSocket
 function wsSend(socket: any, obj: any) {
-    if(!socket || socket.readyState !== WebSocket.OPEN) return false;
+    if (!socket || socket.readyState !== WebSocket.OPEN) return false;
     try {
         socket.send(JSON.stringify(obj));
         return true;
@@ -94,6 +90,7 @@ function wsSend(socket: any, obj: any) {
 async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<boolean> {
     return new Promise((resolve) => {
         let done = false;
+
         function onMessage(ev: MessageEvent) {
             try {
                 const data = JSON.parse(ev.data);
@@ -112,6 +109,7 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
                 // ignore non-JSON frames
             }
         }
+
         const timer = setTimeout(() => {
             if (!done) {
                 done = true;
@@ -126,8 +124,8 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
 
 // --- Typing events ---
 export function sendTyping(deps: SendEventDeps, typing: boolean) {
-    const { socket } = deps;
-    const unified = createEvent("chat:typing", { typing });
+    const {socket} = deps;
+    const unified = createEvent("chat:typing", {typing});
     wsSend(socket, unified);
 }
 
@@ -136,10 +134,10 @@ export const sendTypingStop = (deps: SendEventDeps) => sendTyping(deps, false);
 
 // --- Read receipt ---
 export function sendReadReceipt(deps: SendEventDeps, lastMessageId: string) {
-    const { socket } = deps;
+    const {socket} = deps;
     const packet = createEvent(
         "chat:read",
-        { last_read_message_id: String(lastMessageId || "") },
+        {last_read_message_id: String(lastMessageId || "")},
     );
     wsSend(socket, packet);
 }
@@ -149,31 +147,29 @@ export function sendRoomUpdateEvent(
     deps: SendEventDeps,
     update: Record<string, any>
 ) {
-    const { socket } = deps;
+    const {socket} = deps;
     const packet = createEvent(
         "room:update",
-        { ...update },
+        {...update},
     );
     wsSend(socket, packet);
 }
 
 /** Centralized send-message flow used by PhoenixSocketProvider */
-export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePayload) {
+export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayload) {
     const {roomId, peerPublicKeyHex, socket} = deps;
 
     try {
         const token = UserService.Instance.auth();
 
         // Create once (plaintext) and optimistically update UI
-        const packet = createMessage(
-            data.message,
-            data.id,
-        );
+        const packet = createMessage(data);
         const p = packet.payload as ChatMessage;
         if (p) p.status = "pending";
         emitChatNewMessage({
             roomId,
             id: p.id,
+            senderId: p.senderId,
             content: p.content,
             createdAt: p.createdAt,
             status: p.status,
@@ -198,7 +194,7 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
 
         let finalContent = data.message;
 
-        if(shouldEncrypt) {
+        if (shouldEncrypt) {
             try {
                 const aesKey = await importAesKey(sharedKeyHex!, "encrypt");
                 finalContent = await encrypt(data.message, aesKey);
@@ -218,20 +214,25 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
         const sent = wsSend(socket, packet);
         let acked = false;
         if (sent) {
-            try { acked = await waitForAck(socket, String(messageId)); } catch {}
+            try {
+                acked = await waitForAck(socket, String(messageId));
+            } catch {
+            }
         }
         // Notify UI of final status (sent/failed)
         try {
-            const updated = { ...p };
+            const updated = {...p};
             updated.status = sent && acked ? "sent" : "failed";
             emitChatNewMessage({
                 roomId,
                 id: updated.id,
+                senderId: updated.senderId,
                 content: updated.content,
                 createdAt: p.createdAt,
                 status: updated.status,
             });
-        } catch {}
+        } catch {
+        }
     } catch (ignored) {
     }
     return;

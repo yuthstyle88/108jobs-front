@@ -1,4 +1,6 @@
-export type WsMessageSender = (data: { message: string; id: string }) => void | Promise<void>;
+import {LocalUserId} from "@/lib/lemmy-js-client/src";
+
+export type WsMessageSender = (data: MessagePayload) => void | Promise<void>;
 /**
  * Public API exposed by the Realtime chat WebSocket context.
  * Keep this minimal and stable; prefer adding helpers inside the provider.
@@ -26,5 +28,6 @@ export interface WebSocketContextValue {
 
 export interface MessagePayload {
     message: string;
+    senderId: LocalUserId;
     id?: string;
 }
