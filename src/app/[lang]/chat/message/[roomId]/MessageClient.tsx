@@ -154,7 +154,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     }, [accessToken, roomId, localUser?.id]);
 
 
-    if (!accessToken || !roomId || state.loading) {
+    if (!accessToken || !roomId || !localUser || state.loading) {
         return <LoadingBlur text=""/>;
     }
 
@@ -175,6 +175,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
                 partnerId={state.partnerId}
                 partnerAvailable={state.partnerAvailable}
                 roomData={state.currentRoom}
+                localUser={localUser}
             />
         </PhoenixSocketProvider>
     );
