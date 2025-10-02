@@ -4,7 +4,7 @@ import {useLanguage} from "@/contexts/LanguageContext";
 import {useParams} from "next/navigation";
 import React, {useCallback, useMemo, useState} from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {useChatRooms} from "@/contexts/ChatRoomsContext";
+import {useChatRoomsContext} from "@/contexts/ChatRoomsContext";
 import type {ChatRoom} from "@/types/chat";
 import {debounce} from "lodash";
 import ChatListItem from "@/app/[lang]/chat/_components/ChatListItem";
@@ -16,7 +16,7 @@ const ChatWrapper = () => {
     const activeRoomId = params?.roomId as string | undefined;
     const { lang: currentLang } = useLanguage();
     const { localUser } = useMyUser();
-    const { rooms, isLoading, error} = useChatRooms();
+    const { rooms, isLoading, error} = useChatRoomsContext();
     const [searchQuery, setSearchQuery] = useState("");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 

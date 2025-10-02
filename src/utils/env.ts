@@ -61,10 +61,8 @@ export function getStaticDir() {
  * This is for html tags, don't include port
  */
 export function httpExternalPath(path: string) {
-  return `http${getSecure()}://${getExternalHost().replace(
-    /:\d+/g,
-    "",
-  )}${path}`;
+  const host = getExternalHost() ?? "";
+  return `http${getSecure()}://${host.replace(/:\d+/g, "")}${path}`;
 }
 
 export function isHttps() {

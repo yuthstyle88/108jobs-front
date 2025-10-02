@@ -94,15 +94,13 @@ async function testEncryptionDecryption(sharedSecret: ArrayBuffer) {
   // Encrypt the message
   console.log('Encrypting message...');
   const encryptedMessage = await encrypt(originalMessage,
-    aesKey,
-    sessionId);
+    aesKey,);
   console.log('Encrypted message (base64):',
     encryptedMessage);
 
   // Decrypt the message
   console.log('Decrypting message...');
   const decryptedMessage = await decrypt(encryptedMessage,
-    sessionId,
     aesKey);
   console.log('Decrypted message:',
     decryptedMessage);

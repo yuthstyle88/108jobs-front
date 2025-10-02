@@ -463,7 +463,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     );
 };
 
-export const useChatRooms = (): ChatRoomsContextValue => {
+export const useChatRoomsContext = (): ChatRoomsContextValue => {
     const ctx = useContext(ChatRoomsContext);
     if (!ctx) throw new Error('useChatRooms must be used within ChatRoomsProvider');
     return ctx;

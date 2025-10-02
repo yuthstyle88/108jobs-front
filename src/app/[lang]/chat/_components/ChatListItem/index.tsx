@@ -3,7 +3,7 @@ import React from "react";
 import type {ChatRoom} from "@/types/chat";
 import type {LocalUser} from "lemmy-js-client";
 import Link from "next/link";
-import {useChatRooms} from "@/contexts/ChatRoomsContext";
+import {useChatRoomsContext} from "@/contexts/ChatRoomsContext";
 
 interface ChatListItemProps {
     room: ChatRoom;
@@ -13,7 +13,7 @@ interface ChatListItemProps {
 }
 
 function ChatListItemComponent({room, isActive, currentLang}: ChatListItemProps) {
-    const {markRoomRead} = useChatRooms();
+    const {markRoomRead} = useChatRoomsContext();
 
     const handleClick = () => {
         try {

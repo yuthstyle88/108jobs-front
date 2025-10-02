@@ -5,5 +5,3 @@ export * from './message';
 export * from './structured';
 export * from './types';
 export * from './workflowTypes';
-export * from './useRoomWebSocket';
-export * from './handleWSMessage';

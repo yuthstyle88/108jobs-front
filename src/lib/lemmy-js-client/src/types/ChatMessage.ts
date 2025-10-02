@@ -5,6 +5,7 @@ import {ChatStatus} from "./ChatStatus";
 export type ChatMessage = {
   id: string;
   roomId?: ChatRoomId;
+  senderId: number;
   content: string;
   status: ChatStatus;
   createdAt: string;

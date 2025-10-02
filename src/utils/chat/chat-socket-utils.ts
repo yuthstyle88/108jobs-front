@@ -13,20 +13,59 @@ import {importAesKey, isBrowser} from "@/utils";
 
 /** Normalize Phoenix frames/envelopes into a flat object once */
 export function normalizePhoenixEnvelope(payload: any, fallbackRoomId?: string): any {
+    // Goal: accept a variety of shapes and produce a flat object with:
+    // { event, topic (raw), roomId (normalized), ...payloadFields, contentParsed? }
     let env: any = payload;
     try {
-        if (Array.isArray(payload) && payload.length >= 5 && typeof payload[3] === 'string' && payload[4] && typeof payload[4] === 'object') {
+        // Phoenix array frame: [join_ref, msg_ref, topic, event, payload]
+        if (Array.isArray(payload) && payload.length >= 5 && typeof payload[3] === 'string') {
             const [, , topic, ev, body] = payload as [any, any, string, string, any];
-            env = {event: ev, topic: String(topic).replace(/^room:/, ''), ...(body || {})};
-        } else if (payload && typeof payload === 'object' && 'event' in payload && 'payload' in payload) {
-            const p: any = payload;
-            const topic = typeof p.topic === 'string' ? p.topic.replace(/^room:/, '') : p.topic;
-            env = {event: p.event, topic, ...(p.payload || {})};
+            const roomId = typeof topic === 'string' && topic.startsWith('room:') ? topic.slice(5) : String(topic);
+            env = { event: ev, topic, roomId, ...(body || {}) };
         }
-    } catch {
-    }
+        // Nested envelope: { data: { event, payload, topic }, ... }
+        else if (payload && typeof payload === 'object' && payload.data && typeof payload.data === 'object') {
+            const d: any = payload.data;
+            const topic = d.topic ?? payload.topic ?? fallbackRoomId ?? null;
+            const roomId = typeof topic === 'string' && topic.startsWith('room:') ? topic.slice(5) : topic;
+            env = { event: d.event, topic, roomId, ...(d.payload || {}) };
+        }
+        // Flat envelope: { event, payload, topic }
+        else if (payload && typeof payload === 'object' && 'event' in payload && 'payload' in payload) {
+            const p: any = payload;
+            const topic = p.topic ?? fallbackRoomId ?? null;
+            const roomId = typeof topic === 'string' && topic.startsWith('room:') ? topic.slice(5) : topic;
+            env = { event: p.event, topic, roomId, ...(p.payload || {}) };
+        }
+        // Already flat payload or unknown shape → try to ensure topic/roomId
+        else if (payload && typeof payload === 'object') {
+            const topic = (payload as any).topic ?? fallbackRoomId ?? null;
+            const roomId = typeof topic === 'string' && topic.startsWith('room:') ? topic.slice(5) : topic;
+            env = { ...payload, topic, roomId };
+        }
+    } catch {}
+
     if (!env || typeof env !== 'object') env = {};
-    if (fallbackRoomId && !('topic' in env)) (env as any).topic = fallbackRoomId;
+
+    // Ensure topic/roomId with fallbacks (do NOT add/remove the 'room:' prefix on topic)
+    if (!('topic' in env) && fallbackRoomId) {
+        (env as any).topic = fallbackRoomId;
+    }
+    if (!('roomId' in env)) {
+        const t = (env as any).topic ?? fallbackRoomId ?? null;
+        (env as any).roomId = typeof t === 'string' && t.startsWith('room:') ? t.slice(5) : t;
+    }
+
+    // Parse contentParsed from either env.content or env.payload?.content
+    try {
+        const c = (env as any).content ?? (env as any).payload?.content;
+        if (typeof c === 'string' && c.trim().startsWith('{')) {
+            (env as any).contentParsed = JSON.parse(c);
+        } else if (c && typeof c === 'object') {
+            (env as any).contentParsed = c;
+        }
+    } catch {}
+
     return env;
 }
 
@@ -347,144 +386,7 @@ export function broadcastToListeners(payload: unknown): void {
     for (const {fn} of __roomListeners.values()) fn(event);
 }
 
-// ===== Payload handler (shared) =====
-import {MutableRefObject} from 'react';
 import {uuidv4} from "zod/v4";
-import {emitChatTyping} from "@/events/chat";
-
-export async function handleIncomingPayload(
-    payload: any,
-    ctx: {
-        roomId: string;
-        localUserId: number;
-        token: string | null | undefined;
-        sharedKeyHex?: string;
-        receivedSet: Set<string>;
-        setPageCursor: (cursor: string | null) => void;
-        setHasMoreMessages: (v: boolean) => void;
-        setIsFetching: (v: boolean) => void;
-        fetchTimeoutRef: MutableRefObject<NodeJS.Timeout | null>;
-        fetchResolveRef: MutableRefObject<((value?: void) => void) | null>;
-    }
-): Promise<import("@/lib/lemmy-js-client/src").ChatMessage[] | null> {
-    try {
-        logDebug('[RT] handleIncomingPayload →', payload);
-    } catch {
-    }
-    // Ignore trivial frames
-    if (
-        payload == null ||
-        payload === 'pong' ||
-        payload === 'ping' ||
-        (payload?.op === 'Ping') ||
-        (payload?.event === 'phx_leave') ||
-        (typeof payload === 'object' && !Array.isArray(payload) && Object.keys(payload).length === 0)
-    ) {
-        return null;
-    }
-
-    // Normalize Phoenix shapes to a flat message-like object
-    try {
-        if (Array.isArray(payload) && payload.length >= 5 && typeof payload[3] === 'string' && payload[4] && typeof payload[4] === 'object') {
-            const [, , topic, ev, body] = payload as [any, any, string, string, any];
-            payload = {event: ev, topic: topic.replace(/^room:/, ''), ...body};
-        } else if (payload && typeof payload === 'object' && 'event' in payload && 'payload' in payload && typeof (payload as any).payload === 'object') {
-            const env = payload as any;
-            const topic = typeof env.topic === 'string' ? env.topic.replace(/^room:/, '') : env.topic;
-            payload = {event: env.event, topic, ...(env.payload || {})};
-        }
-    } catch {
-    }
-
-    const out: import("@/lib/lemmy-js-client/src").ChatMessage[] = [];
-
-    // ChatMessageView line: { message: {...}, room?: { id } }
-    if (payload && typeof payload === 'object' && (payload as any).message) {
-        const msgView = payload as any;
-        const m = {...msgView.message, room_id: msgView.room?.id || msgView.message?.room_id};
-
-        const mapped = await mapIncomingToChatMessage(m, {
-            token: ctx.token,
-            sharedKeyHex: ctx.sharedKeyHex,
-            fallbackRoomId: ctx.roomId,
-            localUserId: ctx.localUserId,
-            receivedSet: ctx.receivedSet,
-            decryptLabel: 'message view',
-        });
-        if (mapped) out.push(mapped);
-        return out;
-    }
-
-    // Flat ChatMessage line (and also detect inline typing JSON)
-    if (payload && typeof payload === 'object' && Object.prototype.hasOwnProperty.call(payload, 'content')) {
-        const m = (() => {
-            const p: any = payload;
-            const topic = typeof p.topic === 'string' ? p.topic.replace(/^room:/, '') : undefined;
-            return {...p, room_id: p.room_id ?? p.roomId ?? topic};
-        })();
-
-        // Typing embedded in content
-        try {
-            if (typeof m.content === 'string' && m.content.trim().startsWith('{')) {
-                const parsed = safeParse(m.content);
-                if (parsed && typeof parsed === 'object' && ('typing' in parsed)) {
-                    const senderIdNum = Number(m.sender_id ?? m.senderId ?? 0);
-                    const info = {
-                        type: 'typing',
-                        roomId: String(m.room_id || m.roomId || m.topic || ctx.roomId),
-                        senderId: senderIdNum,
-                        typing: Boolean((parsed as any).typing),
-                    } as any;
-                    if (senderIdNum !== Number(ctx.localUserId)) {
-                        emitChatTyping(info);
-                    }
-                    return [];
-                }
-            }
-        } catch {
-        }
-
-        const mapped = await mapIncomingToChatMessage(m, {
-            token: ctx.token,
-            sharedKeyHex: ctx.sharedKeyHex,
-            fallbackRoomId: ctx.roomId,
-            localUserId: ctx.localUserId,
-            receivedSet: ctx.receivedSet,
-            decryptLabel: 'flat message',
-        });
-        if (mapped) out.push(mapped);
-        return out;
-    }
-
-    // Pagination payloads (prev/next page)
-    if (payload && typeof payload === 'object' && ((payload as any).prevPage || (payload as any).prev_page || (payload as any).nextPage || (payload as any).next_page)) {
-        const prev = (payload as any).prev_page ?? (payload as any).prevPage ?? null;
-        const next = (payload as any).next_page ?? (payload as any).nextPage ?? null;
-        if (typeof prev === 'string' && prev.length > 0) {
-            ctx.setPageCursor(next);
-            ctx.setHasMoreMessages(true);
-        } else {
-            ctx.setPageCursor(null);
-            ctx.setHasMoreMessages(false);
-        }
-        if (ctx.fetchTimeoutRef.current) {
-            clearTimeout(ctx.fetchTimeoutRef.current);
-            ctx.fetchTimeoutRef.current = null;
-        }
-        ctx.setIsFetching(false);
-        if (ctx.fetchResolveRef.current) {
-            ctx.fetchResolveRef.current();
-            ctx.fetchResolveRef.current = null;
-        }
-        return [];
-    }
-
-    try {
-        logDebug('onmessage: dropped unknown payload shape', payload);
-    } catch {
-    }
-    return null;
-}
 
 // Utility to wait for sharedKey with a timeout
 const waitForSharedKey = (timeoutMs: number = 5000): Promise<string | undefined> => {

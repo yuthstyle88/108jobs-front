@@ -50,7 +50,7 @@ export const instanceLinkRegex = new RegExp(
   "g",
 );
 
-export const testHost = process.env.NEXT_PUBLIC_API_HOST_NAME;
+export const testHost = process.env.NEXT_PUBLIC_API_HOST_NAME ?? "108jobs.com";
 
 export const validActorRegexPattern =
   "^\\w+|[\\p{Script=Arabic}\\d_]+|[\\p{Script=Cyrillic}\\d_]+$";

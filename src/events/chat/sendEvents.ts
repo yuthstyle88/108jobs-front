@@ -42,6 +42,7 @@ export function createEvent<T>(
 // ฟังก์ชันย่อย สำหรับสร้าง new_message event โดยเฉพาะ
 export function createMessage(
     content: string,
+    senderId: number,
     id?: string,
 ): PhoenixPacket<ChatMessage> {
     if (!content || content.trim().length === 0) {
@@ -50,18 +51,17 @@ export function createMessage(
 
     const message: ChatMessage = {
         id: id ?? crypto.randomUUID(),
+        senderId,
         content,
         status: "pending",
         createdAt: new Date().toISOString(),
     };
-
     return createEvent("new_message", message);
 }
 
 export interface SendMessageDeps {
     isE2EMock: boolean;
     roomId: string;
-    localUserId: number;
     peerPublicKeyHex?: string;
     sentSet: Set<string>;
     onAfterSend?: () => void; // ใช้เคลียร์ typing flag ที่ provider
@@ -70,24 +70,43 @@ export interface SendMessageDeps {
 
 export interface SendMessagePayload {
     message: string;
+    senderId: number;
     id?: string
 }
 
 // --- Generic event-deps for socket sends ---
 export interface SendEventDeps {
     roomId: string;
+    senderId: number;
     socket: any;
 }
 
 // Safe JSON send over WebSocket
 function wsSend(socket: any, obj: any) {
-    if(!socket || socket.readyState !== WebSocket.OPEN) return false;
-    try {
-        socket.send(JSON.stringify(obj));
-        return true;
-    } catch {
-        return false;
+  if (!socket) return false;
+  const event = obj?.event ?? obj?.type ?? 'message';
+  const payload = obj?.payload ?? obj;
+  try {
+    // 1) Phoenix Channel API (channel.push(event, payload))
+    if (typeof socket.push === 'function') {
+      socket.push(event, payload);
+      return true;
     }
+    // 2) Adapter with emit(event, payload)
+    if (typeof socket.emit === 'function') {
+      socket.emit(event, payload);
+      return true;
+    }
+    // 3) Raw WebSocket API
+    if (typeof socket.send === 'function') {
+      if (typeof socket.readyState === 'number' && socket.readyState !== WebSocket.OPEN) return false;
+      socket.send(JSON.stringify({ event, payload }));
+      return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
 }
 
 // Wait for server ACK for a specific message id
@@ -126,8 +145,11 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
 
 // --- Typing events ---
 export function sendTyping(deps: SendEventDeps, typing: boolean) {
-    const { socket } = deps;
-    const unified = createEvent("chat:typing", { typing });
+    const { socket, senderId } = deps;
+    const unified = createEvent("chat:typing", {
+        typing,
+        senderId,
+    });
     wsSend(socket, unified);
 }
 
@@ -159,7 +181,7 @@ export function sendRoomUpdateEvent(
 
 /** Centralized send-message flow used by PhoenixSocketProvider */
 export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePayload) {
-    const {roomId, peerPublicKeyHex, socket} = deps;
+    const {roomId,  peerPublicKeyHex, socket} = deps;
 
     try {
         const token = UserService.Instance.auth();
@@ -167,6 +189,7 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
         // Create once (plaintext) and optimistically update UI
         const packet = createMessage(
             data.message,
+            data.senderId,
             data.id,
         );
         const p = packet.payload as ChatMessage;
@@ -183,7 +206,11 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
         // 1. Ensure we have a shared key for this room
         if (token && peerPublicKeyHex && !UserService.Instance.authInfo?.sharedKey) {
             try {
-                await ensureSharedKeyForRoom(roomId, peerPublicKeyHex);
+                if (peerPublicKeyHex) {
+                    await ensureSharedKeyForRoom(roomId, peerPublicKeyHex);
+                } else {
+                    console.warn(`[crypto] skipped key derivation: no peerPublicKey for room ${roomId}`);
+                }
             } catch (ex) {
                 if (process.env.NODE_ENV !== 'production') {
                     console.warn(
@@ -215,7 +242,7 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
         if (finalContent !== data.message && p) {
             p.content = finalContent;
         }
-        const sent = wsSend(socket, packet);
+        const sent = wsSend(socket, p);
         let acked = false;
         if (sent) {
             try { acked = await waitForAck(socket, String(messageId)); } catch {}

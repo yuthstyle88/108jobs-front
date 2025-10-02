@@ -110,10 +110,8 @@ function reconcileRooms(st: BGState) {
             st.seenByRoom.delete(id);
 
             dbg('open adapter', { roomId: id });
-            const senderId = Number(st.userIdGetter?.()) || 0;
-            const receiverIdRaw = getReceiverIdFromRoom(id);
-            const receiverId = receiverIdRaw != null ? Number(receiverIdRaw) : 0;
-            const adapter = getChannelAdapter(token, id, senderId, receiverId) as any;
+            const topic = `room:${id}`;
+            const adapter = getChannelAdapter(token, topic) as any;
 
             if (!st.seenByRoom.has(id)) st.seenByRoom.set(id, new Set<string>());
             const seen = st.seenByRoom.get(id)!;

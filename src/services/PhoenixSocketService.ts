@@ -85,14 +85,13 @@ class PhoenixChannelHub {
   }
 }
 
-export function getChannelAdapter(token: string, roomId: string, senderId: number, receiverId: number): RealtimeChannelAdapter {
+export function getChannelAdapter(token: string, topic: string): RealtimeChannelAdapter {
   const hub = PhoenixChannelHub.getInstance();
-  const primaryTopic = `room:${roomId}:${senderId}:${receiverId}`;
 
-  if (DEV) console.log('[phoenix] create adapter', { roomId, primaryTopic});
+  if (DEV) console.log('[phoenix] create adapter', { topic});
 
   // Create channels (primary + alias) and join both. If alias is unused, it will be idle.
-  let channel = hub.getOrCreateChannel(token, primaryTopic);
+  let channel = hub.getOrCreateChannel(token, topic);
 
   let readyState = 0;
   const adapter: RealtimeChannelAdapter = {
@@ -107,8 +106,13 @@ export function getChannelAdapter(token: string, roomId: string, senderId: numbe
       try {
         const payload = JSON.parse(data);
         (channel as any).push("send_message", payload);
-      } catch {
-        (channel as any).push("send_message", { room_id: roomId, content: String(data) });
+      } catch (e) {
+        // Invalid JSON passed to send(): surface error instead of silently rewriting payload
+        if (DEV) console.error('[phoenix] send() invalid JSON payload', { data, e });
+        try {
+          adapter.onerror?.({ code: 'INVALID_JSON', reason: 'send() expects a JSON string', data });
+        } catch {}
+        return; // do not send malformed payload
       }
     },
     emit(event: string, payload: any) {
@@ -124,7 +128,7 @@ export function getChannelAdapter(token: string, roomId: string, senderId: numbe
       clearRetry();
       try { (channel as any).leave?.(); } catch {}
 
-      hub.leaveChannel(token, primaryTopic);
+      hub.leaveChannel(token, topic);
       // remove network listeners
       cleanups.forEach(fn => { try { fn(); } catch {} });
       readyState = 3;
@@ -134,6 +138,7 @@ export function getChannelAdapter(token: string, roomId: string, senderId: numbe
 
   // Unify forward → adapter.onmessage with normalized envelope
     const forward = (event: string, topic: string, payload: any) => {
+        console.log('[phoenix] forward', { event, topic, payload });
         if (!event || isInternalEvent(event)) return;
 
         // --- unwrap server envelope like: {event:"new_message", payload:{...}} ---
@@ -183,18 +188,22 @@ export function getChannelAdapter(token: string, roomId: string, senderId: numbe
     try { ch.on('chat:message', (p: any) => forward('chat:message', topicLabel, p)); } catch {}
     try { ch.on('chat:read', (p: any) => forward('chat:read', topicLabel, p)); } catch {}
     try { ch.on('chat:read-receipt', (p: any) => forward('chat:read-receipt', topicLabel, p)); } catch {}
+    try { ch.on('new_message', (p: any) => forward('new_message', topicLabel, p)); } catch {}
   }
 
   function recreateChannels() {
     try { (channel as any).leave?.(); } catch {}
 
-    hub.leaveChannel(token, primaryTopic);
+    hub.leaveChannel(token, topic);
 
-    channel = hub.getOrCreateChannel(token, primaryTopic);
+    channel = hub.getOrCreateChannel(token, topic);
 
-    wireChannel(channel, primaryTopic);
+    // Reset to connecting so that onopen can fire after successful rejoin
+    readyState = 0;
 
-    joinChannel(channel, primaryTopic);
+    wireChannel(channel, topic);
+
+    joinChannel(channel, topic);
   }
 
   // --- background resiliency helpers ---
@@ -267,10 +276,10 @@ export function getChannelAdapter(token: string, roomId: string, senderId: numbe
   }
 
   // Wire before initial join to avoid missing early events
-  wireChannel(channel, primaryTopic);
+  wireChannel(channel, topic);
 
   // Initial join after wiring
-  joinChannel(channel, primaryTopic);
+  joinChannel(channel, topic);
 
   // Network-awareness: re-join when back online; pause backoff while offline
   try {
@@ -316,9 +325,22 @@ export function getChannelAdapter(token: string, roomId: string, senderId: numbe
 
   // Lifecycle propagation (errors/close)
   try { (channel as any).onError?.((e: any) => { if (DEV) console.log('[phoenix] channel error', e); adapter.onerror?.(e); scheduleRetry('channel error'); }); } catch {}
-  try { (channel as any).onClose?.(() => { if (DEV) console.log('[phoenix] channel closed'); scheduleRetry('channel closed'); }); } catch {}
-  try { ((channel as any).socket as any)?.onError?.((e: any) => { if (DEV) console.log('[phoenix] socket error', e); adapter.onerror?.(e); scheduleRetry('socket error'); }); } catch {}
-  try { ((channel as any).socket as any)?.onClose?.(() => { if (DEV) console.log('[phoenix] socket closed'); scheduleRetry('socket closed'); }); } catch {}
+  try {
+    (channel as any).onClose?.(() => {
+      if (DEV) console.log('[phoenix] channel closed');
+      try { adapter.onclose?.({ code: 1006, reason: 'channel closed' }); } catch {}
+      scheduleRetry('channel closed');
+    });
+  } catch {}
+  try {
+    ((channel as any).socket as any)?.onError?.((e: any) => { if (DEV) console.log('[phoenix] socket error', e); adapter.onerror?.(e); scheduleRetry('socket error'); }); } catch {}
+  try {
+    ((channel as any).socket as any)?.onClose?.(() => {
+      if (DEV) console.log('[phoenix] socket closed');
+      try { adapter.onclose?.({ code: 1006, reason: 'socket closed' }); } catch {}
+      scheduleRetry('socket closed');
+    });
+  } catch {}
 
   return adapter;
 }

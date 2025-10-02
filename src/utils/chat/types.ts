@@ -1,4 +1,4 @@
-export type WsMessageSender = (data: { message: string; id: string }) => void | Promise<void>;
+export type WsMessageSender = (data: { message: string; senderId: number, id: string }) => void | Promise<void>;
 /**
  * Public API exposed by the Realtime chat WebSocket context.
  * Keep this minimal and stable; prefer adding helpers inside the provider.

@@ -271,7 +271,7 @@ export default async function fetchIsoData(url: string, incomingHeaders: Incomin
             communities,
             routeData,
             errorPageData,
-            lemmyExternalHost: process.env.LEMMY_UI_LEMMY_EXTERNAL_HOST ?? testHost,
+            lemmyExternalHost: process.env.LEMMY_UI_LEMMY_EXTERNAL_HOST ?? testHost ?? "https://108jobs.com",
         };
     }
 }

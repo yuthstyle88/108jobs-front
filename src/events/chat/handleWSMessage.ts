@@ -5,28 +5,44 @@ import {
   normalizePhoenixEnvelope,
   isValidIncomingChatPayload,
   broadcastToListeners,
-  handleIncomingPayload,
   isChatMessageLike,
 } from "@/utils/chat/chat-socket-utils";
-import {isBrowser} from "@/utils";
 import {REQUEST_STATE} from "@/services/HttpService";
-import { emitChatTyping, emitReadReceipt, type ChatTypingDetail } from "@/events/chat";
+import {emitChatTyping, emitReadReceipt, type ChatTypingDetail, handleIncomingPayload} from "@/events/chat/index";
+
+// Local fallback for message de-duplication signature
+function buildMessageSignature(msg: any): string {
+  try {
+    // Prefer stable ids first
+    const id = (msg?.id ?? msg?.msg_ref_id ?? msg?.messageId);
+    if (id) return String(id);
+    // Composite signature as a fallback (room,sender,timestamp,content)
+    const room = String(msg?.roomId ?? msg?.room_id ?? "");
+    const sender = String(msg?.senderId ?? msg?.sender_id ?? "");
+    const ts = String(msg?.createdAt ?? msg?.created_at ?? "");
+    const content = typeof msg?.content === "string" ? msg.content : JSON.stringify(msg?.content ?? "");
+    return [room, sender, ts, content].join("|");
+  } catch {
+    // Absolute fallback: unique object identity (weak, but prevents crash)
+    return Math.random().toString(36).slice(2);
+  }
+}
 
 export interface HandlerRefs {
   /** set of processed message signatures for dedupe */
-  processedMsgRef: React.MutableRefObject<Set<string>>;
+  processedMsgRef: React.RefObject<Set<string>>;
   /** mark that peer is active right now */
-  peerActiveRef: React.MutableRefObject<boolean>;
+  peerActiveRef: React.RefObject<boolean>;
   /** pending page cursor setter from history fetch */
-  setPageCursor: (cursor: any) => void;
-  setHasMoreMessages: (b: boolean) => void;
-  setIsFetching: (b: boolean) => void;
+  setPageCursor?: (cursor: any) => void;
+  setHasMoreMessages?: (b: boolean) => void;
+  setIsFetching?: (b: boolean) => void;
   /** fetch coordination */
-  fetchTimeoutRef: React.MutableRefObject<any>;
-  fetchResolveRef: React.MutableRefObject<(() => void) | null>;
+  fetchTimeoutRef?: React.RefObject<any>;
+  fetchResolveRef?: React.RefObject<(() => void) | null>;
   /** read-ack support */
-  readAckRef: React.MutableRefObject<((lastId: string) => void) | null>;
-  ackCooldownRef: React.MutableRefObject<number>;
+  readAckRef: React.RefObject<((lastId: string) => void) | null>;
+  ackCooldownRef: React.RefObject<number>;
 }
 
 export interface HandlerDeps extends HandlerRefs {
@@ -37,16 +53,8 @@ export interface HandlerDeps extends HandlerRefs {
   setRefreshRoomData: (data: any) => void;
   /** inform that peer is active (UI hint) */
   markPeerActive: () => void;
-}
-
-export function buildMessageSignature(item: any): string {
-  const id = item?.id != null ? String(item.id) : '';
-  if (id) return `id:${id}`;
-  const r = String(item?.roomId ?? '');
-  const s = String(item?.senderId ?? '');
-  const t = String(item?.createdAt ?? '');
-  const c = typeof item?.content === 'string' ? item.content : JSON.stringify(item?.content ?? '');
-  return `sig:${r}|${s}|${t}|${c}`;
+  /** optional: push typing state directly to UI in addition to DOM event */
+  onRemoteTyping?: (detail: ChatTypingDetail) => void;
 }
 
 /**
@@ -58,6 +66,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
     localUserId,
     setRefreshRoomData,
     markPeerActive,
+    onRemoteTyping,
     processedMsgRef,
     peerActiveRef,
     setPageCursor,
@@ -84,7 +93,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
 
       // Normalize once
       const env: any = normalizePhoenixEnvelope(payload, roomId);
-
+      console.log("onmessage: env", env);
       // Shortcut: status-change -> refresh room once
       try {
         const evName = String((env as any)?.content || "");
@@ -106,22 +115,55 @@ export function createHandleWSMessage(deps: HandlerDeps) {
 
       // Broadcast typing notifications to listeners (but never to the typist themselves)
       try {
-        const evName = String((env as any)?.event || "");
+        const evName = String((env as any)?.event ?? (env as any)?.data?.event ?? "");
         if (evName && evName.includes("typing")) {
-          const senderIdNum = Number((env as any)?.sender_id ?? (env as any)?.senderId ?? 0);
-          const info: ChatTypingDetail = {
-            roomId: String((env as any)?.topic || roomId),
-            senderId: senderIdNum,
-            typing:
-              (env as any)?.typing ??
-              (evName.includes("start") ? true : evName.includes("stop") ? false : !!(env as any)?.isTyping),
-          };
-          if (senderIdNum !== Number(localUserId)) {
-            try {
-              markPeerActive();
-            } catch {}
-            emitChatTyping(info);
+          // Topics/room ids
+          const rawTopic = String((env as any)?.topic ?? (env as any)?.data?.topic ?? roomId ?? "");
+          const bare = rawTopic.startsWith("room:") ? rawTopic.slice(5) : rawTopic;
+          const pureRoomId = String((env as any)?.roomId ?? bare.split(":")[0] ?? bare);
+
+          // Prefer normalized payload if present
+          const p: any = (env as any)?.payload ?? env;
+
+          // senderId: payload → contentParsed → content(JSON) → topic
+          let senderIdNum = Number(p?.sender_id ?? p?.senderId ?? 0);
+          if (!senderIdNum) {
+            const cp: any = (env as any)?.contentParsed;
+            if (cp) {
+              senderIdNum = Number(cp?.senderId ?? cp?.sender_id ?? 0);
+            }
           }
+
+          // typing: payload → contentParsed → content(JSON) → event name fallback
+          let typingFlag: boolean | undefined = typeof p?.typing === 'boolean' ? p.typing : undefined;
+          if (typeof typingFlag !== 'boolean') {
+            const cp: any = (env as any)?.contentParsed;
+            if (cp && typeof cp.typing === 'boolean') {
+              typingFlag = cp.typing;
+            }
+          }
+          if (typeof typingFlag !== 'boolean') {
+            try {
+              const c: any = p?.content;
+              if (typeof c === 'string' && c.trim().startsWith('{')) {
+                const j = JSON.parse(c);
+                if (typeof j?.typing === 'boolean') typingFlag = j.typing;
+              } else if (c && typeof c === 'object' && typeof c.typing === 'boolean') {
+                typingFlag = c.typing;
+              }
+            } catch {}
+          }
+          if (typeof typingFlag !== 'boolean') {
+            typingFlag = evName.includes('start') ? true : evName.includes('stop') ? false : false;
+          }
+
+          // Skip invalid sender or self
+          if (!senderIdNum || senderIdNum === Number(localUserId)) return;
+          const info: ChatTypingDetail = { roomId: pureRoomId, senderId: senderIdNum, typing: !!typingFlag };
+          try { markPeerActive(); } catch {}
+          emitChatTyping(info);
+          try { onRemoteTyping?.(info); } catch {}
+          try { console.debug('[typing] dispatch → DOM+callback', info); } catch {}
         }
       } catch {}
 
@@ -136,7 +178,6 @@ export function createHandleWSMessage(deps: HandlerDeps) {
           return;
         }
       } catch {}
-
       const msgs = await handleIncomingPayload(payload, {
         roomId,
         localUserId: Number(localUserId),
@@ -166,11 +207,12 @@ export function createHandleWSMessage(deps: HandlerDeps) {
 
             const msgId = String((item as any).id || "");
             const fromSelf = Number((item as any).senderId) === Number(localUserId);
-            const peerActiveNow = peerActiveRef.current;
+            const peerActiveNow = !!peerActiveRef.current;
             const detail = {
               id: msgId,
               roomId: String((item as any).roomId),
               content: String((item as any).content ?? ""),
+              status: String((item as any).status),
               createdAt: String((item as any).createdAt || new Date().toISOString()),
               // If message is from self and peer isn't currently active in this room, mark as unread for recipient view
               // Incoming messages to us are considered read (for our side) when they arrive in the active room
@@ -189,13 +231,6 @@ export function createHandleWSMessage(deps: HandlerDeps) {
               }
             } catch {}
 
-            if (isBrowser()) {
-              try {
-                // Dispatch exactly once via DOM (no secondary emitters)
-                // NOTE: emitChatNewMessage is performed inside broadcastToListeners by downstream listeners if needed.
-                // Keeping here minimal to avoid duplicate DOM events.
-              } catch {}
-            }
           } catch {}
         }
         // Flush one auto-ack (safe)
@@ -248,12 +283,12 @@ export function createHandleWSMessage(deps: HandlerDeps) {
         } catch {}
       }
     } catch (e) {
-      setIsFetching(false);
-      if (fetchTimeoutRef.current) {
+      setIsFetching?.(false);
+      if (fetchTimeoutRef?.current) {
         clearTimeout(fetchTimeoutRef.current);
-        fetchTimeoutRef.current = null;
+        fetchTimeoutRef.current = null as any;
       }
-      if (fetchResolveRef.current) {
+      if (fetchResolveRef?.current) {
         fetchResolveRef.current();
         fetchResolveRef.current = null;
       }

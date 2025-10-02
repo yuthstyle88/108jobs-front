@@ -9,9 +9,8 @@ import type {ChatMessage as WsChatMessage, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
-import {useWebSocket} from "@/utils/chat";
-import {useChatRooms} from "@/contexts/ChatRoomsContext";
 import {useUnreadStore} from "@/stores/unreadStore";
+import { useRoomsStore } from '@/stores/roomsStore';
 import FreelanceChatFlow, {FlowActions, StatusKey} from "@/components/FreelanceChatFlow";
 import {createFlowActions} from "@/utils/chat/flowActions";
 import QuotationModal from "@/components/Common/Modal/QuotationModal";
@@ -28,8 +27,9 @@ import {useWorkflowStatus} from '@/hooks/chat/useWorkflowStatus';
 import {useTypingIndicator} from '@/hooks/chat/useTypingIndicator';
 import {useFileUpload} from '@/hooks/chat/useFileUpload';
 import {useWorkflowActions} from '@/hooks/chat/useWorkflowActions';
-import {createChatRealtimeHandler} from './createChatRealtimeHandler';
 import { emitChatNewMessage } from "@/events/chat";
+import { useChatRoom } from '@/hooks/chat/useChatRoom';
+import { useChatHistory } from '@/hooks/chat/useChatHistory';
 
 type MessageForm = { message: string };
 type UIChatMessage = WsChatMessage & { isOwner?: boolean };
@@ -54,6 +54,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {t} = useTranslation();
     const {localUser, person, wallet} = useMyUser();
     const isSubmittingRef = useRef(false);
+    const isFetchingRef = useRef<boolean>(false);
     const myAvailable = person?.available !== false; // treat undefined as available
     const canSend = (partnerAvailable !== false) && myAvailable;
     const disabledReason = !myAvailable
@@ -65,8 +66,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         senderId: number;
         timestamp: string
     } | null>(null);
+    const receivedIds = useMemo(() => new Set<string>(), []);
     const roomId = roomData.room.room.id;
-    const {markRoomRead, setActiveRoomId} = useChatRooms();
     const {send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
@@ -77,10 +78,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [messages, setMessages] = useState<UIChatMessage[]>([]);
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
-    const {isPartnerTyping, onRemoteTyping} = useTypingIndicator({roomId});
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { setActiveRoomId, markRoomRead } = useRoomsStore();
     const {
         selectedFile,
         setSelectedFile,
@@ -91,6 +92,20 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
+    const { isPartnerTyping, onRemoteTyping } = useTypingIndicator({ roomId });
+
+    const {
+        state: { pageCursor, hasMore, isFetching },
+        actions: { fetchHistory, reset: resetHistory },
+    } = useChatHistory({
+        roomId,
+        pageSize: 20,
+        isE2EMock: false,
+        localUserId: Number(localUser?.id) || 0,
+        receivedSet: receivedIds,
+        broadcast: () => {}, // หน้านี้จัดการ messages เอง
+    });
+
     const roomPostId = currentRoom?.room?.post?.id;
     const roomCommentId = currentRoom?.room?.currentComment?.id;
     const postCreatorId = post?.creatorId;
@@ -148,27 +163,25 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
-
-    // Mirror isFetching in a ref to avoid TDZ when wiring the realtime handler
-    const isFetchingRef = useRef(false);
-    const {sendMessage, sendTyping, sendRoomUpdate, fetchHistory, isConnected, hasMoreMessages, isFetching, refreshRoomData} = useWebSocket(
-        `chat-view:${roomId}`,
-        (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) =>
-            createChatRealtimeHandler({
-                roomId,
-                localUserId: Number(localUser?.id) || 0,
-                onRemoteTyping,
-                getIsFetching: () => isFetchingRef.current,
-                tryUpdateStatusFromItems,
-                setMessages: setMessages as any,
-                atBottomRef,
-                setNewSinceCount,
-                latestIncomingRef,
-            })(event)
+    const handleRemoteTyping = React.useCallback(
+      (detail: { roomId: string; senderId: number; typing: boolean }) => {
+        // ignore if event is for a different room
+        if (detail.roomId && detail.roomId !== roomId) return;
+        // skip if it's me
+        if (Number(localUser?.id) === Number(detail.senderId)) return;
+        try {
+          // forward into typing-indicator hook (roomId already in scope)
+          onRemoteTyping(roomId, detail.senderId, !!detail.typing);
+        } catch {}
+      },
+      [onRemoteTyping, roomId, localUser?.id]
     );
-    useEffect(() => {
-        isFetchingRef.current = Boolean(isFetching);
-    }, [isFetching]);
+
+    // Switch to useChatRoom API (new design)
+    const {
+        actions: { sendMessage, sendTyping },
+        state: { refreshRoomData },
+    } = useChatRoom({ roomId, onRemoteTyping: handleRemoteTyping });
 
     useEffect(() => {
         if (!refreshRoomData) return;
@@ -192,7 +205,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     id: `${d.timestamp}:${d.senderId}`,
                     content: d.content,
                     createdAt: d.timestamp,
-                    status: 'sent'
+                    status: 'pending'
                 });
             } catch {}
         } finally {
@@ -210,7 +223,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         }
         return () => {
             try {
-                setActiveRoomId(null);
+                setActiveRoomId('');
             } catch {
             }
         };
@@ -301,6 +314,17 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         return messageId;
     }, [currentRoom, roomId, localUser?.id]);
 
+    // Shim for legacy sendRoomUpdate: forward as a structured chat message, new signature
+    const sendRoomUpdate = useCallback((roomIdArg: string, update: Record<string, any>) => {
+      try {
+        const payload = { type: 'status-change', ...update };
+        // fire-and-forget to match void signature; rely on ws pipeline
+        sendMessage({ message: JSON.stringify(payload), senderId: Number(localUser?.id) || 0 });
+      } catch (e) {
+        try { console.error('[sendRoomUpdate] failed', e); } catch {}
+      }
+    }, [sendMessage]);
+
     // Centralize all workflow actions into a dedicated hook
     const {
         startWorkflowAction,
@@ -314,11 +338,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     } = useWorkflowActions({
         messages,
         roomData: currentRoom,
-        localUser: localUser || person,
+        localUser,
         roomId,
         selectedFile,
         setError,
-        t: (k: string) => t(k) || k,
+        t: (k: string) => String(t(k) ?? k),
         addOwnMessage,
         sendMessage,
         sendRoomUpdate,
@@ -374,6 +398,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     const detail = {
                         roomId,
                         id: messageId,
+                        senderId: Number(localUser?.id),
                         content: preview,
                         createdAt: tsIso,
                         status: 'pending' as const,
@@ -382,7 +407,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 } catch {}
             } catch {}
 
-            sendMessage({message: contentToSend, id: messageId});
+            sendMessage({message: contentToSend, senderId: Number(localUser?.id), id: messageId});
 
             setSelectedFile(null);
             isSubmittingRef.current = false;
@@ -391,9 +416,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     );
 
     const didInitialFetchRef = useRef(false);
-    // Fetch initial history as soon as component mounts (or roomId changes),
-    // without waiting for a websocket connection. This fixes empty chat on page refresh
-    // when WS is slow or blocked; the WS effect below will no-op if we've already fetched.
     useEffect(() => {
         if (!didInitialFetchRef.current) {
             didInitialFetchRef.current = true;
@@ -406,30 +428,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     setIsInitialLoading(false);
                 });
         }
-        // Reset the guard if roomId changes (new chat)
-        return () => { /* no-op */
-        };
+        return () => {};
     }, [roomId]);
 
-    // Keep previous behavior: when WS connects later (after slow networks), ensure
-    // we have at least one initial fetch; guarded to avoid duplicates.
-    useEffect(() => {
-        if (isConnected && !didInitialFetchRef.current) {
-            didInitialFetchRef.current = true;
-            fetchHistory()
-                .then(() => {
-                    setIsInitialLoading(false);
-                })
-                .catch((err) => {
-                    console.error("[CHAT][INIT] Failed to fetch initial history:", err);
-                    setIsInitialLoading(false);
-                });
-        } else if (!isConnected) {
-            // Allow another initial fetch if we fully disconnect and reconnect later
-            didInitialFetchRef.current = false;
-            console.log("[CHAT][INIT] Not connected yet");
-        }
-    }, [isConnected]);
 
     const calculatedProposedQuote = useMemo(() => {
         return Boolean(getLatestProposedQuotePayload(messages as any));
@@ -543,7 +544,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                             partnerAvatar={currentRoom?.partnerAvatar || ProfileImage.avatar}
                             customScrollParent={scrollParentEl}
                             onTopReached={() => {
-                                if (!hasMoreMessages || isFetching) return;
+                                if (!hasMore || isFetching) return;
                                 const rootEl = scrollContainerRef.current;
                                 const oldHeight = rootEl?.scrollHeight || 0;
                                 fetchHistory()
@@ -551,10 +552,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                         const newHeight = rootEl?.scrollHeight || 0;
                                         if (rootEl) rootEl.scrollTop += newHeight - oldHeight;
                                     })
-                                    .catch(() => {
-                                    });
+                                    .catch(() => {});
                             }}
-                            hasMore={hasMoreMessages}
+                            hasMore={hasMore}
                             isFetching={isFetching}
                             onAtBottomChange={(isAtBottom) => {
                                 atBottomRef.current = isAtBottom;
@@ -618,10 +618,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                     disabledHint=""
                                     onFileUpload={(ev: any) => handleFileUpload(ev as any)}
                                     onTyping={(v) => {
+                                        // Outbound only: do not mutate local UI here; UI listens to inbound events
+                                        if (typeof v !== 'boolean') return;
                                         try {
                                             sendTyping?.(v);
-                                        } catch {
-                                        }
+                                        } catch {}
                                     }}
                                     typingHint={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
                                 />
