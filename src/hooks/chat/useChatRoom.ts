@@ -10,13 +10,13 @@ import {
     sendReadReceipt as sendReadReceiptEvent,
     sendTyping as sendTypingEvent
 } from "@/events/chat/sendEvents";
-import {ChatMessage, ChatRoomId, LocalUser, LocalUserId} from "lemmy-js-client";
+import {ChatRoomId, LocalUser, LocalUserId} from "lemmy-js-client";
 
 export interface UseChatRoomParams {
     roomId: string;
     peerPublicKeyHex: string;
     onRemoteTyping?: (detail: { roomId: string; senderId: number; typing: boolean }) => void;
-    setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+    setMessages: React.Dispatch<React.SetStateAction<any[]>>;
     localUser: LocalUser
 }
 
@@ -235,35 +235,9 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
         fetchingRef.current = false;
     }, []);
 
-    const fetchHistory = useCallback(async () => {
-        if (isE2EMock || fetchingRef.current || !hasMoreRef.current) return;
-        fetchingRef.current = true;
-        try {
-            const {prev, next} = await fetchHistoryPage(
-                {roomId, cursor: pageCursor, limit: pageSize},
-                {
-                    localUserId: Number(localUser?.id) || 0,
-                    receivedSet: receivedMessagesRef.current,
-                    broadcast: (m) => broadcastToListeners(m),
-                },
-            );
-            if (typeof prev === 'string' && prev.length > 0) {
-                setPageCursor(next);
-                hasMoreRef.current = true;
-            } else {
-                setPageCursor(null);
-                hasMoreRef.current = false;
-            }
-        } catch (e) {
-            console.error('fetchHistory failed', e);
-        } finally {
-            fetchingRef.current = false;
-        }
-    }, [isE2EMock, roomId, pageCursor, pageSize, localUser?.id]);
-
     return {
         state: {pageCursor, refreshRoomData, isPartnerTyping},
-        actions: {sendMessage, sendReadReceipt, sendTyping, fetchHistory},
+        actions: {sendMessage, sendReadReceipt, sendTyping},
         utils: {onWsErrorDuringFetch, markPeerActive},
     } as const;
 }
