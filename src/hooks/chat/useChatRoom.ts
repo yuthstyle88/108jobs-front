@@ -1,7 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useWebSocketContext} from '@/contexts/WebSocketContext';
-import {v4 as uuidv4} from "uuid";
-// Chat helpers (reuse your existing utilities)
 import {createHandleWSMessage} from '@/events/chat/handleWSMessage';
 import {ensureSharedKeyForRoom} from "@/utils";
 import {broadcastToListeners, fetchHistoryPage, makeEmitReadAcker, MessagePayload} from "@/utils/chat";
