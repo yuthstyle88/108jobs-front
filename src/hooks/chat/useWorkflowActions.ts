@@ -1,5 +1,4 @@
 import {useCallback} from 'react';
-import {v4 as uuidv4} from 'uuid';
 import {REQUEST_STATE, HttpService} from '@/services/HttpService';
 import {useWorkflow} from '@/hooks/chat/useWorkflow';
 import {getLatestProposedQuoteSeq} from '@/utils/chat/message';

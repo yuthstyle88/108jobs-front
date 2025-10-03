@@ -5,12 +5,12 @@ import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {ProfileImage} from "@/constants/images";
-import type {ChatMessage as WsChatMessage, Post} from "lemmy-js-client";
+import type {ChatMessage as WsChatMessage, LocalUser, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
 import {useUnreadStore} from "@/stores/unreadStore";
-import { useRoomsStore } from '@/stores/roomsStore';
+import {useRoomsStore} from '@/stores/roomsStore';
 import FreelanceChatFlow, {FlowActions, StatusKey} from "@/components/FreelanceChatFlow";
 import {createFlowActions} from "@/utils/chat/flowActions";
 import QuotationModal from "@/components/Common/Modal/QuotationModal";
@@ -27,9 +27,9 @@ import {useWorkflowStatus} from '@/hooks/chat/useWorkflowStatus';
 import {useTypingIndicator} from '@/hooks/chat/useTypingIndicator';
 import {useFileUpload} from '@/hooks/chat/useFileUpload';
 import {useWorkflowActions} from '@/hooks/chat/useWorkflowActions';
-import { emitChatNewMessage } from "@/events/chat";
-import { useChatRoom } from '@/hooks/chat/useChatRoom';
-import { useChatHistory } from '@/hooks/chat/useChatHistory';
+import {emitChatNewMessage} from "@/events/chat";
+import {useChatRoom} from '@/hooks/chat/useChatRoom';
+import {useChatHistory} from '@/hooks/chat/useChatHistory';
 
 type MessageForm = { message: string };
 type UIChatMessage = WsChatMessage & { isOwner?: boolean };
@@ -41,6 +41,8 @@ interface ChatSectionProps {
     partnerId?: number;
     partnerAvailable?: boolean;
     roomData: any;
+    localUser: LocalUser;
+    peerPublicKeyHex: string;
 }
 
 const ChatSection: React.FC<ChatSectionProps> = ({
@@ -49,12 +51,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                                      partnerAvatar,
                                                      partnerId,
                                                      partnerAvailable,
-                                                     roomData
+                                                     roomData,
+                                                     localUser,
+                                                     peerPublicKeyHex
                                                  }) => {
     const {t} = useTranslation();
-    const {localUser, person, wallet} = useMyUser();
+    const {person, wallet} = useMyUser();
     const isSubmittingRef = useRef(false);
-    const isFetchingRef = useRef<boolean>(false);
     const myAvailable = person?.available !== false; // treat undefined as available
     const canSend = (partnerAvailable !== false) && myAvailable;
     const disabledReason = !myAvailable
@@ -81,7 +84,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const { setActiveRoomId, markRoomRead } = useRoomsStore();
+    const {setActiveRoomId, markRoomRead} = useRoomsStore();
     const {
         selectedFile,
         setSelectedFile,
@@ -92,18 +95,19 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
-    const { isPartnerTyping, onRemoteTyping } = useTypingIndicator({ roomId });
+    const {isPartnerTyping, onRemoteTyping} = useTypingIndicator({roomId});
 
     const {
-        state: { pageCursor, hasMore, isFetching },
-        actions: { fetchHistory, reset: resetHistory },
+        state: {pageCursor, hasMore, isFetching},
+        actions: {fetchHistory, reset: resetHistory},
     } = useChatHistory({
         roomId,
         pageSize: 20,
         isE2EMock: false,
-        localUserId: Number(localUser?.id) || 0,
+        localUserId: Number(localUser.id) || 0,
         receivedSet: receivedIds,
-        broadcast: () => {}, // หน้านี้จัดการ messages เอง
+        broadcast: () => {
+        }, // หน้านี้จัดการ messages เอง
     });
 
     const roomPostId = currentRoom?.room?.post?.id;
@@ -164,28 +168,29 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         return () => window.removeEventListener("resize", handleResize);
     }, []);
     const handleRemoteTyping = React.useCallback(
-      (detail: { roomId: string; senderId: number; typing: boolean }) => {
-        // ignore if event is for a different room
-        if (detail.roomId && detail.roomId !== roomId) return;
-        // skip if it's me
-        if (Number(localUser?.id) === Number(detail.senderId)) return;
-        try {
-          // forward into typing-indicator hook (roomId already in scope)
-          onRemoteTyping(roomId, detail.senderId, !!detail.typing);
-        } catch {}
-      },
-      [onRemoteTyping, roomId, localUser?.id]
+        (detail: { roomId: string; senderId: number; typing: boolean }) => {
+            // ignore if event is for a different room
+            if (detail.roomId && detail.roomId !== roomId) return;
+            // skip if it's me
+            if (Number(localUser.id) === Number(detail.senderId)) return;
+            try {
+                // forward into typing-indicator hook (roomId already in scope)
+                onRemoteTyping(roomId, detail.senderId, detail.typing);
+            } catch {
+            }
+        },
+        [onRemoteTyping, roomId, localUser.id]
     );
 
     // Switch to useChatRoom API (new design)
     const {
-        actions: { sendMessage, sendTyping },
-        state: { refreshRoomData },
-    } = useChatRoom({ roomId, onRemoteTyping: handleRemoteTyping });
+        actions: {sendMessage, sendTyping},
+        state: {refreshRoomData},
+    } = useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping: handleRemoteTyping});
 
     useEffect(() => {
         if (!refreshRoomData) return;
-        setCurrentRoom({ ...refreshRoomData });
+        setCurrentRoom({...refreshRoomData});
     }, [refreshRoomData]);
 
     // After commit, propagate the last incoming message to ChatRooms context and auto-scroll for receiver
@@ -195,19 +200,21 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         if (!d) return;
 
         try {
-            if (d.senderId !== Number(localUser?.id)) {
+            if (d.senderId !== Number(localUser.id)) {
                 scrollToLatestSoon();
             }
             try {
-                const isUnread = d.senderId !== Number(localUser?.id) && !atBottomRef.current;
+                const isUnread = d.senderId !== Number(localUser.id) && !atBottomRef.current;
                 emitChatNewMessage({
                     roomId: d.roomId,
                     id: `${d.timestamp}:${d.senderId}`,
+                    senderId: d.senderId,
                     content: d.content,
                     createdAt: d.timestamp,
                     status: 'pending'
                 });
-            } catch {}
+            } catch {
+            }
         } finally {
             latestIncomingRef.current = null;
         }
@@ -233,18 +240,18 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const statusBeforeCancel = useStateMachineStore((s) => s.statusBeforeCancel);
 
     const setWorkflowState = (key: StatusKey, statusBeforeCancel?: StatusKey, isClientUpdate = true) => {
-        console.log('setWorkflowState:', { key, statusBeforeCancel, currentStatus, isClientUpdate });
+        console.log('setWorkflowState:', {key, statusBeforeCancel, currentStatus, isClientUpdate});
         useStateMachineStore.setState({
             state: key,
             stepIndex: ORDER.indexOf(key),
             statusBeforeCancel: key === 'Cancelled' ? (statusBeforeCancel ?? currentStatus) : undefined,
         });
         if (isClientUpdate) {
-            lastClientUpdateRef.current = { status: key, timestamp: Date.now() };
+            lastClientUpdateRef.current = {status: key, timestamp: Date.now()};
         }
     };
 
-    const { tryUpdateStatusFromItems, goToStatus, handleChangeStatus } = useWorkflowStatus({
+    const {tryUpdateStatusFromItems, goToStatus, handleChangeStatus} = useWorkflowStatus({
         currentStatus,
         setWorkflowState,
         hasStarted,
@@ -312,17 +319,20 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         ]);
         scrollToLatestSoon();
         return messageId;
-    }, [currentRoom, roomId, localUser?.id]);
+    }, [currentRoom, roomId, localUser.id]);
 
     // Shim for legacy sendRoomUpdate: forward as a structured chat message, new signature
     const sendRoomUpdate = useCallback((roomIdArg: string, update: Record<string, any>) => {
-      try {
-        const payload = { type: 'status-change', ...update };
-        // fire-and-forget to match void signature; rely on ws pipeline
-        sendMessage({ message: JSON.stringify(payload), senderId: Number(localUser?.id) || 0 });
-      } catch (e) {
-        try { console.error('[sendRoomUpdate] failed', e); } catch {}
-      }
+        try {
+            const payload = {type: 'status-change', ...update};
+            // fire-and-forget to match void signature; rely on ws pipeline
+            sendMessage({message: JSON.stringify(payload), senderId: Number(localUser.id) || 0});
+        } catch (e) {
+            try {
+                console.error('[sendRoomUpdate] failed', e);
+            } catch {
+            }
+        }
     }, [sendMessage]);
 
     // Centralize all workflow actions into a dedicated hook
@@ -398,21 +408,23 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     const detail = {
                         roomId,
                         id: messageId,
-                        senderId: Number(localUser?.id),
+                        senderId: Number(localUser.id),
                         content: preview,
                         createdAt: tsIso,
                         status: 'pending' as const,
                     };
                     emitChatNewMessage(detail);
-                } catch {}
-            } catch {}
+                } catch {
+                }
+            } catch {
+            }
 
-            sendMessage({message: contentToSend, senderId: Number(localUser?.id), id: messageId});
+            sendMessage({message: contentToSend, senderId: Number(localUser.id), id: messageId});
 
             setSelectedFile(null);
             isSubmittingRef.current = false;
         },
-        [sendMessage, currentRoom, roomId, selectedFile, localUser?.id, emitChatNewMessage]
+        [sendMessage, currentRoom, roomId, selectedFile, localUser.id, emitChatNewMessage]
     );
 
     const didInitialFetchRef = useRef(false);
@@ -428,7 +440,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     setIsInitialLoading(false);
                 });
         }
-        return () => {};
+        return () => {
+        };
     }, [roomId]);
 
 
@@ -552,7 +565,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                         const newHeight = rootEl?.scrollHeight || 0;
                                         if (rootEl) rootEl.scrollTop += newHeight - oldHeight;
                                     })
-                                    .catch(() => {});
+                                    .catch(() => {
+                                    });
                             }}
                             hasMore={hasMore}
                             isFetching={isFetching}
@@ -622,7 +636,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                         if (typeof v !== 'boolean') return;
                                         try {
                                             sendTyping?.(v);
-                                        } catch {}
+                                        } catch {
+                                        }
                                     }}
                                     typingHint={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
                                 />

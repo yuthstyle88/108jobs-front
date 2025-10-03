@@ -2,149 +2,132 @@
 // This provides typed helpers to emit and subscribe to chat CustomEvents
 // keeping window and event-name details in one place.
 import {isBrowser} from "@/utils/browser";
-import {ChatStatus} from "lemmy-js-client";
+import {ChatStatus, LocalUserId} from "lemmy-js-client";
 // ===== Payload handler (shared) =====
-import type { RefObject } from 'react';
-import {logDebug, mapIncomingToChatMessage} from "@/utils/chat";
-import {safeParse} from "@/utils/chat";
+import type {RefObject} from 'react';
+import {logDebug, mapIncomingToChatMessage, safeParse} from "@/utils/chat";
 
 
 function stripUndef<T extends Record<string, any>>(obj: T): T {
-  Object.keys(obj).forEach((k) => {
-    if ((obj as any)[k] === undefined) delete (obj as any)[k];
-  });
-  return obj;
+    Object.keys(obj).forEach((k) => {
+        if ((obj as any)[k] === undefined) delete (obj as any)[k];
+    });
+    return obj;
 }
 
 export const CHAT_EVENT = Object.freeze({
-  NEW_MESSAGE: 'chat:new-message',
-  TYPING: 'chat:typing',
-  READ_RECEIPT: 'chat:read-receipt',
-  WS_RECONNECTED: 'ws:reconnected',
+    NEW_MESSAGE: 'chat:new-message',
+    TYPING: 'chat:typing',
+    READ_RECEIPT: 'chat:read-receipt',
+    WS_RECONNECTED: 'ws:reconnected',
 } as const);
 
 export type ChatNewMessageDetail = {
-  roomId: string;          // required: UI context
-  id: string;              // required: for de-dup & updates
-  content: string;         // required: message text (already decrypted for UI)
-  createdAt: string;      // ISO string; defaults to now if omitted
-  status: ChatStatus; // pending | sent | failed
+    roomId: string;          // required: UI context
+    id: string;              // required: for de-dup & updates
+    senderId: LocalUserId;   // required: for checking ownership
+    content: string;         // required: message text (already decrypted for UI)
+    createdAt: string;       // ISO string; defaults to now if omitted
+    status: ChatStatus;      // pending | sent | failed
 };
 
 // Normalize detail for consistent UI handling (no socket dependency)
 export function normalizeChatNewMessageDetail(detail: ChatNewMessageDetail): ChatNewMessageDetail {
-  const now = new Date().toISOString();
-  const normalized: ChatNewMessageDetail = stripUndef({
-    ...detail,
-    createdAt: detail.createdAt ?? now,
-  });
-  return normalized;
+    const now = new Date().toISOString();
+    return stripUndef({
+        ...detail,
+        createdAt: detail.createdAt ?? now,
+    });
 }
 
 export function isChatNewMessageDetail(v: any): v is ChatNewMessageDetail {
-  return !!v && typeof v === 'object'
-    && typeof v.roomId === 'string'
-    && typeof v.id === 'string'
-    && typeof v.content === 'string';
+    return !!v && typeof v === 'object'
+        && typeof v.roomId === 'string'
+        && typeof v.id === 'string'
+        && typeof v.content === 'string';
 }
 
 export type ChatNewMessageHandler = (detail: ChatNewMessageDetail) => void;
 
 // ---- Typing (unified) ----
 export type ChatTypingDetail = { roomId: string; senderId: number; typing: boolean };
-export function isChatTypingDetail(v: any): v is ChatTypingDetail {
-  return !!v && typeof v === 'object' && typeof v.roomId === 'string' && typeof v.typing === 'boolean';
-}
-export type ChatTypingHandler = (detail: ChatTypingDetail) => void;
-export function onChatTyping(handler: ChatTypingHandler): () => void {
-  if (!isBrowser()) return () => {};
-  const wrapped = (e: Event) => {
-    try {
-      const d = (e as CustomEvent).detail;
-      if (!isChatTypingDetail(d)) return;
-      try { console.debug('[typing] on', d); } catch {}
-      handler(d);
-    } catch {}
-  };
-  window.addEventListener(CHAT_EVENT.TYPING as any, wrapped as any);
-  document.addEventListener(CHAT_EVENT.TYPING as any, wrapped as any);
-  return () => {
-    window.removeEventListener(CHAT_EVENT.TYPING as any, wrapped as any);
-    document.removeEventListener(CHAT_EVENT.TYPING as any, wrapped as any);
-  };
-}
-
 export function emitChatNewMessage(detail: ChatNewMessageDetail): void {
-  if (!isBrowser()) return;
-  try {
-    const normalized = normalizeChatNewMessageDetail(detail);
-    window.dispatchEvent(new CustomEvent(CHAT_EVENT.NEW_MESSAGE, { detail: normalized }));
-  } catch {
-    // swallow errors to keep callers simple
-  }
+    if (!isBrowser()) return;
+    try {
+        const normalized = normalizeChatNewMessageDetail(detail);
+        window.dispatchEvent(new CustomEvent(CHAT_EVENT.NEW_MESSAGE, {detail: normalized}));
+    } catch {
+        // swallow errors to keep callers simple
+    }
 }
 
 // Emit multiple new-message events in order (UI may render progressively)
 export function emitChatNewMessages(details: ChatNewMessageDetail[]): void {
-  if (!isBrowser()) return;
-  for (const d of details) emitChatNewMessage(d);
+    if (!isBrowser()) return;
+    for (const d of details) emitChatNewMessage(d);
 }
 
 export function onChatNewMessage(handler: ChatNewMessageHandler): () => void {
-  if (!isBrowser()) return () => {};
-  const wrapped = (e: CustomEvent<ChatNewMessageDetail>) => {
-    try {
-      const d = e.detail;
-      if (!isChatNewMessageDetail(d)) return;
-      handler(normalizeChatNewMessageDetail(d));
-    } catch {}
-  };
-  window.addEventListener(CHAT_EVENT.NEW_MESSAGE, wrapped as EventListener);
-  return () => window.removeEventListener(CHAT_EVENT.NEW_MESSAGE, wrapped as EventListener);
+    if (!isBrowser()) return () => {
+    };
+    const wrapped = (e: CustomEvent<ChatNewMessageDetail>) => {
+        try {
+            const d = e.detail;
+            if (!isChatNewMessageDetail(d)) return;
+            handler(normalizeChatNewMessageDetail(d));
+        } catch {
+        }
+    };
+    window.addEventListener(CHAT_EVENT.NEW_MESSAGE, wrapped as EventListener);
+    return () => window.removeEventListener(CHAT_EVENT.NEW_MESSAGE, wrapped as EventListener);
 }
 
 export function emitWsReconnected(): void {
-  if (!isBrowser()) return;
-  try {
-    window.dispatchEvent(new Event(CHAT_EVENT.WS_RECONNECTED as any));
-  } catch {}
+    if (!isBrowser()) return;
+    try {
+        window.dispatchEvent(new Event(CHAT_EVENT.WS_RECONNECTED as any));
+    } catch {
+    }
 }
 
 export function onWsReconnected(handler: () => void): () => void {
-  if (!isBrowser()) return () => {};
-  window.addEventListener(CHAT_EVENT.WS_RECONNECTED as any, handler as any);
-  return () => window.removeEventListener(CHAT_EVENT.WS_RECONNECTED as any, handler as any);
+    if (!isBrowser()) return () => {
+    };
+    window.addEventListener(CHAT_EVENT.WS_RECONNECTED as any, handler as any);
+    return () => window.removeEventListener(CHAT_EVENT.WS_RECONNECTED as any, handler as any);
 }
 
 /** Emit a unified typing event */
 export function emitChatTyping(detail: { roomId: string; senderId: number; typing: boolean }) {
-  try {
-    if (!isBrowser()) return;
-
-    // Basic validation to avoid silent no-ops
-    const roomId = String((detail as any)?.roomId || "");
-    const senderId = Number((detail as any)?.senderId || 0);
-    const typing = Boolean((detail as any)?.typing);
-    if (!roomId || !Number.isFinite(senderId)) return;
-
-    // Build event with better DOM propagation
-    const evt = new CustomEvent(CHAT_EVENT.TYPING as string, {
-      detail: { roomId, senderId, typing },
-      bubbles: true,
-      composed: true,
-      cancelable: false,
-    } as any);
-     console.info('[typing] emit', evt);
-    // Dispatch to both window and document to cover different listeners
     try {
-      window.dispatchEvent(evt);
-    } catch {}
-    try {
-      document && document.dispatchEvent && document.dispatchEvent(evt);
-    } catch {}
-  } catch (e) {
-    // swallow errors to keep callers simple
-  }
+        if (!isBrowser()) return;
+
+        // Basic validation to avoid silent no-ops
+        const roomId = String((detail as any)?.roomId || "");
+        const senderId = Number((detail as any)?.senderId || 0);
+        const typing = Boolean((detail as any)?.typing);
+        if (!roomId || !Number.isFinite(senderId)) return;
+
+        // Build event with better DOM propagation
+        const evt = new CustomEvent(CHAT_EVENT.TYPING as string, {
+            detail: {roomId, senderId, typing},
+            bubbles: true,
+            composed: true,
+            cancelable: false,
+        } as any);
+        console.info('[typing] emit', evt);
+        // Dispatch to both window and document to cover different listeners
+        try {
+            window.dispatchEvent(evt);
+        } catch {
+        }
+        try {
+            document && document.dispatchEvent && document.dispatchEvent(evt);
+        } catch {
+        }
+    } catch (e) {
+        // swallow errors to keep callers simple
+    }
 }
 
 /** Emit a unified read-receipt event */
@@ -160,6 +143,7 @@ export function emitReadReceipt(roomId: string, lastMessageId: string, readerId:
     } catch {
     }
 }
+
 export async function handleIncomingPayload(
     payload: any,
     ctx: {
@@ -293,5 +277,3 @@ export async function handleIncomingPayload(
     }
     return null;
 }
-// Utility: an empty unsubscribe for non-browser contexts
-export const noopUnsubscribe = () => {};

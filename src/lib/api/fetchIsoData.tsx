@@ -10,12 +10,12 @@
  * @param incomingHeaders HTTP headers from the incoming request
  * @returns An IsoData object containing all necessary data for rendering, or null if an error occurred
  */
-import {FailedRequestState, HttpService, RequestState, wrapClient} from "@/services/HttpService";
+import {FailedRequestState, RequestState, wrapClient} from "@/services/HttpService";
 import {isAuthPath} from "@/utils/app";
 import {getErrorPageData, getJwtCookie, matchPath, setForwardedHeaders} from "@/utils/helpers";
 import {Match} from "@/utils/router";
 import {routes} from "@/utils/routes";
-import {ErrorPageData, InitialFetchRequest, IsoData, RouteData} from "@/utils/types";
+import {ErrorPageData, IsoData, RouteData} from "@/utils/types";
 import {parsePath} from "history";
 import {IncomingHttpHeaders} from "http";
 import {GetSiteResponse, LemmyHttp, ListCommunitiesResponse, MyUserInfo} from "lemmy-js-client";
