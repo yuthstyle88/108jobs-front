@@ -1,14 +1,14 @@
 import * as React from "react";
 import {HttpService, UserService} from "@/services";
 import {
-    unwrapPhoenixFrame,
-    normalizePhoenixEnvelope,
-    isValidIncomingChatPayload,
     broadcastToListeners,
     isChatMessageLike,
+    isValidIncomingChatPayload,
+    normalizePhoenixEnvelope,
+    unwrapPhoenixFrame,
 } from "@/utils/chat/chatSocketUtils";
 import {REQUEST_STATE} from "@/services/HttpService";
-import {emitChatTyping, emitReadReceipt, type ChatTypingDetail, handleIncomingPayload} from "@/events/chat/index";
+import {type ChatTypingDetail, emitChatTyping, emitReadReceipt, handleIncomingPayload} from "@/events/chat/index";
 import {ChatMessage} from "@/lib/lemmy-js-client/src";
 
 // Local fallback for message de-duplication signature
@@ -164,7 +164,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
 
                     // Skip invalid sender or self
                     if (!senderIdNum || senderIdNum === Number(localUserId)) return;
-                    const info: ChatTypingDetail = {roomId: pureRoomId, senderId: senderIdNum, typing: !!typingFlag};
+                    const info: ChatTypingDetail = {roomId: pureRoomId, senderId: senderIdNum, typing: typingFlag};
                     try {
                         markPeerActive();
                     } catch {
@@ -208,59 +208,71 @@ export function createHandleWSMessage(deps: HandlerDeps) {
             });
 
             if (Array.isArray(msgs) && msgs.length) {
+                const newItems: ChatMessage[] = [];
+
                 for (const item of msgs) {
-                    // Broadcast to in-app listeners
+                    // Broadcast to global listeners
                     broadcastToListeners(item);
-                    // Only fire chat:new-message for real messages (not typing/partial frames)
+
                     try {
                         if (!isChatMessageLike(item)) continue;
-                        // Unified dedupe (prefer id; fall back to composite signature)
-                        const signature = buildMessageSignature(item as any);
-                        if (processedMsgRef.current.has(signature)) {
-                            continue;
-                        }
+
+                        const signature = buildMessageSignature(item);
+                        if (processedMsgRef.current.has(signature)) continue;
                         processedMsgRef.current.add(signature);
 
-                        console.log("item", item)
-
-                        setMessages((prev) => {
-                            if (prev.some((m) => buildMessageSignature(m) === signature)) {
-                                return prev; // prevent duplicates
-                            }
-                            return [...prev, item as ChatMessage]; // or [item as ChatMessage, ...prev] for reverse order
-                        });
-
-                        const msgId = String((item as any).id || "");
                         const fromSelf = Number((item as any).senderId) === Number(localUserId);
                         const peerActiveNow = peerActiveRef.current;
-                        const detail = {
-                            id: msgId,
-                            roomId: String((item as any).roomId),
-                            content: String((item as any).content ?? ""),
-                            status: String((item as any).status),
-                            createdAt: String((item as any).createdAt || new Date().toISOString()),
-                            // If message is from self and peer isn't currently active in this room, mark as unread for recipient view
-                            // Incoming messages to us are considered read (for our side) when they arrive in the active room
+
+                        const enhancedItem = {
+                            ...item,
                             unread: fromSelf ? !peerActiveNow : false,
                         };
 
-                        // Collect the latest id for this batch to avoid spamming the acker (ignore self messages)
-                        try {
-                            const sameRoom = String((item as any).roomId) === String(roomId);
-                            const _fromSelf = Number((item as any).senderId) === Number(localUserId);
-                            if (sameRoom && !_fromSelf && detail.id) {
-                                try {
-                                    console.log("[read-ack] candidate:lastId", {roomId, id: String(detail.id)});
-                                } catch {
-                                }
-                                (handleWSMessage as any)._batchAckLastId = String(detail.id);
-                            }
-                        } catch {
-                        }
+                        newItems.push(enhancedItem as ChatMessage);
 
+                        // Read-ack setup
+                        const msgId = String((item as any).id || "");
+                        const sameRoom = String((item as any).roomId) === String(roomId);
+                        if (sameRoom && !fromSelf && msgId) {
+                            try {
+                                console.log("[read-ack] candidate:lastId", {roomId, id: msgId});
+                            } catch {
+                            }
+                            (handleWSMessage as any)._batchAckLastId = msgId;
+                        }
                     } catch {
                     }
                 }
+
+                if (newItems.length > 0) {
+                    setMessages((prev: any[]) => {
+                        const copy = [...prev];
+                        let latestTs = 0;
+
+                        for (const msg of newItems) {
+                            const idx = copy.findIndex((m) => m.id === msg.id);
+                            if (idx >= 0) {
+                                copy[idx] = {...msg}; // Replace existing
+                            } else {
+                                copy.push({...msg}); // Add new
+                            }
+
+                            // Track the latest message info
+                            const ts = new Date(msg.createdAt).getTime();
+                            if (ts > latestTs) {
+                                latestTs = ts;
+                            }
+                        }
+
+                        // Sort newest → oldest (reverse for top-down if needed)
+                        return copy.sort(
+                            (a, b) =>
+                                new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                        );
+                    });
+                }
+
                 // Flush one auto-ack (safe)
                 try {
                     const batchId = (handleWSMessage as any)._batchAckLastId as string | undefined;

@@ -156,7 +156,9 @@ export const th = {
             unread: "ยังไม่ได้อ่าน",
             read: "อ่านแล้ว",
             messageHiringAgain: "หากคุณต้องการจ้างบุคคลนี้อีกครั้ง คลิก",
-            previousMessages: "ข้อความก่อนหน้า"
+            previousMessages: "ข้อความก่อนหน้า",
+            sending: "กำลังส่ง",
+            failed: "ล้มเหลว"
         },
         allCategories: {
             allJobCategories: "หมวดหมู่งานทั้งหมด",

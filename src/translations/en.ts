@@ -157,7 +157,9 @@ export const en = {
             unread: "Unread",
             read: "Read",
             messageHiringAgain: "If you want to hire this person again, click",
-            previousMessages: "Previous Messages"
+            previousMessages: "Previous Messages",
+            sending: "Sending",
+            failed: "Failed"
         },
         allCategories: {
             allJobCategories: "All Job Categories",

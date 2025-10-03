@@ -58,8 +58,8 @@ export const vi = {
             confirmReleasePaymentMessage: "Thao tác này sẽ duyệt sản phẩm đã gửi, giải ngân cho freelancer và đóng dự án.",
             confirmCancelJobTitle: "Hủy công việc này?",
             confirmCancelJobMessage: "Thao tác này sẽ hủy quy trình hiện tại và không thể hoàn tác.",
-            cancelledJobMsg: "Công việc đã được hủy.", 
-            cancelledJobHint: "Tất cả hoạt động hiện tại đã dừng. Bạn có thể mở cuộc trò chuyện mới để trao đổi lại.", 
+            cancelledJobMsg: "Công việc đã được hủy.",
+            cancelledJobHint: "Tất cả hoạt động hiện tại đã dừng. Bạn có thể mở cuộc trò chuyện mới để trao đổi lại.",
             reviewDeliveryTitle: "Xem xét sản phẩm",
             reviewDeliveryDesc: "Freelancer đã gửi sản phẩm. Bạn muốn chấp nhận hay yêu cầu chỉnh sửa?",
             deliveryAccepted: "Đã chấp nhận sản phẩm. Tiến hành thanh toán.",
@@ -158,7 +158,9 @@ export const vi = {
             unread: "Chưa đọc",
             read: "Đã đọc",
             messageHiringAgain: "Nếu bạn muốn thuê lại người này, hãy nhấp vào",
-            previousMessages: "Tin nhắn trước"
+            previousMessages: "Tin nhắn trước",
+            sending: "Đang gửi",
+            failed: "Thất bại"
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",
