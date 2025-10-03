@@ -2,7 +2,7 @@
 import {useRouter} from "next/navigation";
 import React, {useEffect, useRef, useState} from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {makeEmitReadAcker} from "@/utils/chat/chat-socket-utils";
+import {makeEmitReadAcker} from "@/utils/chat/chatSocketUtils";
 import {ensureSharedKeyForRoom} from "@/utils";
 import {createHandleWSMessage} from "@/events/chat/handleWSMessage";
 import {useWebSocketContext} from "@/contexts/WebSocketContext";

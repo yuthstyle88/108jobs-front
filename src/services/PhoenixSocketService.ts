@@ -7,7 +7,7 @@
  * - Proper cleanup to avoid leaks
  */
 import { Socket as PhoenixSocket } from "phoenix";
-import { buildActixWsUrl } from "@/utils/chat/chat-socket-utils";
+import { buildActixWsUrl } from "@/utils/chat/chatSocketUtils";
 
 export interface RealtimeChannelAdapter {
   readyState: number; // 0 connecting, 1 open, 2 closing, 3 closed
