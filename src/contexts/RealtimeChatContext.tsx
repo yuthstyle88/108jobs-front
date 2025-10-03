@@ -7,6 +7,7 @@ import {ensureSharedKeyForRoom} from "@/utils";
 import {createHandleWSMessage} from "@/events/chat/handleWSMessage";
 import {useWebSocketContext} from "@/contexts/WebSocketContext";
 import { emitWsReconnected } from "@/events/chat";
+import {ChatMessage} from "@/lib/lemmy-js-client/src";
 
 interface WebSocketProviderProps {
     token: string;
@@ -51,6 +52,8 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
 
     // เตรียม handler รับข้อความ (reuse ของเดิม)
     const handleWSMessage = createHandleWSMessage({
+        setMessages(value: ((prevState: ChatMessage[]) => ChatMessage[]) | ChatMessage[]): void {
+        },
         roomId,
         localUserId: Number(localUser?.id) || 0,
         setRefreshRoomData,
@@ -65,7 +68,7 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
         fetchTimeoutRef,
         fetchResolveRef,
         readAckRef,
-        ackCooldownRef,
+        ackCooldownRef
     });
 
     // ใช้ WebSocketContext (global) ที่ห่อ useWebSocket ไว้แล้ว

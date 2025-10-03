@@ -556,10 +556,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                 setIsAtBottom(isAtBottom);
                                 if (isAtBottom) {
                                     setNewSinceCount(0);
-                                    setMessages(prev => prev.map(m => (!m.isOwner && m.status !== 'read' ? {
-                                        ...m,
-                                        status: 'read'
-                                    } : m)));
                                     try {
                                         markRoomRead(roomId);
                                     } catch {
