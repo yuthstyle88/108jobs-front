@@ -285,8 +285,6 @@ export async function mapIncomingToChatMessage(
         } catch {
         }
 
-        console.log("mapIncomingToChatMessage: ", m)
-
         const createdAtVal = m.created_at || m.createdAt || new Date().toISOString();
         const roomIdForKey = m.room_id || m.roomId || opts.fallbackRoomId || '';
         const senderIdForKey = String(m.sender_id ?? m.senderId ?? '');
@@ -321,7 +319,7 @@ export async function mapIncomingToChatMessage(
             senderId: senderIdMapped,
             roomId: roomIdMapped,
             content,
-            status: typeof m.status === 'number' ? m.status : 1,
+            status: m.status,
             createdAt: createdAtMapped,
             isOwner: senderIdMapped === opts.localUserId,
         } as ChatMessage;

@@ -1,17 +1,16 @@
 import {v4 as uuidv4} from 'uuid';
-import type {ChatMessage as WsChatMessage} from 'lemmy-js-client';
+import type {ChatMessage} from 'lemmy-js-client';
 import React from "react";
 
 export interface CreateChatRealtimeHandlerDeps {
     roomId: string;
     localUserId?: number | null;
-    onRemoteTyping: (senderId: number, localId: number, typing: boolean) => void;
     getIsFetching: () => boolean;
-    tryUpdateStatusFromItems: (items: WsChatMessage[]) => void;
-    setMessages: React.Dispatch<React.SetStateAction<any[]>>; // UIChatMessage[] in caller
-    atBottomRef: React.MutableRefObject<boolean>;
+    tryUpdateStatusFromItems: (items: ChatMessage[]) => void;
+    setMessages: React.Dispatch<React.SetStateAction<any[]>>;
+    atBottomRef: React.RefObject<boolean>;
     setNewSinceCount: React.Dispatch<React.SetStateAction<number>>;
-    latestIncomingRef: React.MutableRefObject<{
+    latestIncomingRef: React.RefObject<{
         roomId: string;
         content: string;
         senderId: number;
@@ -26,7 +25,6 @@ export interface CreateChatRealtimeHandlerDeps {
 export function createChatRealtimeHandler({
                                               roomId,
                                               localUserId,
-                                              onRemoteTyping,
                                               getIsFetching,
                                               tryUpdateStatusFromItems,
                                               setMessages,
@@ -34,38 +32,19 @@ export function createChatRealtimeHandler({
                                               setNewSinceCount,
                                               latestIncomingRef,
                                           }: CreateChatRealtimeHandlerDeps) {
-    return (event: MessageEvent<string | WsChatMessage | WsChatMessage[]>) => {
+    return (event: MessageEvent<string | ChatMessage | ChatMessage[]>) => {
         try {
             console.debug('[CHAT][RT] handler invoked for room', roomId);
         } catch {
         }
 
-        let parsed: WsChatMessage | WsChatMessage[];
+        let parsed: ChatMessage | ChatMessage[];
         try {
             const raw = event.data as unknown;
             parsed = typeof raw === 'string' ? JSON.parse(raw as string) : (raw as any);
         } catch (e) {
             console.error('Failed to parse WebSocket message:', e);
             return;
-        }
-
-        // Typing payloads from provider
-        if (
-            parsed &&
-            typeof parsed === 'object' &&
-            typeof (parsed as any).content === 'string' &&
-            (parsed as any).content.includes('chat:typing')
-        ) {
-            try {
-                const raw = (parsed as any).content;
-                const inner = JSON.parse(raw);
-
-                const senderId = Number((parsed as any).senderId) || 0;
-                const val = !!inner?.payload?.typing;
-                onRemoteTyping(senderId, Number(localUserId) || 0, val);
-            } catch (err) {
-                console.error("Failed to parse typing content:", err);
-            }
         }
 
         // DEBUG: verify realtime delivery into this component
@@ -81,11 +60,11 @@ export function createChatRealtimeHandler({
         }
 
         // New protocol: provider broadcasts UI-ready ChatMessage objects (single or array)
-        let items: WsChatMessage[] = [];
+        let items: ChatMessage[] = [];
         if (Array.isArray(parsed)) {
-            items = parsed as WsChatMessage[];
+            items = parsed as ChatMessage[];
         } else if (parsed && typeof parsed === 'object' && !(parsed as any).content.includes('chat:typing')) {
-            items = [parsed as WsChatMessage];
+            items = [parsed as ChatMessage];
         }
         if (!items.length) return;
 
@@ -138,7 +117,7 @@ export function createChatRealtimeHandler({
                         ? (msg as any).isOwner
                         : Number((msg as any).senderId) === Number(localUserId);
                 const isIncoming = !isOwner;
-                const newStatus =(msg as any).status;
+                const newStatus = (msg as any).status;
                 if (!isHistoryBatch && !atBottomRef.current && isIncoming) {
                     inc++;
                 }

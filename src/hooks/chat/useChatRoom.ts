@@ -1,9 +1,8 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useWebSocketContext} from '@/contexts/WebSocketContext';
-
+import {v4 as uuidv4} from "uuid";
 // Chat helpers (reuse your existing utilities)
 import {createHandleWSMessage} from '@/events/chat/handleWSMessage';
-import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {ensureSharedKeyForRoom} from "@/utils";
 import {broadcastToListeners, fetchHistoryPage, makeEmitReadAcker, MessagePayload} from "@/utils/chat";
 import {
@@ -11,14 +10,17 @@ import {
     sendReadReceipt as sendReadReceiptEvent,
     sendTyping as sendTypingEvent
 } from "@/events/chat/sendEvents";
+import {ChatMessage, ChatRoomId, LocalUser, LocalUserId} from "lemmy-js-client";
 
 export interface UseChatRoomParams {
     roomId: string;
-    peerPublicKeyHex?: string;
+    peerPublicKeyHex: string;
     onRemoteTyping?: (detail: { roomId: string; senderId: number; typing: boolean }) => void;
+    setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+    localUser: LocalUser
 }
 
-export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping}: UseChatRoomParams) {
+export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessages, localUser}: UseChatRoomParams) {
     const [pageCursor, setPageCursor] = useState<string | null>(null);
     const pageSize = 20;
     const fetchingRef = useRef(false);
@@ -29,7 +31,7 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping}: UseChatR
     const peerActiveDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const markPeerActive = useCallback(() => {
         peerActiveRef.current = true;
-        if(peerActiveDecayRef.current) {
+        if (peerActiveDecayRef.current) {
             try {
                 clearTimeout(peerActiveDecayRef.current);
             } catch {
@@ -40,7 +42,6 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping}: UseChatR
         }, 20000);
     }, []);
 
-    const {localUser} = useMyUser();
     const isE2EMock = process.env.NEXT_PUBLIC_E2E_MODE === 'mock';
     const [refreshRoomData, setRefreshRoomData] = useState<any>(null);
 
@@ -52,24 +53,32 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping}: UseChatR
     const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const ackCooldownRef = useRef<number>(0);
     const readAckRef = useRef<((id: number | string) => void) | null>(null);
-
     const [isPartnerTyping, setIsPartnerTyping] = useState(false);
     const typingDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const ws = useWebSocketContext();
 
-    const handleRemoteTyping = useCallback((detail: { roomId: string; senderId: number; typing: boolean }) => {
-      try {
-        if (!detail) return;
-        if (detail.roomId !== roomId) return;
-        const me = Number(localUser?.id) || 0;
-        if (detail.senderId === me) return; // ignore self
-        setIsPartnerTyping(!!detail.typing);
-        if (detail.typing) {
-          if (typingDecayRef.current) { try { clearTimeout(typingDecayRef.current); } catch {} }
-          typingDecayRef.current = setTimeout(() => { setIsPartnerTyping(false); }, 4000);
+    const handleRemoteTyping = useCallback((detail: { roomId: ChatRoomId; senderId: LocalUserId; typing: boolean }) => {
+        try {
+            if (!detail) return;
+            if (detail.roomId !== roomId) return;
+            const me = Number(localUser?.id) || 0;
+            if (detail.senderId === me) return; // ignore self
+            setIsPartnerTyping(detail.typing);
+            if (detail.typing) {
+                if (typingDecayRef.current) {
+                    try {
+                        clearTimeout(typingDecayRef.current);
+                    } catch {
+                    }
+                }
+                typingDecayRef.current = setTimeout(() => {
+                    setIsPartnerTyping(false);
+                }, 4000);
+            }
+            onRemoteTyping?.(detail);
+        } catch {
         }
-        onRemoteTyping?.(detail);
-      } catch {}
-    }, [roomId, localUser?.id, onRemoteTyping]);
+    }, [roomId, localUser.id, onRemoteTyping]);
 
     const handleWSMessage = createHandleWSMessage({
         roomId,
@@ -77,31 +86,42 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping}: UseChatR
         setRefreshRoomData,
         markPeerActive,
         onRemoteTyping: handleRemoteTyping,
+        setMessages,
         processedMsgRef,
         peerActiveRef,
         setPageCursor,
-        setHasMoreMessages: (val: boolean) => { hasMoreRef.current = val; },
-        setIsFetching: (val: boolean) => { fetchingRef.current = val; },
+        setHasMoreMessages: (val: boolean) => {
+            hasMoreRef.current = val;
+        },
+        setIsFetching: (val: boolean) => {
+            fetchingRef.current = val;
+        },
         fetchTimeoutRef,
         fetchResolveRef,
         readAckRef,
         ackCooldownRef,
     });
 
-    const ws = useWebSocketContext();
-
     useEffect(() => {
-      if (!ws || typeof ws.addMessageListener !== 'function') return;
-      const off = ws.addMessageListener((data: unknown) => {
-        try { handleWSMessage({ data } as any); } catch {}
-      });
-      return () => { try { off?.(); } catch {} };
+        if (!ws || typeof ws.addMessageListener !== 'function') return;
+        const off = ws.addMessageListener((data: unknown) => {
+            try {
+                handleWSMessage({data} as any);
+            } catch {
+            }
+        });
+        return () => {
+            try {
+                off?.();
+            } catch {
+            }
+        };
     }, [ws, handleWSMessage]);
 
     // E2E shared key warmup
     useEffect(() => {
-        if(isE2EMock) return;
-        if(!roomId || !localUser) return;
+        if (isE2EMock) return;
+        if (!roomId || !localUser) return;
         (async () => {
             try {
                 if (peerPublicKeyHex) {
@@ -116,13 +136,13 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping}: UseChatR
 
     // Read-ack acker wiring
     useEffect(() => {
-        if(isE2EMock || !roomId) {
+        if (isE2EMock || !roomId) {
             readAckRef.current = null;
             return;
         }
         const emit = (evt: string, payload: any) => {
             try {
-                if(localStorage.getItem('debug_read_ack') === '1') {
+                if (localStorage.getItem('debug_read_ack') === '1') {
                     console.log('[read-ack] emit', {evt, payload});
                 }
             } catch {
@@ -149,7 +169,14 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping}: UseChatR
     }, [roomId, localUser?.id, isE2EMock, ws]);
 
     useEffect(() => {
-      return () => { if (typingDecayRef.current) { try { clearTimeout(typingDecayRef.current); } catch {} } };
+        return () => {
+            if (typingDecayRef.current) {
+                try {
+                    clearTimeout(typingDecayRef.current);
+                } catch {
+                }
+            }
+        };
     }, []);
 
     // Actions
@@ -168,13 +195,13 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping}: UseChatR
 
     const sendReadReceipt = useCallback((roomIdArg: string, lastMessageId: string) => {
         try {
-            if(localStorage.getItem('debug_read_ack') === '1') {
+            if (localStorage.getItem('debug_read_ack') === '1') {
                 console.log('[read-ack] sendReadReceipt()', {roomId: roomIdArg, lastMessageId});
             }
         } catch {
         }
         try {
-            if(isE2EMock) return;
+            if (isE2EMock) return;
             sendReadReceiptEvent({roomId: roomIdArg, socket: ws, senderId: Number(localUser?.id) ?? 0}, lastMessageId);
             readAckRef.current?.(lastMessageId);
         } catch (err) {
@@ -191,46 +218,52 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping}: UseChatR
     }, [roomId, localUser?.id, ws]);
 
     const onWsErrorDuringFetch = useCallback(() => {
-      if (fetchTimeoutRef.current) {
-        try { clearTimeout(fetchTimeoutRef.current); } catch {}
-        fetchTimeoutRef.current = null;
-      }
-      if (fetchResolveRef.current) {
-        try { fetchResolveRef.current(); } catch {}
-        fetchResolveRef.current = null;
-      }
-      fetchingRef.current = false;
+        if (fetchTimeoutRef.current) {
+            try {
+                clearTimeout(fetchTimeoutRef.current);
+            } catch {
+            }
+            fetchTimeoutRef.current = null;
+        }
+        if (fetchResolveRef.current) {
+            try {
+                fetchResolveRef.current();
+            } catch {
+            }
+            fetchResolveRef.current = null;
+        }
+        fetchingRef.current = false;
     }, []);
 
     const fetchHistory = useCallback(async () => {
-      if (isE2EMock || fetchingRef.current || !hasMoreRef.current) return;
-      fetchingRef.current = true;
-      try {
-        const { prev, next } = await fetchHistoryPage(
-          { roomId, cursor: pageCursor, limit: pageSize },
-          {
-            localUserId: Number(localUser?.id) || 0,
-            receivedSet: receivedMessagesRef.current,
-            broadcast: (m) => broadcastToListeners(m),
-          },
-        );
-        if (typeof prev === 'string' && prev.length > 0) {
-          setPageCursor(next);
-          hasMoreRef.current = true;
-        } else {
-          setPageCursor(null);
-          hasMoreRef.current = false;
+        if (isE2EMock || fetchingRef.current || !hasMoreRef.current) return;
+        fetchingRef.current = true;
+        try {
+            const {prev, next} = await fetchHistoryPage(
+                {roomId, cursor: pageCursor, limit: pageSize},
+                {
+                    localUserId: Number(localUser?.id) || 0,
+                    receivedSet: receivedMessagesRef.current,
+                    broadcast: (m) => broadcastToListeners(m),
+                },
+            );
+            if (typeof prev === 'string' && prev.length > 0) {
+                setPageCursor(next);
+                hasMoreRef.current = true;
+            } else {
+                setPageCursor(null);
+                hasMoreRef.current = false;
+            }
+        } catch (e) {
+            console.error('fetchHistory failed', e);
+        } finally {
+            fetchingRef.current = false;
         }
-      } catch (e) {
-        console.error('fetchHistory failed', e);
-      } finally {
-        fetchingRef.current = false;
-      }
     }, [isE2EMock, roomId, pageCursor, pageSize, localUser?.id]);
 
     return {
-        state: { pageCursor, refreshRoomData, isPartnerTyping },
-        actions: { sendMessage, sendReadReceipt, sendTyping, fetchHistory },
-        utils: { onWsErrorDuringFetch, markPeerActive },
+        state: {pageCursor, refreshRoomData, isPartnerTyping},
+        actions: {sendMessage, sendReadReceipt, sendTyping, fetchHistory},
+        utils: {onWsErrorDuringFetch, markPeerActive},
     } as const;
 }

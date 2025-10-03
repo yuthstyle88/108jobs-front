@@ -2,7 +2,7 @@
 // This provides typed helpers to emit and subscribe to chat CustomEvents
 // keeping window and event-name details in one place.
 import {isBrowser} from "@/utils/browser";
-import {ChatStatus, LocalUserId} from "lemmy-js-client";
+import {ChatStatus} from "lemmy-js-client";
 // ===== Payload handler (shared) =====
 import type {RefObject} from 'react';
 import {logDebug, mapIncomingToChatMessage, safeParse} from "@/utils/chat";
@@ -114,7 +114,6 @@ export function emitChatTyping(detail: { roomId: string; senderId: number; typin
             composed: true,
             cancelable: false,
         } as any);
-        console.info('[typing] emit', evt);
         // Dispatch to both window and document to cover different listeners
         try {
             window.dispatchEvent(evt);
@@ -174,6 +173,7 @@ export async function handleIncomingPayload(
         return null;
     }
 
+
     // Normalize Phoenix shapes to a flat message-like object
     try {
         if (Array.isArray(payload) && payload.length >= 5 && typeof payload[3] === 'string' && payload[4] && typeof payload[4] === 'object') {
@@ -207,13 +207,11 @@ export async function handleIncomingPayload(
     }
 
     // Flat ChatMessage line (and also detect inline typing JSON)
-    if (payload && typeof payload === 'object' && Object.prototype.hasOwnProperty.call(payload, 'content')) {
-        const m = (() => {
-            const p: any = payload;
-            const topic = typeof p.topic === 'string' ? p.topic.replace(/^room:/, '') : undefined;
-            return {...p, room_id: p.room_id ?? p.roomId ?? topic};
-        })();
+    if (payload && typeof payload === 'object' && Object.prototype.hasOwnProperty.call(payload.data.payload, 'content')) {
 
+        const m = (() => {
+            return {...(payload.data.payload)};
+        })();
         // Typing embedded in content
         try {
             if (typeof m.content === 'string' && m.content.trim().startsWith('{')) {

@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {ProfileImage} from "@/constants/images";
-import type {ChatMessage as WsChatMessage, LocalUser, Post} from "lemmy-js-client";
+import type {ChatMessage, LocalUser, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
@@ -24,7 +24,6 @@ import {JobDetailModal} from "@/components/Common/Modal/JobDetailModal";
 import {ReviewDeliveryModal} from "@/components/Common/Modal/ReviewDeliveryModal";
 import {JobFlowContent} from "@/components/JobFlowContent";
 import {useWorkflowStatus} from '@/hooks/chat/useWorkflowStatus';
-import {useTypingIndicator} from '@/hooks/chat/useTypingIndicator';
 import {useFileUpload} from '@/hooks/chat/useFileUpload';
 import {useWorkflowActions} from '@/hooks/chat/useWorkflowActions';
 import {emitChatNewMessage} from "@/events/chat";
@@ -32,7 +31,6 @@ import {useChatRoom} from '@/hooks/chat/useChatRoom';
 import {useChatHistory} from '@/hooks/chat/useChatHistory';
 
 type MessageForm = { message: string };
-type UIChatMessage = WsChatMessage & { isOwner?: boolean };
 
 interface ChatSectionProps {
     post?: Post;
@@ -78,7 +76,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
     const [currentRoom, setCurrentRoom] = useState<any>(roomData);
-    const [messages, setMessages] = useState<UIChatMessage[]>([]);
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
     const markSeen = useUnreadStore((s) => s.markSeen);
@@ -170,7 +168,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {
         actions: { sendMessage, sendTyping },
         state: { refreshRoomData, isPartnerTyping },
-    } = useChatRoom({ roomId });
+    } = useChatRoom({ roomId, peerPublicKeyHex, setMessages, localUser });
 
     useEffect(() => {
         if (!refreshRoomData) return;
@@ -297,7 +295,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 createdAt: new Date().toISOString(),
                 status: 'pending',
                 isOwner: true,
-            } as WsChatMessage,
+            } as ChatMessage,
             ...prev,
         ]);
         scrollToLatestSoon();

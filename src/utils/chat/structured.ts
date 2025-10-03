@@ -37,7 +37,6 @@ export const dispatchPreview = (detail: {
         emitChatNewMessage({
             roomId: detail.roomId,
             id: detail.id,
-            senderId: detail.senderId,
             content: detail.content,
             createdAt,
             status: detail.status

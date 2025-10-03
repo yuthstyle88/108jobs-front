@@ -78,7 +78,6 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
                 emitChatNewMessage({
                     roomId,
                     id: messageId,
-                    senderId: localUser.id,
                     content: readable,
                     createdAt: tsIso,
                     status: 'sent',
@@ -111,7 +110,6 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
                 emitChatNewMessage({
                     roomId,
                     id: messageId,
-                    senderId: localUser.id,
                     content: readable,
                     createdAt: tsIso,
                     status: 'sent',
