@@ -95,7 +95,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
-    const {isPartnerTyping, onRemoteTyping} = useTypingIndicator({roomId});
 
     const {
         state: {pageCursor, hasMore, isFetching},
@@ -167,26 +166,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
-    const handleRemoteTyping = React.useCallback(
-        (detail: { roomId: string; senderId: number; typing: boolean }) => {
-            // ignore if event is for a different room
-            if (detail.roomId && detail.roomId !== roomId) return;
-            // skip if it's me
-            if (Number(localUser.id) === Number(detail.senderId)) return;
-            try {
-                // forward into typing-indicator hook (roomId already in scope)
-                onRemoteTyping(roomId, detail.senderId, detail.typing);
-            } catch {
-            }
-        },
-        [onRemoteTyping, roomId, localUser.id]
-    );
-
     // Switch to useChatRoom API (new design)
     const {
-        actions: {sendMessage, sendTyping},
-        state: {refreshRoomData},
-    } = useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping: handleRemoteTyping});
+        actions: { sendMessage, sendTyping },
+        state: { refreshRoomData, isPartnerTyping },
+    } = useChatRoom({ roomId });
 
     useEffect(() => {
         if (!refreshRoomData) return;
@@ -208,7 +192,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 emitChatNewMessage({
                     roomId: d.roomId,
                     id: `${d.timestamp}:${d.senderId}`,
-                    senderId: d.senderId,
                     content: d.content,
                     createdAt: d.timestamp,
                     status: 'pending'

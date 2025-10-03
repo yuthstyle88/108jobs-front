@@ -53,12 +53,30 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping}: UseChatR
     const ackCooldownRef = useRef<number>(0);
     const readAckRef = useRef<((id: number | string) => void) | null>(null);
 
+    const [isPartnerTyping, setIsPartnerTyping] = useState(false);
+    const typingDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const handleRemoteTyping = useCallback((detail: { roomId: string; senderId: number; typing: boolean }) => {
+      try {
+        if (!detail) return;
+        if (detail.roomId !== roomId) return;
+        const me = Number(localUser?.id) || 0;
+        if (detail.senderId === me) return; // ignore self
+        setIsPartnerTyping(!!detail.typing);
+        if (detail.typing) {
+          if (typingDecayRef.current) { try { clearTimeout(typingDecayRef.current); } catch {} }
+          typingDecayRef.current = setTimeout(() => { setIsPartnerTyping(false); }, 4000);
+        }
+        onRemoteTyping?.(detail);
+      } catch {}
+    }, [roomId, localUser?.id, onRemoteTyping]);
+
     const handleWSMessage = createHandleWSMessage({
         roomId,
         localUserId: Number(localUser?.id) || 0,
         setRefreshRoomData,
         markPeerActive,
-        onRemoteTyping,
+        onRemoteTyping: handleRemoteTyping,
         processedMsgRef,
         peerActiveRef,
         setPageCursor,
@@ -129,6 +147,10 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping}: UseChatR
             readAckRef.current = null;
         };
     }, [roomId, localUser?.id, isE2EMock, ws]);
+
+    useEffect(() => {
+      return () => { if (typingDecayRef.current) { try { clearTimeout(typingDecayRef.current); } catch {} } };
+    }, []);
 
     // Actions
     const sendMessage = useCallback(async (data: MessagePayload) => {
@@ -207,7 +229,7 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping}: UseChatR
     }, [isE2EMock, roomId, pageCursor, pageSize, localUser?.id]);
 
     return {
-        state: { pageCursor, refreshRoomData },
+        state: { pageCursor, refreshRoomData, isPartnerTyping },
         actions: { sendMessage, sendReadReceipt, sendTyping, fetchHistory },
         utils: { onWsErrorDuringFetch, markPeerActive },
     } as const;
