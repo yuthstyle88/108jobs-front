@@ -2,7 +2,7 @@
 import {useRouter} from "next/navigation";
 import React, {useEffect, useRef, useState} from "react";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
-import {makeEmitReadAcker} from "@/utils/chat/chat-socket-utils";
+import {makeEmitReadAcker} from "@/utils/chat/chatSocketUtils";
 import {ensureSharedKeyForRoom} from "@/utils";
 import {createHandleWSMessage} from "@/events/chat/handleWSMessage";
 import {useWebSocketContext} from "@/contexts/WebSocketContext";
@@ -22,7 +22,6 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
 }) => {
     const [connectionError, setConnectionError] = useState(false);
     const [pageCursor, setPageCursor] = useState<string | null>(null);
-    const lastTypedSentRef = useRef<boolean>(false);
     const peerActiveRef = useRef<boolean>(false);
     const peerActiveDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const markPeerActive = () => {
@@ -43,9 +42,6 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
     const {localUser} = useMyUser();
     const isE2EMock = process.env.NEXT_PUBLIC_E2E_MODE === "mock";
     const [refreshRoomData, setRefreshRoomData] = useState<any>(null);
-
-    const sentMessagesRef = useRef<Set<string>>(new Set());
-    const receivedMessagesRef = useRef<Set<string>>(new Set());
     const processedMsgRef = useRef<Set<string>>(new Set());
 
     const fetchResolveRef = useRef<((value?: void) => void) | null>(null);

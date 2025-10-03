@@ -11,7 +11,7 @@ import Link from "next/link";
 import React, {useEffect, useRef, useState} from "react";
 import {Person} from "lemmy-js-client";
 import {useTranslation} from "react-i18next";
-import NotFound from "@/app/[lang]/not-found";
+import NotFound from "@/app/[lang]/notFound";
 import {useRouter} from "next/navigation";
 import {dmRoomId} from "@/utils/helpers";
 import {HttpService} from "@/services";

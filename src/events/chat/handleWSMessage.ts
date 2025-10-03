@@ -6,7 +6,7 @@ import {
   isValidIncomingChatPayload,
   broadcastToListeners,
   isChatMessageLike,
-} from "@/utils/chat/chat-socket-utils";
+} from "@/utils/chat/chatSocketUtils";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {emitChatTyping, emitReadReceipt, type ChatTypingDetail, handleIncomingPayload} from "@/events/chat/index";
 

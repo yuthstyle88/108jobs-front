@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {fetchHistoryPage} from '@/utils/chat/chat-socket-utils';
+import {fetchHistoryPage} from '@/utils/chat/chatSocketUtils';
 
 export type UseChatHistoryOptions = {
   roomId: string;

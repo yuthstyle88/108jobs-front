@@ -1,6 +1,6 @@
 export * from './chat-unread';
 export * from './flowActions';
-export * from './chat-socket-utils';
+export * from './chatSocketUtils';
 export * from './message';
 export * from './structured';
 export * from './types';

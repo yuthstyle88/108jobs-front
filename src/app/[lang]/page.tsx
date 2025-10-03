@@ -13,13 +13,14 @@ import SearchInput from "@/components/SearchInput";
 import SpAdsSlider from "@/containers/SpAdsSlider";
 import SpCatalog from "@/containers/SpCatalog";
 import SpHeader from "@/containers/SpHeader";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { buildCommunitiesTree } from "@/utils/helpers";
-import { useCommunities } from "@/hooks/communites-api/useCommunities";
+import {useState} from "react";
+import {useTranslation} from "react-i18next";
+import {buildCommunitiesTree} from "@/utils/helpers";
+import {useCommunities} from "@/hooks/communites-api/useCommunities";
+import {LandingImage} from "@/constants/images";
 
 export default function Home() {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const [activeCatalogIndex, setActiveCatalogIndex] = useState<number>(0);
     const catalogData = useCommunities();
     const serviceCatalogs = buildCommunitiesTree(catalogData.communities) || [];
@@ -28,28 +29,29 @@ export default function Home() {
     return (
         <div className="min-h-[100vh] bg-gray-50">
             <div className="hidden sm:block">
-                <Header type="transparent" />
+                <Header type="transparent"/>
             </div>
             <div className="block sm:hidden">
-                <SpHeader />
+                <SpHeader/>
             </div>
             <main>
                 <section
                     className="hidden sm:block h-auto bg-cover bg-center relative pt-[6.5rem] md:pt-[4.5rem]"
                     style={{
-                        backgroundImage: `url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')`,
+                        backgroundImage: `url(${LandingImage.bgLanding.src})`,
                     }}
                 >
-                    <div className="absolute inset-0 bg-black/50" />
-                    <div className="relative pt-16 pb-24 flex justify-center flex-col gap-6 text-center items-center max-w-4xl mx-auto px-4">
+                    <div className="absolute inset-0 bg-black/50"/>
+                    <div
+                        className="relative pt-16 pb-24 flex justify-center flex-col gap-6 text-center items-center max-w-4xl mx-auto px-4">
                         <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight animate-fade-in">
                             {t("home.titleBannerHomePage1")}
                         </h1>
-                        <TypingText />
+                        <TypingText/>
                         <p className="text-lg md:text-xl font-medium text-white/90 max-w-2xl">
                             {t("home.titleBannerHomePage2")}
                         </p>
-                        <SearchInput />
+                        <SearchInput/>
                         <a
                             href="/job-board"
                             className="mt-6 inline-block bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
@@ -65,7 +67,8 @@ export default function Home() {
                             {t("home.featuresTitle") || "Discover Our Features"}
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div className="p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                            <div
+                                className="p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
                                     {t("home.feature1Title") || "Community Connection"}
                                 </h3>
@@ -74,7 +77,8 @@ export default function Home() {
                                         "Connect with vibrant communities tailored to your interests."}
                                 </p>
                             </div>
-                            <div className="p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                            <div
+                                className="p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
                                     {t("home.feature2Title") || "Personalized Experience"}
                                 </h3>
@@ -83,7 +87,8 @@ export default function Home() {
                                         "Enjoy a customized journey with recommendations just for you."}
                                 </p>
                             </div>
-                            <div className="p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                            <div
+                                className="p-6 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
                                     {t("home.feature3Title") || "Seamless Navigation"}
                                 </h3>
@@ -104,15 +109,15 @@ export default function Home() {
                 />
 
                 <section className="block sm:hidden pt-[4.5rem] bg-gray-50">
-                    <SpAdsSlider />
+                    <SpAdsSlider/>
                 </section>
                 <section className="block sm:hidden p-3 border-b-4 border-blue-200">
-                    <SpCatalog activeCatalog={activeCatalog} />
+                    <SpCatalog activeCatalog={activeCatalog}/>
                 </section>
 
-                <OfferSection />
+                <OfferSection/>
             </main>
-            <Footer />
+            <Footer/>
         </div>
     );
 }

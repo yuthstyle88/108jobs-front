@@ -12,7 +12,7 @@ import {REQUEST_STATE} from "@/services/HttpService";
 import { isBrowser } from "@/utils/browser";
 import { useUnreadStore } from "@/stores/unreadStore";
 import { useRoomsStore } from "@/stores/roomsStore";
-import { enableBackgroundUnread, disableBackgroundUnread } from "@/utils/chat/BackgroundUnreadWatcher";
+import { enableBackgroundUnread, disableBackgroundUnread } from "@/utils/chat/backgroundUnreadWatcher";
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 
 type RoomsState = {

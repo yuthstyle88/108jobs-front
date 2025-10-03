@@ -1,12 +1,12 @@
 import {__DEV__} from "@/utils/appConfig";
 import {useRoomsStore} from "@/stores/roomsStore";
+import {v4 as uuidv4} from 'uuid';
 import {HttpService, UserService} from "@/services";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {getHost, isHttps} from "@/utils/env";
 import type {ChatMessage} from "@/lib/lemmy-js-client/src";
 import {decrypt} from "@/lib/web-crypto";
-
-import {importAesKey, isBrowser} from "@/utils";
+import {importAesKey} from "@/utils";
 
 // ---- Centralized browser/event helpers (reduce duplication across contexts) ----
 
@@ -20,30 +20,31 @@ export function normalizePhoenixEnvelope(payload: any, fallbackRoomId?: string):
         // Phoenix array frame: [join_ref, msg_ref, topic, event, payload]
         if (Array.isArray(payload) && payload.length >= 5 && typeof payload[3] === 'string') {
             const [, , topic, ev, body] = payload as [any, any, string, string, any];
-            const roomId = typeof topic === 'string' && topic.startsWith('room:') ? topic.slice(5) : String(topic);
-            env = { event: ev, topic, roomId, ...(body || {}) };
+            const roomId = topic.startsWith('room:') ? topic.slice(5) : String(topic);
+            env = {event: ev, topic, roomId, ...(body || {})};
         }
         // Nested envelope: { data: { event, payload, topic }, ... }
         else if (payload && typeof payload === 'object' && payload.data && typeof payload.data === 'object') {
             const d: any = payload.data;
             const topic = d.topic ?? payload.topic ?? fallbackRoomId ?? null;
             const roomId = typeof topic === 'string' && topic.startsWith('room:') ? topic.slice(5) : topic;
-            env = { event: d.event, topic, roomId, ...(d.payload || {}) };
+            env = {event: d.event, topic, roomId, ...(d.payload || {})};
         }
         // Flat envelope: { event, payload, topic }
         else if (payload && typeof payload === 'object' && 'event' in payload && 'payload' in payload) {
             const p: any = payload;
             const topic = p.topic ?? fallbackRoomId ?? null;
             const roomId = typeof topic === 'string' && topic.startsWith('room:') ? topic.slice(5) : topic;
-            env = { event: p.event, topic, roomId, ...(p.payload || {}) };
+            env = {event: p.event, topic, roomId, ...(p.payload || {})};
         }
         // Already flat payload or unknown shape → try to ensure topic/roomId
         else if (payload && typeof payload === 'object') {
             const topic = (payload as any).topic ?? fallbackRoomId ?? null;
             const roomId = typeof topic === 'string' && topic.startsWith('room:') ? topic.slice(5) : topic;
-            env = { ...payload, topic, roomId };
+            env = {...payload, topic, roomId};
         }
-    } catch {}
+    } catch {
+    }
 
     if (!env || typeof env !== 'object') env = {};
 
@@ -64,7 +65,8 @@ export function normalizePhoenixEnvelope(payload: any, fallbackRoomId?: string):
         } else if (c && typeof c === 'object') {
             (env as any).contentParsed = c;
         }
-    } catch {}
+    } catch {
+    }
 
     return env;
 }
@@ -202,7 +204,7 @@ export function isValidIncomingChatPayload(p: any): boolean {
         const m = (p as any).message;
         const hasContent = typeof m.content === 'string' && m.content.length > 0;
         const hasRoom = typeof m.room_id === 'string' || typeof m.room_id === 'number' || typeof (p as any)?.room?.id === 'string' || typeof (p as any)?.room?.id === 'number';
-        return hasContent && !!(hasRoom);
+        return hasContent && hasRoom;
     }
     // Flat style
     const hasRoom = typeof (p as any).room_id === 'string' || typeof (p as any).room_id === 'number' || typeof (p as any).roomId === 'string' || typeof (p as any).roomId === 'number';
@@ -283,6 +285,8 @@ export async function mapIncomingToChatMessage(
         } catch {
         }
 
+        console.log("mapIncomingToChatMessage: ", m)
+
         const createdAtVal = m.created_at || m.createdAt || new Date().toISOString();
         const roomIdForKey = m.room_id || m.roomId || opts.fallbackRoomId || '';
         const senderIdForKey = String(m.sender_id ?? m.senderId ?? '');
@@ -310,7 +314,6 @@ export async function mapIncomingToChatMessage(
 
         const roomIdMapped = m.room_id || m.roomId || opts.fallbackRoomId;
         const senderIdMapped = Number(m.sender_id ?? m.senderId) || 0;
-        const receiverIdMapped = Number(m.receiver_id ?? m.receiverId) || getReceiverIdFromRoom(roomIdMapped);
         const createdAtMapped = m.created_at || m.createdAt || createdAtVal;
 
         return {
@@ -368,7 +371,7 @@ export function broadcastToListeners(payload: unknown): void {
     } catch {
     }
 
-    let pid: string | null = null;
+    let pid: string | null;
     try {
         const parsed = typeof payload === 'string' ? JSON.parse(payload as any) : payload;
         pid = __pickRoomId(parsed);
@@ -385,8 +388,6 @@ export function broadcastToListeners(payload: unknown): void {
     // Fallback: broadcast to all
     for (const {fn} of __roomListeners.values()) fn(event);
 }
-
-import {uuidv4} from "zod/v4";
 
 // Utility to wait for sharedKey with a timeout
 const waitForSharedKey = (timeoutMs: number = 5000): Promise<string | undefined> => {

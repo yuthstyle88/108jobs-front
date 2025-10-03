@@ -8,6 +8,7 @@ import React from "react";
 import {useParams} from "next/navigation";
 import {formatDateToLong} from "@/utils";
 import {getLocale} from "@/utils/date";
+import {useTranslation} from "react-i18next";
 
 type UIChatMessage = ChatMessage & { isOwner?: boolean };
 
@@ -30,7 +31,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                                                        isFetching,
                                                        onAtBottomChange,
                                                    }) => {
-// Reverse messages to display newest-first (API provides oldest-first)
+    const {t} = useTranslation();
+    // Reverse messages to display newest-first (API provides oldest-first)
     const displayedMessages = React.useMemo(() => [...messages].reverse(), [messages]);
     const params = useParams();
     const currentLang = (params?.lang as string) || 'th';
@@ -68,7 +70,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                     ? () => (
                         <div className="w-full flex justify-center my-2">
                             <div className="inline-block rounded bg-gray-200 text-gray-600 text-xs px-2 py-1">
-                                {isFetching ? "Loading..." : "Previous messages"}
+                                {isFetching ? "Loading..." : t("profileChat.previousMessages")}
                             </div>
                         </div>
                     )

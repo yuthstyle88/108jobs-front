@@ -1,5 +1,5 @@
 import {type NextRequest, NextResponse} from "next/server";
-import {middleware as langMiddleware} from "./middleware-lang";
+import {middleware as langMiddleware} from "./middlewareLang";
 import {authCookieName} from "@/utils/config";
 import {VALID_LANGUAGES} from "@/constants/language";
 import {jwtDecode} from "jwt-decode";

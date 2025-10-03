@@ -157,7 +157,8 @@ export const vi = {
             noJobDescription: "Không có mô tả công việc",
             unread: "Chưa đọc",
             read: "Đã đọc",
-            messageHiringAgain: "Nếu bạn muốn thuê lại người này, hãy nhấp vào"
+            messageHiringAgain: "Nếu bạn muốn thuê lại người này, hãy nhấp vào",
+            previousMessages: "Tin nhắn trước"
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",

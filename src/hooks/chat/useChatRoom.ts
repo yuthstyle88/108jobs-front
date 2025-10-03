@@ -5,7 +5,7 @@ import {useWebSocketContext} from '@/contexts/WebSocketContext';
 import {createHandleWSMessage} from '@/events/chat/handleWSMessage';
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {ensureSharedKeyForRoom} from "@/utils";
-import {broadcastToListeners, fetchHistoryPage, makeEmitReadAcker} from "@/utils/chat";
+import {broadcastToListeners, fetchHistoryPage, makeEmitReadAcker, MessagePayload} from "@/utils/chat";
 import {
     sendChatMessage,
     sendReadReceipt as sendReadReceiptEvent,
@@ -131,7 +131,7 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping}: UseChatR
     }, [roomId, localUser?.id, isE2EMock, ws]);
 
     // Actions
-    const sendMessage = useCallback(async (data: { message: string; senderId: number; id?: string }) => {
+    const sendMessage = useCallback(async (data: MessagePayload) => {
         await sendChatMessage({
             isE2EMock,
             roomId,
