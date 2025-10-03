@@ -3,7 +3,6 @@
 import { getChannelAdapter } from "@/services/PhoenixSocketService";
 import { useRoomsStore } from "@/stores/roomsStore";
 import { useUnreadStore, incrementForIncoming } from "@/stores/unreadStore";
-import {getReceiverIdFromRoom} from "@/utils/chat/chat-socket-utils";
 
 // Debug toggle: set window.__DEBUG_BG_UNREAD = true or localStorage.DEBUG_BG_UNREAD = '1' to enable logs
 const DEBUG_KEY = 'DEBUG_BG_UNREAD';
