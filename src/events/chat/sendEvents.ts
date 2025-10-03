@@ -3,7 +3,6 @@ import {UserService} from "@/services";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import {encrypt} from "@/lib/web-crypto";
 import {emitChatNewMessage} from "@/events/chat";
-import {MessagePayload} from "@/utils/chat";
 
 export type PhoenixEvent =
     | "phx_join"
@@ -45,19 +44,18 @@ export function createMessage(
     content: string,
     senderId: number,
     id?: string,
-): PhoenixPacket<ChatMessage> {
+): ChatMessage {
     if (!content || content.trim().length === 0) {
         throw new Error("Message content is required");
     }
 
-    const message: ChatMessage = {
+    return {
         id: id ?? crypto.randomUUID(),
         senderId,
         content,
         status: "pending",
         createdAt: new Date().toISOString(),
     };
-    return createEvent("new_message", message);
 }
 
 export interface SendMessageDeps {
@@ -69,6 +67,12 @@ export interface SendMessageDeps {
     socket: any;
 }
 
+export interface SendMessagePayload {
+    message: string;
+    senderId: number;
+    id?: string
+}
+
 // --- Generic event-deps for socket sends ---
 export interface SendEventDeps {
     roomId: string;
@@ -78,43 +82,43 @@ export interface SendEventDeps {
 
 // Safe JSON send over WebSocket
 function wsSend(socket: any, obj: any) {
-    if (!socket) return false;
-    const event = obj?.event ?? obj?.type ?? 'message';
-    const payload = obj?.payload ?? obj;
-    try {
-        // 1) Phoenix Channel API (channel.push(event, payload))
-        if (typeof socket.push === 'function') {
-            socket.push(event, payload);
-            return true;
-        }
-        // 2) Adapter with emit(event, payload)
-        if (typeof socket.emit === 'function') {
-            socket.emit(event, payload);
-            return true;
-        }
-        // 3) Raw WebSocket API
-        if (typeof socket.send === 'function') {
-            if (typeof socket.readyState === 'number' && socket.readyState !== WebSocket.OPEN) return false;
-            socket.send(JSON.stringify({event, payload}));
-            return true;
-        }
-        return false;
-    } catch {
-        return false;
+  if (!socket) return false;
+  console.info("Event", obj)
+  const event = obj?.event ?? obj?.type ?? 'message';
+  const payload = obj?.payload ?? obj;
+  try {
+    // 1) Phoenix Channel API (channel.push(event, payload))
+    if (typeof socket.push === 'function') {
+      socket.push(event, payload);
+      return true;
     }
+    // 2) Adapter with emit(event, payload)
+    if (typeof socket.emit === 'function') {
+      socket.emit(event, payload);
+      return true;
+    }
+    // 3) Raw WebSocket API
+    if (typeof socket.send === 'function') {
+      if (typeof socket.readyState === 'number' && socket.readyState !== WebSocket.OPEN) return false;
+      socket.send(JSON.stringify({ event, payload }));
+      return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
 }
 
 // Wait for server ACK for a specific message id
 async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<boolean> {
     return new Promise((resolve) => {
         let done = false;
-
         function onMessage(ev: MessageEvent) {
             try {
                 const data = JSON.parse(ev.data);
                 // Accept either a Phoenix-style reply or a custom ack shape
                 const isReply = data?.event === "phx_reply" && (data?.payload?.in_reply_to === id || data?.payload?.id === id);
-                const isAck = (data?.event === "ack:new_message" || data?.event === "ack") && (data?.payload?.in_reply_to === id || data?.payload?.id === id);
+                const isAck = data?.event === "ack:new_message" && (data?.payload?.in_reply_to === id || data?.payload?.id === id);
                 if (isReply || isAck) {
                     if (!done) {
                         done = true;
@@ -127,7 +131,6 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
                 // ignore non-JSON frames
             }
         }
-
         const timer = setTimeout(() => {
             if (!done) {
                 done = true;
@@ -142,7 +145,7 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
 
 // --- Typing events ---
 export function sendTyping(deps: SendEventDeps, typing: boolean) {
-    const {socket, senderId} = deps;
+    const { socket, senderId } = deps;
     const unified = createEvent("chat:typing", {
         typing,
         senderId,
@@ -155,10 +158,10 @@ export const sendTypingStop = (deps: SendEventDeps) => sendTyping(deps, false);
 
 // --- Read receipt ---
 export function sendReadReceipt(deps: SendEventDeps, lastMessageId: string) {
-    const {socket} = deps;
+    const { socket } = deps;
     const packet = createEvent(
         "chat:read",
-        {last_read_message_id: String(lastMessageId || "")},
+        { last_read_message_id: String(lastMessageId || "") },
     );
     wsSend(socket, packet);
 }
@@ -168,33 +171,31 @@ export function sendRoomUpdateEvent(
     deps: SendEventDeps,
     update: Record<string, any>
 ) {
-    const {socket} = deps;
+    const { socket } = deps;
     const packet = createEvent(
         "room:update",
-        {...update},
+        { ...update },
     );
     wsSend(socket, packet);
 }
 
 /** Centralized send-message flow used by PhoenixSocketProvider */
-export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayload) {
-    const {roomId, peerPublicKeyHex, socket} = deps;
+export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePayload) {
+    const {roomId,  peerPublicKeyHex, socket} = deps;
 
     try {
         const token = UserService.Instance.auth();
 
         // Create once (plaintext) and optimistically update UI
-        const packet = createMessage(
-            data.message,
-            data.senderId,
-            data.id,
+        const p = createMessage(
+          data.message,
+          data.senderId,
+          data.id,
         );
-        const p = packet.payload as ChatMessage;
         if (p) p.status = "pending";
         emitChatNewMessage({
             roomId,
             id: p.id,
-            senderId: p.senderId,
             content: p.content,
             createdAt: p.createdAt,
             status: p.status,
@@ -220,11 +221,10 @@ export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayloa
         }
         const sharedKeyHex = UserService.Instance.authInfo?.sharedKey;
         const shouldEncrypt = token && peerPublicKeyHex && sharedKeyHex && data.message && data.message.trim();
-        console.log("peerPublicKeyHex", peerPublicKeyHex,)
 
         let finalContent = data.message;
 
-        if (shouldEncrypt) {
+        if(shouldEncrypt) {
             try {
                 const aesKey = await importAesKey(sharedKeyHex!, "encrypt");
                 finalContent = await encrypt(data.message, aesKey);
@@ -241,29 +241,24 @@ export async function sendChatMessage(deps: SendMessageDeps, data: MessagePayloa
         if (finalContent !== data.message && p) {
             p.content = finalContent;
         }
-        console.log("send", p)
-        const sent = wsSend(socket, p);
+        console.info('[send-message] send', p);
+        const sent = wsSend(socket, createEvent('new_message', p));
         let acked = false;
         if (sent) {
-            try {
-                acked = await waitForAck(socket, String(messageId));
-            } catch {
-            }
+            try { acked = await waitForAck(socket, String(messageId)); } catch {}
         }
         // Notify UI of final status (sent/failed)
         try {
-            const updated = {...p};
+            const updated = { ...p };
             updated.status = sent && acked ? "sent" : "failed";
             emitChatNewMessage({
                 roomId,
                 id: updated.id,
-                senderId: updated.senderId,
                 content: updated.content,
                 createdAt: p.createdAt,
                 status: updated.status,
             });
-        } catch {
-        }
+        } catch {}
     } catch (ignored) {
     }
     return;

@@ -1,1 +1,1 @@
-export type ChatStatus = "pending" | "sent" | "failed" | "read" | "unread" | "deleted" | "delivered";
+export type ChatStatus = "pending" | "sent" | "failed";

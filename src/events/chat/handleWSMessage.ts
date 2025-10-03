@@ -93,7 +93,6 @@ export function createHandleWSMessage(deps: HandlerDeps) {
 
       // Normalize once
       const env: any = normalizePhoenixEnvelope(payload, roomId);
-      console.log("onmessage: env", env);
       // Shortcut: status-change -> refresh room once
       try {
         const evName = String((env as any)?.content || "");

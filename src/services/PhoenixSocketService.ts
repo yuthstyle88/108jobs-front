@@ -138,7 +138,6 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
 
   // Unify forward → adapter.onmessage with normalized envelope
     const forward = (event: string, topic: string, payload: any) => {
-        console.log('[phoenix] forward', { event, topic, payload });
         if (!event || isInternalEvent(event)) return;
 
         // --- unwrap server envelope like: {event:"new_message", payload:{...}} ---
@@ -152,17 +151,6 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
         ) {
             outEvent = String((payload as any).event);
             outPayload = (payload as any).payload ?? payload;
-        }
-
-        // (optional) normalize inbound status for incoming messages
-        // ถ้าข้อความ “เข้ามาจากอีกฝั่ง” แต่สถานะยังเป็น pending ให้ปรับเป็น sent
-        if (
-            outEvent === "new_message" &&
-            outPayload &&
-            typeof outPayload === "object" &&
-            outPayload.status === "pending"
-        ) {
-            try { outPayload.status = "sent"; } catch {}
         }
 
         const env = { event: outEvent, topic: topic.replace(/^room:/, ""), payload: outPayload };

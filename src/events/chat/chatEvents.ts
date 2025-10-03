@@ -25,7 +25,6 @@ export const CHAT_EVENT = Object.freeze({
 export type ChatNewMessageDetail = {
     roomId: string;          // required: UI context
     id: string;              // required: for de-dup & updates
-    senderId: LocalUserId;   // required: for checking ownership
     content: string;         // required: message text (already decrypted for UI)
     createdAt: string;       // ISO string; defaults to now if omitted
     status: ChatStatus;      // pending | sent | failed
