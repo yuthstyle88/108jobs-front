@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {fetchHistoryPage} from '@/utils/chat/chatSocketUtils';
 import {ChatMessage} from "lemmy-js-client";
+import {log} from "node:util";
 
 export type UseChatHistoryOptions = {
     roomId: string;
@@ -55,11 +56,9 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
             );
 
             if (items && Array.isArray(items)) {
-                const mapped = mapMessagesViewToChatMessages(items, localUserId);
-
                 setMessages((prevList) => {
                     const existingIds = new Set(prevList.map((m) => m.id));
-                    const filtered = mapped.filter((m) => !existingIds.has(m.id));
+                    const filtered = items.filter((m) => !existingIds.has(m.id));
                     return [...prevList, ...filtered]; // append or prepend based on your order
                 });
             }
@@ -92,22 +91,4 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
         state: {pageCursor, hasMore, isFetching},
         actions: {fetchHistory, reset},
     };
-}
-
-function mapMessagesViewToChatMessages(
-    messageView: any[],
-    localUserId: number
-): ChatMessage[] {
-    return messageView.map((item) => {
-        const m = item.message;
-        return {
-            id: m.msgRefId,
-            roomId: m.roomId,
-            senderId: m.senderId,
-            content: m.content,
-            status: m.status,
-            createdAt: m.createdAt,
-            isOwner: m.senderId === localUserId,
-        };
-    });
 }

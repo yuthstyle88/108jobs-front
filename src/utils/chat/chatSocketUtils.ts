@@ -155,83 +155,88 @@ export function unwrapPhoenixFrame(data: any): any {
 
 // ---- handleIncomingPayload: normalize and map incoming chat payloads ----
 export async function handleIncomingPayload(
-  payload: any,
-  ctx: {
-    roomId: string;
-    localUserId: number;
-    token?: string | null;
-    sharedKeyHex?: string;
-    receivedSet: Set<string>;
-    setPageCursor?: (cursor: { prev: string | null; next: string | null } | null) => void;
-    setHasMoreMessages?: (v: boolean) => void;
-    setIsFetching?: (v: boolean) => void;
-    fetchTimeoutRef?: { current: any } | null;
-    fetchResolveRef?: { current: any } | null;
-  }
+    payload: any,
+    ctx: {
+        roomId: string;
+        localUserId: number;
+        token?: string | null;
+        sharedKeyHex?: string;
+        receivedSet: Set<string>;
+        setPageCursor?: (cursor: { prev: string | null; next: string | null } | null) => void;
+        setHasMoreMessages?: (v: boolean) => void;
+        setIsFetching?: (v: boolean) => void;
+        fetchTimeoutRef?: { current: any } | null;
+        fetchResolveRef?: { current: any } | null;
+    }
 ): Promise<ChatMessage[]> {
-  try {
-    const env = normalizePhoenixEnvelope(payload, ctx.roomId) || {};
-    const eventName = String((env as any).event || '').toLowerCase();
+    try {
+        const env = normalizePhoenixEnvelope(payload, ctx.roomId) || {};
+        const eventName = String((env as any).event || '').toLowerCase();
 
-    const mapOne = async (raw: any): Promise<ChatMessage | null> => {
-      // prefer explicit message node if present
-      const flat = raw?.message ? { ...raw.message, roomId: raw?.room?.id ?? raw?.message?.roomId } : raw;
-      return mapIncomingToChatMessage(flat, {
-        token: ctx.token,
-        sharedKeyHex: ctx.sharedKeyHex,
-        fallbackRoomId: String(env.roomId || ctx.roomId  || flat?.roomId || ''),
-        localUserId: ctx.localUserId,
-        receivedSet: ctx.receivedSet,
-        decryptLabel: 'ws frame',
-      });
-    };
+        const mapOne = async (raw: any): Promise<ChatMessage | null> => {
+            // prefer explicit message node if present
+            const flat = raw?.message ? {...raw.message, roomId: raw?.room?.id ?? raw?.message?.roomId} : raw;
+            return mapIncomingToChatMessage(flat, {
+                token: ctx.token,
+                sharedKeyHex: ctx.sharedKeyHex,
+                fallbackRoomId: String(env.roomId || ctx.roomId || flat?.roomId || ''),
+                localUserId: ctx.localUserId,
+                receivedSet: ctx.receivedSet,
+                decryptLabel: 'ws frame',
+            });
+        };
 
-    // HISTORY PAGE PUSHED FROM SERVER
-    if (eventName === 'history_page') {
-      try {
-        const prev = (env as any).prevPage ?? (env as any).prev_page ?? null;
-        const next = (env as any).nextPage ?? (env as any).next_page ?? null;
-        ctx.setPageCursor?.({ prev, next });
-        ctx.setHasMoreMessages?.(!!prev); // has older pages when prev exists
-      } catch {}
-      try { ctx.setIsFetching?.(false); } catch {}
-      try {
-        if (ctx.fetchTimeoutRef?.current) {
-          clearTimeout(ctx.fetchTimeoutRef.current);
-          ctx.fetchTimeoutRef.current = null;
+        // HISTORY PAGE PUSHED FROM SERVER
+        if (eventName === 'history_page') {
+            try {
+                const prev = (env as any).prevPage ?? (env as any).prev_page ?? null;
+                const next = (env as any).nextPage ?? (env as any).next_page ?? null;
+                ctx.setPageCursor?.({prev, next});
+                ctx.setHasMoreMessages?.(!!prev); // has older pages when prev exists
+            } catch {
+            }
+            try {
+                ctx.setIsFetching?.(false);
+            } catch {
+            }
+            try {
+                if (ctx.fetchTimeoutRef?.current) {
+                    clearTimeout(ctx.fetchTimeoutRef.current);
+                    ctx.fetchTimeoutRef.current = null;
+                }
+                if (ctx.fetchResolveRef?.current) {
+                    ctx.fetchResolveRef.current();
+                    ctx.fetchResolveRef.current = null;
+                }
+            } catch {
+            }
+
+            const list = Array.isArray((env as any).results)
+                ? (env as any).results
+                : Array.isArray((env as any).messages)
+                    ? (env as any).messages
+                    : [];
+
+            const out: ChatMessage[] = [];
+            for (const item of list) {
+                const mapped = await mapOne(item);
+                if (mapped) out.push(mapped);
+            }
+            return out;
         }
-        if (ctx.fetchResolveRef?.current) {
-          ctx.fetchResolveRef.current();
-          ctx.fetchResolveRef.current = null;
+
+        // NEW MESSAGE (canonical)
+        if (eventName === 'chat:message') {
+            const mapped = await mapOne(env);
+            return mapped ? [mapped] : [];
         }
-      } catch {}
 
-      const list = Array.isArray((env as any).results)
-        ? (env as any).results
-        : Array.isArray((env as any).messages)
-          ? (env as any).messages
-          : [];
-
-      const out: ChatMessage[] = [];
-      for (const item of list) {
-        const mapped = await mapOne(item);
-        if (mapped) out.push(mapped);
-      }
-      return out;
+        // IGNORE non-message events here (typing/read handled elsewhere)
+        return [];
+    } catch (e) {
+        logDebug('handleIncomingPayload: failed', e);
+        return [];
     }
-
-    // NEW MESSAGE (canonical)
-    if (eventName === 'chat:message') {
-      const mapped = await mapOne(env);
-      return mapped ? [mapped] : [];
-    }
-
-    // IGNORE non-message events here (typing/read handled elsewhere)
-    return [];
-  } catch (e) {
-    logDebug('handleIncomingPayload: failed', e);
-    return [];
-  }
 }
 
 // ---- Lightweight runtime validators for chat payloads ----
@@ -355,11 +360,14 @@ export async function mapIncomingToChatMessage(
 
         // Optional decrypt (only when looks like base64 and we have key+token)
         let content = m.content;
+
         if (opts.token && opts.sharedKeyHex && typeof m.content === 'string' && isBase64Like(m.content)) {
             try {
                 const aesKey = await importAesKey(opts.sharedKeyHex, 'decrypt');
                 const plain = await decrypt(m.content, aesKey);
                 if (plain && plain.length > 0) content = plain;
+                console.log("content: ", plain)
+
             } catch {
                 console.warn('mapIncomingToChatMessage: failed to decrypt message', m);
             }
@@ -482,7 +490,6 @@ export async function fetchHistoryPage(
     const items = Array.isArray(resp?.results) ? resp.results : [];
 
     const realToken = UserService.Instance.auth();
-    const realShared = UserService.Instance.authInfo?.sharedKey;
     let sharedKey = UserService.Instance.authInfo?.sharedKey;
     if (!sharedKey) {
         sharedKey = await waitForSharedKey(5000);
@@ -492,23 +499,34 @@ export async function fetchHistoryPage(
         }
     }
 
+    const mappedItems: any[] = [];
+
     for (const view of items) {
-        const m = {...view.message, room_id: view.room?.id || view.message?.room_id};
+        const m = {
+            ...view.message,
+            room_id: view.room?.id || view.message?.room_id,
+        };
+
         const mapped = await mapIncomingToChatMessage(m, {
             token: realToken,
-            sharedKeyHex: realShared,
+            sharedKeyHex: sharedKey,
             fallbackRoomId: params.roomId + "hello",
             localUserId: deps.localUserId,
             receivedSet: deps.receivedSet,
-            decryptLabel: 'history line',
+            decryptLabel: "history line",
         });
-        if (mapped && deps.broadcast) deps.broadcast(mapped);
+
+        if (mapped) {
+            mappedItems.push(mapped);
+            if (deps.broadcast) deps.broadcast(mapped);
+        }
     }
 
     return {
-        prev: resp.prevPage ?? resp.prev_page ?? null,
-        next: resp.nextPage ?? resp.next_page ?? null,
-    } as any;
+        prev: resp.prevPage,
+        next: resp.nextPage,
+        items: mappedItems,
+    };
 }
 
 // Type guard: ensure we only treat real chat messages (not typing frames) as messages
