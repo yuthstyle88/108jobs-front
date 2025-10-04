@@ -104,7 +104,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         localUserId: Number(localUser.id) || 0,
         receivedSet: receivedIds,
         broadcast: () => {
-        }, // หน้านี้จัดการ messages เอง
+        },
+        setMessages
     });
 
     const roomPostId = currentRoom?.room?.post?.id;
@@ -166,9 +167,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }, []);
     // Switch to useChatRoom API (new design)
     const {
-        actions: { sendMessage, sendTyping },
-        state: { refreshRoomData, isPartnerTyping },
-    } = useChatRoom({ roomId, peerPublicKeyHex, setMessages, localUser });
+        actions: {sendMessage, sendTyping},
+        state: {refreshRoomData, isPartnerTyping},
+    } = useChatRoom({roomId, peerPublicKeyHex, setMessages, localUser});
 
     useEffect(() => {
         if (!refreshRoomData) return;

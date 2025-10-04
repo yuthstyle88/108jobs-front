@@ -38,7 +38,6 @@ export const PhoenixSocketProvider: React.FC<WebSocketProviderProps> = ({
             peerActiveRef.current = false;
         }, 20000);
     };
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
     const router = useRouter();
     const {localUser} = useMyUser();
     const isE2EMock = process.env.NEXT_PUBLIC_E2E_MODE === "mock";

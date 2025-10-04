@@ -451,9 +451,10 @@ export async function fetchHistoryPage(
     }
 
     return {
-        prev: resp.prevPage ?? resp.prev_page ?? null,
-        next: resp.nextPage ?? resp.next_page ?? null,
-    } as any;
+        prev: resp.prevPage,
+        next: resp.nextPage,
+        items: items,
+    };
 }
 
 // Type guard: ensure we only treat real chat messages (not typing frames) as messages
