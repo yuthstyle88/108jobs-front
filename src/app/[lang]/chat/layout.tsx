@@ -33,7 +33,7 @@ function resolveSenderId(token: string | null | undefined): number {
   // 3) Tertiary: decode from JWT `sub`
   const id3 = decodeJwtSub(token);
   if (id3) return id3;
-  // 4) Last resort: try cached localStorage if app stores it
+  // 4) Last resort: try cached localStorage if app store it
   try {
     const cache = localStorage.getItem('local_user_id');
     const id4 = Number(cache) || 0;

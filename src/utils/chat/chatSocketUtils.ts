@@ -1,5 +1,5 @@
 import {__DEV__} from "@/utils/appConfig";
-import {useRoomsStore} from "@/stores/roomsStore";
+import {useRoomsStore} from "@/store/roomsStore";
 import {v4 as uuidv4} from 'uuid';
 import {HttpService, UserService} from "@/services";
 import {REQUEST_STATE} from "@/services/HttpService";
@@ -177,6 +177,87 @@ export function unwrapPhoenixFrame(data: any): any {
     } catch {
         return data;
     }
+}
+
+// ---- handleIncomingPayload: normalize and map incoming chat payloads ----
+export async function handleIncomingPayload(
+  payload: any,
+  ctx: {
+    roomId: string;
+    localUserId: number;
+    token?: string | null;
+    sharedKeyHex?: string;
+    receivedSet: Set<string>;
+    setPageCursor?: (cursor: { prev: string | null; next: string | null } | null) => void;
+    setHasMoreMessages?: (v: boolean) => void;
+    setIsFetching?: (v: boolean) => void;
+    fetchTimeoutRef?: { current: any } | null;
+    fetchResolveRef?: { current: any } | null;
+  }
+): Promise<ChatMessage[]> {
+  try {
+    const env = normalizePhoenixEnvelope(payload, ctx.roomId) || {};
+    const eventName = String((env as any).event || '').toLowerCase();
+
+    const mapOne = async (raw: any): Promise<ChatMessage | null> => {
+      // prefer explicit message node if present
+      const flat = raw?.message ? { ...raw.message, room_id: raw?.room?.id ?? raw?.message?.room_id } : raw;
+      return mapIncomingToChatMessage(flat, {
+        token: ctx.token,
+        sharedKeyHex: ctx.sharedKeyHex,
+        fallbackRoomId: String(env.roomId || ctx.roomId || flat?.room_id || flat?.roomId || ''),
+        localUserId: ctx.localUserId,
+        receivedSet: ctx.receivedSet,
+        decryptLabel: 'ws frame',
+      });
+    };
+
+    // HISTORY PAGE PUSHED FROM SERVER
+    if (eventName === 'history_page') {
+      try {
+        const prev = (env as any).prevPage ?? (env as any).prev_page ?? null;
+        const next = (env as any).nextPage ?? (env as any).next_page ?? null;
+        ctx.setPageCursor?.({ prev, next });
+        ctx.setHasMoreMessages?.(!!prev); // has older pages when prev exists
+      } catch {}
+      try { ctx.setIsFetching?.(false); } catch {}
+      try {
+        if (ctx.fetchTimeoutRef?.current) {
+          clearTimeout(ctx.fetchTimeoutRef.current);
+          ctx.fetchTimeoutRef.current = null;
+        }
+        if (ctx.fetchResolveRef?.current) {
+          ctx.fetchResolveRef.current();
+          ctx.fetchResolveRef.current = null;
+        }
+      } catch {}
+
+      const list = Array.isArray((env as any).results)
+        ? (env as any).results
+        : Array.isArray((env as any).messages)
+          ? (env as any).messages
+          : [];
+
+      const out: ChatMessage[] = [];
+      for (const item of list) {
+        const mapped = await mapOne(item);
+        if (mapped) out.push(mapped);
+      }
+      return out;
+    }
+
+    // NEW MESSAGE (canonical)
+    if (eventName === 'chat:message') {
+      const mapped = await mapOne(env);
+      return mapped ? [mapped] : [];
+    }
+
+    // IGNORE non-message events here (typing/read handled elsewhere)
+    return [];
+  } catch (e) {
+    logDebug('handleIncomingPayload: failed', e);
+    return [];
+  }
 }
 
 // ---- Lightweight runtime validators for chat payloads ----
@@ -412,7 +493,7 @@ export async function fetchHistoryPage(
     deps: {
         localUserId: number;
         receivedSet: Set<string>;
-        broadcast?: (m: import("@/lib/lemmy-js-client/src").ChatMessage) => void;
+        broadcast?: (m: import("lemmy-js-client").ChatMessage) => void;
     }
 ) {
     const res = await HttpService.client.getChatHistory({

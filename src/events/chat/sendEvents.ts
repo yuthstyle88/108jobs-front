@@ -1,19 +1,9 @@
-import type {ChatMessage} from "lemmy-js-client";
+import type { ChatMessage } from "lemmy-js-client";
 import {UserService} from "@/services";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import {encrypt} from "@/lib/web-crypto";
 import {emitChatNewMessage} from "@/events/chat";
-
-export type PhoenixEvent =
-    | "phx_join"
-    | "phx_leave"
-    | "phx_reply"
-    | "phx_error"
-    | "phx_close"
-    | "new_message" // custom
-    | "chat:typing" // unified typing
-    | "chat:read"
-    | "room:update";
+import {PhoenixEvent} from "@/utils/chat";
 
 // generic payload (ChatMessage, error, หรืออื่นๆ)
 export interface PhoenixPacket<T = any> {
@@ -32,6 +22,7 @@ export function createEvent<T>(
     const packet: any = {
         event,
         payload,
+        timestamp: new Date().toISOString(),
     };
     Object.keys(packet).forEach((k) => {
         if (packet[k] === undefined) delete packet[k];
@@ -39,7 +30,7 @@ export function createEvent<T>(
     return packet;
 }
 
-// ฟังก์ชันย่อย สำหรับสร้าง new_message event โดยเฉพาะ
+// ฟังก์ชันย่อย สำหรับสร้าง chat:message event โดยเฉพาะ
 export function createMessage(
     content: string,
     senderId: number,
@@ -65,6 +56,16 @@ export interface SendMessageDeps {
     sentSet: Set<string>;
     onAfterSend?: () => void; // ใช้เคลียร์ typing flag ที่ provider
     socket: any;
+    // เชื่อม Chat Store แบบ optional: ถ้าไม่ได้ส่งมาก็ยังทำงานผ่าน DOM event เหมือนเดิม
+    store?: {
+        addPending?: (roomId: string, msg: ChatMessage) => void;
+        commitStatus?: (
+            roomId: string,
+            id: string,
+            status: ChatMessage['status'],
+            patch?: Partial<ChatMessage>
+        ) => void;
+    };
 }
 
 export interface SendMessagePayload {
@@ -182,13 +183,11 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
         refreshTimer();
         const data = typeof ev?.data === 'string' ? JSON.parse(ev.data) : ev?.data ?? ev;
         const eventName = String(data?.event ?? '');
-        console.info('[typing] onWsMessage', eventName, data)
+        console.info('[ws-ack] onWsMessage', eventName, data)
         if (!eventName) return;
         if (
           eventName === 'phx_reply' ||
-          eventName === 'new_message' ||
-          eventName === 'chat:message' ||
-          eventName === 'ack:new_message'
+          eventName === 'chat:message'
         ) {
           if (matchesId(data)) return finish(true);
         }
@@ -221,9 +220,7 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
           if (!evt) return;
           if (
             evt === 'phx_reply' ||
-            evt === 'new_message' ||
-            evt === 'chat:message' ||
-            evt === 'ack:new_message'
+            evt === 'chat:message'
           ) {
             if (matchesId(candidate)) return finish(true);
           }
@@ -249,8 +246,8 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
       ('readyState' in (socket ?? {}))
     );
     if (looksLikeNativeWS) {
-        console.info('[typing] looksLikeNativeWS')
-      try { socket.addEventListener('message', onWsMessage as any); } catch {}
+        try { if (process.env.NODE_ENV !== 'production') console.info('[ws-ack] native WebSocket detected'); } catch {}
+        try { socket.addEventListener('message', onWsMessage as any); } catch {}
     }
     // 1.5) If the channel is nested (socket.channel), try there too
     const chan = (socket && socket.channel) ? socket.channel : null;
@@ -259,7 +256,7 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
       offFns.push(() => { try { chan.removeEventListener?.('message', onWsMessage as any); } catch {} });
     }
     if (chan && typeof chan.on === 'function') {
-      const events = ['phx_reply', 'new_message', 'chat:message', 'ack:new_message', 'forward'];
+      const events = ['phx_reply', 'chat:message'];
       try {
         events.forEach((evt) => {
           try { chan.on(evt, onChanEvent as any); } catch {}
@@ -270,7 +267,7 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
 
     // 2) Phoenix channel-like adapter (.on/.off)
     if (typeof socket?.on === 'function') {
-      const events = ['phx_reply', 'new_message', 'chat:message', 'ack:new_message', 'forward'];
+      const events = ['phx_reply', 'chat:message'];
       try {
         events.forEach((evt) => {
           try { socket.on(evt, onChanEvent as any); } catch {}
@@ -361,6 +358,11 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
           data.id,
         );
         if (p) p.status = "pending";
+
+        try {
+            deps.store?.addPending?.(roomId, p);
+        } catch {}
+
         emitChatNewMessage({
             roomId,
             id: p.id,
@@ -408,9 +410,17 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
         // If encrypted content differs, mutate the single packet before sending
         if (finalContent !== data.message && p) {
             p.content = finalContent;
+            try {
+                // sync การแก้ไข content (เช่น ciphertext) ไปยัง store ถ้ามี
+                deps.store?.commitStatus?.(roomId, String(p.id), p.status, { content: p.content });
+            } catch {}
         }
         console.info('[send-message] send', p);
-        const sent = wsSend(socket, createEvent('new_message', p));
+        const sent = wsSend(socket, createEvent('chat:message', p));
+        try {
+            if (sent) deps.sentSet?.add(String(p.id));
+            deps.onAfterSend?.();
+        } catch {}
         let acked = false;
         if (sent) {
             try { acked = await waitForAck(socket, String(messageId), 4000); } catch {}
@@ -422,9 +432,19 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
         try {
             const updated = { ...p };
             updated.status = !sent ? "failed" : (acked ? "sent" : "pending");
+
+            // อัปเดตลง store หากมี (commitStatus จะอัปเดตเฉพาะสถานะ/แพตช์)
+            try {
+                deps.store?.commitStatus?.(roomId, String(updated.id), updated.status, {
+                    content: updated.content,
+                    createdAt: p.createdAt,
+                });
+            } catch {}
+
+            // คงพฤติกรรมเดิม: แจ้ง DOM ให้ UI อื่น ๆ รับรู้ด้วย
             emitChatNewMessage({
                 roomId,
-                id: updated.id,
+                id: String(updated.id),
                 content: updated.content,
                 createdAt: p.createdAt,
                 status: updated.status,

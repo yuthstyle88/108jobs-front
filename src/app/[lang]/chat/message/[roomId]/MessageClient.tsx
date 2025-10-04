@@ -9,7 +9,7 @@ import {REQUEST_STATE} from "@/services/HttpService";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {Post} from "@/lib/lemmy-js-client";
 import {RoomNotFound} from "@/components/RoomNotFound";
-import {useStateMachineStore} from "@/stores/stateMachineStore";
+import {useStateMachineStore} from "@/store/stateMachineStore";
 import {ensureIdentityKeyPair} from "@/utils";
 
 export default function MessageClient({roomId}: { roomId: string }) {

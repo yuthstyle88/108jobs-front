@@ -1,7 +1,7 @@
 /**
  * Phoenix socket/channel adapter — PRODUCTION-READY
  * - Stable WS-like surface (onopen/onmessage/onclose/onerror, send, close)
- * - Robust wiring via channel.onMessage wildcard + explicit events
+ * - Robust wiring via channel.onMessage wildcard only (no explicit per-event handlers to avoid duplicates)
  * - Dual-topic compatibility ("room:<id>" and "<id>")
  * - Minimal logging in production (logs only in development)
  * - Proper cleanup to avoid leaks
@@ -140,7 +140,7 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
     const forward = (event: string, topic: string, payload: any) => {
         if (!event || isInternalEvent(event)) return;
 
-        // --- unwrap server envelope like: {event:"new_message", payload:{...}} ---
+        // --- unwrap server envelope like: {event:"chat:message", payload:{...}} ---
         let outEvent = event;
         let outPayload = payload;
 
@@ -171,12 +171,6 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
         return orig ? orig(event, payload, ref) : payload;
       };
     } catch {}
-    // explicit events we care about
-    try { ch.on('system:welcome', (p: any) => forward('system:welcome', topicLabel, p)); } catch {}
-    try { ch.on('chat:message', (p: any) => forward('chat:message', topicLabel, p)); } catch {}
-    try { ch.on('chat:read', (p: any) => forward('chat:read', topicLabel, p)); } catch {}
-    try { ch.on('chat:read-receipt', (p: any) => forward('chat:read-receipt', topicLabel, p)); } catch {}
-    try { ch.on('new_message', (p: any) => forward('new_message', topicLabel, p)); } catch {}
   }
 
   function recreateChannels() {

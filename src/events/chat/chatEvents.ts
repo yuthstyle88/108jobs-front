@@ -3,10 +3,6 @@
 // keeping window and event-name details in one place.
 import {isBrowser} from "@/utils/browser";
 import {ChatStatus} from "lemmy-js-client";
-// ===== Payload handler (shared) =====
-import type {RefObject} from 'react';
-import {logDebug, mapIncomingToChatMessage, safeParse} from "@/utils/chat";
-
 
 function stripUndef<T extends Record<string, any>>(obj: T): T {
     Object.keys(obj).forEach((k) => {
@@ -16,9 +12,9 @@ function stripUndef<T extends Record<string, any>>(obj: T): T {
 }
 
 export const CHAT_EVENT = Object.freeze({
-    NEW_MESSAGE: 'chat:new-message',
+    MESSAGE: 'chat:message',
     TYPING: 'chat:typing',
-    READ_RECEIPT: 'chat:read-receipt',
+    READ: 'chat:read',
     WS_RECONNECTED: 'ws:reconnected',
 } as const);
 
@@ -48,13 +44,11 @@ export function isChatNewMessageDetail(v: any): v is ChatNewMessageDetail {
 
 export type ChatNewMessageHandler = (detail: ChatNewMessageDetail) => void;
 
-// ---- Typing (unified) ----
-export type ChatTypingDetail = { roomId: string; senderId: number; typing: boolean };
 export function emitChatNewMessage(detail: ChatNewMessageDetail): void {
     if (!isBrowser()) return;
     try {
         const normalized = normalizeChatNewMessageDetail(detail);
-        window.dispatchEvent(new CustomEvent(CHAT_EVENT.NEW_MESSAGE, {detail: normalized}));
+        window.dispatchEvent(new CustomEvent(CHAT_EVENT.MESSAGE, {detail: normalized}));
     } catch {
         // swallow errors to keep callers simple
     }
@@ -77,8 +71,8 @@ export function onChatNewMessage(handler: ChatNewMessageHandler): () => void {
         } catch {
         }
     };
-    window.addEventListener(CHAT_EVENT.NEW_MESSAGE, wrapped as EventListener);
-    return () => window.removeEventListener(CHAT_EVENT.NEW_MESSAGE, wrapped as EventListener);
+    window.addEventListener(CHAT_EVENT.MESSAGE, wrapped as EventListener);
+    return () => window.removeEventListener(CHAT_EVENT.MESSAGE, wrapped as EventListener);
 }
 
 export function emitWsReconnected(): void {
@@ -131,7 +125,7 @@ export function emitChatTyping(detail: { roomId: string; senderId: number; typin
 /** Emit a unified read-receipt event */
 export function emitReadReceipt(roomId: string, lastMessageId: string, readerId: number) {
     try {
-        if (isBrowser()) window.dispatchEvent(new CustomEvent(CHAT_EVENT.READ_RECEIPT, {
+        if (isBrowser()) window.dispatchEvent(new CustomEvent(CHAT_EVENT.READ, {
             detail: {
                 roomId,
                 lastMessageId,
@@ -142,135 +136,20 @@ export function emitReadReceipt(roomId: string, lastMessageId: string, readerId:
     }
 }
 
-export async function handleIncomingPayload(
-    payload: any,
-    ctx: {
-        roomId: string;
-        localUserId: number;
-        token: string | null | undefined;
-        sharedKeyHex?: string;
-        receivedSet: Set<string>;
-        setPageCursor?: (cursor: string | null) => void;
-        setHasMoreMessages?: (v: boolean) => void;
-        setIsFetching?: (v: boolean) => void;
-        fetchTimeoutRef?: RefObject<ReturnType<typeof setTimeout> | null>;
-        fetchResolveRef?: RefObject<((value?: void) => void) | null>;
-    }
-): Promise<import("lemmy-js-client").ChatMessage[] | null> {
-    try {
-        logDebug('[RT] handleIncomingPayload →', payload);
-    } catch {
-    }
-    // Ignore trivial frames
-    if (
-        payload == null ||
-        payload === 'pong' ||
-        payload === 'ping' ||
-        (payload?.op === 'Ping') ||
-        (payload?.event === 'phx_leave') ||
-        (typeof payload === 'object' && !Array.isArray(payload) && Object.keys(payload).length === 0)
-    ) {
-        return null;
-    }
+export type ChatReadReceiptDetail = { roomId: string; lastMessageId: string; readerId: number };
+export type ChatReadReceiptHandler = (detail: ChatReadReceiptDetail) => void;
 
-
-    // Normalize Phoenix shapes to a flat message-like object
-    try {
-        if (Array.isArray(payload) && payload.length >= 5 && typeof payload[3] === 'string' && payload[4] && typeof payload[4] === 'object') {
-            const [, , topic, ev, body] = payload as [any, any, string, string, any];
-            payload = {event: ev, topic: topic.replace(/^room:/, ''), ...body};
-        } else if (payload && typeof payload === 'object' && 'event' in payload && 'payload' in payload && typeof (payload as any).payload === 'object') {
-            const env = payload as any;
-            const topic = typeof env.topic === 'string' ? env.topic.replace(/^room:/, '') : env.topic;
-            payload = {event: env.event, topic, ...(env.payload || {})};
-        }
-    } catch {
-    }
-
-    const out: import("lemmy-js-client").ChatMessage[] = [];
-
-    // ChatMessageView line: { message: {...}, room?: { id } }
-    if (payload && typeof payload === 'object' && (payload as any).message) {
-        const msgView = payload as any;
-        const m = {...msgView.message, room_id: msgView.room?.id || msgView.message?.room_id};
-
-        const mapped = await mapIncomingToChatMessage(m, {
-            token: ctx.token,
-            sharedKeyHex: ctx.sharedKeyHex,
-            fallbackRoomId: ctx.roomId,
-            localUserId: ctx.localUserId,
-            receivedSet: ctx.receivedSet,
-            decryptLabel: 'message view',
-        });
-        if (mapped) out.push(mapped);
-        return out;
-    }
-
-    // Flat ChatMessage line (and also detect inline typing JSON)
-    if (payload && typeof payload === 'object' && Object.prototype.hasOwnProperty.call(payload.data.payload, 'content')) {
-
-        const m = (() => {
-            return {...(payload.data.payload)};
-        })();
-        // Typing embedded in content
+export function onReadReceipt(handler: ChatReadReceiptHandler): () => void {
+    if (!isBrowser()) return () => {};
+    const wrapped = (e: CustomEvent<ChatReadReceiptDetail>) => {
         try {
-            if (typeof m.content === 'string' && m.content.trim().startsWith('{')) {
-                const parsed = safeParse(m.content);
-                if (parsed && typeof parsed === 'object' && ('typing' in parsed)) {
-                    const senderIdNum = Number(m.sender_id ?? m.senderId ?? 0);
-                    const info = {
-                        type: 'typing',
-                        roomId: String(m.room_id || m.roomId || m.topic || ctx.roomId),
-                        senderId: senderIdNum,
-                        typing: Boolean((parsed as any).typing),
-                    } as any;
-                    if (senderIdNum !== Number(ctx.localUserId)) {
-                        emitChatTyping(info);
-                    }
-                    return [];
-                }
-            }
-        } catch {
-        }
-
-        const mapped = await mapIncomingToChatMessage(m, {
-            token: ctx.token,
-            sharedKeyHex: ctx.sharedKeyHex,
-            fallbackRoomId: ctx.roomId,
-            localUserId: ctx.localUserId,
-            receivedSet: ctx.receivedSet,
-            decryptLabel: 'flat message',
-        });
-        if (mapped) out.push(mapped);
-        return out;
-    }
-
-    // Pagination payloads (prev/next page)
-    if (payload && typeof payload === 'object' && ((payload as any).prevPage || (payload as any).prev_page || (payload as any).nextPage || (payload as any).next_page)) {
-        const prev = (payload as any).prev_page ?? (payload as any).prevPage ?? null;
-        const next = (payload as any).next_page ?? (payload as any).nextPage ?? null;
-        if (typeof prev === 'string' && prev.length > 0) {
-            ctx.setPageCursor?.(next);
-            ctx.setHasMoreMessages?.(true);
-        } else {
-            ctx.setPageCursor?.(null);
-            ctx.setHasMoreMessages?.(false);
-        }
-        if (ctx.fetchTimeoutRef?.current) {
-            clearTimeout(ctx.fetchTimeoutRef.current);
-            ctx.fetchTimeoutRef.current = null;
-        }
-        ctx.setIsFetching?.(false);
-        if (ctx.fetchResolveRef?.current) {
-            ctx.fetchResolveRef.current();
-            ctx.fetchResolveRef.current = null;
-        }
-        return [];
-    }
-
-    try {
-        logDebug('onmessage: dropped unknown payload shape', payload);
-    } catch {
-    }
-    return null;
+            const d = e.detail;
+            if (!d || typeof d.roomId !== 'string') return;
+            if (typeof d.lastMessageId !== 'string') return;
+            if (!Number.isFinite(d.readerId)) return;
+            handler({ roomId: d.roomId, lastMessageId: d.lastMessageId, readerId: Number(d.readerId) });
+        } catch {}
+    };
+    window.addEventListener(CHAT_EVENT.READ as any, wrapped as any);
+    return () => window.removeEventListener(CHAT_EVENT.READ as any, wrapped as any);
 }

@@ -1,8 +1,8 @@
 "use client";
 
 import { getChannelAdapter } from "@/services/PhoenixSocketService";
-import { useRoomsStore } from "@/stores/roomsStore";
-import { useUnreadStore, incrementForIncoming } from "@/stores/unreadStore";
+import { useRoomsStore } from "@/store/roomsStore";
+import { useUnreadStore, incrementForIncoming } from "@/store/unreadStore";
 import {getReceiverIdFromRoom} from "@/utils/chat/chatSocketUtils";
 
 // Debug toggle: set window.__DEBUG_BG_UNREAD = true or localStorage.DEBUG_BG_UNREAD = '1' to enable logs
@@ -120,7 +120,6 @@ function reconcileRooms(st: BGState) {
                 try {
                     const env = JSON.parse(evt.data);
                     const isMsg = env?.event === 'chat:message'
-                        || env?.event === 'new_msg'
                         || env?.payload?.event === 'chat:message';
                     if (!isMsg) { dbg('skip non-message event', env?.event || env?.payload?.event); return; }
                     const payload = env.payload || env;

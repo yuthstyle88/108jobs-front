@@ -19,7 +19,7 @@ import React, {useState, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import ConfirmActionModal from '@/components/Common/Modal/ConfirmActionModal';
 import {useWorkflowStepper} from '@/hooks/useWorkflowMachine';
-import type {UiFlowStatus} from '@/stores/stateMachineStore';
+import type {UiFlowStatus} from '@/store/stateMachineStore';
 import Link from 'next/link';
 import FileUploadModal from '@/components/Common/Modal/FileUploadModal';
 import {UploadedFile} from '@/hooks/chat/useFileUpload';

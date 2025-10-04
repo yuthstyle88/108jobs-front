@@ -10,8 +10,8 @@ import type {ListUserChatRoomsResponse} from "lemmy-js-client";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {REQUEST_STATE} from "@/services/HttpService";
 import { isBrowser } from "@/utils/browser";
-import { useUnreadStore } from "@/stores/unreadStore";
-import { useRoomsStore } from "@/stores/roomsStore";
+import { useUnreadStore } from "@/store/unreadStore";
+import { useRoomsStore } from "@/store/roomsStore";
 import { enableBackgroundUnread, disableBackgroundUnread } from "@/utils/chat/backgroundUnreadWatcher";
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 
@@ -286,7 +286,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         setState(prev => ({...prev, rooms: prev.rooms.map(r => r.id === roomId ? {...r, unreadCount: 0} : r)}));
         try {
             // Keep global unread badge in sync
-            const { markSeen } = (await import("@/stores/unreadStore")).useUnreadStore.getState();
+            const { markSeen } = (await import("@/store/unreadStore")).useUnreadStore.getState();
             markSeen(roomId);
         } catch {}
         // If server endpoint exists, call it here
@@ -363,7 +363,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         let cancelled = false;
         (async () => {
             try {
-                const { useUnreadStore } = await import("@/stores/unreadStore");
+                const { useUnreadStore } = await import("@/store/unreadStore");
                 const applyPerRoom = (perRoom: Record<string, number>) => {
                     if (cancelled) return;
                     setState(prev => {

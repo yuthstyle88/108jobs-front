@@ -1,4 +1,4 @@
-import { useStateMachineStore, ORDER, UiFlowStatus } from '@/stores/stateMachineStore';
+import { useStateMachineStore, ORDER, UiFlowStatus } from '@/store/stateMachineStore';
 
 // A stepper-friendly hook that mirrors the issue description API
 export type StepperEvents = { type: 'NEXT' } | { type: 'BACK' } | { type: 'RESET' } | { type: 'CANCEL' };

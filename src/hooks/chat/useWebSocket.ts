@@ -27,7 +27,7 @@ export interface UseWebSocketOptions {
     onNewMessage?: (data: any) => void;
     onTyping?: (data: any) => void;
     // แผนที่ event → handler (ยืดหยุ่นกว่า onNewMessage/onTyping แบบ fix ชื่อ)
-    eventHandlers?: Record<string, (payload: any) => void>; // e.g. {'new_message': fn, 'chat:typing': fn}
+    eventHandlers?: Record<string, (payload: any) => void>; // e.g. {'chat:message': fn, 'chat:typing': fn}
 
     debug?: boolean;
 }
