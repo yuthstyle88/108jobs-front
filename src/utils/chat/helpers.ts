@@ -53,15 +53,16 @@ export function parseTypingDetail(env: any, fallbackRoomId: string, localUserId:
 }
 
 // ---- helpers: status-change ----
-export async function maybeHandleStatusChange(env: any, roomId: string, setRefreshRoomData: (d:any)=>void, markPeerActive: ()=>void): Promise<boolean> {
+export async function maybeHandleStatusChange(env: any, roomId: string, setRefreshRoomData: (d:any)=>void): Promise<boolean> {
     try {
-        const evName = String(env?.content || "");
-        if (!evName || !evName.includes("status-change")) return false;
+
+        const evName = String(env?.event);
+
+        if (!evName || !evName.includes("join")) return false;
         try {
             const chatRoomRes = await HttpService.client.getChatRoom(roomId);
             if (chatRoomRes.state === REQUEST_STATE.SUCCESS) {
                 setRefreshRoomData(chatRoomRes.data);
-                try { markPeerActive(); } catch {}
             }
         } catch (err) {
             try { if (localStorage.getItem('chat_debug') === '1') console.error("Error fetching room:", err); } catch {}
@@ -148,4 +149,65 @@ export function buildMessageSignature(msg: any): string {
     const content = typeof c === "string" ? c : (c == null ? "" : JSON.stringify(c));
 
     return `${room}|${sender}|${ts}|${content}`;
+}
+
+
+/**
+ * Lightweight, safe debug logger for websocket flows.
+ * Enable with localStorage.setItem('debugWs','1') or NEXT_PUBLIC_DEBUG_WS=1
+ *
+ * NOTE: keep the same name/signature so all existing call sites work.
+ */
+export function dbg(label: string, data?: unknown) {
+    try {
+        // Gate – support both browser/local flag and env flag.
+        const enabled =
+          (typeof localStorage !== 'undefined' && localStorage.getItem('debugWs') === '1') ||
+          (typeof process !== 'undefined' && (process as any)?.env?.NEXT_PUBLIC_DEBUG_WS === '1');
+        if (!enabled) return;
+
+        // Timestamped, namespaced header
+        const ts = new Date().toISOString();
+        const header = `[ws-debug ${ts}] ${label}`;
+
+        // Redact potentially sensitive blobs (tokens, long ciphertexts)
+        const redact = (v: any): any => {
+            if (v == null) return v;
+            if (typeof v === 'string') {
+                // redact obvious JWT/ciphertext-looking strings
+                if (v.length > 120) return `${v.slice(0, 32)}…[${v.length} chars]`;
+                return v;
+            }
+            if (Array.isArray(v)) return v.map(redact);
+            if (typeof v === 'object') {
+                const out: Record<string, any> = {};
+                for (const [k, val] of Object.entries(v)) {
+                    if (/token|authorization|auth|secret/i.test(k)) {
+                        out[k] = '[redacted]';
+                    } else if (k === 'content' && typeof val === 'string' && val.length > 120) {
+                        out[k] = `${val.slice(0, 32)}…[${val.length} chars]`;
+                    } else {
+                        out[k] = redact(val as any);
+                    }
+                }
+                return out;
+            }
+            return v;
+        };
+
+        const payload = redact(data);
+
+        // Compact output by default; expand in console to inspect
+        if (typeof console.groupCollapsed === 'function') {
+            console.groupCollapsed(header);
+            // eslint-disable-next-line no-console
+            console.log(payload ?? '');
+            console.groupEnd();
+        } else {
+            // eslint-disable-next-line no-console
+            console.info(header, payload ?? '');
+        }
+    } catch {
+        // never throw from a debug helper
+    }
 }

@@ -3,7 +3,7 @@ import {UserService} from "@/services";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import {encrypt} from "@/lib/web-crypto";
 import {emitChatNewMessage} from "@/events/chat";
-import {PhoenixEvent} from "@/utils/chat";
+import {dbg, PhoenixEvent} from "@/utils/chat";
 
 // generic payload (ChatMessage, error, หรืออื่นๆ)
 export interface PhoenixPacket<T = any> {
@@ -89,222 +89,182 @@ function wsSend(socket: any, obj: any) {
   try {
     // 1) Phoenix Channel API (channel.push(event, payload))
     if (typeof socket.push === 'function') {
+      dbg('send via phoenix.push', { event, payload });
       socket.push(event, payload);
       return true;
     }
     // 2) Adapter with emit(event, payload)
     if (typeof socket.emit === 'function') {
+      dbg('send via adapter.emit', { event, payload });
       socket.emit(event, payload);
       return true;
     }
     // 3) Raw WebSocket API
     if (typeof socket.send === 'function') {
       const canCheckReady = typeof (globalThis as any).WebSocket !== 'undefined' && typeof socket.readyState === 'number';
-      if (canCheckReady && socket.readyState !== (globalThis as any).WebSocket.OPEN) return false;
+      if (canCheckReady && socket.readyState !== (globalThis as any).WebSocket.OPEN) {
+        dbg('raw ws not open', { readyState: socket.readyState });
+        return false;
+      }
+      dbg('send via raw WebSocket', { event });
       socket.send(JSON.stringify({ event, payload }));
       return true;
     }
+    dbg('no send method found');
     return false;
   } catch {
     return false;
   }
 }
 
-// Wait for server ACK for a specific message id
+// Wait for server ACK for a specific message id (simplified version)
 async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<boolean> {
   return new Promise((resolve) => {
     const idToMatch = String(id);
     let done = false;
-    let timer: any = null;
-    const refreshTimer = () => {
-      try { if (timer) clearTimeout(timer); } catch {}
-      timer = setTimeout(() => finish(false), timeoutMs);
+    let timer: any = setTimeout(() => finish(false), timeoutMs);
+
+    // Track cleanup functions and handlers for various adapters
+    const cleanupFns: Array<() => void> = [];
+    let anyHandler: ((evt: any, payload: any) => void) | null = null;
+    let onMessageUnsub: (() => void) | null = null;
+    let addMsgCb: ((packet: any) => void) | null = null;
+
+    // Helper: checks if payload matches our id (by 'id' only for chat:message)
+    const matchesId = (obj: any): boolean => {
+      console.log('waitForAck/matchesId', { obj, idToMatch });
+      if (!obj) return false;
+      // Check top-level id
+      if (obj.id != null && String(obj.id) === idToMatch) return true;
+      // Check payload.id
+      if (obj.payload?.id != null && String(obj.payload.id) === idToMatch) return true;
+      // Check forward wrapper
+      if (obj.event === 'forward' && obj.payload) {
+        const inner = obj.payload;
+        const innerPayload = inner.payload ?? inner;
+        if (inner.event === 'chat:message') {
+          if (innerPayload?.id != null && String(innerPayload.id) === idToMatch) return true;
+        }
+      }
+      return false;
     };
 
+    // Clean up listeners and timer
     const finish = (ok: boolean) => {
       if (done) return;
       done = true;
-      try { if (timer) clearTimeout(timer); } catch {}
-      timer = null;
-      // detach listeners
-      try { socket.removeEventListener?.('message', onWsMessage as any); } catch {}
-      try {
-        if (offFns.length) offFns.forEach((off) => { try { off?.(); } catch {} });
-      } catch {}
-      try {
-        if (originalOnMessageWrapped) {
-          socket.onmessage = originalOnMessage; // restore
-          originalOnMessageWrapped = false;
+      clearTimeout(timer);
+      try { cleanupFns.forEach((fn) => { try { fn(); } catch {} }); } catch {}
+      // direct removals for cases where we didn't push into cleanupFns
+      if (wsListener && typeof socket?.removeEventListener === 'function') {
+        try { socket.removeEventListener('message', wsListener); } catch {}
+      }
+      if (typeof socket?.off === 'function') {
+        try { socket.off('chat:message', chanListener as any); } catch {}
+        try { socket.off('forward', chanListener as any); } catch {}
+      }
+      const channel = (socket as any)?.channel;
+      if (channel) {
+        if (typeof channel.off === 'function') {
+          try { channel.off('chat:message', chanListener as any); } catch {}
+          try { channel.off('forward', chanListener as any); } catch {}
         }
-      } catch {}
+        if (typeof channel.removeEventListener === 'function') {
+          try { channel.removeEventListener('message', wsListener); } catch {}
+        }
+      }
+      // wildcard & generic unsubs
+      try { (socket as any)?.offAny?.(anyHandler as any); } catch {}
+      try { onMessageUnsub?.(); } catch {}
+      try { if (addMsgCb && typeof (socket as any)?.removeMessageListener === 'function') { (socket as any).removeMessageListener(addMsgCb); } } catch {}
       resolve(ok);
     };
 
-    const matchesId = (obj: any): boolean => {
+    // WebSocket 'message' event handler
+    const wsListener = (ev: any) => {
       try {
-        if (!obj) return false;
-        const idToMatchStr = idToMatch;
-        const get = (o: any, k: string) => {
-          try { return o?.[k]; } catch { return undefined; }
-        };
-        const unwrap = (o: any) => (o?.response ?? o?.payload ?? o?.data ?? o);
-        const candidate = unwrap(obj);
-
-        const direct = get(candidate, 'in_reply_to') ?? get(candidate, 'id');
-        if (direct != null && String(direct) === idToMatchStr) return true;
-
-        const msgs = get(candidate, 'messages') ?? get(candidate, 'message');
-        if (msgs) {
-          const arr = Array.isArray(msgs) ? msgs : [msgs];
-          for (const m of arr) {
-            const mid = get(m, 'in_reply_to') ?? get(m, 'id');
-            if (mid != null && String(mid) === idToMatchStr) return true;
-          }
-        }
-
-        // deep fallback (limited depth)
-        const stack: any[] = [candidate];
-        let depth = 0;
-        while (stack.length && depth < 4) {
-          const cur = stack.pop();
-          if (!cur || typeof cur !== 'object') continue;
-          const mid = get(cur, 'in_reply_to') ?? get(cur, 'id');
-          if (mid != null && String(mid) === idToMatchStr) return true;
-          for (const v of Object.values(cur)) if (v && typeof v === 'object') stack.push(v);
-          depth++;
-        }
-        return false;
-      } catch { return false; }
-    };
-
-    const onWsMessage = (ev: any) => {
-      try {
-        // any inbound activity proves server is live
-        refreshTimer();
+        clearTimeout(timer);
+        timer = setTimeout(() => finish(false), timeoutMs);
         const data = typeof ev?.data === 'string' ? JSON.parse(ev.data) : ev?.data ?? ev;
-        const eventName = String(data?.event ?? '');
-        console.info('[ws-ack] onWsMessage', eventName, data)
-        if (!eventName) return;
-        if (
-          eventName === 'phx_reply' ||
-          eventName === 'chat:message'
-        ) {
-          if (matchesId(data)) return finish(true);
-        }
-      } catch { /* ignore */ }
-    };
-
-    const onChanEvent = (...args: any[]) => {
-      try {
-        refreshTimer();
-        // adapters may call (payload) or (eventName, payload)
-        const payload = args.length === 1 ? args[0] : args[1];
-        const candidate = (payload?.response ?? payload?.payload ?? payload);
-        if (matchesId(candidate)) return finish(true);
-      } catch { /* ignore */ }
-    };
-
-    // Attach listeners depending on adapter shape
-    const offFns: Array<() => void> = [];
-    let originalOnMessage: any = null;
-    let originalOnMessageWrapped = false;
-
-    // 0) Adapter-style: addMessageListener / removeMessageListener
-    if (typeof socket?.addMessageListener === 'function') {
-      const onAdapterMessage = (packet: any) => {
-        try {
-          refreshTimer();
-          // common packet shapes: { event, payload, ... } or raw { data }
-          const evt = String(packet?.event ?? packet?.data?.event ?? '');
-          const candidate = packet?.payload ?? packet?.data ?? packet;
-          if (!evt) return;
-          if (
-            evt === 'phx_reply' ||
-            evt === 'chat:message'
-          ) {
-            if (matchesId(candidate)) return finish(true);
-          }
-        } catch { /* noop */ }
-      };
-
-      try {
-        const off = socket.addMessageListener(onAdapterMessage);
-        if (typeof off === 'function') {
-          offFns.push(() => { try { off(); } catch {} });
-        } else if (typeof socket.removeMessageListener === 'function') {
-          offFns.push(() => { try { socket.removeMessageListener(onAdapterMessage); } catch {} });
+        try { dbg('waitForAck/ws', { data }); } catch {}
+        const inner = data.event === 'forward' ? data.payload : data;
+        const innerEvent = inner?.event;
+        const innerPayload = inner?.payload ?? inner;
+        if (innerEvent === 'chat:message' && matchesId(innerPayload)) {
+          return finish(true);
         }
       } catch {}
-    }
+    };
 
-    // 1) Native WebSocket (stricter detection to avoid adapter lookalikes)
-    const looksLikeNativeWS = (
-      typeof socket?.send === 'function' &&
-      typeof socket?.close === 'function' &&
-      typeof socket?.addEventListener === 'function' &&
-      ('onopen' in (socket ?? {})) &&
-      ('readyState' in (socket ?? {}))
-    );
-    if (looksLikeNativeWS) {
-        try { if (process.env.NODE_ENV !== 'production') console.info('[ws-ack] native WebSocket detected'); } catch {}
-        try { socket.addEventListener('message', onWsMessage as any); } catch {}
-    }
-    // 1.5) If the channel is nested (socket.channel), try there too
-    const chan = (socket && socket.channel) ? socket.channel : null;
-    if (chan && typeof chan.addEventListener === 'function') {
-      try { chan.addEventListener('message', onWsMessage as any); } catch {}
-      offFns.push(() => { try { chan.removeEventListener?.('message', onWsMessage as any); } catch {} });
-    }
-    if (chan && typeof chan.on === 'function') {
-      const events = ['phx_reply', 'chat:message'];
-      try {
-        events.forEach((evt) => {
-          try { chan.on(evt, onChanEvent as any); } catch {}
-          offFns.push(() => { try { chan.off?.(evt, onChanEvent as any); } catch {} });
-        });
-      } catch {}
-    }
-
-    // 2) Phoenix channel-like adapter (.on/.off)
-    if (typeof socket?.on === 'function') {
-      const events = ['phx_reply', 'chat:message'];
-      try {
-        events.forEach((evt) => {
-          try { socket.on(evt, onChanEvent as any); } catch {}
-          offFns.push(() => { try { socket.off?.(evt, onChanEvent as any); } catch {} });
-        });
-      } catch {}
-      // wildcard hook if adapter supports it
-      if (typeof (socket as any).onAny === 'function') {
-        try {
-          (socket as any).onAny(onChanEvent as any);
-          offFns.push(() => { try { (socket as any).offAny?.(onChanEvent as any); } catch {} });
-        } catch {}
+    // Phoenix channel 'on' handler
+    const chanListener = (payload: any, eventName?: string) => {
+      try { dbg('waitForAck/chan', { payload, eventName }); } catch {}
+      clearTimeout(timer);
+      timer = setTimeout(() => finish(false), timeoutMs);
+      let evt = eventName;
+      let pl = payload;
+      if (payload?.event === 'forward' && payload.payload) {
+        evt = payload.payload.event;
+        pl = payload.payload.payload ?? payload.payload;
       }
-    }
+      if (evt === 'chat:message' && matchesId(pl)) return finish(true);
+    };
 
-    // 3) Single-callback adapters (wrap onmessage)
-    if (!socket?.addEventListener && !socket?.on && 'onmessage' in (socket ?? {})) {
+    // Attach listeners for WebSocket and Phoenix channel
+    const looksLikeWS = typeof socket?.addEventListener === 'function' && typeof socket?.send === 'function';
+    if (looksLikeWS) {
       try {
-        originalOnMessage = socket.onmessage ?? null;
-        socket.onmessage = (ev: any) => {
-          try { onWsMessage(ev); } catch {}
-          try { return originalOnMessage?.call(socket, ev); } catch {}
-        };
-        originalOnMessageWrapped = true;
+        socket.addEventListener('message', wsListener);
+        cleanupFns.push(() => { try { socket.removeEventListener('message', wsListener); } catch {} });
       } catch {}
     }
 
-    // 4) Provider-level forward bus (PhoenixSocketService style)
-    if (socket && typeof socket.onForward === 'function') {
+    if (typeof socket?.on === 'function') {
       try {
-        socket.onForward(onChanEvent as any);
-        offFns.push(() => { try { socket.offForward?.(onChanEvent as any); } catch {} });
+        socket.on('chat:message', (p: any) => chanListener(p, 'chat:message'));
+        socket.on('forward', (p: any) => chanListener(p, 'forward'));
+        cleanupFns.push(() => {
+          try { socket.off('chat:message', chanListener as any); } catch {}
+          try { socket.off('forward', chanListener as any); } catch {}
+        });
       } catch {}
     }
 
-    // Kick off liveness timer
-    refreshTimer();
+    // Generic adapter hooks
+    // 4) socket.onMessage((packet) => ...)  -> returns unsubscribe
+    if (typeof (socket as any)?.onMessage === 'function') {
+      try {
+        onMessageUnsub = (socket as any).onMessage((packet: any) => wsListener(packet));
+      } catch {}
+    }
+
+    // 5) socket.addMessageListener(cb) / removeMessageListener(cb)
+    if (typeof (socket as any)?.addMessageListener === 'function') {
+      addMsgCb = (packet: any) => wsListener(packet);
+      try { (socket as any).addMessageListener(addMsgCb); } catch {}
+      cleanupFns.push(() => {
+        try { (socket as any)?.removeMessageListener?.(addMsgCb!); } catch {}
+      });
+    }
+
+    // 6) socket.onAny((event, payload) => ...) / socket.offAny(handler)
+    if (typeof (socket as any)?.onAny === 'function') {
+      anyHandler = (evt: any, payload: any) => chanListener(payload, String(evt));
+      try { (socket as any).onAny(anyHandler); } catch {}
+      cleanupFns.push(() => { try { (socket as any)?.offAny?.(anyHandler!); } catch {} });
+    }
+
+    // Nested channel (for socket.channel)
+    const channel = socket?.channel;
+    if (channel && typeof channel.on === 'function') {
+      channel.on('chat:message', (p: any) => chanListener(p, 'chat:message'));
+      channel.on('forward', (p: any) => chanListener(p, 'forward'));
+    }
+    if (channel && typeof channel.addEventListener === 'function') {
+      channel.addEventListener('message', wsListener);
+    }
+    // Timer for fallback
+    timer = setTimeout(() => finish(false), timeoutMs);
   });
 }
 
@@ -345,7 +305,7 @@ export function sendRoomUpdateEvent(
 }
 
 /** Centralized send-message flow used by PhoenixSocketProvider */
-export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePayload) {
+export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePayload): Promise<{ id: string; sent: boolean; acked: boolean; } | undefined> {
     const {roomId,  peerPublicKeyHex, socket} = deps;
 
     try {
@@ -408,6 +368,7 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
                 }
             }
         }
+
         // If encrypted content differs, mutate the single packet before sending
         if (finalContent !== data.message && p) {
             p.content = finalContent;
@@ -416,8 +377,8 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
                 deps.store?.commitStatus?.(roomId, String(p.id), p.status, { content: p.content });
             } catch {}
         }
-        console.info('[send-message] send', p);
         const sent = wsSend(socket, createEvent('chat:message', p));
+        dbg('chat:message sent?', { roomId, id: p.id, sent });
         try {
             if (sent) deps.sentSet?.add(String(p.id));
             deps.onAfterSend?.();
@@ -426,6 +387,7 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
         if (sent) {
             try { acked = await waitForAck(socket, String(messageId), 4000); } catch {}
         }
+        dbg('chat:message ack?', { id: messageId, acked });
         // Notify UI of final status:
         // - If not sent at transport level => failed
         // - If sent but no ACK => keep 'pending' (server broadcast will set to 'sent')
@@ -455,5 +417,4 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
     } catch (ignored) {
     }
     return;
-
 }

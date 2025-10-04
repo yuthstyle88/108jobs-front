@@ -13,7 +13,7 @@ import type {ChatMessage} from "lemmy-js-client";
 import {
     buildMessageSignature,
     ChatTypingDetail,
-    cleanupFetch,
+    cleanupFetch, dbg,
     maybeHandleReadReceipt,
     maybeHandleStatusChange,
     mergeNewMessages,
@@ -72,7 +72,6 @@ export function createHandleWSMessage(deps: HandlerDeps) {
         readAckRef,
         ackCooldownRef,
     } = deps;
-    console.log("[ws] createHandleWSMessage", {roomId, localUserId});
     const meId = Number(localUserId);
     const roomIdStr = String(roomId);
 
@@ -80,23 +79,21 @@ export function createHandleWSMessage(deps: HandlerDeps) {
         let payload: any;
         try {
             payload = unwrapPhoenixFrame(event);
-
             if (!isValidIncomingChatPayload(payload)) {
                 // Keep log lightweight; the permissive mapper below will try its best.
                 try { console.debug("[ws] payload failed strict validation; attempting permissive mapping"); } catch {}
             }
             // Normalize once only
             const env: any = normalizePhoenixEnvelope(payload, roomIdStr);
-
+            try { markPeerActive(); } catch {}
             // 1) status-change → refresh & return
-            if (await maybeHandleStatusChange(env, roomIdStr, setRefreshRoomData, markPeerActive)) {
+            if (await maybeHandleStatusChange(env, roomIdStr, setRefreshRoomData)) {
                 return null as any;
             }
 
             // 2) typing → DOM + optional callback
             const typingInfo = parseTypingDetail(env, roomIdStr, meId);
             if (typingInfo) {
-                try { markPeerActive(); } catch {}
                 try { emitChatTyping(typingInfo); } catch {}
                 try { onRemoteTyping?.(typingInfo); } catch {}
             }

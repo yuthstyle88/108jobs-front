@@ -176,48 +176,28 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         setCurrentRoom({...refreshRoomData});
     }, [refreshRoomData]);
 
-    // After commit, propagate the last incoming message to ChatRooms context and auto-scroll for receiver
-    useEffect(() => {
-        if (isFetching) return;
-        const d = latestIncomingRef.current;
-        if (!d) return;
-
-        try {
-            if (d.senderId !== Number(localUser.id)) {
-                scrollToLatestSoon();
-            }
-            try {
-                const isUnread = d.senderId !== Number(localUser.id) && !atBottomRef.current;
-                emitChatNewMessage({
-                    roomId: d.roomId,
-                    senderId: d.senderId,
-                    id: `${d.timestamp}:${d.senderId}`,
-                    content: d.content,
-                    createdAt: d.timestamp,
-                    status: 'pending'
-                });
-            } catch {
-            }
-        } finally {
-            latestIncomingRef.current = null;
-        }
-    }, [messages, isFetching, currentRoom]);
-
-    // Mark this room as active and mark as read on mount
+    // Mark active + read, and notify peer on join/leave (single source of truth)
     useEffect(() => {
         try {
             setActiveRoomId(roomId);
             markRoomRead(roomId);
             markSeen(roomId);
-        } catch {
-        }
+            // announce enter immediately on join
+            if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('chat:status-change', { detail: { roomId, status: 'room:enter' } }));
+            }
+        } catch {}
         return () => {
             try {
-                setActiveRoomId('');
-            } catch {
-            }
+                // announce leave on unmount / room change
+                if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('chat:status-change', { detail: { roomId, status: 'room:leave' } }));
+                }
+            } catch {}
+            try { setActiveRoomId(''); } catch {}
         };
-    }, [roomId, setActiveRoomId, markRoomRead]);
+    }, [roomId, setActiveRoomId, markRoomRead, markSeen]);
+
 
     const currentStatus = useStateMachineStore((s) => s.state);
     const statusBeforeCancel = useStateMachineStore((s) => s.statusBeforeCancel);
@@ -307,16 +287,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     // Shim for legacy sendRoomUpdate: forward as a structured chat message, new signature
     const sendRoomUpdate = useCallback((roomIdArg: string, update: Record<string, any>) => {
         try {
-            const payload = {type: 'status-change', ...update};
-            // fire-and-forget to match void signature; rely on ws pipeline
-            sendMessage({message: JSON.stringify(payload), senderId: Number(localUser.id) || 0});
-        } catch (e) {
-            try {
-                console.error('[sendRoomUpdate] failed', e);
-            } catch {
+            // Forward a room status-change via DOM event; socket layer will bridge this to server
+            if (typeof window !== 'undefined') {
+                const detail = { roomId: roomIdArg, ...update };
+                window.dispatchEvent(new CustomEvent('chat:status-change', { detail }));
             }
+        } catch (e) {
+            try { console.error('[sendRoomUpdate] failed', e); } catch {}
         }
-    }, [sendMessage]);
+    }, []);
 
     // Centralize all workflow actions into a dedicated hook
     const {

@@ -504,7 +504,7 @@ export async function fetchHistoryPage(
     for (const view of items) {
         const m = {
             ...view.message,
-            room_id: view.room?.id || view.message?.room_id,
+            roomId: view.room?.id || view.message?.roomId,
         };
 
         const mapped = await mapIncomingToChatMessage(m, {

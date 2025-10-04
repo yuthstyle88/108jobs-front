@@ -22,7 +22,15 @@ export interface RealtimeChannelAdapter {
 }
 
 const DEV = typeof process !== "undefined" && process.env.NODE_ENV !== "production";
-const isInternalEvent = (ev?: string) => !!ev && ev.startsWith("phx_");
+const isInternalEvent = (ev?: string) : boolean => {
+  if (!ev) return false;
+  return (
+    ev.startsWith("chan_reply") ||       // Phoenix push replies
+    ev === "heartbeat" ||
+    ev === "presence_state" ||
+    ev === "presence_diff"
+  );
+};
 
 class PhoenixChannelHub {
   private static instance: PhoenixChannelHub | null = null;
@@ -123,11 +131,16 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
 
   // Unify forward → adapter.onmessage with normalized envelope
     const forward = (event: string, topic: string, payload: any) => {
-        if (!event || isInternalEvent(event)) return;
+        // ignore any Phoenix reply noise that shouldn't reach the app layer
+
+        if (/^chan_reply/.test(event)) return;
+        const isPass = isInternalEvent(event);
+        if (!event || isPass) return;
 
         // --- unwrap server envelope like: {event:"chat:message", payload:{...}} ---
         let outEvent = event;
-        let outPayload = payload;
+        // default to an empty object when payload is null/undefined
+        let outPayload: any = (payload == null ? {} : payload);
 
         if (
             payload &&
@@ -135,9 +148,10 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
             typeof (payload as any).event === "string"
         ) {
             outEvent = String((payload as any).event);
-            outPayload = (payload as any).payload ?? payload;
+            const inner = (payload as any).payload;
+            outPayload = (inner == null ? {} : inner);
         }
-
+        console.log('[phoenix] forward2', { event, topic, payload });
         const env = { event: outEvent, topic: topic.replace(/^room:/, ""), payload: outPayload };
         try { adapter.onmessage?.({ data: JSON.stringify(env) }); } catch {}
     };

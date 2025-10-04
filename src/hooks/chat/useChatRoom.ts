@@ -11,7 +11,16 @@ import {
 import {ChatRoomId, LocalUser, LocalUserId} from "lemmy-js-client";
 import {useChatStore} from "@/store/chatStore"
 import {makeReadAckEmitter} from "@/utils/chat/socket-emitter";
-import {emitWsReconnected} from "@/events/chat";
+import {emitChatTyping, emitWsReconnected} from "@/events/chat";
+
+// Safe DOM CustomEvent dispatcher
+function dispatchDomEvent(name: string, detail: any) {
+  try {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent(name, { detail }));
+    }
+  } catch {}
+}
 
 const TYPING_DECAY_MS = 4000;
 const PEER_ACTIVE_DECAY_MS = 20000;
@@ -35,7 +44,10 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
     const peerActiveDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const markPeerActive = useCallback(() => {
         peerActiveRef.current = true;
+        // Notify DOM listeners that peer is currently active in this room
+        emitChatTyping({ roomId, senderId: 3 , typing: true });
         if(peerActiveDecayRef.current) {
+         console.log('[peerActiveDecay] clearTimeout', peerActiveDecayRef.current);
             try {
                 clearTimeout(peerActiveDecayRef.current);
             } catch {
@@ -43,6 +55,8 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
         }
         peerActiveDecayRef.current = setTimeout(() => {
             peerActiveRef.current = false;
+            // Notify DOM listeners that peer is no longer active
+            dispatchDomEvent('chat:peer-active', { roomId, active: false });
         }, PEER_ACTIVE_DECAY_MS);
     }, []);
 
@@ -86,8 +100,8 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
             if(detail.roomId !== roomId) return;
             const me = Number(localUser?.id) || 0;
             if(detail.senderId === me) return; // ignore self
-            console.info('[typing] received', {roomId, senderId: detail.senderId, typing: detail.typing});
             setIsPartnerTyping(detail.typing);
+            dispatchDomEvent('chat:partner-typing', { roomId, senderId: Number(detail.senderId) || 0, typing: !!detail.typing });
             if(detail.typing) {
                 if(typingDecayRef.current) {
                     try {
@@ -97,6 +111,7 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
                 }
                 typingDecayRef.current = setTimeout(() => {
                     setIsPartnerTyping(false);
+                    dispatchDomEvent('chat:partner-typing', { roomId, senderId: Number(detail.senderId) || 0, typing: false });
                 }, TYPING_DECAY_MS);
             }
             onRemoteTyping?.(detail);
