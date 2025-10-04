@@ -1,4 +1,4 @@
-import type { ChatMessage } from "lemmy-js-client";
+import type {ChatMessage} from "lemmy-js-client";
 import {UserService} from "@/services";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import {encrypt} from "@/lib/web-crypto";
@@ -16,7 +16,7 @@ export function createEvent<T>(
     event: PhoenixEvent,
     payload?: T,
 ): PhoenixPacket<T> & {
-    room_id?: string;
+    roomId?: string;
     timestamp: string;
 } {
     const packet: any = {
@@ -99,7 +99,8 @@ function wsSend(socket: any, obj: any) {
     }
     // 3) Raw WebSocket API
     if (typeof socket.send === 'function') {
-      if (typeof socket.readyState === 'number' && socket.readyState !== WebSocket.OPEN) return false;
+      const canCheckReady = typeof (globalThis as any).WebSocket !== 'undefined' && typeof socket.readyState === 'number';
+      if (canCheckReady && socket.readyState !== (globalThis as any).WebSocket.OPEN) return false;
       socket.send(JSON.stringify({ event, payload }));
       return true;
     }
@@ -115,7 +116,6 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
     const idToMatch = String(id);
     let done = false;
     let timer: any = null;
-    console.log('socket',socket);
     const refreshTimer = () => {
       try { if (timer) clearTimeout(timer); } catch {}
       timer = setTimeout(() => finish(false), timeoutMs);
@@ -326,7 +326,7 @@ export function sendReadReceipt(deps: SendEventDeps, lastMessageId: string) {
     const { socket } = deps;
     const packet = createEvent(
         "chat:read",
-        { last_read_message_id: String(lastMessageId || "") },
+        { lastReadMessageId: String(lastMessageId || "") },
     );
     wsSend(socket, packet);
 }
@@ -366,6 +366,7 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
         emitChatNewMessage({
             roomId,
             id: p.id,
+            senderId: data.senderId,
             content: p.content,
             createdAt: p.createdAt,
             status: p.status,
@@ -445,6 +446,7 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
             emitChatNewMessage({
                 roomId,
                 id: String(updated.id),
+                senderId: data.senderId,
                 content: updated.content,
                 createdAt: p.createdAt,
                 status: updated.status,

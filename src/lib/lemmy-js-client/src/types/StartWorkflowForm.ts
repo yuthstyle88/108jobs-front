@@ -1,4 +1,4 @@
-import type { ChatRoomId } from "./ChatRoomId";
+import type {ChatRoomId} from "./ChatRoomId";
 
 // Matches backend StartWorkflow with camelCase fields
 export type StartWorkflowForm = {

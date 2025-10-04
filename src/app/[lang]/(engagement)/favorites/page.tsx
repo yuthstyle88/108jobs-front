@@ -1,8 +1,5 @@
 "use client";
-import JobCard from "@/components/JobCard";
-import JobCardSkeleton from "@/components/ui/JobCardSkeleton";
 import {LanguageFile} from "@/constants/language";
-import {FavoriteJob} from "@/types/favorite";
 import {getNamespace} from "@/utils/i18nHelper";
 
 const Favorites = () => {

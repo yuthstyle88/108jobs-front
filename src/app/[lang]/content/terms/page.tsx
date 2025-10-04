@@ -1,9 +1,9 @@
 "use client";
-import { AssetIcon } from "@/constants/icons";
+import {AssetIcon} from "@/constants/icons";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import {useState} from "react";
+import {useTranslation} from "react-i18next";
 
 const TermAndConditions = () => {
     const { t } = useTranslation();

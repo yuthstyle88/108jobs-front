@@ -1,6 +1,5 @@
-import { useCallback, useState } from 'react';
-import { HttpService } from '@/services/HttpService';
-import { REQUEST_STATE } from '@/services/HttpService';
+import {useCallback, useState} from 'react';
+import {HttpService, REQUEST_STATE} from '@/services/HttpService';
 
 export type UploadedFile = { fileUrl: string; fileType: string; fileName: string } | null;
 

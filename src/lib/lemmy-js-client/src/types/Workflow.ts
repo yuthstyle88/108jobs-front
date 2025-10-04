@@ -1,8 +1,8 @@
-import type { WorkflowId } from "./WorkflowId";
-import type { PostId } from "./PostId";
-import type { WorkflowStatus } from "./WorkflowStatus";
-import type { ChatRoomId } from "./ChatRoomId";
-import type { BillingId } from "./BillingId";
+import type {WorkflowId} from "./WorkflowId";
+import type {PostId} from "./PostId";
+import type {WorkflowStatus} from "./WorkflowStatus";
+import type {ChatRoomId} from "./ChatRoomId";
+import type {BillingId} from "./BillingId";
 
 // Matches backend Workflow with camelCase fields
 export type Workflow = {

@@ -1,7 +1,7 @@
 "use client";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { UseFormRegisterReturn } from "react-hook-form";
+import {faEye, faEyeSlash} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {UseFormRegisterReturn} from "react-hook-form";
 
 type InputProps = {
     tag?: "input" | "textarea"; // Added to support textarea

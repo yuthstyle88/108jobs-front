@@ -5,7 +5,7 @@ import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {formatDateToLong} from "@/utils";
 import {faEdit} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {ChevronLeft, ChevronRight, X, MessageCircle} from "lucide-react";
+import {ChevronLeft, ChevronRight, MessageCircle, X} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React, {useEffect, useRef, useState} from "react";

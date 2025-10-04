@@ -1,7 +1,7 @@
-import type { ChatRoom } from "./ChatRoom";
-import type { ChatParticipant } from "./ChatParticipant";
-import type { Post } from "./Post";
-import type { Comment } from "./Comment";
+import type {ChatRoom} from "./ChatRoom";
+import type {ChatParticipant} from "./ChatParticipant";
+import type {Post} from "./Post";
+import type {Comment} from "./Comment";
 
 /**
  * A chat room view, including its participants.

@@ -12,7 +12,7 @@ import {useIsoData} from "@/hooks/profile-api/useIsoData";
 import {OAuthProvider} from "lemmy-js-client";
 import {handleUseOAuthProvider} from "@/components/Authentication/LoginForm/handlers";
 import {useSearchParams} from "next/navigation";
-import { getAppName } from "@/utils/appConfig";
+import {getAppName} from "@/utils/appConfig";
 
 // Form schema definition
 const createRegisterSchema = (t: any) => z

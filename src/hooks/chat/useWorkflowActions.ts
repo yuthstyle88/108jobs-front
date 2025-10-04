@@ -1,5 +1,5 @@
 import {useCallback} from 'react';
-import {REQUEST_STATE, HttpService} from '@/services/HttpService';
+import {HttpService, REQUEST_STATE} from '@/services/HttpService';
 import {useWorkflow} from '@/hooks/chat/useWorkflow';
 import {getLatestProposedQuoteSeq} from '@/utils/chat/message';
 import type {ApproveQuotationForm, CreateInvoiceForm, LocalUser} from 'lemmy-js-client';

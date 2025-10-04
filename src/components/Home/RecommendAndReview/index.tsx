@@ -12,7 +12,7 @@ import "../../../app/styles.css";
 import {Navigation} from "swiper/modules";
 import {LandingImage, ProfileImage} from "@/constants/images";
 import {useTranslation} from "react-i18next";
-import { getAppName } from "@/utils/appConfig";
+import {getAppName} from "@/utils/appConfig";
 
 const CustomNavigation = () => {
   const swiper = useSwiper();

@@ -1,10 +1,7 @@
-import {
-    IsoData,
-    RouteData,
-    ThemeColor,
-} from "@/utils/types";
+import {IsoData, RouteData, ThemeColor,} from "@/utils/types";
 import {isBrowser} from "@/utils/browser";
 import Toastify from "toastify-js";
+
 export function isAuthPath(pathname: string) {
   return /^\/(create_.*?|inbox|settings|admin|reports|registration-applications|activitypub.*?)\b/g.test(
     pathname,

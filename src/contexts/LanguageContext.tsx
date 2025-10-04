@@ -4,7 +4,7 @@ import {LANGUAGE_COOKIE, VALID_LANGUAGES} from "@/constants/language";
 import {I18NextService} from "@/services/I18NextService";
 import {I18nextProvider} from "react-i18next";
 import {getClientCurrentLanguage} from "@/actions/getClientCurrentLanguage";
-import { isBrowser } from "@/utils/browser";
+import {isBrowser} from "@/utils/browser";
 
 interface LanguageContextType {
   lang: string;

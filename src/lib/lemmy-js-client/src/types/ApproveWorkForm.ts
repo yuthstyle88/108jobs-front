@@ -1,4 +1,4 @@
-import type { WorkflowId } from "./WorkflowId";
+import type {WorkflowId} from "./WorkflowId";
 import {ChatRoomId} from "./ChatRoomId";
 import {BillingId} from "./BillingId";
 

@@ -1,13 +1,13 @@
-import { CategoriesIcon } from "@/constants/icons";
-import { CommunityNodeView } from "lemmy-js-client";
-import { catalogIcons } from "@/types/catalogIcon";
-import { faArrowRight, faBars } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {CategoriesIcon} from "@/constants/icons";
+import {CommunityNodeView} from "lemmy-js-client";
+import {catalogIcons} from "@/types/catalogIcon";
+import {faArrowRight, faBars} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { toCamelCaseLastSegment } from "@/utils/helpers";
+import React, {useState} from "react";
+import {useTranslation} from "react-i18next";
+import {toCamelCaseLastSegment} from "@/utils/helpers";
 
 type Props = {
     serviceCatalogs: CommunityNodeView[];

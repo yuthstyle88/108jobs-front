@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
 /**
  * Simple network status hook using the browser's navigator.onLine and

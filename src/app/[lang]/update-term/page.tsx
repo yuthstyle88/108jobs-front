@@ -5,7 +5,7 @@ import {CategoriesImage} from "@/constants/images";
 import Image from "next/image";
 import {useState} from "react";
 import {AcceptForm} from "@/components/Authentication/AcceptForm";
-import { getAppName } from "@/utils/appConfig";
+import {getAppName} from "@/utils/appConfig";
 import {useTranslation} from "react-i18next";
 
 

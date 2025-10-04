@@ -1,5 +1,5 @@
 import {ChatRoomId} from "./ChatRoomId";
-import type { PostId } from "./PostId";
+import type {PostId} from "./PostId";
 
 export type ChatRoom = {
     id: ChatRoomId;

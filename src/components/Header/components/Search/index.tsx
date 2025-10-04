@@ -1,10 +1,10 @@
 "use client";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import {faSearch} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useRouter, useSearchParams} from "next/navigation";
+import {useForm} from "react-hook-form";
+import {useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
 
 type Props = {
     showSearch?: boolean;

@@ -5,7 +5,7 @@ import {LoginResponse, MyUserInfo} from "lemmy-js-client";
 import {HttpService} from "./index";
 import {toast} from "sonner";
 import {authCookieName} from "@/utils/config";
-import {VALID_LANGUAGES, LANGUAGE_COOKIE} from "@/constants/language";
+import {LANGUAGE_COOKIE, VALID_LANGUAGES} from "@/constants/language";
 
 export interface Claims {
   sub: number;

@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 // IMPORTANT: Adjust the import path if your service lives elsewhere
-import { getChannelAdapter } from '@/services/PhoenixSocketService';
-import {getReceiverIdFromRoom} from "@/utils/chat";
+import {getChannelAdapter} from '@/services/PhoenixSocketService';
 
 export type WebSocketStatus = 'idle' | 'connecting' | 'connected' | 'disconnected' | 'error';
 

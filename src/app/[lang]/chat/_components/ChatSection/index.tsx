@@ -190,6 +190,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 const isUnread = d.senderId !== Number(localUser.id) && !atBottomRef.current;
                 emitChatNewMessage({
                     roomId: d.roomId,
+                    senderId: d.senderId,
                     id: `${d.timestamp}:${d.senderId}`,
                     content: d.content,
                     createdAt: d.timestamp,

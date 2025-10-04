@@ -2,8 +2,8 @@
 
 import React from "react";
 import Modal from "@/components/ui/Modal";
-import { CircleAlert } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import {CircleAlert} from "lucide-react";
+import {useTranslation} from "react-i18next";
 
 export type ConfirmActionModalProps = {
   isOpen: boolean;

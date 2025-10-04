@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import {create} from 'zustand';
 
 // Each Room represents a 1-to-1 conversation, so it has exactly one participant besides the current user.
 export type Room = {

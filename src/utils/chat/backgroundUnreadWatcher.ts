@@ -1,9 +1,8 @@
 "use client";
 
-import { getChannelAdapter } from "@/services/PhoenixSocketService";
-import { useRoomsStore } from "@/store/roomsStore";
-import { useUnreadStore, incrementForIncoming } from "@/store/unreadStore";
-import {getReceiverIdFromRoom} from "@/utils/chat/chatSocketUtils";
+import {getChannelAdapter} from "@/services/PhoenixSocketService";
+import {useRoomsStore} from "@/store/roomsStore";
+import {incrementForIncoming, useUnreadStore} from "@/store/unreadStore";
 
 // Debug toggle: set window.__DEBUG_BG_UNREAD = true or localStorage.DEBUG_BG_UNREAD = '1' to enable logs
 const DEBUG_KEY = 'DEBUG_BG_UNREAD';
@@ -130,7 +129,7 @@ function reconcileRooms(st: BGState) {
                     if (seen.has(messageId)) { dbg('skip: duplicate', { roomId, messageId }); return; }
                     seen.add(messageId);
 
-                    const sender = payload.sender_id ?? payload.senderId;
+                    const sender = payload.senderId;
                     if (selfId != null && sender != null && String(sender) === selfId) { dbg('skip: from self', { roomId, messageId, sender }); return; }
 
                     const activeNow = useUnreadStore.getState().activeRoomId;

@@ -1,4 +1,4 @@
-import { isBrowser } from "@/utils/browser";
+import {isBrowser} from "@/utils/browser";
 
 export const __DEV__ = process.env.NODE_ENV !== "production";
 

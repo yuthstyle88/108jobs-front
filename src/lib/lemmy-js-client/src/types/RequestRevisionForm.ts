@@ -1,4 +1,4 @@
-import type { WorkflowId } from "./WorkflowId";
+import type {WorkflowId} from "./WorkflowId";
 
 // Matches backend RequestRevisionForm with camelCase fields
 // #[serde(rename_all = "camelCase")]

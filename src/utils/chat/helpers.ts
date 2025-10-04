@@ -1,5 +1,5 @@
 import {TYPING_EVENT_NAMES} from "@/utils/chat/types";
-import type { RefObject } from "react";
+import type {RefObject} from "react";
 import {HttpService} from "@/services";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {emitReadReceipt} from "@/events/chat";
@@ -18,20 +18,19 @@ export function parseTypingDetail(env: any, fallbackRoomId: string, localUserId:
         // Prefer normalized payload
         const p: any = env?.payload ?? env;
 
-        // sender id (payload → contentParsed → topic fallback)
-        let senderIdNum = Number(p?.sender_id ?? p?.senderId ?? 0);
+        // sender id (payload → contentParsed)
+        let senderIdNum = Number(p?.senderId ?? 0);
         if (!senderIdNum) {
             const cp: any = env?.contentParsed;
-            if (cp) senderIdNum = Number(cp?.senderId ?? cp?.sender_id ?? 0);
+            if (cp) senderIdNum = Number(cp?.senderId ?? 0);
         }
         if (!senderIdNum || senderIdNum === Number(localUserId)) return null;
 
-        // typing flag
-        let typingFlag: boolean | undefined = typeof p?.typing === 'boolean' ? p.typing : undefined;
-        if (typeof typingFlag !== 'boolean') {
-            const cp: any = env?.contentParsed;
-            if (cp && typeof cp.typing === 'boolean') typingFlag = cp.typing;
-        }
+        // typing flag (payload → contentParsed → parse content → fallback from event name)
+        let typingFlag: boolean | undefined =
+            typeof p?.typing === 'boolean' ? p.typing :
+            (typeof env?.contentParsed?.typing === 'boolean' ? env.contentParsed.typing : undefined);
+
         if (typeof typingFlag !== 'boolean') {
             try {
                 const c: any = p?.content;
@@ -75,11 +74,11 @@ export async function maybeHandleStatusChange(env: any, roomId: string, setRefre
 export function maybeHandleReadReceipt(env: any, fallbackRoomId: string): boolean {
     try {
         const evName = String(env?.event || env?.content || "");
-        if (evName !== "chat:read-receipt" && evName !== "chat:read") return false;
-        const room_id = env?.room_id || env?.roomId || env?.topic || fallbackRoomId;
-        const last_read_message_id = env?.last_read_message_id || env?.lastReadMessageId;
-        const reader_id = Number(env?.reader_id ?? env?.readerId ?? 0);
-        emitReadReceipt(String(room_id), String(last_read_message_id || ""), reader_id);
+        if (evName !== "chat:read") return false;
+        const roomId = env?.roomId || env?.topic || fallbackRoomId;
+        const lastReadMessageId = env?.lastReadMessageId;
+        const readerId = Number(env?.readerId ?? 0);
+        emitReadReceipt(String(roomId), String(lastReadMessageId || ""), readerId);
         return true;
     } catch { return false; }
 }
@@ -97,7 +96,7 @@ export function mergeNewMessages(
 }
 
 // ---- helpers: auto-ack ----
-export function tryFlushAutoAck(handleWSMessageFn: any, roomId: string, readAckRef: RefObject<((lastId: string)=>void) | null>, ackCooldownRef: RefObject<number | undefined>) {
+export function tryFlushAutoAck(handleWSMessageFn: any, roomIdStr: string, readAckRef: RefObject<((lastId: string) => void) | null>, ackCooldownRef: RefObject<number | undefined>) {
     try {
         const batchId = (handleWSMessageFn as any)._batchAckLastId as string | undefined;
         (handleWSMessageFn as any)._batchAckLastId = null;
@@ -138,13 +137,13 @@ export function cleanupFetch(setIsFetching?: (b:boolean)=>void, fetchTimeoutRef?
 
 export function buildMessageSignature(msg: any): string {
     // Fast path: prefer stable ids first
-    const id = msg?.id ?? msg?.msg_ref_id ?? msg?.messageId;
+    const id = msg?.id ?? "";
     if (id != null) return String(id);
 
     // Fallback: composite signature (room|sender|ts|content)
-    const room = msg?.roomId ?? msg?.room_id ?? "";
-    const sender = msg?.senderId ?? msg?.sender_id ?? "";
-    const ts = msg?.createdAt ?? msg?.created_at ?? "";
+    const room = msg?.roomId  ?? "";
+    const sender = msg?.senderId ?? "";
+    const ts = msg?.createdAt ?? "";
     const c = msg?.content;
     const content = typeof c === "string" ? c : (c == null ? "" : JSON.stringify(c));
 

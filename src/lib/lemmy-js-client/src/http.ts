@@ -15,8 +15,11 @@ import {
 } from "@tsoa/runtime";
 import type {
     AdminListUsersI,
+    ChatHistoryQueryI,
     CommunityIdQueryI,
     DeleteImageParamsI,
+    GetBankAccountsI,
+    GetBillingByRoomQueryI,
     GetCommentI,
     GetCommentsI,
     GetCommunityI,
@@ -36,10 +39,10 @@ import type {
     ListMediaI,
     ListNotificationsI,
     ListPersonContentI,
+    ListPersonCreatedI,
     ListPersonHiddenI,
     ListPersonLikedI,
     ListPersonReadI,
-    ListPersonCreatedI,
     ListPersonSavedI,
     ListPostLikesI,
     ListRegistrationApplicationsI,
@@ -51,7 +54,6 @@ import type {
     UploadImage,
 } from "./other_types";
 import {VERSION} from "./other_types";
-import type {GetBankAccountsI} from "./other_types";
 import type {AddAdmin} from "./types/AddAdmin";
 import type {AddAdminResponse} from "./types/AddAdminResponse";
 import type {AddModToCommunity} from "./types/AddModToCommunity";
@@ -73,7 +75,6 @@ import type {BlockCommunity} from "./types/BlockCommunity";
 import type {BlockCommunityResponse} from "./types/BlockCommunityResponse";
 import type {BlockPerson} from "./types/BlockPerson";
 import type {BlockPersonResponse} from "./types/BlockPersonResponse";
-import type {CertificatesResponse} from "./types/Certificate";
 import type {ChangePassword} from "./types/ChangePassword";
 import type {CommentReportResponse} from "./types/CommentReportResponse";
 import type {CommentResponse} from "./types/CommentResponse";
@@ -155,7 +156,6 @@ import type {HideCommunity} from "./types/HideCommunity";
 import type {HidePost} from "./types/HidePost";
 import type {IdentityCardForm} from "./types/IdentityCardForm";
 import {IdentityCardResponse} from "./types/IdentityCardResponse";
-import type {LanguageProfilesResponse} from "./types/LanguageProfile";
 import type {ListCommentLikes} from "./types/ListCommentLikes";
 import type {ListCommentLikesResponse} from "./types/ListCommentLikesResponse";
 import type {ListCommunities} from "./types/ListCommunities";
@@ -226,7 +226,6 @@ import type {Search} from "./types/Search";
 import type {SearchResponse} from "./types/SearchResponse";
 import type {SetDefaultBankAccount} from "./types/SetDefaultBankAccount";
 import type {SiteResponse} from "./types/SiteResponse";
-import type {SkillsResponse} from "./types/Skill";
 import type {SuccessResponse} from "./types/SuccessResponse";
 import type {Tag} from "./types/Tag";
 import type {TaglineResponse} from "./types/TaglineResponse";
@@ -260,13 +259,11 @@ import type {ApproveWorkForm} from "./types/ApproveWorkForm";
 import type {UserKeysResponse} from "./types/UserKeysResponse";
 import type {ChatHistoryQuery} from "./types/ChatHistoryQuery";
 import type {ChatMessagesResponse} from "./types/ChatMessagesResponse";
-import type {ChatHistoryQueryI} from "./other_types";
 import type {Billing} from "./types/Billing";
 import type {GetBillingByRoomQuery} from "./types/GetBillingByRoomQuery";
-import type {GetBillingByRoomQueryI} from "./other_types";
-import type { ScbTokenResponse } from "./types/ScbTokenResponse";
-import type { ScbQrCodeRequest, ScbQrCodeResponse } from "./types/ScbQrCode";
-import type { ScbQrInquiryRequest, ScbQrInquiryResponse } from "./types/ScbQrInquiry";
+import type {ScbTokenResponse} from "./types/ScbTokenResponse";
+import type {ScbQrCodeRequest, ScbQrCodeResponse} from "./types/ScbQrCode";
+import type {ScbQrInquiryRequest, ScbQrInquiryResponse} from "./types/ScbQrInquiry";
 import type {BillingId} from "./types/BillingId";
 
 enum HttpType {

@@ -1,7 +1,7 @@
 import {faComment} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { useTotalUnread } from "@/utils/chat";
+import {useTotalUnread} from "@/utils/chat";
 
 const ChatBadge = () => {
     // Compute unread count from store via chat module

@@ -1,5 +1,5 @@
 import {OAuthProvider, PublicOAuthProvider,} from "lemmy-js-client";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 function getProviderKey(p: PublicOAuthProvider): string {
     const name = (p.displayName || "").toLowerCase();

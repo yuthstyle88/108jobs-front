@@ -1,9 +1,9 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCoins, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { callHttp, isSuccess, REQUEST_STATE } from "@/services/HttpService";
-import type { ScbQrCodeResponse, ScbTokenResponse } from "lemmy-js-client";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCoins, faTimes} from "@fortawesome/free-solid-svg-icons";
+import {useEffect, useRef, useState} from "react";
+import {useTranslation} from "react-i18next";
+import {callHttp, isSuccess, REQUEST_STATE} from "@/services/HttpService";
+import type {ScbQrCodeResponse, ScbTokenResponse} from "lemmy-js-client";
 import LoadingMultiCircle from "@/components/Common/Loading/LoadingMultiCircle";
 
 interface TopUpModalProps {

@@ -36,6 +36,7 @@ export const dispatchPreview = (detail: {
         const createdAt = detail.createdAt || new Date().toISOString();
         emitChatNewMessage({
             roomId: detail.roomId,
+            senderId: detail.senderId,
             id: detail.id,
             content: detail.content,
             createdAt,

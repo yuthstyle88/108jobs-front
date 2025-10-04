@@ -77,6 +77,7 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
                 const tsIso = new Date().toISOString();
                 emitChatNewMessage({
                     roomId,
+                    senderId: localUser.id,
                     id: messageId,
                     content: readable,
                     createdAt: tsIso,
@@ -109,6 +110,7 @@ export function createFlowActions(deps: CreateFlowActionsDeps): FlowActions {
                 const tsIso = new Date().toISOString();
                 emitChatNewMessage({
                     roomId,
+                    senderId: localUser.id,
                     id: messageId,
                     content: readable,
                     createdAt: tsIso,

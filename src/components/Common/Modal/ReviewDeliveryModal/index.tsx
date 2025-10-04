@@ -1,9 +1,8 @@
-import { useTranslation } from 'react-i18next';
-import { v4 as uuidv4 } from 'uuid';
+import {useTranslation} from 'react-i18next';
+import {v4 as uuidv4} from 'uuid';
 import {StatusKey} from "@/components/FreelanceChatFlow";
 import {LocalUserId} from "@/lib/lemmy-js-client/src";
 import React from "react";
-import {getReceiverIdFromRoom} from "@/utils/chat/chatSocketUtils";
 import {emitChatNewMessage} from "@/events/chat";
 
 interface ReviewDeliveryModalProps {
@@ -68,7 +67,6 @@ export const ReviewDeliveryModal: React.FC<ReviewDeliveryModalProps> = ({
                                         content,
                                         id: uuidv4(),
                                         senderId: Number(localUser?.id) || 0,
-                                        receiverId: getReceiverIdFromRoom(roomId),
                                         status: "sent" as const,
                                         createdAt: tsIso,
                                 };

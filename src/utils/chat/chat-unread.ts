@@ -1,7 +1,7 @@
 // Thin indirection layer around unread store to decouple consumers from store implementation
 // Consumers should import from '@/chat' instead of '@/store/unreadStore'
 
-import { useUnreadStore as baseStore } from '@/store/unreadStore';
+import {useUnreadStore as baseStore} from '@/store/unreadStore';
 
 export const useUnreadStore = baseStore;
 

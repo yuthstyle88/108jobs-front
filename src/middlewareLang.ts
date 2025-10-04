@@ -1,6 +1,6 @@
 import {NextRequest, NextResponse} from "next/server";
 import {VALID_LANGUAGES} from "@/constants/language";
-import { getCurrentLanguage } from "@/actions/getCurrentLanguage";
+import {getCurrentLanguage} from "@/actions/getCurrentLanguage";
 
 const PUBLIC_FILE = /\.(.*)$/;
 

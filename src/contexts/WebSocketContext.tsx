@@ -5,9 +5,9 @@
 // so consumers can access a single, shared websocket API.
 // ------------------------------------------------------------
 
-import React, { createContext, useContext } from 'react';
-import { useWebSocket } from '@/hooks/chat/useWebSocket';
-import type { WebSocketAPI, UseWebSocketOptions } from '@/hooks/chat/useWebSocket';
+import React, {createContext, useContext} from 'react';
+import type {UseWebSocketOptions, WebSocketAPI} from '@/hooks/chat/useWebSocket';
+import {useWebSocket} from '@/hooks/chat/useWebSocket';
 
 // ========================= Context Layer =======================
 interface WebSocketContextValue extends WebSocketAPI {}

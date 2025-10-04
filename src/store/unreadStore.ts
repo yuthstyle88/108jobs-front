@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { isBrowser } from "@/utils/browser";
+import {create} from "zustand";
+import {isBrowser} from "@/utils/browser";
 
 // Lightweight unread store with persistence and batching
 export type UnreadState = {

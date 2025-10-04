@@ -1,5 +1,5 @@
 import {Metadata} from "next";
-import { getAppName } from "@/utils/appConfig";
+import {getAppName} from "@/utils/appConfig";
 
 export const defaultMetadata: Metadata = {
   metadataBase: new URL("https://108jobs.com"),

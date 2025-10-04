@@ -1,8 +1,8 @@
-import type { BillingId } from "./BillingId";
-import type { PostId } from "./PostId";
-import type { CommentId } from "./CommentId";
-import type { Coin } from "./Coin";
-import type { BillingStatus } from "./BillingStatus";
+import type {BillingId} from "./BillingId";
+import type {PostId} from "./PostId";
+import type {CommentId} from "./CommentId";
+import type {Coin} from "./Coin";
+import type {BillingStatus} from "./BillingStatus";
 import {LocalUserId} from "./LocalUserId";
 
 // Mirrors backend Billing struct with camelCase keys

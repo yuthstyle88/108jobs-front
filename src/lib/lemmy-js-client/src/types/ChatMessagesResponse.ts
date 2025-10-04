@@ -1,5 +1,5 @@
-import type { ChatMessageView } from "./ChatMessageView";
-import type { PaginationCursor } from "./PaginationCursor";
+import type {ChatMessageView} from "./ChatMessageView";
+import type {PaginationCursor} from "./PaginationCursor";
 
 export type ChatMessagesResponse = {
   results: ChatMessageView[];

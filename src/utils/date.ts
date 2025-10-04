@@ -1,10 +1,10 @@
-import { Locale, setDefaultOptions } from "date-fns";
-import { I18NextService, LanguageService, pickTranslations } from "@/services/I18NextService";
-import { enUS } from "date-fns/locale/en-US";
-import { th } from "date-fns/locale/th";
-import { vi } from "date-fns/locale/vi";
-import { ImportReport } from "@/utils/dynamic-imports";
-import { MyUserInfo } from "lemmy-js-client";
+import {Locale, setDefaultOptions} from "date-fns";
+import {I18NextService, LanguageService, pickTranslations} from "@/services/I18NextService";
+import {enUS} from "date-fns/locale/en-US";
+import {th} from "date-fns/locale/th";
+import {vi} from "date-fns/locale/vi";
+import {ImportReport} from "@/utils/dynamic-imports";
+import {MyUserInfo} from "lemmy-js-client";
 
 export const getLocale = (locale: string | undefined): string => {
     if (!locale) return "en-US";

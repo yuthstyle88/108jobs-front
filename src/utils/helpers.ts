@@ -5,7 +5,8 @@ import {
     GetSiteResponse,
     JobType,
     ListCommunitiesResponse,
-    PaginationCursor, PersonId
+    PaginationCursor,
+    PersonId
 } from "lemmy-js-client";
 import {IncomingHttpHeaders} from "http";
 import * as cookie from "cookie";

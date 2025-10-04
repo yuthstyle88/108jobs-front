@@ -1,4 +1,5 @@
-import { isBrowser } from "@/utils/browser";
+import {isBrowser} from "@/utils/browser";
+
 /**
  * Utility functions for measuring and monitoring performance
  */

@@ -6,8 +6,8 @@
  * - Minimal logging in production (logs only in development)
  * - Proper cleanup to avoid leaks
  */
-import { Socket as PhoenixSocket } from "phoenix";
-import { buildActixWsUrl } from "@/utils/chat/chatSocketUtils";
+import {Socket as PhoenixSocket} from "phoenix";
+import {buildActixWsUrl} from "@/utils/chat/chatSocketUtils";
 
 export interface RealtimeChannelAdapter {
   readyState: number; // 0 connecting, 1 open, 2 closing, 3 closed
@@ -23,21 +23,6 @@ export interface RealtimeChannelAdapter {
 
 const DEV = typeof process !== "undefined" && process.env.NODE_ENV !== "production";
 const isInternalEvent = (ev?: string) => !!ev && ev.startsWith("phx_");
-
-type ChannelMeta = { roomId: string; senderId: number; receiverId: number };
-function parseChannelMeta(topic: string): ChannelMeta | null {
-  try {
-    const cleaned = topic?.startsWith('room:') ? topic.slice(5) : topic;
-    const [roomId, s, r] = String(cleaned || '').split(':');
-    if (!roomId || !s || !r) return null;
-    const senderId = Number(s);
-    const receiverId = Number(r);
-    if (!Number.isFinite(senderId) || !Number.isFinite(receiverId)) return null;
-    return { roomId, senderId, receiverId };
-  } catch {
-    return null;
-  }
-}
 
 class PhoenixChannelHub {
   private static instance: PhoenixChannelHub | null = null;
@@ -105,7 +90,7 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
       // Accept either raw string JSON or object-like string
       try {
         const payload = JSON.parse(data);
-        (channel as any).push("send_message", payload);
+        (channel as any).push("chat:message", payload);
       } catch (e) {
         // Invalid JSON passed to send(): surface error instead of silently rewriting payload
         if (DEV) console.error('[phoenix] send() invalid JSON payload', { data, e });

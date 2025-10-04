@@ -5,7 +5,7 @@ import {Home} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {useTranslation} from "react-i18next";
-import { getAppName } from "@/utils/appConfig";
+import {getAppName} from "@/utils/appConfig";
 
 const categoryImages = [
   {

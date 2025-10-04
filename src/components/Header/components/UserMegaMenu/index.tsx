@@ -7,7 +7,6 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Image, {StaticImageData} from "next/image";
 import Link from "next/link";
 import {JSX, useState} from "react";
-import Find from "./Find";
 import Post from "./Post";
 
 interface FreelanceMegaMenuItem {

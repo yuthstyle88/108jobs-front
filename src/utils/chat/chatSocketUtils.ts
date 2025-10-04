@@ -1,12 +1,10 @@
 import {__DEV__} from "@/utils/appConfig";
-import {useRoomsStore} from "@/store/roomsStore";
-import {v4 as uuidv4} from 'uuid';
 import {HttpService, UserService} from "@/services";
-import {REQUEST_STATE} from "@/services/HttpService";
 import {getHost, isHttps} from "@/utils/env";
 import type {ChatMessage} from "@/lib/lemmy-js-client/src";
 import {decrypt} from "@/lib/web-crypto";
 import {importAesKey} from "@/utils";
+import {REQUEST_STATE} from "@/services/HttpService";
 
 // ---- Centralized browser/event helpers (reduce duplication across contexts) ----
 
@@ -88,7 +86,7 @@ export function safeParse(val: unknown): unknown {
 
 export function buildActixWsUrl(): string {
     // Always go through Actix first → Phoenix-compatible endpoint
-    // Do not append token/room_id in the URL. Phoenix client will send auth via params.
+    // Do not append token/roomId in the URL. Phoenix client will send auth via params.
     const proto = isHttps() ? 'wss' : 'ws';
     const host = getHost();
     // Actix will handle `/socket/websocket` (either as WS proxy to Phoenix on :4000 or native Phoenix-compatible handler)
@@ -99,30 +97,6 @@ export function isBase64Like(s: string): boolean {
     return /^[A-Za-z0-9+/=]+$/.test(s);
 }
 
-export function getReceiverIdFromRoom(roomId: string): number {
-    // 1) Prefer the unified rooms store (1-1 rooms with exactly one participant)
-    try {
-        const {rooms} = useRoomsStore.getState() as {
-            rooms: Array<{ id: string | number; participant?: { id?: number } }>;
-        };
-        const room = rooms.find((r: {
-            id: string | number;
-            participant?: { id?: number }
-        }) => String(r.id) === String(roomId));
-        const pid = room?.participant?.id;
-        if (typeof pid === 'number' && Number.isFinite(pid) && pid > 0) {
-            logDebug(`getReceiverIdFromRoom(store): ${pid} for roomId ${roomId}`);
-            return pid;
-        }
-    } catch (e) {
-        logDebug('getReceiverIdFromRoom: store lookup failed', e);
-    }
-
-    // 2) Fallback: legacy "roomId:receiverId" format if any
-    const receiverId = roomId.includes(':') ? Number(roomId.split(':')[1]) || 0 : 0;
-    logDebug(`getReceiverIdFromRoom(fallback): ${receiverId} from roomId ${roomId}`);
-    return receiverId;
-}
 
 export function addOnce(set: Set<string>, key: string): boolean {
     if (set.has(key)) {
@@ -201,11 +175,11 @@ export async function handleIncomingPayload(
 
     const mapOne = async (raw: any): Promise<ChatMessage | null> => {
       // prefer explicit message node if present
-      const flat = raw?.message ? { ...raw.message, room_id: raw?.room?.id ?? raw?.message?.room_id } : raw;
+      const flat = raw?.message ? { ...raw.message, roomId: raw?.room?.id ?? raw?.message?.roomId } : raw;
       return mapIncomingToChatMessage(flat, {
         token: ctx.token,
         sharedKeyHex: ctx.sharedKeyHex,
-        fallbackRoomId: String(env.roomId || ctx.roomId || flat?.room_id || flat?.roomId || ''),
+        fallbackRoomId: String(env.roomId || ctx.roomId  || flat?.roomId || ''),
         localUserId: ctx.localUserId,
         receivedSet: ctx.receivedSet,
         decryptLabel: 'ws frame',
@@ -265,8 +239,8 @@ export function isValidOutgoingChatPayload(p: any): boolean {
     return !!(
         p && typeof p === 'object' &&
         (p.op === 'SendMessage' || typeof p.op === 'undefined') &&
-        typeof p.sender_id === 'number' && p.sender_id >= 0 &&
-        typeof p.room_id === 'string' && p.room_id.length > 0 &&
+        typeof p.senderId === 'number' && p.senderId >= 0 &&
+        typeof p.roomId === 'string' && p.roomId.length > 0 &&
         typeof p.content === 'string' && p.content.length > 0 &&
         typeof p.id === 'string' && p.id.length > 0 &&
         typeof p.createdAt === 'string'
@@ -280,15 +254,15 @@ export function isValidIncomingChatPayload(p: any): boolean {
         return p.some((it) => isValidIncomingChatPayload(it));
     }
     if (typeof p !== 'object') return false;
-    // View style { message: { content, room_id? }, room?: { id } }
+    // View style { message: { content, roomId? }, room?: { id } }
     if ((p as any).message && typeof (p as any).message === 'object') {
         const m = (p as any).message;
         const hasContent = typeof m.content === 'string' && m.content.length > 0;
-        const hasRoom = typeof m.room_id === 'string' || typeof m.room_id === 'number' || typeof (p as any)?.room?.id === 'string' || typeof (p as any)?.room?.id === 'number';
+        const hasRoom = typeof m.roomId === 'string' || typeof m.roomId === 'number' || typeof (p as any)?.room?.id === 'string' || typeof (p as any)?.room?.id === 'number';
         return hasContent && hasRoom;
     }
     // Flat style
-    const hasRoom = typeof (p as any).room_id === 'string' || typeof (p as any).room_id === 'number' || typeof (p as any).roomId === 'string' || typeof (p as any).roomId === 'number';
+    const hasRoom = typeof (p as any).roomId === 'string' || typeof (p as any).roomId === 'number' || typeof (p as any).roomId === 'string' || typeof (p as any).roomId === 'number';
     const hasContent = typeof (p as any).content === 'string' && (p as any).content.length > 0;
     return hasRoom && hasContent;
 }
@@ -367,8 +341,8 @@ export async function mapIncomingToChatMessage(
         }
 
         const createdAtVal = m.created_at || m.createdAt || new Date().toISOString();
-        const roomIdForKey = m.room_id || m.roomId || opts.fallbackRoomId || '';
-        const senderIdForKey = String(m.sender_id ?? m.senderId ?? '');
+        const roomIdForKey = m.roomId || opts.fallbackRoomId || '';
+        const senderIdForKey = String(m.senderId ?? '');
 
         // Stable signature to dedupe messages
         const messageSignature = m.id
@@ -391,12 +365,12 @@ export async function mapIncomingToChatMessage(
             }
         }
 
-        const roomIdMapped = m.room_id || m.roomId || opts.fallbackRoomId;
-        const senderIdMapped = Number(m.sender_id ?? m.senderId) || 0;
+        const roomIdMapped = m.roomId || opts.fallbackRoomId;
+        const senderIdMapped = Number(m.senderId) || 0;
         const createdAtMapped = m.created_at || m.createdAt || createdAtVal;
 
         return {
-            id: m.id || uuidv4(),
+            id: m.id,
             senderId: senderIdMapped,
             roomId: roomIdMapped,
             content,
@@ -434,9 +408,9 @@ function __pickRoomId(payload: any): string | null {
     try {
         if (Array.isArray(payload) && payload.length > 0) {
             const h = payload[0];
-            return norm(h?.roomId ?? h?.room_id ?? h?.topic);
+            return norm(h?.roomId ?? h?.roomId ?? h?.topic);
         }
-        return norm(payload?.roomId ?? payload?.room_id ?? payload?.topic);
+        return norm(payload?.roomId ?? payload?.roomId ?? payload?.topic);
     } catch {
         return null;
     }
@@ -532,10 +506,9 @@ export async function fetchHistoryPage(
     }
 
     return {
-        prev: resp.prevPage,
-        next: resp.nextPage,
-        items: items,
-    };
+        prev: resp.prevPage ?? resp.prev_page ?? null,
+        next: resp.nextPage ?? resp.next_page ?? null,
+    } as any;
 }
 
 // Type guard: ensure we only treat real chat messages (not typing frames) as messages
@@ -549,10 +522,10 @@ export function isChatMessageLike(m: any): m is {
     return !!(
         m && typeof m === 'object' &&
         typeof m.id === 'string' &&
-        (typeof m.roomId === 'string' || typeof m.room_id === 'string') &&
-        (typeof m.senderId === 'number' || typeof m.sender_id === 'number') &&
+        (typeof m.roomId === 'string') &&
+        (typeof m.senderId === 'number') &&
         typeof m.content === 'string' && m.content.trim() !== '' &&
-        typeof (m.createdAt ?? m.created_at) === 'string'
+        typeof (m.createdAt) === 'string'
     );
 }
 
@@ -601,8 +574,8 @@ export function makeEmitReadAcker(
             scheduled = false;
             if (!pendingIdStr) return;
             const payload = {
-                room_id: roomId,
-                last_read_message_id: pendingIdStr,
+                roomId: roomId,
+                lastReadMessageId: pendingIdStr,
             };
             if (DBG) {
                 try {

@@ -1,7 +1,7 @@
 // src/store/chatStore.ts
-import { create } from "zustand";
-import { nanoid } from "nanoid";
-import { ChatMessage } from "lemmy-js-client";
+import {create} from "zustand";
+import {nanoid} from "nanoid";
+import {ChatMessage} from "lemmy-js-client";
 
 interface ChatState {
     messages: ChatMessage[];

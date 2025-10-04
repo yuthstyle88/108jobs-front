@@ -7,7 +7,7 @@ import {getNamespace} from "@/utils/i18nHelper";
 import {LanguageFile} from "@/constants/language";
 import React, {useEffect} from "react";
 import Modal from "@/components/ui/Modal";
-import { Bank } from "@/lib/lemmy-js-client/src";
+import {Bank} from "@/lib/lemmy-js-client/src";
 
 const schema = z.object({
   bankId: z.string().min(1, "Bank is required"),

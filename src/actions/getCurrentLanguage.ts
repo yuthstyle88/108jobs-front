@@ -1,7 +1,7 @@
 "use server";
 
 import {cookies, headers} from "next/headers";
-import {VALID_LANGUAGES, LANGUAGE_COOKIE} from "@/constants/language";
+import {LANGUAGE_COOKIE, VALID_LANGUAGES} from "@/constants/language";
 import {SupportedLang} from "@/lib/metadata";
 
 export async function getCurrentLanguage(): Promise<SupportedLang> {

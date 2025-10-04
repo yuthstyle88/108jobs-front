@@ -1,21 +1,24 @@
 import * as React from "react";
 import {UserService} from "@/services";
 import {
-    broadcastToListeners, handleIncomingPayload,
+    broadcastToListeners,
+    handleIncomingPayload,
     isChatMessageLike,
     isValidIncomingChatPayload,
     normalizePhoenixEnvelope,
     unwrapPhoenixFrame,
 } from "@/utils/chat/chatSocketUtils";
-import {emitChatTyping, } from "@/events/chat/index";
-import type { ChatMessage } from "lemmy-js-client";
+import {emitChatTyping,} from "@/events/chat/index";
+import type {ChatMessage} from "lemmy-js-client";
 import {
     buildMessageSignature,
-    ChatTypingDetail, cleanupFetch,
+    ChatTypingDetail,
+    cleanupFetch,
     maybeHandleReadReceipt,
     maybeHandleStatusChange,
     mergeNewMessages,
-    parseTypingDetail, tryFlushAutoAck
+    parseTypingDetail,
+    tryFlushAutoAck
 } from "@/utils/chat";
 
 export interface HandlerRefs {

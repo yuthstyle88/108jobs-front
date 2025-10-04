@@ -1,7 +1,7 @@
 'use client'
-import {LANGUAGES, VALID_LANGUAGES, LANGUAGE_COOKIE} from "@/constants/language";
+import {LANGUAGE_COOKIE, LANGUAGES, VALID_LANGUAGES} from "@/constants/language";
 import {SupportedLang} from "@/lib/metadata";
-import { isBrowser } from "@/utils/browser";
+import {isBrowser} from "@/utils/browser";
 
 // Micro-cache with an invalidation key to avoid stale values when cookies, localStorage, or URL change
 let cachedClientLang: SupportedLang | undefined;

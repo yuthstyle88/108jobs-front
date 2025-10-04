@@ -3,7 +3,7 @@ import {Accordion, AccordionContent, AccordionItem, AccordionTrigger,} from "@/c
 import {Button} from "@/components/ui/Button";
 import {AssetIcon, ContentIcon} from "@/constants/icons";
 import Image from "next/image";
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 
 const SupportCenter = () => {
   const { t } = useTranslation();
