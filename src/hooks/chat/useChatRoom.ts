@@ -22,8 +22,9 @@ function dispatchDomEvent(name: string, detail: any) {
   } catch {}
 }
 
-const TYPING_DECAY_MS = 4000;
+const TYPING_DECAY_MS = 200; // faster hint-off (was 2000)
 const PEER_ACTIVE_DECAY_MS = 20000;
+const PEER_ACTIVE_BUMP_MIN_MS = 1000; // throttle markPeerActive to avoid runaway timer churn
 
 export interface UseChatRoomParams {
     roomId: string;
@@ -42,23 +43,39 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
     const lastTypedSentRef = useRef<boolean>(false);
     const peerActiveRef = useRef<boolean>(false);
     const peerActiveDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const lastPeerActiveBumpAtRef = useRef<number>(0);
+    const peerActiveExpiresAtRef = useRef<number>(0);
     const markPeerActive = useCallback(() => {
-        peerActiveRef.current = true;
-        // Notify DOM listeners that peer is currently active in this room
-        emitChatTyping({ roomId, senderId: 3 , typing: true });
-        if(peerActiveDecayRef.current) {
-         console.log('[peerActiveDecay] clearTimeout', peerActiveDecayRef.current);
-            try {
-                clearTimeout(peerActiveDecayRef.current);
-            } catch {
-            }
+    const now = Date.now();
+
+    // Throttle to avoid churn from extremely frequent packets
+    if (now - lastPeerActiveBumpAtRef.current < PEER_ACTIVE_BUMP_MIN_MS) {
+      return;
+    }
+    lastPeerActiveBumpAtRef.current = now;
+
+    // Mark active and push out the expiry
+    peerActiveRef.current = true;
+    peerActiveExpiresAtRef.current = now + PEER_ACTIVE_DECAY_MS;
+
+    // If there's already a decay timer running, do not create a new one.
+    // Let the single timer extend its expiry by reading peerActiveExpiresAtRef when it wakes.
+    if (!peerActiveDecayRef.current) {
+      const tick = () => {
+        const remaining = peerActiveExpiresAtRef.current - Date.now();
+        if (remaining <= 0) {
+          // Expired: flip the flag and clear the timer handle
+          peerActiveRef.current = false;
+          peerActiveDecayRef.current = null;
+          return;
         }
-        peerActiveDecayRef.current = setTimeout(() => {
-            peerActiveRef.current = false;
-            // Notify DOM listeners that peer is no longer active
-            dispatchDomEvent('chat:peer-active', { roomId, active: false });
-        }, PEER_ACTIVE_DECAY_MS);
-    }, []);
+        // Still active; schedule the next wake-up only once
+        peerActiveDecayRef.current = setTimeout(tick, Math.min(remaining, PEER_ACTIVE_DECAY_MS));
+      };
+      // Start the one-and-only timer
+      peerActiveDecayRef.current = setTimeout(tick, PEER_ACTIVE_DECAY_MS);
+    }
+  }, []);
 
     const isE2EMock = process.env.NEXT_PUBLIC_E2E_MODE === 'mock';
     const [refreshRoomData, setRefreshRoomData] = useState<any>(null);
@@ -101,6 +118,16 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
             const me = Number(localUser?.id) || 0;
             if(detail.senderId === me) return; // ignore self
             setIsPartnerTyping(detail.typing);
+            if (!detail.typing) {
+                if (typingDecayRef.current) {
+                    try { clearTimeout(typingDecayRef.current); } catch {}
+                    typingDecayRef.current = null;
+                }
+                // already set to false above; ensure DOM event mirrors instant off
+                dispatchDomEvent('chat:partner-typing', { roomId, senderId: Number(detail.senderId) || 0, typing: false });
+                onRemoteTyping?.(detail);
+                return;
+            }
             dispatchDomEvent('chat:partner-typing', { roomId, senderId: Number(detail.senderId) || 0, typing: !!detail.typing });
             if(detail.typing) {
                 if(typingDecayRef.current) {

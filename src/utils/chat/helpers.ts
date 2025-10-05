@@ -7,45 +7,43 @@ import {ChatMessage} from "lemmy-js-client";
 
 export function parseTypingDetail(env: any, fallbackRoomId: string, localUserId: number): { roomId: string; senderId: number; typing: boolean } | null {
     try {
+        // Minimal parser: look only at event and payload
+        console.log("parseTypingDetail", env);
         const evName = String(env?.event ?? env?.data?.event ?? env?.content ?? '');
-        if (!evName || !TYPING_EVENT_NAMES.some(n => evName === n || evName.includes('typing'))) return null;
+        if (!evName) return null;
+        // Accept only typing events
+        const isTypingEvent = evName === 'chat:typing' || evName.includes('typing');
+        if (!isTypingEvent) return null;
 
-        // Topic / room id
+        // Determine topic/room id (do not over-parse)
         const rawTopic = String(env?.topic ?? env?.data?.topic ?? fallbackRoomId ?? '');
         const bare = rawTopic.startsWith('room:') ? rawTopic.slice(5) : rawTopic;
         const pureRoomId = String(env?.roomId ?? bare.split(':')[0] ?? bare);
 
-        // Prefer normalized payload
-        const p: any = env?.payload ?? env;
-
-        // sender id (payload → contentParsed)
-        let senderIdNum = Number(p?.senderId ?? 0);
-        if (!senderIdNum) {
-            const cp: any = env?.contentParsed;
-            if (cp) senderIdNum = Number(cp?.senderId ?? 0);
-        }
+        // Prefer senderId on root/payload; ignore contentParsed to keep it simple
+        const p: any = env?.payload;
+        const senderIdNum = Number(env?.senderId ?? (p && typeof p === 'object' ? p.senderId : undefined) ?? 0);
         if (!senderIdNum || senderIdNum === Number(localUserId)) return null;
 
-        // typing flag (payload → contentParsed → parse content → fallback from event name)
-        let typingFlag: boolean | undefined =
-            typeof p?.typing === 'boolean' ? p.typing :
-            (typeof env?.contentParsed?.typing === 'boolean' ? env.contentParsed.typing : undefined);
-
-        if (typeof typingFlag !== 'boolean') {
-            try {
-                const c: any = p?.content;
-                if (typeof c === 'string' && c.trim().startsWith('{')) {
-                    const j = JSON.parse(c);
-                    if (typeof j?.typing === 'boolean') typingFlag = j.typing;
-                } else if (c && typeof c === 'object' && typeof c.typing === 'boolean') {
-                    typingFlag = c.typing;
-                }
-            } catch {}
+        // typing flag logic:
+        // - If payload is a string (e.g., "chat:typing"), treat as a typing "pulse" (true).
+        // - If payload is an object with a boolean 'typing', use it.
+        // - Else fallback: true for generic 'chat:typing', false only if event/payload explicitly says 'stop'.
+        let typingFlag: boolean | undefined;
+        if (typeof p === 'string') {
+            // Example given: payload === "chat:typing"
+            typingFlag = p.includes('typing') ? true : undefined;
+        } else if (p && typeof p === 'object' && typeof p.typing === 'boolean') {
+            typingFlag = p.typing;
         }
         if (typeof typingFlag !== 'boolean') {
-            typingFlag = evName.includes('start') ? true : evName.includes('stop') ? false : false;
+            // fallback from event name or payload string content
+            const src = `${evName}|${typeof p === 'string' ? p : ''}`.toLowerCase();
+            if (src.includes('stop')) typingFlag = false;
+            else if (src.includes('start')) typingFlag = true;
+            else typingFlag = true; // default pulse when only "chat:typing" is present
         }
-
+        console.log("typingFlag", {pureRoomId, senderIdNum});
         return { roomId: pureRoomId, senderId: senderIdNum, typing: !!typingFlag };
     } catch {
         return null;
