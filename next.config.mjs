@@ -36,7 +36,7 @@ const nextConfig = {
         ignoreDuringBuilds: true,
     },
     compiler: {
-        removeConsole: process.env.NODE_ENV === 'production' ? {
+        removeConsole: process.env.NODE_ENV === 'production' && process.env.DEBUG !== 'true' ? {
             exclude: ['error', 'warn'],
         } : false,
     },
