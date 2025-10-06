@@ -67,10 +67,64 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         : (t("profileChat.userNotAvailable") || "This user is currently not accepting messages. You can read history but cannot send new messages.");
     const receivedIds = useMemo(() => new Set<string>(), []);
     const roomId = roomData.room.room.id;
-
     // Hydrate UI from local store (messages + pending) so leftover local data shows immediately
     const storeMessages = useChatStore((s) => s.messages);
     const storePending = useChatStore((s) => s.pendingMessages);
+    const {send, canGo, ORDER} = useWorkflowStepper();
+    const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
+    const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
+    const [showJobDetailModal, setShowJobDetailModal] = useState<boolean>(false);
+    const [hasStarted, setHasStarted] = useState<boolean>(false);
+    const [isFlowOpen, setIsFlowOpen] = useState(false);
+    const [currentRoom, setCurrentRoom] = useState<ChatRoomData>(roomData);
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const atBottomRef = useRef<boolean>(true);
+    const [isAtBottom, setIsAtBottom] = useState(true);
+    const markSeen = useUnreadStore((s) => s.markSeen);
+    const [, setIsInitialLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const {setActiveRoomId, markRoomRead} = useRoomsStore();
+    const [newSinceCount, setNewSinceCount] = useState<number>(0);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
+    const roomPostId = currentRoom.room.post?.id;
+    const roomCommentId = currentRoom?.room?.currentComment?.id;
+    const postCreatorId = post?.creatorId;
+    const isEmployer = postCreatorId != null && person?.id != null ? String(postCreatorId) === String(person?.id) : undefined;
+    const lastClientUpdateRef = useRef<{ status: StatusKey | null; timestamp: number }>({status: null, timestamp: 0});
+    const currentStatus = useStateMachineStore((s) => s.state);
+    const statusBeforeCancel = useStateMachineStore((s) => s.statusBeforeCancel);
+    const calculatedProposedQuote = useMemo(() => {
+        return Boolean(getLatestProposedQuotePayload(messages as any));
+    }, [messages]);
+
+    // Determine latest quotation amount and whether employer has sufficient balance to approve
+    const latestQuoteAmount = currentRoom.room.post?.budget;
+
+    const availableBalance: number = useMemo(() => {
+        const total = Number((wallet as any)?.balanceAvailable ?? (wallet as any)?.balanceTotal ?? 0);
+        return Number.isFinite(total) ? total : 0;
+    }, [wallet]);
+
+    const insufficientForApprove = useMemo(() => {
+        return Boolean(isEmployer && latestQuoteAmount != null && availableBalance < (latestQuoteAmount as number));
+    }, [isEmployer, latestQuoteAmount, availableBalance]);
+
+    const isEmployerKnown = typeof isEmployer === 'boolean';
+    const canProposeQuoteProp =
+        isEmployerKnown ? (!isEmployer && Boolean(roomPostId) && !calculatedProposedQuote) : false;
+    const canApproveQuotationProp =
+        isEmployerKnown ? (Boolean(isEmployer) && calculatedProposedQuote) : false;
+    const {execute: createInvoice} = useHttpPost("createInvoice");
+    const {execute: startWorkflow} = useHttpPost("startWorkflow");
+    const {execute: approveQuotationApi} = useHttpPost("approveQuotation");
+    const {execute: submitStartWorkApi} = useHttpPost("submitStartWork");
+    const {execute: approveWorkApi} = useHttpPost("approveWork");
+    // Measure chat input height to prevent last message being obscured
+    const inputContainerRef = useRef<HTMLDivElement>(null);
+    const [bottomPad, setBottomPad] = useState<number>(0);
+    // Room-scoped last-read id (wired to roomsStore + UserService)
+    const {lastReadId} = useRoomReadLastId(roomId);
     const roomLocalMessages = useMemo(() => {
         const all = [
             ...(Array.isArray(storeMessages) ? storeMessages : []),
@@ -84,6 +138,48 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             return tb - ta;
         });
     }, [storeMessages, storePending, roomId]) as unknown as ChatMessage[];
+    const setScrollRef = useCallback((el: HTMLDivElement | null) => {
+        scrollContainerRef.current = el;
+        if (el) setScrollParentEl(el);
+    }, []);
+    const scrollToLatest = () => {
+        const rootEl = scrollContainerRef.current;
+        if (rootEl) {
+            rootEl.scrollTop = rootEl.scrollHeight - rootEl.clientHeight;
+        }
+    };
+    const scrollToLatestSoon = () => {
+        if (!isBrowser()) return;
+        try {
+            requestAnimationFrame(() => requestAnimationFrame(scrollToLatest));
+        } catch {
+            setTimeout(scrollToLatest, 0);
+        }
+    };
+    const {
+        selectedFile,
+        setSelectedFile,
+        isDeletingFile,
+        handleFileUpload,
+        handleRemoveSelectedFile
+    } = useFileUpload({setError, t: (k: string) => t(k)});
+    const {
+        state: {hasMore, isFetching},
+        actions: {fetchHistory},
+    } = useChatHistory({
+        roomId,
+        pageSize: 20,
+        isE2EMock: false,
+        localUserId: Number(localUser.id) || 0,
+        receivedSet: receivedIds,
+        broadcast: () => {
+        },
+        setMessages
+    });
+    const {
+        actions: {sendMessage, sendTyping, sendRoomUpdate},
+        state: {refreshRoomData, isPartnerTyping},
+    } = useChatRoom({roomId, peerPublicKeyHex, setMessages, localUser, roomData: currentRoom});
 
     // Keep ChatSection's local `messages` state in sync with store leftovers
     useEffect(() => {
@@ -104,34 +200,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         }
     }, [roomLocalMessages?.length, roomId]);
 
-    const {send, canGo, ORDER} = useWorkflowStepper();
-    const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
-    const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
-    const [showJobDetailModal, setShowJobDetailModal] = useState<boolean>(false);
-    const [hasStarted, setHasStarted] = useState<boolean>(false);
-    const [isFlowOpen, setIsFlowOpen] = useState(false);
-    const [currentRoom, setCurrentRoom] = useState<ChatRoomData>(roomData);
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
-    const atBottomRef = useRef<boolean>(true);
-    const [isAtBottom, setIsAtBottom] = useState(true);
-    const markSeen = useUnreadStore((s) => s.markSeen);
-    const [, setIsInitialLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const {setActiveRoomId, markRoomRead} = useRoomsStore();
-    const {
-        selectedFile,
-        setSelectedFile,
-        isDeletingFile,
-        handleFileUpload,
-        handleRemoveSelectedFile
-    } = useFileUpload({setError, t: (k: string) => t(k)});
-    const [newSinceCount, setNewSinceCount] = useState<number>(0);
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
-
-    // Room-scoped last-read id (wired to roomsStore + UserService)
-    const {lastReadId} = useRoomReadLastId(roomId);
-
     // Apply read flags to current message list (newest-first)
     useEffect(() => {
         if (!lastReadId || !Array.isArray(messages) || messages.length === 0) return;
@@ -150,47 +218,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         });
     }, [lastReadId, messages]);
 
-    const {
-        state: {hasMore, isFetching},
-        actions: {fetchHistory},
-    } = useChatHistory({
-        roomId,
-        pageSize: 20,
-        isE2EMock: false,
-        localUserId: Number(localUser.id) || 0,
-        receivedSet: receivedIds,
-        broadcast: () => {
-        },
-        setMessages
-    });
-
-    const roomPostId = currentRoom.room.post?.id;
-    const roomCommentId = currentRoom?.room?.currentComment?.id;
-    const postCreatorId = post?.creatorId;
-    const isEmployer = postCreatorId != null && person?.id != null ? String(postCreatorId) === String(person?.id) : undefined;
-    const lastClientUpdateRef = useRef<{ status: StatusKey | null; timestamp: number }>({status: null, timestamp: 0});
-    const setScrollRef = useCallback((el: HTMLDivElement | null) => {
-        scrollContainerRef.current = el;
-        if (el) setScrollParentEl(el);
-    }, []);
-    const scrollToLatest = () => {
-        const rootEl = scrollContainerRef.current;
-        if (rootEl) {
-            rootEl.scrollTop = rootEl.scrollHeight - rootEl.clientHeight;
-        }
-    };
-    const scrollToLatestSoon = () => {
-        if (!isBrowser()) return;
-        try {
-            requestAnimationFrame(() => requestAnimationFrame(scrollToLatest));
-        } catch {
-            setTimeout(scrollToLatest, 0);
-        }
-    };
-
-    // Measure chat input height to prevent last message being obscured
-    const inputContainerRef = useRef<HTMLDivElement>(null);
-    const [bottomPad, setBottomPad] = useState<number>(0);
     useEffect(() => {
         const el = inputContainerRef.current;
         if (!el || typeof ResizeObserver === "undefined") return;
@@ -220,11 +247,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
-    // Switch to useChatRoom API (new design)
-    const {
-        actions: {sendMessage, sendTyping, sendRoomUpdate},
-        state: {refreshRoomData, isPartnerTyping},
-    } = useChatRoom({roomId, peerPublicKeyHex, setMessages, localUser, roomData: currentRoom});
 
     useEffect(() => {
         if (!refreshRoomData) return;
@@ -262,10 +284,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             }
         };
     }, [roomId, setActiveRoomId, markRoomRead, markSeen]);
-
-
-    const currentStatus = useStateMachineStore((s) => s.state);
-    const statusBeforeCancel = useStateMachineStore((s) => s.statusBeforeCancel);
 
     const setWorkflowState = (key: StatusKey, statusBeforeCancel?: StatusKey, isClientUpdate = true) => {
         useStateMachineStore.setState({
@@ -309,31 +327,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         }
     }, [currentRoom, currentStatus, statusBeforeCancel, setHasStarted]);
 
-
-    const {execute: createInvoice} = useHttpPost("createInvoice");
-    const {execute: startWorkflow} = useHttpPost("startWorkflow");
-    const {execute: approveQuotationApi} = useHttpPost("approveQuotation");
-    const {execute: submitStartWorkApi} = useHttpPost("submitStartWork");
-    const {execute: approveWorkApi} = useHttpPost("approveWork");
-
-    // Helper to add a local (owner) message to the list and scroll
-    const addOwnMessage = useCallback((content: string, id?: string) => {
-        const messageId = id;
-        setMessages((prev) => [
-            {
-                id: messageId,
-                roomId,
-                content,
-                createdAt: new Date().toISOString(),
-                status: 'pending',
-                isOwner: true,
-            } as ChatMessage,
-            ...prev,
-        ]);
-        scrollToLatestSoon();
-        return messageId;
-    }, [currentRoom, roomId, localUser.id]);
-
     // Centralize all workflow actions into a dedicated hook
     const {
         startWorkflowAction,
@@ -352,7 +345,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         selectedFile,
         setError,
         t: (k: string) => String(t(k) ?? k),
-        addOwnMessage,
         sendMessage,
         sendRoomUpdate,
         goToStatus,
@@ -370,6 +362,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         walletId: wallet?.id,
         currentStatus,
     });
+
+    // Wrap approveQuotation with additional balance guard to keep identical behavior
+    const approveQuotationWrapped = React.useCallback(async (): Promise<boolean> => {
+        if (insufficientForApprove) {
+            setError(t('profileChat.insufficientBalanceWarning') || 'Insufficient balance to approve the quotation.');
+            return false;
+        }
+        return await approveQuotationFromHook();
+    }, [insufficientForApprove, approveQuotationFromHook, setError, t]);
 
     const onSubmit = useCallback(
         async (data: MessageForm) => {
@@ -396,7 +397,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             isSubmittingRef.current = true;
             const messageId = uuidv4();
 
-            addOwnMessage(contentToSend || "", messageId);
             try {
                 const tsIso = new Date().toISOString();
                 const preview = selectedFile
@@ -442,33 +442,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         };
     }, [roomId]);
 
-
-    const calculatedProposedQuote = useMemo(() => {
-        return Boolean(getLatestProposedQuotePayload(messages as any));
-    }, [messages]);
-
-
-    // Determine latest quotation amount and whether employer has sufficient balance to approve
-    const latestQuoteAmount = currentRoom.room.post?.budget;
-
-    const availableBalance: number = useMemo(() => {
-        const total = Number((wallet as any)?.balanceAvailable ?? (wallet as any)?.balanceTotal ?? 0);
-        return Number.isFinite(total) ? total : 0;
-    }, [wallet]);
-
-    const insufficientForApprove = useMemo(() => {
-        return Boolean(isEmployer && latestQuoteAmount != null && availableBalance < (latestQuoteAmount as number));
-    }, [isEmployer, latestQuoteAmount, availableBalance]);
-
-    // Wrap approveQuotation with additional balance guard to keep identical behavior
-    const approveQuotationWrapped = React.useCallback(async (): Promise<boolean> => {
-        if (insufficientForApprove) {
-            setError(t('profileChat.insufficientBalanceWarning') || 'Insufficient balance to approve the quotation.');
-            return false;
-        }
-        return await approveQuotationFromHook();
-    }, [insufficientForApprove, approveQuotationFromHook, setError, t]);
-
     const flowActions: FlowActions = createFlowActions({
         t,
         goToStatus,
@@ -489,13 +462,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         requestRevision: async () => await requestRevision(),
         approveWork: async () => await approveWork(),
     });
-
-    // Normalize role & capability flags for Flow (avoid undefined branching in JSX)
-    const isEmployerKnown = typeof isEmployer === 'boolean';
-    const canProposeQuoteProp =
-        isEmployerKnown ? (!isEmployer && Boolean(roomPostId) && !calculatedProposedQuote) : false;
-    const canApproveQuotationProp =
-        isEmployerKnown ? (Boolean(isEmployer) && calculatedProposedQuote) : false;
 
     const renderFlowContent = () => (
         <>
