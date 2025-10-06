@@ -4,6 +4,7 @@ import {createHandleWSMessage} from '@/events/chat/handleWSMessage';
 import {ensureSharedKeyForRoom} from "@/utils";
 import {makeEmitReadAcker, MessagePayload} from "@/utils/chat";
 import {
+    resendChatMessage,
     sendChatMessage,
     sendReadReceipt as sendReadReceiptEvent,
     sendTyping as sendTypingEvent
@@ -11,15 +12,16 @@ import {
 import {ChatRoomId, LocalUser, LocalUserId} from "lemmy-js-client";
 import {useChatStore} from "@/store/chatStore"
 import {makeReadAckEmitter} from "@/utils/chat/socket-emitter";
-import {emitChatTyping, emitWsReconnected} from "@/events/chat";
+import {emitWsReconnected} from "@/events/chat";
 
 // Safe DOM CustomEvent dispatcher
 function dispatchDomEvent(name: string, detail: any) {
-  try {
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent(name, { detail }));
+    try {
+        if(typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent(name, {detail}));
+        }
+    } catch {
     }
-  } catch {}
 }
 
 const TYPING_DECAY_MS = 200; // faster hint-off (was 2000)
@@ -46,36 +48,36 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
     const lastPeerActiveBumpAtRef = useRef<number>(0);
     const peerActiveExpiresAtRef = useRef<number>(0);
     const markPeerActive = useCallback(() => {
-    const now = Date.now();
+        const now = Date.now();
 
-    // Throttle to avoid churn from extremely frequent packets
-    if (now - lastPeerActiveBumpAtRef.current < PEER_ACTIVE_BUMP_MIN_MS) {
-      return;
-    }
-    lastPeerActiveBumpAtRef.current = now;
-
-    // Mark active and push out the expiry
-    peerActiveRef.current = true;
-    peerActiveExpiresAtRef.current = now + PEER_ACTIVE_DECAY_MS;
-
-    // If there's already a decay timer running, do not create a new one.
-    // Let the single timer extend its expiry by reading peerActiveExpiresAtRef when it wakes.
-    if (!peerActiveDecayRef.current) {
-      const tick = () => {
-        const remaining = peerActiveExpiresAtRef.current - Date.now();
-        if (remaining <= 0) {
-          // Expired: flip the flag and clear the timer handle
-          peerActiveRef.current = false;
-          peerActiveDecayRef.current = null;
-          return;
+        // Throttle to avoid churn from extremely frequent packets
+        if(now - lastPeerActiveBumpAtRef.current < PEER_ACTIVE_BUMP_MIN_MS) {
+            return;
         }
-        // Still active; schedule the next wake-up only once
-        peerActiveDecayRef.current = setTimeout(tick, Math.min(remaining, PEER_ACTIVE_DECAY_MS));
-      };
-      // Start the one-and-only timer
-      peerActiveDecayRef.current = setTimeout(tick, PEER_ACTIVE_DECAY_MS);
-    }
-  }, []);
+        lastPeerActiveBumpAtRef.current = now;
+
+        // Mark active and push out the expiry
+        peerActiveRef.current = true;
+        peerActiveExpiresAtRef.current = now + PEER_ACTIVE_DECAY_MS;
+
+        // If there's already a decay timer running, do not create a new one.
+        // Let the single timer extend its expiry by reading peerActiveExpiresAtRef when it wakes.
+        if(!peerActiveDecayRef.current) {
+            const tick = () => {
+                const remaining = peerActiveExpiresAtRef.current - Date.now();
+                if(remaining <= 0) {
+                    // Expired: flip the flag and clear the timer handle
+                    peerActiveRef.current = false;
+                    peerActiveDecayRef.current = null;
+                    return;
+                }
+                // Still active; schedule the next wake-up only once
+                peerActiveDecayRef.current = setTimeout(tick, Math.min(remaining, PEER_ACTIVE_DECAY_MS));
+            };
+            // Start the one-and-only timer
+            peerActiveDecayRef.current = setTimeout(tick, PEER_ACTIVE_DECAY_MS);
+        }
+    }, []);
 
     const isE2EMock = process.env.NEXT_PUBLIC_E2E_MODE === 'mock';
     const [refreshRoomData, setRefreshRoomData] = useState<any>(null);
@@ -100,7 +102,8 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
             try {
                 // Notify in-app listeners that WS reconnected (no dynamic import)
                 emitWsReconnected?.();
-            } catch {}
+            } catch {
+            }
         }
     }, [ws.isReady]);
 
@@ -118,17 +121,28 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
             const me = Number(localUser?.id) || 0;
             if(detail.senderId === me) return; // ignore self
             setIsPartnerTyping(detail.typing);
-            if (!detail.typing) {
-                if (typingDecayRef.current) {
-                    try { clearTimeout(typingDecayRef.current); } catch {}
+            if(!detail.typing) {
+                if(typingDecayRef.current) {
+                    try {
+                        clearTimeout(typingDecayRef.current);
+                    } catch {
+                    }
                     typingDecayRef.current = null;
                 }
                 // already set to false above; ensure DOM event mirrors instant off
-                dispatchDomEvent('chat:partner-typing', { roomId, senderId: Number(detail.senderId) || 0, typing: false });
+                dispatchDomEvent('chat:partner-typing', {
+                    roomId,
+                    senderId: Number(detail.senderId) || 0,
+                    typing: false
+                });
                 onRemoteTyping?.(detail);
                 return;
             }
-            dispatchDomEvent('chat:partner-typing', { roomId, senderId: Number(detail.senderId) || 0, typing: !!detail.typing });
+            dispatchDomEvent('chat:partner-typing', {
+                roomId,
+                senderId: Number(detail.senderId) || 0,
+                typing: !!detail.typing
+            });
             if(detail.typing) {
                 if(typingDecayRef.current) {
                     try {
@@ -138,7 +152,11 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
                 }
                 typingDecayRef.current = setTimeout(() => {
                     setIsPartnerTyping(false);
-                    dispatchDomEvent('chat:partner-typing', { roomId, senderId: Number(detail.senderId) || 0, typing: false });
+                    dispatchDomEvent('chat:partner-typing', {
+                        roomId,
+                        senderId: Number(detail.senderId) || 0,
+                        typing: false
+                    });
                 }, TYPING_DECAY_MS);
             }
             onRemoteTyping?.(detail);
@@ -169,7 +187,7 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
     }), [roomId, localUser?.id, setMessages, setRefreshRoomData, markPeerActive, handleRemoteTyping]);
 
     useEffect(() => {
-        if (!ws || typeof ws.addMessageListener !== 'function') return;
+        if(!ws || typeof ws.addMessageListener !== 'function') return;
         const off = ws.addMessageListener((data: unknown) => {
             try {
                 handleWSMessage({data} as any);
@@ -242,25 +260,87 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
 
     // Actions
     const sendMessage = useCallback(async (data: MessagePayload) => {
-      const deps = {
-        isE2EMock,
-        roomId,
-        peerPublicKeyHex,
-        sentSet: sentMessagesRef.current,
-        onAfterSend: () => {
-          lastTypedSentRef.current = false;
-        },
-        store: {
-          addPending: (roomId: string, msg: { senderId: number; content: string }) =>
-            useChatStore.getState().addMessage(roomId, msg.senderId, msg.content),
-          commitStatus: (roomId: string, id: string, status: any, patch?: any) =>
-            useChatStore.getState().commitStatus(roomId, id, status, patch),
-        },
-        socket: ws,
-      } as const;
+        const deps = {
+            isE2EMock,
+            roomId,
+            peerPublicKeyHex,
+            sentSet: sentMessagesRef.current,
+            onAfterSend: () => {
+                lastTypedSentRef.current = false;
+            },
+            store: {
+                addPending: (roomId: string, msg: { senderId: number; content: string }) =>
+                  useChatStore.getState().addMessage(roomId, msg.senderId, msg.content),
+                commitStatus: (roomId: string, id: string, status: any, patch?: any) =>
+                  useChatStore.getState().commitStatus(roomId, id, status, patch),
+            },
+            socket: ws,
+        } as const;
 
-      await sendChatMessage(deps, data);
+        await sendChatMessage(deps, data);
     }, [isE2EMock, roomId, peerPublicKeyHex, ws]);
+
+    const resendMessage = useCallback(async (id: string) => {
+        const st = useChatStore.getState();
+        try {
+            // Try targeted resend via sendEvents (preferred: resend only this message)
+            // Resolve the latest message object from the store
+            const lookup = (rid: string, mid: string) => {
+                const fromMsgs = (st as any).messages?.find?.((m: any) => String(m.id) === String(mid) && String(m.roomId) === String(rid));
+                if(fromMsgs) return fromMsgs;
+                const fromPending = (st as any).pendingMessages?.find?.((m: any) => String(m.id) === String(mid) && String(m.roomId) === String(rid));
+                return fromPending;
+            };
+
+            const msg = lookup(roomId, id);
+            if(msg) {
+                await resendChatMessage(
+                  {
+                      roomId,
+                      socket: ws,
+                      store: {
+                          // expose only what resendChatMessage needs
+                          commitStatus: st.commitStatus,
+                          getMessageById: (rid: string, mid: string) => lookup(rid, mid),
+                      },
+                      isE2EMock,
+                      sentSet: sentMessagesRef.current,
+                  },
+                  msg
+                );
+                return;
+            }
+
+            // Fallback: if we can't resolve the message object, trigger store retry + flush
+            st.retryMessage?.(id);
+            await st.flushPending?.();
+        } catch (err) {
+            try {
+                console.warn('[chat] resendMessage failed, fallback to flush', err);
+            } catch {
+            }
+            // Final fallback
+            try {
+                st.retryMessage?.(id);
+                await st.flushPending?.();
+            } catch {
+            }
+        }
+    }, [roomId, ws, isE2EMock]);
+
+    const flushPending = useCallback(async () => {
+        try {
+            await useChatStore.getState().flushPending?.();
+        } catch {
+        }
+    }, []);
+
+    const removePending = useCallback((id: string) => {
+        try {
+            useChatStore.getState().removeMessage?.(id);
+        } catch {
+        }
+    }, []);
 
     const sendReadReceipt = useCallback((roomIdArg: string, lastMessageId: string) => {
         try {
@@ -306,7 +386,7 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
 
     return {
         state: {pageCursor, refreshRoomData, isPartnerTyping},
-        actions: {sendMessage, sendReadReceipt, sendTyping},
+        actions: {sendMessage, resendMessage, flushPending, removePending, sendReadReceipt, sendTyping},
         utils: {onWsErrorDuringFetch, markPeerActive},
     } as const;
 }

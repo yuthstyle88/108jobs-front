@@ -4,7 +4,8 @@ import Image, {StaticImageData} from "next/image";
 import type {ChatMessage} from "lemmy-js-client";
 import {MessageImage} from "@/constants/images";
 import {useTranslation} from "react-i18next";
-import React from "react";
+import { useChatStore } from "@/store/chatStore";
+import React, { useMemo } from "react";
 import {toLocalTime} from "@/utils/date";
 import MessageReceipt from "@/components/MessageReceipt";
 
@@ -42,33 +43,43 @@ interface ProposedQuoteMessage {
 }
 
 const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
-                                                             message,
-                                                             partnerAvatar,
-                                                         }) => {
+    message,
+    partnerAvatar,
+}) => {
     const {t, i18n} = useTranslation();
-    const isIncoming = !message.isOwner;
 
-    const time = toLocalTime(message.createdAt as any, i18n?.language || "th-TH");
+    // Subscribe to latest message from store so UI auto-updates (ACK/resend/status/content patches)
+    const liveMessage = useChatStore((s) => {
+        const mid = message?.id;
+        if (!mid) return undefined;
+        // Prefer committed messages; fallback to pending queue by id
+        return s.messages.find((m) => m.id === mid) || s.pendingMessages.find((m) => m.id === mid);
+    });
+    const viewMsg = liveMessage || message;
+
+    const isIncoming = !viewMsg.isOwner;
+
+    const time = toLocalTime(viewMsg.createdAt as any, i18n?.language || "th-TH");
     // Delivery status (server type: "pending" | "sent" | "failed")
-    const msgStatus = (message.status || "pending") as "pending" | "sent" | "failed";
+    const msgStatus = (viewMsg.status || "pending") as "pending" | "sent" | "failed";
 
     // unread may be absent when pending; treat undefined as "unknown"
-    const hasUnreadField = typeof (message as any).unread === "boolean";
-    const unreadVal = (message as any).unread === true;
-    const readByPeer = message.isOwner && hasUnreadField && (message as any).unread === false;
-    const deliveredButUnread = message.isOwner && hasUnreadField && unreadVal;
+    const hasUnreadField = typeof (viewMsg as any).unread === "boolean";
+    const unreadVal = (viewMsg as any).unread === true;
+    const readByPeer = viewMsg.isOwner && hasUnreadField && (viewMsg as any).unread === false;
+    const deliveredButUnread = viewMsg.isOwner && hasUnreadField && unreadVal;
 
     // Show receipt only for outbound messages (isOwner) after send
-    const showReceipt = message.isOwner && msgStatus === "sent";
+    const showReceipt = viewMsg.isOwner && msgStatus === "sent";
 
-    // Try to parse message.content as JSON for special rendering
-    let parsed: ProposedQuoteMessage | null = null;
-    if (message.content && message.content.trim().startsWith("{")) {
-        try {
-            parsed = JSON.parse(message.content) as ProposedQuoteMessage;
-        } catch {
+    // Parse content as JSON only when it changes (auto re-render on updates from store)
+    const parsed = useMemo<ProposedQuoteMessage | null>(() => {
+        const c = viewMsg?.content;
+        if (c && c.trim().startsWith("{")) {
+            try { return JSON.parse(c) as ProposedQuoteMessage; } catch {}
         }
-    }
+        return null;
+    }, [viewMsg?.content]);
     const isEmployerStarted = parsed && parsed.type === "employer-started";
     const isProposedQuote = parsed && parsed.type === "proposed-quote" && parsed.quote;
     const isEmployerAssigned = parsed && (parsed as any).type === "employer-assigned";
@@ -92,6 +103,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     return (
         <div
             data-testid="chat-message"
+            data-status={msgStatus}
             className={`flex ${isIncoming ? "justify-start" : "justify-end"}`}
         >
             {isIncoming && (
@@ -107,8 +119,8 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                 <p className="text-[11px] text-gray-400 flex items-center gap-1">
                     {time}
                     <MessageReceipt
-                        isOwner={message.isOwner}
-                        unread={(message as any).unread}
+                        isOwner={viewMsg.isOwner}
+                        unread={(viewMsg as any).unread}
                         msgStatus={msgStatus}
                         showReceipt={showReceipt}
                         readByPeer={readByPeer}
@@ -399,7 +411,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                     </div>
                 ) : (
                     // Default text message bubble
-                    message.content?.trim() && (
+                    viewMsg.content?.trim() && (
                         <div
                             className={`max-w-[80vw] sm:max-w-xs px-3 py-2 rounded-2xl text-[15px] leading-relaxed font-sans break-words whitespace-pre-line shadow-sm ${
                                 isIncoming
@@ -407,7 +419,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                                     : "bg-primary text-white rounded-br-sm"
                             }`}
                         >
-                            {message.content}
+                            {viewMsg.content}
                         </div>
                     )
                 )}

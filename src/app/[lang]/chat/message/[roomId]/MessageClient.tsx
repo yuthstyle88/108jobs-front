@@ -1,7 +1,7 @@
 "use client";
 
 import {useEffect, useState} from "react";
-import {PhoenixSocketProvider} from "@/contexts/RealtimeChatContext";
+import {PhoenixChatBridgeProvider} from "@/contexts/PhoenixChatBridgeProvider";
 import ChatSection from "../../_components/ChatSection";
 import {HttpService, UserService} from "@/services";
 import LoadingBlur from "@/components/Common/Loading/LoadingBlur";
@@ -163,7 +163,7 @@ export default function MessageClient({roomId}: { roomId: string }) {
     }
 
     return (
-        <PhoenixSocketProvider
+        <PhoenixChatBridgeProvider
             token={accessToken}
             roomId={roomId}
             peerPublicKeyHex={state.peerPublicKeyHex}
@@ -178,6 +178,6 @@ export default function MessageClient({roomId}: { roomId: string }) {
                 localUser={localUser}
                 peerPublicKeyHex={state.peerPublicKeyHex}
             />
-        </PhoenixSocketProvider>
+        </PhoenixChatBridgeProvider>
     );
 }

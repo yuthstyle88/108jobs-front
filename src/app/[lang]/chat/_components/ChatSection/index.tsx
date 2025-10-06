@@ -30,6 +30,9 @@ import {emitChatNewMessage} from "@/events/chat";
 import {useChatRoom} from '@/hooks/chat/useChatRoom';
 import {useChatHistory} from '@/hooks/chat/useChatHistory';
 
+import { useChatStore } from "@/store/chatStore";
+
+
 type MessageForm = { message: string };
 
 interface ChatSectionProps {
@@ -69,6 +72,41 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     } | null>(null);
     const receivedIds = useMemo(() => new Set<string>(), []);
     const roomId = roomData.room.room.id;
+
+    // Hydrate UI from local store (messages + pending) so leftover local data shows immediately
+    const roomLocalMessages = useChatStore(
+      React.useCallback(
+        (s) => {
+          const all = [...(s.messages || []), ...(s.pendingMessages || [])];
+          const filtered = all.filter((m: any) => String(m?.roomId) === String(roomId));
+          // Sort newest first to match current UI order
+          return filtered.sort((a: any, b: any) => {
+            const ta = new Date(a?.createdAt || 0).getTime();
+            const tb = new Date(b?.createdAt || 0).getTime();
+            return tb - ta;
+          });
+        },
+        [roomId]
+      )
+    ) as unknown as ChatMessage[];
+
+    // Keep ChatSection's local `messages` state in sync with store leftovers
+    useEffect(() => {
+      try {
+        if (Array.isArray(roomLocalMessages) && roomLocalMessages.length > 0) {
+          setMessages((prev) => {
+            // merge by id to avoid duplicates with history fetch
+            const byId = new Map<string, any>();
+            for (const m of roomLocalMessages) byId.set(String(m.id), m);
+            for (const m of prev) if (!byId.has(String(m.id))) byId.set(String(m.id), m as any);
+            const merged = Array.from(byId.values()) as ChatMessage[];
+            // keep sorted newest first
+            merged.sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+            return merged;
+          });
+        }
+      } catch {}
+    }, [roomLocalMessages]);
     const {send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
@@ -335,27 +373,26 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     });
 
     const onSubmit = useCallback(
-        (data: MessageForm) => {
-            if (!canSend) {
-                setError(disabledReason);
-                return;
-            }
-            if (isSubmittingRef.current) {
-                return;
-            }
-            const message = data.message?.trim() || "";
-            if (!message && !selectedFile) return;
+      async (data: MessageForm) => {
+        if (!canSend) {
+          setError(disabledReason);
+          return;
+        }
+        if (isSubmittingRef.current) {
+          return;
+        }
+        const message = data.message?.trim() || "";
+        if (!message && !selectedFile) return;
 
-            // Build content (file payload or plain text)
-            const contentToSend = selectedFile
-                ? JSON.stringify({
-                    type: "file",
-                    url: selectedFile.fileUrl,
-                    name: selectedFile.fileName,
-                    mime: selectedFile.fileType,
-                    caption: message || undefined,
-                })
-                : message;
+        const contentToSend = selectedFile
+          ? JSON.stringify({
+              type: "file",
+              url: selectedFile.fileUrl,
+              name: selectedFile.fileName,
+              mime: selectedFile.fileType,
+              caption: message || undefined,
+            })
+          : message;
 
             isSubmittingRef.current = true;
             const messageId = uuidv4();

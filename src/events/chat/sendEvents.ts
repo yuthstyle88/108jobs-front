@@ -65,6 +65,7 @@ export interface SendMessageDeps {
             status: ChatMessage['status'],
             patch?: Partial<ChatMessage>
         ) => void;
+        getMessageById?: (roomId: string, id: string) => ChatMessage | undefined;
     };
 }
 
@@ -417,4 +418,66 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
     } catch (ignored) {
     }
     return;
+}
+
+/** Manual resend (used when user taps "resend" in UI) */
+export async function resendChatMessage(
+  deps: SendMessageDeps,
+  originalOrId: string | ChatMessage
+): Promise<{ id: string; sent: boolean; acked: boolean }> {
+    const { roomId, socket, store } = deps;
+
+    try {
+        // Resolve message from id or use provided ChatMessage directly
+        let msg: ChatMessage | undefined;
+        let messageId: string;
+        if (typeof originalOrId === 'string') {
+          messageId = originalOrId;
+          msg = store?.getMessageById ? store.getMessageById(roomId, messageId) : undefined;
+          if (!msg) {
+            console.warn("[chat] resend: message not found in store", messageId);
+            return { id: messageId, sent: false, acked: false };
+          }
+        } else {
+          msg = originalOrId;
+          messageId = String(originalOrId.id);
+        }
+
+        // mark as pending again
+        store?.commitStatus?.(roomId, messageId, "pending");
+
+        // resend ข้อมูลชุดเดิม
+        const sent = wsSend(socket, createEvent("chat:message", msg));
+        dbg("resendChatMessage", { id: msg.id, sent });
+
+        let acked = false;
+        if (sent) {
+            try { acked = await waitForAck(socket, String(msg.id), 4000); } catch {}
+        }
+
+        const newStatus = !sent ? "failed" : (acked ? "sent" : "pending");
+        store?.commitStatus?.(roomId, String(msg.id), newStatus);
+
+        emitChatNewMessage({
+            roomId,
+            id: String(msg.id),
+            senderId: msg.senderId,
+            content: msg.content,
+            createdAt: msg.createdAt,
+            status: newStatus,
+        });
+
+        return { id: msg.id, sent, acked };
+    } catch (err) {
+        console.error("[chat] resend failed", err);
+        // messageId is always defined by this point
+        let messageId: string;
+        if (typeof originalOrId === 'string') {
+          messageId = originalOrId;
+        } else {
+          messageId = String(originalOrId.id);
+        }
+        store?.commitStatus?.(roomId, messageId, "failed");
+        return { id: messageId, sent: false, acked: false };
+    }
 }
