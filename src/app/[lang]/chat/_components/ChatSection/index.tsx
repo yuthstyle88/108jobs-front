@@ -264,7 +264,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const statusBeforeCancel = useStateMachineStore((s) => s.statusBeforeCancel);
 
     const setWorkflowState = (key: StatusKey, statusBeforeCancel?: StatusKey, isClientUpdate = true) => {
-        console.log('setWorkflowState:', {key, statusBeforeCancel, currentStatus, isClientUpdate});
         useStateMachineStore.setState({
             state: key,
             stepIndex: ORDER.indexOf(key),

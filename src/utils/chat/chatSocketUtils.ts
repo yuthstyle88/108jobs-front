@@ -366,7 +366,6 @@ export async function mapIncomingToChatMessage(
                 const aesKey = await importAesKey(opts.sharedKeyHex, 'decrypt');
                 const plain = await decrypt(m.content, aesKey);
                 if (plain && plain.length > 0) content = plain;
-                console.log("content: ", plain)
 
             } catch {
                 console.warn('mapIncomingToChatMessage: failed to decrypt message', m);

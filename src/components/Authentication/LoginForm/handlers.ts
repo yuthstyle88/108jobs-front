@@ -27,7 +27,6 @@ export const handleUseOAuthProvider = async(params: {
       `redirect_uri=${encodeURIComponent(redirectUri)}`,
       `state=${state}`,
     ].join("&");
-  console.log(requestUri);
 
   localStorage.setItem(
     "oauthState",

@@ -101,7 +101,6 @@ function reconcileRooms(st: BGState) {
 
         // เปิด adapter สำหรับห้องที่ต้องการ
         for (const id of want) {
-            console.log('ID room', id);
             if (String(active ?? '') === id) continue;
             if (st.adapters.has(id)) continue;
 

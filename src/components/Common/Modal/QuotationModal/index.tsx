@@ -119,7 +119,6 @@ const QuotationModal: React.FC<QuotationModalProps> = ({
             if (key === 'startingDay' || key === 'workingDays') {
                 const startingDay = key === 'startingDay' ? value as string : prev.startingDay;
                 const workingDays = key === 'workingDays' ? Number(value) : prev.workingDays;
-                console.log('Updating deliveryDay:', {startingDay, workingDays}); // Debug log
                 if (startingDay && !isNaN(workingDays) && workingDays >= 0) {
                     updatedForm.deliveryDay = addDaysYMD(startingDay, workingDays);
                     // Clear deliveryDay error when auto-generated

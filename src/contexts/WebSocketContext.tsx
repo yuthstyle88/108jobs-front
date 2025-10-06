@@ -18,7 +18,6 @@ const WebSocketContext = createContext<WebSocketContextValue | undefined>(undefi
 export const WebSocketProvider: React.FC<React.PropsWithChildren<{ options?: UseWebSocketOptions }>> = ({ children, options }) => {
 
   const ws = useWebSocket(options);
-    console.log('WebSocketProvider', ws);
   const value = React.useMemo(() => ws, [ws]);
   return (
     <WebSocketContext.Provider value={value}>

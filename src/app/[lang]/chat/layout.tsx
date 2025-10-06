@@ -63,8 +63,6 @@ export default function ProfileLayout({ children }: LayoutProps) {
       }
     }, [token]);
 
-    console.log("token", token);
-    console.log("setSenderId", senderId);
     return (
         <ChatLanguageProvider>
             <ChatRoomsProvider>

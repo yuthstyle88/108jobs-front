@@ -133,7 +133,6 @@ async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<bo
 
     // Helper: checks if payload matches our id (by 'id' only for chat:message)
     const matchesId = (obj: any): boolean => {
-      console.log('waitForAck/matchesId', { obj, idToMatch });
       if (!obj) return false;
       // Check top-level id
       if (obj.id != null && String(obj.id) === idToMatch) return true;
