@@ -471,7 +471,7 @@ const waitForSharedKey = (timeoutMs: number = 5000): Promise<string | undefined>
  * The caller can decide how to broadcast the mapped messages.
  */
 export async function fetchHistoryPage(
-    params: { roomId: string; cursor: string | null; limit: number },
+    params: { roomId: string; cursor: string | null; limit: number; lastReadId?: string | null },
     deps: {
         localUserId: number;
         receivedSet: Set<string>;
@@ -510,15 +510,32 @@ export async function fetchHistoryPage(
         const mapped = await mapIncomingToChatMessage(m, {
             token: realToken,
             sharedKeyHex: sharedKey,
-            fallbackRoomId: params.roomId + "hello",
+            fallbackRoomId: params.roomId,
             localUserId: deps.localUserId,
             receivedSet: deps.receivedSet,
             decryptLabel: "history line",
         });
 
         if (mapped) {
+            // Mark read/unread relative to lastReadId if provided.
+            if (typeof params.lastReadId !== 'undefined') {
+                // Assume items are ordered newest -> oldest within the page.
+                // All items before hitting lastReadId are newer (unread),
+                // once we hit lastReadId, it and the rest are read.
+                // We'll compute this after the loop to avoid early assumptions.
+            }
             mappedItems.push(mapped);
             if (deps.broadcast) deps.broadcast(mapped);
+        }
+    }
+
+    // Post-process isRead flags based on lastReadId
+    if (typeof params.lastReadId !== 'undefined' && mappedItems.length > 0) {
+        let hit = false;
+        for (let i = 0; i < mappedItems.length; i++) {
+            const it = mappedItems[i];
+            if (String(it.id) === String(params.lastReadId)) hit = true;
+            (mappedItems[i] as any).isRead = hit;
         }
     }
 

@@ -1,3 +1,4 @@
+const READ_LAST_STORAGE_PREFIX = "chat:lastRead:";
 import {clearAuthCookie, isBrowser, setAuthCookie} from "@/utils/browser";
 import * as cookie from "cookie";
 import {jwtDecode} from "jwt-decode";
@@ -21,6 +22,7 @@ interface AuthInfo {
   claims?: Claims;
   auth: string;
   sharedKey?: string;
+  readLastByRoom?: Record<string, string | null>; // per-room last-read cache
 }
 
 export class UserService {
@@ -32,6 +34,7 @@ export class UserService {
 
   private constructor() {
     this.#setAuthInfo();
+    this.#hydrateReadLastMap();
   }
 
   public static get Instance() {
@@ -50,6 +53,20 @@ export class UserService {
     return Boolean(this.authInfo?.auth);
   }
 
+  /** Get last-read message id for a room (null if unknown) */
+  public getReadLastId(roomId: string): string | null {
+    return this.authInfo?.readLastByRoom?.[roomId] ?? null;
+  }
+
+  /** Set last-read message id for a room and persist per-user */
+  public setReadLastId(roomId: string, id: string | null) {
+    if (!isBrowser()) return;
+    if (!this.authInfo) this.authInfo = { auth: "" } as AuthInfo;
+    if (!this.authInfo.readLastByRoom) this.authInfo.readLastByRoom = {};
+    this.authInfo.readLastByRoom[roomId] = id ?? null;
+    this.#persistReadLastMap();
+  }
+
 
   public login({
     res,
@@ -65,6 +82,7 @@ export class UserService {
         toast("loggedIn");
       }
       this.#setAuthInfo({sharedKey});
+      this.#hydrateReadLastMap();
       setAuthCookie(res.jwt);
 
       if (!VALID_LANGUAGES.includes(this.currentLanguage)) return;
@@ -75,6 +93,7 @@ export class UserService {
 
     } else {
       this.#setAuthInfo({rawCookie: res.toString()});
+      this.#hydrateReadLastMap();
     }
   }
 
@@ -111,6 +130,29 @@ export class UserService {
       return undefined;
       // throw msg;
     }
+  }
+
+  #hydrateReadLastMap() {
+    if (!isBrowser()) return;
+    const uid = this.authInfo?.claims?.sub ?? "anon";
+    try {
+      const raw = localStorage.getItem(READ_LAST_STORAGE_PREFIX + uid);
+      const parsed = raw ? (JSON.parse(raw) as Record<string, string | null>) : {};
+      if (!this.authInfo) this.authInfo = { auth: "" } as AuthInfo;
+      this.authInfo.readLastByRoom = parsed || {};
+    } catch {
+      if (!this.authInfo) this.authInfo = { auth: "" } as AuthInfo;
+      this.authInfo.readLastByRoom = {};
+    }
+  }
+
+  #persistReadLastMap() {
+    if (!isBrowser()) return;
+    const uid = this.authInfo?.claims?.sub ?? "anon";
+    try {
+      const data = JSON.stringify(this.authInfo?.readLastByRoom || {});
+      localStorage.setItem(READ_LAST_STORAGE_PREFIX + uid, data);
+    } catch {}
   }
 
   #setAuthInfo(opts: {rawCookie?: string; sharedKey?: string} = {},

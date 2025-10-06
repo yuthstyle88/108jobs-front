@@ -31,6 +31,7 @@ import {useChatRoom} from '@/hooks/chat/useChatRoom';
 import {useChatHistory} from '@/hooks/chat/useChatHistory';
 
 import { useChatStore } from "@/store/chatStore";
+import { useRoomReadLastId } from "@/hooks/chat/useReadLastId";
 
 
 type MessageForm = { message: string };
@@ -107,6 +108,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         }
       } catch {}
     }, [roomLocalMessages?.length, roomId]);
+
     const {send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
@@ -131,6 +133,27 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
+
+    // Room-scoped last-read id (wired to roomsStore + UserService)
+    const { lastReadId } = useRoomReadLastId(roomId);
+
+    // Apply read flags to current message list (newest-first)
+    useEffect(() => {
+        if (!lastReadId || !Array.isArray(messages) || messages.length === 0) return;
+        setMessages((prev) => {
+            let hit = false;
+            let changed = false;
+            const mapped = prev.map((m) => {
+                const isHit = String(m.id) === String(lastReadId);
+                if (isHit) hit = true;
+                const shouldRead = hit; // hit and below are read
+                if ((m as any).isRead === shouldRead) return m;
+                changed = true;
+                return { ...(m as any), isRead: shouldRead } as ChatMessage;
+            });
+            return changed ? mapped : prev;
+        });
+    }, [lastReadId, messages]);
 
     const {
         state: {pageCursor, hasMore, isFetching},
