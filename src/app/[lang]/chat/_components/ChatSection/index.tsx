@@ -74,21 +74,21 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const roomId = roomData.room.room.id;
 
     // Hydrate UI from local store (messages + pending) so leftover local data shows immediately
-    const roomLocalMessages = useChatStore(
-      React.useCallback(
-        (s) => {
-          const all = [...(s.messages || []), ...(s.pendingMessages || [])];
-          const filtered = all.filter((m: any) => String(m?.roomId) === String(roomId));
-          // Sort newest first to match current UI order
-          return filtered.sort((a: any, b: any) => {
-            const ta = new Date(a?.createdAt || 0).getTime();
-            const tb = new Date(b?.createdAt || 0).getTime();
-            return tb - ta;
-          });
-        },
-        [roomId]
-      )
-    ) as unknown as ChatMessage[];
+    const storeMessages = useChatStore((s) => s.messages);
+    const storePending = useChatStore((s) => s.pendingMessages);
+    const roomLocalMessages = useMemo(() => {
+      const all = [
+        ...(Array.isArray(storeMessages) ? storeMessages : []),
+        ...(Array.isArray(storePending) ? storePending : []),
+      ];
+      const filtered = all.filter((m: any) => String(m?.roomId) === String(roomId));
+      // Sort newest first to match current UI order
+      return filtered.sort((a: any, b: any) => {
+        const ta = new Date(a?.createdAt || 0).getTime();
+        const tb = new Date(b?.createdAt || 0).getTime();
+        return tb - ta;
+      });
+    }, [storeMessages, storePending, roomId]) as unknown as ChatMessage[];
 
     // Keep ChatSection's local `messages` state in sync with store leftovers
     useEffect(() => {
@@ -106,7 +106,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
           });
         }
       } catch {}
-    }, [roomLocalMessages]);
+    }, [roomLocalMessages?.length, roomId]);
     const {send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
