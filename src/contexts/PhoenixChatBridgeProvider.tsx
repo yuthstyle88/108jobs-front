@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useChatStore } from "@/store/chatStore";
 
 // Try to use your existing WebSocketContext (if present in your codebase).
@@ -47,89 +47,102 @@ export const PhoenixChatBridgeProvider: React.FC<WebSocketProviderProps> = ({ ch
   const ws = useWebSocketContext?.() as any;
   const store = useChatStore();
 
+  const wiredWsRef = useRef<any>(null);
+  const senderWiredRef = useRef<boolean>(false);
+  const lastFlushAtRef = useRef<number>(0);
+
   useEffect(() => {
     if (!ws) return;
 
-    // 1) Tell store how to send a message (transport-level)
-    // Do NOT generate an id on client; wait for the server to return one.
-    store.setSender(async (draft) => {
-      try {
-        const ch = pickChannel(ws, roomId);
-        if (ch && typeof ch.push === "function") {
-          // Phoenix 'push' returns a Push object that supports .receive("ok", cb)
-          const id = await new Promise<string | "">((resolve) => {
-            try {
-              const push = ch.push("chat:message", draft);
-              let settled = false;
-              const to = setTimeout(() => { if (!settled) { settled = true; resolve(""); } }, 4000);
-              if (typeof push?.receive === "function") {
-                push.receive("ok", (resp: any) => {
-                  if (settled) return;
-                  settled = true;
-                  clearTimeout(to);
-                  resolve(typeof resp?.id === "string" ? resp.id : "");
-                });
-                push.receive("error", () => {
-                  if (settled) return;
-                  settled = true;
-                  clearTimeout(to);
-                  resolve("");
-                });
-                push.receive("timeout", () => {
-                  if (settled) return;
-                  settled = true;
-                  clearTimeout(to);
-                  resolve("");
-                });
-              } else {
-                // No receive available → fall back to empty (store will treat as send failure)
-                resolve("");
-              }
-            } catch {
-              resolve("");
-            }
-          });
-          return id || false;
-        }
-        // If we only have ws-level API without acks, we cannot obtain an id → return false
-        if (typeof ws?.push === "function") {
-          try { ws.push("chat:message", draft); } catch {}
-          return false;
-        }
-        if (typeof ws?.emit === "function") {
-          try { ws.emit("chat:message", draft); } catch {}
-          return false;
-        }
-        if (typeof ws?.send === "function") {
-          try { ws.send(JSON.stringify({ event: "chat:message", payload: draft })); } catch {}
-          return false;
-        }
-        return false;
-      } catch {
-        return false;
-      }
-    });
+    // Avoid wiring the same ws instance repeatedly
+    if (wiredWsRef.current === ws) return;
+    wiredWsRef.current = ws;
 
-    // 2) Reflect connectivity (so store can auto-flush pending on reconnection)
-    try {
-      if (typeof ws?.connected === "boolean") {
-        store.setOnline(!!ws.connected);
-        if (ws.connected) { void store.flushPending(); }
+    const maybeFlush = () => {
+      const now = Date.now();
+      if (now - lastFlushAtRef.current > 1500) {
+        lastFlushAtRef.current = now;
+        void store.flushPending();
       }
-      // Optional: if your context exposes 'onConnect'/'onDisconnect', wire them here.
-      if (typeof ws?.on === "function") {
-        const onOpen = () => { store.setOnline(true); void store.flushPending(); };
-        const onClose = () => store.setOnline(false);
-        try { ws.on("open", onOpen); } catch {}
-        try { ws.on("close", onClose); } catch {}
-        return () => {
-          try { ws.off?.("open", onOpen); } catch {}
-          try { ws.off?.("close", onClose); } catch {}
-        };
+    };
+
+    // Wire only when network is ONLINE (open). Do not set sender on mount.
+    const onOpen = () => {
+      store.setOnline(true);
+
+      // Lazily wire sender exactly once per ws instance
+      if (!senderWiredRef.current) {
+        senderWiredRef.current = true;
+        store.setSender(async (draft) => {
+          try {
+            const ch = pickChannel(ws, roomId);
+            if (ch && typeof ch.push === "function") {
+              const id = await new Promise<string | "">((resolve) => {
+                try {
+                  const push = ch.push("chat:message", draft);
+                  let settled = false;
+                  const to = setTimeout(() => { if (!settled) { settled = true; resolve(""); } }, 4000);
+                  if (typeof push?.receive === "function") {
+                    push.receive("ok", (resp: any) => {
+                      if (settled) return;
+                      settled = true;
+                      clearTimeout(to);
+                      resolve(typeof resp?.id === "string" ? resp.id : "");
+                    });
+                    push.receive("error", () => {
+                      if (settled) return;
+                      settled = true;
+                      clearTimeout(to);
+                      resolve("");
+                    });
+                    push.receive("timeout", () => {
+                      if (settled) return;
+                      settled = true;
+                      clearTimeout(to);
+                      resolve("");
+                    });
+                  } else {
+                    resolve("");
+                  }
+                } catch {
+                  resolve("");
+                }
+              });
+              return id || false;
+            }
+            if (typeof ws?.push === "function") { try { ws.push("chat:message", draft); } catch {} return false; }
+            if (typeof ws?.emit === "function") { try { ws.emit("chat:message", draft); } catch {} return false; }
+            if (typeof ws?.send === "function") { try { ws.send(JSON.stringify({ event: "chat:message", payload: draft })); } catch {} return false; }
+            return false;
+          } catch {
+            return false;
+          }
+        });
       }
-    } catch {}
+
+      maybeFlush();
+    };
+
+    const onClose = () => {
+      store.setOnline(false);
+    };
+
+    try { ws.on?.("open", onOpen); } catch {}
+    try { ws.on?.("close", onClose); } catch {}
+
+    // If the socket is already connected, trigger onOpen once
+    if (typeof ws?.connected === "boolean" && ws.connected) {
+      onOpen();
+    }
+
+    return () => {
+      try { ws.off?.("open", onOpen); } catch {}
+      try { ws.off?.("close", onClose); } catch {}
+      wiredWsRef.current = null;
+      senderWiredRef.current = false;
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ws, roomId, store.setSender, store.setOnline]);
+  }, [ws, roomId]);
 
   useEffect(() => {
     if (!ws) return; // allow channel-based wiring even when ws.on is missing

@@ -125,19 +125,25 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [bottomPad, setBottomPad] = useState<number>(0);
     // Room-scoped last-read id (wired to roomsStore + UserService)
     const {lastReadId} = useRoomReadLastId(roomId);
+    const meId = Number(localUser?.id ?? 0);
+
+    // this data for the chat section send failed load form localstorage
     const roomLocalMessages = useMemo(() => {
         const all = [
             ...(Array.isArray(storeMessages) ? storeMessages : []),
             ...(Array.isArray(storePending) ? storePending : []),
         ];
-        const filtered = all.filter((m: any) => String(m?.roomId) === String(roomId));
+        const filtered = all.filter((m: any) =>
+            String(m?.roomId) === String(roomId) && Number(m?.senderId) !== meId
+        );
         // Sort newest first to match current UI order
         return filtered.sort((a: any, b: any) => {
             const ta = new Date(a?.createdAt || 0).getTime();
             const tb = new Date(b?.createdAt || 0).getTime();
             return tb - ta;
         });
-    }, [storeMessages, storePending, roomId]) as unknown as ChatMessage[];
+    }, [storeMessages, storePending, roomId, meId]) as unknown as ChatMessage[];
+
     const setScrollRef = useCallback((el: HTMLDivElement | null) => {
         scrollContainerRef.current = el;
         if (el) setScrollParentEl(el);
