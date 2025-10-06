@@ -1,4 +1,3 @@
-import {TYPING_EVENT_NAMES} from "@/utils/chat/types";
 import type {RefObject} from "react";
 import {HttpService} from "@/services";
 import {REQUEST_STATE} from "@/services/HttpService";
@@ -9,7 +8,7 @@ export function parseTypingDetail(env: any, fallbackRoomId: string, localUserId:
     try {
         // Minimal parser: look only at event and payload
         console.log("parseTypingDetail", env);
-        const evName = String(env?.event ?? env?.data?.event ?? env?.content ?? '');
+        const evName = String(env?.event ?? env?.content);
         if (!evName) return null;
         // Accept only typing events
         const isTypingEvent = evName === 'chat:typing' || evName.includes('typing');
@@ -44,7 +43,7 @@ export function parseTypingDetail(env: any, fallbackRoomId: string, localUserId:
             else typingFlag = true; // default pulse when only "chat:typing" is present
         }
         console.log("typingFlag", {pureRoomId, senderIdNum});
-        return { roomId: pureRoomId, senderId: senderIdNum, typing: !!typingFlag };
+        return { roomId: pureRoomId, senderId: senderIdNum, typing: typingFlag };
     } catch {
         return null;
     }
@@ -55,8 +54,7 @@ export async function maybeHandleStatusChange(env: any, roomId: string, setRefre
     try {
 
         const evName = String(env?.event);
-
-        if (!evName || !evName.includes("join")) return false;
+        if (!evName || !evName.includes("update")) return false;
         try {
             const chatRoomRes = await HttpService.client.getChatRoom(roomId);
             if (chatRoomRes.state === REQUEST_STATE.SUCCESS) {

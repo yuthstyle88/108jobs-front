@@ -8,6 +8,7 @@ export type { ChatRoomId } from "./types/ChatRoomId";
 export type { ChatParticipant } from "./types/ChatParticipant";
 export type { LastMessage } from "./types/LastMessage";
 export type { ChatRoomResponse } from "./types/ChatRoomResponse";
+export type { ChatRoomData } from "./types/ChatRoomResponse";
 export type { CreateChatRoomRequest } from "./types/CreateChatRoomRequest";
 export type { ChatMessagesResponse } from "./types/ChatMessagesResponse";
 export type { ChatHistoryQuery } from "./types/ChatHistoryQuery";

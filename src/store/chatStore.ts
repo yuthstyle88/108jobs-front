@@ -175,13 +175,13 @@ export const useChatStore = create<ChatState>((set, get) => ({
             // skip messages that are already marked failed or already scheduled far in the future
             if ((m as any).status === "failed") continue;
             try {
-                const sentId = await Promise.resolve(sender({
+                const sentId = await sender({
                     roomId: m.roomId,
                     senderId: m.senderId as any,
                     content: m.content as any,
                     createdAt: m.createdAt as any,
                     status: m.status as any,
-                }));
+                });
                 const ok = typeof sentId === "string" && sentId.length > 0;
                 if (!ok) {
                     // update backoff

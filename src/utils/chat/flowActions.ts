@@ -1,7 +1,8 @@
 import {FlowActions, StatusKey} from '@/components/FreelanceChatFlow';
 import {v4 as uuidv4} from 'uuid';
-import type {ChatMessage as WsChatMessage, LocalUser} from 'lemmy-js-client';
+import type {ChatMessage as WsChatMessage, ChatRoomData, LocalUser} from 'lemmy-js-client';
 import {emitChatNewMessage, sendChatMessage, SendMessageDeps} from "@/events/chat";
+import React from "react";
 
 export type CreateFlowActionsDeps = {
     t: (k: string) => string | undefined;
@@ -11,7 +12,7 @@ export type CreateFlowActionsDeps = {
     setMessages: React.Dispatch<React.SetStateAction<WsChatMessage[]>>;
     handleFileUpload: (e: Event) => void;
     scrollContainerRef: React.RefObject<any>;
-    currentRoom?: { roomId?: string | number } | null;
+    currentRoom: ChatRoomData;
     roomId: string;
     localUser: LocalUser;
     setError: (msg: string) => void;

@@ -1,4 +1,4 @@
-import type {ChatMessage} from "lemmy-js-client";
+import type {ChatMessage, LocalUserId} from "lemmy-js-client";
 import {UserService} from "@/services";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import {encrypt} from "@/lib/web-crypto";
@@ -33,7 +33,7 @@ export function createEvent<T>(
 // ฟังก์ชันย่อย สำหรับสร้าง chat:message event โดยเฉพาะ
 export function createMessage(
     content: string,
-    senderId: number,
+    senderId: LocalUserId,
     id?: string,
 ): ChatMessage {
     if (!content || content.trim().length === 0) {
@@ -71,14 +71,14 @@ export interface SendMessageDeps {
 
 export interface SendMessagePayload {
     message: string;
-    senderId: number;
+    senderId: LocalUserId;
     id?: string
 }
 
 // --- Generic event-deps for socket sends ---
 export interface SendEventDeps {
     roomId: string;
-    senderId: number;
+    senderId: LocalUserId;
     socket: any;
 }
 
@@ -298,7 +298,7 @@ export function sendRoomUpdateEvent(
 ) {
     const { socket } = deps;
     const packet = createEvent(
-        "room:update",
+        "chat:update",
         { ...update },
     );
     wsSend(socket, packet);

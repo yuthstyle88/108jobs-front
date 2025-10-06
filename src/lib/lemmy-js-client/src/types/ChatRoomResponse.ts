@@ -8,3 +8,5 @@ export type ChatRoomResponse = {
     lastMessage?: LastMessage;
     workflow?: Workflow;
 };
+
+export type ChatRoomData = ChatRoomResponse;

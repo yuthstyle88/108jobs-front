@@ -2,7 +2,7 @@ import {useCallback} from 'react';
 import {HttpService, REQUEST_STATE} from '@/services/HttpService';
 import {useWorkflow} from '@/hooks/chat/useWorkflow';
 import {getLatestProposedQuoteSeq} from '@/utils/chat/message';
-import type {ApproveQuotationForm, CreateInvoiceForm, LocalUser} from 'lemmy-js-client';
+import type {ApproveQuotationForm, ChatRoomData, CreateInvoiceForm, LocalUser, PostId} from 'lemmy-js-client';
 import type {WsMessageSender} from '@/utils/chat/types';
 import type {StatusKey} from '@/components/FreelanceChatFlow';
 import {sendStructuredMessage} from '@/utils/chat/structured';
@@ -22,7 +22,7 @@ function extractErr(res: any, fallback: string) {
 // Deps the hook requires. Keep it flexible and explicit.
 export type UseWorkflowActionsDeps = {
     messages: any[];
-    roomData: any;
+    roomData: ChatRoomData;
     localUser: LocalUser;
     roomId: string;
     selectedFile: { fileUrl: string; fileType: string; fileName: string } | null;
@@ -42,7 +42,7 @@ export type UseWorkflowActionsDeps = {
     approveQuotationApi: (form: ApproveQuotationForm) => Promise<any>;
     submitStartWorkApi: (form: any) => Promise<any>;
     approveWorkApi: (form: any) => Promise<any>;
-    postId?: number | string | null;
+    postId?: PostId | null;
     walletId?: number | null;
     currentStatus: StatusKey;
 };
@@ -115,7 +115,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
     const startWorkflowAction = useCallback(async () => {
         setError(null);
         try {
-            const pid = (postId ?? (roomData?.room?.room?.postId ?? roomData?.room?.post?.id ?? roomData?.postId ?? roomData?.room?.postId)) as any;
+            const pid = postId;
             if (!pid) {
                 setError(t('profileChat.missingPostIdForQuotation') || 'This chat is not linked to a post. You cannot create a quotation.');
                 return false;
@@ -132,12 +132,6 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                     } catch {
                     }
                 }
-                const readable = t('profileChat.proposeQuoteMsg');
-                const payload = {type: 'employer-started'} as any;
-                const sentId = await sendStructuredMessage(sendMessage, roomId, payload, localUser.id, {
-                    previewText: readable
-                });
-                addOwnMessage(JSON.stringify(payload), sentId);
                 goToStatusAndBroadcast('WaitForFreelancerQuotation');
                 return true;
             } else {
@@ -241,7 +235,6 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
                 previewText: readable
             });
             addOwnMessage(JSON.stringify(payload), sentId);
-
             goToStatusAndBroadcast('OrderApproved');
             return true;
         } catch (e: any) {
@@ -415,7 +408,7 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
             if (!workflowId) return false;
 
             const seqNumber = getLatestProposedQuoteSeq(messages as any, 1);
-            const form: any = {seqNumber, workflowId: roomData.workflow.id, currentStatus};
+            const form: any = {seqNumber, workflowId: roomData.workflow?.id, currentStatus};
             const res = await HttpService.client.cancelJob(form as any);
             const ok = res?.state === REQUEST_STATE.SUCCESS && Boolean(res?.data?.success);
             if (!ok) {

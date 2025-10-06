@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {ProfileImage} from "@/constants/images";
-import type {ChatMessage, LocalUser, Post} from "lemmy-js-client";
+import type {ChatMessage, ChatRoomData, LocalUser, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
@@ -30,8 +30,8 @@ import {emitChatNewMessage} from "@/events/chat";
 import {useChatRoom} from '@/hooks/chat/useChatRoom';
 import {useChatHistory} from '@/hooks/chat/useChatHistory';
 
-import { useChatStore } from "@/store/chatStore";
-import { useRoomReadLastId } from "@/hooks/chat/useReadLastId";
+import {useChatStore} from "@/store/chatStore";
+import {useRoomReadLastId} from "@/hooks/chat/useReadLastId";
 
 
 type MessageForm = { message: string };
@@ -42,7 +42,7 @@ interface ChatSectionProps {
     partnerAvatar: string;
     partnerId?: number;
     partnerAvailable?: boolean;
-    roomData: any;
+    roomData: ChatRoomData;
     localUser: LocalUser;
     peerPublicKeyHex: string;
 }
@@ -65,12 +65,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const disabledReason = !myAvailable
         ? (t("profileChat.youAreNotAvailable") || "You are currently unavailable. Enable availability in your profile to send messages.")
         : (t("profileChat.userNotAvailable") || "This user is currently not accepting messages. You can read history but cannot send new messages.");
-    const latestIncomingRef = useRef<{
-        roomId: string;
-        content: string;
-        senderId: number;
-        timestamp: string
-    } | null>(null);
     const receivedIds = useMemo(() => new Set<string>(), []);
     const roomId = roomData.room.room.id;
 
@@ -78,35 +72,36 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const storeMessages = useChatStore((s) => s.messages);
     const storePending = useChatStore((s) => s.pendingMessages);
     const roomLocalMessages = useMemo(() => {
-      const all = [
-        ...(Array.isArray(storeMessages) ? storeMessages : []),
-        ...(Array.isArray(storePending) ? storePending : []),
-      ];
-      const filtered = all.filter((m: any) => String(m?.roomId) === String(roomId));
-      // Sort newest first to match current UI order
-      return filtered.sort((a: any, b: any) => {
-        const ta = new Date(a?.createdAt || 0).getTime();
-        const tb = new Date(b?.createdAt || 0).getTime();
-        return tb - ta;
-      });
+        const all = [
+            ...(Array.isArray(storeMessages) ? storeMessages : []),
+            ...(Array.isArray(storePending) ? storePending : []),
+        ];
+        const filtered = all.filter((m: any) => String(m?.roomId) === String(roomId));
+        // Sort newest first to match current UI order
+        return filtered.sort((a: any, b: any) => {
+            const ta = new Date(a?.createdAt || 0).getTime();
+            const tb = new Date(b?.createdAt || 0).getTime();
+            return tb - ta;
+        });
     }, [storeMessages, storePending, roomId]) as unknown as ChatMessage[];
 
     // Keep ChatSection's local `messages` state in sync with store leftovers
     useEffect(() => {
-      try {
-        if (Array.isArray(roomLocalMessages) && roomLocalMessages.length > 0) {
-          setMessages((prev) => {
-            // merge by id to avoid duplicates with history fetch
-            const byId = new Map<string, any>();
-            for (const m of roomLocalMessages) byId.set(String(m.id), m);
-            for (const m of prev) if (!byId.has(String(m.id))) byId.set(String(m.id), m as any);
-            const merged = Array.from(byId.values()) as ChatMessage[];
-            // keep sorted newest first
-            merged.sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
-            return merged;
-          });
+        try {
+            if (Array.isArray(roomLocalMessages) && roomLocalMessages.length > 0) {
+                setMessages((prev) => {
+                    // merge by id to avoid duplicates with history fetch
+                    const byId = new Map<string, any>();
+                    for (const m of roomLocalMessages) byId.set(String(m.id), m);
+                    for (const m of prev) if (!byId.has(String(m.id))) byId.set(String(m.id), m as any);
+                    const merged = Array.from(byId.values()) as ChatMessage[];
+                    // keep sorted newest first
+                    merged.sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+                    return merged;
+                });
+            }
+        } catch {
         }
-      } catch {}
     }, [roomLocalMessages?.length, roomId]);
 
     const {send, canGo, ORDER} = useWorkflowStepper();
@@ -115,7 +110,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [showJobDetailModal, setShowJobDetailModal] = useState<boolean>(false);
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
-    const [currentRoom, setCurrentRoom] = useState<any>(roomData);
+    const [currentRoom, setCurrentRoom] = useState<ChatRoomData>(roomData);
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
@@ -135,7 +130,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
 
     // Room-scoped last-read id (wired to roomsStore + UserService)
-    const { lastReadId } = useRoomReadLastId(roomId);
+    const {lastReadId} = useRoomReadLastId(roomId);
 
     // Apply read flags to current message list (newest-first)
     useEffect(() => {
@@ -149,15 +144,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 const shouldRead = hit; // hit and below are read
                 if ((m as any).isRead === shouldRead) return m;
                 changed = true;
-                return { ...(m as any), isRead: shouldRead } as ChatMessage;
+                return {...(m as any), isRead: shouldRead} as ChatMessage;
             });
             return changed ? mapped : prev;
         });
     }, [lastReadId, messages]);
 
     const {
-        state: {pageCursor, hasMore, isFetching},
-        actions: {fetchHistory, reset: resetHistory},
+        state: {hasMore, isFetching},
+        actions: {fetchHistory},
     } = useChatHistory({
         roomId,
         pageSize: 20,
@@ -169,7 +164,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         setMessages
     });
 
-    const roomPostId = currentRoom?.room?.post?.id;
+    const roomPostId = currentRoom.room.post?.id;
     const roomCommentId = currentRoom?.room?.currentComment?.id;
     const postCreatorId = post?.creatorId;
     const isEmployer = postCreatorId != null && person?.id != null ? String(postCreatorId) === String(person?.id) : undefined;
@@ -192,7 +187,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             setTimeout(scrollToLatest, 0);
         }
     };
-
 
     // Measure chat input height to prevent last message being obscured
     const inputContainerRef = useRef<HTMLDivElement>(null);
@@ -228,9 +222,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     }, []);
     // Switch to useChatRoom API (new design)
     const {
-        actions: {sendMessage, sendTyping},
+        actions: {sendMessage, sendTyping, sendRoomUpdate},
         state: {refreshRoomData, isPartnerTyping},
-    } = useChatRoom({roomId, peerPublicKeyHex, setMessages, localUser});
+    } = useChatRoom({roomId, peerPublicKeyHex, setMessages, localUser, roomData: currentRoom});
 
     useEffect(() => {
         if (!refreshRoomData) return;
@@ -245,17 +239,27 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             markSeen(roomId);
             // announce enter immediately on join
             if (typeof window !== 'undefined') {
-                window.dispatchEvent(new CustomEvent('chat:status-change', { detail: { roomId, status: 'room:enter' } }));
+                window.dispatchEvent(new CustomEvent('chat:status-change', {detail: {roomId, status: 'room:enter'}}));
             }
-        } catch {}
+        } catch {
+        }
         return () => {
             try {
                 // announce leave on unmount / room change
                 if (typeof window !== 'undefined') {
-                    window.dispatchEvent(new CustomEvent('chat:status-change', { detail: { roomId, status: 'room:leave' } }));
+                    window.dispatchEvent(new CustomEvent('chat:status-change', {
+                        detail: {
+                            roomId,
+                            status: 'room:leave'
+                        }
+                    }));
                 }
-            } catch {}
-            try { setActiveRoomId(''); } catch {}
+            } catch {
+            }
+            try {
+                setActiveRoomId('');
+            } catch {
+            }
         };
     }, [roomId, setActiveRoomId, markRoomRead, markSeen]);
 
@@ -274,7 +278,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         }
     };
 
-    const {tryUpdateStatusFromItems, goToStatus, handleChangeStatus} = useWorkflowStatus({
+    const {goToStatus, handleChangeStatus} = useWorkflowStatus({
         currentStatus,
         setWorkflowState,
         hasStarted,
@@ -296,20 +300,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 ? apiToUiStatus(apiStatusBeforeCancelRaw as any)
                 : undefined;
             if (uiStatus) {
-                const now = Date.now();
-                const recentClientUpdate = lastClientUpdateRef.current;
-                const gracePeriodMs = 5000;
-                if (
-                    recentClientUpdate?.status &&
-                    recentClientUpdate.status !== uiStatus &&
-                    now - recentClientUpdate.timestamp < gracePeriodMs
-                ) {
-                    console.log('useEffect: Skipping server update due to recent client update', {
-                        uiStatus,
-                        recentClientUpdate,
-                    });
-                    return;
-                }
                 const shouldBeStarted = uiStatus !== 'Completed' && uiStatus !== 'Cancelled';
                 setHasStarted(shouldBeStarted);
                 if (uiStatus !== currentStatus || uiStatusBeforeCancel !== statusBeforeCancel) {
@@ -332,7 +322,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         setMessages((prev) => [
             {
                 id: messageId,
-                roomId: currentRoom?.roomId || roomId,
+                roomId,
                 content,
                 createdAt: new Date().toISOString(),
                 status: 'pending',
@@ -343,19 +333,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         scrollToLatestSoon();
         return messageId;
     }, [currentRoom, roomId, localUser.id]);
-
-    // Shim for legacy sendRoomUpdate: forward as a structured chat message, new signature
-    const sendRoomUpdate = useCallback((roomIdArg: string, update: Record<string, any>) => {
-        try {
-            // Forward a room status-change via DOM event; socket layer will bridge this to server
-            if (typeof window !== 'undefined') {
-                const detail = { roomId: roomIdArg, ...update };
-                window.dispatchEvent(new CustomEvent('chat:status-change', { detail }));
-            }
-        } catch (e) {
-            try { console.error('[sendRoomUpdate] failed', e); } catch {}
-        }
-    }, []);
 
     // Centralize all workflow actions into a dedicated hook
     const {
@@ -395,26 +372,26 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     });
 
     const onSubmit = useCallback(
-      async (data: MessageForm) => {
-        if (!canSend) {
-          setError(disabledReason);
-          return;
-        }
-        if (isSubmittingRef.current) {
-          return;
-        }
-        const message = data.message?.trim() || "";
-        if (!message && !selectedFile) return;
+        async (data: MessageForm) => {
+            if (!canSend) {
+                setError(disabledReason);
+                return;
+            }
+            if (isSubmittingRef.current) {
+                return;
+            }
+            const message = data.message?.trim() || "";
+            if (!message && !selectedFile) return;
 
-        const contentToSend = selectedFile
-          ? JSON.stringify({
-              type: "file",
-              url: selectedFile.fileUrl,
-              name: selectedFile.fileName,
-              mime: selectedFile.fileType,
-              caption: message || undefined,
-            })
-          : message;
+            const contentToSend = selectedFile
+                ? JSON.stringify({
+                    type: "file",
+                    url: selectedFile.fileUrl,
+                    name: selectedFile.fileName,
+                    mime: selectedFile.fileType,
+                    caption: message || undefined,
+                })
+                : message;
 
             isSubmittingRef.current = true;
             const messageId = uuidv4();
@@ -472,7 +449,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
 
     // Determine latest quotation amount and whether employer has sufficient balance to approve
-    const latestQuoteAmount = currentRoom.room.post.budget;
+    const latestQuoteAmount = currentRoom.room.post?.budget;
 
     const availableBalance: number = useMemo(() => {
         const total = Number((wallet as any)?.balanceAvailable ?? (wallet as any)?.balanceTotal ?? 0);
@@ -575,7 +552,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     >
                         <ChatMessages
                             messages={messages}
-                            partnerAvatar={currentRoom?.partnerAvatar || ProfileImage.avatar}
+                            partnerAvatar={ProfileImage.avatar}
                             customScrollParent={scrollParentEl}
                             onTopReached={() => {
                                 if (!hasMore || isFetching) return;
@@ -650,7 +627,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                     onFileUpload={(ev: any) => handleFileUpload(ev as any)}
                                     onTyping={(v) => {
                                         // Outbound only: do not mutate local UI here; UI listens to inbound events
-                                        if (typeof v !== 'boolean') return;
                                         try {
                                             sendTyping?.(v);
                                         } catch {
@@ -724,8 +700,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 postId={roomPostId as number}
                 commentId={roomCommentId as number}
                 partnerId={partnerId as number}
-                projectName={currentRoom.room.post.name || t("profileChat.noJobTitle")}
-                amount={currentRoom.room.post.budget}
+                projectName={currentRoom.room.post?.name || t("profileChat.noJobTitle")}
+                amount={currentRoom.room.post?.budget}
             />
         </>
     );

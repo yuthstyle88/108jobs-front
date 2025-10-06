@@ -240,18 +240,6 @@ export async function handleIncomingPayload(
 }
 
 // ---- Lightweight runtime validators for chat payloads ----
-export function isValidOutgoingChatPayload(p: any): boolean {
-    return !!(
-        p && typeof p === 'object' &&
-        (p.op === 'SendMessage' || typeof p.op === 'undefined') &&
-        typeof p.senderId === 'number' && p.senderId >= 0 &&
-        typeof p.roomId === 'string' && p.roomId.length > 0 &&
-        typeof p.content === 'string' && p.content.length > 0 &&
-        typeof p.id === 'string' && p.id.length > 0 &&
-        typeof p.createdAt === 'string'
-    );
-}
-
 export function isValidIncomingChatPayload(p: any): boolean {
     if (!p) return false;
     // Allow arrays of messages

@@ -9,7 +9,7 @@ import {
     unwrapPhoenixFrame,
 } from "@/utils/chat/chatSocketUtils";
 import {emitChatTyping,} from "@/events/chat/index";
-import type {ChatMessage} from "lemmy-js-client";
+import type {ChatMessage, ChatRoomData} from "lemmy-js-client";
 import {
     buildMessageSignature,
     ChatTypingDetail,
@@ -43,7 +43,7 @@ export interface HandlerDeps extends HandlerRefs {
     /** current user id */
     localUserId: number;
     /** inform UI that room data has been refreshed */
-    setRefreshRoomData: (data: any) => void;
+    setRefreshRoomData: (data: ChatRoomData) => void;
     /** inform that peer is active (UI hint) */
     markPeerActive: () => void;
     /** optional: push typing state directly to UI in addition to DOM event */
@@ -88,7 +88,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
             try { markPeerActive(); } catch {}
             // 1) status-change → refresh & return
             if (await maybeHandleStatusChange(env, roomIdStr, setRefreshRoomData)) {
-                return null as any;
+                return null;
             }
 
             // 2) typing → DOM + optional callback
