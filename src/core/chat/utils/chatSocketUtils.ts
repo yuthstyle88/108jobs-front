@@ -1,6 +1,13 @@
 import {HttpService, UserService} from "@/services";
 import {getHost, isHttps} from "@/utils/env";
-import type {ChatMessage, ChatMessagesResponse, ChatMessageView, ChatRoom, ChatStatus} from "lemmy-js-client";
+import type {
+    ChatMessage,
+    ChatMessagesResponse,
+    ChatMessageView,
+    ChatRoom, ChatRoomId,
+    ChatStatus,
+    LocalUser
+} from "lemmy-js-client";
 import {decrypt} from "@/lib/web-crypto";
 import {importAesKey} from "@/utils";
 import {REQUEST_STATE} from "@/services/HttpService";
@@ -20,8 +27,8 @@ export type NormalizedEnvelope =
 // Server-side payload shapes (mirroring Rust `MessageModel` and `IncomingEvent`)
 interface ServerMessageModel {
   id?: string;
-  senderId?: number;
-  readerId?: number;
+  senderId?: LocalUser;
+  readerId?: ChatRoomId;
   readLastId?: string;
   content?: string;
   status?: 'pending' | 'sent' | 'failed' | string;
@@ -33,7 +40,7 @@ interface ServerMessageModel {
 }
 interface IncomingEventLike {
   event: string;
-  room_id: string; // Phoenix topic room id (without the `room:` prefix on server side)
+  roomId: string; // Phoenix topic room id (without the `room:` prefix on server side)
   topic?: string;
   payload?: ServerMessageModel;
 }
@@ -42,7 +49,7 @@ function isIncomingEventLike(v: unknown): v is IncomingEventLike {
   return !!(
     v && typeof v === 'object' &&
     typeof (v as IncomingEventLike).event === 'string' &&
-    typeof (v as IncomingEventLike).room_id === 'string'
+    typeof (v as IncomingEventLike).roomId === 'string'
   );
 }
 
@@ -68,7 +75,7 @@ export function normalizePhoenixEnvelope(
   if (isIncomingEventLike(payload)) {
     const ev = payload.event;
     const evLower = ev.toLowerCase();
-    const rid = payload.room_id || fallbackRoomId || '';
+    const rid = payload.roomId || fallbackRoomId || '';
     if (evLower === 'chat:message') {
       const p: ServerMessageModel | undefined = payload.payload;
       // guard: must have content and senderId
@@ -200,8 +207,8 @@ export async function handleIncomingPayload(
         // HISTORY PAGE PUSHED FROM SERVER
         if (eventName === 'history_page') {
             try {
-                const prev = (env as any).prevPage ?? (env as any).prev_page ?? null;
-                const next = (env as any).nextPage ?? (env as any).next_page ?? null;
+                const prev = (env as any).prevPage ?? null;
+                const next = (env as any).nextPage ?? null;
                 ctx.setPageCursor?.({prev, next});
                 ctx.setHasMoreMessages?.(!!prev); // has older pages when prev exists
             } catch {
@@ -356,7 +363,7 @@ export async function mapIncomingToChatMessage(
         } catch {
         }
 
-        const createdAtVal = m.created_at || m.createdAt || new Date().toISOString();
+        const createdAtVal = m.createdAt || new Date().toISOString();
 
         // Stable signature to dedupe messages
         const messageSignature = m.id ?? "";
@@ -381,7 +388,7 @@ export async function mapIncomingToChatMessage(
 
         const roomIdMapped = m.roomId || opts.fallbackRoomId;
         const senderIdMapped = Number(m.senderId) || 0;
-        const createdAtMapped = m.created_at || m.createdAt || createdAtVal;
+        const createdAtMapped =  m.createdAt || createdAtVal;
 
         return {
             id: m.msgRefId,
