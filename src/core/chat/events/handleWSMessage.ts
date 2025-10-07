@@ -13,7 +13,7 @@ import {emitChatTyping,} from "@/core/chat/events/index";
 import type {ChatMessage, ChatRoomData} from "lemmy-js-client";
 import {
     buildMessageSignature,
-    cleanupFetch,
+    cleanupFetch, dbg,
     maybeHandleReadReceipt,
     maybeHandleStatusChange,
     mergeNewMessages,
@@ -87,7 +87,6 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                 } catch {
                 }
             }
-
             // Normalize once only
             const env: NormalizedEnvelope = normalizePhoenixEnvelope(payload.data, roomIdStr);
             try {
@@ -100,7 +99,9 @@ export function createHandleWSMessage(deps: HandlerDeps) {
             }
 
             // 2) typing → DOM + optional callback
+
             const typingInfo = parseTypingDetail(env, roomIdStr, meId);
+            dbg("handleWSMessage", typingInfo);
             if (typingInfo) {
                 try {
                     emitChatTyping(typingInfo);

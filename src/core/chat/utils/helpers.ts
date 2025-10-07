@@ -3,46 +3,32 @@ import {HttpService} from "@/services";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {emitReadReceipt} from "@/core/chat/events";
 import {ChatMessage} from "lemmy-js-client";
+import {NormalizedEnvelope} from "@/core/chat/utils/chatSocketUtils";
+import type { ChatMessageView } from "lemmy-js-client";
 
-export function parseTypingDetail(env: any, fallbackRoomId: string, localUserId: number): { roomId: string; senderId: number; typing: boolean } | null {
+// Type guard: narrow a NormalizedEnvelope to the typing envelope (explicit interface)
+export type TypingEnv = {
+    event: 'chat:typing';
+    roomId: string;
+    typing: boolean;
+    sender?: ChatMessageView['sender'];
+};
+function isTypingEnvelope(env: NormalizedEnvelope): env is TypingEnv {
+    return !!env && (env as any).event === 'chat:typing' && typeof (env as any).roomId === 'string';
+}
+
+export function parseTypingDetail(env: NormalizedEnvelope, _fallbackRoomId: string, localUserId: number): { roomId: string; senderId: number; typing: boolean } | null {
     try {
-        // Minimal parser: look only at event and payload
-        const evName = String(env?.event ?? env?.content);
-        if (!evName) return null;
-        // Accept only typing events
-        const isTypingEvent = evName === 'chat:typing' || evName.includes('typing');
-        if (!isTypingEvent) return null;
+        if (!isTypingEnvelope(env)) return null;
+        const roomId = env.roomId?.trim();
 
-        // Determine topic/room id (do not over-parse)
-        const rawTopic = String(env?.topic ?? env?.data?.topic ?? fallbackRoomId ?? '');
-        const bare = rawTopic.startsWith('room:') ? rawTopic.slice(5) : rawTopic;
-        const pureRoomId = String(env?.roomId ?? bare.split(':')[0] ?? bare);
+        if (!roomId) return null;
+        const senderId = Number(env.sender?.id ?? 0);
+        if (!senderId || senderId === Number(localUserId)) return null; // ignore self
 
-        // Prefer senderId on root/payload; ignore contentParsed to keep it simple
-        const p: any = env?.payload;
-        const senderIdNum = Number(env?.sender.id ?? (p && typeof p === 'object' ? p.sender.id : undefined) ?? 0);
-        if (!senderIdNum || senderIdNum === Number(localUserId)) return null;
+        const typing = Boolean(env.typing);
 
-        // typing flag logic:
-        // - If payload is a string (e.g., "chat:typing"), treat as a typing "pulse" (true).
-        // - If payload is an object with a boolean 'typing', use it.
-        // - Else fallback: true for generic 'chat:typing', false only if event/payload explicitly says 'stop'.
-        let typingFlag: boolean | undefined;
-        if (typeof p === 'string') {
-            // Example given: payload === "chat:typing"
-            typingFlag = p.includes('typing') ? true : undefined;
-        } else if (p && typeof p === 'object' && typeof p.typing === 'boolean') {
-            typingFlag = p.typing;
-        }
-        if (typeof typingFlag !== 'boolean') {
-            // fallback from event name or payload string content
-            const src = `${evName}|${typeof p === 'string' ? p : ''}`.toLowerCase();
-            if (src.includes('stop')) typingFlag = false;
-            else if (src.includes('start')) typingFlag = true;
-            else typingFlag = true; // default pulse when only "chat:typing" is present
-        }
-        console.log("typingFlag", {pureRoomId, senderIdNum});
-        return { roomId: pureRoomId, senderId: senderIdNum, typing: typingFlag };
+        return { roomId, senderId, typing };
     } catch {
         return null;
     }
