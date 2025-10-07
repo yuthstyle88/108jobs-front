@@ -1,85 +1,115 @@
 import {__DEV__} from "@/utils/appConfig";
 import {HttpService, UserService} from "@/services";
 import {getHost, isHttps} from "@/utils/env";
-import type {ChatMessage} from "lemmy-js-client";
+import type {ChatMessage, ChatMessagesResponse, ChatMessageView, ChatRoom, ChatStatus} from "lemmy-js-client";
 import {decrypt} from "@/lib/web-crypto";
 import {importAesKey} from "@/utils";
 import {REQUEST_STATE} from "@/services/HttpService";
+import {dbg} from "@/core/chat/utils/helpers";
 
 // ---- Centralized browser/event helpers (reduce duplication across contexts) ----
 
-
-/** Normalize Phoenix frames/envelopes into a flat object once */
-export function normalizePhoenixEnvelope(payload: any, fallbackRoomId?: string): any {
-    // Goal: accept a variety of shapes and produce a flat object with:
-    // { event, topic (raw), roomId (normalized), ...payloadFields, contentParsed? }
-    let env: any = payload;
-    try {
-        // Phoenix array frame: [join_ref, msg_ref, topic, event, payload]
-        if (Array.isArray(payload) && payload.length >= 5 && typeof payload[3] === 'string') {
-            const [, , topic, ev, body] = payload as [any, any, string, string, any];
-            const roomId = topic.startsWith('room:') ? topic.slice(5) : String(topic);
-            env = {event: ev, topic, roomId, ...(body || {})};
-        }
-        // Nested envelope: { data: { event, payload, topic }, ... }
-        else if (payload && typeof payload === 'object' && payload.data && typeof payload.data === 'object') {
-            const d: any = payload.data;
-            const topic = d.topic ?? payload.topic ?? fallbackRoomId ?? null;
-            const roomId = typeof topic === 'string' && topic.startsWith('room:') ? topic.slice(5) : topic;
-            env = {event: d.event, topic, roomId, ...(d.payload || {})};
-        }
-        // Flat envelope: { event, payload, topic }
-        else if (payload && typeof payload === 'object' && 'event' in payload && 'payload' in payload) {
-            const p: any = payload;
-            const topic = p.topic ?? fallbackRoomId ?? null;
-            const roomId = typeof topic === 'string' && topic.startsWith('room:') ? topic.slice(5) : topic;
-            env = {event: p.event, topic, roomId, ...(p.payload || {})};
-        }
-        // Already flat payload or unknown shape → try to ensure topic/roomId
-        else if (payload && typeof payload === 'object') {
-            const topic = (payload as any).topic ?? fallbackRoomId ?? null;
-            const roomId = typeof topic === 'string' && topic.startsWith('room:') ? topic.slice(5) : topic;
-            env = {...payload, topic, roomId};
-        }
-    } catch {
-    }
-
-    if (!env || typeof env !== 'object') env = {};
-
-    // Ensure topic/roomId with fallbacks (do NOT add/remove the 'room:' prefix on topic)
-    if (!('topic' in env) && fallbackRoomId) {
-        (env as any).topic = fallbackRoomId;
-    }
-    if (!('roomId' in env)) {
-        const t = (env as any).topic ?? fallbackRoomId ?? null;
-        (env as any).roomId = typeof t === 'string' && t.startsWith('room:') ? t.slice(5) : t;
-    }
-
-    // Parse contentParsed from either env.content or env.payload?.content
-    try {
-        const c = (env as any).content ?? (env as any).payload?.content;
-        if (typeof c === 'string' && c.trim().startsWith('{')) {
-            (env as any).contentParsed = JSON.parse(c);
-        } else if (c && typeof c === 'object') {
-            (env as any).contentParsed = c;
-        }
-    } catch {
-    }
-
-    return env;
+/**
+ * Normalize Phoenix frames/envelopes into a normalized envelope type for chat events.
+ */
+// NormalizedEnvelope type
+export type NormalizedEnvelope =
+  // history page event
+  { event: 'history_page'; results: ChatMessageView[]; prevPage?: string; nextPage?: string }
+  // single message event (e.g., chat:message)
+  | { event: string; roomId: string; message?: ChatMessage; room?: ChatRoom; sender?: ChatMessageView['sender'] };
+// Server-side payload shapes (mirroring Rust `MessageModel` and `IncomingEvent`)
+interface ServerMessageModel {
+  id?: string;
+  sender_id?: number;
+  reader_id?: number;
+  read_last_id?: string;
+  content?: string;
+  status?: 'pending' | 'sent' | 'failed' | string;
+  typing?: boolean;
+  update_type?: string;
+  status_target?: string;
+  prev_status?: string;
+  created_at?: string;
+}
+interface IncomingEventLike {
+  event: string;
+  room_id: string; // Phoenix topic room id (without the `room:` prefix on server side)
+  topic?: string;
+  payload?: ServerMessageModel;
 }
 
-export function logDebug(...args: unknown[]) {
-    if (__DEV__) console.debug(...args);
+function isIncomingEventLike(v: unknown): v is IncomingEventLike {
+  return !!(
+    v && typeof v === 'object' &&
+    typeof (v as IncomingEventLike).event === 'string' &&
+    typeof (v as IncomingEventLike).room_id === 'string'
+  );
+}
+
+function isChatMessagesResponse(v: unknown): v is ChatMessagesResponse {
+  return !!(v && typeof v === 'object' && Array.isArray((v as ChatMessagesResponse).results));
+}
+
+export function normalizePhoenixEnvelope(
+  payload: ChatMessagesResponse | IncomingEventLike,
+  fallbackRoomId?: string
+): NormalizedEnvelope {
+  // 1) If it's already normalized, return as history_page envelope
+  if (isChatMessagesResponse(payload)) {
+    return {
+      event: 'history_page',
+      results: payload.results,
+      prevPage: payload.prevPage,
+      nextPage: payload.nextPage,
+    };
+  }
+
+  // 2) If it is an `IncomingEventLike`, normalize events
+  if (isIncomingEventLike(payload)) {
+    const ev = payload.event;
+    const evLower = ev.toLowerCase();
+    const rid = payload.room_id || fallbackRoomId || '';
+    if (evLower === 'chat:message') {
+      const p: ServerMessageModel | undefined = payload.payload;
+      // guard: must have content and sender_id
+      if (!p || typeof p.content !== 'string' || p.content.length === 0) {
+        return { event: ev, roomId: rid };
+      }
+      const msg: ChatMessage = {
+        id: String(p.id ?? ''),
+        roomId: rid,
+        senderId: typeof p.sender_id === 'number' ? p.sender_id : 0,
+        content: p.content,
+        status: (typeof p.status === 'string' ? p.status : 'pending') as ChatStatus,
+        createdAt: String(p.created_at ?? new Date().toISOString()),
+        isOwner: undefined,
+      };
+      return {
+        event: 'chat:message',
+        roomId: rid,
+        message: msg,
+        room: { id: msg.roomId } as ChatRoom,
+        sender: { id: msg.senderId } as unknown as ChatMessageView['sender'],
+      };
+    }
+    // For other events, return just event and roomId (even if no payload)
+    return { event: ev, roomId: rid };
+  }
+
+  // 3) Unknown shape → return empty envelope with generic event
+  const ev = 'unknown';
+  const rid = fallbackRoomId || '';
+  return { event: ev, roomId: rid };
 }
 
 export function safeParse(val: unknown): unknown {
     try {
         const result = typeof val === "string" ? JSON.parse(val as string) : val;
-        logDebug(`safeParse: Parsed value`, result);
+        dbg(`safeParse: Parsed value`, result);
         return result;
     } catch {
-        logDebug(`safeParse: Failed to parse value`, val);
+        dbg(`safeParse: Failed to parse value`, val);
         return val;
     }
 }
@@ -100,11 +130,12 @@ export function isBase64Like(s: string): boolean {
 
 export function addOnce(set: Set<string>, key: string): boolean {
     if (set.has(key)) {
-        logDebug(`addOnce: Key ${key} already exists in set`);
+        dbg(`addOnce: Key already exists in set:` , key);
         return false;
     }
     set.add(key);
-    logDebug(`addOnce: Added key ${key} to set`);
+    dbg(`addOnce: Added key to set:` , key);
+    return true;
     return true;
 }
 
@@ -155,7 +186,7 @@ export function unwrapPhoenixFrame(data: any): any {
 
 // ---- handleIncomingPayload: normalize and map incoming chat payloads ----
 export async function handleIncomingPayload(
-    payload: any,
+    payload: ChatMessagesResponse,
     ctx: {
         roomId: string;
         localUserId: number;
@@ -179,7 +210,7 @@ export async function handleIncomingPayload(
             return mapIncomingToChatMessage(flat, {
                 token: ctx.token,
                 sharedKeyHex: ctx.sharedKeyHex,
-                fallbackRoomId: String(env.roomId || ctx.roomId || flat?.roomId || ''),
+                fallbackRoomId: String(ctx.roomId || flat?.roomId || ''),
                 localUserId: ctx.localUserId,
                 receivedSet: ctx.receivedSet,
                 decryptLabel: 'ws frame',
@@ -234,7 +265,7 @@ export async function handleIncomingPayload(
         // IGNORE non-message events here (typing/read handled elsewhere)
         return [];
     } catch (e) {
-        logDebug('handleIncomingPayload: failed', e);
+        dbg('handleIncomingPayload: failed', e);
         return [];
     }
 }

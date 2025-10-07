@@ -48,3 +48,8 @@ export type ChatMessageModel = ChatMessage & {
 };
 
 export type WebSocketStatus = 'idle' | 'connecting' | 'connected' | 'disconnected' | 'error';
+
+export type ChatMessageResponse = {
+    message: ChatMessageModel;
+    isOwner: boolean;
+};
