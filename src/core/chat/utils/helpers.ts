@@ -7,7 +7,6 @@ import {ChatMessage} from "lemmy-js-client";
 export function parseTypingDetail(env: any, fallbackRoomId: string, localUserId: number): { roomId: string; senderId: number; typing: boolean } | null {
     try {
         // Minimal parser: look only at event and payload
-        console.log("parseTypingDetail", env);
         const evName = String(env?.event ?? env?.content);
         if (!evName) return null;
         // Accept only typing events
@@ -164,7 +163,7 @@ export function dbg(label: string, data?: unknown) {
 
         // Timestamped, namespaced header
         const ts = new Date().toISOString();
-        const header = `[ws-debug ${ts}] ${label}`;
+        const header = `[debug ${ts}] ${label}`;
 
         // Redact potentially sensitive blobs (tokens, long ciphertexts)
         const redact = (v: any): any => {

@@ -28,6 +28,7 @@ const isInternalEvent = (ev?: string) : boolean => {
     ev.startsWith("chan_reply") ||       // Phoenix push replies
     ev === "heartbeat" ||
     ev === "presence_state" ||
+    ev === "phx_reply" ||
     ev === "presence_diff"
   );
 };
@@ -37,9 +38,6 @@ class PhoenixChannelHub {
   static getInstance() {
     if (!this.instance) {
       this.instance = new PhoenixChannelHub();
-      if (DEV) console.log('[PhoenixChannelHub] created singleton instance');
-    } else {
-      if (DEV) console.log('[PhoenixChannelHub] reused existing singleton instance');
     }
     return this.instance;
   }
@@ -80,8 +78,6 @@ class PhoenixChannelHub {
 
 export function getChannelAdapter(token: string, topic: string): RealtimeChannelAdapter {
   const hub = PhoenixChannelHub.getInstance();
-
-  if (DEV) console.log('[phoenix] create adapter', { topic});
 
   // Create channels (primary + alias) and join both. If alias is unused, it will be idle.
   let channel = hub.getOrCreateChannel(token, topic);
@@ -132,8 +128,6 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
   // Unify forward → adapter.onmessage with normalized envelope
     const forward = (event: string, topic: string, payload: any) => {
         // ignore any Phoenix reply noise that shouldn't reach the app layer
-
-        if (/^chan_reply/.test(event)) return;
         const isPass = isInternalEvent(event);
         if (!event || isPass) return;
 
@@ -151,7 +145,6 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
             const inner = (payload as any).payload;
             outPayload = (inner == null ? {} : inner);
         }
-        console.log('[phoenix] forward2', { event, topic, payload });
         const env = { event: outEvent, topic: topic.replace(/^room:/, ""), payload: outPayload };
         try { adapter.onmessage?.({ data: JSON.stringify(env) }); } catch {}
     };

@@ -8,6 +8,7 @@ import {
     normalizePhoenixEnvelope,
     unwrapPhoenixFrame,
 } from "@/core/chat/utils/chatSocketUtils";
+import type { NormalizedEnvelope } from "@/core/chat/utils/chatSocketUtils";
 import {emitChatTyping,} from "@/core/chat/events/index";
 import type {ChatMessage, ChatRoomData} from "lemmy-js-client";
 import {
@@ -84,7 +85,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                 try { console.debug("[ws] payload failed strict validation; attempting permissive mapping"); } catch {}
             }
             // Normalize once only
-            const env: any = normalizePhoenixEnvelope(payload, roomIdStr);
+            const env: NormalizedEnvelope = normalizePhoenixEnvelope(payload, roomIdStr);
             try { markPeerActive(); } catch {}
             // 1) status-change → refresh & return
             if (await maybeHandleStatusChange(env, roomIdStr, setRefreshRoomData)) {
