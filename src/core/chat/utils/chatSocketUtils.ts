@@ -25,10 +25,14 @@ export type NormalizedEnvelope =
     { event: 'history_page'; results: ChatMessageView[]; prevPage?: string; nextPage?: string }
     // single message event (e.g., chat:message)
     | {
-    event: Exclude<string, "history_page">;
+    event: string;
     roomId: string;
     message?: ChatMessage;
     room?: ChatRoom;
+    typing?: boolean;
+    updateType?: string,
+    prevStatus?: string,
+    statusTarget?: string,
     sender?: ChatMessageView['sender']
 };
 
@@ -83,27 +87,52 @@ export function normalizePhoenixEnvelope(
         const ev = payload.event;
         const evLower = ev.toLowerCase();
         const rid = payload.roomId || fallbackRoomId || '';
+        const p: ServerMessageModel | undefined = payload.payload;
+
+        // --- chat:message ---
         if (evLower === 'chat:message') {
-            const p: ServerMessageModel | undefined = payload.payload;
-            // guard: must have content and senderId
-            if (!p || typeof p.content !== 'string' || p.content.length === 0) {
+            if (!p || !p.content || !p.senderId) {
                 return {event: ev, roomId: rid};
             }
+
             const msg: ChatMessage = {
                 id: String(p.id ?? ''),
                 roomId: rid,
                 senderId: p.senderId,
-                content: p.content!,
-                status: (typeof p.status === 'string' ? p.status : 'pending') as ChatStatus,
-                createdAt: String(p.createdAt ?? new Date().toISOString()),
+                content: p.content,
+                status: (p.status as ChatStatus) ?? 'sent',
+                createdAt: p.createdAt ?? new Date().toISOString(),
                 isOwner: undefined,
             };
+
             return {
                 event: 'chat:message',
                 roomId: rid,
                 message: msg,
-                room: {id: msg.roomId} as ChatRoom,
-                sender: {id: msg.senderId} as unknown as ChatMessageView['sender'],
+                room: {id: rid} as ChatRoom,
+                sender: {id: p.senderId} as unknown as ChatMessageView['sender'],
+            };
+        }
+
+        // --- typing events ---
+        if (['chat:typing', 'typing:start', 'typing:stop'].includes(evLower)) {
+            return {
+                event: ev,
+                roomId: rid,
+                typing: p?.typing,
+                sender: p?.senderId ? ({id: p.senderId} as unknown as ChatMessageView['sender']) : undefined,
+            };
+        }
+
+        // --- update events ---
+        if (evLower === 'chat:update') {
+            return {
+                event: ev,
+                roomId: rid,
+                updateType: p?.updateType,
+                prevStatus: p?.prevStatus,
+                statusTarget: p?.statusTarget,
+                sender: p?.senderId ? ({id: p.senderId} as unknown as ChatMessageView['sender']) : undefined,
             };
         }
         // For other events, return just event and roomId (even if no payload)

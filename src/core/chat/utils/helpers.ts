@@ -20,7 +20,7 @@ export function parseTypingDetail(env: any, fallbackRoomId: string, localUserId:
 
         // Prefer senderId on root/payload; ignore contentParsed to keep it simple
         const p: any = env?.payload;
-        const senderIdNum = Number(env?.senderId ?? (p && typeof p === 'object' ? p.senderId : undefined) ?? 0);
+        const senderIdNum = Number(env?.sender.id ?? (p && typeof p === 'object' ? p.sender.id : undefined) ?? 0);
         if (!senderIdNum || senderIdNum === Number(localUserId)) return null;
 
         // typing flag logic:

@@ -140,7 +140,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                     if (!isChatMessageLike(item)) continue;
 
                     const signature = buildMessageSignature(item);
-                    if (processedMsgRef.current.has(signature)) continue;
+                    // if (processedMsgRef.current.has(signature)) continue;
                     processedMsgRef.current.add(signature);
 
 
