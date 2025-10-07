@@ -126,6 +126,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {lastReadId} = useRoomReadLastId(roomId);
     const meId = Number(localUser?.id ?? 0);
 
+    console.log("lastReadId: ", lastReadId)
+
     // this data for the chat section send failed load form localstorage
     const roomLocalMessages = useMemo(() => {
         const all = [
@@ -169,7 +171,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         setMessages
     });
     const {
-        actions: {sendMessage, sendTyping, sendRoomUpdate},
+        actions: {sendMessage, sendTyping, sendRoomUpdate, sendReadReceipt},
         state: {refreshRoomData, isPartnerTyping},
     } = useChatRoom({roomId, peerPublicKeyHex, setMessages, localUser, roomData: currentRoom});
 
@@ -209,6 +211,26 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             return changed ? mapped : prev;
         });
     }, [lastReadId, messages]);
+
+    useEffect(() => {
+        if (!messages.length) return;
+        const lastMessage = messages[messages.length - 1];
+
+        // Only send if message is not yours
+        if (lastMessage.senderId !== localUser.id) {
+            sendReadReceipt(roomId, String(lastMessage.id));
+        }
+    }, [messages, roomId, localUser.id, sendReadReceipt]);
+
+    useEffect(() => {
+        const onVisible = () => {
+            const lastMsg = messages[messages.length - 1];
+            if (lastMsg) sendReadReceipt(roomId, String(lastMsg.id));
+        };
+
+        window.addEventListener("focus", onVisible);
+        return () => window.removeEventListener("focus", onVisible);
+    }, [roomId, messages, sendReadReceipt]);
 
     useEffect(() => {
         const el = inputContainerRef.current;
@@ -541,6 +563,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                     }
                                 }
                             }}
+                            sendReadReceipt={sendReadReceipt}
+                            roomId={roomId}
                         />
                     </div>
                     <div ref={inputContainerRef} className="border-t px-3 py-2 sm:px-4 sm:py-3 bg-white">

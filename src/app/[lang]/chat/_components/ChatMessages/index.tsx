@@ -20,6 +20,8 @@ interface ChatMessagesProps {
     hasMore?: boolean;
     isFetching?: boolean;
     onAtBottomChange?: (isAtBottom: boolean) => void;
+    sendReadReceipt: (roomIdArg: string, lastMessageId: string) => void;
+    roomId: string
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
@@ -30,6 +32,8 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                                                        hasMore,
                                                        isFetching,
                                                        onAtBottomChange,
+                                                       sendReadReceipt,
+                                                       roomId
                                                    }) => {
     const {t} = useTranslation();
     // Reverse messages to display newest-first (API provides oldest-first)
@@ -64,6 +68,10 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
             atBottomStateChange={(isAtBottom) => {
                 setAtBottom(isAtBottom);
                 if (onAtBottomChange) onAtBottomChange(isAtBottom);
+
+                if (isAtBottom) {
+                    sendReadReceipt(roomId, displayedMessages[displayedMessages.length - 1]?.id);
+                }
             }}
             components={{
                 Header: hasMore

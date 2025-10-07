@@ -47,7 +47,7 @@ export function createMessage(
         roomId,
         senderId,
         content,
-        status: "pending"  as ChatStatus,
+        status: "pending" as ChatStatus,
         createdAt: new Date().toISOString(),
     };
 }
@@ -87,193 +87,265 @@ export interface SendEventDeps {
 
 // Safe JSON send over WebSocket
 function wsSend(socket: any, obj: any) {
-  if (!socket) return false;
-  const event = obj?.event ?? obj?.type ?? 'message';
-  const payload = obj?.payload ?? obj;
-  try {
-    // 1) Phoenix Channel API (channel.push(event, payload))
-    if (typeof socket.push === 'function') {
-      dbg('send via phoenix.push', { event, payload });
-      socket.push(event, payload);
-      return true;
-    }
-    // 2) Adapter with emit(event, payload)
-    if (typeof socket.emit === 'function') {
-      dbg('send via adapter.emit', { event, payload });
-      socket.emit(event, payload);
-      return true;
-    }
-    // 3) Raw WebSocket API
-    if (typeof socket.send === 'function') {
-      const canCheckReady = typeof (globalThis as any).WebSocket !== 'undefined' && typeof socket.readyState === 'number';
-      if (canCheckReady && socket.readyState !== (globalThis as any).WebSocket.OPEN) {
-        dbg('raw ws not open', { readyState: socket.readyState });
+    if (!socket) return false;
+    const event = obj?.event ?? obj?.type ?? 'message';
+    const payload = obj?.payload ?? obj;
+    try {
+        // 1) Phoenix Channel API (channel.push(event, payload))
+        if (typeof socket.push === 'function') {
+            dbg('send via phoenix.push', {event, payload});
+            socket.push(event, payload);
+            return true;
+        }
+        // 2) Adapter with emit(event, payload)
+        if (typeof socket.emit === 'function') {
+            dbg('send via adapter.emit', {event, payload});
+            socket.emit(event, payload);
+            return true;
+        }
+        // 3) Raw WebSocket API
+        if (typeof socket.send === 'function') {
+            const canCheckReady = typeof (globalThis as any).WebSocket !== 'undefined' && typeof socket.readyState === 'number';
+            if (canCheckReady && socket.readyState !== (globalThis as any).WebSocket.OPEN) {
+                dbg('raw ws not open', {readyState: socket.readyState});
+                return false;
+            }
+            dbg('send via raw WebSocket', {event});
+            socket.send(JSON.stringify({event, payload}));
+            return true;
+        }
+        dbg('no send method found');
         return false;
-      }
-      dbg('send via raw WebSocket', { event });
-      socket.send(JSON.stringify({ event, payload }));
-      return true;
+    } catch {
+        return false;
     }
-    dbg('no send method found');
-    return false;
-  } catch {
-    return false;
-  }
 }
 
 // Wait for server ACK for a specific message id (simplified version)
 async function waitForAck(socket: any, id: string, timeoutMs = 8000): Promise<boolean> {
-  return new Promise((resolve) => {
-    const idToMatch = String(id);
-    let done = false;
-    let timer: any = setTimeout(() => finish(false), timeoutMs);
+    return new Promise((resolve) => {
+        const idToMatch = String(id);
+        let done = false;
+        let timer: any = setTimeout(() => finish(false), timeoutMs);
 
-    // Track cleanup functions and handlers for various adapters
-    const cleanupFns: Array<() => void> = [];
-    let anyHandler: ((evt: any, payload: any) => void) | null = null;
-    let onMessageUnsub: (() => void) | null = null;
-    let addMsgCb: ((packet: any) => void) | null = null;
+        // Track cleanup functions and handlers for various adapters
+        const cleanupFns: Array<() => void> = [];
+        let anyHandler: ((evt: any, payload: any) => void) | null = null;
+        let onMessageUnsub: (() => void) | null = null;
+        let addMsgCb: ((packet: any) => void) | null = null;
 
-    // Helper: checks if payload matches our id (by 'id' only for chat:message)
-    const matchesId = (obj: any): boolean => {
-      if (!obj) return false;
-      // Check top-level id
-      if (obj.id != null && String(obj.id) === idToMatch) return true;
-      // Check payload.id
-      if (obj.payload?.id != null && String(obj.payload.id) === idToMatch) return true;
-      // Check forward wrapper
-      if (obj.event === 'forward' && obj.payload) {
-        const inner = obj.payload;
-        const innerPayload = inner.payload ?? inner;
-        if (inner.event === 'chat:message') {
-          if (innerPayload?.id != null && String(innerPayload.id) === idToMatch) return true;
+        // Helper: checks if payload matches our id (by 'id' only for chat:message)
+        const matchesId = (obj: any): boolean => {
+            if (!obj) return false;
+            // Check top-level id
+            if (obj.id != null && String(obj.id) === idToMatch) return true;
+            // Check payload.id
+            if (obj.payload?.id != null && String(obj.payload.id) === idToMatch) return true;
+            // Check forward wrapper
+            if (obj.event === 'forward' && obj.payload) {
+                const inner = obj.payload;
+                const innerPayload = inner.payload ?? inner;
+                if (inner.event === 'chat:message') {
+                    if (innerPayload?.id != null && String(innerPayload.id) === idToMatch) return true;
+                }
+            }
+            return false;
+        };
+
+        // Clean up listeners and timer
+        const finish = (ok: boolean) => {
+            if (done) return;
+            done = true;
+            clearTimeout(timer);
+            try {
+                cleanupFns.forEach((fn) => {
+                    try {
+                        fn();
+                    } catch {
+                    }
+                });
+            } catch {
+            }
+            // direct removals for cases where we didn't push into cleanupFns
+            if (wsListener && typeof socket?.removeEventListener === 'function') {
+                try {
+                    socket.removeEventListener('message', wsListener);
+                } catch {
+                }
+            }
+            if (typeof socket?.off === 'function') {
+                try {
+                    socket.off('chat:message', chanListener as any);
+                } catch {
+                }
+                try {
+                    socket.off('forward', chanListener as any);
+                } catch {
+                }
+            }
+            const channel = (socket as any)?.channel;
+            if (channel) {
+                if (typeof channel.off === 'function') {
+                    try {
+                        channel.off('chat:message', chanListener as any);
+                    } catch {
+                    }
+                    try {
+                        channel.off('forward', chanListener as any);
+                    } catch {
+                    }
+                }
+                if (typeof channel.removeEventListener === 'function') {
+                    try {
+                        channel.removeEventListener('message', wsListener);
+                    } catch {
+                    }
+                }
+            }
+            // wildcard & generic unsubs
+            try {
+                (socket as any)?.offAny?.(anyHandler as any);
+            } catch {
+            }
+            try {
+                onMessageUnsub?.();
+            } catch {
+            }
+            try {
+                if (addMsgCb && typeof (socket as any)?.removeMessageListener === 'function') {
+                    (socket as any).removeMessageListener(addMsgCb);
+                }
+            } catch {
+            }
+            resolve(ok);
+        };
+
+        // WebSocket 'message' event handler
+        const wsListener = (ev: any) => {
+            try {
+                clearTimeout(timer);
+                timer = setTimeout(() => finish(false), timeoutMs);
+                const data = typeof ev?.data === 'string' ? JSON.parse(ev.data) : ev?.data ?? ev;
+                try {
+                    dbg('waitForAck/ws', {data});
+                } catch {
+                }
+                const inner = data.event === 'forward' ? data.payload : data;
+                const innerEvent = inner?.event;
+                const innerPayload = inner?.payload ?? inner;
+                if (innerEvent === 'chat:message' && matchesId(innerPayload)) {
+                    return finish(true);
+                }
+            } catch {
+            }
+        };
+
+        // Phoenix channel 'on' handler
+        const chanListener = (payload: any, eventName?: string) => {
+            try {
+                dbg('waitForAck/chan', {payload, eventName});
+            } catch {
+            }
+            clearTimeout(timer);
+            timer = setTimeout(() => finish(false), timeoutMs);
+            let evt = eventName;
+            let pl = payload;
+            if (payload?.event === 'forward' && payload.payload) {
+                evt = payload.payload.event;
+                pl = payload.payload.payload ?? payload.payload;
+            }
+            if (evt === 'chat:message' && matchesId(pl)) return finish(true);
+        };
+
+        // Attach listeners for WebSocket and Phoenix channel
+        const looksLikeWS = typeof socket?.addEventListener === 'function' && typeof socket?.send === 'function';
+        if (looksLikeWS) {
+            try {
+                socket.addEventListener('message', wsListener);
+                cleanupFns.push(() => {
+                    try {
+                        socket.removeEventListener('message', wsListener);
+                    } catch {
+                    }
+                });
+            } catch {
+            }
         }
-      }
-      return false;
-    };
 
-    // Clean up listeners and timer
-    const finish = (ok: boolean) => {
-      if (done) return;
-      done = true;
-      clearTimeout(timer);
-      try { cleanupFns.forEach((fn) => { try { fn(); } catch {} }); } catch {}
-      // direct removals for cases where we didn't push into cleanupFns
-      if (wsListener && typeof socket?.removeEventListener === 'function') {
-        try { socket.removeEventListener('message', wsListener); } catch {}
-      }
-      if (typeof socket?.off === 'function') {
-        try { socket.off('chat:message', chanListener as any); } catch {}
-        try { socket.off('forward', chanListener as any); } catch {}
-      }
-      const channel = (socket as any)?.channel;
-      if (channel) {
-        if (typeof channel.off === 'function') {
-          try { channel.off('chat:message', chanListener as any); } catch {}
-          try { channel.off('forward', chanListener as any); } catch {}
+        if (typeof socket?.on === 'function') {
+            try {
+                socket.on('chat:message', (p: any) => chanListener(p, 'chat:message'));
+                socket.on('forward', (p: any) => chanListener(p, 'forward'));
+                cleanupFns.push(() => {
+                    try {
+                        socket.off('chat:message', chanListener as any);
+                    } catch {
+                    }
+                    try {
+                        socket.off('forward', chanListener as any);
+                    } catch {
+                    }
+                });
+            } catch {
+            }
         }
-        if (typeof channel.removeEventListener === 'function') {
-          try { channel.removeEventListener('message', wsListener); } catch {}
-        }
-      }
-      // wildcard & generic unsubs
-      try { (socket as any)?.offAny?.(anyHandler as any); } catch {}
-      try { onMessageUnsub?.(); } catch {}
-      try { if (addMsgCb && typeof (socket as any)?.removeMessageListener === 'function') { (socket as any).removeMessageListener(addMsgCb); } } catch {}
-      resolve(ok);
-    };
 
-    // WebSocket 'message' event handler
-    const wsListener = (ev: any) => {
-      try {
-        clearTimeout(timer);
+        // Generic adapter hooks
+        // 4) socket.onMessage((packet) => ...)  -> returns unsubscribe
+        if (typeof (socket as any)?.onMessage === 'function') {
+            try {
+                onMessageUnsub = (socket as any).onMessage((packet: any) => wsListener(packet));
+            } catch {
+            }
+        }
+
+        // 5) socket.addMessageListener(cb) / removeMessageListener(cb)
+        if (typeof (socket as any)?.addMessageListener === 'function') {
+            addMsgCb = (packet: any) => wsListener(packet);
+            try {
+                (socket as any).addMessageListener(addMsgCb);
+            } catch {
+            }
+            cleanupFns.push(() => {
+                try {
+                    (socket as any)?.removeMessageListener?.(addMsgCb!);
+                } catch {
+                }
+            });
+        }
+
+        // 6) socket.onAny((event, payload) => ...) / socket.offAny(handler)
+        if (typeof (socket as any)?.onAny === 'function') {
+            anyHandler = (evt: any, payload: any) => chanListener(payload, String(evt));
+            try {
+                (socket as any).onAny(anyHandler);
+            } catch {
+            }
+            cleanupFns.push(() => {
+                try {
+                    (socket as any)?.offAny?.(anyHandler!);
+                } catch {
+                }
+            });
+        }
+
+        // Nested channel (for socket.channel)
+        const channel = socket?.channel;
+        if (channel && typeof channel.on === 'function') {
+            channel.on('chat:message', (p: any) => chanListener(p, 'chat:message'));
+            channel.on('forward', (p: any) => chanListener(p, 'forward'));
+        }
+        if (channel && typeof channel.addEventListener === 'function') {
+            channel.addEventListener('message', wsListener);
+        }
+        // Timer for fallback
         timer = setTimeout(() => finish(false), timeoutMs);
-        const data = typeof ev?.data === 'string' ? JSON.parse(ev.data) : ev?.data ?? ev;
-        try { dbg('waitForAck/ws', { data }); } catch {}
-        const inner = data.event === 'forward' ? data.payload : data;
-        const innerEvent = inner?.event;
-        const innerPayload = inner?.payload ?? inner;
-        if (innerEvent === 'chat:message' && matchesId(innerPayload)) {
-          return finish(true);
-        }
-      } catch {}
-    };
-
-    // Phoenix channel 'on' handler
-    const chanListener = (payload: any, eventName?: string) => {
-      try { dbg('waitForAck/chan', { payload, eventName }); } catch {}
-      clearTimeout(timer);
-      timer = setTimeout(() => finish(false), timeoutMs);
-      let evt = eventName;
-      let pl = payload;
-      if (payload?.event === 'forward' && payload.payload) {
-        evt = payload.payload.event;
-        pl = payload.payload.payload ?? payload.payload;
-      }
-      if (evt === 'chat:message' && matchesId(pl)) return finish(true);
-    };
-
-    // Attach listeners for WebSocket and Phoenix channel
-    const looksLikeWS = typeof socket?.addEventListener === 'function' && typeof socket?.send === 'function';
-    if (looksLikeWS) {
-      try {
-        socket.addEventListener('message', wsListener);
-        cleanupFns.push(() => { try { socket.removeEventListener('message', wsListener); } catch {} });
-      } catch {}
-    }
-
-    if (typeof socket?.on === 'function') {
-      try {
-        socket.on('chat:message', (p: any) => chanListener(p, 'chat:message'));
-        socket.on('forward', (p: any) => chanListener(p, 'forward'));
-        cleanupFns.push(() => {
-          try { socket.off('chat:message', chanListener as any); } catch {}
-          try { socket.off('forward', chanListener as any); } catch {}
-        });
-      } catch {}
-    }
-
-    // Generic adapter hooks
-    // 4) socket.onMessage((packet) => ...)  -> returns unsubscribe
-    if (typeof (socket as any)?.onMessage === 'function') {
-      try {
-        onMessageUnsub = (socket as any).onMessage((packet: any) => wsListener(packet));
-      } catch {}
-    }
-
-    // 5) socket.addMessageListener(cb) / removeMessageListener(cb)
-    if (typeof (socket as any)?.addMessageListener === 'function') {
-      addMsgCb = (packet: any) => wsListener(packet);
-      try { (socket as any).addMessageListener(addMsgCb); } catch {}
-      cleanupFns.push(() => {
-        try { (socket as any)?.removeMessageListener?.(addMsgCb!); } catch {}
-      });
-    }
-
-    // 6) socket.onAny((event, payload) => ...) / socket.offAny(handler)
-    if (typeof (socket as any)?.onAny === 'function') {
-      anyHandler = (evt: any, payload: any) => chanListener(payload, String(evt));
-      try { (socket as any).onAny(anyHandler); } catch {}
-      cleanupFns.push(() => { try { (socket as any)?.offAny?.(anyHandler!); } catch {} });
-    }
-
-    // Nested channel (for socket.channel)
-    const channel = socket?.channel;
-    if (channel && typeof channel.on === 'function') {
-      channel.on('chat:message', (p: any) => chanListener(p, 'chat:message'));
-      channel.on('forward', (p: any) => chanListener(p, 'forward'));
-    }
-    if (channel && typeof channel.addEventListener === 'function') {
-      channel.addEventListener('message', wsListener);
-    }
-    // Timer for fallback
-    timer = setTimeout(() => finish(false), timeoutMs);
-  });
+    });
 }
 
 // --- Typing events ---
 export function sendTyping(deps: SendEventDeps, typing: boolean) {
-    const { socket, senderId } = deps;
+    const {socket, senderId} = deps;
     const unified = createEvent("chat:typing", {
         typing,
         senderId,
@@ -286,11 +358,12 @@ export const sendTypingStop = (deps: SendEventDeps) => sendTyping(deps, false);
 
 // --- Read receipt ---
 export function sendReadReceipt(deps: SendEventDeps, lastMessageId: string) {
-    const { socket } = deps;
+    const {socket} = deps;
     const packet = createEvent(
         "chat:read",
-        { lastReadMessageId: String(lastMessageId || "") },
+        {lastReadMessageId: String(lastMessageId || "")},
     );
+    console.log("sendReadReceipt", packet);
     wsSend(socket, packet);
 }
 
@@ -299,33 +372,38 @@ export function sendRoomUpdateEvent(
     deps: SendEventDeps,
     update: Record<string, any>
 ) {
-    const { socket } = deps;
+    const {socket} = deps;
     const packet = createEvent(
         "chat:update",
-        { ...update },
+        {...update},
     );
     wsSend(socket, packet);
 }
 
 /** Centralized send-message flow used by PhoenixSocketProvider */
-export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePayload): Promise<{ id: string; sent: boolean; acked: boolean; } | undefined> {
-    const {roomId,  peerPublicKeyHex, socket} = deps;
+export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePayload): Promise<{
+    id: string;
+    sent: boolean;
+    acked: boolean;
+} | undefined> {
+    const {roomId, peerPublicKeyHex, socket} = deps;
 
     try {
         const token = UserService.Instance.auth();
 
         // Create once (plaintext) and optimistically update UI
         const p = createMessage(
-          data.message,
-          roomId,
-          data.senderId,
-          data.id,
+            data.message,
+            roomId,
+            data.senderId,
+            data.id,
         );
         if (p) p.status = "pending";
 
         try {
             deps.store?.addPending?.(roomId, p);
-        } catch {}
+        } catch {
+        }
 
         emitChatNewMessage({
             roomId,
@@ -359,7 +437,7 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
 
         let finalContent = data.message;
 
-        if(shouldEncrypt) {
+        if (shouldEncrypt) {
             try {
                 const aesKey = await importAesKey(sharedKeyHex!, "encrypt");
                 finalContent = await encrypt(data.message, aesKey);
@@ -378,26 +456,31 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
             p.content = finalContent;
             try {
                 // sync การแก้ไข content (เช่น ciphertext) ไปยัง store ถ้ามี
-                deps.store?.commitStatus?.(roomId, String(p.id), p.status, { content: p.content });
-            } catch {}
+                deps.store?.commitStatus?.(roomId, String(p.id), p.status, {content: p.content});
+            } catch {
+            }
         }
         const sent = wsSend(socket, createEvent('chat:message', p));
-        dbg('chat:message sent?', { roomId, id: p.id, sent });
+        dbg('chat:message sent?', {roomId, id: p.id, sent});
         try {
             if (sent) deps.sentSet?.add(String(p.id));
             deps.onAfterSend?.();
-        } catch {}
+        } catch {
+        }
         let acked = false;
         if (sent) {
-            try { acked = await waitForAck(socket, String(messageId), 4000); } catch {}
+            try {
+                acked = await waitForAck(socket, String(messageId), 4000);
+            } catch {
+            }
         }
-        dbg('chat:message ack?', { id: messageId, acked });
+        dbg('chat:message ack?', {id: messageId, acked});
         // Notify UI of final status:
         // - If not sent at transport level => failed
         // - If sent but no ACK => keep 'pending' (server broadcast will set to 'sent')
         // - If ACK received => mark 'sent' early
         try {
-            const updated = { ...p };
+            const updated = {...p};
             updated.status = !sent ? "failed" : (acked ? "sent" : "pending");
 
             // อัปเดตลง store หากมี (commitStatus จะอัปเดตเฉพาะสถานะ/แพตช์)
@@ -406,7 +489,8 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
                     content: updated.content,
                     createdAt: p.createdAt,
                 });
-            } catch {}
+            } catch {
+            }
 
             // คงพฤติกรรมเดิม: แจ้ง DOM ให้ UI อื่น ๆ รับรู้ด้วย
             emitChatNewMessage({
@@ -417,7 +501,8 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
                 createdAt: p.createdAt,
                 status: updated.status,
             });
-        } catch {}
+        } catch {
+        }
     } catch (ignored) {
     }
     return;
@@ -425,25 +510,25 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
 
 /** Manual resend (used when user taps "resend" in UI) */
 export async function resendChatMessage(
-  deps: SendMessageDeps,
-  originalOrId: string | ChatMessage
+    deps: SendMessageDeps,
+    originalOrId: string | ChatMessage
 ): Promise<{ id: string; sent: boolean; acked: boolean }> {
-    const { roomId, socket, store } = deps;
+    const {roomId, socket, store} = deps;
 
     try {
         // Resolve message from id or use provided ChatMessage directly
         let msg: ChatMessage | undefined;
         let messageId: string;
         if (typeof originalOrId === 'string') {
-          messageId = originalOrId;
-          msg = store?.getMessageById ? store.getMessageById(roomId, messageId) : undefined;
-          if (!msg) {
-            console.warn("[chat] resend: message not found in store", messageId);
-            return { id: messageId, sent: false, acked: false };
-          }
+            messageId = originalOrId;
+            msg = store?.getMessageById ? store.getMessageById(roomId, messageId) : undefined;
+            if (!msg) {
+                console.warn("[chat] resend: message not found in store", messageId);
+                return {id: messageId, sent: false, acked: false};
+            }
         } else {
-          msg = originalOrId;
-          messageId = String(originalOrId.id);
+            msg = originalOrId;
+            messageId = String(originalOrId.id);
         }
 
         // mark as pending again
@@ -451,11 +536,14 @@ export async function resendChatMessage(
 
         // resend ข้อมูลชุดเดิม
         const sent = wsSend(socket, createEvent("chat:message", msg));
-        dbg("resendChatMessage", { id: msg.id, sent });
+        dbg("resendChatMessage", {id: msg.id, sent});
 
         let acked = false;
         if (sent) {
-            try { acked = await waitForAck(socket, String(msg.id), 4000); } catch {}
+            try {
+                acked = await waitForAck(socket, String(msg.id), 4000);
+            } catch {
+            }
         }
 
         const newStatus = !sent ? "failed" : (acked ? "sent" : "pending");
@@ -470,17 +558,17 @@ export async function resendChatMessage(
             status: newStatus,
         });
 
-        return { id: msg.id, sent, acked };
+        return {id: msg.id, sent, acked};
     } catch (err) {
         console.error("[chat] resend failed", err);
         // messageId is always defined by this point
         let messageId: string;
         if (typeof originalOrId === 'string') {
-          messageId = originalOrId;
+            messageId = originalOrId;
         } else {
-          messageId = String(originalOrId.id);
+            messageId = String(originalOrId.id);
         }
         store?.commitStatus?.(roomId, messageId, "failed");
-        return { id: messageId, sent: false, acked: false };
+        return {id: messageId, sent: false, acked: false};
     }
 }
