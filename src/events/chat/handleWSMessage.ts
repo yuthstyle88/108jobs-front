@@ -13,7 +13,7 @@ import type {ChatMessage, ChatRoomData} from "lemmy-js-client";
 import {
     buildMessageSignature,
     ChatTypingDetail,
-    cleanupFetch, dbg,
+    cleanupFetch,
     maybeHandleReadReceipt,
     maybeHandleStatusChange,
     mergeNewMessages,

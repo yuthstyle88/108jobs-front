@@ -80,9 +80,10 @@ export const useWorkflowActions = (deps: UseWorkflowActionsDeps) => {
 
             // broadcast to partner
             sendRoomUpdate(roomId, {
-                type: 'status-change',
-                status: target,
-                prevStatus,
+                senderId: localUser.id,
+                updateType: 'status-change',
+                statusTarget: target,
+                prevStatus: prevStatus,
             });
         },
         [goToStatus, sendRoomUpdate, roomId]

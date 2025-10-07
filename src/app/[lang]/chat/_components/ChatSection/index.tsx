@@ -17,7 +17,6 @@ import QuotationModal from "@/components/Common/Modal/QuotationModal";
 import {useWorkflowStepper} from "@/hooks/useWorkflowMachine";
 import {useHttpPost} from "@/hooks/useHttpPost";
 import {apiToUiStatus, useStateMachineStore} from "@/store/stateMachineStore";
-import {isBrowser} from "@/utils/browser";
 import {Trash2} from "lucide-react";
 import {getLatestProposedQuotePayload} from "@/utils/chat/message";
 import {JobDetailModal} from "@/components/Common/Modal/JobDetailModal";
@@ -148,20 +147,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         scrollContainerRef.current = el;
         if (el) setScrollParentEl(el);
     }, []);
-    const scrollToLatest = () => {
-        const rootEl = scrollContainerRef.current;
-        if (rootEl) {
-            rootEl.scrollTop = rootEl.scrollHeight - rootEl.clientHeight;
-        }
-    };
-    const scrollToLatestSoon = () => {
-        if (!isBrowser()) return;
-        try {
-            requestAnimationFrame(() => requestAnimationFrame(scrollToLatest));
-        } catch {
-            setTimeout(scrollToLatest, 0);
-        }
-    };
+
     const {
         selectedFile,
         setSelectedFile,
@@ -598,7 +584,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                                     disabledHint=""
                                     onFileUpload={(ev: any) => handleFileUpload(ev as any)}
                                     onTyping={(v) => {
-                                        // Outbound only: do not mutate local UI here; UI listens to inbound events
                                         try {
                                             sendTyping?.(v);
                                         } catch {
