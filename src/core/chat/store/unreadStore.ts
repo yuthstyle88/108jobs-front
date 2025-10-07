@@ -356,7 +356,7 @@ if (isBrowser()) {
     // --- Integrate with roomsStore: prune counters for rooms that no longer exist ---
     (async () => {
       try {
-        const mod = await import("@/store/roomsStore");
+        const mod = await import("@/core/chat/store/roomsStore");
         const useRoomsStore = (mod as any).useRoomsStore as { getState: () => any; subscribe: (cb: (s: any) => void) => () => void };
         if (!useRoomsStore) return;
 

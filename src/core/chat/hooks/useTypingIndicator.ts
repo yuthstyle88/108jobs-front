@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {LocalUserId} from "@/lib/lemmy-js-client/src";
+import {LocalUserId} from 'lemmy-js-client';
 
 export const useTypingIndicator = (deps: { roomId: string }) => {
     const [isPartnerTyping, setIsPartnerTyping] = useState<boolean>(false);

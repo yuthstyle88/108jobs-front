@@ -1,8 +1,8 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 // IMPORTANT: Adjust the import path if your service lives elsewhere
-import {getChannelAdapter} from '@/services/PhoenixSocketService';
+import {getChannelAdapter} from '@/core/chat/services/PhoenixSocketService';
+import {WebSocketStatus} from "@/core/chat/types";
 
-export type WebSocketStatus = 'idle' | 'connecting' | 'connected' | 'disconnected' | 'error';
 
 export interface SendMessageInput {
   roomId: string;

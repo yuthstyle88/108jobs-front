@@ -411,6 +411,6 @@ export type { SubmitStartWorkForm } from "./types/SubmitStartWorkForm";
 export type { RequestRevisionForm } from "./types/RequestRevisionForm";
 export type { ApproveWorkForm } from "./types/ApproveWorkForm";
 export type { ChatStatus } from "./types/ChatStatus";
-
+export type { IdentityCard }  from "./types/IdentityCard";
 export type { ScbStatus, ScbTokenData, ScbTokenResponse } from "./types/ScbTokenResponse";
 export type { ScbQrCodeBody, ScbQrCodeRequest, ScbQrCodeStatus, ScbQrCodeData, ScbQrCodeResponse } from "./types/ScbQrCode";

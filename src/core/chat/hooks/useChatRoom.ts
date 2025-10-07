@@ -1,18 +1,19 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {useWebSocketContext} from '@/contexts/WebSocketContext';
-import {createHandleWSMessage} from '@/events/chat/handleWSMessage';
+import {useWebSocketContext} from '@/core/chat/contexts/WebSocketContext';
+import {createHandleWSMessage} from '@/core/chat/events/handleWSMessage';
 import {ensureSharedKeyForRoom} from "@/utils";
-import {makeEmitReadAcker, MessagePayload} from "@/utils/chat";
+import {makeEmitReadAcker} from "@/core/chat/utils";
 import {
     resendChatMessage,
     sendChatMessage,
     sendReadReceipt as sendReadReceiptEvent, sendRoomUpdateEvent,
     sendTyping as sendTypingEvent
-} from "@/events/chat/sendEvents";
+} from "@/core/chat/events/sendEvents";
 import {ChatRoomId, ChatRoomData, LocalUser, LocalUserId} from "lemmy-js-client";
 import {useChatStore} from "@/store/chatStore"
-import {makeReadAckEmitter} from "@/utils/chat/socket-emitter";
-import {emitWsReconnected} from "@/events/chat";
+import {makeReadAckEmitter} from "@/core/chat/utils/socket-emitter";
+import {emitWsReconnected} from "@/core/chat/events";
+import {MessagePayload} from "@/core/chat/types";
 
 // Safe DOM CustomEvent dispatcher
 function dispatchDomEvent(name: string, detail: any) {

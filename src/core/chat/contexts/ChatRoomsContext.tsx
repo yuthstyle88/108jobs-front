@@ -10,9 +10,9 @@ import type {ListUserChatRoomsResponse} from "lemmy-js-client";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {REQUEST_STATE} from "@/services/HttpService";
 import {isBrowser} from "@/utils/browser";
-import {useUnreadStore} from "@/store/unreadStore";
-import {useRoomsStore} from "@/store/roomsStore";
-import {disableBackgroundUnread, enableBackgroundUnread} from "@/utils/chat/backgroundUnreadWatcher";
+import {useUnreadStore} from "@/core/chat/store/unreadStore";
+import {useRoomsStore} from "@/core/chat/store/roomsStore";
+import {disableBackgroundUnread, enableBackgroundUnread} from "@/core/chat/utils/backgroundUnreadWatcher";
 // Context state for listing chat rooms with pagination and E2EE-aware lastMessage preview
 
 type RoomsState = {
@@ -266,7 +266,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     // Refetch when WS reconnects (event dispatched from RealtimeChatContext)
     useEffect(() => {
         const off = (async () => {
-            const { onWsReconnected } = await import("@/events/chat");
+            const { onWsReconnected } = await import("@/core/chat/events");
             const unsubscribe = onWsReconnected(() => {
                 try { execute(); } catch {}
             });
@@ -286,7 +286,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         setState(prev => ({...prev, rooms: prev.rooms.map(r => r.id === roomId ? {...r, unreadCount: 0} : r)}));
         try {
             // Keep global unread badge in sync
-            const { markSeen } = (await import("@/store/unreadStore")).useUnreadStore.getState();
+            const { markSeen } = (await import("@/core/chat/store/unreadStore")).useUnreadStore.getState();
             markSeen(roomId);
         } catch {}
         // If server endpoint exists, call it here
@@ -328,7 +328,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         let unsubscribe: (() => void) | null = null;
         (async () => {
             try {
-                const { onChatNewMessage } = await import("@/events/chat");
+                const { onChatNewMessage } = await import("@/core/chat/events");
                 unsubscribe = onChatNewMessage((detail) => {
                     console.log('New message event received:', detail); // Debug log
                     if (!detail || !detail.roomId) {
@@ -363,7 +363,7 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
         let cancelled = false;
         (async () => {
             try {
-                const { useUnreadStore } = await import("@/store/unreadStore");
+                const { useUnreadStore } = await import("@/core/chat/store/unreadStore");
                 const applyPerRoom = (perRoom: Record<string, number>) => {
                     if (cancelled) return;
                     setState(prev => {

@@ -7,19 +7,19 @@ import {
     isValidIncomingChatPayload,
     normalizePhoenixEnvelope,
     unwrapPhoenixFrame,
-} from "@/utils/chat/chatSocketUtils";
-import {emitChatTyping,} from "@/events/chat/index";
+} from "@/core/chat/utils/chatSocketUtils";
+import {emitChatTyping,} from "@/core/chat/events/index";
 import type {ChatMessage, ChatRoomData} from "lemmy-js-client";
 import {
     buildMessageSignature,
-    ChatTypingDetail,
     cleanupFetch,
     maybeHandleReadReceipt,
     maybeHandleStatusChange,
     mergeNewMessages,
     parseTypingDetail,
     tryFlushAutoAck
-} from "@/utils/chat";
+} from "@/core/chat/utils";
+import {ChatTypingDetail} from "@/core/chat/types";
 
 export interface HandlerRefs {
     /** set of processed message signatures for dedupe */

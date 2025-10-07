@@ -1,8 +1,8 @@
 "use client";
 
-import {getChannelAdapter} from "@/services/PhoenixSocketService";
-import {useRoomsStore} from "@/store/roomsStore";
-import {incrementForIncoming, useUnreadStore} from "@/store/unreadStore";
+import {getChannelAdapter} from "@/core/chat/services/PhoenixSocketService";
+import {useRoomsStore} from "@/core/chat/store/roomsStore";
+import {incrementForIncoming, useUnreadStore} from "@/core/chat/store/unreadStore";
 
 // Debug toggle: set window.__DEBUG_BG_UNREAD = true or localStorage.DEBUG_BG_UNREAD = '1' to enable logs
 const DEBUG_KEY = 'DEBUG_BG_UNREAD';

@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {fetchHistoryPage} from '@/utils/chat/chatSocketUtils';
+import {fetchHistoryPage} from '@/core/chat/utils/chatSocketUtils';
 import {ChatMessage} from "lemmy-js-client";
-import {log} from "node:util";
 
 export type UseChatHistoryOptions = {
     roomId: string;

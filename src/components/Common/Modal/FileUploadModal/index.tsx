@@ -3,7 +3,7 @@
 import React from 'react';
 import {createPortal} from 'react-dom';
 import {useTranslation} from 'react-i18next';
-import {UploadedFile} from "@/hooks/chat/useFileUpload";
+import {UploadedFile} from "@/core/chat/hooks/useFileUpload";
 import {Paperclip, Trash2} from "lucide-react";
 
 interface FileUploadModalProps {

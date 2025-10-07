@@ -5,6 +5,7 @@ import type {ChatMessage} from "lemmy-js-client";
 import {MessageImage} from "@/constants/images";
 import {useTranslation} from "react-i18next";
 import { useChatStore } from "@/store/chatStore";
+import { useChatServices } from "@/core/chat/contexts/PhoenixChatBridgeProvider";
 import React, { useMemo } from "react";
 import {toLocalTime} from "@/utils/date";
 import MessageReceipt from "@/components/MessageReceipt";
@@ -47,6 +48,7 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
     partnerAvatar,
 }) => {
     const {t, i18n} = useTranslation();
+    const { resend } = useChatServices();
 
     // Subscribe to latest message from store so UI auto-updates (ACK/resend/status/content patches)
     const liveMessage = useChatStore((s) => {
@@ -119,13 +121,19 @@ const ChatMessageItem: React.FC<ChatMessageItemProps> = ({
                 <p className="text-[11px] text-gray-400 flex items-center gap-1">
                     {time}
                     <MessageReceipt
-                        isOwner={viewMsg.isOwner}
-                        unread={(viewMsg as any).unread}
-                        msgStatus={msgStatus}
-                        showReceipt={showReceipt}
-                        readByPeer={readByPeer}
-                        deliveredButUnread={deliveredButUnread}
-                        t={t}
+                      isOwner={viewMsg.isOwner}
+                      unread={(viewMsg as any).unread}
+                      msgStatus={msgStatus}
+                      showReceipt={showReceipt}
+                      readByPeer={readByPeer}
+                      deliveredButUnread={deliveredButUnread}
+                      t={t}
+                      onRetry={viewMsg.isOwner ? () => {
+                        const rid = String((viewMsg as any)?.roomId ?? "");
+                        if (rid) {
+                          try { resend?.flushActive(rid); } catch {}
+                        }
+                      } : undefined}
                     />
                 </p>
 

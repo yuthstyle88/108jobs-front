@@ -6,8 +6,8 @@ import ChatWrapper from "@/containers/ChatWrapper";
 import SpHeader from "@/containers/SpHeader";
 import {ChatLanguageProvider} from "@/contexts/ChatLanguage";
 import {LayoutProps} from "@/types/layout";
-import {ChatRoomsProvider} from "@/contexts/ChatRoomsContext";
-import {WebSocketProvider} from "@/contexts/WebSocketContext";
+import {ChatRoomsProvider} from "@/core/chat/contexts/ChatRoomsContext";
+import {WebSocketProvider} from "@/core/chat/contexts/WebSocketContext";
 import {UserService} from "@/services/UserService";
 import {useParams} from "next/navigation";
 

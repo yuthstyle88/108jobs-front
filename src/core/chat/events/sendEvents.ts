@@ -1,9 +1,10 @@
-import type {ChatMessage, LocalUserId} from "lemmy-js-client";
+import type {ChatMessage, ChatRoomId, ChatStatus, LocalUserId} from "lemmy-js-client";
 import {UserService} from "@/services";
 import {ensureSharedKeyForRoom, importAesKey} from "@/utils";
 import {encrypt} from "@/lib/web-crypto";
-import {emitChatNewMessage} from "@/events/chat";
-import {dbg, PhoenixEvent} from "@/utils/chat";
+import {emitChatNewMessage} from "@/core/chat/events/index";
+import {dbg} from "@/core/chat/utils";
+import {PhoenixEvent} from "@/core/chat/types";
 
 // generic payload (ChatMessage, error, หรืออื่นๆ)
 export interface PhoenixPacket<T = any> {
@@ -33,6 +34,7 @@ export function createEvent<T>(
 // ฟังก์ชันย่อย สำหรับสร้าง chat:message event โดยเฉพาะ
 export function createMessage(
     content: string,
+    roomId: ChatRoomId,
     senderId: LocalUserId,
     id?: string,
 ): ChatMessage {
@@ -42,9 +44,10 @@ export function createMessage(
 
     return {
         id: id ?? crypto.randomUUID(),
+        roomId,
         senderId,
         content,
-        status: "pending",
+        status: "pending"  as ChatStatus,
         createdAt: new Date().toISOString(),
     };
 }
@@ -314,6 +317,7 @@ export async function sendChatMessage(deps: SendMessageDeps, data: SendMessagePa
         // Create once (plaintext) and optimistically update UI
         const p = createMessage(
           data.message,
+          roomId,
           data.senderId,
           data.id,
         );

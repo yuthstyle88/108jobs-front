@@ -1,7 +1,7 @@
 import type {RefObject} from "react";
 import {HttpService} from "@/services";
 import {REQUEST_STATE} from "@/services/HttpService";
-import {emitReadReceipt} from "@/events/chat";
+import {emitReadReceipt} from "@/core/chat/events";
 import {ChatMessage} from "lemmy-js-client";
 
 export function parseTypingDetail(env: any, fallbackRoomId: string, localUserId: number): { roomId: string; senderId: number; typing: boolean } | null {

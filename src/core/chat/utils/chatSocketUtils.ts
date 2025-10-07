@@ -1,7 +1,7 @@
 import {__DEV__} from "@/utils/appConfig";
 import {HttpService, UserService} from "@/services";
 import {getHost, isHttps} from "@/utils/env";
-import type {ChatMessage} from "@/lib/lemmy-js-client/src";
+import type {ChatMessage} from "lemmy-js-client";
 import {decrypt} from "@/lib/web-crypto";
 import {importAesKey} from "@/utils";
 import {REQUEST_STATE} from "@/services/HttpService";

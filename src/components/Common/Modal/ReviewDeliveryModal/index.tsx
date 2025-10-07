@@ -1,9 +1,9 @@
 import {useTranslation} from 'react-i18next';
 import {v4 as uuidv4} from 'uuid';
 import {StatusKey} from "@/components/FreelanceChatFlow";
-import {LocalUserId} from "@/lib/lemmy-js-client/src";
+import {LocalUserId} from "lemmy-js-client";
 import React from "react";
-import {emitChatNewMessage} from "@/events/chat";
+import {emitChatNewMessage} from "@/core/chat/events";
 
 interface ReviewDeliveryModalProps {
     showReviewModal: boolean;

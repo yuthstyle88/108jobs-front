@@ -4,7 +4,7 @@ import {ChatStatus} from "./ChatStatus";
 // Basic chat message entity from server
 export type ChatMessage = {
   id: string;
-  roomId?: ChatRoomId;
+  roomId: ChatRoomId;
   senderId: number;
   content: string;
   status: ChatStatus;

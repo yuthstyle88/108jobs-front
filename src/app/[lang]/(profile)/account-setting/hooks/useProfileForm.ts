@@ -4,7 +4,7 @@ import {LOADING_REQUEST, RequestState} from "@/services/HttpService";
 import {MyUserInfo, Person, SaveUserSettings, UploadImage, UploadImageResponse} from "lemmy-js-client";
 import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
-import {IdentityCard} from "@/lib/lemmy-js-client/src/types/IdentityCard";
+import {IdentityCard} from "lemmy-js-client";
 
 interface FormValues {
     displayName: string;

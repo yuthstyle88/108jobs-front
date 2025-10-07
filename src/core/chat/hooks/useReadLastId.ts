@@ -1,9 +1,6 @@
-
-
-
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { useRoomsStore } from "@/store/roomsStore";
+import { useRoomsStore } from "@/core/chat/store/roomsStore";
 import { UserService } from "@/services/UserService";
 
 export type ReadLastIdOptions = {

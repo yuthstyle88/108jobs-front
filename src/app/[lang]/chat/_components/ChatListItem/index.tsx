@@ -3,7 +3,7 @@ import React from "react";
 import type {ChatRoom} from "@/types/chat";
 import type {LocalUser} from "lemmy-js-client";
 import Link from "next/link";
-import {useChatRoomsContext} from "@/contexts/ChatRoomsContext";
+import {useChatRoomsContext} from "@/core/chat/contexts/ChatRoomsContext";
 
 interface ChatListItemProps {
     room: ChatRoom;

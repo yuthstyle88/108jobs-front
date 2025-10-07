@@ -1,7 +1,7 @@
 import {useCallback, useRef} from 'react';
 import type {StatusKey} from '@/components/FreelanceChatFlow';
 import type {ChatMessage as WsChatMessage} from 'lemmy-js-client';
-import {TYPES_TO_STATUS} from '@/utils/chat/workflowTypes';
+import {TYPES_TO_STATUS} from '@/core/chat/utils/workflowTypes';
 
 export interface UseWorkflowStatusParams {
     currentStatus: StatusKey;

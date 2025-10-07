@@ -1,7 +1,7 @@
 import {v4 as uuidv4} from 'uuid';
-import type {WsMessageSender} from './types';
-import {emitChatNewMessage} from "@/events/chat";
+import {emitChatNewMessage} from "@/core/chat/events";
 import {ChatStatus, LocalUserId} from "lemmy-js-client";
+import {WsMessageSender} from "@/core/chat/types";
 
 export type Structured = Record<string, any>;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import {useEffect, useState} from "react";
-import {PhoenixChatBridgeProvider} from "@/contexts/PhoenixChatBridgeProvider";
+import {PhoenixChatBridgeProvider} from "@/core/chat/contexts/PhoenixChatBridgeProvider";
 import ChatSection from "../../_components/ChatSection";
 import {HttpService, UserService} from "@/services";
 import LoadingBlur from "@/components/Common/Loading/LoadingBlur";

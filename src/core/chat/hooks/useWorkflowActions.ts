@@ -1,11 +1,11 @@
 import {useCallback} from 'react';
 import {HttpService, REQUEST_STATE} from '@/services/HttpService';
-import {useWorkflow} from '@/hooks/chat/useWorkflow';
-import {getLatestProposedQuoteSeq} from '@/utils/chat/message';
+import {useWorkflow} from '@/core/chat/hooks/useWorkflow';
+import {getLatestProposedQuoteSeq} from '@/core/chat/utils/message';
 import type {ApproveQuotationForm, ChatRoomData, CreateInvoiceForm, LocalUser, PostId} from 'lemmy-js-client';
-import type {WsMessageSender} from '@/utils/chat/types';
+import type {WsMessageSender} from '@/core/chat/types';
 import type {StatusKey} from '@/components/FreelanceChatFlow';
-import {sendStructuredMessage} from '@/utils/chat/structured';
+import {sendStructuredMessage} from '@/core/chat/utils/structured';
 
 // Helper to extract meaningful error messages from wrapped HttpService responses
 function extractErr(res: any, fallback: string) {

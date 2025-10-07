@@ -1,4 +1,4 @@
-import {LocalUserId} from "lemmy-js-client";
+import {ChatMessage, LocalUserId} from "lemmy-js-client";
 
 export type WsMessageSender = (data: MessagePayload) => void | Promise<void>;
 
@@ -15,20 +15,20 @@ export interface MessagePayload {
  * - createdAt: optional ISO timestamp when the event was generated (server/client)
  */
 export interface ChatTypingDetail {
-  roomId: string;
-  senderId: LocalUserId;
-  typing: boolean;
-  createdAt?: string;
+    roomId: string;
+    senderId: LocalUserId;
+    typing: boolean;
+    createdAt?: string;
 }
 export const TYPING_EVENT_NAMES = ['chat:typing'];
 
 export const EVENTS = [
-  'phx_reply',
-  'forward',
-  'chat:message',
-  'chat:typing',
-  'chat:read',
-  'history_page',
+    'phx_reply',
+    'forward',
+    'chat:message',
+    'chat:typing',
+    'chat:read',
+    'history_page',
 ];
 
 export type PhoenixEvent =
@@ -42,3 +42,9 @@ export type PhoenixEvent =
   | "chat:read"
   | "chat:update"
   | "history_page";
+
+export type ChatMessageModel = ChatMessage & {
+    isOwner: boolean
+};
+
+export type WebSocketStatus = 'idle' | 'connecting' | 'connected' | 'disconnected' | 'error';

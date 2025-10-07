@@ -6,8 +6,8 @@
 // ------------------------------------------------------------
 
 import React, {createContext, useContext} from 'react';
-import type {UseWebSocketOptions, WebSocketAPI} from '@/hooks/chat/useWebSocket';
-import {useWebSocket} from '@/hooks/chat/useWebSocket';
+import type {UseWebSocketOptions, WebSocketAPI} from '@/core/chat/hooks/useWebSocket';
+import {useWebSocket} from '@/core/chat/hooks/useWebSocket';
 
 // ========================= Context Layer =======================
 interface WebSocketContextValue extends WebSocketAPI {}
