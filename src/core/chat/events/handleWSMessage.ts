@@ -8,7 +8,7 @@ import {
     normalizePhoenixEnvelope,
     unwrapPhoenixFrame,
 } from "@/core/chat/utils/chatSocketUtils";
-import type { NormalizedEnvelope } from "@/core/chat/utils/chatSocketUtils";
+import type {NormalizedEnvelope} from "@/core/chat/utils/chatSocketUtils";
 import {emitChatTyping,} from "@/core/chat/events/index";
 import type {ChatMessage, ChatRoomData} from "lemmy-js-client";
 import {
@@ -82,11 +82,18 @@ export function createHandleWSMessage(deps: HandlerDeps) {
             payload = unwrapPhoenixFrame(event);
             if (!isValidIncomingChatPayload(payload)) {
                 // Keep log lightweight; the permissive mapper below will try its best.
-                try { console.debug("[ws] payload failed strict validation; attempting permissive mapping"); } catch {}
+                try {
+                    console.debug("[ws] payload failed strict validation; attempting permissive mapping");
+                } catch {
+                }
             }
+
             // Normalize once only
-            const env: NormalizedEnvelope = normalizePhoenixEnvelope(payload, roomIdStr);
-            try { markPeerActive(); } catch {}
+            const env: NormalizedEnvelope = normalizePhoenixEnvelope(payload.data, roomIdStr);
+            try {
+                markPeerActive();
+            } catch {
+            }
             // 1) status-change → refresh & return
             if (await maybeHandleStatusChange(env, roomIdStr, setRefreshRoomData)) {
                 return null;
@@ -95,8 +102,14 @@ export function createHandleWSMessage(deps: HandlerDeps) {
             // 2) typing → DOM + optional callback
             const typingInfo = parseTypingDetail(env, roomIdStr, meId);
             if (typingInfo) {
-                try { emitChatTyping(typingInfo); } catch {}
-                try { onRemoteTyping?.(typingInfo); } catch {}
+                try {
+                    emitChatTyping(typingInfo);
+                } catch {
+                }
+                try {
+                    onRemoteTyping?.(typingInfo);
+                } catch {
+                }
             }
 
             // 3) read-receipt → emit & return
@@ -105,7 +118,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
             }
 
             // 4) message payloads → handle + merge
-            const msgs = await handleIncomingPayload(payload, {
+            const msgs = await handleIncomingPayload(payload.data, {
                 roomId: roomIdStr,
                 localUserId: meId,
                 token: UserService.Instance.auth(),
@@ -130,20 +143,21 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                     if (processedMsgRef.current.has(signature)) continue;
                     processedMsgRef.current.add(signature);
 
-                    const fromSelf = Number((item as any).senderId) === meId;
+
+                    const fromSelf = Number(item.senderId) === meId;
                     const peerActiveNow = peerActiveRef.current;
-                    const enhancedItem = { ...item, unread: fromSelf ? !peerActiveNow : false } as ChatMessage;
+                    const enhancedItem = {...item, unread: fromSelf ? !peerActiveNow : false} as ChatMessage;
                     newItems.push(enhancedItem);
 
-                    const msgId = String((item as any).id || "");
-                    const sameRoom = String((item as any).roomId) === roomIdStr;
+                    const msgId = String(item.id || "");
+                    const sameRoom = String(item.roomId) === roomIdStr;
                     if (sameRoom && !fromSelf && msgId) lastAckId = msgId;
                 }
 
                 if (lastAckId) (handleWSMessage as any)._batchAckLastId = lastAckId;
 
                 if (newItems.length > 0) {
-                   setMessages(prev => mergeNewMessages(prev, newItems));
+                    setMessages(prev => mergeNewMessages(prev, newItems));
                 }
 
                 // 5) auto-ack flush (once)
@@ -151,7 +165,10 @@ export function createHandleWSMessage(deps: HandlerDeps) {
             }
         } catch (e) {
             cleanupFetch(setIsFetching, fetchTimeoutRef, fetchResolveRef);
-            try { broadcastToListeners(payload ?? unwrapPhoenixFrame(event)); } catch {}
+            try {
+                broadcastToListeners(payload ?? unwrapPhoenixFrame(event));
+            } catch {
+            }
         }
     };
 

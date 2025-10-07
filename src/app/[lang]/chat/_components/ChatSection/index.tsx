@@ -175,6 +175,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         state: {refreshRoomData, isPartnerTyping},
     } = useChatRoom({roomId, peerPublicKeyHex, setMessages, localUser, roomData: currentRoom});
 
+    console.log("messages: ", messages)
+
     // Keep ChatSection's local `messages` state in sync with store leftovers
     useEffect(() => {
         try {

@@ -1,11 +1,12 @@
 import type {ChatRoomId} from "./ChatRoomId";
 import {ChatStatus} from "./ChatStatus";
+import {LocalUserId} from "./LocalUserId";
 
 // Basic chat message entity from server
 export type ChatMessage = {
   id: string;
   roomId: ChatRoomId;
-  senderId: number;
+  senderId: LocalUserId;
   content: string;
   status: ChatStatus;
   createdAt: string;
