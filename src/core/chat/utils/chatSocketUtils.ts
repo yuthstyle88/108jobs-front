@@ -21,16 +21,16 @@ export type NormalizedEnvelope =
 // Server-side payload shapes (mirroring Rust `MessageModel` and `IncomingEvent`)
 interface ServerMessageModel {
   id?: string;
-  sender_id?: number;
-  reader_id?: number;
-  read_last_id?: string;
+  senderId?: number;
+  readerId?: number;
+  readLastId?: string;
   content?: string;
   status?: 'pending' | 'sent' | 'failed' | string;
   typing?: boolean;
-  update_type?: string;
-  status_target?: string;
-  prev_status?: string;
-  created_at?: string;
+  updateType?: string;
+  statusTarget?: string;
+  prevStatus?: string;
+  createdAt?: string;
 }
 interface IncomingEventLike {
   event: string;
@@ -72,17 +72,17 @@ export function normalizePhoenixEnvelope(
     const rid = payload.room_id || fallbackRoomId || '';
     if (evLower === 'chat:message') {
       const p: ServerMessageModel | undefined = payload.payload;
-      // guard: must have content and sender_id
+      // guard: must have content and senderId
       if (!p || typeof p.content !== 'string' || p.content.length === 0) {
         return { event: ev, roomId: rid };
       }
       const msg: ChatMessage = {
         id: String(p.id ?? ''),
         roomId: rid,
-        senderId: typeof p.sender_id === 'number' ? p.sender_id : 0,
-        content: p.content,
+        senderId: typeof p.senderId === 'number' ? p.senderId : 0,
+        content: p.content!,
         status: (typeof p.status === 'string' ? p.status : 'pending') as ChatStatus,
-        createdAt: String(p.created_at ?? new Date().toISOString()),
+        createdAt: String(p.createdAt ?? new Date().toISOString()),
         isOwner: undefined,
       };
       return {
@@ -139,49 +139,29 @@ export function addOnce(set: Set<string>, key: string): boolean {
     return true;
 }
 
-export function unwrapPhoenixFrame(data: any): any {
-    try {
-        // If already an envelope-like object: { event, payload, topic }
-        if (data && typeof data === 'object' && ('event' in data || 'payload' in data || 'topic' in data)) {
-            const env: any = data;
-            const payload = env.payload ?? env;
-            if (payload && typeof payload === 'object') {
-                // Preserve topic/event for downstream mapping (e.g., infer room from topic)
-                return {...payload, topic: payload.topic ?? env.topic, event: payload.event ?? env.event};
-            }
-            return payload;
-        }
+export function unwrapPhoenixFrame(data: unknown): unknown {
+  try {
+    // If MessageEvent-like
+    const raw = typeof data === 'string' ? data : (typeof (data as any)?.data === 'string' ? (data as any).data : null);
 
-        // Accept either raw string, or MessageEvent-like { data: string }
-        const raw = typeof data === 'string' ? data : (typeof data?.data === 'string' ? data.data : null);
-        if (!raw) return data;
+    // Already an object (not a string)? return as-is
+    if (raw == null) return data;
 
-        // Phoenix array frame: [join_ref, msg_ref, topic, event, payload]
-        if (raw.startsWith('[')) {
-            const arr = JSON.parse(raw);
-            if (Array.isArray(arr) && arr.length >= 5) {
-                const payload = arr[4];
-                if (arr[3] === 'phx_reply' && payload && typeof payload === 'object' && 'response' in payload) {
-                    return (payload as any).response;
-                }
-                return payload;
-            }
-        }
-
-        // JSON envelope case: { event, payload, topic }
-        const obj = JSON.parse(raw);
-        if (obj && typeof obj === 'object' && ('event' in obj || 'payload' in obj || 'topic' in obj)) {
-            const env: any = obj;
-            const payload = env.payload ?? env;
-            if (payload && typeof payload === 'object') {
-                return {...payload, topic: payload.topic ?? env.topic, event: payload.event ?? env.event};
-            }
-            return payload;
-        }
-        return obj;
-    } catch {
-        return data;
+    // Phoenix array frame: [join_ref, msg_ref, topic, event, payload]
+    if (raw.startsWith('[')) {
+      const arr: unknown = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.length >= 5) {
+        return arr[4]; // return payload only; let higher-level normalizer handle event/topic
+      }
+      return arr;
     }
+
+    // JSON object: return parsed object as-is, no merging of topic/event
+    const obj: unknown = JSON.parse(raw);
+    return obj;
+  } catch {
+    return data;
+  }
 }
 
 // ---- handleIncomingPayload: normalize and map incoming chat payloads ----
