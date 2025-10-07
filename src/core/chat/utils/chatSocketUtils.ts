@@ -135,8 +135,6 @@ export function normalizePhoenixEnvelope(
                 sender: p?.senderId ? ({id: p.senderId} as unknown as ChatMessageView['sender']) : undefined,
             };
         }
-        // For other events, return just event and roomId (even if no payload)
-        return {event: ev, roomId: rid};
     }
 
     // 3) Unknown shape → return empty envelope with generic event
