@@ -1,4 +1,3 @@
-import {__DEV__} from "@/utils/appConfig";
 import {HttpService, UserService} from "@/services";
 import {getHost, isHttps} from "@/utils/env";
 import type {ChatMessage, ChatMessagesResponse, ChatMessageView, ChatRoom, ChatStatus} from "lemmy-js-client";
@@ -187,6 +186,7 @@ export async function handleIncomingPayload(
         const mapOne = async (raw: any): Promise<ChatMessage | null> => {
             // prefer explicit message node if present
             const flat = raw?.message ? {...raw.message, roomId: raw?.room?.id ?? raw?.message?.roomId} : raw;
+
             return mapIncomingToChatMessage(flat, {
                 token: ctx.token,
                 sharedKeyHex: ctx.sharedKeyHex,
@@ -322,12 +322,24 @@ export function installBestMessageListener(sock: any, handler: (evt: any) => voi
     };
 }
 
+// A flattened, incoming message shape after envelope normalization
+// (already merged with view.room.id when applicable)
+export type IncomingFlatMessage = {
+  id?: string;
+  msgRefId?: string;
+  roomId?: string;
+  senderId?: number;
+  content?: string;
+  status?: ChatStatus;
+  createdAt?: string;   // camelCase from server
+} & Record<string, unknown>;
+
 /**
  * Map various incoming shapes to a ChatMessage, with optional decryption.
  * Uses `addOnce` to de-duplicate by a stable signature (id or composite key).
  */
 export async function mapIncomingToChatMessage(
-    m: any,
+   m: IncomingFlatMessage,
     opts: {
         token?: string | null;
         sharedKeyHex?: string;
@@ -345,13 +357,9 @@ export async function mapIncomingToChatMessage(
         }
 
         const createdAtVal = m.created_at || m.createdAt || new Date().toISOString();
-        const roomIdForKey = m.roomId || opts.fallbackRoomId || '';
-        const senderIdForKey = String(m.senderId ?? '');
 
         // Stable signature to dedupe messages
-        const messageSignature = m.id
-            ? `id:${m.id}`
-            : `room:${roomIdForKey}|sender:${senderIdForKey}|ts:${createdAtVal}|content:${m.content}`;
+        const messageSignature = m.id ?? "";
 
         if (!addOnce(opts.receivedSet, messageSignature)) {
             return null; // duplicate
@@ -502,9 +510,9 @@ export async function fetchHistoryPage(
     for (const view of items) {
         const m = {
             ...view.message,
-            roomId: view.room?.id || view.message?.roomId,
+            id: view.message?.msgRefId,
+            roomId: view.message?.roomId,
         };
-
         const mapped = await mapIncomingToChatMessage(m, {
             token: realToken,
             sharedKeyHex: sharedKey,
