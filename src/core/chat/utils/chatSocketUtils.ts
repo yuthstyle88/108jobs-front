@@ -376,7 +376,7 @@ export async function mapIncomingToChatMessage(
         const createdAtMapped = m.created_at || m.createdAt || createdAtVal;
 
         return {
-            id: m.id,
+            id: m.msgRefId,
             senderId: senderIdMapped,
             roomId: roomIdMapped,
             content,
