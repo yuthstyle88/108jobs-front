@@ -52,10 +52,29 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         data.length ? String((data[data.length - 1] as any)?.id ?? '') : null
     );
 
+    // Track the range to detect when we're near the top
+    const rangeRef = React.useRef({ startIndex: 0, endIndex: 0 });
+    const hasMoreRef = React.useRef(hasMore);
+    const isFetchingRef = React.useRef(isFetching);
+
+    React.useEffect(() => {
+        hasMoreRef.current = hasMore;
+        isFetchingRef.current = isFetching;
+    }, [hasMore, isFetching]);
+
     const handleTopReached = React.useCallback(() => {
-        if (!hasMore || isFetching) return;
+        if (!hasMoreRef.current || isFetchingRef.current) return;
         onTopReached?.();
-    }, [hasMore, isFetching, onTopReached]);
+    }, [onTopReached]);
+
+    const handleRangeChanged = React.useCallback((range: { startIndex: number; endIndex: number }) => {
+        rangeRef.current = range;
+
+        // If we're at the 2nd message from the start and have more to load
+        if (range.startIndex <= 5 && hasMoreRef.current && !isFetchingRef.current) {
+            handleTopReached();
+        }
+    }, [handleTopReached]);
 
 
     React.useEffect(() => {
@@ -68,6 +87,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
         const prevTailId = tailIdRef.current;
         const newTailId = newLength ? String((data[newLength - 1] as any)?.id ?? '') : null;
+
         prevLengthRef.current = newLength;
         headIdRef.current = newHeadId;
         tailIdRef.current = newTailId;
@@ -131,6 +151,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 return `${created}|${sender}`;
             }}
             alignToBottom
+            rangeChanged={handleRangeChanged}
             atTopStateChange={(atTop) => {
                 if (atTop && hasMore && !isFetching && onTopReached) onTopReached();
             }}

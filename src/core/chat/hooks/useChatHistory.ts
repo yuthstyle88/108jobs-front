@@ -25,7 +25,7 @@ export type UseChatHistoryResult = {
 };
 
 export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResult {
-    const {roomId, pageSize = 20, isE2EMock = false, localUserId, receivedSet, broadcast, upsertHistory} = opts;
+    const {roomId, pageSize = 40, isE2EMock = false, localUserId, receivedSet, broadcast, upsertHistory} = opts;
 
     const [pageCursor, setPageCursor] = useState<string | null>(null);
     const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -62,7 +62,6 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
                 // Reverse items before inserting to match ascending render order
                 upsertHistory(items.reverse());
             }
-            console.log('[useChatHistory] reset history', items);
 
             // For backfill, use `prev` to continue going backward
             const prevCursor = (typeof prev === 'string' && prev.length > 0) ? prev : null;

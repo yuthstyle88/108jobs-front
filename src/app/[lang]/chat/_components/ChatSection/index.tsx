@@ -139,7 +139,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         actions: {fetchHistory},
     } = useChatHistory({
         roomId,
-        pageSize: 20,
+        pageSize: 40,
         isE2EMock: false,
         localUserId: Number(localUser.id) || 0,
         receivedSet: receivedIds,
