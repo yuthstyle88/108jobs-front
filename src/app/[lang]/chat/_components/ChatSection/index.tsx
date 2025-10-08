@@ -172,7 +172,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     });
     const {
         actions: {sendMessage, sendTyping, sendRoomUpdate, sendReadReceipt},
-        state: {refreshRoomData, isPartnerTyping},
+        state: {refreshRoomData, isPartnerTyping, isPeerActive},
     } = useChatRoom({roomId, peerPublicKeyHex, setMessages, localUser, roomData: currentRoom});
 
     // Keep ChatSection's local `messages` state in sync with store leftovers
@@ -519,6 +519,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                     <ChatHeader
                         avatarUrl={partnerAvatar || ProfileImage.avatar}
                         displayName={partnerName || "User"}
+                        online={isPeerActive}
                         typingText={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
                         onToggleFlow={() => setIsFlowOpen((v) => !v)}
                         isFlowOpen={isFlowOpen}

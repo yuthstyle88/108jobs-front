@@ -14,6 +14,7 @@ import {useChatStore} from "@/store/chatStore"
 import {makeReadAckEmitter} from "@/core/chat/utils/socket-emitter";
 import {emitWsReconnected} from "@/core/chat/events";
 import {MessagePayload} from "@/core/chat/types";
+import {useChatRoomsContext} from "@/core/chat/contexts/ChatRoomsContext";
 
 // Safe DOM CustomEvent dispatcher
 function dispatchDomEvent(name: string, detail: any) {
@@ -38,7 +39,14 @@ export interface UseChatRoomParams {
     roomData: ChatRoomData;
 }
 
-export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessages, localUser, roomData}: UseChatRoomParams) {
+export function useChatRoom({
+                                roomId,
+                                peerPublicKeyHex,
+                                onRemoteTyping,
+                                setMessages,
+                                localUser,
+                                roomData
+                            }: UseChatRoomParams) {
     const [pageCursor, setPageCursor] = useState<string | null>(null);
     const fetchingRef = useRef(false);
     const hasMoreRef = useRef(true);
@@ -48,6 +56,8 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
     const peerActiveDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const lastPeerActiveBumpAtRef = useRef<number>(0);
     const peerActiveExpiresAtRef = useRef<number>(0);
+    const { updatePeerPresence } = useChatRoomsContext();
+
     const markPeerActive = useCallback(() => {
         const now = Date.now();
 
@@ -59,6 +69,7 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
 
         // Mark active and push out the expiry
         peerActiveRef.current = true;
+        updatePeerPresence(roomId, true);
         peerActiveExpiresAtRef.current = now + PEER_ACTIVE_DECAY_MS;
 
         // If there's already a decay timer running, do not create a new one.
@@ -69,6 +80,7 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
                 if (remaining <= 0) {
                     // Expired: flip the flag and clear the timer handle
                     peerActiveRef.current = false;
+                    updatePeerPresence(roomId, false);
                     peerActiveDecayRef.current = null;
                     return;
                 }
@@ -402,7 +414,7 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
     }, []);
 
     return {
-        state: {pageCursor, refreshRoomData, isPartnerTyping},
+        state: {pageCursor, refreshRoomData, isPartnerTyping, isPeerActive: peerActiveRef},
         actions: {sendMessage, resendMessage, flushPending, removePending, sendReadReceipt, sendTyping, sendRoomUpdate},
         utils: {onWsErrorDuringFetch, markPeerActive},
     } as const;
