@@ -56,6 +56,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     const rangeRef = React.useRef({ startIndex: 0, endIndex: 0 });
     const hasMoreRef = React.useRef(hasMore);
     const isFetchingRef = React.useRef(isFetching);
+    const hasInitialScrollRef = React.useRef(false);
 
     React.useEffect(() => {
         hasMoreRef.current = hasMore;
@@ -120,18 +121,19 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         }
     }, [data, isAtBottom]);
 
-    // Handle initial scroll to bottom
     React.useEffect(() => {
-        if (data.length > 0) {
-            // Small delay to ensure Virtuoso is fully mounted
+        // Only scroll to bottom if we have messages AND haven't done initial scroll yet
+        if (data.length > 0 && !hasInitialScrollRef.current) {
             setTimeout(() => {
                 virtuosoRef.current?.scrollToIndex({
                     index: data.length - 1,
                     behavior: 'auto',
+                    align: 'end',
                 });
-            }, 100);
+                hasInitialScrollRef.current = true;
+            }, 50);
         }
-    }, []); // Empty dependency array - only run on mount
+    }, [data.length]);
 
     return (
         <Virtuoso
