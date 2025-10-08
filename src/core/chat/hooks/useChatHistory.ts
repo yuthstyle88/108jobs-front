@@ -9,7 +9,7 @@ export type UseChatHistoryOptions = {
     localUserId: number;
     receivedSet: Set<string>;
     broadcast: (m: any) => void;
-    setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+    upsertHistory: (items: ChatMessage[]) => void
 };
 
 export type UseChatHistoryResult = {
@@ -25,7 +25,7 @@ export type UseChatHistoryResult = {
 };
 
 export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResult {
-    const {roomId, pageSize = 20, isE2EMock = false, localUserId, receivedSet, broadcast, setMessages} = opts;
+    const {roomId, pageSize = 20, isE2EMock = false, localUserId, receivedSet, broadcast, upsertHistory} = opts;
 
     const [pageCursor, setPageCursor] = useState<string | null>(null);
     const [isFetching, setIsFetching] = useState<boolean>(false);
@@ -33,7 +33,6 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
 
     const fetchingRef = useRef(false);
     const lastCursorRef = useRef<string | null>(null);
-    const lastTotalRef = useRef<number>(0);
 
     // Reset cursor/state when room changes
     useEffect(() => {
@@ -41,7 +40,6 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
         setHasMore(true);
         fetchingRef.current = false;
         lastCursorRef.current = null;
-        lastTotalRef.current = 0;
         console.debug('[useChatHistory] reset for room', roomId);
     }, [roomId]);
 
@@ -61,18 +59,23 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
 
             let filteredCount = 0;
             if (items && Array.isArray(items)) {
-                setMessages((prevList) => {
-                    const existingIds = new Set(prevList.map((m) => m.id));
-                    // NOTE: server may return newest->oldest for backfill. If needed, reverse here.
-                    const incoming = items; // or: [...items].reverse()
-                    const filtered = incoming.filter((m) => !existingIds.has(m.id));
-                    filteredCount = filtered.length;
-                    if (filteredCount === 0) return prevList;
-                    // Backfill older messages should be PREPENDED to keep overall order oldest->newest
-                    const next = [...filtered, ...prevList];
-                    lastTotalRef.current = next.length;
-                    return next;
-                });
+                // Reverse items before inserting to match ascending render order
+                items.reverse();
+                // Build combined set of known IDs (receivedSet plus any others if needed)
+                // Here we rely only on receivedSet for deduplication
+                const knownIds = new Set(receivedSet);
+
+                // Server returns newest->oldest (DESC), store will normalize order
+                const incoming = items;
+
+                // Filter out duplicates based on knownIds
+                const filtered = incoming.filter(m => !knownIds.has(m.id));
+
+                filteredCount = filtered.length;
+
+                if (filteredCount > 0) {
+                    upsertHistory(filtered);
+                }
             }
 
             // For backfill, use `prev` to continue going backward
@@ -100,7 +103,7 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
             fetchingRef.current = false;
             setIsFetching(false);
         }
-    }, [isE2EMock, roomId, pageCursor, pageSize, localUserId, receivedSet, broadcast, hasMore]);
+    }, [isE2EMock, roomId, pageCursor, pageSize, localUserId, receivedSet, broadcast, hasMore, upsertHistory]);
 
     const reset = useCallback(() => {
         setPageCursor(null);

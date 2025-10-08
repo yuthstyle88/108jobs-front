@@ -4,7 +4,7 @@ import Image, {StaticImageData} from "next/image";
 import type {ChatMessage} from "lemmy-js-client";
 import {MessageImage} from "@/constants/images";
 import {useTranslation} from "react-i18next";
-import { useChatStore } from "@/store/chatStore";
+import { useChatStore } from "@/core/chat/store/chatStore";
 import { useChatServices } from "@/core/chat/contexts/PhoenixChatBridgeProvider";
 import React, { useMemo } from "react";
 import {toLocalTime} from "@/utils/date";

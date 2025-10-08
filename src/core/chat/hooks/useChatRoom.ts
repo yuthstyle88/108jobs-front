@@ -10,7 +10,7 @@ import {
     sendTyping as sendTypingEvent
 } from "@/core/chat/events/sendEvents";
 import {ChatRoomId, ChatRoomData, LocalUser, LocalUserId} from "lemmy-js-client";
-import {useChatStore} from "@/store/chatStore"
+import {useChatStore} from "@/core/chat/store/chatStore"
 import {makeReadAckEmitter} from "@/core/chat/utils/socket-emitter";
 import {emitWsReconnected} from "@/core/chat/events";
 import {MessagePayload} from "@/core/chat/types";
@@ -268,10 +268,27 @@ export function useChatRoom({roomId, peerPublicKeyHex, onRemoteTyping, setMessag
                 lastTypedSentRef.current = false;
             },
             store: {
-                addPending: (roomId: string, msg: { senderId: number; content: string }) =>
-                    useChatStore.getState().addMessage(roomId, msg.senderId, msg.content),
-                commitStatus: (roomId: string, id: string, status: any, patch?: any) =>
-                    useChatStore.getState().commitStatus(roomId, id, status, patch),
+                // Insert a local pending message into the store
+                addPending: (roomId: string, msg: { id?: string; senderId: number; content: string; createdAt?: string }) => {
+                    const st = useChatStore.getState();
+                    const draftId = msg.id ?? (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `${Date.now()}`);
+                    const draft = {
+                        id: draftId,
+                        roomId,
+                        senderId: msg.senderId,
+                        content: msg.content,
+                        status: 'pending',
+                        createdAt: msg.createdAt ?? new Date().toISOString(),
+                        isOwner: true,
+                    } as any; // ChatMessage shape
+                    (st as any).addMessage?.(draft) || (st as any).upsertMessage?.(draft);
+                    return draftId;
+                },
+                // Update message status (e.g., 'sent' | 'failed' | 'pending')
+                commitStatus: (roomId: string, id: string, status: any, patch?: any) => {
+                    const st = useChatStore.getState();
+                    (st as any).commitStatus?.(id, status, patch);
+                },
             },
             socket: ws,
         } as const;

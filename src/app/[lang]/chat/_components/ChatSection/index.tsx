@@ -29,9 +29,10 @@ import {emitChatNewMessage} from "@/core/chat/events";
 import {useChatRoom} from '@/core/chat/hooks/useChatRoom';
 import {useChatHistory} from '@/core/chat/hooks/useChatHistory';
 
-import {useChatStore} from "@/store/chatStore";
 import {useRoomReadLastId} from "@/core/chat/hooks/useReadLastId";
-
+import {useChatStore} from "@/core/chat/store/chatStore";
+import { useShallow } from 'zustand/react/shallow';
+import { selectRoomMessages } from '@/core/chat/utils/selectors';
 
 type MessageForm = { message: string };
 
@@ -68,7 +69,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const roomId = roomData.room.room.id;
     // Hydrate UI from local store (messages + pending) so leftover local data shows immediately
     const storeMessages = useChatStore((s) => s.messages);
-    const storePending = useChatStore((s) => s.pendingMessages);
     const {send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
@@ -76,7 +76,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
     const [currentRoom, setCurrentRoom] = useState<ChatRoomData>(roomData);
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    // Dedup + stable ascending order for this room comes from store-level selector
+    const roomSelector = React.useMemo(() => (s: any) => selectRoomMessages(s, String(roomId)), [roomId]);
+    const messages = useChatStore(useShallow(roomSelector)) as ChatMessage[];
+    // no-op ให้กับส่วนที่ยังคาดหวัง setMessages อยู่ (เช่น hook อื่น)
+    const setMessages = React.useCallback((_updater: any) => {}, []);
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
     const markSeen = useUnreadStore((s) => s.markSeen);
@@ -128,22 +132,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
 
     console.log("lastReadId: ", lastReadId)
 
-    // this data for the chat section send failed load form localstorage
-    const roomLocalMessages = useMemo(() => {
-        const all = [
-            ...(Array.isArray(storeMessages) ? storeMessages : []),
-            ...(Array.isArray(storePending) ? storePending : []),
-        ];
-        const filtered = all.filter((m: any) =>
-            String(m?.roomId) === String(roomId) && Number(m?.senderId) !== meId
-        );
-        // Sort newest first to match current UI order
-        return filtered.sort((a: any, b: any) => {
-            const ta = new Date(a?.createdAt || 0).getTime();
-            const tb = new Date(b?.createdAt || 0).getTime();
-            return tb - ta;
-        });
-    }, [storeMessages, storePending, roomId, meId]) as unknown as ChatMessage[];
 
     const setScrollRef = useCallback((el: HTMLDivElement | null) => {
         scrollContainerRef.current = el;
@@ -157,6 +145,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         handleFileUpload,
         handleRemoveSelectedFile
     } = useFileUpload({setError, t: (k: string) => t(k)});
+    const upsertHistory = useChatStore(s => s.upsertHistory);
     const {
         state: {hasMore, isFetching},
         actions: {fetchHistory},
@@ -166,49 +155,30 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         isE2EMock: false,
         localUserId: Number(localUser.id) || 0,
         receivedSet: receivedIds,
-        broadcast: () => {
-        },
-        setMessages
+        broadcast: () => {},
+        upsertHistory, // ✅ replaced setMessages
     });
     const {
         actions: {sendMessage, sendTyping, sendRoomUpdate, sendReadReceipt},
         state: {refreshRoomData, isPartnerTyping},
     } = useChatRoom({roomId, peerPublicKeyHex, setMessages, localUser, roomData: currentRoom});
 
-    // Keep ChatSection's local `messages` state in sync with store leftovers
-    useEffect(() => {
-        try {
-            if (Array.isArray(roomLocalMessages) && roomLocalMessages.length > 0) {
-                setMessages((prev) => {
-                    // merge by id to avoid duplicates with history fetch
-                    const byId = new Map<string, any>();
-                    for (const m of roomLocalMessages) byId.set(String(m.id), m);
-                    for (const m of prev) if (!byId.has(String(m.id))) byId.set(String(m.id), m as any);
-                    const merged = Array.from(byId.values()) as ChatMessage[];
-                    // keep sorted newest first
-                    merged.sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
-                    return merged;
-                });
-            }
-        } catch {
-        }
-    }, [roomLocalMessages?.length, roomId]);
 
     // Apply read flags to current message list (newest-first)
     useEffect(() => {
         if (!lastReadId || !Array.isArray(messages) || messages.length === 0) return;
-        setMessages((prev) => {
-            let hit = false;
-            let changed = false;
-            const mapped = prev.map((m) => {
-                const isHit = String(m.id) === String(lastReadId);
-                if (isHit) hit = true;
-                const shouldRead = hit; // hit and below are read
-                if ((m as any).isRead === shouldRead) return m;
-                changed = true;
-                return {...(m as any), isRead: shouldRead} as ChatMessage;
-            });
-            return changed ? mapped : prev;
+        setMessages((prev: ChatMessage[]) => {
+          let hit = false;
+          let changed = false;
+          const mapped: ChatMessage[] = prev.map((m: ChatMessage) => {
+            const isHit = String(m.id) === String(lastReadId);
+            if (isHit) hit = true;
+            const shouldRead: boolean = hit; // hit and below are read
+            if ((m as any).isRead === shouldRead) return m;
+            changed = true;
+            return { ...(m as any), isRead: shouldRead } as ChatMessage;
+          });
+          return changed ? mapped : prev;
         });
     }, [lastReadId, messages]);
 

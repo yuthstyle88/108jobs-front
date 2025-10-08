@@ -44,19 +44,32 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     const [isAtBottom, setIsAtBottom] = React.useState(true);
 
     const prevLengthRef = React.useRef(data.length);
+    // Track last (tail) message id to distinguish append (newest) vs prepend (history)
+    const tailIdRef = React.useRef<string | null>(
+        data.length ? String((data[data.length - 1] as any)?.id ?? '') : null
+    );
 
     React.useEffect(() => {
         const prevLength = prevLengthRef.current;
         const newLength = data.length;
         const added = newLength - prevLength;
-        prevLengthRef.current = newLength;
 
-        if (added <= 0) return; // no new messages
+        const prevTailId = tailIdRef.current;
+        const newTailId = newLength ? String((data[newLength - 1] as any)?.id ?? '') : null;
+
+        prevLengthRef.current = newLength;
+        tailIdRef.current = newTailId;
+
+        if (added <= 0) return; // no new items
+
+        // Consider it an append only if the tail id changed
+        const isAppend = prevTailId !== newTailId;
+        if (!isAppend) return; // likely a prepend (history load), don't scroll
 
         if (added === 1 || isAtBottom) {
             virtuosoRef.current?.scrollToIndex({
                 index: newLength - 1,
-                behavior: "auto",
+                behavior: 'auto',
             });
         }
     }, [data.length, isAtBottom]);
@@ -67,15 +80,15 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
             data={data}
             initialTopMostItemIndex={Math.max(0, data.length - 1)}
             followOutput={isFetching ? false : 'auto'}
-            increaseViewportBy={{ top: 300, bottom: 600 }}
             customScrollParent={customScrollParent ?? undefined}
             computeItemKey={(_index, msg) => {
-                const anyMsg: any = msg as any;
-                if (anyMsg?.id != null) return String(anyMsg.id);
-                const created = anyMsg?.createdAt ?? '';
-                const sender = anyMsg?.senderId ?? '';
-                const content: string = anyMsg?.content ?? '';
-                return `${created}|${sender}|${content.length}:${content.slice(0, 32)}`;
+                const m: any = msg as any;
+                const id = m?.id ?? m?.clientId;
+                if (id != null) return String(id);
+                // Fallback to immutable combo; avoid content length to keep key stable
+                const created = m?.createdAt ?? '';
+                const sender = m?.senderId ?? '';
+                return `${created}|${sender}`;
             }}
             alignToBottom
             atTopStateChange={(atTop) => {
