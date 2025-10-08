@@ -39,7 +39,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     const currentLocale = getLocale(currentLang);
 
     // Keep natural order (oldest -> newest) for Virtuoso stability
-    const data = React.useMemo(() => messages, [messages]);
+    const data = React.useMemo(() => [...messages].reverse(), [messages]);
     const virtuosoRef = React.useRef<VirtuosoHandle | null>(null);
     const [isAtBottom, setIsAtBottom] = React.useState(true);
 

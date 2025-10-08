@@ -13,7 +13,8 @@ interface ChatListItemProps {
 }
 
 function ChatListItemComponent({room, isActive, currentLang}: ChatListItemProps) {
-    const {markRoomRead} = useChatRoomsContext();
+    const {markRoomRead, peerPresence} = useChatRoomsContext();
+    const online = peerPresence?.[String(room.id)] ?? false;
 
     const handleClick = () => {
         try {
@@ -58,6 +59,11 @@ function ChatListItemComponent({room, isActive, currentLang}: ChatListItemProps)
                     style={avatarStyle}
                 >
                     <span className="text-sm sm:text-base font-semibold select-none">{initials.toUpperCase()}</span>
+                    <span
+                        className={`absolute bottom-0 right-0 block w-3 h-3 rounded-full border-2 border-white ${
+                            online ? "bg-green-500" : "bg-gray-300"
+                        }`}
+                    />
                 </div>
                 {/* Room Info */}
                 <div className="min-w-0 flex-1">
