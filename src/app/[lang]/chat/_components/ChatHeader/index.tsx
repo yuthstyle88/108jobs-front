@@ -2,12 +2,12 @@
 
 import {ProfileImage} from "@/constants/images";
 import Image, {StaticImageData} from "next/image";
-import React from "react";
+import React, {RefObject} from "react";
 
 interface ChatHeaderProps {
     avatarUrl: StaticImageData | string;
     displayName: string;
-    online: boolean;
+    online: RefObject<boolean>;
     typingText?: string;
     onToggleFlow?: () => void; // mobile toggle for right sidebar
     isFlowOpen?: boolean; // state for label
