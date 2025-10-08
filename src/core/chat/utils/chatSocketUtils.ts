@@ -366,8 +366,8 @@ export function installBestMessageListener(sock: any, handler: (evt: any) => voi
 export type IncomingFlatMessage = {
     id?: string;
     msgRefId?: string;
-    roomId?: string;
-    senderId?: number;
+    roomId?: ChatRoomId;
+    senderId?: LocalUserId;
     content?: string;
     status?: ChatStatus;
     createdAt?: string;   // camelCase from server
@@ -524,14 +524,17 @@ export async function fetchHistoryPage(
         broadcast?: (m: import("lemmy-js-client").ChatMessage) => void;
     }
 ) {
+
+    console.log("fetchHistoryPage", params, deps)
+
     const res = await HttpService.client.getChatHistory({
         roomId: params.roomId,
         cursor: params.cursor ?? undefined,
         limit: params.limit,
         back: true,
     } as any);
-    if (res.state !== REQUEST_STATE.SUCCESS) return {prev: null, next: null} as any;
 
+    if (res.state !== REQUEST_STATE.SUCCESS) return {prev: null, next: null} as any;
     const resp = res.data as any;
     const items = Array.isArray(resp?.results) ? resp.results : [];
 
@@ -546,7 +549,6 @@ export async function fetchHistoryPage(
     }
 
     const mappedItems: any[] = [];
-
     for (const view of items) {
         const m = {
             ...view.message,
@@ -586,8 +588,9 @@ export async function fetchHistoryPage(
     }
 
     return {
-        prev: resp.prevPage,
-        next: resp.nextPage,
+        // backend return latest to oldest so need reverse
+        prev: resp.nextPage,
+        next: resp.prevPage,
         items: mappedItems,
     };
 }

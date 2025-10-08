@@ -10,10 +10,8 @@ import {formatDateToLong} from "@/utils";
 import {getLocale} from "@/utils/date";
 import {useTranslation} from "react-i18next";
 
-type UIChatMessage = ChatMessage & { isOwner?: boolean };
-
 interface ChatMessagesProps {
-    messages: UIChatMessage[];
+    messages: ChatMessage[];
     partnerAvatar: StaticImageData | string;
     customScrollParent?: HTMLElement | null;
     onTopReached?: () => void;
@@ -21,7 +19,7 @@ interface ChatMessagesProps {
     isFetching?: boolean;
     onAtBottomChange?: (isAtBottom: boolean) => void;
     sendReadReceipt: (roomIdArg: string, lastMessageId: string) => void;
-    roomId: string
+    roomId: string;
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
@@ -33,47 +31,57 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                                                        isFetching,
                                                        onAtBottomChange,
                                                        sendReadReceipt,
-                                                       roomId
+                                                       roomId,
                                                    }) => {
     const {t} = useTranslation();
-    // Reverse messages to display newest-first (API provides oldest-first)
-    const displayedMessages = React.useMemo(() => [...messages].reverse(), [messages]);
     const params = useParams();
-    const currentLang = (params?.lang as string) || 'th';
+    const currentLang = (params?.lang as string) || "th";
     const currentLocale = getLocale(currentLang);
 
-    // Track whether the user is at the bottom for auto-scroll
+    const displayedMessages = React.useMemo(() => [...messages].reverse(), [messages]);
     const virtuosoRef = React.useRef<VirtuosoHandle | null>(null);
-    const [, setAtBottom] = React.useState(true);
+    const [isAtBottom, setIsAtBottom] = React.useState(true);
+
+    const prevLengthRef = React.useRef(displayedMessages.length);
+
+    React.useEffect(() => {
+        const prevLength = prevLengthRef.current;
+        const newLength = displayedMessages.length;
+        const added = newLength - prevLength;
+        prevLengthRef.current = newLength;
+
+        // Only scroll if messages grew by 1 (new chat message)
+        // or user was at bottom when multiple new messages arrived
+        if (added <= 0) return; // no new messages
+
+        if (added === 1 || isAtBottom) {
+            virtuosoRef.current?.scrollToIndex({
+                index: newLength - 1,
+                behavior: "auto",
+            });
+        }
+    }, [displayedMessages.length, isAtBottom]);
 
     return (
         <Virtuoso
             ref={virtuosoRef}
             data={displayedMessages}
             customScrollParent={customScrollParent ?? undefined}
-            computeItemKey={(_index, msg) => {
-                const anyMsg: any = msg as any;
-                if (anyMsg && anyMsg.id != null) return String(anyMsg.id);
-                const created = anyMsg?.createdAt || "";
-                const sender = anyMsg?.senderId ?? "";
-                const content: string = anyMsg?.content || "";
-                return `${created}|${sender}|${content.length}:${content.slice(0, 16)}`;
-            }}
-            followOutput={isFetching ? false : "auto"} // Auto-scroll to new messages when at bottom; disabled during history fetch
-            initialTopMostItemIndex={displayedMessages.length - 1} // Start at newest message
-            alignToBottom // Align viewport to bottom for newest messages
+            computeItemKey={(_index, msg) => String(msg.id ?? _index)}
+            alignToBottom
             atTopStateChange={(atTop) => {
-                if (atTop && onTopReached) onTopReached(); // Fetch older messages
+                if (atTop && onTopReached) onTopReached();
             }}
-            atBottomStateChange={(isAtBottom) => {
-                setAtBottom(isAtBottom);
-                if (onAtBottomChange) onAtBottomChange(isAtBottom);
+            atBottomStateChange={(bottom) => {
+                setIsAtBottom(bottom);
+                onAtBottomChange?.(bottom);
 
-                if (isAtBottom) {
+                if (bottom && displayedMessages.length > 0) {
                     sendReadReceipt(roomId, displayedMessages[displayedMessages.length - 1]?.id);
                 }
             }}
             components={{
+                Footer: () => <div style={{height: 20}}/>,
                 Header: hasMore
                     ? () => (
                         <div className="w-full flex justify-center my-2">
@@ -83,27 +91,13 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                         </div>
                     )
                     : undefined,
-                Scroller: React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-                    (props, ref) => (
-                        <div
-                            {...props}
-                            ref={ref}
-                            style={{
-                                ...(props.style || {}),
-                                overflow: customScrollParent ? "visible" : "auto",
-                                display: "flex",
-                                flexDirection: "column-reverse", // Render messages bottom-to-top
-                            }}
-                        />
-                    )
-                ),
             }}
             itemContent={(index, msg) => {
                 const currentDate = formatDateToLong(msg.createdAt, currentLocale);
-                // Compare with previous message (older) for date boundary in newest-first order
                 const prev = index > 0 ? displayedMessages[index - 1] : null;
                 const prevDate = prev ? formatDateToLong(prev.createdAt, currentLocale) : null;
                 const showDate = currentDate !== prevDate;
+
                 return (
                     <div key={msg.id || index} className="mb-2 last:mb-0">
                         {showDate && (
@@ -118,7 +112,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                     </div>
                 );
             }}
-            style={{overflowX: "hidden", width: "100%", height: "100%"}}
+            style={{height: "100%", width: "100%", overflowX: "hidden"}}
         />
     );
 };

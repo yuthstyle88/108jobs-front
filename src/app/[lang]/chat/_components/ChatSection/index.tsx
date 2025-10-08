@@ -523,50 +523,42 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         onToggleFlow={() => setIsFlowOpen((v) => !v)}
                         isFlowOpen={isFlowOpen}
                     />
-                    <div
-                        ref={setScrollRef}
-                        data-testid="chat-list"
-                        className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-4 pt-3 sm:pt-4 bg-gray-50 flex"
-                        style={{paddingBottom: `calc(${bottomPad}px + env(safe-area-inset-bottom))`}}
-                        aria-live="polite"
-                    >
-                        <ChatMessages
-                            messages={messages}
-                            partnerAvatar={ProfileImage.avatar}
-                            customScrollParent={scrollParentEl}
-                            onTopReached={() => {
-                                if (!hasMore || isFetching) return;
-                                const rootEl = scrollContainerRef.current;
-                                const oldHeight = rootEl?.scrollHeight || 0;
-                                fetchHistory()
-                                    .then(() => {
-                                        const newHeight = rootEl?.scrollHeight || 0;
-                                        if (rootEl) rootEl.scrollTop += newHeight - oldHeight;
-                                    })
-                                    .catch(() => {
-                                    });
-                            }}
-                            hasMore={hasMore}
-                            isFetching={isFetching}
-                            onAtBottomChange={(isAtBottom) => {
-                                atBottomRef.current = isAtBottom;
-                                setIsAtBottom(isAtBottom);
-                                if (isAtBottom) {
-                                    setNewSinceCount(0);
-                                    try {
-                                        markRoomRead(roomId);
-                                    } catch {
-                                    }
-                                    try {
-                                        markSeen(roomId);
-                                    } catch {
-                                    }
+                    <ChatMessages
+                        messages={messages}
+                        partnerAvatar={ProfileImage.avatar}
+                        customScrollParent={scrollParentEl}
+                        onTopReached={() => {
+                            if (!hasMore || isFetching) return;
+                            const rootEl = scrollContainerRef.current;
+                            const oldHeight = rootEl?.scrollHeight || 0;
+                            fetchHistory()
+                                .then(() => {
+                                    const newHeight = rootEl?.scrollHeight || 0;
+                                    if (rootEl) rootEl.scrollTop += newHeight - oldHeight;
+                                })
+                                .catch(() => {
+                                });
+                        }}
+                        hasMore={hasMore}
+                        isFetching={isFetching}
+                        onAtBottomChange={(isAtBottom) => {
+                            atBottomRef.current = isAtBottom;
+                            setIsAtBottom(isAtBottom);
+                            if (isAtBottom) {
+                                setNewSinceCount(0);
+                                try {
+                                    markRoomRead(roomId);
+                                } catch {
                                 }
-                            }}
-                            sendReadReceipt={sendReadReceipt}
-                            roomId={roomId}
-                        />
-                    </div>
+                                try {
+                                    markSeen(roomId);
+                                } catch {
+                                }
+                            }
+                        }}
+                        sendReadReceipt={sendReadReceipt}
+                        roomId={roomId}
+                    />
                     <div ref={inputContainerRef} className="border-t px-3 py-2 sm:px-4 sm:py-3 bg-white">
                         <div className="flex items-center gap-2">
                             <div className="flex-1">
