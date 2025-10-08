@@ -9,7 +9,7 @@ import {
     sendReadReceipt as sendReadReceiptEvent, sendRoomUpdateEvent,
     sendTyping as sendTypingEvent
 } from "@/core/chat/events/sendEvents";
-import {ChatRoomId, ChatRoomData, LocalUser, LocalUserId} from "lemmy-js-client";
+import {ChatRoomId, ChatRoomData, LocalUser, LocalUserId, ChatMessage} from "lemmy-js-client";
 import {useChatStore} from "@/core/chat/store/chatStore"
 import {makeReadAckEmitter} from "@/core/chat/utils/socket-emitter";
 import {emitWsReconnected} from "@/core/chat/events";
@@ -34,18 +34,18 @@ export interface UseChatRoomParams {
     roomId: string;
     peerPublicKeyHex: string;
     onRemoteTyping?: (detail: { roomId: string; senderId: number; typing: boolean }) => void;
-    setMessages: React.Dispatch<React.SetStateAction<any[]>>;
     localUser: LocalUser,
     roomData: ChatRoomData;
+    upsertMessage: (msg: ChatMessage) => void
 }
 
 export function useChatRoom({
                                 roomId,
                                 peerPublicKeyHex,
                                 onRemoteTyping,
-                                setMessages,
                                 localUser,
-                                roomData
+                                roomData,
+                                upsertMessage
                             }: UseChatRoomParams) {
     const [pageCursor, setPageCursor] = useState<string | null>(null);
     const fetchingRef = useRef(false);
@@ -56,7 +56,7 @@ export function useChatRoom({
     const peerActiveDecayRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const lastPeerActiveBumpAtRef = useRef<number>(0);
     const peerActiveExpiresAtRef = useRef<number>(0);
-    const { updatePeerPresence } = useChatRoomsContext();
+    const {updatePeerPresence} = useChatRoomsContext();
 
     const markPeerActive = useCallback(() => {
         const now = Date.now();
@@ -118,13 +118,6 @@ export function useChatRoom({
         }
     }, [ws.isReady]);
 
-    // ปิด: สถานะไม่พร้อม
-    useEffect(() => {
-        if (!ws.isReady) {
-            // removed setIsConnected(false)
-        }
-    }, [ws.isReady]);
-
     const handleRemoteTyping = useCallback((detail: { roomId: ChatRoomId; senderId: LocalUserId; typing: boolean }) => {
         try {
             if (!detail) return;
@@ -181,7 +174,6 @@ export function useChatRoom({
         setRefreshRoomData,
         markPeerActive,
         onRemoteTyping: handleRemoteTyping,
-        setMessages,
         processedMsgRef,
         peerActiveRef,
         setPageCursor,
@@ -195,7 +187,8 @@ export function useChatRoom({
         fetchResolveRef,
         readAckRef,
         ackCooldownRef,
-    }), [roomId, localUser.id, setMessages, setRefreshRoomData, markPeerActive, handleRemoteTyping]);
+        upsertMessage
+    }), [roomId, localUser.id, setRefreshRoomData, markPeerActive, handleRemoteTyping, upsertMessage]);
 
     useEffect(() => {
         if (!ws || typeof ws.addMessageListener !== 'function') return;
@@ -281,7 +274,12 @@ export function useChatRoom({
             },
             store: {
                 // Insert a local pending message into the store
-                addPending: (roomId: string, msg: { id?: string; senderId: number; content: string; createdAt?: string }) => {
+                addPending: (roomId: string, msg: {
+                    id?: string;
+                    senderId: number;
+                    content: string;
+                    createdAt?: string
+                }) => {
                     const st = useChatStore.getState();
                     const draftId = msg.id ?? (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `${Date.now()}`);
                     const draft = {

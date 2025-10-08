@@ -38,47 +38,87 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     const currentLang = (params?.lang as string) || "th";
     const currentLocale = getLocale(currentLang);
 
-    // Keep natural order (oldest -> newest) for Virtuoso stability
+    // Keep natural order (oldest -> newest) for Virtuoso
     const data = React.useMemo(() => [...messages], [messages]);
     const virtuosoRef = React.useRef<VirtuosoHandle | null>(null);
     const [isAtBottom, setIsAtBottom] = React.useState(true);
 
     const prevLengthRef = React.useRef(data.length);
-    // Track last (tail) message id to distinguish append (newest) vs prepend (history)
+    // Track first (head) message id to detect prepends (history loads)
+    const headIdRef = React.useRef<string | null>(
+        data.length ? String((data[0] as any)?.id ?? '') : null
+    );
     const tailIdRef = React.useRef<string | null>(
         data.length ? String((data[data.length - 1] as any)?.id ?? '') : null
     );
+
+    const handleTopReached = React.useCallback(() => {
+        if (!hasMore || isFetching) return;
+        onTopReached?.();
+    }, [hasMore, isFetching, onTopReached]);
+
 
     React.useEffect(() => {
         const prevLength = prevLengthRef.current;
         const newLength = data.length;
         const added = newLength - prevLength;
 
+        const prevHeadId = headIdRef.current;
+        const newHeadId = newLength ? String((data[0] as any)?.id ?? '') : null;
+
         const prevTailId = tailIdRef.current;
         const newTailId = newLength ? String((data[newLength - 1] as any)?.id ?? '') : null;
-
         prevLengthRef.current = newLength;
+        headIdRef.current = newHeadId;
         tailIdRef.current = newTailId;
 
-        if (added <= 0) return; // no new items
+        if (added <= 0) return;
 
-        // Consider it an append only if the tail id changed
+        // If head id changed, it's a prepend (history load)
+        const isPrepend = prevHeadId !== newHeadId;
+        // If tail id changed, it's an append (new message)
         const isAppend = prevTailId !== newTailId;
-        if (!isAppend) return; // likely a prepend (history load), don't scroll
 
-        if (added === 1 || isAtBottom) {
-            virtuosoRef.current?.scrollToIndex({
-                index: newLength - 1,
-                behavior: 'auto',
-            });
+        if (isPrepend) {
+            // For history loads, scroll to maintain the user's position
+            setTimeout(() => {
+                virtuosoRef.current?.scrollToIndex({
+                    index: added, // Scroll to where the new items start
+                    behavior: 'auto',
+                    align: 'start',
+                });
+            }, 0);
+        } else if (isAppend || isAtBottom) {
+            // For new messages, scroll to bottom if user is already there
+            setTimeout(() => {
+                virtuosoRef.current?.scrollToIndex({
+                    index: newLength - 1,
+                    behavior: 'auto',
+                    align: 'end',
+                });
+            }, 0);
         }
-    }, [data.length, isAtBottom]);
+    }, [data, isAtBottom]);
+
+    // Handle initial scroll to bottom
+    React.useEffect(() => {
+        if (data.length > 0) {
+            // Small delay to ensure Virtuoso is fully mounted
+            setTimeout(() => {
+                virtuosoRef.current?.scrollToIndex({
+                    index: data.length - 1,
+                    behavior: 'auto',
+                });
+            }, 100);
+        }
+    }, []); // Empty dependency array - only run on mount
 
     return (
         <Virtuoso
             ref={virtuosoRef}
             data={data}
-            initialTopMostItemIndex={Math.max(0, data.length - 1)}
+            firstItemIndex={0}
+            initialTopMostItemIndex={data.length > 0 ? data.length - 1 : 0}
             followOutput={isFetching ? false : 'auto'}
             customScrollParent={customScrollParent ?? undefined}
             computeItemKey={(_index, msg) => {

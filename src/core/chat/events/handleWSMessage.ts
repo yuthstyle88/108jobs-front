@@ -49,7 +49,7 @@ export interface HandlerDeps extends HandlerRefs {
     markPeerActive: () => void;
     /** optional: push typing state directly to UI in addition to DOM event */
     onRemoteTyping?: (detail: ChatTypingDetail) => void;
-    setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+    upsertMessage: (msg: ChatMessage) => void;
 }
 
 /**
@@ -62,7 +62,6 @@ export function createHandleWSMessage(deps: HandlerDeps) {
         setRefreshRoomData,
         markPeerActive,
         onRemoteTyping,
-        setMessages,
         processedMsgRef,
         peerActiveRef,
         setPageCursor,
@@ -72,6 +71,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
         fetchResolveRef,
         readAckRef,
         ackCooldownRef,
+        upsertMessage
     } = deps;
     const meId = Number(localUserId);
     const roomIdStr = String(roomId);
@@ -135,7 +135,6 @@ export function createHandleWSMessage(deps: HandlerDeps) {
 
             if (Array.isArray(msgs) && msgs.length) {
                 let lastAckId: string | undefined;
-                const newItems: ChatMessage[] = [];
 
                 for (const item of msgs) {
                     broadcastToListeners(item);
@@ -149,19 +148,14 @@ export function createHandleWSMessage(deps: HandlerDeps) {
                     const fromSelf = Number(item.senderId) === meId;
                     const peerActiveNow = peerActiveRef.current;
                     const enhancedItem = {...item, unread: fromSelf ? !peerActiveNow : false} as ChatMessage;
-                    newItems.push(enhancedItem);
 
                     const msgId = String(item.id || "");
                     const sameRoom = String(item.roomId) === roomIdStr;
                     if (sameRoom && !fromSelf && msgId) lastAckId = msgId;
+                    upsertMessage(enhancedItem)
                 }
 
                 if (lastAckId) (handleWSMessage as any)._batchAckLastId = lastAckId;
-
-                if (newItems.length > 0) {
-                    setMessages(prev => mergeNewMessages(prev, newItems));
-                }
-
                 // 5) auto-ack flush (once)
                 tryFlushAutoAck(handleWSMessage, roomIdStr, readAckRef, ackCooldownRef);
             }

@@ -76,13 +76,10 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [currentRoom, setCurrentRoom] = useState<ChatRoomData>(roomData);
     const roomSelector = React.useMemo(() => (s: any) => selectRoomMessages(s, String(roomId)), [roomId]);
     const messages = useChatStore(useShallow(roomSelector)) as ChatMessage[];
-    console.log("messages", messages);
-    // no-op ให้กับส่วนที่ยังคาดหวัง setMessages อยู่ (เช่น hook อื่น)
     const setMessages = React.useCallback((_updater: any) => {}, []);
     const atBottomRef = useRef<boolean>(true);
     const [isAtBottom, setIsAtBottom] = useState(true);
     const markSeen = useUnreadStore((s) => s.markSeen);
-    const [, setIsInitialLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const {setActiveRoomId, markRoomRead} = useRoomsStore();
     const [newSinceCount, setNewSinceCount] = useState<number>(0);
@@ -123,10 +120,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {execute: approveWorkApi} = useHttpPost("approveWork");
     // Measure chat input height to prevent last message being obscured
     const inputContainerRef = useRef<HTMLDivElement>(null);
-    const [bottomPad, setBottomPad] = useState<number>(0);
     // Room-scoped last-read id (wired to roomsStore + UserService)
     const {lastReadId} = useRoomReadLastId(roomId);
-    console.log("lastReadId: ", lastReadId)
     useCallback((el: HTMLDivElement | null) => {
         scrollContainerRef.current = el;
         if (el) setScrollParentEl(el);
@@ -149,12 +144,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         localUserId: Number(localUser.id) || 0,
         receivedSet: receivedIds,
         broadcast: () => {},
-        upsertHistory, // ✅ replaced setMessages
+        upsertHistory,
     });
+    const upsertMessage = useChatStore(s => s.upsertMessage);
     const {
         actions: {sendMessage, sendTyping, sendRoomUpdate, sendReadReceipt},
         state: {refreshRoomData, isPartnerTyping, isPeerActive},
-    } = useChatRoom({roomId, peerPublicKeyHex, setMessages, localUser, roomData: currentRoom});
+    } = useChatRoom({roomId, peerPublicKeyHex, localUser, roomData: currentRoom, upsertMessage});
 
 
     // Apply read flags to current message list (newest-first)
@@ -194,25 +190,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         window.addEventListener("focus", onVisible);
         return () => window.removeEventListener("focus", onVisible);
     }, [roomId, messages, sendReadReceipt]);
-
-    useEffect(() => {
-        const el = inputContainerRef.current;
-        if (!el || typeof ResizeObserver === "undefined") return;
-        const ro = new ResizeObserver((entries) => {
-            const rect = entries[0]?.contentRect;
-            if (rect) {
-                // Add small gap (8px) for visual breathing room
-                setBottomPad(Math.ceil(rect.height + 8));
-            }
-        });
-        ro.observe(el);
-        return () => {
-            try {
-                ro.disconnect();
-            } catch {
-            }
-        };
-    }, []);
 
     useEffect(() => {
         const handleResize = () => {
@@ -476,14 +453,13 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         customScrollParent={scrollParentEl}
                         onTopReached={() => {
                             if (!hasMore || isFetching) return;
-                            const rootEl = scrollContainerRef.current;
-                            const oldHeight = rootEl?.scrollHeight || 0;
                             fetchHistory()
                                 .then(() => {
-                                    const newHeight = rootEl?.scrollHeight || 0;
-                                    if (rootEl) rootEl.scrollTop += newHeight - oldHeight;
+                                    // Virtuoso will handle the scroll position automatically
+                                    // with the updated ChatMessages component
                                 })
                                 .catch(() => {
+                                    // Handle error
                                 });
                         }}
                         hasMore={hasMore}
@@ -493,14 +469,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                             setIsAtBottom(isAtBottom);
                             if (isAtBottom) {
                                 setNewSinceCount(0);
-                                try {
-                                    markRoomRead(roomId);
-                                } catch {
-                                }
-                                try {
-                                    markSeen(roomId);
-                                } catch {
-                                }
+                                markRoomRead(roomId);
+                                markSeen(roomId);
                             }
                         }}
                         sendReadReceipt={sendReadReceipt}
