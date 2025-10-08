@@ -32,12 +32,17 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
     const [hasMore, setHasMore] = useState<boolean>(true);
 
     const fetchingRef = useRef(false);
+    const lastCursorRef = useRef<string | null>(null);
+    const lastTotalRef = useRef<number>(0);
 
     // Reset cursor/state when room changes
     useEffect(() => {
         setPageCursor(null);
         setHasMore(true);
         fetchingRef.current = false;
+        lastCursorRef.current = null;
+        lastTotalRef.current = 0;
+        console.debug('[useChatHistory] reset for room', roomId);
     }, [roomId]);
 
     const fetchHistory = useCallback(async () => {
@@ -54,23 +59,41 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
                 },
             );
 
+            let filteredCount = 0;
             if (items && Array.isArray(items)) {
                 setMessages((prevList) => {
                     const existingIds = new Set(prevList.map((m) => m.id));
-                    const filtered = items.filter((m) => !existingIds.has(m.id));
-                    return [...prevList, ...filtered]; // append or prepend based on your order
+                    // NOTE: server may return newest->oldest for backfill. If needed, reverse here.
+                    const incoming = items; // or: [...items].reverse()
+                    const filtered = incoming.filter((m) => !existingIds.has(m.id));
+                    filteredCount = filtered.length;
+                    if (filteredCount === 0) return prevList;
+                    // Backfill older messages should be PREPENDED to keep overall order oldest->newest
+                    const next = [...filtered, ...prevList];
+                    lastTotalRef.current = next.length;
+                    return next;
                 });
             }
 
-            // For backfill pagination, server returns { prev, next }.
-            // We should use `prev` as the next cursor to continue going backward.
-            if (typeof prev === 'string' && prev.length > 0) {
-                setPageCursor(prev); // FIX: previously set to `next`, which was wrong for backfill
+            // For backfill, use `prev` to continue going backward
+            const prevCursor = (typeof prev === 'string' && prev.length > 0) ? prev : null;
+            const sameCursor = prevCursor !== null && prevCursor === lastCursorRef.current;
+            if (filteredCount === 0 && sameCursor) {
+                console.debug('[useChatHistory] stop: no new items & cursor unchanged');
+                setPageCursor(null);
+                setHasMore(false);
+            } else if (prevCursor) {
+                lastCursorRef.current = prevCursor;
+                setPageCursor(prevCursor);
                 setHasMore(true);
+                console.debug('[useChatHistory] next prev-cursor =', prevCursor);
             } else {
+                console.debug('[useChatHistory] end reached: hasMore=false');
                 setPageCursor(null);
                 setHasMore(false);
             }
+
+            console.debug('[useChatHistory] page done', { filteredCount, hasMoreCandidate: (typeof prev === 'string' && prev.length > 0) });
         } catch (e) {
             console.error('[useChatHistory] fetchHistory failed', e);
         } finally {
