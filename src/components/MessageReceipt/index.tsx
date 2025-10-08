@@ -52,15 +52,15 @@ const FailedIcon = () => (
 );
 
 const MessageReceipt: React.FC<Props> = ({
-    isOwner,
-    msgStatus,
-    unread,
-    showReceipt,
-    readByPeer,
-    deliveredButUnread,
-    t,
-    onRetry,
-}) => {
+                                             isOwner,
+                                             msgStatus,
+                                             unread,
+                                             showReceipt,
+                                             readByPeer,
+                                             deliveredButUnread,
+                                             t,
+                                             onRetry,
+                                         }) => {
     // Incoming messages
     if (!isOwner) {
         if (unread === true) {
@@ -108,24 +108,24 @@ const MessageReceipt: React.FC<Props> = ({
         if (readByPeer) {
             return (
                 <span className="ml-1 inline-flex items-center gap-1 text-green-600">
-          <ReadIcon/>
-          <span className="text-xs">{t("profileChat.read") || "Read"}</span>
-        </span>
+                    <ReadIcon/>
+                    <span className="text-xs">{t("profileChat.read") || "Read"}</span>
+                </span>
             );
         }
         if (deliveredButUnread) {
             return (
                 <span className="ml-1 inline-flex items-center gap-1 text-blue-600">
-          <DeliveredIcon/>
-          <span className="text-xs">{t("profileChat.unread") || "Delivered"}</span>
-        </span>
+                    <DeliveredIcon/>
+                    <span className="text-xs">{t("profileChat.unread") || "Delivered"}</span>
+                </span>
             );
         }
         return (
             <span className="ml-1 inline-flex items-center gap-1 text-gray-500">
-        <SentIcon/>
-        <span className="text-xs">{t("profileChat.sent") || "Sent"}</span>
-      </span>
+                <SentIcon/>
+                <span className="text-xs">{t("profileChat.sent") || "Sent"}</span>
+            </span>
         );
     }
 

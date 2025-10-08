@@ -160,7 +160,9 @@ export const vi = {
             messageHiringAgain: "Nếu bạn muốn thuê lại người này, hãy nhấp vào",
             previousMessages: "Tin nhắn trước",
             sending: "Đang gửi",
-            failed: "Thất bại"
+            failed: "Thất bại",
+            sent: "Đã gửi",
+            retry: "Thử lại",
         },
         allCategories: {
             allJobCategories: "Tất cả danh mục công việc",

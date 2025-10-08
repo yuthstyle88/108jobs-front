@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {fetchHistoryPage} from '@/core/chat/utils/chatSocketUtils';
 import {ChatMessage} from "lemmy-js-client";
 
@@ -60,23 +60,9 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
             let filteredCount = 0;
             if (items && Array.isArray(items)) {
                 // Reverse items before inserting to match ascending render order
-                items.reverse();
-                // Build combined set of known IDs (receivedSet plus any others if needed)
-                // Here we rely only on receivedSet for deduplication
-                const knownIds = new Set(receivedSet);
-
-                // Server returns newest->oldest (DESC), store will normalize order
-                const incoming = items;
-
-                // Filter out duplicates based on knownIds
-                const filtered = incoming.filter(m => !knownIds.has(m.id));
-
-                filteredCount = filtered.length;
-
-                if (filteredCount > 0) {
-                    upsertHistory(filtered);
-                }
+                upsertHistory(items.reverse());
             }
+            console.log('[useChatHistory] reset history', items);
 
             // For backfill, use `prev` to continue going backward
             const prevCursor = (typeof prev === 'string' && prev.length > 0) ? prev : null;
@@ -96,7 +82,10 @@ export function useChatHistory(opts: UseChatHistoryOptions): UseChatHistoryResul
                 setHasMore(false);
             }
 
-            console.debug('[useChatHistory] page done', { filteredCount, hasMoreCandidate: (typeof prev === 'string' && prev.length > 0) });
+            console.debug('[useChatHistory] page done', {
+                filteredCount,
+                hasMoreCandidate: (typeof prev === 'string' && prev.length > 0)
+            });
         } catch (e) {
             console.error('[useChatHistory] fetchHistory failed', e);
         } finally {

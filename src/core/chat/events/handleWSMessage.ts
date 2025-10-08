@@ -79,6 +79,7 @@ export function createHandleWSMessage(deps: HandlerDeps) {
     const handleWSMessage = async (event: any) => {
         let payload: any;
         try {
+            console.log("handleWSMessage", event);
             payload = unwrapPhoenixFrame(event);
             if (!isValidIncomingChatPayload(payload)) {
                 // Keep log lightweight; the permissive mapper below will try its best.

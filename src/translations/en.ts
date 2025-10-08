@@ -159,7 +159,9 @@ export const en = {
             messageHiringAgain: "If you want to hire this person again, click",
             previousMessages: "Previous Messages",
             sending: "Sending",
-            failed: "Failed"
+            failed: "Failed",
+            sent: "Sent",
+            retry: "Retry",
         },
         allCategories: {
             allJobCategories: "All Job Categories",

@@ -158,7 +158,9 @@ export const th = {
             messageHiringAgain: "หากคุณต้องการจ้างบุคคลนี้อีกครั้ง คลิก",
             previousMessages: "ข้อความก่อนหน้า",
             sending: "กำลังส่ง",
-            failed: "ล้มเหลว"
+            failed: "ล้มเหลว",
+            sent: "ส่งแล้ว",
+            retry: "ลองใหม่",
         },
         allCategories: {
             allJobCategories: "หมวดหมู่งานทั้งหมด",

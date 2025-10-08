@@ -41,6 +41,7 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
     upsertHistory: (items) =>
       set((s) => {
         const map = new Map<string, ChatMessage>();
+          console.log("items from upsert history", items)
         // seed with existing messages
         for (const m of s.messages) map.set(m.id, m);
         // upsert incoming

@@ -67,8 +67,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         : (t("profileChat.userNotAvailable") || "This user is currently not accepting messages. You can read history but cannot send new messages.");
     const receivedIds = useMemo(() => new Set<string>(), []);
     const roomId = roomData.room.room.id;
-    // Hydrate UI from local store (messages + pending) so leftover local data shows immediately
-    const storeMessages = useChatStore((s) => s.messages);
     const {send, canGo, ORDER} = useWorkflowStepper();
     const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
     const [showQuotationModal, setShowQuotationModal] = useState<boolean>(false);
@@ -76,9 +74,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [isFlowOpen, setIsFlowOpen] = useState(false);
     const [currentRoom, setCurrentRoom] = useState<ChatRoomData>(roomData);
-    // Dedup + stable ascending order for this room comes from store-level selector
     const roomSelector = React.useMemo(() => (s: any) => selectRoomMessages(s, String(roomId)), [roomId]);
     const messages = useChatStore(useShallow(roomSelector)) as ChatMessage[];
+    console.log("messages", messages);
     // no-op ให้กับส่วนที่ยังคาดหวัง setMessages อยู่ (เช่น hook อื่น)
     const setMessages = React.useCallback((_updater: any) => {}, []);
     const atBottomRef = useRef<boolean>(true);
@@ -128,16 +126,11 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const [bottomPad, setBottomPad] = useState<number>(0);
     // Room-scoped last-read id (wired to roomsStore + UserService)
     const {lastReadId} = useRoomReadLastId(roomId);
-    const meId = Number(localUser?.id ?? 0);
-
     console.log("lastReadId: ", lastReadId)
-
-
-    const setScrollRef = useCallback((el: HTMLDivElement | null) => {
+    useCallback((el: HTMLDivElement | null) => {
         scrollContainerRef.current = el;
         if (el) setScrollParentEl(el);
     }, []);
-
     const {
         selectedFile,
         setSelectedFile,
@@ -408,23 +401,6 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         },
         [sendMessage, currentRoom, roomId, selectedFile, localUser.id, emitChatNewMessage]
     );
-
-    const didInitialFetchRef = useRef(false);
-    useEffect(() => {
-        if (!didInitialFetchRef.current) {
-            didInitialFetchRef.current = true;
-            fetchHistory()
-                .then(() => {
-                    setIsInitialLoading(false);
-                })
-                .catch((err) => {
-                    console.error("[CHAT][INIT] Failed to fetch initial history:", err);
-                    setIsInitialLoading(false);
-                });
-        }
-        return () => {
-        };
-    }, [roomId]);
 
     const flowActions: FlowActions = createFlowActions({
         t,
