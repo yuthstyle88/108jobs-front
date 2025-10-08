@@ -38,20 +38,19 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     const currentLang = (params?.lang as string) || "th";
     const currentLocale = getLocale(currentLang);
 
-    const displayedMessages = React.useMemo(() => [...messages].reverse(), [messages]);
+    // Keep natural order (oldest -> newest) for Virtuoso stability
+    const data = React.useMemo(() => messages, [messages]);
     const virtuosoRef = React.useRef<VirtuosoHandle | null>(null);
     const [isAtBottom, setIsAtBottom] = React.useState(true);
 
-    const prevLengthRef = React.useRef(displayedMessages.length);
+    const prevLengthRef = React.useRef(data.length);
 
     React.useEffect(() => {
         const prevLength = prevLengthRef.current;
-        const newLength = displayedMessages.length;
+        const newLength = data.length;
         const added = newLength - prevLength;
         prevLengthRef.current = newLength;
 
-        // Only scroll if messages grew by 1 (new chat message)
-        // or user was at bottom when multiple new messages arrived
         if (added <= 0) return; // no new messages
 
         if (added === 1 || isAtBottom) {
@@ -60,24 +59,36 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 behavior: "auto",
             });
         }
-    }, [displayedMessages.length, isAtBottom]);
+    }, [data.length, isAtBottom]);
 
     return (
         <Virtuoso
             ref={virtuosoRef}
-            data={displayedMessages}
+            data={data}
+            initialTopMostItemIndex={Math.max(0, data.length - 1)}
+            followOutput={isFetching ? false : 'auto'}
+            increaseViewportBy={{ top: 300, bottom: 600 }}
             customScrollParent={customScrollParent ?? undefined}
-            computeItemKey={(_index, msg) => String(msg.id ?? _index)}
+            computeItemKey={(_index, msg) => {
+                const anyMsg: any = msg as any;
+                if (anyMsg?.id != null) return String(anyMsg.id);
+                const created = anyMsg?.createdAt ?? '';
+                const sender = anyMsg?.senderId ?? '';
+                const content: string = anyMsg?.content ?? '';
+                return `${created}|${sender}|${content.length}:${content.slice(0, 32)}`;
+            }}
             alignToBottom
             atTopStateChange={(atTop) => {
-                if (atTop && onTopReached) onTopReached();
+                if (atTop && hasMore && !isFetching && onTopReached) onTopReached();
             }}
             atBottomStateChange={(bottom) => {
                 setIsAtBottom(bottom);
                 onAtBottomChange?.(bottom);
-
-                if (bottom && displayedMessages.length > 0) {
-                    sendReadReceipt(roomId, displayedMessages[displayedMessages.length - 1]?.id);
+                if (bottom && data.length > 0) {
+                    const lastId = (data[data.length - 1] as any)?.id;
+                    if (lastId != null) {
+                        sendReadReceipt(roomId, String(lastId));
+                    }
                 }
             }}
             components={{
@@ -94,12 +105,12 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
             }}
             itemContent={(index, msg) => {
                 const currentDate = formatDateToLong(msg.createdAt, currentLocale);
-                const prev = index > 0 ? displayedMessages[index - 1] : null;
+                const prev = index > 0 ? data[index - 1] : null;
                 const prevDate = prev ? formatDateToLong(prev.createdAt, currentLocale) : null;
                 const showDate = currentDate !== prevDate;
 
                 return (
-                    <div key={msg.id || index} className="mb-2 last:mb-0">
+                    <div className="mb-2 last:mb-0">
                         {showDate && (
                             <div className="w-full flex justify-center my-4">
                                 <div
