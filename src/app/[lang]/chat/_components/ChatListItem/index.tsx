@@ -26,17 +26,6 @@ function ChatListItemComponent({room, isActive, currentLang}: ChatListItemProps)
 
     // Parse room name to extract partner name and job ID
     const [partnerName = "Unknown", jobId = ""] = (room.name || "?").split(":Job ");
-    // Generate initials from partner name (first two characters or first letter)
-    const initials = partnerName
-        .split(" ")
-        .map((w) => w.charAt(0))
-        .slice(0, 2)
-        .join("") || partnerName.charAt(0) || "?";
-
-    // Set avatar background color based on isActive
-    const avatarStyle = {
-        background: isActive ? '#3B82F6' : '#9CA3AF' // Blue for selected, grey for unselected
-    };
 
     return (
         <Link

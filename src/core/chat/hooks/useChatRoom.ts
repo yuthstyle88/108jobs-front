@@ -291,7 +291,7 @@ export function useChatRoom({
                         createdAt: msg.createdAt ?? new Date().toISOString(),
                         isOwner: true,
                     } as any; // ChatMessage shape
-                    (st as any).addMessage?.(draft) || (st as any).upsertMessage?.(draft);
+                    (st as any).addMessage?.(draft) || (st as any).upsertMessage?.();
                     return draftId;
                 },
                 // Update message status (e.g., 'sent' | 'failed' | 'pending')
