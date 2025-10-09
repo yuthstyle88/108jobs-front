@@ -31,7 +31,7 @@ const Header = ({ type, forceShowSearch = false }: { type: string; forceShowSear
 
     return (
         <header className={`fixed top-0 z-[999] w-full transition-all duration-300 ${bg}`}>
-            <nav className="mx-4 sm:mx-6 lg:mx-8 flex flex-wrap items-center justify-between h-auto py-4">
+            <nav className="mx-4 sm:mx-6 lg:mx-8 flex flex-wrap items-center justify-between h-auto py-2">
                 <section className="flex items-center gap-x-4 w-full sm:w-auto">
                     <div className="block md:hidden">
                         <Link prefetch={true} href="/" className="shrink-0">
