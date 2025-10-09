@@ -28,7 +28,7 @@ import {useTranslation} from "react-i18next";
 import {v4 as uuidv4} from "uuid";
 import {useMyUser} from "@/hooks/profile-api/useMyUser";
 import {ProfileImage} from "@/constants/images";
-import {ChatMessage, ChatRoomData, ChatRoomId, LocalUser, Post} from "lemmy-js-client";
+import type {ChatMessage, ChatRoomData, LocalUser, Post} from "lemmy-js-client";
 import ChatHeader from "../ChatHeader";
 import ChatInput from "../ChatInput";
 import ChatMessages from "../ChatMessages";
@@ -48,12 +48,13 @@ import {JobFlowContent} from "@/components/JobFlowContent";
 import {useWorkflowStatus} from '@/core/chat/hooks/useWorkflowStatus';
 import {useFileUpload} from '@/core/chat/hooks/useFileUpload';
 import {useWorkflowActions} from '@/core/chat/hooks/useWorkflowActions';
+import {emitChatNewMessage} from "@/core/chat/events";
 import {useChatRoom} from '@/core/chat/hooks/useChatRoom';
 import {useChatHistory} from '@/core/chat/hooks/useChatHistory';
-
+import {useRoomReadLastId} from "@/core/chat/hooks/useReadLastId";
 import {useChatStore} from "@/core/chat/store/chatStore";
-import { useShallow } from 'zustand/react/shallow';
-import { selectRoomMessages } from '@/core/chat/utils/selectors';
+import {useShallow} from 'zustand/react/shallow';
+import {selectRoomMessages} from '@/core/chat/utils/selectors';
 
 
 /** Shape of the form submitted by ChatInput. */
@@ -116,11 +117,15 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     // Store selector pinned to the current room. Guarantees stable ascending order and dedup at selector level.
     const roomSelector = React.useMemo(() => (s: any) => selectRoomMessages(s, String(roomId)), [roomId]);
     const messages = useChatStore(useShallow(roomSelector)) as ChatMessage[];
-    // Legacy no-op placeholder. Some hooks still expect a setMessages signature; we route all writes via upsertHistory.
-    const setMessages = React.useCallback((_updater: any) => {}, []);
+    const setMessages = React.useCallback((_updater: any) => {
+    }, []);
+    const initialFetchRef = useRef(false);
+    const atBottomRef = useRef<boolean>(true);
+    const [isAtBottom, setIsAtBottom] = useState(true);
     const markSeen = useUnreadStore((s) => s.markSeen);
     const [error, setError] = useState<string | null>(null);
     const {setActiveRoomId, markRoomRead} = useRoomsStore();
+    const [newSinceCount, setNewSinceCount] = useState<number>(0);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollParentEl, setScrollParentEl] = useState<HTMLElement | null>(null);
     const roomPostId = currentRoom.room.post?.id;
@@ -158,9 +163,9 @@ const ChatSection: React.FC<ChatSectionProps> = ({
     const {execute: approveQuotationApi} = useHttpPost("approveQuotation");
     const {execute: submitStartWorkApi} = useHttpPost("submitStartWork");
     const {execute: approveWorkApi} = useHttpPost("approveWork");
-    // Room-scoped last-read id (wired to roomsStore + UserService)
-    // Remember the scrolling container we control (provides a reliable parent for virtualized list & listeners).
-    const setScrollRef = useCallback((el: HTMLDivElement | null) => {
+    const inputContainerRef = useRef<HTMLDivElement>(null);
+    const {lastReadId} = useRoomReadLastId(roomId);
+    useCallback((el: HTMLDivElement | null) => {
         scrollContainerRef.current = el;
         if (el) setScrollParentEl(el);
     }, []);
@@ -188,19 +193,30 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         broadcast: () => {},
         upsertHistory, // ✅ replaced setMessages
     });
-    // --- Realtime channel (adapter) ---
-    // Binds to the underlying adapter (Phoenix/WebSocket). Exposes sendMessage, typing, room updates,
-    // and yields partner activity/typing signals.
+    const upsertMessage = useChatStore(s => s.upsertMessage);
     const {
         actions: {sendMessage, sendTyping, sendRoomUpdate, sendReadReceipt},
-        state: {refreshRoomData, isPartnerTyping, isPeerActive},
-    } = useChatRoom({
-        upsertMessage(msg: ChatMessage): void {
-        }, roomId, peerPublicKeyHex, setMessages, localUser, roomData: currentRoom});
+        state: {refreshRoomData, isPartnerTyping},
+    } = useChatRoom({roomId, peerPublicKeyHex, localUser, roomData: currentRoom, upsertMessage});
 
+    // Apply read flags to current message list (newest-first)
+    useEffect(() => {
+        if (!lastReadId || !Array.isArray(messages) || messages.length === 0) return;
+        setMessages((prev: ChatMessage[]) => {
+            let hit = false;
+            let changed = false;
+            const mapped: ChatMessage[] = prev.map((m: ChatMessage) => {
+                const isHit = String(m.id) === String(lastReadId);
+                if (isHit) hit = true;
+                const shouldRead: boolean = hit; // hit and below are read
+                if ((m as any).isRead === shouldRead) return m;
+                changed = true;
+                return {...(m as any), isRead: shouldRead} as ChatMessage;
+            });
+            return changed ? mapped : prev;
+        });
+    }, [lastReadId, messages]);
 
-    // Mark latest partner message as read when a new message arrives.
-    // Only triggers for messages not sent by the local user.
     useEffect(() => {
         if (!messages.length) return;
         const lastMessage = messages[messages.length - 1];
@@ -238,10 +254,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         setCurrentRoom({...refreshRoomData});
     }, [refreshRoomData]);
 
-    // On mount or room change:
-    // - mark this room as active
-    // - mark read & seen immediately
-    // - dispatch 'room:enter' / 'room:leave' custom events for cross-component listeners
+    // Mark active + read, and notify peer on join/leave (single source of truth)
     useEffect(() => {
         try {
             setActiveRoomId(roomId);
@@ -272,6 +285,24 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             }
         };
     }, [roomId, setActiveRoomId, markRoomRead, markSeen]);
+
+    useEffect(() => {
+        if (initialFetchRef.current) return;
+
+        if (messages.length === 0 && hasMore && !isFetching) {
+            initialFetchRef.current = true;
+            console.log("🔄 Initial page load - fetching chat history");
+
+            fetchHistory()
+                .then(() => {
+                    console.log("✅ Initial history fetch completed");
+                })
+                .catch((error) => {
+                    console.error("❌ Failed to fetch initial history:", error);
+                    initialFetchRef.current = false; // Allow retry
+                });
+        }
+    }, [messages.length, hasMore, isFetching, fetchHistory, t]);
 
     const setWorkflowState = (key: StatusKey, statusBeforeCancel?: StatusKey, isClientUpdate = true) => {
         useStateMachineStore.setState({
@@ -316,9 +347,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         }
     }, [currentRoom, currentStatus, statusBeforeCancel, setHasStarted]);
 
-
-    // Centralizes side-effecting workflow operations (propose/approve/start/deliver/revise/approve).
-    // This hook encapsulates API posting and chat emissions needed by each action.
+    // Centralize all workflow actions into a dedicated hook
     const {
         startWorkflowAction,
         quotationSubmit,
@@ -354,7 +383,7 @@ const ChatSection: React.FC<ChatSectionProps> = ({
         currentStatus,
     });
 
-    // Guard: require sufficient wallet balance before approving a quotation.
+    // Wrap approveQuotation with additional balance guard to keep identical behavior
     const approveQuotationWrapped = React.useCallback(async (): Promise<boolean> => {
         if (insufficientForApprove) {
             setError(t('profileChat.insufficientBalanceWarning') || 'Insufficient balance to approve the quotation.');
@@ -383,43 +412,48 @@ const ChatSection: React.FC<ChatSectionProps> = ({
             const message = data.message?.trim() || "";
             if (!message && !selectedFile) return;
 
-            const isFile = !!selectedFile;
-            const payloadObj = isFile
-              ? {
-                  type: "file",
-                  url: selectedFile!.fileUrl,
-                  name: selectedFile!.fileName,
-                  mime: selectedFile!.fileType,
-                  caption: message || undefined,
-                }
-              : null;
+            const contentToSend = selectedFile
+                ? JSON.stringify({
+                    type: "file",
+                    url: selectedFile.fileUrl,
+                    name: selectedFile.fileName,
+                    mime: selectedFile.fileType,
+                    caption: message || undefined,
+                })
+                : message;
 
             isSubmittingRef.current = true;
             const messageId = uuidv4();
 
-            // Single source of truth for content
-            const contentToSend = isFile ? JSON.stringify(payloadObj) : message;
+            try {
+                const tsIso = new Date().toISOString();
+                const preview = selectedFile
+                    ? (message || `[File] ${selectedFile.fileName}`)
+                    : message;
+                try {
+                    const detail = {
+                        roomId,
+                        id: messageId,
+                        senderId: Number(localUser.id),
+                        content: preview,
+                        createdAt: tsIso,
+                        status: 'pending' as const,
+                    };
+                    emitChatNewMessage(detail);
+                } catch {
+                }
+            } catch {
+            }
 
             sendMessage({message: contentToSend, senderId: Number(localUser.id), id: messageId});
 
             setSelectedFile(null);
             isSubmittingRef.current = false;
         },
-        [sendMessage, selectedFile, localUser.id]
+        [sendMessage, currentRoom, roomId, selectedFile, localUser.id, emitChatNewMessage]
     );
 
-    // Fetch initial history once per room (first mount). Errors are logged to aid debugging.
-    const didInitialFetchRef = useRef(false);
-    useEffect(() => {
-        if (!didInitialFetchRef.current) {
-            didInitialFetchRef.current = true;
-            fetchHistory().catch((err) => {
-                console.error("[CHAT][INIT] Failed to fetch initial history:", err);
-            });
-        }
-        return () => {
-        };
-    }, [roomId]);
+    console.log("messages", messages)
 
     const flowActions: FlowActions = createFlowActions({
         t,
@@ -503,15 +537,14 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                 <div className="flex-1 min-w-0 flex flex-col h-full w-full">
                     {/* Header: partner presence, typing indicator, and toggle for workflow side panel */}
                     <ChatHeader
-                      avatarUrl={partnerAvatar || ProfileImage.avatar?.src}
-                      roomId={roomId}
-                      displayName={partnerName || "User"}
-                      typingText={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
-                      onToggleFlow={() => setIsFlowOpen((v) => !v)}
-                      isFlowOpen={isFlowOpen} />
-                    {/* Scroll container: provides a stable parent for ChatMessages and scroll listeners */}
-                    <div ref={setScrollRef} className="flex-1 min-h-0 overflow-y-auto">
-                      <ChatMessages
+                        avatarUrl={partnerAvatar}
+                        displayName={partnerName || "User"}
+                        roomId={roomId}
+                        typingText={isPartnerTyping ? (t("profileChat.typing") || "กำลังพิมพ์...") : undefined}
+                        onToggleFlow={() => setIsFlowOpen((v) => !v)}
+                        isFlowOpen={isFlowOpen}
+                    />
+                    <ChatMessages
                         messages={messages}
                         partnerAvatar={ProfileImage.avatar}
                         customScrollParent={scrollParentEl}
@@ -527,11 +560,8 @@ const ChatSection: React.FC<ChatSectionProps> = ({
                         }}
                         sendReadReceipt={sendReadReceipt}
                         roomId={roomId}
-                      />
-                    </div>
-
-                    {/* Composer: error display, attach/remove file controls, and ChatInput */}
-                    <div className="border-t px-3 py-2 sm:px-4 sm:py-3 bg-white">
+                    />
+                    <div ref={inputContainerRef} className="border-t px-3 py-2 sm:px-4 sm:py-3 bg-white">
                         <div className="flex items-center gap-2">
                             <div className="flex-1">
                                 {error && <p className="text-sm text-red-600 mb-2">{error}</p>}

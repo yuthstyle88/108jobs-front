@@ -20,6 +20,7 @@ interface ChatMessagesProps {
     onAtBottomChange?: (isAtBottom: boolean) => void;
     sendReadReceipt: (roomIdArg: string, lastMessageId: string) => void;
     roomId: string;
+    initialLoadDone?: boolean;
 }
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({
@@ -32,6 +33,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                                                        onAtBottomChange,
                                                        sendReadReceipt,
                                                        roomId,
+                                                       initialLoadDone = false,
                                                    }) => {
     const {t} = useTranslation();
     const params = useParams();
@@ -53,21 +55,41 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
     );
 
     // Track the range to detect when we're near the top
-    const rangeRef = React.useRef({ startIndex: 0, endIndex: 0 });
+    const rangeRef = React.useRef({startIndex: 0, endIndex: 0});
     const hasMoreRef = React.useRef(hasMore);
     const isFetchingRef = React.useRef(isFetching);
-    const hasInitialScrollRef = React.useRef(false);
+
+    // Track initial load state internally as fallback
+    const initialLoadDoneRef = React.useRef(initialLoadDone);
 
     React.useEffect(() => {
         hasMoreRef.current = hasMore;
         isFetchingRef.current = isFetching;
     }, [hasMore, isFetching]);
 
+    // Sync with parent's initialLoadDone prop
+    React.useEffect(() => {
+        initialLoadDoneRef.current = initialLoadDone;
+    }, [initialLoadDone]);
+
+    const handleTopReached = React.useCallback(() => {
+        if (!hasMoreRef.current || isFetchingRef.current) return;
+        onTopReached?.();
+    }, [onTopReached]);
 
     const handleRangeChanged = React.useCallback((range: { startIndex: number; endIndex: number }) => {
         rangeRef.current = range;
-    }, []);
 
+        // ⚠️ CRITICAL: Skip initial load - let parent useEffect handle it
+        if (!initialLoadDoneRef.current && range.startIndex === 0) {
+            return;
+        }
+
+        // If we're at the 10th message from the start and have more to load
+        if (range.startIndex <= 10 && hasMoreRef.current && !isFetchingRef.current) {
+            handleTopReached();
+        }
+    }, [handleTopReached]);
 
     React.useEffect(() => {
         const prevLength = prevLengthRef.current;
@@ -86,22 +108,18 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
 
         if (added <= 0) return;
 
-        // If head id changed, it's a prepend (history load)
         const isPrepend = prevHeadId !== newHeadId;
-        // If tail id changed, it's an append (new message)
         const isAppend = prevTailId !== newTailId;
 
         if (isPrepend) {
-            // For history loads, scroll to maintain the user's position
             setTimeout(() => {
                 virtuosoRef.current?.scrollToIndex({
-                    index: added, // Scroll to where the new items start
+                    index: added,
                     behavior: 'auto',
                     align: 'start',
                 });
             }, 0);
         } else if (isAppend || isAtBottom) {
-            // For new messages, scroll to bottom if user is already there
             setTimeout(() => {
                 virtuosoRef.current?.scrollToIndex({
                     index: newLength - 1,
@@ -112,27 +130,13 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
         }
     }, [data, isAtBottom]);
 
-    React.useEffect(() => {
-        // Only scroll to bottom if we have messages AND haven't done initial scroll yet
-        if (data.length > 0 && !hasInitialScrollRef.current) {
-            setTimeout(() => {
-                virtuosoRef.current?.scrollToIndex({
-                    index: data.length - 1,
-                    behavior: 'auto',
-                    align: 'end',
-                });
-                hasInitialScrollRef.current = true;
-            }, 50);
-        }
-    }, [data.length]);
-
     return (
         <Virtuoso
             ref={virtuosoRef}
             data={data}
             firstItemIndex={0}
             initialTopMostItemIndex={data.length > 0 ? data.length - 1 : 0}
-            followOutput={isFetching ? false : 'auto'}
+            followOutput={true}
             customScrollParent={customScrollParent ?? undefined}
             computeItemKey={(_index, msg) => {
                 const m: any = msg as any;
@@ -145,8 +149,10 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
             }}
             alignToBottom
             rangeChanged={handleRangeChanged}
+            // REMOVED: atTopStateChange to prevent duplicate triggers
             atTopStateChange={(atTop) => {
-                if (atTop && hasMore && !isFetching && onTopReached) onTopReached();
+                // Don't trigger loading here - we use rangeChanged instead
+                // This prevents double fetching
             }}
             atBottomStateChange={(bottom) => {
                 setIsAtBottom(bottom);
@@ -159,7 +165,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({
                 }
             }}
             components={{
-                Footer: () => <div style={{height: 20}}/>,
+                Footer: () => <div style={{height: 10}}/>,
                 Header: hasMore
                     ? () => (
                         <div className="w-full flex justify-center my-2">

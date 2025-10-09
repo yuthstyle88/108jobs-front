@@ -300,13 +300,12 @@ export const ChatRoomsProvider: React.FC<{ children: React.ReactNode; pageSize?:
     useEffect(() => {
         const off = (async () => {
             const {onWsReconnected} = await import("@/core/chat/events");
-            const unsubscribe = onWsReconnected(() => {
+            return onWsReconnected(() => {
                 try {
                     execute();
                 } catch {
                 }
             });
-            return unsubscribe;
         })();
         let unsub: (() => void) | null = null;
         off.then((u) => {
