@@ -36,32 +36,71 @@ export function wsSend(socket: any, obj: any) {
     }
 }
 
-// Wait for server ACK for a specific message id (adapter-only version)
-export async function waitForAck(adapter: SendMessageDeps['adapter'] | undefined, id: string, timeoutMs = 8000): Promise<boolean> {
-    if (!adapter) return false;
-    return new Promise((resolve) => {
-        const idToMatch = String(id);
-        let done = false;
-        const finish = (ok: boolean) => { if (done) return; done = true; try { unsub?.(); } catch {} resolve(ok); };
+/**
+ * Wait for an ack ('chat:ack') that matches the given message id.
+ * Uses onAny/onMessage if available; otherwise resolves false after timeout.
+ */
+export function waitForAck(deps: SendMessageDeps, clientId: string, timeoutMs = 4000): Promise<boolean> {
+  return new Promise((resolve) => {
+    let settled = false;
+    let unsubs: Array<() => void> = [];
 
-        const matchesId = (obj: any): boolean => {
-            if (!obj) return false;
-            const inner = obj.event === 'forward' ? (obj.payload ?? obj) : obj;
-            const payload = inner?.payload ?? inner;
-            if (inner?.event !== 'chat:message') return false;
-            const mid = payload?.id ?? payload?.payload?.id ?? payload?.message?.id;
-            return mid != null && String(mid) === idToMatch;
-        };
+    // Phoenix protocol acknowledges messages with `phx_reply` event containing status 'ok' or 'error'
+    const transport: any = (deps as any)?.adapter || (deps as any)?.sender;
 
-        let unsub: (() => void) | undefined;
-        if (typeof adapter.onMessage === 'function') {
-            unsub = adapter.onMessage((packet: any) => { if (matchesId(packet)) finish(true); });
-        } else if (typeof adapter.onAny === 'function') {
-            unsub = adapter.onAny((evt: string, payload: any) => { if (evt === 'chat:message' && matchesId(payload)) finish(true); });
-        } else {
-            // no listener API -> cannot wait for ack via adapter
-            return resolve(false);
+    const cleanup = () => {
+      try { clearTimeout(timer); } catch {}
+      for (const off of unsubs) {
+        try { typeof off === 'function' && off(); } catch {}
+      }
+      unsubs = [];
+    };
+
+    const timer: any = setTimeout(() => {
+      if (!settled) {
+        settled = true;
+        try {
+          dbg('waitForAck timeout', {
+            clientId,
+            timeoutMs,
+            transport: !!transport,
+            at: new Date().toISOString(),
+          });
+        } finally {
+          cleanup();
+          resolve(false);
         }
-        setTimeout(() => finish(false), timeoutMs);
+      }
+    }, timeoutMs);
+
+
+    try {
+      const addMessageListener = (deps as any)?.addMessageListener;
+      if (typeof addMessageListener === 'function') {
+        const off = addMessageListener((packet: any) => {
+          const ev = packet?.event;
+          const payload = packet?.payload ?? packet;
+          dbg('waitForAck addMessageListener event', { ev, payload });
+          if (ev !== 'phx_reply') return;
+          const status = payload?.status;
+          const id = payload?.response?.id;
+          if (String(id) === String(clientId) && status === 'ok') {
+            dbg('waitForAck received', { clientId, status });
+            if (!settled) { settled = true; cleanup(); resolve(true); }
+          }
+        });
+        if (typeof off === 'function') unsubs.push(off);
+      } else {
+        dbg('waitForAck no addMessageListener on deps');
+      }
+    } catch (err) {
+      dbg('waitForAck addMessageListener error', err);
+    }
+
+    dbg('waitForAck subscription summary', {
+      hasAddMessageListener: typeof (deps as any)?.addMessageListener === 'function',
     });
+
+    // Fallback: no event subscription → resolve false after timeout
+  });
 }

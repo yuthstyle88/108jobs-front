@@ -5,7 +5,7 @@ import {encrypt} from "@/lib/web-crypto";
 import {dbg} from "@/core/chat/utils";
 import {PhoenixEvent, PhoenixPacket, SendMessageDeps} from "@/core/chat/types";
 import {createMessage} from "@/core/chat/domain/entities/message";
-import {wsSend} from "@/core/chat/utils/socketSend";
+import {waitForAck, wsSend} from "@/core/chat/utils/socketSend";
 import {useChatStore} from "@/core/chat/store/chatStore";
 
 // ฟังก์ชันกลาง สำหรับสร้าง event (รองรับ meta + ลบ key undefined)
@@ -79,7 +79,18 @@ export function sendRoomUpdateEvent(
 /** Internal helper to send a message, wait for ack, update status and emit UI event */
 async function doSend(deps: SendMessageDeps, msg: ChatMessage): Promise<{ id: string; sent: boolean; }> {
     const sent = deps.sender ? Boolean(await deps.sender.send('chat:message', msg)) : false;
-    dbg('doSend', { id: msg.id, sent });
+    if (sent) {
+        const acked = await waitForAck(deps, msg.id, 4000)
+          .catch((err) => { dbg('waitForAck error', err); return false; });
+        if (acked) {
+            dbg('xxxxxxxdoSend', { id: msg.id, sent });
+            try { (deps as any).onAfterSend?.(); } catch {}
+            return { id: String(msg.id), sent };
+        }
+        try { (deps as any).onAfterSend?.(); } catch {}
+        return { id: String(msg.id), sent: false };
+    }
+
     return { id: String(msg.id), sent  };
 }
 

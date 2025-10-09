@@ -8,6 +8,7 @@
  */
 import {Socket as PhoenixSocket} from "phoenix";
 import {buildActixWsUrl} from "@/core/chat/utils/chatSocketUtils";
+import {dbg} from "@/core/chat/utils";
 
 export interface RealtimeChannelAdapter {
   readyState: number; // 0 connecting, 1 open, 2 closing, 3 closed
@@ -26,7 +27,6 @@ const isInternalEvent = (ev?: string): boolean => !!ev && (
   ev.startsWith("chan_reply") ||   // Phoenix push replies
   ev === "heartbeat" ||
   ev === "presence_state" ||
-  ev === "phx_reply" ||
   ev === "presence_diff"
 );
 
@@ -118,7 +118,9 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
   // Unify forward → adapter.onmessage with normalized envelope
     const forward = (event: string, topic: string, payload: any) => {
         // ignore any Phoenix reply noise that shouldn't reach the app layer
+
         const isPass = isInternalEvent(event);
+
         if (!event || isPass) return;
 
         // --- unwrap server envelope like: {event:"chat:message", payload:{...}} ---
@@ -136,6 +138,7 @@ export function getChannelAdapter(token: string, topic: string): RealtimeChannel
             outPayload = (inner == null ? {} : inner);
         }
         const env = { event: outEvent, topic: topic.replace(/^room:/, ""), payload: outPayload };
+        dbg('[phoenix] forward', { event, topic, payload });
         try { adapter.onmessage?.({ data: JSON.stringify(env) }); } catch {}
     };
 

@@ -312,6 +312,7 @@ export function useChatRoom({
           roomId,
           peerPublicKeyHex,
           sentSet: sentMessagesRef.current,
+          addMessageListener, // allow waitForAck to subscribe when adapter lacks onAny/onmessage
           onAfterSend: () => {
               lastTypedSentRef.current = false;
           },
