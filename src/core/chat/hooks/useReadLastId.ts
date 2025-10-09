@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { useRoomsStore } from "@/core/chat/store/roomsStore";
+import { useChatStore } from "@/core/chat/store/chatStore";
 import { UserService } from "@/services/UserService";
 
 export type ReadLastIdOptions = {
@@ -85,37 +85,37 @@ export function useReadLastId(roomId: string, opts: ReadLastIdOptions = {}): Use
  * - Persists every change to both roomsStore (for UI) and UserService (for reloads).
  */
 export function useRoomReadLastId(roomId: string): UseReadLastId {
-  // Select the room and actions from the rooms store
-  const room = useRoomsStore((s) => s.rooms.find((r) => String(r.id) === String(roomId)));
-  const updateReadLastId = useRoomsStore((s) => s.updateReadLastId);
+  // Use chatStore for lastReadId management
+  const chatStore = useChatStore();
+  const setLastReadId = chatStore.setLastReadId;
+  const getLastReadId = chatStore.getLastReadAt;
 
-  // Seed priority: roomsStore.readLastId → UserService cache → null
+  // Seed priority: chatStore.getLastReadId → UserService cache → null
   const initial = useMemo(() => {
-    const fromStore = room?.readLastId ?? null;
+    const fromStore = getLastReadId?.(roomId) ?? null;
     if (fromStore != null) return fromStore;
     try {
       return UserService?.Instance?.getReadLastId?.(roomId) ?? null;
     } catch {
       return null;
     }
-  }, [room?.readLastId, roomId]);
+  }, [roomId, getLastReadId]);
 
   // Compose the decoupled hook with a persistence side-effect
   const api = useReadLastId(roomId, {
     initial,
     onChange: (rid, id) => {
-      try { updateReadLastId?.(rid, id ?? null); } catch {}
+      try { if (id) setLastReadId?.(rid, id); } catch {}
       try { UserService?.Instance?.setReadLastId?.(rid, id ?? null); } catch {}
     },
   });
 
-  // Back-fill roomsStore when only UserService had a cached value
+  // Back-fill chatStore when only UserService had a cached value
   useEffect(() => {
-    if (!room?.readLastId && initial) {
-      try { updateReadLastId?.(roomId, initial); } catch {}
+    if (!getLastReadId?.(roomId) && initial) {
+      try { setLastReadId?.(roomId, initial); } catch {}
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roomId]);
+  }, [roomId, initial, getLastReadId, setLastReadId]);
 
   return api;
 }

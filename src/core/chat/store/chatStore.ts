@@ -22,6 +22,8 @@ interface ChatStoreState {
     messages: ChatMessage[]
     retryMeta: RetryMeta
     pendingMessages: ChatMessage[]
+    lastReadIdMap?: Record<string, string>
+    peerLastReadIdMap?: Record<string, string>
 }
 
 interface ChatStoreActions {
@@ -46,12 +48,20 @@ interface ChatStoreActions {
     addPendingMessage: (msg: ChatMessage) => void
     removePendingMessage: (id: string) => void
     clearPendingMessages: () => void
+    setLastReadId: (roomId: string, id: string) => void
+    getLastReadAt: (roomId: string) => string | undefined
+    clearLastReadId: (roomId: string) => void
+    setPeerLastReadId: (roomId: string, id: string) => void
+    getPeerLastReadAt: (roomId: string) => string | undefined
+    clearPeerLastReadId: (roomId: string) => void
 }
 
 export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get) => ({
     messages: [],
     retryMeta: {},
     pendingMessages: [],
+    lastReadIdMap: {},
+    peerLastReadIdMap: {},
     online: false,
 
     addMessage: (msg) => set(() => ({ messages: mergeIntoMessages(get().messages, msg) })),
@@ -118,7 +128,17 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
       }),
 
     clearRoom: (roomId) =>
-      set((s) => ({ messages: s.messages.filter((m) => String(m.roomId) !== String(roomId)) })),
+      set((s) => {
+        const nextMap = { ...(s.lastReadIdMap || {}) } as Record<string, string>;
+        delete nextMap[String(roomId)];
+        const nextPeer = { ...(s.peerLastReadIdMap || {}) } as Record<string, string>;
+        delete nextPeer[String(roomId)];
+        return {
+          messages: s.messages.filter((m) => String(m.roomId) !== String(roomId)),
+          lastReadIdMap: nextMap,
+          peerLastReadIdMap: nextPeer,
+        };
+      }),
 
     getPendingByRoom: (roomId) => get().pendingMessages.filter((m) => String(m.roomId) === String(roomId) && (m as any).status === 'pending'),
     getFailedByRoom: (roomId) => {
@@ -241,4 +261,50 @@ export const useChatStore = create<ChatStoreState & ChatStoreActions>((set, get)
     removePendingMessage: (id) => get().removePending(id),
 
     clearPendingMessages: () => set(() => ({ pendingMessages: [] })),
+
+    setLastReadId: (roomId, id) =>
+      set((s) => ({ lastReadIdMap: { ...(s.lastReadIdMap || {}), [String(roomId)]: String(id) } })),
+
+    getLastReadAt: (roomId) => {
+      const map = get().lastReadIdMap || {};
+      const id = map[String(roomId)];
+      if (!id) return undefined;
+      const { messages, pendingMessages } = get();
+      const k = String(id);
+      const msg =
+        messages.find((m) => String(m.id) === k) ||
+        pendingMessages.find((m) => String(m.id) === k);
+      const at = (msg as any)?.createdAt as string | undefined;
+      return at;
+    },
+
+    setPeerLastReadId: (roomId, id) =>
+      set((s) => ({ peerLastReadIdMap: { ...(s.peerLastReadIdMap || {}), [String(roomId)]: String(id) } })),
+
+    getPeerLastReadAt: (roomId) => {
+      const map = get().peerLastReadIdMap || {};
+      const id = map[String(roomId)];
+      if (!id) return undefined;
+      const { messages, pendingMessages } = get();
+      const k = String(id);
+      const msg =
+        messages.find((m) => String(m.id) === k) ||
+        pendingMessages.find((m) => String(m.id) === k);
+      const at = (msg as any)?.createdAt as string | undefined;
+      return at;
+    },
+
+    clearPeerLastReadId: (roomId) =>
+      set((s) => {
+        const next = { ...(s.peerLastReadIdMap || {}) } as Record<string, string>;
+        delete next[String(roomId)];
+        return { peerLastReadIdMap: next };
+      }),
+
+    clearLastReadId: (roomId) =>
+      set((s) => {
+        const next = { ...(s.lastReadIdMap || {}) } as Record<string, string>;
+        delete next[String(roomId)];
+        return { lastReadIdMap: next };
+      }),
 }))

@@ -192,3 +192,45 @@ export function dbg(label: string, data?: unknown) {
         // never throw from a debug helper
     }
 }
+
+/**
+ * Return true if `a` is older than `b` by createdAt.
+ * Accepts objects with `createdAt` or raw date strings/Date.
+ */
+export function isOlder(
+  lastReadAt: string | Date,
+  createdAt: string | Date,
+): boolean {
+    const normalize = (v: any) => {
+        if (typeof v === "string") {
+            // Normalize to full ISO 8601 format
+            let s = v.trim();
+
+            // Replace space between date and time with 'T'
+            s = s.replace(" ", "T");
+
+            // Handle fractional seconds: trim to 3 digits if too long
+            s = s.replace(/(\.\d{3})\d+/, "$1");
+
+            // Ensure timezone format ends with 'Z' if +00:00
+            s = s.replace(/\s*\+00:00$/, "Z");
+
+            // If timezone missing entirely, assume UTC
+            if (!/[zZ]|[+-]\d{2}:?\d{2}$/.test(s)) s += "Z";
+
+            return s;
+        }
+        return v;
+    };
+
+    const toTime = (v: any) => new Date(normalize(v) ?? 0).getTime();
+
+    const t1 = toTime(lastReadAt);
+    const t2 = toTime(createdAt);
+
+    if (Number.isNaN(t1) || Number.isNaN(t2)) return false;
+
+    const result = t1 < t2;
+    console.debug("[isOlder]", { lastReadAt, createdAt, t1, t2, result });
+    return result;
+}

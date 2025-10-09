@@ -10,7 +10,6 @@ export type Room = {
     lastMessageAt?: string;
     unreadCount?: number;
     isActive?: boolean;
-    readLastId?: string | null; // ✅ last message id that this user has read for this room
 };
 
 export type RoomsState = {
@@ -20,8 +19,6 @@ export type RoomsState = {
     removeRoom: (roomId: string) => void;
     /** Mark room as read: set unreadCount=0 and sync readLastId to lastMessageId (if present) */
     markRoomRead: (roomId: string) => void;
-    /** Explicitly set last-read id for a room */
-    updateReadLastId: (roomId: string, messageId: string | null) => void;
     setActiveRoomId: (roomId: string) => void;
 };
 
@@ -33,19 +30,7 @@ export const useRoomsStore = create<RoomsState>((set) => ({
     markRoomRead: (roomId) =>
         set((s) => ({
             rooms: s.rooms.map((room) =>
-                room.id === roomId
-                    ? {
-                        ...room,
-                        unreadCount: 0,
-                        readLastId: room.lastMessageId ?? room.readLastId ?? null,
-                      }
-                    : room
-            ),
-        })),
-    updateReadLastId: (roomId, messageId) =>
-        set((s) => ({
-            rooms: s.rooms.map((room) =>
-                room.id === roomId ? { ...room, readLastId: messageId ?? null } : room
+                room.id === roomId ? { ...room, unreadCount: 0 } : room
             ),
         })),
     setActiveRoomId: (roomId) =>
